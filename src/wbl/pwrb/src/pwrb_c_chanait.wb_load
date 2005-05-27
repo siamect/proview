@@ -315,6 +315,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String16"
         EndBody
       EndObject
+      !/**
+      !  Specifies the data representation of the raw value.
+      !*/
+      Object Representation $Attribute 26
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-DataRepEnum"
+        EndBody
+      EndObject
     EndObject
     Object Template ChanAit
       Body RtBody

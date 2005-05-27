@@ -7,6 +7,7 @@ SObject         pwrb:Class
     Body	SysBody
       Attr	Editor = pwr_eEditor_AttrEd
       Attr	Method = pwr_eMethod_Standard
+      Attr 	Flags |= pwr_mClassDef_IOCard
     EndBody
     !
     Object	RtBody	$ObjBodyDef 1
@@ -110,6 +111,23 @@ SObject         pwrb:Class
 	Attr OffsetInputs = 0
       EndBody
     EndObject	! Template
+    Object IoMethods $RtMethod
+      Object IoCardInit $Method
+        Body SysBody
+          Attr MethodName = "Pb_Di-IoCardInit"
+        EndBody
+      EndObject
+      Object IoCardClose $Method
+        Body SysBody
+          Attr MethodName = "Pb_Di-IoCardClose"
+        EndBody
+      EndObject
+      Object IoCardRead $Method
+        Body SysBody
+          Attr MethodName = "Pb_Di-IoCardRead"
+        EndBody
+      EndObject
+    EndObject
 !
   EndObject	! Pb_Di
 !

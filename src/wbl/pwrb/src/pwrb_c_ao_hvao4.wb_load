@@ -20,7 +20,7 @@ SObject pwrb:Class
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtAndDevBodies
-      Attr Flags |= pwr_mClassDef_IO
+      Attr Flags |= pwr_mClassDef_IOCard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
@@ -150,6 +150,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this object.
+      !  A URL to the data sheet for the equipment of this object.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
       Object ChannelAllocation $Attribute 1 
@@ -163,6 +173,7 @@ SObject pwrb:Class
       Body RtBody
         Attr MaxNoOfChannels = 4
         Attr Process = 2
+ 	Attr DataSheet = "$pwr_lang/ssab_ao_hvao4.pdf"
       EndBody
     EndObject
     Object AnteAdopt $DbCallBack
@@ -195,5 +206,23 @@ SObject pwrb:Class
 	EndObject
       EndObject
     EndObject
+    Object IoMethods $RtMethod
+      Object IoCardInit $Method
+        Body SysBody
+          Attr MethodName = "Ao_HVAO4-IoCardInit"
+        EndBody
+      EndObject
+      Object IoCardClose $Method
+        Body SysBody
+          Attr MethodName = "Ao_HVAO4-IoCardClose"
+        EndBody
+      EndObject
+      Object IoCardWrite $Method
+        Body SysBody
+          Attr MethodName = "Ao_HVAO4-IoCardWrite"
+        EndBody
+      EndObject
+    EndObject
   EndObject
 EndSObject
+

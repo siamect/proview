@@ -133,6 +133,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
+      !/**
+      !  Specifies the data representation of the raw value.
+      !*/
+      Object Representation $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-DataRepEnum"
+        EndBody
+      EndObject
     EndObject
     Object Defaults $Object
       Body SysBody

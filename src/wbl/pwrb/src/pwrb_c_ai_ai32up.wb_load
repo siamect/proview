@@ -33,7 +33,7 @@ SObject pwrb:Class
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_RtAndDevBodies
-      Attr Flags |= pwr_mClassDef_IO
+      Attr Flags |= pwr_mClassDef_IOCard
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
@@ -147,6 +147,16 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Objid"
         EndBody
       EndObject
+      !/**
+      !  @Summary A URL to the data sheet for the equipment in this object.
+      !  A URL to the data sheet for the equipment of this object.
+      !  The data sheet can be displayed from the popup menu for this object.
+      !*/
+      Object DataSheet $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
     EndObject
     Object DevBody $ObjBodyDef 2 
       Object ChannelAllocation $Attribute 1 
@@ -162,6 +172,7 @@ SObject pwrb:Class
 	Attr ErrorSoftLimit = 15
 	Attr ErrorHardLimit = 50
         Attr Process = 1
+ 	Attr DataSheet = "$pwr_lang/ssab_ai_ai32up.pdf"
       EndBody
     EndObject
     Object AnteAdopt $DbCallBack
@@ -194,5 +205,23 @@ SObject pwrb:Class
 	EndObject
       EndObject
     EndObject
+    Object IoMethods $RtMethod
+      Object IoCardInit $Method
+        Body SysBody
+          Attr MethodName = "Ai_AI32uP-IoCardInit"
+        EndBody
+      EndObject
+      Object IoCardClose $Method
+        Body SysBody
+          Attr MethodName = "Ai_AI32uP-IoCardClose"
+        EndBody
+      EndObject
+      Object IoCardRead $Method
+        Body SysBody
+          Attr MethodName = "Ai_AI32uP-IoCardRead"
+        EndBody
+      EndObject
+    EndObject
   EndObject
 EndSObject
+

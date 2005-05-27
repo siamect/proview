@@ -177,6 +177,14 @@ SObject pwrb:Class
           Attr Flags |= PWR_MASK_STATE
         EndBody
       EndObject
+      !/**
+      !  Specifies the data representation of the raw value.
+      !*/
+      Object Representation $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-DataRepEnum"
+        EndBody
+      EndObject
     EndObject
     Object Template ChanCo
       Body RtBody

@@ -22,6 +22,7 @@ SObject         pwrb:Class
     Body	SysBody
       Attr	Editor = pwr_eEditor_AttrEd
       Attr	Method = pwr_eMethod_Standard
+      Attr 	Flags |= pwr_mClassDef_IOAgent
     EndBody
     !
     Object	RtBody	$ObjBodyDef 1
@@ -340,6 +341,28 @@ SObject         pwrb:Class
 	Attr DataControlTime = 100
       EndBody
     EndObject	! Template
+    Object IoMethods $RtMethod
+      Object IoAgentInit $Method
+        Body SysBody
+          Attr MethodName = "Pb_Profiboard-IoAgentInit"
+        EndBody
+      EndObject
+      Object IoAgentClose $Method
+        Body SysBody
+          Attr MethodName = "Pb_Profiboard-IoAgentClose"
+        EndBody
+      EndObject
+      Object IoAgentRead $Method
+        Body SysBody
+          Attr MethodName = "Pb_Profiboard-IoAgentRead"
+        EndBody
+      EndObject
+      Object IoAgentWrite $Method
+        Body SysBody
+          Attr MethodName = "Pb_Profiboard-IoAgentWrite"
+        EndBody
+      EndObject
+    EndObject
 !
   EndObject	! Pb_Profiboard
 !

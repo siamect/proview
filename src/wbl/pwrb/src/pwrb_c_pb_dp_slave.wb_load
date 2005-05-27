@@ -10,6 +10,7 @@ SObject         pwrb:Class
     Body	SysBody
       Attr	Editor = pwr_eEditor_AttrEd
       Attr	Method = pwr_eMethod_Standard
+      Attr 	Flags |= pwr_mClassDef_IORack
     EndBody
     !
     Object	RtBody	$ObjBodyDef 1
@@ -62,7 +63,12 @@ SObject         pwrb:Class
           Attr	TypeRef  = "pwrb:Type-ByteOrderingEnum"
         EndBody
       EndObject
-      !
+!
+      Object 	FloatRepresentation	$Attribute 37
+        Body	SysBody
+          Attr	TypeRef  = "pwrb:Type-FloatRepEnum"
+        EndBody
+      EndObject
 !
       Object 	StallAction	$Attribute 8
         Body	SysBody
@@ -342,6 +348,28 @@ SObject         pwrb:Class
 	Attr NumberModules = 0
       EndBody
     EndObject	! Template
+    Object IoMethods $RtMethod
+      Object IoRackInit $Method
+        Body SysBody
+          Attr MethodName = "Pb_DP_Slave-IoRackInit"
+        EndBody
+      EndObject
+      Object IoRackClose $Method
+        Body SysBody
+          Attr MethodName = "Pb_DP_Slave-IoRackClose"
+        EndBody
+      EndObject
+      Object IoRackRead $Method
+        Body SysBody
+          Attr MethodName = "Pb_DP_Slave-IoRackRead"
+        EndBody
+      EndObject
+      Object IoRackWrite $Method
+        Body SysBody
+          Attr MethodName = "Pb_DP_Slave-IoRackWrite"
+        EndBody
+      EndObject
+    EndObject
 !
   EndObject	! Pb_DP_Slave
 !

@@ -114,6 +114,14 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
       EndObject
+      !/**
+      !  Specifies the data representation of the raw value.
+      !*/
+      Object Representation $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-DataRepEnum"
+        EndBody
+      EndObject
     EndObject
     Object RtXtt $RtMenu
       Object Signal $MenuRef

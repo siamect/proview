@@ -160,7 +160,6 @@ SObject pwrb:Class
       Object Gain $Intern 7 
         Body SysBody
           Attr PgmName = "Gain"
-          Attr Flags |= PWR_MASK_CHANGELOG
           Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Gain"
         EndBody
@@ -173,7 +172,6 @@ SObject pwrb:Class
       Object PICal1 $Intern 8 
         Body SysBody
           Attr PgmName = "PICal1"
-          Attr Flags |= PWR_MASK_CHANGELOG
           Attr TypeRef = "pwrs:Type-$Int32"
           Attr GraphName = "PICal1"
         EndBody
