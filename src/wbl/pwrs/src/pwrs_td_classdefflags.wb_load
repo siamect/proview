@@ -143,23 +143,43 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
+    !  Object is IO agent.
+    !*/
+    Object IOAgent $Bit
+     Body SysBody
+       Attr PgmName = "IOAgent"
+       Attr Text = "IOAgent"
+       Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  Object is IO rack.
+    !*/
+    Object IORack $Bit
+     Body SysBody
+       Attr PgmName = "IORack"
+       Attr Text = "IORack"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Object is IO card.
+    !*/
+    Object IOCard $Bit
+     Body SysBody
+       Attr PgmName = "IOCard"
+       Attr Text = "IOCard"
+       Attr Value = 16384
+     EndBody
+    EndObject
+    !/**
     !  Object has callbacks.
     !*/
     Object HasCallBack $Bit
      Body SysBody
        Attr PgmName = "HasCallBack"
        Attr Text = "HasCallBack"
-       Attr Value = 4096
-     EndBody
-    EndObject
-    !/**
-    !  Object has casted attributes.
-    !*/
-    Object CastAttr $Bit
-     Body SysBody
-       Attr PgmName = "CastAttr"
-       Attr Text = "CastAttr"
-       Attr Value = 8192
+       Attr Value = 32768
      EndBody
     EndObject
   EndObject
