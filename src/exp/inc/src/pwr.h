@@ -401,13 +401,15 @@ typedef union {
     pwr_tBit  ObjectAttr: 1;
     pwr_tBit  Array	: 1;
     pwr_tBit  Shadowed	: 1;
+    pwr_tBit  CastAttr	: 1;
 
-    pwr_tBit  fill	: 27;
+    pwr_tBit  fill	: 26;
 
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
 
-    pwr_tBit  fill	: 27;
+    pwr_tBit  fill	: 26;
 
+    pwr_tBit  CastAttr	: 1;
     pwr_tBit  Shadowed	: 1;
     pwr_tBit  Array	: 1;
     pwr_tBit  ObjectAttr: 1;
@@ -422,6 +424,7 @@ typedef union {
 #define pwr_mAttrRef_ObjectAttr	pwr_Bit(2)
 #define pwr_mAttrRef_Array	pwr_Bit(3)
 #define pwr_mAttrRef_Shadowed	pwr_Bit(4)
+#define pwr_mAttrRef_CastAttr	pwr_Bit(5)
 
 } pwr_mAttrRef;
 
