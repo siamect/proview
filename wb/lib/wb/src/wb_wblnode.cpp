@@ -704,6 +704,38 @@ void wb_wblnode::postBuild()
       ((pwr_sGraphPlcNode *)o->rbody)->default_mask[1] = mask;
     }
   }
+  else if ( isTemplate() && o->templ.created) {
+    // New template object, insert template values of attribute objects into body
+    size_t size;
+    void *body;
+
+    ch = o->fth->o->fch;
+    while ( ch) {
+      if ( ch->isObjBodyDef() && ch->o->b.bix == pwr_eBix_rt) {
+	wb_wblnode *attr = ch->o->fch;
+	while ( attr) {
+	  if ( attr->isAttribute()) {
+	    if ( cdh_tidIsCid( attr->o->a.tid)) {
+	      // Copy template for this object to offset of the attribute
+	      if ( m_vrep->getTemplateBody( attr->o->a.tid, pwr_eBix_sys, &size, &body)) {
+		if ( size != attr->o->a.size ||
+		     attr->o->a.offset + size > o->rbody_size) 
+		  m_vrep->error( "AttrObject size mismatch", getFileName(), line_number);
+		else
+		  memcpy( (char *)o->rbody + attr->o->a.offset, body, size);
+		free( body);
+	      }
+	    }
+	  }
+	  attr = attr->o->fws;
+	}
+	
+	break;
+      }
+      ch = ch->o->fws;
+    }
+    
+  }
 }
 
 void wb_wblnode::buildObjBodyDef( ref_wblnode classdef)
@@ -809,6 +841,24 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
   }
   ((pwr_sParam *)o->rbody)->Info.ParamIndex = *bindex;
   (*bindex)++;
+
+
+  // Do some syntax check of flags and typeref
+  if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_SUPERCLASS && 
+       strcmp( name(), "Super") != 0)
+    m_vrep->error( "Super class attribute not named Super", getFileName(), line_number);
+  if ( strcmp( name(), "Super") == 0) {
+    if ( !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_SUPERCLASS))
+      m_vrep->error( "Super class flag not set", getFileName(), line_number);
+    if ( !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CLASS))
+      m_vrep->error( "Class flag not set", getFileName(), line_number);
+    if ( !cdh_tidIsCid( o->a.tid))
+      m_vrep->error( "TypeRef is not a class", getFileName(), line_number);
+  }
+  if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CLASS && 
+       !cdh_tidIsCid( o->a.tid))
+    m_vrep->error( "TypeRef is not a class", getFileName(), line_number);
+  
 }
 
 void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef, 
@@ -1556,6 +1606,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         strcpy( o->c.templ->o->cname, name());
         // o->c.templ->o->m_oid.oix = m_vrep->nextOix();
         o->c.templ->o->m_cid = o->c.cid;
+	o->c.templ->o->templ.created = true;
         o->c.templ->node_type = wbl_eNodeType_Template;
       }
     }

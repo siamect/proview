@@ -79,6 +79,12 @@ class wbl_attribute {
     pwr_eType type;
 };
 
+class wbl_template {
+ public:
+  wbl_template() : created(0) {};
+  bool created;
+};
+
 class wbl_object {
  public:
   wbl_object() : rbody_size(0), dbody_size(0), rbody(0), dbody(0),
@@ -114,6 +120,7 @@ class wbl_object {
   wbl_type ty;
   wbl_body b;
   wbl_attribute a;
+  wbl_template templ;
 };
 
 
