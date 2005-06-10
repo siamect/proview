@@ -848,17 +848,26 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
        strcmp( name(), "Super") != 0)
     m_vrep->error( "Super class attribute not named Super", getFileName(), line_number);
   if ( strcmp( name(), "Super") == 0) {
+    if ( *bindex != 1)
+      m_vrep->error( "Super has to be first attribute", getFileName(), line_number);
     if ( !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_SUPERCLASS))
-      m_vrep->error( "Super class flag not set", getFileName(), line_number);
+      ((pwr_sParam *)o->rbody)->Info.Flags |= PWR_MASK_SUPERCLASS;
     if ( !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CLASS))
-      m_vrep->error( "Class flag not set", getFileName(), line_number);
+      ((pwr_sParam *)o->rbody)->Info.Flags |= PWR_MASK_CLASS;
     if ( !cdh_tidIsCid( o->a.tid))
       m_vrep->error( "TypeRef is not a class", getFileName(), line_number);
   }
   if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CLASS && 
        !cdh_tidIsCid( o->a.tid))
     m_vrep->error( "TypeRef is not a class", getFileName(), line_number);
-  
+  if ( cdh_tidIsCid( o->a.tid)) {
+    if ( !(((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CLASS))
+      ((pwr_sParam *)o->rbody)->Info.Flags |= PWR_MASK_CLASS;
+  }
+  if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CASTATTR) {
+    if ( !o->bws || o->bws->o->a.type !=  pwr_eType_CastId)
+      m_vrep->error( "Cast attribute not found", getFileName(), line_number);
+  }
 }
 
 void wb_wblnode::buildBuffer( ref_wblnode classdef, ref_wblnode objbodydef, 
