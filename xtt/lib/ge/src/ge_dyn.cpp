@@ -631,6 +631,15 @@ int *GeDyn::ref_slider_disabled()
   return 0;
 }
 
+int GeDyn::get_slider_disabled()
+{
+  for ( GeDynElem *elem = elements; elem; elem = elem->next) {
+    if ( elem->action_type == ge_mActionType_Slider)
+      return ((GeSlider *)elem)->slider_disabled;
+  }
+  return 0;
+}
+
 int *GeDyn::ref_trend_hold()
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
@@ -4635,6 +4644,8 @@ int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
   switch ( type) {
   case pwr_eType_Float32:
   case pwr_eType_Int32:
+  case pwr_eType_UInt32:
+  case pwr_eType_Enum:
     break;
   default:
     return 1;
@@ -9274,6 +9285,11 @@ void GeSlider::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_String;
   attrinfo[i++].size = sizeof( maxvalue_attr);
 
+  strcpy( attrinfo[i].name, "Slider.InsensitiveAttr");
+  attrinfo[i].value = insensitive_attr;
+  attrinfo[i].type = glow_eType_String;
+  attrinfo[i++].size = sizeof( insensitive_attr);
+
   dyn->display_access = true;
   *item_count = i;
 }
@@ -9301,6 +9317,7 @@ void GeSlider::save( ofstream& fp)
   fp << int(ge_eSave_Slider_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_Slider_minvalue_attr) << FSPACE << minvalue_attr << endl;
   fp << int(ge_eSave_Slider_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
+  fp << int(ge_eSave_Slider_insensitive_attr) << FSPACE << insensitive_attr << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -9326,6 +9343,10 @@ void GeSlider::open( ifstream& fp)
       case ge_eSave_Slider_maxvalue_attr:
         fp.get();
         fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
+        break;
+      case ge_eSave_Slider_insensitive_attr:
+        fp.get();
+        fp.getline( insensitive_attr, sizeof(insensitive_attr));
         break;
       case ge_eSave_End: end_found = 1; break;
       default:
@@ -9434,6 +9455,15 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
 				       &max_value_subid, a_size);
   }
+
+  insensitive_p = 0;
+  dyn->parse_attr_name( insensitive_attr, parsed_name,
+				    &inverted, &a_type, &a_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       a_type == pwr_eType_Boolean) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&insensitive_p, 
+				       &insensitive_subid, a_size);
+  }
   return 1;
 }
 
@@ -9451,6 +9481,10 @@ int GeSlider::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
+  if ( insensitive_p) {
+    gdh_UnrefObjectInfo( insensitive_subid);
+    insensitive_p = 0;
+  }
   return 1;
 }
 
@@ -9458,6 +9492,9 @@ int GeSlider::scan( grow_tObject object)
 {
   double max_value, min_value, max_pos, min_pos;
   glow_eDirection direction;
+
+  if ( insensitive_p)
+    slider_disabled = *insensitive_p;
 
   if ( max_value_p && min_value_p && 
        ( *max_value_p != old_max_value ||
@@ -9555,6 +9592,9 @@ int GeSlider::scan( grow_tObject object)
 
 int GeSlider::action( grow_tObject object, glow_tEvent event)
 {
+  if ( insensitive_p && *insensitive_p)
+    return 1;
+    
   switch ( event->event) {
   case glow_eEvent_MB1Down:
     grow_SetClickSensitivity( dyn->graph->grow->ctx, glow_mSensitivity_MB1Press);

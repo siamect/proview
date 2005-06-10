@@ -3136,6 +3136,10 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	GeDyn *dyn;
 
         grow_GetUserData( event->object.object, (void **)&dyn);
+	if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider) {
+	  if ( dyn->get_slider_disabled())
+	    return 0;
+	}
         if ( graph->is_authorized( dyn->access) &&
 	     dyn->get_actiontype( event->object.object) & ~ge_mActionType_Inherit) {
 	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu)

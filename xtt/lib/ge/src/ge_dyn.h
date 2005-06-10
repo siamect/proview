@@ -407,6 +407,7 @@ extern "C" {
     ge_eSave_Slider_attribute	       	= 6000,
     ge_eSave_Slider_minvalue_attr     	= 6001,
     ge_eSave_Slider_maxvalue_attr     	= 6002,
+    ge_eSave_Slider_insensitive_attr    = 6003,
     ge_eSave_AnalogColor_attribute      = 6100,
     ge_eSave_AnalogColor_limit        	= 6101,
     ge_eSave_AnalogColor_limit_type     = 6102,
@@ -656,6 +657,7 @@ class GeDyn {
   void get_hostobject( char *hostobject);
   void set_value_input( char *format, double min_value, double max_value);
   int *ref_slider_disabled();
+  int get_slider_disabled();
   int *ref_trend_hold();
   double *ref_trend_scantime();
   void *get_p();
@@ -1861,6 +1863,7 @@ class GeSlider : public GeDynElem {
   char attribute[120];
   char minvalue_attr[120];
   char maxvalue_attr[120];
+  char insensitive_attr[120];
   int slider_disabled;
 
   pwr_tFloat32 *p;
@@ -1877,16 +1880,19 @@ class GeSlider : public GeDynElem {
   pwr_tFloat32 old_max_value;
   pwr_tSubid min_value_subid;
   pwr_tSubid max_value_subid;
+  pwr_tBoolean *insensitive_p;
+  pwr_tSubid insensitive_subid;
 
   GeSlider( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, ge_eDynPrio_Slider),
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
-    { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
+    { strcpy( attribute, ""); strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");
+    strcpy( insensitive_attr, "");}
   GeSlider( const GeSlider& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio),
-    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0)
+    min_value_p(0), max_value_p(0), old_min_value(0), old_max_value(0), insensitive_p(0)
     { strcpy( attribute, x.attribute); strcpy( minvalue_attr, x.minvalue_attr);
-    strcpy( maxvalue_attr, x.maxvalue_attr);}
+    strcpy( maxvalue_attr, x.maxvalue_attr); strcpy( insensitive_attr, x.insensitive_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);
