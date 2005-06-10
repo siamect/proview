@@ -31,7 +31,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-ManualValve2Switch"
+            Attr TypeRef = "BaseComponent:Class-ManualValve2Sw"
           EndBody
         EndObject
       EndObject
@@ -64,6 +64,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Cewe_SafetySwitch_KSA_LBAS 2148237312
         Body RtBody
+          Attr Super.AlarmText = "Safety switch is off, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/cewe_safetyswitch_ksa_lbas.pdf"
         EndBody
       EndObject
@@ -89,6 +90,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Legrand_CircuitBreaker_DX 2148499456
         Body RtBody
+          Attr Super.AlarmText = "Overload, circuit breaker tripped, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/legrand_circuitbreaker_dx.pdf"
         EndBody
       EndObject
@@ -202,6 +204,8 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Omron_Contactor_J7KN 2148761600
         Body RtBody
+          Attr Super.FbTimeLimit = 1.000000e+00
+          Attr Super.AlarmText = "Feedback contactor lost, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/omron_contactor_j7kn.pdf"
         EndBody
       EndObject

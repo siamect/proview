@@ -17,7 +17,7 @@
 117 0
 118 200
 119 154
-120 0
+120 1
 121 Claes context
 122 0
 126 0.5
@@ -6830,6 +6830,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Open Object"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Open Object"/object=$object
@@ -6960,6 +6962,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Trend"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Trend"/object=$object
@@ -7090,6 +7094,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Fast"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Fast"/object=$object
@@ -7220,6 +7226,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Photo"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Photo"/object=$object
@@ -7350,6 +7358,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="DataSheet"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="DataSheet"/object=$object
@@ -7480,6 +7490,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Open Plc"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Open Plc"/object=$object
@@ -7610,6 +7622,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="CircuitDiagram"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="CircuitDiagram"/object=$object
@@ -7740,6 +7754,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="RtNavigator"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="RtNavigator"/object=$object
@@ -7870,6 +7886,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help Class"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Help Class"/object=$object
@@ -8000,6 +8018,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Block Events..."/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Block Events..."/object=$object
@@ -8130,6 +8150,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Hist Event..."/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Hist Event..."/object=$object
@@ -8260,6 +8282,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Note"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Note"/object=$object
@@ -8390,6 +8414,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Help"/object=$object
@@ -8521,6 +8547,8 @@ pwr_exe:
 9
 900 $object.Note##String80
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Note"/object=$object
@@ -9509,7 +9537,7 @@ pwr_exe:
 102 65535
 103 0
 68
-6800 1
+6800 3
 6801 Close
 6833
 1
@@ -9518,6 +9546,17 @@ pwr_exe:
 102 65535
 103 0
 67
+99
+99
+6802 Print
+6834
+1
+100 1
+101 65
+102 65535
+103 0
+55
+5500 print graph/class/inst=$object
 99
 99
 99
@@ -9935,6 +9974,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Help"/object=$object
@@ -9950,6 +9991,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Note"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Note"/object=$object
@@ -9965,6 +10008,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Trend"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Trend"/object=$object
@@ -9980,6 +10025,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Fast"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Fast"/object=$object
@@ -9995,6 +10042,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Photo"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Photo"/object=$object
@@ -10010,6 +10059,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="DataSheet"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="DataSheet"/object=$object
@@ -10025,6 +10076,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Hist Event..."/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Hist Event..."/object=$object
@@ -10040,6 +10093,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Block Events..."/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Block Events..."/object=$object
@@ -10055,6 +10110,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="RtNavigator"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="RtNavigator"/object=$object
@@ -10070,6 +10127,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Open Object"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Open Object"/object=$object
@@ -10085,6 +10144,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Open Plc"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Open Plc"/object=$object
@@ -10100,6 +10161,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="CircuitDiagram"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="CircuitDiagram"/object=$object
@@ -10115,6 +10178,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help Class"/object=$object)
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Help Class"/object=$object
