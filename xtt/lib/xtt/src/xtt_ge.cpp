@@ -40,7 +40,7 @@ extern "C" {
 #include "co_lng.h"
 #include "xtt_ge.h"
 #include "ge_graph.h"
-
+#include "xtt_xnav.h"
 
 //
 //  Test program
@@ -110,13 +110,23 @@ static void ge_graph_init_cb( void *client_data)
     sts = ((Graph *)gectx->graph)->get_default_size( &default_width, &default_height);
     if ( ODD(sts))
     {
+      short x1, x2, y1, y2;
+
       i = 0;
       XtSetArg(args[i],XmNwidth, default_width);i++;
       XtSetArg(args[i],XmNheight, default_height);i++;
-      XtSetArg(args[i], XmNminAspectX, default_width); i++;
-      XtSetArg(args[i], XmNminAspectY, default_height); i++;
-      XtSetArg(args[i], XmNmaxAspectX, default_width); i++;
-      XtSetArg(args[i], XmNmaxAspectY, default_height); i++;
+
+      x1 = default_width;
+      y1 = default_height;
+      x2 = default_width;
+      y2 = default_height;
+      // This condition is due to a bug in Reflection X 11.0.5...
+      if ( !((XNav *)gectx->parent_ctx)->gbl.no_graph_ratio) {
+	XtSetArg(args[i], XmNminAspectX, x1); i++;
+	XtSetArg(args[i], XmNminAspectY, y1); i++;
+	XtSetArg(args[i], XmNmaxAspectX, x2); i++;
+	XtSetArg(args[i], XmNmaxAspectY, y2); i++;
+      }
       XtSetValues( gectx->toplevel, args,i);
     }
   }

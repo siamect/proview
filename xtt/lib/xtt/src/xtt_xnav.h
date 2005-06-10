@@ -191,18 +191,19 @@ class ApplList {
 class XNavGbl {
   public:
     XNavGbl() :
-	priv(0), UserObject(pwr_cNObjid), AlarmAutoLoad(0), AlarmMessage(0),
-	AlarmBeep(0), AlarmReturn(0), AlarmAck(0), gdh_started(1),
-        verify(0), scantime(0.5), signal_test_mode(0), advanced_user(0), show_truedb(0)
-	{ 
-	  strcpy( version, xnav_cVersion); strcpy( time, "");
-	  strcpy( ConfigureObject, ""); strcpy( AlarmLastMessage, "");
-	  strcpy( AlarmText1, ""); strcpy( AlarmText2, ""); strcpy( AlarmText3, ""); 
-	  strcpy( AlarmText4, ""); strcpy( AlarmText5, ""); 
-	  strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
-	  strcpy( node, ""); strcpy( sys, ""); strcpy( default_directory, "");
-	  strcpy( symbolfilename, "");
-	};
+      priv(0), UserObject(pwr_cNObjid), AlarmAutoLoad(0), AlarmMessage(0),
+      AlarmBeep(0), AlarmReturn(0), AlarmAck(0), gdh_started(1),
+      verify(0), scantime(0.5), signal_test_mode(0), advanced_user(0), show_truedb(0),
+      no_graph_ratio(0)
+      { 
+	strcpy( version, xnav_cVersion); strcpy( time, "");
+	strcpy( ConfigureObject, ""); strcpy( AlarmLastMessage, "");
+	strcpy( AlarmText1, ""); strcpy( AlarmText2, ""); strcpy( AlarmText3, ""); 
+	strcpy( AlarmText4, ""); strcpy( AlarmText5, ""); 
+	strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
+	strcpy( node, ""); strcpy( sys, ""); strcpy( default_directory, "");
+	strcpy( symbolfilename, "");
+      };
     char		version[10];
     char		time[80];
     unsigned long	priv;
@@ -232,6 +233,7 @@ class XNavGbl {
     int			signal_test_mode;
     int			advanced_user;
     int			show_truedb;
+    int			no_graph_ratio;
 
     int			load_config( void *xnav);
     int			symbolfile_exec( void *xnav);

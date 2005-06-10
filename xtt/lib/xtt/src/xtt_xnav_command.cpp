@@ -302,7 +302,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"PRINT",
 			&xnav_print_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
-			  "/OBJECT",
+			  "/OBJECT", "/CLASSGRAPH", "/INSTANCE",
 			  ""}
 		},
 		{"",}};
@@ -664,6 +664,11 @@ static int	xnav_set_func(	void		*client_data,
     }
     cdh_ToLower( language_str, language_str);
     Lng::set( language_str);
+  }
+  else if ( strncmp( arg1_str, "NORATIO", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET NORATIO"
+    xnav->gbl.no_graph_ratio = 1;
   }
   else
     xnav->message('E',"Syntax error");
@@ -4275,9 +4280,29 @@ static int	xnav_print_func(void		*client_data,
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
     char file_str[80];
-    char name_str[80] = "";
+    char instance_str[80];
     ge_tCtx gectx;
     char fname[200];
+    int classgraph;
+    char *instance_p;
+    int sts;
+
+
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str))) {
+      instance_p = instance_str;
+    }
+    else
+      instance_p = 0;
+
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0))) {
+      classgraph = 1;
+      if ( !instance_p) {
+	xnav->message('E', "Instance is missing");
+	return XNAV__HOLDCOMMAND;
+      }
+    }
+    else
+      classgraph = 0;
 
     if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str))) {
       if ( file_str[0] == '/') {
@@ -4289,8 +4314,70 @@ static int	xnav_print_func(void		*client_data,
       // Get base class graphs on $pwr_exe
       cdh_ToLower( fname, file_str);
     }
+    else if ( classgraph) {
+      // Get file from class of instance object
+      pwr_sAttrRef aref;
+      char cname[80];
+      pwr_tCid cid;
+      char found_file[200];
+	  
+      if ( !instance_p) {
+	xnav->message('E',"Enter instance object");
+	return XNAV__HOLDCOMMAND;
+      }
 
-    if ( xnav->appl.find( applist_eType_Graph, file_str, name_str, 
+      sts = gdh_NameToAttrref( pwr_cNObjid, instance_p, &aref);
+      if ( EVEN(sts)) {
+	xnav->message('E',"Instance object not found");
+	return XNAV__HOLDCOMMAND;
+      }
+      sts = gdh_GetAttrRefTid( &aref, &cid);
+      while ( ODD(sts)) {
+	// Try all superclasses
+	sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid), cname, sizeof(cname),
+			       cdh_mName_object);
+	if ( EVEN(sts)) return sts;
+	
+	cdh_ToLower( cname, cname);
+	if ( cdh_CidToVid(cid) < cdh_cUserClassVolMin ||
+	     (cdh_CidToVid(cid) >= cdh_cManufactClassVolMin &&
+	      cdh_CidToVid(cid) <= cdh_cManufactClassVolMax)) {
+	  if ( cname[0] == '$')
+	    sprintf( file_str, "pwr_c_%s", &cname[1]);
+	  else
+	    sprintf( file_str, "pwr_c_%s", cname);
+	}
+	else
+	  strcpy( file_str, cname);
+	
+	// Get base class graphs on $pwr_exe
+	cdh_ToLower( fname, file_str);
+	if ( instance_p && 
+	     (strncmp( fname, "pwr_c_", 6) == 0 || 
+	      strncmp( fname, "pwr_c_", 6) == 0)) {
+	  strcpy( fname, "$pwr_exe/");
+	  strcat( fname, file_str);
+	  strcpy( file_str, fname);
+	}
+	else {
+	  strcpy( fname, "$pwrp_exe/");
+	  strcat( fname, file_str);
+	  strcpy( file_str, fname);
+	}
+	strcat( fname, ".pwg");
+	sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+	if ( ODD(sts)) break;
+	
+	sts = gdh_GetSuperClass( cid, &cid);
+      }
+      if ( EVEN(sts)) {
+	xnav->message('E',"No classgraph found");
+	return XNAV__HOLDCOMMAND;
+      }      
+    }
+
+    if ( xnav->appl.find( applist_eType_Graph, file_str, instance_p, 
 		  (void **) &gectx))
       ge_print( gectx);
     else {
