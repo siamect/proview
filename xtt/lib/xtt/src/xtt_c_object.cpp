@@ -1125,6 +1125,105 @@ static pwr_tStatus HelpClassFilter( xmenu_sMenuCall *ip)
   return XNAV__SUCCESS;
 }
 
+// Simulate
+static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
+{
+  int sts;
+  char name[140];
+  pwr_sAttrRef simconnect;
+  pwr_sAttrRef aref;
+  pwr_tCmd cmd;
+  pwr_sAttrRef *objar =
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".SimConnect");
+  sts = gdh_GetObjectInfo( name, (void *)&simconnect, sizeof(simconnect));
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_AttrrefToName( &simconnect,
+		  name, sizeof(name), cdh_mNName);
+  if ( EVEN(sts)) return sts;
+
+  // Check if object is mounted with other name
+  sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
+  if ( EVEN(sts)) {
+    sts = gdh_AttrrefToName( &simconnect,
+		  name, sizeof(name), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+  }
+  sprintf( cmd, "open graph/class/inst=%s/name=\"%s\"", name, name);
+
+  ((XNav *)ip->EditorContext)->command( cmd);
+  return XNAV__SUCCESS;
+}
+
+// Simulate filter
+static pwr_tStatus SimulateFilter( xmenu_sMenuCall *ip)
+{
+  int sts;
+  char name[140];
+  pwr_sAttrRef simconnect;
+  pwr_tClassId classid;
+  char		classname[80];
+  char		fname[120];
+  char		found_file[120];
+  pwr_tOid	iohandler;
+  pwr_sClass_IOHandler *iohandler_p;
+  pwr_sAttrRef *objar =
+    !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
+    objar = &ip->Pointed : 
+    objar = &ip->ItemList[ip->ChosenItem].CurrentObject;
+
+  sts = gdh_GetClassList( pwr_cClass_IOHandler, &iohandler);
+  if ( EVEN(sts)) return XNAV__INVISIBLE;
+
+  sts = gdh_ObjidToPointer( iohandler, (void **)&iohandler_p);
+  if ( EVEN(sts)) return XNAV__INVISIBLE;
+
+  if ( !iohandler_p->IOSimulFlag)
+    return XNAV__INVISIBLE;
+
+  sts = gdh_AttrrefToName( objar, name, sizeof(name),
+			     cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return sts;
+
+  strcat( name, ".SimConnect");
+  sts = gdh_GetObjectInfo( name, (void *)&simconnect, sizeof(simconnect));
+  if ( EVEN(sts) || cdh_ObjidIsNull( simconnect.Objid))
+    return XNAV__INVISIBLE;
+
+  // Simconnect found
+  sts = gdh_GetAttrRefTid( &simconnect, &classid);
+  if ( EVEN(sts)) return XNAV__INVISIBLE;
+
+  sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			 classname, sizeof(classname), cdh_mName_object);
+  if ( EVEN(sts)) return sts;
+  cdh_ToLower( classname, classname);
+
+  if ( classname[0] == '$')
+    sprintf( fname, "$pwr_exe/pwr_c_%s.pwg", &classname[1]);
+  else
+    sprintf( fname, "$pwr_exe/pwr_c_%s.pwg", classname);
+  sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+  dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+  if ( EVEN(sts)) {
+    sprintf( fname, "$pwrp_exe/%s.pwg", classname);
+    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+  }
+  if ( ODD(sts))
+    return XNAV__SUCCESS;
+
+  return XNAV__INVISIBLE;
+}
+
 /////////////////////////////////////////////////////////////////////
 //
 //  Attribute methods
@@ -1523,6 +1622,8 @@ pwr_dExport pwr_BindXttMethods($Object) = {
   pwr_BindXttMethod(BlockEventsFilter),
   pwr_BindXttMethod(HelpClass),
   pwr_BindXttMethod(HelpClassFilter),
+  pwr_BindXttMethod(Simulate),
+  pwr_BindXttMethod(SimulateFilter),
   pwr_BindXttMethod(OpenTypeGraph),
   pwr_BindXttMethod(OpenTypeGraphFilter),
   pwr_BindXttMethod(RefOpenObject),
