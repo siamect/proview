@@ -1,0 +1,46 @@
+#
+# Class ManValve2Sw
+#
+<class> ManValve2Sw
+  @Version 1.0
+  @Group Valves
+  @Author cs
+  @Summary Handventil med två gränslägen.
+  Handventil med två gränslägen.
+
+<attr>SwOpen
+@Summary Gränsläge öppen
+Gränsläge öppen. Digital ingång som markerar att ventilen är öppen.
+</attr>
+
+<attr>SwClosed
+@Summry Gränsläge stängd
+Gränsläge stängd. Digital ingång som markerar att ventilen är stängd.
+</attr>
+
+<attr>HelpTopic
+@Summary Hjälp-text för objektet.
+Ett hjälp ämne (topic) i xtt-hjälp filen som innehåller hjälp för det
+här objektet. Hjälptexten kan visas från popup-menyn för objektet.
+</attr>
+
+<attr>DataSheet
+@Summary En URL till datablad för objektet.
+En URL till datablad för objektet. Databladet kan visas från popup-menyn
+för objektet.
+</attr>
+
+<attr>CircuitDiagram
+@Summary En URL till kopplings-schemat för utrustningen i det här objektet.
+En URL till kopplings-schemat för utrustningen i det här objektet.
+Kopplings-schemat kan visas från popup-menyn för objektet.
+
+Om attributet är tomt, kommer CircuitDiagram-metoden att leta efter nämrsta 
+förfader som har ett angivet kopplings-schema och använda denna URL istället.
+Om denna funktion ej önskas, lägg in strängen 'Disabled' i attributet. Detta
+kommer att stänga av CircuitDiagram-metoden för detta objekt, och för alla
+barn med tomt CircuitDiagram attribut.
+</attr>
+</class>
+
+

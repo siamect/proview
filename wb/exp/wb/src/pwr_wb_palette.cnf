@@ -619,21 +619,33 @@ palette PlcEditorPalette
   }
   menu Components 
   {
-    menu BaseComponent BaseComponent
+    menu BaseComponent
     {
       class ContactorFo
       class SafetySwitchFo
       class CircuitBreakerFo
       class TempSensorFo
       class BaseSensorFo
-      class CompModeFo
+      class CompModeDFo
+      class CompModeAFo
+      class CompModeAMFo
       class RunTimeCounterFo
-      class FanCbCoSsFo
+      class FanCbCoSsFo  
+      class ActuatorPoOr2SwFo
+      class ControlValvePoOr2SwFo
+      class ManualValve2SwFo
     }
-    menu ABB ABB
+    menu ABB
     {
-      class ABB_ACS800_1_Fo
-      class ABB_ACS800Pump1_Fo
+      class ABB_ACS800_1Fo
+      class ABB_ACS800Pump1Fo
+    }
+    menu Simulate
+    {
+      class ControlValvePoOr2SwSim
+      class FanCbCoSsSim
+      class BaseSensorSim
+      class ABB_ACS800Pump1Sim
     }
   }
 }
