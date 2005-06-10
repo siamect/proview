@@ -948,7 +948,7 @@ int CnvWblToHtml::bit_exec()
   fp_tmp <<
 "<HR>" << endl <<
 "<A NAME=\"" << ctx->rw->bit_name << "\"> <H3>" <<
-    "<FONT SIZE=\"-1\">pwr_" << bitchar << ctx->rw->typedef_name << "_" << ctx->rw->bit_pgmname << "</FONT>&nbsp;&nbsp" << ctx->rw->bit_text << "</H3></A>" << endl <<
+    "<FONT SIZE=\"-1\">pwr_" << bitchar << ctx->rw->typedef_name << "_" << ctx->rw->bit_pgmname << "</FONT>&nbsp;&nbsp;" << ctx->rw->bit_text << "</H3></A>" << endl <<
 "<DL><DT>" << endl <<
 "<CODE><B>Value</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->bit_value << "</CODE><DT>" << endl;
 
