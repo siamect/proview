@@ -967,6 +967,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-CollectFilter"
 	EndBody
       EndObject
+      Object Simulate $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Simulate"
+	  Attr MethodName = "$Object-Simulate"
+	  Attr FilterName = "$Object-SimulateFilter"
+	EndBody
+      EndObject
     EndObject
     Object RtXttAttrObject $RtMenu
       Object OpenGraph $MenuButton
