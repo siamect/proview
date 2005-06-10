@@ -30,7 +30,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 25
+#define	GOBJ_MAX_METHOD 26
 
 int	gobj_get_object_m0();
 int	gobj_get_object_m1();
@@ -58,6 +58,7 @@ int	gobj_get_object_m22();
 int	gobj_get_object_m23();
 int	gobj_get_object_m24();
 int	gobj_get_object_m25();
+int	gobj_get_object_m26();
 
 int	(* gobj_get_object_m[30]) () = {
 	&gobj_get_object_m0,
@@ -86,6 +87,7 @@ int	(* gobj_get_object_m[30]) () = {
  	&gobj_get_object_m23,
  	&gobj_get_object_m24,
  	&gobj_get_object_m25,
+ 	&gobj_get_object_m26,
 	};
 
 static int	gobj_expand_m0(	foe_ctx		foectx,
@@ -2490,6 +2492,8 @@ unsigned long	index;
 	case pwr_eType_UInt16:
 	case pwr_eType_Int8:
 	case pwr_eType_UInt8:
+	case pwr_eType_Enum:
+	case pwr_eType_Mask:
 	  /* Create a GetIp */
 	  create_classid = pwr_cClass_GetIp;
 	  strcpy( parname, "IpObject");
@@ -2628,6 +2632,8 @@ unsigned long	index;
 	case pwr_eType_UInt16:
 	case pwr_eType_Int8:
 	case pwr_eType_UInt8:
+	case pwr_eType_Enum:
+	case pwr_eType_Mask:
 	  /* Create a StoIp */
 	  strcpy( parname, "Object");
 	  create_classid = pwr_cClass_StoIp;
@@ -2694,6 +2700,71 @@ unsigned long	index;
 	gre_node_update( foectx->grectx, new_node);
 
 	if ( con_count > 0) XtFree((char *) con_list);
+
+	return FOE__SUCCESS;
+}
+
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m26()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Connect method for a connected simulation function object.
+*
+**************************************************************************/
+
+int	gobj_get_object_m26( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+        pwr_sAttrRef	attrref;
+	pwr_sAttrRef	nattrref;
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.wind)->hw.plc;
+	ldhses =(node->hn.wind)->hw.ldhses;
+
+        sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts) || is_attr == 1) { 
+	  foe_message( foectx,"Select an object in the navigator");
+	  BEEP;
+	  return sts;
+	}
+
+	/* Set the PlcConnect attribute in the current object */
+	sts = ldh_SetObjectPar( ldhses,
+		node->ln.oid, 
+		"RtBody", "PlcConnect",
+		(char *)&attrref, sizeof(attrref)); 
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"No PlcConnect attribute in object");
+	  BEEP;
+	  return sts;
+	}
+	/* Set the SimConnect attribute in the connected object */
+	nattrref = cdh_ObjidToAref( node->ln.oid);
+	sts = ldh_SetObjectPar( ldhses, attrref.Objid,
+		"RtBody", "SimConnect",
+		(char *)&nattrref, sizeof(nattrref)); 
+
+	gre_node_update( foectx->grectx, node);
+
+
+	gre_node_update( foectx->grectx, node);
 
 	return FOE__SUCCESS;
 }
