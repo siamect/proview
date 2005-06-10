@@ -22,6 +22,11 @@ menu Process
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
+  subgraph 	ValveControl2	pwr_exe:pwr_valvecontrol2.pwsg 		2
+  subgraph	BaseValve	pwr_exe:pwr_basevalve.pwsg		6
+  subgraph	BaseValve2	pwr_exe:pwr_basevalve2.pwsg		6
+  subgraph	Actuator	pwr_exe:pwr_actuator.pwsg		6
+  subgraph	HandWheel	pwr_exe:pwr_handwheel.pwsg		6
   subgraph 	Thermometer	pwr_exe:pwr_thermometer.pwsg 		28
   subgraph 	Burner		pwr_exe:pwr_burner.pwsg 		6
   subgraph 	Switch		pwr_exe:pwr_switch.pwsg 		16
@@ -122,6 +127,7 @@ menu Pushbuttons
     subgraph 	MbPhoto	 	pwr_exe:pwr_mbphoto.pwsg		7
     subgraph 	MbRtNavigator 	pwr_exe:pwr_mbrtnavigator.pwsg		7
     subgraph 	MbTrend	 	pwr_exe:pwr_mbtrend.pwsg		7
+    subgraph 	MbSimulate 	pwr_exe:pwr_mbsimulate.pwsg		7
   }
 }
 menu Sliders
@@ -129,6 +135,7 @@ menu Sliders
   subgraph 	SliderArrow 	pwr_exe:pwr_sliderarrow.pwsg		37
   subgraph 	Slider1 	pwr_exe:pwr_slider1.pwsg		37
   subgraph 	SliderBackground1 pwr_exe:pwr_sliderbackground1.pwsg	38
+  subgraph 	SliderBackground1_2 pwr_exe:pwr_sliderbackground1_2.pwsg 38
   subgraph 	Slider2 	pwr_exe:pwr_slider2.pwsg		37
   subgraph 	SliderBackground2 pwr_exe:pwr_sliderbackground2.pwsg	38
   subgraph 	Slider3 	pwr_exe:pwr_slider3.pwsg		37
@@ -175,9 +182,15 @@ menu Other
 {
   menu BaseComponent
   {
-    subgraph    ManualValve2Switch pwr_exe:bcomp_manualvalve2switch.pwsg 4
-    subgraph    Fan 		pwr_exe:bcomp_fan.pwsg 			6
+    subgraph    ManualValve2Sw pwr_exe:bcomp_manualvalve2sw.pwsg 	4
+    subgraph    ManualValveSwOp pwr_exe:bcomp_manualvalveswop.pwsg 	4
+    subgraph    ManualValveSwCl pwr_exe:bcomp_manualvalveswcl.pwsg 	4
+    subgraph    ManualValveNoSw pwr_exe:bcomp_manualvalvenosw.pwsg 	4
+    subgraph    FanCoCbSs 	pwr_exe:bcomp_fancocbss.pwsg 		6
+    subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
+    subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
     subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
+    subgraph	ABB_ACS800Pump  pwr_exe:mcomp_abb_acs800pump.pwsg	16
   }
   menu Animations
   {
