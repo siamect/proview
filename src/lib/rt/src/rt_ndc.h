@@ -50,11 +50,14 @@ pwr_tBoolean
 ndc_ConvertData (
   pwr_tStatus		*sts,
   const gdb_sNode	*np,
+  gdb_sClass            *cp,
   const pwr_sAttrRef	*arp,
   void			*tp,	/* Address of target.  */
   const void		*sp,	/* Address of source.  */
-  pwr_tUInt32		size,	/* Size of source.  */
-  ndc_eOp		op
+  pwr_tUInt32		*size,	/* Size of source.  */
+  ndc_eOp		op,
+  pwr_tUInt32           offset,
+  pwr_tUInt32           offs
 );
 
 /**
@@ -71,7 +74,11 @@ ndc_ConvertNativeToRemoteData (
   const pwr_sAttrRef	*narp,  /**< Native attribute reference */
   void			*tp,	/**< Address of target.  */
   const void		*sp,	/**< Address of source.  */
-  pwr_tUInt32		size	/**< Size of target buffer.  */
+  pwr_tUInt32		*size,	/**< Size of target buffer.  */
+  pwr_tUInt32           offset, /**< Offset in class */
+  pwr_tUInt32           toffs,  /**< Offset i ntarget buffer */
+  pwr_tUInt32           soffs,  /**< Offset i source buffer */
+  pwr_tNodeId           nid     /**< Node id */
 );
 
 /**
@@ -85,8 +92,10 @@ ndc_ConvertRemoteData (
   const pwr_sAttrRef	*arp,
   void			*tp,	/* Address of target.  */
   const void		*sp,	/* Address of source.  */
-  pwr_tUInt32		size,	/* Size of source.  */
-  ndc_eOp		op
+  pwr_tUInt32		*size,	/* Size of source.  */
+  ndc_eOp		op,
+  pwr_tUInt32           offset, /**< Offset to attribute in class.  */
+  pwr_tUInt32           offs    /**< Offset in buffer.  */
 );
 
 
@@ -105,7 +114,11 @@ ndc_ConvertRemoteToNativeData (
   const pwr_sAttrRef	*narp,  /**< Native attribute reference */
   void			*tp,	/**< Address of target.  */
   const void		*sp,	/**< Address of source.  */
-  pwr_tUInt32		size	/**< Size of target buffer.  */
+  pwr_tUInt32		*size,	/**< Size of target buffer.  */
+  pwr_tUInt32           offset, /**< Offset in class */
+  pwr_tUInt32           toffs,  /**< Offset i ntarget buffer */
+  pwr_tUInt32           soffs,  /**< Offset i source buffer */
+  pwr_tNodeId           nid     /**< Node id */
 );
 
 /**
@@ -115,13 +128,18 @@ ndc_ConvertRemoteToNativeData (
 pwr_tBoolean
 ndc_ConvertRemoteToNativeTable (
   pwr_tStatus			*sts,
-  const gdb_sCclass		*ccp,	/**< Cached class */
+  const gdb_sCclass		*ccp,	 /**< Cached class */
   const ndc_sRemoteToNative	*tbl,
-  const pwr_sAttrRef		*rarp,  /**< Remote attribute reference */
-  const pwr_sAttrRef		*narp,  /**< Native attribute reference */
-  void				*tp,	/**< Address of target.  */
-  const void			*sp,	/**< Address of source.  */
-  pwr_tUInt32			size	/**< Size of target buffer.  */
+  const pwr_sAttrRef		*rarp,   /**< Remote attribute reference */
+  const pwr_sAttrRef		*narp,   /**< Native attribute reference */
+  void				*tp,	 /**< Address of target.  */
+  const void			*sp,	 /**< Address of source.  */
+  pwr_tUInt32			*size,	 /**< Size of target buffer.  */
+  pwr_tUInt32			offset,  /**< Offset to attribute in class.  */
+  pwr_tUInt32			toffs,	 /**< Offset in target buffer.  */
+  pwr_tUInt32			soffs,	 /**< Offset in source buffer.  */
+  pwr_tBoolean			*first,	 /**< First scan.  */
+  pwr_tNodeId			nid	 /**< Node id  */
   );
 
 
@@ -132,13 +150,17 @@ ndc_ConvertRemoteToNativeTable (
  */
 pwr_sAttrRef *
 ndc_NarefToRaref(
-  pwr_tStatus 		*sts,  /**< Status */
-  const mvol_sAttribute	*ap,   /**< Native mvol attribute */
-  const pwr_sAttrRef	*narp, /**< Native attribute reference */ 
-  const gdb_sCclass	*ccp,  /**< Cached class */
-  pwr_tUInt32		*ridx, /**< Attribute index in ccp or UINT_LONG if whole object*/
-  pwr_sAttrRef		*rarp, /**< Remote attribute reference */
-  pwr_tBoolean		*equal /**< Set if the attribute references are equal */
+  pwr_tStatus 		*sts,   /**< Status */
+  mvol_sAttribute	*ap,    /**< Native mvol attribute */
+  pwr_sAttrRef	        *narp,  /**< Native attribute reference */ 
+  gdb_sCclass	        *ccp,   /**< Cached class */
+  pwr_tUInt32		*ridx,  /**< Attribute index in ccp or UINT_LONG if whole object */
+  pwr_sAttrRef		*rarp,  /**< Remote attribute reference */
+  pwr_tBoolean		*equal, /**< Set if the attribute references are equal, not checked if whole object */
+  cdh_sParseName        *pn,    /**< Not NULL if called from Get-/SetObjectInfo */
+  gdb_sCclass           *ccpLocked,
+  gdb_sVolume           *vp,
+  gdb_sNode             *np
 );
 
 ndc_sRemoteToNative *
@@ -147,7 +169,8 @@ ndc_UpdateRemoteToNativeTable(
   ndc_sRemoteToNative	*tbl,  
   pwr_tUInt32		tcnt, /**< # table entries */ 
   const gdb_sClass	*cp,
-  const gdb_sCclass	*ccp
+  const gdb_sCclass	*ccp,
+  pwr_tNodeId           nid
   );
 
 

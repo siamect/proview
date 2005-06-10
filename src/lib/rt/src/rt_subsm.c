@@ -284,6 +284,8 @@ subsm_SendBuffer (
   pwr_tBoolean		remote = (bp->nid != gdbroot->db->nid);
   pool_sQlink		*sl;
   void			*data;
+  gdb_sClass		*classp;
+  cdh_uTypeId		cid;
 
   gdb_AssumeLocked;
 
@@ -363,7 +365,12 @@ subsm_SendBuffer (
       dp->sts = sp->sts;
 
       if (ODD(sp->sts)) {
-	ndc_ConvertData(&dp->sts, np, &sp->aref, dp->data, data, sp->aref.Size, ndc_eOp_encode);
+        size = sp->aref.Size;
+        cid.pwr = sp->aref.Body;
+        cid.c.bix = 0;	/* To get the class id.  */
+        classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
+        if (classp == NULL)
+	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, &size, ndc_eOp_encode, sp->aref.Offset, 0);
 	sp->count++;
 	mp->count++;
       }

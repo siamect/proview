@@ -111,6 +111,7 @@ subcm_Data (
   qcom_sQid		tgt;
   gdb_sCclass		*ccp;
   ndc_sRemoteToNative	*tbl;
+  int                   rsize;
   
 
   clock_gettime(CLOCK_REALTIME, &curtim);
@@ -180,15 +181,26 @@ subcm_Data (
 	refcount++;
 
 	if (1 || mp->msg.hdr.xdr) {
-          if (cp->cclass == pool_cNRef)
-            ndc_ConvertData(&sts, np, &cp->aref, dp->data, dp->data, dp->size, ndc_eOp_decode);
+          if (cp->cclass == pool_cNRef) {
+            gdb_sClass		*classp;
+            cdh_uTypeId		cid;
+
+            cid.pwr = cp->aref.Body;
+            cid.c.bix = 0;	/* To get the class id.  */
+            classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
+	    rsize = dp->size;
+
+            if (classp != NULL)
+              ndc_ConvertData(&sts, np, classp, &cp->aref, dp->data, dp->data, &rsize, ndc_eOp_decode, cp->aref.Offset, 0);
+	  }
           else {
             cp->old = TRUE;
             ccp = pool_Address(&cp->sts, gdbroot->pool, cp->cclass);
             if (ccp != NULL) {
               tbl = pool_Address(&cp->sts, gdbroot->pool, ccp->rnConv);
-              if (tbl != NULL) {   
-                ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data, dp->data, dp->size, ndc_eOp_decode);
+              if (tbl != NULL) {
+	        rsize = dp->size;
+                ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data, dp->data, &rsize, ndc_eOp_decode, cp->raref.Offset, 0);
                 if (ODD(cp->sts))
                   cp->old = FALSE;
               }
@@ -207,7 +219,10 @@ subcm_Data (
             if (cp->cclass == pool_cNRef)
               memcpy(adrs, dp->data, MIN(dp->size, cp->usersize));
             else if (!cp->old) {
-              ndc_ConvertRemoteToNativeTable(&cp->sts, ccp, tbl, &cp->raref, &cp->aref, adrs, dp->data, cp->usersize);
+              pwr_tUInt32  size = cp->usersize;
+              pwr_tBoolean first = 1;
+              ndc_ConvertRemoteToNativeTable(&cp->sts, ccp, tbl, &cp->raref, &cp->aref, adrs, dp->data, &size, 
+                                             cp->aref.Offset, 0, 0, &first, np->nid);
               if (EVEN(cp->sts))
                 cp->old = TRUE;
             }

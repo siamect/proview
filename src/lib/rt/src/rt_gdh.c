@@ -605,7 +605,7 @@ gdh_GetObjectInfo (
     ccp = NULL;
     /* Get cached class if needed */
     if (!ap->op->u.c.flags.b.classChecked || !ap->op->u.c.flags.b.classEqual) {
-      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched);
+      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched, NULL);
       if (EVEN(sts)) {
         np = NULL;
         break;
@@ -630,7 +630,7 @@ gdh_GetObjectInfo (
       if (equal)
         break;
 
-      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal);        
+      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal, pn, ccpLocked, vp, np);        
     }
     break;    
   } while (1);
@@ -717,7 +717,7 @@ gdh_GetObjectInfoAttrref (
     ccp = NULL;
     /* Get cached class if needed */
     if (!ap->op->u.c.flags.b.classChecked || !ap->op->u.c.flags.b.classEqual) {
-      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched);
+      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched, NULL);
       if (EVEN(sts)) {
         np = NULL;
         break;
@@ -740,7 +740,7 @@ gdh_GetObjectInfoAttrref (
       if (equal)
         break;
         
-      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal);
+      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal, NULL, ccpLocked, vp, np);
     }
 
     break;    
@@ -2062,7 +2062,7 @@ gdh_SetObjectInfo (
     ccp = NULL;
     /* Get cached class if needed */
     if (!ap->op->u.c.flags.b.classChecked || !ap->op->u.c.flags.b.classEqual) {
-      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched);
+      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched, NULL);
       if (EVEN(sts)) {
         np = NULL;
         break;
@@ -2087,7 +2087,7 @@ gdh_SetObjectInfo (
       if (equal)
         break;
 
-      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal);        
+      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal, pn, ccpLocked, vp, np);        
       
     }
     break;        
@@ -2175,7 +2175,7 @@ gdh_SetObjectInfoAttrref (
     ccp = NULL;
     /* Get cached class if needed */
     if (!ap->op->u.c.flags.b.classChecked || !ap->op->u.c.flags.b.classEqual) {
-      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched);
+      ccp = cmvolc_GetCachedClass(&sts, np, vp, ap, &equal, &fetched, NULL);
       if (EVEN(sts)) {
         np = NULL;
         break;
@@ -2198,7 +2198,7 @@ gdh_SetObjectInfoAttrref (
       if (equal)
         break;
         
-      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal);
+      rarp = ndc_NarefToRaref(&sts, ap, arp, ccp, &ridx, &raref, &equal, NULL, ccpLocked, vp, np);
     }
 
     break;
@@ -2510,6 +2510,8 @@ gdh_SubData (
       if (cp->cclass != pool_cNRef) {
         gdb_sCclass 		*ccp;
         ndc_sRemoteToNative	*tbl;
+        pwr_tUInt32             size;
+        pwr_tBoolean            first = 1;
 
         ccp = pool_Address(NULL, gdbroot->pool, cp->cclass);
         if (ccp == NULL) errh_Bugcheck(GDH__WEIRD, "gdh_SubData, get cached class address");
@@ -2519,7 +2521,8 @@ gdh_SubData (
         tbl = pool_Address(NULL, gdbroot->pool, ccp->rnConv);
         if (tbl == NULL)errh_Bugcheck(GDH__WEIRD, "gdh_SubData, get cached class address");
 
-        ndc_ConvertRemoteToNativeTable(&sts, ccp, tbl, &cp->raref, &cp->aref, bp, p, MIN(bsize, cp->aref.Size));
+        size =  MIN(bsize, cp->aref.Size);
+        ndc_ConvertRemoteToNativeTable(&sts, ccp, tbl, &cp->raref, &cp->aref, bp, p, &size, cp->aref.Offset, 0, 0, &first, cp->nid);
 
       } else    
         memcpy(bp, p, MIN(bsize, cp->aref.Size));

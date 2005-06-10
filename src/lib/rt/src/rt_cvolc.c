@@ -109,6 +109,9 @@ cvolc_GetObjectInfo (
   net_sGetObjectInfoR	*rmp;	/* Receive message.  */
   pwr_tBoolean		equal;
   ndc_sRemoteToNative	*tbl = NULL;
+  pwr_tBoolean          first = 1;
+  int                   rsize;
+  cdh_uTypeId		cid;
   
   gdb_AssumeUnlocked;
   pwr_Assert(sts != NULL);
@@ -137,7 +140,13 @@ cvolc_GetObjectInfo (
     if (ODD(rmp->sts)) {
       size = MIN(arp->Size, size);
       if (ccp == NULL || equal) {
-        ndc_ConvertData(sts, np, arp, p, rmp->info, size, ndc_eOp_decode);
+        gdb_sClass  *cp; 
+        cid.pwr = arp->Body;
+        cid.c.bix = 0;	/* To get the class id.  */
+        cp = hash_Search(sts, gdbroot->cid_ht, &cid.pwr);
+        if (cp != NULL) {
+	  ndc_ConvertData(sts, np, cp, arp, p, rmp->info, &size, ndc_eOp_decode, arp->Offset, 0);
+	}
       } else {
 
         if (!ccp->flags.b.rnConv && ap->aop == NULL) { /* whole object */
@@ -152,7 +161,7 @@ cvolc_GetObjectInfo (
               if (tbl == NULL)
                 break;                
 
-              ndc_UpdateRemoteToNativeTable(sts, tbl, ap->cp->acount, ap->cp, ccp);
+              ndc_UpdateRemoteToNativeTable(sts, tbl, ap->cp->acount, ap->cp, ccp, np->nid);
               if (ODD(*sts)) {
                 ccp->rnConv = pool_Reference(NULL, gdbroot->pool, tbl);
                 ccp->flags.b.rnConv = 1;
@@ -165,7 +174,8 @@ cvolc_GetObjectInfo (
           } gdb_ScopeUnlock;
         }
         
-        ndc_ConvertRemoteData(sts, np, ccp, rarp, rmp->info, rmp->info, rarp->Size, ndc_eOp_decode);
+	rsize   = rarp->Size;
+        ndc_ConvertRemoteData(sts, np, ccp, rarp, rmp->info, rmp->info, &rsize, ndc_eOp_decode, rarp->Offset, 0);
         if (ODD(*sts)) {
           if (ccp->flags.b.rnConv) {
             if (tbl == NULL) {
@@ -173,13 +183,16 @@ cvolc_GetObjectInfo (
               if (tbl == NULL)
                 errh_Bugcheck(*sts, "failed getting address for conversion table");
             }
-            ndc_ConvertRemoteToNativeTable(sts, ccp, tbl, rarp,
-                                               arp, p, rmp->info, size);
+            gdb_ScopeLock {
+              ndc_ConvertRemoteToNativeTable(sts, ccp, tbl, rarp,
+                                               arp, p, rmp->info, &size,
+					       arp->Offset, 0, 0, &first, np->nid);
+            } gdb_ScopeUnlock;
 
           } else {
             /* The object pointer may be invalid after gdb has been open, reset it */
             ap->op = NULL;
-            ndc_ConvertRemoteToNativeData(sts, ccp, ridx, ap, rarp, arp, p, rmp->info, size);
+            ndc_ConvertRemoteToNativeData(sts, ccp, ridx, ap, rarp, arp, p, rmp->info, &size, arp->Offset, 0, 0, np->nid);
           }
         }
       }      
@@ -364,6 +377,8 @@ cvolc_SetObjectInfo (
   int			msize;
   net_sSetObjectInfoR	*rmp;
   pwr_tBoolean		equal;
+  int                   rsize;
+  cdh_uTypeId		cid;
 
   gdb_AssumeUnlocked;
 
@@ -389,14 +404,22 @@ cvolc_SetObjectInfo (
   smp->size = rarp->Size;
   smp->aref = *rarp;
 
-  if (equal)
-    ndc_ConvertData(sts, np, arp, smp->info, p, size, ndc_eOp_encode);
-  else {
+  if (equal) {
+    gdb_sClass		*cp;
+    cid.pwr = arp->Body;
+    cid.c.bix = 0;	/* To get the class id.  */
+    cp = hash_Search(sts, gdbroot->cid_ht, &cid.pwr);
+    if (cp != NULL) {
+      ndc_ConvertData(sts, np, cp, arp, smp->info, p, &size, ndc_eOp_encode, arp->Offset, 0);
+    }
+  } else {
     /* The object pointer may be invalid after gdb has been open, reset it */
     ap->op = NULL;
-    ndc_ConvertNativeToRemoteData(sts, ccp, ridx, ap, rarp, arp, smp->info, p, rarp->Size);
+    rsize = rarp->Size;
+    ndc_ConvertNativeToRemoteData(sts, ccp, ridx, ap, rarp, arp, smp->info, p, &rsize, rarp->Offset, 0, 0, np->nid);
     if (ODD(*sts)) {
-      ndc_ConvertRemoteData(sts, np, ccp, rarp, smp->info, smp->info, rarp->Size, ndc_eOp_encode);
+      rsize   = rarp->Size;
+      ndc_ConvertRemoteData(sts, np, ccp, rarp, smp->info, smp->info, &rsize, ndc_eOp_encode, rarp->Offset, 0);
     }    
     if (EVEN(*sts)) {
       net_Free(NULL, smp);

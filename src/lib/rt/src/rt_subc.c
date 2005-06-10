@@ -180,6 +180,7 @@ testClient (
   pwr_sAttrRef		*arp;
   pwr_sAttrRef		*rarp;
   gdb_sCclass		*ccp;
+  gdb_sCclass		*ccpLocked;
   pool_tRef		ccr;
   pwr_tUInt32		ridx;
   pwr_tBoolean		equal;
@@ -217,7 +218,7 @@ testClient (
         
         /* Get cached class if needed */
         if (!op->u.c.flags.b.classChecked || !op->u.c.flags.b.classEqual) {
-          ccp = cmvolc_GetCachedClass(&lsts, np, vp, ap, &equal, &fetched);
+          ccp = cmvolc_GetCachedClass(&lsts, np, vp, ap, &equal, &fetched, NULL);
           if (EVEN(lsts)) {
             np = NULL;
             op = NULL;
@@ -298,7 +299,7 @@ testClient (
         if (!op->u.c.flags.b.classChecked || !op->u.c.flags.b.classEqual) {
 	  ap = vol_ArefToAttribute(&lsts, &attribute, &cp->aref, gdb_mLo_global, vol_mTrans_all);
 	  if (ap == NULL) break;
-          ccp = cmvolc_GetCachedClass(&lsts, np, vp, ap, &equal, &fetched);
+          ccp = cmvolc_GetCachedClass(&lsts, np, vp, ap, &equal, &fetched, NULL);
           if (EVEN(lsts)) {
             np = NULL;
             op = NULL;
@@ -363,10 +364,11 @@ testClient (
       np = pool_Address(NULL, gdbroot->pool, vp->l.nr);
 
       if (!equal) {
-        
-        rarp = ndc_NarefToRaref(sts, ap, arp, ccp, &ridx, &cp->raref, &equal);        
+        ccpLocked = ccp;
+        rarp = ndc_NarefToRaref(sts, ap, arp, ccp, &ridx, &cp->raref, &equal, NULL, ccpLocked, vp, np );        
         if (rarp == NULL || equal) {
-          cmvolc_UnlockClass(NULL, ccp);
+	  if (ccp->flags.b.cacheLock)
+            cmvolc_UnlockClass(NULL, ccp);
           cp->cclass = pool_cNRef;
           if (rarp == NULL)
             np = gdbroot->no_node;
@@ -378,7 +380,7 @@ testClient (
 
             tbl = pool_Alloc(sts, gdbroot->pool, sizeof(*tbl) * c->acount);
 
-            ndc_UpdateRemoteToNativeTable(sts, tbl, c->acount, c, ccp);
+            ndc_UpdateRemoteToNativeTable(sts, tbl, c->acount, c, ccp, np->nid);
             if (ODD(*sts)) {
               ccp->rnConv = pool_Reference(NULL, gdbroot->pool, tbl);
               ccp->flags.b.rnConv = 1;

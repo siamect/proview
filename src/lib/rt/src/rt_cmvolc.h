@@ -31,7 +31,8 @@ cmvolc_GetCachedClass (
   const gdb_sVolume	*vp,
   mvol_sAttribute	*ap,
   pwr_tBoolean		*equal, /**< set if classes are equal then NULL is returned */
-  pwr_tBoolean		*fetched /**< true if the class has been fected from the remote node */
+  pwr_tBoolean		*fetched, /**< true if the class has been fected from the remote node */
+  gdb_sClass            *cp
   );
 
 void

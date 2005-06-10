@@ -227,6 +227,8 @@ cvolsm_GetObjectInfo (
   net_sGetObjectInfo	*mp = get->data;
   qcom_sPut		put;
   gdb_sNode		*np;
+  cdh_uTypeId		cid;
+  gdb_sClass		*cp;
 
   gdb_AssumeUnlocked;
 
@@ -247,9 +249,14 @@ cvolsm_GetObjectInfo (
 
   } gdb_ScopeUnlock;
 
-  if (p != NULL)
-    ndc_ConvertData(&sts, np, &mp->aref, rmp->info, p, mp->aref.Size, ndc_eOp_encode);
-
+  if (p != NULL) {
+    size = mp->aref.Size;
+    cid.pwr = mp->aref.Body;
+    cid.c.bix = 0;	/* To get the class id.  */
+    cp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
+    if (cp != NULL)    
+      ndc_ConvertData(&sts, np, cp, &mp->aref, rmp->info, p, &size, ndc_eOp_encode, mp->aref.Offset, 0);
+  }
   rmp->aref = mp->aref;
   rmp->sts  = sts;
   rmp->size = mp->aref.Size;
@@ -349,6 +356,9 @@ cvolsm_SetObjectInfo (
   qcom_sPut		put;
   net_sSetObjectInfo	*mp = get->data;
   gdb_sNode		*np;
+  int                   size;
+  cdh_uTypeId		cid;
+  gdb_sClass		*cp;
 
   gdb_AssumeUnlocked;
 
@@ -367,8 +377,14 @@ cvolsm_SetObjectInfo (
 
   } gdb_ScopeUnlock;
 
-  if (p != NULL)
-    ndc_ConvertData(&sts, np, &mp->aref, p, mp->info, mp->aref.Size, ndc_eOp_decode);
+  if (p != NULL) {
+    size = mp->aref.Size;
+    cid.pwr = mp->aref.Body;
+    cid.c.bix = 0;	/* To get the class id.  */
+    cp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
+    if (cp != NULL)    
+      ndc_ConvertData(&sts, np, cp, &mp->aref, p, mp->info, &size, ndc_eOp_decode, mp->aref.Offset, 0);
+  }
 
   rmp->aref = mp->aref;
   rmp->sts  = sts;

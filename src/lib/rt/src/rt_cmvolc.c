@@ -78,7 +78,8 @@ cmvolc_GetCachedClass (
   const gdb_sVolume	*vp,
   mvol_sAttribute	*ap,
   pwr_tBoolean		*equal, /**< set if classes are equal then NULL is returned */
-  pwr_tBoolean		*fetched /**< true if the class has been fected from the remote node */
+  pwr_tBoolean		*fetched, /**< true if the class has been fected from the remote node */
+  gdb_sClass            *cp
 )
 {
   qcom_sQid		tgt;
@@ -93,6 +94,8 @@ cmvolc_GetCachedClass (
   pwr_tUInt32		size;
   pwr_tUInt32		nextIdx = 0;
   pwr_tUInt32		stopIdx;
+  gdb_sObject           *cop;
+  pwr_tTime             time;
 
   gdb_AssumeLocked;
   
@@ -103,16 +106,20 @@ cmvolc_GetCachedClass (
   /* Handle nodes that don't support cached classes */
   if (!np->cclassSupport) {
     *equal = 1;
-    ap->op->u.c.flags.b.classChecked = 1;
-    ap->op->u.c.flags.b.classEqual = 1;
+    if (cp == NULL) {
+      ap->op->u.c.flags.b.classChecked = 1;
+      ap->op->u.c.flags.b.classEqual = 1;
+    }
     pwr_Return(NULL, sts, GDH__SUCCESS);
   }
   
-
   /** @todo Check vp->u.c.equalClasses first (when implemented) */
 
   ccvKey.nid = np->nid;
-  ccvKey.vid = ap->op->g.cid >> 16; /* Class Id to Class Volume Id */
+  if (cp == NULL)
+    ccvKey.vid = ap->op->g.cid >> 16; /* Class Id to Class Volume Id */
+  else
+    ccvKey.vid = cp->cid >> 16;
   
 
   ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
@@ -121,28 +128,40 @@ cmvolc_GetCachedClass (
     /** @todo Verify that this bugcheck is valid */
   }
   
-  if (ccvp->equalClasses) {
+  /* If cp is not NULL then we always fetch the class */
+  
+  if (ccvp->equalClasses && cp == NULL) {
     *equal = 1;
     ap->op->u.c.flags.b.classChecked = 1;
     ap->op->u.c.flags.b.classEqual = 1;
     pwr_Return(NULL, sts, GDH__SUCCESS);
   }
   
-  ccKey.cid = ap->op->g.cid;
+  if (cp != NULL) {
+    ccKey.cid = cp->cid;
+    cop = pool_Address(NULL, gdbroot->pool, cp->cor);
+    time = cop->u.n.time;
+  }
+  else {
+    ccKey.cid = ap->op->g.cid;
+    time = ap->cop->u.n.time;
+  }
   ccKey.ccvoltime = ccvp->time;
 
   ccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
   if (ccp != NULL) {
     cmvolc_TouchClass(ccp);
 
-    if (time_Acomp(&ap->cop->u.n.time, &ccp->time) == 0) {
+    if (time_Acomp(&time, &ccp->time) == 0 && cp == NULL) {
       *equal = 1;
       ap->op->u.c.flags.b.classChecked = 1;
       ap->op->u.c.flags.b.classEqual = 1;
       pwr_Return(NULL, sts, GDH__SUCCESS);
     } else {
-      ap->op->u.c.flags.b.classChecked = 1;
-      ap->op->u.c.flags.b.classEqual = 0;
+      if (cp == NULL) {
+        ap->op->u.c.flags.b.classChecked = 1;
+        ap->op->u.c.flags.b.classEqual = 0;
+      }
       pwr_Return(ccp, sts, GDH__SUCCESS);
     }
   }
@@ -151,76 +170,127 @@ cmvolc_GetCachedClass (
 
   *fetched = 1;
   
-  do {
-    gdb_Unlock;
-    
-    smp = net_Alloc(sts, &put, sizeof(*smp), net_eMsg_getCclass);
-    if (smp == NULL)
-      goto netError;
-    
-    tgt.nid = np->nid;
-    tgt.qix = net_cProcHandler;
-    smp->ver = net_cVersion;
-    smp->cid = ccKey.cid;
-    smp->time = ap->cop->u.n.time;
-    smp->aidx = nextIdx;
-    
-    rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getCclassR);
-    if (rmp == NULL || EVEN(rmp->sts))
-      goto netError;
-    
-    gdb_Lock;
-
-    if (ccp == NULL) {      
-      if (rmp->equal)
-        size = sizeof(*ccp);
-      else
-        size = sizeof(*ccp) + (rmp->cclass.acount - 1) * sizeof(ccp->attr[0]);
-
-      ccp = pool_Alloc(sts, gdbroot->pool, size);
-      if (ccp == NULL) {
-        net_Free(NULL, rmp);
-        return NULL;
-      }
-
-      if (rmp->equal) {
-        ccp->size = 0;
-        ccp->time = ap->cop->u.n.time;
-      } else {
-        ccp->size = rmp->cclass.size;
-        ccp->time = rmp->cclass.time;
-      }
-      
-      
-    }
-    
-
-    if (rmp->equal) {
-      *equal = 1;
-      ccp->acount = 0;
-    } else {
-      nextIdx = rmp->naidx;
-      stopIdx = nextIdx != ULONG_MAX ? nextIdx : rmp->cclass.acount;
-        
-      for (i = rmp->saidx; i < stopIdx; i++)
-        ccp->attr[i] = rmp->attr[i];
-
-      ccp->acount = rmp->cclass.acount;  
-    }
-      
-    net_Free(NULL, rmp);
-    rmp = NULL;
-
-  } while(!*equal && nextIdx != ULONG_MAX);
+  /* If classes equal, create cached class */
   
+  if (ccvp->equalClasses && cp != NULL) {
+
+    *fetched = 0;
+    size = sizeof(*ccp) + (cp->acount - 1) * sizeof(ccp->attr[0]);
+    ccp = pool_Alloc(sts, gdbroot->pool, size);
+    if (ccp == NULL) {
+      return NULL;
+    }
+
+    *equal = 1;
+
+    ccp->size = cp->size;
+    ccp->time = time;
+
+
+    for (i = 0; i < cp->acount; i++) {
+      ccp->attr[i].aix     = cp->attr[i].aix;
+      ccp->attr[i].flags   = cp->attr[i].flags;
+      ccp->attr[i].type    = cp->attr[i].type;
+      ccp->attr[i].offs    = cp->attr[i].offs;
+      ccp->attr[i].size    = cp->attr[i].size;
+      ccp->attr[i].elem    = cp->attr[i].elem;
+      ccp->attr[i].moffset = cp->attr[i].moffset;
+    }
+
+    ccp->acount = cp->acount;
+
+  } else {
+    do {
+      gdb_Unlock;
+    
+      smp = net_Alloc(sts, &put, sizeof(*smp), net_eMsg_getCclass);
+      if (smp == NULL)
+        goto netError;
+    
+      tgt.nid = np->nid;
+      tgt.qix = net_cProcHandler;
+      smp->ver = net_cVersion;
+      smp->cid = ccKey.cid;
+      smp->time = time;
+      smp->aidx = nextIdx;
+    
+      rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getCclassR);
+      if (rmp == NULL || EVEN(rmp->sts))
+        goto netError;
+    
+      gdb_Lock;
+
+      if (ccp == NULL) {      
+        if (rmp->equal && cp == NULL)
+          size = sizeof(*ccp);
+        else if (rmp->equal && cp != NULL)
+          size = sizeof(*ccp) + (cp->acount - 1) * sizeof(ccp->attr[0]);
+        else
+          size = sizeof(*ccp) + (rmp->cclass.acount - 1) * sizeof(ccp->attr[0]);
+
+        ccp = pool_Alloc(sts, gdbroot->pool, size);
+        if (ccp == NULL) {
+          net_Free(NULL, rmp);
+          return NULL;
+        }
+
+        if (rmp->equal && cp == NULL) {
+          ccp->size = 0;
+          ccp->time = time;
+        } else if (rmp->equal && cp != NULL) {
+          ccp->size = cp->size;
+          ccp->time = time;
+        } else {
+          ccp->size = rmp->cclass.size;
+          ccp->time = rmp->cclass.time;
+        }
+      }
+    
+
+      if (rmp->equal && cp == NULL) {
+        *equal = 1;
+        ccp->acount = 0;
+      } else if (rmp->equal && cp != NULL) {
+        *equal = 1;
+
+        for (i = 0; i < cp->acount; i++) {
+          ccp->attr[i].aix     = cp->attr[i].aix;
+          ccp->attr[i].flags   = cp->attr[i].flags;
+          ccp->attr[i].type    = cp->attr[i].type;
+          ccp->attr[i].offs    = cp->attr[i].offs;
+          ccp->attr[i].size    = cp->attr[i].size;
+          ccp->attr[i].elem    = cp->attr[i].elem;
+          ccp->attr[i].moffset = cp->attr[i].moffset;
+        }
+
+        ccp->acount = cp->acount;
+
+      } else {
+        nextIdx = rmp->naidx;
+        stopIdx = nextIdx != ULONG_MAX ? nextIdx : rmp->cclass.acount;
+        
+        for (i = rmp->saidx; i < stopIdx; i++)
+          ccp->attr[i] = rmp->attr[i];
+
+        ccp->acount = rmp->cclass.acount;  
+      }
+      
+      net_Free(NULL, rmp);
+      rmp = NULL;
+
+    } while(!*equal && nextIdx != ULONG_MAX);
+  }
 
   ccp->key = ccKey;
   ccp->flags.b.equal = *equal;
   
   ccp = linkCclass(sts, ccp);
   
-  if (*equal)
+  if (*equal && cp == NULL)
     ccp = NULL;
+  
+  if (cp != NULL)
+    *equal = 0;
   
   return ccp;
 

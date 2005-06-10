@@ -23,6 +23,7 @@
 #include "rt_cvolc.h"
 #include "rt_ndc.h"
 #include "rt_ndc_msg.h"
+#include "rt_cmvolc.h"
 
 
 /* Vax f-float on a little endian machine.
@@ -159,6 +160,7 @@ union i3e_s_be {
 # define ENDIAN_SWAP_BOOL(t, s) ENDIAN_SWAP_INT(t, s)
 #endif
 
+#define touchObject(op)  if (op != NULL && op->l.flags.b.isCached) cvolc_TouchObject(op)
 
 
 #ifndef __powerpc__
@@ -632,18 +634,21 @@ pwr_tBoolean
 ndc_ConvertData (
   pwr_tStatus		*sts,
   const gdb_sNode	*np,
+  gdb_sClass		*cp, 
   const pwr_sAttrRef	*arp,
   void			*tp,	/* Address of target.  */
   const void		*sp,	/* Address of source.  */
-  pwr_tUInt32		size,	/* Size of source.  */
-  ndc_eOp		op
+  pwr_tUInt32		*size,	/* Size of source.  */
+  ndc_eOp		op, 
+  pwr_tUInt32           offset,
+  pwr_tUInt32           offs
 )
 {
-  gdb_sClass		*cp;
-  cdh_uTypeId		cid;
   int			i;
   int			base;
   gdb_sAttribute	*ap;
+  pwr_tUInt32           aoffs;
+  pwr_tUInt32           count;
 
  /* The new way, convert if different co_mFormat
   * The old way, always convert if different OS 
@@ -653,43 +658,68 @@ ndc_ConvertData (
       || (np->netver < net_cFirstCclassVersion && 
           np->os == gdbroot->my_node->os && np->fm.b.bo == gdbroot->my_node->fm.b.bo)) {
       if (tp != sp)
-        memcpy(tp, sp, size);
+        memcpy(tp, sp, *size);
       return TRUE;
   }
-
-
-  cid.pwr = arp->Body;
-  cid.c.bix = 0;	/* To get the class id.  */
-
-  cp = hash_Search(sts, gdbroot->cid_ht, &cid.pwr);
-  if (cp == NULL) return FALSE;
   
   /* Find attribute.  */
 
   for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++)
-    if (arp->Offset <= ap->moffset)
+    if (offset <= ap->moffset)
       break;
 
   if (i >= cp->acount) pwr_Return(NO, sts, NDC__OFFSET);
 
-  if (arp->Offset == 0)
+  if (offset == 0)
     base = 0;
   else
     base = ap->offs;
 
   switch (op) {
   case ndc_eOp_encode:
-    for (; i < cp->acount && size > 0; i++, ap++) {
-      if(!encode[pwr_Tix(ap->type)](ap->elem, ap->size, (char *)tp + (ap->offs - base),
-	(char *)sp + (ap->offs - base), &size))
-	pwr_Return(NO, sts, NDC__CONVERT);
+    for (; i < cp->acount && *size > 0; i++, ap++) {
+      if (ap->flags.b.isclass) {
+        gdb_sClass               *lcp;
+	  
+        lcp = hash_Search(sts, gdbroot->cid_ht, &ap->tid);
+
+	/* Single attribute or array */
+	/* Loop n:o element */
+
+	aoffs = 0; /* Attribute offset - source */
+	
+	for (count = ap->elem; count > 0 && *size > 0; count--) {
+          ndc_ConvertData(sts, np, lcp, arp, tp, sp, size, op, (offset - ap->offs) % (ap->size / ap->elem), ap->offs - base + aoffs + offs);
+	  aoffs += ap->size / ap->elem;  
+	}
+      } else {
+        if(!encode[pwr_Tix(ap->type)](ap->elem, ap->size, (char *)tp + (ap->offs - base + offs),
+	  (char *)sp + (ap->offs - base + offs), size))
+	  pwr_Return(NO, sts, NDC__CONVERT);
+      }
     }
     break;
   case ndc_eOp_decode:
-    for (; i < cp->acount && size > 0; i++, ap++) {
-      if(!decode[pwr_Tix(ap->type)](ap->elem, ap->size, (char *)tp + (ap->offs - base),
-	(char *)sp + (ap->offs - base), &size))
-	pwr_Return(NO, sts, NDC__CONVERT);
+    for (; i < cp->acount && *size > 0; i++, ap++) {
+      if (ap->flags.b.isclass) {
+        gdb_sClass               *lcp;
+	  
+        lcp = hash_Search(sts, gdbroot->cid_ht, &ap->tid);
+
+	/* Single attribute or array */
+	/* Loop n:o element */
+
+	aoffs = 0; /* Attribute offset - source */
+	
+	for (count = ap->elem; count > 0 && *size > 0; count--) {
+          ndc_ConvertData(sts, np, lcp, arp, tp, sp, size, op, (offset - ap->offs) % (ap->size / ap->elem), ap->offs - base + aoffs + offs);
+	  aoffs += ap->size / ap->elem;  
+	}
+      } else {
+        if(!decode[pwr_Tix(ap->type)](ap->elem, ap->size, (char *)tp + (ap->offs - base + offs),
+	  (char *)sp + (ap->offs - base + offs), size))
+ 	  pwr_Return(NO, sts, NDC__CONVERT);
+      }
     }
     break;
   default:
@@ -718,7 +748,11 @@ ndc_ConvertNativeToRemoteData (
   const pwr_sAttrRef	*narp,  /**< Native attribute reference */
   void			*tp,	/**< Address of target.  */
   const void		*sp,	/**< Address of source.  */
-  pwr_tUInt32		size	/**< Size of target buffer.  */
+  pwr_tUInt32		*size,	/**< Size of target buffer.  */
+  pwr_tUInt32           offset,
+  pwr_tUInt32           toffs,
+  pwr_tUInt32           soffs,
+  pwr_tNodeId           nid
 )
 {
   const net_sCattribute	*cap;
@@ -726,80 +760,164 @@ ndc_ConvertNativeToRemoteData (
   int			i,j;
   int 			tasize,sasize;
   pwr_mAdef		adef;
+  int			tcount;
+  int			scount;
+  int                   zsize;
+  pwr_tUInt32           asoffs;
+  pwr_tUInt32           atoffs;
+  const gdb_sClass	*cp;
+  const gdb_sAttribute	*ap;
   
   gdb_AssumeUnlocked;
 
-  if (nap->aop == NULL) { /* whole object */
-    const gdb_sClass		*cp;
-    const gdb_sAttribute	*ap;
+  if (offset == 0) { /* from start */
     
-
     cp = hash_Search(sts, gdbroot->cid_ht, &ccp->key.cid);
     if (cp == NULL) 
       errh_Bugcheck(GDH__WEIRD, "can't find native class");
     
 
-    for (i = 0, cap = ccp->attr; i < ccp->acount && size > 0; i++, cap++) {
+    for (i = 0, cap = ccp->attr; i < ccp->acount && *size > 0; i++, cap++) {
       for (j = 0, ap = cp->attr; j < cp->acount; j++, ap++) {
         if (ap->aix == cap->aix) {
-          tasize = cap->size / cap->elem;
-          sasize = ap->size / ap->elem;
+	  if (ap->flags.b.isclass) {
+            gdb_sCcVolKey             ccvKey;
+            gdb_sCclassKey            ccKey;
+            gdb_sCclass               *lccp;
+            gdb_sCclassVolume         *ccvp;
+	  
+            ccvKey.nid = nid;
+            ccvKey.vid = ap->tid >> 16;
+	  
+            ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+            ccKey.cid = ap->tid;
+            ccKey.ccvoltime = ccvp->time;
 
-          cidx = conv_GetIdx(ap->type, cap->type);
-          if (cidx == conv_eIdx_invalid)
-            cidx = conv_eIdx_zero; /* Zero the attribute */
+            lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+            if (lccp == NULL) errh_Bugcheck(GDH__WEIRD, "can't get class");
+	    	      
+	    atoffs = 0; /* Attribute offset - target */
+	    asoffs = 0; /* Attribute offset - source */
+	    for (scount = ap->elem, tcount = cap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	      if (scount > 0) {
+                ndc_ConvertNativeToRemoteData(sts, lccp, ridx, nap, rarp, narp, tp, sp, size, 0,
+                    toffs + atoffs, soffs + asoffs, nid);
+	        asoffs += ap->size / ap->elem;  
+	      } else {
+	        memset(tp + toffs + atoffs, 0, cap->size / cap->elem);
+	        *size -= cap->size / cap->elem;
+	      }
+	      atoffs += cap->size / cap->elem;
+	    }
+	  } else {
+            tasize = cap->size / cap->elem;
+            sasize = ap->size / ap->elem;
 
-          /* Prevent conversion of pointers in objects. 
-           * If we are unlucky we can get a floating point exception.
-           */
-          adef.m = ap->flags.m;
-          adef.b.privatepointer = 1; 
+            cidx = conv_GetIdx(ap->type, cap->type);
+            if (cidx == conv_eIdx_invalid)
+              cidx = conv_eIdx_zero; /* Zero the attribute */
+
+            /* Prevent conversion of pointers in objects. 
+             * If we are unlucky we can get a floating point exception.
+             */
+            adef.m = ap->flags.m;
+            adef.b.privatepointer = 1; 
           
 
-          if (!conv_Fctn[cidx](cap->elem, tasize, (char *)tp + cap->offs, (int *)&size, ap->elem, sasize, (const char *)sp + ap->offs, adef)) {
-            pwr_Return(NO, sts, NDC__CONVERT);
-          }
+            if (!conv_Fctn[cidx](cap->elem, tasize, (char *)tp + cap->offs + toffs, (int *) size,
+	         ap->elem, sasize, (const char *)sp + ap->offs + soffs, adef)) {
+              pwr_Return(NO, sts, NDC__CONVERT);
+            }
+	  }
           break;
         }
       }
 
       if (j >= cp->acount) {/* the remote attribute doesn't exist locally */
-        if (!conv_Fctn[conv_eIdx_zero](cap->elem, tasize, (char *)tp + cap->offs, (int *)&size, 0, 0, 0, adef)) {
-          pwr_Return(NO, sts, NDC__CONVERT);
-        }
+        zsize = MIN(*size, cap->size);
+	memset((char *) tp + (cap->offs + toffs), 0, zsize);
+	*size -= zsize;
       }
     }
     
     
-    
   } else { /* single attribute */
 
-    pwr_Assert(nap->adef != NULL);
-    pwr_Assert(ridx < ccp->acount);
+    /* Find attribute.  */
+
+    cp = hash_Search(sts, gdbroot->cid_ht, &ccp->key.cid);
+    if (cp == NULL) 
+      return FALSE;
+
+    for (i = 0, cap = ccp->attr; i < ccp->acount; i++, cap++)
+      if (offset <= cap->moffset)
+        break;
+
+    if (i >= ccp->acount) pwr_Return(NO, sts, NDC__OFFSET);
+
+    for (j = 0, ap = cp->attr; j < cp->acount; j++, ap++) {
+      if (ap->aix == cap->aix) {
+        if (ap->flags.b.isclass) {
+          gdb_sCcVolKey             ccvKey;
+          gdb_sCclassKey            ccKey;
+          gdb_sCclass               *lccp;
+          gdb_sCclassVolume         *ccvp;
+	  
+          ccvKey.nid = nid;
+          ccvKey.vid = ap->tid >> 16;
+	  
+          ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+          ccKey.cid = ap->tid;
+          ccKey.ccvoltime = ccvp->time;
+
+          lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+          if (lccp == NULL) errh_Bugcheck(GDH__WEIRD, "can't get class");
+
+          atoffs = 0; /* Attribute offset - target */
+          asoffs = 0; /* Attribute offset - source */
+          for (tcount = cap->elem, scount = ap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	    if (scount > 0) {
+              ndc_ConvertRemoteToNativeData(sts, lccp, ridx, nap, rarp, narp, tp, sp, size, (offset - cap->offs) % (cap->size / cap->elem),
+                    toffs + atoffs, soffs + asoffs, nid);
+	      asoffs += ap->size / ap->elem;
+	    } else {
+	      memset(tp + toffs + atoffs, 0, cap->size / cap->elem);
+	      *size -= cap->size / cap->elem;
+	    }
+	    atoffs += cap->size / cap->elem;
+	  }
+	} else {
+
+          pwr_Assert(nap->adef != NULL);
     
-    cap = &ccp->attr[ridx];
-    sasize = nap->size / nap->elem;
-    tasize = cap->size / cap->elem;
+          sasize = nap->size / nap->elem;
+          tasize = cap->size / cap->elem;
 
-    cidx = conv_GetIdx(nap->adef->Info.Type, cap->type);
-    if (cidx == conv_eIdx_invalid) {
-      pwr_Return(NO, sts, NDC__NOCONV);    
-    } 
+          cidx = conv_GetIdx(ap->type, cap->type);
+          if (cidx == conv_eIdx_invalid) {
+            pwr_Return(NO, sts, NDC__NOCONV);    
+          } 
 
-    /* Prevent conversion of pointers if it's not a single pointer. 
-     * If we are unlucky we can get a floating point exception.
-     */
-    adef.m = nap->adef->Info.Flags;
-    if (adef.b.array && size > cap->size/cap->elem)
-      adef.b.privatepointer = 1; 
+          /* Prevent conversion of pointers if it's not a single pointer. 
+           * If we are unlucky we can get a floating point exception.
+          */
+          adef.m = nap->adef->Info.Flags;
+          if (adef.b.array && *size > cap->size/cap->elem)
+            adef.b.privatepointer = 1; 
 
-
-    if (!conv_Fctn[cidx](cap->elem, tasize, tp, (int *)&size, 
-                       nap->elem, sasize, sp, adef)
-    ) {
-      pwr_Return(NO, sts, NDC__CONVERT);
+          if (!conv_Fctn[cidx](cap->elem, tasize, tp, (int *) size, 
+                       nap->elem, sasize, sp, adef)) {
+            pwr_Return(NO, sts, NDC__CONVERT);
+          }
+	}
+      }
     }
-    
+    if (j >= cp->acount) {/* the remote attribute doesn't exist locally */
+      memset((char *) tp, 0, *size);
+      *size = 0;
+    }
   }
 
   pwr_Return(YES, sts, NDC__SUCCESS);
@@ -818,48 +936,102 @@ ndc_ConvertRemoteData (
   const pwr_sAttrRef	*arp,
   void			*tp,	/* Address of target.  */
   const void		*sp,	/* Address of source.  */
-  pwr_tUInt32		size,	/* Size of source.  */
-  ndc_eOp		op
+  pwr_tUInt32		*size,	/* Size of source.  */
+  ndc_eOp		op, 
+  pwr_tUInt32           offset,
+  pwr_tUInt32           offs
 )
 {
   int			i;
   int			base;
   const net_sCattribute	*cap;
+  pwr_tUInt32           aoffs;
+  pwr_tUInt32           count;
 
 
   if (np->fm.m == gdbroot->my_node->fm.m) {
     if (tp != sp)
-      memcpy(tp, sp, size);
+      memcpy(tp, sp, *size);
     return TRUE;
   }
-
 
   /* Find attribute.  */
 
   for (i = 0, cap = ccp->attr; i < ccp->acount; i++, cap++)
-    if (arp->Offset <= cap->offs + cap->size - 1) /* maximum attribute offset */
+    if (offset <= cap->offs + cap->size - 1) /* maximum attribute offset */
       break;
 
   if (i >= ccp->acount) pwr_Return(NO, sts, NDC__OFFSET);
 
-  if (arp->Offset == 0)
+  if (offset == 0)
     base = 0;
   else
     base = cap->offs;
 
   switch (op) {
   case ndc_eOp_encode:
-    for (; i < ccp->acount && size > 0; i++, cap++) {
-      if(!encode[pwr_Tix(cap->type)](cap->elem, cap->size, (char *)tp + (cap->offs - base),
-	(char *)sp + (cap->offs - base), &size))
+    for (; i < ccp->acount && *size > 0; i++, cap++) {
+      if (cap->flags.b.isclass) {
+        gdb_sCcVolKey             ccvKey;
+        gdb_sCclassKey            ccKey;
+        gdb_sCclass               *lccp;
+        gdb_sCclassVolume         *ccvp;
+	  
+        ccvKey.nid = np->nid;
+        ccvKey.vid = cap->type >> 16;
+	ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+        ccKey.cid = cap->type;
+        ccKey.ccvoltime = ccvp->time;
+        lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+
+	/* Single attribute or array */
+	/* Loop n:o element */
+
+	aoffs = 0; /* Attribute offset - source */
+	
+	for (count = cap->elem; count > 0 && *size > 0; count--) {
+          ndc_ConvertRemoteData(sts, np, lccp, arp, tp, sp, size, op, (offset - cap->offs) % (cap->size / cap->elem), cap->offs - base + aoffs + offs);
+	  aoffs += cap->size / cap->elem;  
+	}
+      } else {
+      
+      if(!encode[pwr_Tix(cap->type)](cap->elem, cap->size, (char *)tp + (cap->offs - base + offs),
+	(char *)sp + (cap->offs - base + offs), size))
 	pwr_Return(NO, sts, NDC__CONVERT);
+      }
     }
     break;
   case ndc_eOp_decode:
-    for (; i < ccp->acount && size > 0; i++, cap++) {
-      if(!decode[pwr_Tix(cap->type)](cap->elem, cap->size, (char *)tp + (cap->offs - base),
-	(char *)sp + (cap->offs - base), &size))
-	pwr_Return(NO, sts, NDC__CONVERT);
+    for (; i < ccp->acount && *size > 0; i++, cap++) {
+      if (cap->flags.b.isclass) {
+        gdb_sCcVolKey             ccvKey;
+        gdb_sCclassKey            ccKey;
+        gdb_sCclass               *lccp;
+        gdb_sCclassVolume         *ccvp;
+	  
+        ccvKey.nid = np->nid;
+        ccvKey.vid = cap->type >> 16;
+	ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+        ccKey.cid = cap->type;
+        ccKey.ccvoltime = ccvp->time;
+        lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+
+	/* Single attribute or array */
+	/* Loop n:o element */
+
+	aoffs = 0; /* Attribute offset - source */
+	
+	for (count = cap->elem; count > 0 && *size > 0; count--) {
+          ndc_ConvertRemoteData(sts, np, lccp, arp, tp, sp, size, op, (offset - cap->offs) % (cap->size / cap->elem), cap->offs - base + aoffs + offs);
+	  aoffs += cap->size / cap->elem;  
+	}
+      } else {
+        if(!decode[pwr_Tix(cap->type)](cap->elem, cap->size, (char *)tp + (cap->offs - base + offs),
+	  (char *)sp + (cap->offs - base + offs), size))
+	  pwr_Return(NO, sts, NDC__CONVERT);
+      }
     }
     break;
   default:
@@ -888,7 +1060,11 @@ ndc_ConvertRemoteToNativeData (
   const pwr_sAttrRef	*narp,  /**< Native attribute reference */
   void			*tp,	/**< Address of target.  */
   const void		*sp,	/**< Address of source.  */
-  pwr_tUInt32		size	/**< Size of target buffer.  */
+  pwr_tUInt32		*size,	/**< Size of target buffer.  */
+  pwr_tUInt32           offset,
+  pwr_tUInt32           toffs,
+  pwr_tUInt32           soffs,
+  pwr_tNodeId           nid
 )
 {
   const net_sCattribute	*cap;
@@ -896,15 +1072,20 @@ ndc_ConvertRemoteToNativeData (
   int			i,j;
   int 			tasize,sasize;
   pwr_mAdef		adef;
+  int			tcount;
+  int			scount;
+  int                   zsize;
+  pwr_tUInt32           asoffs;
+  pwr_tUInt32           atoffs;
+  const gdb_sAttribute	*ap;
+  const gdb_sClass      *cp;
 
   gdb_AssumeUnlocked;
 
-  if (nap->aop == NULL) { /* whole object */
-    const gdb_sClass		*cp;
-    const gdb_sAttribute	*ap;
+  if (offset == 0) { /* from start */
     
 
-    pwr_Assert(narp->Offset == 0);
+//    pwr_Assert(narp->Offset == 0);
 
     cp = hash_Search(sts, gdbroot->cid_ht, &ccp->key.cid);
     if (cp == NULL) 
@@ -912,66 +1093,146 @@ ndc_ConvertRemoteToNativeData (
 
     ap = cp->attr;
 
-    for (i = 0; i < cp->acount && size > 0; i++, ap++) {
+    for (i = 0; i < cp->acount && *size > 0; i++, ap++) {
       for (j = 0, cap = ccp->attr; j < ccp->acount; j++, cap++) {
         if (ap->aix == cap->aix) {
-          tasize = ap->size / ap->elem;
-          sasize = cap->size / cap->elem;
+	
+	  if (ap->flags.b.isclass) {
+            gdb_sCcVolKey             ccvKey;
+            gdb_sCclassKey            ccKey;
+            gdb_sCclass               *lccp;
+            gdb_sCclassVolume         *ccvp;
+	  
+            ccvKey.nid = nid;
+            ccvKey.vid = ap->tid >> 16;
+	  
+            ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+            ccKey.cid = ap->tid;
+            ccKey.ccvoltime = ccvp->time;
 
-          cidx = conv_GetIdx(cap->type, ap->type);
-          if (cidx == conv_eIdx_invalid)
-            cidx = conv_eIdx_zero; /* Zero the attribute */
+            lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+            if (lccp == NULL) errh_Bugcheck(GDH__WEIRD, "can't get class");
 
-          /* Prevent conversion of pointers in objects. 
-           * If we are unlucky we can get a floating point exception.
-           */
-          adef.m = cap->flags.m;
-          adef.b.privatepointer = 1;          
+	    atoffs = 0; /* Attribute offset - target */
+	    asoffs = 0; /* Attribute offset - source */
+	    for (tcount = ap->elem, scount = cap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	      if (scount > 0) {
+                ndc_ConvertRemoteToNativeData(sts, lccp, ridx, nap, rarp, narp, tp, sp, size, 0,
+                    toffs + atoffs, soffs + asoffs, nid);
+	        asoffs += cap->size / cap->elem;  
+	      } else {
+	        memset(tp + toffs + atoffs, 0, ap->size / ap->elem);
+	        *size -= ap->size / ap->elem;
+	      }
+	      atoffs += ap->size / ap->elem;
+	    }
+	  } else {	  
+            tasize = ap->size / ap->elem;
+            sasize = cap->size / cap->elem;
 
-          if (!conv_Fctn[cidx](ap->elem, tasize, tp, (int *)&size, cap->elem, sasize, sp, adef)) {
-            pwr_Return(NO, sts, NDC__CONVERT);
-          }
+            cidx = conv_GetIdx(cap->type, ap->type);
+            if (cidx == conv_eIdx_invalid)
+              cidx = conv_eIdx_zero; /* Zero the attribute */
+
+            /* Prevent conversion of pointers in objects. 
+             * If we are unlucky we can get a floating point exception.
+             */
+            adef.m = cap->flags.m;
+            adef.b.privatepointer = 1;          
+
+            if (!conv_Fctn[cidx](ap->elem, tasize, tp + ap->offs + toffs, (int *) size, cap->elem, sasize, sp + cap->offs + soffs, adef)) {
+              pwr_Return(NO, sts, NDC__CONVERT);
+            }
+	  }
+	  break;
         }
       }
 
       if (j >= ccp->acount) {/* the native attribute doesn't exist remotely */
-        if (!conv_Fctn[cidx](ap->elem, tasize, tp, (int *)&size, 0, 0, 0, adef)) {
-          pwr_Return(NO, sts, NDC__CONVERT);
-        }
+        zsize = MIN(*size, ap->size);
+	memset((char *) tp + (ap->offs + toffs), 0, zsize);
+	*size -= zsize;
       }
     }
-    
-    
+        
     
   } else { /* single attribute */
+  
+    /* Find attribute.  */
 
-    pwr_Assert(nap->adef != NULL);
-    pwr_Assert(ridx < ccp->acount);
+    cp = hash_Search(sts, gdbroot->cid_ht, &ccp->key.cid);
+    if (cp == NULL) 
+      return FALSE;
+
+    for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++)
+      if (offset <= ap->moffset)
+        break;
+
+    if (i >= cp->acount) pwr_Return(NO, sts, NDC__OFFSET);
+
+    for (j = 0, cap = ccp->attr; j < ccp->acount; j++, cap++) {
+      if (ap->aix == cap->aix) {
+        if (ap->flags.b.isclass) {
+          gdb_sCcVolKey             ccvKey;
+          gdb_sCclassKey            ccKey;
+          gdb_sCclass               *lccp;
+          gdb_sCclassVolume         *ccvp;
+	  
+          ccvKey.nid = nid;
+          ccvKey.vid = ap->tid >> 16;
+	  
+          ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+          ccKey.cid = ap->tid;
+          ccKey.ccvoltime = ccvp->time;
+
+          lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+          if (lccp == NULL) errh_Bugcheck(GDH__WEIRD, "can't get class");
+
+          atoffs = 0; /* Attribute offset - target */
+          asoffs = 0; /* Attribute offset - source */
+          for (tcount = ap->elem, scount = cap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	    if (scount > 0) {
+              ndc_ConvertRemoteToNativeData(sts, lccp, ridx, nap, rarp, narp, tp, sp, size, (offset - ap->offs) % (ap->size / ap->elem),
+                    toffs + atoffs, soffs + asoffs, nid);
+	      asoffs += cap->size / cap->elem;
+	    } else {
+	      memset(tp + toffs + atoffs, 0, ap->size / ap->elem);
+	        *size -= ap->size / ap->elem;
+	    }
+	    atoffs += ap->size / ap->elem;
+	  }
+	} else {
+          pwr_Assert(nap->adef != NULL);
     
-    cap = &ccp->attr[ridx];
-    tasize = nap->size / nap->elem;
-    sasize = cap->size / cap->elem;
+          tasize = nap->size / nap->elem;
+          sasize = cap->size / cap->elem;
+    
+          cidx = conv_GetIdx(cap->type, ap->type);
+          if (cidx == conv_eIdx_invalid) {
+            pwr_Return(NO, sts, NDC__NOCONV);    
+	  }
 
-    cidx = conv_GetIdx(cap->type, nap->adef->Info.Type);
-    if (cidx == conv_eIdx_invalid) {
-      pwr_Return(NO, sts, NDC__NOCONV);    
+          /* Prevent conversion of pointers if it's not a single attribute. 
+           * If we are unlucky we can get a floating point exception.
+           */
+          *size = MIN(*size, nap->size);
+          adef = cap->flags;
+          if (adef.b.array && *size > nap->size/nap->elem)
+            adef.b.privatepointer = 1;
+
+          if (!conv_Fctn[cidx](nap->elem, tasize, tp, (int *) size, 
+                       cap->elem, sasize, sp, adef)) {
+            pwr_Return(NO, sts, NDC__CONVERT);
+          }
+	}
+      }
     } 
-
-    /* Prevent conversion of pointers if it's not a single attribute. 
-     * If we are unlucky we can get a floating point exception.
-     */
-    size = MIN(size, nap->size);
-    adef = cap->flags;
-    if (adef.b.array && size > nap->size/nap->elem)
-      adef.b.privatepointer = 1;
-
-
-    if (!conv_Fctn[cidx](nap->elem, tasize, tp, (int *)&size, 
-                       cap->elem, sasize, sp, adef)
-    ) {
-      pwr_Return(NO, sts, NDC__CONVERT);
+    if (j >= ccp->acount) {/* the native attribute doesn't exist remotely */
+      memset((char *) tp, 0, *size);
+      *size = 0;
     }
-      
   }
 
   pwr_Return(YES, sts, NDC__SUCCESS);
@@ -983,6 +1244,233 @@ ndc_ConvertRemoteToNativeData (
  */
 pwr_tBoolean
 ndc_ConvertRemoteToNativeTable (
+  pwr_tStatus			*sts,
+  const gdb_sCclass		*ccp,	/**< Cached class */
+  const ndc_sRemoteToNative	*tbl,
+  const pwr_sAttrRef		*rarp,  /**< Remote attribute reference */
+  const pwr_sAttrRef		*narp,  /**< Native attribute reference */
+  void				*tp,	/**< Address of target.  */
+  const void			*sp,	/**< Address of source.  */
+  pwr_tUInt32			*size,	/**< Size of target buffer.  */
+  pwr_tUInt32                   offset,
+  pwr_tUInt32                   toffs,
+  pwr_tUInt32                   soffs,
+  pwr_tBoolean                  *first,
+  pwr_tNodeId                   nid
+)
+{
+  const gdb_sClass	*cp;
+  const gdb_sAttribute	*ap;
+  const net_sCattribute	*cap;
+  int			i;
+  int			base;
+  int 			zsize;
+  int 			idx;
+  int  			relem;
+  int			tcount;
+  int			scount;
+  pwr_tUInt32           asoffs;
+  pwr_tUInt32           atoffs;
+  pwr_tUInt32		roffs;
+  pwr_tUInt32		raidx;
+  conv_eIdx		cidx;
+  pwr_mAdef		adef;
+  
+  
+
+  gdb_AssumeLocked;
+
+  cp = hash_Search(sts, gdbroot->cid_ht, &ccp->key.cid);
+  if (cp == NULL) 
+    return FALSE;
+
+  /* Find attribute.  */
+
+  for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++)
+    if (offset <= ap->moffset)
+      break;
+
+  if (i >= cp->acount) pwr_Return(NO, sts, NDC__OFFSET);
+
+  if (offset == 0)
+    base = 0;
+  else
+    base = ap->offs;
+
+
+  for (; i < cp->acount && *size > 0; i++, ap++) {
+    cidx = tbl[i].cidx;
+    raidx =  tbl[i].raidx;
+    pwr_Assert(raidx < ccp->acount || raidx == ULONG_MAX);    
+
+    if ( raidx == ULONG_MAX || cidx == conv_eIdx_invalid) {
+      /* Attribute doesn't exist on remote node or there is no valid conversion
+       * Zero the local attribute 
+       */
+      zsize = MIN(*size, ap->size);
+      memset((char *)tp + (ap->offs - base + toffs), 0, zsize);
+      *size -= zsize;
+      if (*first)
+        *first = 0;
+    } 
+    else if (ap->flags.b.isclass) {
+      gdb_sCcVolKey             ccvKey;
+      gdb_sCclassKey            ccKey;
+      gdb_sCclass               *lccp;
+      gdb_sCclassVolume         *ccvp;
+      ndc_sRemoteToNative	*ltbl;
+	  
+      ccvKey.nid = nid;
+      ccvKey.vid = ap->tid >> 16;
+	  
+      ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+      ccKey.cid = ap->tid;
+      ccKey.ccvoltime = ccvp->time;
+
+      lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+
+      if (!lccp->flags.b.rnConv) {
+        const gdb_sClass      *lcp = hash_Search(sts, gdbroot->cid_ht, &lccp->key.cid);
+
+	ltbl = pool_Alloc(sts, gdbroot->pool, sizeof(*ltbl) * lcp->acount);
+	ndc_UpdateRemoteToNativeTable(sts, ltbl, lcp->acount, lcp, lccp, nid);
+	if (ODD(*sts)) {
+	   lccp->rnConv = pool_Reference(NULL, gdbroot->pool, ltbl);
+	   lccp->flags.b.rnConv = 1;
+	} else {
+	  pool_Free(NULL, gdbroot->pool, ltbl);
+          pwr_Return(NO, sts, NDC__CONVERT);      
+	}
+      } else {
+        ltbl = pool_Address(NULL, gdbroot->pool, lccp->rnConv);
+      }
+
+      cap = &ccp->attr[raidx];
+	  
+      if (lccp == NULL) errh_Bugcheck(GDH__WEIRD, "can't get class");
+      
+      /* It could either be: */
+      /* - Whole attribute, or ... */
+      /* - Single array-element, or ... */
+      /* - Atrribute in attribute. */
+      
+      if (*first) {
+        if (base != 0 && offset > ap->offs) {
+	  if (*size == ap->size / ap->elem) {
+
+	    /* Single array-element */
+	    /* Check if source element exist */
+	    
+	    if ((offset - ap->offs) / (ap->size / ap->elem) < cap->elem) {
+              ndc_ConvertRemoteToNativeTable(sts, lccp, ltbl, NULL, NULL, tp, sp, size, 0,
+                                             toffs + ap->offs - base, soffs, first, nid);
+	    } else {
+	      memset(tp + toffs + ap->offs - base, 0, *size);
+	      *size = 0;
+	    }
+	  } else {
+	  
+	    /* Atrribute in attribute */
+
+            ndc_ConvertRemoteToNativeTable(sts, lccp, ltbl, NULL, NULL, tp, sp, size, (offset - ap->offs) % (ap->size/ap->elem),
+                  toffs + ap->offs - base, soffs, first, nid);	    
+	  }
+	} else {
+	  /* Single attribute or array */
+	  /* Loop n:o element */
+	  /* Check boundaries */
+
+	  atoffs = 0; /* Attribute offset - target */
+	  asoffs = 0; /* Attribute offset - source */
+	  for (tcount = ap->elem, scount = cap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	    if (scount > 0) {
+              ndc_ConvertRemoteToNativeTable(sts, lccp, ltbl, NULL, NULL, tp, sp, size, (offset - ap->offs) % (ap->size/ap->elem),
+                  toffs + atoffs + ap->offs - base, soffs + asoffs, first, nid);
+	      asoffs += cap->size / cap->elem;  
+	    } else {
+	      memset(tp + toffs + atoffs + ap->offs - base, 0, ap->size / ap->elem);
+	      *size -= ap->size / ap->elem;
+	    }
+	    atoffs += ap->size / ap->elem;
+	  }
+	}
+	*first = 0;
+      } else {
+	/* Single attribute or array */
+	/* Loop n:o element */
+	/* Check boundaries */
+
+	atoffs = 0; /* Attribute offset - target */
+	asoffs = 0; /* Attribute offset - source */
+	for (tcount = ap->elem, scount = cap->elem; tcount > 0 && *size > 0; tcount--, scount--) {
+	  if (scount > 0) {
+            ndc_ConvertRemoteToNativeTable(sts, lccp, ltbl, NULL, NULL, tp, sp, size, (offset - ap->offs) % (ap->size/ap->elem),
+                  toffs + atoffs + ap->offs - base, cap->offs + soffs + asoffs, first, nid);
+	    asoffs += cap->size / cap->elem;  
+	  } else {
+	    memset(tp + toffs + atoffs + ap->offs - base, 0, ap->size / ap->elem);
+	    *size -= ap->size / ap->elem;
+	  }
+	  atoffs += ap->size / ap->elem;
+	}
+      }
+    }
+    else {
+      cap = &ccp->attr[raidx];
+
+      /** @note Pointers are only handled correctly for a single pointer, 
+       * not arrays. See, vol_AttributeToAddress. Set private for all other
+       * cases. 
+       * It's quite tricky to find out if it's a single array element. Let's 
+       * hope that the size has the exact size of one element. Maybe we should
+       * add a flag to the attribute reference that indicates single array element.
+       */
+      adef = cap->flags;
+      if (!*first || (adef.b.array && *size > ap->size/ap->elem))
+        adef.b.privatepointer = 1; /* prevent floating point exceptions */
+
+
+      if (*first) {
+        *first = 0;
+        roffs = 0;
+
+        /* Check if the first attribute is an array element with index > 0 
+         * and that the index exist in the remote attribute.
+         */
+        if (base != 0 && offset > ap->offs) {        
+          pwr_Assert(ap->elem > 1);
+
+          idx = (offset - ap->offs) / (ap->size/ap->elem);
+
+          /* Calm down, the convert routine will only use the source if relem > 0 */
+          relem = cap->elem  - idx; 
+        } else
+          relem = cap->elem;
+
+      } else {
+        roffs = cap->offs;
+        relem = cap->elem;
+      }
+      
+
+
+      if(!conv_Fctn[cidx](ap->elem, ap->size/ap->elem, (char *)tp + (ap->offs - base) + toffs, (int *) size,
+                        relem, cap->size/cap->elem, (const char *)sp + roffs + soffs, adef))
+        pwr_Return(NO, sts, NDC__CONVERT);      
+      
+    }
+  }
+
+  pwr_Return(YES, sts, NDC__SUCCESS);
+}
+
+/**
+ * Converts remote data that has a different class version.
+ * The data has already been converted to native data format
+ */
+pwr_tBoolean
+ndc_ConvertRemoteToNativeTableOld (
   pwr_tStatus			*sts,
   const gdb_sCclass		*ccp,	/**< Cached class */
   const ndc_sRemoteToNative	*tbl,
@@ -1098,18 +1586,30 @@ ndc_ConvertRemoteToNativeTable (
  */
 pwr_sAttrRef *
 ndc_NarefToRaref(
-  pwr_tStatus 		*sts,  /**< Status */
-  const mvol_sAttribute	*ap,   /**< Native mvol attribute */
-  const pwr_sAttrRef	*narp, /**< Native attribute reference */ 
-  const gdb_sCclass	*ccp,  /**< Cached class */
-  pwr_tUInt32		*ridx, /**< Attribute index in ccp or UINT_LONG if whole object */
-  pwr_sAttrRef		*rarp, /**< Remote attribute reference */
-  pwr_tBoolean		*equal /**< Set if the attribute references are equal, not checked if whole object */
+  pwr_tStatus 		*sts,   /**< Status */
+  mvol_sAttribute	*ap,    /**< Native mvol attribute */
+  pwr_sAttrRef	        *narp,  /**< Native attribute reference */ 
+  gdb_sCclass	        *ccp,   /**< Cached class */
+  pwr_tUInt32		*ridx,  /**< Attribute index in ccp or UINT_LONG if whole object */
+  pwr_sAttrRef		*rarp,  /**< Remote attribute reference */
+  pwr_tBoolean		*equal, /**< Set if the attribute references are equal, not checked if whole object */
+  cdh_sParseName        *pn,    /**< Not NULL if called from Get-/SetObjectInfo */
+  gdb_sCclass           *ccpLocked,
+  gdb_sVolume           *vp,
+  gdb_sNode             *np
 )
 {
-  pwr_tUInt32		i;
+  pwr_tUInt32		i, j;
   const net_sCattribute	*cap;
-
+  gdb_sClass		*acp;
+  int			offset = 0;
+  int			roffset = 0;
+  pwr_tBoolean          fetched;
+  mvol_sAttribute       attribute;
+  pwr_sAttrRef          aref;
+  pwr_tClassId          cid;
+  gdb_sCclass	        *l_ccp;   /**< Cached class */
+  pwr_tBoolean          l_equal;
 
   gdb_AssumeLocked;
 
@@ -1121,67 +1621,206 @@ ndc_NarefToRaref(
     *rarp = *narp;
     rarp->Size = ccp->size;
     return rarp;
-  }
-  
+  }  
 
   /* It's a single attribute */
 
   pwr_Assert(ap->aix != ULONG_MAX);
+  
+  acp = ap->cp;
+  if (acp == NULL)
+    pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+  
+  l_ccp = ccp;
 
-  for (i = 0, cap = ccp->attr; i < ccp->acount; i++, cap++) {      
+  /* Loop until we get to the correct offset */
 
-    if (ap->aix == cap->aix) {
-      pwr_Assert(ap->adef != NULL);
-      *ridx = i;
+  while (1) {
+    for (i = 0; i < acp->acount; i++) {
+      if (ap->offs <= (offset + acp->attr[i].moffset))
+        break;
+    }
+  
+    if (i == acp->acount)
+      pwr_Return(NULL, sts, GDH__ATTRIBUTE);
 
-      if (ap->idx == ULONG_MAX) {
-        if (ap->adef->Info.Type == cap->type && 
-            ap->offs            == cap->offs &&
-            ap->size            == cap->size &&
-            ap->elem            == cap->elem &&
-            ap->flags.b.Indirect == (cap->flags.b.pointer && !cap->flags.b.privatepointer)
-        ) {
-          *rarp = *narp;
-          *equal = 1;
-        } else {
-          rarp->Objid = narp->Objid;
-          rarp->Body = narp->Body;
-          rarp->Offset = cap->offs;
-          rarp->Size = cap->size;
-          rarp->Flags.b.Indirect = (cap->flags.b.pointer && !cap->flags.b.privatepointer);
-        } 
-      } else { /* It's an array element */
+    offset += acp->attr[i].offs;
+  
+    for (j = 0, cap = l_ccp->attr; j < l_ccp->acount; j++, cap++) {
+      if (acp->attr[i].aix == cap->aix) {
+        roffset += cap->offs;
+        *ridx    = j;
+	break;
+      }
+    }
 
-          
-        if (ap->adef->Info.Type     == cap->type && 
-            ap->adef->Info.Offset   == cap->offs &&
-            ap->adef->Info.Size     == cap->size &&
-            ap->adef->Info.Elements == cap->elem &&
-            ap->flags.b.Indirect    == (cap->flags.b.pointer && !cap->flags.b.privatepointer)
-        ) {
-          *rarp = *narp;
-          *equal = 1;
-        } else {
+    /* Attribute doesn't exist on remote node */
 
-          if (ap->idx >= cap->elem) {
-            *sts = NDC__NRELEM_IDX;
-            return NULL;
-          }            
+    if (j == l_ccp->acount)
+      pwr_Return(NULL, sts, NDC__NRATTRIBUTE);
 
-          rarp->Objid = narp->Objid;
-          rarp->Body = narp->Body;
-          rarp->Size = cap->size / cap->elem;
-          rarp->Offset = cap->offs + rarp->Size * ap->idx;
-          rarp->Flags.b.Indirect = (cap->flags.b.pointer && !cap->flags.b.privatepointer);
+    if (!acp->attr[i].flags.b.isclass) {
+      if (acp->attr[i].elem > 1) {
+	roffset += ((narp->Offset - offset) / 
+	           (acp->attr[i].size / acp->attr[i].elem)) * 
+		  (cap->size / cap->elem);
+        offset = narp->Offset;
+      }
+      break;
+    }
+  
+    if (acp->attr[i].size == narp->Size) {
+      /* Fetch the class */
+      if (acp->attr[i].flags.b.isclass) {
+        cid = acp->attr[i].tid;
+        acp = hash_Search(sts, gdbroot->cid_ht, &cid);
+        if (acp == NULL)
+        pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    
+        l_ccp = cmvolc_GetCachedClass(sts, np, vp, NULL, equal, &fetched, acp);
+        if (EVEN(*sts)) {
+          np = NULL;
+          pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
         }
       }
-      return rarp;
+      break;
     }
-  } /* for acount */
+  
+    if (acp->attr[i].flags.b.array) {
+      for (j = 0; j < acp->attr[i].elem; j++) {
+	if ( narp->Offset < (offset + acp->attr[i].size / acp->attr[i].elem))
+	  break;
+	offset += acp->attr[i].size / acp->attr[i].elem;
+	roffset += cap->size / cap->elem; 
+      }
+      if (acp->attr[i].size / acp->attr[i].elem == narp->Size) {
 
-  /* Attribute doesn't exist on remote node */
-  *sts = NDC__NRATTRIBUTE;
-  return NULL;
+        /* Fetch the class */
+        if (acp->attr[i].flags.b.isclass) {
+          cid = acp->attr[i].tid;
+          acp = hash_Search(sts, gdbroot->cid_ht, &cid);
+          if (acp == NULL)
+          pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    
+          l_ccp = cmvolc_GetCachedClass(sts, np, vp, NULL, equal, &fetched, acp);
+          if (EVEN(*sts)) {
+            np = NULL;
+            pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+          }
+	}
+      
+        break;
+      }
+    }
+
+    if (l_ccp != ccp) {
+      cmvolc_UnlockClass(NULL, l_ccp);
+    }
+
+//    if (ccpLocked) {
+//      cmvolc_UnlockClass(NULL, ccpLocked);
+//      ccpLocked = NULL;
+//    }
+  
+    /* we're not through yet, get next class */
+
+    cid = acp->attr[i].tid;
+    acp = hash_Search(sts, gdbroot->cid_ht, &cid);
+    if (acp == NULL)
+      pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    
+    l_ccp = cmvolc_GetCachedClass(sts, np, vp, NULL, equal, &fetched, acp);
+    if (EVEN(*sts)) {
+      np = NULL;
+      pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    }
+  
+    if (l_ccp != NULL) {
+      cmvolc_LockClass(NULL, l_ccp);
+    }
+
+    /* If gdb has been unlocked, refresh pointers (cmvolc_getCached.. unlocks) */
+    /** @todo Check if we can do it more efficient, eg. vol_ArefToAttribute */
+    /* I cannot explain why this must be done, maybe LW has the answer ?? */
+
+    if (fetched) {
+      memset(&attribute, 0, sizeof(attribute));
+      np = NULL;
+    
+      if (pn) {
+        ap = vol_NameToAttribute(sts, &attribute, pn, gdb_mLo_global, vol_mTrans_all);
+        if ((ap == NULL) || (ap->op == NULL))
+          pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+        touchObject(ap->op);
+
+        narp = mvol_AttributeToAref(sts, ap, &aref);
+        if (narp == NULL)
+          pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+      }
+      else {
+        ap = vol_ArefToAttribute(sts, &attribute, narp, gdb_mLo_global, vol_mTrans_all);
+        if ((ap == NULL) || (ap->op == NULL))
+          pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+        touchObject(ap->op);
+      }
+
+      acp = hash_Search(sts, gdbroot->cid_ht, &cid);
+      if (acp == NULL)
+        pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+      vp = pool_Address(NULL, gdbroot->pool, ap->op->l.vr);
+      np = hash_Search(sts, gdbroot->nid_ht, &vp->g.nid);
+      if (np == NULL)
+        pwr_Return(NULL, sts, GDH__NOSUCHNODE);
+
+      l_ccp = cmvolc_GetCachedClass(sts, np, vp, NULL, equal, &fetched, acp);
+      if (EVEN(*sts)) {
+        np = NULL;
+        pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+      }
+      
+      /* Refresh original cached class */
+
+      ccp = cmvolc_GetCachedClass(sts, np, vp, ap, &l_equal, &fetched, NULL);
+      if (EVEN(*sts)) {
+        np = NULL;
+        pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+      }
+      ccpLocked = ccp;      
+
+    }  
+  }
+  
+  if (l_ccp != ccp) {
+    cmvolc_UnlockClass(NULL, l_ccp);
+  }
+   
+  if (ap->idx == ULONG_MAX) {
+    rarp->Objid   = narp->Objid;
+    rarp->Body    = narp->Body;
+    rarp->Offset  = roffset;
+    rarp->Size    = cap->size;
+    rarp->Flags.m = narp->Flags.m;
+    rarp->Flags.b.Indirect = (cap->flags.b.pointer && !cap->flags.b.privatepointer);
+    rarp->Flags.b.Array = cap->flags.b.array;
+  } 
+  else { /* It's an array element */
+    if (ap->idx >= cap->elem) {
+      *sts = NDC__NRELEM_IDX;
+      return NULL;
+    }            
+
+    rarp->Objid   = narp->Objid;
+    rarp->Body    = narp->Body;
+    rarp->Size    = cap->size / cap->elem;
+    rarp->Offset  = roffset;
+    rarp->Flags.m = narp->Flags.m;
+    rarp->Flags.b.Indirect = (cap->flags.b.pointer && !cap->flags.b.privatepointer);
+    rarp->Flags.b.Array = cap->flags.b.array;
+  }
+
+  return rarp;
+
 }
 
 ndc_sRemoteToNative *
@@ -1190,11 +1829,13 @@ ndc_UpdateRemoteToNativeTable(
   ndc_sRemoteToNative	*tbl,  
   pwr_tUInt32		tcnt, /**< # table entries */ 
   const gdb_sClass	*cp,
-  const gdb_sCclass	*ccp
+  const gdb_sCclass	*ccp,
+  pwr_tNodeId           nid
   )
 {
   const gdb_sAttribute	*ap;
   const net_sCattribute	*cap;
+  
   int			i,j;
 
 
@@ -1203,13 +1844,51 @@ ndc_UpdateRemoteToNativeTable(
     return NULL;
   }
   
-
-
   for (i = 0, ap = cp->attr; i < cp->acount; i++, ap++) {
     for (j = 0, cap = ccp->attr; j < ccp->acount; j++, cap++) {
       if (ap->aix == cap->aix) {
-        tbl[i].cidx = conv_GetIdx(cap->type, ap->type);
-        tbl[i].raidx = j;
+      
+        /* If attribute is class then continue with this one */
+	
+        if (ap->flags.b.isclass) {
+/*          const gdb_sClass  *lcp = hash_Search(sts, gdbroot->cid_ht, &ap->tid);
+	  gdb_sCcVolKey     ccvKey;
+	  gdb_sCclassKey    ccKey;
+          gdb_sCclass       *lccp;
+	  gdb_sCclassVolume *ccvp;
+	  
+	  ccvKey.nid = nid;
+	  ccvKey.vid = ap->tid >> 16;
+	  
+	  ccvp = hash_Search(sts, gdbroot->ccvol_ht, &ccvKey);
+	  
+	  ccKey.cid = ap->tid;
+	  ccKey.ccvoltime = ccvp->time;
+
+	  lccp = hash_Search(sts, gdbroot->cclass_ht, &ccKey);
+	  
+          if ((lcp == NULL) || (lccp == NULL)) errh_Bugcheck(GDH__WEIRD, "can't get class");
+	  
+	  if (!lccp->flags.b.rnConv) {
+	    ndc_sRemoteToNative   *ltbl;
+	    ltbl = pool_Alloc(sts, gdbroot->pool, sizeof(*tbl) * lcp->acount);
+	    ndc_UpdateRemoteToNativeTable(sts, ltbl, lcp->acount, lcp, lccp, nid);
+	    if (ODD(*sts)) {
+	      lccp->rnConv = pool_Reference(NULL, gdbroot->pool, ltbl);
+	      lccp->flags.b.rnConv = 1;
+	    } else {
+	      pool_Free(NULL, gdbroot->pool, ltbl);
+	      return NULL;
+	    }
+	  } */
+	  
+	  tbl[i].cidx = conv_eIdx_;
+	  tbl[i].raidx = j;	  	
+	}
+	else {
+          tbl[i].cidx = conv_GetIdx(cap->type, ap->type);
+          tbl[i].raidx = j;
+	}
         break;
       }
     }

@@ -193,6 +193,7 @@ mvol_AnameToAttribute (
     ap->adef = NULL;
     ap->idx = ULONG_MAX;
   } else {
+    acp = ap->cp;
     abop = ap->bop;
     acp = ap->cp;
     for ( i = 0; i < pn->nAttribute; i++) {
