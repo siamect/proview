@@ -27,6 +27,7 @@ class FocusTimer {
 
   static void enable_set_focus( void *ft, XtIntervalId *id) {
     ((FocusTimer *)ft)->set_focus_disabled--;
+    ((FocusTimer *)ft)->request_cnt = 0;
   }
  public:
   ~FocusTimer() {
