@@ -1,6 +1,6 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody
-    Attr NextOix = "_X2608"
+    Attr NextOix = "_X2631"
     Attr NextCix = "_X51"
     Attr NextTix[0] = "_X3"
   EndBody
@@ -32761,7 +32761,7 @@ to avoid restart after error."
       Object RtBody $ObjBodyDef 1
         Body SysBody
           Attr StructName = "ActuatorPoOr2Sw"
-          Attr NextAix = "_X53"
+          Attr NextAix = "_X54"
         EndBody
         Object Description $Attribute 25
           Body SysBody
@@ -32849,6 +32849,13 @@ to avoid restart after error."
         Object IndError $Attribute 38
           Body SysBody
             Attr PgmName = "IndError"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IndWarning $Attribute 53
+          Body SysBody
+            Attr PgmName = "IndWarning"
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
@@ -33031,7 +33038,7 @@ to avoid restart after error."
       Object RtBody $ObjBodyDef 1
         Body SysBody
           Attr StructName = "ActuatorPoOr2SwFo"
-          Attr NextAix = "_X5"
+          Attr NextAix = "_X7"
         EndBody
         Object ExtOrder $Input 3
           Body SysBody
@@ -33045,6 +33052,20 @@ to avoid restart after error."
             Attr PgmName = "LocalMode"
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "loc"
+          EndBody
+        EndObject
+        Object Error $Input 6
+          Body SysBody
+            Attr PgmName = "Error"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "err"
+          EndBody
+        EndObject
+        Object Warning $Input 5
+          Body SysBody
+            Attr PgmName = "Warning"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "warn"
           EndBody
         EndObject
         Object PlcConnect $Intern 1
@@ -33067,7 +33088,7 @@ to avoid restart after error."
       Object GraphPlcNode $GraphPlcNode 2024
         Body SysBody
           Attr object_type = 11
-          Attr parameters[0] = 2
+          Attr parameters[0] = 4
           Attr parameters[1] = 1
           Attr parameters[2] = 0
           Attr parameters[3] = 0
@@ -33104,36 +33125,36 @@ to avoid restart after error."
             Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 1
-            Attr defnamecount[11] = 16
+            Attr defnamecount[11] = 17
             Attr defnamecount[60] = 4
             Attr defnamecount[64] = 3
             Attr defnamecount[65] = 1
             Attr defnamecount[72] = 1
             Attr defnamecount[90] = 5
-            Attr defnamecount[91] = 3
+            Attr defnamecount[91] = 4
             Attr defnamecount[97] = 3
             Attr defnamecount[99] = 3
             Attr defnamecount[100] = 1
             Attr defnamecount[136] = 7
-            Attr defnamecount[137] = 6
+            Attr defnamecount[137] = 7
             Attr defnamecount[138] = 1
-            Attr defnamecount[139] = 3
+            Attr defnamecount[139] = 4
             Attr defnamecount[141] = 1
             Attr defnamecount[253] = 5
-            Attr defnamecount[255] = 3
-            Attr defnamecount[256] = 4
+            Attr defnamecount[255] = 4
+            Attr defnamecount[256] = 7
             Attr defnamecount[263] = 3
             Attr defnamecount[264] = 3
             Attr defnamecount[267] = 1
             Attr defnamecount[271] = 1
-            Attr connamecount = 79
+            Attr connamecount = 86
           EndBuffer
         EndBody
         Object W WindowPlc 2028
           Body RtBody
           EndBody
           Body DevBody
-            Attr Modified = "10-JUN-2005 10:39:17.80"
+            Attr Modified = "13-JUN-2005 09:34:44.19"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -33143,6 +33164,161 @@ to avoid restart after error."
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn85 ConDigital 2631
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-cn85"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or3"
+                Attr dest_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.720000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.599000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn84 ConDigital 2630
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-cn84"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp6"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.420000e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.248667e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn83 ConDigital 2629
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-cn83"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp5"
+                Attr dest_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.420000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.210889e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn80 ConDigital 2620
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-cn80"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or2"
+                Attr dest_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.175333e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.420000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn78 ConDigital 2597
             Body DevBody
               Buffer PlcConnection
@@ -33390,17 +33566,17 @@ to avoid restart after error."
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 2
+                Attr source_point = 3
                 Attr source_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or2"
                 Attr dest_oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp2"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.720000e+00
-                  Attr y = 2.350000e+00
+                  Attr y = 2.150000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.599000e+00
-                  Attr y = 2.350000e+00
+                  Attr y = 2.150000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -33435,11 +33611,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.317556e+00
-                  Attr y = 2.400000e+00
+                  Attr y = 2.200000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 2.400000e+00
+                  Attr y = 2.200000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -33473,11 +33649,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.313111e+00
-                  Attr y = 2.350000e+00
+                  Attr y = 2.150000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 2.350000e+00
+                  Attr y = 2.150000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 7.750000e-01
@@ -33520,19 +33696,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.484667e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.527333e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 2.527333e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.570000e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -33563,19 +33739,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.384667e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.402333e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 2.402333e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.420000e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -33607,19 +33783,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.899000e+00
-                  Attr y = 2.150000e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.970556e+00
-                  Attr y = 2.150000e+00
+                  Attr x = 2.002084e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.970556e+00
-                  Attr y = 1.850000e+00
+                  Attr x = 2.002084e+00
+                  Attr y = 1.650000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.020000e+00
-                  Attr y = 1.850000e+00
+                  Attr y = 1.650000e+00
                 EndBuffer
                 Buffer point[4]
                   Attr x = 1.884500e+00
@@ -33654,11 +33830,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.720000e+00
-                  Attr y = 2.200000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.333111e+00
-                  Attr y = 2.200000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.659500e+00
@@ -33696,19 +33872,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.315333e+00
-                  Attr y = 1.900000e+00
+                  Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.677250e+00
-                  Attr y = 1.900000e+00
+                  Attr x = 1.659500e+00
+                  Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.677250e+00
-                  Attr y = 2.150000e+00
+                  Attr x = 1.659500e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.720000e+00
-                  Attr y = 2.150000e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -33740,19 +33916,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.899000e+00
-                  Attr y = 2.000000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.995278e+00
-                  Attr y = 2.000000e+00
+                  Attr x = 1.970556e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.995278e+00
-                  Attr y = 1.800000e+00
+                  Attr x = 1.970556e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 2.020000e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -33907,11 +34083,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.270000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.199000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -33946,11 +34122,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.020000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.849000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -33985,11 +34161,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.720000e+00
-                  Attr y = 2.000000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.599000e+00
-                  Attr y = 2.000000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34024,11 +34200,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
-                  Attr y = 2.050000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.382000e+00
-                  Attr y = 2.050000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34062,11 +34238,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.420000e+00
-                  Attr y = 2.000000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.257556e+00
-                  Attr y = 2.000000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34101,19 +34277,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.720000e+00
-                  Attr y = 2.050000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.616750e+00
-                  Attr y = 2.050000e+00
+                  Attr x = 1.634500e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.616750e+00
-                  Attr y = 2.200000e+00
+                  Attr x = 1.634500e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.333111e+00
-                  Attr y = 2.200000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -34144,11 +34320,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.570000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.484667e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34183,19 +34359,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.670000e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.634500e+00
-                  Attr y = 1.800000e+00
+                  Attr x = 1.616750e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.634500e+00
-                  Attr y = 1.900000e+00
+                  Attr x = 1.616750e+00
+                  Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.315333e+00
-                  Attr y = 1.900000e+00
+                  Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -34226,11 +34402,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.670000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.599000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34265,11 +34441,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.364222e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34303,11 +34479,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.257556e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34500,11 +34676,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.420000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.384667e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34539,11 +34715,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.170000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.099000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34578,19 +34754,19 @@ to avoid restart after error."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.920000e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.884500e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.884500e+00
-                  Attr y = 1.500000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.306444e+00
-                  Attr y = 1.500000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -34621,11 +34797,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.920000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.849000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34660,11 +34836,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.670000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.599000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34698,11 +34874,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.257556e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34737,11 +34913,11 @@ to avoid restart after error."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.228667e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.420000e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.300000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -34825,7 +35001,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Sub"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Sub1"
                 Attr x = 1.400000e+00
-                Attr y = -3.750000e-01
+                Attr y = -2.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34844,7 +35020,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAo"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAo0"
                 Attr x = 8.500000e-01
-                Attr y = -4.250000e-01
+                Attr y = -3.250000e-01
                 Attr width = 3.786667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34862,7 +35038,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAi0"
                 Attr x = 8.500000e-01
-                Attr y = -3.750000e-01
+                Attr y = -2.750000e-01
                 Attr width = 4.075556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34879,7 +35055,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Abs"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Abs2"
                 Attr x = 1.650000e+00
-                Attr y = -3.750000e-01
+                Attr y = -2.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34897,7 +35073,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GreaterThan"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Gt3"
                 Attr x = 1.900000e+00
-                Attr y = -3.750000e-01
+                Attr y = -2.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34916,7 +35092,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAp1"
                 Attr x = 8.500000e-01
-                Attr y = -5.250000e-01
+                Attr y = -4.250000e-01
                 Attr width = 4.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34933,7 +35109,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Wait0"
                 Attr x = 2.150000e+00
-                Attr y = -4.250000e-01
+                Attr y = -3.250000e-01
                 Attr width = 2.146667e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -34951,7 +35127,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-DSup0"
                 Attr x = 2.400000e+00
-                Attr y = -3.750000e-01
+                Attr y = -2.750000e-01
                 Attr width = 3.020000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35078,7 +35254,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Text6"
                 Attr x = 8.500000e-01
-                Attr y = 1.810000e-01
+                Attr y = 1.310000e-01
                 Attr width = 7.146667e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35094,7 +35270,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Text7"
                 Attr x = 8.500000e-01
-                Attr y = -2.690000e-01
+                Attr y = -2.190000e-01
                 Attr width = 7.857778e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35110,7 +35286,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GreaterThan"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Gt8"
                 Attr x = 1.400000e+00
-                Attr y = -7.750000e-01
+                Attr y = -5.749999e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35129,7 +35305,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAi1"
                 Attr x = 8.500000e-01
-                Attr y = -7.750000e-01
+                Attr y = -5.749999e-01
                 Attr width = 4.075556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35147,7 +35323,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAp3"
                 Attr x = 8.500000e-01
-                Attr y = -8.249999e-01
+                Attr y = -6.250000e-01
                 Attr width = 5.142222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35164,7 +35340,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-And0"
                 Attr x = 1.650000e+00
-                Attr y = -8.250000e-01
+                Attr y = -6.249999e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35184,7 +35360,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetDi"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDi0"
                 Attr x = 8.500000e-01
-                Attr y = -9.250000e-01
+                Attr y = -7.250000e-01
                 Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35201,7 +35377,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-DSup1"
                 Attr x = 2.550000e+00
-                Attr y = -7.750000e-01
+                Attr y = -5.749999e-01
                 Attr width = 3.020000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35219,7 +35395,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Wait1"
                 Attr x = 2.250000e+00
-                Attr y = -8.250000e-01
+                Attr y = -6.249999e-01
                 Attr width = 2.146667e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35238,7 +35414,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetDi"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDi1"
                 Attr x = 8.500000e-01
-                Attr y = -1.225000e+00
+                Attr y = -1.025000e+00
                 Attr width = 4.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35255,7 +35431,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-And1"
                 Attr x = 1.700000e+00
-                Attr y = -1.075000e+00
+                Attr y = -8.749999e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35275,7 +35451,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAp4"
                 Attr x = 8.500000e-01
-                Attr y = -1.075000e+00
+                Attr y = -8.750000e-01
                 Attr width = 5.320000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35293,7 +35469,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetAi2"
                 Attr x = 8.500000e-01
-                Attr y = -1.025000e+00
+                Attr y = -8.249999e-01
                 Attr width = 4.075556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35310,7 +35486,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-LessThan"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Lt10"
                 Attr x = 1.400000e+00
-                Attr y = -1.025000e+00
+                Attr y = -8.249999e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35328,7 +35504,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or0"
                 Attr x = 2.000000e+00
-                Attr y = -8.750000e-01
+                Attr y = -6.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.500000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35400,7 +35576,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Text13"
                 Attr x = 8.500000e-01
-                Attr y = -6.690000e-01
+                Attr y = -5.190000e-01
                 Attr width = 7.391111e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35416,7 +35592,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-And4"
                 Attr x = 1.700000e+00
-                Attr y = -1.225000e+00
+                Attr y = -1.025000e+00
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35435,7 +35611,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp0"
                 Attr x = 2.400000e+00
-                Attr y = -4.250000e-01
+                Attr y = -3.250000e-01
                 Attr width = 5.185555e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35453,7 +35629,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp1"
                 Attr x = 2.550000e+00
-                Attr y = -8.249999e-01
+                Attr y = -6.250000e-01
                 Attr width = 5.141111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35470,11 +35646,11 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or2"
                 Attr x = 1.400000e+00
-                Attr y = -1.425000e+00
-                Attr width = 1.790000e-01
-                Attr heigth = 1.000000e-01
+                Attr y = -2.180000e+00
+                Attr width = -7.260000e-01
+                Attr heigth = 1.055000e+00
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
-                Attr mask[0] = 3
+                Attr mask[0] = 7
                 Attr mask[1] = 1
               EndBuffer
             EndBody
@@ -35489,7 +35665,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp1"
                 Attr x = 8.500000e-01
-                Attr y = -1.375000e+00
+                Attr y = -1.175000e+00
                 Attr width = 4.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35507,7 +35683,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp2"
                 Attr x = 8.500000e-01
-                Attr y = -1.425000e+00
+                Attr y = -1.225000e+00
                 Attr width = 4.675556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35525,7 +35701,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp2"
                 Attr x = 1.700000e+00
-                Attr y = -1.375000e+00
+                Attr y = -1.175000e+00
                 Attr width = 4.607778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
@@ -35644,6 +35820,112 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
+          Object GetDp4 GetDp 2619
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr DpObject = "$PlcHost:BaseComponent-Class-ActuatorPoOr2SwFo.Error"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp4"
+                Attr x = 8.500000e-01
+                Attr y = -2.850000e+00
+                Attr width = -1.249667e+00
+                Attr heigth = 1.625000e+00
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp5 GetDp 2621
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr DpObject = "$PlcHost:BaseComponent-Class-ActuatorPoOr2SwFo.Warning"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp5"
+                Attr x = 8.500000e-01
+                Attr y = -1.425000e+00
+                Attr width = 3.608889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp3 StoDp 2624
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr Object = "$PlcConnect:BaseComponent-Class-ActuatorPoOr2Sw.IndWarning"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-StoDp3"
+                Attr x = 1.700000e+00
+                Attr y = -1.425000e+00
+                Attr width = 4.963333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text16 Text 2626
+            Body DevBody
+              Attr Text = "Indicate error or warning (red or yellow)"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Text16"
+                Attr x = 8.500000e-01
+                Attr y = -2.344000e+00
+                Attr width = -6.614445e-01
+                Attr heigth = 1.269000e+00
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp6 GetDp 2627
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr DpObject = "$PlcHost:BaseComponent-Class-ActuatorPoOr2SwFo.LocalMode"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-GetDp6"
+                Attr x = 8.500000e-01
+                Attr y = -1.475000e+00
+                Attr width = 3.986667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or3 Or 2628
+            Body RtBody
+            EndBody
+            Body DevBody
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W-Or3"
+                Attr x = 1.400000e+00
+                Attr y = -2.430000e+00
+                Attr width = -7.760000e-01
+                Attr heigth = 1.055000e+00
+                Attr woid = "BaseComponent:Class-ActuatorPoOr2SwFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object Template ActuatorPoOr2SwFo 2156888064
@@ -35662,7 +35944,7 @@ to avoid restart after error."
       Object RtBody $ObjBodyDef 1
         Body SysBody
           Attr StructName = "ControlValvePoOr2SwFo"
-          Attr NextAix = "_X4"
+          Attr NextAix = "_X6"
         EndBody
         Object ExtOrder $Input 2
           Body SysBody
@@ -35676,6 +35958,20 @@ to avoid restart after error."
             Attr PgmName = "LocalMode"
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "loc"
+          EndBody
+        EndObject
+        Object Error $Input 5
+          Body SysBody
+            Attr PgmName = "Error"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "err"
+          EndBody
+        EndObject
+        Object Warning $Input 4
+          Body SysBody
+            Attr PgmName = "Warning"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "warn"
           EndBody
         EndObject
         Object PlcConnect $Intern 1
@@ -35698,7 +35994,7 @@ to avoid restart after error."
       Object GraphPlcNode $GraphPlcNode 2584
         Body SysBody
           Attr object_type = 11
-          Attr parameters[0] = 2
+          Attr parameters[0] = 4
           Attr parameters[1] = 1
           Attr parameters[2] = 0
           Attr parameters[3] = 0
@@ -35737,17 +36033,17 @@ to avoid restart after error."
             Attr defnamecount[2] = 1
             Attr defnamecount[11] = 1
             Attr defnamecount[136] = 1
-            Attr defnamecount[137] = 1
+            Attr defnamecount[137] = 3
             Attr defnamecount[253] = 1
-            Attr defnamecount[256] = 1
-            Attr connamecount = 4
+            Attr defnamecount[256] = 3
+            Attr connamecount = 8
           EndBuffer
         EndBody
         Object W WindowPlc 2598
           Body RtBody
           EndBody
           Body DevBody
-            Attr Modified = "10-JUN-2005 10:35:42.32"
+            Attr Modified = "13-JUN-2005 08:38:17.93"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -35757,6 +36053,84 @@ to avoid restart after error."
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn7 ConDigital 2616
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-cn7"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-ActuatorFo0"
+                Attr dest_oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-GetDp2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.160889e+00
+                  Attr y = 1.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.370000e+00
+                  Attr y = 1.000000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn6 ConDigital 2614
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-cn6"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-ActuatorFo0"
+                Attr dest_oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-GetDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.125333e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.370000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn3 ConDigital 2608
             Body DevBody
               Buffer PlcConnection
@@ -35859,11 +36233,11 @@ to avoid restart after error."
                 Attr cid = "BaseComponent:Class-ActuatorPoOr2SwFo"
                 Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-ActuatorFo0"
                 Attr x = 1.350000e+00
-                Attr y = 6.200000e-01
+                Attr y = 5.200000e-01
                 Attr width = 8.630000e-01
-                Attr heigth = -3.950000e-01
+                Attr heigth = -2.950000e-01
                 Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
-                Attr mask[0] = 3
+                Attr mask[0] = 15
               EndBuffer
             EndBody
           EndObject
@@ -35898,6 +36272,42 @@ to avoid restart after error."
                 Attr y = 2.421439e-08
                 Attr width = 3.236667e-01
                 Attr heigth = 1.250000e-01
+                Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp1 GetDp 2613
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr DpObject = "$PlcHost:BaseComponent-Class-ControlValvePoOr2SwFo.Error"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-GetDp1"
+                Attr x = 8.000000e-01
+                Attr y = -9.999999e-02
+                Attr width = 2.003333e-01
+                Attr heigth = 1.750000e-01
+                Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp2 GetDp 2615
+            Body RtBody
+            EndBody
+            Body DevBody
+              Attr DpObject = "$PlcHost:BaseComponent-Class-ControlValvePoOr2SwFo.Warning"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W-GetDp2"
+                Attr x = 8.000000e-01
+                Attr y = -2.000000e-01
+                Attr width = 1.858889e-01
+                Attr heigth = 2.250000e-01
                 Attr woid = "BaseComponent:Class-ControlValvePoOr2SwFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
