@@ -286,6 +286,7 @@ subsm_SendBuffer (
   void			*data;
   gdb_sClass		*classp;
   cdh_uTypeId		cid;
+  int 			asize;
 
   gdb_AssumeLocked;
 
@@ -365,12 +366,12 @@ subsm_SendBuffer (
       dp->sts = sp->sts;
 
       if (ODD(sp->sts)) {
-        size = sp->aref.Size;
+        asize = sp->aref.Size;
         cid.pwr = sp->aref.Body;
         cid.c.bix = 0;	/* To get the class id.  */
         classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
         if (classp == NULL)
-	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, &size, ndc_eOp_encode, sp->aref.Offset, 0);
+	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, &asize, ndc_eOp_encode, sp->aref.Offset, 0);
 	sp->count++;
 	mp->count++;
       }
