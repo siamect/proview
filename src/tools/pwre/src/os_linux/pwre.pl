@@ -207,6 +207,8 @@ sub build_all ()
   _build("wbl", "nmps", "copy");
   _build("wbl", "ssab", "copy");
   _build("wbl", "tlog", "copy");
+  _build("wbl", "bcomp", "copy");
+  _build("wbl", "mcomp", "copy");
   _build("lib", "ge", "all");
   _build("lib", "wb", "all");
   _build("lib", "rt", "all");
@@ -232,6 +234,8 @@ sub build_all ()
   _build("wbl", "nmps", "lib");
   _build("wbl", "ssab", "lib");
   _build("wbl", "tlog", "lib");
+  _build("wbl", "bcomp", "lib");
+  _build("wbl", "mcomp", "lib");
   _build("wbl", "wb", "lib");
   _build("doc", "web", "all");
   _build("doc", "dweb", "all");
@@ -244,6 +248,8 @@ sub build_all ()
   _build("wbl", "nmps", "exe");
   _build("wbl", "tlog", "exe");
   _build("wbl", "ssab", "exe");
+  _build("wbl", "bcomp", "exe");
+  _build("wbl", "mcomp", "exe");
 
 }
 
