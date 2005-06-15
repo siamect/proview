@@ -370,7 +370,7 @@ subsm_SendBuffer (
         cid.pwr = sp->aref.Body;
         cid.c.bix = 0;	/* To get the class id.  */
         classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
-        if (classp == NULL)
+        if (classp != NULL)
 	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, &asize, ndc_eOp_encode, sp->aref.Offset, 0);
 	sp->count++;
 	mp->count++;
