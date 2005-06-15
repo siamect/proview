@@ -17,7 +17,7 @@
 117 0
 118 200
 119 155
-120 0
+120 1
 121 Claes context
 122 0
 126 1
@@ -9680,13 +9680,13 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Actuator.Mode.OpNoLocal##Boolean
+900 $object.Mode.OpNoLocal##Boolean
 901 0
 902 1
 903 1
 99
 2
-200 $object.Actuator.Mode.LocalMode##Boolean
+200 $object.Mode.LocalMode##Boolean
 201 9999
 99
 99
@@ -9749,12 +9749,12 @@ pwr_exe:
 0
 0
 1006 6.66537
-1007 5.24252
-1008 21.2313
+1007 5.24253
+1008 21.2312
 1009 20.5746
 1013 6.66537
-1014 5.24252
-1015 21.2313
+1014 5.24253
+1015 21.2312
 1016 20.5746
 1003
 0
@@ -9812,7 +9812,7 @@ pwr_exe:
 102 65532
 103 0
 9
-900 $object.Actuator.Mode.OpNoLocal##Boolean
+900 $object.Mode.OpNoLocal##Boolean
 901 0
 902 1
 903 1
