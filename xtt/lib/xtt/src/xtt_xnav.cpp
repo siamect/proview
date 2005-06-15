@@ -502,7 +502,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     case pwr_eType_UInt8:
     {
       if ( !format)
-        *len = sprintf( str, "%d", *(unsigned char *)value_ptr);
+        *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned char *)value_ptr);
       break;
@@ -510,7 +510,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     case pwr_eType_UInt16:
     {
       if ( !format)
-        *len = sprintf( str, "%hd", *(unsigned short *)value_ptr);
+        *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned short *)value_ptr);
       break;
@@ -519,7 +519,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     case pwr_eType_Mask:
     {
       if ( !format)
-        *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+        *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned int *)value_ptr);
       break;
