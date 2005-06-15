@@ -38,13 +38,16 @@ copy : $(inc_dir)/pwr_othermanufacturerclasses.h \
        $(inc_dir)/pwr_siemensclasses.h \
        $(inc_dir)/pwr_siemensclasses.hpp \
        $(inc_dir)/pwr_telemecaniqueclasses.h \
-       $(inc_dir)/pwr_telemecaniqueclasses.hpp
+       $(inc_dir)/pwr_telemecaniqueclasses.hpp \
+       $(inc_dir)/pwr_ssaboxclasses.h \
+       $(inc_dir)/pwr_ssaboxclasses.hpp
 
 
 lib  : $(load_dir)/othermanufacturer.dbs \
        $(load_dir)/abb.dbs \
        $(load_dir)/siemens.dbs \
-       $(load_dir)/telemecanique.dbs
+       $(load_dir)/telemecanique.dbs \
+       $(load_dir)/ssabox.dbs
 
 exe : $(doc_dir)/en_us/orm/othermanufacturer_allclasses.html \
       $(doc_dir)/sv_se/orm/othermanufacturer_allclasses.html \
@@ -61,7 +64,9 @@ exe : $(doc_dir)/en_us/orm/othermanufacturer_allclasses.html \
       $(doc_dir)/en_us/orm/telemecanique_allclasses.html \
       $(doc_dir)/sv_se/orm/telemecanique_allclasses.html \
       $(exe_dir)/en_us/telemecanique_xtthelp.dat \
-      $(exe_dir)/sv_se/telemecanique_xtthelp.dat
+      $(exe_dir)/sv_se/telemecanique_xtthelp.dat \
+      $(exe_dir)/en_us/ssabox_xtthelp.dat \
+      $(exe_dir)/sv_se/ssabox_xtthelp.dat
 
 clean : 
 
@@ -212,6 +217,43 @@ $(exe_dir)/en_us/telemecanique_xtthelp.dat : ../../telemecanique.wb_load
 
 $(exe_dir)/sv_se/telemecanique_xtthelp.dat : ../../telemecanique.wb_load
 	@ echo "Generating xtt help files for telemecanique classes sv_se"
+	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(source)"
+
+#
+# SsabOx
+#
+$(load_dir)/ssabox.dbs : ../../ssabox.wb_load
+	@ echo "Generating snapshot for ssabox"
+	@ wb_cmd create snapshot /file=\"$(source)\"/out=\"$(target)\"
+	@ chmod a+w $(target)
+
+$(inc_dir)/pwr_ssaboxclasses.h : ../../ssabox.wb_load
+	@ echo "Generating struct files for ssabox classes..."
+	@ co_convert -sv -d $(inc_dir) "$(source)"
+
+$(inc_dir)/pwr_ssaboxclasses.hpp : ../../ssabox.wb_load
+	@ echo "Generating hpp files for ssabox classes..."
+	@ co_convert -po -d $(inc_dir) "$(source)"
+
+$(doc_dir)/en_us/orm/ssabox_allclasses.html : ../../ssabox.wb_load
+	@ echo "Generating html files for ssabox classes en_us..."
+	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_ssaboxclasses.h
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_ssaboxclasses.hpp
+	@ echo "Generating html files for ssabox classes sv_se..."
+	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_ssaboxclasses.h
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_ssaboxclasses.hpp
+	@ echo "Generating postscript file for ssabox classes..."
+	@ co_convert -q -d $(doc_dir)/en_us "$(source)"
+	@ co_convert -q -l sv_se -d $(doc_dir)/sv_se "$(source)"
+
+$(exe_dir)/en_us/ssabox_xtthelp.dat : ../../ssabox.wb_load
+	@ echo "Generating xtt help files for ssabox classes en_us"
+	@ co_convert -x -d $(exe_dir)/en_us "$(source)"
+
+$(exe_dir)/sv_se/ssabox_xtthelp.dat : ../../ssabox.wb_load
+	@ echo "Generating xtt help files for ssabox classes sv_se"
 	@ co_convert -x -l sv_se -d $(exe_dir)/sv_se "$(source)"
 
 #

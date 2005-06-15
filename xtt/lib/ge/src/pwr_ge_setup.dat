@@ -182,10 +182,11 @@ menu Other
 {
   menu BaseComponent
   {
-    subgraph    ManualValve2Sw pwr_exe:bcomp_manualvalve2sw.pwsg 	4
-    subgraph    ManualValveSwOp pwr_exe:bcomp_manualvalveswop.pwsg 	4
-    subgraph    ManualValveSwCl pwr_exe:bcomp_manualvalveswcl.pwsg 	4
-    subgraph    ManualValveNoSw pwr_exe:bcomp_manualvalvenosw.pwsg 	4
+    subgraph    ManValve2Sw 	pwr_exe:bcomp_manvalve2sw.pwsg 	4
+    subgraph    ManValveSwOp	pwr_exe:bcomp_manvalveswop.pwsg 	4
+    subgraph    ManValveSwCl 	pwr_exe:bcomp_manvalveswcl.pwsg 	4
+    subgraph    ManValveNoSw 	pwr_exe:bcomp_manvalvenosw.pwsg 	4
+    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 4
     subgraph    FanCoCbSs 	pwr_exe:bcomp_fancocbss.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16

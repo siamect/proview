@@ -31,7 +31,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-ManualValve2Sw"
+            Attr TypeRef = "BaseComponent:Class-ManValve2Sw"
           EndBody
         EndObject
       EndObject
@@ -207,32 +207,6 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Feedback contactor lost, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/omron_contactor_j7kn.pdf"
-        EndBody
-      EndObject
-    EndObject
-    Object Ssab_SafetySwitch $ClassDef 7
-      Body SysBody
-        Attr Editor = 0
-        Attr Method = 0
-        Attr Flags = 16
-      EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
-          Attr StructName = "Ssab_SafetySwitch"
-          Attr NextAix = "_X2"
-        EndBody
-        Object Super $Attribute 1
-          Body SysBody
-            Attr PgmName = "Super"
-            Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
-          EndBody
-        EndObject
-      EndObject
-      Object Template Ssab_SafetySwitch 2149548032
-        Body RtBody
-          Attr Super.Specification = "SSAB SafetySwitch"
-          Attr Super.DataSheet = "$pwr_lang/datasheet/ssab_safetyswitch.pdf"
         EndBody
       EndObject
     EndObject

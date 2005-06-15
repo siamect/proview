@@ -192,6 +192,7 @@ palette NavigatorPalette
     classvolume ABB ABB
     classvolume Siemens Siemens
     classvolume Telemecanique Telemecanique
+    classvolume SsabOx SsabOx
   }
 }
 
@@ -255,6 +256,7 @@ palette ClassNavigatorPalette
     classvolume ABB ABB
     classvolume Siemens Siemens
     classvolume Telemecanique Telemecanique
+    classvolume SsabOx SsabOx
   }
 }
 
@@ -632,8 +634,18 @@ palette PlcEditorPalette
       class RunTimeCounterFo
       class FanCbCoSsFo  
       class ActuatorPoOr2SwFo
-      class ControlValvePoOr2SwFo
-      class ManualValve2SwFo
+      class ActuatorPoOrFo
+      class ActuatorOrFo
+      class ActuatorOr2SwFo
+      class ActuatorOrSwOpFo
+      class ActuatorOrSwClFo
+      class CValvePoOr2SwFo
+      class CValvePoOrFo
+      class CValveOrFo
+      class CValveOr2SwFo
+      class CValveOrSwOpFo
+      class CValveOrSwClFo
+      class ManValve2SwFo
     }
     menu ABB
     {
@@ -642,7 +654,11 @@ palette PlcEditorPalette
     }
     menu Simulate
     {
-      class ControlValvePoOr2SwSim
+      class CValvePoOr2SwSim
+      class CValvePoOrSim
+      class CValveOr2SwSim
+      class CValveOrSwOpSim
+      class CValveOrSwClSim
       class FanCbCoSsSim
       class BaseSensorSim
       class ABB_ACS800Pump1Sim

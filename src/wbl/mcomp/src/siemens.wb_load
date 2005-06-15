@@ -163,7 +163,7 @@ Volume Siemens $ClassVolume 0.0.250.3
           Body SysBody
             Attr PgmName = "Ch"
             Attr Flags = 131074
-            Attr Elements = 2
+            Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDi"
           EndBody
         EndObject
@@ -197,7 +197,7 @@ Volume Siemens $ClassVolume 0.0.250.3
           Body SysBody
             Attr PgmName = "Ch"
             Attr Flags = 131074
-            Attr Elements = 2
+            Attr Elements = 4
             Attr TypeRef = "pwrb:Class-ChanDo"
           EndBody
         EndObject

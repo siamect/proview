@@ -77,13 +77,63 @@ SObject pwrb:Type
      EndBody
     EndObject
     !/**
-    !  A single bit.
+    !  64-bit signed integer.
     !*/
-    Object Bit $Value
+    Object Int8 $Value
      Body SysBody
-       Attr PgmName = "Bit"
-       Attr Text = "Bit"
+       Attr PgmName = "Int64"
+       Attr Text = "Int64"
        Attr Value = 6
+     EndBody
+    EndObject
+    !/**
+    !  64-bit unsigned integer.
+    !*/
+    Object UInt64 $Value
+     Body SysBody
+       Attr PgmName = "UInt64"
+       Attr Text = "UInt64"
+       Attr Value = 7
+     EndBody
+    EndObject
+    !/**
+    !  A single bit in a 8-bit word.
+    !*/
+    Object Bit8 $Value
+     Body SysBody
+       Attr PgmName = "Bit8"
+       Attr Text = "Bit8"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  A single bit in a 16-bit word.
+    !*/
+    Object Bit8 $Value
+     Body SysBody
+       Attr PgmName = "Bit16"
+       Attr Text = "Bit16"
+       Attr Value = 9
+     EndBody
+    EndObject
+    !/**
+    !  A single bit in a 32-bit word.
+    !*/
+    Object Bit32 $Value
+     Body SysBody
+       Attr PgmName = "Bit32"
+       Attr Text = "Bit32"
+       Attr Value = 10
+     EndBody
+    EndObject
+    !/**
+    !  A single bit in a 64-bit word.
+    !*/
+    Object Bit64 $Value
+     Body SysBody
+       Attr PgmName = "Bit64"
+       Attr Text = "Bit64"
+       Attr Value = 11
      EndBody
     EndObject
     !/**
@@ -93,7 +143,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "Float32"
        Attr Text = "Float32"
-       Attr Value = 7
+       Attr Value = 12
      EndBody
     EndObject
     !/**
@@ -103,7 +153,7 @@ SObject pwrb:Type
      Body SysBody
        Attr PgmName = "Float64"
        Attr Text = "Float64"
-       Attr Value = 8
+       Attr Value = 13
      EndBody
     EndObject
   EndObject
