@@ -350,7 +350,7 @@ int print_object( pwr_tOid oid, pwr_tCid cid, char *object_p,
   int 		rows;
   char		idx[20];
 
-  sts = gdh_GetObjectBodyDef( cid, &bd, &rows);
+  sts = gdh_GetObjectBodyDef( cid, &bd, &rows, oid);
   if ( EVEN(sts)) return sts;
 
   for ( i = 0; i < rows; i++) {
