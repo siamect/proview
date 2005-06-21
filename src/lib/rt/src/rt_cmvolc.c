@@ -322,7 +322,8 @@ netError:
 void
 cmvolc_GetNonExistingClass (
   pwr_tStatus		*sts,
-  gdb_sObject		*op
+  gdb_sObject		*op, 
+  pwr_tCid              cid
   )
 {
 
@@ -336,7 +337,6 @@ cmvolc_GetNonExistingClass (
   net_sGetGclassR	*rmp = NULL; /* Receive message.  */
   int 			i, j;
   pwr_tUInt32		nextIdx = 0;
-  pwr_tClassId		cid;
   pwr_tVolumeId		cvid;
   gdb_sClass		*cp;
   gdb_sVolume		*vp;
@@ -355,8 +355,6 @@ cmvolc_GetNonExistingClass (
   gdb_AssumeLocked;
 
   pwr_Assert(op->l.flags.b.isCached);
-
-  cid = op->g.cid;
 
   vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
   np = pool_Address(NULL, gdbroot->pool, vp->l.nr);

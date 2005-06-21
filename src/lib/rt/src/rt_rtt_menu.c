@@ -6498,7 +6498,7 @@ int	rtt_object_parameters(
 	strcat( title, "   ");
 	strcat( title, classname);
 
-	sts = gdh_GetObjectBodyDef( class, &bd, &rows);
+	sts = gdh_GetObjectBodyDef( class, &bd, &rows, objid);
 	if ( EVEN(sts)) return sts;
 
 	/* Count the parameters */

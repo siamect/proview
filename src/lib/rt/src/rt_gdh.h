@@ -722,7 +722,8 @@ pwr_tStatus
 gdh_GetObjectBodyDef(
   pwr_tCid cid,
   gdh_sAttrDef **bodydef,
-  int *rows
+  int *rows,
+  pwr_tOid oid
 );
 
 pwr_tStatus
@@ -740,8 +741,9 @@ gdh_GetAttrRefAdef(
 
 pwr_tStatus 
 gdh_GetSuperClass( 
-  pwr_tCid cid,
-  pwr_tCid *supercid
+  pwr_tCid   cid,
+  pwr_tCid   *supercid, 
+  pwr_tObjid oid
 );
 
 pwr_tStatus

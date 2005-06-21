@@ -38,7 +38,8 @@ cmvolc_GetCachedClass (
 void
 cmvolc_GetNonExistingClass (
   pwr_tStatus		*sts,
-  gdb_sObject		*op
+  gdb_sObject		*op,
+  pwr_tCid              cid
   );
 
 

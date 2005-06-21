@@ -828,7 +828,7 @@ gdh_GetObjectClass (
       if (op->l.flags.b.isCached) {
         cp = hash_Search(&lsts, gdbroot->cid_ht, cid);
         if (cp == NULL) {
-          cmvolc_GetNonExistingClass(&lsts, op);
+          cmvolc_GetNonExistingClass(&lsts, op, *cid);
         }
       }
 
@@ -853,6 +853,7 @@ gdh_GetAttrRefTid (
   pwr_tStatus		sts = GDH__SUCCESS;
   mvol_sAttribute	*ap;
   mvol_sAttribute	attribute;
+  gdb_sClass            *cp;
 
   if ( arp->Flags.b.Object && arp->Body) {
     *tid = arp->Body & ~7;
@@ -879,11 +880,29 @@ gdh_GetAttrRefTid (
       sts = gdh_GetObjectInfoAttrref( &cast_aref, &castid, sizeof(castid));
       if ( ODD(sts) && castid != pwr_cNCastId) {
 	*tid = castid;
-	return sts;
-      }      
-      sts = GDH__SUCCESS;
+      } else {
+        *tid  = ap->adef->TypeRef;
+      }
+    } else {
+      *tid  = ap->adef->TypeRef;
     }
-    *tid  = ap->adef->TypeRef;
+
+    if (!(ap->op->l.flags.m & gdb_mLo_native)) {
+
+      gdh_ScopeLock {
+
+        cp = hash_Search(&sts, gdbroot->cid_ht, tid);
+        if (cp == NULL) {
+          cmvolc_GetNonExistingClass(&sts, ap->op, *tid);
+          cp = hash_Search(&sts, gdbroot->cid_ht, tid);
+          if (cp == NULL) {
+	    sts = GDH__NOSUCHCLASS;
+	  }
+        }
+	
+      } gdh_ScopeUnlock;
+
+    }   
   }
   return sts;
 }
@@ -3125,12 +3144,14 @@ pwr_tStatus
 gdh_GetObjectBodyDef(
   pwr_tCid cid,
   gdh_sAttrDef **bodydef,
-  int *rows
+  int *rows, 
+  pwr_tOid oid
 )
 {
   gdb_sClass *cp;
   gdb_sObject *bop;
   gdb_sObject *aop;
+  gdb_sObject *op;
   pwr_sParam *adef;
   pwr_sObjBodyDef *bdef;
   int acnt = 0;
@@ -3159,7 +3180,20 @@ gdh_GetObjectBodyDef(
 
       if ( strcmp( a_super[scnt-1]->g.f.name.orig, "Super") == 0 && cdh_tidIsCid(adef->TypeRef)) {
 	cp = hash_Search(&sts, gdbroot->cid_ht, &adef->TypeRef);
-	if ( cp == 0) { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+	
+	if (cp == 0) {
+
+	  if (!cdh_ObjidIsNull(oid)) {
+            op = vol_OidToObject(&sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+
+            if (!(op->l.flags.m & gdb_mLo_native)) {
+
+              cmvolc_GetNonExistingClass(&sts, op, adef->TypeRef);
+              cp = hash_Search(&sts, gdbroot->cid_ht, &adef->TypeRef);
+              if (cp == NULL) { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+            } else { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+	  } else { rsts = GDH__NOSUCHCLASS; goto error_sts;}
+	}
 	    
 	bop = pool_Address(&sts, gdbroot->pool, cp->bor);
 	if (bop == NULL) { rsts = GDH__ATTRIBUTE; goto error_sts;}
@@ -3315,21 +3349,49 @@ gdh_GetAttrRefAdef(
 
 pwr_tStatus 
 gdh_GetSuperClass( 
-  pwr_tCid cid,
-  pwr_tCid *supercid
+  pwr_tCid    cid,
+  pwr_tCid    *supercid, 
+  pwr_tObjid  oid
 )
 {
-  gdb_sClass *cp;
+  gdb_sClass  *cp;
+  gdb_sObject *op;
+  pwr_tCid    sid;
   pwr_tStatus sts = GDH__SUCCESS;
 
   gdh_ScopeLock {
-    /* TODO get cashed class... */
     cp = hash_Search(&sts, gdbroot->cid_ht, &cid);
-    if ( cp) {
+    if (cp) {
       if ( !(cp->attr[0].flags.m & PWR_MASK_SUPERCLASS))
 	sts = GDH__NOSUCHCLASS;
-      else
-	*supercid = cp->attr[0].tid;
+      else {
+	sid = *supercid = cp->attr[0].tid;
+	if (!cdh_ObjidIsNull(oid)) {
+          op = vol_OidToObject(&sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+          if (!(op->l.flags.m & gdb_mLo_native)) {
+            cp = hash_Search(&sts, gdbroot->cid_ht, &sid);
+	    if (cp == NULL) {
+              cmvolc_GetNonExistingClass(&sts, op, sid);
+              cp = hash_Search(&sts, gdbroot->cid_ht, &sid);
+              if (cp == NULL) {
+	        sts = GDH__NOSUCHCLASS;
+	      }
+            }
+          }
+        }
+      }
+    } else if (!cdh_ObjidIsNull(oid)) {
+      op = vol_OidToObject(&sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+      cmvolc_GetNonExistingClass(&sts, op, cid);
+      cp = hash_Search(&sts, gdbroot->cid_ht, &cid);
+      if (cp) {
+        if (!(cp->attr[0].flags.m & PWR_MASK_SUPERCLASS))
+	  sts = GDH__NOSUCHCLASS;
+        else
+	  *supercid = cp->attr[0].tid;
+      } else {
+	sts = GDH__NOSUCHCLASS;
+      }
     }
   } gdh_ScopeUnlock;
 
