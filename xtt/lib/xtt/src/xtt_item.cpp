@@ -297,7 +297,7 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
     if ( brow->usertype == brow_eUserType_XNav && ((XNav *)brow->userdata)->gbl.show_truedb)
       sts = gdh_GetTrueObjectBodyDef( classid, &bd, &rows);
     else
-      sts = gdh_GetObjectBodyDef( classid, &bd, &rows);
+      sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objid);
     if ( EVEN(sts)) return sts;
 
     for ( i = 0; i < rows; i++) {
@@ -376,7 +376,7 @@ int ItemBaseObject::open_attribute( XNavBrow *brow, double x, double y,
   sts = gdh_GetObjectClass ( objid, &classid);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_GetObjectBodyDef( classid, &bd, &rows);
+  sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objid);
   if ( EVEN(sts)) return sts;
 
   attr_exist = 0;
@@ -935,7 +935,7 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
     if ( brow->usertype == brow_eUserType_XNav && ((XNav *)brow->userdata)->gbl.show_truedb)
       sts = gdh_GetTrueObjectBodyDef( cid, &bd, &rows);
     else
-      sts = gdh_GetObjectBodyDef( cid, &bd, &rows);
+      sts = gdh_GetObjectBodyDef( cid, &bd, &rows, objid);
     if ( EVEN(sts)) return sts;
 
     for ( i = 0; i < rows; i++) {

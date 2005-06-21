@@ -578,7 +578,7 @@ static pwr_tStatus OpenObjectGraphFilter( xmenu_sMenuCall *ip)
 
   for ( sts = gdh_GetAttrRefTid( objar, &classid);
 	ODD(sts);
-	sts = gdh_GetSuperClass( classid, &classid)) {
+	sts = gdh_GetSuperClass( classid, &classid, pwr_cNObjid)) {
 
     sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
 			   classname, sizeof(classname), cdh_mName_object);

@@ -460,7 +460,7 @@ static int xnav_GetObjectMenu(
 
       // Get the RtXtt menu-objects for superclasses
       // TODO shadow overlayed methods...
-      sts = gdh_GetSuperClass( classid, &supercid);
+      sts = gdh_GetSuperClass( classid, &supercid, CurrentObject->Objid);
       while ( ODD(sts)) {
 	sts = gdh_ObjidToName( cdh_ClassIdToObjid( supercid), classname, 
 			       sizeof(classname), cdh_mName_volumeStrict);
@@ -476,7 +476,7 @@ static int xnav_GetObjectMenu(
 	    sts = gdh_GetNextSibling( child, &child);
 	  }
 	}
-	sts = gdh_GetSuperClass( supercid, &supercid);
+	sts = gdh_GetSuperClass( supercid, &supercid, CurrentObject->Objid);
       }
 
       // Get the RtXtt menu-objects for this class, or for superclasses

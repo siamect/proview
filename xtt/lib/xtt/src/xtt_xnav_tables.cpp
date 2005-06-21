@@ -1114,7 +1114,7 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
     if ( EVEN(sts)) return sts;
 
     // Get attributes for this class
-    sts = gdh_GetObjectBodyDef( classid, &bd, &rows);
+    sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objid);
     if ( EVEN(sts)) return sts;
 
     for ( i = 0; i < rows; i++) {

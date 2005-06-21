@@ -2348,7 +2348,7 @@ static int	xnav_open_func(	void		*client_data,
 	    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
 	    if ( ODD(sts)) break;
 
-	    sts = gdh_GetSuperClass( cid, &cid);
+	    sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
 	  }
 	  if ( EVEN(sts)) {
 	    xnav->message('E',"No classgraph found");
@@ -4369,7 +4369,7 @@ static int	xnav_print_func(void		*client_data,
 	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
 	if ( ODD(sts)) break;
 	
-	sts = gdh_GetSuperClass( cid, &cid);
+	sts = gdh_GetSuperClass( cid, &cid, aref.Objid);
       }
       if ( EVEN(sts)) {
 	xnav->message('E',"No classgraph found");
