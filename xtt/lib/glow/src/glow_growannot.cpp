@@ -65,6 +65,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
     return;
 
   glow_eDrawType color;
+  int rot;
   double trf_scale = trf.vertical_scale( t);
   int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
@@ -75,76 +76,99 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
   {
     x1 = int( trf.x( p.x, p.y) * ctx->zoom_factor_x) - ctx->offset_x;
     y1 = int( trf.y( p.x, p.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    rot = (int) trf.rot();
   }
   else
   {
     x1 = int( trf.x( t, p.x, p.y) * ctx->zoom_factor_x) - ctx->offset_x;
     y1 = int( trf.y( t, p.x, p.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    rot = (int) trf.rot( t);
   }
+  rot = rot < 0 ? rot % 360 + 360 : rot % 360;
 
   switch ( annot_type) {
-    case glow_eAnnotType_OneLine:
-      color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
-		 highlight, (GrowNode *)colornode, 2);
+  case glow_eAnnotType_OneLine: {
+    int width, height, descent;
 
+    color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
+					    highlight, (GrowNode *)colornode, 2);
+
+
+    if ( rot < 45 || rot >= 315) {
       if ( ((GlowNode *) node)->annotv_inputmode[number] &&
 	   ((GrowNode *) node)->input_selected) {
-	int width, height, descent;
 	draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
 			      strlen(((GlowNode *) node)->annotv[number]),
 			      draw_type, idx,
 			      &width, &height, &descent);
-	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, glow_eDrawType_MediumGray);
+	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, 
+			     glow_eDrawType_MediumGray);
       }
-
-      glow_draw_text( ctx, x1, y1,
-	((GlowNode *) node)->annotv[number], 
-	strlen(((GlowNode *) node)->annotv[number]), draw_type, color, idx, 
-	highlight, 0);
-      if ( ((GlowNode *) node)->annotv_inputmode[number])
-	glow_draw_text_cursor( ctx, x1, y1,
-			((GlowNode *) node)->annotv[number],
-			strlen(((GlowNode *) node)->annotv[number]),
-			draw_type, color, idx, highlight, 
-			((GrowNode *)node)->input_position);
-#if 0
-        glow_draw_move_input( ctx, 
-	  ((GlowNode *) node)->annotv_input[number],
-	  x1, y1,
-	  glow_ePosition_Absolute);
-#endif
-      break;
-    case glow_eAnnotType_MultiLine:
-    {
-      int z_width, z_height, z_descent;
-      int len = 0;
-      int line_cnt = 0;
-      char *line = ((GlowNode *) node)->annotv[number];
-      char *s;
-      color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
-		 highlight, (GrowNode *)colornode, 2);
-
-      draw_get_text_extent( ctx, "", 0, draw_type, idx, &z_width, &z_height,
-		&z_descent);
-      for ( s = ((GlowNode *) node)->annotv[number]; *s; s++)
-      {
-        if ( *s == 10)
-	{
-	  if ( len)
-            glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
-	  	len, draw_type, color, idx, highlight, 0);
-	  len = 0;
-	  line = s+1;
-	  line_cnt++;
-	}
-	else
-	  len++;
-      }
-      if ( len)
-        glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
-	  	len, draw_type, color, idx, highlight, 0);
-      break;
     }
+    else {
+      // Text is rotated, adjust the coordinates
+      draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
+			  strlen(((GlowNode *) node)->annotv[number]),
+			  draw_type, idx,
+			  &width, &height, &descent);
+
+      if ( 45 <= rot && rot < 135) {
+	y1 += height - descent;
+      }
+      else if ( 135 <= rot && rot < 225) {
+	x1 -= width;
+	y1 += height - descent;
+      }
+      else {
+	x1 -= width;
+      }
+    } 
+    glow_draw_text( ctx, x1, y1,
+		    ((GlowNode *) node)->annotv[number], 
+		    strlen(((GlowNode *) node)->annotv[number]), draw_type, color, idx, 
+		    highlight, 0);
+    if ( ((GlowNode *) node)->annotv_inputmode[number])
+      glow_draw_text_cursor( ctx, x1, y1,
+			     ((GlowNode *) node)->annotv[number],
+			     strlen(((GlowNode *) node)->annotv[number]),
+			     draw_type, color, idx, highlight, 
+			     ((GrowNode *)node)->input_position);
+#if 0
+    glow_draw_move_input( ctx, 
+			  ((GlowNode *) node)->annotv_input[number],
+			  x1, y1,
+			  glow_ePosition_Absolute);
+#endif
+    break;
+  }
+  case glow_eAnnotType_MultiLine: {
+    int z_width, z_height, z_descent;
+    int len = 0;
+    int line_cnt = 0;
+    char *line = ((GlowNode *) node)->annotv[number];
+    char *s;
+    color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
+					    highlight, (GrowNode *)colornode, 2);
+
+    draw_get_text_extent( ctx, "", 0, draw_type, idx, &z_width, &z_height,
+			  &z_descent);
+    for ( s = ((GlowNode *) node)->annotv[number]; *s; s++) {
+      if ( *s == 10) {
+	if ( len)
+	  glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
+			  len, draw_type, color, idx, highlight, 0);
+	len = 0;
+	line = s+1;
+	line_cnt++;
+      }
+      else
+	len++;
+    }
+    if ( len)
+      glow_draw_text( ctx, x1, y1 + line_cnt * z_height, line, 
+		      len, draw_type, color, idx, highlight, 0);
+    break;
+  }
   }
 }
 
