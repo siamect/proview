@@ -76,7 +76,7 @@ static pwr_tStatus AiRangeToCoef(
       }
       else
       {
-        sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+        sts = gdh_ObjidToName( chanp->ChanAref.Objid, buf, sizeof(buf), 
 			cdh_mName_volumeStrict);
         if ( EVEN(sts)) return sts;
         errh_Error( "Invalid SigValueRange in Ai channel %s", buf);
