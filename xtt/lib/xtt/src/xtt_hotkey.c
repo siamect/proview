@@ -324,7 +324,7 @@ hotkeySTATUS hotkey_Process (
 	    {
 		if ( cp->hk[i].kcode == kev->keycode 
 		    && cp->hk[i].mod == (kev->state & ~LockMask
-		    & ~Mod1Mask & ~Mod2Mask & ~Mod3Mask & ~Mod4Mask & ~Mod5Mask)
+		    & ~Mod2Mask & ~Mod3Mask & ~Mod4Mask & ~Mod5Mask)
 		)
 		{
 		    XtCallActionProc (
