@@ -65,6 +65,11 @@ pwr_dImport pwr_BindIoMethods(Pb_Ai);
 pwr_dImport pwr_BindIoMethods(Pb_Ao);
 pwr_dImport pwr_BindIoMethods(Pb_Ii);
 pwr_dImport pwr_BindIoMethods(Pb_Io);
+pwr_dImport pwr_BindIoMethods(Ssab_AiuP);
+pwr_dImport pwr_BindIoMethods(Ssab_AouP);
+pwr_dImport pwr_BindIoMethods(Ssab_Di);
+pwr_dImport pwr_BindIoMethods(Ssab_Do);
+pwr_dImport pwr_BindIoMethods(Ssab_Co);
 
 pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Node),
@@ -86,6 +91,11 @@ pwr_BindIoClasses(Base) = {
   pwr_BindIoClass(Pb_Ao),
   pwr_BindIoClass(Pb_Ii),
   pwr_BindIoClass(Pb_Io),
+  pwr_BindIoClass(Ssab_AiuP),
+  pwr_BindIoClass(Ssab_AouP),
+  pwr_BindIoClass(Ssab_Di),
+  pwr_BindIoClass(Ssab_Do),
+  pwr_BindIoClass(Ssab_Co),
   pwr_NullClass
 };
 
@@ -1139,7 +1149,7 @@ static pwr_tStatus io_FindMethods(
 	break;
       }
 
-      sts = gdh_GetSuperClass( cid, &cid);
+      sts = gdh_GetSuperClass( cid, &cid, pwr_cNObjid);
       if ( EVEN(sts)) {
 	next = 1;
 	break;
@@ -1331,7 +1341,7 @@ static pwr_tStatus io_init_card(
   pwr_tDlid	sigdlid;
   pwr_tUInt32	number;
   pwr_tUInt16	maxchan;
-  pwr_tObjid	sigchancon;
+  pwr_sAttrRef	sigchancon;
   void		*chan_op;
   void		*sig_op;
   io_sChannel	*chanp;
@@ -1339,7 +1349,8 @@ static pwr_tStatus io_init_card(
   pwr_tFloat32	scantime;
   pwr_tObjid	thread;
   int		ok;
-
+  int		child_found = 0;
+  
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
 
@@ -1425,6 +1436,7 @@ static pwr_tStatus io_init_card(
 	  
 	  /* Fill in the channel and signal lists */
 
+	  /* Find children */
 	  sts = gdh_GetChild( objid, &chan);
 	  while( ODD(sts)) {
 	    memset( &attrref, 0, sizeof(attrref));
@@ -1437,35 +1449,35 @@ static pwr_tStatus io_init_card(
 
 	    switch ( class) {
 	    case pwr_cClass_ChanAi:
-	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanAi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanAit:
-	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanAit *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanAo:
-	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanAo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanDo:
-	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanDo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanDi:
-	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanDi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanIi:
-	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanIi *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanIo:
-	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanIo *) chan_op)->Number;
 	      break;
 	    case pwr_cClass_ChanCo:
-	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon.Objid;
+	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
 	      number = ((pwr_sClass_ChanCo *) chan_op)->Number;
 	      break;
 	    default:
@@ -1474,6 +1486,7 @@ static pwr_tStatus io_init_card(
 	      continue;
 	    }
 	    
+	    child_found = 1;
 	    if ( (int) number > maxchan-1) {
 	      /* Number out of range */
 	      errh_Error( 
@@ -1484,23 +1497,21 @@ static pwr_tStatus io_init_card(
 	      continue;
 	    }
 	    /* Find signal */
-	    if ( cdh_ObjidIsNull( sigchancon)) {
+	    if ( cdh_ObjidIsNull( sigchancon.Objid)) {
 	      /* Not connected */
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_GetNextSibling( chan, &chan);
 	      continue;
 	    }
 	    
-	    sts = gdh_GetObjectClass( sigchancon, &sigclass);
+	    sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
 	    if ( EVEN(sts)) {
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_GetNextSibling( chan, &chan);
 	      continue;
 	    }
 
-	    memset( &attrref, 0, sizeof(attrref));
-	    attrref.Objid = sigchancon;
-	    sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &sig_op, &sigdlid);
+	    sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
 	    if ( EVEN(sts)) {
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_GetNextSibling( chan, &chan);
@@ -1511,10 +1522,10 @@ static pwr_tStatus io_init_card(
 	    chanp = &cp->chanlist[number];
 	    chanp->cop = chan_op;
 	    chanp->ChanDlid = chandlid;
-	    chanp->ChanObjid = chan;
+	    chanp->ChanAref = cdh_ObjidToAref(chan);
 	    chanp->sop = sig_op;
 	    chanp->SigDlid = sigdlid;
-	    chanp->SigObjid = sigchancon;
+	    chanp->SigAref = sigchancon;
 	    chanp->ChanClass = class;
 	    chanp->SigClass = sigclass;
 	    switch( sigclass) {
@@ -1564,10 +1575,174 @@ static pwr_tStatus io_init_card(
 	    /* If the signal has a Sup-object as a child, this will be inserted
 	       in the suplist */
 	    /* if ( process != io_mProcess_Plc) */
-	    io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon, sig_op);
+	    io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon.Objid, sig_op);
 
 	    sts = gdh_GetNextSibling( chan, &chan);
 	  }
+
+	  /* Look for internal object attributes */
+	  if ( !child_found) {
+	    gdh_sAttrDef *bd;
+	    int rows;
+	    int csize;
+	    int chan_cnt = 0;
+	    int i, j;
+	    int elem;
+
+	    sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
+	    if ( EVEN(sts)) return sts;
+
+	    for ( i = 0; i < rows; i++) {
+	      switch ( bd[i].attr->Param.TypeRef) {
+	      case pwr_cClass_ChanAi:
+		csize = sizeof( pwr_sClass_ChanAi);
+		break;
+	      case pwr_cClass_ChanAit:
+		csize = sizeof( pwr_sClass_ChanAit);
+		break;
+	      case pwr_cClass_ChanAo:
+		csize = sizeof( pwr_sClass_ChanAo);
+		break;
+	      case pwr_cClass_ChanDi:
+		csize = sizeof( pwr_sClass_ChanDi);
+		break;
+	      case pwr_cClass_ChanDo:
+		csize = sizeof( pwr_sClass_ChanDo);
+		break;
+	      case pwr_cClass_ChanIi:
+		csize = sizeof( pwr_sClass_ChanIi);
+		break;
+	      case pwr_cClass_ChanIo:
+		csize = sizeof( pwr_sClass_ChanIo);
+		break;
+	      case pwr_cClass_ChanCo:
+		csize = sizeof( pwr_sClass_ChanCo);
+		break;
+	      default:
+		continue;
+	      }
+
+	      elem = 1;
+	      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+		elem = bd[i].attr->Param.Info.Elements;
+	      for ( j = 0; j < elem; j++) {
+		chan_op = ((char *)cp->op) + bd[i].attr->Param.Info.Offset + csize * j;
+
+		switch ( bd[i].attr->Param.TypeRef) {
+		case pwr_cClass_ChanAi:
+		  sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanAit:
+		  sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanAo:
+		  sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanDi:
+		  sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanDo:
+		  sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanIi:
+		  sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanIo:
+		  sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		case pwr_cClass_ChanCo:
+		  sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+		  number = chan_cnt;
+		  break;
+		default:
+		  ;
+		}
+
+		chan_cnt++;
+
+		/* Find signal */
+		if ( cdh_ObjidIsNull( sigchancon.Objid)) {
+		  /* Not connected */
+		  continue;
+		}
+	    
+		sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+		if ( EVEN(sts))
+		  continue;
+
+		sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+		if ( EVEN(sts))
+		  continue;
+	  
+		/* Insert */
+		if ( elem > 1)
+		  sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
+		else
+		  sprintf( attrname, "%s.%s", cname, bd[i].attrName);
+
+		chanp = &cp->chanlist[number];
+		chanp->cop = chan_op;
+		chanp->ChanDlid = pwr_cNDlid;
+		sts = gdh_NameToAttrref( pwr_cNObjid, attrname, &chanp->ChanAref);
+		if ( EVEN(sts)) return sts;
+		chanp->sop = sig_op;
+		chanp->SigDlid = sigdlid;
+		chanp->SigAref = sigchancon;
+		chanp->ChanClass = bd[i].attr->Param.TypeRef;
+		chanp->SigClass = sigclass;
+		switch( sigclass) {
+		case pwr_cClass_Di:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Do:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+	             (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Po:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ai:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ao:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ii:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Io:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Co:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		  chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		  break;
+		default:
+		  errh_Error( 
+		    "IO init error: unknown signal class card  %, chan nr %d", 
+		    cp->Name, number);
+		  sts = gdh_DLUnrefObjectInfo( sigdlid);
+		  memset( chanp, 0, sizeof(*chanp));
+		}
+	      }
+	    }
+	  }
+	  
 	}
       }
     }
@@ -2328,7 +2503,8 @@ pwr_tStatus io_close(
 	  {
 	    if ( cp->chanlist[i].cop)
 	    {
-	      gdh_DLUnrefObjectInfo( cp->chanlist[i].ChanDlid);
+	      if ( cdh_RefIdIsNotNull( cp->chanlist[i].ChanDlid))
+		gdh_DLUnrefObjectInfo( cp->chanlist[i].ChanDlid);
 	      gdh_DLUnrefObjectInfo( cp->chanlist[i].SigDlid);
 	    }
 	  }
@@ -2382,7 +2558,7 @@ pwr_tStatus io_AiRangeToCoef(
     }
     else
     {
-      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
 			cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       errh_Error( "Invalid RawValueRange in Ai channel %s", buf);
@@ -2404,7 +2580,7 @@ pwr_tStatus io_AiRangeToCoef(
       }
       else
       {
-        sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+        sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
 			cdh_mName_volumeStrict);
         if ( EVEN(sts)) return sts;
  	errh_Error( "Invalid SensorSigValueRange in Ai channel %s", buf);
@@ -2445,7 +2621,7 @@ pwr_tStatus io_AoRangeToCoef(
     }
     else
     {
-      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
 			cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       errh_Error( "Invalid ActValueRange in Ao channel %s", buf);
@@ -2465,7 +2641,7 @@ pwr_tStatus io_AoRangeToCoef(
     }
     else
     {
-      sts = gdh_ObjidToName( chanp->ChanObjid, buf, sizeof(buf), 
+      sts = gdh_AttrrefToName( &chanp->ChanAref, buf, sizeof(buf), 
 			cdh_mName_volumeStrict);
       if ( EVEN(sts)) return sts;
       errh_Error( "Invalid ChannelSigValueRange in Ao channel %s", buf);

@@ -105,14 +105,17 @@ typedef enum {
 typedef struct {
 	void		*cop;		/* Pointer to channel object */
 	pwr_tDlid	ChanDlid;	/* Dlid for pointer to channel */
-	pwr_tObjid	ChanObjid;	/* Objid for channel */
+	pwr_sAttrRef	ChanAref;	/* AttrRef for channel */
 	void		*sop;		/* Pointer to signal object */
 	pwr_tDlid	SigDlid;	/* Dlid for pointer to signal */
-	pwr_tObjid	SigObjid;	/* Objid for signal */
+	pwr_sAttrRef	SigAref;	/* AttrRef for signal */
 	void		*vbp;		/* Pointer to valuebase for signal */
 	void		*abs_vbp;	/* Pointer to absvaluebase (Co only) */
 	pwr_tClassId	ChanClass;	/* Class of channel object */
 	pwr_tClassId	SigClass;	/* Class of signal object */
+	pwr_tUInt32	size;		/* Size of channel in byte */
+	pwr_tUInt32	offset;		/* Offset to channel in card */
+	pwr_tUInt32	mask;		/* Mask for bit oriented channels */
 } io_sChannel;
 	
 
@@ -127,7 +130,9 @@ typedef struct s_Card {
 	pwr_tStatus	(* Read) ();	/* Read method */
 	pwr_tStatus	(* Write) ();	/* Write method */
 	pwr_tAddress	*op;		/* Pointer to card object */
-	pwr_tDlid	Dlid;		/* Dlid för card object pointer */
+	pwr_tDlid	Dlid;		/* Dlid for card object pointer */
+	pwr_tUInt32	size;		/* Size of card data area in byte */
+	pwr_tUInt32	offset;		/* Offset to card data area in rack */
 	int		scan_interval;	/* Interval between scans */
 	int		scan_interval_cnt;/* Counter to detect next time to scan */
 	int		AgentControlled;/* TRUE if kontrolled by agent */
@@ -149,6 +154,8 @@ typedef struct s_Rack {
 	pwr_tStatus	(* Write) ();	/* Write method */
 	void		*op;		/* Pointer to rack object */
 	pwr_tDlid	Dlid;		/* Dlid för rack object pointer */
+	pwr_tUInt32	size;		/* Size of rack data area in byte */
+	pwr_tUInt32	offset;		/* Offset to rack data area in agent */
 	int		scan_interval;	/* Interval between scans */
 	int		scan_interval_cnt;/* Counter to detect next time to scan */
 	int		AgentControlled;/* TRUE if kontrolled by agent */
