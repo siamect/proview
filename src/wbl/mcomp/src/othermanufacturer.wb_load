@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody
     Attr NextOix = "_X1"
-    Attr NextCix = "_X10"
+    Attr NextCix = "_X15"
   EndBody
   Object Class $ClassHier 1
     !/**
@@ -43,6 +43,42 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    Object Bernard_Actuator_OA $ClassDef 12
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Bernard_Actuator_OA"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-ActuatorAPoOr2Sw"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Bernard_Actuator_OA 2150858752
+        Body RtBody
+          Attr Super.Position.Unit = "%"
+          Attr Super.Position.PresMaxLimit = 1.000000e+02
+          Attr Super.Order.Unit = "%"
+          Attr Super.Order.PresMaxLimit = 1.000000e+02
+          Attr Super.Mode.OpNoLocal = 1
+          Attr Super.Mode.AlarmLocalMode = "Local mode is activated, "
+          Attr Super.MaxPosDiff = 5.000000e+00
+          Attr Super.DiffAlarmDelay = 1.000000e+01
+          Attr Super.DiffAlarmText = "Position error, "
+          Attr Super.SwitchAlarmText = "Switch error, "
+          Attr Super.PosSwitchOpen = 9.500000e+01
+          Attr Super.PosSwitchClosed = 5.000000e+00
+        EndBody
+      EndObject
+    EndObject
     Object Cewe_SafetySwitch_KSA_LBAS $ClassDef 2
       Body SysBody
         Attr Editor = 0
@@ -66,6 +102,46 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Body RtBody
           Attr Super.AlarmText = "Safety switch is off, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/cewe_safetyswitch_ksa_lbas.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Impac_TempSensor_IN300 $ClassDef 11
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Impac_TempSensor_IN300"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-TempSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Impac_TempSensor_IN300 2150596608
+        Body RtBody
+          Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.Super.LimitH.Limit = 9.000000e+01
+          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.Super.LimitL.Limit = 1.000000e+01
+          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.StorageTime = 239
+          Attr Super.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/impac_tempsensor_in300.pdf"
         EndBody
       EndObject
     EndObject
@@ -134,6 +210,32 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Trend"
           Attr Super.Super.DataSheet = "$pwr_lang/datasheet/mobrey_levelsensor_msp422.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Mobrey_LevelSwitch_EC $ClassDef 10
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Mobrey_LevelSwitch_EC"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-LevelSwitch"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Mobrey_LevelSwitch_EC 2150334464
+        Body RtBody
+          Attr Super.Super.AlarmText = "Level switch, "
+          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/mobrey_levelswitch_ec.pdf"
         EndBody
       EndObject
     EndObject
@@ -207,6 +309,58 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Feedback contactor lost, "
           Attr Super.DataSheet = "$pwr_lang/datasheet/omron_contactor_j7kn.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Metso_Pump_VS $ClassDef 13
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Metso_Pump_VS"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BasePump"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Metso_Pump_VS 2151120896
+        Body RtBody
+          Attr Super.Specification = "Metso sumppump Sala serien VS"
+          Attr Super.DataSheet = "$pwr_lang/datasheet/metso_pump_vs.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Flygt_Pump_N3202 $ClassDef 14
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Flygt_Pump_N3202"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BasePump"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Flygt_Pump_N3202 2151383040
+        Body RtBody
+          Attr Super.Specification = "Flygt dränkbar pump N 3202"
+          Attr Super.DataSheet = "$pwr_lang/datasheet/flygt_pump_n3202.pdf"
         EndBody
       EndObject
     EndObject

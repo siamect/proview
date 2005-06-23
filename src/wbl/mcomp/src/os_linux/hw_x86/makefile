@@ -43,9 +43,9 @@ copy : $(inc_dir)/pwr_othermanufacturerclasses.h \
        $(inc_dir)/pwr_ssaboxclasses.hpp
 
 
-lib  : $(load_dir)/othermanufacturer.dbs \
-       $(load_dir)/abb.dbs \
+lib  : $(load_dir)/abb.dbs \
        $(load_dir)/siemens.dbs \
+       $(load_dir)/othermanufacturer.dbs \
        $(load_dir)/telemecanique.dbs \
        $(load_dir)/ssabox.dbs
 
