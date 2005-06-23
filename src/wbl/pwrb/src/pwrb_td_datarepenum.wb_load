@@ -79,7 +79,7 @@ SObject pwrb:Type
     !/**
     !  64-bit signed integer.
     !*/
-    Object Int8 $Value
+    Object Int64 $Value
      Body SysBody
        Attr PgmName = "Int64"
        Attr Text = "Int64"
@@ -109,7 +109,7 @@ SObject pwrb:Type
     !/**
     !  A single bit in a 16-bit word.
     !*/
-    Object Bit8 $Value
+    Object Bit16 $Value
      Body SysBody
        Attr PgmName = "Bit16"
        Attr Text = "Bit16"
