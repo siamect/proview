@@ -23,6 +23,7 @@ menu Process
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	ValveControl2	pwr_exe:pwr_valvecontrol2.pwsg 		2
+  subgraph	MValve		pwr_exe:pwr_mvalve.pwsg			2
   subgraph	BaseValve	pwr_exe:pwr_basevalve.pwsg		6
   subgraph	BaseValve2	pwr_exe:pwr_basevalve2.pwsg		6
   subgraph	Actuator	pwr_exe:pwr_actuator.pwsg		6
@@ -182,15 +183,22 @@ menu Other
 {
   menu BaseComponent
   {
-    subgraph    ManValve2Sw 	pwr_exe:bcomp_manvalve2sw.pwsg 	4
+    subgraph    ManValve2Sw 	pwr_exe:bcomp_manvalve2sw.pwsg 		4
     subgraph    ManValveSwOp	pwr_exe:bcomp_manvalveswop.pwsg 	4
     subgraph    ManValveSwCl 	pwr_exe:bcomp_manvalveswcl.pwsg 	4
     subgraph    ManValveNoSw 	pwr_exe:bcomp_manvalvenosw.pwsg 	4
-    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 4
+    subgraph    MValveOr2Sw 	pwr_exe:bcomp_mvalveor2sw.pwsg 		4
+    subgraph    MValveOrSwOp	pwr_exe:bcomp_mvalveorswop.pwsg 	4
+    subgraph    MValveOrSwCl 	pwr_exe:bcomp_mvalveorswcl.pwsg 	4
+    subgraph    MValveOrNoSw 	pwr_exe:bcomp_mvalveornosw.pwsg 	4
+    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	4
     subgraph    FanCoCbSs 	pwr_exe:bcomp_fancocbss.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
+    subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
+    subgraph    PressureSwitch 	pwr_exe:bcomp_pressureswitch.pwsg 	16
     subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
+    subgraph    TempSwitch 	pwr_exe:bcomp_tempswitch.pwsg 		16
     subgraph	ABB_ACS800Pump  pwr_exe:mcomp_abb_acs800pump.pwsg	16
   }
   menu Animations
@@ -198,6 +206,7 @@ menu Other
     subgraph 	PumpAnim 	pwr_exe:pwr_pumpanim.pwsg		17
     subgraph 	PadlockAnim 	pwr_exe:pwr_padlockanim.pwsg		39
     subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
+    subgraph 	ValveAnim2 	pwr_exe:pwr_valveanim2.pwsg		1
     subgraph 	MotorAnim	pwr_exe:pwr_motoranim.pwsg 		23
     subgraph 	ScrewAnim	pwr_exe:pwr_screw.pwsg 			46
     subgraph 	IndAnimSquare 	pwr_exe:pwr_indanimsquare.pwsg 		5
