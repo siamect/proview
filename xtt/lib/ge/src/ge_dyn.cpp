@@ -3113,6 +3113,30 @@ int GeValue::scan( grow_tObject object)
     len = sprintf( buf, "%s", name);
     break;
   }
+  case pwr_eType_AttrRef: {
+    int sts;
+    char name[120];
+    pwr_sAttrRef aref = *(pwr_sAttrRef *)p;
+    switch ( format[1]) {
+    case '1':
+      // Format %1o, write path
+      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+			      cdh_mName_pathStrict);
+      break;
+    case '2':
+      // Format %2o, write volume and path
+      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+			      cdh_mName_volumeStrict);
+      break;
+    default:
+      sts = gdh_AttrrefToName ( &aref, name, sizeof(name), 
+			      cdh_mName_object | cdh_mName_attribute);
+    }
+    if ( EVEN(sts))
+      strcpy( name, "");
+    len = sprintf( buf, "%s", name);
+    break;
+  }
   case pwr_eType_Time: {
     int sts;
     char timstr[40];
