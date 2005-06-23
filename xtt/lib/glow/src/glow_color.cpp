@@ -201,27 +201,33 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
       glow_eDrawTone tone = ((GrowNode *)node)->color_tone;
 
       if ( local_drawtype > 30) {
-	if ( tone >= glow_eDrawTone_GrayHighSaturation &&
-	     tone < glow_eDrawTone_GrayLowSaturation) {
-	  tone = glow_eDrawTone( tone - 27);
-	  intensity += 2;
+	if ( tone == glow_eDrawTone_LightGrayHighSaturation)
+          drawtype = glow_eDrawType_Color31; // GrayLow1
+	else if ( tone == glow_eDrawTone_DarkGrayHighSaturation)
+          drawtype = glow_eDrawType_Color30; // DarkGrey
+	else {
+	  if ( tone >= glow_eDrawTone_GrayHighSaturation &&
+	       tone < glow_eDrawTone_GrayLowSaturation) {
+	    tone = glow_eDrawTone( tone - 27);
+	    intensity += 2;
+	  }
+	  else if ( tone >= glow_eDrawTone_GrayLowSaturation) {
+	    tone = glow_eDrawTone( tone - 2 * 27);
+	    intensity -= 1;
+	  }
+	  if ( tone >= glow_eDrawTone_DarkGray &&
+	       tone < glow_eDrawTone_LightGray) {
+	    tone = glow_eDrawTone( tone - 9);
+	    lightness -= 2;
+	  }
+	  else if ( tone >= glow_eDrawTone_LightGray) {
+	    tone = glow_eDrawTone( tone - 18);
+	    lightness += 2;
+	  }
+	  
+	  drawtype = (glow_eDrawType) (local_drawtype - local_drawtype / 30 * 30 + 
+				       30 * tone);
 	}
-	else if ( tone >= glow_eDrawTone_GrayLowSaturation) {
-	  tone = glow_eDrawTone( tone - 2 * 27);
-	  intensity -= 1;
-	}
-        if ( tone >= glow_eDrawTone_DarkGray &&
-	     tone < glow_eDrawTone_LightGray) {
-	  tone = glow_eDrawTone( tone - 9);
-	  lightness -= 2;
-	}
-        else if ( tone >= glow_eDrawTone_LightGray) {
-	  tone = glow_eDrawTone( tone - 18);
-	  lightness += 2;
-	}
-
-	drawtype = (glow_eDrawType) (local_drawtype - local_drawtype / 30 * 30 + 
-		30 * tone);
       }
       else
         drawtype = local_drawtype;

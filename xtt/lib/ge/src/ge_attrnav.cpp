@@ -472,6 +472,8 @@ static attrnav_sEnumElement elem_tone_or_color[] = {
 	{ (int) glow_eDrawTone_Green, 		"ToneGreen"},
 	{ (int) glow_eDrawTone_DarkGray,	"ToneDarkGray"},
 	{ (int) glow_eDrawTone_LightGray,	"ToneLightGray"},
+	{ (int) glow_eDrawTone_LightGrayHighSaturation,		"ToneLightLightGray"},
+	{ (int) glow_eDrawTone_DarkGrayHighSaturation,		"ToneDarkDarkGray"},
 	{ (int) glow_eDrawTone_DarkYellowGreen,			"ToneDarkYellowGreen"},
 	{ (int) glow_eDrawTone_LightYellowGreen,	       	"ToneLightYellowGreen"},
 	{ (int) glow_eDrawTone_YellowGreenHighSaturation,      	"ToneYellowGreenHighSaturation"},
