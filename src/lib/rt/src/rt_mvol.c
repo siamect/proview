@@ -171,7 +171,8 @@ mvol_AnameToAttribute (
   pwr_tStatus		*sts,
   mvol_sAttribute	*ap,
   pwr_tClassId		cid,
-  cdh_sParseName	*pn
+  cdh_sParseName	*pn,
+  gdb_sObject           *op
 )
 {
   cdh_uObjid            coid;
@@ -179,9 +180,29 @@ mvol_AnameToAttribute (
   gdb_sObject		*abop;
   int			offset = 0;
   int			i;
-    
+  pwr_tOid              oid, tid;
+  
+  oid = op->g.oid;
   ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
-  if (ap->cp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+//  if (ap->cp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+  /* If it's not native object then we try to fetch class from remote node */
+  
+  if (ap->cp == NULL) {
+    if (op == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    if (!(op->l.flags.m & gdb_mLo_native)) {
+      cmvolc_GetNonExistingClass(sts, op, cid);
+      ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
+      if (ap->cp == NULL) {
+        pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+      } else {
+        /* Refresh pointer, pool has been released during fetch */
+	op = vol_OidToObject(sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+      }
+    } else {
+      pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+    }
+  }
 
   ap->bop = pool_Address(sts, gdbroot->pool, ap->cp->bor);
   if (ap->bop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);
@@ -202,8 +223,28 @@ mvol_AnameToAttribute (
       while ( ap->aop == NULL) {
 	/* Try superclass */
 	if ( acp->attr[0].flags.m & PWR_MASK_SUPERCLASS) {
+	  tid = acp->attr[0].tid;
 	  acp = hash_Search(sts, gdbroot->cid_ht, &acp->attr[0].tid);
-	  if ( acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+//	  if ( acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+          /* If it's not native object then we try to fetch class from remote node */
+
+          if (acp == NULL) {
+	    if (op == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+            if (!(op->l.flags.m & gdb_mLo_native)) {
+              cmvolc_GetNonExistingClass(sts, op, tid);
+              acp = hash_Search(sts, gdbroot->cid_ht, &tid);
+              if (acp == NULL) {
+                pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+              } else {
+                /* Refresh pointers, pool has been released during fetch */
+	        op = vol_OidToObject(sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+                ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
+              }
+            } else {
+              pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+            }
+          }
 
 	  abop = pool_Address(sts, gdbroot->pool, acp->bor);
 	  if (abop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);
@@ -222,8 +263,31 @@ mvol_AnameToAttribute (
 	  offset += pn->index[i] * ap->adef->Info.Size / ap->adef->Info.Elements;
 	if ( !ap->adef->Info.Flags & PWR_MASK_CLASS) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
 
+        tid = ap->adef->TypeRef;
 	acp = hash_Search(sts, gdbroot->cid_ht, &ap->adef->TypeRef);
-	if (acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+//	if (acp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+
+        /* If it's not native object then we try to fetch class from remote node */
+
+        if (acp == NULL) {
+	  if (op == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+	
+          if (!(op->l.flags.m & gdb_mLo_native)) {
+            cmvolc_GetNonExistingClass(sts, op, tid);
+            acp = hash_Search(sts, gdbroot->cid_ht, &tid);
+            if (acp == NULL) {
+              pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+            } else {
+              /* Refresh pointers, pool has been released during fetch */
+	      op = vol_OidToObject(sts, oid, gdb_mLo_global, vol_mTrans_all, cvol_eHint_none);
+              ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
+	      ap->aop = hash_Search(sts, gdbroot->family_ht, &pn->attribute[i]);
+              ap->adef = pool_Address(NULL, gdbroot->rtdb, ap->aop->u.n.body);
+            }
+          } else {
+            pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
+          }
+        }
 
 	abop = pool_Address(sts, gdbroot->pool, acp->bor);
 	if (abop == NULL) pwr_Return(NULL, sts, GDH__ATTRIBUTE);

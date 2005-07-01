@@ -79,7 +79,8 @@ mvol_AnameToAttribute (
   pwr_tStatus		*sts,
   mvol_sAttribute	*ap,
   pwr_tClassId		cid,
-  cdh_sParseName	*pn
+  cdh_sParseName	*pn,
+  gdb_sObject           *op
 );
 
 mvol_sAttribute *

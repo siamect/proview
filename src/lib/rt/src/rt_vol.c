@@ -614,7 +614,7 @@ vol_NameToAttribute (
   op = vol_NameToObject(sts, pn, lo_flags, trans);
   if (op == NULL) return NULL;
 
-  ap = mvol_AnameToAttribute(sts, ap, op->g.cid, pn);
+  ap = mvol_AnameToAttribute(sts, ap, op->g.cid, pn, op);
   if (ap == NULL) return NULL; 
 
   ap->op = op;

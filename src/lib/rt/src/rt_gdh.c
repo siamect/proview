@@ -201,7 +201,7 @@ gdh_ClassAttrToAttrref (
 
   gdh_ScopeLock {
 
-    ap = mvol_AnameToAttribute(&sts, &Attribute, cid, pn);
+    ap = mvol_AnameToAttribute(&sts, &Attribute, cid, pn, NULL);
     if (ap == NULL) break;
     mvol_AttributeToAref(&sts, ap, arp);
 
@@ -1668,7 +1668,7 @@ gdh_MDAttribute (
     if (arp != NULL) {
       ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
     } else if (cid != pwr_cNClassId) {
-      ap = mvol_AnameToAttribute(&sts, ap, cid, pn);
+      ap = mvol_AnameToAttribute(&sts, ap, cid, pn, NULL);
     } else {
       ap = vol_NameToAttribute(&sts, ap, pn, gdb_mLo_global, vol_mTrans_all);
     }
