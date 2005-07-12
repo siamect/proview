@@ -2089,7 +2089,8 @@ void GrowCtx::clear_all( int keep_paste)
       {
         if ( a_paste[j]->type() == glow_eObjectType_GrowNode ||
              a_paste[j]->type() == glow_eObjectType_GrowSlider ||
-             a_paste[j]->type() == glow_eObjectType_GrowGroup)
+             a_paste[j]->type() == glow_eObjectType_GrowGroup ||
+             a_paste[j]->type() == glow_eObjectType_GrowConGlue)
 	{
           found = ((GrowNode *) a_paste[j])->find_nc( a_nc[i]);
           if ( found)
