@@ -1138,6 +1138,7 @@ class GeValueInput : public GeDynElem {
   int action( grow_tObject object, glow_tEvent event);
   int change_value( grow_tObject object, char *text);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 
 };
 
@@ -1634,6 +1635,7 @@ class GeCommand : public GeDynElem {
   void save( ofstream& fp);
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 
 };
@@ -1655,6 +1657,7 @@ class GeCommandDoubleClick : public GeDynElem {
   void save( ofstream& fp);
   void open( ifstream& fp);
   int action( grow_tObject object, glow_tEvent event);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 
 };
 

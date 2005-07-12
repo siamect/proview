@@ -1,4 +1,4 @@
-/* ge_dyn.cpp -- Display plant and node hiererachy
+/* gedyn.cpp -- Display plant and node hiererachy
 
    PROVIEW/R  
    Copyright (C) 1996 by Comator Process AB.
@@ -827,6 +827,20 @@ void GeDyn::update_elements()
       }
     }
     mask = mask << 1;
+  }
+
+  // Update PulldownMenu items
+  for ( elem = elements; elem; elem  = elem->next) {
+    if ( elem->action_type == ge_mActionType_PulldownMenu) {
+      GePulldownMenu *pm = (GePulldownMenu *) elem;
+      for ( int i = 0; i < 32; i++) {
+	if ( pm->items_dyn[i]) {
+	  pm->items_dyn[i]->total_dyn_type = pm->items_dyn[i]->dyn_type;
+	  pm->items_dyn[i]->total_action_type = pm->items_dyn[i]->action_type;
+	  pm->items_dyn[i]->update_elements();
+	}
+      }
+    }
   }
 }
 
@@ -1774,8 +1788,11 @@ int GeDigColor::scan( grow_tObject object)
 
   if ( dyn->total_dyn_type & ge_mDynType_Tone) {
     if ( (!inverted && *p) || (inverted && !*p)) {
-      if ( color >= (glow_eDrawType) glow_eDrawTone__)
+      if ( color >= (glow_eDrawType) glow_eDrawTone__) {
+	if ( dyn->reset_color)
+	  grow_ResetObjectFillColor( object); // Previous color might be a tone
 	grow_SetObjectFillColor( object, color);
+      }
       else
 	grow_SetObjectColorTone( object, (glow_eDrawTone) color);
       dyn->ignore_color = true;
@@ -3291,6 +3308,12 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
 
   dyn->display_access = true;
   *item_count = i;
+}
+
+void GeValueInput::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( minvalue_attr, sizeof(minvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( maxvalue_attr, sizeof(maxvalue_attr), from, to, cnt, strict);
 }
 
 void GeValueInput::save( ofstream& fp)
@@ -6162,6 +6185,10 @@ int GeTable::scan( grow_tObject object)
 	case pwr_eType_UInt32:
 	  len = sprintf( buf, format[i], *(pwr_tInt32 *) headerref_p[i][j]);
 	  break;
+	case pwr_eType_Int16:
+	case pwr_eType_UInt16:
+	  len = sprintf( buf, format[i], *(pwr_tInt16 *) headerref_p[i][j]);
+	  break;
 	case pwr_eType_Status:
 	case pwr_eType_NetStatus:
 	  if ( *(pwr_tStatus *)headerref_p[i][j] == 0) {
@@ -6243,7 +6270,7 @@ int GeTable::scan( grow_tObject object)
 	default: {
 	  int sts;
 	  sts = cdh_AttrValueToString( (pwr_eType) type_id[i], 
-				       p + offs, buf, sizeof(buf));
+				       p[i] + offs, buf, sizeof(buf));
 	  if ( EVEN(sts))
 	    sprintf( buf, "Invalid type");
 	  len = strlen(buf);
@@ -7877,6 +7904,11 @@ int GeCommand::get_transtab( char **tt)
   return 0;
 }
 
+void GeCommand::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( command, sizeof(command), from, to, cnt, strict);
+}
+
 void GeCommand::save( ofstream& fp)
 {
   fp << int(ge_eSave_Command) << endl;
@@ -7971,6 +8003,11 @@ int GeCommandDoubleClick::get_transtab( char **tt)
 
   *tt = (char *) transtab;
   return 0;
+}
+
+void GeCommandDoubleClick::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( command, sizeof(command), from, to, cnt, strict);
 }
 
 void GeCommandDoubleClick::save( ofstream& fp)
@@ -9333,6 +9370,8 @@ void GeSlider::set_attribute( grow_tObject object, char *attr_name, int *cnt)
 void GeSlider::replace_attribute( char *from, char *to, int *cnt, int strict)
 {
   GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+  GeDyn::replace_attribute( minvalue_attr, sizeof(minvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( maxvalue_attr, sizeof(maxvalue_attr), from, to, cnt, strict);
 }
 
 void GeSlider::save( ofstream& fp)
@@ -10802,8 +10841,10 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
       glow_eDrawType text_drawtype, text_color, bg_color;
       int text_size;
       int sts;
-
-      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color);
+      double scale;
+      
+      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color,
+				     &scale);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
@@ -10819,6 +10860,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 			   text_drawtype, text_color,
 			   glow_eDrawType_MediumGray, 0,
 			   &menu_object);
+      grow_SetObjectScale( menu_object, scale, scale, 0, 0, glow_eScaleType_LowerLeft);
       grow_SetMenuInputFocus( menu_object, 1);
     }
     break;
@@ -11472,8 +11514,10 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       glow_eDrawType text_drawtype, text_color, bg_color;
       int text_size;
       int sts;
+      double scale;
 
-      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color);
+      sts = grow_GetObjectAnnotInfo( object, 1, &text_size, &text_drawtype, &text_color, &bg_color,
+				     &scale);
       if ( EVEN(sts)) {
 	text_size = 2;
 	text_drawtype = glow_eDrawType_TextHelveticaBold;
@@ -11489,6 +11533,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
 			   text_drawtype, text_color,
 			   glow_eDrawType_MediumGray, 0,
 			   &menu_object);
+      grow_SetObjectScale( menu_object, scale, scale, 0, 0, glow_eScaleType_LowerLeft);
     }
     break;
   case glow_eEvent_MenuActivated:
