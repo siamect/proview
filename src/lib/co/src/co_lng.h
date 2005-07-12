@@ -8,6 +8,9 @@
 
    <Description>.  */
 
+#include <iostream.h>
+#include <fstream.h>
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -16,10 +19,69 @@ extern "C" {
 # include "pwr.h"
 #endif
 
+#ifndef co_tree_h
+# include "co_tree.h"
+#endif
+
 typedef enum {
-  lng_eLanguage_en_us = 0,
-  lng_eLanguage_sv_se = 1
+  lng_eLanguage_,
+  lng_eLanguage_en_us,
+  lng_eLanguage_sv_se,
+  lng_eLanguage_ru_ru
 } lng_eLanguage;
+
+typedef struct {
+  char		text[80];
+  char		type;
+} lang_sKey;
+
+typedef struct {
+  tree_sNode 	n;
+  lang_sKey	key;
+  char		transl[80];
+} lang_sRecord;
+
+class Row {
+ public:
+  char type;
+  int n1;
+  int n2;
+  int n3;
+  char text[200];
+  int row;
+  ifstream& fp;
+  char fname[200];
+
+  Row( ifstream& f, char *filename) : row(0), fp(f) { 
+    strcpy( text, ""); strcpy( fname, filename);}
+  bool eq( Row& r) { return n1 == r.n1 && n2 == r.n2 && n3 == r.n3;}
+  bool lt( Row& r) {
+    if ( n1 < r.n1)
+      return true;
+    else if ( n1 > r.n1)
+      return false;
+    if ( n2 < r.n2)
+      return true;
+    else if ( n2 > r.n2)
+      return false;
+    if ( n3 < r.n3)
+      return true;
+    return false;
+  }
+  bool gt( Row& r) {
+    if ( n1 > r.n1)
+      return true;
+    else if ( n1 < r.n1)
+      return false;
+    if ( n2 > r.n2)
+      return true;
+    else if ( n2 < r.n2)
+      return false;
+    if ( n3 > r.n3)
+      return true;
+    return false;
+  }
+};
 
 class Lng {
   public:
@@ -41,19 +103,24 @@ class Lng {
     static const int Open_Plc___ = 13;
     static char items[][2][40];
 
-    static void set( lng_eLanguage language) { lang = language;};
-    static lng_eLanguage current() { return lang;}
-    static void set( char *language) 
-      { if ( strcmp(language,"en_us") == 0) lang = lng_eLanguage_en_us;
-        else if ( strcmp(language,"sv_se") == 0) lang = lng_eLanguage_sv_se;};
-    static char *get( int item)
-      { return items[lang][item];};
-    static char *get( lng_eLanguage language, int item)
-      { return items[language][item];};
-    static char *translate( char *str);
-    static int translate( char *in, char *out);
+    static tree_sTable *tree;
+
+    static bool read();
+    static bool read_line( Row& r);
+    static char *translate( char *text);
     static char *get_language_str();
+    static int translate( char *in, char *out);
+    static void unload();
+    static void set( lng_eLanguage language);
+    static lng_eLanguage current() { return lang;}
+    static void set( char *language);
+    static char *get( int item)
+      { return items[lang][item];}
+    static char *get( lng_eLanguage language, int item)
+      { return items[language][item];}
     static void get_uid( char *in, char *out);
+    static lng_eLanguage str_to_lang( char *str);
+    static char *lang_to_str( lng_eLanguage language);
 };
 
 #if defined __cplusplus
