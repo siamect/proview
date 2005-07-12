@@ -1995,7 +1995,12 @@ static void wtt_activate_compile( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
     // Open a temporary write session
     sts = ldh_OpenSession( &ldhses, wtt->volctx, ldh_eAccess_ReadWrite,
     	ldh_eUtility_Configurator);
-    if ( EVEN(sts)) return;
+    if ( EVEN(sts)) {
+      wtt->reset_cursor();
+      wow_DisplayError( wtt->toplevel, "Compile error", "Other session is open");
+      return;
+    }
+
     ldh_AddThisSessionCallback( ldhses, (void *)wtt,
 		wtt_ldh_this_session_cb);
     wtt->wnav->editmode = 1;
