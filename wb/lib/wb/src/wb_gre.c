@@ -4364,7 +4364,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 {
   flow_eTraceType 	trace_type;
   char			object_str[120];
-  char			attr_str[80];
+  char			attr_str[120] = "";
   int			sts, i, j, size;
   vldh_t_wind		wind;
   unsigned long		node_count;
@@ -4374,6 +4374,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
   int 			rows;
   pwr_sAttrRef		*objarp;
   char			*np;
+  char			*s;
 
   wind = grectx->wind;
   sts = vldh_get_nodes( wind, &node_count, &nodelist);
@@ -4394,59 +4395,72 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
 		attr_str, trace_type);
     }
-    else
-    {
-      switch( (*node_ptr)->ln.cid )
-      {
-        case pwr_cClass_GetAi:
-        case pwr_cClass_GetAo:
-        case pwr_cClass_GetAv:
-        case pwr_cClass_stoai:
-        case pwr_cClass_stoao:
-        case pwr_cClass_stoav:
-        case pwr_cClass_cstoai:
-        case pwr_cClass_cstoao:
-        case pwr_cClass_cstoav:
-        case pwr_cClass_GetIi:
-        case pwr_cClass_GetIo:
-        case pwr_cClass_GetIv:
-        case pwr_cClass_stoii:
-        case pwr_cClass_stoio:
-        case pwr_cClass_stoiv:
-        case pwr_cClass_cstoii:
-        case pwr_cClass_cstoio:
-        case pwr_cClass_cstoiv:
-          sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
+    else {
+      switch( (*node_ptr)->ln.cid ) {
+      case pwr_cClass_GetAi:
+      case pwr_cClass_GetAo:
+      case pwr_cClass_GetAv:
+      case pwr_cClass_stoai:
+      case pwr_cClass_stoao:
+      case pwr_cClass_stoav:
+      case pwr_cClass_cstoai:
+      case pwr_cClass_cstoao:
+      case pwr_cClass_cstoav:
+      case pwr_cClass_GetIi:
+      case pwr_cClass_GetIo:
+      case pwr_cClass_GetIv:
+      case pwr_cClass_stoii:
+      case pwr_cClass_stoio:
+      case pwr_cClass_stoiv:
+      case pwr_cClass_cstoii:
+      case pwr_cClass_cstoio:
+      case pwr_cClass_cstoiv:
+      case pwr_cClass_GetAp:
+      case pwr_cClass_GetIp:
+	sts = ldh_GetObjectBodyDef( wind->hw.ldhses, 
 			(*node_ptr)->ln.cid, "DevBody", 1, 
 			&bodydef, &rows);
-	  if ( EVEN(sts) ) return sts;
-          strcpy( object_str, "");
-	  for ( j = 0; j < rows; j++ ) {
-	    if ( bodydef[j].Par->Output.Info.Type == pwr_eType_AttrRef) {
-              /* Get the objid stored in the parameter */
-	      sts = ldh_GetObjectPar( wind->hw.ldhses,
+	if ( EVEN(sts) ) return sts;
+	strcpy( object_str, "");
+	for ( j = 0; j < rows; j++ ) {
+	  if ( bodydef[j].Par->Output.Info.Type == pwr_eType_AttrRef) {
+	    /* Get the objid stored in the parameter */
+	    sts = ldh_GetObjectPar( wind->hw.ldhses,
 			(*node_ptr)->ln.oid,  "DevBody",
 			bodydef[j].ParName, (char **)&objarp, &size);
-              if ( EVEN(sts)) return sts;
+	    if ( EVEN(sts)) return sts;
 
-              sts = ldh_AttrRefToName( wind->hw.ldhses, objarp,
+	    sts = ldh_AttrRefToName( wind->hw.ldhses, objarp,
 				       cdh_mNName, &np, &size);
-              if ( EVEN(sts))
-                strcpy( object_str, "");
-	      else
-		strcpy( object_str, np);
-	      free((char *) objarp);
-              
-              break;
-            }
-          }
-          break;
-        default:
-          /* Store object name */
-          sts = ldh_ObjidToName( wind->hw.ldhses, (*node_ptr)->ln.oid,
-	         ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
-          if ( EVEN(sts)) return sts;
+	    if ( EVEN(sts))
+	      strcpy( object_str, "");
+	    else
+	      strcpy( object_str, np);
+	    free((char *) objarp);
+	    
+	    break;
+	  }
+	}
+	break;
+      default:
+	/* Store object name */
+	sts = ldh_ObjidToName( wind->hw.ldhses, (*node_ptr)->ln.oid,
+		ldh_eName_Hierarchy, object_str, sizeof(object_str), &size);
+	if ( EVEN(sts)) return sts;
       }
+
+      switch ((*node_ptr)->ln.cid ) {
+      case pwr_cClass_GetAp:
+      case pwr_cClass_GetIp:
+	s = strrchr( object_str, '.');
+	if ( s) {
+	  strcpy( attr_str, s + 1);
+	  *s = 0;
+	}
+	break;
+      default: ;
+      }
+
       if ( host && strncmp( object_str, host, strlen(host)) == 0) {
 	char tmp[120];
 	strcpy( tmp, "$host");
@@ -4454,7 +4468,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 	strcpy( object_str, tmp);
       }
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
-      		"", flow_eTraceType_User);
+      		attr_str, flow_eTraceType_User);
     }
     node_ptr++;
   }
