@@ -349,7 +349,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB3Press:
     {
       // Popup menu
-      Widget popup;
+      Widget popup = 0;
       pwr_sAttrRef attrref;
       int sts;
 
@@ -364,6 +364,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           switch ( item->type) {
             case xnav_eItemType_Attr:
             case xnav_eItemType_AttrArrayElem:
+            case xnav_eItemType_AttrObject:
             case xnav_eItemType_Collect:
             {
               char attr_str[140];
