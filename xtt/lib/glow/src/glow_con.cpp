@@ -1701,6 +1701,8 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
     found = 0;
     if ( fabs( dest_x - src_x) > 3 * ctx->draw_delta) {
       for ( node_p = nodelist; node_p; node_p = node_p->link) {
+	if ( node_p == dest_node || node_p == source_node)
+	  continue;
 	if ( node_p->in_horiz_line( dest_y, 
 				    min( dest_x, src_x) + ctx->draw_delta + CON_EPSILON,
 				    max( dest_x, src_x) - ctx->draw_delta - CON_EPSILON)) {
@@ -1732,6 +1734,8 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
     found = 0;
     if ( fabs( dest_y - src_y) > 3 * ctx->draw_delta) {
       for ( node_p = nodelist; node_p; node_p = node_p->link) {
+	if ( node_p == dest_node || node_p == source_node)
+	  continue;
 	if ( node_p->in_vert_line( dest_x, 
 				   min( dest_y, src_y) + ctx->draw_delta + CON_EPSILON,
 				   max( dest_y, src_y) - ctx->draw_delta - CON_EPSILON)) {
