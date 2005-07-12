@@ -14,7 +14,8 @@ class GrowScrollBar;
 
 typedef enum {
   glow_mTableOptions_No 		= 0,
-  glow_mTableOptions_ZeroIfHeader 	= 1 << 0
+  glow_mTableOptions_ZeroIfHeader 	= 1 << 0,
+  glow_mTableOptions_ZeroIfHeaderIs0 	= 1 << 1
 } glow_mTableOptions;
 
 //! Class for drawing a bar object.

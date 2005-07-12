@@ -558,6 +558,13 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
 	  if ( strcmp( cell_value + j * column_size[0], "") == 0)
 	    continue;
 	}
+	if ( options & glow_mTableOptions_ZeroIfHeaderIs0) {
+	  // Don't draw the row if the value in the first column is zero
+	  char *s;
+	  for ( s = cell_value + j * column_size[0]; *s && *s == ' '; s++) ;
+	  if ( strcmp( s, "0") == 0)
+	    continue;
+	}
 
 	if ( y > ll_y) {
 	  offs = column_offs + column_size[i] * j;
