@@ -113,7 +113,8 @@ static pwr_tStatus IoCardInit (
   chanp = cp->chanlist;
   for  ( i = 0; i < cp->ChanListSize; i++)
   {
-    AiRangeToCoef( chanp);
+    if ( chanp->sop)
+      AiRangeToCoef( chanp);
     chanp++;
   }
 
@@ -168,7 +169,7 @@ static pwr_tStatus IoCardRead (
   chanp = &cp->chanlist[0];
   for ( i = 0; i < cp->ChanListSize; i++)
   { 
-    if ( !chanp->cop)
+    if ( !chanp->cop || !chanp->sop)
     {
       chanp++;
       continue;

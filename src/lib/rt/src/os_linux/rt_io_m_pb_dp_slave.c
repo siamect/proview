@@ -25,6 +25,7 @@
 #include "rt_errh.h"
 #include "co_cdh.h"
 #include "rt_io_profiboard.h"
+#include "rt_pb_msg.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -47,8 +48,10 @@ static pwr_tStatus IoRackInit (
   pwr_sClass_Pb_Ao *aop;
   pwr_sClass_Pb_Ii *iip;
   pwr_sClass_Pb_Io *iop;
+  pwr_sClass_Pb_Module *mp;
   char name[196];
   pwr_tStatus sts;
+  pwr_tCid cid;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
   errh_Info( "Init of Profibus DP Slave and modules %s", name);
@@ -68,7 +71,10 @@ static pwr_tStatus IoRackInit (
     local_card->input_area = (void *) &(op->Inputs);
     local_card->output_area = (void *) &(op->Outputs);
 
-    switch (cardp->Class) {
+    cid = cardp->Class;
+    while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
+
+    switch (cid) {
 
       case pwr_cClass_Pb_Di:
         dip = (pwr_sClass_Pb_Di *) cardp->op;
@@ -116,6 +122,14 @@ static pwr_tStatus IoRackInit (
         iop->BytesOfOutput = iop->NumberOfChannels * iop->BytesPerChannel;
         output_counter += iop->BytesOfOutput;
         iop->Status = PB_MODULE_STATE_OPERATE;
+        break;
+
+      case pwr_cClass_Pb_Module:
+        mp = (pwr_sClass_Pb_Module *) cardp->op;
+//        iop->OffsetOutputs = output_counter;
+//        iop->BytesOfOutput = iop->NumberOfChannels * iop->BytesPerChannel;
+//        output_counter += iop->BytesOfOutput;
+        mp->Status = PB__SUCCESS;
         break;
     }
 

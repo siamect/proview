@@ -78,7 +78,7 @@ static pwr_tStatus IoCardInit (
   /* Configure card */
   for ( i = 0; i < op->MaxNoOfCounters; i++)
   {
-    if ( !cp->chanlist[i].cop)
+    if ( !cp->chanlist[i].cop || !cp->chanlist[i].sop)
       continue;
 
     wr_data_p = (pwr_tUInt32 *) &wr_data;
@@ -182,7 +182,7 @@ static pwr_tStatus IoCardRead (
 
   for ( i = 0; i < op->MaxNoOfCounters; i++)
   { 
-    if ( !cp->chanlist[i].cop)
+    if ( !cp->chanlist[i].cop || !cp->chanlist[i].sop)
       continue;
 
     if ( op->ConvMask & (1 << i))

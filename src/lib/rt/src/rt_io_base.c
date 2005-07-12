@@ -121,10 +121,13 @@ static pwr_tStatus io_replace_symbol( pwr_sAttrRef *chan, pwr_sAttrRef *sig)
     pwr_tStatus sts;
     pwr_sAttrRef connect;
     pwr_tCid cid;
+    char *s;
 
-    sts = gdh_ObjidToName( sig->Objid, name, sizeof(name),
+    sts = gdh_AttrrefToName( sig, name, sizeof(name),
 			   cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
+    if ( (s = strrchr( name, '.')))
+      *s = 0;
     strcat( name, ".IoConnect");
     sts = gdh_GetObjectInfo( name, &connect, sizeof(connect));
     if ( EVEN(sts)) return sts;
@@ -145,6 +148,80 @@ static pwr_tStatus io_replace_symbol( pwr_sAttrRef *chan, pwr_sAttrRef *sig)
     return IO__REPLACED;
   }
   return IO__SUCCESS;
+}
+
+int io_connect_status( pwr_sAttrRef *sig_aref, pwr_sAttrRef *chan_aref)
+{
+  pwr_sAttrRef status_aref;
+  pwr_sAttrRef ioconnect_aref;
+  static pwr_sAttrRef last_ioconnect = {{0,0},0,0,0,{0}};
+  pwr_sAttrRef iostatus_aref;
+  pwr_sAttrRef card_aref;
+  pwr_tStatus sts;
+  pwr_tStatus *status_p;
+  pwr_tStatus *iostatus_p;
+  pwr_tAName sname;
+  char *s;
+  int found;
+  
+  if ( chan_aref->Offset == 0 || sig_aref->Offset == 0)
+    return 0;
+
+  /* Find content of IoConnect attribute in the signal object */
+  sts = gdh_AttrrefToName( sig_aref, sname, sizeof(sname),
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return 0;
+
+  found = 0;
+  for (;;) {
+    s = strrchr( sname, '.');
+    if ( !s) 
+      break;
+    *s = 0;
+    strcat( sname, ".IoConnect");
+    sts = gdh_NameToAttrref( pwr_cNObjid, sname, &ioconnect_aref);
+    if ( ODD(sts)) {
+      if ( cdh_ArefIsEqual( &ioconnect_aref, &last_ioconnect))
+	return 1;
+	   
+      found = 1;
+      
+      *s = 0;
+      strcat( sname, ".IoStatus");
+      sts = gdh_NameToAttrref( pwr_cNObjid, sname, &iostatus_aref);
+      if (EVEN(sts)) return 0;
+
+      break;
+    }
+    *s = 0;
+  }
+
+  if ( !found)
+    return 0;
+
+  /* Get the Status attribute in the connected module */
+  sts = gdh_GetObjectInfoAttrref( &ioconnect_aref, &card_aref, sizeof(card_aref));
+  if ( EVEN(sts)) return 0;
+  
+  sts = gdh_AttrrefToName( &card_aref, sname, sizeof(sname),
+			   cdh_mName_volumeStrict);
+  if ( EVEN(sts)) return 0;
+  strcat( sname, ".Status");
+
+  sts = gdh_NameToAttrref( pwr_cNObjid, sname, &status_aref);
+  if ( EVEN(sts)) return 0;
+
+  /* Store status pointer in IoStatus */
+  sts = gdh_AttrRefToPointer( &iostatus_aref, (void **)&iostatus_p);
+  if ( EVEN(sts)) return 0;
+
+  sts = gdh_AttrRefToPointer( &status_aref, (void **)&status_p);
+  if ( EVEN(sts)) return 0;
+
+  gdh_StoreRtdbPointer( iostatus_p, status_p);
+
+  last_ioconnect = ioconnect_aref;
+  return 1;
 }
 
 
@@ -215,6 +292,7 @@ pwr_tStatus io_init_ai_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Ai, &sig_aref, &sig_aref);
@@ -293,6 +371,7 @@ pwr_tStatus io_init_ao_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Ao, &sig_aref, &sig_aref);
@@ -370,6 +449,7 @@ pwr_tStatus io_init_di_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Di, &sig_aref, &sig_aref);
@@ -449,6 +529,7 @@ pwr_tStatus io_init_do_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Do, &sig_aref, &sig_aref);
@@ -485,6 +566,8 @@ pwr_tStatus io_init_do_signals(
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Po, &sig_aref, &sig_aref);
@@ -561,6 +644,7 @@ pwr_tStatus io_init_co_signals(
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, &area_op->Value[sig_count]);
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->AbsValue, &abs_area_op->Value[sig_count]);
     sig_op->ValueIndex = sig_count;
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Co, &sig_aref, &sig_aref);
@@ -777,6 +861,7 @@ pwr_tStatus io_init_ii_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Ii, &sig_aref, &sig_aref);
@@ -856,6 +941,7 @@ pwr_tStatus io_init_io_signals(
 
     gdh_StoreRtdbPointer( (pwr_tUInt32 *)&iarea_op->Value[sig_count], &sig_op->InitialValue);
 
+    io_connect_status( &sig_aref, &sig_op->SigChanCon);
     sig_count++;
 
     sts = gdh_GetNextAttrRef( pwr_cClass_Io, &sig_aref, &sig_aref);
@@ -1588,6 +1674,7 @@ static pwr_tStatus io_init_card(
 	    int chan_cnt = 0;
 	    int i, j;
 	    int elem;
+	    int sig_found;
 
 	    sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
 	    if ( EVEN(sts)) return sts;
@@ -1668,19 +1755,19 @@ static pwr_tStatus io_init_card(
 		chan_cnt++;
 
 		/* Find signal */
-		if ( cdh_ObjidIsNull( sigchancon.Objid)) {
-		  /* Not connected */
-		  continue;
+		sig_found = 0;
+		if ( cdh_ObjidIsNotNull( sigchancon.Objid)) {
+		  sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+		  if ( ODD(sts)) {
+		    sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+		    if ( ODD(sts)) 
+		      sig_found = 1;
+		  }
 		}
-	    
-		sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
-		if ( EVEN(sts))
-		  continue;
-
-		sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
-		if ( EVEN(sts))
-		  continue;
-	  
+		if ( !sig_found) {
+		  sig_op = 0;
+		  sigdlid = pwr_cNDlid;
+		}
 		/* Insert */
 		if ( elem > 1)
 		  sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
@@ -1697,47 +1784,50 @@ static pwr_tStatus io_init_card(
 		chanp->SigAref = sigchancon;
 		chanp->ChanClass = bd[i].attr->Param.TypeRef;
 		chanp->SigClass = sigclass;
-		switch( sigclass) {
-		case pwr_cClass_Di:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		if ( sig_found) {
+		  switch( sigclass) {
+		  case pwr_cClass_Di:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Do:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Do:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 	             (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Po:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Po:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Ai:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Ai:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Ao:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Ao:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Ii:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Ii:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Io:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Io:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
-		  break;
-		case pwr_cClass_Co:
-		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    break;
+		  case pwr_cClass_Co:
+		    chanp->vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
-		  chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		    chanp->abs_vbp = gdh_TranslateRtdbPointer( 
 		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
-		  break;
-		default:
-		  errh_Error( 
-		    "IO init error: unknown signal class card  %, chan nr %d", 
-		    cp->Name, number);
-		  sts = gdh_DLUnrefObjectInfo( sigdlid);
-		  memset( chanp, 0, sizeof(*chanp));
+		    break;
+		  default:
+		    errh_Error( 
+		     "IO init error: unknown signal class card  %, chan nr %d", 
+		     cp->Name, number);
+		    sts = gdh_DLUnrefObjectInfo( sigdlid);
+		    sig_op = 0;
+		    sigdlid = pwr_cNDlid;
+		  }
 		}
 	      }
 	    }
@@ -2029,103 +2119,103 @@ void io_DiUnpackWord(
   if ( mask == IO_CONVMASK_ALL)
   {
     /* No conversion test */
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
     chanp++;
-    if ( chanp->cop)
+    if ( chanp->cop && chanp->sop)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
     chanp++;
   }
   else
   {
-    if ( chanp->cop && mask & 1)
+    if ( chanp->cop && chanp->sop && mask & 1)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
     chanp++;
-    if ( chanp->cop && mask & 2)
+    if ( chanp->cop && chanp->sop && mask & 2)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
     chanp++;
-    if ( chanp->cop && mask & 4)
+    if ( chanp->cop && chanp->sop && mask & 4)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
     chanp++;
-    if ( chanp->cop && mask & 8)
+    if ( chanp->cop && chanp->sop && mask & 8)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
     chanp++;
-    if ( chanp->cop && mask & 16)
+    if ( chanp->cop && chanp->sop && mask & 16)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
     chanp++;
-    if ( chanp->cop && mask & 32)
+    if ( chanp->cop && chanp->sop && mask & 32)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
     chanp++;
-    if ( chanp->cop && mask & 64)
+    if ( chanp->cop && chanp->sop && mask & 64)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
     chanp++;
-    if ( chanp->cop && mask & 128)
+    if ( chanp->cop && chanp->sop && mask & 128)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
     chanp++;
-    if ( chanp->cop && mask & 256)
+    if ( chanp->cop && chanp->sop && mask & 256)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
     chanp++;
-    if ( chanp->cop && mask & 512)
+    if ( chanp->cop && chanp->sop && mask & 512)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
     chanp++;
-    if ( chanp->cop && mask & 1024)
+    if ( chanp->cop && chanp->sop && mask & 1024)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
     chanp++;
-    if ( chanp->cop && mask & 2048)
+    if ( chanp->cop && chanp->sop && mask & 2048)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
     chanp++;
-    if ( chanp->cop && mask & 4096)
+    if ( chanp->cop && chanp->sop && mask & 4096)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
     chanp++;
-    if ( chanp->cop && mask & 8192)
+    if ( chanp->cop && chanp->sop && mask & 8192)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
     chanp++;
-    if ( chanp->cop && mask & 16384)
+    if ( chanp->cop && chanp->sop && mask & 16384)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
     chanp++;
-    if ( chanp->cop && mask & 32768)
+    if ( chanp->cop && chanp->sop && mask & 32768)
       * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
     chanp++;
   }
@@ -2147,52 +2237,52 @@ void io_DoPackWord(
     chanp = &cp->chanlist[16];
 
   *data = 0;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 1;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 2;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 4;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 8;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 16;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 32;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 64;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 128;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 256;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 512;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 1024;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 2048;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 4096;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 8192;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 16384;
   chanp++;
-  if ( chanp->cop && * (pwr_tUInt16 *) (chanp->vbp))
+  if ( chanp->cop && chanp->sop && * (pwr_tUInt16 *) (chanp->vbp))
     *data |= 32768;
   chanp++;
 }
