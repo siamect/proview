@@ -195,11 +195,11 @@
 102 65532
 103 1
 26
-2600 !$hostobject.Switch.ActualValue##Boolean
+2600 $hostobject.AlarmStatus##Boolean
 2601 29
 99
 7
-700 !$hostobject.Switch.ActualValue##Boolean
+700 $hostobject.AlarmStatus##Boolean
 99
 50
 5000 $hostobject

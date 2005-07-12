@@ -26,7 +26,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object Template Siemens_Motor_1LA 2147975168
         Body RtBody
           Attr Super.Specification = "1LA"
-          Attr Super.DataSheet = "$pwr_lang/datasheet/siemens_motor_1la.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/siemens_motor_1la.pdf"
         EndBody
       EndObject
     EndObject

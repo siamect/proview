@@ -1,7 +1,7 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody
     Attr NextOix = "_X1"
-    Attr NextCix = "_X15"
+    Attr NextCix = "_X20"
   EndBody
   Object Class $ClassHier 1
     !/**
@@ -37,9 +37,37 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Ventim_Valve_VM3001 2147975168
         Body RtBody
+          Attr Super.Specification = "Ventim vridspjällventil VM3001"
           Attr Super.SwitchOpen.Description = "Valve is open"
           Attr Super.SwitchClosed.Description = "Valve is closed"
-          Attr Super.DataSheet = "$pwr_lang/datasheet/ventim_valve_vm3001.pdf"
+          Attr Super.AlarmText = "Valve error"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ventim_valve_vm3001.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Durholdt_valve_100_103 $ClassDef 18
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Durholdt_valve_100_103"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-MValveOrNoSw"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Durholdt_valve_100_103 2152431616
+        Body RtBody
+          Attr Super.Specification = "Durholdt valve 100.103"
+          Attr Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
         EndBody
       EndObject
     EndObject
@@ -64,6 +92,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Bernard_Actuator_OA 2150858752
         Body RtBody
+          Attr Super.Specification = "Bernard ställdon typ OA"
           Attr Super.Position.Unit = "%"
           Attr Super.Position.PresMaxLimit = 1.000000e+02
           Attr Super.Order.Unit = "%"
@@ -76,6 +105,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.SwitchAlarmText = "Switch error, "
           Attr Super.PosSwitchOpen = 9.500000e+01
           Attr Super.PosSwitchClosed = 5.000000e+00
+          Attr Super.DataSheet = "$pwr_lang/dsh/bernard_actuator_oa.html"
         EndBody
       EndObject
     EndObject
@@ -100,8 +130,36 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Cewe_SafetySwitch_KSA_LBAS 2148237312
         Body RtBody
+          Attr Super.Specification = "Safety switch "
           Attr Super.AlarmText = "Safety switch is off, "
-          Attr Super.DataSheet = "$pwr_lang/datasheet/cewe_safetyswitch_ksa_lbas.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_ksa_lbas.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Cewe_SafetySwitch_BAS $ClassDef 16
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Cewe_SafetySwitch_BAS"
+          Attr NextAix = "_X4"
+        EndBody
+        Object Super $Attribute 3
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Cewe_SafetySwitch_BAS 2151907328
+        Body RtBody
+          Attr Super.Specification = "Safety switch "
+          Attr Super.AlarmText = "Safety switch is not on "
+          Attr Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_bas.pdf"
         EndBody
       EndObject
     EndObject
@@ -126,6 +184,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Impac_TempSensor_IN300 2150596608
         Body RtBody
+          Attr Super.Super.Specification = "Impac compact pyrometer IN300"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -141,7 +200,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.BufferStatus[1] = 1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
-          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/impac_tempsensor_in300.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
         EndBody
       EndObject
     EndObject
@@ -166,8 +225,38 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Legrand_CircuitBreaker_DX 2148499456
         Body RtBody
+          Attr Super.Specification = "Legrand Circuit breaker DX"
           Attr Super.AlarmText = "Overload, circuit breaker tripped, "
-          Attr Super.DataSheet = "$pwr_lang/datasheet/legrand_circuitbreaker_dx.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/legrand_circuitbreaker_dx.pdf"
+        EndBody
+      EndObject
+    EndObject
+    Object Suco_PresSwitch_27AF $ClassDef 19
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Suco_PresSwitch_27AF"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 4
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-PressureSwitch"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Suco_PresSwitch_27AF 2152693760
+        Body RtBody
+          Attr Super.Super.Description = "Suco pressure switch 27 AF"
+          Attr Super.Super.Specification = "Pressure switch"
+          Attr Super.Super.Switch.Description = "Switch digital input"
+          Attr Super.Super.AlarmText = "Pressure switch, "
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
         EndBody
       EndObject
     EndObject
@@ -192,6 +281,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Mobrey_LevelSensor_MSP422 2149810176
         Body RtBody
+          Attr Super.Super.Specification = "Mobrey ultraljudsnivåtransmitter MSP422"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -209,7 +299,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/mobrey_levelsensor_msp422.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelsensor_msp422.pdf"
         EndBody
       EndObject
     EndObject
@@ -234,8 +324,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Mobrey_LevelSwitch_EC 2150334464
         Body RtBody
+          Attr Super.Super.Specification = "Mobrey nivåvippa modell EC"
           Attr Super.Super.AlarmText = "Level switch, "
-          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/mobrey_levelswitch_ec.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelswitch_ec.pdf"
         EndBody
       EndObject
     EndObject
@@ -260,6 +351,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Klay_PressureSensor_Series2000 2150072320
         Body RtBody
+          Attr Super.Super.Specification = "Klay instrument trycktransmitter serie 2000"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -277,7 +369,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/datasheet/klay_pressuresensor_series2000.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/klay_pressuresensor_series2000.pdf"
         EndBody
       EndObject
     EndObject
@@ -306,9 +398,10 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Omron_Contactor_J7KN 2148761600
         Body RtBody
+          Attr Super.Specification = "Omron motor contactor J7KN"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Feedback contactor lost, "
-          Attr Super.DataSheet = "$pwr_lang/datasheet/omron_contactor_j7kn.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/omron_contactor_j7kn.pdf"
         EndBody
       EndObject
     EndObject
@@ -333,8 +426,8 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Metso_Pump_VS 2151120896
         Body RtBody
-          Attr Super.Specification = "Metso sumppump Sala serien VS"
-          Attr Super.DataSheet = "$pwr_lang/datasheet/metso_pump_vs.pdf"
+          Attr Super.Specification = "Metso minerals vertikala sumppumpar SALA serien VS"
+          Attr Super.DataSheet = "$pwr_lang/dsh/metso_pump_vs.html"
         EndBody
       EndObject
     EndObject
@@ -359,8 +452,45 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Flygt_Pump_N3202 2151383040
         Body RtBody
-          Attr Super.Specification = "Flygt dränkbar pump N 3202"
-          Attr Super.DataSheet = "$pwr_lang/datasheet/flygt_pump_n3202.pdf"
+          Attr Super.Specification = "ITT Industries Flygt dränkbar pump N 3202"
+          Attr Super.DataSheet = "$pwr_lang/dsh/flygt_pump_n3202.html"
+        EndBody
+      EndObject
+    EndObject
+    Object Jowa_fan $ClassDef 15
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Jowa_fan"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-FanCbCoSs"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Jowa_fan 2151645184
+        Body RtBody
+          Attr Super.Specification = "Jowa fan"
+          Attr Super.Contactor.FbTimeLimit = 1.000000e+00
+          Attr Super.Contactor.AlarmText = "Feedback lost fan "
+          Attr Super.CircuitBreaker.AlarmText = "Overload, circuit breaker tripped fan "
+          Attr Super.SafetySwitch.AlarmText = "Safey switch is OFF fan "
+          Attr Super.Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready fan "
+          Attr Super.Mode.AlarmNotReadyA = "Check interlocks! Automode is not allowed, not ready fan "
+          Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed fan "
+          Attr Super.Mode.Alarm2LocalMod = "Local mode is activated for fan "
+          Attr Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed, fan "
+          Attr Super.Fan.Description = "Jowa fan"
+          Attr Super.Fan.Specification = "?"
+          Attr Super.DataSheet = "$pwr_lang/dsh/jowa_fan.pdf"
         EndBody
       EndObject
     EndObject

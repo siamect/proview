@@ -25,6 +25,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
       EndObject
       Object Template Ssab_SafetySwitch 2147975168
         Body RtBody
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
         EndBody
       EndObject
     EndObject
@@ -993,7 +994,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ai32up.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
           Attr Ch01.ConversionOn = 1
           Attr Ch01.ScanInterval = 1
           Attr Ch01.RawValRangeLow = -3.000000e+04
@@ -1569,7 +1570,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 16
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ai32up.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
           Attr Ch01.ConversionOn = 1
           Attr Ch01.ScanInterval = 1
           Attr Ch01.RawValRangeLow = -3.000000e+04
@@ -1897,7 +1898,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 8
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ai32up.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
           Attr Ch01.ConversionOn = 1
           Attr Ch01.ScanInterval = 1
           Attr Ch01.RawValRangeLow = -3.000000e+04
@@ -2130,7 +2131,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 8
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ao8up.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao8up.pdf"
           Attr Ch01.OutPolyType = 1
           Attr Ch01.ActValRangeLow = -1.000000e+02
           Attr Ch01.ActValRangeHigh = 1.000000e+02
@@ -2347,13 +2348,13 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
       EndObject
-      Object Template Ssab_AO8uPL
+      Object Template Ssab_AO8uPL 2151383040
         Body RtBody
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 8
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ao8up.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao8up.pdf"
           Attr Ch01.OutPolyType = 1
           Attr Ch01.ActValRangeLow = -1.000000e+02
           Attr Ch01.ActValRangeHigh = 1.000000e+02
@@ -2538,52 +2539,68 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
         Object Ch09 $Attribute 10
           Body SysBody
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch10 $Attribute 11
           Body SysBody
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch11 $Attribute 12
           Body SysBody
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch12 $Attribute 13
           Body SysBody
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch13 $Attribute 14
           Body SysBody
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch14 $Attribute 15
           Body SysBody
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch15 $Attribute 16
           Body SysBody
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
         Object Ch16 $Attribute 17
           Body SysBody
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
             Attr TypeRef = "pwrb:Class-ChanAo"
           EndBody
         EndObject
       EndObject
-      Object Template Ssab_AO16uP_Logger
+      Object Template Ssab_AO16uP_Logger 2151645184
         Body RtBody
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 16
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_ao16up_logger.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao16up_logger.pdf"
           Attr Ch01.OutPolyType = 1
           Attr Ch01.ActValRangeLow = -1.000000e+02
           Attr Ch01.ActValRangeHigh = 1.000000e+02
@@ -3045,7 +3062,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_di32d.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_di32d.pdf"
           Attr Super.ConvMask1 = 65535
           Attr Super.ConvMask2 = 65535
         EndBody
@@ -3333,7 +3350,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_do32dks.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
         EndBody
       EndObject
       Object IoMethods $RtMethod 23
@@ -3611,13 +3628,13 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
       EndObject
-      Object Template Ssab_DO32DKS_Stall
+      Object Template Ssab_DO32DKS_Stall 2151120896
         Body RtBody
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
           Attr Super.MaxNoOfChannels = 32
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/ssab_do32dks.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
         EndBody
       EndObject
       Object IoMethods $RtMethod 46
@@ -4017,7 +4034,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr CopWrFine[2] = 1
           Attr CopWrFine[3] = 1
           Attr Process = 1
-          Attr DataSheet = "$pwr_lang/ssab_co4up.pdf"
+          Attr DataSheet = "$pwr_lang/dsh/ssab_co4up.pdf"
           Attr Ch1.ConversionOn = 1
           Attr Ch1.SensorPolyType = 1
           Attr Ch2.ConversionOn = 1
