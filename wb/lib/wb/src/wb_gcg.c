@@ -2075,6 +2075,10 @@ static int	gcg_pgmname_to_parname(
 	int			sts, i, par_index, found;
 	char			*s;
 	char			indexstr[10];
+	char			pname[80];
+
+	/* Suppress any leading Super */
+	cdh_SuppressSuper( pname, pgmname);
 
 	/* Get the parameter index */
 	sts = ldh_GetObjectBodyDef(
@@ -2091,7 +2095,7 @@ static int	gcg_pgmname_to_parname(
 	  if ( EVEN(sts) ) return sts;
 	}	
 	/* If the pgmname contains an index, store the index */
-	s = strchr( pgmname, '[');
+	s = strchr( pname, '[');
 	if ( s != 0)
 	{
 	  strcpy( indexstr, s);
@@ -2103,7 +2107,7 @@ static int	gcg_pgmname_to_parname(
 	found = 0;
 	for ( i = 0; i < rows; i++ )
 	{
-	  if ( strcmp( pgmname, bodydef[i].Par->Param.Info.PgmName) == 0)
+	  if ( strcmp( pname, bodydef[i].Par->Param.Info.PgmName) == 0)
 	  {
 	    found = 1;
 	    par_index = i;
@@ -2114,7 +2118,9 @@ static int	gcg_pgmname_to_parname(
 	  return GSX__REFPAR;  
 
 
-	strcpy( parname, bodydef[par_index].ParName);
+	/* Suppress any leading Super */
+	cdh_SuppressSuper( parname, bodydef[par_index].ParName);
+	s = bodydef[par_index].ParName;
 
 	free((char *) bodydef);
 
@@ -2186,6 +2192,7 @@ int	gcg_wind_comp_all(
 	unsigned long	warningcount;
 	int		wind_compiled;
 	vldh_t_wind	*loaded_windlist;
+	int		*loaded_list;
 	int		loaded_windcount;		
 	pwr_tObjid	parent;
 
@@ -2196,29 +2203,27 @@ int	gcg_wind_comp_all(
 	/* Store the windows in the order they are loaded, and
 	   unload them later in the opposite order */
 	loaded_windlist = (vldh_t_wind *)XtCalloc( wind_count, sizeof( vldh_t_wind));
+	loaded_list = (int *)XtCalloc( wind_count, sizeof(int));
 	loaded_windcount = 0;
 
 	wind_compiled = 0;
 	windlist_ptr = windlist;
-	for ( j = 0; j < wind_count; j++)
-	{
+	for ( j = 0; j < wind_count; j++) {
+
 	  /* Check that the window still exist, if Func subwindow it has
 	     been replaced and has already been compiled during parent window
 	     compilation */
 	  sts = ldh_GetParent( ldhses, *windlist_ptr, &parent);
-	  if ( sts == LDH__NOSUCHOBJ)
-	  {
+	  if ( sts == LDH__NOSUCHOBJ) {
 	    windlist_ptr++;
 	    continue;
 	  }
 	  else if ( EVEN(sts)) return sts;
 
 	  /* Check if this window is modified */
-	  if ( modified)
-	  {
+	  if ( modified) {
 	    sts = gcg_wind_check_modification( ldhses, *windlist_ptr);
-	    if (ODD(sts))
-	    {
+	    if (ODD(sts)) {
 	      /* This object is ok, take the next one */
 	      windlist_ptr++;
 	      continue;
@@ -2231,8 +2236,7 @@ int	gcg_wind_comp_all(
 
 	  /* Check if the plcpgm is loaded in vldh */
 	  sts = vldh_get_plc_objdid( *(parentlist + parent_count -1), &plc);
-	  if ( sts == VLDH__OBJNOTFOUND )
-	  {
+	  if ( sts == VLDH__OBJNOTFOUND ) {
 	    /* Load the plcpgm */
 	    sts = vldh_plc_load( *(parentlist + parent_count -1), 
 		ldhwb, ldhses, &plc);
@@ -2240,8 +2244,8 @@ int	gcg_wind_comp_all(
 	  else
 	    if ( EVEN(sts)) return sts;
 	    
-	  for ( i = parent_count - 2; i >= 0; i -= 2)
-	  {
+	  for ( i = parent_count - 2; i >= 0; i -= 2) {
+
 	    /* Check if this window is loaded */
 	    if (!IsWindowLoaded(loaded_windlist, loaded_windcount, *(parentlist + i),  &wind)) {
 	      sts = vldh_get_wind_objdid( *(parentlist + i), &wind); 
@@ -2268,6 +2272,7 @@ int	gcg_wind_comp_all(
 		if ( EVEN(sts)) return sts;
 
 		*(loaded_windlist + loaded_windcount) = wind;
+		*(loaded_list + loaded_windcount) = 1;
 		loaded_windcount++;
 	      }
 	    }
@@ -2285,26 +2290,59 @@ int	gcg_wind_comp_all(
 	  if (!IsWindowLoaded(loaded_windlist, loaded_windcount, *windlist_ptr,  &wind))
 #endif
 	  {
-	    if ( parent_count == 1)
-	    {
+	    if ( parent_count == 1) {
 	      /* This is the child to the plc */
-	      sts = vldh_wind_load( plc, 0, *windlist_ptr, 0, 0, &wind, 
-			ldh_eAccess_SharedReadWrite);
-	      if ( EVEN(sts)) return sts;
-	      plc->hp.wind = wind;
+	      sts = vldh_get_wind_objdid( *windlist_ptr, &wind); 
+	      if ( sts == VLDH__OBJNOTFOUND ) {
+		sts = vldh_wind_load( plc, 0, *windlist_ptr, 0, 0, &wind, 
+				      ldh_eAccess_SharedReadWrite);
+		if ( EVEN(sts)) return sts;
+		plc->hp.wind = wind;
+
+		sts = vldh_wind_load_all( wind);
+		*(loaded_list + loaded_windcount) = 1;
+	      }
+	      else {
+		ldh_sSessInfo		info;
+
+		sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
+		if ( EVEN(sts)) return sts;
+
+		if ( info.Access != ldh_eAccess_ReadOnly)
+		  return LDH__OTHERSESS;
+
+		sts = ldh_SetSession( wind->hw.ldhses, ldh_eAccess_SharedReadWrite);
+		if ( EVEN(sts)) return sts;
+	      }
 	    }
-	    else
-	    {
+	    else {
 	      /* Get the parent vldhnode */
 	      sts = vldh_get_node_objdid( *parentlist, parentwind,  
 			&node);
 	      if ( EVEN(sts)) return sts;
 	       
-	      sts = vldh_wind_load( plc, node, *windlist_ptr, 0, 0, &wind,
-			ldh_eAccess_SharedReadWrite);
-	      if ( EVEN(sts)) return sts;
+	      sts = vldh_get_wind_objdid( *windlist_ptr, &wind); 
+	      if ( sts == VLDH__OBJNOTFOUND ) {
+		sts = vldh_wind_load( plc, node, *windlist_ptr, 0, 0, &wind,
+				      ldh_eAccess_SharedReadWrite);
+		if ( EVEN(sts)) return sts;
+		*(loaded_list + loaded_windcount) = 1;
+
+		sts = vldh_wind_load_all( wind);
+	      }
+	      else {
+		ldh_sSessInfo		info;
+
+		sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
+		if ( EVEN(sts)) return sts;
+
+		if ( info.Access != ldh_eAccess_ReadOnly)
+		  return LDH__OTHERSESS;
+
+		sts = ldh_SetSession( wind->hw.ldhses, ldh_eAccess_SharedReadWrite);
+		if ( EVEN(sts)) return sts;
+	      }
 	    }
-	    sts = vldh_wind_load_all( wind);
 	    if ( EVEN(sts)) return sts;
 
 	    *(loaded_windlist + loaded_windcount) = wind;
@@ -2314,8 +2352,7 @@ int	gcg_wind_comp_all(
 	  /* Compile the window */
 	  sts = gcg_plcwindow_compile( wind, codetype, &errorcount, 
 			&warningcount, 1, debug);
-	  if ( sts == GSX__PLCWIND_ERRORS || sts == GSX__AMBIGOUS_EXECUTEORDER)
-	  {
+	  if ( sts == GSX__PLCWIND_ERRORS || sts == GSX__AMBIGOUS_EXECUTEORDER) {
 	    /* continue */
 	  }
 	  else if ( EVEN(sts)) return sts;
@@ -2328,10 +2365,9 @@ int	gcg_wind_comp_all(
 	/* Compile the plc */
 
 
-	/* FIX, the plc is uloaded by the Func objects, load it again... */
+	/* FIX, the plc is unloaded by the Func objects, load it again... */
 	sts = vldh_get_plc_objdid( *(parentlist + parent_count -1), &plc);
-	if ( sts == VLDH__OBJNOTFOUND )
-	{
+	if ( sts == VLDH__OBJNOTFOUND ) {
 	  /* Load the plcpgm */
 	  sts = vldh_plc_load( *(parentlist + parent_count -1), 
 		ldhwb, ldhses, &plc);
@@ -2341,25 +2377,39 @@ int	gcg_wind_comp_all(
         /* End of FIX */
 
 
-	if ( wind_compiled)
-	{
+	if ( wind_compiled) {
 	  sts = gcg_plc_compile( plc, codetype, &errorcount, &warningcount, 1,
 			debug);
-	  if ( sts == GSX__PLCPGM_ERRORS)
-	  {
+	  if ( sts == GSX__PLCPGM_ERRORS) {
 	    /* continue */
 	  }
 	  else if ( EVEN(sts)) return sts;
 	}
 
 	/* Unload the loaded windows */
-	for ( i = 0; i < loaded_windcount; i++)
-	{
- 	  sts = vldh_wind_quit_all( 
-		*(loaded_windlist + loaded_windcount - i - 1));
-	  if ( EVEN(sts)) return sts;
+	for ( i = 0; i < loaded_windcount; i++) {
+	  if ( *(loaded_list + loaded_windcount - i - 1)) {
+	    sts = vldh_wind_quit_all( 
+		   *(loaded_windlist + loaded_windcount - i - 1));
+	    if ( EVEN(sts)) return sts;
+	  }
+	  else {
+	    ldh_sSessInfo		info;
+
+	    sts = ldh_GetSessionInfo( wind->hw.ldhses, &info);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( !info.Empty) {
+	      sts = ldh_RevertSession( wind->hw.ldhses);
+	      if ( EVEN(sts)) return sts;
+	    }
+
+	    sts = ldh_SetSession( wind->hw.ldhses, ldh_eAccess_ReadOnly);
+	    if ( EVEN(sts)) return sts;
+	  }
 	}
 	XtFree((char *) loaded_windlist);
+	XtFree((char *) loaded_list);
 
 	return GSX__SUCCESS;
 }
