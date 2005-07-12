@@ -572,6 +572,8 @@ static int compCatt( tree_sTable *tp, tree_sNode *x, tree_sNode *y)
 void wb_merep::subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid,
 			 pwr_tStatus *sts)
 {
+  bool prev_found = false;
+
   // Loop through all $ClassDef objects
   for ( mvrep_iterator it = m_mvrepdbs.begin(); 
 	it != m_mvrepdbs.end(); 
@@ -580,7 +582,6 @@ void wb_merep::subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubci
     wb_orep *o, *onext;
     wb_adrep *ad;
     pwr_tCid cid;
-    bool prev_found = false;
 
     for ( o = vrep->object( sts, pwr_eClass_ClassDef);
 	  ODD(*sts);
