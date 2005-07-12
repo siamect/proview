@@ -51,18 +51,23 @@ extern "C" {
 #define ALARM_INFO_I_SIZE  2
 typedef struct {
 	char	a_alarm_text[ALARM_INFO_A_SIZE][80];
+	char	a_alarm_alias[ALARM_INFO_A_SIZE][40];
 	int	a_alarm_active[ALARM_INFO_A_SIZE];
 	int	a_alarm_exist[ALARM_INFO_A_SIZE];
 	char	b_alarm_text[ALARM_INFO_B_SIZE][80];
+	char	b_alarm_alias[ALARM_INFO_A_SIZE][40];
 	int	b_alarm_active[ALARM_INFO_B_SIZE];
 	int	b_alarm_exist[ALARM_INFO_B_SIZE];
 	char	c_alarm_text[ALARM_INFO_C_SIZE][80];
+	char	c_alarm_alias[ALARM_INFO_A_SIZE][40];
 	int	c_alarm_active[ALARM_INFO_C_SIZE];
 	int	c_alarm_exist[ALARM_INFO_C_SIZE];
 	char	d_alarm_text[ALARM_INFO_D_SIZE][80];
+	char	d_alarm_alias[ALARM_INFO_A_SIZE][40];
 	int	d_alarm_active[ALARM_INFO_D_SIZE];
 	int	d_alarm_exist[ALARM_INFO_D_SIZE];
 	char	i_alarm_text[ALARM_INFO_I_SIZE][80];
+	char	i_alarm_alias[ALARM_INFO_A_SIZE][40];
 	int	i_alarm_active[ALARM_INFO_I_SIZE];
 	int	i_alarm_exist[ALARM_INFO_I_SIZE];
 	int	alarms_total;
@@ -145,6 +150,7 @@ class EvList {
     void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
 					  unsigned long, char *, Widget *);
+    char		*(*name_to_alias_cb)( void *, char *);
     double		acc_beep_time;
     double		beep_interval;
 
@@ -201,6 +207,7 @@ class ItemAlarm {
     mh_sEventId		eventid;
     pwr_tObjid		object;
     unsigned long	status;
+    char		alias[40];
 
     void	update_text();
 };

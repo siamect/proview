@@ -36,6 +36,7 @@ extern "C" {
 #include "flow_x.h"
 #include "co_mrm_util.h"
 }
+#include "co_lng.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
@@ -216,8 +217,7 @@ void EvListBrow::create_nodeclasses()
 		flow_eNodeGroup_Common, &nc_event);
   brow_AddFrame( nc_event, 0, 0, 35, 0.8, flow_eDrawType_Line, -1, 1);
   brow_AddAnnot( nc_event, 0.8, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_event, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_event, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_event, 3.3, 0.6, 1,
@@ -226,7 +226,10 @@ void EvListBrow::create_nodeclasses()
   brow_AddAnnot( nc_event, 10, 0.6, 2,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_event, 26, 0.6, 3,
+  brow_AddAnnot( nc_event, 12, 0.6, 3,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		1);
+  brow_AddAnnot( nc_event, 28, 0.6, 4,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		1);
 
@@ -237,19 +240,17 @@ void EvListBrow::create_nodeclasses()
   brow_AddFilledRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_LineRed);
   brow_AddRect( nc_a_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_a_alarm, 0.8, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_a_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_a_alarm, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_a_alarm, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_a_alarm, 26, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnot( nc_a_alarm, 12, 0.6, 3,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddAnnot( nc_a_alarm, 28, 0.6, 4,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
 
   // Nodeclass for B-alarm
   brow_CreateNodeClass( ctx, "B_Alarm", 
@@ -258,19 +259,17 @@ void EvListBrow::create_nodeclasses()
   brow_AddFilledRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Yellow);
   brow_AddRect( nc_b_alarm, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_b_alarm, 0.8, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_b_alarm, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_b_alarm, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_b_alarm, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_b_alarm, 26, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnot( nc_b_alarm, 12, 0.6, 3,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddAnnot( nc_b_alarm, 28, 0.6, 4,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
 
   // Nodeclass for Info
   brow_CreateNodeClass( ctx, "Info", 
@@ -279,19 +278,17 @@ void EvListBrow::create_nodeclasses()
   brow_AddFilledRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Green);
   brow_AddRect( nc_info, 0.2, 0.15, 0.4, 0.4, flow_eDrawType_Line, 0, 0);
   brow_AddAnnot( nc_info, 0.8, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnotPixmap( nc_info, 0, 1.6, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnotPixmap( nc_info, 1, 2.2, 0.1, flow_eDrawType_Line, 2, 0);
   brow_AddAnnot( nc_info, 3.3, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
   brow_AddAnnot( nc_info, 10, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_info, 26, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 0);
+  brow_AddAnnot( nc_info, 12, 0.6, 3,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
+  brow_AddAnnot( nc_info, 28, 0.6, 4,
+		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 1);
 
 }
 
@@ -360,7 +357,7 @@ EvList::EvList(
 	parent_ctx(ev_parent_ctx), parent_wid(ev_parent_wid),
 	type(ev_type), size(0), max_size(ev_size), display_hundredth(0),
 	hide_object(0), hide_text(0),
-	start_trace_cb(NULL), display_in_xnav_cb(NULL), acc_beep_time(0),
+	start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), acc_beep_time(0),
 	beep_interval(4)
 {
   if ( max_size <= 0) {
@@ -1180,10 +1177,15 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, char *item_name, pwr_tTime item_time,
   brow_tNodeClass 	nc;
 
   strcpy( name, item_name);
-  strncpy( eventtext, item_eventtext, sizeof(eventtext));
+  strncpy( eventtext, Lng::translate( item_eventtext), sizeof(eventtext));
   eventtext[sizeof(eventtext)-1] = 0;
   strncpy( eventname, item_eventname, sizeof(eventname));
   eventname[sizeof(eventname)-1] = 0;
+  if ( evlist->name_to_alias_cb)
+    strcpy( alias, evlist->name_to_alias_cb( evlist->parent_ctx, eventname));
+  else
+    strcpy( alias, "");
+
 
   switch ( event_type) { 
   case evlist_eEventType_Alarm:
@@ -1306,24 +1308,30 @@ void ItemAlarm::update_text()
   {
     case evlist_eEventType_Info:
     case evlist_eEventType_Alarm:
-      if ( ! evlist->hide_text)
-        brow_SetAnnotation( node, 2, eventtext, strlen(eventtext));
-      else
+      if ( ! evlist->hide_text) {
+        brow_SetAnnotation( node, 2, alias, strlen(alias));
+        brow_SetAnnotation( node, 3, eventtext, strlen(eventtext));
+      }
+      else {
         brow_SetAnnotation( node, 2, "", 0);
+        brow_SetAnnotation( node, 3, "", 0);
+      }
       break;
     default:
       brow_SetAnnotation( node, 2, "", 0);
+      brow_SetAnnotation( node, 3, "", 0);
   }
 
   if ( !evlist->hide_object && evlist->hide_text)
   {
     brow_SetAnnotation( node, 2, eventname, strlen(eventname));
     brow_SetAnnotation( node, 3, "", 0);
+    brow_SetAnnotation( node, 4, "", 0);
   }
   else if ( !evlist->hide_object)
-    brow_SetAnnotation( node, 3, eventname, strlen(eventname));
+    brow_SetAnnotation( node, 4, eventname, strlen(eventname));
   else
-    brow_SetAnnotation( node, 3, "", 0);
+    brow_SetAnnotation( node, 4, "", 0);
 }
 
 int EvList::get_last_not_acked( mh_sEventId **id)
@@ -1461,6 +1469,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                   if ( a_cnt >= ALARM_INFO_A_SIZE)
                     break;
                   strcpy( info->a_alarm_text[a_cnt], object_item->eventtext);
+                  strcpy( info->a_alarm_alias[a_cnt], object_item->alias);
                   info->a_alarm_active[a_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->a_alarm_exist[a_cnt] = 1;
                   a_cnt++;
@@ -1469,6 +1478,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                   if ( b_cnt >= ALARM_INFO_B_SIZE)
                     break;
                   strcpy( info->b_alarm_text[b_cnt], object_item->eventtext);
+                  strcpy( info->b_alarm_alias[b_cnt], object_item->alias);
                   info->b_alarm_active[b_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->b_alarm_exist[b_cnt] = 1;
                   b_cnt++;
@@ -1477,6 +1487,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                   if ( c_cnt >= ALARM_INFO_C_SIZE)
                     break;
                   strcpy( info->c_alarm_text[c_cnt], object_item->eventtext);
+                  strcpy( info->c_alarm_alias[c_cnt], object_item->alias);
                   info->c_alarm_active[c_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->c_alarm_exist[c_cnt] = 1;
                   c_cnt++;
@@ -1485,6 +1496,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                   if ( d_cnt >= ALARM_INFO_D_SIZE)
                     break;
                   strcpy( info->d_alarm_text[d_cnt], object_item->eventtext);
+                  strcpy( info->d_alarm_alias[d_cnt], object_item->alias);
                   info->d_alarm_active[d_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->d_alarm_exist[d_cnt] = 1;
                   d_cnt++;
@@ -1501,6 +1513,7 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
               if ( i_cnt >= ALARM_INFO_I_SIZE)
                 break;
               strcpy( info->i_alarm_text[i_cnt], object_item->eventtext);
+              strcpy( info->i_alarm_alias[i_cnt], object_item->alias);
               info->i_alarm_active[i_cnt] = object_item->status & mh_mEventStatus_NotRet;
               info->i_alarm_exist[i_cnt] = 1;
               i_cnt++;

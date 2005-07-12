@@ -271,6 +271,7 @@ void  Op::update_alarm_info()
   int		height, active_height;
   int		background;
   char          str[40];
+  char		text[120];
 
   if ( get_alarm_info_cb)
   {
@@ -307,7 +308,8 @@ void  Op::update_alarm_info()
     {
       if ( info.a_alarm_exist[i])
       {
-        cstr=XmStringCreateLtoR( info.a_alarm_text[i], "ISO8859-1");
+	sprintf( text, "%s  %s", info.a_alarm_alias[i], info.a_alarm_text[i]);
+        cstr=XmStringCreateLtoR( text, "ISO8859-1");
         XtSetArg(args[j=0],XmNlabelString, cstr);j++;
         XtSetValues( aalarm_label[i], args, j);
         XmStringFree( cstr);
@@ -340,7 +342,8 @@ void  Op::update_alarm_info()
     {
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_B;
-      cstr=XmStringCreateLtoR( info.b_alarm_text[0], "ISO8859-1");
+      sprintf( text, "%s  %s", info.b_alarm_alias[0], info.b_alarm_text[0]);
+      cstr=XmStringCreateLtoR( text, "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -366,7 +369,8 @@ void  Op::update_alarm_info()
     {
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_C;
-      cstr=XmStringCreateLtoR( info.c_alarm_text[0], "ISO8859-1");
+      sprintf( text, "%s  %s", info.c_alarm_alias[0], info.c_alarm_text[0]);
+      cstr=XmStringCreateLtoR( text, "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -392,7 +396,8 @@ void  Op::update_alarm_info()
     {
       balarm_type = evlist_eEventType_Alarm;
       balarm_prio = mh_eEventPrio_D;
-      cstr=XmStringCreateLtoR( info.d_alarm_text[0], "ISO8859-1");
+      sprintf( text, "%s  %s", info.d_alarm_alias[0], info.d_alarm_text[0]);
+      cstr=XmStringCreateLtoR( text, "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -417,7 +422,8 @@ void  Op::update_alarm_info()
     else if ( info.i_alarm_exist[0])
     {
       balarm_type = evlist_eEventType_Info;
-      cstr=XmStringCreateLtoR( info.i_alarm_text[0], "ISO8859-1");
+      sprintf( text, "%s  %s", info.i_alarm_alias[0], info.i_alarm_text[0]);
+      cstr=XmStringCreateLtoR( text, "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
       XtSetValues( balarm_label, args, j);
       XmStringFree( cstr);
@@ -525,7 +531,7 @@ int Op::configure( char *opplace_str)
     sts = gdh_ClassAttrToAttrref( pwr_cClass_XttGraph, ".ButtonText", &attrref);
     if ( EVEN(sts)) return sts;
 
-    attrref = user_p->FastAvail[i];
+    attrref = cdh_ArefAdd( &user_p->FastAvail[i], &attrref);
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)button_title[i], 
 		sizeof(button_title[0]));
     if ( EVEN(sts)) 

@@ -28,6 +28,11 @@ extern "C" {
 # include "xtt_focustimer.h"
 #endif
 
+typedef struct {
+  char Object[120];
+  char Alias[8];
+} ev_sAlias;
+
 class Ev {
   public:
     Ev(
@@ -84,6 +89,7 @@ class Ev {
     FocusTimer		eve_focustimer;
     FocusTimer		ala_focustimer;
     FocusTimer		blk_focustimer;
+    ev_sAlias		alias_list[20];
 
     int		outunit_connect( pwr_tObjid	user);
     void	update( double scantime);
@@ -100,6 +106,8 @@ class Ev {
     void 	ack_last_prio( unsigned long type, unsigned long prio);
     int		get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 
 			unsigned long prio);
+    void	create_aliaslist( void *up);
+    char	*name_to_alias( char *name);
 };
 
 #endif

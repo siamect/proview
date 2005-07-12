@@ -42,6 +42,7 @@ static Ev *ev = NULL;
 static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
 static void ev_blk_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
+static char *ev_name_to_alias_cb( void *ctx, char *name);
 static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
@@ -215,6 +216,7 @@ Ev::Ev(
   ala_size = userobject_ptr->MaxNoOfAlarms;
   eve_size = userobject_ptr->MaxNoOfEvents;
   blk_size = 0;
+  create_aliaslist( userobject_ptr);
 
   reglist[0].value = (caddr_t) this;
 
@@ -302,10 +304,12 @@ Ev::Ev(
   eve = new EvList( this, form_eve, ev_eType_EventList, eve_size, &eve_widget);
   eve->start_trace_cb = &ev_eve_start_trace_cb;
   eve->display_in_xnav_cb = &ev_eve_display_in_xnav_cb;
+  eve->name_to_alias_cb = &ev_name_to_alias_cb;
   eve->popup_menu_cb = &ev_popup_menu_cb;
   ala = new EvList( this, form_ala, ev_eType_AlarmList, ala_size, &ala_widget);
   ala->start_trace_cb = &ev_ala_start_trace_cb;
   ala->display_in_xnav_cb = &ev_ala_display_in_xnav_cb;
+  ala->name_to_alias_cb = &ev_name_to_alias_cb;
   ala->popup_menu_cb = &ev_popup_menu_cb;
   blk = new EvList( this, form_blk, ev_eType_BlockList, blk_size, &blk_widget);
   blk->start_trace_cb = &ev_blk_start_trace_cb;
@@ -466,6 +470,11 @@ static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
   if ( ((Ev *)ctx)->popup_menu_cb)
     (((Ev *)ctx)->popup_menu_cb) ( ((Ev *)ctx)->parent_ctx, attrref, item_type,
 				   utility, arg, popup);
+}
+
+static char *ev_name_to_alias_cb( void *ctx, char *name)
+{
+  return ((Ev *)ctx)->name_to_alias( name);
 }
 
 static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
@@ -860,6 +869,63 @@ int Ev::get_last_not_acked_prio( mh_sEventId **id, unsigned long type,
 	unsigned long prio)
 {
   return ala->get_last_not_acked_prio( id, type, prio);
+}
+
+void Ev::create_aliaslist( void *up)
+{
+  char alias_array[2][80];
+  int nr;
+  int i, j;
+  int alias_size;
+  ev_sAlias dum;
+  pwr_sClass_User *userp = (pwr_sClass_User *)up;
+
+  int listsize = MIN( sizeof(userp->SelectList)/sizeof(userp->SelectList[0]),
+		      sizeof(alias_list)/sizeof(alias_list[0]));
+						    
+
+  for ( i = 0, j = 0; i < listsize; i++) {
+    nr = dcli_parse( userp->SelectList[i], " 	", "",
+	     (char *) alias_array, sizeof( alias_array)/sizeof( alias_array[0]), 
+	     sizeof( alias_array[0]), 0);
+    if ( nr < 2)
+      continue;
+    cdh_ToUpper( alias_list[j].Object, alias_array[0]);
+    strncpy( alias_list[j].Alias, alias_array[1], sizeof(alias_list[j].Alias));
+    alias_list[j].Alias[sizeof(alias_list[j].Alias)-1] = 0;
+    j++;
+  }
+  alias_size = j;
+
+  // Order
+  for ( i = alias_size - 1; i > 0; i--) {
+    for ( j = 0; j < i; j++) {
+      if ( strcmp( alias_list[j].Object, alias_list[j+1].Object) <= 0) {
+	memcpy( &dum, &alias_list[j+1], sizeof(dum));
+	memcpy( &alias_list[j+1], &alias_list[j], sizeof(dum));
+	memcpy( &alias_list[j], &dum, sizeof(dum));
+      }
+    }
+  }
+}
+
+char *Ev::name_to_alias( char *name)
+{
+  char oname[120];
+  static char alias[40];
+
+  cdh_ToUpper( oname, name);
+
+  for ( int i = 0; i < (int)(sizeof(alias_list)/sizeof(alias_list[0])); i++) {
+    if ( alias_list[i].Alias[0] == 0)
+      break;
+    if ( strncmp( oname, alias_list[i].Object, strlen(alias_list[i].Object)) == 0) {
+      strcpy( alias, alias_list[i].Alias);
+      return alias;
+    }	 
+  }
+  strcpy( alias, "");
+  return alias;
 }
 
 static pwr_tStatus ev_mh_ack_bc( mh_sAck *MsgP)
