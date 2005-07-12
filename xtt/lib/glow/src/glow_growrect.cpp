@@ -21,7 +21,7 @@ GrowRect::GrowRect( GlowCtx *glow_ctx, char *name, double x, double y,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-  shadow_contrast(2), disable_shadow(0), invisible(0)
+  shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -263,6 +263,7 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRect_shadow_contrast) << FSPACE << shadow_contrast << endl;
   fp << int(glow_eSave_GrowRect_relief) << FSPACE << int(relief) << endl;
   fp << int(glow_eSave_GrowRect_invisible) << FSPACE << invisible << endl;
+  fp << int(glow_eSave_GrowRect_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_GrowRect_disable_shadow) << FSPACE << disable_shadow << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
@@ -319,6 +320,7 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_relief: fp >> tmp; relief = (glow_eRelief)tmp; break;
       case glow_eSave_GrowRect_disable_shadow: fp >> disable_shadow; break;
       case glow_eSave_GrowRect_invisible: fp >> invisible; break;
+      case glow_eSave_GrowRect_fixcolor: fp >> fixcolor; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -700,6 +702,8 @@ void GrowRect::draw( GlowTransform *t, int highlight, int hot, void *node, void 
     return;
   int idx;
   glow_eDrawType drawtype;
+  if ( fixcolor)
+    colornode = 0;
 
   if ( fix_line_width)
   {
@@ -868,6 +872,9 @@ void GrowRect::nav_draw( GlowTransform *t, int highlight, void *node, void *colo
     return;
   if ( !(display_level & ctx->display_level))
     return;
+  if ( fixcolor)
+    colornode = 0;
+
   glow_eDrawType drawtype;
   int idx;
   if ( fix_line_width)

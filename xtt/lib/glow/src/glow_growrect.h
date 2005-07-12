@@ -278,6 +278,7 @@ class GrowRect : public GlowRect {
   int 		shadow_contrast; //!< Shadow contrast.
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
   int		invisible;	//!< Invisible if not highlighted.
+  int		fixcolor;	//!< Color independent of node color.
 
   //! Set user data.
   /*!
