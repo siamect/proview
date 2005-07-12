@@ -309,7 +309,7 @@ glow_eDrawType GlowColor::get_drawtype( glow_eDrawType local_drawtype,
 	drawtype = (glow_eDrawType) ( drawtype - 4);
     }
   }
-  if ( drawtype < 0 || drawtype >= 300) {
+  if ( drawtype < 0 || drawtype >= 301) {
     printf("** Invalid drawtype : %d\n", drawtype);    
     drawtype = glow_eDrawType_Line;
   }
@@ -446,7 +446,7 @@ glow_eDrawType GlowColor::convert( glow_eConvert version, glow_eDrawType color)
 
 char *GlowColor::color_to_name( glow_eDrawType color)
 {
-  char default_color_names[300][32] = {
+  char default_color_names[301][32] = {
         /* glow_eDrawType_Line */      	"Black",
 	/* glow_eDrawType_LineRed */ 	"Red",
 	/* glow_eDrawType_LineGray */ 	"Grey",
@@ -746,7 +746,8 @@ char *GlowColor::color_to_name( glow_eDrawType color)
 	/* glow_eDrawType_Color297 */ 	"GreenHigh7",
 	/* glow_eDrawType_Color298 */ 	"GreenHigh8",
 	/* glow_eDrawType_Color299 */ 	"GreenHigh9",
-        /* glow_eDrawType_Color300 */  	"GreenHigh10"};
+        /* glow_eDrawType_Color300 */  	"GreenHigh10",
+        /* glow_eDrawType_LineErase */  "Background"};
   static char color_name[32];
 
   if ( (unsigned int) color > 
