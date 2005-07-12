@@ -39,6 +39,7 @@ menu Electric
   subgraph 	ControlSwitch	pwr_exe:pwr_controlswitch.pwsg 		6
   subgraph 	Fuse		pwr_exe:pwr_fuse.pwsg 			6
   subgraph 	Fuse2		pwr_exe:pwr_fuse2.pwsg 			6
+  subgraph 	Fuse3		pwr_exe:pwr_fuse3.pwsg 			6
   subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		34
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		6
@@ -184,14 +185,19 @@ menu Other
   menu BaseComponent
   {
     subgraph    ManValve2Sw 	pwr_exe:bcomp_manvalve2sw.pwsg 		4
-    subgraph    ManValveSwOp	pwr_exe:bcomp_manvalveswop.pwsg 	4
-    subgraph    ManValveSwCl 	pwr_exe:bcomp_manvalveswcl.pwsg 	4
     subgraph    ManValveNoSw 	pwr_exe:bcomp_manvalvenosw.pwsg 	4
-    subgraph    MValveOr2Sw 	pwr_exe:bcomp_mvalveor2sw.pwsg 		4
-    subgraph    MValveOrSwOp	pwr_exe:bcomp_mvalveorswop.pwsg 	4
-    subgraph    MValveOrSwCl 	pwr_exe:bcomp_mvalveorswcl.pwsg 	4
-    subgraph    MValveOrNoSw 	pwr_exe:bcomp_mvalveornosw.pwsg 	4
-    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	4
+    subgraph    ManValveSwCl 	pwr_exe:bcomp_manvalveswcl.pwsg 	4
+    subgraph    ManValveSwOp	pwr_exe:bcomp_manvalveswop.pwsg 	4
+    subgraph    MValveOr2Sw 	pwr_exe:bcomp_mvalveor2sw.pwsg 		1
+    subgraph    MValveOrSwCl 	pwr_exe:bcomp_mvalveorswcl.pwsg 	1
+    subgraph    MValveOrSwOp	pwr_exe:bcomp_mvalveorswop.pwsg 	1
+    subgraph    MValveOrNoSw 	pwr_exe:bcomp_mvalveornosw.pwsg 	1
+    subgraph    CValveOr 	pwr_exe:bcomp_cvalveor.pwsg 		2
+    subgraph    CValveOr2Sw 	pwr_exe:bcomp_cvalveor2sw.pwsg 		2
+    subgraph    CValveOrSwCl 	pwr_exe:bcomp_cvalveorswcl.pwsg 	2
+    subgraph    CValveOrSwOp 	pwr_exe:bcomp_cvalveorswop.pwsg 	2
+    subgraph    CValvePoOr 	pwr_exe:bcomp_cvalvepoor.pwsg 		2
+    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	2
     subgraph    FanCoCbSs 	pwr_exe:bcomp_fancocbss.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
