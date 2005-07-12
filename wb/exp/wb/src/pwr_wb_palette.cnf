@@ -188,11 +188,13 @@ palette NavigatorPalette
     classvolume TLog TLog
     classvolume ssab ssab
     classvolume BaseComponent BaseComponent
+    classvolume Inor Inor
     classvolume OtherManufacturer OtherManufacturer
     classvolume ABB ABB
+    classvolume KlocknerMoeller KlocknerMoeller
     classvolume Siemens Siemens
-    classvolume Telemecanique Telemecanique
     classvolume SsabOx SsabOx
+    classvolume Telemecanique Telemecanique
   }
 }
 

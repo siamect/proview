@@ -21,6 +21,7 @@
 #include "rt_gdb.h"
 #include "rt_vol.h"
 #include "rt_mvol.h"
+#include "rt_cmvolc.h"
 #include "rt_pool.h"
 
 
@@ -180,9 +181,12 @@ mvol_AnameToAttribute (
   gdb_sObject		*abop;
   int			offset = 0;
   int			i;
-  pwr_tOid              oid, tid;
+  pwr_tOid              oid;
+  pwr_tCid              tid;
   
-  oid = op->g.oid;
+  if (op != NULL)
+    oid = op->g.oid;
+
   ap->cp = hash_Search(sts, gdbroot->cid_ht, &cid);
 //  if (ap->cp == NULL) pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
 

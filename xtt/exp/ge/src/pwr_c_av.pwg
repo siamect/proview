@@ -77,7 +77,7 @@ pwr_exe:
 2229 0
 2233 1
 2234 1
-2235 0
+2235 1
 2243 0
 2244
 99
@@ -4711,6 +4711,7 @@ pwr_exe:
 1201 %10.3f
 1202 1
 1203 1
+1204 0
 99
 99
 99
@@ -4869,6 +4870,7 @@ pwr_exe:
 1201 %s
 1202 1
 1203 1
+1204 0
 99
 99
 99
@@ -4950,6 +4952,8 @@ pwr_exe:
 103 0
 22
 2200 $object.ActualValue##Float32
+2201 
+2202 
 99
 99
 99
@@ -5039,6 +5043,10 @@ pwr_exe:
 23
 2300 $object.ActualValue##Float32
 2301 
+2302 
+2303 
+2304 
+2305 
 99
 99
 99
@@ -5715,6 +5723,7 @@ pwr_exe:
 1201 %s
 1202 1
 1203 1
+1204 0
 99
 99
 99
@@ -5965,6 +5974,9 @@ pwr_exe:
 103 0
 60
 6000 $object.ActualValue##Float32
+6001 
+6002 
+6003 
 99
 99
 99
@@ -6218,12 +6230,16 @@ pwr_exe:
 1201 %5.1f
 1202 1
 1203 1
+1204 0
 99
 13
 1302 0
 1303 0
 1304 0
 1305 0
+1306 0
+1307 
+1308 
 99
 99
 99
@@ -6350,12 +6366,16 @@ pwr_exe:
 1201 %5.1f
 1202 1
 1203 1
+1204 0
 99
 13
 1302 0
 1303 0
 1304 0
 1305 0
+1306 0
+1307 
+1308 
 99
 99
 99
@@ -6482,12 +6502,16 @@ pwr_exe:
 1201 %5.0f
 1202 1
 1203 1
+1204 0
 99
 13
 1302 4
 1303 100000
 1304 0
 1305 0
+1306 0
+1307 
+1308 
 99
 99
 99
@@ -6614,12 +6638,16 @@ pwr_exe:
 1201 %10.3f
 1202 1
 1203 1
+1204 0
 99
 13
 1302 0
 1303 0
 1304 0
 1305 0
+1306 0
+1307 
+1308 
 99
 99
 99
@@ -6744,6 +6772,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Open Object"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Open Object"/object=$object
@@ -6874,6 +6904,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Trend"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Trend"/object=$object
@@ -7004,6 +7036,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Fast"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Fast"/object=$object
@@ -7134,6 +7168,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Photo"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Photo"/object=$object
@@ -7264,6 +7300,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="DataSheet"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="DataSheet"/object=$object
@@ -7394,6 +7432,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="CircuitDiagram"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="CircuitDiagram"/object=$object
@@ -7524,6 +7564,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="RtNavigator"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="RtNavigator"/object=$object
@@ -7654,6 +7696,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help Class"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Help Class"/object=$object
@@ -7784,6 +7828,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Block Events..."/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Block Events..."/object=$object
@@ -7914,6 +7960,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Hist Event..."/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Hist Event..."/object=$object
@@ -8044,6 +8092,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Note"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Note"/object=$object
@@ -8174,6 +8224,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Help"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Help"/object=$object
@@ -8304,6 +8356,8 @@ pwr_exe:
 9
 900 $cmd(check method/method="Crossreferences"/object=$object)
 901 1
+902 1
+903 1
 99
 55
 5500 call method/method="Crossreferences"/object=$object
@@ -8435,6 +8489,8 @@ pwr_exe:
 9
 900 $object.Note##String80
 901 0
+902 1
+903 1
 99
 55
 5500 call method/method="Note"/object=$object
@@ -8564,6 +8620,7 @@ pwr_exe:
 1201 %s
 1202 1
 1203 1
+1204 0
 99
 99
 99
