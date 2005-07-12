@@ -733,6 +733,7 @@ getSelectList ()
   int i;
   int j;
   int len;
+  char *s;
 
   if (l.type == mh_eOutunitType_Logger) {
     l.selSize = 0;
@@ -743,7 +744,9 @@ getSelectList ()
   memset(&l.selL, 0, sizeof(l.selL));
 
   for (i = 0, j = 0; i < mh_cSelLSize; i++) {
-    len = MIN(strlen((*l.pSelL)[i]), sizeof(pwr_tString80));
+    for ( s = (*l.pSelL)[i], len = 0; !(*s == 0 || *s == 32 || * s == 9); s++)
+      len++;
+    len = MIN(len, sizeof(pwr_tString80));
     if (len == 0)
       continue;
     l.selL[j].len = len;
