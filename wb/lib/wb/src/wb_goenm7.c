@@ -241,6 +241,10 @@ int goen_create_nodetype_m7(
     case pwr_cClass_GetAattr:
     case pwr_cClass_GetIattr:
     case pwr_cClass_GetDattr:
+    case pwr_cClass_GetDp:
+    case pwr_cClass_GetAp:
+    case pwr_cClass_GetIp:
+    case pwr_cClass_GetIpToA:
       /* Use objects trace attribute */
       strcpy( trace_attr, "$object");
       break;

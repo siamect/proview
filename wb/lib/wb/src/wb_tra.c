@@ -73,7 +73,7 @@ static pwr_tStatus trace_get_attr_m0( 	gre_ctx		grectx,
 					char		*attr_str,
 					flow_eTraceType	*trace_type)
 { return TRA__DISCARD;}
-static pwr_tStatus trace_get_attr_m1( 	gre_ctx		grectx, 
+static pwr_tStatus trace_get_attr_m1(	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
