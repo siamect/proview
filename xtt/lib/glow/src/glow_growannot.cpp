@@ -537,14 +537,15 @@ void GrowAnnot::convert( glow_eConvert version)
 void GrowAnnot::get_annotation_info( void *node, int *t_size, glow_eDrawType *t_drawtype,
 				    glow_eDrawType *t_color)
 {
+#if 0
   double trf_scale = trf.vertical_scale( &((GrowNode *)node)->trf);
   int idx = int( trf_scale * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
     idx = 0;
   idx = min( idx, DRAW_TYPE_SIZE-1);
-
+#endif
   *t_color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 		 0, (GrowNode *)node, 2);
-  *t_size = idx;
+  *t_size = text_size;
   *t_drawtype = draw_type;
 }

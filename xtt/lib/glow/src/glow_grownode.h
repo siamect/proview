@@ -904,7 +904,7 @@ class GrowNode : public GlowNode {
     \return		0 if annotation doesn't exist, else 1.
   */
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
-				 glow_eDrawType *bg_color);
+				 glow_eDrawType *bg_color, double *scale);
 
   //! Destructor
   /*! Remove the object from the context and erase it from the screen.

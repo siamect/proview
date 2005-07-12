@@ -120,7 +120,7 @@ void GrowMenu::draw( GlowTransform *t, int highlight, int hot, void *node, void 
   if ( !(display_level & ctx->display_level))
     return;
   int idx;
-  int text_idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int text_idx = int( trf.vertical_scale(t) * ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
   text_idx = max( 0, text_idx);
 
