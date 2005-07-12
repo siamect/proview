@@ -84,7 +84,17 @@ void ColPalCtx::configure()
         glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
   insert( rect);
   text = new GrowText( this, name, "Reset", x + 0.15, 
-		       y + entry_height / 2 + 0.3, 
+		       y + entry_height / 2 + 0.25, 
+		       glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
+  insert( (GlowArrayElem *)text);
+  x += 2 * tone_entry_width;
+  sprintf( name, "ColorEntryBg");
+  rect = new GrowRect( this, name, x, y, 
+	tone_entry_width * 2, entry_height, glow_eDrawType_Line, 1, 0, 
+        glow_mDisplayLevel_1, 1, 1, 0, glow_eDrawType_Color34);
+  insert( rect);
+  text = new GrowText( this, name, " Bg", x + 0.15, 
+		       y + entry_height / 2 + 0.25, 
 		       glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2);
   insert( (GlowArrayElem *)text);
 
@@ -315,21 +325,38 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
             }
             break;
           }
-          if ( strcmp( name, "ColorEntry") != 0)
+          if ( strncmp( name, "ColorEntry", 10) != 0)
             break;
-          if ( event == glow_eEvent_MB1Click) {
-            current_fill = rect->fill_drawtype;
-            ((GrowRect *)display_fill)->set_fill_color( current_fill);
+          if ( strcmp( name, "ColorEntryBg") == 0) {
+	    if ( event == glow_eEvent_MB1Click) {
+	      current_fill = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_fill)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else if ( event == glow_eEvent_MB1ClickShift) {
+	      current_text = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_text)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else {
+	      current_border = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_border)->set_fill_color( glow_eDrawType_Color4);
+	    }	    
+	    callback = 1;
           }
-          else if ( event == glow_eEvent_MB1ClickShift) {
-            current_text = rect->fill_drawtype;
-            ((GrowRect *)display_text)->set_fill_color( current_text);
-          }
-          else {
-            current_border = rect->fill_drawtype;
-            ((GrowRect *)display_border)->set_fill_color( current_border);
-          }
-          callback = 1;
+	  else {
+	    if ( event == glow_eEvent_MB1Click) {
+	      current_fill = rect->fill_drawtype;
+	      ((GrowRect *)display_fill)->set_fill_color( current_fill);
+	    }
+	    else if ( event == glow_eEvent_MB1ClickShift) {
+	      current_text = rect->fill_drawtype;
+	      ((GrowRect *)display_text)->set_fill_color( current_text);
+	    }
+	    else {
+	      current_border = rect->fill_drawtype;
+	      ((GrowRect *)display_border)->set_fill_color( current_border);
+	    }
+	    callback = 1;
+	  }
         }
         else if ( callback_object->type() == glow_eObjectType_GrowText) {
           GrowText *text;
@@ -358,6 +385,21 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
               event_callback[event]( this, &e);
             }
             break;
+          }
+          if ( strcmp( name, "ColorEntryBg") == 0) {
+	    if ( event == glow_eEvent_MB1Click) {
+	      current_fill = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_fill)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else if ( event == glow_eEvent_MB1ClickShift) {
+	      current_text = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_text)->set_fill_color( glow_eDrawType_Color4);
+	    }
+	    else {
+	      current_border = glow_eDrawType_LineErase;
+	      ((GrowRect *)display_border)->set_fill_color( glow_eDrawType_Color4);
+	    }	    
+	    callback = 1;
           }
         }
       }
