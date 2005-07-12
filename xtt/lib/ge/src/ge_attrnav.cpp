@@ -442,6 +442,7 @@ static attrnav_sEnumElement elem_color[] = {
 	{ (int) glow_eDrawType_Color298, 	"GreenHigh8"},
 	{ (int) glow_eDrawType_Color299, 	"GreenHigh9"},
 	{ (int) glow_eDrawType_Color300, 	"GreenHigh10"},
+	{ (int) glow_eDrawType_LineErase, 	"Background"},
 	{ (int) glow_eDrawType_Inherit, 	"Inherit"},
 	{ 0, ""}};
 
@@ -757,6 +758,7 @@ static attrnav_sEnumElement elem_tone_or_color[] = {
 	{ (int) glow_eDrawType_Color298, 	"GreenHigh8"},
 	{ (int) glow_eDrawType_Color299, 	"GreenHigh9"},
 	{ (int) glow_eDrawType_Color300, 	"GreenHigh10"},
+	{ (int) glow_eDrawType_LineErase, 	"Background"},
 	{ (int) glow_eDrawType_Inherit, 	"Inherit"},
 	{ 0, ""}};
 
