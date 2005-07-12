@@ -2801,10 +2801,11 @@ typedef GlowTraceData glow_sTraceData;
     \param text_drawtype Annotation text drawtype.
     \param text_color	Annotation text color.
     \param bg_color	Annotation background color.
+    \param scale	Vertical scale.
     \return		0 if annotation doesn't exist, else 1.
   */
   int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
-				glow_eDrawType *text_color, glow_eDrawType *bg_color);
+				glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale);
 
   //! Get color, textsize and text colors for a menu.
   /*!

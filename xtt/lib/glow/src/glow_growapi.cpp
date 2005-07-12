@@ -1228,6 +1228,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->invisible);
       
+      strcpy( attrinfo[i].name, "fixcolor");
+      attrinfo[i].value_p = &op->fixcolor;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixcolor);
+      
       strcpy( attrinfo[i].name, "disable_shadow");
       attrinfo[i].value_p = &op->disable_shadow;
       attrinfo[i].type = glow_eType_Boolean;
@@ -4244,9 +4249,10 @@ void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, i
 }
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,
-			glow_eDrawType *text_color, glow_eDrawType *bg_color)
+			glow_eDrawType *text_color, glow_eDrawType *bg_color, double *scale)
 {
-  return ((GrowNode *)object)->get_annotation_info( num, text_size, text_drawtype, text_color, bg_color);
+  return ((GrowNode *)object)->get_annotation_info( num, text_size, text_drawtype, text_color, bg_color,
+						    scale);
 }
 
 void grow_GetMenuChar( grow_tObject menu, int *t_size, glow_eDrawType *fill_color, glow_eDrawType *t_drawtype,
