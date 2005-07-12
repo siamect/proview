@@ -503,7 +503,7 @@ cdh_AttrValueToString (
     sprintf(sval, "%d", *(pwr_tInt8 *) Value);
     break;
   case pwr_eType_Int16:
-    sprintf(sval, "%d", *(pwr_tInt16 *) Value);
+    sprintf(sval, "%hd", *(pwr_tInt16 *) Value);
     break;
   case pwr_eType_Int32:
     sprintf(sval, "%d", *(pwr_tInt32 *) Value);
@@ -512,7 +512,7 @@ cdh_AttrValueToString (
     sprintf(sval, "%u", *(pwr_tUInt8 *) Value);
     break;
   case pwr_eType_UInt16:
-    sprintf(sval, "%u", *(pwr_tUInt16 *) Value);
+    sprintf(sval, "%hu", *(pwr_tUInt16 *) Value);
     break;
   case pwr_eType_UInt32:
     sprintf(sval, "%u", *(pwr_tUInt32 *) Value);
@@ -2532,6 +2532,13 @@ pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2)
   return aref;
 }
 
+void cdh_SuppressSuper( char *out, char *in)
+{
+  char *s = in;
+  while ( strncmp( s, "Super.", 6) == 0)
+    s += 6;
+  strcpy( out, s);
+}
 /*@}*/
 
 

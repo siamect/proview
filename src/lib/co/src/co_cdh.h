@@ -969,6 +969,8 @@ pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp);
 
 pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2);
 
+void cdh_SuppressSuper( char *out, char *in);
+
 /*@}*/
 
 #ifdef __cplusplus
