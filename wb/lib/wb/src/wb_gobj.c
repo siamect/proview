@@ -979,6 +979,9 @@ unsigned long	index;
         pwr_sAttrRef	attrref;
 	pwr_sAttrRef	nattrref;
 	int		is_attr;
+	char		*aname;
+	int		size;
+	char		msg[200];
 
 	/* Get the selected object in the navigator */
 	plc = (node->hn.wind)->hw.plc;
@@ -1009,6 +1012,12 @@ unsigned long	index;
 		(char *)&nattrref, sizeof(nattrref)); 
 
 	gre_node_update( foectx->grectx, node);
+
+	sts = ldh_AttrRefToName( ldhses, &attrref, cdh_mNName, &aname, &size);
+	if ( EVEN(sts)) return sts;
+
+	sprintf( msg, "Connected to: %s", aname);
+	foe_message( foectx, msg);
 
 	return FOE__SUCCESS;
 }
@@ -2733,6 +2742,9 @@ unsigned long	index;
         pwr_sAttrRef	attrref;
 	pwr_sAttrRef	nattrref;
 	int		is_attr;
+	char		*aname;
+	int		size;
+	char		msg[200];
 
 	/* Get the selected object in the navigator */
 	plc = (node->hn.wind)->hw.plc;
@@ -2763,8 +2775,11 @@ unsigned long	index;
 
 	gre_node_update( foectx->grectx, node);
 
+	sts = ldh_AttrRefToName( ldhses, &attrref, cdh_mNName, &aname, &size);
+	if ( EVEN(sts)) return sts;
 
-	gre_node_update( foectx->grectx, node);
+	sprintf( msg, "Connected to: %s", aname);
+	foe_message( foectx, msg);
 
 	return FOE__SUCCESS;
 }
