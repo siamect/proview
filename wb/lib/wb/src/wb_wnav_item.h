@@ -224,7 +224,7 @@ class WItemBaseAttr : public WItem {
     pwr_tTid tid;
     int size;
     int flags;
-    char attr[40];
+    char attr[120];
     char body[20];
     pwr_tClassId classid;
 
