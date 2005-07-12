@@ -26,8 +26,6 @@ int CnvWblToPs::init( char *first)
 
   strcpy( fname, ctx->dir);
   strcat( fname, ctx->rw->volume_name);
-  strcat( fname, "_");
-  strcat( fname, Lng::get_language_str());
   strcat( fname, ".ps");
   cdh_ToLower( fname, fname);
 
