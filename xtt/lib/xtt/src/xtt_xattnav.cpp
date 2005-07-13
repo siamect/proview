@@ -726,6 +726,7 @@ int	XAttNav::object_attr()
   gdh_sAttrDef 	*bd;
   int 		rows;
   char		aname[120];
+  char		attr_name[120];
   char		name[240];
   char		*s;
 
@@ -755,12 +756,15 @@ int	XAttNav::object_attr()
 	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
       continue;
 
+    if ( objar.Flags.b.CastAttr)
+      cdh_SuppressSuper( attr_name, bd[i].attrName);
+
     if ( strcmp( aname, "") == 0)
-      strcpy( name, bd[i].attrName);
+      strcpy( name, attr_name);
     else {
       strcpy( name, aname);
       strcat( name, ".");
-      strcat( name, bd[i].attrName);
+      strcat( name, attr_name);
     }
 
     elements = 1;

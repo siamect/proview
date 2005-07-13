@@ -66,7 +66,6 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
   int sts;
   char	segname[120];
   pwr_tObjid child;
-  pwr_tClassId classid;
   char	descr[80];
 
   type = xnav_eItemType_Object;
@@ -87,19 +86,24 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
     }
     if ( EVEN(sts)) throw co_error(sts);
 
+    sts = gdh_GetObjectClass( objid, &cid);
+    if ( EVEN(sts)) throw co_error(sts);
+
     // Set pixmap
     sts = gdh_GetChild( objid, &child);
-    if( ODD(sts))
-      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    if( ODD(sts)) {
+      if ( cid == pwr_cClass_plc)
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_plcpgm);
+      else
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    }
     else
       brow_SetAnnotPixmap( node, 0, brow->pixmap_leaf);
     // Set object name annotation
     brow_SetAnnotation( node, 0, segname, strlen(segname));
 
     // Set class annotation
-    sts = gdh_GetObjectClass( objid, &classid);
-    if ( EVEN(sts)) throw co_error(sts);
-    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( cid),
 		  segname, sizeof(segname), cdh_mName_object);
     if ( EVEN(sts)) throw co_error(sts);
     brow_SetAnnotation( node, 1, segname, strlen(segname));
@@ -155,8 +159,12 @@ int ItemBaseObject::open_children( XNavBrow *brow, double x, double y)
     brow_CloseNode( brow->ctx, node);
     if ( brow_IsOpen( node) & xnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap( node, 1);
-    if ( brow_IsOpen( node) & xnav_mOpen_Children)
-      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    if ( brow_IsOpen( node) & xnav_mOpen_Children) {
+      if ( cid == pwr_cClass_plc)
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_plcpgm);
+      else
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    }
     brow_ResetOpen( node, xnav_mOpen_All);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
@@ -280,7 +288,10 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
       brow_CloseNode( brow->ctx, node);
       brow_ResetOpen( node, xnav_mOpen_Children);
       brow_ResetOpen( node, xnav_mOpen_Crossref);
-      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+      if ( cid == pwr_cClass_plc)
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_plcpgm);
+      else
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
       brow_ResetNodraw( brow->ctx);
       brow_Redraw( brow->ctx, node_y);
     }
@@ -450,8 +461,12 @@ int ItemBaseObject::open_crossref( XNavBrow *brow, double x, double y)
     brow_CloseNode( brow->ctx, node);
     if ( brow_IsOpen( node) & xnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap( node, 1);
-    if ( brow_IsOpen( node) & xnav_mOpen_Children)
-      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    if ( brow_IsOpen( node) & xnav_mOpen_Children) {
+      if ( cid == pwr_cClass_plc)
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_plcpgm);
+      else
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    }
     brow_ResetOpen( node, xnav_mOpen_All);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);
@@ -514,8 +529,12 @@ void ItemBaseObject::close( XNavBrow *brow, double x, double y)
     brow_CloseNode( brow->ctx, node);
     if ( brow_IsOpen( node) & xnav_mOpen_Attributes)
       brow_RemoveAnnotPixmap( node, 1);
-    if ( brow_IsOpen( node) & xnav_mOpen_Children)
-      brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    if ( brow_IsOpen( node) & xnav_mOpen_Children) {
+      if ( cid == pwr_cClass_plc)
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_plcpgm);
+      else
+	brow_SetAnnotPixmap( node, 0, brow->pixmap_map);
+    }
     brow_ResetOpen( node, xnav_mOpen_All);
     brow_ResetNodraw( brow->ctx);
     brow_Redraw( brow->ctx, node_y);

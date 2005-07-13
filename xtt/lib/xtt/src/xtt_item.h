@@ -216,15 +216,15 @@ class ItemFile : public Item {
 class ItemBaseObject : public Item {
   public:
     ItemBaseObject( pwr_tObjid item_objid, int item_is_root):
-	Item( item_objid, item_is_root) {};
+	Item( item_objid, item_is_root), cid(0) {};
     virtual int	open_children( XNavBrow *brow, double x, double y);
     virtual int open_attributes( XNavBrow *brow, double x, double y);
     virtual int open_trace( XNavBrow *brow, double x, double y);
     virtual int open_crossref( XNavBrow *brow, double x, double y);
     virtual void close( XNavBrow *brow, double x, double y);
     virtual int open_attribute( XNavBrow *brow, double x, double y, 
-
 				char *attr_name, int element);
+    pwr_tCid 	cid;
 };
 
 class ItemObject : public ItemBaseObject {
