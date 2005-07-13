@@ -142,7 +142,7 @@ Graph::Graph(
 	char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access) :
-	attr_list( 1, NULL),
+	attr_list( 0, NULL),
 	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
 	grow_cnt(0), ldhses(0),
 	message_cb(NULL), get_current_subgraph_cb(NULL), close_cb(NULL),
@@ -416,6 +416,16 @@ int Graph::is_javaapplet()
 //
 void Graph::clear_all()
 {
+  Attr		*attrctx;
+  int		sts;
+
+  sts = attr_list.get_first( (void **) &attrctx);
+  while ( sts)
+  {
+    delete attrctx;
+    attr_list.remove( (void *) attrctx);
+    sts = attr_list.get_first( (void **) &attrctx);
+  }
   grow_New( grow->ctx);
 }
 
@@ -1506,7 +1516,7 @@ int Graph::edit_attributes( grow_tObject object)
   attr->set_data_cb = &graph_attr_set_data_cb;
   attr->get_plant_select_cb = &graph_get_plant_select_cb;
   attr->get_current_colors_cb = &graph_get_current_colors_cb;
-  attr_list.insert( (void *) attr);
+  attr_list.insert( (void *)object, (void *) attr);
   grow_SetModified( grow->ctx, 1);
   return 1;
 }
@@ -1771,7 +1781,7 @@ int Graph::edit_subgraph_attributes()
   attr->close_cb = graph_graphattr_close_cb;
   attr->redraw_cb = graph_graphattr_redraw_cb;
   attr->reconfigure_attr_cb = &graph_reconfigure_attr_cb;
-  attr_list.insert( (void *) attr);
+  attr_list.insert( 0, (void *) attr);
   grow_SetModified( grow->ctx, 1);
   was_subgraph = is_subgraph();
   return 1;
@@ -1826,7 +1836,7 @@ int Graph::edit_graph_attributes()
   attr->close_cb = graph_graphattr_close_cb;
   attr->redraw_cb = graph_graphattr_redraw_cb;
   attr->reconfigure_attr_cb = &graph_reconfigure_attr_cb;
-  attr_list.insert( (void *) attr);
+  attr_list.insert( 0, (void *) attr);
   grow_SetModified( grow->ctx, 1);
   was_subgraph = is_subgraph();
   return 1;
@@ -2010,7 +2020,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_SelectClear:
       grow_ResetSelectHighlight( graph->grow->ctx);
       break;
-    case glow_eEvent_ObjectDeleted:
+    case glow_eEvent_ObjectDeleted: {
       if ( graph->current_polyline && 
 	   event->object.object == graph->current_polyline)
       {
@@ -2031,7 +2041,14 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         grow_GetUserData( event->object.object, (void **)&dyn);
         delete dyn;
       }
+
+      Attr		*attrctx;
+      if ( graph->attr_list.find( event->object.object, (void **) &attrctx)) {
+	delete attrctx;
+	graph->attr_list.remove( (void *) attrctx);
+      }
       break;
+    }
     case glow_eEvent_MB3Click:
       if ( grow_Mode( graph->grow->ctx) == grow_eMode_PolyLine && graph->current_polyline) {
 	if ( graph->fill)
@@ -3983,9 +4000,9 @@ void Graph::swap( int mode)
   }
 }
 
-void GraphApplList::insert( void *ctx)
+void GraphApplList::insert( void *key, void *ctx)
 {
-  GraphApplList *appl_p = new GraphApplList( 0, ctx);  
+  GraphApplList *appl_p = new GraphApplList( key, ctx);
   if ( next)
     next->prev = appl_p;
   appl_p->next = next;
@@ -4016,6 +4033,19 @@ void GraphApplList::remove( void *ctx)
       break;
     }
   }
+}
+
+int GraphApplList::find( void *key, void **ctx)
+{
+  GraphApplList *appl_p;
+
+  for ( appl_p = next; appl_p; appl_p = appl_p->next) {
+    if ( appl_p->key == key) {
+      *ctx = appl_p->ctx;
+      return 1;
+    }
+  }
+  return 0;
 }
 
 int GraphApplList::get_first( void **ctx)

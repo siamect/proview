@@ -253,21 +253,28 @@ class GraphApplList {
     \param root		The root of the list.
     \param appl_ctx	Application object.
   */
-  GraphApplList( int root, void *appl_ctx) :
-    is_root(root), ctx(appl_ctx), prev(NULL), next(NULL) {};
+  GraphApplList( void *appl_key, void *appl_ctx) :
+    key(appl_key), ctx(appl_ctx), prev(NULL), next(NULL) {};
 
-  int			is_root;	//!< This elements is the root of the list.
+  void	       		*key;		//!< Key.
   void			*ctx;		//!< Application object.
   GraphApplList		*prev;		//!< Previous element in list.
   GraphApplList		*next;		//!< Next element in list.
 
   //! Insert an application in list.
+  /*! \param key	Key for application. */
   /*! \param ctx	Application object to insert. */
-  void 		insert( void *ctx);
+  void 		insert( void *key, void *ctx);
 
   //! Remove an application from list.
   /*! \param ctx	Application object to remove. */
   void 		remove( void *ctx);
+
+  //! Find an applications with specified key.
+  /*! \param key	Key to search for. */
+  /*! \param ctx	Ctx for found key. */
+  /*! \return		Returns 1 if key is found, else 0. */
+  int find( void *key, void **ctx);
 
   //! Get the first element (after the root element)
   /*!
