@@ -318,6 +318,7 @@ mvol_AnameToAttribute (
     ap->elem  = ap->adef->Info.Elements;
     ap->flags.b.Indirect = ((ap->adef->Info.Flags & PWR_MASK_POINTER) != 0) &&
       ((ap->adef->Info.Flags & PWR_MASK_PRIVATE) == 0);
+    ap->flags.b.CastAttr = ((ap->adef->Info.Flags & PWR_MASK_CASTATTR) != 0);
     if (ap->idx != ULONG_MAX) {
       if (ap->idx > ap->adef->Info.Elements - 1)
 	pwr_Return(NULL, sts, GDH__SUBSCRIPT);
