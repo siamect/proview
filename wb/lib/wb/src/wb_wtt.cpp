@@ -150,7 +150,7 @@ extern "C" void wtt_uted_quit_cb( void *ctx)
 extern "C" void wtt_wpkg_quit_cb( void *ctx) 
 {
   delete ((Wtt *)ctx)->wpkg;
-  ((Wtt *)ctx)->wpkg = NULL;
+  ((Wtt *)ctx)->wpkg = 0;
 }
 
 static void wtt_open_vsel_cb( void *ctx, wb_eType type, char *filename, wow_eFileSelType file_type)
@@ -1094,7 +1094,7 @@ int Wtt::set_edit()
     	ldh_eUtility_Configurator);
   if ( EVEN(sts))
   {
-    // Access denied, open readsesssion again
+    // Access denied, open readsession again
     ldh_OpenSession( &ldhses, volctx, ldh_eAccess_ReadOnly,
     	ldh_eUtility_Navigator);
     ldh_AddOtherSessionCallback( ldhses, (void *)this,
@@ -3204,6 +3204,14 @@ void wtt_watt_close_cb( void *watt)
   wtt->appl.remove( watt);
 }
 
+void wtt_wda_close_cb( void *wda)
+{
+  Wtt *wtt = (Wtt *) ((Wda *)wda)->parent_ctx;
+
+  delete (Wda *)wda;
+  wtt->appl.remove( wda);
+}
+
 void Wtt::register_utility( void *ctx, wb_eUtility utility)
 {
 
@@ -3212,6 +3220,10 @@ void Wtt::register_utility( void *ctx, wb_eUtility utility)
     case wb_eUtility_AttributeEditor:
       appl.insert( utility, ctx, pwr_cNObjid, "");
       ((WAtt *)ctx)->close_cb = wtt_watt_close_cb;
+      break;
+    case wb_eUtility_SpreadsheetEditor:
+      appl.insert( utility, ctx, pwr_cNObjid, "");
+      ((Wda *)ctx)->close_cb = wtt_wda_close_cb;
       break;
     default:
      ;
@@ -3601,6 +3613,9 @@ Wtt::~Wtt()
 
   free_cursor();
 
+  if ( utedctx)
+    uted_delete( utedctx);
+
   if ( set_focus_disabled)
     XtRemoveTimeOut( disfocus_timerid);
   if ( selection_timerid)
@@ -3668,6 +3683,9 @@ WttApplList::~WttApplList()
       case wb_eUtility_AttributeEditor:
         delete (WAtt *)elem->ctx;
         break;
+      case wb_eUtility_SpreadsheetEditor:
+        delete (Wda *)elem->ctx;
+        break;
       default:
         ;
     }
@@ -3733,6 +3751,9 @@ void WttApplList::set_editmode( int editmode, ldh_tSesContext ldhses)
         remove( elem->ctx);
         elem = next_elem;
         continue;
+      case wb_eUtility_SpreadsheetEditor:
+        ((Wda *)elem->ctx)->set_editmode( editmode, ldhses);
+	break;
       default:
         ;
     }

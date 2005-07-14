@@ -886,7 +886,7 @@ Wda::Wda(
   if ( utility == wb_eUtility_Wtt)
   {
     ((Wtt *)parent_ctx)->register_utility( (void *) this,
-	wb_eUtility_AttributeEditor);
+	wb_eUtility_SpreadsheetEditor);
   }
 }
 

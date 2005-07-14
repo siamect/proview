@@ -49,6 +49,10 @@ extern "C" {
 #include "wb_uted.h"
 #endif
 
+#ifndef wb_wda_h
+#include "wb_wda.h"
+#endif
+
 #ifndef co_wow_h
 #include "co_wow.h"
 #endif
