@@ -173,12 +173,12 @@ void Lng::unload()
 
 bool Lng::read()
 {
-  char fname1[120] = "$pwr_exe/en_us/lang_en_us.dat";
-  char fname2[120] = "$pwr_exe/%s/lang_%s.dat";
+  char fname1[120] = "$pwr_exe/en_us/xtt_lng.dat";
+  char fname2[120] = "$pwr_exe/%s/xtt_lng.dat";
   pwr_tFileName filename1, filename2;
   int sts;
 
-  sprintf( filename2, fname2, get_language_str(), get_language_str());
+  sprintf( filename2, fname2, get_language_str());
   dcli_translate_filename( filename1, fname1);
   dcli_translate_filename( filename2, filename2);
 
