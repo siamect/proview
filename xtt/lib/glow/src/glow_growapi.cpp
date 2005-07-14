@@ -1781,6 +1781,8 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = &op->columns;
         attrinfo[i].type = glow_eType_Int;
+	attrinfo[i].minlimit = 1;
+	attrinfo[i].maxlimit = 12;
         attrinfo[i++].size = sizeof( op->columns);
       }
       if ( (name = growapi_translate( transtab, "HeaderRow"))) {
