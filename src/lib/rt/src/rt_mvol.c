@@ -358,6 +358,7 @@ mvol_ArefToAttribute (
   int			offset = 0;
   int			idx = ULONG_MAX;
   char			idxstr[20];
+  pwr_tBoolean          noDot = TRUE;
 
 
 #if 0
@@ -377,7 +378,7 @@ mvol_ArefToAttribute (
 	acp = hash_Search(sts, gdbroot->cid_ht, &acp->attr[i].tid)) {
     if ( acp == NULL)
       pwr_Return(NULL, sts, GDH__NOSUCHCLASS);
-    for (i=0; i < acp->acount; i++) {
+    for (i = 0; i < acp->acount; i++) {
       if (arp->Offset <= (offset + acp->attr[i].moffset)) break;
     }
     if ( i == acp->acount)
@@ -387,10 +388,17 @@ mvol_ArefToAttribute (
       sprintf( idxstr, "[%d]", idx);
       strcat( ap->name, idxstr);
     }
-    if ( acp != cp)
+    if ((acp != cp) && (!noDot) &&
+        (!(acp->attr[i].flags.m & PWR_MASK_SUPERCLASS) || (i != 0) || (acp->attr[i].size == arp->Size)))
       strcat( ap->name, ".");
     ap->aop = pool_Address(NULL, gdbroot->pool, acp->attr[i].aor);
-    strcat( ap->name, ap->aop->g.f.name.orig);
+
+    /* Skip name if it is a attribute of type superclass and not entire attribute */
+    
+    if (!(acp->attr[i].flags.m & PWR_MASK_SUPERCLASS) || (i != 0) || (acp->attr[i].size == arp->Size)) {
+      strcat( ap->name, ap->aop->g.f.name.orig);
+      noDot = FALSE;
+    }
 
     if ( !acp->attr[i].flags.b.isclass) {
       if ( acp->attr[i].elem > 1)
