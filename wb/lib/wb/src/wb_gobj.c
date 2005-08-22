@@ -982,6 +982,8 @@ unsigned long	index;
 	char		*aname;
 	int		size;
 	char		msg[200];
+	pwr_tOid	woid;
+	pwr_tCid	cid;
 
 	/* Get the selected object in the navigator */
 	plc = (node->hn.wind)->hw.plc;
@@ -1012,6 +1014,18 @@ unsigned long	index;
 		(char *)&nattrref, sizeof(nattrref)); 
 
 	gre_node_update( foectx->grectx, node);
+
+	/* Remove the subwindow which might hold old references */
+	sts = ldh_GetChild( ldhses, node->ln.oid, &woid);
+	if ( ODD(sts)) {
+	  sts = ldh_GetObjectClass( ldhses, woid, &cid);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( cid == pwr_cClass_windowplc) {
+	    sts = ldh_DeleteObjectTree( ldhses, woid);
+	    if ( EVEN(sts)) return sts;
+	  }
+	}
 
 	sts = ldh_AttrRefToName( ldhses, &attrref, cdh_mNName, &aname, &size);
 	if ( EVEN(sts)) return sts;
@@ -2745,6 +2759,8 @@ unsigned long	index;
 	char		*aname;
 	int		size;
 	char		msg[200];
+	pwr_tOid	woid;
+	pwr_tCid	cid;
 
 	/* Get the selected object in the navigator */
 	plc = (node->hn.wind)->hw.plc;
@@ -2772,6 +2788,18 @@ unsigned long	index;
 	sts = ldh_SetObjectPar( ldhses, attrref.Objid,
 		"RtBody", "SimConnect",
 		(char *)&nattrref, sizeof(nattrref)); 
+
+	/* Remove the subwindow which might hold old references */
+	sts = ldh_GetChild( ldhses, node->ln.oid, &woid);
+	if ( ODD(sts)) {
+	  sts = ldh_GetObjectClass( ldhses, woid, &cid);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( cid == pwr_cClass_windowplc) {
+	    sts = ldh_DeleteObjectTree( ldhses, woid);
+	    if ( EVEN(sts)) return sts;
+	  }
+	}
 
 	gre_node_update( foectx->grectx, node);
 
