@@ -28,6 +28,7 @@
 #include "pwr.h"
 #include "co_dcli.h"
 #include "co_wow.h"
+#include "co_api.h"
 #include "flow_x.h"
 
 #define WOW_MAXNAMES 400
@@ -37,6 +38,7 @@ typedef struct {
   void			*data;
   void	         	(* questionbox_ok) ();
   void	         	(* questionbox_cancel) ();
+  void	         	(* questionbox_help) ();
 } wow_t_question_cb;
 
 typedef struct {
@@ -96,6 +98,18 @@ static void wow_question_cancel_cb (
   XtDestroyWidget (dialog);
 }
 
+static void wow_question_help_cb (
+  Widget dialog, 
+  XtPointer data, 
+  XmAnyCallbackStruct *cbs
+)
+{
+  wow_t_question_cb *cbdata = (wow_t_question_cb *) data;
+  
+  if (cbdata->questionbox_help)
+    (cbdata->questionbox_help)( cbdata->ctx, cbdata->data);
+}
+
 
 /************************************************************************
 *
@@ -148,6 +162,7 @@ void	    *data
     cbdata = (wow_t_question_cb *) XtCalloc( 1, sizeof(*cbdata));
     cbdata->questionbox_ok = questionbox_ok;
     cbdata->questionbox_cancel = questionbox_cancel;
+    cbdata->questionbox_help = 0;
     cbdata->ctx = ctx;
     cbdata->data = data;
 
@@ -705,6 +720,211 @@ void wow_GetAtoms( Widget w, Atom *graph_atom, Atom *objid_atom, Atom *attrref_a
   if ( attrref_atom)
     *attrref_atom = XInternAtom( flow_Display(w), "PWR_ATTRREF", False); 
 }
+
+void warranty_ok_cb( void *ctx, void *data)
+{
+}
+
+void warranty_cancel_cb( void *ctx, void *data)
+{
+  exit(0);
+}
+
+void warranty_help_cb( void *ctx, void *data)
+{
+  wow_DisplayLicense( (Widget) data);
+}
+
+void wow_DisplayWarranty( Widget father)
+{
+    char    text[4000];
+    Arg	    arg[12];
+    Widget  question_widget;
+    XmString CStr2, TitleStr, okstr, cancelstr, helpstr;
+    wow_t_question_cb *cbdata;
+    XmFontList fontlist;
+    XFontStruct *font;
+    XmFontListEntry fontentry;
+    char 	title[80];
+    FILE 	*fp;
+    int 	i;
+    char 	fname[256];
+
+    sprintf( fname, "$pwr_exe/%s/acceptlicense.txt", lng_get_language_str());
+    dcli_translate_filename( fname, fname);
+
+    fp = fopen( fname, "r");
+    if ( !fp) {
+      strcpy( fname, "$pwr_exe/en_us/acceptlincense.txt");
+      dcli_translate_filename( fname, fname);
+      fp = fopen( fname, "r");
+      if ( !fp) return;
+    }
+
+    for ( i = 0; i < sizeof(text) - 1; i++) {
+      text[i] = fgetc( fp);
+      if ( text[i] == EOF)
+	break;
+    }
+    text[i] = 0;
+    fclose( fp);
+
+    strcpy( title, lng_translate("Accept License Terms"));
+
+    // Set default fontlist
+    font = XLoadQueryFont( XtDisplay(father),
+	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
+    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontlist = XmFontListAppendEntry( NULL, fontentry);
+    XtFree( (char *)fontentry);
+    
+    CStr2 = XmStringCreateLtoR( text, XmSTRING_DEFAULT_CHARSET);
+    TitleStr = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
+    okstr = XmStringCreateLtoR( lng_translate( "I Accept"), XmSTRING_DEFAULT_CHARSET );    
+    cancelstr = XmStringCreateLtoR( lng_translate( "Quit"), XmSTRING_DEFAULT_CHARSET );    
+    helpstr = XmStringCreateLtoR( lng_translate( "Show License"), XmSTRING_DEFAULT_CHARSET );    
+    XtSetArg(arg[0],XmNheight,75);
+    XtSetArg(arg[1],XmNwidth,700);
+    XtSetArg(arg[2],XmNmessageString, CStr2);
+    XtSetArg(arg[3],XmNx,400);
+    XtSetArg(arg[4],XmNy,300);
+    XtSetArg(arg[5],XmNdialogTitle,TitleStr);
+    XtSetArg(arg[6], XmNokLabelString, okstr);
+    XtSetArg(arg[7], XmNcancelLabelString, cancelstr);
+    XtSetArg(arg[8], XmNhelpLabelString, helpstr);
+    XtSetArg(arg[9], XmNbuttonFontList, fontlist);
+    XtSetArg(arg[10], XmNlabelFontList, fontlist);
+    XtSetArg(arg[11], XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL);
+
+    cbdata = (wow_t_question_cb *) XtCalloc( 1, sizeof(*cbdata));
+    cbdata->questionbox_ok = warranty_ok_cb;
+    cbdata->questionbox_cancel = warranty_cancel_cb;
+    cbdata->questionbox_help = warranty_help_cb;
+    cbdata->ctx = 0;
+    cbdata->data = (void *)father;
+
+    question_widget = XmCreateMessageDialog( father,"questionDialog",arg, 12);
+    XtAddCallback( question_widget, XmNokCallback,
+		(XtCallbackProc) wow_question_ok_cb, cbdata);
+    XtAddCallback( question_widget, XmNcancelCallback, 
+		(XtCallbackProc) wow_question_cancel_cb, cbdata);
+    XtAddCallback( question_widget, XmNhelpCallback, 
+		(XtCallbackProc) wow_question_help_cb, cbdata);
+
+    XmStringFree( CStr2);
+    XmStringFree( TitleStr);
+    XmStringFree( okstr);
+    XmStringFree( cancelstr);
+    XmStringFree( helpstr);
+    XmFontListFree( fontlist);
+   
+    XtManageChild( question_widget);	       
+}
+
+void wow_DisplayLicense( Widget father)
+{
+    char text[20000];
+    Arg	    arg[11];
+    Widget  question_widget;
+    XmString CStr2, TitleStr, cancelstr;
+    XmFontList fontlist;
+    XFontStruct *font;
+    XmFontListEntry fontentry;
+    char title[80];
+    Widget w;
+    FILE *fp;
+    char fname[200];
+    int i;
+    Widget wcancel;
+
+    strcpy( title, lng_translate("License"));
+
+    sprintf( fname, "$pwr_exe/%s/license.txt", lng_get_language_str());
+    dcli_translate_filename( fname, fname);
+
+    fp = fopen( fname, "r");
+    if ( !fp) {
+      strcpy( fname, "$pwr_exe/en_us/lincense.txt");
+      dcli_translate_filename( fname, fname);
+      fp = fopen( fname, "r");
+      if ( !fp)
+	return;
+    }
+
+    for ( i = 0; i < sizeof(text) - 1; i++) {
+      text[i] = fgetc( fp);
+      if ( text[i] == EOF)
+	break;
+    }
+    fclose( fp);
+    text[i] = 0;
+
+    // Set default fontlist
+    font = XLoadQueryFont( XtDisplay(father),
+	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
+    fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
+    fontlist = XmFontListAppendEntry( NULL, fontentry);
+    XtFree( (char *)fontentry);
+
+    CStr2 = XmStringCreateLtoR( "", XmSTRING_DEFAULT_CHARSET);
+    TitleStr = XmStringCreateLtoR( title, XmSTRING_DEFAULT_CHARSET);    
+    cancelstr = XmStringCreateLtoR( " Close ", XmSTRING_DEFAULT_CHARSET );    
+    XtSetArg(arg[0],XmNheight,400);
+    XtSetArg(arg[1],XmNwidth,600);
+    XtSetArg(arg[2],XmNmessageString, CStr2);
+    XtSetArg(arg[3],XmNx,400);
+    XtSetArg(arg[4],XmNy,300);
+    XtSetArg(arg[5],XmNdialogTitle,TitleStr);
+    XtSetArg(arg[6], XmNcancelLabelString, cancelstr);
+    XtSetArg(arg[7], XmNbuttonFontList, fontlist);
+    XtSetArg(arg[8], XmNlabelFontList, fontlist);
+
+    question_widget = XmCreateMessageDialog( father,"questionDialog",arg,9);
+    XmStringFree( CStr2);
+    XmStringFree( TitleStr);
+    XmStringFree( cancelstr);
+    XmFontListFree( fontlist);
+    wcancel = XmMessageBoxGetChild(question_widget, XmDIALOG_CANCEL_BUTTON);
+   
+
+    XtSetArg(arg[0], XmNscrollHorizontal, True);
+    XtSetArg(arg[1], XmNscrollVertical, True);
+    XtSetArg(arg[2], XmNeditMode, XmMULTI_LINE_EDIT);
+    XtSetArg(arg[3], XmNeditable, False);
+    XtSetArg(arg[4], XmNcursorPositionVisible, False);
+    XtSetArg(arg[5], XmNrows, 30);
+    XtSetArg(arg[6], XmNvalue, text);
+    XtSetArg(arg[7], XmNfontList, fontlist);
+    w = XmCreateScrolledText( question_widget, "text", arg, 7);
+    XtVaSetValues( XtParent(w), 
+		   XmNleftAttachment, XmATTACH_FORM,
+		   XmNrightAttachment, XmATTACH_FORM,
+		   XmNtopAttachment, XmATTACH_FORM,
+		   XmNbottomAttachment, XmATTACH_WIDGET,
+		   XmNbottomWidget, wcancel,
+		   NULL);
+    XtManageChild(w);
+
+    w = XmMessageBoxGetChild(question_widget, XmDIALOG_OK_BUTTON);
+    XtUnmanageChild( w);    
+    
+    w = XmMessageBoxGetChild(question_widget, XmDIALOG_HELP_BUTTON);
+    XtUnmanageChild( w);    
+
+    XtManageChild( question_widget);	       
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

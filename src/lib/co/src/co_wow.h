@@ -79,6 +79,8 @@ void wow_GetLabel( Widget w, char *label);
 void wow_GetCSText( XmString ar_value, char *t_buffer);
 int wow_GetSelection( Widget w, char *str, int size, Atom atom);
 void wow_GetAtoms( Widget w, Atom *graph_atom, Atom *objid_atom, Atom *attrref_atom);
+void wow_DisplayWarranty( Widget father);
+void wow_DisplayLicense( Widget father);
 
 #if defined __cplusplus
 }
