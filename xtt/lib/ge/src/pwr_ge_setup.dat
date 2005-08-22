@@ -45,11 +45,13 @@ menu Electric
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		6
   subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
   subgraph	Rod		pwr_exe:pwr_rod.pwsg			6
+  subgraph	RodCouplingAnim	pwr_exe:pwr_rodcouplinganim.pwsg	6
   subgraph	Fan		pwr_exe:pwr_fan.pwsg			6
   subgraph	Fan2		pwr_exe:pwr_fan2.pwsg			6
   subgraph	Fananim		pwr_exe:pwr_fananim.pwsg		6
   subgraph	Fananim2	pwr_exe:pwr_fananim2.pwsg		6
   subgraph	Pump2		pwr_exe:pwr_pump2.pwsg			6
+  subgraph	Pump3		pwr_exe:pwr_pump3.pwsg			6
   subgraph	Pumpanim2	pwr_exe:pwr_pumpanim2.pwsg		6
   subgraph	ManSwitch	pwr_exe:pwr_manswitch.pwsg		6
   subgraph	ManSwitch2	pwr_exe:pwr_manswitch2.pwsg		6
@@ -198,7 +200,7 @@ menu Other
     subgraph    CValveOrSwOp 	pwr_exe:bcomp_cvalveorswop.pwsg 	2
     subgraph    CValvePoOr 	pwr_exe:bcomp_cvalvepoor.pwsg 		2
     subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	2
-    subgraph    FanCoCbSs 	pwr_exe:bcomp_fancocbss.pwsg 		6
+    subgraph    FanCbCoSs 	pwr_exe:bcomp_fancbcoss.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
