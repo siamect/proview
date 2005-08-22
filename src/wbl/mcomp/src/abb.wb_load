@@ -57,7 +57,7 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr Super.Order.Description = "Energize contactor"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Contactor feedback lost "
-          Attr Super.DataSheet = "$pwr_lang/dsh/abb_kontaktorer.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_contactors.pdf"
         EndBody
       EndObject
     EndObject
@@ -378,8 +378,7 @@ Volume ABB $ClassVolume 0.0.250.2
       EndObject
       Object Template ABB_ACS800_1 2148237312
         Body RtBody
-          Attr Description = "Varvtalsreglering"
-          Attr Specification = "ABB ACS800 Frequency converters"
+          Attr Specification = "ABB ACS800 Frequency converter"
           Attr ActSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ACT"
           Attr ActSpeed.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendActSpeed"
           Attr ActTorque.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_PZD4"
@@ -402,6 +401,7 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr AlarmWarning = "Frequency converter warning, "
           Attr AlarmError = "Frequency converter error, "
           Attr DefTrend = "ABB:Class-ABB_ACS800_1-Template.PlotGroup"
+          Attr DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr TrendActSpeed.Multiple = 1
           Attr TrendActSpeed.DataName = "ABB:Class-ABB_ACS800_1-Template.ActSpeed.ActualValue"
           Attr TrendActSpeed.StorageTime = 239
@@ -7070,6 +7070,41 @@ signals are connected to converters digitala input."
           Attr ACS800.AlarmWarning = "Frequency converter warning, "
           Attr ACS800.AlarmError = "Frequency converter error, "
           Attr ACS800.DefTrend = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.PlotGroup"
+          Attr ACS800.TrendActSpeed.Multiple = 1
+          Attr ACS800.TrendActSpeed.DataName = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.ActSpeed.ActualValue"
+          Attr ACS800.TrendActSpeed.StorageTime = 239
+          Attr ACS800.TrendActSpeed.BufferStatus[0] = 1
+          Attr ACS800.TrendActSpeed.BufferStatus[1] = 1
+          Attr ACS800.TrendActSpeed.NoOfBuffers = 2
+          Attr ACS800.TrendActSpeed.NoOfBufElement = 239
+          Attr ACS800.TrendActTorque.Multiple = 1
+          Attr ACS800.TrendActTorque.DataName = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.ActTorque.ActualValue"
+          Attr ACS800.TrendActTorque.StorageTime = 239
+          Attr ACS800.TrendActTorque.BufferStatus[0] = 1
+          Attr ACS800.TrendActTorque.BufferStatus[1] = 1
+          Attr ACS800.TrendActTorque.NoOfBuffers = 2
+          Attr ACS800.TrendActTorque.NoOfBufElement = 239
+          Attr ACS800.TrendActCurrent.Multiple = 1
+          Attr ACS800.TrendActCurrent.DataName = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.ActCurrent.ActualValue"
+          Attr ACS800.TrendActCurrent.StorageTime = 239
+          Attr ACS800.TrendActCurrent.BufferStatus[0] = 1
+          Attr ACS800.TrendActCurrent.BufferStatus[1] = 1
+          Attr ACS800.TrendActCurrent.NoOfBuffers = 2
+          Attr ACS800.TrendActCurrent.NoOfBufElement = 239
+          Attr ACS800.TrendRefSpeed.Multiple = 1
+          Attr ACS800.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.RefSpeed.ActualValue"
+          Attr ACS800.TrendRefSpeed.StorageTime = 239
+          Attr ACS800.TrendRefSpeed.BufferStatus[0] = 1
+          Attr ACS800.TrendRefSpeed.BufferStatus[1] = 1
+          Attr ACS800.TrendRefSpeed.NoOfBuffers = 2
+          Attr ACS800.TrendRefSpeed.NoOfBufElement = 239
+          Attr ACS800.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.TrendActSpeed"
+          Attr ACS800.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.TrendRefSpeed"
+          Attr ACS800.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.TrendActTorque"
+          Attr ACS800.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS800Pump1-Template.ACS800.TrendActCurrent"
+          Attr ACS800.PlotGroup.YUnit[1] = "%"
+          Attr ACS800.PlotGroup.YUnit[2] = "A"
+          Attr ACS800.PlotGroup.NumPoints = 478
           Attr SafetySwitch.AlarmText = "Safety switch is off, "
           Attr Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready, "
           Attr Mode.AlarmNotReadyA = "Check interlocks! Automode start is not allowed, not ready, "
@@ -13787,7 +13822,7 @@ SSAB safetyswitch, Contactor"
         Body RtBody
           Attr Super.Specification = "ABB ACS, PPO message type 5"
           Attr Super.Process = 1
-          Attr Super.DataSheet = "$pwr_lang/abb_acs800.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr I_ID.Description = "Parameter identification"
           Attr I_ID.ConversionOn = 1
           Attr I_ID.Representation = 2
@@ -17540,37 +17575,37 @@ if Op reset converter."
           Attr ACS800.AlarmError = "Frequency converter error, "
           Attr ACS800.DefTrend = "ABB:Class-ABB_ACS800_1-Template.PlotGroup"
           Attr ACS800.TrendActSpeed.Multiple = 1
-          Attr ACS800.TrendActSpeed.DataName = "ABB:Class-ABB_ACS800_1-Template.ActSpeed.ActualValue"
+          Attr ACS800.TrendActSpeed.DataName = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.ActSpeed.ActualValue"
           Attr ACS800.TrendActSpeed.StorageTime = 239
           Attr ACS800.TrendActSpeed.BufferStatus[0] = 1
           Attr ACS800.TrendActSpeed.BufferStatus[1] = 1
           Attr ACS800.TrendActSpeed.NoOfBuffers = 2
           Attr ACS800.TrendActSpeed.NoOfBufElement = 239
           Attr ACS800.TrendActTorque.Multiple = 1
-          Attr ACS800.TrendActTorque.DataName = "ABB:Class-ABB_ACS800_1-Template.ActTorque.ActualValue"
+          Attr ACS800.TrendActTorque.DataName = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.ActTorque.ActualValue"
           Attr ACS800.TrendActTorque.StorageTime = 239
           Attr ACS800.TrendActTorque.BufferStatus[0] = 1
           Attr ACS800.TrendActTorque.BufferStatus[1] = 1
           Attr ACS800.TrendActTorque.NoOfBuffers = 2
           Attr ACS800.TrendActTorque.NoOfBufElement = 239
           Attr ACS800.TrendActCurrent.Multiple = 1
-          Attr ACS800.TrendActCurrent.DataName = "ABB:Class-ABB_ACS800_1-Template.ActCurrent.ActualValue"
+          Attr ACS800.TrendActCurrent.DataName = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.ActCurrent.ActualValue"
           Attr ACS800.TrendActCurrent.StorageTime = 239
           Attr ACS800.TrendActCurrent.BufferStatus[0] = 1
           Attr ACS800.TrendActCurrent.BufferStatus[1] = 1
           Attr ACS800.TrendActCurrent.NoOfBuffers = 2
           Attr ACS800.TrendActCurrent.NoOfBufElement = 239
           Attr ACS800.TrendRefSpeed.Multiple = 1
-          Attr ACS800.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS800_1-Template.RefSpeed.ActualValue"
+          Attr ACS800.TrendRefSpeed.DataName = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.RefSpeed.ActualValue"
           Attr ACS800.TrendRefSpeed.StorageTime = 239
           Attr ACS800.TrendRefSpeed.BufferStatus[0] = 1
           Attr ACS800.TrendRefSpeed.BufferStatus[1] = 1
           Attr ACS800.TrendRefSpeed.NoOfBuffers = 2
           Attr ACS800.TrendRefSpeed.NoOfBufElement = 239
-          Attr ACS800.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS800_1-Template.TrendActSpeed"
-          Attr ACS800.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS800_1-Template.TrendRefSpeed"
-          Attr ACS800.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS800_1-Template.TrendActTorque"
-          Attr ACS800.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS800_1-Template.TrendActCurrent"
+          Attr ACS800.PlotGroup.YObjectName[0] = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.TrendActSpeed"
+          Attr ACS800.PlotGroup.YObjectName[1] = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.TrendRefSpeed"
+          Attr ACS800.PlotGroup.YObjectName[2] = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.TrendActTorque"
+          Attr ACS800.PlotGroup.YObjectName[3] = "ABB:Class-ABB_ACS800Pump2-Template.ACS800.TrendActCurrent"
           Attr ACS800.PlotGroup.YUnit[1] = "%"
           Attr ACS800.PlotGroup.YUnit[2] = "A"
           Attr ACS800.PlotGroup.NumPoints = 478

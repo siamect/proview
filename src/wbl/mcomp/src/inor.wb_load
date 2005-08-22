@@ -36,11 +36,13 @@ Volume Inor $ClassVolume 0.0.250.7
           Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.DataName = "Inor:Class-Inor_TempSensor_VRS-Template.Super.Super.Value.ActualValue"
           Attr Super.Super.Trend.StorageTime = 239
           Attr Super.Super.Trend.BufferStatus[0] = 1
           Attr Super.Super.Trend.BufferStatus[1] = 1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DefTrend = "Inor:Class-Inor_TempSensor_VRS-Template.Super.Super.Trend"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/inor_tempsensor_vrs.pdf"
         EndBody
       EndObject

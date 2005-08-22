@@ -28,7 +28,7 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
           Attr Super.Specification = "Klockner Moeller type PKZ"
           Attr Super.NotTripped.Description = "CircuitBreaker is tripped"
           Attr Super.AlarmText = "Circuit breaker tripped"
-          Attr Super.DataSheet = "$pwrp_lang/dsh/km_motor_protective_pkz.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
     EndObject
@@ -58,7 +58,7 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
           Attr Super.Order.Description = "Energize contactor"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Contactor feedback lost "
-          Attr Super.DataSheet = "$pwrp_lang/dsh/km_motor_protective_pkz.pdf"
+          Attr Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
     EndObject

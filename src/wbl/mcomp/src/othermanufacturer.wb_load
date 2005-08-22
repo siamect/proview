@@ -195,11 +195,13 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template.Super.Super.Value.ActualValue"
           Attr Super.Super.Trend.StorageTime = 239
           Attr Super.Super.Trend.BufferStatus[0] = 1
           Attr Super.Super.Trend.BufferStatus[1] = 1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DefTrend = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template.Super.Super.Trend"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
         EndBody
       EndObject
@@ -351,7 +353,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
       Object Template Klay_PressureSensor_Series2000 2150072320
         Body RtBody
-          Attr Super.Super.Specification = "Klay instrument trycktransmitter serie 2000"
+          Attr Super.Super.Specification = "Klay instrument pressuretransmitter series 2000"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -472,24 +474,13 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-FanCbCoSs"
+            Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
         EndObject
       EndObject
       Object Template Jowa_fan 2151645184
         Body RtBody
-          Attr Super.Specification = "Jowa fan"
-          Attr Super.Contactor.FbTimeLimit = 1.000000e+00
-          Attr Super.Contactor.AlarmText = "Feedback lost fan "
-          Attr Super.CircuitBreaker.AlarmText = "Overload, circuit breaker tripped fan "
-          Attr Super.SafetySwitch.AlarmText = "Safey switch is OFF fan "
-          Attr Super.Mode.AlarmNotReadyM = "Check interlocks! Manual start is not allowed, not ready fan "
-          Attr Super.Mode.AlarmNotReadyA = "Check interlocks! Automode is not allowed, not ready fan "
-          Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed fan "
-          Attr Super.Mode.Alarm2LocalMod = "Local mode is activated for fan "
-          Attr Super.Mode.AlarmNotManOrd = "Automode active! Manual start/stop order is not allowed, fan "
-          Attr Super.Fan.Description = "Jowa fan"
-          Attr Super.Fan.Specification = "?"
+          Attr Super.Specification = "Jowa Fan"
           Attr Super.DataSheet = "$pwr_lang/dsh/jowa_fan.pdf"
         EndBody
       EndObject

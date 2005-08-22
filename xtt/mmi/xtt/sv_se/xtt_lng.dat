@@ -77,6 +77,13 @@ E 1.2.14 "VillkorsParameter"
 E 1.3.1 "Blockerade larm"
 E 1.3.2 "Larmblockering"
 #
+# License
+E 1.4.1 "Jag Godkänner"
+E 1.4.2 "Visa Licens"
+E 1.4.3 "Godkänn licensvillkor"
+E 1.4.4 "Avbryt"
+E 1.4.5 "Licens"
+#
 # Postscript printing
 E 2.1.1 "Innehåll"
 E 2.1.2 "sidan"
