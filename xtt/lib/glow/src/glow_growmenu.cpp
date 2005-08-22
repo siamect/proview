@@ -285,9 +285,10 @@ int GrowMenu::local_event_handler( glow_eEvent event, double x, double y)
        ll_y <= y && y <= ur_y)
   {
     int item;
+    double vscale = trf.vertical_scale(0);
     //cout << "Event handler: Hit in menu" << endl;
 
-    item = int((y - ll.y) / ( item_height / ctx->zoom_factor_y));
+    item = int((y - ll.y) / ( item_height / vscale / ctx->zoom_factor_y));
     if ( item > item_cnt - 1)
       item = item_cnt - 1;
     if ( item < 0)
