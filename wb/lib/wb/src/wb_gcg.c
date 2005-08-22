@@ -8753,7 +8753,7 @@ vldh_t_node	node;
 	      free((char *) a_ptr);
 	      if ( !cdh_ObjidIsNull( aref.Objid)) {
 		sts = gcg_replace_ref( gcgctx, &aref, node);
-		if ( ODD(sts)) {
+		if ( sts == GSX__REPLACED) {
 		  keep = 1;
 		  /* Store replaced aref */
 		  sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
@@ -14950,7 +14950,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
     attrref->Objid = connect_arp->Objid;
     attrref->Offset += connect_arp->Offset;
     free( (char *)connect_arp);
-    return GSX__SUCCESS;
+    return GSX__REPLACED;
   }
   else if ( attrref->Objid.vid == ldh_cPlcHostVolume) {
     // Replace objid with host object
@@ -14979,7 +14979,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
     }
 
     attrref->Objid = host_oid;
-    return GSX__SUCCESS;
+    return GSX__REPLACED;
   }
   return GSX__SUCCESS;
 }
