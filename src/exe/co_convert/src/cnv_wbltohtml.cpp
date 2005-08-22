@@ -739,6 +739,9 @@ int CnvWblToHtml::attribute_exec()
   char attrtype_href[80];
   int lng_sts = 1;
 
+  if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0)
+    return 1;
+    
   if ( Lng::current() != lng_eLanguage_en_us)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, ctx->rw->attr_name);
 
