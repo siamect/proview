@@ -47,6 +47,7 @@ extern "C" {
 extern "C" {
 #include "flow_x.h"
 #include "rt_trace.h"
+#include "co_wow.h"
 }
 #include "co_lng.h"
 #include "co_error.h"
@@ -694,6 +695,12 @@ static int	xnav_show_func(	void		*client_data,
     strcpy( message_str, "Xtt version ");
     strcat( message_str, xtt_version);
     xnav->message('I', message_str);
+    return 1;
+  }
+  else if ( strncmp( arg1_str, "LICENSE", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW LICENSE"
+    wow_DisplayLicense( xnav->parent_wid);
     return 1;
   }
   else if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
