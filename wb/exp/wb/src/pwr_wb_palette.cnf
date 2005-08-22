@@ -635,12 +635,12 @@ palette PlcEditorPalette
       class CompModeAMFo
       class RunTimeCounterFo
       class FanCbCoSsFo  
-      class ActuatorPoOr2SwFo
-      class ActuatorPoOrFo
-      class ActuatorOrFo
-      class ActuatorOr2SwFo
-      class ActuatorOrSwOpFo
-      class ActuatorOrSwClFo
+      class ActuatorAPoOr2SwFo
+      class ActuatorAPoOrFo
+      class ActuatorAOrFo
+      class ActuatorAOr2SwFo
+      class ActuatorAOrSwOpFo
+      class ActuatorAOrSwClFo
       class CValvePoOr2SwFo
       class CValvePoOrFo
       class CValveOrFo
