@@ -31,6 +31,30 @@ foldersTree = gFld("<b>Object Reference Manual</b>", "orm_intro.html")
   aux1 = insFld(foldersTree, gFld("<b>tlog</b>", "tlog_index.html"))
   TLog(aux1)
 
+  aux1 = insFld(foldersTree, gFld("<b>BaseComponent</b>", "basecomponent_index.html"))
+  BaseComponent(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>OtherManufacturer</b>", "othermanufacturer_index.html"))
+  OtherManufacturer(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>ABB</b>", "abb_index.html"))
+  ABB(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>Siemens</b>", "siemens_index.html"))
+  Siemens(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>Telemecanique</b>", "telemecanique_index.html"))
+  Telemecanique(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>SsabOx</b>", "ssabox_index.html"))
+  SsabOx(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>Inor</b>", "inor_index.html"))
+  Inor(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>KlocknerMoeller</b>", "klocknermoeller_index.html"))
+  KlocknerMoeller(aux1)
+
 
 
 
