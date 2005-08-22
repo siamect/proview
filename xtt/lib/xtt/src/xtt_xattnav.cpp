@@ -758,6 +758,8 @@ int	XAttNav::object_attr()
 
     if ( objar.Flags.b.CastAttr)
       cdh_SuppressSuper( attr_name, bd[i].attrName);
+    else
+      strcpy( attr_name, bd[i].attrName);
 
     if ( strcmp( aname, "") == 0)
       strcpy( name, attr_name);
