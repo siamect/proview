@@ -696,7 +696,7 @@ void GrowRect::set_rotation( double angel,
 
 void GrowRect::draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode)
 {
-  if ( invisible && !highlight)
+  if ( invisible && !(highlight && !node))
     return;
   if ( !(display_level & ctx->display_level))
     return;
@@ -868,7 +868,7 @@ void GrowRect::erase( GlowTransform *t, int hot, void *node)
 
 void GrowRect::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
 {
-  if ( invisible && !highlight)
+  if ( invisible)
     return;
   if ( !(display_level & ctx->display_level))
     return;
