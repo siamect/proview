@@ -883,6 +883,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   pwr_tObjid op_objid;
   qcom_sQattr qAttr;
   qcom_sQid qini;
+  int quiet = 0;
 
   hot_xtt = this;
 
@@ -916,6 +917,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   for ( i = 1; i < argc; i++) {
     if ( strcmp( argv[i], "-l") == 0 && i + 1 < argc)
       Lng::set( argv[i+1]);
+    else if ( strcmp( argv[i], "-q") == 0)
+      quiet = 1;
     else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
       char oname[80];
 
@@ -1034,6 +1037,9 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   CoXHelp::set_default( xhelp);
 
   XtRealizeWidget( toplevel);
+
+  if ( !opplace_found && !quiet)
+    wow_DisplayWarranty( toplevel);
 
 //  XmProcessTraversal( xnav->brow_widget, XmTRAVERSE_CURRENT);
 //  xnav->set_inputfocus();
