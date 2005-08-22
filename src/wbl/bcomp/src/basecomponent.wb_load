@@ -1,21 +1,32 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody
-    Attr NextOix = "_X4158"
+    Attr NextOix = "_X4160"
     Attr NextCix = "_X94"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 87
+!/**
+!  @Version 1.0
+!  @Summary Enumeration for Auto/Man/Local mode
+!  Enumeration for Auto/Man/Local mode for a component.
+!*/
     Object ModeEnum $TypeDef 1
       Body SysBody
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
+!/**
+!  The component is handled manually by the operator.
+!*/
       Object Manual $Value 88
         Body SysBody
           Attr Text = "Manual"
           Attr PgmName = "Manual"
         EndBody
       EndObject
+!/**
+!  The component is handled automatically by the system.
+!*/
       Object Auto $Value 89
         Body SysBody
           Attr Text = "Auto"
@@ -23,6 +34,10 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr Value = 1
         EndBody
       EndObject
+!/**
+!  The component is handled locally.
+!  When local mode is left, the mode is set to manual.
+!*/
       Object ManualLocal $Value 90
         Body SysBody
           Attr Text = "ManualLocal"
@@ -30,6 +45,10 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr Value = 2
         EndBody
       EndObject
+!/**
+!  The component is handled locally.
+!  When local mode is left, the mode is set to auto.
+!*/
       Object AutoLocal $Value 91
         Body SysBody
           Attr Text = "AutoLocal"
@@ -38,17 +57,28 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+!/**
+!  @Version 1.0
+!  @Summary Enumeration for valve position.
+!  Enumeration for valve position.
+!*/
     Object ValvePosEnum $TypeDef 2
       Body SysBody
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
+!/**
+!  The valve is somewhere between open and closed position.
+!*/
       Object Between $Value 2447
         Body SysBody
           Attr Text = "Between"
           Attr PgmName = "Between"
         EndBody
       EndObject
+!/**
+!  The valve is in closed position.
+!*/
       Object Closed $Value 2448
         Body SysBody
           Attr Text = "Closed"
@@ -56,6 +86,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr Value = 1
         EndBody
       EndObject
+!/**
+!  The valve is in open position.
+!*/
       Object Open $Value 2449
         Body SysBody
           Attr Text = "Open"
@@ -66,6 +99,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     EndObject
   EndObject
   Object Class $ClassHier 1
+!/**
+!  @Version 1.0
+!  @Summary Baseclass for a component.
+!  Baseclass for a component.
+!  The baseclass contains the Description attribute and attributes for the
+!  common methods.
+!*/
     Object Component $ClassDef 13
       Body SysBody
         Attr Editor = 0
@@ -77,42 +117,83 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "Component"
           Attr NextAix = "_X38"
         EndBody
+!/**
+!  Optional description of the component.
+!*/
         Object Description $Attribute 31
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the component.
+        !  Specification of the component.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 32
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this component.
+        !  A help topic in the xtt help file that contains help for this component.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 33
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
-        Object DataSheet $Attribute 34
+         !/**
+        !  @Summary A URL to the data sheet for the component.
+        !  A URL to the data sheet for the component.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+       Object DataSheet $Attribute 34
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the component.
+        !  A URL to the circuit diagram for the component.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 35
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 36
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 37
           Body SysBody
             Attr PgmName = "Photo"
@@ -128,9 +209,36 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Valves
-    !  @Author cs/je
     !  @Summary Manual valve with two switches.
     !  Base component for a manual valve with two switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/ManValve2Sw.
+    !  @image orm_manvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is open.
+    !  - colored white when the valve is closed.
+    !  - colored gray when no switch is affected. 
+    !  - colored red when an error occurrs (both switches are present simultaneously).
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_manvalve2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ManValve2SwFo is used.
+    !  @image orm_manvalve2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  No simulation object is needed for this object.
+    !
+    !  @b See also
+    !  @classlink ManValve2SwFo basecomponent_manvalve2swfo.html
     !*/
     Object ManValve2Sw $ClassDef 1
       Body SysBody
@@ -143,6 +251,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ManValve2Sw"
           Attr NextAix = "_X14"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 11
           Body SysBody
             Attr PgmName = "Description"
@@ -162,7 +273,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndObject
         !/**
         !  @Summary Switch open.
-        !  Switch closed. Digital input indicating that the valve is open.
+        !  Switch open. Digital input indicating that the valve is open.
         !*/
         Object SwitchOpen $Attribute 1
           Body SysBody
@@ -203,6 +314,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+	!/**
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        !*/
         Object PosEnum $Attribute 13
           Body SysBody
             Attr PgmName = "PosEnum"
@@ -272,6 +386,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 12
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -288,6 +408,23 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Plc function object to ManValve2Sw.
+    !  Plc function object to ManValve2Sw.
+    !
+    !  @image orm_manvalve2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ManValve2Sw.
+    !
+    !  The object supervises the two switches and alarms if both switches are
+    !  present simultaneously.
+    !
+    !  @b See also
+    !  @classlink ManValve2Sw basecomponent_manvalve2sw.html
+    !*/
     Object ManValve2SwFo $ClassDef 43
       Body SysBody
         Attr Editor = 0
@@ -299,6 +436,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ManValve2SwFo"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 1
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -1070,6 +1213,29 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Manual valve with switch open.
+    !  Base component for a manual valve with switch open.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/ManValveSwOp.
+    !  @image orm_manvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is open.
+    !  - colored white when the valve is not open.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_manvalveswop_og.gif
+    !
+    !  No function object exist for this object.
+    !  No simulation object is needed for this object.
+    !*/
     Object ManValveSwOp $ClassDef 44
       Body SysBody
         Attr Editor = 0
@@ -1081,18 +1247,30 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ManValveSwOp"
           Attr NextAix = "_X25"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 13
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 14
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch open.
+        !  Switch open. Digital input indicating that the valve is open.
+        !*/
         Object SwitchOpen $Attribute 15
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -1100,30 +1278,63 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 19
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 20
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 21
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 22
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 23
           Body SysBody
             Attr PgmName = "Photo"
@@ -1137,6 +1348,29 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Manual valve with switch closed.
+    !  Base component for a manual valve with switch closed.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/ManValveSwCl.
+    !  @image orm_manvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is not closed.
+    !  - colored white when the valve is closed.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_manvalveswop_og.gif
+    !
+    !  No function object exist for this object.
+    !  No simulation object is needed for this object.
+    !*/
     Object ManValveSwCl $ClassDef 45
       Body SysBody
         Attr Editor = 0
@@ -1148,18 +1382,30 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ManValveSwCl"
           Attr NextAix = "_X25"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 13
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 14
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch open.
+        !  Switch closed. Digital input indicating that the valve is closed.
+        !*/
         Object SwitchClosed $Attribute 16
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -1167,30 +1413,63 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 19
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 20
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 21
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 22
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 23
           Body SysBody
             Attr PgmName = "Photo"
@@ -1204,6 +1483,30 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Manual valve without switches.
+    !  Base component for a manual valve without switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/ManValveNoSw.
+    !  @image orm_manvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is 
+    !    reported open in the object graph.
+    !  - colored white when the valve is reported closed in the object graph.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_manvalvenosw_og.gif
+    !
+    !  No function object exist for this object.
+    !  No simulation object is needed for this object.
+    !*/
     Object ManValveNoSw $ClassDef 46
       Body SysBody
         Attr Editor = 0
@@ -1215,30 +1518,52 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ManValveNoSw"
           Attr NextAix = "_X27"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 13
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 14
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Manually set indication of valve.
+        !  Manually set indication of valve.
+        !  IndClosed equals true, indicates that the valve is closed. 
+        !*/
         Object IndClosed $Attribute 17
           Body SysBody
             Attr PgmName = "IndClosed"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Allow manual indication of valve open/closed.
+        !  Allow manual indication of valve open/closed.
+        !  If OpIndication is set, the object graph views two pushbuttons
+        !  for displaying the graphic symbol of the valve as open or closed.
+        !*/
         Object OpIndication $Attribute 25
           Body SysBody
             Attr PgmName = "OpIndication"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Backupobject for attribute IndClosed.
+        !*/
         Object OpIndBackup $Attribute 26
           Body SysBody
             Attr PgmName = "OpIndBackup"
@@ -1246,30 +1571,63 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Backup"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 19
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 20
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 21
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 22
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 23
           Body SysBody
             Attr PgmName = "Photo"
@@ -1287,11 +1645,19 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group CircuitBreaker
-    !  @Author cs/je
     !  @Summary CircuitBreaker.
     !  Base component for a circuit breaker.
     !  @b Object Graph
     !  @image orm_circuitbreaker_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CircuitBreakerFo is used.
+    !  @image orm_circuitbreakerfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CircuitBreakerFo basecomponent_circuitbreakerfo.html
     !*/
     Object CircuitBreaker $ClassDef 2
       Body SysBody
@@ -1304,6 +1670,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "CircuitBreaker"
           Attr NextAix = "_X11"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 10
           Body SysBody
             Attr PgmName = "Description"
@@ -1311,8 +1680,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Specification of the fuse.
-        !  Specification of the fuse.
+        !  @Summary Specification of the circuit breaker.
+        !  Specification of the circuit breaker.
         !  Used for documentation only.
         !*/
         Object Specification $Attribute 3
@@ -1322,8 +1691,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Tripped signal.
-        !  Tripped signal. Digital input indicating that the fuse is tripped.
+        !  Digital input indicating that the fuse is not tripped.
         !*/
         Object NotTripped $Attribute 1
           Body SysBody
@@ -1333,8 +1701,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Alarmtext.
-        !  Alarm text when when the fuse is tripped.
+        !  Alarm text when the circuit breaker is tripped.
         !*/
         Object AlarmText $Attribute 2
           Body SysBody
@@ -1405,6 +1772,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 9
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -1420,6 +1793,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Motors
+    !  @Summary Motor with overtemperature switch.
+    !  Base component for a motor with overtemperature switch.
+    !
+    !*/
     Object MotorD $ClassDef 9
       Body SysBody
         Attr Editor = 0
@@ -1431,18 +1811,29 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "MotorD"
           Attr NextAix = "_X23"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 11
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the motor.
+        !  Specification of the motor.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 12
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital input indicating overtemperatur.
+        !*/
         Object OverTemp $Attribute 21
           Body SysBody
             Attr PgmName = "OverTemp"
@@ -1450,42 +1841,84 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Alarm text when temperture is high.
+        !*/
         Object AlarmText $Attribute 22
           Body SysBody
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 15
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 16
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 17
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 18
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 19
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 20
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -1500,6 +1933,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Motors
+    !  @Summary Motor without signals.
+    !  Base component for a motor without signals.
+    !
+    !*/
     Object Motor $ClassDef 14
       Body SysBody
         Attr Editor = 0
@@ -1511,42 +1951,83 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "Motor"
           Attr NextAix = "_X45"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 38
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the motor.
+        !  Specification of the motor.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 39
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 40
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 41
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 42
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 43
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 44
           Body SysBody
             Attr PgmName = "Photo"
@@ -1560,6 +2041,15 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Motors
+    !  @Summary Motor with overtemperature sensor.
+    !  Base component for a motor with analog overtemperature sensor.
+    !
+    !  The object contains two alarm limits for overtemperature, high and 
+    !  high high.
+    !*/
     Object MotorA $ClassDef 11
       Body SysBody
         Attr Editor = 0
@@ -1571,18 +2061,29 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "MotorA"
           Attr NextAix = "_X41"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 22
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the motor.
+        !  Specification of the motor.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 23
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog input for motor temperature.
+        !*/
         Object Temp $Attribute 24
           Body SysBody
             Attr PgmName = "Temp"
@@ -1590,96 +2091,165 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
         EndObject
+        !/**
+        !  Indicator for high temperature.
+        !*/
         Object TempH $Attribute 39
           Body SysBody
             Attr PgmName = "TempH"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Indicator for high high temperature.
+        !*/
         Object TempHH $Attribute 40
           Body SysBody
             Attr PgmName = "TempHH"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Alarmtext when high high limit is exceeded.
+        !*/
         Object AlarmTextHH $Attribute 32
           Body SysBody
             Attr PgmName = "AlarmTextHH"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Temperature high high limit.
+        !*/
         Object LimitHH $Attribute 35
           Body SysBody
             Attr PgmName = "LimitHH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Hysteres for high high alarm.
+        !*/
         Object HysteresHH $Attribute 34
           Body SysBody
             Attr PgmName = "HysteresHH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Time delay for high high alarm.
+        !*/
         Object TimeDelayHH $Attribute 38
           Body SysBody
             Attr PgmName = "TimeDelayHH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarmtext when high limit is exceeded.
+        !*/
         Object AlarmTextH $Attribute 31
           Body SysBody
             Attr PgmName = "AlarmTextH"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Temperature high limit.
+        !*/
         Object LimitH $Attribute 36
           Body SysBody
             Attr PgmName = "LimitH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Hysteres for high alarm.
+        !*/
         Object HysteresH $Attribute 33
           Body SysBody
             Attr PgmName = "HysteresH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Time delay for high alarm.
+        !*/
         Object TimeDelayH $Attribute 37
           Body SysBody
             Attr PgmName = "TimeDelayH"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 25
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 26
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 27
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 28
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 29
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 30
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -1701,6 +2271,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Fan without signals.
+    !  Base component for a fan without signals.
+    !
+    !*/
     Object BaseFan $ClassDef 93
       Body SysBody
         Attr Editor = 0
@@ -1712,36 +2289,66 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "BaseFan"
           Attr NextAix = "_X52"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 45
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the fan.
+        !  Specification of the fan.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 46
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 47
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 48
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 50
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 51
           Body SysBody
             Attr PgmName = "Photo"
@@ -1755,6 +2362,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Fan without signals.
+    !  Base component for a fan without signals.
+    !
+    !*/
     Object BasePump $ClassDef 92
       Body SysBody
         Attr Editor = 0
@@ -1766,36 +2380,66 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "BasePump"
           Attr NextAix = "_X52"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 45
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the fan.
+        !  Specification of the fan.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 46
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 47
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 48
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 50
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 51
           Body SysBody
             Attr PgmName = "Photo"
@@ -1812,12 +2456,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Contactors
-    !  @Author cs/je
     !  @Summary Contactor/Relay.
     !  Base component for a contactor or relay.
     ! 
     !  @b Object Graph
     !  @image orm_contactor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ContactorFo is used.
+    !  @image orm_contactorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ContactorFo basecomponent_contactorfo.html
     !*/
     Object Contactor $ClassDef 3
       Body SysBody
@@ -1830,6 +2482,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "Contactor"
           Attr NextAix = "_X15"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 13
           Body SysBody
             Attr PgmName = "Description"
@@ -1963,6 +2618,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 12
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -1998,6 +2659,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "Switch"
           Attr NextAix = "_X9"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 8
           Body SysBody
             Attr PgmName = "Description"
@@ -2005,8 +2669,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Specification of the contactor.
-        !  Specification of the contactor.
+        !  @Summary Specification of the switch.
+        !  Specification of the switch.
         !  Used for documentation only.
         !*/
         Object Specification $Attribute 2
@@ -2100,9 +2764,17 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Switches
-    !  @Author cs/je
-    !  @Summary Switch.
+    !  @Summary Supervised switch.
     !  Base component for a supervised switch.
+    !
+    !  @b Plc coding
+    !  For plc coding the function object SupSwitchFo is used.
+    !  @image orm_supswitchfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink SupSwitchFo basecomponent_supswitchfo.html
     !*/
     Object SupSwitch $ClassDef 5
       Body SysBody
@@ -2115,6 +2787,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "SupSwitch"
           Attr NextAix = "_X13"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 9
           Body SysBody
             Attr PgmName = "Description"
@@ -2122,8 +2797,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Specification of the contactor.
-        !  Specification of the contactor.
+        !  @Summary Specification of the switch.
+        !  Specification of the switch.
         !  Used for documentation only.
         !*/
         Object Specification $Attribute 2
@@ -2159,6 +2834,10 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Time delay for alarm.
+        !  Time delay for alarm.
+        !*/
         Object Delay $Attribute 11
           Body SysBody
             Attr PgmName = "Delay"
@@ -2243,6 +2922,22 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to SupSwitch.
+    !  Plc function object to SupSwitch.
+    !
+    !  @image orm_supswitchfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  SupSwitch.
+    !
+    !  The object supervises the switch and alarms if the signal value is lost.
+    !
+    !  @b See also
+    !  @classlink SupSwitch basecomponent_supswitch.html
+    !*/
     Object SupSwitchFo $ClassDef 91
       Body SysBody
         Attr Editor = 0
@@ -2254,6 +2949,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "SupSwitchFo"
           Attr NextAix = "_X3"
         EndBody
+	!/**
+	!  Alarm status output.
+	!*/
         Object AlarmStatus $Output 2
           Body SysBody
             Attr PgmName = "AlarmStatus"
@@ -2261,6 +2959,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr GraphName = "val"
           EndBody
         EndObject
+	!/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+	!*/
         Object PlcConnect $Intern 1
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -3050,6 +3754,35 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Switches
+    !  @Summary Supervised level switch.
+    !  Base component for a supervised level switch.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/LevelSwitch.
+    !  @image orm_levelswitch_gs.gif
+    !
+    !  Default dynamic:
+    !  - the switch symbol is colored red when the signal value is lost.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_levelswitch_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object SupSwitchFo is used.
+    !  @image orm_supswitchfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink SupSwitchFo basecomponent_supswitchfo.html
+    !  @classlink SupSwitch basecomponent_supswitch.html
+    !*/
     Object LevelSwitch $ClassDef 88
       Body SysBody
         Attr Editor = 0
@@ -3061,6 +3794,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "LevelSwitch"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1
           Body SysBody
             Attr PgmName = "Super"
@@ -3077,6 +3813,35 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Switches
+    !  @Summary Supervised pressure switch.
+    !  Base component for a supervised pressure switch.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/PressureSwitch.
+    !  @image orm_pressureswitch_gs.gif
+    !
+    !  Default dynamic:
+    !  - the switch symbol is colored red when the signal value is lost.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_pressureswitch_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object SupSwitchFo is used.
+    !  @image orm_supswitchfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink SupSwitchFo basecomponent_supswitchfo.html
+    !  @classlink SupSwitch basecomponent_supswitch.html
+    !*/
     Object PressureSwitch $ClassDef 89
       Body SysBody
         Attr Editor = 0
@@ -3088,6 +3853,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "PressureSwitch"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1
           Body SysBody
             Attr PgmName = "Super"
@@ -3104,6 +3872,35 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Switches
+    !  @Summary Supervised temperature switch.
+    !  Base component for a supervised temperature switch.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/TempSwitch.
+    !  @image orm_tempswitch_gs.gif
+    !
+    !  Default dynamic:
+    !  - the switch symbol is colored red when the signal value is lost.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_tempswitch_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object SupSwitchFo is used.
+    !  @image orm_supswitchfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink SupSwitchFo basecomponent_supswitchfo.html
+    !  @classlink SupSwitch basecomponent_supswitch.html
+    !*/
     Object TempSwitch $ClassDef 90
       Body SysBody
         Attr Editor = 0
@@ -3115,6 +3912,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "TempSwitch"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1
           Body SysBody
             Attr PgmName = "Super"
@@ -3131,6 +3931,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Mode for digital components.
+    !  Mode for digital components.
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CompModeDFo is used.
+    !  @image orm_compmodedfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CompModeDFo basecomponent_compmodedfo.html
+    !*/
     Object CompModeD $ClassDef 16
       Body SysBody
         Attr Editor = 0
@@ -3327,6 +4141,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Mode for analog components.
+    !  Mode for analog components.
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CompModeAFo is used.
+    !  @image orm_compmodeafo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CompModeAFo basecomponent_compmodeafo.html
+    !*/
     Object CompModeA $ClassDef 31
       Body SysBody
         Attr Editor = 0
@@ -3553,6 +4381,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Mode for analog components.
+    !  Mode for analog components.
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CompModeAMFo is used.
+    !  @image orm_compmodeamfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CompModeAMFo basecomponent_compmodeamfo.html
+    !*/
     Object CompModeAM $ClassDef 37
       Body SysBody
         Attr Editor = 0
@@ -3653,6 +4495,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Mode for digital components.
+    !  Mode for digital components.
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CompModeDFo is used.
+    !  @image orm_compmodedmfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CompModeDMFo basecomponent_compmodedmfo.html
+    !*/
     Object CompModeDM $ClassDef 75
       Body SysBody
         Attr Editor = 0
@@ -3691,12 +4547,6 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object OpUpdateManRef $Attribute 20
-          Body SysBody
-            Attr PgmName = "OpUpdateManRef"
-            Attr TypeRef = "pwrs:Type-$Boolean"
-          EndBody
-        EndObject
         Object OpRefMan $Attribute 22
           Body SysBody
             Attr PgmName = "OpRefMan"
@@ -3721,6 +4571,13 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Component limit.
+    !  Object for a supervised component limit.
+    !  
+    !  The object contains attributes for the supervision but no code.
+    !*/
     Object CompLimit $ClassDef 19
       Body SysBody
         Attr Editor = 0
@@ -3732,36 +4589,54 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "CompLimit"
           Attr NextAix = "_X7"
         EndBody
+        !/**
+        !  Alarmtext when the limit is passed.
+        !*/
         Object AlarmText $Attribute 1
           Body SysBody
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+	!/**
+        !  Limit for detection of alarm condition.
+        !*/
         Object Limit $Attribute 2
           Body SysBody
             Attr PgmName = "Limit"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+	!/**
+        !  Hysteresis
+        !*/
         Object Hysteres $Attribute 3
           Body SysBody
             Attr PgmName = "Hysteres"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+	!/**
+        !  Time delay between limit is passed and alarm condition is set.
+        !*/
         Object TimeDelay $Attribute 4
           Body SysBody
             Attr PgmName = "TimeDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+	!/**
+        !  Indicates if the limit is supervised or not.
+        !*/
         Object Used $Attribute 5
           Body SysBody
             Attr PgmName = "Used"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+        !  The current status of the supervision.
+        !*/
         Object Status $Attribute 6
           Body SysBody
             Attr PgmName = "Status"
@@ -3774,6 +4649,34 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Sensors
+    !  @Summary Supervised analog sensor.
+    !  Base component for a supervised analog sensor.
+    !  
+    !  The object has four supervised limits LowLow, Low, High and HighHigh.
+    !  The limits can be enabled/disabled and limits are adjustable from the
+    !  object graph.
+    !
+    !  The object also contains a Trend.
+    !
+    !  @b Object Graph
+    !  @image orm_basesensor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object BaseSensorFo is used.
+    !  @image orm_basesensorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  For simulation of the sensor value, use the plc object BaseSensorSim.
+    !  
+    !  @b See also
+    !  @classlink BaseSensorFo basecomponent_basesensorfo.html
+    !  @classlink BaseSensorSim basecomponent_basesensorsim.html
+    !*/
     Object BaseSensor $ClassDef 25
       Body SysBody
         Attr Editor = 0
@@ -3785,18 +4688,29 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "BaseSensor"
           Attr NextAix = "_X94"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 75
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the sensor.
+        !  Specification of the contactor.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 76
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog input of sensor.
+        !*/
         Object Value $Attribute 77
           Body SysBody
             Attr PgmName = "Value"
@@ -3804,6 +4718,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
         EndObject
+        !/**
+        !  HighHigh limit object.
+        !*/
         Object LimitHH $Attribute 78
           Body SysBody
             Attr PgmName = "LimitHH"
@@ -3811,6 +4728,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
+        !/**
+        !  High limit object.
+        !*/
         Object LimitH $Attribute 79
           Body SysBody
             Attr PgmName = "LimitH"
@@ -3818,6 +4738,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
+        !/**
+        !  Low limit object.
+        !*/
         Object LimitL $Attribute 80
           Body SysBody
             Attr PgmName = "LimitL"
@@ -3825,6 +4748,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
+        !/**
+        !  LowLow limit object.
+        !*/
         Object LimitLL $Attribute 81
           Body SysBody
             Attr PgmName = "LimitLL"
@@ -3832,24 +4758,36 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "BaseComponent:Class-CompLimit"
           EndBody
         EndObject
+        !/**
+        !  Error indication.
+        !*/
         Object IndError $Attribute 82
           Body SysBody
             Attr PgmName = "IndError"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Warning indication.
+        !*/
         Object IndWarning $Attribute 83
           Body SysBody
             Attr PgmName = "IndWarning"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Supervision is disabled.
+        !*/
         Object SupDisabled $Attribute 93
           Body SysBody
             Attr PgmName = "SupDisabled"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Trend object for the sensor value.
+        !*/
         Object Trend $Attribute 84
           Body SysBody
             Attr PgmName = "Trend"
@@ -3863,42 +4801,87 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 86
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 87
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 88
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 89
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 90
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 91
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simualte functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 92
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -3931,12 +4914,23 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Sensors
-    !  @Author cs/je
-    !  @Summary Levelsensor with highhigh, high, low and lowlow limits.
-    !  Levelsensor with highhigh, high, low and lowlow limits.
-    ! 
+    !  @Summary Levelsensor with HighHigh, High, Low and LowLow limits.
+    !  Levelsensor with HighHigh, High, Low and LowLow limits.
+    !
+    !  Subclass of BaseSensor. See class BaseSensor for more information.
+    !
     !  @b Object Graph
     !  @image orm_levelsensor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object BaseSensorFo is used.
+    !  @image orm_basesensorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !  @classlink BaseSensorFo basecomponent_basesensorfo.html
     !*/
     Object LevelSensor $ClassDef 28
       Body SysBody
@@ -3949,6 +4943,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "LevelSensor"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Super class
+        !*/
         Object Super $Attribute 1
           Body SysBody
             Attr PgmName = "Super"
@@ -3986,9 +4983,21 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Author cs/je
     !  @Summary Temperaturesensor with highhigh, high, low and lowlow limits.
     !  Temperaturesensor with highhigh, high, low and lowlow limits.
+    !
+    !  Subclass of BaseSensor. See class BaseSensor for more information.
     ! 
     !  @b Object Graph
     !  @image orm_tempsensor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object BaseSensorFo is used.
+    !  @image orm_basesensorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !  @classlink BaseSensorFo basecomponent_basesensorfo.html
     !*/
     Object TempSensor $ClassDef 29
       Body SysBody
@@ -4001,6 +5010,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "TempSensor"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class
+        !*/
         Object Super $Attribute 2
           Body SysBody
             Attr PgmName = "Super"
@@ -4035,12 +5047,23 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Sensors
-    !  @Author cs/je
     !  @Summary Pressuresensor with highhigh, high, low and lowlow limits.
     !  Pressuresensor with highhigh, high, low and lowlow limits.
     ! 
+    !  Subclass of BaseSensor. See class BaseSensor for more information.
+    !
     !  @b Object Graph
     !  @image orm_pressuresensor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object BaseSensorFo is used.
+    !  @image orm_basesensorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !  @classlink BaseSensorFo basecomponent_basesensorfo.html
     !*/
     Object PressureSensor $ClassDef 30
       Body SysBody
@@ -4053,6 +5076,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "PressureSensor"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class
+        !*/
         Object Super $Attribute 2
           Body SysBody
             Attr PgmName = "Super"
@@ -4084,6 +5110,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Plc function object to Contactor.
+    !  Plc function object to Contactor.
+    !
+    !  @image orm_contactorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  Contactor.
+    !
+    !  @b See also
+    !  @classlink Contactor basecomponent_contactor.html
+    !*/
     Object ContactorFo $ClassDef 6
       Body SysBody
         Attr Editor = 0
@@ -4095,6 +5135,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "ContactorFo"
           Attr NextAix = "_X6"
         EndBody
+        !/**
+        !  Set contactor on.
+        !*/
         Object On $Input 2
           Body SysBody
             Attr PgmName = "On"
@@ -4102,6 +5145,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr GraphName = "on"
           EndBody
         EndObject
+        !/**
+        !  Contactor feedback.
+        !*/
         Object Feedback $Output 4
           Body SysBody
             Attr PgmName = "Feedback"
@@ -4109,6 +5155,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr GraphName = "fb"
           EndBody
         EndObject
+        !/**
+        !  Error.
+        !*/
         Object Error $Output 3
           Body SysBody
             Attr PgmName = "Error"
@@ -4116,6 +5165,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr GraphName = "err"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 1
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -5216,12 +6271,20 @@ Error = err"
     !/**
     !  @Version 1.0
     !  @Group SafetySwitch
-    !  @Author cs/je
     !  @Summary Basecomponent for a safetyswitch
     !  Basecomponent for a safetyswitch
     ! 
     !  @b Object Graph
     !  @image orm_safetyswitch_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object SafetySwitchFo is used.
+    !  @image orm_safetyswitchfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink SafetySwitch basecomponent_safetyswitch.html
     !*/
     Object SafetySwitch $ClassDef 7
       Body SysBody
@@ -5234,18 +6297,29 @@ Error = err"
           Attr StructName = "SafetySwitch"
           Attr NextAix = "_X12"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 11
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the safetyswitch.
+        !  Specification of the safetyswitch.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 4
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital input, safety switch is on.
+        !*/
         Object On $Attribute 2
           Body SysBody
             Attr PgmName = "On"
@@ -5253,42 +6327,84 @@ Error = err"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Alarmtext when safetyswitch is off.
+        !*/
         Object AlarmText $Attribute 3
           Body SysBody
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 5
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 6
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 7
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 8
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 9
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 10
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -5303,6 +6419,22 @@ Error = err"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Plc function object to SafetySwitch.
+    !  Plc function object to SafetySwitch.
+    !
+    !  @image orm_safetyswitchfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  SafetySwitch.
+    !
+    !  The object sends an alarm when the switch is off.
+    !
+    !  @b See also
+    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    !*/
     Object SafetySwitchFo $ClassDef 8
       Body SysBody
         Attr Editor = 0
@@ -5314,6 +6446,9 @@ Error = err"
           Attr StructName = "SafetySwitchFo"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Output indicating that the safetyswitch is on.
+        !*/
         Object On $Output 2
           Body SysBody
             Attr PgmName = "On"
@@ -5321,6 +6456,12 @@ Error = err"
             Attr GraphName = "on"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 1
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -5872,6 +7013,22 @@ Safety switch"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Plc function object to CircuitBreaker.
+    !  Plc function object to CircuitBreaker.
+    !
+    !  @image orm_circuitbreakerfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CircuitBreaker.
+    !
+    !  The object alarms when the circuit breaker is tripped.
+    !
+    !  @b See also
+    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !*/
     Object CircuitBreakerFo $ClassDef 15
       Body SysBody
         Attr Editor = 0
@@ -5883,6 +7040,9 @@ Safety switch"
           Attr StructName = "CircuitBreakerFo"
           Attr NextAix = "_X6"
         EndBody
+        !/**
+        !  Output indicating that the circuitbreaker is tripped.
+        !*/
         Object Tripped $Output 4
           Body SysBody
             Attr PgmName = "Tripped"
@@ -5890,6 +7050,12 @@ Safety switch"
             Attr GraphName = "trip"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 5
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -6409,6 +7575,18 @@ Circuit breaker"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompModeD.
+    !  Plc function object to CompModeD.
+    !
+    !  @image orm_compmoded_fo.gif
+    !
+    !  Connect the function object to an object of class CompModeD.
+    !
+    !  @b See also
+    !  @classlink CompModeD basecomponent_compmoded.html
+    !*/
     Object CompModeDFo $ClassDef 17
       Body SysBody
         Attr Editor = 0
@@ -6460,6 +7638,12 @@ Circuit breaker"
             Attr GraphName = "fb"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 7
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -14143,6 +15327,18 @@ No letters  = Auto mod
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompModeD.
+    !  Plc function object to CompModeA.
+    !
+    !  @image orm_compmodea_fo.gif
+    !
+    !  Connect the function object to an object of class CompModeA.
+    !
+    !  @b See also
+    !  @classlink CompModeA basecomponent_compmodea.html
+    !*/
     Object CompModeAFo $ClassDef 33
       Body SysBody
         Attr Editor = 0
@@ -14210,6 +15406,12 @@ No letters  = Auto mod
             Attr GraphName = "REL"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 26
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -22919,6 +24121,18 @@ set from HMI."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompModeAM.
+    !  Plc function object to CompModeAM.
+    !
+    !  @image orm_compmodeam_fo.gif
+    !
+    !  Connect the function object to an object of class CompModeAM.
+    !
+    !  @b See also
+    !  @classlink CompModeAM basecomponent_compmodeam.html
+    !*/
     Object CompModeAMFo $ClassDef 38
       Body SysBody
         Attr Editor = 0
@@ -22946,6 +24160,12 @@ set from HMI."
             Attr GraphName = "loc"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 1
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -25090,6 +26310,18 @@ set from HMI."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompModeDM.
+    !  Plc function object to CompModeDM.
+    !
+    !  @image orm_compmodedm_fo.gif
+    !
+    !  Connect the function object to an object of class CompModeDM.
+    !
+    !  @b See also
+    !  @classlink CompModeDM basecomponent_compmodedm.html
+    !*/
     Object CompModeDMFo $ClassDef 76
       Body SysBody
         Attr Editor = 0
@@ -25117,6 +26349,12 @@ set from HMI."
             Attr GraphName = "rdy"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 8
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -25202,14 +26440,14 @@ set from HMI."
             Attr defnamecount[265] = 4
             Attr defnamecount[266] = 1
             Attr defnamecount[267] = 1
-            Attr connamecount = 72
+            Attr connamecount = 74
           EndBuffer
         EndBody
         Object W WindowPlc 3482
           Body RtBody
           EndBody
           Body DevBody
-            Attr Modified = "08-JUL-2005 10:55:36.99"
+            Attr Modified = "16-AUG-2005 16:51:41.47"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -25219,23 +26457,24 @@ set from HMI."
               Attr refconcount = 1
             EndBuffer
           EndBody
-          Object cn71 ConDigital 4094
+          Object cn73 ConDigital 4160
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn71"
+                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn73"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp17"
-                Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-ResDp4"
+                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp16"
+                Attr dest_point = 2
+                Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.920000e+00
-                  Attr y = 2.050000e+00
+                  Attr x = 1.320000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.043111e+00
-                  Attr y = 2.050000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -25257,24 +26496,62 @@ set from HMI."
               EndBuffer
             EndBody
           EndObject
-          Object cn69 ConDigital 4089
+          Object cn72 ConDigital 4159
             Body DevBody
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn69"
+                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn72"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp16"
-                Attr dest_point = 3
+                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp7"
+                Attr dest_point = 1
                 Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.320000e+00
-                  Attr y = 1.900000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.163111e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn71 ConDigital 4094
+            Body DevBody
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn71"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp17"
+                Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-ResDp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.920000e+00
+                  Attr y = 2.050000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.043111e+00
-                  Attr y = 1.900000e+00
+                  Attr y = 2.050000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -25585,7 +26862,7 @@ set from HMI."
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 4
+                Attr source_point = 3
                 Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr dest_point = 1
                 Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And9"
@@ -25668,7 +26945,7 @@ set from HMI."
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 4
+                Attr source_point = 3
                 Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr dest_point = 1
                 Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And8"
@@ -25965,84 +27242,6 @@ set from HMI."
                 Buffer point[1]
                   Attr x = 1.399000e+00
                   Attr y = 1.250000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn20 ConDigital 3501
-            Body DevBody
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn20"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp7"
-                Attr dest_point = 2
-                Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.320000e+00
-                  Attr y = 1.850000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.163111e+00
-                  Attr y = 1.850000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn19 ConDigital 3502
-            Body DevBody
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn19"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp6"
-                Attr dest_point = 1
-                Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.320000e+00
-                  Attr y = 1.800000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.236444e+00
-                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26537,24 +27736,6 @@ set from HMI."
               EndBuffer
             EndBody
           EndObject
-          Object GetDp6 GetDp 3532
-            Body RtBody
-            EndBody
-            Body DevBody
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.OpUpdateManRef"
-              Buffer PlcNode
-                Attr object_type = 256
-                Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp6"
-                Attr x = 7.000000e-01
-                Attr y = -1.750000e+00
-                Attr width = -3.885556e-01
-                Attr heigth = 9.750000e-01
-                Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp7 GetDp 3533
             Body RtBody
             EndBody
@@ -26565,9 +27746,9 @@ set from HMI."
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp7"
                 Attr x = 7.000000e-01
-                Attr y = -1.850000e+00
-                Attr width = -5.118889e-01
-                Attr heigth = 1.025000e+00
+                Attr y = -8.249999e-01
+                Attr width = 4.631111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -26582,13 +27763,13 @@ set from HMI."
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr x = 1.300000e+00
-                Attr y = -1.330000e+00
+                Attr y = -1.280000e+00
                 Attr width = -2.260000e-01
-                Attr heigth = 6.050000e-01
+                Attr heigth = 5.550000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
-                Attr mask[0] = 15
+                Attr mask[0] = 7
                 Attr mask[1] = 1
-                Attr mask[2] = 5
+                Attr mask[2] = 3
               EndBuffer
             EndBody
           EndObject
@@ -26958,9 +28139,9 @@ set from HMI."
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp16"
                 Attr x = 7.000000e-01
-                Attr y = -1.650000e+00
-                Attr width = -3.818889e-01
-                Attr heigth = 7.750000e-01
+                Attr y = -8.750000e-01
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -27012,6 +28193,20 @@ set from HMI."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Sensors
+    !  @Summary Plc function object to BaseSensor.
+    !  Plc function object to BaseSensor.
+    !
+    !  @image orm_basesensorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  BaseSensor.
+    !
+    !  @b See also
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !*/
     Object BaseSensorFo $ClassDef 27
       Body SysBody
         Attr Editor = 0
@@ -27023,6 +28218,9 @@ set from HMI."
           Attr StructName = "BaseSensorFo"
           Attr NextAix = "_X45"
         EndBody
+        !/**
+	!  Disable supervision of the limits.
+        !*/
         Object DisableSup $Input 44
           Body SysBody
             Attr PgmName = "DisableSup"
@@ -27030,12 +28228,21 @@ set from HMI."
             Attr GraphName = "dis"
           EndBody
         EndObject
+        !/**
+	!  @Summary The main object connected to this object.
+	!  The main object of class ManValve2Sw (or a subclass of this class).
+	!  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 37
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+	!  Sensor value.
+        !*/
         Object Value $Output 43
           Body SysBody
             Attr PgmName = "Value"
@@ -27043,6 +28250,9 @@ set from HMI."
             Attr GraphName = "VAL"
           EndBody
         EndObject
+        !/**
+	!  HighHigh limit is exceeded.
+        !*/
         Object HH $Output 38
           Body SysBody
             Attr PgmName = "HH"
@@ -27050,6 +28260,9 @@ set from HMI."
             Attr GraphName = "HH"
           EndBody
         EndObject
+        !/**
+	!  High limit is exceeded.
+        !*/
         Object H $Output 39
           Body SysBody
             Attr PgmName = "H"
@@ -27057,6 +28270,9 @@ set from HMI."
             Attr GraphName = "H"
           EndBody
         EndObject
+        !/**
+	!  Value is below Low limit.
+        !*/
         Object L $Output 40
           Body SysBody
             Attr PgmName = "L"
@@ -27064,6 +28280,9 @@ set from HMI."
             Attr GraphName = "L"
           EndBody
         EndObject
+        !/**
+	!  Value is below LowLow limit.
+        !*/
         Object LL $Output 41
           Body SysBody
             Attr PgmName = "LL"
@@ -31867,6 +33086,23 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to BaseSensor.
+    !  Plc simulation object to BaseSensor.
+    !
+    !  @image orm_basesensorsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_basesensorsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  BaseSensor.
+    !
+    !  @b See also
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !*/
     Object BaseSensorSim $ClassDef 40
       Body SysBody
         Attr Editor = 0
@@ -33574,6 +34810,23 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Count the run time of a component.
+    !  Count the run time of a component.
+    ! 
+    !  @b Object Graph
+    !  @image orm_runtimecounter_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object RunTimeCounterFo is used.
+    !  @image orm_runtimecounterfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink RunTimeCounterFo basecomponent_runtimecounterfo.html
+    !*/
     Object RunTimeCounter $ClassDef 23
       Body SysBody
         Attr Editor = 0
@@ -33585,6 +34838,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "RunTimeCounter"
           Attr NextAix = "_X28"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 1
           Body SysBody
             Attr PgmName = "Description"
@@ -33721,6 +34977,18 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to RunTimeCounter.
+    !  Plc function object to RunTimeCounter.
+    !
+    !  @image orm_runtimecounterfo_fo.gif
+    !
+    !  Connect the function object to an object of class RunTimeCounter.
+    !
+    !  @b See also
+    !  @classlink RunTimeCounter basecomponent_runtimecounter.html
+    !*/
     Object RunTimeCounterFo $ClassDef 24
       Body SysBody
         Attr Editor = 0
@@ -33827,12 +35095,24 @@ Alarm HH, H, L, LL"
     !/**
     !  @Version 1.0
     !  @Group Fans
-    !  @Author cs/je
     !  @Summary Fan with circuitbreaker, contactor and safetyswitch.
     !  Fan with circuitbreaker, contactor and safetyswitch.
-    ! 
+    !
     !  @b Object Graph
     !  @image orm_fancbcoss_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object FanCbCoSsFo is used.
+    !  @image orm_fancbcossfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  For simulation of the fan, use the plc object FanCbCoSsSim.
+    !
+    !  @b See also
+    !  @classlink FanCbCoSsFo basecomponent_basesensorfo.html
+    !  @classlink FanCbCoSsSim basecomponent_basesensorsim.html
     !*/
     Object FanCbCoSs $ClassDef 21
       Body SysBody
@@ -33845,12 +35125,20 @@ Alarm HH, H, L, LL"
           Attr StructName = "FanCbCoSs"
           Attr NextAix = "_X47"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 844
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the fan.
+        !  Specification of the fan.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 845
           Body SysBody
             Attr PgmName = "Specification"
@@ -33971,42 +35259,87 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 32
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 33
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 34
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 35
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 36
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 851
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simualte functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 44
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -34029,6 +35362,20 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Fans
+    !  @Summary Plc function object to FanCbCoSs.
+    !  Plc function object to FanCbCoSs.
+    !
+    !  @image orm_fancbcossfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  FanCbCoSs.
+    !
+    !  @b See also
+    !  @classlink FanCbCoSs basecomponent_fancbcoss.html
+    !*/
     Object FanCbCoSsFo $ClassDef 22
       Body SysBody
         Attr Editor = 0
@@ -36343,6 +37690,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to FanCbCoSs.
+    !  Plc simulation object to FanCbCoSs.
+    !
+    !  @image orm_fancbcosssim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_fancbcosssim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  FanCbCoSs.
+    !
+    !  @b See also
+    !  @classlink FanCbCoSs basecomponent_fancbcoss.html
+    !*/
     Object FanCbCoSsSim $ClassDef 39
       Body SysBody
         Attr Editor = 0

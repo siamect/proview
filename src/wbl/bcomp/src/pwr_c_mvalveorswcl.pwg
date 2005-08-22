@@ -11739,11 +11739,11 @@ pwr_exe:
 0
 0
 0
-1006 13.419
+1006 13.4191
 1007 10.8
 1008 19.05
 1009 18.2
-1013 13.419
+1013 13.4191
 1014 10.8
 1015 19.05
 1016 18.2
@@ -11806,8 +11806,14 @@ pwr_exe:
 9
 900 $object.Mode.OpAutoOnly##Boolean
 901 0
-902 1
+902 2
 903 1
+99
+9
+900 !$object.Mode.ManMode##Boolean
+901 1
+902 1
+903 3
 99
 52
 5200 $object.Mode.OpRefMan##Boolean
@@ -11938,8 +11944,14 @@ pwr_exe:
 9
 900 $object.Mode.OpAutoOnly##Boolean
 901 0
-902 1
+902 2
 903 1
+99
+9
+900 !$object.Mode.ManMode##Boolean
+901 1
+902 1
+903 3
 99
 51
 5100 $object.Mode.OpRefMan##Boolean
