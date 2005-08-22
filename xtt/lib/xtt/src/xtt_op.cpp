@@ -31,6 +31,7 @@ extern "C" {
 
 extern "C" {
 #include "flow_x.h"
+#include "co_wow.h"
 }
 #include "co_lng.h"
 #include "xtt_op.h"
@@ -209,6 +210,9 @@ Op::Op(
   flow_UnmapWidget( aalarm_active[3]);
   flow_UnmapWidget( aalarm_active[4]);
   flow_UnmapWidget( balarm_active);
+
+  wow_DisplayWarranty( toplevel);
+
 
   *status = sts;
 }
