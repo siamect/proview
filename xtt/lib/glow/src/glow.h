@@ -1,6 +1,6 @@
 /** 
- * $Id: glow.h,v 1.9 2005-08-31 09:07:56 claes Exp $
  * Proview
+ * $Id: glow.h,v 1.10 2005-08-31 09:12:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
