@@ -202,6 +202,7 @@ menu Other
     subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	2
     subgraph    FanCbCoSs 	pwr_exe:bcomp_fancbcoss.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
+    subgraph    SupSwitch 	pwr_exe:bcomp_supswitch.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
     subgraph    PressureSwitch 	pwr_exe:bcomp_pressureswitch.pwsg 	16
