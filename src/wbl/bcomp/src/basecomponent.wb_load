@@ -220,7 +220,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  - the valve symbol is filled with the original color when the valve is open.
     !  - colored white when the valve is closed.
     !  - colored gray when no switch is affected. 
-    !  - colored red when an error occurrs (both switches are present simultaneously).
+    !  - colored red when an error occurs (both switches are present simultaneously).
     !
     !  Default action:
     !  - the methods menu is opened with MB3.
@@ -1366,7 +1366,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  - the methods menu is opened with MB3.
     !
     !  @b Object Graph
-    !  @image orm_manvalveswop_og.gif
+    !  @image orm_manvalveswcl_og.gif
     !
     !  No function object exist for this object.
     !  No simulation object is needed for this object.
@@ -1798,6 +1798,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Group Motors
     !  @Summary Motor with overtemperature switch.
     !  Base component for a motor with overtemperature switch.
+    !  @b Object Graph
+    !  @image orm_motor_og.gif
     !
     !*/
     Object MotorD $ClassDef 9
@@ -1938,6 +1940,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Group Motors
     !  @Summary Motor without signals.
     !  Base component for a motor without signals.
+    !  @b Object Graph
+    !  @image orm_motor_og.gif
     !
     !*/
     Object Motor $ClassDef 14
@@ -2046,6 +2050,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Group Motors
     !  @Summary Motor with overtemperature sensor.
     !  Base component for a motor with analog overtemperature sensor.
+    !  @b Object Graph
+    !  @image orm_motor_og.gif
     !
     !  The object contains two alarm limits for overtemperature, high and 
     !  high high.
@@ -2276,6 +2282,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Group Process
     !  @Summary Fan without signals.
     !  Base component for a fan without signals.
+    !  @b Object Graph
+    !  @image orm_basefan_og.gif
     !
     !*/
     Object BaseFan $ClassDef 93
@@ -2366,7 +2374,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Version 1.0
     !  @Group Process
     !  @Summary Fan without signals.
-    !  Base component for a fan without signals.
+    !  Base component for a pump without signals.
+    !  @b Object Graph
+    !  @image orm_basepump_og.gif
     !
     !*/
     Object BasePump $ClassDef 92
@@ -2390,8 +2400,8 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         !/**
-        !  @Summary Specification of the fan.
-        !  Specification of the fan.
+        !  @Summary Specification of the pump.
+        !  Specification of the pump.
         !  Used for documentation only.
         !*/
         Object Specification $Attribute 46
@@ -2644,7 +2654,6 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !/**
     !  @Version 1.0
     !  @Group Switches
-    !  @Author cs/je
     !  @Summary Switch.
     !  Base component for a switch.
     !*/
@@ -2766,6 +2775,19 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  @Group Switches
     !  @Summary Supervised switch.
     !  Base component for a supervised switch.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/SupSwitch.
+    !  @image orm_supswitch_gs.gif
+    !
+    !  Default dynamic:
+    !  - the switch symbol is colored red when the signal value is lost.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_supswitch_og.gif
     !
     !  @b Plc coding
     !  For plc coding the function object SupSwitchFo is used.
@@ -4699,7 +4721,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndObject
         !/**
         !  @Summary Specification of the sensor.
-        !  Specification of the contactor.
+        !  Specification of the sensors.
         !  Used for documentation only.
         !*/
         Object Specification $Attribute 76
@@ -4879,7 +4901,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
 	!/**
 	!  @Summary The simulate plc function object connected to this object.
 	!  The simulate plc function object connected to this object.
-	!  This attribute is set when the simualte functionobject is connected from
+	!  This attribute is set when the simulate functionobject is connected from
         !  the plc editor by the connect function.
 	!*/
         Object SimConnect $Attribute 92
@@ -7580,7 +7602,7 @@ Circuit breaker"
     !  @Summary Plc function object to CompModeD.
     !  Plc function object to CompModeD.
     !
-    !  @image orm_compmoded_fo.gif
+    !  @image orm_compmodedfo_fo.gif
     !
     !  Connect the function object to an object of class CompModeD.
     !
@@ -15332,7 +15354,7 @@ No letters  = Auto mod
     !  @Summary Plc function object to CompModeD.
     !  Plc function object to CompModeA.
     !
-    !  @image orm_compmodea_fo.gif
+    !  @image orm_compmodeafo_fo.gif
     !
     !  Connect the function object to an object of class CompModeA.
     !
@@ -24126,7 +24148,7 @@ set from HMI."
     !  @Summary Plc function object to CompModeAM.
     !  Plc function object to CompModeAM.
     !
-    !  @image orm_compmodeam_fo.gif
+    !  @image orm_compmodeamfo_fo.gif
     !
     !  Connect the function object to an object of class CompModeAM.
     !
@@ -26315,7 +26337,7 @@ set from HMI."
     !  @Summary Plc function object to CompModeDM.
     !  Plc function object to CompModeDM.
     !
-    !  @image orm_compmodedm_fo.gif
+    !  @image orm_compmodedmfo_fo.gif
     !
     !  Connect the function object to an object of class CompModeDM.
     !
@@ -35098,6 +35120,25 @@ Alarm HH, H, L, LL"
     !  @Summary Fan with circuitbreaker, contactor and safetyswitch.
     !  Fan with circuitbreaker, contactor and safetyswitch.
     !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/FanCbCoSs.
+    !  @image orm_fan_gs.gif
+    !  Default dynamics:
+    !  - the triangle is rotated 90 degrees when the fan is on.
+    !  - the fan symbol is filled with the original color when the valve is 
+    !    on.
+    !  - colored gray when the fan is off.
+    !  - colored red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
     !  @b Object Graph
     !  @image orm_fancbcoss_og.gif
     !
@@ -35337,7 +35378,7 @@ Alarm HH, H, L, LL"
 	!/**
 	!  @Summary The simulate plc function object connected to this object.
 	!  The simulate plc function object connected to this object.
-	!  This attribute is set when the simualte functionobject is connected from
+	!  This attribute is set when the simulate functionobject is connected from
         !  the plc editor by the connect function.
 	!*/
         Object SimConnect $Attribute 44
@@ -38293,6 +38334,15 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Base component for a valve.
+    !  Base component for a valve.
+    !  @b Object Graph
+    !  @image orm_basepump_og.gif
+    !
+    !*/
     Object BaseValve $ClassDef 42
       Body SysBody
         Attr Editor = 0
@@ -38304,24 +38354,48 @@ to avoid restart after error."
           Attr StructName = "BaseValve"
           Attr NextAix = "_X5"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 1
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 2
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 3
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 4
           Body SysBody
             Attr PgmName = "CircuitDiagram"
@@ -38335,6 +38409,25 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order, position feedback and two switches.
+    !  Base component for an actuator with analog order, position feedback and two
+    !  switches (switch open and switch closed).
+    !
+    !  @b Object Graph
+    !  @image orm_actuatorapoor2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAPoOr2SwFo is used.
+    !  @image orm_actuatorapoor2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ActuatorAPoOr2SwFo basecomponent_actuatorapoor2swfo.html
+    !*/
     Object ActuatorAPoOr2Sw $ClassDef 49
       Body SysBody
         Attr Editor = 0
@@ -38346,18 +38439,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAPoOr2Sw"
           Attr NextAix = "_X54"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog input for the actual position.
+        !*/
         Object Position $Attribute 49
           Body SysBody
             Attr PgmName = "Position"
@@ -38365,6 +38469,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 50
           Body SysBody
             Attr PgmName = "Order"
@@ -38372,6 +38479,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Switch open digital input.
+        !*/
         Object SwitchOpen $Attribute 51
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -38379,6 +38489,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Switch closed digital input.
+        !*/
         Object SwitchClosed $Attribute 52
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -38386,6 +38499,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 31
           Body SysBody
             Attr PgmName = "Mode"
@@ -38393,42 +38509,75 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  Alarm limit for difference between order and position.
+        !*/
         Object MaxPosDiff $Attribute 32
           Body SysBody
             Attr PgmName = "MaxPosDiff"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Delay for difference alarm.
+        !*/
         Object DiffAlarmDelay $Attribute 33
           Body SysBody
             Attr PgmName = "DiffAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarmtext for difference alarm.
+        !*/
         Object DiffAlarmText $Attribute 34
           Body SysBody
             Attr PgmName = "DiffAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 35
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
-        EndObject
+        EndObject 
+        !/**
+        !  @Summary Lowest position value where switch open is indicated.
+        !  Lowest position value where switch open is indicated.
+        !  This value is used to alarm if switch open doesn't match
+        !  the position value.
+        !*/
         Object PosSwitchOpen $Attribute 36
           Body SysBody
             Attr PgmName = "PosSwitchOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Highest position value where switch closed is indicated.
+        !  Highest position value where switch closed is indicated.
+        !  This value is used to alarm if switch closed doesn't match
+        !  the position value.
+        !*/
         Object PosSwitchClosed $Attribute 37
           Body SysBody
             Attr PgmName = "PosSwitchClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error can be:
+        !  - a switch error. The position value and the switches doesn't correspond.
+        !  - a position difference error. The difference between order and position
+        !    is too large.
+        !  - an error from the application.
+        !*/
         Object IndError $Attribute 38
           Body SysBody
             Attr PgmName = "IndError"
@@ -38436,6 +38585,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 53
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -38443,6 +38599,12 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. 
+        !  Switch error detected.
+        !  The position is higher than PosSwitchOpen or lower than PosSwitchClosed
+        !  but the corresponding switch input is missing.
+        !*/
         Object SwitchError $Attribute 39
           Body SysBody
             Attr PgmName = "SwitchError"
@@ -38450,6 +38612,12 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Position difference error.
+        !  Position difference error.
+        !  The difference between the order and the actual position exceeds the
+        !  value in MaxPosDiff for a time longer than the DiffAlarmDelay time.
+        !*/
         Object DiffPosError $Attribute 40
           Body SysBody
             Attr PgmName = "DiffPosError"
@@ -38457,30 +38625,61 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        !*/
         Object PosEnum $Attribute 41
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 43
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 44
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 47
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 48
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -38506,6 +38705,26 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order and position feedback, without switches.
+    !  Base component for an actuator with analog order and position feedback 
+    !  without switches.
+    !
+    !  @b Object Graph
+    !  @image orm_actuatorapoor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAPoOrFo is used.
+    !  @image orm_actuatorapoorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !
+    !  @b See also
+    !  @classlink ActuatorAPoOr2SwFo basecomponent_actuatorapoorfo.html
+    !*/
     Object ActuatorAPoOr $ClassDef 53
       Body SysBody
         Attr Editor = 0
@@ -38517,18 +38736,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAPoOr"
           Attr NextAix = "_X78"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 54
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 55
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog input for the actual position.
+        !*/
         Object Position $Attribute 56
           Body SysBody
             Attr PgmName = "Position"
@@ -38536,6 +38766,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ai"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 57
           Body SysBody
             Attr PgmName = "Order"
@@ -38543,6 +38776,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 60
           Body SysBody
             Attr PgmName = "Mode"
@@ -38550,24 +38786,41 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  Alarm limit for difference between order and position.
+        !*/
         Object MaxPosDiff $Attribute 61
           Body SysBody
             Attr PgmName = "MaxPosDiff"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Delay for difference alarm.
+        !*/
         Object DiffAlarmDelay $Attribute 62
           Body SysBody
             Attr PgmName = "DiffAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarmtext for difference alarm.
+        !*/
         Object DiffAlarmText $Attribute 63
           Body SysBody
             Attr PgmName = "DiffAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error can be:
+        !  - a position difference error. The difference between order and position
+        !    is too large.
+        !  - an error from the application.
+        !*/
         Object IndError $Attribute 67
           Body SysBody
             Attr PgmName = "IndError"
@@ -38575,6 +38828,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 68
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -38582,6 +38842,12 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Position difference error.
+        !  Position difference error.
+        !  The difference between the order and the actual position exceeds the
+        !  value in MaxPosDiff for a time longer than the DiffAlarmDelay time.
+        !*/
         Object DiffPosError $Attribute 70
           Body SysBody
             Attr PgmName = "DiffPosError"
@@ -38589,42 +38855,82 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+	! @Summary Enumeration indicating the position of the valve (Closed/Between/Open).
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        ! The indication of Closed and Open are based on the values of PosOpen
+        ! and PosClosed.
+        !*/
         Object PosEnum $Attribute 71
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        ! Position when the valve is regarded as open.
+        !*/
         Object PosOpen $Attribute 76
           Body SysBody
             Attr PgmName = "PosOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Position when the valve is regarded as closed.
+        !*/
         Object PosClosed $Attribute 77
           Body SysBody
             Attr PgmName = "PosClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 72
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 73
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 74
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 75
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -38646,6 +38952,25 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order, without switches.
+    !  Base component for an actuator with analog order, without switches.
+    !
+    !  @b Object Graph
+    !  @image orm_actuatoraor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAOrFo is used.
+    !  @image orm_actuatoraorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !
+    !  @b See also
+    !  @classlink ActuatorAPoOr2SwFo basecomponent_actuatoraorfo.html
+    !*/
     Object ActuatorAOr $ClassDef 55
       Body SysBody
         Attr Editor = 0
@@ -38657,18 +38982,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAOr"
           Attr NextAix = "_X94"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 76
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 77
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 79
           Body SysBody
             Attr PgmName = "Order"
@@ -38676,6 +39012,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 80
           Body SysBody
             Attr PgmName = "Mode"
@@ -38683,6 +39022,11 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error is an error from the application.
+        !*/
         Object IndError $Attribute 84
           Body SysBody
             Attr PgmName = "IndError"
@@ -38690,6 +39034,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 85
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -38697,42 +39048,82 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        ! Position (order) when the valve is regarded as open.
+        !*/
         Object PosOpen $Attribute 92
           Body SysBody
             Attr PgmName = "PosOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Position (order) when the valve is regarded as closed.
+        !*/
         Object PosClosed $Attribute 93
           Body SysBody
             Attr PgmName = "PosClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+	!/**
+	! @Summary Enumeration indicating the position of the valve (Closed/Between/Open).
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        ! The indication of Closed and Open are based on the values of PosOpen
+        ! and PosClosed.
+        !*/
         Object PosEnum $Attribute 87
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 88
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 89
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 90
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 91
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -38752,6 +39143,25 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order and two switches.
+    !  Base component for an actuator with analog order and two switches (switch 
+    !  open and switch closed).
+    !
+    !  @b Object Graph
+    !  @image orm_actuatoraor2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAOr2SwFo is used.
+    !  @image orm_actuatoraor2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOr2SwFo basecomponent_actuatoraor2swfo.html
+    !*/
     Object ActuatorAOr2Sw $ClassDef 52
       Body SysBody
         Attr Editor = 0
@@ -38763,18 +39173,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAOr2Sw"
           Attr NextAix = "_X76"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 54
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 55
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 57
           Body SysBody
             Attr PgmName = "Order"
@@ -38782,6 +39203,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Switch open digital input.
+        !*/
         Object SwitchOpen $Attribute 58
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -38789,6 +39213,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Switch closed digital input.
+        !*/
         Object SwitchClosed $Attribute 59
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -38796,6 +39223,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 60
           Body SysBody
             Attr PgmName = "Mode"
@@ -38803,30 +39233,55 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 62
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 64
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Lowest order value where switch open is indicated.
+        !  Lowest order value where switch open is indicated.
+        !  This value is used to alarm if switch open doesn't match
+        !  the order value.
+        !*/
         Object PosSwitchOpen $Attribute 65
           Body SysBody
             Attr PgmName = "PosSwitchOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Highest order value where switch closed is indicated.
+        !  Highest order value where switch closed is indicated.
+        !  This value is used to alarm if switch closed doesn't match
+        !  the order value.
+        !*/
         Object PosSwitchClosed $Attribute 66
           Body SysBody
             Attr PgmName = "PosSwitchClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error can be:
+        !  - a switch error. The position value and the switches doesn't correspond.
+        !  - an error from the application.
+        !*/
         Object IndError $Attribute 67
           Body SysBody
             Attr PgmName = "IndError"
@@ -38834,6 +39289,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 68
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -38841,6 +39303,12 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. 
+        !  Switch error detected.
+        !  The order is higher than PosSwitchOpen or lower than PosSwitchClosed
+        !  but the corresponding switch input is missing.
+        !*/
         Object SwitchError $Attribute 69
           Body SysBody
             Attr PgmName = "SwitchError"
@@ -38848,30 +39316,61 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        !*/
         Object PosEnum $Attribute 71
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 72
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 73
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 74
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 75
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -38893,6 +39392,24 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order and switch open.
+    !  Base component for an actuator with analog order and switch open.
+    !
+    !  @b Object Graph
+    !  @image orm_actuatoraorswop_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAOrSwOpFo is used.
+    !  @image orm_actuatoraorswopfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOrSwOpFo basecomponent_actuatoraorswopfo.html
+    !*/
     Object ActuatorAOrSwOp $ClassDef 51
       Body SysBody
         Attr Editor = 0
@@ -38904,18 +39421,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAOrSwOp"
           Attr NextAix = "_X77"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 54
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 55
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 57
           Body SysBody
             Attr PgmName = "Order"
@@ -38923,6 +39451,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Switch open digital input.
+        !*/
         Object SwitchOpen $Attribute 58
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -38930,6 +39461,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 60
           Body SysBody
             Attr PgmName = "Mode"
@@ -38937,30 +39471,52 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 62
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 64
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Lowest order value where switch open is indicated.
+        !  Lowest order value where switch open is indicated.
+        !  This value is used to alarm if switch open doesn't match
+        !  the order value.
+        !*/
         Object PosSwitchOpen $Attribute 65
           Body SysBody
             Attr PgmName = "PosSwitchOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Position (order) when the valve is regarded as closed.
+        !*/
         Object PosClosed $Attribute 76
           Body SysBody
             Attr PgmName = "PosClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error can be:
+        !  - a switch error. The position value and the switch doesn't correspond.
+        !  - an error from the application.
+        !*/
         Object IndError $Attribute 67
           Body SysBody
             Attr PgmName = "IndError"
@@ -38968,6 +39524,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 68
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -38975,6 +39538,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. 
+        !  Switch error detected.
+        !  The order is higher than PosSwitchOpen but the switch input is missing.
+        !*/
         Object SwitchError $Attribute 69
           Body SysBody
             Attr PgmName = "SwitchError"
@@ -38982,30 +39550,61 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        !*/
         Object PosEnum $Attribute 71
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 72
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 73
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 74
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 75
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39027,6 +39626,24 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Actuator with analog order and switch closed.
+    !  Base component for an actuator with analog order and switch closed.
+    !
+    !  @b Object Graph
+    !  @image orm_actuatoraorswcl_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ActuatorAOrSwClFo is used.
+    !  @image orm_actuatoraorswclfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOrSwClFo basecomponent_actuatoraorswclfo.html
+    !*/
     Object ActuatorAOrSwCl $ClassDef 54
       Body SysBody
         Attr Editor = 0
@@ -39038,18 +39655,29 @@ to avoid restart after error."
           Attr StructName = "ActuatorAOrSwCl"
           Attr NextAix = "_X95"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 76
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 77
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Analog output for the order.
+        !*/
         Object Order $Attribute 78
           Body SysBody
             Attr PgmName = "Order"
@@ -39057,6 +39685,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Ao"
           EndBody
         EndObject
+        !/**
+        !  Switch closed digital input.
+        !*/
         Object SwitchClosed $Attribute 80
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -39064,6 +39695,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 81
           Body SysBody
             Attr PgmName = "Mode"
@@ -39071,30 +39705,52 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeAM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 82
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 83
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Highest order value where switch closed is indicated.
+        !  Highest order value where switch closed is indicated.
+        !  This value is used to alarm if switch open doesn't match
+        !  the order value.
+        !*/
         Object PosSwitchClosed $Attribute 85
           Body SysBody
             Attr PgmName = "PosSwitchClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Position (order) when the valve is regarded as open.
+        !*/
         Object PosOpen $Attribute 94
           Body SysBody
             Attr PgmName = "PosOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary Error detected. 
+        !  Error detected.
+        !  The error can be:
+        !  - a switch error. The position value and the switch doesn't correspond.
+        !  - an error from the application.
+        !*/
         Object IndError $Attribute 86
           Body SysBody
             Attr PgmName = "IndError"
@@ -39102,6 +39758,13 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. 
+        !  Warning detected.
+        !  The warning can be:
+        !  - local mode.
+        !  - a warning from the application.
+        !*/
         Object IndWarning $Attribute 87
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -39109,6 +39772,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. 
+        !  Switch error detected.
+        !  The order is higher than PosSwitchOpen but the switch input is missing.
+        !*/
         Object SwitchError $Attribute 88
           Body SysBody
             Attr PgmName = "SwitchError"
@@ -39116,30 +39784,61 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+	!/**
+	! Enumeration indicating the position of the valve (Closed/Between/Open).
+        !*/
         Object PosEnum $Attribute 89
           Body SysBody
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 90
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 91
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 92
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 93
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39161,6 +39860,44 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve with position feedback and two switches.
+    !  Base component for a controlvalve with position feedback and two
+    !  switches (switch open and switch closed).
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValvePoOr2Sw.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is 
+    !    not closed.
+    !  - colored white when the valve is closed.
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_cvalvepoor2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValvePoOr2SwFo is used.
+    !  @image orm_cvalvepoor2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CValvePoOr2SwFo basecomponent_cvalvepoor2swfo.html
+    !  @classlink ActuatorAPoOr2Sw basecomponent_actuatorapoor2sw.html
+    !*/
     Object CValvePoOr2Sw $ClassDef 41
       Body SysBody
         Attr Editor = 0
@@ -39172,12 +39909,20 @@ to avoid restart after error."
           Attr StructName = "CValvePoOr2Sw"
           Attr NextAix = "_X25"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 2
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 3
           Body SysBody
             Attr PgmName = "Specification"
@@ -39191,6 +39936,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 1
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39205,6 +39953,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 6
           Body SysBody
             Attr PgmName = "Valve"
@@ -39212,42 +39963,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 17
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 18
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 19
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 20
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 21
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
-        EndObject
+        EndObject 
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 22
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 23
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39276,6 +40072,42 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve with position feedback, without switches.
+    !  Base component for a controlvalve with position feedback 
+    !  without switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValvePoOr.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_cvalvepoor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValvePoOrFo is used.
+    !  @image orm_cvalvepoorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !
+    !  @b See also
+    !  @classlink CValvePoOrFo basecomponent_cvalvepoorfo.html
+    !  @classlink ActuatorAPoOr basecomponent_actuatorapoor.html
+    !*/
     Object CValvePoOr $ClassDef 65
       Body SysBody
         Attr Editor = 0
@@ -39287,12 +40119,20 @@ to avoid restart after error."
           Attr StructName = "CValvePoOr"
           Attr NextAix = "_X38"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
@@ -39306,6 +40146,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 28
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39320,6 +40163,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30
           Body SysBody
             Attr PgmName = "Valve"
@@ -39327,42 +40173,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 31
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 32
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 33
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 34
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 35
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 36
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 37
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39386,6 +40277,41 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve without switches.
+    !  Base component for a controlvalve without switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValveOr.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveor_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValveOrFo is used.
+    !  @image orm_cvalveorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !
+    !  @b See also
+    !  @classlink CValveOrFo basecomponent_cvalveorfo.html
+    !  @classlink ActuatorAOr basecomponent_actuatoraor.html
+    !*/
     Object CValveOr $ClassDef 64
       Body SysBody
         Attr Editor = 0
@@ -39397,12 +40323,20 @@ to avoid restart after error."
           Attr StructName = "CValveOr"
           Attr NextAix = "_X38"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
@@ -39416,6 +40350,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 28
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39430,6 +40367,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30
           Body SysBody
             Attr PgmName = "Valve"
@@ -39437,42 +40377,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 31
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 32
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 33
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 34
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 35
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 36
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 37
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39493,6 +40478,44 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve with two switches.
+    !  Base component for a controlvalve with two switches (switch 
+    !  open and switch closed).
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValveOr2Sw.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is 
+    !    not closed.
+    !  - colored white when the valve is closed.
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_actuatoraor2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValveOr2SwFo is used.
+    !  @image orm_cvalveor2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CValveOr2SwFo basecomponent_cvalveor2swfo.html
+    !  @classlink ActuatorAOr2Sw basecomponent_actuatoraor2sw.html
+    !*/
     Object CValveOr2Sw $ClassDef 63
       Body SysBody
         Attr Editor = 0
@@ -39504,12 +40527,20 @@ to avoid restart after error."
           Attr StructName = "CValveOr2Sw"
           Attr NextAix = "_X38"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
@@ -39523,6 +40554,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 28
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39537,6 +40571,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30
           Body SysBody
             Attr PgmName = "Valve"
@@ -39544,42 +40581,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 31
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 32
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 33
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 34
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 35
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 36
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 37
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39601,6 +40683,40 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve with switch open.
+    !  Base component for a controlvalve with switch open.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValveOrSwOp.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveorswop_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValveOrSwOpFo is used.
+    !  @image orm_cvalveorswopfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwOpFo basecomponent_cvalveorswopfo.html
+    !  @classlink ActuatorAOrSwOp basecomponent_actuatoraorswop.html
+    !*/
     Object CValveOrSwOp $ClassDef 62
       Body SysBody
         Attr Editor = 0
@@ -39612,12 +40728,20 @@ to avoid restart after error."
           Attr StructName = "CValveOrSwOp"
           Attr NextAix = "_X38"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
@@ -39631,6 +40755,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 28
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39645,6 +40772,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30
           Body SysBody
             Attr PgmName = "Valve"
@@ -39652,42 +40782,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 31
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 32
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 33
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 34
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 35
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 36
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 37
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39709,6 +40884,43 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Controlvalve with switch closed.
+    !  Base component for a controlvalve with switch closed.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/CValveOrSwCl.
+    !  @image orm_cvalve_gs.gif
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is 
+    !    not closed.
+    !  - colored white when the valve is closed.
+    !  - colored flashing red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveorswcl_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object CValveOrSwClFo is used.
+    !  @image orm_cvalveorswclfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwClFo basecomponent_cvalveorswcl.html
+    !  @classlink ActuatorAOrSwCl basecomponent_actuatoraorswcl.html
+    !*/
     Object CValveOrSwCl $ClassDef 61
       Body SysBody
         Attr Editor = 0
@@ -39720,12 +40932,20 @@ to avoid restart after error."
           Attr StructName = "CValveOrSwCl"
           Attr NextAix = "_X38"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 25
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the actuator.
+        !  Specification of the actuator.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 26
           Body SysBody
             Attr PgmName = "Specification"
@@ -39739,6 +40959,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object.
+        !*/
         Object Actuator $Attribute 28
           Body SysBody
             Attr PgmName = "Actuator"
@@ -39753,6 +40976,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30
           Body SysBody
             Attr PgmName = "Valve"
@@ -39760,42 +40986,87 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 31
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 32
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 33
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 34
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 35
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 36
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 37
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -39817,6 +41088,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAPoOr2Sw.
+    !  Plc function object to ActuatorAPoOr2Sw.
+    !
+    !  @image orm_actuatorapoor2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAPoOr2Sw.
+    !
+    !  @b See also
+    !  @classlink ActuatorAPoOr2Sw basecomponent_actuatorapoor2sw.html
+    !*/
     Object ActuatorAPoOr2SwFo $ClassDef 35
       Body SysBody
         Attr Editor = 0
@@ -42727,6 +44012,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAPoOr.
+    !  Plc function object to ActuatorAPoOr.
+    !
+    !  @image orm_actuatorapoorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAPoOr.
+    !
+    !  @b See also
+    !  @classlink ActuatorAPoOr basecomponent_actuatorapoor.html
+    !*/
     Object ActuatorAPoOrFo $ClassDef 56
       Body SysBody
         Attr Editor = 0
@@ -44681,6 +45980,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAOr.
+    !  Plc function object to ActuatorAOr.
+    !
+    !  @image orm_actuatoraorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAOr.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOr basecomponent_actuatoraor.html
+    !*/
     Object ActuatorAOrFo $ClassDef 57
       Body SysBody
         Attr Editor = 0
@@ -45614,6 +46927,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAOr2Sw.
+    !  Plc function object to ActuatorAOr2Sw.
+    !
+    !  @image orm_actuatoraor2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAOr2Sw.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOr2Sw basecomponent_actuatoraor2sw.html
+    !*/
     Object ActuatorAOr2SwFo $ClassDef 58
       Body SysBody
         Attr Editor = 0
@@ -47796,6 +49123,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAOrSwOp.
+    !  Plc function object to ActuatorAOrSwOp.
+    !
+    !  @image orm_actuatoraorswopfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAOrSwOp.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOrSwOp basecomponent_actuatoraorswop.html
+    !*/
     Object ActuatorAOrSwOpFo $ClassDef 60
       Body SysBody
         Attr Editor = 0
@@ -49594,6 +50935,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ActuatorAOrSwCl.
+    !  Plc function object to ActuatorAOrSwCl.
+    !
+    !  @image orm_actuatoraorswclfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ActuatorAOrSwCl.
+    !
+    !  @b See also
+    !  @classlink ActuatorAOrSwCl basecomponent_actuatoraorswcl.html
+    !*/
     Object ActuatorAOrSwClFo $ClassDef 59
       Body SysBody
         Attr Editor = 0
@@ -51400,6 +52755,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValvePoOr2Sw.
+    !  Plc function object to CValvePoOr2Sw.
+    !
+    !  @image orm_cvalvepoor2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValvePoOr2Sw.
+    !
+    !  @b See also
+    !  @classlink CValvePoOr2Sw basecomponent_cvalvepoor2sw.html
+    !*/
     Object CValvePoOr2SwFo $ClassDef 50
       Body SysBody
         Attr Editor = 0
@@ -51790,6 +53159,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValvePoOr.
+    !  Plc function object to CValvePoOr.
+    !
+    !  @image orm_cvalvepoorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValvePoOr.
+    !
+    !  @b See also
+    !  @classlink CValvePoOr basecomponent_cvalvepoor.html
+    !*/
     Object CValvePoOrFo $ClassDef 70
       Body SysBody
         Attr Editor = 0
@@ -52180,6 +53563,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValveOr.
+    !  Plc function object to CValveOr.
+    !
+    !  @image orm_cvalveorfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOr.
+    !
+    !  @b See also
+    !  @classlink CValveOr basecomponent_cvalveor.html
+    !*/
     Object CValveOrFo $ClassDef 69
       Body SysBody
         Attr Editor = 0
@@ -52570,6 +53967,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValveOr2Sw.
+    !  Plc function object to CValveOr2Sw.
+    !
+    !  @image orm_cvalveor2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOr2Sw.
+    !
+    !  @b See also
+    !  @classlink CValveOr2Sw basecomponent_cvalveor2sw.html
+    !*/
     Object CValveOr2SwFo $ClassDef 68
       Body SysBody
         Attr Editor = 0
@@ -52960,6 +54371,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValveOrSwOp.
+    !  Plc function object to CValveOrSwOp.
+    !
+    !  @image orm_cvalveorswopfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOrSwOp.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwOp basecomponent_cvalveorswop.html
+    !*/
     Object CValveOrSwOpFo $ClassDef 67
       Body SysBody
         Attr Editor = 0
@@ -53350,6 +54775,20 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to CValveOrSwCl.
+    !  Plc function object to CValveOrSwCl.
+    !
+    !  @image orm_cvalveorswclfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOrSwCl.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwCl basecomponent_cvalveorswcl.html
+    !*/
     Object CValveOrSwClFo $ClassDef 66
       Body SysBody
         Attr Editor = 0
@@ -53740,6 +55179,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to CValvePoOr2Sw.
+    !  Plc simulation object to CValvePoOr2Sw.
+    !
+    !  @image orm_cvalvepoor2swsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_cvalvepoor2swsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValvePoOr2Sw.
+    !
+    !  @b See also
+    !  @classlink CValvePoOr2Sw basecomponent_cvalvepoor2sw.html
+    !*/
     Object CValvePoOr2SwSim $ClassDef 36
       Body SysBody
         Attr Editor = 0
@@ -55618,6 +57074,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to CValvePoOr.
+    !  Plc simulation object to CValvePoOr.
+    !
+    !  @image orm_cvalvepoorsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_cvalvepoorsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValvePoOr.
+    !
+    !  @b See also
+    !  @classlink CValvePoOr basecomponent_cvalvepoor.html
+    !*/
     Object CValvePoOrSim $ClassDef 74
       Body SysBody
         Attr Editor = 0
@@ -56405,6 +57878,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to CValveOr2Sw.
+    !  Plc simulation object to CValveOr2Sw.
+    !
+    !  @image orm_cvalveor2swsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveor2swsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOr2Sw.
+    !
+    !  @b See also
+    !  @classlink CValveOr2Sw basecomponent_cvalveor2sw.html
+    !*/
     Object CValveOr2SwSim $ClassDef 73
       Body SysBody
         Attr Editor = 0
@@ -57623,6 +59113,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to CValveOrSwOp.
+    !  Plc simulation object to CValveOrSwOp.
+    !
+    !  @image orm_cvalveorswopsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveorswopsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOrSwOp.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwOp basecomponent_cvalveorswop.html
+    !*/
     Object CValveOrSwOpSim $ClassDef 72
       Body SysBody
         Attr Editor = 0
@@ -58316,6 +59823,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to CValveOrSwCl.
+    !  Plc simulation object to CValveOrSwCl.
+    !
+    !  @image orm_cvalveorswclsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_cvalveorswclsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  CValveOrSwCl.
+    !
+    !  @b See also
+    !  @classlink CValveOrSwCl basecomponent_cvalveorswcl.html
+    !*/
     Object CValveOrSwClSim $ClassDef 71
       Body SysBody
         Attr Editor = 0
@@ -58993,6 +60517,41 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Magnetic valve with two switches.
+    !  Base component for a magnetic valve with two switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/MValveOr2Sw.
+    !  @image orm_mvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is open.
+    !  - colored white when the valve is closed.
+    !  - colored gray when no switch is affected. 
+    !  - colored red when an error occurs.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveor2sw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object MValveOr2SwFo is used.
+    !  @image orm_mvalveor2swfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  For simulation of the valve, use the plc object MValveOr2SwSim.
+    !
+    !  @b See also
+    !  @classlink MValveOr2SwFo basecomponent_mvalveor2swfo.html
+    !  @classlink MValveOr2SwSim basecomponent_mvalveor2swsim.html
+    !*/
     Object MValveOr2Sw $ClassDef 77
       Body SysBody
         Attr Editor = 0
@@ -59004,18 +60563,29 @@ to avoid restart after error."
           Attr StructName = "MValveOr2Sw"
           Attr NextAix = "_X19"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 5
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 6
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital output for the order.
+        !*/
         Object Order $Attribute 1
           Body SysBody
             Attr PgmName = "Order"
@@ -59023,6 +60593,10 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Do"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch open.
+        !  Switch open. Digital input indicating that the valve is open.
+        !*/
         Object SwitchOpen $Attribute 2
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -59030,6 +60604,10 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch closed.
+        !  Switch closed. Digital input indicating that the valve is closed.
+        !*/
         Object SwitchClosed $Attribute 3
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -59037,6 +60615,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 4
           Body SysBody
             Attr PgmName = "Mode"
@@ -59044,18 +60625,27 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeDM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 14
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 15
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. The order and the switches doesn't correspond.
+        !*/
         Object IndError $Attribute 16
           Body SysBody
             Attr PgmName = "IndError"
@@ -59063,6 +60653,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. The valve is externally interlocked.
+        !*/
         Object IndWarning $Attribute 18
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -59070,6 +60663,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary External interlock. 
+        !  External interlock. External interlock is an input of the
+        !  function object, and interlocks opening of the valve.
+        !*/
         Object ExtInterlock $Attribute 17
           Body SysBody
             Attr PgmName = "ExtInterlock"
@@ -59077,42 +60675,87 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 7
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 8
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 9
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 10
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 11
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 12
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 13
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -59128,6 +60771,40 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Magnetic valve with switch open.
+    !  Base component for a magnetic valve with switch open.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/MValveOrSwOp.
+    !  @image orm_mvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve is open.
+    !  - colored white when the valve is not open.
+    !  - colored red when an error occurs.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveorswop_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object MValveOrSwOpFo is used.
+    !  @image orm_mvalveorswopfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  For simulation of the valve, use the plc object MValveOrSwOpSim.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwOpFo basecomponent_mvalveorswopfo.html
+    !  @classlink MValveOrSwOpSim basecomponent_mvalveorswopsim.html
+    !*/
     Object MValveOrSwOp $ClassDef 82
       Body SysBody
         Attr Editor = 0
@@ -59139,18 +60816,29 @@ to avoid restart after error."
           Attr StructName = "MValveOrSwOp"
           Attr NextAix = "_X35"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 17
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 18
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital output for the order.
+        !*/
         Object Order $Attribute 19
           Body SysBody
             Attr PgmName = "Order"
@@ -59158,6 +60846,10 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Do"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch open.
+        !  Switch open. Digital input indicating that the valve is open.
+        !*/
         Object SwitchOpen $Attribute 20
           Body SysBody
             Attr PgmName = "SwitchOpen"
@@ -59165,6 +60857,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 22
           Body SysBody
             Attr PgmName = "Mode"
@@ -59172,18 +60867,27 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeDM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 23
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 24
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. The order and the switches doesn't correspond.
+        !*/
         Object IndError $Attribute 25
           Body SysBody
             Attr PgmName = "IndError"
@@ -59191,6 +60895,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. The valve is externally interlocked.
+        !*/
         Object IndWarning $Attribute 34
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -59198,6 +60905,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary External interlock. 
+        !  External interlock. External interlock is an input of the
+        !  function object, and interlocks opening of the valve.
+        !*/
         Object ExtInterlock $Attribute 33
           Body SysBody
             Attr PgmName = "ExtInterlock"
@@ -59205,42 +60917,87 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 26
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 27
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 28
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 29
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 30
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 31
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 32
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -59256,6 +61013,40 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Magnetic valve with switch closed.
+    !  Base component for a magnetic valve with switch closed.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/MValveOrSwCl.
+    !  @image orm_mvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the valve not closed.
+    !  - colored white when the valve is closed.
+    !  - colored red when an error occurs.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveorswcl_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object MValveOrSwClFo is used.
+    !  @image orm_mvalveorswclfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  For simulation of the valve, use the plc object MValveOrSwClSim.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwClFo basecomponent_mvalveorswclfo.html
+    !  @classlink MValveOrSwClSim basecomponent_mvalveorswclsim.html
+    !*/
     Object MValveOrSwCl $ClassDef 81
       Body SysBody
         Attr Editor = 0
@@ -59267,18 +61058,29 @@ to avoid restart after error."
           Attr StructName = "MValveOrSwCl"
           Attr NextAix = "_X35"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 17
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 18
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital output for the order.
+        !*/
         Object Order $Attribute 19
           Body SysBody
             Attr PgmName = "Order"
@@ -59286,6 +61088,10 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Do"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch closed.
+        !  Switch closed. Digital input indicating that the valve is closed.
+        !*/
         Object SwitchClosed $Attribute 21
           Body SysBody
             Attr PgmName = "SwitchClosed"
@@ -59293,6 +61099,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 22
           Body SysBody
             Attr PgmName = "Mode"
@@ -59300,18 +61109,27 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeDM"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm.
+        !*/
         Object SwitchAlarmDelay $Attribute 23
           Body SysBody
             Attr PgmName = "SwitchAlarmDelay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for swith error.
+        !*/
         Object SwitchAlarmText $Attribute 24
           Body SysBody
             Attr PgmName = "SwitchAlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Switch error detected. The order and the switches doesn't correspond.
+        !*/
         Object IndError $Attribute 25
           Body SysBody
             Attr PgmName = "IndError"
@@ -59319,6 +61137,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. The valve is externally interlocked.
+        !*/
         Object IndWarning $Attribute 34
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -59326,6 +61147,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary External interlock. 
+        !  External interlock. External interlock is an input of the
+        !  function object, and interlocks opening of the valve.
+        !*/
         Object ExtInterlock $Attribute 33
           Body SysBody
             Attr PgmName = "ExtInterlock"
@@ -59333,42 +61159,87 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 26
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 27
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 28
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 29
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 30
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 31
           Body SysBody
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+	!/**
+	!  @Summary The simulate plc function object connected to this object.
+	!  The simulate plc function object connected to this object.
+	!  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object SimConnect $Attribute 32
           Body SysBody
             Attr PgmName = "SimConnect"
@@ -59384,6 +61255,37 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Magnetic valve without switches.
+    !  Base component for a magnetic valve without switches.
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is BaseComponent/MValveOrNoSw.
+    !  @image orm_mvalve_gs.gif
+    !
+    !  Default dynamics:
+    !  - the valve symbol is filled with the original color when the vavle is open
+    !    (order is set).
+    !  - colored white when the valve is closed.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveornosw_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object MValveOrNoSwFo is used.
+    !  @image orm_mvalveornoswfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Simulate
+    !  @b See also
+    !  @classlink MValveOrNoSwFo basecomponent_mvalveornoswfo.html
+    !*/
     Object MValveOrNoSw $ClassDef 80
       Body SysBody
         Attr Editor = 0
@@ -59395,18 +61297,29 @@ to avoid restart after error."
           Attr StructName = "MValveOrNoSw"
           Attr NextAix = "_X35"
         EndBody
+	!/**
+	!  Optional description of the component.
+	!*/
         Object Description $Attribute 17
           Body SysBody
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary Specification of the valve.
+        !  Specification of the valve.
+        !  Used for documentation only.
+        !*/
         Object Specification $Attribute 18
           Body SysBody
             Attr PgmName = "Specification"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Digital output for the order.
+        !*/
         Object Order $Attribute 19
           Body SysBody
             Attr PgmName = "Order"
@@ -59414,6 +61327,9 @@ to avoid restart after error."
             Attr TypeRef = "pwrb:Class-Do"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 22
           Body SysBody
             Attr PgmName = "Mode"
@@ -59421,6 +61337,9 @@ to avoid restart after error."
             Attr TypeRef = "BaseComponent:Class-CompModeDM"
           EndBody
         EndObject
+        !/**
+        !  @Summary Warning detected. The valve is externally interlocked.
+        !*/
         Object IndWarning $Attribute 33
           Body SysBody
             Attr PgmName = "IndWarning"
@@ -59428,6 +61347,11 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary External interlock. 
+        !  External interlock. External interlock is an input of the
+        !  function object, and interlocks opening of the valve.
+        !*/
         Object ExtInterlock $Attribute 34
           Body SysBody
             Attr PgmName = "ExtInterlock"
@@ -59435,36 +61359,75 @@ to avoid restart after error."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary A help topic for this hierarchy.
+        !  A help topic in the xtt help file that contains help for this hierarchy.
+        !  The help can be displayed from the popup menu for this object.
+        !*/
         Object HelpTopic $Attribute 26
           Body SysBody
             Attr PgmName = "HelpTopic"
             Attr TypeRef = "pwrs:Type-$String40"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this hierarchy.
+        !  A URL to the data sheet for the equipment in this hierarchy.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
         Object DataSheet $Attribute 27
           Body SysBody
             Attr PgmName = "DataSheet"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A URL to the circuit diagram for the equipment in this hierarchy.
+        !  A URL to the circuit diagram for the equipment in this hierarchy.
+        !  The circuit diagram can be displayed from the popup menu for this object.
+        ! 
+        !  If the attribute is empty, the CircuitDiagram method will look at the
+        !  closest ancestor that has supplied a value in CircuitDiagram and use this
+        !  URL instead. If this behavior is unwanted, put the string 'Disabled' in the
+        !  attribute. This will disable the CircuitDiagram method for this object, and
+        !  for any child with empty CircuitDiagram attribute.
+        !*/
         Object CircuitDiagram $Attribute 28
           Body SysBody
             Attr PgmName = "CircuitDiagram"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  @Summary A note of the current status of the object.
+        !  A note of the current status of the object.
+        !  Notes are used to exchange information between operators. It is handled 
+        !  by the Note method.
+        !*/
         Object Note $Attribute 29
           Body SysBody
             Attr PgmName = "Note"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary A photograph of the component in the plant.
+        !  A photograph of the component in the plant.
+        !  A URL to a photo of the equipment.
+        !  The photo can be displayed from the popup menu for this object.
+        !*/
         Object Photo $Attribute 30
           Body SysBody
             Attr PgmName = "Photo"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+	!/**
+	!  @Summary The plc function object connected to this object.
+	!  The plc function object connected to this object.
+	!  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+	!*/
         Object PlcConnect $Attribute 31
           Body SysBody
             Attr PgmName = "PlcConnect"
@@ -59478,6 +61441,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to MValveOr2Sw.
+    !  Plc function object to MValveOr2Sw.
+    !
+    !  @image orm_mvalveor2swfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOr2Sw.
+    !
+    !  @b See also
+    !  @classlink MValveOr2Sw basecomponent_mvalveor2sw.html
+    !*/
     Object MValveOr2SwFo $ClassDef 78
       Body SysBody
         Attr Editor = 0
@@ -61159,6 +63135,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to MValveOrSwOp.
+    !  Plc function object to MValveOrSwOp.
+    !
+    !  @image orm_mvalveorswopfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOrSwOp.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwOp basecomponent_mvalveorswop.html
+    !*/
     Object MValveOrSwOpFo $ClassDef 85
       Body SysBody
         Attr Editor = 0
@@ -62509,6 +64498,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to MValveOrSwCl.
+    !  Plc function object to MValveOrSwCl.
+    !
+    !  @image orm_mvalveorswclfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOrSwCl.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwCl basecomponent_mvalveorswcl.html
+    !*/
     Object MValveOrSwClFo $ClassDef 84
       Body SysBody
         Attr Editor = 0
@@ -63858,6 +65860,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to MValveOrNoSw.
+    !  Plc function object to MValveOrNoSw.
+    !
+    !  @image orm_mvalveornoswfo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOrNoSw.
+    !
+    !  @b See also
+    !  @classlink MValveOrNoSw basecomponent_mvalveornosw.html
+    !*/
     Object MValveOrNoSwFo $ClassDef 83
       Body SysBody
         Attr Editor = 0
@@ -64400,6 +66415,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to MValveOr2Sw.
+    !  Plc simulation object to MValveOr2Sw.
+    !
+    !  @image orm_mvalveor2swsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveor2swsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOr2Sw.
+    !
+    !  @b See also
+    !  @classlink MValveOr2Sw basecomponent_mvalveor2sw.html
+    !*/
     Object MValveOr2SwSim $ClassDef 79
       Body SysBody
         Attr Editor = 0
@@ -65489,6 +67521,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to MValveOrSwOp.
+    !  Plc simulation object to MValveOrSwOp.
+    !
+    !  @image orm_mvalveorswopsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveorswopsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOrSwOp.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwOp basecomponent_mvalveorswop.html
+    !*/
     Object MValveOrSwOpSim $ClassDef 87
       Body SysBody
         Attr Editor = 0
@@ -66093,6 +68142,23 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to MValveOrSwCl.
+    !  Plc simulation object to MValveOrSwCl.
+    !
+    !  @image orm_mvalveorswclsim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_mvalveorswclsim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  MValveOrSwCl.
+    !
+    !  @b See also
+    !  @classlink MValveOrSwCl basecomponent_mvalveorswcl.html
+    !*/
     Object MValveOrSwClSim $ClassDef 86
       Body SysBody
         Attr Editor = 0
