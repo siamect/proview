@@ -75,6 +75,7 @@ typedef struct pwr_s_ClassVolume	pwr_sClassVolume;
 typedef struct pwr_s_WorkBenchVolume	pwr_sWorkBenchVolume;
 typedef struct pwr_s_DirectoryVolume	pwr_sDirectoryVolume;
 typedef struct pwr_s_VolatileVolume	pwr_sVolatileVolume;
+typedef struct pwr_s_ExternVolume	pwr_sExternVolume;
 typedef struct pwr_s_CreateVolume	pwr_sCreateVolume;
 typedef struct pwr_s_MountVolume	pwr_sMountVolume;
 typedef struct pwr_s_MountObject	pwr_sMountObject;
@@ -264,6 +265,7 @@ typedef enum {
   pwr_eCix_Value		=  62,
   pwr_eCix_Method		=  63,
   pwr_eCix_RtMethod		=  64,
+  pwr_eCix_ExternVolume		=  65,
   pwr_eCix_
 } pwr_eCix;
     
@@ -332,6 +334,7 @@ typedef enum {
   pwr_eClass_Value		= pwr_ClassId(pwr_eCix_Value),
   pwr_eClass_Method		= pwr_ClassId(pwr_eCix_Method),
   pwr_eClass_RtMethod		= pwr_ClassId(pwr_eCix_RtMethod),
+  pwr_eClass_ExternVolume	= pwr_ClassId(pwr_eCix_ExternVolume),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -1153,6 +1156,10 @@ struct pwr_s_DirectoryVolume {
 struct pwr_s_VolatileVolume {
   pwr_tString80		Description;
   pwr_tObjectIx		NextOix;
+};
+
+struct pwr_s_ExternVolume {
+  pwr_tString80		Description;
 };
 
 struct pwr_s_CreateVolume {
