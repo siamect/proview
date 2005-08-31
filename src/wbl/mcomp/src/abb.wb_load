@@ -4,6 +4,16 @@ Volume ABB $ClassVolume 0.0.250.2
     Attr NextCix = "_X13"
   EndBody
   Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group CircuitBreaker
+    !  @Summary CircuitBreaker ABB MS116.
+    !  CircuitBreaker ABB MS116.
+    !
+    !  See superclass CircuitBreaker for more information.
+    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !  @link Datasheet ../dsh/abb_circuitbreaker_ms116.pdf
+    !*/
     Object ABB_CircuitBreaker_MS116 $ClassDef 1
       Body SysBody
         Attr Editor = 0
@@ -15,6 +25,9 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr StructName = "ABB_CircuitBreaker_MS116"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Superclass
+        !*/
         Object Super $Attribute 1
           Body SysBody
             Attr PgmName = "Super"
@@ -31,6 +44,16 @@ Volume ABB $ClassVolume 0.0.250.2
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Contactor
+    !  @Summary Contactor ABB A.
+    !  Contactor ABB A.
+    !
+    !  See superclass Contactor for more information.
+    !  @classlink Contactor basecomponent_contactor.html
+    !  @link Datasheet ../dsh/abb_contactors.pdf
+    !*/
     Object ABB_Contactor_A $ClassDef 12
       Body SysBody
         Attr Editor = 0
@@ -42,6 +65,9 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr StructName = "ABB_Contactor_A"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Superclass
+        !*/
         Object Super $Attribute 2
           Body SysBody
             Attr PgmName = "Super"
@@ -70,6 +96,23 @@ Volume ABB $ClassVolume 0.0.250.2
     ! 
     !  @b Object Graph
     !  @image orm_abb_acs800_1_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ABB_ACS800_1Fo is used.
+    !  @image orm_abb_acs800_1fo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Profibus
+    !  For profibus connection with protocol PPO5 use the profibus Module object
+    !  ABB_ACS_PPO5.
+    !  Create a module object in the node hierarchy and connect it to the ACS800
+    !  object with the connect function.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800_1Fo abb_abb_acs800_1fo.html
+    !  @classlink ABB_ACS_PPO5 abb_abb_acs_ppo5.html
+    !  @link Datasheet ../dsh/abb_acs800.html
     !*/
     Object ABB_ACS800_1 $ClassDef 2
       Body SysBody
@@ -451,6 +494,20 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ABB_ACS800_1.
+    !  Plc function object to ABB_ACS800_1.
+    !
+    !  @image orm_abb_acs800_1fo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800_1.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
+    !*/
     Object ABB_ACS800_1Fo $ClassDef 3
       Body SysBody
         Attr Editor = 0
@@ -6809,9 +6866,49 @@ signals are connected to converters digitala input."
     !  @Author je
     !  @Summary Pump with ABB Frequencyconverter ACS800
     !  Pump with ABB Frequencyconverter ACS800
-    ! 
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is ABB/ABB_ACS800Pump1.
+    !  @image orm_abb_acs800pump_gs.gif
+    !  Default dynamics:
+    !  - the triangle is rotated 90 degrees when the pump is on.
+    !  - the fan symbol is filled with the original color when the valve is 
+    !    on.
+    !  - colored gray when the fan is off.
+    !  - colored red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
     !  @b Object Graph
     !  @image orm_abb_acs800pump1_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ABB_ACS800Pump1Fo is used.
+    !  @image orm_abb_acs800pump1fo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Profibus
+    !  For profibus connection with protocol PPO5 use the profibus Module object
+    !  ABB_ACS_PPO5.
+    !  Create a module object in the node hierarchy and connect it to the ACS800
+    !  object with the connect function. The ACS800 object is an attribute in the
+    !  ACS800Pump2 object.
+    !
+    !  @b Simulate
+    !  For simulation of the pump, use the plc object ABB_ACS800Pump1Sim.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump1Fo abb_abb_acs800pump1fo.html
+    !  @classlink ABB_ACS8_PPO5 abb_abb_acs_ppo5.html
+    !  @classlink ABB_ACS800Pump1Sim abb_abb_acs800pump1sim.html
     !*/
     Object ABB_ACS800Pump1 $ClassDef 4
       Body SysBody
@@ -7115,6 +7212,20 @@ signals are connected to converters digitala input."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ABB_ACS800Pump1.
+    !  Plc function object to ABB_ACS800Pump1.
+    !
+    !  @image orm_abb_acs800pump1fo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800Pump1.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump1 abb_abb_acs800pump1.html
+    !*/
     Object ABB_ACS800Pump1Fo $ClassDef 5
       Body SysBody
         Attr Editor = 0
@@ -13617,6 +13728,19 @@ SSAB safetyswitch, Contactor"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Profibus module to ACS800 with protocol PPO5.
+    !  Profibus module to ACS800 with protocol PPO5.
+    !
+    !  The object is configured under a PbSlave object in the node hierarchy.
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800_1 with the IoConnect method.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
+    !*/
     Object ABB_ACS_PPO5 $ClassDef 7
       Body SysBody
         Attr Editor = 0
@@ -13967,6 +14091,23 @@ SSAB safetyswitch, Contactor"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to ABB_ACS800Pump1.
+    !  Plc simulation object to ABB_ACS800Pump1.
+    !
+    !  @image orm_abb_acs800pump1sim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_abb_acs800pump1sim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800Pump1.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump1 abb_abb_acs800pump1.html
+    !*/
     Object ABB_ACS800Pump1Sim $ClassDef 8
       Body SysBody
         Attr Editor = 0
@@ -17315,6 +17456,56 @@ if Op reset converter."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Pumps
+    !  @Author je
+    !  @Summary Pump with ABB Frequencyconverter ACS800
+    !  Pump with ABB Frequencyconverter ACS800
+    !
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is ABB/ABB_ACS800Pump2.
+    !  @image orm_abb_acs800pump_gs.gif
+    !  Default dynamics:
+    !  - the triangle is rotated 90 degrees when the pump is on.
+    !  - the pump symbol is filled with the original color when the valve is 
+    !    on.
+    !  - colored gray when the fan is off.
+    !  - colored red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode: 
+    !    M:  Manual mode.
+    !    L: Local mode, mode is set to auto when local is left.
+    !    LM: Local mode, mode is set to manual when local is left.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    !
+    !  @b Object Graph
+    !  @image orm_abb_acs800pump2_og.gif
+    !
+    !  @b Plc coding
+    !  For plc coding the function object ABB_ACS800Pump2Fo is used.
+    !  @image orm_abb_acs800pump2fo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    !
+    !  @b Profibus
+    !  For profibus connection with protocol PPO5 use the profibus Module object
+    !  ABB_ACS_PPO5.
+    !  Create a module object in the node hierarchy and connect it to the ACS800
+    !  object with the connect function. The ACS800 object is an attribute in the
+    !  ACS800Pump2 object.
+    !
+    !  @b Simulate
+    !  For simulation of the pump, use the plc object ABB_ACS800Pump2Sim.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump2Fo abb_abb_acs800pump2fo.html
+    !  @classlink ABB_ACS8_PPO5 abb_abb_acs_ppo5.html
+    !  @classlink ABB_ACS800Pump2Sim abb_abb_acs800pump2sim.html
+    !*/
     Object ABB_ACS800Pump2 $ClassDef 9
       Body SysBody
         Attr Editor = 0
@@ -17618,6 +17809,20 @@ if Op reset converter."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Summary Plc function object to ABB_ACS800Pump2.
+    !  Plc function object to ABB_ACS800Pump2.
+    !
+    !  @image orm_abb_acs800pump2fo_fo.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800Pump2.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump2 abb_abb_acs800pump2.html
+    !*/
     Object ABB_ACS800Pump2Fo $ClassDef 10
       Body SysBody
         Attr Editor = 0
@@ -23900,6 +24105,23 @@ no circuit breaker."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Summary Plc simulation object to ABB_ACS800Pump2.
+    !  Plc simulation object to ABB_ACS800Pump2.
+    !
+    !  @image orm_abb_acs800pump2sim_fo.gif
+    !
+    !  @b Object Graph
+    !  @image orm_abb_acs800pump2sim_og.gif
+    !
+    !  Connect the function object to an object of class or subclass of
+    !  ABB_ACS800Pump2.
+    !
+    !  @b See also
+    !  @classlink ABB_ACS800Pump2 abb_abb_acs800pump2.html
+    !*/
     Object ABB_ACS800Pump2Sim $ClassDef 11
       Body SysBody
         Attr Editor = 0

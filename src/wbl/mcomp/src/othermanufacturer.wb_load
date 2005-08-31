@@ -7,10 +7,12 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !/**
     !  @Version 1.0
     !  @Group Valves
-    !  @Author cs
     !  @Summary Ventim Butterfly Valve VM3001.
-    !  EBRO Butterfly Valve VM3001.
+    !  Ventim Butterfly Valve VM3001.
     ! 
+    !  See superclass ManValve2Sw for more information.
+    !  @classlink ManValve2Sw basecomponent_manvalve2sw.html
+    !  @link Datasheet ../dsh/ventim_valve_vm3001.pdf
     !*/
     Object Ventim_Valve_VM3001 $ClassDef 1
       Body SysBody
@@ -45,6 +47,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Durholdt Valve 100 103.
+    !  Durholdt Valve 100 103.
+    ! 
+    !  See superclass MValveOrNoSw for more information.
+    !  @classlink MValveOrNoSw basecomponent_mvalveornosw.html
+    !  @link Datasheet ../dsh/kla_armatur.pdf
+    !*/
     Object Durholdt_valve_100_103 $ClassDef 18
       Body SysBody
         Attr Editor = 0
@@ -71,6 +83,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Bernard Actuator OA.
+    !  Bernard Actuator OA.
+    ! 
+    !  See superclass ActuatorAPoOr2Sw for more information.
+    !  @classlink ActuatorAPoOr2Sw basecomponent_actuatorapoor2sw.html
+    !  @link Datasheet ../dsh/bernard_actuator_oa.html
+    !*/
     Object Bernard_Actuator_OA $ClassDef 12
       Body SysBody
         Attr Editor = 0
@@ -109,6 +131,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group SafetySwitch
+    !  @Summary SafetySwitch Cewe KSA LBAS.
+    !  SafetySwitch Cewe KSA LBAS.
+    !
+    !  See superclass SafetySwitch for more information.
+    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    !  @link Datasheet ../dsh/cewe_safetyswitch_ksa_lbas.pdf
+    !*/
     Object Cewe_SafetySwitch_KSA_LBAS $ClassDef 2
       Body SysBody
         Attr Editor = 0
@@ -136,6 +168,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group SafetySwitch
+    !  @Summary SafetySwitch Cewe BAS.
+    !  SafetySwitch Cewe BAS.
+    !
+    !  See superclass SafetySwitch for more information.
+    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    !  @link Datasheet ../dsh/cewe_safetyswitch_bas.pdf
+    !*/
     Object Cewe_SafetySwitch_BAS $ClassDef 16
       Body SysBody
         Attr Editor = 0
@@ -163,6 +205,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group TempSensor
+    !  @Summary TempSensor Impac IN300.
+    !  Temperatur sensor Impac IN300.
+    !
+    !  See superclass TempSensor for more information.
+    !  @classlink TempSensor basecomponent_tempsensor.html
+    !  @link Datasheet ../dsh/impac_tempsensor_in300.pdf
+    !*/
     Object Impac_TempSensor_IN300 $ClassDef 11
       Body SysBody
         Attr Editor = 0
@@ -206,6 +258,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group CircuitBreaker
+    !  @Summary CircuitBreaker Legrand DX.
+    !  CircuitBreaker Legrand DX.
+    !
+    !  See superclass CircuitBreaker for more information.
+    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !  @link Datasheet ../dsh/legrand_circuitbreaker_dx.pdf
+    !*/
     Object Legrand_CircuitBreaker_DX $ClassDef 3
       Body SysBody
         Attr Editor = 0
@@ -233,6 +295,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group PressureSwitch
+    !  @Summary PressureSwitch Suco 27AF.
+    !  PressureSwitch Suco 27AF.
+    !
+    !  See superclass PressureSwitch for more information.
+    !  @classlink PressureSwitch basecomponent_pressureswitch.html
+    !  @link Datasheet ../dsh/kla_armatur.pdf
+    !*/
     Object Suco_PresSwitch_27AF $ClassDef 19
       Body SysBody
         Attr Editor = 0
@@ -262,6 +334,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group LevelSensor
+    !  @Summary LevelSensor Mobrey MSP422.
+    !  LevelSensor Mobrey MSP422.
+    !
+    !  See superclass LevelSensor for more information.
+    !  @classlink LevelSensor basecomponent_levelsensor.html
+    !  @link Datasheet ../dsh/mobrey_levelsensor_msp422.pdf
+    !*/
     Object Mobrey_LevelSensor_MSP422 $ClassDef 8
       Body SysBody
         Attr Editor = 0
@@ -305,6 +387,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group LevelSwitch
+    !  @Summary LevelSwitch Mobrey EC.
+    !  LevelSwitch Mobrey EC.
+    !
+    !  See superclass LevelSwitch for more information.
+    !  @classlink LevelSwitch basecomponent_levelswitch.html
+    !  @link Datasheet ../dsh/mobrey_levelswitch_ec.pdf
+    !*/
     Object Mobrey_LevelSwitch_EC $ClassDef 10
       Body SysBody
         Attr Editor = 0
@@ -332,6 +424,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group PressureSensor
+    !  @Summary PressureSensor Klay Series 2000.
+    !  PressureSensor Klay Series 2000.
+    !
+    !  See superclass PressureSensor for more information.
+    !  @classlink PressureSensor basecomponent_pressuresensor.html
+    !  @link Datasheet ../dsh/klay_pressuresensor_series2000.pdf
+    !*/
     Object Klay_PressureSensor_Series2000 $ClassDef 9
       Body SysBody
         Attr Editor = 0
@@ -376,8 +478,14 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       EndObject
     EndObject
     !/**
-    ! For basic description see 
-    ! @classlink Contactor basecomponent_contactor.html
+    !  @Version 1.0
+    !  @Group Contactor
+    !  @Summary Contactor Omron J7KN.
+    !  Contactor Omron J7KN.
+    !
+    !  See superclass Contactor for more information.
+    !  @classlink Contactor basecomponent_contactor.html
+    !  @link Datasheet ../dsh/omron_contactor_j7kn.pdf
     !*/
     Object Omron_Contactor_J7KN $ClassDef 4
       Body SysBody
@@ -407,6 +515,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Pump
+    !  @Summary Pump Metso VS.
+    !  Pump Metso VS.
+    !
+    !  See superclass BasePump for more information.
+    !  @classlink BasePump basecomponent_basepump.html
+    !  @link Datasheet ../dsh/metso_pump_vs.pdf
+    !*/
     Object Metso_Pump_VS $ClassDef 13
       Body SysBody
         Attr Editor = 0
@@ -433,6 +551,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Pump
+    !  @Summary Pump Flygt N3202.
+    !  Pump Flygt N3202.
+    !
+    !  See superclass BasePump for more information.
+    !  @classlink BasePump basecomponent_basepump.html
+    !  @link Datasheet ../dsh/flygt_pump_n3202.pdf
+    !*/
     Object Flygt_Pump_N3202 $ClassDef 14
       Body SysBody
         Attr Editor = 0
@@ -459,6 +587,16 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Fan
+    !  @Summary Fan Jowa.
+    !  Fan Jowa.
+    !
+    !  See superclass BaseFan for more information.
+    !  @classlink BaseFan basecomponent_basefan.html
+    !  @link Datasheet ../dsh/jowa_fan.pdf
+    !*/
     Object Jowa_fan $ClassDef 15
       Body SysBody
         Attr Editor = 0

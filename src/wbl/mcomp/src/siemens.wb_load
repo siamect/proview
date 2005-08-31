@@ -4,6 +4,16 @@ Volume Siemens $ClassVolume 0.0.250.3
     Attr NextCix = "_X6"
   EndBody
   Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group Motor
+    !  @Summary Motor Siemens 1LA.
+    !  Motor Siemens 1LA.
+    !
+    !  See superclass Motor for more information.
+    !  @classlink Motor basecomponent_motor.html
+    !  @link Datasheet ../dsh/siemens_motor_1la.pdf
+    !*/
     Object Siemens_Motor_1LA $ClassDef 1
       Body SysBody
         Attr Editor = 0
@@ -25,11 +35,20 @@ Volume Siemens $ClassVolume 0.0.250.3
       EndObject
       Object Template Siemens_Motor_1LA 2147975168
         Body RtBody
-          Attr Super.Specification = "1LA"
+          Attr Super.Specification = "Siemens 1LA"
           Attr Super.DataSheet = "$pwr_lang/dsh/siemens_motor_1la.pdf"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200 with two Ai.
+    !  Profibus module ET200 with two analog inputs.
+    !
+    !  See also
+    !  @classlink Pb_Module pwrb_pb_module.html
+    !*/
     Object Siemens_ET200S_Ai2 $ClassDef 2
       Body SysBody
         Attr Editor = 0
@@ -88,6 +107,15 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200 with two Ao.
+    !  Profibus module ET200 with two analog outputs.
+    !
+    !  See also
+    !  @classlink Pb_Module pwrb_pb_module.html
+    !*/
     Object Siemens_ET200S_Ao2 $ClassDef 3
       Body SysBody
         Attr Editor = 0
@@ -141,6 +169,15 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200 with four Di.
+    !  Profibus module ET200 with four digital inputs.
+    !
+    !  See also
+    !  @classlink Pb_Module pwrb_pb_module.html
+    !*/
     Object Siemens_ET200S_Di4 $ClassDef 4
       Body SysBody
         Attr Editor = 0
@@ -175,6 +212,15 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200 four Do.
+    !  Profibus module ET200 with four digital outputs.
+    !
+    !  See also
+    !  @classlink Pb_Module pwrb_pb_module.html
+    !*/
     Object Siemens_ET200S_Do4 $ClassDef 5
       Body SysBody
         Attr Editor = 0

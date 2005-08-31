@@ -4,6 +4,16 @@ Volume SsabOx $ClassVolume 0.0.250.5
     Attr NextCix = "_X16"
   EndBody
   Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group SafetySwitch
+    !  @Summary SafetySwitch SSAB.
+    !  SafetySwitch SSAB.
+    !
+    !  See superclass SafetySwitch for more information.
+    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    !  @link Datasheet ../dsh/ssab_safetyswitch.pdf
+    !*/
     Object Ssab_SafetySwitch $ClassDef 1
       Body SysBody
         Attr Editor = 0
@@ -736,7 +746,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
     ! 
     !  @b See hardware specification
-    !  @Link AI32uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_AI32uP $ClassDef 5
@@ -1430,7 +1440,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
     ! 
     !  @b See hardware specification
-    !  @Link AI16uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_AI16uP $ClassDef 11
@@ -1814,7 +1824,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
     ! 
     !  @b See hardware specification
-    !  @Link AI8uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_AI8uP $ClassDef 12
@@ -2045,7 +2055,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
     ! 
     !  @b See hardware specification
-    !  @Link AO8uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AO8uP
+    !  @link Datasheet ../dsh/ssab_ao8up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_AO8uP $ClassDef 6
@@ -2270,7 +2280,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
     ! 
     !  @b See hardware specification
-    !  @Link AO8uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AO8uP
+    !  @link Datasheet ../dsh/ssab_ao8up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_AO8uPL $ClassDef 14
@@ -2809,7 +2819,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  Di_DIX2 object.
     ! 
     !  @b See hardware specification
-    !  @Link DI32D http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#DI32D
+    !  @link Datasheet ../dsh/ssab_di32d.pdf
     !*/
     Object Ssab_DI32D $ClassDef 7
       Body SysBody
@@ -3097,7 +3107,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  Do_HVDO32 object.
     ! 
     !  @b See hardware specification
-    !  @Link DO32DKS http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#DO32D
+    !  @link Datasheet ../dsh/ssab_do32dks.pdf
     !*/
     Object Ssab_DO32DKS $ClassDef 8
       Body SysBody
@@ -3383,7 +3393,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  Do_HVDO32 object.
     ! 
     !  @b See hardware specification
-    !  @Link DO32DKS http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#DO32D
+    !  @link Datasheet ../dsh/ssab_do32dks.pdf
     !*/
     Object Ssab_DO32DKS_Stall $ClassDef 13
       Body SysBody
@@ -3675,7 +3685,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  For more information about the console program, follow the link below. 
     ! 
     !  @b See hardware specification
-    !  @Link CO4uP http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#CO4uP
+    !  @link Datasheet ../dsh/ssab_co4up.pdf
     !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
     !*/
     Object Ssab_CO4uP $ClassDef 9

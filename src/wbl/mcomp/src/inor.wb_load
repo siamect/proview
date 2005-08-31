@@ -4,6 +4,16 @@ Volume Inor $ClassVolume 0.0.250.7
     Attr NextCix = "_X2"
   EndBody
   Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group TempSensor
+    !  @Summary TempSensor Inor VRS.
+    !  Temperature Sensor Inor VRS.
+    !
+    !  See superclass TempSensor for more information.
+    !  @classlink TempSensor basecomponent_tempsensor.html
+    !  @link Datasheet ../dsh/inor_tempsensor_vrs.pdf
+    !*/
     Object Inor_TempSensor_VRS $ClassDef 1
       Body SysBody
         Attr Editor = 0

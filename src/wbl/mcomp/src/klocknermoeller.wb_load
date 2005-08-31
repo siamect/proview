@@ -4,6 +4,16 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
     Attr NextCix = "_X3"
   EndBody
   Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group CircuitBreaker
+    !  @Summary CircuitBreaker KlocknerMoeller PKZ.
+    !  CircuitBreaker KlocknerMoeller PKZ.
+    !
+    !  See superclass CircuitBreaker for more information.
+    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
+    !*/
     Object KM_CircuitBreaker_PKZ $ClassDef 1
       Body SysBody
         Attr Editor = 0
@@ -32,6 +42,16 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Contactor
+    !  @Summary Contactor KlocknerMoeller PKZ.
+    !  Contactor KlocknerMoeller PKZ.
+    !
+    !  See superclass Contactor for more information.
+    !  @classlink Contactor basecomponent_contactor.html
+    !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
+    !*/
     Object KM_Contactor_PKZ $ClassDef 2
       Body SysBody
         Attr Editor = 0
