@@ -572,13 +572,13 @@ endl <<
   html_clf->f <<
 "</XMP>" << endl;
 
-  for ( i = 0; i < ctx->rw->doc_link_cnt; i++) {
-    html_clf->f <<
-"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_link_text[i] <<"</FONT></A><BR>" << endl;
-  }
   for ( i = 0; i < ctx->rw->doc_clink_cnt; i++) {
     html_clf->f <<
 "  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_clink_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_clink_text[i] <<"</FONT></A><BR>" << endl;
+  }
+  for ( i = 0; i < ctx->rw->doc_link_cnt; i++) {
+    html_clf->f <<
+"  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A HREF=\"" << ctx->rw->doc_link_ref[i] << "\" TARGET=\"_self\"><FONT size=\"-1\"> " << ctx->rw->doc_link_text[i] <<"</FONT></A><BR>" << endl;
   }
   html_clf->f <<
 "</DIV>" << endl;  

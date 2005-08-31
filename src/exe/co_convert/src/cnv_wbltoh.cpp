@@ -845,6 +845,7 @@ int CnvWblToH::cixstr_to_classid( char *cix_str, pwr_tClassId *cid)
 	{ "pwr_eCix_Value",		pwr_eCix_Value},
 	{ "pwr_eCix_Method",		pwr_eCix_Method},
 	{ "pwr_eCix_RtMethod",		pwr_eCix_RtMethod},
+	{ "pwr_eCix_ExternVolume",     	pwr_eCix_ExternVolume},
 	{ "", 0}};
 
   found = 0;
