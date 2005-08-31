@@ -1,3 +1,5 @@
+// $Header: /data1/cvs/pwr/wb/lib/wb/src/wb_vext.h,v 1.2 2005-08-31 08:45:34 claes Exp $
+
 #ifndef wb_vext_h
 #define wb_vext_h
 
