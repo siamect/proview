@@ -575,6 +575,9 @@ pwr_tStatus WVsel::load_volumelist()
 	  case ldh_eVolRep_Ref: 
 	    strcat( str, "Ref    ");
 	    break;
+	  case ldh_eVolRep_Ext: 
+	    strcat( str, "Ext    ");
+	    break;
 	  }
 
 	  switch (classid)
@@ -596,6 +599,9 @@ pwr_tStatus WVsel::load_volumelist()
 	      break;
 	    case pwr_eClass_DirectoryVolume:
 	      strcat( str, "DirectoryVolume");
+	      break;
+	    case pwr_eClass_ExternVolume:
+	      strcat( str, "ExternVolume");
 	      break;
 	  }
 	  cstr = XmStringCreateSimple( str);

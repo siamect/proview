@@ -8,6 +8,7 @@
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
 #include "wb_vrepref.h"
+#include "wb_vrepext.h"
 #include "wb_cdrep.h"
 #include "wb_orep.h"
 #include "wb_tdrep.h"
@@ -199,6 +200,15 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
       return it->second;
     }
     else {
+      // Next volume in extern
+      for ( it = m_vrepextern.begin();
+	    it != m_vrepextern.end();
+	    it++) {
+	if ( it->second->cid() == pwr_eClass_ExternVolume) {
+	  *sts = LDH__SUCCESS;
+	  return it->second;
+	}
+      }
       *sts = LDH__NOSUCHVOL;
       return 0;
     }
@@ -508,7 +518,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   }
 
   while ( fpm.getline( line, sizeof(line))) {
-    char vol_array[5][80];
+    char vol_array[7][80];
     int nr;
 
     if ( line[0] == '#')
@@ -517,13 +527,33 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     nr = dcli_parse( line, " ", "", (char *)vol_array,
                      sizeof(vol_array)/sizeof(vol_array[0]),
                      sizeof(vol_array[0]), 0);
-    if ( nr != 4)
+    if ( nr > 6)
       cout << "Syntax error in file: " << fname << endl;
 
     cdh_StringToVolumeId( vol_array[1], &vid);
 
-    if ( (cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0) ||
+    if ( cdh_NoCaseStrcmp( vol_array[2], "ExternVolume") == 0) {
+      if ( nr != 6)
+	cout << "Syntax error in file: " << fname << endl;
+
+      // Load extern volume for this volume
+      cdh_ToLower( vol_array[0], vol_array[0]);
+
+      try {
+	wb_vrepext *vrepext = new wb_vrepext( this, vid, vol_array[0], vol_array[4]);
+	addExtern( &sts, vrepext);
+	MsgWindow::message( 'I', "Volume loaded", vname);
+	vol_cnt++;
+      }
+      catch ( wb_error& e) {
+	MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+      }
+    }
+    else if ( (cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0) ||
          (strcmp( vol_array[3], "load") == 0)) {
+      if ( nr != 4)
+	cout << "Syntax error in file: " << fname << endl;
+
       // Load dbs for this volume
       cdh_ToLower( vol_array[0], vol_array[0]);
 
@@ -574,6 +604,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     else {
       // Load db for this volume
       char uname[80];
+
+      if ( nr != 4)
+	cout << "Syntax error in file: " << fname << endl;
 
       if ( db) {
 	// If db is specified, load only specified db, load as dbs instead

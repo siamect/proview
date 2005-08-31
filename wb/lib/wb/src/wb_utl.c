@@ -3161,6 +3161,9 @@ pwr_tStatus	utl_show_volumes(
 	  case ldh_eVolRep_Ref:
 	    u_print( utlctx, " Ref");
 	    break;
+	  case ldh_eVolRep_Ext:
+	    u_print( utlctx, " Ext");
+	    break;
 	  }
 	  u_print( utlctx, " %s", class_name);
 	  u_posit( utlctx, 2, strlen(class_name) + 2);

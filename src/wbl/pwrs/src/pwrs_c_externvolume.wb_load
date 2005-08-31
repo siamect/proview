@@ -1,0 +1,34 @@
+!  pwrs_c_externvolume.wb_load -- Defines the class ExternVolume.
+!
+!  PROVIEW/R
+!  Copyright (C) 1996 by Comator Process AB.
+!
+SObject pwrs:Class
+!/**
+!  @Group Volumes
+!  Volume to store paste buffers in development environment.
+!*/
+  Object $ExternVolume $ClassDef pwr_eCix_ExternVolume
+    Body SysBody
+      Attr Flags |= pwr_mClassDef_System
+      Attr Flags |= pwr_mClassDef_DevOnly
+      Attr Flags |= pwr_mClassDef_TopObject
+    EndBody
+    Object SysBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "ExternVolume"
+      EndBody
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+

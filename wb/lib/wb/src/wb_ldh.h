@@ -75,7 +75,8 @@ typedef enum {
   ldh_eVolRep_Dbs,
   ldh_eVolRep_Wbl,
   ldh_eVolRep_Mem,
-  ldh_eVolRep_Ref
+  ldh_eVolRep_Ref,
+  ldh_eVolRep_Ext
 } ldh_eVolRep;
 
 typedef enum {

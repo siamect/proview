@@ -200,6 +200,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_DirectoryVolume", pwr_eCix_DirectoryVolume }
   ,{ "pwr_eClass_VolatileVolume", pwr_eClass_VolatileVolume }
   ,{ "pwr_eCix_VolatileVolume", pwr_eCix_VolatileVolume }
+  ,{ "pwr_eClass_ExternVolume", pwr_eClass_ExternVolume }
+  ,{ "pwr_eCix_ExternVolume", pwr_eCix_ExternVolume }
   ,{ "pwr_eClass_CreateVolume", pwr_eClass_CreateVolume }
   ,{ "pwr_eCix_CreateVolume", pwr_eCix_CreateVolume }
   ,{ "pwr_eClass_MountVolume", pwr_eClass_MountVolume }
