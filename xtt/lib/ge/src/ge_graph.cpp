@@ -4139,6 +4139,8 @@ int  graph_attr_string_to_value( int type_id, char *value_str,
       break;
     }
     case pwr_eType_UInt32:
+    case pwr_eType_Mask:
+    case pwr_eType_Enum:
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;
