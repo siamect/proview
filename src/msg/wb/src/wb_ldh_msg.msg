@@ -107,7 +107,10 @@ nonext		<No next object>					/error
 catt		<Class attribute tree is not built>			/error
 classlist	<No object in classlist>				/error
 nonextclass	<No next class>						/error
-
+noprov		<No provider for extern volume>				/error
+msgget		<msgget failed>						/error
+msgsnd		<msgsnd failed>						/error
+msgrcv		<msgrcv failed>						/error
 
 
 

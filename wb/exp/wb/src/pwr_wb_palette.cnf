@@ -270,6 +270,7 @@ topobjects ProjectNavigatorW1
   class RootVolumeConfig
   class ClassVolumeConfig
   class SubVolumeConfig
+  class ExternVolumeConfig
   class WbEnvironment
   class DbConfig
 }
@@ -289,6 +290,7 @@ palette ProjectNavigatorPalette
     class ClassVolumeConfig
     class ClassVolumeLoad
     class CommonClassDistribute
+    class ExternVolumeConfig
     class $PlantHier
     class RootVolumeConfig
     class RootVolumeLoad
