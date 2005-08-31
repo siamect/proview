@@ -1,4 +1,4 @@
-// $Header: /data1/cvs/pwr/wb/lib/wb/src/wb_vext.h,v 1.2 2005-08-31 08:45:34 claes Exp $
+// $Id: wb_vext.h,v 1.3 2005-08-31 09:03:53 claes Exp $
 
 #ifndef wb_vext_h
 #define wb_vext_h
