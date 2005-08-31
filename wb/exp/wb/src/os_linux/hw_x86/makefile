@@ -17,9 +17,21 @@ endif
 
 vpath %.h $(hw_source):$(os_source):$(co_source)
 vpath %.c $(hw_source):$(os_source):$(co_source)
+vpath %.cpp $(hw_source):$(os_source):$(co_source)
 vpath %.dat $(hw_source):$(os_source):$(co_source)
 
 source_dirs := $(hw_source) $(os_source) $(co_source)
+
+sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.cpp) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+cpp_sources := $(filter %.cpp,$(sources))
 
 sources := $(sort \
              $(foreach file, \
@@ -36,6 +48,7 @@ dat_sources := $(filter %.dat,$(sources))
 
 export_h := $(patsubst %.h,$(inc_dir)/%.h,$(h_sources))
 export_c := $(patsubst %.c,$(src_dir)/%.c,$(c_sources))
+export_obj := $(patsubst %.cpp,$(obj_dir)/%.o,$(cpp_sources))
 export_dat := $(patsubst %.dat,$(src_dir)/%.dat,$(dat_sources))
 clean_h := $(patsubst %.h,clean_%.h,$(h_sources))
 clean_c := $(patsubst %.c,clean_%.c,$(c_sources))
@@ -63,7 +76,7 @@ copy : $(export_h) $(export_c) $(export_dat) \
 	$(exe_dir)/ge_help.dat \
 	$(exe_dir)/pwr_wb_palette.cnf $(load_dir)/pwr_volumelist.dat
 
-lib :
+lib : $(export_obj)
 
 exe :
 
