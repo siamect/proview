@@ -11386,7 +11386,10 @@ int GeOptionMenu::scan( grow_tObject object)
   unsigned int enum_value;
 
   switch( type_id) {
-  case pwr_eType_Float32: enum_value = (unsigned int) (*(pwr_tFloat32 *) p + 0.5); break;
+  case pwr_eType_Float32: 
+    enum_value = (unsigned int) (*(pwr_tFloat32 *) p > 0 ?
+				 *(pwr_tFloat32 *)p+0.5 : *(pwr_tFloat32 *)p-0.5); 
+    break;
   case pwr_eType_Int32: enum_value = (unsigned int) *(pwr_tInt32 *) p; break;
   case pwr_eType_UInt32: enum_value = (unsigned int) *(pwr_tUInt32 *) p; break;
   case pwr_eType_Int16: enum_value = (unsigned int) *(pwr_tInt16 *) p; break;
