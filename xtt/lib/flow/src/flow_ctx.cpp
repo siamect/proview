@@ -689,7 +689,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       int j, node_cnt;
 
       // If trace is started, move only tracenodes
-      if ( trace_started &&
+      if ( trace_started && a_move.size() > 0 &&
 	   a_move[0]->type() == flow_eObjectType_Node &&
 	   ((FlowNode *)a_move[0])->get_group() != flow_eNodeGroup_Trace)
         return 1;
