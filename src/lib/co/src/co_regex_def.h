@@ -1,11 +1,6 @@
-/* co_regex_def.h -- <short description>
-
-   PROVIEW/R
-   Copyright (C) 1996 by Comator Process AB.
-
-   <Description>.  */
-
-/* Definitions for data structures callers pass the regex library.
+/** 
+   Proview   $Id: co_regex_def.h,v 1.2 2005-09-01 14:57:52 claes Exp $
+   Definitions for data structures callers pass the regex library.
 
    Copyright (C) 1985, 1989-90 Free Software Foundation, Inc.
 

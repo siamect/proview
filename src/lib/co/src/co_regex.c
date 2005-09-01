@@ -1,11 +1,7 @@
-/* co_regex.c -- <short description>
+/*
+   Proview   $Id: co_regex.c,v 1.2 2005-09-01 14:57:52 claes Exp $
 
-   PROVIEW/R
-   Copyright (C) 1996 by Comator Process AB.
-
-   <Description>.  */
-
-/* Extended regular expression matching and search library.
+   Extended regular expression matching and search library.
    Copyright (C) 1985, 1989-90 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
