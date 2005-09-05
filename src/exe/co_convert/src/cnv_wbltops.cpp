@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltops.cpp,v 1.5 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_wbltops.cpp,v 1.6 2005-09-05 08:39:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,9 +69,14 @@ int CnvWblToPs::init( char *first)
 
   tops.set_cf( ps_eFile_Info);
   tops.set_ci( ps_eId_InfoPage);
-  tops.y = ps_cPageHeight - ps_cTopMargin - 600;
-  tops.print_text("Copyright 2004 SSAB Oxelösund AB", tops.style[tops.ci].text);
-  tops.print_text("All rights reserved.", tops.style[tops.ci].text);
+  tops.y = ps_cPageHeight - ps_cTopMargin - 450;
+  tops.print_text("Copyright 2005 SSAB Oxelösund AB", tops.style[tops.ci].text);
+  tops.print_text("", tops.style[tops.ci].text);
+  tops.print_text("Permission is granted to copy, distribute and/or modify this document", tops.style[tops.ci].text);
+  tops.print_text("under the terms of the GNU Free Documentation License, Version 1.2", tops.style[tops.ci].text);
+  tops.print_text("or any later version published by the Free Software Foundation;", tops.style[tops.ci].text);
+  tops.print_text("with no Invariant Sections, no Front-Cover Texts, and no Back-Cover", tops.style[tops.ci].text);
+  tops.print_text("Texts.", tops.style[tops.ci].text);
 
   tops.y = ps_cPageHeight - ps_cTopMargin;
   tops.set_cf( ps_eFile_Body);
