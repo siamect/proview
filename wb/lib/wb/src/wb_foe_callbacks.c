@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_foe_callbacks.c,v 1.10 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_foe_callbacks.c,v 1.11 2005-09-05 08:35:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,7 @@
 #include "wb_foe_callbacks.h"
 #include "wb_foe_api.h"
 #include "co_api.h"
+#include "co_wow.h"
 #include "pwr_baseclasses.h"
 #include "flow_x.h"
 
@@ -857,6 +858,50 @@ XmAnyCallbackStruct	*data;
 *	Checks first that a selected node does not contain a subwindow.
 *
 **************************************************************************/
+static void foe_delete_subwindow_ok_cb( void *ctx, void *data)
+{
+  foe_ctx foectx = (foe_ctx) ctx;
+  vldh_t_node node = (vldh_t_node) data;
+  pwr_tStatus sts, rsts;
+  pwr_tOid child, nextchild;
+  vldh_t_wind wind = foectx->grectx->wind;
+  unsigned long		wind_count;
+  vldh_t_wind		*windlist;
+  vldh_t_wind		*wind_ptr;
+  int			i;
+
+  /* Check that subwindow is not open */
+  sts = vldh_get_wind_subwindows( foectx->grectx->wind, 
+				  &wind_count, &windlist);
+  if( EVEN(sts)) { error_msg( sts); return;}
+
+  for ( sts = ldh_GetChild( wind->hw.ldhses, node->ln.oid, &child);
+	ODD(sts);
+	sts = ldh_GetNextSibling( wind->hw.ldhses, child, &child)) {
+    wind_ptr = windlist;
+    for ( i = 0; i < wind_count; i++) {
+      if ( cdh_ObjidIsEqual( (*wind_ptr)->lw.oid, child)) {
+	wow_DisplayError( foectx->widgets.foe_window, "Window open",
+			  "Subwindow is open\nClose subwindow first");
+	XtFree((char *) windlist);
+	return;
+      }
+      wind_ptr++;
+    }
+  }
+  if ( wind_count > 0) XtFree((char *) windlist);
+
+  for ( sts = ldh_GetChild( wind->hw.ldhses, node->ln.oid, &child);
+	ODD(sts);
+	child = nextchild) {
+    sts = ldh_GetNextSibling( wind->hw.ldhses, child, &nextchild);
+
+    rsts = ldh_DeleteObjectTree( wind->hw.ldhses, child);
+    if ( EVEN(rsts)) { error_msg( rsts); return; }
+  }
+  node->ln.subwindow = 0;
+  gre_delete( foectx->grectx);
+}
 
 static void foe_activate_delete (w, foectx, data)
 Widget	w;
@@ -880,6 +925,20 @@ XmAnyCallbackStruct	*data;
 	/* Delete the selected nodes and connections */
 	/* Check that any node doesn't contain a subwindow */
 	gre_get_selnodes( foectx->grectx, &node_count, &nodelist);
+
+	if ( node_count == 1 && (*nodelist)->ln.subwindow != 0) {
+	  /* Single node that has subwindow */
+	  char msg[200];
+	  sprintf( msg, 
+         "Object \"%s\" has subwindow\n Do you wan't to delete the subwindow?",
+		   (*nodelist)->hn.name);
+	  wow_DisplayQuestion( foectx, foectx->widgets.foe_window, 
+			       "Delete subwindow", msg,
+			       foe_delete_subwindow_ok_cb, 0, *nodelist);
+	  foectx->popupmenu_node = 0;
+	  return;
+	}
+
 	node_ptr = nodelist;
 	subwind_found = FALSE;
 	for( i = 0; i < node_count; i++)
@@ -894,8 +953,8 @@ XmAnyCallbackStruct	*data;
 	if ( node_count > 0) XtFree((char *) nodelist);
 	if ( subwind_found )
 	{
-	  foe_message( foectx, 
-	     "Subwindow found, delete the subwindow first");
+	  wow_DisplayError( foectx->widgets.foe_window, "Subwindow found",
+		   "Subwindow found\nDelete objects with subwindows separately");
 	  BEEP;
 	}
 	else
