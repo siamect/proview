@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_wattnav.cpp,v 1.8 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.9 2005-09-05 08:33:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -163,6 +163,8 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
         return WATT__FLAGNOEDIT;
       if ( item->flags & PWR_MASK_STATE && !bypass)
         return WATT__FLAGSTATE;
+      if ( cdh_tidIsCid( item->type_id))
+        return WATT__FLAGNOEDIT;
 
       sts = item->get_value( (char **)&p);
       wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
