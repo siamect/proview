@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.5 2005-09-05 08:42:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -227,7 +227,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
   if ( ctx->nodraw)
     return;
   int i;
-  int draw_text = (increment > 0);
+  int draw_text = (fabs(increment) > DBL_EPSILON);
   int idx;
   int x, y;
   char text[20];
