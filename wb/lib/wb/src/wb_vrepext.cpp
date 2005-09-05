@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepext.cpp,v 1.2 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.3 2005-09-05 08:34:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -419,13 +419,13 @@ void wb_vrepext::put( vext_sQMsg *msg, int size, pwr_tStatus *sts)
     close( fd);
 
     key = ftok( m_provider, 0);
-    m_msgsndid = msgget( key, 0666 | IPC_CREAT);
+    m_msgsndid = msgget( key, 0666 /* | IPC_CREAT */);
     if ( m_msgsndid == -1) {
       *sts = LDH__MSGGET;
       return;
     }
 
-    m_msgrcvid = msgget( (key_t)(key + 1), 0666 | IPC_CREAT);
+    m_msgrcvid = msgget( (key_t)(key + 1), 0666 /* | IPC_CREAT */);
     if ( m_msgrcvid == -1) {
       *sts = LDH__MSGGET;
       return;
