@@ -253,6 +253,30 @@ void wb_wblparser::object() {
 		case ENDOBJECT:
 		case BODY:
 		case DOCBLOCK:
+		case ASC_TIME:
+		{
+			break;
+		}
+		default:
+		{
+			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltException(LT(1), getFilename());
+		}
+		}
+		}
+		{
+		switch ( LA(1)) {
+		case ASC_TIME:
+		{
+			ref_wblnode tmp9_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp9_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp9_AST));
+			match(ASC_TIME);
+			break;
+		}
+		case OBJECT:
+		case ENDOBJECT:
+		case BODY:
+		case DOCBLOCK:
 		{
 			break;
 		}
@@ -269,11 +293,11 @@ void wb_wblparser::object() {
 				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(returnAST));
 			}
 			else {
-				goto _loop17;
+				goto _loop18;
 			}
 			
 		}
-		_loop17:;
+		_loop18:;
 		}
 		{
 		for (;;) {
@@ -282,9 +306,9 @@ void wb_wblparser::object() {
 				switch ( LA(1)) {
 				case DOCBLOCK:
 				{
-					ref_wblnode tmp9_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-					tmp9_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp9_AST));
+					ref_wblnode tmp10_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+					tmp10_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp10_AST));
 					match(DOCBLOCK);
 					break;
 				}
@@ -302,15 +326,15 @@ void wb_wblparser::object() {
 				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(returnAST));
 			}
 			else {
-				goto _loop20;
+				goto _loop21;
 			}
 			
 		}
-		_loop20:;
+		_loop21:;
 		}
-		ref_wblnode tmp10_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-		tmp10_AST = astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp10_AST));
+		ref_wblnode tmp11_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+		tmp11_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp11_AST));
 		match(ENDOBJECT);
 		object_AST = ref_wblnode(currentAST.root);
 	}
@@ -331,18 +355,18 @@ void wb_wblparser::cid() {
 		switch ( LA(1)) {
 		case VALUE:
 		{
-			ref_wblnode tmp11_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp11_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp11_AST));
+			ref_wblnode tmp12_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp12_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp12_AST));
 			match(VALUE);
 			cid_AST = ref_wblnode(currentAST.root);
 			break;
 		}
 		case STRING_LITERAL:
 		{
-			ref_wblnode tmp12_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp12_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp12_AST));
+			ref_wblnode tmp13_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp13_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp13_AST));
 			match(STRING_LITERAL);
 			cid_AST = ref_wblnode(currentAST.root);
 			break;
@@ -367,10 +391,32 @@ void wb_wblparser::body() {
 	ref_wblnode body_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
 	
 	try {      // for error handling
-		ref_wblnode tmp13_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-		tmp13_AST = astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp13_AST));
+		ref_wblnode tmp14_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+		tmp14_AST = astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp14_AST));
 		match(BODY);
+		{
+		switch ( LA(1)) {
+		case ASC_TIME:
+		{
+			ref_wblnode tmp15_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp15_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp15_AST));
+			match(ASC_TIME);
+			break;
+		}
+		case ENDBODY:
+		case ATTRIBUTE:
+		case BUFFER:
+		{
+			break;
+		}
+		default:
+		{
+			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltException(LT(1), getFilename());
+		}
+		}
+		}
 		{
 		for (;;) {
 			if ((LA(1)==ATTRIBUTE||LA(1)==BUFFER)) {
@@ -378,15 +424,15 @@ void wb_wblparser::body() {
 				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(returnAST));
 			}
 			else {
-				goto _loop23;
+				goto _loop25;
 			}
 			
 		}
-		_loop23:;
+		_loop25:;
 		}
-		ref_wblnode tmp14_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-		tmp14_AST = astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp14_AST));
+		ref_wblnode tmp16_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+		tmp16_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp16_AST));
 		match(ENDBODY);
 		body_AST = ref_wblnode(currentAST.root);
 	}
@@ -407,18 +453,18 @@ void wb_wblparser::oix() {
 		switch ( LA(1)) {
 		case VALUE:
 		{
-			ref_wblnode tmp15_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp15_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp15_AST));
+			ref_wblnode tmp17_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp17_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp17_AST));
 			match(VALUE);
 			oix_AST = ref_wblnode(currentAST.root);
 			break;
 		}
 		case INT:
 		{
-			ref_wblnode tmp16_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp16_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp16_AST));
+			ref_wblnode tmp18_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp18_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp18_AST));
 			match(INT);
 			oix_AST = ref_wblnode(currentAST.root);
 			break;
@@ -446,25 +492,25 @@ void wb_wblparser::attribute() {
 		switch ( LA(1)) {
 		case ATTRIBUTE:
 		{
-			ref_wblnode tmp17_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp17_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp17_AST));
+			ref_wblnode tmp19_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp19_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp19_AST));
 			match(ATTRIBUTE);
 			{
 			switch ( LA(1)) {
 			case EQ:
 			{
-				ref_wblnode tmp18_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-				tmp18_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp18_AST));
+				ref_wblnode tmp20_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+				tmp20_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp20_AST));
 				match(EQ);
 				break;
 			}
 			case OREQ:
 			{
-				ref_wblnode tmp19_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-				tmp19_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp19_AST));
+				ref_wblnode tmp21_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+				tmp21_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp21_AST));
 				match(OREQ);
 				break;
 			}
@@ -481,17 +527,17 @@ void wb_wblparser::attribute() {
 		}
 		case BUFFER:
 		{
-			ref_wblnode tmp20_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp20_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp20_AST));
+			ref_wblnode tmp22_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp22_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp22_AST));
 			match(BUFFER);
 			{
 			switch ( LA(1)) {
 			case INDEX:
 			{
-				ref_wblnode tmp21_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-				tmp21_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp21_AST));
+				ref_wblnode tmp23_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+				tmp23_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp23_AST));
 				match(INDEX);
 				break;
 			}
@@ -514,15 +560,15 @@ void wb_wblparser::attribute() {
 					astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(returnAST));
 				}
 				else {
-					goto _loop28;
+					goto _loop30;
 				}
 				
 			}
-			_loop28:;
+			_loop30:;
 			}
-			ref_wblnode tmp22_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp22_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp22_AST));
+			ref_wblnode tmp24_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp24_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp24_AST));
 			match(ENDBUFFER);
 			attribute_AST = ref_wblnode(currentAST.root);
 			break;
@@ -550,36 +596,36 @@ void wb_wblparser::value() {
 		switch ( LA(1)) {
 		case VALUE:
 		{
-			ref_wblnode tmp23_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp23_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp23_AST));
+			ref_wblnode tmp25_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp25_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp25_AST));
 			match(VALUE);
 			value_AST = ref_wblnode(currentAST.root);
 			break;
 		}
 		case STRING_LITERAL:
 		{
-			ref_wblnode tmp24_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp24_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp24_AST));
+			ref_wblnode tmp26_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp26_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp26_AST));
 			match(STRING_LITERAL);
 			value_AST = ref_wblnode(currentAST.root);
 			break;
 		}
 		case NUM_FLOAT:
 		{
-			ref_wblnode tmp25_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp25_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp25_AST));
+			ref_wblnode tmp27_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp27_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp27_AST));
 			match(NUM_FLOAT);
 			value_AST = ref_wblnode(currentAST.root);
 			break;
 		}
 		case INT:
 		{
-			ref_wblnode tmp26_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-			tmp26_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp26_AST));
+			ref_wblnode tmp28_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+			tmp28_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp28_AST));
 			match(INT);
 			value_AST = ref_wblnode(currentAST.root);
 			break;
@@ -604,9 +650,9 @@ void wb_wblparser::oname() {
 	ref_wblnode oname_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
 	
 	try {      // for error handling
-		ref_wblnode tmp27_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
-		tmp27_AST = astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp27_AST));
+		ref_wblnode tmp29_AST = static_cast<ref_wblnode>(ANTLR_USE_NAMESPACE(antlr)nullAST);
+		tmp29_AST = astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, ANTLR_USE_NAMESPACE(antlr)RefAST(tmp29_AST));
 		match(VALUE);
 		oname_AST = ref_wblnode(currentAST.root);
 	}
@@ -648,6 +694,7 @@ const char* wb_wblparser::_tokenNames[] = {
 	"INT",
 	"OID",
 	"DOCBLOCK",
+	"ASC_TIME",
 	"EQ",
 	"OREQ",
 	"WS",
@@ -671,14 +718,14 @@ const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wblparser::_tokenSet_1(_tokenSet_1_dat
 const unsigned long wb_wblparser::_tokenSet_2_data_[] = { 8389618UL, 0UL, 0UL, 0UL };
 // EOF OBJECT ENDOBJECT VOLUME ENDVOLUME SOBJECT ENDSOBJECT DOCBLOCK 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wblparser::_tokenSet_2(_tokenSet_2_data_,4);
-const unsigned long wb_wblparser::_tokenSet_3_data_[] = { 551552048UL, 0UL, 0UL, 0UL };
-// OBJECT ENDOBJECT BODY INT OID DOCBLOCK VALUE 
+const unsigned long wb_wblparser::_tokenSet_3_data_[] = { 1105200176UL, 0UL, 0UL, 0UL };
+// OBJECT ENDOBJECT BODY INT OID DOCBLOCK ASC_TIME VALUE 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wblparser::_tokenSet_3(_tokenSet_3_data_,4);
 const unsigned long wb_wblparser::_tokenSet_4_data_[] = { 8389808UL, 0UL, 0UL, 0UL };
 // OBJECT ENDOBJECT ENDVOLUME BODY DOCBLOCK 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wblparser::_tokenSet_4(_tokenSet_4_data_,4);
-const unsigned long wb_wblparser::_tokenSet_5_data_[] = { 8389680UL, 0UL, 0UL, 0UL };
-// OBJECT ENDOBJECT BODY DOCBLOCK 
+const unsigned long wb_wblparser::_tokenSet_5_data_[] = { 25166896UL, 0UL, 0UL, 0UL };
+// OBJECT ENDOBJECT BODY DOCBLOCK ASC_TIME 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wblparser::_tokenSet_5(_tokenSet_5_data_,4);
 const unsigned long wb_wblparser::_tokenSet_6_data_[] = { 30720UL, 0UL, 0UL, 0UL };
 // ENDBODY ATTRIBUTE BUFFER ENDBUFFER 

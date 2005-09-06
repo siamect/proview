@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepdb.h,v 1.26 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepdb.h,v 1.27 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,8 @@ public:
   virtual wb_vrep *next();
 
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tTime rbTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tTime dbTime(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o);

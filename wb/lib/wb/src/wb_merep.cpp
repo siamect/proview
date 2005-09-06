@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_merep.cpp,v 1.29 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.30 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,6 +364,13 @@ void wb_merep::classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time)
   wb_cdrep *cd = cdrep( sts, cid);
   if ( !cd) return;
 
+  if ( cd->vtype() == ldh_eVolRep_Dbs) {
+    // ohTime contains class version for a class in vrepdbs
+    *time = cd->ohTime();
+    *sts = LDH__SUCCESS;
+    return;
+  }
+
   wb_bdrep *bd = cd->bdrep( sts, pwr_eBix_rt);
   if ( !bd) { 
     delete cd; 
@@ -375,7 +382,7 @@ void wb_merep::classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time)
     return;
   }
 
-  *time = cd->ohTime();
+  *time = cd->structModTime();
 
   wb_adrep *ad, *oad;
   for ( ad = bd->adrep( sts); ad;) {

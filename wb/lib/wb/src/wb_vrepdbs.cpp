@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.43 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.44 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -168,6 +168,16 @@ wb_name wb_vrepdbs::longName(pwr_tStatus *sts, const wb_orep *o)
 pwr_tTime wb_vrepdbs::ohTime(pwr_tStatus *sts, const wb_orep *o)
 {
   return o->ohTime();
+}
+
+pwr_tTime wb_vrepdbs::rbTime(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->rbTime();
+}
+
+pwr_tTime wb_vrepdbs::dbTime(pwr_tStatus *sts, const wb_orep *o)
+{
+  return o->dbTime();
 }
 
 pwr_mClassDef wb_vrepdbs::flags(pwr_tStatus *sts, const wb_orep *o)

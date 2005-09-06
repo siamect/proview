@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orepref.h,v 1.2 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orepref.h,v 1.3 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,6 +55,8 @@ public:
     return wb_name( str);
   }
   virtual pwr_tTime ohTime() const { pwr_tTime t = {0,0}; return t;}
+  virtual pwr_tTime rbTime() const { pwr_tTime t = {0,0}; return t;}
+  virtual pwr_tTime dbTime() const { pwr_tTime t = {0,0}; return t;}
   virtual pwr_mClassDef flags() const { pwr_mClassDef m; m.m = 0; return m;}
     
   virtual bool isOffspringOf(const wb_orep *o) const {return false;}
@@ -71,6 +73,7 @@ public:
   virtual wb_adrep *attribute(pwr_tStatus *sts) {*sts = LDH__NOSUCHOBJ; return 0;}
   wb_erep *erep() const { return m_vrep->erep();}
   wb_vrep *vrep() const { return m_vrep;}
+  virtual ldh_eVolRep vtype() const { return ldh_eVolRep_Ref;}
 
   virtual bool docBlock( char **block, int *size) const {return false;}
   virtual bool docBlock( char *block) {return false;}

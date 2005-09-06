@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_cdrep.h,v 1.19 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: wb_cdrep.h,v 1.20 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,6 +76,8 @@ public:
   wb_orep *menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o);
 
   pwr_tTime ohTime();
+  pwr_tTime modTime();
+  pwr_tTime structModTime();
   void convertSubClass( pwr_tCid cid, wb_merep *merep,
 			void *body_source, void *body_target);
   void convertObject( wb_merep *merep, void *rbody, void *dbody,
@@ -86,6 +88,7 @@ public:
 			       pwr_tOid toid);
   void updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toid);
   pwr_tStatus sts() { return m_sts;}
+  ldh_eVolRep vtype() const;
 };
 
 #endif

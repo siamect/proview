@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orepext.cpp,v 1.2 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orepext.cpp,v 1.3 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,8 +89,17 @@ wb_name wb_orepext::longName()
 
 pwr_tTime wb_orepext::ohTime() const
 {
-  pwr_tTime t = {0,0};
-  return t;
+  return m_extobject.time;
+}
+
+pwr_tTime wb_orepext::rbTime() const
+{
+  return m_extobject.time;
+}
+
+pwr_tTime wb_orepext::dbTime() const
+{
+  return m_extobject.time;
 }
 
 pwr_mClassDef wb_orepext::flags() const

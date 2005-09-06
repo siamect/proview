@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_ldh.cpp,v 1.43 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.44 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2055,7 +2055,19 @@ ldh_GetSubClass(ldh_tSession session, pwr_tCid supercid, pwr_tCid subcid, pwr_tC
   return sp->sts();
 }
 
+pwr_tStatus
+ldh_GetModTime(ldh_tSession session, pwr_tOid oid, pwr_tTime *time)
+{
+  wb_session *sp = (wb_session *)session;
+  wb_object o = sp->object(oid);
+  if (!o) return o.sts();
+    
+  *time = o.modTime();
+
+  return o.sts();
+}
 #endif
+
 
 
 

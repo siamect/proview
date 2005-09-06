@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepmem.cpp,v 1.16 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.17 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -514,7 +514,11 @@ void wb_vrepmem::objectName(const wb_orep *o, char *str)
 
 bool wb_vrepmem::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p)
 {
+  pwr_tTime time;
+
   *sts = LDH__SUCCESS;
+  clock_gettime(CLOCK_REALTIME, &time);
+
     
   mem_object *n = ((wb_orepmem *) o)->memobject();
 
@@ -525,6 +529,7 @@ bool wb_vrepmem::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size
       return false;
     }
     memcpy( (char *)n->rbody + offset, p, MIN(n->rbody_size - offset, size));
+    n->m_rbtime = time;
     return true;
   case pwr_eBix_dev:
     if ( n->dbody_size == 0) {
@@ -532,6 +537,7 @@ bool wb_vrepmem::writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size
       return false;
     }
     memcpy( (char *)n->dbody + offset, p, MIN(n->dbody_size - offset, size));
+    n->m_dbtime = time;
     return true;
   default:
     *sts = LDH__NOSUCHBODY;
@@ -574,7 +580,10 @@ void *wb_vrepmem::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix
 
 bool wb_vrepmem::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 {
+  pwr_tTime time;
+
   *sts = LDH__SUCCESS;
+  clock_gettime(CLOCK_REALTIME, &time);
     
   mem_object *n = ((wb_orepmem *) o)->memobject();
 
@@ -586,6 +595,7 @@ bool wb_vrepmem::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
     }
 
     memcpy( n->rbody, p, n->rbody_size);
+    n->m_rbtime = time;
     return true;
   case pwr_eBix_dev:
     if ( n->dbody_size == 0) {
@@ -593,6 +603,7 @@ bool wb_vrepmem::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
       return false;
     }
     memcpy( n->dbody, p, n->dbody_size);
+    n->m_dbtime = time;
     return true;
   default:
     *sts = LDH__NOSUCHBODY;
@@ -681,6 +692,9 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   ldh_eDest code = d.code();
   char name_str[32];
   pwr_tOix oix;
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
 
   if ( d.oid().oix == 0) {
     dest = root_object;
@@ -717,20 +731,24 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
       strcpy( name_str, name.object());
   }
 
+
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name_str);
   memo->m_oid.oix = oix;
   memo->m_oid.vid = m_vid;
   memo->m_cid = cdef.cid();
   memo->m_flags = cdef.flags();
+  memo->m_ohtime = time;
   memo->rbody_size = cdef.size( pwr_eBix_rt);
   if ( memo->rbody_size) {
+    memo->m_rbtime = time;
     memo->rbody = malloc( memo->rbody_size);
     cdef.templateBody( sts, pwr_eBix_rt, memo->rbody, memo->m_oid);
     if ( EVEN(*sts)) return 0;
   }
   memo->dbody_size = cdef.size( pwr_eBix_dev);
   if ( memo->dbody_size) {
+    memo->m_dbtime = time;
     memo->dbody = malloc( memo->dbody_size);
     cdef.templateBody( sts, pwr_eBix_dev, memo->dbody, memo->m_oid);
     if ( EVEN(*sts)) return 0;
@@ -830,6 +848,9 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
   mem_object *dest;
   ldh_eDest code = d.code();
   char name_str[32];
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
 
   if ( cdh_ObjidIsNull( d.oid())) {
     dest = root_object;
@@ -867,12 +888,14 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
   memo->m_oid.oix = oix;
   memo->m_oid.vid = m_vid;
   memo->m_cid = orep->cid();
+  memo->m_ohtime = time;
 
   wb_attribute rbody;
   rbody = wb_attribute( LDH__SUCCESS, (wb_orep *)orep, "RtBody");
   if ( !rbody)
     rbody = wb_attribute( LDH__SUCCESS, (wb_orep *)orep, "SysBody");
   if ( rbody) {
+    memo->m_rbtime = time;
     memo->rbody_size = rbody.size();
     memo->rbody = malloc( memo->rbody_size);
     rbody.value( memo->rbody);
@@ -881,6 +904,7 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
   wb_attribute dbody;
   dbody = wb_attribute( LDH__SUCCESS, (wb_orep *)orep, "DevBody");
   if ( dbody) {
+    memo->m_dbtime = time;
     memo->dbody_size = dbody.size();
     memo->dbody = malloc( memo->dbody_size);
     dbody.value( memo->dbody);
@@ -953,6 +977,9 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
 {
   mem_object *dest;
   ldh_eDest code = d.code();
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
 
   if ( cdh_ObjidIsEqual( d.oid(), orep->oid()))
     return false;
@@ -1038,6 +1065,8 @@ bool wb_vrepmem::moveObject(pwr_tStatus *sts, wb_orep *orep, wb_destination &d)
       return false;
   }
 
+  memo->m_ohtime = time;
+
   return true;
 }
 
@@ -1105,6 +1134,10 @@ void wb_vrepmem::deleteChildren( mem_object *memo)
 
 bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name) 
 {
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
+
   mem_object *memo = ((wb_orepmem *)orep)->memobject();
   if ( !memo) return false;
 
@@ -1128,6 +1161,9 @@ bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
     strcpy( memo->m_name, old_name);
     return LDH__NAMALREXI;
   }
+
+  memo->m_ohtime = time;
+
   *sts = LDH__SUCCESS;
   return true;
 }
@@ -1399,6 +1435,9 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
 				   pwr_tOid *roid)
 {
   pwr_tStatus sts;
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
 
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name);
@@ -1475,13 +1514,16 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   memo->m_oid.vid = m_vid;
   memo->m_cid = cid;
   memo->m_flags = flags;
+  memo->m_ohtime = time;
   memo->rbody_size = rbSize;
   if ( memo->rbody_size) {
+    memo->m_rbtime = time;
     memo->rbody = malloc( memo->rbody_size);
     memcpy( memo->rbody, rbody, memo->rbody_size);
   }
   memo->dbody_size = dbSize;
   if ( memo->dbody_size) {
+    memo->m_dbtime = time;
     memo->dbody = malloc( memo->dbody_size);
     memcpy( memo->dbody, dbody, memo->dbody_size);
   }
@@ -1716,7 +1758,7 @@ bool wb_vrepmem::importBuildObject( mem_object *memo)
 bool wb_vrepmem::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                         pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
                         const char *name, const char *normname, pwr_mClassDef flags,
-                        pwr_tTime time, pwr_tTime rbTime, pwr_tTime dbTime,
+                        pwr_tTime ohTime, pwr_tTime rbTime, pwr_tTime dbTime,
                         size_t rbSize, size_t dbSize)
 {
     
@@ -1732,7 +1774,9 @@ bool wb_vrepmem::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   memo->bwsoid = boid;
   memo->fwsoid = aoid;
   memo->fchoid = foid;
-  memo->time = time;
+  memo->m_ohtime = ohTime;
+  memo->m_rbtime = rbTime;
+  memo->m_dbtime = dbTime;
 
   if (oid.oix == pwr_cNOix) {
     // this is the volume object

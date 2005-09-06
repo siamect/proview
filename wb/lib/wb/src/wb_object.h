@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_object.h,v 1.12 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_object.h,v 1.13 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,9 +82,11 @@ public:
   const char *name();
   wb_name longName();
 
-  pwr_tTime ohTime();  //< time when this object was last changed
+  pwr_tTime ohTime();  //< time when header of this object was last changed
   pwr_tTime rbTime();  //< time when run time body of this object was last changed
   pwr_tTime dbTime();  //< time when development body of this object was last changed
+  pwr_tTime modTime(); //< time when this object was last changed
+  pwr_tTime treeModTime();  //< time when this object or any ancestor was last changed
 
   pwr_mClassDef flags();
 

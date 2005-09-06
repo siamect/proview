@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_wnav_item.h,v 1.8 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_wnav_item.h,v 1.9 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,7 +59,8 @@ typedef enum {
 	wnav_eItemType_File,
 	wnav_eItemType_Text,
 	wnav_eItemType_Crossref,
-	wnav_eItemType_DocBlock
+	wnav_eItemType_DocBlock,
+	wnav_eItemType_ObjectModTime
 	} wnav_eItemType;
 
 typedef enum {
@@ -186,6 +187,18 @@ class WItemObjectName : public WItem {
 
     int update();
     int get_value( char **value);	// The value should be freed with free
+};
+
+class WItemObjectModTime : public WItem {
+  public:
+    WItemObjectModTime(
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code);
+    WNavBrow *brow;
+    ldh_tSesContext ldhses;
+
+    int update();
 };
 
 class WItemDocBlock : public WItem {

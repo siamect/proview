@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepdb.cpp,v 1.38 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.39 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -808,6 +808,36 @@ pwr_tTime wb_vrepdb::ohTime(pwr_tStatus *sts, const wb_orep *orp)
   *sts = LDH__SUCCESS;
   try {
     return m_ohead.get(m_db->m_txn, orp->oid()).ohTime();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    pwr_tTime t = {0, 0};
+    
+    printf("vrepdb: %s\n", e.what());
+    return t;
+  }
+}
+
+pwr_tTime wb_vrepdb::rbTime(pwr_tStatus *sts, const wb_orep *orp)
+{
+  *sts = LDH__SUCCESS;
+  try {
+    return m_ohead.get(m_db->m_txn, orp->oid()).rbTime();
+  }
+  catch (DbException &e) {
+    *sts = LDH__NOSUCHOBJ;
+    pwr_tTime t = {0, 0};
+    
+    printf("vrepdb: %s\n", e.what());
+    return t;
+  }
+}
+
+pwr_tTime wb_vrepdb::dbTime(pwr_tStatus *sts, const wb_orep *orp)
+{
+  *sts = LDH__SUCCESS;
+  try {
+    return m_ohead.get(m_db->m_txn, orp->oid()).dbTime();
   }
   catch (DbException &e) {
     *sts = LDH__NOSUCHOBJ;

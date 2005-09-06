@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_cdrep.cpp,v 1.25 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.26 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,7 @@
  **/
 
 #include "co_cdh.h"
+#include "co_time.h"
 #include "wb_cdrep.h"
 #include "wb_erep.h"
 #include "wb_merep.h"
@@ -450,6 +451,32 @@ pwr_tTime wb_cdrep::ohTime()
   return m_orep->ohTime();
 }
 
+pwr_tTime wb_cdrep::modTime()
+{
+  return m_orep->treeModTime();
+}
+
+pwr_tTime wb_cdrep::structModTime()
+{
+  pwr_tStatus sts;
+  pwr_tTime t = m_orep->modTime();
+
+  wb_bdrep *rbd = bdrep( &sts, pwr_eBix_rt);
+  if ( ODD(sts)) {
+    pwr_tTime rbt = rbd->modTime();
+    if ( time_Acomp( &rbt, &t) == 1)
+      t = rbt;
+    delete rbd;
+  }
+  wb_bdrep *dbd = bdrep( &sts, pwr_eBix_dev);
+  if ( ODD(sts)) {
+    pwr_tTime dbt = dbd->modTime();
+    if ( time_Acomp( &dbt, &t) == 1)
+      t = dbt;
+  }
+  return t;
+}
+
 wb_cdrep* wb_cdrep::super( pwr_tStatus *sts)
 {
   wb_bdrep *bd = bdrep( sts, pwr_eBix_rt);
@@ -759,5 +786,9 @@ void wb_cdrep::updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toi
   delete bd;
 }
 
+ldh_eVolRep wb_cdrep::vtype() const 
+{ 
+  return m_orep->vtype();
+}
 
 

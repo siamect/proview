@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_ldh.h,v 1.25 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.26 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1173,6 +1173,13 @@ ldh_GetSubClass(
   pwr_tCid supercid,
   pwr_tCid subcid,
   pwr_tCid *nextsubcid
+);
+
+pwr_tStatus
+ldh_GetModTime(
+  ldh_tSession session, 
+  pwr_tOid oid, 
+  pwr_tTime *time
 );
 
 #ifdef __cplusplus

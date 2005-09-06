@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_wblnode.h,v 1.17 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_wblnode.h,v 1.18 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,9 +80,9 @@ class wbl_type {
 
 class wbl_body {
  public:
-  wbl_body() : bix(pwr_eBix__), size(0) {};
-    pwr_eBix bix;
-    size_t size;
+  wbl_body() : bix(pwr_eBix__), size(0) {}
+  pwr_eBix bix;
+  size_t size;
 };
 
 class wbl_attribute {
@@ -114,6 +114,12 @@ class wbl_object {
       m_flags.m = 0;
       m_oid.oix = 0;
       m_oid.vid = 0;
+      m_ohtime.tv_sec = 0;
+      m_ohtime.tv_nsec = 0;
+      m_rbtime.tv_sec = 0;
+      m_rbtime.tv_nsec = 0;
+      m_dbtime.tv_sec = 0;
+      m_dbtime.tv_nsec = 0;
     };
   ~wbl_object() {
       if ( rbody_size) free( rbody);
@@ -126,6 +132,9 @@ class wbl_object {
   pwr_tCid m_cid;
   pwr_tTid m_tid;
   pwr_tOid m_oid;
+  pwr_tTime m_ohtime;
+  pwr_tTime m_rbtime;
+  pwr_tTime m_dbtime;
   char cname[32];
   pwr_mClassDef m_flags;
   wb_wblnode *fth;
@@ -269,6 +278,7 @@ public:
     ref_wblnode get_o_lch();
     int classNameToCid( char *cname, pwr_tCid *cid);
     int stringToOix( const char *buf, pwr_tOix *oix) const;
+    int stringToTime( const char *buf, pwr_tTime *time) const;
     pwr_tCid Cid() { return o->c.cid;}
     int attrStringToValue( int type_id, char *value_str, 
 			   void *buffer_ptr, size_t buff_size, size_t attr_size);

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orepdbs.cpp,v 1.14 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orepdbs.cpp,v 1.15 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -154,6 +154,16 @@ wb_name wb_orepdbs::longName()
 pwr_tTime wb_orepdbs::ohTime() const
 {
   return m_o->time;
+}
+
+pwr_tTime wb_orepdbs::rbTime() const
+{
+  return m_o->rbody.time;
+}
+
+pwr_tTime wb_orepdbs::dbTime() const
+{
+  return m_o->dbody.time;
 }
 
 pwr_mClassDef wb_orepdbs::flags() const

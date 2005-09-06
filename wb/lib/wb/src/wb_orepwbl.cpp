@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orepwbl.cpp,v 1.11 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orepwbl.cpp,v 1.12 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,7 +103,19 @@ wb_name wb_orepwbl::longName()
 
 pwr_tTime wb_orepwbl::ohTime() const
 {
-  return m_wblnode->getFileTime();
+  return m_wblnode->o->m_ohtime;
+}
+
+
+pwr_tTime wb_orepwbl::rbTime() const
+{
+  return m_wblnode->o->m_rbtime;
+}
+
+
+pwr_tTime wb_orepwbl::dbTime() const
+{
+  return m_wblnode->o->m_dbtime;
 }
 
 

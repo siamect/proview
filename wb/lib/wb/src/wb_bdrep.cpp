@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_bdrep.cpp,v 1.15 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: wb_bdrep.cpp,v 1.16 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -297,4 +297,9 @@ const char* wb_bdrep::name() const
 wb_name wb_bdrep::longName() const
 {
   return m_orep->longName();
+}
+
+pwr_tTime wb_bdrep::modTime()
+{
+  return m_orep->treeModTime();
 }

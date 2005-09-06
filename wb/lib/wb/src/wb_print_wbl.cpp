@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_print_wbl.cpp,v 1.11 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.12 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_errCnt(0),
   m_idxFlag(true),
+  m_timeFlag(true),
   m_level(0),
   m_levelInd(levelIndentation),
   m_keepName(false),
@@ -106,6 +107,7 @@ void wb_print_wbl::printBody(wb_volume& v,
   wb_attribute attr;
   wb_attribute tattr;
   const char* bname;
+  char timestr[40] = " ";
     
   wb_bdef bdef = cdef.bdef(bix);
     
@@ -122,8 +124,25 @@ void wb_print_wbl::printBody(wb_volume& v,
     return;
   }
     
-    
-  indent(1) << "Body " << bdef.name() << endl;
+  if ( m_timeFlag) {
+    // Get body time
+    pwr_tTime btime;
+    switch ( bix) {
+    case pwr_eBix_rt:
+      btime = o.rbTime();
+      strcpy( timestr, " ");
+      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
+      break;
+    case pwr_eBix_dev:
+      btime = o.dbTime();
+      strcpy( timestr, " ");
+      time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
+      break;
+    default: ;
+    }
+  }
+
+  indent(1) << "Body " << bdef.name() << timestr << endl;
   for (adef = bdef.adef(); adef; adef = adef.next()) {
     attr = o.attribute(bname, adef.name());
     tattr = templ.attribute(bname, adef.name());
@@ -424,6 +443,14 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
       idx = (unsigned long) o.oix();
     }
     m_os << " " << idx;
+  }
+  if ( m_timeFlag) {
+    // Get oh time
+    char timestr[40];
+    pwr_tTime ohtime = o.ohTime();
+    time_AtoAscii( &ohtime, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+
+    m_os << " " << timestr;
   }
   m_os << endl;
 

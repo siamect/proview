@@ -8,7 +8,7 @@ header {
 header "post_include_hpp" {
 extern int wblparser_error_cnt;
 
-# This declarations should be moved inside parser class in wb_wblparser.hpp !!
+# This_declarations_should_be_moved_inside_parser_class_in_wb_wblparser_hpp_!!
 void reportError(const RecognitionException& ex);
 }
 header "post_include_cpp" {
@@ -49,11 +49,11 @@ sobject
 	;
 
 object
-	: OBJECT^ cid (oix)? (body)* ((DOCBLOCK)? object)* ENDOBJECT
+	: OBJECT^ cid (oix)? (ASC_TIME)? (body)* ((DOCBLOCK)? object)* ENDOBJECT
 	;
 
 body
-	: BODY^ (attribute)* ENDBODY
+	: BODY^ (ASC_TIME)? (attribute)* ENDBODY
 	;
 
 attribute

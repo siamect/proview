@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_print_wbl.h,v 1.6 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_print_wbl.h,v 1.7 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,7 @@ class wb_print_wbl
 protected:
   int  m_errCnt;
   bool m_idxFlag;
+  bool m_timeFlag;
   int  m_level;
   int  m_levelInd;
   char m_indBuf[256];

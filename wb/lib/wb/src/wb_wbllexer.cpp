@@ -251,7 +251,7 @@ void wb_wbllexer::mWS(bool _createToken) {
 		{
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 49 "wb_wbllexer.g"
+#line 50 "wb_wbllexer.g"
 				newline();
 #line 257 "wb_wbllexer.cpp"
 			}
@@ -272,7 +272,7 @@ void wb_wbllexer::mWS(bool _createToken) {
 	_loop5:;
 	}
 	if ( inputState->guessing==0 ) {
-#line 51 "wb_wbllexer.g"
+#line 52 "wb_wbllexer.g"
 		_ttype = antlr::Token::SKIP;
 #line 278 "wb_wbllexer.cpp"
 	}
@@ -334,7 +334,7 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 	
 	}
 	if ( inputState->guessing==0 ) {
-#line 57 "wb_wbllexer.g"
+#line 58 "wb_wbllexer.g"
 		_ttype = antlr::Token::SKIP; newline();
 #line 340 "wb_wbllexer.cpp"
 	}
@@ -361,7 +361,7 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 			match(static_cast<unsigned char>('\r'));
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 74 "wb_wbllexer.g"
+#line 75 "wb_wbllexer.g"
 				newline();
 #line 367 "wb_wbllexer.cpp"
 			}
@@ -369,7 +369,7 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 		else if ((LA(1)==static_cast<unsigned char>('\r')) && ((LA(2) >= static_cast<unsigned char>('\3') && LA(2) <= static_cast<unsigned char>('\377')))) {
 			match(static_cast<unsigned char>('\r'));
 			if ( inputState->guessing==0 ) {
-#line 75 "wb_wbllexer.g"
+#line 76 "wb_wbllexer.g"
 				newline();
 #line 375 "wb_wbllexer.cpp"
 			}
@@ -377,7 +377,7 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 		else if ((LA(1)==static_cast<unsigned char>('\n'))) {
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 76 "wb_wbllexer.g"
+#line 77 "wb_wbllexer.g"
 				newline();
 #line 383 "wb_wbllexer.cpp"
 			}
@@ -580,7 +580,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 		oname:;
 		}
 		if ( inputState->guessing==0 ) {
-#line 100 "wb_wbllexer.g"
+#line 101 "wb_wbllexer.g"
 			_ttype = OBJECT;
 #line 586 "wb_wbllexer.cpp"
 		}
@@ -609,7 +609,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 			mWS(false);
 			text.erase(_saveIndex);
 			if ( inputState->guessing==0 ) {
-#line 102 "wb_wbllexer.g"
+#line 103 "wb_wbllexer.g"
 				_ttype = ENDOBJECT;
 #line 615 "wb_wbllexer.cpp"
 			}
@@ -757,7 +757,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 				soname:;
 				}
 				if ( inputState->guessing==0 ) {
-#line 104 "wb_wbllexer.g"
+#line 105 "wb_wbllexer.g"
 					_ttype = SOBJECT;
 #line 763 "wb_wbllexer.cpp"
 				}
@@ -786,7 +786,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 					mWS(false);
 					text.erase(_saveIndex);
 					if ( inputState->guessing==0 ) {
-#line 106 "wb_wbllexer.g"
+#line 107 "wb_wbllexer.g"
 						_ttype = ENDSOBJECT;
 #line 792 "wb_wbllexer.cpp"
 					}
@@ -924,7 +924,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 						doname:;
 						}
 						if ( inputState->guessing==0 ) {
-#line 108 "wb_wbllexer.g"
+#line 109 "wb_wbllexer.g"
 							_ttype = DOBJECT;
 #line 930 "wb_wbllexer.cpp"
 						}
@@ -953,7 +953,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 							mWS(false);
 							text.erase(_saveIndex);
 							if ( inputState->guessing==0 ) {
-#line 110 "wb_wbllexer.g"
+#line 111 "wb_wbllexer.g"
 								_ttype = ENDDOBJECT;
 #line 959 "wb_wbllexer.cpp"
 							}
@@ -1099,7 +1099,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 								
 								}
 								if ( inputState->guessing==0 ) {
-#line 112 "wb_wbllexer.g"
+#line 113 "wb_wbllexer.g"
 									_ttype = VOLUME;
 #line 1105 "wb_wbllexer.cpp"
 								}
@@ -1128,7 +1128,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 									mWS(false);
 									text.erase(_saveIndex);
 									if ( inputState->guessing==0 ) {
-#line 114 "wb_wbllexer.g"
+#line 115 "wb_wbllexer.g"
 										_ttype = ENDVOLUME;
 #line 1134 "wb_wbllexer.cpp"
 									}
@@ -1266,7 +1266,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 										buname:;
 										}
 										if ( inputState->guessing==0 ) {
-#line 116 "wb_wbllexer.g"
+#line 117 "wb_wbllexer.g"
 											_ttype = BUFFER;
 #line 1272 "wb_wbllexer.cpp"
 										}
@@ -1295,7 +1295,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 											mWS(false);
 											text.erase(_saveIndex);
 											if ( inputState->guessing==0 ) {
-#line 118 "wb_wbllexer.g"
+#line 119 "wb_wbllexer.g"
 												_ttype = ENDBUFFER;
 #line 1301 "wb_wbllexer.cpp"
 											}
@@ -1433,7 +1433,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 												boname:;
 												}
 												if ( inputState->guessing==0 ) {
-#line 120 "wb_wbllexer.g"
+#line 121 "wb_wbllexer.g"
 													_ttype = BODY;
 #line 1439 "wb_wbllexer.cpp"
 												}
@@ -1462,7 +1462,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 													mWS(false);
 													text.erase(_saveIndex);
 													if ( inputState->guessing==0 ) {
-#line 122 "wb_wbllexer.g"
+#line 123 "wb_wbllexer.g"
 														_ttype = ENDBODY;
 #line 1468 "wb_wbllexer.cpp"
 													}
@@ -1739,7 +1739,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 														_loop63:;
 														}
 														if ( inputState->guessing==0 ) {
-#line 124 "wb_wbllexer.g"
+#line 125 "wb_wbllexer.g"
 															_ttype = ATTRIBUTE;
 #line 1745 "wb_wbllexer.cpp"
 														}
@@ -1782,341 +1782,26 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															
 															}
 															if ( inputState->guessing==0 ) {
-#line 126 "wb_wbllexer.g"
+#line 127 "wb_wbllexer.g"
 																_ttype = OID;
 #line 1788 "wb_wbllexer.cpp"
 															}
 														}
 														else {
-															bool synPredMatched68 = false;
-															if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_2.member(LA(2))))) {
-																int _m68 = mark();
-																synPredMatched68 = true;
+															bool synPredMatched73 = false;
+															if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9'))))) {
+																int _m73 = mark();
+																synPredMatched73 = true;
 																inputState->guessing++;
 																try {
 																	{
-																	mDIGITS(false);
-																	match(static_cast<unsigned char>('.'));
-																	}
-																}
-																catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-																	synPredMatched68 = false;
-																}
-																rewind(_m68);
-																inputState->guessing--;
-															}
-															if ( synPredMatched68 ) {
-																mDIGITS(false);
-																match(static_cast<unsigned char>('.'));
-																{
-																for (;;) {
-																	if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																		matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																	}
-																	else {
-																		goto _loop70;
-																	}
-																	
-																}
-																_loop70:;
-																}
-																{
-																if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
 																	{
-																	switch ( LA(1)) {
-																	case static_cast<unsigned char>('e'):
-																	{
-																		match(static_cast<unsigned char>('e'));
-																		break;
-																	}
-																	case static_cast<unsigned char>('E'):
-																	{
-																		match(static_cast<unsigned char>('E'));
-																		break;
-																	}
-																	default:
-																	{
-																		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																	}
-																	}
+																	matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																	}
 																	{
-																	switch ( LA(1)) {
-																	case static_cast<unsigned char>('+'):
-																	{
-																		match(static_cast<unsigned char>('+'));
-																		break;
+																	matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 																	}
-																	case static_cast<unsigned char>('-'):
-																	{
-																		match(static_cast<unsigned char>('-'));
-																		break;
-																	}
-																	case static_cast<unsigned char>('0'):
-																	case static_cast<unsigned char>('1'):
-																	case static_cast<unsigned char>('2'):
-																	case static_cast<unsigned char>('3'):
-																	case static_cast<unsigned char>('4'):
-																	case static_cast<unsigned char>('5'):
-																	case static_cast<unsigned char>('6'):
-																	case static_cast<unsigned char>('7'):
-																	case static_cast<unsigned char>('8'):
-																	case static_cast<unsigned char>('9'):
-																	{
-																		break;
-																	}
-																	default:
-																	{
-																		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																	}
-																	}
-																	}
-																	{
-																	int _cnt75=0;
-																	for (;;) {
-																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																		}
-																		else {
-																			if ( _cnt75>=1 ) { goto _loop75; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
-																		}
-																		
-																		_cnt75++;
-																	}
-																	_loop75:;
-																	}
-																}
-																else {
-																}
-																
-																}
-																if ( inputState->guessing==0 ) {
-#line 128 "wb_wbllexer.g"
-																	_ttype = NUM_FLOAT;
-#line 1897 "wb_wbllexer.cpp"
-																}
-															}
-															else {
-																bool synPredMatched77 = false;
-																if (((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9'))))) {
-																	int _m77 = mark();
-																	synPredMatched77 = true;
-																	inputState->guessing++;
-																	try {
-																		{
-																		match(static_cast<unsigned char>('-'));
-																		mDIGITS(false);
-																		match(static_cast<unsigned char>('.'));
-																		}
-																	}
-																	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
-																		synPredMatched77 = false;
-																	}
-																	rewind(_m77);
-																	inputState->guessing--;
-																}
-																if ( synPredMatched77 ) {
 																	match(static_cast<unsigned char>('-'));
-																	mDIGITS(false);
-																	match(static_cast<unsigned char>('.'));
-																	{
-																	for (;;) {
-																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																		}
-																		else {
-																			goto _loop79;
-																		}
-																		
-																	}
-																	_loop79:;
-																	}
-																	{
-																	if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
-																		{
-																		switch ( LA(1)) {
-																		case static_cast<unsigned char>('e'):
-																		{
-																			match(static_cast<unsigned char>('e'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('E'):
-																		{
-																			match(static_cast<unsigned char>('E'));
-																			break;
-																		}
-																		default:
-																		{
-																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																		}
-																		}
-																		}
-																		{
-																		switch ( LA(1)) {
-																		case static_cast<unsigned char>('+'):
-																		{
-																			match(static_cast<unsigned char>('+'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('-'):
-																		{
-																			match(static_cast<unsigned char>('-'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('0'):
-																		case static_cast<unsigned char>('1'):
-																		case static_cast<unsigned char>('2'):
-																		case static_cast<unsigned char>('3'):
-																		case static_cast<unsigned char>('4'):
-																		case static_cast<unsigned char>('5'):
-																		case static_cast<unsigned char>('6'):
-																		case static_cast<unsigned char>('7'):
-																		case static_cast<unsigned char>('8'):
-																		case static_cast<unsigned char>('9'):
-																		{
-																			break;
-																		}
-																		default:
-																		{
-																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																		}
-																		}
-																		}
-																		{
-																		int _cnt84=0;
-																		for (;;) {
-																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																			}
-																			else {
-																				if ( _cnt84>=1 ) { goto _loop84; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
-																			}
-																			
-																			_cnt84++;
-																		}
-																		_loop84:;
-																		}
-																	}
-																	else {
-																	}
-																	
-																	}
-																	if ( inputState->guessing==0 ) {
-#line 130 "wb_wbllexer.g"
-																		_ttype = NUM_FLOAT;
-#line 2008 "wb_wbllexer.cpp"
-																	}
-																}
-																else if ((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9')))) {
-																	match(static_cast<unsigned char>('-'));
-																	mDIGITS(false);
-																	if ( inputState->guessing==0 ) {
-#line 136 "wb_wbllexer.g"
-																		_ttype = INT;
-#line 2017 "wb_wbllexer.cpp"
-																	}
-																}
-																else if ((LA(1)==static_cast<unsigned char>('.'))) {
-																	match(static_cast<unsigned char>('.'));
-																	{
-																	int _cnt86=0;
-																	for (;;) {
-																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																		}
-																		else {
-																			if ( _cnt86>=1 ) { goto _loop86; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
-																		}
-																		
-																		_cnt86++;
-																	}
-																	_loop86:;
-																	}
-																	{
-																	if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
-																		{
-																		switch ( LA(1)) {
-																		case static_cast<unsigned char>('e'):
-																		{
-																			match(static_cast<unsigned char>('e'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('E'):
-																		{
-																			match(static_cast<unsigned char>('E'));
-																			break;
-																		}
-																		default:
-																		{
-																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																		}
-																		}
-																		}
-																		{
-																		switch ( LA(1)) {
-																		case static_cast<unsigned char>('+'):
-																		{
-																			match(static_cast<unsigned char>('+'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('-'):
-																		{
-																			match(static_cast<unsigned char>('-'));
-																			break;
-																		}
-																		case static_cast<unsigned char>('0'):
-																		case static_cast<unsigned char>('1'):
-																		case static_cast<unsigned char>('2'):
-																		case static_cast<unsigned char>('3'):
-																		case static_cast<unsigned char>('4'):
-																		case static_cast<unsigned char>('5'):
-																		case static_cast<unsigned char>('6'):
-																		case static_cast<unsigned char>('7'):
-																		case static_cast<unsigned char>('8'):
-																		case static_cast<unsigned char>('9'):
-																		{
-																			break;
-																		}
-																		default:
-																		{
-																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
-																		}
-																		}
-																		}
-																		{
-																		int _cnt91=0;
-																		for (;;) {
-																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
-																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																			}
-																			else {
-																				if ( _cnt91>=1 ) { goto _loop91; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
-																			}
-																			
-																			_cnt91++;
-																		}
-																		_loop91:;
-																		}
-																	}
-																	else {
-																	}
-																	
-																	}
-																	if ( inputState->guessing==0 ) {
-#line 132 "wb_wbllexer.g"
-																		_ttype = NUM_FLOAT;
-#line 2109 "wb_wbllexer.cpp"
-																	}
-																}
-																else if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (true)) {
-																	mDIGITS(false);
-																	if ( inputState->guessing==0 ) {
-#line 134 "wb_wbllexer.g"
-																		_ttype = INT;
-#line 2117 "wb_wbllexer.cpp"
-																	}
-																}
-																else if ((_tokenSet_3.member(LA(1))) && (true)) {
 																	{
 																	switch ( LA(1)) {
 																	case static_cast<unsigned char>('a'):
@@ -2179,24 +1864,72 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
 																		break;
 																	}
-																	case static_cast<unsigned char>('$'):
+																	default:
 																	{
-																		match(static_cast<unsigned char>('$'));
+																		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																	}
+																	}
+																	}
+																	{
+																	switch ( LA(1)) {
+																	case static_cast<unsigned char>('a'):
+																	case static_cast<unsigned char>('b'):
+																	case static_cast<unsigned char>('c'):
+																	case static_cast<unsigned char>('d'):
+																	case static_cast<unsigned char>('e'):
+																	case static_cast<unsigned char>('f'):
+																	case static_cast<unsigned char>('g'):
+																	case static_cast<unsigned char>('h'):
+																	case static_cast<unsigned char>('i'):
+																	case static_cast<unsigned char>('j'):
+																	case static_cast<unsigned char>('k'):
+																	case static_cast<unsigned char>('l'):
+																	case static_cast<unsigned char>('m'):
+																	case static_cast<unsigned char>('n'):
+																	case static_cast<unsigned char>('o'):
+																	case static_cast<unsigned char>('p'):
+																	case static_cast<unsigned char>('q'):
+																	case static_cast<unsigned char>('r'):
+																	case static_cast<unsigned char>('s'):
+																	case static_cast<unsigned char>('t'):
+																	case static_cast<unsigned char>('u'):
+																	case static_cast<unsigned char>('v'):
+																	case static_cast<unsigned char>('w'):
+																	case static_cast<unsigned char>('x'):
+																	case static_cast<unsigned char>('y'):
+																	case static_cast<unsigned char>('z'):
+																	{
+																		matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
 																		break;
 																	}
-																	case static_cast<unsigned char>('_'):
+																	case static_cast<unsigned char>('A'):
+																	case static_cast<unsigned char>('B'):
+																	case static_cast<unsigned char>('C'):
+																	case static_cast<unsigned char>('D'):
+																	case static_cast<unsigned char>('E'):
+																	case static_cast<unsigned char>('F'):
+																	case static_cast<unsigned char>('G'):
+																	case static_cast<unsigned char>('H'):
+																	case static_cast<unsigned char>('I'):
+																	case static_cast<unsigned char>('J'):
+																	case static_cast<unsigned char>('K'):
+																	case static_cast<unsigned char>('L'):
+																	case static_cast<unsigned char>('M'):
+																	case static_cast<unsigned char>('N'):
+																	case static_cast<unsigned char>('O'):
+																	case static_cast<unsigned char>('P'):
+																	case static_cast<unsigned char>('Q'):
+																	case static_cast<unsigned char>('R'):
+																	case static_cast<unsigned char>('S'):
+																	case static_cast<unsigned char>('T'):
+																	case static_cast<unsigned char>('U'):
+																	case static_cast<unsigned char>('V'):
+																	case static_cast<unsigned char>('W'):
+																	case static_cast<unsigned char>('X'):
+																	case static_cast<unsigned char>('Y'):
+																	case static_cast<unsigned char>('Z'):
 																	{
-																		match(static_cast<unsigned char>('_'));
-																		break;
-																	}
-																	case static_cast<unsigned char>('\304'):
-																	case static_cast<unsigned char>('\305'):
-																	case static_cast<unsigned char>('\326'):
-																	case static_cast<unsigned char>('\344'):
-																	case static_cast<unsigned char>('\345'):
-																	case static_cast<unsigned char>('\366'):
-																	{
-																		mSWEC(false);
+																		matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
 																		break;
 																	}
 																	default:
@@ -2206,7 +1939,681 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																	}
 																	{
+																	switch ( LA(1)) {
+																	case static_cast<unsigned char>('a'):
+																	case static_cast<unsigned char>('b'):
+																	case static_cast<unsigned char>('c'):
+																	case static_cast<unsigned char>('d'):
+																	case static_cast<unsigned char>('e'):
+																	case static_cast<unsigned char>('f'):
+																	case static_cast<unsigned char>('g'):
+																	case static_cast<unsigned char>('h'):
+																	case static_cast<unsigned char>('i'):
+																	case static_cast<unsigned char>('j'):
+																	case static_cast<unsigned char>('k'):
+																	case static_cast<unsigned char>('l'):
+																	case static_cast<unsigned char>('m'):
+																	case static_cast<unsigned char>('n'):
+																	case static_cast<unsigned char>('o'):
+																	case static_cast<unsigned char>('p'):
+																	case static_cast<unsigned char>('q'):
+																	case static_cast<unsigned char>('r'):
+																	case static_cast<unsigned char>('s'):
+																	case static_cast<unsigned char>('t'):
+																	case static_cast<unsigned char>('u'):
+																	case static_cast<unsigned char>('v'):
+																	case static_cast<unsigned char>('w'):
+																	case static_cast<unsigned char>('x'):
+																	case static_cast<unsigned char>('y'):
+																	case static_cast<unsigned char>('z'):
+																	{
+																		matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
+																		break;
+																	}
+																	case static_cast<unsigned char>('A'):
+																	case static_cast<unsigned char>('B'):
+																	case static_cast<unsigned char>('C'):
+																	case static_cast<unsigned char>('D'):
+																	case static_cast<unsigned char>('E'):
+																	case static_cast<unsigned char>('F'):
+																	case static_cast<unsigned char>('G'):
+																	case static_cast<unsigned char>('H'):
+																	case static_cast<unsigned char>('I'):
+																	case static_cast<unsigned char>('J'):
+																	case static_cast<unsigned char>('K'):
+																	case static_cast<unsigned char>('L'):
+																	case static_cast<unsigned char>('M'):
+																	case static_cast<unsigned char>('N'):
+																	case static_cast<unsigned char>('O'):
+																	case static_cast<unsigned char>('P'):
+																	case static_cast<unsigned char>('Q'):
+																	case static_cast<unsigned char>('R'):
+																	case static_cast<unsigned char>('S'):
+																	case static_cast<unsigned char>('T'):
+																	case static_cast<unsigned char>('U'):
+																	case static_cast<unsigned char>('V'):
+																	case static_cast<unsigned char>('W'):
+																	case static_cast<unsigned char>('X'):
+																	case static_cast<unsigned char>('Y'):
+																	case static_cast<unsigned char>('Z'):
+																	{
+																		matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
+																		break;
+																	}
+																	default:
+																	{
+																		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																	}
+																	}
+																	}
+																	match(static_cast<unsigned char>('-'));
+																	}
+																}
+																catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
+																	synPredMatched73 = false;
+																}
+																rewind(_m73);
+																inputState->guessing--;
+															}
+															if ( synPredMatched73 ) {
+																{
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																match(static_cast<unsigned char>('-'));
+																{
+																switch ( LA(1)) {
+																case static_cast<unsigned char>('a'):
+																case static_cast<unsigned char>('b'):
+																case static_cast<unsigned char>('c'):
+																case static_cast<unsigned char>('d'):
+																case static_cast<unsigned char>('e'):
+																case static_cast<unsigned char>('f'):
+																case static_cast<unsigned char>('g'):
+																case static_cast<unsigned char>('h'):
+																case static_cast<unsigned char>('i'):
+																case static_cast<unsigned char>('j'):
+																case static_cast<unsigned char>('k'):
+																case static_cast<unsigned char>('l'):
+																case static_cast<unsigned char>('m'):
+																case static_cast<unsigned char>('n'):
+																case static_cast<unsigned char>('o'):
+																case static_cast<unsigned char>('p'):
+																case static_cast<unsigned char>('q'):
+																case static_cast<unsigned char>('r'):
+																case static_cast<unsigned char>('s'):
+																case static_cast<unsigned char>('t'):
+																case static_cast<unsigned char>('u'):
+																case static_cast<unsigned char>('v'):
+																case static_cast<unsigned char>('w'):
+																case static_cast<unsigned char>('x'):
+																case static_cast<unsigned char>('y'):
+																case static_cast<unsigned char>('z'):
+																{
+																	matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
+																	break;
+																}
+																case static_cast<unsigned char>('A'):
+																case static_cast<unsigned char>('B'):
+																case static_cast<unsigned char>('C'):
+																case static_cast<unsigned char>('D'):
+																case static_cast<unsigned char>('E'):
+																case static_cast<unsigned char>('F'):
+																case static_cast<unsigned char>('G'):
+																case static_cast<unsigned char>('H'):
+																case static_cast<unsigned char>('I'):
+																case static_cast<unsigned char>('J'):
+																case static_cast<unsigned char>('K'):
+																case static_cast<unsigned char>('L'):
+																case static_cast<unsigned char>('M'):
+																case static_cast<unsigned char>('N'):
+																case static_cast<unsigned char>('O'):
+																case static_cast<unsigned char>('P'):
+																case static_cast<unsigned char>('Q'):
+																case static_cast<unsigned char>('R'):
+																case static_cast<unsigned char>('S'):
+																case static_cast<unsigned char>('T'):
+																case static_cast<unsigned char>('U'):
+																case static_cast<unsigned char>('V'):
+																case static_cast<unsigned char>('W'):
+																case static_cast<unsigned char>('X'):
+																case static_cast<unsigned char>('Y'):
+																case static_cast<unsigned char>('Z'):
+																{
+																	matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
+																	break;
+																}
+																default:
+																{
+																	throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																}
+																}
+																}
+																{
+																switch ( LA(1)) {
+																case static_cast<unsigned char>('a'):
+																case static_cast<unsigned char>('b'):
+																case static_cast<unsigned char>('c'):
+																case static_cast<unsigned char>('d'):
+																case static_cast<unsigned char>('e'):
+																case static_cast<unsigned char>('f'):
+																case static_cast<unsigned char>('g'):
+																case static_cast<unsigned char>('h'):
+																case static_cast<unsigned char>('i'):
+																case static_cast<unsigned char>('j'):
+																case static_cast<unsigned char>('k'):
+																case static_cast<unsigned char>('l'):
+																case static_cast<unsigned char>('m'):
+																case static_cast<unsigned char>('n'):
+																case static_cast<unsigned char>('o'):
+																case static_cast<unsigned char>('p'):
+																case static_cast<unsigned char>('q'):
+																case static_cast<unsigned char>('r'):
+																case static_cast<unsigned char>('s'):
+																case static_cast<unsigned char>('t'):
+																case static_cast<unsigned char>('u'):
+																case static_cast<unsigned char>('v'):
+																case static_cast<unsigned char>('w'):
+																case static_cast<unsigned char>('x'):
+																case static_cast<unsigned char>('y'):
+																case static_cast<unsigned char>('z'):
+																{
+																	matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
+																	break;
+																}
+																case static_cast<unsigned char>('A'):
+																case static_cast<unsigned char>('B'):
+																case static_cast<unsigned char>('C'):
+																case static_cast<unsigned char>('D'):
+																case static_cast<unsigned char>('E'):
+																case static_cast<unsigned char>('F'):
+																case static_cast<unsigned char>('G'):
+																case static_cast<unsigned char>('H'):
+																case static_cast<unsigned char>('I'):
+																case static_cast<unsigned char>('J'):
+																case static_cast<unsigned char>('K'):
+																case static_cast<unsigned char>('L'):
+																case static_cast<unsigned char>('M'):
+																case static_cast<unsigned char>('N'):
+																case static_cast<unsigned char>('O'):
+																case static_cast<unsigned char>('P'):
+																case static_cast<unsigned char>('Q'):
+																case static_cast<unsigned char>('R'):
+																case static_cast<unsigned char>('S'):
+																case static_cast<unsigned char>('T'):
+																case static_cast<unsigned char>('U'):
+																case static_cast<unsigned char>('V'):
+																case static_cast<unsigned char>('W'):
+																case static_cast<unsigned char>('X'):
+																case static_cast<unsigned char>('Y'):
+																case static_cast<unsigned char>('Z'):
+																{
+																	matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
+																	break;
+																}
+																default:
+																{
+																	throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																}
+																}
+																}
+																{
+																switch ( LA(1)) {
+																case static_cast<unsigned char>('a'):
+																case static_cast<unsigned char>('b'):
+																case static_cast<unsigned char>('c'):
+																case static_cast<unsigned char>('d'):
+																case static_cast<unsigned char>('e'):
+																case static_cast<unsigned char>('f'):
+																case static_cast<unsigned char>('g'):
+																case static_cast<unsigned char>('h'):
+																case static_cast<unsigned char>('i'):
+																case static_cast<unsigned char>('j'):
+																case static_cast<unsigned char>('k'):
+																case static_cast<unsigned char>('l'):
+																case static_cast<unsigned char>('m'):
+																case static_cast<unsigned char>('n'):
+																case static_cast<unsigned char>('o'):
+																case static_cast<unsigned char>('p'):
+																case static_cast<unsigned char>('q'):
+																case static_cast<unsigned char>('r'):
+																case static_cast<unsigned char>('s'):
+																case static_cast<unsigned char>('t'):
+																case static_cast<unsigned char>('u'):
+																case static_cast<unsigned char>('v'):
+																case static_cast<unsigned char>('w'):
+																case static_cast<unsigned char>('x'):
+																case static_cast<unsigned char>('y'):
+																case static_cast<unsigned char>('z'):
+																{
+																	matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
+																	break;
+																}
+																case static_cast<unsigned char>('A'):
+																case static_cast<unsigned char>('B'):
+																case static_cast<unsigned char>('C'):
+																case static_cast<unsigned char>('D'):
+																case static_cast<unsigned char>('E'):
+																case static_cast<unsigned char>('F'):
+																case static_cast<unsigned char>('G'):
+																case static_cast<unsigned char>('H'):
+																case static_cast<unsigned char>('I'):
+																case static_cast<unsigned char>('J'):
+																case static_cast<unsigned char>('K'):
+																case static_cast<unsigned char>('L'):
+																case static_cast<unsigned char>('M'):
+																case static_cast<unsigned char>('N'):
+																case static_cast<unsigned char>('O'):
+																case static_cast<unsigned char>('P'):
+																case static_cast<unsigned char>('Q'):
+																case static_cast<unsigned char>('R'):
+																case static_cast<unsigned char>('S'):
+																case static_cast<unsigned char>('T'):
+																case static_cast<unsigned char>('U'):
+																case static_cast<unsigned char>('V'):
+																case static_cast<unsigned char>('W'):
+																case static_cast<unsigned char>('X'):
+																case static_cast<unsigned char>('Y'):
+																case static_cast<unsigned char>('Z'):
+																{
+																	matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
+																	break;
+																}
+																default:
+																{
+																	throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																}
+																}
+																}
+																match(static_cast<unsigned char>('-'));
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																match(static_cast<unsigned char>(' '));
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																match(static_cast<unsigned char>(':'));
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																match(static_cast<unsigned char>(':'));
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																}
+																{
+																if ((LA(1)==static_cast<unsigned char>('.'))) {
+																	match(static_cast<unsigned char>('.'));
+																	{
+																	matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																	}
+																	{
+																	matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																	}
+																}
+																else {
+																}
+																
+																}
+																}
+																if ( inputState->guessing==0 ) {
+#line 129 "wb_wbllexer.g"
+																	_ttype = ASC_TIME;
+#line 2284 "wb_wbllexer.cpp"
+																}
+															}
+															else {
+																bool synPredMatched94 = false;
+																if ((((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (_tokenSet_2.member(LA(2))))) {
+																	int _m94 = mark();
+																	synPredMatched94 = true;
+																	inputState->guessing++;
+																	try {
+																		{
+																		mDIGITS(false);
+																		match(static_cast<unsigned char>('.'));
+																		}
+																	}
+																	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
+																		synPredMatched94 = false;
+																	}
+																	rewind(_m94);
+																	inputState->guessing--;
+																}
+																if ( synPredMatched94 ) {
+																	mDIGITS(false);
+																	match(static_cast<unsigned char>('.'));
+																	{
 																	for (;;) {
+																		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																		}
+																		else {
+																			goto _loop96;
+																		}
+																		
+																	}
+																	_loop96:;
+																	}
+																	{
+																	if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
+																		{
+																		switch ( LA(1)) {
+																		case static_cast<unsigned char>('e'):
+																		{
+																			match(static_cast<unsigned char>('e'));
+																			break;
+																		}
+																		case static_cast<unsigned char>('E'):
+																		{
+																			match(static_cast<unsigned char>('E'));
+																			break;
+																		}
+																		default:
+																		{
+																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																		}
+																		}
+																		}
+																		{
+																		switch ( LA(1)) {
+																		case static_cast<unsigned char>('+'):
+																		{
+																			match(static_cast<unsigned char>('+'));
+																			break;
+																		}
+																		case static_cast<unsigned char>('-'):
+																		{
+																			match(static_cast<unsigned char>('-'));
+																			break;
+																		}
+																		case static_cast<unsigned char>('0'):
+																		case static_cast<unsigned char>('1'):
+																		case static_cast<unsigned char>('2'):
+																		case static_cast<unsigned char>('3'):
+																		case static_cast<unsigned char>('4'):
+																		case static_cast<unsigned char>('5'):
+																		case static_cast<unsigned char>('6'):
+																		case static_cast<unsigned char>('7'):
+																		case static_cast<unsigned char>('8'):
+																		case static_cast<unsigned char>('9'):
+																		{
+																			break;
+																		}
+																		default:
+																		{
+																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																		}
+																		}
+																		}
+																		{
+																		int _cnt101=0;
+																		for (;;) {
+																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																			}
+																			else {
+																				if ( _cnt101>=1 ) { goto _loop101; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																			}
+																			
+																			_cnt101++;
+																		}
+																		_loop101:;
+																		}
+																	}
+																	else {
+																	}
+																	
+																	}
+																	if ( inputState->guessing==0 ) {
+#line 131 "wb_wbllexer.g"
+																		_ttype = NUM_FLOAT;
+#line 2393 "wb_wbllexer.cpp"
+																	}
+																}
+																else {
+																	bool synPredMatched103 = false;
+																	if (((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9'))))) {
+																		int _m103 = mark();
+																		synPredMatched103 = true;
+																		inputState->guessing++;
+																		try {
+																			{
+																			match(static_cast<unsigned char>('-'));
+																			mDIGITS(false);
+																			match(static_cast<unsigned char>('.'));
+																			}
+																		}
+																		catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
+																			synPredMatched103 = false;
+																		}
+																		rewind(_m103);
+																		inputState->guessing--;
+																	}
+																	if ( synPredMatched103 ) {
+																		match(static_cast<unsigned char>('-'));
+																		mDIGITS(false);
+																		match(static_cast<unsigned char>('.'));
+																		{
+																		for (;;) {
+																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																			}
+																			else {
+																				goto _loop105;
+																			}
+																			
+																		}
+																		_loop105:;
+																		}
+																		{
+																		if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
+																			{
+																			switch ( LA(1)) {
+																			case static_cast<unsigned char>('e'):
+																			{
+																				match(static_cast<unsigned char>('e'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('E'):
+																			{
+																				match(static_cast<unsigned char>('E'));
+																				break;
+																			}
+																			default:
+																			{
+																				throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																			}
+																			}
+																			}
+																			{
+																			switch ( LA(1)) {
+																			case static_cast<unsigned char>('+'):
+																			{
+																				match(static_cast<unsigned char>('+'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('-'):
+																			{
+																				match(static_cast<unsigned char>('-'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('0'):
+																			case static_cast<unsigned char>('1'):
+																			case static_cast<unsigned char>('2'):
+																			case static_cast<unsigned char>('3'):
+																			case static_cast<unsigned char>('4'):
+																			case static_cast<unsigned char>('5'):
+																			case static_cast<unsigned char>('6'):
+																			case static_cast<unsigned char>('7'):
+																			case static_cast<unsigned char>('8'):
+																			case static_cast<unsigned char>('9'):
+																			{
+																				break;
+																			}
+																			default:
+																			{
+																				throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																			}
+																			}
+																			}
+																			{
+																			int _cnt110=0;
+																			for (;;) {
+																				if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																					matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																				}
+																				else {
+																					if ( _cnt110>=1 ) { goto _loop110; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																				}
+																				
+																				_cnt110++;
+																			}
+																			_loop110:;
+																			}
+																		}
+																		else {
+																		}
+																		
+																		}
+																		if ( inputState->guessing==0 ) {
+#line 133 "wb_wbllexer.g"
+																			_ttype = NUM_FLOAT;
+#line 2504 "wb_wbllexer.cpp"
+																		}
+																	}
+																	else if ((LA(1)==static_cast<unsigned char>('-')) && ((LA(2) >= static_cast<unsigned char>('0') && LA(2) <= static_cast<unsigned char>('9')))) {
+																		match(static_cast<unsigned char>('-'));
+																		mDIGITS(false);
+																		if ( inputState->guessing==0 ) {
+#line 139 "wb_wbllexer.g"
+																			_ttype = INT;
+#line 2513 "wb_wbllexer.cpp"
+																		}
+																	}
+																	else if ((LA(1)==static_cast<unsigned char>('.'))) {
+																		match(static_cast<unsigned char>('.'));
+																		{
+																		int _cnt112=0;
+																		for (;;) {
+																			if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																			}
+																			else {
+																				if ( _cnt112>=1 ) { goto _loop112; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																			}
+																			
+																			_cnt112++;
+																		}
+																		_loop112:;
+																		}
+																		{
+																		if ((LA(1)==static_cast<unsigned char>('E')||LA(1)==static_cast<unsigned char>('e'))) {
+																			{
+																			switch ( LA(1)) {
+																			case static_cast<unsigned char>('e'):
+																			{
+																				match(static_cast<unsigned char>('e'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('E'):
+																			{
+																				match(static_cast<unsigned char>('E'));
+																				break;
+																			}
+																			default:
+																			{
+																				throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																			}
+																			}
+																			}
+																			{
+																			switch ( LA(1)) {
+																			case static_cast<unsigned char>('+'):
+																			{
+																				match(static_cast<unsigned char>('+'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('-'):
+																			{
+																				match(static_cast<unsigned char>('-'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('0'):
+																			case static_cast<unsigned char>('1'):
+																			case static_cast<unsigned char>('2'):
+																			case static_cast<unsigned char>('3'):
+																			case static_cast<unsigned char>('4'):
+																			case static_cast<unsigned char>('5'):
+																			case static_cast<unsigned char>('6'):
+																			case static_cast<unsigned char>('7'):
+																			case static_cast<unsigned char>('8'):
+																			case static_cast<unsigned char>('9'):
+																			{
+																				break;
+																			}
+																			default:
+																			{
+																				throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
+																			}
+																			}
+																			}
+																			{
+																			int _cnt117=0;
+																			for (;;) {
+																				if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
+																					matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																				}
+																				else {
+																					if ( _cnt117>=1 ) { goto _loop117; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+																				}
+																				
+																				_cnt117++;
+																			}
+																			_loop117:;
+																			}
+																		}
+																		else {
+																		}
+																		
+																		}
+																		if ( inputState->guessing==0 ) {
+#line 135 "wb_wbllexer.g"
+																			_ttype = NUM_FLOAT;
+#line 2605 "wb_wbllexer.cpp"
+																		}
+																	}
+																	else if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9'))) && (true)) {
+																		mDIGITS(false);
+																		if ( inputState->guessing==0 ) {
+#line 137 "wb_wbllexer.g"
+																			_ttype = INT;
+#line 2613 "wb_wbllexer.cpp"
+																		}
+																	}
+																	else if ((_tokenSet_3.member(LA(1))) && (true)) {
+																		{
 																		switch ( LA(1)) {
 																		case static_cast<unsigned char>('a'):
 																		case static_cast<unsigned char>('b'):
@@ -2268,20 +2675,6 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
 																			break;
 																		}
-																		case static_cast<unsigned char>('0'):
-																		case static_cast<unsigned char>('1'):
-																		case static_cast<unsigned char>('2'):
-																		case static_cast<unsigned char>('3'):
-																		case static_cast<unsigned char>('4'):
-																		case static_cast<unsigned char>('5'):
-																		case static_cast<unsigned char>('6'):
-																		case static_cast<unsigned char>('7'):
-																		case static_cast<unsigned char>('8'):
-																		case static_cast<unsigned char>('9'):
-																		{
-																			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
-																			break;
-																		}
 																		case static_cast<unsigned char>('$'):
 																		{
 																			match(static_cast<unsigned char>('$'));
@@ -2304,17 +2697,120 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																		default:
 																		{
-																			goto _loop94;
+																			throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
 																		}
 																		}
+																		}
+																		{
+																		for (;;) {
+																			switch ( LA(1)) {
+																			case static_cast<unsigned char>('a'):
+																			case static_cast<unsigned char>('b'):
+																			case static_cast<unsigned char>('c'):
+																			case static_cast<unsigned char>('d'):
+																			case static_cast<unsigned char>('e'):
+																			case static_cast<unsigned char>('f'):
+																			case static_cast<unsigned char>('g'):
+																			case static_cast<unsigned char>('h'):
+																			case static_cast<unsigned char>('i'):
+																			case static_cast<unsigned char>('j'):
+																			case static_cast<unsigned char>('k'):
+																			case static_cast<unsigned char>('l'):
+																			case static_cast<unsigned char>('m'):
+																			case static_cast<unsigned char>('n'):
+																			case static_cast<unsigned char>('o'):
+																			case static_cast<unsigned char>('p'):
+																			case static_cast<unsigned char>('q'):
+																			case static_cast<unsigned char>('r'):
+																			case static_cast<unsigned char>('s'):
+																			case static_cast<unsigned char>('t'):
+																			case static_cast<unsigned char>('u'):
+																			case static_cast<unsigned char>('v'):
+																			case static_cast<unsigned char>('w'):
+																			case static_cast<unsigned char>('x'):
+																			case static_cast<unsigned char>('y'):
+																			case static_cast<unsigned char>('z'):
+																			{
+																				matchRange(static_cast<unsigned char>('a'),static_cast<unsigned char>('z'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('A'):
+																			case static_cast<unsigned char>('B'):
+																			case static_cast<unsigned char>('C'):
+																			case static_cast<unsigned char>('D'):
+																			case static_cast<unsigned char>('E'):
+																			case static_cast<unsigned char>('F'):
+																			case static_cast<unsigned char>('G'):
+																			case static_cast<unsigned char>('H'):
+																			case static_cast<unsigned char>('I'):
+																			case static_cast<unsigned char>('J'):
+																			case static_cast<unsigned char>('K'):
+																			case static_cast<unsigned char>('L'):
+																			case static_cast<unsigned char>('M'):
+																			case static_cast<unsigned char>('N'):
+																			case static_cast<unsigned char>('O'):
+																			case static_cast<unsigned char>('P'):
+																			case static_cast<unsigned char>('Q'):
+																			case static_cast<unsigned char>('R'):
+																			case static_cast<unsigned char>('S'):
+																			case static_cast<unsigned char>('T'):
+																			case static_cast<unsigned char>('U'):
+																			case static_cast<unsigned char>('V'):
+																			case static_cast<unsigned char>('W'):
+																			case static_cast<unsigned char>('X'):
+																			case static_cast<unsigned char>('Y'):
+																			case static_cast<unsigned char>('Z'):
+																			{
+																				matchRange(static_cast<unsigned char>('A'),static_cast<unsigned char>('Z'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('0'):
+																			case static_cast<unsigned char>('1'):
+																			case static_cast<unsigned char>('2'):
+																			case static_cast<unsigned char>('3'):
+																			case static_cast<unsigned char>('4'):
+																			case static_cast<unsigned char>('5'):
+																			case static_cast<unsigned char>('6'):
+																			case static_cast<unsigned char>('7'):
+																			case static_cast<unsigned char>('8'):
+																			case static_cast<unsigned char>('9'):
+																			{
+																				matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('$'):
+																			{
+																				match(static_cast<unsigned char>('$'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('_'):
+																			{
+																				match(static_cast<unsigned char>('_'));
+																				break;
+																			}
+																			case static_cast<unsigned char>('\304'):
+																			case static_cast<unsigned char>('\305'):
+																			case static_cast<unsigned char>('\326'):
+																			case static_cast<unsigned char>('\344'):
+																			case static_cast<unsigned char>('\345'):
+																			case static_cast<unsigned char>('\366'):
+																			{
+																				mSWEC(false);
+																				break;
+																			}
+																			default:
+																			{
+																				goto _loop120;
+																			}
+																			}
+																		}
+																		_loop120:;
+																		}
 																	}
-																	_loop94:;
-																	}
-																}
 	else {
 		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());
 	}
-	}}}}}}}}}}}}}}}
+	}}}}}}}}}}}}}}}}
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
 	   _token->setText(text.substr(_begin, text.length()-_begin));
@@ -2378,18 +2874,18 @@ void wb_wbllexer::mDIGITS(bool _createToken) {
 	int _saveIndex;
 	
 	{
-	int _cnt102=0;
+	int _cnt128=0;
 	for (;;) {
 		if (((LA(1) >= static_cast<unsigned char>('0') && LA(1) <= static_cast<unsigned char>('9')))) {
 			matchRange(static_cast<unsigned char>('0'),static_cast<unsigned char>('9'));
 		}
 		else {
-			if ( _cnt102>=1 ) { goto _loop102; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
+			if ( _cnt128>=1 ) { goto _loop128; } else {throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine());}
 		}
 		
-		_cnt102++;
+		_cnt128++;
 	}
-	_loop102:;
+	_loop128:;
 	}
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
@@ -2511,9 +3007,9 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 		{
 			match(static_cast<unsigned char>('\n'));
 			if ( inputState->guessing==0 ) {
-#line 145 "wb_wbllexer.g"
+#line 153 "wb_wbllexer.g"
 				newline();
-#line 2517 "wb_wbllexer.cpp"
+#line 3013 "wb_wbllexer.cpp"
 			}
 			break;
 		}
@@ -2522,11 +3018,11 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 				matchNot(static_cast<unsigned char>('"'));
 			}
 		else {
-			goto _loop99;
+			goto _loop125;
 		}
 		}
 	}
-	_loop99:;
+	_loop125:;
 	}
 	match(static_cast<unsigned char>('"'));
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {

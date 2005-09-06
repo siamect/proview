@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_wnav_item.cpp,v 1.13 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.14 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -344,12 +344,19 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 
 
     // Display object name
-    if ( wnav->editmode)
-    {
+    if ( wnav->editmode) {
       item = (WItem *) new WItemObjectName( wnav->brow, wnav->ldhses, objid, 
 		node, flow_eDest_IntoLast);
       attr_exist = 1;
     }
+    // Display modification time
+    if ( wnav->gbl.show_truedb) {
+      item = (WItem *) new WItemObjectModTime( wnav->brow, wnav->ldhses, objid, 
+		node, flow_eDest_IntoLast);
+      attr_exist = 1;
+    }
+
+
     // Get bodydef for rtbody, devbody or sysbody
 
     sts = ldh_GetObjectClass( wnav->ldhses, objid, &classid);
@@ -926,6 +933,50 @@ int WItemObjectName::get_value( char **value)
     return sts;
   }
   *value = segname;
+  return WNAV__SUCCESS;
+}
+
+WItemObjectModTime::WItemObjectModTime(
+	WNavBrow *item_brow, ldh_tSesContext item_ldhses, 
+	pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code) :
+	WItem( item_objid, 0), brow(item_brow), ldhses(item_ldhses)
+{
+  int sts;
+  char	timestr[40];
+  pwr_tTime time;
+
+  type = wnav_eItemType_ObjectModTime;
+
+  sts = ldh_GetModTime( ldhses, objid, &time);
+  if ( ODD(sts))
+    sts = time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+  if ( EVEN(sts))
+    strcpy( timestr, "Undefined");
+  
+  brow_CreateNode( brow->ctx, "ModTime", brow->nc_attr, 
+		dest, dest_code, (void *) this, 1, &node);
+
+  brow_SetAnnotPixmap( node, 0, brow->pixmap_objname);
+
+  // Set name
+  brow_SetAnnotation( node, 0, "ModificationTime", strlen("ModificaionTime"));
+  brow_SetAnnotation( node, 1, timestr, strlen(timestr));
+}
+
+int WItemObjectModTime::update()
+{
+  char	timestr[40];
+  pwr_tTime time;
+  int   sts;
+
+  sts = ldh_GetModTime( ldhses, objid, &time);
+  if ( ODD(sts))
+    sts = time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+  if ( EVEN(sts))
+    strcpy( timestr, "Undefined");
+  brow_SetAnnotation( node, 1, timestr, strlen(timestr));
+
   return WNAV__SUCCESS;
 }
 

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orep.h,v 1.12 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orep.h,v 1.13 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,8 @@ public:
   virtual const char * name() const = 0;
   virtual wb_name longName() = 0;
   virtual pwr_tTime ohTime() const = 0;
+  virtual pwr_tTime rbTime() const = 0;
+  virtual pwr_tTime dbTime() const = 0;
   virtual pwr_mClassDef flags() const = 0;
     
   virtual bool isOffspringOf(const wb_orep *o) const = 0;
@@ -85,6 +87,10 @@ public:
 
   virtual wb_erep *erep() const = 0;
   virtual wb_vrep *vrep() const = 0;
+  virtual ldh_eVolRep vtype() const = 0;
+
+  pwr_tTime modTime();
+  pwr_tTime treeModTime();
 };
 
 #endif

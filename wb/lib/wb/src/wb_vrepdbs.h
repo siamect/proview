@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_vrepdbs.h,v 1.31 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.32 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,6 +75,8 @@ public:
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o);
     
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tTime rbTime(pwr_tStatus *sts, const wb_orep *o);
+  virtual pwr_tTime dbTime(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o);
     
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) { return false;}

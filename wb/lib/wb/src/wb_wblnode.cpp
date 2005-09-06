@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_wblnode.cpp,v 1.44 2005-09-01 14:57:59 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.45 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -367,6 +367,13 @@ int wb_wblnode::stringToOix( const char *buf, pwr_tOix *oix) const
     }
   }
   return 1;
+}
+
+int wb_wblnode::stringToTime( const char *buf, pwr_tTime *time) const
+{
+  pwr_tStatus sts;
+  sts = time_AsciiToA( (char *)buf, time);
+  return ODD(sts);
 }
 
 int wb_wblnode::lookup( int *type, const char *keyword, wbl_sSym *table) 
@@ -980,9 +987,26 @@ void wb_wblnode::buildBody( ref_wblnode object)
       m_vrep->error( "Bad body name", getFileName(), line_number);
     }
 
-    for ( first_child = getFirstChild();
+    first_child = getFirstChild();
+
+    // First child might be body time
+    if ( first_child && first_child->getType() == tokens.ASC_TIME) {
+      string timestr = first_child->getText();
+      pwr_tTime bodytime;
+      if ( stringToTime( timestr.c_str(), &bodytime)) {
+	if ( bix == pwr_eBix_rt)
+	  object->o->m_rbtime = bodytime;
+	else
+	  object->o->m_dbtime = bodytime;
+      }
+      else 
+	m_vrep->error( "Time syntax", getFileName(), line_number);
+      first_child = first_child->getNextSibling();
+    }
+
+    for ( ;
 	  first_child;
-	  first_child = first_child->getNextSibling()) 
+	  first_child = first_child->getNextSibling())
       first_child->buildAttr( object, bix);
 
     next_sibling = getNextSibling();
@@ -1501,6 +1525,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       m_vrep->error( "Bad object name", getFileName(), line_number);
     }
 
+    // Filetime is default for ohtime
+    o->m_ohtime = getFileTime();
+
     // Get class
     if ( first_child) {
       string class_name = first_child->getText();
@@ -1556,16 +1583,28 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Get oix
       ref_wblnode second_child = first_child->getNextSibling();
       if ( second_child) {
+	ref_wblnode third_child = second_child->getNextSibling();
+
         switch ( second_child->getType()) {
         case tokens.VALUE:
-        case tokens.INT:
-        {
+        case tokens.INT: {
           string oixstr = second_child->getText();
           if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix)) {
             o->m_oid.oix = m_vrep->nextOix();
           }
+	  if ( third_child && third_child->getType() == tokens.ASC_TIME) {
+	    string timestr = third_child->getText();
+	    if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
+	      m_vrep->error( "Time syntax", getFileName(), line_number);
+	  }
           break;
         }
+        case tokens.ASC_TIME: {
+	  string timestr = second_child->getText();
+	  if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
+	    m_vrep->error( "Time syntax", getFileName(), line_number);
+          break;
+	}
         case tokens.ENDOBJECT:
         case tokens.OBJECT:
         case tokens.BODY:
@@ -1821,7 +1860,7 @@ bool wb_wblnode::exportHead(wb_import &i)
 
   i.importHead( o->m_oid, o->m_cid, fthoid, bwsoid, fwsoid, fchoid, lchoid, name(), 
 		n.normName(cdh_mName_object), o->m_flags,
-                getFileTime(), getFileTime(), getFileTime(), o->rbody_size, o->dbody_size);
+                o->m_ohtime, o->m_rbtime, o->m_dbtime, o->rbody_size, o->dbody_size);
   
   if ( o->fch)
     o->fch->exportHead( i);

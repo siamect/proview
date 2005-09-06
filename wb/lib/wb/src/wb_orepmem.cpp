@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_orepmem.cpp,v 1.4 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_orepmem.cpp,v 1.5 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,8 +103,17 @@ wb_name wb_orepmem::longName()
 
 pwr_tTime wb_orepmem::ohTime() const
 {
-  pwr_tTime t = {0,0};
-  return t;
+  return m_memobject->m_ohtime;
+}
+
+pwr_tTime wb_orepmem::rbTime() const
+{
+  return m_memobject->m_rbtime;
+}
+
+pwr_tTime wb_orepmem::dbTime() const
+{
+  return m_memobject->m_dbtime;
 }
 
 pwr_mClassDef wb_orepmem::flags() const

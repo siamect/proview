@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: wb_object.cpp,v 1.13 2005-09-01 14:57:58 claes Exp $
+ * Proview   $Id: wb_object.cpp,v 1.14 2005-09-06 08:02:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -288,6 +288,34 @@ pwr_tTime wb_object::ohTime()
   check();
     
   return m_orep->ohTime();
+}
+
+pwr_tTime wb_object::rbTime()
+{
+  check();
+    
+  return m_orep->rbTime();
+}
+
+pwr_tTime wb_object::dbTime()
+{
+  check();
+    
+  return m_orep->dbTime();
+}
+
+pwr_tTime wb_object::modTime()
+{
+  check();
+    
+  return m_orep->modTime();
+}
+
+pwr_tTime wb_object::treeModTime()
+{
+  check();
+    
+  return m_orep->treeModTime();
 }
 
 pwr_mClassDef wb_object::flags()
