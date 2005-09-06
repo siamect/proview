@@ -3582,6 +3582,7 @@ Wtt kommandon
 <b>setup       <t>Wtt setup			<LINK> setup
 <b>show children<t>Visa ett objekts barn	<LINK> show children
 <b>show object  <t>Visa ett objekt		<LINK> show object
+<b>show license  <t>Visa licensvillkor		<LINK> show license
 <b>show objid  <t>Visa objektidentiteten	<LINK> show objid
 <b>show script <t>Visa script filer		<LINK> show script
 <b>show symbol <t>Visa en symbol		<LINK> show symbol
@@ -3829,6 +3830,14 @@ Kommando   show version
 Visa wtt version.
 
 <B>wtt> show version
+</TOPIC>
+
+<TOPIC> show license <style> function
+Kommando   show license
+
+Visa licensvillkor.
+
+<B>wtt> show license
 </TOPIC>
 
 <TOPIC> show symbol <style> function

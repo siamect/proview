@@ -3637,6 +3637,7 @@ Wtt commands
 <b>set volume  <t>Set volume 			<LINK> set volume
 <b>setup       <t>Wtt setup			<LINK> setup
 <b>show children<t>Show the children of an object <LINK> show children
+<b>show license <t>Show license terms		<LINK> show license
 <b>show object  <t>Show an object		<LINK> show object
 <b>show objid  <t>Show object identity		<LINK> show objid
 <b>show script <t>Show scriptfiles		<LINK> show script
@@ -3885,6 +3886,14 @@ Command   show version
 Show the wtt version
 
 <B>wtt> show version
+</TOPIC>
+
+<TOPIC> show license <style> function
+Command   show license
+
+Show license terms.
+
+<B>wtt> show license
 </TOPIC>
 
 <TOPIC> show symbol <style> function
