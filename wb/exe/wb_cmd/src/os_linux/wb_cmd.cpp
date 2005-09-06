@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd.cpp,v 1.6 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: wb_cmd.cpp,v 1.7 2005-09-06 14:13:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -338,6 +338,15 @@ int main(int argc, char *argv[])
       strcat( str, argv[i]);
     }
   }
+
+  cout << "\n\
+Proview is free software; covered by the GNU General Public License.\n\
+You can redistribute it and/or modify it under the terms of this license.\n\
+\n\
+Proview is distributed in the hope that it will be useful \n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of \n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \n\
+GNU General Public License for more details.\n\n";
 
   if ( str[0] != 0) {
     dcli_remove_blank( str, str);
