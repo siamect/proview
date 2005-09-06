@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.h,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_menu.h,v 1.4 2005-09-06 14:17:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -397,7 +397,7 @@ if ( argc >= 2 )				\
 }						\
 else						\
 {						\
-  strcpy( login, "SYS");	       		\
+  strcpy( login, "");	       		\
   strcpy( commandfile, "");			\
 }						\
 sts = rtt_initialize( login, commandfile, mainmenu_title);	\

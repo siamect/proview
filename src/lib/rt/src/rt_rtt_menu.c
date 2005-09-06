@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.8 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.9 2005-09-06 14:17:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -8183,9 +8183,9 @@ static int	rtt_logon( unsigned long *chn,
 	char		el_username2[] = "SKIFTEL";	
 	char		op_username[] = "OP";	
 	char		noneth_str[] = "NONETH_";
-	char		double_height_top_half[4] = {27,'#','3',0};
-	char		double_height_bottom_half[4] = {27,'#','4',0};
-	char		double_width[4] = {27,'#','6',0};
+	// char		double_height_top_half[4] = {27,'#','3',0};
+	// char		double_height_bottom_half[4] = {27,'#','4',0};
+	// char		double_width[4] = {27,'#','6',0};
 	char		nodename[80];
 	int		sts;
 	rtt_t_backgr	*picture;
@@ -8227,16 +8227,9 @@ static int	rtt_logon( unsigned long *chn,
 	rtt_display_erase();
 	rtt_edit_draw_background( picture);
 
-	rtt_cursor_abs( 15, 13);
-	r_print( double_width);
-	r_print("in node");
-	rtt_cursor_abs( 16, 15);
-	r_print( double_height_top_half);
+	rtt_cursor_abs( 34, 9);
 	r_print( nodename);
-	rtt_cursor_abs( 16, 16);
-	r_print( double_height_bottom_half);
-	r_print( nodename);
-	rtt_cursor_abs( 34, 17);
+	rtt_cursor_abs( 34, 11);
 	r_print(rtt_version);
 	r_print_buffer();
 
