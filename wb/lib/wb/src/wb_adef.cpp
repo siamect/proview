@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_adef.cpp,v 1.12 2005-09-01 14:57:57 claes Exp $
+/* 
+ * Proview   $Id: wb_adef.cpp,v 1.13 2005-09-06 10:43:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

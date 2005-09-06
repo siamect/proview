@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_c_pb_dp_slave.c,v 1.2 2005-09-01 14:57:57 claes Exp $
+/* 
+ * Proview   $Id: wb_c_pb_dp_slave.c,v 1.3 2005-09-06 10:43:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

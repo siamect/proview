@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_print_wbl.cpp,v 1.12 2005-09-06 08:02:04 claes Exp $
+/* 
+ * Proview   $Id: wb_print_wbl.cpp,v 1.13 2005-09-06 10:43:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

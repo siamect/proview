@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_wattnav.cpp,v 1.9 2005-09-05 08:33:58 claes Exp $
+/* 
+ * Proview   $Id: wb_wattnav.cpp,v 1.10 2005-09-06 10:43:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

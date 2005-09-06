@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_vrepmem.cpp,v 1.17 2005-09-06 08:02:04 claes Exp $
+/* 
+ * Proview   $Id: wb_vrepmem.cpp,v 1.18 2005-09-06 10:43:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

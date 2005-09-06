@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_erep.h,v 1.19 2005-09-01 14:57:58 claes Exp $
+/* 
+ * Proview   $Id: wb_erep.h,v 1.20 2005-09-06 10:43:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 

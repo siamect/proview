@@ -1,5 +1,5 @@
-/** 
- * Proview   $Id: wb_volume.h,v 1.24 2005-09-01 14:57:59 claes Exp $
+/* 
+ * Proview   $Id: wb_volume.h,v 1.25 2005-09-06 10:43:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
