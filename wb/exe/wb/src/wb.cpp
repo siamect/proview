@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.15 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.16 2005-09-06 14:13:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -504,6 +504,7 @@ int main( int argc, char *argv[])
   int           sw_classeditor = 0;
   char		filename[200];
   int           i;
+  int		quiet = 0;
 
   dcli_translate_filename( uid_filename, uid_filename);
 
@@ -523,6 +524,10 @@ int main( int argc, char *argv[])
 	// Load all volumes
 	sw_projectvolume = 0;
 	volumename_p = 0;
+	break;
+      case 'q':
+	// Load all volumes
+	quiet = 1;
 	break;
       case 'l':
 	if ( i+1 >= argc) {
@@ -704,6 +709,11 @@ int main( int argc, char *argv[])
   /* NYI */
   DXmHelpSystemOpen(&help_ctx, toplevel, HELP_FILE, help_error, NULL);
 #endif
+
+  if ( !quiet)
+    XtAppAddWorkProc( XtWidgetToApplicationContext(toplevel),
+			(XtWorkProc)wow_DisplayWarranty, toplevel) ;
+  // wow_DisplayWarranty( toplevel);
 
   XtAppMainLoop(app_ctx);
   return (0);
