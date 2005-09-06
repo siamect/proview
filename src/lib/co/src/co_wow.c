@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.c,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_wow.c,v 1.8 2005-09-06 14:17:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -749,7 +749,7 @@ void warranty_help_cb( void *ctx, void *data)
   wow_DisplayLicense( (Widget) data);
 }
 
-void wow_DisplayWarranty( Widget father)
+int wow_DisplayWarranty( Widget father)
 {
     char    text[4000];
     Arg	    arg[12];
@@ -769,10 +769,10 @@ void wow_DisplayWarranty( Widget father)
 
     fp = fopen( fname, "r");
     if ( !fp) {
-      strcpy( fname, "$pwr_exe/en_us/acceptlincense.txt");
+      strcpy( fname, "$pwr_exe/en_us/acceptlicense.txt");
       dcli_translate_filename( fname, fname);
       fp = fopen( fname, "r");
-      if ( !fp) return;
+      if ( !fp) return 1;
     }
 
     for ( i = 0; i < sizeof(text) - 1; i++) {
@@ -833,6 +833,7 @@ void wow_DisplayWarranty( Widget father)
     XmFontListFree( fontlist);
    
     XtManageChild( question_widget);	       
+    return 1;
 }
 
 void wow_DisplayLicense( Widget father)
