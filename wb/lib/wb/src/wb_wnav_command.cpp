@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.29 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.30 2005-09-06 14:18:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1462,6 +1462,15 @@ static int	wnav_show_func(	void		*client_data,
     strcpy( message_str, "Wtt version ");
     strcat( message_str, wtt_version);
     wnav->message('I', message_str);
+    return WNAV__SUCCESS;
+  }
+  else if ( strncmp( arg1_str, "LICENSE", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW LICENSE"
+    if ( wnav->window_type == wnav_eWindowType_No)
+      system( "cat $pwr_exe/en_us/license.txt");
+    else
+      wow_DisplayLicense( wnav->parent_wid);
     return WNAV__SUCCESS;
   }
   else if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
