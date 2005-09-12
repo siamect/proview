@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeCFormat.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeCFormat.java,v 1.5 2005-09-12 10:48:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,7 +141,10 @@ public class GeCFormat {
         m = 1;
 	for ( j = 0; j < d; j++)
 	  m *= 10;
-        t2 = (int)((value - (float)t2) * m + 0.5f);
+        if(value >= 0.0)
+          t2 = (int)((value - (float)t2) * m + 0.5f);
+        else
+          t2 = (int)((value - (float)t2) * m - 0.5f);
         t2 = Math.abs( t2);
         for ( j = 0; j < d - Integer.toString(t2).length(); j++)
 	  buff.append('0');
