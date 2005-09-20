@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_wtt.uil,v 1.6 2005-09-06 10:39:34 claes Exp $
+!  Proview   $Id: wb_wtt.uil,v 1.7 2005-09-20 13:28:05 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -50,6 +50,9 @@ procedure
 	wtt_activate_openbuffer(integer);
 	wtt_activate_openfile_dbs(integer);
 	wtt_activate_openfile_wbl(integer);
+	wtt_activate_openpl(integer);
+	wtt_activate_opengvl(integer);
+	wtt_activate_openudb(integer);
 	wtt_activate_spreadsheet(integer);
 	wtt_activate_openge(integer);
 	wtt_activate_openclasseditor(integer);
@@ -168,7 +171,7 @@ object file_entry : XmCascadeButton
         {
           arguments
           {
-  	    XmNlabelString = compound_string("Open...");
+  	    XmNlabelString = compound_string("Open Volume");
             XmNmnemonic = keysym('O');
             XmNfontList	   = menu_font;
 	  };
@@ -181,7 +184,7 @@ object file_entry : XmCascadeButton
         {
           arguments 
           {
-	    XmNlabelString = compound_string("Open File");
+	    XmNlabelString = compound_string("Open");
 	    XmNmnemonic         = keysym("F");
             XmNfontList	   = menu_font;
           };
@@ -198,7 +201,7 @@ object file_entry : XmCascadeButton
                 {
                   arguments
                   {
-  	            XmNlabelString = compound_string("Dbs...");
+  	            XmNlabelString = compound_string("Dbs File...");
                     XmNmnemonic = keysym('D');
                     XmNfontList	   = menu_font;
 	          };
@@ -211,7 +214,7 @@ object file_entry : XmCascadeButton
                 {
                   arguments
                   {
-  	            XmNlabelString = compound_string("Wbl...");
+  	            XmNlabelString = compound_string("Wbl File...");
                     XmNmnemonic = keysym('W');
                     XmNfontList	   = menu_font;
 	          };
@@ -220,22 +223,61 @@ object file_entry : XmCascadeButton
                     XmNactivateCallback = procedure wtt_activate_openfile_wbl(wtt_ctx);
                   };
 	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Buffer...");
+                    XmNmnemonic = keysym('b');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openbuffer(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("ProjectList");
+                    XmNmnemonic = keysym('g');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openpl(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("GlobalVolumeList");
+                    XmNmnemonic = keysym('r');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_opengvl(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("UserDatabase");
+                    XmNmnemonic = keysym('u');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openudb(wtt_ctx);
+                  };
+	        };
 	      };
 	    };
 	  };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Open Buffer...");
-            XmNmnemonic = keysym('b');
-            XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure wtt_activate_openbuffer(wtt_ctx);
-          };
 	};
         XmPushButton
         {
