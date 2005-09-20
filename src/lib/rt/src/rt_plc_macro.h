@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_macro.h,v 1.3 2005-09-20 13:27:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 #endif
 
 #include <math.h>
+#include <float.h>
 
 #include "pwr.h"
 #include "pwr_systemclasses.h"
@@ -39,3 +40,4 @@
 #include "rt_plc_macro_mps.h"
 #include "rt_plc_macro_string.h"
 #include "ra_plc_user.h"
+
