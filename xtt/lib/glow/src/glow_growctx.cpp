@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.11 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.12 2005-09-20 13:26:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2079,6 +2079,7 @@ void GrowCtx::clear_all( int keep_paste)
   mb3_action = glow_eMB3Action_Close;
   translate_on = 0;
   inputfocus_object = 0;
+  x0 = y0 = x1 = y1 = 0;
 
   nav_clear();
   set_nodraw();
