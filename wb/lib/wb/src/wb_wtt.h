@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.12 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.13 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -250,6 +250,7 @@ class Wtt {
     void set_twowindows( int two, int display_wnav, int display_wnavnode);
     void set_prompt( char *prompt);
     void open_change_value();
+    void close_change_value();
     void open_change_name();
     void update_options_form();
     void set_options();

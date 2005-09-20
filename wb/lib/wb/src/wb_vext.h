@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vext.h,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vext.h,v 1.6 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,10 +22,20 @@
 
 
 typedef enum {
+  vext_eMsgType_Status,
   vext_eMsgType_Object,
   vext_eMsgType_ObjectOid,
   vext_eMsgType_ObjectName,
-  vext_eMsgType_ObjectBody
+  vext_eMsgType_ObjectBody,
+  vext_eMsgType_CreateObject,
+  vext_eMsgType_MoveObject,
+  vext_eMsgType_CopyObject,
+  vext_eMsgType_DeleteObject,
+  vext_eMsgType_DeleteFamily,
+  vext_eMsgType_RenameObject,
+  vext_eMsgType_WriteAttr,
+  vext_eMsgType_Commit,
+  vext_eMsgType_Abort
 } vext_eMsgType;
 
 // Question message types
@@ -44,13 +54,74 @@ typedef struct {
 typedef struct {
   unsigned long 	message_type;
   vext_eMsgType		Type;
+  pwr_tOix		Oix;
+} vext_sQMsgDeleteObject;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		Oix;
+} vext_sQMsgDeleteFamily;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
   char			Name[120];
 } vext_sQMsgObjectName;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		DestOix;
+  int			DestType;
+  pwr_tCid		Cid;
+  char			Name[120];
+} vext_sQMsgCreateObject;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		Oix;
+  pwr_tOix		DestOix;
+  int			DestType;
+} vext_sQMsgMoveObject;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		Oix;
+  pwr_tOix		DestOix;
+  int			DestType;
+  char 			Name[120];
+} vext_sQMsgCopyObject;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		Oix;
+  char			Name[120];
+} vext_sQMsgRenameObject;
+
+typedef struct {
+  unsigned long 	message_type;
+  vext_eMsgType		Type;
+  pwr_tOix		Oix;
+  unsigned int	       	Offset;
+  unsigned int	       	Size;
+  char			Buffer[512];
+} vext_sQMsgWriteAttr;
 
 typedef union {
   vext_sQMsgAny		Any;
   vext_sQMsgOid		Oid;
   vext_sQMsgObjectName	ObjectName;
+  vext_sQMsgCreateObject CreateObject;
+  vext_sQMsgMoveObject 	MoveObject;
+  vext_sQMsgCopyObject 	CopyObject;
+  vext_sQMsgDeleteObject DeleteObject;
+  vext_sQMsgDeleteFamily DeleteFamily;
+  vext_sQMsgRenameObject RenameObject;
+  vext_sQMsgWriteAttr 	WriteAttr;
 } vext_sQMsg;
 
 // Answer message types

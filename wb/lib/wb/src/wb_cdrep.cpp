@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.27 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.28 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,7 +73,7 @@ wb_cdrep::~wb_cdrep()
     m_orep->unref();
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0), m_orep(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( cid);
   m_orep = mvrep->object( &m_sts, oid);
@@ -83,7 +83,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, pwr_tCid cid) : m_nRef(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0), m_orep(0)
 {
   char str[80];
   strcpy( str, "Class-");
@@ -96,7 +96,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0)
+wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0), m_orep(0)
 {
   pwr_tOid oid = cdh_ClassIdToObjid( o.cid());
   m_orep = mvrep->object( &m_sts, oid);
@@ -106,7 +106,7 @@ wb_cdrep::wb_cdrep( wb_mvrep *mvrep, const wb_orep& o) : m_nRef(0)
   m_sts = LDH__SUCCESS;
 }
 
-wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0)
+wb_cdrep::wb_cdrep( const wb_orep& o) : m_nRef(0), m_orep(0)
 {
   pwr_tStatus sts;
   

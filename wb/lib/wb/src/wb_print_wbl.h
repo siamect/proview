@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.h,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_print_wbl.h,v 1.9 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,7 @@ public:
   int getErrCnt() const { return m_errCnt;}
   void resetErrCnt() {m_errCnt = 0; }
   void keepName() { m_keepName = true;}
+  void noIndex() { m_idxFlag = false;}
 
   void printHierarchy(wb_volume& v, wb_object& o); //< Prints a hierarchy
   void printObject(wb_volume& v, wb_object& o, bool recursive = true); //< Prints an object

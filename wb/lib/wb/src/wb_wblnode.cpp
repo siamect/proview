@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.46 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.47 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,6 +97,8 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_NetStatus", pwr_eTix_NetStatus }
   ,{ "pwr_eType_CastId", pwr_eType_CastId }
   ,{ "pwr_eTix_CastId", pwr_eTix_CastId }
+  ,{ "pwr_eType_ProString", pwr_eType_ProString }
+  ,{ "pwr_eTix_ProString", pwr_eTix_ProString }
   ,{ "pwr_eTypeDef_AdefFlags", pwr_eTypeDef_AdefFlags }
   ,{ "pwr_eTdix_AdefFlags", pwr_eTdix_AdefFlags }
   ,{ "pwr_eTypeDef_ClassDefFlags", pwr_eTypeDef_ClassDefFlags }
@@ -235,6 +237,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_Method", pwr_eCix_Method }
   ,{ "pwr_eClass_RtMethod", pwr_eClass_RtMethod }
   ,{ "pwr_eCix_RtMethod", pwr_eCix_RtMethod }
+  ,{ "pwr_eClass_Hier", pwr_eClass_Hier }
+  ,{ "pwr_eCix_Hier", pwr_eCix_Hier }
   ,{ 0, 0 }
 };
 
@@ -395,6 +399,10 @@ int wb_wblnode::convconst( int *val, char *str)
   if (wb_wblnode::lookup( val, str, editor))	return( TRUE);
   if (wb_wblnode::lookup( val, str, datatypes))	return( TRUE);
   if (wb_wblnode::lookup( val, str, attr_flags))   return( TRUE);
+  if (strncmp( str, "\"_X", 2) == 0) {
+    if ( sscanf( &str[3], "%d", val) == 1)
+      return( TRUE);
+  }
   return( FALSE);
 }
 
@@ -608,6 +616,22 @@ void wb_wblnode::build( bool recursive)
     else if ( isBuffer()) {
     }
     else if ( isVolume()) {
+      size_t size, offset;
+      int elements;
+      pwr_tTypeId tid;
+      pwr_eType type;
+      int flags;
+      pwr_tObjectIx no;
+      
+      // Transfer next_oix from volumes rtbody
+
+      if ( m_vrep->getAttrInfo( "NextOix", pwr_eBix_sys, o->m_cid, &size, &offset,
+                               &tid, &elements, &type, &flags)) {
+     
+	no = *(pwr_tObjectIx *)((char *)o->rbody + offset);
+	if ( no > (pwr_tObjectIx)m_vrep->next_oix)
+	  m_vrep->next_oix = *(pwr_tObjectIx *)((char *)o->rbody + offset);
+      }
     }
     else {
       if( !m_vrep->registerObject( o->m_oid.oix, this)) {
@@ -1743,6 +1767,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     // Register volume
     m_vrep->registerVolume( name(), o->m_cid, vid, this);
 
+    // Build to get next oix
+    build( false);
     break;
   }
   case tokens.ATTRIBUTE:

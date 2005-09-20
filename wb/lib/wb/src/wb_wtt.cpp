@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.25 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.26 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,6 +133,8 @@ static pwr_tStatus wtt_ldh_this_session_cb (
 {
   Wtt *wtt = (Wtt *) ctx;
 
+  if ( wtt->input_open)
+    wtt->close_change_value();
   wtt->wnav->ldh_event( event);
   wtt->wnavnode->ldh_event( event);
   return 1;
@@ -147,6 +149,8 @@ static pwr_tStatus wtt_ldh_other_session_cb(
   switch (event->Event) 
   {
     case ldh_eEvent_SessionSaved:
+      if ( wtt->input_open)
+	wtt->close_change_value();
       wtt->wnav->ldh_refresh( pwr_cNObjid);
       wtt->wnavnode->ldh_refresh( pwr_cNObjid);
       break;
@@ -777,6 +781,8 @@ static void wtt_revert_ok( Wtt *wtt)
     wtt->message( 'E', wnav_get_message( sts));
   else
   {
+    if ( wtt->input_open)
+      wtt->close_change_value();
     wtt->wnav->ldh_refresh( pwr_cNObjid);
     wtt->wnavnode->ldh_refresh( pwr_cNObjid);
     wtt->message( 'E', "Session reverted");
@@ -1315,6 +1321,15 @@ void Wtt::set_prompt( char *prompt)
   XmStringFree( cstr);
 }
 
+void Wtt::close_change_value()
+{
+  if ( input_open) {
+    XtUnmanageChild( cmd_input);
+    set_prompt( "");
+    input_open = 0;
+  }
+}
+
 void Wtt::open_change_value()
 {
   int		sts;
@@ -1324,8 +1339,7 @@ void Wtt::open_change_value()
   int		multiline;
   int		input_size;
 
-  if ( input_open) 
-  {
+  if ( input_open) {
     XtUnmanageChild( cmd_input);
     set_prompt( "");
     input_open = 0;
@@ -2071,6 +2085,30 @@ static void wtt_activate_openfile_wbl( Widget w, Wtt *wtt, XmAnyCallbackStruct *
   wtt->reset_cursor();
 }
 
+static void wtt_activate_openpl( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  wtt->set_clock_cursor();
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "ProjectList", wow_eFileSelType_);
+  wtt->reset_cursor();
+}
+
+static void wtt_activate_opengvl( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  wtt->set_clock_cursor();
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "GlobalVolumeList", wow_eFileSelType_);
+  wtt->reset_cursor();
+}
+
+static void wtt_activate_openudb( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  wtt->set_clock_cursor();
+  if ( wtt->open_volume_cb)
+    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "UserDatabase", wow_eFileSelType_);
+  wtt->reset_cursor();
+}
+
 static void wtt_activate_spreadsheet( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
 #if defined OS_VMS
@@ -2497,9 +2535,11 @@ static void wtt_valchanged_cmd_input( Widget w, XEvent *event)
         default:
           ;
       }
-      XtUnmanageChild( w);
-      wtt->set_prompt( "");
-      wtt->input_open = 0;
+      if ( wtt->input_open) {
+	XtUnmanageChild( w);
+	wtt->set_prompt( "");
+	wtt->input_open = 0;
+      }
     }
     else if ( wtt->command_open)
     {
@@ -3320,6 +3360,9 @@ Wtt::Wtt(
 	{"wtt_activate_openbuffer",(caddr_t)wtt_activate_openbuffer },
 	{"wtt_activate_openfile_dbs",(caddr_t)wtt_activate_openfile_dbs },
 	{"wtt_activate_openfile_wbl",(caddr_t)wtt_activate_openfile_wbl },
+	{"wtt_activate_openpl",(caddr_t)wtt_activate_openpl },
+	{"wtt_activate_opengvl",(caddr_t)wtt_activate_opengvl },
+	{"wtt_activate_openudb",(caddr_t)wtt_activate_openudb },
 	{"wtt_activate_spreadsheet",(caddr_t)wtt_activate_spreadsheet },
 	{"wtt_activate_openge",(caddr_t)wtt_activate_openge },
 	{"wtt_activate_openclasseditor",(caddr_t)wtt_activate_openclasseditor },

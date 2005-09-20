@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.27 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.28 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,9 @@ extern "C" {
 
 #define ldh_cPlcHostVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
 #define ldh_cIoConnectVolume  cdh_cIoConnectVolume
+#define ldh_cProjectListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 248)
+#define ldh_cGlobalVolumeListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 247)
+#define ldh_cUserDatabaseVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 246)
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
 
@@ -1100,7 +1103,8 @@ ldh_WbDump(
   ldh_tSession session,
   char *objname,
   char *dumpfile,
-  int keep_name
+  int keep_name,
+  int noindex
 );
 
 pwr_tStatus 

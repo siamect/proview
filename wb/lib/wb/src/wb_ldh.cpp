@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.45 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.46 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1805,7 +1805,8 @@ ldh_CreateLoadFile(ldh_tSession session)
 }
 
 pwr_tStatus 
-ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name) 
+ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name, 
+	    int noindex) 
 {
   wb_session *sp = (wb_session*)session;
   char fname[200];
@@ -1823,6 +1824,8 @@ ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name)
     wb_print_wbl wprint( fp);
     if ( keep_name)
       wprint.keepName();
+    if ( noindex)
+      wprint.noIndex();
     if ( !objname)
       wprint.printVolume( *sp);
     else {

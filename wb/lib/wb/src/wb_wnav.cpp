@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.22 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.23 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,6 +194,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     }
     case pwr_eType_Text:
     case pwr_eType_String:
+    case pwr_eType_ProString:
     {
       if ( (int) strlen( value_str) >= attr_size)
         return WNAV__STRINGTOLONG;
@@ -384,6 +385,15 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     {
       *len = strlen((char *) value_ptr);
       strcpy( str, (char *) value_ptr);
+      *buff = str;
+      break;
+    }
+    case pwr_eType_ProString:
+    {
+      *len = strlen((char *) value_ptr);
+      strcpy( str, "");
+      for ( int i = 0; i < *len; i++)
+	strcat( str, "*");
       *buff = str;
       break;
     }
@@ -3116,6 +3126,11 @@ void WNav::refresh()
 
 void WNav::select_object( brow_tObject object)
 {
+  if ( set_focus_cb)
+    (set_focus_cb)( parent_ctx, this);
+
+  set_selection_owner();
+
   brow_SelectClear( brow->ctx);
   brow_SetInverse( object, 1);
   brow_SelectInsert( brow->ctx, object);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.h,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepext.h,v 1.5 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,6 +29,8 @@
 #include "co_dbs.h"
 #include "wb_import.h"
 #include "wb_vext.h"
+#include "wb_provider.h"
+#include "wb_cdef.h"
 
 class wb_vrepext;
 
@@ -48,7 +50,8 @@ class ext_object
       m_oid.oix = 0;
       m_oid.vid = 0;
     }
-  ext_object( vext_sAMsgObject *msg, pwr_tVid vid) : rbody_size(0), dbody_size(0), rbody(0), dbody(0)
+  ext_object( vext_sAMsgObject *msg, pwr_tVid vid, wb_cdef &cdef) : 
+    rbody_size(0), dbody_size(0), rbody(0), dbody(0)
     {
       strcpy( m_name, msg->name);
       strcpy( m_longname, msg->longname);
@@ -65,11 +68,36 @@ class ext_object
       lchoid.oix = msg->lchoix;
       lchoid.vid = vid;      
       m_cid = msg->cid;
+      m_flags = cdef.flags();
     }
   ~ext_object() {
     if ( rbody_size) free( rbody);
     if ( dbody_size) free( dbody);
   }    
+  ext_object(const ext_object& x) {
+    memcpy( this, &x, sizeof(x));
+    if ( rbody_size) {
+      rbody = calloc( 1, rbody_size);
+      memcpy( rbody, x.rbody, rbody_size);
+    }    
+    if ( dbody_size) {
+      dbody = calloc( 1, dbody_size);
+      memcpy( dbody, x.dbody, dbody_size);
+    }    
+  }
+  ext_object& operator=(const ext_object& x) {
+    memcpy( this, &x, sizeof(x));
+    if ( rbody_size) {
+      rbody = calloc( 1, rbody_size);
+      memcpy( rbody, x.rbody, rbody_size);
+    }    
+    if ( dbody_size) {
+      dbody = calloc( 1, dbody_size);
+      memcpy( dbody, x.dbody, dbody_size);
+    }    
+    return *this;
+  }
+
   const char *name() const { return m_name; }
   const char *longname() const { return m_longname; }
   bool exportHead(wb_import &i) { return false;}
@@ -107,15 +135,14 @@ class wb_vrepext : public wb_vrep
   wb_merep *m_merep;
   unsigned int m_nRef;
   ext_object volume_object;
-  char m_provider[200];
+  char m_providerstr[200];
   int m_connected;
   int m_msgsndid;
   int m_msgrcvid;
   ext_object m_cashe;
-
-  map<pwr_tOix, ext_object *> m_oix_list;
-
-  typedef map<pwr_tOix, ext_object *>::iterator iterator_oix_list;
+  wb_procom *m_procom;
+  wb_provider *m_provider;
+  procom_eType m_ptype;
 
 public:
   wb_vrepext( wb_erep *erep) : 
@@ -142,13 +169,6 @@ public:
   wb_erep *erep() {return m_erep;}
   wb_merep *merep() const { return m_merep;}
 
-  int nextOix();
-  ext_object *findObject( pwr_tOix oix);
-  ext_object *find( const char *name);
-  int nameToOid( const char *name, pwr_tOid *oid);
-  bool registerObject( pwr_tOix oix, ext_object *node);
-  bool unregisterObject( pwr_tOix oix);
-  void registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, ext_object *node);
   void info();
   bool createVolumeObject( char *name);
 

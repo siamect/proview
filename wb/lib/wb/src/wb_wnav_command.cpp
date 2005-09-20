@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.30 2005-09-06 14:18:18 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.31 2005-09-20 13:14:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3842,6 +3842,7 @@ static int	wnav_wb_func( 	void		*client_data,
     char        *hierarchystr_p;
     pwr_tStatus	sts;
     int		keepname;
+    int		noindex;
 
     if ( EVEN( dcli_get_qualifier( "/OUTPUT" , outputstr)))
     {
@@ -3855,10 +3856,11 @@ static int	wnav_wb_func( 	void		*client_data,
       hierarchystr_p = 0;
 
     keepname = ODD( dcli_get_qualifier( "/KEEPNAME", 0));
+    noindex = ODD( dcli_get_qualifier( "/NOINDEX", 0));
 
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     
-    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr, keepname);
+    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr, keepname, noindex);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;
