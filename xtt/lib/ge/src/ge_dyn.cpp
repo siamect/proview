@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.30 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.31 2005-09-20 13:25:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4540,8 +4540,8 @@ int GeMove::scan( grow_tObject object)
 	double scale_offs = 0;
 	// Adjust position for different scaletypes
 	switch ( scale_type) {
-	case glow_eScaleType_LowerRight:
 	case glow_eScaleType_UpperRight:
+	case glow_eScaleType_UpperLeft:
 	  scale_offs = height_orig * ( 1 - scale_y);
 	  break;
 	case glow_eScaleType_Center:
