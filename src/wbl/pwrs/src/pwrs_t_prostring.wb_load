@@ -1,0 +1,38 @@
+! 
+!  Proview   $Id: pwrs_t_prostring.wb_load,v 1.1 2005-09-20 13:18:56 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_t_string.wb_load -- Defines the basic type ProString
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  8-bit protected string character. Basic type.
+!  The ProString type is a base type for the derived string types ProString40
+!
+! @b See also
+!  @classlink ProString40 pwrs_prostring40.html
+!*/
+  Object $ProString pwr_eClass_Type pwr_eTix_ProString
+    Body SysBody
+      Attr Type = pwr_eType_ProString
+      Attr Size = 1
+    EndBody
+  EndObject
+EndSObject

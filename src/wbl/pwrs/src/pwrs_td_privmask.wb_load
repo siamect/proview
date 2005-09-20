@@ -1,0 +1,250 @@
+! 
+!  Proview   $Id: pwrs_td_privmask.wb_load,v 1.1 2005-09-20 13:18:56 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_td_privmask.wb_load -- Defines the type PrivMask
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group DerivedTypes,Types
+!  Proview Privilege bitmask. Derived from Mask.
+!
+! @b See also
+!  @classlink Mask pwrs_mask.html
+!*/
+  Object $PrivMask $TypeDef 20
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Mask"
+      Attr PgmName = "OpSys"
+    EndBody
+    !/**
+    !  Read access in runtime
+    !*/
+    Object RtRead $Bit
+     Body SysBody
+       Attr PgmName = "RtRead"
+       Attr Text = "RtRead"
+       Attr Value = 1
+     EndBody
+    EndObject
+    !/**
+    !  Write access in runtime
+    !*/
+    Object RtWrite $Bit
+     Body SysBody
+       Attr PgmName = "RtWrite"
+       Attr Text = "RtWrite"
+       Attr Value = 2
+     EndBody
+    EndObject
+    !/**
+    !  System manager privilege
+    !*/
+    Object System $Bit
+     Body SysBody
+       Attr PgmName = "System"
+       Attr Text = "System"
+       Attr Value = 4
+     EndBody
+    EndObject
+    !/**
+    !  Maintenance privilege
+    !*/
+    Object Maintenance $Bit
+     Body SysBody
+       Attr PgmName = "Maintenance"
+       Attr Text = "Maintenance"
+       Attr Value = 8
+     EndBody
+    EndObject
+    !/**
+    !  Process privilege
+    !*/
+    Object Process $Bit
+     Body SysBody
+       Attr PgmName = "Process"
+       Attr Text = "Process"
+       Attr Value = 16
+     EndBody
+    EndObject
+    !/**
+    !  Instrument privilege
+    !*/
+    Object Instrument $Bit
+     Body SysBody
+       Attr PgmName = "Instrument"
+       Attr Text = "Instrument"
+       Attr Value = 32
+     EndBody
+    EndObject
+    !/**
+    !  Operator 1 privilege
+    !*/
+    Object Operator1 $Bit
+     Body SysBody
+       Attr PgmName = "Operator1"
+       Attr Text = "Operator1"
+       Attr Value = 64
+     EndBody
+    EndObject
+    !/**
+    !  Operator 2 privilege
+    !*/
+    Object Operator2 $Bit
+     Body SysBody
+       Attr PgmName = "Operator2"
+       Attr Text = "Operator2"
+       Attr Value = 128
+     EndBody
+    EndObject
+    !/**
+    !  Operator 3 privilege
+    !*/
+    Object Operator3 $Bit
+     Body SysBody
+       Attr PgmName = "Operator3"
+       Attr Text = "Operator3"
+       Attr Value = 256
+     EndBody
+    EndObject
+    !/**
+    !  Operator 4 privilege
+    !*/
+    Object Operator4 $Bit
+     Body SysBody
+       Attr PgmName = "Operator4"
+       Attr Text = "Operator4"
+       Attr Value = 512
+     EndBody
+    EndObject
+    !/**
+    !  Operator 5 privilege
+    !*/
+    Object Operator5 $Bit
+     Body SysBody
+       Attr PgmName = "Operator5"
+       Attr Text = "Operator5"
+       Attr Value = 1024
+     EndBody
+    EndObject
+    !/**
+    !  Operator 6 privilege
+    !*/
+    Object Operator6 $Bit
+     Body SysBody
+       Attr PgmName = "Operator6"
+       Attr Text = "Operator6"
+       Attr Value = 2048
+     EndBody
+    EndObject
+    !/**
+    !  Operator 7 privilege
+    !*/
+    Object Operator7 $Bit
+     Body SysBody
+       Attr PgmName = "Operator7"
+       Attr Text = "Operator7"
+       Attr Value = 4096
+     EndBody
+    EndObject
+    !/**
+    !  Operator 8 privilege
+    !*/
+    Object Operator8 $Bit
+     Body SysBody
+       Attr PgmName = "Operator8"
+       Attr Text = "Operator8"
+       Attr Value = 8192
+     EndBody
+    EndObject
+    !/**
+    !  Operator 9 privilege
+    !*/
+    Object Operator9 $Bit
+     Body SysBody
+       Attr PgmName = "Operator9"
+       Attr Text = "Operator9"
+       Attr Value = 16384
+     EndBody
+    EndObject
+    !/**
+    !  Operator 10 privilege
+    !*/
+    Object Operator10 $Bit
+     Body SysBody
+       Attr PgmName = "Operator10"
+       Attr Text = "Operator10"
+       Attr Value = 32768
+     EndBody
+    EndObject
+    !/**
+    !  Read access in development environment
+    !*/
+    Object DevRead $Bit
+     Body SysBody
+       Attr PgmName = "DevRead"
+       Attr Text = "DevRead"
+       Attr Value = 2097152
+     EndBody
+    EndObject
+    !/**
+    !  Plc editing access
+    !*/
+    Object DevPlc $Bit
+     Body SysBody
+       Attr PgmName = "DevPlc"
+       Attr Text = "DevPlc"
+       Attr Value = 4194304
+     EndBody
+    EndObject
+    !/**
+    !  Configurator editing access
+    !*/
+    Object DevConfig $Bit
+     Body SysBody
+       Attr PgmName = "DevConfig"
+       Attr Text = "DevConfig"
+       Attr Value = 8388608
+     EndBody
+    EndObject
+    !/**
+    !  Class editing access
+    !*/
+    Object DevClass $Bit
+     Body SysBody
+       Attr PgmName = "DevClass"
+       Attr Text = "DevClass"
+       Attr Value = 16777216
+     EndBody
+    EndObject
+    !/**
+    !  Event blocking privilege
+    !*/
+    Object RtEvents $Bit
+     Body SysBody
+       Attr PgmName = "RtEvents"
+       Attr Text = "RtEvents"
+       Attr Value = 33554432
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
