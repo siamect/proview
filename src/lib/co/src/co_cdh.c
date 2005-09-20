@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.13 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.14 2005-09-20 13:22:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -549,8 +549,17 @@ cdh_AttrValueToString (
     }
     break;
   case pwr_eType_String:
+  case pwr_eType_Text:
     sprintf(sval,"%s", (char *) Value);
     break;
+  case pwr_eType_ProString: {
+    int len = strlen( (char *)Value);
+    int i;
+    strcpy( sval, "");
+    for ( i = 0; i < len; i++)
+      strcat( sval, "*");
+    break;
+  }
   default:
     sts = CDH__INVTYPE;
     break;
@@ -727,6 +736,8 @@ cdh_StringToAttrValue (
     break;
 
   case pwr_eType_String:
+  case pwr_eType_Text:
+  case pwr_eType_ProString:
     strcpy(Value, String);
     break;
 
