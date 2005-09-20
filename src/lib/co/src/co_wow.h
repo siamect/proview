@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.7 2005-09-06 14:17:10 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.8 2005-09-20 13:24:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,10 +30,12 @@ extern "C" {
 #endif
 
 typedef enum {
+  wow_eFileSelType_,
   wow_eFileSelType_All,
   wow_eFileSelType_Dbs,
   wow_eFileSelType_Wbl,
-  wow_eFileSelType_WblClass
+  wow_eFileSelType_WblClass,
+  wow_eFileSelType__
 } wow_eFileSelType;
 
 typedef struct {

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_ldh_msg.msg,v 1.12 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_ldh_msg.msg,v 1.13 2005-09-20 13:28:26 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -126,6 +126,8 @@ noprov		<No provider for extern volume>				/error
 msgget		<msgget failed>						/error
 msgsnd		<msgsnd failed>						/error
 msgrcv		<msgrcv failed>						/error
+newfile		<New file>						/info
+
 
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_bcomp.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_bcomp.c,v 1.3 2005-09-20 13:27:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@
 #endif
 
 
-/**
+/*_*
   RunTimeCounterFo
 
   @aref runtimecounterfo RunTimeCounterFo

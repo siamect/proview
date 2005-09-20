@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.c,v 1.8 2005-09-06 14:17:10 claes Exp $
+ * Proview   $Id: co_wow.c,v 1.9 2005-09-20 13:24:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -601,23 +601,24 @@ void wow_CreateFileSelDia( Widget parent_wid,
   XtSetArg( args[i], XmNfileSearchProc, wow_file_search_cb); i++;
 
   switch( file_type) {
-    case wow_eFileSelType_All:
-      break;
-    case wow_eFileSelType_Dbs:
-      dcli_translate_filename( directory, "$pwrp_load/");
-      cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
-      cpattern = XmStringCreateLtoR( "*.dbs", XmSTRING_DEFAULT_CHARSET);
-      XtSetArg( args[i], XmNdirectory, cdirectory); i++;
-      XtSetArg( args[i], XmNpattern, cpattern); i++;
-      break;
-    case wow_eFileSelType_Wbl:
-    case wow_eFileSelType_WblClass:
-      dcli_translate_filename( directory, "$pwrp_db/");
-      cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
-      cpattern = XmStringCreateLtoR( "*.wb_load", XmSTRING_DEFAULT_CHARSET);
-      XtSetArg( args[i], XmNdirectory, cdirectory); i++;
-      XtSetArg( args[i], XmNpattern, cpattern); i++;
-      break;
+  case wow_eFileSelType_All:
+    break;
+  case wow_eFileSelType_Dbs:
+    dcli_translate_filename( directory, "$pwrp_load/");
+    cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
+    cpattern = XmStringCreateLtoR( "*.dbs", XmSTRING_DEFAULT_CHARSET);
+    XtSetArg( args[i], XmNdirectory, cdirectory); i++;
+    XtSetArg( args[i], XmNpattern, cpattern); i++;
+    break;
+  case wow_eFileSelType_Wbl:
+  case wow_eFileSelType_WblClass:
+    dcli_translate_filename( directory, "$pwrp_db/");
+    cdirectory = XmStringCreateLtoR( directory, XmSTRING_DEFAULT_CHARSET);
+    cpattern = XmStringCreateLtoR( "*.wb_load", XmSTRING_DEFAULT_CHARSET);
+    XtSetArg( args[i], XmNdirectory, cdirectory); i++;
+    XtSetArg( args[i], XmNpattern, cpattern); i++;
+    break;
+  default: ;
   }
 
   ctx->dialog = XmCreateFileSelectionDialog( parent_wid, "fileseldia", args, i);
