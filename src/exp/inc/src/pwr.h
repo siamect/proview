@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.16 2005-09-01 14:57:49 claes Exp $
+ * Proview   $Id: pwr.h,v 1.17 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -372,6 +372,10 @@ typedef char		pwr_tString8	[8];			//!< 8 byte string type.
   @aref string1 String1
 */
 typedef char		pwr_tString1	[1];			//!< 1 byte string type.
+/*_*
+  @aref prostring40 ProString40
+*/
+typedef char		pwr_tProString40	[40];		//!< 40 byte protected string type.
 /*_*
   @aref text1024 Text1024
 */

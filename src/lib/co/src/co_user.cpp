@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.cpp,v 1.5 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_user.cpp,v 1.6 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,19 @@ GeUser::~GeUser()
     delete sl;
     sl = next;
   }
+}
+
+void GeUser::clear()
+{
+  SystemList *sl, *next;
+
+  for ( sl = root; sl; )
+  {
+    next = sl->next;
+    delete sl;
+    sl = next;
+  }
+  root = 0;
 }
 
 int GeUser::load( char *filename)
@@ -149,10 +162,16 @@ int GeUser::add_system( char *name, unsigned int attributes)
   SystemName *parent = sn->parent();
   if ( !parent)
   {
+    SystemList *sl;
 
-    SystemList *system_list = new SystemList(name, 0, 0);
-    system_list->next = root;
-    root = system_list;
+    SystemList *system_list = new SystemList(name, 0, attributes);
+    // Insert as last sibling to root
+    if ( !root)
+      root = system_list;
+    else {
+      for ( sl = root; sl->next; sl = sl->next) ;
+      sl->next = system_list;
+    }
   }
   else
   {

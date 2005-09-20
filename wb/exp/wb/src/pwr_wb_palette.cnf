@@ -12,8 +12,12 @@ topobjects NavigatorW1
 {
   class $PlantHier
   class $LibHier
+  class $Hier
   class $Alias
   class $MountObject
+  class ProjectReg
+  class VolumeReg
+  class SystemGroupReg
 }
 topobjects NavigatorW2
 {
@@ -631,6 +635,7 @@ palette PlcEditorPalette
       class SafetySwitchFo
       class CircuitBreakerFo
       class BaseSensorFo
+      class PositSensorFo
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo
@@ -654,6 +659,7 @@ palette PlcEditorPalette
       class MValveOrSwOpFo
       class MValveOrSwClFo
       class MValveOrNoSwFo
+      class PropValveOrFo
       class SupSwitchFo
     }
     menu ABB

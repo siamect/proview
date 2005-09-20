@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_provider.cpp,v 1.2 2005-09-01 14:57:49 claes Exp $
+ * Proview   $Id: wb_provider.cpp,v 1.3 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,12 +38,18 @@ extern "C" {
 
 void wb_procom::put( vext_sAMsg *msg, int size, pwr_tStatus *sts)
 {
-  msg->Any.message_type = 1;
-  if ( msgsnd( m_msgsndid, (void *)msg, size, 0) == -1) {
-    *sts = LDH__MSGSND;
-    return;
-  }
   *sts = LDH__SUCCESS;
+  msg->Any.message_type = 1;
+  switch ( m_type) {
+  case procom_eType_Ipc:
+    if ( msgsnd( m_msgsndid, (void *)msg, size, 0) == -1) {
+      *sts = LDH__MSGSND;
+      return;
+    }
+  case procom_eType_Local:
+    memcpy( &m_msg, msg, sizeof(m_msg));
+    break;
+  }
 }
 
 void wb_procom::receive( vext_sQMsg *msg, int size, pwr_tStatus *sts)
@@ -110,6 +116,7 @@ void wb_procom::provideBody( pwr_tStatus sts, pwr_tOix oix, int size, void *body
   vext_sAMsg amsg;
   pwr_tStatus asts;
 
+  amsg.Object.Type = vext_eMsgType_ObjectBody;
   amsg.ObjectBody.Status = sts;
   amsg.ObjectBody.oix = oix;
   if ( (int)sizeof(amsg.ObjectBody.body) < size)
@@ -120,6 +127,93 @@ void wb_procom::provideBody( pwr_tStatus sts, pwr_tOix oix, int size, void *body
   put( &amsg, sizeof(amsg), &asts);
 }
 
+void wb_procom::provideStatus( pwr_tStatus sts)
+{
+  vext_sAMsg amsg;
+  pwr_tStatus asts;
+
+  amsg.Object.Type = vext_eMsgType_Status;
+  amsg.Any.Status = sts;
+  put( &amsg, sizeof(amsg), &asts);
+}
+
+void wb_procom::dispatch( vext_sQMsg *qmsg)
+{
+  switch( qmsg->Any.Type) {
+  case vext_eMsgType_Object:
+    printf( "Object\n");
+    m_provider->object( this);
+    break;
+  case vext_eMsgType_ObjectOid:
+    printf( "ObjectOid %d\n", qmsg->Oid.Oix);
+    m_provider->objectOid( this, qmsg->Oid.Oix);
+    break;
+  case vext_eMsgType_ObjectBody:
+    printf( "ObjectBody %d\n", qmsg->Oid.Oix);
+    m_provider->objectBody( this, qmsg->Oid.Oix);
+    break;
+  case vext_eMsgType_ObjectName:
+    printf( "ObjectName %s\n", qmsg->ObjectName.Name);
+    m_provider->objectName( this, qmsg->ObjectName.Name);
+    break;
+  case vext_eMsgType_CreateObject:
+    printf( "CreateObject %s\n", qmsg->CreateObject.Name);
+    m_provider->createObject( this, qmsg->CreateObject.DestOix, qmsg->CreateObject.DestType,
+			      qmsg->CreateObject.Cid, qmsg->CreateObject.Name);
+    break;
+  case vext_eMsgType_MoveObject:
+    printf( "MoveObject %d\n", qmsg->Oid.Oix);
+    m_provider->moveObject( this, qmsg->MoveObject.Oix, qmsg->MoveObject.DestOix, 
+			      qmsg->MoveObject.DestType);
+    break;
+  case vext_eMsgType_CopyObject:
+    printf( "CopyObject %d\n", qmsg->Oid.Oix);
+    m_provider->copyObject( this, qmsg->CopyObject.Oix, qmsg->CopyObject.DestOix, 
+			      qmsg->CopyObject.DestType, qmsg->CopyObject.Name);
+    break;
+  case vext_eMsgType_DeleteObject:
+    printf( "DeleteObject %d\n", qmsg->Oid.Oix);
+    m_provider->deleteObject( this, qmsg->DeleteObject.Oix);
+    break;
+  case vext_eMsgType_DeleteFamily:
+    printf( "DeleteFamily %d\n", qmsg->Oid.Oix);
+    m_provider->deleteFamily( this, qmsg->DeleteFamily.Oix);
+    break;
+  case vext_eMsgType_RenameObject:
+    printf( "RenameObject %d\n", qmsg->Oid.Oix);
+    m_provider->renameObject( this, qmsg->RenameObject.Oix, qmsg->RenameObject.Name);
+    break;
+  case vext_eMsgType_WriteAttr:
+    printf( "WriteAttr %d\n", qmsg->Oid.Oix);
+    m_provider->writeAttribute( this, qmsg->WriteAttr.Oix, qmsg->WriteAttr.Offset, 
+				qmsg->WriteAttr.Size, qmsg->WriteAttr.Buffer);
+    break;
+  case vext_eMsgType_Commit:
+    printf( "Commit\n");
+    m_provider->commit( this);
+    break;
+  case vext_eMsgType_Abort:
+    printf( "Abort\n");
+    m_provider->abort( this);
+    break;
+  default:
+    ;
+  }
+}
+
+int wb_procom::lmsgsnd( int msgid, const void *msg_ptr, size_t msg_sz, int msgflg)
+{
+  dispatch( (vext_sQMsg *)msg_ptr);
+  return 0;
+}
+
+int wb_procom::lmsgrcv( int msgid, const void *msg_ptr, size_t msg_sz, int msgtype, 
+			int msgflg)
+{
+  memcpy( (void *)msg_ptr, &m_msg, sizeof(m_msg));
+  return 0;
+}
+
 void wb_procom::mainloop()
 {
   vext_sQMsg qmsg;
@@ -127,27 +221,7 @@ void wb_procom::mainloop()
 
   for (;;) {
     receive( &qmsg, sizeof(qmsg), &sts);
-
-    switch( qmsg.Any.Type) {
-    case vext_eMsgType_Object:
-      printf( "Object\n");
-      m_provider->object( this);
-      break;
-    case vext_eMsgType_ObjectOid:
-      printf( "ObjectOid %d\n", qmsg.Oid.Oix);
-      m_provider->objectOid( this, qmsg.Oid.Oix);
-      break;
-    case vext_eMsgType_ObjectBody:
-      printf( "ObjectBody %d\n", qmsg.Oid.Oix);
-      m_provider->objectBody( this, qmsg.Oid.Oix);
-      break;
-    case vext_eMsgType_ObjectName:
-      printf( "ObjectName %s\n", qmsg.ObjectName.Name);
-      m_provider->objectName( this, qmsg.ObjectName.Name);
-      break;
-    default:
-      ;
-    }
+    dispatch( &qmsg);
   }
 }
 

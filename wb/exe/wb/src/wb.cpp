@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.16 2005-09-06 14:13:22 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.17 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,7 @@ extern "C" {
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepmem.h"
+#include "wb_vrepext.h"
 
 using namespace std;
 
@@ -364,23 +365,6 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 
         // Load volume and import to vrepmem
 	wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
-#if 0
-        wb_vrepwbl *vrep = new wb_vrepwbl( erep);
-        sts = vrep->load( filename);
-	if ( vrep->vid() == 0) {
-	  delete vrep;
-	  return;
-	}
-	vrep->ref();
-
-	wb_vrepmem *mem = new wb_vrepmem(erep, vrep->vid());
-	mem->name( vrep->name());
-	erep->addExtern( &sts, mem);
-
-	mem->importVolume( *vrep);
-
-	vrep->unref();
-#endif
 	wb_vrepmem *mem = new wb_vrepmem(erep, 0);
 	mem->loadWbl( filename, &sts);
 	if ( EVEN(sts)) {
@@ -410,8 +394,67 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
 	  wtt->time_to_exit_cb = pwr_time_to_exit;
         }
       }
-      else
-        printf( "Unknown file type\n");
+      else {
+	if ( strcmp( filename, "ProjectList") == 0) {
+	  // Load ProjectList
+
+	  wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+	  wb_vrepext *ext = new wb_vrepext(erep, ldh_cProjectListVolume, filename, filename);
+	  erep->addExtern( &sts, ext);
+
+	  // Display buffer
+	  wb_volume *vol = new wb_volume(ext);
+
+	  Wtt *wtt = new Wtt( 0, toplevel, filename, 
+			      "Navigator", wbctx, ext->vid(), vol, 0, &sts);
+	  if (ODD(sts)) {
+	    appl_count++;
+	    wtt->close_cb = pwr_wtt_close;
+	    wtt->open_volume_cb = pwr_wtt_open_volume;
+	    wtt->time_to_exit_cb = pwr_time_to_exit;
+	  }
+	}
+	else if ( strcmp( filename, "GlobalVolumeList") == 0) {
+	  // Load GlobalVolumeList
+
+	  wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+	  wb_vrepext *ext = new wb_vrepext(erep, ldh_cGlobalVolumeListVolume, filename, filename);
+	  erep->addExtern( &sts, ext);
+
+	  // Display buffer
+	  wb_volume *vol = new wb_volume(ext);
+
+	  Wtt *wtt = new Wtt( 0, toplevel, filename, 
+			      "Navigator", wbctx, ext->vid(), vol, 0, &sts);
+	  if (ODD(sts)) {
+	    appl_count++;
+	    wtt->close_cb = pwr_wtt_close;
+	    wtt->open_volume_cb = pwr_wtt_open_volume;
+	    wtt->time_to_exit_cb = pwr_time_to_exit;
+	  }
+	}
+	else if ( strcmp( filename, "UserDatabase") == 0) {
+	  // Load UserDatabase
+
+	  wb_erep *erep = (wb_erep *)(*(wb_env *)wbctx);
+	  wb_vrepext *ext = new wb_vrepext(erep, ldh_cUserDatabaseVolume, filename, filename);
+	  erep->addExtern( &sts, ext);
+
+	  // Display buffer
+	  wb_volume *vol = new wb_volume(ext);
+
+	  Wtt *wtt = new Wtt( 0, toplevel, filename, 
+			      "Navigator", wbctx, ext->vid(), vol, 0, &sts);
+	  if (ODD(sts)) {
+	    appl_count++;
+	    wtt->close_cb = pwr_wtt_close;
+	    wtt->open_volume_cb = pwr_wtt_open_volume;
+	    wtt->time_to_exit_cb = pwr_time_to_exit;
+	  }
+	}
+	else
+	  printf( "Unknown file\n");
+      }
     }
 
   }
@@ -502,6 +545,7 @@ int main( int argc, char *argv[])
   XtAppContext  app_ctx;
   int           sw_projectvolume = 0;
   int           sw_classeditor = 0;
+  int           sw_projectlist = 0;
   char		filename[200];
   int           i;
   int		quiet = 0;
@@ -546,6 +590,10 @@ int main( int argc, char *argv[])
 	strcpy( filename, argv[i+1]);
 	sw_projectvolume = 0;
 	i++;
+	break;
+      case 'p':
+	sw_projectlist = 1;
+	sw_projectvolume = 0;
 	break;
       default:
 	printf("Unknown argument: %s\n", argv[i]);
@@ -677,6 +725,9 @@ int main( int argc, char *argv[])
   }
   else if ( sw_classeditor) {
     pwr_wtt_open_volume( 0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
+  }
+  else if ( sw_projectlist) {
+    pwr_wtt_open_volume( 0, wb_eType_Volume, "ProjectList", wow_eFileSelType_);
   }
   else if ( nav_display) {
     if ( login_prv.priv & pwr_mPrv_DevRead ) {

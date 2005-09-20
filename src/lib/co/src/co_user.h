@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.h,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_user.h,v 1.5 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -178,6 +178,7 @@ class GeUser {
 
   public:
     int 		load( char *filename);
+    void 		clear();
     int 		save() { return save( fname);}
     int 		save( char *filename);
     int 		load_system( ifstream& fp);

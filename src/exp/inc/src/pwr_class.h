@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.15 2005-09-01 14:57:49 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.16 2005-09-20 13:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@ typedef union pwr_m_ClassDef	pwr_mClassDef;
 typedef struct pwr_s_Alias		pwr_sAlias;
 typedef struct pwr_s_AttrXRef		pwr_sAttrXRef;
 typedef struct pwr_s_ClassDef		pwr_sClassDef;
+typedef struct pwr_s_Hier		pwr_sHier;
 typedef struct pwr_s_DocHier		pwr_sDocHier;
 typedef struct pwr_s_LibHier		pwr_sLibHier;
 typedef struct pwr_s_NodeHier		pwr_sNodeHier;
@@ -143,6 +144,7 @@ typedef enum {
   pwr_eTix_Status	= 29,	/* Basic type */
   pwr_eTix_NetStatus	= 30,	/* Basic type */
   pwr_eTix_CastId	= 31,	/* Basic type */
+  pwr_eTix_ProString	= 32,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -184,6 +186,7 @@ typedef enum {
   pwr_eType_Status	= pwr_TypeId(pwr_eTix_Status),
   pwr_eType_NetStatus	= pwr_TypeId(pwr_eTix_NetStatus),
   pwr_eType_CastId	= pwr_TypeId(pwr_eTix_CastId),
+  pwr_eType_ProString	= pwr_TypeId(pwr_eTix_ProString),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 
@@ -281,6 +284,7 @@ typedef enum {
   pwr_eCix_Method		=  63,
   pwr_eCix_RtMethod		=  64,
   pwr_eCix_ExternVolume		=  65,
+  pwr_eCix_Hier			=  66,
   pwr_eCix_
 } pwr_eCix;
     
@@ -350,6 +354,7 @@ typedef enum {
   pwr_eClass_Method		= pwr_ClassId(pwr_eCix_Method),
   pwr_eClass_RtMethod		= pwr_ClassId(pwr_eCix_RtMethod),
   pwr_eClass_ExternVolume	= pwr_ClassId(pwr_eCix_ExternVolume),
+  pwr_eClass_Hier		= pwr_ClassId(pwr_eCix_Hier),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -577,6 +582,11 @@ struct pwr_s_ParInfo
     pwr_tUInt32		Elements;	/* If array; number of rows. */
     pwr_tUInt32		ParamIndex;	/* Index of param within a body. */
     };
+
+/*_*
+  @aref privmask PrivMask
+*/
+typedef pwr_tMask pwr_tPrivMask;
 
 /* Operating system.  */
 /*_*
@@ -1067,6 +1077,11 @@ struct pwr_s_Alias
     {
     pwr_tString80	Description;
     pwr_tObjid		Object;
+    };
+
+struct pwr_s_Hier
+    {
+    pwr_tString80	Description;
     };
 
 struct pwr_s_DocHier
