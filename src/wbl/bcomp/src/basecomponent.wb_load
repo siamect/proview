@@ -1,8 +1,8 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X4529"
-    Attr NextCix = "_X100"
-    Attr NextTix[0] = "_X3"
+    Attr NextOix = "_X4680"
+    Attr NextCix = "_X104"
+    Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 87 08-SEP-2005 13:01:47.00
     Object ModeEnum $TypeDef 1 08-SEP-2005 13:01:47.00
@@ -60,6 +60,32 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         Body SysBody 01-JAN-1970 01:00:00.00
           Attr Text = "Open"
           Attr PgmName = "Open"
+          Attr Value = 2
+        EndBody
+      EndObject
+    EndObject
+    Object DirValvePosEnum $TypeDef 3 21-SEP-2005 10:12:31.47
+      Body SysBody 21-SEP-2005 10:12:15.26
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Closed $Value 4660 21-SEP-2005 10:13:41.88
+        Body SysBody 21-SEP-2005 10:13:43.65
+          Attr Text = "Closed"
+          Attr PgmName = "Closed"
+        EndBody
+      EndObject
+      Object Forward $Value 4661 21-SEP-2005 10:21:06.56
+        Body SysBody 21-SEP-2005 10:21:08.83
+          Attr Text = "Forward"
+          Attr PgmName = "Forward"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object Reverse $Value 4662 21-SEP-2005 10:21:18.18
+        Body SysBody 21-SEP-2005 10:21:19.67
+          Attr Text = "Reverse"
+          Attr PgmName = "Reverse"
           Attr Value = 2
         EndBody
       EndObject
@@ -4556,6 +4582,74 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndObject
       EndObject
       Object Template CompModeDM 2167373824 08-SEP-2005 13:01:47.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CompModeD2M $ClassDef 100 21-SEP-2005 08:26:46.09
+      Body SysBody 21-SEP-2005 08:26:22.81
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-SEP-2005 08:26:22.81
+        Body SysBody 21-SEP-2005 08:26:57.03
+          Attr StructName = "CompModeD2M"
+          Attr NextAix = "_X36"
+        EndBody
+        Object OpAuto $Attribute 28 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "OpAuto"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpMan $Attribute 29 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "OpMan"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ManMode $Attribute 30 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "ManMode"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpAutoOnly $Attribute 31 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "OpAutoOnly"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpRefManIncr $Attribute 32 21-SEP-2005 08:27:41.81
+          Body SysBody 21-SEP-2005 08:27:43.12
+            Attr PgmName = "OpRefManIncr"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpRefManDecr $Attribute 35 21-SEP-2005 08:27:57.89
+          Body SysBody 21-SEP-2005 08:27:59.27
+            Attr PgmName = "OpRefManDecr"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IndMode $Attribute 33 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "IndMode"
+            Attr TypeRef = "pwrs:Type-$String8"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 34 21-SEP-2005 08:26:22.81
+          Body SysBody 21-SEP-2005 08:26:22.81
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template CompModeD2M 2173927424 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject
@@ -26543,7 +26637,7 @@ set from HMI."
       Object Code PlcTemplate 3481 08-SEP-2005 13:01:47.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 01-JAN-1970 01:00:00.00
+        Body DevBody 21-SEP-2005 14:44:21.41
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-CompModeDMFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -26574,8 +26668,8 @@ set from HMI."
         Object W WindowPlc 3482 08-SEP-2005 13:01:47.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 01-JAN-1970 01:00:00.00
-            Attr Modified = "16-AUG-2005 16:51:41.47"
+          Body DevBody 21-SEP-2005 14:44:21.41
+            Attr Modified = "21-SEP-2005 14:44:21.41"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -26586,7 +26680,7 @@ set from HMI."
             EndBuffer
           EndBody
           Object cn73 ConDigital 4160 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn73"
                 Attr object_type = 23
@@ -26598,11 +26692,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.320000e+00
-                  Attr y = 1.850000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.043111e+00
-                  Attr y = 1.850000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26625,7 +26719,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn72 ConDigital 4159 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn72"
                 Attr object_type = 23
@@ -26637,11 +26731,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.320000e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.163111e+00
-                  Attr y = 1.800000e+00
+                  Attr y = 1.950000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26664,7 +26758,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn71 ConDigital 4094 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn71"
                 Attr object_type = 23
@@ -26674,16 +26768,20 @@ set from HMI."
                 Attr dest_oid = "BaseComponent:Class-CompModeDMFo-Code-W-ResDp4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.920000e+00
-                  Attr y = 2.050000e+00
+                  Attr x = 1.270000e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.043111e+00
-                  Attr y = 2.050000e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.835389e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 1.920000e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -26702,7 +26800,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn68 ConDigital 4087 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn68"
                 Attr object_type = 23
@@ -26714,19 +26812,19 @@ set from HMI."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 2.020000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.999000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.999000e+00
-                  Attr y = 1.450000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.043111e+00
-                  Attr y = 1.450000e+00
+                  Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -26745,7 +26843,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn66 ConDigital 4083 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn66"
                 Attr object_type = 23
@@ -26757,11 +26855,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.320000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 2.199000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26784,7 +26882,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn65 ConDigital 4082 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn65"
                 Attr object_type = 23
@@ -26796,11 +26894,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 2.020000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.949000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26903,7 +27001,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn62 ConDigital 3588 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn62"
                 Attr object_type = 23
@@ -26915,11 +27013,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.920000e+00
-                  Attr y = 1.700000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.799000e+00
-                  Attr y = 1.700000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -26942,7 +27040,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn61 ConDigital 3587 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn61"
                 Attr object_type = 23
@@ -26953,19 +27051,19 @@ set from HMI."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.065333e+00
-                  Attr y = 1.600000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.559500e+00
-                  Attr y = 1.600000e+00
+                  Attr x = 1.599319e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.559500e+00
-                  Attr y = 1.700000e+00
+                  Attr x = 1.599319e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.620000e+00
-                  Attr y = 1.700000e+00
+                  Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -26984,7 +27082,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn60 ConDigital 3586 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn60"
                 Attr object_type = 23
@@ -26997,11 +27095,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.620000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.499000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.603333e+00
@@ -27028,7 +27126,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn59 ConDigital 3583 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn59"
                 Attr object_type = 23
@@ -27040,11 +27138,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.920000e+00
-                  Attr y = 1.600000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.799000e+00
-                  Attr y = 1.600000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27067,7 +27165,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn58 ConDigital 3581 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn58"
                 Attr object_type = 23
@@ -27080,19 +27178,19 @@ set from HMI."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.499000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.589750e+00
-                  Attr y = 1.750000e+00
+                  Attr x = 1.559500e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.589750e+00
-                  Attr y = 1.650000e+00
+                  Attr x = 1.559500e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.620000e+00
-                  Attr y = 1.650000e+00
+                  Attr y = 1.800000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -27111,7 +27209,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn57 ConDigital 3580 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn57"
                 Attr object_type = 23
@@ -27122,11 +27220,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.620000e+00
-                  Attr y = 1.600000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.065333e+00
-                  Attr y = 1.600000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27149,7 +27247,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn54 ConDigital 3572 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn54"
                 Attr object_type = 23
@@ -27162,19 +27260,19 @@ set from HMI."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.649000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.500000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.721667e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.500000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.721667e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.770000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -27193,7 +27291,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn53 ConDigital 3571 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn53"
                 Attr object_type = 23
@@ -27205,11 +27303,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.770000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.649000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27232,7 +27330,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn52 ConDigital 3569 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn52"
                 Attr object_type = 23
@@ -27244,19 +27342,19 @@ set from HMI."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.399000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.434500e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.434500e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.500000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.470000e+00
-                  Attr y = 1.350000e+00
+                  Attr y = 1.500000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -27275,7 +27373,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn51 ConDigital 3568 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn51"
                 Attr object_type = 23
@@ -27287,11 +27385,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.470000e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.065333e+00
-                  Attr y = 1.400000e+00
+                  Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27314,7 +27412,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn48 ConDigital 3562 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn48"
                 Attr object_type = 23
@@ -27325,11 +27423,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.143111e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.470000e+00
-                  Attr y = 1.200000e+00
+                  Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27352,7 +27450,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn46 ConDigital 3558 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn46"
                 Attr object_type = 23
@@ -27365,11 +27463,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.470000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.399000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27392,7 +27490,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn18 ConDigital 3503 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn18"
                 Attr object_type = 23
@@ -27403,11 +27501,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.320000e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.129778e+00
-                  Attr y = 1.750000e+00
+                  Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27430,7 +27528,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn16 ConDigital 3505 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn16"
                 Attr object_type = 23
@@ -27442,11 +27540,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.163111e+00
-                  Attr y = 1.300000e+00
+                  Attr y = 1.450000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.220000e+00
-                  Attr y = 1.300000e+00
+                  Attr y = 1.450000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27469,7 +27567,7 @@ set from HMI."
             EndBody
           EndObject
           Object cn14 ConDigital 3506 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-cn14"
                 Attr object_type = 23
@@ -27480,11 +27578,11 @@ set from HMI."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.220000e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.129778e+00
-                  Attr y = 1.250000e+00
+                  Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -27794,16 +27892,16 @@ set from HMI."
           Object GetDp2 GetDp 3523 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.ManMode"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp2"
                 Attr x = 7.000000e-01
-                Attr y = -8.000000e-01
-                Attr width = -9.522223e-02
-                Attr heigth = 5.750000e-01
+                Attr y = -4.250000e-01
+                Attr width = 4.297778e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -27812,13 +27910,13 @@ set from HMI."
           Object And0 And 3527 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And0"
                 Attr x = 1.200000e+00
-                Attr y = -3.250000e-01
+                Attr y = -4.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -27831,16 +27929,16 @@ set from HMI."
           Object GetDp4 GetDp 3528 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.OpAutoOnly"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp4"
                 Attr x = 7.000000e-01
-                Attr y = -9.000000e-01
-                Attr width = -1.118889e-01
-                Attr heigth = 6.250000e-01
+                Attr y = -4.750001e-01
+                Attr width = 4.631111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -27849,16 +27947,16 @@ set from HMI."
           Object GetDp5 GetDp 3531 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.ManMode"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp5"
                 Attr x = 7.000000e-01
-                Attr y = -1.650000e+00
-                Attr width = -4.452222e-01
-                Attr heigth = 9.250000e-01
+                Attr y = -9.250000e-01
+                Attr width = 4.297778e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -27867,14 +27965,14 @@ set from HMI."
           Object GetDp7 GetDp 3533 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.OpAutoOnly"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp7"
                 Attr x = 7.000000e-01
-                Attr y = -8.249999e-01
+                Attr y = -9.750000e-01
                 Attr width = 4.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -27885,15 +27983,15 @@ set from HMI."
           Object And1 And 3534 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And1"
                 Attr x = 1.300000e+00
-                Attr y = -1.280000e+00
-                Attr width = -2.260000e-01
-                Attr heigth = 5.550000e-01
+                Attr y = -1.025000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.500000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 7
                 Attr mask[1] = 1
@@ -27918,7 +28016,7 @@ set from HMI."
             EndBody
           EndObject
           Object Text1 Text 3536 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Text = "Select reference value"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -27926,7 +28024,7 @@ set from HMI."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-Text1"
                 Attr x = 7.000000e-01
-                Attr y = -1.690000e-01
+                Attr y = -3.189999e-01
                 Attr width = 3.280000e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -27934,7 +28032,7 @@ set from HMI."
             EndBody
           EndObject
           Object Text2 Text 3537 08-SEP-2005 13:01:47.00
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Text = "Copy auto ref to man ref for smooth transition"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -27942,7 +28040,7 @@ set from HMI."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-Text2"
                 Attr x = 7.000000e-01
-                Attr y = -5.689999e-01
+                Attr y = -7.190000e-01
                 Attr width = 6.413333e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28024,13 +28122,13 @@ set from HMI."
           Object And6 And 3557 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And6"
                 Attr x = 1.450000e+00
-                Attr y = -2.750000e-01
+                Attr y = -4.250000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28042,16 +28140,16 @@ set from HMI."
           Object GetDp11 GetDp 3561 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeDM.OpRefMan"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp11"
                 Attr x = 7.000000e-01
-                Attr y = -7.000000e-01
-                Attr width = -3.188888e-02
-                Attr heigth = 5.250000e-01
+                Attr y = -3.750000e-01
+                Attr width = 4.431111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -28060,15 +28158,15 @@ set from HMI."
           Object And7 And 3563 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And7"
                 Attr x = 1.450000e+00
-                Attr y = -2.800000e-01
-                Attr width = 3.240000e-01
-                Attr heigth = -4.500000e-02
+                Attr y = -5.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
@@ -28079,16 +28177,16 @@ set from HMI."
           Object GetDp12 GetDp 3567 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeDMFo.RefAuto"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp12"
                 Attr x = 7.000000e-01
-                Attr y = -1.100000e+00
-                Attr width = -3.096667e-01
-                Attr heigth = 7.250000e-01
+                Attr y = -5.749999e-01
+                Attr width = 3.653333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -28097,13 +28195,13 @@ set from HMI."
           Object Or0 Or 3570 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-Or0"
                 Attr x = 1.750000e+00
-                Attr y = -2.750000e-01
+                Attr y = -4.250000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28115,14 +28213,14 @@ set from HMI."
           Object StoDp1 StoDp 3575 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Object = "$PlcHost:BaseComponent-Class-CompModeDMFo.OutRef"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-StoDp1"
                 Attr x = 2.300000e+00
-                Attr y = -2.250001e-01
+                Attr y = -3.750000e-01
                 Attr width = 4.052222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28133,16 +28231,16 @@ set from HMI."
           Object GetDp14 GetDp 3578 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeDMFo.RefAuto"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp14"
                 Attr x = 7.000000e-01
-                Attr y = -1.300000e+00
-                Attr width = -3.096667e-01
-                Attr heigth = 7.250000e-01
+                Attr y = -7.750000e-01
+                Attr width = 3.653333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -28151,13 +28249,13 @@ set from HMI."
           Object And8 And 3579 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And8"
                 Attr x = 1.600000e+00
-                Attr y = -6.750000e-01
+                Attr y = -8.250000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28169,16 +28267,16 @@ set from HMI."
           Object SetDp1 SetDp 3582 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Object = "$PlcConnect:BaseComponent-Class-CompModeDM.OpRefMan"
               Buffer PlcNode
                 Attr object_type = 257
                 Attr cid = "pwrb:Class-SetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-SetDp1"
                 Attr x = 1.900000e+00
-                Attr y = -2.800000e-01
-                Attr width = 8.391111e-01
-                Attr heigth = -2.950000e-01
+                Attr y = -7.750000e-01
+                Attr width = 4.941111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
@@ -28187,16 +28285,16 @@ set from HMI."
           Object ResDp3 ResDp 3584 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Object = "$PlcConnect:BaseComponent-Class-CompModeDM.OpRefMan"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-ResDp3"
                 Attr x = 1.900000e+00
-                Attr y = -4.800000e-01
-                Attr width = 7.391111e-01
-                Attr heigth = -1.950000e-01
+                Attr y = -8.750000e-01
+                Attr width = 4.941111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
@@ -28205,15 +28303,15 @@ set from HMI."
           Object And9 And 3585 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And9"
                 Attr x = 1.600000e+00
-                Attr y = -7.800000e-01
-                Attr width = 1.740000e-01
-                Attr heigth = 1.050000e-01
+                Attr y = -9.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
@@ -28224,15 +28322,15 @@ set from HMI."
           Object And10 And 4081 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-And10"
                 Attr x = 2.000000e+00
-                Attr y = 5.699999e-01
-                Attr width = 1.024000e+00
-                Attr heigth = -7.450000e-01
+                Attr y = -4.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
@@ -28242,16 +28340,16 @@ set from HMI."
           Object GetDp15 GetDp 4086 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeDMFo.Ready"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp15"
                 Attr x = 7.000000e-01
-                Attr y = -1.200000e+00
-                Attr width = -3.818889e-01
-                Attr heigth = 7.750000e-01
+                Attr y = -6.250000e-01
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -28260,14 +28358,14 @@ set from HMI."
           Object GetDp16 GetDp 4088 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeDMFo.Ready"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp16"
                 Attr x = 7.000000e-01
-                Attr y = -8.750000e-01
+                Attr y = -1.025000e+00
                 Attr width = 3.431111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
@@ -28278,16 +28376,16 @@ set from HMI."
           Object GetDp17 GetDp 4090 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeDMFo.Ready"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-GetDp17"
                 Attr x = 7.000000e-01
-                Attr y = -1.800000e+00
-                Attr width = -3.818889e-01
-                Attr heigth = 7.750000e-01
+                Attr y = -1.250000e-01
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -28296,16 +28394,16 @@ set from HMI."
           Object ResDp4 ResDp 4093 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 01-JAN-1970 01:00:00.00
+            Body DevBody 21-SEP-2005 14:44:21.41
               Attr Object = "$PlcConnect:BaseComponent-Class-CompModeDM.OpRefMan"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "BaseComponent:Class-CompModeDMFo-Code-W-ResDp4"
-                Attr x = 1.900000e+00
-                Attr y = -1.180000e+00
-                Attr width = 3.891111e-01
-                Attr heigth = 1.550000e-01
+                Attr x = 1.250000e+00
+                Attr y = -1.250000e-01
+                Attr width = 4.941111e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDMFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[2] = 1
@@ -28315,6 +28413,2312 @@ set from HMI."
         EndObject
       EndObject
       Object Template CompModeDMFo 2167635968 08-SEP-2005 13:01:47.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CompModeD2MFo $ClassDef 101 21-SEP-2005 08:28:42.26
+      Body SysBody 21-SEP-2005 08:28:30.81
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-SEP-2005 08:28:30.81
+        Body SysBody 21-SEP-2005 08:28:47.86
+          Attr StructName = "CompModeD2MFo"
+          Attr NextAix = "_X17"
+        EndBody
+        Object RefAutoIncr $Input 11 21-SEP-2005 08:29:03.10
+          Body SysBody 21-SEP-2005 09:36:45.17
+            Attr PgmName = "RefAutoIncr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "ainc"
+          EndBody
+        EndObject
+        Object RefAutoDecr $Input 15 21-SEP-2005 08:29:22.83
+          Body SysBody 21-SEP-2005 09:36:50.76
+            Attr PgmName = "RefAutoDecr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "adec"
+          EndBody
+        EndObject
+        Object Ready $Input 12 21-SEP-2005 08:28:30.81
+          Body SysBody 21-SEP-2005 08:28:30.81
+            Attr PgmName = "Ready"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "rdy"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 13 21-SEP-2005 08:28:30.81
+          Body SysBody 21-SEP-2005 08:28:30.81
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object OutRefIncr $Output 14 21-SEP-2005 08:30:16.67
+          Body SysBody 21-SEP-2005 09:36:29.96
+            Attr PgmName = "OutRefIncr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "rinc"
+          EndBody
+        EndObject
+        Object OutRefDecr $Output 16 21-SEP-2005 08:30:27.95
+          Body SysBody 21-SEP-2005 09:36:36.02
+            Attr PgmName = "OutRefDecr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "rdec"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 21-SEP-2005 08:28:30.81
+        Body SysBody 21-SEP-2005 08:28:30.81
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 21-SEP-2005 08:28:30.81
+          Body SysBody 21-SEP-2005 08:28:30.81
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 4530 21-SEP-2005 08:28:30.81
+        Body SysBody 21-SEP-2005 09:29:10.44
+          Attr object_type = 11
+          Attr parameters[0] = 3
+          Attr parameters[1] = 1
+          Attr parameters[2] = 2
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 7
+          Attr default_mask[1] = 3
+          Attr segname_annotation = 1
+          Attr compmethod = 58
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "CompModeD2MFo"
+          Attr graphname = "CompModeD2MFo"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 4531 21-SEP-2005 08:28:30.81
+        Object PlcConnect $MenuRef 4532 21-SEP-2005 08:28:30.81
+          Body SysBody 21-SEP-2005 08:28:30.81
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Code PlcTemplate 4533 21-SEP-2005 08:28:30.81
+        Body RtBody 21-SEP-2005 08:28:30.81
+        EndBody
+        Body DevBody 21-SEP-2005 14:41:56.99
+          Buffer PlcProgram
+            Attr oid = "BaseComponent:Class-CompModeD2MFo-Code"
+            Attr cid = "pwrb:Class-PlcTemplate"
+            Attr defnamecount[2] = 1
+            Attr defnamecount[11] = 8
+            Attr defnamecount[90] = 15
+            Attr defnamecount[91] = 3
+            Attr defnamecount[93] = 2
+            Attr defnamecount[99] = 1
+            Attr defnamecount[125] = 1
+            Attr defnamecount[136] = 2
+            Attr defnamecount[137] = 5
+            Attr defnamecount[138] = 1
+            Attr defnamecount[139] = 5
+            Attr defnamecount[250] = 1
+            Attr defnamecount[253] = 3
+            Attr defnamecount[255] = 3
+            Attr defnamecount[256] = 26
+            Attr defnamecount[257] = 2
+            Attr defnamecount[258] = 8
+            Attr defnamecount[263] = 1
+            Attr defnamecount[264] = 1
+            Attr defnamecount[265] = 4
+            Attr defnamecount[266] = 1
+            Attr defnamecount[267] = 1
+            Attr connamecount = 96
+          EndBuffer
+        EndBody
+        Object W WindowPlc 4534 21-SEP-2005 08:28:30.81
+          Body RtBody 21-SEP-2005 08:28:30.81
+          EndBody
+          Body DevBody 21-SEP-2005 14:41:56.99
+            Attr Modified = "21-SEP-2005 14:41:56.99"
+            Buffer PlcWindow
+              Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              Attr cid = "pwrb:Class-WindowPlc"
+              Attr y = 5.000000e+01
+              Attr width = 1.000000e+03
+              Attr heigth = 7.500000e+02
+              Attr refconcount = 1
+            EndBuffer
+          EndBody
+          Object cn95 ConDigital 4679 21-SEP-2005 11:17:24.10
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn95"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge1"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499000e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn94 ConDigital 4678 21-SEP-2005 11:17:20.50
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn94"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp25"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.205333e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn93 ConDigital 4675 21-SEP-2005 11:17:06.04
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn93"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp7"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn92 ConDigital 4672 21-SEP-2005 11:16:25.75
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn92"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp24"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.194222e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn91 ConDigital 4629 21-SEP-2005 09:19:09.49
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn91"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or2"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp5"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.499000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.659500e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.659500e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.820000e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn90 ConDigital 4628 21-SEP-2005 09:19:07.97
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn90"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or2"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn89 ConDigital 4627 21-SEP-2005 09:19:06.05
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn89"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp23"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.100889e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn88 ConDigital 4626 21-SEP-2005 09:19:04.34
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn88"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp17"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.043111e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn86 ConDigital 4621 21-SEP-2005 08:43:55.64
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn86"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And13"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.451139e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.451139e+00
+                  Attr y = 2.150000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.470000e+00
+                  Attr y = 2.150000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn85 ConDigital 4620 21-SEP-2005 08:43:53.34
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn85"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And12"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.434500e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.434500e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.470000e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn82 ConDigital 4617 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn82"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And12"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.649000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn81 ConDigital 4616 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn81"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And13"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or1"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.649000e+00
+                  Attr y = 2.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.709500e+00
+                  Attr y = 2.150000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.709500e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn80 ConDigital 4615 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn80"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or1"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And14"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.949000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn79 ConDigital 4614 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn79"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp22"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And13"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 2.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.127556e+00
+                  Attr y = 2.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn78 ConDigital 4613 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn78"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And14"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp21"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.999000e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.999000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.043111e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn77 ConDigital 4612 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn77"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And14"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-StoDp2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.320000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.199000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn76 ConDigital 4611 21-SEP-2005 08:41:58.07
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn76"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And12"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp20"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.205333e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.470000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn68 ConDigital 4538 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn68"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And10"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp15"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.999000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.999000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.043111e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn66 ConDigital 4539 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn66"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And10"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-StoDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.320000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.199000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn65 ConDigital 4540 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn65"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And10"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.949000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn64 ConDigital 4541 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn64"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp8"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-CStoSp1"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.129778e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.488833e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.488833e+00
+                  Attr y = 2.550000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.720000e+00
+                  Attr y = 2.550000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn63 ConDigital 4542 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn63"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp8"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-CStoSp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.720000e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.129778e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn54 ConDigital 4549 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn54"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And7"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or0"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.649000e+00
+                  Attr y = 1.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.709500e+00
+                  Attr y = 1.700000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.709500e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn53 ConDigital 4550 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn53"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And6"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.649000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn52 ConDigital 4551 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn52"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And7"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.434500e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.434500e+00
+                  Attr y = 1.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.700000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn51 ConDigital 4552 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn51"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp12"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And7"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.116444e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn48 ConDigital 4553 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn48"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And6"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp11"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.194222e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn46 ConDigital 4554 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn46"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn16 ConDigital 4556 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn16"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.163111e+00
+                  Attr y = 1.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn14 ConDigital 4557 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn14"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp2"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.129778e+00
+                  Attr y = 1.600000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn4 ConDigital 4558 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn4"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp1"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp2"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.100889e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.249583e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.249583e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.270000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn3 ConDigital 4559 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn3"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp1"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.100889e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn2 ConDigital 4560 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn2"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp0"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.096444e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.229166e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.229166e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.270000e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn1 ConDigital 4561 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-cn1"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp0"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2MFo-Code-W-SetDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.096444e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document0 Document 4562 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 08:28:30.81
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Document0"
+                Attr x = 5.000000e-01
+                Attr y = -1.750000e+00
+                Attr width = 3.425000e+00
+                Attr heigth = 2.275000e+00
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object GetDp0 GetDp 4563 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpMan"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp0"
+                Attr x = 7.000000e-01
+                Attr y = 2.500000e-01
+                Attr width = 3.714444e-01
+                Attr heigth = 7.500000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object SetDp0 SetDp 4564 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.ManMode"
+              Buffer PlcNode
+                Attr object_type = 257
+                Attr cid = "pwrb:Class-SetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-SetDp0"
+                Attr x = 1.250000e+00
+                Attr y = 8.200000e-01
+                Attr width = 1.025778e+00
+                Attr heigth = -4.950000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp0 ResDp 4565 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 10:54:59.30
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpMan"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp0"
+                Attr x = 1.250000e+00
+                Attr y = 7.700000e-01
+                Attr width = 9.924445e-01
+                Attr heigth = -4.950000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp1 GetDp 4566 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpAuto"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp1"
+                Attr x = 7.000000e-01
+                Attr y = -5.000002e-02
+                Attr width = 2.258889e-01
+                Attr heigth = 2.250000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp1 ResDp 4567 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.ManMode"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp1"
+                Attr x = 1.250000e+00
+                Attr y = 5.200000e-01
+                Attr width = 8.757778e-01
+                Attr heigth = -3.450000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp2 ResDp 4568 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpAuto"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp2"
+                Attr x = 1.250000e+00
+                Attr y = 4.200000e-01
+                Attr width = 7.968889e-01
+                Attr heigth = -2.950000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp2 GetDp 4569 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.ManMode"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp2"
+                Attr x = 7.000000e-01
+                Attr y = -6.250000e-01
+                Attr width = 4.297778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And0 And 4570 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And0"
+                Attr x = 1.200000e+00
+                Attr y = -6.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp4 GetDp 4571 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpAutoOnly"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp4"
+                Attr x = 7.000000e-01
+                Attr y = -6.750000e-01
+                Attr width = 4.631111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text0 Text 4575 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 09:19:24.55
+              Attr Text = "Detect operator actions"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Text0"
+                Attr x = 7.000000e-01
+                Attr y = 3.310000e-01
+                Attr width = 3.413333e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text1 Text 4576 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Text = "Select reference value"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Text1"
+                Attr x = 7.000000e-01
+                Attr y = -5.190000e-01
+                Attr width = 3.280000e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp8 GetDp 4578 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.ManMode"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp8"
+                Attr x = 7.000000e-01
+                Attr y = -1.475000e+00
+                Attr width = 4.297778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object CStoSp0 CStoSp 4579 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+              Attr In = "M"
+            EndBody
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.IndMode"
+              Buffer PlcNode
+                Attr object_type = 265
+                Attr cid = "pwrb:Class-CStoSp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-CStoSp0"
+                Attr x = 1.700000e+00
+                Attr y = -1.425000e+00
+                Attr width = 4.822222e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object CStoSp1 CStoSp 4580 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.IndMode"
+              Buffer PlcNode
+                Attr object_type = 265
+                Attr cid = "pwrb:Class-CStoSp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-CStoSp1"
+                Attr x = 1.700000e+00
+                Attr y = -1.525000e+00
+                Attr width = 4.822222e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 2
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text3 Text 4581 21-SEP-2005 08:28:30.81
+            Body DevBody 21-SEP-2005 11:18:22.20
+              Attr Text = "Set mode indicator to M if manual mode"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Text3"
+                Attr x = 7.000000e-01
+                Attr y = -1.419000e+00
+                Attr width = 5.546667e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object And6 And 4582 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And6"
+                Attr x = 1.450000e+00
+                Attr y = -6.249999e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp11 GetDp 4583 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManIncr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp11"
+                Attr x = 7.000000e-01
+                Attr y = -5.749999e-01
+                Attr width = 4.942222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And7 And 4584 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And7"
+                Attr x = 1.450000e+00
+                Attr y = -7.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp12 GetDp 4585 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeD2MFo.RefAutoIncr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp12"
+                Attr x = 7.000000e-01
+                Attr y = -7.750000e-01
+                Attr width = 4.164445e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or0 Or 4586 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or0"
+                Attr x = 1.750000e+00
+                Attr y = -6.249999e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp1 StoDp 4587 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcHost:BaseComponent-Class-CompModeD2MFo.OutRefIncr"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-StoDp1"
+                Attr x = 2.300000e+00
+                Attr y = -5.749999e-01
+                Attr width = 4.563333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And10 And 4593 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And10"
+                Attr x = 2.000000e+00
+                Attr y = -6.249999e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp15 GetDp 4594 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeD2MFo.Ready"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp15"
+                Attr x = 7.000000e-01
+                Attr y = -8.249999e-01
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp17 GetDp 4596 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeD2MFo.Ready"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp17"
+                Attr x = 7.000000e-01
+                Attr y = -2.750000e-01
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp4 ResDp 4597 21-SEP-2005 08:28:30.81
+            Body RtBody 21-SEP-2005 08:28:30.81
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManIncr"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp4"
+                Attr x = 1.800000e+00
+                Attr y = -2.750000e-01
+                Attr width = 5.452222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp20 GetDp 4600 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManDecr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp20"
+                Attr x = 7.000000e-01
+                Attr y = -1.025000e+00
+                Attr width = 5.053333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp2 StoDp 4601 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcHost:BaseComponent-Class-CompModeD2MFo.OutRefDecr"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-StoDp2"
+                Attr x = 2.300000e+00
+                Attr y = -1.025000e+00
+                Attr width = 4.674444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp21 GetDp 4602 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeD2MFo.Ready"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp21"
+                Attr x = 7.000000e-01
+                Attr y = -1.275000e+00
+                Attr width = 3.431111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp22 GetDp 4603 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcHost:BaseComponent-Class-CompModeD2MFo.RefAutoDecr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp22"
+                Attr x = 7.000000e-01
+                Attr y = -1.225000e+00
+                Attr width = 4.275556e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And12 And 4605 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And12"
+                Attr x = 1.450000e+00
+                Attr y = -1.075000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And13 And 4606 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And13"
+                Attr x = 1.450000e+00
+                Attr y = -1.225000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or1 Or 4607 21-SEP-2005 08:41:58.06
+            Body RtBody 21-SEP-2005 08:41:58.06
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or1"
+                Attr x = 1.750000e+00
+                Attr y = -1.075000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And14 And 4608 21-SEP-2005 08:41:58.07
+            Body RtBody 21-SEP-2005 08:41:58.07
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-And14"
+                Attr x = 2.000000e+00
+                Attr y = -1.075000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp5 ResDp 4622 21-SEP-2005 09:17:12.55
+            Body RtBody 21-SEP-2005 09:17:12.55
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManDecr"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp5"
+                Attr x = 1.800000e+00
+                Attr y = -3.250000e-01
+                Attr width = 5.563333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp23 GetDp 4624 21-SEP-2005 09:18:09.98
+            Body RtBody 21-SEP-2005 09:18:09.98
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpAuto"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp23"
+                Attr x = 7.000000e-01
+                Attr y = -3.250000e-01
+                Attr width = 4.008889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or2 Or 4625 21-SEP-2005 09:18:58.04
+            Body RtBody 21-SEP-2005 09:18:58.04
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Or2"
+                Attr x = 1.300000e+00
+                Attr y = -3.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp24 GetDp 4670 21-SEP-2005 11:16:08.68
+            Body RtBody 21-SEP-2005 11:16:08.68
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManIncr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp24"
+                Attr x = 7.000000e-01
+                Attr y = -7.499995e-02
+                Attr width = 4.942222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Edge0 Edge 4671 21-SEP-2005 11:16:24.19
+            Body RtBody 21-SEP-2005 11:16:24.19
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 93
+                Attr cid = "pwrb:Class-Edge"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge0"
+                Attr x = 1.300000e+00
+                Attr y = -1.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp6 ResDp 4673 21-SEP-2005 11:16:56.93
+            Body RtBody 21-SEP-2005 11:16:56.93
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManIncr"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp6"
+                Attr x = 1.800000e+00
+                Attr y = -1.750000e-01
+                Attr width = 5.452222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp7 ResDp 4674 21-SEP-2005 11:17:01.61
+            Body RtBody 21-SEP-2005 11:17:01.61
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Object = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManDecr"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-ResDp7"
+                Attr x = 1.800000e+00
+                Attr y = -7.499995e-02
+                Attr width = 5.563333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp25 GetDp 4676 21-SEP-2005 11:17:15.64
+            Body RtBody 21-SEP-2005 11:17:15.64
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-CompModeD2M.OpRefManDecr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-GetDp25"
+                Attr x = 7.000000e-01
+                Attr y = -1.750000e-01
+                Attr width = 5.053333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Edge1 Edge 4677 21-SEP-2005 11:17:19.14
+            Body RtBody 21-SEP-2005 11:17:19.14
+            EndBody
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Buffer PlcNode
+                Attr object_type = 93
+                Attr cid = "pwrb:Class-Edge"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Edge1"
+                Attr x = 1.300000e+00
+                Attr y = -2.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text7 Text 4680 21-SEP-2005 14:41:30.25
+            Body DevBody 21-SEP-2005 14:41:56.99
+              Attr Text = "Reset manual orders"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-CompModeD2MFo-Code-W-Text7"
+                Attr x = 7.000000e-01
+                Attr y = -2.940000e-01
+                Attr width = 2.633334e-02
+                Attr heigth = 3.190000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2MFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template CompModeD2MFo 2174189568 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
@@ -76552,6 +78956,940 @@ to avoid restart after error."
         EndObject
       EndObject
       Object Template PropValveOrFo 2172616704 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object DirectValve2Or $ClassDef 102 21-SEP-2005 09:25:41.98
+      Body SysBody 21-SEP-2005 09:24:56.91
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-SEP-2005 09:24:56.91
+        Body SysBody 21-SEP-2005 09:25:47.74
+          Attr StructName = "DirectValve2Or"
+          Attr NextAix = "_X49"
+        EndBody
+        Object Description $Attribute 35 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 36 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object OrderIncr $Attribute 37 21-SEP-2005 09:37:39.72
+          Body SysBody 21-SEP-2005 09:37:40.92
+            Attr PgmName = "OrderIncr"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-Do"
+          EndBody
+        EndObject
+        Object OrderDecr $Attribute 47 21-SEP-2005 09:37:51.27
+          Body SysBody 21-SEP-2005 09:37:52.40
+            Attr PgmName = "OrderDecr"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-Do"
+          EndBody
+        EndObject
+        Object Mode $Attribute 38 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:25:57.60
+            Attr PgmName = "Mode"
+            Attr Flags = 131072
+            Attr TypeRef = "BaseComponent:Class-CompModeD2M"
+          EndBody
+        EndObject
+        Object IndWarning $Attribute 39 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "IndWarning"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ExtInterlock $Attribute 40 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "ExtInterlock"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PositionEnum $Attribute 48 21-SEP-2005 10:23:15.93
+          Body SysBody 21-SEP-2005 10:23:35.09
+            Attr PgmName = "PositionEnum"
+            Attr TypeRef = "BaseComponent:Type-DirValvePosEnum"
+          EndBody
+        EndObject
+        Object HelpTopic $Attribute 41 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "HelpTopic"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 42 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object CircuitDiagram $Attribute 43 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "CircuitDiagram"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object Note $Attribute 44 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "Note"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Photo $Attribute 45 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "Photo"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 46 21-SEP-2005 09:24:56.91
+          Body SysBody 21-SEP-2005 09:24:56.91
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template DirectValve2Or 2174451712 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object DirectValve2OrFo $ClassDef 103 21-SEP-2005 09:26:59.45
+      Body SysBody 21-SEP-2005 09:26:40.03
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 21-SEP-2005 09:26:40.03
+        Body SysBody 21-SEP-2005 09:27:10.65
+          Attr StructName = "DirectValve2OrFo"
+          Attr NextAix = "_X10"
+        EndBody
+        Object ExtOrderIncr $Input 6 21-SEP-2005 09:27:42.19
+          Body SysBody 21-SEP-2005 09:38:22.78
+            Attr PgmName = "ExtOrderIncr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "oinc"
+          EndBody
+        EndObject
+        Object ExtOrderDecr $Input 9 21-SEP-2005 09:27:54.69
+          Body SysBody 21-SEP-2005 09:38:28.48
+            Attr PgmName = "ExtOrderDecr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "odec"
+          EndBody
+        EndObject
+        Object ExtInterlock $Input 7 21-SEP-2005 09:26:40.03
+          Body SysBody 21-SEP-2005 09:26:40.03
+            Attr PgmName = "ExtInterlock"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "ilk"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 8 21-SEP-2005 09:26:40.03
+          Body SysBody 21-SEP-2005 09:26:40.03
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 21-SEP-2005 09:26:40.03
+        Body SysBody 21-SEP-2005 09:26:40.03
+          Attr NextAix = "_X4"
+        EndBody
+        Object PlcNode $Buffer 3 21-SEP-2005 09:26:40.03
+          Body SysBody 21-SEP-2005 09:26:40.03
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 4630 21-SEP-2005 09:26:40.03
+        Body SysBody 21-SEP-2005 09:28:43.36
+          Attr object_type = 11
+          Attr parameters[0] = 3
+          Attr parameters[1] = 1
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 3
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr compmethod = 58
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "DirectValve2Or"
+          Attr graphname = "DirectValve2Or"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 4631 21-SEP-2005 09:26:40.03
+        Object PlcConnect $MenuRef 4632 21-SEP-2005 09:26:40.03
+          Body SysBody 21-SEP-2005 09:26:40.03
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Code PlcTemplate 4633 21-SEP-2005 09:26:40.03
+        Body RtBody 21-SEP-2005 09:26:40.03
+        EndBody
+        Body DevBody 21-SEP-2005 10:25:55.75
+          Buffer PlcProgram
+            Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code"
+            Attr cid = "pwrb:Class-PlcTemplate"
+            Attr defnamecount[2] = 1
+            Attr defnamecount[11] = 8
+            Attr defnamecount[60] = 2
+            Attr defnamecount[61] = 2
+            Attr defnamecount[70] = 2
+            Attr defnamecount[90] = 4
+            Attr defnamecount[91] = 1
+            Attr defnamecount[97] = 1
+            Attr defnamecount[99] = 1
+            Attr defnamecount[102] = 1
+            Attr defnamecount[136] = 1
+            Attr defnamecount[137] = 5
+            Attr defnamecount[139] = 4
+            Attr defnamecount[141] = 1
+            Attr defnamecount[253] = 1
+            Attr defnamecount[255] = 3
+            Attr defnamecount[256] = 5
+            Attr defnamecount[263] = 1
+            Attr defnamecount[264] = 1
+            Attr defnamecount[266] = 1
+            Attr defnamecount[267] = 1
+            Attr defnamecount[271] = 1
+            Attr connamecount = 48
+          EndBuffer
+        EndBody
+        Object W WindowPlc 4634 21-SEP-2005 09:26:40.03
+          Body RtBody 21-SEP-2005 09:26:40.03
+          EndBody
+          Body DevBody 21-SEP-2005 10:25:55.75
+            Attr Modified = "21-SEP-2005 10:25:55.75"
+            Buffer PlcWindow
+              Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              Attr cid = "pwrb:Class-WindowPlc"
+              Attr y = 5.000000e+01
+              Attr width = 1.000000e+03
+              Attr heigth = 7.500000e+02
+              Attr refconcount = 1
+            EndBuffer
+          EndBody
+          Object cn47 ConAnalog 4669 21-SEP-2005 10:25:45.58
+            Body DevBody 21-SEP-2005 10:25:55.75
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn47"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-DtoEnum7"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoIp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.270000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.233556e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn45 ConDigital 4665 21-SEP-2005 10:25:27.88
+            Body DevBody 21-SEP-2005 10:25:55.75
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn45"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 4
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-DtoEnum7"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.849111e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.939778e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.939778e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.970000e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn44 ConDigital 4664 21-SEP-2005 10:25:26.06
+            Body DevBody 21-SEP-2005 10:25:55.75
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn44"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-DtoEnum7"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.849111e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.909556e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.909556e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.970000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn43 ConDigital 4658 21-SEP-2005 09:33:13.00
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn43"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 4
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDo0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.970000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.849111e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn42 ConDigital 4657 21-SEP-2005 09:33:11.70
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn42"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDo1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.970000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.849111e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn41 ConDigital 4655 21-SEP-2005 09:33:05.64
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn41"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp4"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.129778e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn40 ConDigital 4653 21-SEP-2005 09:32:57.94
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn40"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp0"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.140889e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn39 ConDigital 4652 21-SEP-2005 09:32:50.98
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn39"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-Inv0"
+                Attr dest_point = 2
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn37 ConDigital 4636 21-SEP-2005 09:26:40.03
+            Body DevBody 21-SEP-2005 09:26:40.03
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn37"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp2"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-Inv0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.118667e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn36 ConDigital 4637 21-SEP-2005 09:26:40.03
+            Body DevBody 21-SEP-2005 09:26:40.03
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn36"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp3"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDp2"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.118667e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.169333e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.169333e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn34 ConDigital 4638 21-SEP-2005 09:26:40.03
+            Body DevBody 21-SEP-2005 09:26:40.03
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-cn34"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp3"
+                Attr dest_oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.118667e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document0 Document 4641 21-SEP-2005 09:26:40.03
+            Body DevBody 21-SEP-2005 09:26:40.03
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-Document0"
+                Attr x = 5.000000e-01
+                Attr y = -1.750000e+00
+                Attr width = 3.425000e+00
+                Attr heigth = 2.275000e+00
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object GetDp0 GetDp 4643 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Attr DpObject = "$PlcHost:BaseComponent-Class-DirectValve2OrFo.ExtOrderDecr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp0"
+                Attr x = 7.000000e-01
+                Attr y = -9.999997e-02
+                Attr width = 2.658889e-01
+                Attr heigth = 2.250000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDo0 StoDo 4644 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:39:53.57
+              Attr DoObject = "$PlcConnect:BaseComponent-Class-DirectValve2Or.OrderDecr"
+              Buffer PlcNode
+                Attr object_type = 70
+                Attr cid = "pwrb:Class-StoDo"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDo0"
+                Attr x = 1.950000e+00
+                Attr y = 1.170000e+00
+                Attr width = 1.586889e+00
+                Attr heigth = -1.045000e+00
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text3 Text 4645 21-SEP-2005 09:26:40.03
+            Body DevBody 21-SEP-2005 09:26:40.03
+              Attr Text = "Manual or Auto mode"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-Text3"
+                Attr x = 7.000000e-01
+                Attr y = 1.560000e-01
+                Attr width = 2.807778e-01
+                Attr heigth = 6.900000e-02
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp2 GetDp 4646 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Attr DpObject = "$PlcHost:BaseComponent-Class-DirectValve2OrFo.ExtInterlock"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp2"
+                Attr x = 7.000000e-01
+                Attr y = -2.000000e-01
+                Attr width = 1.936667e-01
+                Attr heigth = 2.750000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp3 GetDp 4647 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Attr DpObject = "$PlcHost:BaseComponent-Class-DirectValve2OrFo.ExtInterlock"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp3"
+                Attr x = 7.000000e-01
+                Attr y = -7.000000e-01
+                Attr width = -5.633334e-02
+                Attr heigth = 5.250000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp1 StoDp 4648 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:40:52.19
+              Attr Object = "$PlcConnect:BaseComponent-Class-DirectValve2Or.IndWarning"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDp1"
+                Attr x = 1.200000e+00
+                Attr y = -1.800001e-01
+                Attr width = 5.413333e-01
+                Attr heigth = 5.000000e-03
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp2 StoDp 4649 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Attr Object = "$PlcConnect:BaseComponent-Class-DirectValve2Or.ExtInterlock"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDp2"
+                Attr x = 1.200000e+00
+                Attr y = -2.800000e-01
+                Attr width = 5.091111e-01
+                Attr heigth = 5.500000e-02
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Inv0 Inv 4650 21-SEP-2005 09:26:40.03
+            Body RtBody 21-SEP-2005 09:26:40.03
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Buffer PlcNode
+                Attr object_type = 102
+                Attr cid = "pwrb:Class-Inv"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-Inv0"
+                Attr x = 1.200000e+00
+                Attr y = -2.499999e-02
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object CompModeD2MFo6 CompModeD2MFo 4651 21-SEP-2005 09:32:20.70
+            Body RtBody 21-SEP-2005 09:40:43.02
+              Attr PlcConnect = "$PlcConnect:BaseComponent-Class-DirectValve2Or.Mode"
+            EndBody
+            Body DevBody 21-SEP-2005 09:40:52.19
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "BaseComponent:Class-CompModeD2MFo"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-CompModeD2MFo6"
+                Attr x = 1.450000e+00
+                Attr y = 6.700000e-01
+                Attr width = 1.074111e+00
+                Attr heigth = -4.450000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 7
+                Attr mask[1] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp4 GetDp 4654 21-SEP-2005 09:33:01.68
+            Body RtBody 21-SEP-2005 09:33:01.68
+            EndBody
+            Body DevBody 21-SEP-2005 09:35:07.93
+              Attr DpObject = "$PlcHost:BaseComponent-Class-DirectValve2OrFo.ExtOrderIncr"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-GetDp4"
+                Attr x = 7.000000e-01
+                Attr y = -2.048910e-08
+                Attr width = 3.047778e-01
+                Attr heigth = 1.750000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDo1 StoDo 4656 21-SEP-2005 09:33:08.34
+            Body RtBody 21-SEP-2005 09:33:08.34
+            EndBody
+            Body DevBody 21-SEP-2005 09:39:53.57
+              Attr DoObject = "$PlcConnect:BaseComponent-Class-DirectValve2Or.OrderIncr"
+              Buffer PlcNode
+                Attr object_type = 70
+                Attr cid = "pwrb:Class-StoDo"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoDo1"
+                Attr x = 1.950000e+00
+                Attr y = 1.270000e+00
+                Attr width = 1.625778e+00
+                Attr heigth = -1.095000e+00
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object DtoEnum7 DtoEnum 4663 21-SEP-2005 10:24:54.45
+            Body RtBody 21-SEP-2005 10:24:54.45
+            EndBody
+            Body DevBody 21-SEP-2005 10:25:55.75
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DtoEnum"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-DtoEnum7"
+                Attr x = 1.950000e+00
+                Attr y = 8.200001e-01
+                Attr width = 1.258556e+00
+                Attr heigth = -7.950000e-01
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoIp0 StoIp 4668 21-SEP-2005 10:25:45.58
+            Body RtBody 21-SEP-2005 10:25:45.58
+            EndBody
+            Body DevBody 21-SEP-2005 10:25:55.75
+              Attr Object = "$PlcConnect:BaseComponent-Class-DirectValve2Or.PositionEnum"
+              Buffer PlcNode
+                Attr object_type = 271
+                Attr cid = "pwrb:Class-StoIp"
+                Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W-StoIp0"
+                Attr x = 2.250000e+00
+                Attr y = 1.220000e+00
+                Attr width = 1.776889e+00
+                Attr heigth = -1.195000e+00
+                Attr woid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template DirectValve2OrFo 2174713856 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
