@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.7 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.8 2005-09-21 14:21:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -551,10 +551,16 @@ endl <<
 "<DT><B>" << Lng::translate("Author") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_author << "<DT>" << endl;
   }
 
-  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0)
+  if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_version, "") != 0 || 
+       strcmp( ctx->rw->class_version, "") != 0)
   {
     html_clf->f <<
-"<DT><B>" << Lng::translate("Version") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" << ctx->rw->doc_version << "<DT>" << endl;
+"<DT><B>" << Lng::translate("Version") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    if ( strcmp( ctx->rw->doc_version, "") != 0)
+      html_clf->f << ctx->rw->doc_version << "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    if (strcmp( ctx->rw->class_version, "") != 0)
+      html_clf->f << ctx->rw->class_version;
+    html_clf->f << "<DT>" << endl;
   }
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {

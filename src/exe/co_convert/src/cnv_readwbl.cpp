@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.6 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.7 2005-09-21 14:21:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@
 
 extern "C" {
 #include "pwr.h"
+#include "co_time.h"
 #include "co_dcli.h"
 #include "co_cdh.h"
 }
@@ -44,7 +45,7 @@ int CnvReadWbl::read_wbl( char *filename)
   int sts;
   int return_sts = 1;
   char line[400];
-  char	line_part[4][80];
+  char	line_part[6][80];
   int nr;
   int object_level = 0;
   int classdef_level = 0;
@@ -273,6 +274,16 @@ int CnvReadWbl::read_wbl( char *filename)
             strcpy( class_name, line_part[1]);
           if ( nr > 3)
             strcpy( class_id, line_part[3]);
+	  if ( nr > 5)
+	    sprintf( class_version, "%s %s", line_part[4], line_part[5]);
+	  else {
+	    pwr_tTime t;
+	    sts = dcli_file_time( filename, &t);
+	    if ( ODD(sts))
+	      time_AtoAscii( &t, time_eFormat_DateAndTime, class_version, sizeof(class_version));
+	    else
+	      strcpy( class_version, "");
+	  }
 	  if (tlog) printf( "Cd %7d %3d %s\n", line_cnt, object_level, line);
           break;
         case cread_eLine_TypeDef:
