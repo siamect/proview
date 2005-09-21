@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.8 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.9 2005-09-21 14:20:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,8 @@
 
 #include <string.h>
 #include <stdio.h>
+
+#include "pwr.h"
  
 extern "C" {
 #include "co_dcli.h"
