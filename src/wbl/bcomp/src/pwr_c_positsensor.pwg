@@ -7817,15 +7817,15 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitLL.Used##Boolean
+900 !$object.LimitLL.Used##Boolean
 901 0
 902 1
 903 1
 99
 60
-6000 $object.Sensor.LimitLL.Limit##Float32
-6001 $object.Sensor.Value.PresMinLimit##Float32
-6002 $object.Sensor.Value.PresMaxLimit##Float32
+6000 $object.LimitLL.Limit##Float32
+6001 $object.Value.PresMinLimit##Float32
+6002 $object.Value.PresMaxLimit##Float32
 6003 
 99
 99
@@ -7957,15 +7957,15 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitL.Used##Boolean
+900 !$object.LimitL.Used##Boolean
 901 0
 902 1
 903 1
 99
 60
-6000 $object.Sensor.LimitL.Limit##Float32
-6001 $object.Sensor.Value.PresMinLimit##Float32
-6002 $object.Sensor.Value.PresMaxLimit##Float32
+6000 $object.LimitL.Limit##Float32
+6001 $object.Value.PresMinLimit##Float32
+6002 $object.Value.PresMaxLimit##Float32
 6003 
 99
 99
@@ -8097,15 +8097,15 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitHH.Used##Boolean
+900 !$object.LimitHH.Used##Boolean
 901 0
 902 1
 903 1
 99
 60
-6000 $object.Sensor.LimitHH.Limit##Float32
-6001 $object.Sensor.Value.PresMinLimit##Float32
-6002 $object.Sensor.Value.PresMaxLimit##Float32
+6000 $object.LimitHH.Limit##Float32
+6001 $object.Value.PresMinLimit##Float32
+6002 $object.Value.PresMaxLimit##Float32
 6003 
 99
 99
@@ -8237,15 +8237,15 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitH.Used##Boolean
+900 !$object.LimitH.Used##Boolean
 901 0
 902 1
 903 1
 99
 60
-6000 $object.Sensor.LimitH.Limit##Float32
-6001 $object.Sensor.Value.PresMinLimit##Float32
-6002 $object.Sensor.Value.PresMaxLimit##Float32
+6000 $object.LimitH.Limit##Float32
+6001 $object.Value.PresMinLimit##Float32
+6002 $object.Value.PresMaxLimit##Float32
 6003 
 99
 99
@@ -8429,7 +8429,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Sensor.Value.PresMaxLimit##Float32
+1200 $object.Value.PresMaxLimit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -8565,7 +8565,7 @@ pwr_exe:
 102 65532
 103 0
 12
-1200 $object.Sensor.Value.PresMinLimit##Float32
+1200 $object.Value.PresMinLimit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -8892,13 +8892,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitHH.Used##Boolean
+900 !$object.LimitHH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitHH.Limit##Float32
+1200 $object.LimitHH.Limit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9034,13 +9034,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitHH.Used##Boolean
+900 !$object.LimitHH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitHH.Hysteres##Float32
+1200 $object.LimitHH.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9176,13 +9176,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitHH.Used##Boolean
+900 !$object.LimitHH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitHH.TiimeDelay##Float32
+1200 $object.LimitHH.TiimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9318,10 +9318,10 @@ pwr_exe:
 102 52
 103 0
 18
-1800 $object.Sensor.LimitHH.Used##Boolean
+1800 $object.LimitHH.Used##Boolean
 99
 53
-5300 $object.Sensor.LimitHH.Used##Boolean
+5300 $object.LimitHH.Used##Boolean
 99
 99
 99
@@ -9476,13 +9476,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitH.Used##Boolean
+900 !$object.LimitH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitH.Limit##Float32
+1200 $object.LimitH.Limit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9618,13 +9618,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitH.Used##Boolean
+900 !$object.LimitH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitL.Hysteres##Float32
+1200 $object.LimitL.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9760,13 +9760,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitH.Used##Boolean
+900 !$object.LimitH.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitH.TiimeDelay##Float32
+1200 $object.LimitH.TiimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -9902,10 +9902,10 @@ pwr_exe:
 102 52
 103 0
 18
-1800 $object.Sensor.LimitH.Used##Boolean
+1800 $object.LimitH.Used##Boolean
 99
 53
-5300 $object.Sensor.LimitH.Used##Boolean
+5300 $object.LimitH.Used##Boolean
 99
 99
 99
@@ -10060,13 +10060,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitL.Used##Boolean
+900 !$object.LimitL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitL.Limit##Float32
+1200 $object.LimitL.Limit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10202,13 +10202,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitL.Used##Boolean
+900 !$object.LimitL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitHH.Hysteres##Float32
+1200 $object.LimitHH.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10344,13 +10344,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitL.Used##Boolean
+900 !$object.LimitL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitL.TiimeDelay##Float32
+1200 $object.LimitL.TiimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10486,10 +10486,10 @@ pwr_exe:
 102 52
 103 0
 18
-1800 $object.Sensor.LimitL.Used##Boolean
+1800 $object.LimitL.Used##Boolean
 99
 53
-5300 $object.Sensor.LimitL.Used##Boolean
+5300 $object.LimitL.Used##Boolean
 99
 99
 99
@@ -10644,13 +10644,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitLL.Used##Boolean
+900 !$object.LimitLL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitLL.Limit##Float32
+1200 $object.LimitLL.Limit##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10786,13 +10786,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitLL.Used##Boolean
+900 !$object.LimitLL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitLL.Hysteres##Float32
+1200 $object.LimitLL.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10928,13 +10928,13 @@ pwr_exe:
 102 52
 103 0
 9
-900 !$object.Sensor.LimitLL.Used##Boolean
+900 !$object.LimitLL.Used##Boolean
 901 0
 902 1
 903 1
 99
 12
-1200 $object.Sensor.LimitLL.TiimeDelay##Float32
+1200 $object.LimitLL.TiimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -11070,10 +11070,10 @@ pwr_exe:
 102 52
 103 0
 18
-1800 $object.Sensor.LimitLL.Used##Boolean
+1800 $object.LimitLL.Used##Boolean
 99
 53
-5300 $object.Sensor.LimitLL.Used##Boolean
+5300 $object.LimitLL.Used##Boolean
 99
 99
 99
@@ -11196,13 +11196,13 @@ pwr_exe:
 102 65532
 103 0
 9
-900 !$object.Sensor.LimitHH.Used##Boolean
+900 !$object.LimitHH.Used##Boolean
 901 0
 902 1
 903 1
 99
 2
-200 $object.Sensor.LimitHH.Status##Boolean
+200 $object.LimitHH.Status##Boolean
 201 9999
 99
 99
@@ -11326,13 +11326,13 @@ pwr_exe:
 102 65532
 103 0
 9
-900 !$object.Sensor.LimitH.Used##Boolean
+900 !$object.LimitH.Used##Boolean
 901 0
 902 1
 903 1
 99
 2
-200 $object.Sensor.LimitH.Status##Boolean
+200 $object.LimitH.Status##Boolean
 201 9999
 99
 99
@@ -11456,13 +11456,13 @@ pwr_exe:
 102 65532
 103 0
 9
-900 !$object.Sensor.LimitL.Used##Boolean
+900 !$object.LimitL.Used##Boolean
 901 0
 902 1
 903 1
 99
 2
-200 $object.Sensor.LimitL.Status##Boolean
+200 $object.LimitL.Status##Boolean
 201 9999
 99
 99
@@ -11586,13 +11586,13 @@ pwr_exe:
 102 65532
 103 0
 9
-900 !$object.Sensor.LimitLL.Used##Boolean
+900 !$object.LimitLL.Used##Boolean
 901 0
 902 1
 903 1
 99
 2
-200 $object.Sensor.LimitLL.Status##Boolean
+200 $object.LimitLL.Status##Boolean
 201 9999
 99
 99
@@ -11726,7 +11726,7 @@ pwr_exe:
 102 65535
 103 0
 55
-5500 open graph /class /inst=$object.Sensor.Value
+5500 open graph /class /inst=$object.Value
 99
 99
 99
@@ -12572,7 +12572,7 @@ pwr_exe:
 102 65532
 103 0
 2
-200 $object.Sensor.SupDisabled##Boolean
+200 $object.SupDisabled##Boolean
 201 9999
 99
 99

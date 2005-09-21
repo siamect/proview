@@ -4516,7 +4516,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  Mode for digital components.
     ! 
     !  @b Plc coding
-    !  For plc coding the function object CompModeDFo is used.
+    !  For plc coding the function object CompModeDMFo is used.
     !  @image orm_compmodedmfo_fo.gif
     !  Create a function object in the plc editor and connect it to the current
     !  object with the connect function.
@@ -4586,6 +4586,20 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Mode for digital components with two order signals.
+    !  Mode for digital components with two order signals.
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object CompModeD2MFo is used.
+    !  @image orm_compmoded2mfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    !  @b See also
+    !  @classlink CompModeD2MFo basecomponent_compmoded2mfo.html
+    !*/
     Object CompModeD2M $ClassDef 100 21-SEP-2005 08:26:46.09
       Body SysBody 21-SEP-2005 08:26:22.81
         Attr Editor = 0
@@ -5193,6 +5207,28 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Sensors
+    !  @Summary Positional sensor with hh, h, l, ll limits and calibration.
+    !  Positional sensor with highhigh, high, low and lowlow limits and
+    !  calibration
+    ! 
+    !  Subclass of BaseSensor. See class BaseSensor for more information.
+    ! 
+    !  @b Object Graph
+    !  @image orm_positsensor_og.gif
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object PositSensorFo is used.
+    !  @image orm_positsensorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    !  @b See also
+    !  @classlink PositSensorFo basecomponent_positsensorfo.html
+    !  @classlink BaseSensor basecomponent_basesensor.html
+    !*/
     Object PositSensor $ClassDef 96 15-SEP-2005 14:52:18.34
       Body SysBody 15-SEP-2005 14:51:58.61
         Attr Editor = 0
@@ -5204,10 +5240,10 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr StructName = "PositSensor"
           Attr NextAix = "_X17"
         EndBody
-        Object Sensor $Attribute 1 15-SEP-2005 14:53:10.77
+        Object Super $Attribute 1 15-SEP-2005 14:53:10.77
           Body SysBody 15-SEP-2005 15:33:08.91
-            Attr PgmName = "Sensor"
-            Attr Flags = 131072
+            Attr PgmName = "Super"
+            Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseSensor"
           EndBody
         EndObject
@@ -5311,23 +5347,23 @@ Volume BaseComponent $ClassVolume 0.0.0.10
       EndObject
       Object Template PositSensor 2172878848 01-JAN-1970 01:00:00.00
         Body RtBody 20-SEP-2005 14:48:56.94
-          Attr Sensor.Value.PresMaxLimit = 1.000000e+02
-          Attr Sensor.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
-          Attr Sensor.LimitHH.Limit = 9.500000e+01
-          Attr Sensor.LimitH.AlarmText = "High limit exceeded, sensor,  "
-          Attr Sensor.LimitH.Limit = 9.000000e+01
-          Attr Sensor.LimitL.AlarmText = "Below Low limit, sensor, "
-          Attr Sensor.LimitL.Limit = 1.000000e+01
-          Attr Sensor.LimitLL.AlarmText = "Below LowLow limit, sensor, "
-          Attr Sensor.LimitLL.Limit = 5.000000e+00
-          Attr Sensor.Trend.Multiple = 1
-          Attr Sensor.Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
-          Attr Sensor.Trend.StorageTime = 239
-          Attr Sensor.Trend.BufferStatus[0] = 1
-          Attr Sensor.Trend.BufferStatus[1] = 1
-          Attr Sensor.Trend.NoOfBuffers = 2
-          Attr Sensor.Trend.NoOfBufElement = 239
-          Attr Sensor.DefTrend = "BaseComponent:Class-BaseSensor-Template.Trend"
+          Attr Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
+          Attr Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.LimitH.AlarmText = "High limit exceeded, sensor,  "
+          Attr Super.LimitH.Limit = 9.000000e+01
+          Attr Super.LimitL.AlarmText = "Below Low limit, sensor, "
+          Attr Super.LimitL.Limit = 1.000000e+01
+          Attr Super.LimitLL.AlarmText = "Below LowLow limit, sensor, "
+          Attr Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Trend.Multiple = 1
+          Attr Super.Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
+          Attr Super.Trend.StorageTime = 239
+          Attr Super.Trend.BufferStatus[0] = 1
+          Attr Super.Trend.BufferStatus[1] = 1
+          Attr Super.Trend.NoOfBuffers = 2
+          Attr Super.Trend.NoOfBufElement = 239
+          Attr Super.DefTrend = "BaseComponent:Class-BaseSensor-Template.Trend"
           Attr Gain = 1.000000e+00
         EndBody
       EndObject
@@ -37342,6 +37378,20 @@ Alarm HH, H, L, LL"
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Sensors
+    !  @Summary Plc function object to PositSensor.
+    !  Plc function object to PositSensor.
+    ! 
+    !  @image orm_positsensorfo_fo.gif
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  PositSensor.
+    ! 
+    !  @b See also
+    !  @classlink PositSensor basecomponent_positsensor.html
+    !*/
     Object PositSensorFo $ClassDef 99 15-SEP-2005 15:58:30.58
       Body SysBody 15-SEP-2005 15:58:07.54
         Attr Editor = 0
@@ -37461,7 +37511,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4193 15-SEP-2005 15:58:07.56
         Body RtBody 15-SEP-2005 15:58:07.56
         EndBody
-        Body DevBody 20-SEP-2005 14:58:03.68
+        Body DevBody 21-SEP-2005 15:36:18.58
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-PositSensorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -37497,8 +37547,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 4194 15-SEP-2005 15:58:07.56
           Body RtBody 15-SEP-2005 15:58:07.56
           EndBody
-          Body DevBody 20-SEP-2005 14:58:03.68
-            Attr Modified = "20-SEP-2005 14:58:03.68"
+          Body DevBody 21-SEP-2005 15:36:18.58
+            Attr Modified = "21-SEP-2005 15:36:18.58"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-PositSensorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -37509,7 +37559,7 @@ Alarm HH, H, L, LL"
             EndBuffer
           EndBody
           Object cn296 ConDigital 4529 20-SEP-2005 14:57:53.61
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn296"
                 Attr object_type = 23
@@ -37548,7 +37598,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn295 ConDigital 4527 20-SEP-2005 14:57:48.80
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn295"
                 Attr object_type = 23
@@ -37587,7 +37637,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn292 ConDigital 4521 20-SEP-2005 14:57:19.76
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn292"
                 Attr object_type = 23
@@ -37630,7 +37680,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn291 ConDigital 4519 20-SEP-2005 14:57:12.49
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn291"
                 Attr object_type = 23
@@ -37673,7 +37723,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn288 ConDigital 4513 20-SEP-2005 14:51:31.88
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn288"
                 Attr object_type = 23
@@ -37719,7 +37769,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn286 ConDigital 4510 20-SEP-2005 13:36:15.85
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn286"
                 Attr object_type = 23
@@ -37763,7 +37813,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn285 ConAnalog 4509 20-SEP-2005 13:36:13.35
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn285"
                 Attr object_type = 24
@@ -37810,7 +37860,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn284 ConDigital 4507 20-SEP-2005 13:32:07.01
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn284"
                 Attr object_type = 23
@@ -37858,7 +37908,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn283 ConDigital 4506 20-SEP-2005 13:32:04.35
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn283"
                 Attr object_type = 23
@@ -37906,7 +37956,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn282 ConDigital 4505 20-SEP-2005 13:31:44.22
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn282"
                 Attr object_type = 23
@@ -37921,7 +37971,7 @@ Alarm HH, H, L, LL"
                   Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.054222e+00
+                  Attr x = 1.045333e+00
                   Attr y = 1.900000e+00
                 EndBuffer
                 Buffer point[2]
@@ -37945,7 +37995,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn281 ConDigital 4504 20-SEP-2005 13:31:42.09
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn281"
                 Attr object_type = 23
@@ -37960,7 +38010,7 @@ Alarm HH, H, L, LL"
                   Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.054222e+00
+                  Attr x = 1.045333e+00
                   Attr y = 1.850000e+00
                 EndBuffer
                 Buffer point[2]
@@ -37984,7 +38034,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn277 ConAnalog 4493 16-SEP-2005 08:28:53.66
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn277"
                 Attr object_type = 24
@@ -38026,7 +38076,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn276 ConAnalog 4492 16-SEP-2005 08:28:51.29
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn276"
                 Attr object_type = 24
@@ -38068,7 +38118,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn275 ConAnalog 4490 16-SEP-2005 08:28:30.51
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn275"
                 Attr object_type = 24
@@ -38083,11 +38133,11 @@ Alarm HH, H, L, LL"
                   Attr y = 3.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.345444e+00
+                  Attr x = 1.313222e+00
                   Attr y = 3.750000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.345444e+00
+                  Attr x = 1.313222e+00
                   Attr y = 4.550000e+00
                 EndBuffer
                 Buffer point[3]
@@ -38111,7 +38161,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn274 ConAnalog 4489 16-SEP-2005 08:28:27.46
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn274"
                 Attr object_type = 24
@@ -38126,11 +38176,11 @@ Alarm HH, H, L, LL"
                   Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.301556e+00
+                  Attr x = 1.213778e+00
                   Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.301556e+00
+                  Attr x = 1.213778e+00
                   Attr y = 3.750000e+00
                 EndBuffer
                 Buffer point[3]
@@ -38154,7 +38204,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn272 ConAnalog 4485 15-SEP-2005 18:08:40.18
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn272"
                 Attr object_type = 24
@@ -38197,7 +38247,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn270 ConDigital 4480 15-SEP-2005 17:14:21.16
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn270"
                 Attr object_type = 23
@@ -38235,7 +38285,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn269 ConDigital 4479 15-SEP-2005 17:14:19.30
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn269"
                 Attr object_type = 23
@@ -38273,7 +38323,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn268 ConDigital 4474 15-SEP-2005 17:12:43.39
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn268"
                 Attr object_type = 23
@@ -38288,11 +38338,11 @@ Alarm HH, H, L, LL"
                   Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.334500e+00
+                  Attr x = 1.342861e+00
                   Attr y = 1.400000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.334500e+00
+                  Attr x = 1.342861e+00
                   Attr y = 1.350000e+00
                 EndBuffer
                 Buffer point[3]
@@ -38316,7 +38366,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn267 ConDigital 4473 15-SEP-2005 17:12:41.68
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn267"
                 Attr object_type = 23
@@ -38355,7 +38405,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn265 ConDigital 4470 15-SEP-2005 17:12:04.09
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn265"
                 Attr object_type = 23
@@ -38370,11 +38420,11 @@ Alarm HH, H, L, LL"
                   Attr y = 1.150000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.284500e+00
+                  Attr x = 1.298889e+00
                   Attr y = 1.150000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.284500e+00
+                  Attr x = 1.298889e+00
                   Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[3]
@@ -38398,7 +38448,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn264 ConDigital 4469 15-SEP-2005 17:12:00.49
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn264"
                 Attr object_type = 23
@@ -38437,7 +38487,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn262 ConAnalog 4467 15-SEP-2005 17:00:49.42
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn262"
                 Attr object_type = 24
@@ -38484,7 +38534,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn261 ConDigital 4466 15-SEP-2005 17:00:44.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn261"
                 Attr object_type = 23
@@ -38495,7 +38545,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp80"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.104222e+00
+                  Attr x = 1.095333e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[1]
@@ -38527,7 +38577,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn259 ConAnalog 4462 15-SEP-2005 17:00:30.45
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn259"
                 Attr object_type = 24
@@ -38570,7 +38620,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn258 ConAnalog 4460 15-SEP-2005 17:00:26.07
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn258"
                 Attr object_type = 24
@@ -38613,7 +38663,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn257 ConAnalog 4458 15-SEP-2005 17:00:10.87
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn257"
                 Attr object_type = 24
@@ -38656,7 +38706,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn253 ConAnalog 4450 15-SEP-2005 16:59:42.70
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn253"
                 Attr object_type = 24
@@ -38670,7 +38720,7 @@ Alarm HH, H, L, LL"
                   Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.126444e+00
+                  Attr x = 1.024222e+00
                   Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[2]
@@ -38698,7 +38748,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn252 ConDigital 4448 15-SEP-2005 16:57:14.67
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn252"
                 Attr object_type = 23
@@ -38742,7 +38792,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn251 ConAnalog 4447 15-SEP-2005 16:57:13.19
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn251"
                 Attr object_type = 24
@@ -38789,7 +38839,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn249 ConAnalog 4443 15-SEP-2005 16:50:24.12
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn249"
                 Attr object_type = 24
@@ -38828,7 +38878,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn247 ConAnalog 4439 15-SEP-2005 16:50:17.23
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn247"
                 Attr object_type = 24
@@ -38867,7 +38917,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn245 ConAnalog 4435 15-SEP-2005 16:50:09.14
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn245"
                 Attr object_type = 24
@@ -38906,7 +38956,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn244 ConAnalog 4434 15-SEP-2005 16:50:07.74
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn244"
                 Attr object_type = 24
@@ -38944,7 +38994,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn231 ConAnalog 4410 15-SEP-2005 16:39:21.03
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn231"
                 Attr object_type = 24
@@ -38954,7 +39004,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAi5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.076445e+00
+                  Attr x = 9.742222e-01
                   Attr y = 1.250000e+00
                 EndBuffer
                 Buffer point[1]
@@ -38982,7 +39032,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn230 ConAnalog 4408 15-SEP-2005 16:39:19.33
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn230"
                 Attr object_type = 24
@@ -38992,7 +39042,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAi4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.076445e+00
+                  Attr x = 9.742222e-01
                   Attr y = 1.000000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39020,7 +39070,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn226 ConDigital 4401 15-SEP-2005 16:35:58.46
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn226"
                 Attr object_type = 23
@@ -39062,7 +39112,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn223 ConDigital 4398 15-SEP-2005 16:35:58.46
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn223"
                 Attr object_type = 23
@@ -39102,7 +39152,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn219 ConDigital 4385 15-SEP-2005 16:34:23.25
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn219"
                 Attr object_type = 23
@@ -39142,7 +39192,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn216 ConDigital 4380 15-SEP-2005 16:33:37.96
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn216"
                 Attr object_type = 23
@@ -39184,7 +39234,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn212 ConDigital 4195 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn212"
                 Attr object_type = 23
@@ -39199,7 +39249,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.317556e+00
+                  Attr x = 1.215333e+00
                   Attr y = 6.750000e+00
                 EndBuffer
                 Buffer point[2]
@@ -39223,7 +39273,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn211 ConDigital 4196 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn211"
                 Attr object_type = 23
@@ -39238,7 +39288,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.100000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.267556e+00
+                  Attr x = 1.165333e+00
                   Attr y = 6.100000e+00
                 EndBuffer
                 Buffer point[2]
@@ -39262,7 +39312,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn210 ConDigital 4197 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn210"
                 Attr object_type = 23
@@ -39277,7 +39327,7 @@ Alarm HH, H, L, LL"
                   Attr y = 4.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.217556e+00
+                  Attr x = 1.115333e+00
                   Attr y = 4.900000e+00
                 EndBuffer
                 Buffer point[2]
@@ -39301,7 +39351,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn209 ConDigital 4198 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn209"
                 Attr object_type = 23
@@ -39312,7 +39362,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp70"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.217556e+00
+                  Attr x = 1.115333e+00
                   Attr y = 4.250000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39340,7 +39390,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn208 ConDigital 4199 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn208"
                 Attr object_type = 23
@@ -39378,7 +39428,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn203 ConDigital 4201 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn203"
                 Attr object_type = 23
@@ -39388,7 +39438,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp67"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.237556e+00
+                  Attr x = 1.135333e+00
                   Attr y = 9.250000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39416,7 +39466,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn202 ConDigital 4202 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn202"
                 Attr object_type = 23
@@ -39427,7 +39477,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp66"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.233111e+00
+                  Attr x = 1.130889e+00
                   Attr y = 9.300000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39459,7 +39509,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn201 ConDigital 4203 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn201"
                 Attr object_type = 23
@@ -39470,7 +39520,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp65"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.248667e+00
+                  Attr x = 1.146444e+00
                   Attr y = 9.100000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39498,7 +39548,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn200 ConDigital 4204 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn200"
                 Attr object_type = 23
@@ -39508,7 +39558,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp64"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.257555e+00
+                  Attr x = 1.155333e+00
                   Attr y = 9.050000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39536,7 +39586,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn199 ConDigital 4205 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn199"
                 Attr object_type = 23
@@ -39575,7 +39625,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn198 ConDigital 4206 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn198"
                 Attr object_type = 23
@@ -39614,7 +39664,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn191 ConDigital 4207 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn191"
                 Attr object_type = 23
@@ -39657,7 +39707,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn190 ConAnalog 4208 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn190"
                 Attr object_type = 24
@@ -39667,7 +39717,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp8"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.295333e+00
+                  Attr x = 1.193111e+00
                   Attr y = 8.700000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39703,7 +39753,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn189 ConAnalog 4209 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn189"
                 Attr object_type = 24
@@ -39746,7 +39796,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn188 ConAnalog 4210 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn188"
                 Attr object_type = 24
@@ -39789,7 +39839,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn187 ConDigital 4211 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn187"
                 Attr object_type = 23
@@ -39803,15 +39853,15 @@ Alarm HH, H, L, LL"
                   Attr y = 8.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.599778e+00
+                  Attr x = 1.584500e+00
                   Attr y = 8.750000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.599778e+00
+                  Attr x = 1.584500e+00
                   Attr y = 8.850000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.248667e+00
+                  Attr x = 1.146444e+00
                   Attr y = 8.850000e+00
                 EndBuffer
                 Buffer point[4]
@@ -39831,7 +39881,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn186 ConAnalog 4212 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn186"
                 Attr object_type = 24
@@ -39841,7 +39891,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp7"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.279778e+00
+                  Attr x = 1.177556e+00
                   Attr y = 8.400000e+00
                 EndBuffer
                 Buffer point[1]
@@ -39877,7 +39927,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn185 ConAnalog 4213 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn185"
                 Attr object_type = 24
@@ -39920,7 +39970,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn184 ConAnalog 4214 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn184"
                 Attr object_type = 24
@@ -39963,7 +40013,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn183 ConDigital 4215 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn183"
                 Attr object_type = 23
@@ -39985,7 +40035,7 @@ Alarm HH, H, L, LL"
                   Attr y = 8.550000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.233111e+00
+                  Attr x = 1.130889e+00
                   Attr y = 8.550000e+00
                 EndBuffer
                 Buffer point[4]
@@ -40005,7 +40055,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn182 ConAnalog 4216 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn182"
                 Attr object_type = 24
@@ -40015,7 +40065,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp6"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.284222e+00
+                  Attr x = 1.182000e+00
                   Attr y = 8.100000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40051,7 +40101,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn181 ConAnalog 4217 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn181"
                 Attr object_type = 24
@@ -40094,7 +40144,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn180 ConAnalog 4218 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn180"
                 Attr object_type = 24
@@ -40137,7 +40187,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn179 ConDigital 4219 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn179"
                 Attr object_type = 23
@@ -40159,7 +40209,7 @@ Alarm HH, H, L, LL"
                   Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.237556e+00
+                  Attr x = 1.135333e+00
                   Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[4]
@@ -40179,7 +40229,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn178 ConAnalog 4220 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn178"
                 Attr object_type = 24
@@ -40222,7 +40272,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn177 ConDigital 4221 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn177"
                 Attr object_type = 23
@@ -40244,7 +40294,7 @@ Alarm HH, H, L, LL"
                   Attr y = 7.950000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.257555e+00
+                  Attr x = 1.155333e+00
                   Attr y = 7.950000e+00
                 EndBuffer
                 Buffer point[4]
@@ -40264,7 +40314,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn169 ConAnalog 4222 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn169"
                 Attr object_type = 24
@@ -40307,7 +40357,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn168 ConAnalog 4223 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn168"
                 Attr object_type = 24
@@ -40317,7 +40367,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.304222e+00
+                  Attr x = 1.202000e+00
                   Attr y = 7.800000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40353,7 +40403,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn166 ConDigital 4224 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn166"
                 Attr object_type = 23
@@ -40396,7 +40446,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn165 ConAnalog 4225 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn165"
                 Attr object_type = 24
@@ -40410,7 +40460,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.550000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.382000e+00
+                  Attr x = 1.279778e+00
                   Attr y = 6.550000e+00
                 EndBuffer
                 Buffer point[2]
@@ -40438,7 +40488,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn163 ConAnalog 4227 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn163"
                 Attr object_type = 24
@@ -40453,7 +40503,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.400000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.324222e+00
+                  Attr x = 1.222000e+00
                   Attr y = 6.400000e+00
                 EndBuffer
                 Buffer point[2]
@@ -40481,7 +40531,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn162 ConDigital 4228 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn162"
                 Attr object_type = 23
@@ -40524,7 +40574,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn161 ConAnalog 4229 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn161"
                 Attr object_type = 24
@@ -40539,7 +40589,7 @@ Alarm HH, H, L, LL"
                   Attr y = 5.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.258667e+00
+                  Attr x = 1.156444e+00
                   Attr y = 5.750000e+00
                 EndBuffer
                 Buffer point[2]
@@ -40567,7 +40617,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn157 ConAnalog 4231 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn157"
                 Attr object_type = 24
@@ -40577,7 +40627,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp10"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.316444e+00
+                  Attr x = 1.214222e+00
                   Attr y = 5.900000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40609,7 +40659,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn155 ConAnalog 4232 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn155"
                 Attr object_type = 24
@@ -40619,7 +40669,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp11"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.334222e+00
+                  Attr x = 1.232000e+00
                   Attr y = 5.950000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40647,7 +40697,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn154 ConDigital 4233 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn154"
                 Attr object_type = 23
@@ -40694,7 +40744,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn153 ConDigital 4234 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn153"
                 Attr object_type = 23
@@ -40737,7 +40787,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn152 ConDigital 4235 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn152"
                 Attr object_type = 23
@@ -40752,7 +40802,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.260889e+00
+                  Attr x = 1.158667e+00
                   Attr y = 6.050000e+00
                 EndBuffer
                 Buffer point[2]
@@ -40776,7 +40826,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn147 ConAnalog 4236 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn147"
                 Attr object_type = 24
@@ -40786,7 +40836,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp6"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.399778e+00
+                  Attr x = 1.297556e+00
                   Attr y = 6.600000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40814,7 +40864,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn146 ConDigital 4237 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn146"
                 Attr object_type = 23
@@ -40857,7 +40907,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn145 ConDigital 4238 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn145"
                 Attr object_type = 23
@@ -40872,7 +40922,7 @@ Alarm HH, H, L, LL"
                   Attr y = 6.700000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.326445e+00
+                  Attr x = 1.224222e+00
                   Attr y = 6.700000e+00
                 EndBuffer
                 Buffer point[2]
@@ -40896,7 +40946,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn144 ConDigital 4239 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn144"
                 Attr object_type = 23
@@ -40943,7 +40993,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn142 ConAnalog 4241 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn142"
                 Attr object_type = 24
@@ -40953,7 +41003,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp3"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.213111e+00
+                  Attr x = 1.110889e+00
                   Attr y = 4.500000e+00
                 EndBuffer
                 Buffer point[1]
@@ -40981,7 +41031,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn140 ConAnalog 4242 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn140"
                 Attr object_type = 24
@@ -40991,7 +41041,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.270889e+00
+                  Attr x = 1.168667e+00
                   Attr y = 4.700000e+00
                 EndBuffer
                 Buffer point[1]
@@ -41023,7 +41073,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn139 ConDigital 4243 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn139"
                 Attr object_type = 23
@@ -41066,7 +41116,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn138 ConAnalog 4244 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn138"
                 Attr object_type = 24
@@ -41076,7 +41126,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.288667e+00
+                  Attr x = 1.186444e+00
                   Attr y = 4.750000e+00
                 EndBuffer
                 Buffer point[1]
@@ -41104,7 +41154,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn137 ConDigital 4245 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn137"
                 Attr object_type = 23
@@ -41151,7 +41201,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn136 ConDigital 4246 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn136"
                 Attr object_type = 23
@@ -41194,7 +41244,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn135 ConDigital 4247 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn135"
                 Attr object_type = 23
@@ -41209,7 +41259,7 @@ Alarm HH, H, L, LL"
                   Attr y = 4.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.215333e+00
+                  Attr x = 1.113111e+00
                   Attr y = 4.850000e+00
                 EndBuffer
                 Buffer point[2]
@@ -41233,7 +41283,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn134 ConDigital 4248 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn134"
                 Attr object_type = 23
@@ -41248,7 +41298,7 @@ Alarm HH, H, L, LL"
                   Attr y = 4.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.235333e+00
+                  Attr x = 1.133111e+00
                   Attr y = 4.200000e+00
                 EndBuffer
                 Buffer point[2]
@@ -41276,7 +41326,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn130 ConDigital 4249 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn130"
                 Attr object_type = 23
@@ -41323,7 +41373,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn119 ConAnalog 4250 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn119"
                 Attr object_type = 24
@@ -41333,7 +41383,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp2"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.308667e+00
+                  Attr x = 1.206444e+00
                   Attr y = 4.100000e+00
                 EndBuffer
                 Buffer point[1]
@@ -41369,7 +41419,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn115 ConDigital 4251 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn115"
                 Attr object_type = 23
@@ -41412,7 +41462,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn114 ConAnalog 4252 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn114"
                 Attr object_type = 24
@@ -41422,7 +41472,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.290889e+00
+                  Attr x = 1.188667e+00
                   Attr y = 4.050000e+00
                 EndBuffer
                 Buffer point[1]
@@ -41458,7 +41508,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn110 ConAnalog 4254 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn110"
                 Attr object_type = 24
@@ -41468,7 +41518,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.233111e+00
+                  Attr x = 1.130889e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[1]
@@ -41496,7 +41546,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn48 ConDigital 4255 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn48"
                 Attr object_type = 23
@@ -41506,7 +41556,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp18"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.183111e+00
+                  Attr x = 1.080889e+00
                   Attr y = 8.000000e-01
                 EndBuffer
                 Buffer point[1]
@@ -41538,7 +41588,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn36 ConDigital 4256 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn36"
                 Attr object_type = 23
@@ -41548,7 +41598,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp14"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.198667e+00
+                  Attr x = 1.096444e+00
                   Attr y = 8.500000e-01
                 EndBuffer
                 Buffer point[1]
@@ -41580,7 +41630,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn17 ConDigital 4257 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn17"
                 Attr object_type = 23
@@ -41590,7 +41640,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp6"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.187556e+00
+                  Attr x = 1.085333e+00
                   Attr y = 7.500000e-01
                 EndBuffer
                 Buffer point[1]
@@ -41622,7 +41672,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn15 ConDigital 4258 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-cn15"
                 Attr object_type = 23
@@ -41632,7 +41682,7 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.207556e+00
+                  Attr x = 1.105333e+00
                   Attr y = 7.000000e-01
                 EndBuffer
                 Buffer point[1]
@@ -41664,7 +41714,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object Document0 Document 4259 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
@@ -41682,7 +41732,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText7 BodyText 4260 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
@@ -41702,7 +41752,7 @@ LimitLL = LL"
             EndBody
           EndObject
           Object BodyText8 BodyText 4261 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -41720,15 +41770,15 @@ LimitLL = LL"
           Object GetDp4 GetDp 4262 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp4"
                 Attr x = 6.000000e-01
                 Attr y = 2.750000e-01
-                Attr width = 6.075555e-01
+                Attr width = 5.053333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -41738,7 +41788,7 @@ LimitLL = LL"
           Object StoDp5 StoDp 4263 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "$PlcHost:BaseComponent-Class-PositSensorFo.HH"
               Buffer PlcNode
                 Attr object_type = 255
@@ -41756,7 +41806,7 @@ LimitLL = LL"
           Object StoDp7 StoDp 4264 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "$PlcHost:BaseComponent-Class-PositSensorFo.H"
               Buffer PlcNode
                 Attr object_type = 255
@@ -41774,15 +41824,15 @@ LimitLL = LL"
           Object GetDp6 GetDp 4265 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp6"
                 Attr x = 6.000000e-01
                 Attr y = 2.250000e-01
-                Attr width = 5.875555e-01
+                Attr width = 4.853334e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -41790,7 +41840,7 @@ LimitLL = LL"
             EndBody
           EndObject
           Object Document1 Document 4266 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
@@ -41808,7 +41858,7 @@ LimitLL = LL"
             EndBody
           EndObject
           Object BodyText11 BodyText 4267 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
@@ -41827,7 +41877,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object Document2 Document 4268 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
@@ -41847,7 +41897,7 @@ Alarm HH, H, L, LL"
           Object StoDp11 StoDp 4269 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "$PlcHost:BaseComponent-Class-PositSensorFo.LL"
               Buffer PlcNode
                 Attr object_type = 255
@@ -41865,15 +41915,15 @@ Alarm HH, H, L, LL"
           Object GetDp14 GetDp 4270 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp14"
                 Attr x = 6.000000e-01
                 Attr y = 1.250000e-01
-                Attr width = 5.986667e-01
+                Attr width = 4.964445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -41883,7 +41933,7 @@ Alarm HH, H, L, LL"
           Object StoDp13 StoDp 4271 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "$PlcHost:BaseComponent-Class-PositSensorFo.L"
               Buffer PlcNode
                 Attr object_type = 255
@@ -41901,15 +41951,15 @@ Alarm HH, H, L, LL"
           Object GetDp18 GetDp 4272 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp18"
                 Attr x = 6.000000e-01
                 Attr y = 1.750000e-01
-                Attr width = 5.831111e-01
+                Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -41917,23 +41967,23 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText16 BodyText 4273 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText16"
                 Attr x = 6.500000e-01
-                Attr y = -2.619000e+00
+                Attr y = -2.662000e+00
                 Attr width = 3.168889e-01
-                Attr heigth = 9.400000e-02
+                Attr heigth = 1.370000e-01
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "Limits high"
             EndBody
           EndObject
           Object BodyText38 BodyText 4274 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
@@ -41952,7 +42002,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText39 BodyText 4275 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
@@ -41973,7 +42023,7 @@ Alarm HH, H, L, LL"
           Object HH Comph 4276 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
@@ -41991,8 +42041,8 @@ Alarm HH, H, L, LL"
           Object GetAp0 GetAp 4277 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Limit"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
@@ -42000,7 +42050,7 @@ Alarm HH, H, L, LL"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp0"
                 Attr x = 6.500000e-01
                 Attr y = -2.875000e+00
-                Attr width = 5.831111e-01
+                Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42010,7 +42060,7 @@ Alarm HH, H, L, LL"
           Object StoAp39 StoAp 4279 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-HH.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42029,15 +42079,15 @@ Alarm HH, H, L, LL"
           Object GetAp1 GetAp 4280 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Hysteres"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp1"
                 Attr x = 6.500000e-01
                 Attr y = -3.075000e+00
-                Attr width = 6.408889e-01
+                Attr width = 5.386667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42047,7 +42097,7 @@ Alarm HH, H, L, LL"
           Object TimeHH Wait 4281 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
@@ -42065,7 +42115,7 @@ Alarm HH, H, L, LL"
           Object StoAp40 StoAp 4282 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-TimeHH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42084,15 +42134,15 @@ Alarm HH, H, L, LL"
           Object StoDp15 StoDp 4283 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp15"
                 Attr x = 2.250000e+00
                 Attr y = -3.175000e+00
-                Attr width = 6.585555e-01
+                Attr width = 5.563333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -42102,15 +42152,15 @@ Alarm HH, H, L, LL"
           Object GetAp2 GetAp 4284 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.TimeDelay"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp2"
                 Attr x = 6.500000e-01
                 Attr y = -3.125000e+00
-                Attr width = 6.586667e-01
+                Attr width = 5.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42120,7 +42170,7 @@ Alarm HH, H, L, LL"
           Object LimitHH And 4285 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -42139,15 +42189,15 @@ Alarm HH, H, L, LL"
           Object GetDp45 GetDp 4286 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Used"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp45"
                 Attr x = 6.500000e-01
                 Attr y = -3.225000e+00
-                Attr width = 5.853333e-01
+                Attr width = 4.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42155,32 +42205,32 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText46 BodyText 4287 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText46"
                 Attr x = 2.350000e+00
-                Attr y = -3.069000e+00
+                Attr y = -3.112000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 9.400000e-02
+                Attr heigth = 1.370000e-01
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
             EndBody
           EndObject
           Object BodyText47 BodyText 4288 15-SEP-2005 15:58:07.56
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText47"
                 Attr x = 2.350000e+00
-                Attr y = -3.719000e+00
+                Attr y = -3.762000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 9.400000e-02
+                Attr heigth = 1.370000e-01
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
@@ -42189,7 +42239,7 @@ Alarm HH, H, L, LL"
           Object LimitH And 4289 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -42208,15 +42258,15 @@ Alarm HH, H, L, LL"
           Object GetDp46 GetDp 4290 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Used"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp46"
                 Attr x = 6.500000e-01
                 Attr y = -3.875000e+00
-                Attr width = 5.653333e-01
+                Attr width = 4.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42226,7 +42276,7 @@ Alarm HH, H, L, LL"
           Object H Comph 4291 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
@@ -42244,8 +42294,8 @@ Alarm HH, H, L, LL"
           Object GetAp3 GetAp 4292 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Limit"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
@@ -42253,7 +42303,7 @@ Alarm HH, H, L, LL"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp3"
                 Attr x = 6.500000e-01
                 Attr y = -3.525000e+00
-                Attr width = 5.631111e-01
+                Attr width = 4.608889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42263,7 +42313,7 @@ Alarm HH, H, L, LL"
           Object StoAp47 StoAp 4293 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-H.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42282,15 +42332,15 @@ Alarm HH, H, L, LL"
           Object GetAp4 GetAp 4294 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Hysteres"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp4"
                 Attr x = 6.500000e-01
                 Attr y = -3.725000e+00
-                Attr width = 6.208889e-01
+                Attr width = 5.186667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42300,7 +42350,7 @@ Alarm HH, H, L, LL"
           Object TimeH Wait 4295 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
@@ -42318,7 +42368,7 @@ Alarm HH, H, L, LL"
           Object StoAp48 StoAp 4296 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-TimeH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42337,15 +42387,15 @@ Alarm HH, H, L, LL"
           Object StoDp16 StoDp 4297 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp16"
                 Attr x = 2.250000e+00
                 Attr y = -3.825000e+00
-                Attr width = 6.385555e-01
+                Attr width = 5.363333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -42355,15 +42405,15 @@ Alarm HH, H, L, LL"
           Object GetAp5 GetAp 4298 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.TimeDelay"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp5"
                 Attr x = 6.500000e-01
                 Attr y = -3.775000e+00
-                Attr width = 6.386666e-01
+                Attr width = 5.364444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42373,15 +42423,15 @@ Alarm HH, H, L, LL"
           Object StoDp17 StoDp 4299 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp17"
                 Attr x = 2.500000e+00
                 Attr y = -5.675000e+00
-                Attr width = 6.496667e-01
+                Attr width = 5.474444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -42391,7 +42441,7 @@ Alarm HH, H, L, LL"
           Object LimitLL And 4300 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -42410,7 +42460,7 @@ Alarm HH, H, L, LL"
           Object StoAp49 StoAp 4301 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-TimeLL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42429,7 +42479,7 @@ Alarm HH, H, L, LL"
           Object TimeLL Wait 4302 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
@@ -42445,7 +42495,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText48 BodyText 4303 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -42463,15 +42513,15 @@ Alarm HH, H, L, LL"
           Object GetAp6 GetAp 4304 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.TimeDelay"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp6"
                 Attr x = 7.500000e-01
                 Attr y = -5.625000e+00
-                Attr width = 6.497778e-01
+                Attr width = 5.475555e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42481,15 +42531,15 @@ Alarm HH, H, L, LL"
           Object GetAp7 GetAp 4305 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Hysteres"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp7"
                 Attr x = 7.500000e-01
                 Attr y = -5.575000e+00
-                Attr width = 6.320000e-01
+                Attr width = 5.297778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42499,8 +42549,8 @@ Alarm HH, H, L, LL"
           Object GetAp8 GetAp 4306 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Limit"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
@@ -42508,7 +42558,7 @@ Alarm HH, H, L, LL"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp8"
                 Attr x = 7.500000e-01
                 Attr y = -5.425000e+00
-                Attr width = 5.742222e-01
+                Attr width = 4.720000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42518,15 +42568,15 @@ Alarm HH, H, L, LL"
           Object GetDp51 GetDp 4307 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Used"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp51"
                 Attr x = 7.500000e-01
                 Attr y = -5.725000e+00
-                Attr width = 5.764444e-01
+                Attr width = 4.742222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42534,7 +42584,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText49 BodyText 4308 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -42552,7 +42602,7 @@ Alarm HH, H, L, LL"
           Object LimitL And 4309 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -42571,15 +42621,15 @@ Alarm HH, H, L, LL"
           Object GetDp52 GetDp 4310 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Used"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Used"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp52"
                 Attr x = 7.000000e-01
                 Attr y = -5.075000e+00
-                Attr width = 5.608889e-01
+                Attr width = 4.586667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42587,7 +42637,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText50 BodyText 4311 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -42605,8 +42655,8 @@ Alarm HH, H, L, LL"
           Object GetAp9 GetAp 4312 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Limit"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Limit"
               Attr ApObjectSegments = 3
               Buffer PlcNode
                 Attr object_type = 253
@@ -42614,7 +42664,7 @@ Alarm HH, H, L, LL"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp9"
                 Attr x = 7.000000e-01
                 Attr y = -4.775000e+00
-                Attr width = 5.586666e-01
+                Attr width = 4.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42624,7 +42674,7 @@ Alarm HH, H, L, LL"
           Object StoAp53 StoAp 4314 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-L.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42643,15 +42693,15 @@ Alarm HH, H, L, LL"
           Object GetAp10 GetAp 4315 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Hysteres"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Hysteres"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp10"
                 Attr x = 7.000000e-01
                 Attr y = -4.925000e+00
-                Attr width = 6.164444e-01
+                Attr width = 5.142222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42661,7 +42711,7 @@ Alarm HH, H, L, LL"
           Object TimeL Wait 4316 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
@@ -42679,7 +42729,7 @@ Alarm HH, H, L, LL"
           Object StoAp54 StoAp 4317 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-TimeL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42698,15 +42748,15 @@ Alarm HH, H, L, LL"
           Object StoDp18 StoDp 4318 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp18"
                 Attr x = 2.450000e+00
                 Attr y = -5.025000e+00
-                Attr width = 6.341111e-01
+                Attr width = 5.318888e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -42716,15 +42766,15 @@ Alarm HH, H, L, LL"
           Object GetAp11 GetAp 4319 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.TimeDelay"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.TimeDelay"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp11"
                 Attr x = 7.000000e-01
                 Attr y = -4.975000e+00
-                Attr width = 6.342222e-01
+                Attr width = 5.320000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42734,7 +42784,7 @@ Alarm HH, H, L, LL"
           Object L Compl 4320 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
@@ -42752,7 +42802,7 @@ Alarm HH, H, L, LL"
           Object LL Compl 4321 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
@@ -42770,7 +42820,7 @@ Alarm HH, H, L, LL"
           Object StoAp55 StoAp 4322 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-LL.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42790,7 +42840,7 @@ Alarm HH, H, L, LL"
             Body RtBody 15-SEP-2005 15:58:07.56
               Attr DetectText = "Alarm HH"
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
@@ -42807,7 +42857,7 @@ Alarm HH, H, L, LL"
           Object NameToStr51 NameToStr 4324 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -42827,15 +42877,15 @@ Alarm HH, H, L, LL"
           Object GetSp5 GetSp 4325 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.AlarmText"
+            Body DevBody 21-SEP-2005 15:36:18.59
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp5"
                 Attr x = 6.000000e-01
                 Attr y = -6.775000e+00
-                Attr width = 6.542222e-01
+                Attr width = 5.520000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42845,7 +42895,7 @@ Alarm HH, H, L, LL"
           Object Strcat52 Strcat 4326 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
@@ -42863,7 +42913,7 @@ Alarm HH, H, L, LL"
           Object StoSp5 StoSp 4327 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-DSup6.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -42880,7 +42930,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText55 BodyText 4328 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -42896,23 +42946,23 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText56 BodyText 4329 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 0
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText56"
                 Attr x = 6.500000e-01
-                Attr y = -1.379400e+01
-                Attr width = -6.895000e+00
-                Attr heigth = 7.069000e+00
+                Attr y = -6.793667e+00
+                Attr width = 1.300000e-01
+                Attr heigth = 6.866667e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
             EndBody
           EndObject
           Object BodyText57 BodyText 4330 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Attr TextAttribute = 3
               Attr FrameAttribute = 1
               Buffer PlcNode
@@ -42931,7 +42981,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object Document4 Document 4331 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.59
               Buffer PlcNode
                 Attr object_type = 2
                 Attr cid = "pwrb:Class-Document"
@@ -42951,15 +43001,15 @@ Alarm HH, H, L, LL"
           Object GetDp60 GetDp 4332 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp60"
                 Attr x = 6.500000e-01
                 Attr y = -6.975000e+00
-                Attr width = 6.075555e-01
+                Attr width = 5.053333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -42970,7 +43020,7 @@ Alarm HH, H, L, LL"
             Body RtBody 15-SEP-2005 15:58:07.56
               Attr DetectText = "Alarm H"
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
@@ -42987,7 +43037,7 @@ Alarm HH, H, L, LL"
           Object StoSp6 StoSp 4334 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-DSup7.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -43006,15 +43056,15 @@ Alarm HH, H, L, LL"
           Object GetDp61 GetDp 4335 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp61"
                 Attr x = 6.500000e-01
                 Attr y = -7.275000e+00
-                Attr width = 5.875555e-01
+                Attr width = 4.853334e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43024,7 +43074,7 @@ Alarm HH, H, L, LL"
           Object NameToStr58 NameToStr 4336 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -43044,15 +43094,15 @@ Alarm HH, H, L, LL"
           Object GetSp6 GetSp 4337 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.AlarmText"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp6"
                 Attr x = 6.000000e-01
                 Attr y = -7.075000e+00
-                Attr width = 6.342222e-01
+                Attr width = 5.320000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43060,16 +43110,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText59 BodyText 4338 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr TextAttribute = 0
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText59"
                 Attr x = 6.500000e-01
-                Attr y = -1.334400e+01
-                Attr width = -6.145000e+00
-                Attr heigth = 6.319000e+00
+                Attr y = -7.093667e+00
+                Attr width = 1.300000e-01
+                Attr heigth = 6.866667e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
@@ -43078,7 +43128,7 @@ Alarm HH, H, L, LL"
           Object Strcat61 Strcat 4339 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
@@ -43097,7 +43147,7 @@ Alarm HH, H, L, LL"
             Body RtBody 15-SEP-2005 15:58:07.56
               Attr DetectText = "Alarm L"
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
@@ -43114,7 +43164,7 @@ Alarm HH, H, L, LL"
           Object StoSp7 StoSp 4341 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-DSup8.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -43133,15 +43183,15 @@ Alarm HH, H, L, LL"
           Object GetDp62 GetDp 4342 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp62"
                 Attr x = 6.500000e-01
                 Attr y = -7.575000e+00
-                Attr width = 5.831111e-01
+                Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43151,7 +43201,7 @@ Alarm HH, H, L, LL"
           Object NameToStr62 NameToStr 4343 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -43171,15 +43221,15 @@ Alarm HH, H, L, LL"
           Object GetSp7 GetSp 4344 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.AlarmText"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp7"
                 Attr x = 6.000000e-01
                 Attr y = -7.375000e+00
-                Attr width = 6.297777e-01
+                Attr width = 5.275555e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43187,16 +43237,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText63 BodyText 4345 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr TextAttribute = 0
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText63"
                 Attr x = 6.500000e-01
-                Attr y = -1.519400e+01
-                Attr width = -7.695000e+00
-                Attr heigth = 7.869000e+00
+                Attr y = -7.393667e+00
+                Attr width = 1.300000e-01
+                Attr heigth = 6.866667e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "L"
@@ -43205,7 +43255,7 @@ Alarm HH, H, L, LL"
           Object Strcat65 Strcat 4346 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
@@ -43224,7 +43274,7 @@ Alarm HH, H, L, LL"
             Body RtBody 15-SEP-2005 15:58:07.56
               Attr DetectText = "Alarm LL"
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
@@ -43241,7 +43291,7 @@ Alarm HH, H, L, LL"
           Object StoSp8 StoSp 4348 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "BaseComponent:Class-PositSensorFo-Code-W-DSup9.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
@@ -43260,15 +43310,15 @@ Alarm HH, H, L, LL"
           Object GetDp63 GetDp 4349 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp63"
                 Attr x = 6.500000e-01
                 Attr y = -7.875000e+00
-                Attr width = 5.986667e-01
+                Attr width = 4.964445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43278,7 +43328,7 @@ Alarm HH, H, L, LL"
           Object NameToStr66 NameToStr 4350 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -43298,15 +43348,15 @@ Alarm HH, H, L, LL"
           Object GetSp8 GetSp 4351 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.AlarmText"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr SpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetSp8"
                 Attr x = 6.000000e-01
                 Attr y = -7.675000e+00
-                Attr width = 6.453333e-01
+                Attr width = 5.431111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43314,16 +43364,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText67 BodyText 4352 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr TextAttribute = 0
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-BodyText67"
                 Attr x = 6.500000e-01
-                Attr y = -1.479400e+01
-                Attr width = -6.995000e+00
-                Attr heigth = 7.169000e+00
+                Attr y = -7.693666e+00
+                Attr width = 1.300000e-01
+                Attr heigth = 6.866667e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
               Attr Text = "LL"
@@ -43332,7 +43382,7 @@ Alarm HH, H, L, LL"
           Object Strcat69 Strcat 4353 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
@@ -43350,7 +43400,7 @@ Alarm HH, H, L, LL"
           Object Red Or 4354 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
@@ -43368,7 +43418,7 @@ Alarm HH, H, L, LL"
           Object Yellow Or 4355 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
@@ -43384,7 +43434,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText70 BodyText 4356 15-SEP-2005 15:58:07.56
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
@@ -43402,15 +43452,15 @@ Alarm HH, H, L, LL"
           Object StoDp19 StoDp 4357 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.IndError"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.IndError"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp19"
                 Attr x = 1.650000e+00
                 Attr y = -8.075000e+00
-                Attr width = 5.630000e-01
+                Attr width = 4.607778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -43420,15 +43470,15 @@ Alarm HH, H, L, LL"
           Object StoDp20 StoDp 4358 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.IndWarning"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.IndWarning"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp20"
                 Attr x = 1.650000e+00
                 Attr y = -8.275000e+00
-                Attr width = 5.985555e-01
+                Attr width = 4.963333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -43438,15 +43488,15 @@ Alarm HH, H, L, LL"
           Object GetDp64 GetDp 4359 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitHH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp64"
                 Attr x = 6.500000e-01
                 Attr y = -8.075000e+00
-                Attr width = 6.075555e-01
+                Attr width = 5.053333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43456,15 +43506,15 @@ Alarm HH, H, L, LL"
           Object GetDp65 GetDp 4360 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitLL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp65"
                 Attr x = 6.500000e-01
                 Attr y = -8.125000e+00
-                Attr width = 5.986667e-01
+                Attr width = 4.964445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43474,15 +43524,15 @@ Alarm HH, H, L, LL"
           Object GetDp66 GetDp 4361 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitL.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp66"
                 Attr x = 6.500000e-01
                 Attr y = -8.325000e+00
-                Attr width = 5.831111e-01
+                Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43492,15 +43542,15 @@ Alarm HH, H, L, LL"
           Object GetDp67 GetDp 4362 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.LimitH.Status"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp67"
                 Attr x = 6.500000e-01
                 Attr y = -8.275000e+00
-                Attr width = 5.875555e-01
+                Attr width = 4.853334e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43510,15 +43560,15 @@ Alarm HH, H, L, LL"
           Object GetAi3 GetAi 4363 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.Value"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAi3"
                 Attr x = 6.500000e-01
                 Attr y = -2.025000e+00
-                Attr width = 4.764445e-01
+                Attr width = 3.742222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43528,7 +43578,7 @@ Alarm HH, H, L, LL"
           Object StoAp68 StoAp 4364 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcHost:BaseComponent-Class-PositSensorFo.Value"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43546,7 +43596,7 @@ Alarm HH, H, L, LL"
           Object GetDp69 GetDp 4365 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcHost:BaseComponent-Class-PositSensorFo.DisableSup"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43564,15 +43614,15 @@ Alarm HH, H, L, LL"
           Object StoDp21 StoDp 4366 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.SupDisabled"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Super.SupDisabled"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-StoDp21"
                 Attr x = 1.250000e+00
                 Attr y = 3.250000e-01
-                Attr width = 6.185555e-01
+                Attr width = 5.163333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
@@ -43582,15 +43632,15 @@ Alarm HH, H, L, LL"
           Object GetDp70 GetDp 4367 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.SupDisabled"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.SupDisabled"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp70"
                 Attr x = 6.500000e-01
                 Attr y = -3.275000e+00
-                Attr width = 5.675555e-01
+                Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43600,15 +43650,15 @@ Alarm HH, H, L, LL"
           Object GetDp71 GetDp 4368 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.SupDisabled"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.SupDisabled"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp71"
                 Attr x = 6.500000e-01
                 Attr y = -3.925000e+00
-                Attr width = 5.675555e-01
+                Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43618,15 +43668,15 @@ Alarm HH, H, L, LL"
           Object GetDp72 GetDp 4369 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.SupDisabled"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.SupDisabled"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp72"
                 Attr x = 7.000000e-01
                 Attr y = -5.125000e+00
-                Attr width = 5.675555e-01
+                Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43636,15 +43686,15 @@ Alarm HH, H, L, LL"
           Object GetDp73 GetDp 4370 15-SEP-2005 15:58:07.56
             Body RtBody 15-SEP-2005 15:58:07.56
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.SupDisabled"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.SupDisabled"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp73"
                 Attr x = 7.500000e-01
                 Attr y = -5.775000e+00
-                Attr width = 5.675555e-01
+                Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43654,7 +43704,7 @@ Alarm HH, H, L, LL"
           Object GetDp74 GetDp 4374 15-SEP-2005 16:33:15.32
             Body RtBody 15-SEP-2005 16:33:15.32
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder1"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43672,7 +43722,7 @@ Alarm HH, H, L, LL"
           Object Edge4 Edge 4376 15-SEP-2005 16:33:23.10
             Body RtBody 15-SEP-2005 16:33:23.10
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 93
                 Attr cid = "pwrb:Class-Edge"
@@ -43690,7 +43740,7 @@ Alarm HH, H, L, LL"
           Object GetDp75 GetDp 4379 15-SEP-2005 16:33:37.96
             Body RtBody 15-SEP-2005 16:33:37.96
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcHost:BaseComponent-Class-PositSensorFo.CalOrder1"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43708,7 +43758,7 @@ Alarm HH, H, L, LL"
           Object Or12 Or 4381 15-SEP-2005 16:33:43.81
             Body RtBody 15-SEP-2005 16:33:43.81
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
@@ -43726,7 +43776,7 @@ Alarm HH, H, L, LL"
           Object CStoAp0 CStoAp 4384 15-SEP-2005 16:34:16.17
             Body RtBody 15-SEP-2005 16:34:16.17
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.CalValue1"
               Buffer PlcNode
                 Attr object_type = 250
@@ -43744,7 +43794,7 @@ Alarm HH, H, L, LL"
           Object CStoAp1 CStoAp 4391 15-SEP-2005 16:35:58.46
             Body RtBody 15-SEP-2005 16:35:58.46
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.CalValue2"
               Buffer PlcNode
                 Attr object_type = 250
@@ -43762,7 +43812,7 @@ Alarm HH, H, L, LL"
           Object Or13 Or 4392 15-SEP-2005 16:35:58.46
             Body RtBody 15-SEP-2005 16:35:58.46
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
@@ -43780,7 +43830,7 @@ Alarm HH, H, L, LL"
           Object GetDp76 GetDp 4393 15-SEP-2005 16:35:58.46
             Body RtBody 15-SEP-2005 16:35:58.46
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcHost:BaseComponent-Class-PositSensorFo.CalOrder2"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43798,7 +43848,7 @@ Alarm HH, H, L, LL"
           Object Edge5 Edge 4394 15-SEP-2005 16:35:58.46
             Body RtBody 15-SEP-2005 16:35:58.46
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 93
                 Attr cid = "pwrb:Class-Edge"
@@ -43816,7 +43866,7 @@ Alarm HH, H, L, LL"
           Object GetDp77 GetDp 4395 15-SEP-2005 16:35:58.46
             Body RtBody 15-SEP-2005 16:35:58.46
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder2"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43834,15 +43884,15 @@ Alarm HH, H, L, LL"
           Object GetAi4 GetAi 4407 15-SEP-2005 16:39:19.33
             Body RtBody 15-SEP-2005 16:39:19.33
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
-              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.Value"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAi4"
                 Attr x = 6.000000e-01
                 Attr y = -2.500000e-02
-                Attr width = 4.764445e-01
+                Attr width = 3.742222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43852,15 +43902,15 @@ Alarm HH, H, L, LL"
           Object GetAi5 GetAi 4409 15-SEP-2005 16:39:21.03
             Body RtBody 15-SEP-2005 16:39:21.03
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
-              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Sensor.Value"
+            Body DevBody 21-SEP-2005 15:36:18.58
+              Attr AiObject = "$PlcConnect:BaseComponent-Class-PositSensor.Super.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAi5"
                 Attr x = 6.000000e-01
                 Attr y = -2.750000e-01
-                Attr width = 4.764445e-01
+                Attr width = 3.742222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
@@ -43870,15 +43920,15 @@ Alarm HH, H, L, LL"
           Object CArit71 CArithm 4415 15-SEP-2005 16:46:18.65
             Body RtBody 15-SEP-2005 16:46:18.65
             EndBody
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArithm"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-CArit71"
                 Attr x = 1.650000e+00
-                Attr y = -1.380000e+00
-                Attr width = 8.490000e-01
-                Attr heigth = 9.050000e-01
+                Attr y = -1.575000e+00
+                Attr width = 6.540000e-01
+                Attr heigth = 1.100000e+00
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 16143
                 Attr mask[1] = 771
@@ -43903,16 +43953,16 @@ else
           Object GetDp78 GetDp 4419 15-SEP-2005 16:47:56.61
             Body RtBody 15-SEP-2005 16:47:56.61
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Cal1Enable"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp78"
                 Attr x = 6.000000e-01
-                Attr y = -2.100000e+00
-                Attr width = -7.796667e-01
-                Attr heigth = 1.275000e+00
+                Attr y = -8.750000e-01
+                Attr width = 4.453333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -43921,16 +43971,16 @@ else
           Object GetDp79 GetDp 4423 15-SEP-2005 16:48:07.78
             Body RtBody 15-SEP-2005 16:48:07.78
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Cal2Enable"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp79"
                 Attr x = 6.000000e-01
-                Attr y = -2.200000e+00
-                Attr width = -8.296667e-01
-                Attr heigth = 1.325000e+00
+                Attr y = -9.250000e-01
+                Attr width = 4.453333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -43939,16 +43989,16 @@ else
           Object GetAp15 GetAp 4428 15-SEP-2005 16:49:21.23
             Body RtBody 15-SEP-2005 16:49:21.23
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalPos1"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp15"
                 Attr x = 6.000000e-01
-                Attr y = -1.500000e+00
-                Attr width = -4.796667e-01
-                Attr heigth = 9.750000e-01
+                Attr y = -5.749999e-01
+                Attr width = 4.453333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -43957,16 +44007,16 @@ else
           Object GetAp16 GetAp 4432 15-SEP-2005 16:49:30.56
             Body RtBody 15-SEP-2005 16:49:30.56
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalPos2"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp16"
                 Attr x = 6.000000e-01
-                Attr y = -1.600000e+00
-                Attr width = -5.296667e-01
-                Attr heigth = 1.025000e+00
+                Attr y = -6.250000e-01
+                Attr width = 4.453333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -43975,7 +44025,7 @@ else
           Object GetAp17 GetAp 4438 15-SEP-2005 16:50:17.23
             Body RtBody 15-SEP-2005 16:50:17.23
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.CalValue1"
               Buffer PlcNode
                 Attr object_type = 253
@@ -43993,7 +44043,7 @@ else
           Object GetAp18 GetAp 4442 15-SEP-2005 16:50:24.12
             Body RtBody 15-SEP-2005 16:50:24.12
             EndBody
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.CalValue2"
               Buffer PlcNode
                 Attr object_type = 253
@@ -44011,7 +44061,7 @@ else
           Object CStoAp2 CStoAp 4446 15-SEP-2005 16:57:10.78
             Body RtBody 15-SEP-2005 16:57:10.78
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Gain"
               Buffer PlcNode
                 Attr object_type = 250
@@ -44029,15 +44079,15 @@ else
           Object CArit72 CArithm 4449 15-SEP-2005 16:58:03.97
             Body RtBody 15-SEP-2005 16:58:03.97
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArithm"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-CArit72"
                 Attr x = 1.500000e+00
-                Attr y = -3.830000e+00
-                Attr width = -9.354444e-01
-                Attr heigth = 1.905000e+00
+                Attr y = -2.425000e+00
+                Attr width = 4.695556e-01
+                Attr heigth = 5.000000e-01
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 271
                 Attr mask[1] = 1
@@ -44051,16 +44101,16 @@ else
           Object GetAp19 GetAp 4457 15-SEP-2005 17:00:10.87
             Body RtBody 15-SEP-2005 17:00:10.87
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.CalPos1"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetAp19"
                 Attr x = 6.500000e-01
-                Attr y = -3.800000e+00
-                Attr width = -1.317444e+00
-                Attr heigth = 1.775000e+00
+                Attr y = -2.075000e+00
+                Attr width = 4.075556e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -44069,7 +44119,7 @@ else
           Object GetAp20 GetAp 4459 15-SEP-2005 17:00:26.06
             Body RtBody 15-SEP-2005 17:00:26.06
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.CalValue1"
               Buffer PlcNode
                 Attr object_type = 253
@@ -44087,7 +44137,7 @@ else
           Object GetAp21 GetAp 4461 15-SEP-2005 17:00:30.45
             Body RtBody 15-SEP-2005 17:00:30.45
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Gain"
               Buffer PlcNode
                 Attr object_type = 253
@@ -44105,16 +44155,16 @@ else
           Object GetDp80 GetDp 4465 15-SEP-2005 17:00:44.56
             Body RtBody 15-SEP-2005 17:00:44.56
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.Cal1Enable"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp80"
                 Attr x = 6.500000e-01
-                Attr y = -4.750000e+00
-                Attr width = -2.079667e+00
-                Attr heigth = 2.575000e+00
+                Attr y = -2.225000e+00
+                Attr width = 4.453333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -44123,7 +44173,7 @@ else
           Object GetDp81 GetDp 4475 15-SEP-2005 17:13:00.66
             Body RtBody 15-SEP-2005 17:13:00.66
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder1"
               Buffer PlcNode
                 Attr object_type = 256
@@ -44141,7 +44191,7 @@ else
           Object GetDp82 GetDp 4476 15-SEP-2005 17:13:00.66
             Body RtBody 15-SEP-2005 17:13:00.66
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder2"
               Buffer PlcNode
                 Attr object_type = 256
@@ -44159,7 +44209,7 @@ else
           Object ResDp6 ResDp 4477 15-SEP-2005 17:13:39.00
             Body RtBody 15-SEP-2005 17:13:39.00
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder1"
               Buffer PlcNode
                 Attr object_type = 258
@@ -44177,7 +44227,7 @@ else
           Object ResDp7 ResDp 4478 15-SEP-2005 17:13:40.71
             Body RtBody 15-SEP-2005 17:13:40.71
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.OpCalOrder2"
               Buffer PlcNode
                 Attr object_type = 258
@@ -44193,7 +44243,7 @@ else
             EndBody
           EndObject
           Object Text73 Text 4481 15-SEP-2005 17:15:12.56
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Text = "Should always be positioned last in program"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -44211,7 +44261,7 @@ else
           Object StoAp83 StoAp 4484 15-SEP-2005 18:08:40.18
             Body RtBody 15-SEP-2005 18:08:40.18
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Position"
               Buffer PlcNode
                 Attr object_type = 256
@@ -44229,7 +44279,7 @@ else
           Object GetAp22 GetAp 4488 16-SEP-2005 08:28:27.46
             Body RtBody 16-SEP-2005 08:28:27.46
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Position"
               Buffer PlcNode
                 Attr object_type = 253
@@ -44247,7 +44297,7 @@ else
           Object GetAp23 GetAp 4491 16-SEP-2005 08:28:43.75
             Body RtBody 16-SEP-2005 08:28:43.75
             EndBody
-            Body DevBody 16-SEP-2005 08:29:15.94
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr ApObject = "$PlcConnect:BaseComponent-Class-PositSensor.Position"
               Buffer PlcNode
                 Attr object_type = 253
@@ -44263,7 +44313,7 @@ else
             EndBody
           EndObject
           Object Text74 Text 4499 16-SEP-2005 08:38:53.16
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Text = "Order calibration point 1"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -44271,15 +44321,15 @@ else
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-Text74"
                 Attr x = 6.000000e-01
-                Attr y = -2.940000e-01
-                Attr width = 2.077778e-02
-                Attr heigth = 3.690000e-01
+                Attr y = 3.100001e-02
+                Attr width = 3.457778e-01
+                Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
           Object Text75 Text 4500 16-SEP-2005 08:39:19.22
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Text = "Order calibration point 2"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -44287,15 +44337,15 @@ else
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-Text75"
                 Attr x = 6.000000e-01
-                Attr y = -7.940001e-01
-                Attr width = -2.292222e-01
-                Attr heigth = 6.190000e-01
+                Attr y = -2.190000e-01
+                Attr width = 3.457778e-01
+                Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
           Object Text76 Text 4501 16-SEP-2005 08:39:33.97
-            Body DevBody 16-SEP-2005 08:40:26.09
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Text = "Calculate Gain"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -44303,15 +44353,15 @@ else
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-Text76"
                 Attr x = 6.000000e-01
-                Attr y = -1.394000e+00
-                Attr width = -6.581111e-01
-                Attr heigth = 9.190000e-01
+                Attr y = -5.190000e-01
+                Attr width = 2.168889e-01
+                Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
               EndBuffer
             EndBody
           EndObject
           Object Text77 Text 4502 16-SEP-2005 08:40:04.94
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Text = "Calculate Position"
               Attr FrameAttribute = 2
               Buffer PlcNode
@@ -44329,16 +44379,16 @@ else
           Object CStoAp3 CStoAp 4508 20-SEP-2005 13:35:39.46
             Body RtBody 20-SEP-2005 13:35:39.46
             EndBody
-            Body DevBody 20-SEP-2005 13:40:09.20
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.CalPos1"
               Buffer PlcNode
                 Attr object_type = 250
                 Attr cid = "pwrb:Class-CStoAp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-CStoAp3"
                 Attr x = 2.550000e+00
-                Attr y = 6.999996e-02
-                Attr width = 1.220556e+00
-                Attr heigth = -6.450000e-01
+                Attr y = -6.750000e-01
+                Attr width = 4.755556e-01
+                Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 3
               EndBuffer
@@ -44347,16 +44397,16 @@ else
           Object ResDp8 ResDp 4512 20-SEP-2005 14:51:18.53
             Body RtBody 20-SEP-2005 14:51:18.53
             EndBody
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.Cal2Enable"
               Buffer PlcNode
                 Attr object_type = 258
                 Attr cid = "pwrb:Class-ResDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-ResDp8"
                 Attr x = 1.150000e+00
-                Attr y = -2.130000e+00
-                Attr width = -5.086667e-01
-                Attr heigth = 1.055000e+00
+                Attr y = -1.125000e+00
+                Attr width = 4.963333e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[2] = 1
@@ -44366,16 +44416,16 @@ else
           Object SetDp3 SetDp 4518 20-SEP-2005 14:57:09.51
             Body RtBody 20-SEP-2005 14:57:09.51
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.P1Calibrated"
               Buffer PlcNode
                 Attr object_type = 257
                 Attr cid = "pwrb:Class-SetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-SetDp3"
                 Attr x = 1.700000e+00
-                Attr y = 5.200000e-01
-                Attr width = 1.163556e+00
-                Attr heigth = -5.950000e-01
+                Attr y = -1.250000e-01
+                Attr width = 5.185555e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
@@ -44384,16 +44434,16 @@ else
           Object SetDp4 SetDp 4520 20-SEP-2005 14:57:13.94
             Body RtBody 20-SEP-2005 14:57:13.94
             EndBody
-            Body DevBody 20-SEP-2005 14:57:21.92
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr Object = "$PlcConnect:BaseComponent-Class-PositSensor.P2Calibrated"
               Buffer PlcNode
                 Attr object_type = 257
                 Attr cid = "pwrb:Class-SetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-SetDp4"
                 Attr x = 1.700000e+00
-                Attr y = 1.999998e-02
-                Attr width = 9.135556e-01
-                Attr heigth = -3.450000e-01
+                Attr y = -3.750000e-01
+                Attr width = 5.185555e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
@@ -44402,16 +44452,16 @@ else
           Object GetDp85 GetDp 4526 20-SEP-2005 14:57:48.79
             Body RtBody 20-SEP-2005 14:57:48.79
             EndBody
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.P2Calibrated"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp85"
                 Attr x = 6.000000e-01
-                Attr y = -2.400000e+00
-                Attr width = -9.074445e-01
-                Attr heigth = 1.425000e+00
+                Attr y = -1.025000e+00
+                Attr width = 4.675556e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -44420,16 +44470,16 @@ else
           Object GetDp86 GetDp 4528 20-SEP-2005 14:57:53.61
             Body RtBody 20-SEP-2005 14:57:53.61
             EndBody
-            Body DevBody 20-SEP-2005 14:58:03.68
+            Body DevBody 21-SEP-2005 15:36:18.58
               Attr DpObject = "$PlcConnect:BaseComponent-Class-PositSensor.P1Calibrated"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-PositSensorFo-Code-W-GetDp86"
                 Attr x = 6.000000e-01
-                Attr y = -2.300000e+00
-                Attr width = -8.574445e-01
-                Attr heigth = 1.375000e+00
+                Attr y = -9.750000e-01
+                Attr width = 4.675556e-01
+                Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-PositSensorFo-Code-W"
                 Attr mask[1] = 1
               EndBuffer
@@ -70894,7 +70944,6 @@ to avoid restart after error."
     !  Create a function object in the plc editor and connect it to the current
     !  object with the connect function.
     ! 
-    !  @b Simulate
     !  @b See also
     !  @classlink MValveOrNoSwFo basecomponent_mvalveornoswfo.html
     !*/
@@ -78375,6 +78424,24 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Proportional valve.
+    !  Base componente for a proportional valve.
+    ! 
+    !  @b Object Graph
+    !  @image orm_propvalveor_og.gif
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object PropValveOrFo is used.
+    !  @image orm_propvalveorfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    !  @b See also
+    !  @classlink PropValveOrFo basecomponent_propvalveorfo.html
+    !*/
     Object PropValveOr $ClassDef 94 15-SEP-2005 09:47:33.89
       Body SysBody 15-SEP-2005 09:42:23.41
         Attr Editor = 0
@@ -78476,6 +78543,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to PropValveOr.
+    !  Plc function object to PropValveOr.
+    ! 
+    !  @image orm_propvalveorfo_fo.gif
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  PropValveOr.
+    ! 
+    !  @b See also
+    !  @classlink PropValveOr basecomponent_propvalveor.html
+    !*/
     Object PropValveOrFo $ClassDef 95 15-SEP-2005 09:48:23.73
       Body SysBody 15-SEP-2005 09:48:16.73
         Attr Editor = 0
@@ -78962,6 +79042,24 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Valves
+    !  @Summary Directional valve with two solenoids.
+    !  Base componente for a directional valve with two solenoids.
+    ! 
+    !  @b Object Graph
+    !  @image orm_directvalve2or_og.gif
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object DirectValve2OrFo is used.
+    !  @image orm_directvalve2orfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    !  @b See also
+    !  @classlink DirectValve2OrFo basecomponent_directvalve2orfo.html
+    !*/
     Object DirectValve2Or $ClassDef 102 21-SEP-2005 09:25:41.98
       Body SysBody 21-SEP-2005 09:24:56.91
         Attr Editor = 0
@@ -79068,6 +79166,19 @@ to avoid restart after error."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to DirectValve2Or.
+    !  Plc function object to DirectValve2Or.
+    ! 
+    !  @image orm_directvalve2orfo_fo.gif
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  DirectValve2Or.
+    ! 
+    !  @b See also
+    !  @classlink DirectValve2Or basecomponent_directvalve2or.html
+    !*/
     Object DirectValve2OrFo $ClassDef 103 21-SEP-2005 09:26:59.45
       Body SysBody 21-SEP-2005 09:26:40.03
         Attr Editor = 0
@@ -79155,7 +79266,7 @@ to avoid restart after error."
       Object Code PlcTemplate 4633 21-SEP-2005 09:26:40.03
         Body RtBody 21-SEP-2005 09:26:40.03
         EndBody
-        Body DevBody 21-SEP-2005 10:25:55.75
+        Body DevBody 21-SEP-2005 17:07:54.81
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -79187,8 +79298,8 @@ to avoid restart after error."
         Object W WindowPlc 4634 21-SEP-2005 09:26:40.03
           Body RtBody 21-SEP-2005 09:26:40.03
           EndBody
-          Body DevBody 21-SEP-2005 10:25:55.75
-            Attr Modified = "21-SEP-2005 10:25:55.75"
+          Body DevBody 21-SEP-2005 17:07:54.81
+            Attr Modified = "21-SEP-2005 17:07:54.81"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-DirectValve2OrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -79852,9 +79963,11 @@ to avoid restart after error."
             EndBody
           EndObject
           Object DtoEnum7 DtoEnum 4663 21-SEP-2005 10:24:54.45
-            Body RtBody 21-SEP-2005 10:24:54.45
+            Body RtBody 21-SEP-2005 17:07:46.66
+              Attr EnumValues[0] = 1
+              Attr EnumValues[1] = 2
             EndBody
-            Body DevBody 21-SEP-2005 10:25:55.75
+            Body DevBody 21-SEP-2005 17:07:54.81
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-DtoEnum"

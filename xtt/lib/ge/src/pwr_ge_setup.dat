@@ -23,6 +23,7 @@ menu Process
   subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	ValveControl2	pwr_exe:pwr_valvecontrol2.pwsg 		2
+  subgraph 	DirectValve	pwr_exe:pwr_directvalve.pwsg 		2
   subgraph	MValve		pwr_exe:pwr_mvalve.pwsg			2
   subgraph	BaseValve	pwr_exe:pwr_basevalve.pwsg		6
   subgraph	BaseValve2	pwr_exe:pwr_basevalve2.pwsg		6
