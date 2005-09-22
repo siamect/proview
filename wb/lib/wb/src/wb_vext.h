@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vext.h,v 1.6 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_vext.h,v 1.7 2005-09-22 09:46:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,11 @@
 
 #ifndef wb_vext_h
 #define wb_vext_h
+
+typedef enum {
+  procom_eType_Ipc,
+  procom_eType_Local
+} procom_eType;
 
 
 typedef enum {
