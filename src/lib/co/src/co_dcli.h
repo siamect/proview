@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.6 2005-09-21 14:19:39 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.7 2005-09-22 08:38:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,8 @@
 #define co_dcli_h
 
 #include <stdio.h>
+
+#include "pwr.h"
 
 #ifdef __cplusplus
 extern "C" {
