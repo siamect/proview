@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.8 2005-09-21 14:21:12 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.9 2005-09-22 14:36:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -764,7 +764,8 @@ int CnvWblToHtml::attribute_exec()
   char attrtype_href[80];
   int lng_sts = 1;
 
-  if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0)
+  if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0 ||
+       strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
     return 1;
     
   if ( Lng::current() != lng_eLanguage_en_us)

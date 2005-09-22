@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltops.cpp,v 1.6 2005-09-05 08:39:57 claes Exp $
+ * Proview   $Id: cnv_wbltops.cpp,v 1.7 2005-09-22 14:36:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -228,7 +228,8 @@ int CnvWblToPs::attribute_exec()
   int page;
   int lng_sts = 1;
 
-  if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0)
+  if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0 ||
+       strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)
     return 1;
     
   if ( Lng::current() != lng_eLanguage_en_us)
