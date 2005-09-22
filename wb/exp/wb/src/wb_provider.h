@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_provider.h,v 1.3 2005-09-20 13:21:45 claes Exp $
+ * Proview   $Id: wb_provider.h,v 1.4 2005-09-22 09:45:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,11 +47,6 @@ public:
   virtual void abort( wb_procom *pcom) {}
 };
 
-
-typedef enum {
-  procom_eType_Ipc,
-  procom_eType_Local
-} procom_eType;
 
 class wb_procom 
 {
