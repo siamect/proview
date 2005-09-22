@@ -639,6 +639,7 @@ palette PlcEditorPalette
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo
+      class CompModeD2MFo
       class CompModeAMFo
       class RunTimeCounterFo
       class FanCbCoSsFo  
@@ -654,6 +655,7 @@ palette PlcEditorPalette
       class CValveOr2SwFo
       class CValveOrSwOpFo
       class CValveOrSwClFo
+      class DirectValve2OrFo
       class ManValve2SwFo
       class MValveOr2SwFo
       class MValveOrSwOpFo

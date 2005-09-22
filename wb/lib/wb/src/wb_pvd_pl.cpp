@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.2 2005-09-22 08:31:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ extern "C" {
 #include "co_dcli.h"
 }
 
-void wb_pvd_file::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offset,
+void wb_pvd_pl::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offset,
 		       unsigned int size, char *buffer)
 {
   if ( oix >= m_list.size() || oix <= 0) {
