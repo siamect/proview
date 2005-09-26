@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.9 2005-09-21 14:20:18 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.10 2005-09-26 07:59:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,8 +42,8 @@ lng_eLanguage Lng::str_to_lang( char *str)
     return lng_eLanguage_en_us;
   if ( strcmp( str, "sv_se") == 0)
     return lng_eLanguage_sv_se;
-  if ( strcmp( str, "ru_ru") == 0)
-    return lng_eLanguage_ru_ru;
+  if ( strcmp( str, "de_de") == 0)
+    return lng_eLanguage_de_de;
 
   return lng_eLanguage_;
 }
@@ -56,8 +56,8 @@ char *Lng::lang_to_str( lng_eLanguage language)
     case lng_eLanguage_sv_se:
       strcpy( result, "sv_se");
       break;
-    case lng_eLanguage_ru_ru:
-      strcpy( result, "ru_ru");
+    case lng_eLanguage_de_de:
+      strcpy( result, "de_de");
       break;
     default:
       strcpy( result, "en_us");
@@ -114,8 +114,9 @@ char *Lng::translate( char *text)
       if ( s) {
 	char *t = strrchr( text, ',');
 	if ( t) {
-	  strncpy( result, record->transl, 
-		   (unsigned int)s - (unsigned int)record->transl + 1);
+	  int len = (unsigned int)s - (unsigned int)record->transl + 1;
+	  strncpy( result, record->transl, len);
+	  result[len] = 0;
 	  strcat( result, t+1);
 	}
 	else
