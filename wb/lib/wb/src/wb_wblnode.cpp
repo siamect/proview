@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.48 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.49 2005-10-07 11:28:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1785,8 +1785,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     // Register volume
     m_vrep->registerVolume( name(), o->m_cid, vid, this);
 
-    // Build to get next oix
-    build( false);
+    if ( o->m_cid == pwr_eClass_ClassVolume) {
+      // Build to get next oix
+      build( false);
+    }
     break;
   }
   case tokens.ATTRIBUTE:
