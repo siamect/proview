@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.14 2005-09-20 13:22:40 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.15 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2542,11 +2542,27 @@ pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp)
   pwr_sAttrRef cast_aref;
 
   cast_aref = *arp;
+  if ( arp->Flags.b.DisableAttr)
+    cast_aref.Offset -= sizeof(pwr_tDisableAttr);
   cast_aref.Offset -= sizeof(pwr_tCastId);
   cast_aref.Size = sizeof(pwr_tCastId);
   cast_aref.Flags.b.ObjectAttr = 0;  
   cast_aref.Flags.b.CastAttr = 0;  
+  cast_aref.Flags.b.DisableAttr = 0;  
   return cast_aref;
+}
+
+pwr_sAttrRef cdh_ArefToDisableAref( pwr_sAttrRef *arp)
+{
+  pwr_sAttrRef dis_aref;
+
+  dis_aref = *arp;
+  dis_aref.Offset -= sizeof(pwr_tDisableAttr);
+  dis_aref.Size = sizeof(pwr_tDisableAttr);
+  dis_aref.Flags.b.ObjectAttr = 0;  
+  dis_aref.Flags.b.CastAttr = 0;  
+  dis_aref.Flags.b.DisableAttr = 0;  
+  return dis_aref;
 }
 
 pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2)

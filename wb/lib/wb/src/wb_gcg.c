@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.23 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.24 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -208,6 +208,8 @@ int	gcg_comp_m57();
 int	gcg_comp_m58();
 int	gcg_comp_m59();
 int	gcg_comp_m60();
+int	gcg_comp_m61();
+int	gcg_comp_m62();
 
 int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m0,
@@ -270,7 +272,9 @@ int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m57,
 	&gcg_comp_m58,
 	&gcg_comp_m59,
-	&gcg_comp_m60
+	&gcg_comp_m60,
+	&gcg_comp_m61,
+	&gcg_comp_m62
 	};
 
 
@@ -532,12 +536,21 @@ static int gcg_is_window(
 );
 
 
+static int gcg_set_cmanager( 
+    vldh_t_wind wind);
 
+static int gcg_cmanager_find_nodes( 
+    vldh_t_wind wind, 
+    vldh_t_node mgr, 
+    vldh_t_node *nodelist,
+    int node_count);
 
+static int gcg_cmanager_comp( 
+    gcg_ctx	gcgctx,
+    vldh_t_node	node);
 
-
-
-
+static int gcg_reset_cmanager( 
+    gcg_ctx	gcgctx);
 
 
 
@@ -1172,6 +1185,9 @@ int gcg_plcwindow_compile (
 	int sts;
 
 	gcg_debug = debug;
+
+	/* Find any compilation managers */
+	sts = gcg_set_cmanager( wind);
 
 	/* Calculate execute order */
 	sts = exo_wind_exec( wind);
@@ -2202,7 +2218,7 @@ int	gcg_wind_comp_all(
 	vldh_t_plc	plc;
 	vldh_t_node	node;
 	pwr_tObjid	*parentlist;
-	unsigned long	parent_count;
+	unsigned long	parent_count = 0;
 	unsigned long	errorcount;
 	unsigned long	warningcount;
 	int		wind_compiled;
@@ -2381,14 +2397,16 @@ int	gcg_wind_comp_all(
 
 
 	/* FIX, the plc is unloaded by the Func objects, load it again... */
-	sts = vldh_get_plc_objdid( *(parentlist + parent_count -1), &plc);
-	if ( sts == VLDH__OBJNOTFOUND ) {
-	  /* Load the plcpgm */
-	  sts = vldh_plc_load( *(parentlist + parent_count -1), 
-		ldhwb, ldhses, &plc);
+	if ( parent_count) {
+	  sts = vldh_get_plc_objdid( *(parentlist + parent_count -1), &plc);
+	  if ( sts == VLDH__OBJNOTFOUND ) {
+	    /* Load the plcpgm */
+	    sts = vldh_plc_load( *(parentlist + parent_count -1), 
+				 ldhwb, ldhses, &plc);
+	  }
+	  else
+	    if ( EVEN(sts)) return sts;
 	}
-	else
-	  if ( EVEN(sts)) return sts;
         /* End of FIX */
 
 
@@ -3375,268 +3393,341 @@ static int	gcg_get_outputstring_spec(
     char		*parstring
 )
 {
-	int		sts, size;
-	pwr_sAttrRef	*attrref;
-	pwr_tClassId	class;
-	ldh_tSesContext ldhses;
-	char 		*name_p;
-	pwr_tAName     	aname;
-	char 		*s;
+  int		sts, size;
+  pwr_sAttrRef	*attrref;
+  pwr_tClassId	class;
+  ldh_tSesContext ldhses;
+  char 		*name_p;
+  pwr_tAName     	aname;
+  char 		*s;
 	
-	ldhses = (output_node->hn.wind)->hw.ldhses;
+  ldhses = (output_node->hn.wind)->hw.ldhses;
 
+  switch ( output_node->ln.cid) {
 
-	/**********************************************************
-	*  GETDP
-	***********************************************************/	
-	if ( output_node->ln.cid == pwr_cClass_GetDp) {
-
-	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( 
+  case pwr_cClass_GetDp: {
+      
+    /**********************************************************
+     *  GETDP
+     ***********************************************************/	
+    
+    /* Get the objdid stored in the parameter */
+    sts = ldh_GetObjectPar( 
 			ldhses,  
 			output_node->ln.oid, 
 			"DevBody",
 			"DpObject",
 			(char **)&attrref, &size); 
-	  if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) return sts;
 
-	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
-	  if ( EVEN(sts)) return sts;
+    sts = gcg_replace_ref( gcgctx, attrref, output_node);
+    if ( EVEN(sts)) return sts;
 
-	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
-	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
-				   &name_p, &size);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
-	  free((char *) attrref);
+    /* Check that this is objdid of an existing object */
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    /* Get the attribute name of last segment */
+    sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
+			     &name_p, &size);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    free((char *) attrref);
 
-	  strcpy( aname, name_p);
-	  if ( (s = strrchr( aname, '.')) == 0) { 
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+    strcpy( aname, name_p);
+    if ( (s = strrchr( aname, '.')) == 0) { 
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    
+    *s = 0;
+    sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
+    if ( EVEN(sts)) return sts;
+      
+    *parprefix = GCG_PREFIX_REF;
+    *partype = GCG_OTYPE_AREF;
+    return GSX__SPECFOUND;
+  }
 
-	  *s = 0;
-	  sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
-	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
-	  sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
-	  if ( EVEN(sts)) return sts;
+  case pwr_cClass_GetAp: {
+    /**********************************************************
+     *  GETAP
+     ***********************************************************/	
 
-	  *parprefix = GCG_PREFIX_REF;
-	  *partype = GCG_OTYPE_AREF;
-	  return GSX__SPECFOUND;
-	}
-
-	/**********************************************************
-	*  GETAP
-	***********************************************************/	
-
-	if ( output_node->ln.cid == pwr_cClass_GetAp) {
-	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( ldhses,  
+    /* Get the objdid stored in the parameter */
+    sts = ldh_GetObjectPar( ldhses,  
 			output_node->ln.oid, 
 			"DevBody",
 			"ApObject",
 			(char **)&attrref, &size); 
-	  if ( EVEN(sts)) return sts;
+    if ( EVEN(sts)) return sts;
 
-	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
-	  if ( EVEN(sts)) return sts;
+    sts = gcg_replace_ref( gcgctx, attrref, output_node);
+    if ( EVEN(sts)) return sts;
 
-	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
+    /* Check that this is objdid of an existing object */
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
 
-	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
-				   &name_p, &size);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
-	  free((char *) attrref);
+    /* Get the attribute name of last segment */
+    sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
+			     &name_p, &size);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    free((char *) attrref);
 
-	  strcpy( aname, name_p);
-	  if ( (s = strrchr( aname, '.')) == 0) { 
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+    strcpy( aname, name_p);
+    if ( (s = strrchr( aname, '.')) == 0) { 
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
 
-	  *s = 0;
-	  sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+    *s = 0;
+    sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
 
-	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+    sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
 
-	  sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
-	  if ( EVEN(sts)) return sts;
+    sts = gcg_parname_to_pgmname( ldhses, class, s+1, parstring);
+    if ( EVEN(sts)) return sts;
 
-	  *parprefix = GCG_PREFIX_REF;
-	  *partype = GCG_OTYPE_AREF;
-	  return GSX__SPECFOUND;
-	}
-	/**********************************************************
-	*  GETPI
-	***********************************************************/	
-	if ( output_node->ln.cid == pwr_cClass_GetPi) {
-	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
-				  "DevBody", "CoObject",
-				  (char **)&attrref, &size); 
-	  if ( EVEN(sts)) return sts;
+    *parprefix = GCG_PREFIX_REF;
+    *partype = GCG_OTYPE_AREF;
+    return GSX__SPECFOUND;
+  }
 
-	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
-	  if ( EVEN(sts)) return sts;
+  case pwr_cClass_GetPi: {
+    /**********************************************************
+     *  GETPI
+     ***********************************************************/	
+    /* Get the objdid stored in the parameter */
+    sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+			    "DevBody", "CoObject",
+			    (char **)&attrref, &size); 
+    if ( EVEN(sts)) return sts;
+	  
+    sts = gcg_replace_ref( gcgctx, attrref, output_node);
+    if ( EVEN(sts)) return sts;
 
-	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
+    /* Check that this is objdid of an existing object */
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
 
-	  strcpy( parstring, 
-		(output_bodydef->Par)->Param.Info.PgmName);
-	  *parattrref = *attrref;
-	  if ( strcmp( "PulsIn", output_bodydef->ParName) == 0)
-	    *parprefix = GCG_PREFIX_IOC;
-	  else
-	    *parprefix = GCG_PREFIX_REF;
+    strcpy( parstring, 
+	    (output_bodydef->Par)->Param.Info.PgmName);
+    *parattrref = *attrref;
+    if ( strcmp( "PulsIn", output_bodydef->ParName) == 0)
+      *parprefix = GCG_PREFIX_IOC;
+    else
+      *parprefix = GCG_PREFIX_REF;
 
-	  *partype = GCG_OTYPE_AREF;
-	  free((char *) attrref);
-	  return GSX__SPECFOUND;
-	}
-	/**********************************************************
-	*  GETSP
-	***********************************************************/	
-	if ( output_node->ln.cid == pwr_cClass_GetSp)
-	{
-	  /* Get the objdid stored in the parameter */
-	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
-				  "DevBody", "SpObject",
-				  (char **)&attrref, &size); 
-	  if ( EVEN(sts)) return sts;
+    *partype = GCG_OTYPE_AREF;
+    free((char *) attrref);
+    return GSX__SPECFOUND;
+  }
+  case pwr_cClass_GetSp: {
+    /**********************************************************
+     *  GETSP
+     ***********************************************************/	
+     
+    /* Get the objdid stored in the parameter */
+    sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+			    "DevBody", "SpObject",
+			    (char **)&attrref, &size); 
+    if ( EVEN(sts)) return sts;
+	  
+    sts = gcg_replace_ref( gcgctx, attrref, output_node);
+    if ( EVEN(sts)) return sts;
 
-	  sts = gcg_replace_ref( gcgctx, attrref, output_node);
-	  if ( EVEN(sts)) return sts;
+    /* Check that this is objdid of an existing object */
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
 
-	  /* Check that this is objdid of an existing object */
-	  sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
+    /* Get the attribute name of last segment */
+    sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
+			     &name_p, &size);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    free((char *) attrref);
+    
+    strcpy( aname, name_p);
+    if ( (s = strrchr( aname, '.')) == 0) { 
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
 
-	  /* Get the attribute name of last segment */
-	  sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, 
-				   &name_p, &size);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    free((char *) attrref);
-	    return GSX__NEXTPAR;
-	  }
-	  free((char *) attrref);
+    *s = 0;
+    sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = gcg_parname_to_pgmname(ldhses, class, s+1, parstring);
+    if ( EVEN(sts)) return sts;
 
-	  strcpy( aname, name_p);
-	  if ( (s = strrchr( aname, '.')) == 0) { 
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+    *parprefix = GCG_PREFIX_REF;
+    *partype = GCG_OTYPE_AREF;
+    return GSX__SPECFOUND;
+  }
+	
+  case pwr_cClass_GetDattr:
+  case pwr_cClass_GetAattr:
+  case pwr_cClass_GetIattr:
+  case pwr_cClass_GetSattr: {
+    /**********************************************************
+     *  GetDattr
+     ***********************************************************/	
+    pwr_tObjid host_objid;
+    char *parameter;
 
-	  *s = 0;
-	  sts = ldh_NameToAttrRef(
-			(output_node->hn.wind)->hw.ldhses, 
-			aname, parattrref);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
-	  sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
-	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
-	    return GSX__NEXTPAR;
-	  }
-	  sts = gcg_parname_to_pgmname(ldhses, class, s+1, parstring);
-	  if ( EVEN(sts)) return sts;
+    /* Get host object */
+    host_objid = (output_node->hn.wind)->lw.poid;
 
-	  *parprefix = GCG_PREFIX_REF;
-	  *partype = GCG_OTYPE_AREF;
-	  return GSX__SPECFOUND;
-	  return GSX__SPECFOUND;
-	}
+    sts = ldh_GetObjectClass( ldhses, host_objid, &class);
 
-	/**********************************************************
-	*  GetDattr
-	***********************************************************/	
-	if ( output_node->ln.cid == pwr_cClass_GetDattr ||
-	     output_node->ln.cid == pwr_cClass_GetAattr ||
-	     output_node->ln.cid == pwr_cClass_GetIattr ||
-	     output_node->ln.cid == pwr_cClass_GetSattr)
-	{
-	  pwr_tObjid host_objid;
-	  char *parameter;
+    if ( cdh_ObjidIsNull(host_objid)) {	
+      /* Parent is a plcprogram */
+      gcg_error_msg( gcgctx, GSX__BADWIND, output_node);  
+      return GSX__NEXTPAR;
+    }
 
-	  /* Get host object */
-	  host_objid = (output_node->hn.wind)->lw.poid;
+    /* Get the referenced attribute stored in Attribute */
+    sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+			    "DevBody", "Attribute",
+			    (char **)&parameter, &size); 
+    if ( EVEN(sts)) return sts;
+    
+    sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
+    if ( EVEN(sts)) return sts;
 
-	  sts = ldh_GetObjectClass( ldhses, host_objid, &class);
+    *parattrref = cdh_ObjidToAref( host_objid);
+    *parprefix = GCG_PREFIX_REF;
+    *partype = GCG_OTYPE_OID;
+    free((char *) parameter);
+    return GSX__SPECFOUND;
+  }
 
-	  if ( cdh_ObjidIsNull(host_objid)) {	
-	    /* Parent is a plcprogram */
-	    gcg_error_msg( gcgctx, GSX__BADWIND, output_node);  
-	    return GSX__NEXTPAR;
-	  }
+  case pwr_cClass_Disabled: {
+    /**********************************************************
+     *  Disabled
+     ***********************************************************/	
 
-	  /* Get the referenced attribute stored in Attribute */
-	  sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
-			"DevBody", "Attribute",
-			(char **)&parameter, &size); 
-	  if ( EVEN(sts)) return sts;
+    ldh_sAttrRefInfo info;
+    pwr_sAttrRef disaref;
 
-	  sts = gcg_parname_to_pgmname(ldhses, class, parameter, parstring);
-	  if ( EVEN(sts)) return sts;
+    /* Get the objdid stored in the parameter */
+    sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
+			    "DevBody", "Object",
+			    (char **)&attrref, &size); 
+    if ( EVEN(sts)) return sts;
+	  
+    sts = gcg_replace_ref( gcgctx, attrref, output_node);
+    if ( EVEN(sts)) return sts;
 
-	  *parattrref = cdh_ObjidToAref( host_objid);
-	  *parprefix = GCG_PREFIX_REF;
-	  *partype = GCG_OTYPE_OID;
-	  free((char *) parameter);
-	  return GSX__SPECFOUND;
-	}
+    /* Check that this is objdid of an existing object */
+    sts = ldh_GetAttrRefOrigTid( ldhses, attrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
 
-	return GSX__SUCCESS;
+    /* Check if DisableAttr is present */
+    sts = ldh_GetAttrRefInfo( ldhses, attrref, &info);
+    if ( EVEN(sts)) return sts;
+
+    if ( !(info.flags & PWR_MASK_DISABLEATTR)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+
+    /* Get DisableAttr attribute */
+    disaref = cdh_ArefToDisableAref( attrref);
+
+    /* Get the attribute name of last segment */
+    sts = ldh_AttrRefToName( ldhses, &disaref, ldh_eName_ArefVol, 
+			     &name_p, &size);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      free((char *) attrref);
+      return GSX__NEXTPAR;
+    }
+    free((char *) attrref);
+    
+    strcpy( aname, name_p);
+    if ( (s = strrchr( aname, '.')) == 0) { 
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+
+    *s = 0;
+    sts = ldh_NameToAttrRef( ldhses, aname, parattrref);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = ldh_GetAttrRefOrigTid( ldhses, parattrref, &class);
+    if ( EVEN(sts)) {
+      gcg_error_msg( gcgctx, GSX__REFOBJ, output_node);  
+      return GSX__NEXTPAR;
+    }
+    sts = gcg_parname_to_pgmname(ldhses, class, s+1, parstring);
+    if ( EVEN(sts)) return sts;
+
+    *parprefix = GCG_PREFIX_REF;
+    *partype = GCG_OTYPE_AREF;
+    return GSX__SPECFOUND;
+  }
+  }
+
+  return GSX__SUCCESS;
 }
 
 
@@ -4263,14 +4354,22 @@ static int gcg_node_comp(
 
 	wind = node->hn.wind;
 
-	/* Get comp method for this node */
-	sts = ldh_GetClassBody(wind->hw.ldhses, node->ln.cid, 
-		"GraphPlcNode", &bodyclass, (char **)&graphbody, &size);
-	if ( EVEN(sts)) return sts;
+	if ( !node->hn.comp_manager) {
+	  if ( gcgctx->current_cmanager)
+	    gcg_reset_cmanager( gcgctx);
 
-	compmethod = graphbody->compmethod;
-	sts = (gcg_comp_m[ compmethod ]) (gcgctx, node); 
-
+	  /* Get comp method for this node */
+	  sts = ldh_GetClassBody(wind->hw.ldhses, node->ln.cid, 
+				 "GraphPlcNode", &bodyclass, 
+				 (char **)&graphbody, &size);
+	  if ( EVEN(sts)) return sts;
+	  
+	  compmethod = graphbody->compmethod;
+	  sts = (gcg_comp_m[ compmethod ]) (gcgctx, node); 
+	}
+	else {
+	  sts = gcg_cmanager_comp( gcgctx, node);
+	}
 	return sts;
 }	
 
@@ -5945,6 +6044,9 @@ unsigned long	spawn;
 	}	  
 	if ( node_count > 0)
 	  XtFree((char *) nodelist);
+
+	if ( gcgctx->current_cmanager)
+	  gcg_reset_cmanager( gcgctx);
 
 	sts = gcg_ref_print( gcgctx);
 	if ( EVEN(sts)) goto classerror; 
@@ -14718,6 +14820,153 @@ vldh_t_node	node;
 
 /*************************************************************************
 *
+* Name:		gcg_comp_m60()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for CArea.
+*
+**************************************************************************/
+
+int	gcg_comp_m61( gcg_ctx		gcgctx,
+		      vldh_t_node	node)
+{
+	int 			sts;
+	gcg_t_nocondef		nocondef;
+	unsigned long		nocontype = GCG_BOOLEAN;
+	ldh_tSesContext 	ldhses;
+
+	if ( !gcgctx->cmanager_active)
+	  return GSX__SUCCESS;
+
+	if ( gcgctx->current_cmanager == node)
+	  return GSX__SUCCESS;
+	if ( gcgctx->current_cmanager) {
+	  /* Other cmanager */
+	  gcg_reset_cmanager( gcgctx);
+	}
+	gcgctx->current_cmanager = node;
+
+	nocondef.bo = FALSE;
+	ldhses = (node->hn.wind)->hw.ldhses; 
+
+	/* Print the execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		"if ( ");
+
+	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, 
+		&nocondef, &nocontype);
+	if ( EVEN(sts)) return sts;
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		" ) {\n");
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m62()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for Disabled.
+*	Checks that the referenced attribute exists and that is has
+*       a DisableAttr attribute.
+*	Prints declaration and direct link of pointer to DisableAttr of the
+*	referenced object.
+*
+**************************************************************************/
+
+int	gcg_comp_m62( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+	int 			sts;
+	int			size;
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_sAttrRefInfo	info;
+        pwr_tAName	       	aname;
+	char			*name_p;
+	ldh_tSesContext 	ldhses;
+	char			*s;
+	pwr_sAttrRef		disaref;
+
+	ldhses = (node->hn.wind)->hw.ldhses;  
+	
+	/* Get the attrref of the referenced attribute */
+	sts = ldh_GetObjectPar( ldhses, node->ln.oid, 
+			"DevBody", "Object",
+			(char **)&refattrref_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	sts = ldh_GetAttrRefInfo( ldhses, &refattrref, &info);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	if ( !(info.flags & PWR_MASK_DISABLEATTR)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Get attrref of DisableAttr attribute */
+	disaref = cdh_ArefToDisableAref( &refattrref);
+
+	sts = ldh_GetAttrRefInfo( ldhses, &disaref, &info);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Get rid of last attribute segment of the referenced object */
+	sts = ldh_AttrRefToName( ldhses, &disaref, ldh_eName_Aref, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	strcpy( aname, name_p);
+	if ( (s = strrchr( aname, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	*s = 0;
+	sts = ldh_NameToAttrRef( ldhses, aname, &refattrref);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	if ( info.type != pwr_eType_DisableAttr ) {
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);
+	  return GSX__NEXTNODE;
+	}
+
+	/* Insert object in ref list */
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
 * Name:		gcg_wind_check_modification()
 *
 * Type		int
@@ -15017,6 +15266,144 @@ static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
 }
 
 
+/*************************************************************************
+*
+*  Set compilation manager for all nodes in a window.
+*
+**************************************************************************/
+static int gcg_set_cmanager( vldh_t_wind wind)
+{
+  int			sts;
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  vldh_t_node		mgr;
+  int			j;
+
+  /* Get all nodes this window */
+  vldh_get_nodes( wind, &node_count, &nodelist);
+
+  /* Reset compilation manager */
+  for ( j = 0; j < node_count; j++) {
+    nodelist[j]->hn.comp_manager = 0;
+  }	  
+
+  /* Find managers in this window */
+  for ( j = 0; j < node_count; j++) {
+    mgr = nodelist[j];
+    switch ( mgr->ln.cid) {
+    case pwr_cClass_CArea: {
+      sts = gcg_cmanager_find_nodes( wind, mgr, nodelist, node_count);
+      if ( EVEN(sts)) {
+	if ( node_count > 0)
+	  XtFree((char *) nodelist);
+	return sts;
+      }
+      break;
+    }
+    default: ;
+    }
+  }	  
+  if ( node_count > 0)
+    XtFree((char *) nodelist);
+
+  return GSX__SUCCESS;
+}
+
+static int gcg_cmanager_find_nodes( vldh_t_wind wind, vldh_t_node mgr, 
+				vldh_t_node *nodelist, int node_count)
+{
+  int			sts;
+  vldh_t_node		n;
+  int			i;
+
+  /* Find managers in this manager */
+  for ( i = 0; i < node_count; i++) {
+    n = nodelist[i];
+    if ( n == mgr)
+      continue;
+    switch ( n->ln.cid) {
+    case pwr_cClass_CArea: {
+      if ( mgr->ln.x <= n->ln.x + n->ln.width/2 &&
+	   mgr->ln.x + mgr->ln.width >= n->ln.x + n->ln.width/2 &&
+	   mgr->ln.y <= n->ln.y + n->ln.height/2 &&
+	   mgr->ln.y + mgr->ln.height >= n->ln.y + n->ln.height/2) {
+	sts = gcg_cmanager_find_nodes( wind, n, nodelist, node_count);
+	if ( EVEN(sts)) return sts;
+	if ( n->hn.comp_manager == 0)
+	  n->hn.comp_manager = mgr;
+      }
+      break;
+    }
+    default: ;
+    }
+  }
+
+  /* Find nodes for this manager */
+  for ( i = 0; i < node_count; i++) {
+    n = nodelist[i];
+    if ( n == mgr)
+      continue;
+    if ( n->hn.comp_manager == 0) {
+      if ( mgr->ln.x <= n->ln.x + n->ln.width/2 &&
+	   mgr->ln.x + mgr->ln.width >= n->ln.x + n->ln.width/2 &&
+	   mgr->ln.y <= n->ln.y + n->ln.height/2 &&
+	   mgr->ln.y + mgr->ln.height >= n->ln.y + n->ln.height/2) {
+	n->hn.comp_manager = mgr;
+      }
+    }
+  }	  
+  return GSX__SUCCESS;
+}
+
+static int gcg_cmanager_comp( 
+    gcg_ctx	gcgctx,
+    vldh_t_node	node
+)
+{
+  pwr_tClassId		bodyclass;
+  pwr_sGraphPlcNode 	*graphbody;
+  int 			sts, size;
+  int			compmethod;
+  int			mcompmethod;
+  vldh_t_wind		wind;
+  
+  wind = node->hn.wind;
+
+  sts = ldh_GetClassBody(wind->hw.ldhses, node->hn.comp_manager->ln.cid, 
+			 "GraphPlcNode", &bodyclass, 
+			 (char **)&graphbody, &size);
+  if ( EVEN(sts)) return sts;
+  
+  mcompmethod = graphbody->compmethod;
+
+  /* Get comp method for this node */
+  sts = ldh_GetClassBody(wind->hw.ldhses, node->ln.cid, 
+			 "GraphPlcNode", &bodyclass, 
+			 (char **)&graphbody, &size);
+  if ( EVEN(sts)) return sts;
+  
+  compmethod = graphbody->compmethod;
+
+  if ( compmethod != 2 && compmethod != 8 && compmethod != 10) {
+    gcgctx->cmanager_active = 1;
+    sts = (gcg_comp_m[ mcompmethod ]) (gcgctx, node->hn.comp_manager); 
+    if ( EVEN(sts)) return sts;
+    gcgctx->cmanager_active = 0;
+  }
+
+  sts = (gcg_comp_m[ compmethod ]) (gcgctx, node); 
+  return sts;
+}	
+
+static int gcg_reset_cmanager( 
+    gcg_ctx	gcgctx
+)
+{
+  gcgctx->current_cmanager = 0;
+  IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		 "}\n");
+  return GSX__SUCCESS;
+}	
 
 
 

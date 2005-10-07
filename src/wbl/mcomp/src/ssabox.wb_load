@@ -10,8 +10,8 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !  @Summary SafetySwitch SSAB.
     !  SafetySwitch SSAB.
     !
-    !  See superclass SafetySwitch for more information.
-    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    !  See superclass BaseSafetySwitch for more information.
+    !  @classlink BaseSafetySwitch basecomponent_basesafetyswitch.html
     !  @link Datasheet ../dsh/ssab_safetyswitch.pdf
     !*/
     Object Ssab_SafetySwitch $ClassDef 1
@@ -29,13 +29,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
         EndObject
       EndObject
       Object Template Ssab_SafetySwitch 2147975168
         Body RtBody
-          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
+          Attr Super.Super.Specification = "SSAB SafetySwitch"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
         EndBody
       EndObject
     EndObject

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.46 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.47 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1228,6 +1228,31 @@ ldh_NameToAttrRef(ldh_tSession session, char *name, pwr_sAttrRef *arp)
   return a.sts();
 }
 
+pwr_tStatus
+ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, char *aname, pwr_sAttrRef *oarp)
+{
+  wb_session *sp = (wb_session *)session;
+  pwr_tAName name;
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+  try {
+    strcpy( name, a.longName().name(cdh_mName_volumeStrict));
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
+  strcat( name, ".");
+  strcat( name, aname);
+
+  wb_attribute oa = sp->attribute(name);
+  if (!oa) return oa.sts();
+  
+  oa.aref(oarp);
+
+  return oa.sts();
+}
+
 
 /*  Get the object identifier of a named object.  */
 
@@ -2050,6 +2075,15 @@ ldh_CastAttribute(ldh_tSession session, pwr_sAttrRef *arp, pwr_tCid cid)
 }
 
 pwr_tStatus
+ldh_DisableAttribute(ldh_tSession session, pwr_sAttrRef *arp, pwr_tDisableAttr disable)
+{
+  wb_session *sp = (wb_session *)session;
+    
+  sp->disableAttribute( arp, disable);
+  return sp->sts();
+}
+
+pwr_tStatus
 ldh_GetSubClass(ldh_tSession session, pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid)
 {
   wb_session *sp = (wb_session *)session;
@@ -2069,6 +2103,20 @@ ldh_GetModTime(ldh_tSession session, pwr_tOid oid, pwr_tTime *time)
 
   return o.sts();
 }
+
+pwr_tStatus
+ldh_AttributeDisabled(ldh_tSession session, pwr_sAttrRef *arp, pwr_tDisableAttr *disabled)
+{
+  wb_session *sp = (wb_session*)session;
+
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+    
+  *disabled = a.disabled();
+
+  return LDH__SUCCESS;
+}
+
 #endif
 
 

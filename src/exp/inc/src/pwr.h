@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.17 2005-09-20 13:21:45 claes Exp $
+ * Proview   $Id: pwr.h,v 1.18 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -388,6 +388,10 @@ typedef char		pwr_tURL	[160];			//!< URL type.
   @aref castid CastId
 */
 typedef pwr_tTypeId    	pwr_tCastId;				//!< CastId type.
+/*_*
+  @aref disableattr DisableAttr
+*/
+typedef unsigned int    pwr_tDisableAttr;	       		//!< DisableAttr type.
 
 /*_*
   @aref emergbreakselectenum EmergBreakSelectEnum
@@ -421,13 +425,15 @@ typedef union {
     pwr_tBit  Array	: 1;
     pwr_tBit  Shadowed	: 1;
     pwr_tBit  CastAttr	: 1;
+    pwr_tBit  DisableAttr : 1;
 
-    pwr_tBit  fill	: 26;
+    pwr_tBit  fill	: 25;
 
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
 
-    pwr_tBit  fill	: 26;
+    pwr_tBit  fill	: 25;
 
+    pwr_tBit  DisableAttr : 1;
     pwr_tBit  CastAttr	: 1;
     pwr_tBit  Shadowed	: 1;
     pwr_tBit  Array	: 1;
@@ -444,6 +450,7 @@ typedef union {
 #define pwr_mAttrRef_Array	pwr_Bit(3)
 #define pwr_mAttrRef_Shadowed	pwr_Bit(4)
 #define pwr_mAttrRef_CastAttr	pwr_Bit(5)
+#define pwr_mAttrRef_DisableAttr pwr_Bit(6)
 
 } pwr_mAttrRef;
 
@@ -478,6 +485,7 @@ static const pwr_tObjectIx  pwr_cNObjectIx  = 0;	//!< Zero object index constant
 static const pwr_tClassId   pwr_cNClassId   = 0;	//!< Zero class identity constant.
 static const pwr_tTypeId    pwr_cNTypeId    = 0;	//!< Zero type identity constant.
 static const pwr_tCastId    pwr_cNCastId    = 0;	//!< Zero cast identity constant.
+static const pwr_tDisableAttr pwr_cNDisableAttr = 0;	//!< Zero disable attribute constant.
 static const pwr_tVolumeId  pwr_cNVolumeId  = 0;	//!< Zero volume identity constant.
 static const pwr_tNodeId    pwr_cNNodeId    = 0;	//!< Zero node identity constant.
 static const pwr_tCid       pwr_cNCid       = 0;	//!< Zero class identity constant.

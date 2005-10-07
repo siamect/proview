@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.h,v 1.4 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gcg.h,v 1.5 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,6 +145,8 @@ typedef struct {
 	unsigned long	print;	     /* if true code generation, else syntax
 					control only */
 	ldh_tSesContext ldhses;
+  	vldh_t_node	current_cmanager;
+  	int		cmanager_active;
 	} gcg_t_ctx, *gcg_ctx;
 
 

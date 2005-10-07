@@ -10,8 +10,8 @@ Volume ABB $ClassVolume 0.0.250.2
     !  @Summary CircuitBreaker ABB MS116.
     !  CircuitBreaker ABB MS116.
     !
-    !  See superclass CircuitBreaker for more information.
-    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !  See superclass BaseCircuitBreaker for more information.
+    !  @classlink BaseCircuitBreaker basecomponent_basecircuitbreaker.html
     !  @link Datasheet ../dsh/abb_circuitbreaker_ms116.pdf
     !*/
     Object ABB_CircuitBreaker_MS116 $ClassDef 1
@@ -32,15 +32,15 @@ Volume ABB $ClassVolume 0.0.250.2
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-CircuitBreaker"
+            Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
         EndObject
       EndObject
       Object Template ABB_CircuitBreaker_MS116 2147975168
         Body RtBody
-          Attr Super.Specification = "ABB Circuit breaker MS 116"
+          Attr Super.Super.Specification = "ABB Circuit breaker MS 116"
           Attr Super.AlarmText = "Overload, circuit breaker tripped, "
-          Attr Super.DataSheet = "$pwr_lang/dsh/abb_circuitbreaker_ms116.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_circuitbreaker_ms116.pdf"
         EndBody
       EndObject
     EndObject
@@ -50,8 +50,8 @@ Volume ABB $ClassVolume 0.0.250.2
     !  @Summary Contactor ABB A.
     !  Contactor ABB A.
     !
-    !  See superclass Contactor for more information.
-    !  @classlink Contactor basecomponent_contactor.html
+    !  See superclass BaseContactor for more information.
+    !  @classlink BaseContactor basecomponent_basecontactor.html
     !  @link Datasheet ../dsh/abb_contactors.pdf
     !*/
     Object ABB_Contactor_A $ClassDef 12
@@ -72,18 +72,18 @@ Volume ABB $ClassVolume 0.0.250.2
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-Contactor"
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
         EndObject
       EndObject
       Object Template ABB_Contactor_A 2150858752
         Body RtBody
-          Attr Super.Specification = "ABB contactor type A"
+          Attr Super.Super.Specification = "ABB contactor type A"
           Attr Super.Feedback.Description = "Contactor is energized"
           Attr Super.Order.Description = "Energize contactor"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Contactor feedback lost "
-          Attr Super.DataSheet = "$pwr_lang/dsh/abb_contactors.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_contactors.pdf"
         EndBody
       EndObject
     EndObject

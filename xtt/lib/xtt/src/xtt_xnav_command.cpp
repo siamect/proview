@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.20 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.21 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -603,6 +603,22 @@ static int	xnav_set_func(	void		*client_data,
   else if ( strncmp( arg1_str, "NOADVANCEDUSER", strlen( arg1_str)) == 0)
   {
     xnav->gbl.advanced_user = 0;
+  }
+  else if ( strncmp( arg1_str, "SHOWTRUEDB", strlen( arg1_str)) == 0)
+  {
+    xnav->gbl.show_truedb = 1;
+  }
+  else if ( strncmp( arg1_str, "NOSHOWTRUEDB", strlen( arg1_str)) == 0)
+  {
+    xnav->gbl.show_truedb = 0;
+  }
+  else if ( strncmp( arg1_str, "SHOWALLATTR", strlen( arg1_str)) == 0)
+  {
+    xnav->gbl.show_allattr = 1;
+  }
+  else if ( strncmp( arg1_str, "NOSHOWALLATTR", strlen( arg1_str)) == 0)
+  {
+    xnav->gbl.show_allattr = 0;
   }
   else if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
   {
@@ -2274,6 +2290,8 @@ static int	xnav_open_func(	void		*client_data,
       char fname[80];
       int  use_default_access;
       unsigned int access;
+      pwr_tAName aname;
+      pwr_tEnum graph_conf;
 
       // Command is "OPEN GRAPH" without graph object
       scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
@@ -2365,6 +2383,20 @@ static int	xnav_open_func(	void		*client_data,
 	      strcat( fname, file_str);
 	      strcpy( file_str, fname);
 	    }
+
+	    // Add any GraphConfiguration to filename
+	    strcpy( aname, instance_p);
+	    strcat( aname, ".GraphConfiguration");
+	    sts = gdh_GetObjectInfo( aname, &graph_conf, sizeof(graph_conf));
+	    if ( ODD(sts)) {
+	      if ( graph_conf != 0) {
+		char gc[12];
+		sprintf( gc, "%d", graph_conf);
+		strcat( fname, gc);
+	      }
+	      strcpy( file_str, fname);
+	    }
+
 	    strcat( fname, ".pwg");
 	    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
 	    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
@@ -3367,7 +3399,7 @@ static int	xnav_create_func( void		*client_data,
   }
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
   {
-    // Command is "CREATE OBJECT2
+    // Command is "CREATE OBJECT"
 
     char	name_str[80];
     char	class_str[80];

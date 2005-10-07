@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.18 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.19 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -944,6 +944,30 @@ bool wb_session::castAttribute( pwr_sAttrRef *arp, pwr_tCid cid)
     return false;
   }  
 
+  return true;
+}
+
+bool wb_session::disableAttribute( pwr_sAttrRef *arp, pwr_tDisableAttr disable)
+{
+  wb_attribute a = attribute(arp);
+  if (!a) return a.sts();
+    
+  if ( !(a.flags() & PWR_MASK_DISABLEATTR)) {
+    m_sts = 0;
+    return false;
+  }
+
+  pwr_sAttrRef dis_aref = cdh_ArefToDisableAref( arp);
+  wb_attribute dis_a = attribute(&dis_aref);
+  if (!dis_a) return dis_a.sts();
+
+  try {
+    writeAttribute( dis_a, &disable);
+  }
+  catch (wb_error& e) {
+    m_sts = e.sts();
+    return false;
+  }  
   return true;
 }
 

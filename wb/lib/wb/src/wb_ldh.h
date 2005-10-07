@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.28 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.29 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -368,7 +368,7 @@ struct ldh_s_AttrRefInfo {
 };
 
 struct ldh_s_ParDef {
-  pwr_tObjName		ParName;
+  pwr_tOName		ParName;
   unsigned long		ParLevel;
   pwr_eClass		ParClass;
   unsigned int	       	Flags;
@@ -895,6 +895,14 @@ ldh_NameToAttrRef (
 );
 
 pwr_tStatus
+ldh_ArefANameToAref(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  char *aname,
+  pwr_sAttrRef *oarp
+);
+
+pwr_tStatus
 ldh_NameToObjid (
   ldh_tSession	session,
   pwr_tObjid	*objid,
@@ -1172,6 +1180,13 @@ ldh_CastAttribute(
 );
 
 pwr_tStatus
+ldh_DisableAttribute(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  pwr_tDisableAttr disable
+);
+
+pwr_tStatus
 ldh_GetSubClass(
   ldh_tSession session,
   pwr_tCid supercid,
@@ -1184,6 +1199,13 @@ ldh_GetModTime(
   ldh_tSession session, 
   pwr_tOid oid, 
   pwr_tTime *time
+);
+
+pwr_tStatus
+ldh_AttributeDisabled(
+  ldh_tSession session,
+  pwr_sAttrRef *arp,
+  pwr_tDisableAttr *disabled
 );
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.c,v 1.14 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gre.c,v 1.15 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1143,6 +1143,7 @@ int	gre_undelete(
 	/* Restore nodes in delete_list */
 	for ( i = 0; i < grectx->del_node_count; i++ )
 	{
+	  node_class = 0;
 	  sts = gre_get_nodeclass( grectx, 
 		(grectx->del_node_list[i])->ln.cid, 
 		((grectx->del_node_list[i])->hn.wind)->hw.ldhses, 
@@ -1737,6 +1738,7 @@ int	gre_window_draw(
 	/* Create the nodes */
 	for ( i = 0; i < node_count; i++)
 	{
+	  node_class = 0;
 	  sts = gre_get_nodeclass( grectx, 
 		(*node_ptr)->ln.cid,
 		((*node_ptr)->hn.wind)->hw.ldhses, 
@@ -3064,7 +3066,7 @@ int	gre_create_node(
 	vldh_t_node	*node
 )
 {
-	flow_tNodeClass	node_class;
+	flow_tNodeClass	node_class = 0;
 	vldh_t_node 	node_object;
 	double		ll_x, ll_y, ur_x, ur_y;
 	unsigned long	subwindowmark = 0;
@@ -3358,7 +3360,8 @@ void gre_paste (
 	node_ptr = node_list;
 	for ( i = 0; i < node_count; i++)
 	{
-	  sts = gre_get_nodeclass( grectx, 
+	  node_class = 0;
+	  sts = gre_get_nodeclass( grectx, 				   
 		(*node_ptr)->ln.cid,
 		((*node_ptr)->hn.wind)->hw.ldhses, 
 		(*node_ptr)->ln.object_type,
@@ -3470,7 +3473,7 @@ int gre_subwindow_mark (
 	vldh_t_node object
 )
 {
-	flow_tNodeClass	node_class;
+	flow_tNodeClass	node_class = 0;
 	flow_tNode	node_id;
 	vldh_t_con 	*con_list;
 	vldh_t_con 	*con_ptr;
@@ -3644,7 +3647,7 @@ int gre_node_update (
 	vldh_t_node object
 )
 {
-	flow_tNodeClass	node_class;
+	flow_tNodeClass	node_class = 0;
 	flow_tNode	node_id;
 	vldh_t_con 	*con_list;
 	vldh_t_con 	*con_ptr;
@@ -3765,8 +3768,8 @@ int gre_node_update (
 	  if (EVEN(sts)) return sts;
 
  	  flow_MeasureNode( node_id, &ll_x,&ll_y,&ur_x,&ur_y);
-	  object->ln.width = ur_x - ll_y;
-	  object->ln.height = ur_y - ll_x;
+	  object->ln.width = ur_x - ll_x;
+	  object->ln.height = ur_y - ll_y;
 
 
 	  if ( !graphmask_changed )

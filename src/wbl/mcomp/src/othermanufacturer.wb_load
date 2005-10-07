@@ -1,27 +1,27 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
-  Body SysBody
+  Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X1"
     Attr NextCix = "_X20"
   EndBody
-  Object Class $ClassHier 1
+  Object Class $ClassHier 1 06-OCT-2005 09:28:20.00
     !/**
     !  @Version 1.0
     !  @Group Valves
     !  @Summary Ventim Butterfly Valve VM3001.
     !  Ventim Butterfly Valve VM3001.
     ! 
-    !  See superclass ManValve2Sw for more information.
-    !  @classlink ManValve2Sw basecomponent_manvalve2sw.html
+    !  See superclass BaseManValve for more information.
+    !  @classlink BaseManValve basecomponent_basemanvalve.html
     !  @link Datasheet ../dsh/ventim_valve_vm3001.pdf
     !*/
-    Object Ventim_Valve_VM3001 $ClassDef 1
-      Body SysBody
+    Object Ventim_Valve_VM3001 $ClassDef 1 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Ventim_Valve_VM3001"
           Attr NextAix = "_X2"
         EndBody
@@ -29,21 +29,21 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         !  @Summary Base class.
         !  Base class.
         !*/
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-ManValve2Sw"
+            Attr TypeRef = "BaseComponent:Class-BaseManValve"
           EndBody
         EndObject
       EndObject
-      Object Template Ventim_Valve_VM3001 2147975168
-        Body RtBody
-          Attr Super.Specification = "Ventim vridspjällventil VM3001"
+      Object Template Ventim_Valve_VM3001 2147975168 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Ventim Butterfly valve VM3001"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/ventim_valve_vm3001.pdf"
           Attr Super.SwitchOpen.Description = "Valve is open"
           Attr Super.SwitchClosed.Description = "Valve is closed"
           Attr Super.AlarmText = "Valve error"
-          Attr Super.DataSheet = "$pwr_lang/dsh/ventim_valve_vm3001.pdf"
         EndBody
       EndObject
     EndObject
@@ -53,33 +53,38 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Summary Durholdt Valve 100 103.
     !  Durholdt Valve 100 103.
     ! 
-    !  See superclass MValveOrNoSw for more information.
-    !  @classlink MValveOrNoSw basecomponent_mvalveornosw.html
+    !  See superclass BaseMValve for more information.
+    !  @classlink BaseMValve basecomponent_basemvalve.html
     !  @link Datasheet ../dsh/kla_armatur.pdf
     !*/
-    Object Durholdt_valve_100_103 $ClassDef 18
-      Body SysBody
+    Object Durholdt_valve_100_103 $ClassDef 18 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Durholdt_valve_100_103"
           Attr NextAix = "_X3"
         EndBody
-        Object Super $Attribute 2
-          Body SysBody
+        Object Super $Attribute 2 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-MValveOrNoSw"
+            Attr TypeRef = "BaseComponent:Class-BaseMValve"
           EndBody
         EndObject
       EndObject
-      Object Template Durholdt_valve_100_103 2152431616
-        Body RtBody
-          Attr Super.Specification = "Durholdt valve 100.103"
-          Attr Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
+      Object Template Durholdt_valve_100_103 2152431616 06-OCT-2005 09:28:20.00
+        Body RtBody 06-OCT-2005 09:43:11.22
+          Attr Super.Super.Specification = "Durholdt valve 100.103"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
+          Attr Super.GraphConfiguration = 3
+          Attr Super.DisableSwitchOpen = 1
+          Attr Super.DisableSwitchClosed = 1
+          Attr Super.DisableSwitchAlarmDelay = 1
+          Attr Super.DisableSwitchAlarmText = 1
         EndBody
       EndObject
     EndObject
@@ -89,36 +94,38 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Summary Bernard Actuator OA.
     !  Bernard Actuator OA.
     ! 
-    !  See superclass ActuatorAPoOr2Sw for more information.
-    !  @classlink ActuatorAPoOr2Sw basecomponent_actuatorapoor2sw.html
+    !  See superclass BaseActuatorA for more information.
+    !  @classlink BaseActuatorA basecomponent_baseactuatora.html
     !  @link Datasheet ../dsh/bernard_actuator_oa.html
     !*/
-    Object Bernard_Actuator_OA $ClassDef 12
-      Body SysBody
+    Object Bernard_Actuator_OA $ClassDef 12 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Bernard_Actuator_OA"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-ActuatorAPoOr2Sw"
+            Attr TypeRef = "BaseComponent:Class-BaseActuatorA"
           EndBody
         EndObject
       EndObject
-      Object Template Bernard_Actuator_OA 2150858752
-        Body RtBody
-          Attr Super.Specification = "Bernard ställdon typ OA"
-          Attr Super.Position.Unit = "%"
-          Attr Super.Position.PresMaxLimit = 1.000000e+02
+      Object Template Bernard_Actuator_OA 2150858752 06-OCT-2005 09:28:20.00
+        Body RtBody 06-OCT-2005 09:45:37.69
+          Attr Super.Super.Specification = "Bernard ställdon typ OA"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/bernard_actuator_oa.html"
+          Attr Super.GraphConfiguration = 4
           Attr Super.Order.Unit = "%"
           Attr Super.Order.PresMaxLimit = 1.000000e+02
+          Attr Super.Position.Unit = "%"
+          Attr Super.Position.PresMaxLimit = 1.000000e+02
           Attr Super.Mode.OpNoLocal = 1
           Attr Super.Mode.AlarmLocalMode = "Local mode is activated, "
           Attr Super.MaxPosDiff = 5.000000e+00
@@ -127,7 +134,6 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.SwitchAlarmText = "Switch error, "
           Attr Super.PosSwitchOpen = 9.500000e+01
           Attr Super.PosSwitchClosed = 5.000000e+00
-          Attr Super.DataSheet = "$pwr_lang/dsh/bernard_actuator_oa.html"
         EndBody
       EndObject
     EndObject
@@ -136,35 +142,35 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group SafetySwitch
     !  @Summary SafetySwitch Cewe KSA LBAS.
     !  SafetySwitch Cewe KSA LBAS.
-    !
-    !  See superclass SafetySwitch for more information.
-    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    ! 
+    !  See superclass BaseSafetySwitch for more information.
+    !  @classlink BaseSafetySwitch basecomponent_basesafetyswitch.html
     !  @link Datasheet ../dsh/cewe_safetyswitch_ksa_lbas.pdf
     !*/
-    Object Cewe_SafetySwitch_KSA_LBAS $ClassDef 2
-      Body SysBody
+    Object Cewe_SafetySwitch_KSA_LBAS $ClassDef 2 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Cewe_SafetySwitch_KSA_LBAS"
           Attr NextAix = "_X3"
         EndBody
-        Object Super $Attribute 2
-          Body SysBody
+        Object Super $Attribute 2 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
         EndObject
       EndObject
-      Object Template Cewe_SafetySwitch_KSA_LBAS 2148237312
-        Body RtBody
-          Attr Super.Specification = "Safety switch "
+      Object Template Cewe_SafetySwitch_KSA_LBAS 2148237312 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Safety switch "
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_ksa_lbas.pdf"
           Attr Super.AlarmText = "Safety switch is off, "
-          Attr Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_ksa_lbas.pdf"
         EndBody
       EndObject
     EndObject
@@ -173,35 +179,35 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group SafetySwitch
     !  @Summary SafetySwitch Cewe BAS.
     !  SafetySwitch Cewe BAS.
-    !
-    !  See superclass SafetySwitch for more information.
-    !  @classlink SafetySwitch basecomponent_safetyswitch.html
+    ! 
+    !  See superclass BaseSafetySwitch for more information.
+    !  @classlink BaseSafetySwitch basecomponent_basesafetyswitch.html
     !  @link Datasheet ../dsh/cewe_safetyswitch_bas.pdf
     !*/
-    Object Cewe_SafetySwitch_BAS $ClassDef 16
-      Body SysBody
+    Object Cewe_SafetySwitch_BAS $ClassDef 16 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Cewe_SafetySwitch_BAS"
           Attr NextAix = "_X4"
         EndBody
-        Object Super $Attribute 3
-          Body SysBody
+        Object Super $Attribute 3 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
         EndObject
       EndObject
-      Object Template Cewe_SafetySwitch_BAS 2151907328
-        Body RtBody
-          Attr Super.Specification = "Safety switch "
+      Object Template Cewe_SafetySwitch_BAS 2151907328 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Safety switch "
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_bas.pdf"
           Attr Super.AlarmText = "Safety switch is not on "
-          Attr Super.DataSheet = "$pwr_lang/dsh/cewe_safetyswitch_bas.pdf"
         EndBody
       EndObject
     EndObject
@@ -210,33 +216,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group TempSensor
     !  @Summary TempSensor Impac IN300.
     !  Temperatur sensor Impac IN300.
-    !
-    !  See superclass TempSensor for more information.
-    !  @classlink TempSensor basecomponent_tempsensor.html
+    ! 
+    !  See superclass BaseTempSensor for more information.
+    !  @classlink BaseTempSensor basecomponent_basetempsensor.html
     !  @link Datasheet ../dsh/impac_tempsensor_in300.pdf
     !*/
-    Object Impac_TempSensor_IN300 $ClassDef 11
-      Body SysBody
+    Object Impac_TempSensor_IN300 $ClassDef 11 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Impac_TempSensor_IN300"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-TempSensor"
+            Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
         EndObject
       EndObject
-      Object Template Impac_TempSensor_IN300 2150596608
-        Body RtBody
-          Attr Super.Super.Specification = "Impac compact pyrometer IN300"
+      Object Template Impac_TempSensor_IN300 2150596608 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Super.Specification = "Impac compact pyrometer IN300"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -254,7 +261,6 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/impac_tempsensor_in300.pdf"
         EndBody
       EndObject
     EndObject
@@ -263,35 +269,35 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group CircuitBreaker
     !  @Summary CircuitBreaker Legrand DX.
     !  CircuitBreaker Legrand DX.
-    !
-    !  See superclass CircuitBreaker for more information.
-    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    ! 
+    !  See superclass BaseCircuitBreaker for more information.
+    !  @classlink BaseCircuitBreaker basecomponent_basecircuitbreaker.html
     !  @link Datasheet ../dsh/legrand_circuitbreaker_dx.pdf
     !*/
-    Object Legrand_CircuitBreaker_DX $ClassDef 3
-      Body SysBody
+    Object Legrand_CircuitBreaker_DX $ClassDef 3 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Legrand_CircuitBreaker_DX"
           Attr NextAix = "_X4"
         EndBody
-        Object Super $Attribute 3
-          Body SysBody
+        Object Super $Attribute 3 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-CircuitBreaker"
+            Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
         EndObject
       EndObject
-      Object Template Legrand_CircuitBreaker_DX 2148499456
-        Body RtBody
-          Attr Super.Specification = "Legrand Circuit breaker DX"
+      Object Template Legrand_CircuitBreaker_DX 2148499456 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Legrand Circuit breaker DX"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/legrand_circuitbreaker_dx.pdf"
           Attr Super.AlarmText = "Overload, circuit breaker tripped, "
-          Attr Super.DataSheet = "$pwr_lang/dsh/legrand_circuitbreaker_dx.pdf"
         EndBody
       EndObject
     EndObject
@@ -300,37 +306,36 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group PressureSwitch
     !  @Summary PressureSwitch Suco 27AF.
     !  PressureSwitch Suco 27AF.
-    !
-    !  See superclass PressureSwitch for more information.
-    !  @classlink PressureSwitch basecomponent_pressureswitch.html
+    ! 
+    !  See superclass BasePressureSwitch for more information.
+    !  @classlink BasePressureSwitch basecomponent_basepressureswitch.html
     !  @link Datasheet ../dsh/kla_armatur.pdf
     !*/
-    Object Suco_PresSwitch_27AF $ClassDef 19
-      Body SysBody
+    Object Suco_PresSwitch_27AF $ClassDef 19 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Suco_PresSwitch_27AF"
           Attr NextAix = "_X5"
         EndBody
-        Object Super $Attribute 4
-          Body SysBody
+        Object Super $Attribute 4 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-PressureSwitch"
+            Attr TypeRef = "BaseComponent:Class-BasePressureSwitch"
           EndBody
         EndObject
       EndObject
-      Object Template Suco_PresSwitch_27AF 2152693760
-        Body RtBody
-          Attr Super.Super.Description = "Suco pressure switch 27 AF"
-          Attr Super.Super.Specification = "Pressure switch"
+      Object Template Suco_PresSwitch_27AF 2152693760 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Super.Specification = "Suco Pressure switch 27 AF"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
           Attr Super.Super.Switch.Description = "Switch digital input"
           Attr Super.Super.AlarmText = "Pressure switch, "
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
         EndBody
       EndObject
     EndObject
@@ -339,33 +344,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group LevelSensor
     !  @Summary LevelSensor Mobrey MSP422.
     !  LevelSensor Mobrey MSP422.
-    !
-    !  See superclass LevelSensor for more information.
-    !  @classlink LevelSensor basecomponent_levelsensor.html
+    ! 
+    !  See superclass BaseLevelSensor for more information.
+    !  @classlink BaseLevelSensor basecomponent_baselevelsensor.html
     !  @link Datasheet ../dsh/mobrey_levelsensor_msp422.pdf
     !*/
-    Object Mobrey_LevelSensor_MSP422 $ClassDef 8
-      Body SysBody
+    Object Mobrey_LevelSensor_MSP422 $ClassDef 8 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Mobrey_LevelSensor_MSP422"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-LevelSensor"
+            Attr TypeRef = "BaseComponent:Class-BaseLevelSensor"
           EndBody
         EndObject
       EndObject
-      Object Template Mobrey_LevelSensor_MSP422 2149810176
-        Body RtBody
-          Attr Super.Super.Specification = "Mobrey ultraljudsnivåtransmitter MSP422"
+      Object Template Mobrey_LevelSensor_MSP422 2149810176 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Super.Specification = "Mobrey Supersonic Leveltransmitter MSP422"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelsensor_msp422.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -383,7 +389,6 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelsensor_msp422.pdf"
         EndBody
       EndObject
     EndObject
@@ -392,35 +397,35 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group LevelSwitch
     !  @Summary LevelSwitch Mobrey EC.
     !  LevelSwitch Mobrey EC.
-    !
-    !  See superclass LevelSwitch for more information.
-    !  @classlink LevelSwitch basecomponent_levelswitch.html
+    ! 
+    !  See superclass BaseLevelSwitch for more information.
+    !  @classlink BaseLevelSwitch basecomponent_baselevelswitch.html
     !  @link Datasheet ../dsh/mobrey_levelswitch_ec.pdf
     !*/
-    Object Mobrey_LevelSwitch_EC $ClassDef 10
-      Body SysBody
+    Object Mobrey_LevelSwitch_EC $ClassDef 10 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Mobrey_LevelSwitch_EC"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-LevelSwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseLevelSwitch"
           EndBody
         EndObject
       EndObject
-      Object Template Mobrey_LevelSwitch_EC 2150334464
-        Body RtBody
-          Attr Super.Super.Specification = "Mobrey nivåvippa modell EC"
+      Object Template Mobrey_LevelSwitch_EC 2150334464 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Super.Specification = "Mobrey Levelswitch model EC"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelswitch_ec.pdf"
           Attr Super.Super.AlarmText = "Level switch, "
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/mobrey_levelswitch_ec.pdf"
         EndBody
       EndObject
     EndObject
@@ -429,33 +434,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group PressureSensor
     !  @Summary PressureSensor Klay Series 2000.
     !  PressureSensor Klay Series 2000.
-    !
-    !  See superclass PressureSensor for more information.
-    !  @classlink PressureSensor basecomponent_pressuresensor.html
+    ! 
+    !  See superclass BasePressureSensor for more information.
+    !  @classlink BasePressureSensor basecomponent_basepressuresensor.html
     !  @link Datasheet ../dsh/klay_pressuresensor_series2000.pdf
     !*/
-    Object Klay_PressureSensor_Series2000 $ClassDef 9
-      Body SysBody
+    Object Klay_PressureSensor_Series2000 $ClassDef 9 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Klay_PressureSensor_Series2000"
           Attr NextAix = "_X3"
         EndBody
-        Object Super $Attribute 2
-          Body SysBody
+        Object Super $Attribute 2 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-PressureSensor"
+            Attr TypeRef = "BaseComponent:Class-BasePressureSensor"
           EndBody
         EndObject
       EndObject
-      Object Template Klay_PressureSensor_Series2000 2150072320
-        Body RtBody
-          Attr Super.Super.Specification = "Klay instrument pressuretransmitter series 2000"
+      Object Template Klay_PressureSensor_Series2000 2150072320 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Super.Specification = "Klay Instrument Pressuretransmitter series 2000"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/klay_pressuresensor_series2000.pdf"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -473,7 +479,6 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/klay_pressuresensor_series2000.pdf"
         EndBody
       EndObject
     EndObject
@@ -482,36 +487,36 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group Contactor
     !  @Summary Contactor Omron J7KN.
     !  Contactor Omron J7KN.
-    !
-    !  See superclass Contactor for more information.
-    !  @classlink Contactor basecomponent_contactor.html
+    ! 
+    !  See superclass BaseContactor for more information.
+    !  @classlink BaseContactor basecomponent_basecontactor.html
     !  @link Datasheet ../dsh/omron_contactor_j7kn.pdf
     !*/
-    Object Omron_Contactor_J7KN $ClassDef 4
-      Body SysBody
+    Object Omron_Contactor_J7KN $ClassDef 4 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Omron_Contactor_J7KN"
           Attr NextAix = "_X5"
         EndBody
-        Object Super $Attribute 4
-          Body SysBody
+        Object Super $Attribute 4 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-Contactor"
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
         EndObject
       EndObject
-      Object Template Omron_Contactor_J7KN 2148761600
-        Body RtBody
-          Attr Super.Specification = "Omron motor contactor J7KN"
+      Object Template Omron_Contactor_J7KN 2148761600 06-OCT-2005 09:28:20.00
+        Body RtBody 06-OCT-2005 09:46:18.17
+          Attr Super.Super.Specification = "Omron motor contactor J7KN"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/omron_contactor_j7kn.pdf"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Feedback contactor lost, "
-          Attr Super.DataSheet = "$pwr_lang/dsh/omron_contactor_j7kn.pdf"
         EndBody
       EndObject
     EndObject
@@ -520,34 +525,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group Pump
     !  @Summary Pump Metso VS.
     !  Pump Metso VS.
-    !
+    ! 
     !  See superclass BasePump for more information.
     !  @classlink BasePump basecomponent_basepump.html
     !  @link Datasheet ../dsh/metso_pump_vs.pdf
     !*/
-    Object Metso_Pump_VS $ClassDef 13
-      Body SysBody
+    Object Metso_Pump_VS $ClassDef 13 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Metso_Pump_VS"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
         EndObject
       EndObject
-      Object Template Metso_Pump_VS 2151120896
-        Body RtBody
-          Attr Super.Specification = "Metso minerals vertikala sumppumpar SALA serien VS"
-          Attr Super.DataSheet = "$pwr_lang/dsh/metso_pump_vs.html"
+      Object Template Metso_Pump_VS 2151120896 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Metso minerals vertikala sumppumpar SALA serien VS"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/metso_pump_vs.html"
         EndBody
       EndObject
     EndObject
@@ -556,34 +561,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group Pump
     !  @Summary Pump Flygt N3202.
     !  Pump Flygt N3202.
-    !
+    ! 
     !  See superclass BasePump for more information.
     !  @classlink BasePump basecomponent_basepump.html
     !  @link Datasheet ../dsh/flygt_pump_n3202.pdf
     !*/
-    Object Flygt_Pump_N3202 $ClassDef 14
-      Body SysBody
+    Object Flygt_Pump_N3202 $ClassDef 14 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Flygt_Pump_N3202"
           Attr NextAix = "_X2"
         EndBody
-        Object Super $Attribute 1
-          Body SysBody
+        Object Super $Attribute 1 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BasePump"
           EndBody
         EndObject
       EndObject
-      Object Template Flygt_Pump_N3202 2151383040
-        Body RtBody
-          Attr Super.Specification = "ITT Industries Flygt dränkbar pump N 3202"
-          Attr Super.DataSheet = "$pwr_lang/dsh/flygt_pump_n3202.html"
+      Object Template Flygt_Pump_N3202 2151383040 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "ITT Industries Flygt Pump N 3202"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/flygt_pump_n3202.html"
         EndBody
       EndObject
     EndObject
@@ -592,34 +597,34 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @Group Fan
     !  @Summary Fan Jowa.
     !  Fan Jowa.
-    !
+    ! 
     !  See superclass BaseFan for more information.
     !  @classlink BaseFan basecomponent_basefan.html
     !  @link Datasheet ../dsh/jowa_fan.pdf
     !*/
-    Object Jowa_fan $ClassDef 15
-      Body SysBody
+    Object Jowa_fan $ClassDef 15 06-OCT-2005 09:28:20.00
+      Body SysBody 01-JAN-1970 01:00:00.00
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
-      Object RtBody $ObjBodyDef 1
-        Body SysBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 09:28:20.00
+        Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "Jowa_fan"
           Attr NextAix = "_X3"
         EndBody
-        Object Super $Attribute 2
-          Body SysBody
+        Object Super $Attribute 2 06-OCT-2005 09:28:20.00
+          Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
             Attr TypeRef = "BaseComponent:Class-BaseFan"
           EndBody
         EndObject
       EndObject
-      Object Template Jowa_fan 2151645184
-        Body RtBody
-          Attr Super.Specification = "Jowa Fan"
-          Attr Super.DataSheet = "$pwr_lang/dsh/jowa_fan.pdf"
+      Object Template Jowa_fan 2151645184 06-OCT-2005 09:28:20.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "Jowa Fan"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/jowa_fan.pdf"
         EndBody
       EndObject
     EndObject

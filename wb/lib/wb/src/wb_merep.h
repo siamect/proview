@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.h,v 1.20 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_merep.h,v 1.21 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,7 @@ typedef struct {
   merep_sClassAttrKey	key;
   int			numOffset;
   pwr_tUInt32		offset[merep_cCattOffsetSize];
+  pwr_tUInt32		flags[merep_cCattOffsetSize];
 } merep_sClassAttr;  
 
 class wb_merep {

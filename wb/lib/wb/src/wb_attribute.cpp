@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.33 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.34 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -429,6 +429,8 @@ pwr_sAttrRef *wb_attribute::aref(pwr_sAttrRef *arp) const
 
   if ( m_flags & PWR_MASK_CASTATTR)
     arp->Flags.b.CastAttr = 1;
+  if ( m_flags & PWR_MASK_DISABLEATTR)
+    arp->Flags.b.DisableAttr = 1;
 
   return arp;
 }
@@ -580,9 +582,28 @@ void *wb_attribute::value(void *vp, size_t size, pwr_tStatus *sts)
 
 void wb_attribute::castId( pwr_tCastId *castid) 
 {
-  m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, 
-					m_offset - sizeof(pwr_tCastId), sizeof(pwr_tCastId), 
-					castid);
+  size_t offset;
+  if (m_flags & PWR_MASK_DISABLEATTR)
+    offset = m_offset - sizeof(pwr_tDisableAttr) - sizeof(pwr_tCastId);
+  else
+    offset = m_offset - sizeof(pwr_tCastId);
+  m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, offset, 
+				 sizeof(pwr_tCastId), castid);
+}    
+    
+pwr_tDisableAttr wb_attribute::disabled() 
+{
+  pwr_tDisableAttr disabled;
+
+  if (m_flags & PWR_MASK_DISABLEATTR) {
+    m_orep->vrep()->readAttribute( &m_sts, m_orep, m_bix, 
+				   m_offset - sizeof(pwr_tDisableAttr),
+				   sizeof(pwr_tDisableAttr), &disabled);
+  }
+  else
+    disabled = 0;
+
+  return disabled;
 }    
     
 string wb_attribute::toString() const

@@ -10,8 +10,8 @@ Volume Inor $ClassVolume 0.0.250.7
     !  @Summary TempSensor Inor VRS.
     !  Temperature Sensor Inor VRS.
     !
-    !  See superclass TempSensor for more information.
-    !  @classlink TempSensor basecomponent_tempsensor.html
+    !  See superclass BaseTempSensor for more information.
+    !  @classlink BaseTempSensor basecomponent_basetempsensor.html
     !  @link Datasheet ../dsh/inor_tempsensor_vrs.pdf
     !*/
     Object Inor_TempSensor_VRS $ClassDef 1
@@ -29,13 +29,13 @@ Volume Inor $ClassVolume 0.0.250.7
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-TempSensor"
+            Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
         EndObject
       EndObject
       Object Template Inor_TempSensor_VRS 2147975168
         Body RtBody
-          Attr Super.Super.Specification = "Temp sensor"
+          Attr Super.Super.Super.Specification = "Inor Tempsensor VRS"
           Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
@@ -53,7 +53,7 @@ Volume Inor $ClassVolume 0.0.250.7
           Attr Super.Super.Trend.NoOfBuffers = 2
           Attr Super.Super.Trend.NoOfBufElement = 239
           Attr Super.Super.DefTrend = "Inor:Class-Inor_TempSensor_VRS-Template.Super.Super.Trend"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/inor_tempsensor_vrs.pdf"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/inor_tempsensor_vrs.pdf"
         EndBody
       EndObject
     EndObject

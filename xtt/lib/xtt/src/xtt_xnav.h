@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.12 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.13 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -208,7 +208,7 @@ class XNavGbl {
       priv(0), UserObject(pwr_cNObjid), AlarmAutoLoad(0), AlarmMessage(0),
       AlarmBeep(0), AlarmReturn(0), AlarmAck(0), gdh_started(1),
       verify(0), scantime(0.5), signal_test_mode(0), advanced_user(0), show_truedb(0),
-      no_graph_ratio(0)
+      show_allattr(0), no_graph_ratio(0)
       { 
 	strcpy( version, xnav_cVersion); strcpy( time, "");
 	strcpy( ConfigureObject, ""); strcpy( AlarmLastMessage, "");
@@ -247,6 +247,7 @@ class XNavGbl {
     int			signal_test_mode;
     int			advanced_user;
     int			show_truedb;
+    int			show_allattr;
     int			no_graph_ratio;
 
     int			load_config( void *xnav);

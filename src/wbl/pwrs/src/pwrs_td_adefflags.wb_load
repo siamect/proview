@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_td_adefflags.wb_load,v 1.3 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_td_adefflags.wb_load,v 1.4 2005-10-07 05:57:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -72,7 +72,7 @@ SObject pwrs:Type
      EndBody
     EndObject
     !/**
-    !  Attribute is casted.
+    !  Attribute can be casted.
     !*/
     Object CastAttr $Bit
      Body SysBody
@@ -271,6 +271,26 @@ SObject pwrs:Type
        Attr PgmName = "alwayswbl"
        Attr Text = "AlwaysWbl"
        Attr Value = 2097152
+     EndBody
+    EndObject
+    !/**
+    !  The Attribute can be disabled.
+    !*/
+    Object DisableAttr $Bit
+     Body SysBody
+       Attr PgmName = "disableattr"
+       Attr Text = "DisableAttr"
+       Attr Value = 4194304
+     EndBody
+    EndObject
+    !/**
+    !  The Attribute is hidden in runtime.
+    !*/
+    Object RtHide $Bit
+     Body SysBody
+       Attr PgmName = "rthide"
+       Attr Text = "RtHide"
+       Attr Value = 8388608
      EndBody
     EndObject
   EndObject

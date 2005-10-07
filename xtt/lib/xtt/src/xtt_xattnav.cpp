@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.11 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.12 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -769,6 +769,23 @@ int	XAttNav::object_attr()
     if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
 	 bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
       continue;
+    if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
+	 bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr)
+      continue;
+
+    if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
+      pwr_sAttrRef aaref;
+      pwr_tDisableAttr disabled;
+
+      sts = gdh_ArefANameToAref( &objar, bd[i].attrName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      sts = gdh_ArefDisabled( &aaref, &disabled);
+      if ( EVEN(sts)) return sts;
+
+      if ( disabled)
+	continue;
+    }
 
     if ( objar.Flags.b.CastAttr)
       cdh_SuppressSuper( attr_name, bd[i].attrName);

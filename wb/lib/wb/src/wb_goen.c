@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goen.c,v 1.6 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goen.c,v 1.7 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -131,7 +131,7 @@ int	(* goen_get_parameter_m[20]) () = {
 	&goen_get_parameter_m8,
 	&goen_get_parameter_m9,
 	&goen_get_parameter_m10,
-	&goen_get_parameter_m0,
+	&goen_get_parameter_m11,
 	&goen_get_parameter_m0,
 	&goen_get_parameter_m0,
 	&goen_get_parameter_m14,
@@ -151,7 +151,7 @@ int	(* goen_create_nodetype_m[20]) () = {
 	&goen_create_nodetype_m8,
 	&goen_create_nodetype_m9,
 	&goen_create_nodetype_m10,
-	&goen_create_nodetype_m0,
+	&goen_create_nodetype_m11,
 	&goen_create_nodetype_m0,
 	&goen_create_nodetype_m0,
 	&goen_create_nodetype_m14,
@@ -171,7 +171,7 @@ int	(* goen_get_point_info_m[20]) () = {
 	&goen_get_point_info_m8,
 	&goen_get_point_info_m9,
 	&goen_get_point_info_m10,
-	&goen_get_point_info_m0,
+	&goen_get_point_info_m11,
 	&goen_get_point_info_m0,
 	&goen_get_point_info_m0,
 	&goen_get_point_info_m14,
@@ -191,7 +191,7 @@ int	(* goen_get_location_point_m[20]) () = {
 	&goen_get_location_point_m8,
 	&goen_get_location_point_m9,
 	&goen_get_location_point_m10,
-	&goen_get_location_point_m0,
+	&goen_get_location_point_m11,
 	&goen_get_location_point_m0,
 	&goen_get_location_point_m0,
 	&goen_get_location_point_m14,

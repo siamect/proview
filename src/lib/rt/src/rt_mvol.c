@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.13 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.14 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -333,6 +333,7 @@ mvol_AnameToAttribute (
     ap->flags.b.Indirect = ((ap->adef->Info.Flags & PWR_MASK_POINTER) != 0) &&
       ((ap->adef->Info.Flags & PWR_MASK_PRIVATE) == 0);
     ap->flags.b.CastAttr = ((ap->adef->Info.Flags & PWR_MASK_CASTATTR) != 0);
+    ap->flags.b.DisableAttr = ((ap->adef->Info.Flags & PWR_MASK_DISABLEATTR) != 0);
     if (ap->idx != ULONG_MAX) {
       if (ap->idx > ap->adef->Info.Elements - 1)
 	pwr_Return(NULL, sts, GDH__SUBSCRIPT);
@@ -459,7 +460,7 @@ mvol_ArefToAttribute (
     /* If this is the first attribute, then match whole object
        otherwise say the attribute is ok!  */
 
-    if (param->Info.ParamIndex == 0) {
+    if (param->Info.ParamIndex == 0 /* && offset == 0 */) {
       ap->aop = NULL;
       ap->adef = NULL;
     }
@@ -890,7 +891,8 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
   if ( !ap->flags.b.array) {
     if ( ODD(*sts)) {
       /* Insert in found item */
-      item->offset[item->numOffset++] = offset + ap->offs;
+      item->offset[item->numOffset] = offset + ap->offs;
+      item->flags[item->numOffset++] = ap->flags;
     }
     else {
       /* Insert a new item */
@@ -899,7 +901,8 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
       itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
       item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
       if ( item == NULL) return;
-      item->offset[item->numOffset++] = offset + ap->offs;
+      item->offset[item->numOffset] = offset + ap->offs;
+      item->flags[item->numOffset++] = ap->flags;
     }
 
     /* Look for class attributes in this class */
@@ -915,7 +918,8 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
     for ( j = 0; j < ap->elem; j++) {
       if ( ODD(*sts) && item->numOffset < gdb_cCattOffsetSize) {
 	/* Insert in current item */
-	item->offset[item->numOffset++] = offset + ap->offs + j * ap->size / ap->elem;
+	item->offset[item->numOffset] = offset + ap->offs + j * ap->size / ap->elem;
+	item->flags[item->numOffset++] = ap->flags;
       }
       else {
 	/* Insert a new item */
@@ -926,7 +930,8 @@ static void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, gdb_sAttribute *ap
 	itemr = ptree_Insert( sts, gdbroot->catt_tt, &key);
 	item = (gdb_sClassAttr *) pool_Address( sts, gdbroot->pool, itemr);
 	if ( item == NULL) return;
-	item->offset[item->numOffset++] = offset + ap->offs;
+	item->offset[item->numOffset] = offset + ap->offs;
+	item->flags[item->numOffset++] = ap->flags;
       }
 
       /* Look for class attributes in this class */
@@ -986,7 +991,11 @@ mvol_ClassListAttrRef (
   gdb_sClassAttrKey 	key;
   gdb_sClassAttr 	*item = 0;
   pwr_tUInt32		first_offset = 0;
+  pwr_mAdef		first_flags;
   int			i;
+  pwr_sAttrRef		aref;
+
+  first_flags.m = 0;
 
   if ( iarp != NULL && cdh_ObjidIsNotNull(iarp->Objid)) {
     op = vol_OidToObject(sts, iarp->Objid, gdb_mLo_native, vol_mTrans_none, cvol_eHint_none);
@@ -1034,8 +1043,15 @@ mvol_ClassListAttrRef (
 	  oarp->Offset = item->offset[0];
 	  oarp->Size = cp->size;
 	  oarp->Body = cid;
+	  
+	  if ( item->flags[0].m & PWR_MASK_DISABLEATTR &&
+	       vol_ArefDisabled( sts, oarp)) {
+	    aref = *oarp;
+	    mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	    return;
+	  }
 	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
-	}      
+	}
       }
       pwr_ReturnVoid( sts, GDH__NO_TYPE);
     }
@@ -1077,6 +1093,12 @@ mvol_ClassListAttrRef (
 	    oarp->Offset = item->offset[0];
 	    oarp->Size = cp->size;
 	    oarp->Body = cid;
+	    if ( item->flags[0].m & PWR_MASK_DISABLEATTR &&
+		 vol_ArefDisabled( sts, oarp)) {
+	      aref = *oarp;
+	      mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	      return;
+	    }
 	    pwr_ReturnVoid( sts, MVOL__SUCCESS);
 	  }
 	}
@@ -1093,8 +1115,10 @@ mvol_ClassListAttrRef (
 	  item = ptree_FindSuccessor( sts, gdbroot->catt_tt, &item->key)) {
       /* Find next offset */
       for ( i = 0; i < item->numOffset; i++) {
-	if ( i == 0 && item->key.idx == 0)
+	if ( i == 0 && item->key.idx == 0) {
 	  first_offset = item->offset[0];
+	  first_flags = item->flags[0];
+	}
 	if ( item->offset[i] > iarp->Offset) {
 	  *oarp = pwr_cNAttrRef;
 	  oarp->Objid = op->g.oid;
@@ -1102,6 +1126,12 @@ mvol_ClassListAttrRef (
 	  oarp->Offset = item->offset[i];
 	  oarp->Size = cp->size;
 	  oarp->Body = cid;
+	  if ( item->flags[i].m & PWR_MASK_DISABLEATTR &&
+	       vol_ArefDisabled( sts, oarp)) {
+	    aref = *oarp;
+	    mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	    return;
+	  }
 	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
 	}
       }
@@ -1121,6 +1151,12 @@ mvol_ClassListAttrRef (
       oarp->Offset = first_offset;
       oarp->Size = cp->size;
       oarp->Body = cid;
+      if ( first_flags.m & PWR_MASK_DISABLEATTR &&
+	   vol_ArefDisabled( sts, oarp)) {
+	aref = *oarp;
+	mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	return;
+      }
       pwr_ReturnVoid( sts, MVOL__SUCCESS);
     }
 
@@ -1146,6 +1182,12 @@ mvol_ClassListAttrRef (
 	oarp->Offset = item->offset[0];
 	oarp->Size = cp->size;
 	oarp->Body = cid;
+	if ( item->flags[0].m & PWR_MASK_DISABLEATTR &&
+	     vol_ArefDisabled( sts, oarp)) {
+	  aref = *oarp;
+	  mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	  return;
+	}
 	pwr_ReturnVoid( sts, MVOL__SUCCESS);
       }
     }
@@ -1188,6 +1230,12 @@ mvol_ClassListAttrRef (
 	  oarp->Offset = item->offset[i];
 	  oarp->Size = cp->size;
 	  oarp->Body = cid;
+	  if ( item->flags[i].m & PWR_MASK_DISABLEATTR &&
+	       vol_ArefDisabled( sts, oarp)) {
+	    aref = *oarp;
+	    mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	    return;
+	  }
 	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
 	}
       }

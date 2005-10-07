@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.16 2005-09-20 13:21:45 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.17 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,6 +145,7 @@ typedef enum {
   pwr_eTix_NetStatus	= 30,	/* Basic type */
   pwr_eTix_CastId	= 31,	/* Basic type */
   pwr_eTix_ProString	= 32,	/* Basic type */
+  pwr_eTix_DisableAttr	= 33,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -187,6 +188,7 @@ typedef enum {
   pwr_eType_NetStatus	= pwr_TypeId(pwr_eTix_NetStatus),
   pwr_eType_CastId	= pwr_TypeId(pwr_eTix_CastId),
   pwr_eType_ProString	= pwr_TypeId(pwr_eTix_ProString),
+  pwr_eType_DisableAttr	= pwr_TypeId(pwr_eTix_DisableAttr),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 
@@ -699,6 +701,8 @@ union pwr_m_Adef {
 #define pwr_mAdef_buffer	pwr_Bit(19)		
 #define pwr_mAdef_nowbl		pwr_Bit(20)		/* Don't print to wbl file */		
 #define pwr_mAdef_alwayswbl	pwr_Bit(21)		/* Always print to wbl file */		
+#define pwr_mAdef_disableattr	pwr_Bit(22)		/* Can be disabled */
+#define pwr_mAdef_rthide	pwr_Bit(23)		/* Hide in runtime */
 };
 
 #define PWR_MASK_POINTER	pwr_mAdef_pointer
@@ -724,6 +728,8 @@ union pwr_m_Adef {
 #define PWR_MASK_BUFFER	        pwr_mAdef_buffer
 #define PWR_MASK_NOWBL        	pwr_mAdef_nowbl
 #define PWR_MASK_ALWAYSWBL      pwr_mAdef_alwayswbl
+#define PWR_MASK_DISABLEATTR    pwr_mAdef_disableattr
+#define PWR_MASK_RTHIDE    	pwr_mAdef_rthide
 
 struct pwr_s_Param
     {
@@ -848,9 +854,9 @@ struct pwr_s_MenuButton
     {
     pwr_tString40	ButtonName;
     pwr_tString80	MethodName;
-    pwr_tString40	MethodArguments[5];
+    pwr_tString80	MethodArguments[5];
     pwr_tString80	FilterName;
-    pwr_tString40	FilterArguments[5];
+    pwr_tString80	FilterArguments[5];
     pwr_tStatus		(*Method)();		/* Address to method.  */
     pwr_tBoolean	(*Filter)();		/* Address to method
                                                    visibility function.  */

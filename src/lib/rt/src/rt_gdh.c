@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.18 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.19 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -176,6 +176,55 @@ gdh_AttrrefToName (
 
   return sts;
 }
+
+
+/** 
+ * @brief Get attrref of an attribute specified by name.
+ *
+ * @return pwr_tStatus 
+ */
+pwr_tStatus
+gdh_ArefANameToAref (
+  pwr_sAttrRef *arp,
+  char *aname,
+  pwr_sAttrRef *oarp
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  mvol_sAttribute	Attribute;
+  mvol_sAttribute	*ap;
+  char			string[512];
+  char			*s = NULL;
+  cdh_sParseName	parseName;
+  cdh_sParseName	*pn = NULL;
+
+  gdh_ScopeLock {
+    memset(&Attribute, 0, sizeof(Attribute));
+
+    ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap == NULL) break;
+
+    touchObject(ap->op);
+    s = vol_AttributeToName(&sts, ap, cdh_mName_volumeStrict, string);
+
+    strcat( string, ".");
+    strcat( string, aname);
+
+    pn = cdh_ParseName(&sts, &parseName, pwr_cNOid, string, 0);
+    if (pn == NULL) break;
+
+    memset(&Attribute, 0, sizeof(Attribute));
+
+    ap = vol_NameToAttribute(&sts, &Attribute, pn, gdb_mLo_global, vol_mTrans_all);
+    if (ap == NULL) break;
+
+    mvol_AttributeToAref(&sts, ap, oarp);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
 
 /** 
  * @brief Converts a class & attribute to attrref format.
@@ -884,7 +933,7 @@ gdh_GetAttrRefTid (
     
   } gdh_ScopeUnlock;
 
-  if (ap != NULL) {
+  if (ap != 0 && ap->adef != 0) {
     if ( ap->adef->Info.Flags & PWR_MASK_CASTATTR) {
       pwr_tCastId castid;
       pwr_sAttrRef cast_aref = *arp;
@@ -3548,6 +3597,19 @@ gdh_GetMaskBitDef( pwr_tTid tid, gdh_sBitDef **bd, int *rows)
   return sts;
 }
 
+pwr_tStatus gdh_ArefDisabled( pwr_sAttrRef *arp, 
+			      pwr_tDisableAttr *disabled)
+{
+  pwr_tStatus sts;
+
+  gdh_ScopeLock {
+
+    *disabled = vol_ArefDisabled( &sts, arp);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
 
 
 

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.20 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.21 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -981,6 +981,8 @@ cdh_NoCaseStrncmp (
 char *cdh_OpSysToStr( pwr_mOpSys opsys);
 
 pwr_sAttrRef cdh_ArefToCastAref( pwr_sAttrRef *arp);
+
+pwr_sAttrRef cdh_ArefToDisableAref( pwr_sAttrRef *arp);
 
 pwr_sAttrRef cdh_ArefAdd( pwr_sAttrRef *arp1, pwr_sAttrRef *arp2);
 

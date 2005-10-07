@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.20 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.21 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -335,6 +335,7 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
     case pwr_eType_Enum:
+    case pwr_eType_DisableAttr:
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
         return XNAV__INPUT_SYNTAX;
@@ -531,6 +532,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
+    case pwr_eType_DisableAttr:
     {
       if ( !format)
         *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
@@ -1803,11 +1805,12 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       case xnav_eItemType_Attr:
       case xnav_eItemType_AttrArrayElem:
       case xnav_eItemType_Collect:
-      case xnav_eItemType_Local:
       case xnav_eItemType_ObjectStruct:
 	sts = item->open_children( xnav->brow, 0, 0);
 	if (ODD(sts)) break;
 
+	// if even sts continue
+      case xnav_eItemType_Local:
 	if ( xnav->gbl.advanced_user && xnav->change_value_cb)
 	  (xnav->change_value_cb)( xnav->parent_ctx);
 	break;
@@ -2781,6 +2784,9 @@ int	XNav::setup()
   new ItemLocal( brow, "ShowTrueDb", "setup_truedb", 
 	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1, 0,
 	(void *) &gbl.show_truedb, NULL, flow_eDest_IntoLast);
+  new ItemLocal( brow, "ShowAllAttributes", "setup_allattr", 
+	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1, 0,
+	(void *) &gbl.show_allattr, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);

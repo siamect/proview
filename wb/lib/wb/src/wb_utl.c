@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.16 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.17 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -5160,7 +5160,10 @@ static 	char		value[200];
 	        objdid_name[0] = '\0';
 	      }
 	      sprintf( logstrptr + strlen(logstr), "( %s ) ", objdid_name);
-	      sts = ldh_NameToObjid( ldhses, p_ObjDId, valuestr);
+	      if ( strncmp( valuestr, "_O", 2) == 0)
+		sts = cdh_StringToObjid( valuestr, p_ObjDId);
+	      else
+		sts = ldh_NameToObjid( ldhses, p_ObjDId, valuestr);
 	      if ( EVEN(sts))
 	      {
 	        printf("Object does not exist\n");

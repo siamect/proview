@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm7.c,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm7.c,v 1.9 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -185,8 +185,11 @@ int goen_create_nodetype_m7(
     f_width_left = f_strlength * 2 + annot_width[1];
   }
 
-  flow_CreateNodeClass(ctx, name, flow_eNodeGroup_Common, 
-		&nc_pid);
+  if ( *node_class)
+    nc_pid = *node_class;
+  else
+    flow_CreateNodeClass(ctx, name, flow_eNodeGroup_Common, 
+			 &nc_pid);
 
   /* Draw the rectangle for gate		*/
   flow_AddRect( nc_pid, 0, -f_yoffs, f_width, f_height, 
@@ -334,15 +337,13 @@ int goen_create_nodetype_m7(
 *	the connectionpoint type.
 *
 **************************************************************************/
-int goen_get_point_info_m7( grectx, graphbody, point, mask, node_width,
-			info_pointer, node)
-    gre_ctx		 grectx;
-    pwr_sGraphPlcNode	*graphbody;
-    unsigned long	 point;
-    unsigned long 	 *mask;
-    unsigned long	 node_width;
-    goen_conpoint_type	 *info_pointer;
-    vldh_t_node		 node;
+int goen_get_point_info_m7( gre_ctx		 grectx,
+			    pwr_sGraphPlcNode	*graphbody,
+			    unsigned long	 point,
+			    unsigned long 	 *mask,
+			    unsigned long	 node_width,
+			    goen_conpoint_type	 *info_pointer,
+			    vldh_t_node		 node)
 {
     int	inputpoints, outputpoints;
     unsigned long    pointmask;

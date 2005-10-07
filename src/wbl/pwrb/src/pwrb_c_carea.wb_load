@@ -1,0 +1,120 @@
+! 
+!  Proview   $Id: pwrb_c_carea.wb_load,v 1.1 2005-10-07 05:57:31 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_csub.wb_load -- Defines the class CSub.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_grafcet.h
+!  @Group Plc,PlcLogic
+!  @Summary Conditional execution of plc-objects in a sub-window
+!  Conditional execution of objects located in an area.
+!  @image orm_carea_fo.gif
+!  
+!  The code in the area is,
+!  executed if, and only if, the logical input signal is
+!  TRUE.
+!  
+!  By means of the Attribute Editor the value of the input
+!  signal can be inverted.
+!  The sub-window may contain PLC objects without any
+!  known restrictions.
+!*/
+  Object CArea $ClassDef 433
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "CArea"
+      EndBody
+      !/**
+      !  Specifies whether the objects in the area  will be executed 
+      !  or not. FALSE means no execution and TRUE means execution
+      !  of the objects in the sub-window.
+      !*/
+      Object in $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "in"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Width of area. 
+      !*/
+      Object AreaWidth $Intern 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Height of area. 
+      !*/
+      Object AreaHeight $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr graphmethod = 11
+        Attr graphindex = 7
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 1
+        Attr compmethod = 61
+        Attr compindex = 0
+        Attr tracemethod = 2
+        Attr traceindex = 1
+	Attr executeordermethod = 2
+        Attr objname = "CArea"
+        Attr graphname = "CArea"
+        Attr debugpar = "in"
+      EndBody
+    EndObject
+    Object Template CArea
+      Body RtBody
+        Attr in = 0
+      EndBody
+      Body DevBody
+        Attr AreaWidth = 1.3
+        Attr AreaHeight = 1
+      EndBody
+    EndObject
+  EndObject
+EndSObject

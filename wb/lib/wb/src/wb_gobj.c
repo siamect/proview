@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.c,v 1.12 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gobj.c,v 1.13 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 26
+#define	GOBJ_MAX_METHOD 27
 
 int	gobj_get_object_m0();
 int	gobj_get_object_m1();
@@ -74,6 +74,7 @@ int	gobj_get_object_m23();
 int	gobj_get_object_m24();
 int	gobj_get_object_m25();
 int	gobj_get_object_m26();
+int	gobj_get_object_m27();
 
 int	(* gobj_get_object_m[30]) () = {
 	&gobj_get_object_m0,
@@ -103,6 +104,7 @@ int	(* gobj_get_object_m[30]) () = {
  	&gobj_get_object_m24,
  	&gobj_get_object_m25,
  	&gobj_get_object_m26,
+ 	&gobj_get_object_m27,
 	};
 
 static int	gobj_expand_m0(	foe_ctx		foectx,
@@ -2827,6 +2829,79 @@ unsigned long	index;
 	return FOE__SUCCESS;
 }
 
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m27()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for Disabled. The selected attribute in the navigator is 
+*	inserted.
+*	
+*
+**************************************************************************/
+
+int	gobj_get_object_m27( foectx, node, index)
+foe_ctx		foectx;
+vldh_t_node	node;
+unsigned long	index;
+{
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+	pwr_sAttrRef	attrref;
+	int		is_attr;
+	ldh_sAttrRefInfo info;
+
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.wind)->hw.plc;
+	ldhses =(node->hn.wind)->hw.ldhses;
+
+	/* Take the object from the navigator */
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select an object in the navigator");
+	  BEEP;
+	  return sts;
+	}
+	
+	if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+	  gobj_ref_replace( ldhses, node, &attrref);
+	  if ( EVEN(sts)) return sts;
+	}
+
+	/* Check that attribute can be disbled */
+	sts = ldh_GetAttrRefInfo( ldhses, &attrref, &info);
+	if ( EVEN(sts)) return sts;
+
+	if ( !(info.flags & PWR_MASK_DISABLEATTR)) {
+	  foe_message( foectx, "Attribute can't be disabled");
+	  BEEP;
+	  return 0;
+	}
+
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+		node->ln.oid, 
+		"DevBody",
+		"Object",
+		(char *)&attrref, sizeof(attrref)); 
+	if ( EVEN(sts)) return sts;
+
+	gre_node_update( foectx->grectx, node);
+	gre_unselect( foectx->grectx);
+
+	return FOE__SUCCESS;
+}
 
 /*************************************************************************
 *

@@ -10,8 +10,8 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
     !  @Summary CircuitBreaker KlocknerMoeller PKZ.
     !  CircuitBreaker KlocknerMoeller PKZ.
     !
-    !  See superclass CircuitBreaker for more information.
-    !  @classlink CircuitBreaker basecomponent_circuitbreaker.html
+    !  See superclass BaseCircuitBreaker for more information.
+    !  @classlink BaseCircuitBreaker basecomponent_basecircuitbreaker.html
     !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
     !*/
     Object KM_CircuitBreaker_PKZ $ClassDef 1
@@ -29,16 +29,16 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-CircuitBreaker"
+            Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
         EndObject
       EndObject
       Object Template KM_CircuitBreaker_PKZ 2147975168
         Body RtBody
-          Attr Super.Specification = "Klockner Moeller type PKZ"
+          Attr Super.Super.Specification = "Klockner Moeller type PKZ"
           Attr Super.NotTripped.Description = "CircuitBreaker is tripped"
           Attr Super.AlarmText = "Circuit breaker tripped"
-          Attr Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
     EndObject
@@ -48,8 +48,8 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
     !  @Summary Contactor KlocknerMoeller PKZ.
     !  Contactor KlocknerMoeller PKZ.
     !
-    !  See superclass Contactor for more information.
-    !  @classlink Contactor basecomponent_contactor.html
+    !  See superclass BaseContactor for more information.
+    !  @classlink BaseContactor basecomponent_basecontactor.html
     !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
     !*/
     Object KM_Contactor_PKZ $ClassDef 2
@@ -67,18 +67,18 @@ Volume KlocknerMoeller $ClassVolume 0.0.250.6
           Body SysBody
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "BaseComponent:Class-Contactor"
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
         EndObject
       EndObject
       Object Template KM_Contactor_PKZ 2148237312
         Body RtBody
-          Attr Super.Specification = "Klockner Moeller type PKZ"
+          Attr Super.Super.Specification = "Klockner Moeller type PKZ"
           Attr Super.Feedback.Description = "Contactor is energized"
           Attr Super.Order.Description = "Energize contactor"
           Attr Super.FbTimeLimit = 1.000000e+00
           Attr Super.AlarmText = "Contactor feedback lost "
-          Attr Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
         EndBody
       EndObject
     EndObject

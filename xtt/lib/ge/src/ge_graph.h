@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.14 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.15 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1208,13 +1208,13 @@ class Graph {
   //! Initialize trend, bar, slider hold and disable buttons, min and maxlimit buttons, for an object graph.
   /*!
     \param td		Trend data.
-    \param objid	Objid for the object.
+    \param arp		Pointer to attrref.
 
     The funcion looks for an bar named "ActualValueBar, a trend named "ActualValueTrend", a slider
     named "ActualValueSlider", buttons named "TrendHold" and "SliderDisable", and more buttons
     named "PresMaxLimit" and "PresMinLimit".
   */
-  int trend_init( graph_sObjectTrend *td, pwr_tObjid objid);
+  int trend_init( graph_sObjectTrend *td, pwr_sAttrRef *arp);
 
   //! Scan a trend object and check for changes in configuration.
   /*!

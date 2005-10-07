@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.c,v 1.6 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_object.c,v 1.7 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 #include "wb_ldh.h"
 #include "wb_dutl.h"
 #include "co_cdh.h"
+#include "co_dcli.h"
 #include "co_api.h"
 #include <X11/Intrinsic.h>
 #include "wb_api.h"
@@ -674,7 +675,6 @@ static pwr_tStatus Cast( ldh_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
 
   if ( info.flags & PWR_MASK_CASTATTR) {
-    printf( "Here in cast\n");
     wcast_new( ip->EditorContext, ip->WindowContext, "Casting Window", ip->PointedSession,
 		ip->Pointed, &sts);
   }
@@ -692,6 +692,231 @@ static pwr_tStatus CastFilter( ldh_sMenuCall *ip)
   if ( info.flags & PWR_MASK_CASTATTR)
     return 1;
   return 0;
+}
+
+static pwr_tStatus Disable( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  ldh_sAttrRefInfo info;
+  
+  sts = ldh_GetAttrRefInfo( ip->PointedSession, &ip->Pointed, &info);
+  if ( EVEN(sts)) return sts;
+
+  if ( info.flags & PWR_MASK_DISABLEATTR) {
+    sts = ldh_DisableAttribute( ip->PointedSession, &ip->Pointed, 1);
+    if ( EVEN(sts)) return sts;
+  }
+  return 1;
+}
+
+static pwr_tStatus DisableFilter( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  ldh_sAttrRefInfo info;
+  
+  sts = ldh_GetAttrRefInfo( ip->PointedSession, &ip->Pointed, &info);
+  if ( EVEN(sts)) return sts;
+
+  if ( info.flags & PWR_MASK_DISABLEATTR)
+    return 1;
+  return 0;
+}
+
+static pwr_tStatus configure_object( ldh_sMenuCall *ip, pwr_sAttrRef *aref, 
+				     unsigned int disable_mask)
+{
+  pwr_tStatus 	sts;
+  pwr_tCid 	cid;
+  ldh_sParDef 	*bodydef;
+  int 		rows;
+  int		i;
+  pwr_sAttrRef  aaref, daref;
+  pwr_tDisableAttr disable;
+  int disableattr_cnt = 0;
+  
+  sts = ldh_GetAttrRefTid( ip->PointedSession, aref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetObjectBodyDef( ip->PointedSession, cid, "RtBody", 1,
+				  &bodydef, &rows);
+  if (EVEN(sts)) return sts;
+
+  for ( i = 0; i < rows; i++) {
+    if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
+      // Disable or enable dependent on mask
+      sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      daref = cdh_ArefToDisableAref( &aaref);
+
+      if ( (1 << disableattr_cnt++) & disable_mask)
+	disable = 1;
+      else
+	disable = 0;
+
+      sts = ldh_WriteAttribute( ip->PointedSession, &daref, (void *)&disable, 
+				sizeof(disable));
+      if ( EVEN(sts)) return sts;
+    }
+#if 0
+    if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
+      // Examine object attribute
+      sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      sts = configure_object( ip, &aaref, disable_mask, disableattr_cnt);
+      if ( EVEN(sts)) return sts;
+    }
+#endif
+  }
+  free( (char *)bodydef);
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref)
+{
+  pwr_tStatus 	sts;
+  pwr_tCid 	cid;
+  ldh_sParDef 	*bodydef;
+  int 		rows;
+  int		i;
+  pwr_sAttrRef  aaref, daref;
+  pwr_tDisableAttr disable = 0;
+  
+  sts = ldh_GetAttrRefTid( ip->PointedSession, aref, &cid);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_GetObjectBodyDef( ip->PointedSession, cid, "RtBody", 1,
+				  &bodydef, &rows);
+  if (EVEN(sts)) return sts;
+
+  for ( i = 0; i < rows; i++) {
+    if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
+      // Disable or enable dependent on mask
+      sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      daref = cdh_ArefToDisableAref( &aaref);
+
+      sts = ldh_WriteAttribute( ip->PointedSession, &daref, (void *)&disable, 
+				sizeof(disable));
+      if ( EVEN(sts)) return sts;
+    }
+
+    if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
+      // Reset object attribute
+      sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
+      if ( EVEN(sts)) return sts;
+
+      sts = configure_object_reset( ip, &aaref);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  free( (char *)bodydef);
+
+  return LDH__SUCCESS;
+}
+
+static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip) 
+{
+  pwr_tStatus sts;
+  unsigned int disable_mask;
+  pwr_sMenuButton   mb;
+  pwr_tEnum graph_configuration;
+  pwr_sAttrRef aaref;
+  char vect[10][80];
+  char item[3][80];
+  int i;
+  int nr;
+  int vect_cnt;
+  
+  sts = ldh_ReadObjectBody(ip->PointedSession, ip->ItemList[ip->ChosenItem].MenuObject,
+    "SysBody", &mb, sizeof(pwr_sMenuButton));
+
+  // Reset previoius disable configuration
+  configure_object_reset( ip, &ip->Pointed);
+
+  // Set disable attributes from argument 0
+  vect_cnt = dcli_parse( mb.MethodArguments[0], ",", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), 
+		   sizeof( vect[0]), 0);
+  
+  for ( i = 0; i < vect_cnt; i++) {
+    nr = dcli_parse( vect[i], " 	", "", (char *)item,
+		   sizeof( item) / sizeof( item[0]), 
+		   sizeof( item[0]), 0);
+    if ( nr == 1) {
+
+      if ( sscanf( item[0], "%d", &disable_mask) != 1)
+	graph_configuration = 0;
+
+      sts = configure_object( ip, &ip->Pointed, disable_mask);
+      if ( EVEN(sts)) return sts;
+    }
+    else if ( nr == 2) {
+      pwr_tAName aname;
+
+      if ( sscanf( item[1], "%d", &disable_mask) != 1)
+	disable_mask = 0;
+
+      strcpy( aname, item[0]);
+
+      sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
+				 &aaref);
+      if ( ODD(sts)) {
+	sts = configure_object( ip, &aaref, disable_mask);
+	if ( EVEN(sts)) return sts;
+      }
+    }
+  }
+
+  // Set GraphConfiguration from argument 1
+  vect_cnt = dcli_parse( mb.MethodArguments[1], ",", "", (char *)vect, 
+		   sizeof( vect) / sizeof( vect[0]), 
+		   sizeof( vect[0]), 0);
+  
+  for ( i = 0; i < vect_cnt; i++) {
+    nr = dcli_parse( vect[i], " 	", "", (char *)item,
+		   sizeof( item) / sizeof( item[0]), 
+		   sizeof( item[0]), 0);
+    if ( nr == 1) {
+
+      if ( sscanf( item[0], "%d", &graph_configuration) != 1)
+	graph_configuration = 0;
+
+      sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, "GraphConfiguration", 
+				 &aaref);
+      if ( ODD(sts)) {
+	sts = ldh_WriteAttribute( ip->PointedSession, &aaref, (void *)&graph_configuration, 
+				  sizeof(graph_configuration));
+	if ( EVEN(sts)) return sts;
+      }
+    }
+    else if ( nr == 2) {
+      pwr_tAName aname;
+
+      if ( sscanf( item[1], "%d", &graph_configuration) != 1)
+	graph_configuration = 0;
+
+      strcpy( aname, item[0]);
+      strcat( aname, ".GraphConfiguration");
+
+      sts = ldh_ArefANameToAref( ip->PointedSession, &ip->Pointed, aname, 
+				 &aaref);
+      if ( ODD(sts)) {
+	sts = ldh_WriteAttribute( ip->PointedSession, &aaref, (void *)&graph_configuration, 
+				  sizeof(graph_configuration));
+	if ( EVEN(sts)) return sts;
+      }
+    }
+  }
+  return 1;
+}
+
+static pwr_tStatus ConfigureComponentFilter( ldh_sMenuCall *ip) 
+{
+  return 1;
 }
 
 
@@ -716,6 +941,10 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(HelpFilter),
   pwr_BindMethod(Cast),
   pwr_BindMethod(CastFilter),
+  pwr_BindMethod(Disable),
+  pwr_BindMethod(DisableFilter),
+  pwr_BindMethod(ConfigureComponent),
+  pwr_BindMethod(ConfigureComponentFilter),
   pwr_NullMethod
 };
 

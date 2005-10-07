@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.15 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.16 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -392,6 +392,21 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE && 
 	     !wnav->gbl.show_truedb)
           continue;
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	     !wnav->gbl.show_truedb && j > 0) {
+	  pwr_tDisableAttr disabled;
+	  pwr_sAttrRef aar;
+	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+
+	  sts = ldh_ArefANameToAref( wnav->ldhses, &ar, parname, &aar);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_AttributeDisabled( wnav->ldhses, &aar, &disabled);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( disabled)
+	    continue;
+        }
 
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
         {
@@ -2296,6 +2311,21 @@ int WItemAttrObject::open_attributes( double x, double y)
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE && 
 	     !((WNav *)brow->userdata)->gbl.show_truedb)
           continue;
+        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	     !((WNav *)brow->userdata)->gbl.show_truedb && j > 0) {
+	  pwr_tDisableAttr disabled;
+	  pwr_sAttrRef aar;
+	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+
+	  sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_AttributeDisabled( ldhses, &aar, &disabled);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( disabled)
+	    continue;
+        }
 
         if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
           elements = bodydef[j].Par->Output.Info.Elements;

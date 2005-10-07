@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.47 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.48 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,8 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_CastId", pwr_eTix_CastId }
   ,{ "pwr_eType_ProString", pwr_eType_ProString }
   ,{ "pwr_eTix_ProString", pwr_eTix_ProString }
+  ,{ "pwr_eType_DisableAttr", pwr_eType_DisableAttr }
+  ,{ "pwr_eTix_DisableAttr", pwr_eTix_DisableAttr }
   ,{ "pwr_eTypeDef_AdefFlags", pwr_eTypeDef_AdefFlags }
   ,{ "pwr_eTdix_AdefFlags", pwr_eTdix_AdefFlags }
   ,{ "pwr_eTypeDef_ClassDefFlags", pwr_eTypeDef_ClassDefFlags }
@@ -466,6 +468,11 @@ void wb_wblnode::build( bool recursive)
     wb_name n = wb_name(name());
     if (!n)  
       m_vrep->error( "Object name syntax error", getFileName(), line_number);
+
+    if ( o->m_cid == 0) {
+      if ( !classNameToCid( o->cname, &o->m_cid))
+        m_vrep->error( "Unknown class", getFileName(), line_number);
+    }
 
     o->m_oid.vid = m_vrep->vid();
 
@@ -917,8 +924,18 @@ void wb_wblnode::buildAttribute( ref_wblnode classdef, ref_wblnode objbodydef,
       ((pwr_sParam *)o->rbody)->Info.Flags |= PWR_MASK_CLASS;
   }
   if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_CASTATTR) {
-    if ( !o->bws || o->bws->o->a.type !=  pwr_eType_CastId)
-      m_vrep->error( "Cast attribute not found", getFileName(), line_number);
+    if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_DISABLEATTR) {
+      if ( !o->bws || !o->bws->o->bws || o->bws->o->bws->o->a.type !=  pwr_eType_CastId)
+	m_vrep->error( "Cast attribute not found", getFileName(), line_number);
+    }
+    else {
+      if ( !o->bws || o->bws->o->a.type !=  pwr_eType_CastId)
+	m_vrep->error( "Cast attribute not found", getFileName(), line_number);
+    }
+  }
+  if ( ((pwr_sParam *)o->rbody)->Info.Flags & PWR_MASK_DISABLEATTR) {
+    if ( !o->bws || o->bws->o->a.type !=  pwr_eType_DisableAttr)
+      m_vrep->error( "DisableAttr attribute not found", getFileName(), line_number);
   }
 }
 
@@ -1558,7 +1575,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       strcpy( o->cname, class_name.c_str());
  
       if ( !classNameToCid( o->cname, &o->m_cid)) {
-        m_vrep->error( "Unknown class", getFileName(), line_number);
+	o->m_cid = 0;
+        // m_vrep->error( "Unknown class", getFileName(), line_number);
       }
 
       // If $ClassDef, register class in classlist
@@ -2054,6 +2072,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     case pwr_eType_UInt32:
     case pwr_eType_Mask:
     case pwr_eType_Enum:
+    case pwr_eType_DisableAttr:
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
         return 0;
@@ -2061,6 +2080,7 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
     }
     case pwr_eType_Text:
     case pwr_eType_String:
+    case pwr_eType_ProString:
     {
       if ( strlen( value_str) >= attr_size)
         return 0;

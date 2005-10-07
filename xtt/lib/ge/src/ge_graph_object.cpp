@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.10 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.11 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,21 +51,21 @@ extern "C" {
 
 typedef struct {
 	pwr_tClassId	classid;
-    	int 		(*func)( Graph *, pwr_tObjid);
+    	int 		(*func)( Graph *, pwr_sAttrRef *);
 	} graph_sObjectFunction;
 
 static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref);
 static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref);
-static int graph_object_ix( Graph *graph, pwr_tObjid objid);
-static int graph_object_ax( Graph *graph, pwr_tObjid objid);
-static int graph_object_dx( Graph *graph, pwr_tObjid objid);
-static int graph_object_chanxx( Graph *graph, pwr_tObjid objid);
-static int graph_object_PID( Graph *graph, pwr_tObjid objid);
-static int graph_object_Mode( Graph *graph, pwr_tObjid objid);
-static int graph_object_PlcThread( Graph *graph, pwr_tObjid objid);
-static int graph_object_collect( Graph *graph, pwr_tObjid objid);
-static int graph_object_collect_build( Graph *graph, pwr_tObjid objid);
+static int graph_object_ix( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_ax( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_dx( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_PID( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_Mode( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref);
+static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref);
 
 static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_Av, &graph_object_ax},
@@ -160,7 +160,6 @@ int Graph::init_object_graph( int mode)
   pwr_tClassId 	classid;
   char		*s;
   int 		sts;
-  pwr_tObjid	objid;
   int		i;
   int		is_type = 0;
   pwr_sAttrRef	attrref;
@@ -171,7 +170,7 @@ int Graph::init_object_graph( int mode)
     {
       if ( strcmp( object_name, "collect") == 0)
       {
-        sts = graph_object_collect_build( this, pwr_cNObjid);
+        sts = graph_object_collect_build( this, 0);
         return sts;
       }
     }
@@ -182,7 +181,7 @@ int Graph::init_object_graph( int mode)
   {
     if ( strcmp( object_name, "collect") == 0)
     {
-      sts = graph_object_collect( this, pwr_cNObjid);
+      sts = graph_object_collect( this, 0);
       return sts;
     }
   }
@@ -234,14 +233,14 @@ int Graph::init_object_graph( int mode)
     sts = gdh_ClassNameToId( classname, &classid);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_NameToObjid( object_name, &objid);
+    sts = gdh_NameToAttrref( pwr_cNObjid, object_name, &attrref);
     if ( EVEN(sts)) return sts;
 
     for ( i = 0; graph_object_functions[i].classid; i++)
     {
       if ( classid == graph_object_functions[i].classid)
       {
-        sts = (graph_object_functions[i].func)( this, objid); 
+        sts = (graph_object_functions[i].func)( this, &attrref); 
         return sts;
       }
     }
@@ -279,7 +278,7 @@ static int graph_attr_float32( Graph *graph, pwr_sAttrRef *attrref)
   graph->graph_object_close = graph_attr_float32_close;
   graph->graph_object_scan = graph_attr_float32_scan;
 
-  sts = graph->trend_init( &od->td, pwr_cNObjid);
+  sts = graph->trend_init( &od->td, 0);
 
   return 1;
 }
@@ -314,7 +313,7 @@ static int graph_attr_int32( Graph *graph, pwr_sAttrRef *attrref)
   graph->graph_object_close = graph_attr_int32_close;
   graph->graph_object_scan = graph_attr_int32_scan;
 
-  sts = graph->trend_init( &od->td, pwr_cNObjid);
+  sts = graph->trend_init( &od->td, 0);
 
   return 1;
 }
@@ -349,7 +348,7 @@ static int graph_attr_boolean( Graph *graph, pwr_sAttrRef *attrref)
   graph->graph_object_close = graph_attr_boolean_close;
   graph->graph_object_scan = graph_attr_boolean_scan;
 
-  sts = graph->trend_init( &od->td, pwr_cNObjid);
+  sts = graph->trend_init( &od->td, 0);
   return 1;
 }
 
@@ -374,14 +373,14 @@ static void graph_object_ax_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_ax( Graph *graph, pwr_tObjid objid)
+static int graph_object_ax( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
   grow_tObject object;
   graph_sObjectAx *od;
   pwr_tClassId	classid;
-  pwr_tObjid	sigchancon;
+  pwr_sAttrRef	sigchancon;
   pwr_tClassId	chan_classid;
   char		classname[40];
   char		chan_name[120];
@@ -391,11 +390,11 @@ static int graph_object_ax( Graph *graph, pwr_tObjid objid)
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_ax_close;
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   // Display object name in item "ObjectName"
-  sts = gdh_ObjidToName( objid, od->object_name, 
+  sts = gdh_AttrrefToName( arp, od->object_name, 
 		sizeof(od->object_name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
@@ -408,25 +407,23 @@ static int graph_object_ax( Graph *graph, pwr_tObjid objid)
     dyn->set_p( (void *) od->object_name);
   }
 
-  sts = graph->trend_init( &od->td, objid);
+  sts = graph->trend_init( &od->td, arp);
 
   // Register scan function
   graph->graph_object_scan = graph_object_ax_scan;
 
   // Add command to open channel graph
 
-  sts = gdh_ClassAttrToAttrref( classid, ".SigChanCon", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
+  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
+  if ( ODD(sts)) {
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName( sigchancon, chan_name, sizeof(chan_name), 
+    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
 		cdh_mNName);
     if ( ODD(sts))
     {
-      sts = gdh_GetObjectClass( sigchancon, &chan_classid);
+      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
       if ( EVEN(sts)) return sts;
       sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
 		  classname, sizeof(classname), cdh_mName_object);
@@ -464,14 +461,14 @@ static void graph_object_ix_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_ix( Graph *graph, pwr_tObjid objid)
+static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
   grow_tObject object;
   graph_sObjectIx *od;
   pwr_tClassId	classid;
-  pwr_tObjid	sigchancon;
+  pwr_sAttrRef	sigchancon;
   pwr_tClassId	chan_classid;
   char		classname[40];
   char		chan_name[120];
@@ -481,11 +478,11 @@ static int graph_object_ix( Graph *graph, pwr_tObjid objid)
   graph->graph_object_data = (void *) od;
   graph->graph_object_close = graph_object_ix_close;
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   // Display object name in item "ObjectName"
-  sts = gdh_ObjidToName( objid, od->object_name, 
+  sts = gdh_AttrrefToName( arp, od->object_name, 
 		sizeof(od->object_name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
@@ -498,25 +495,23 @@ static int graph_object_ix( Graph *graph, pwr_tObjid objid)
     dyn->set_p( (void *) od->object_name);
   }
 
-  sts = graph->trend_init( &od->td, objid);
+  sts = graph->trend_init( &od->td, arp);
 
   // Register scan function
   graph->graph_object_scan = graph_object_ix_scan;
 
   // Add command to open channel graph
 
-  sts = gdh_ClassAttrToAttrref( classid, ".SigChanCon", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
+  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
+  if ( ODD(sts)) {
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName( sigchancon, chan_name, sizeof(chan_name), 
+    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
 		cdh_mNName);
     if ( ODD(sts))
     {
-      sts = gdh_GetObjectClass( sigchancon, &chan_classid);
+      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
       if ( EVEN(sts)) return sts;
       sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
 		  classname, sizeof(classname), cdh_mName_object);
@@ -554,14 +549,14 @@ static void graph_object_dx_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_dx( Graph *graph, pwr_tObjid objid)
+static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
 {
   int sts;
   grow_tObject object;
   graph_sObjectDx *od;
   pwr_tClassId classid;
   pwr_sAttrRef attrref;
-  pwr_tObjid sigchancon;
+  pwr_sAttrRef sigchancon;
   pwr_tClassId	chan_classid;
   char		classname[40];
   char		chan_name[120];
@@ -572,11 +567,11 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid)
   graph->graph_object_close = graph_object_dx_close;
 
   // Display object name in item "ObjectName"
-  sts = gdh_ObjidToName( objid, od->object_name, 
+  sts = gdh_AttrrefToName( arp, od->object_name, 
 		sizeof(od->object_name), cdh_mNName);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   sts = grow_FindObjectByName( graph->grow->ctx, "ObjectName", &object);
@@ -587,25 +582,22 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid)
     dyn->set_p( (void *) od->object_name);
   }
 
-  sts = graph->trend_init( &od->td, objid);
+  sts = graph->trend_init( &od->td, arp);
 
   // Register scan function
   graph->graph_object_scan = graph_object_dx_scan;
 
   // Add command to open channel graph
 
-  sts = gdh_ClassAttrToAttrref( classid, ".SigChanCon", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
+  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
+  if ( ODD(sts)) {
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName( sigchancon, chan_name, sizeof(chan_name), 
+    sts = gdh_AttrrefToName( &sigchancon, chan_name, sizeof(chan_name), 
 		cdh_mNName);
-    if ( ODD(sts))
-    {
-      sts = gdh_GetObjectClass( sigchancon, &chan_classid);
+    if ( ODD(sts)) {
+      sts = gdh_GetAttrRefTid( &sigchancon, &chan_classid);
       if ( EVEN(sts)) return sts;
       sts = gdh_ObjidToName( cdh_ClassIdToObjid( chan_classid),
 		  classname, sizeof(classname), cdh_mName_object);
@@ -625,34 +617,32 @@ static int graph_object_dx( Graph *graph, pwr_tObjid objid)
 //
 // Graph for channel
 //
-static int graph_object_chanxx( Graph *graph, pwr_tObjid objid)
+static int graph_object_chanxx( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
   pwr_tClassId	classid;
-  pwr_tObjid	sigchancon;
+  pwr_sAttrRef	sigchancon;
   pwr_tClassId	signal_classid;
   char		classname[40];
   char		signal_name[120];
   char		cmd[200];
 
-  sts = gdh_GetObjectClass( objid, &classid);
+  sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
   // Add command to open signal graph
 
-  sts = gdh_ClassAttrToAttrref( classid, ".SigChanCon", &attrref);
-  if ( ODD(sts))
-  {
-    attrref.Objid = objid;
+  sts = gdh_ArefANameToAref( arp, "SigChanCon", &attrref);
+  if ( ODD(sts)) {
     sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&sigchancon, sizeof(sigchancon));
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName( sigchancon, signal_name, sizeof(signal_name), 
+    sts = gdh_AttrrefToName( &sigchancon, signal_name, sizeof(signal_name), 
 		cdh_mNName);
     if ( ODD(sts))
     {
-      sts = gdh_GetObjectClass( sigchancon, &signal_classid);
+      sts = gdh_GetAttrRefTid( &sigchancon, &signal_classid);
       if ( EVEN(sts)) return sts;
       sts = gdh_ObjidToName( cdh_ClassIdToObjid( signal_classid),
 		  classname, sizeof(classname), cdh_mName_object);
@@ -771,7 +761,7 @@ static void graph_object_PID_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_PID( Graph *graph, pwr_tObjid objid)
+static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
@@ -786,6 +776,7 @@ static int graph_object_PID( Graph *graph, pwr_tObjid objid)
   pwr_tFloat32 	max_limit = 100;
   pwr_tFloat32 	min_limit = 0;
   double 	scan_time;
+  pwr_tObjid    objid = arp->Objid;
 
   od = (graph_sObjectPID *) calloc( 1, sizeof(graph_sObjectPID));
   graph->graph_object_data = (void *) od;
@@ -1107,7 +1098,7 @@ static void graph_object_Mode_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
+static int graph_object_Mode( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
@@ -1121,6 +1112,7 @@ static int graph_object_Mode( Graph *graph, pwr_tObjid objid)
   char		cmd[200];
   pwr_tFloat32 max_limit = 100;
   pwr_tFloat32 min_limit = 0;
+  pwr_tObjid    objid = arp->Objid;
 
   od = (graph_sObjectMode *) calloc( 1, sizeof(graph_sObjectMode));
   graph->graph_object_data = (void *) od;
@@ -1412,7 +1404,7 @@ void Graph::trend_scan( graph_sObjectTrend *td)
   }
 }
 
-int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
+int Graph::trend_init( graph_sObjectTrend *td, pwr_sAttrRef *arp)
 {
   pwr_tClassId classid;
   pwr_tFloat32 max_limit = 100;
@@ -1424,24 +1416,22 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_tObjid objid)
   int presmaxlimit_found = 0;
   double scan_time;
 
-  if ( ! cdh_ObjidIsNull( objid))
+  if ( arp && cdh_ObjidIsNotNull( arp->Objid))
   {
-    sts = gdh_GetObjectClass( objid, &classid);
+    sts = gdh_GetAttrRefTid( arp, &classid);
     if ( EVEN(sts)) return sts;
 
     // Try to find attributes PresMaxLimit and PresMinLimit
-    sts = gdh_ClassAttrToAttrref( classid, ".PresMaxLimit", &attrref);
+    sts = gdh_ArefANameToAref( arp, "PresMaxLimit", &attrref);
     if ( ODD(sts))
     {
-      attrref.Objid = objid;
       sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&max_limit, sizeof(max_limit));
       if ( EVEN(sts)) return sts;
       presmaxlimit_found = 1;
     }
-    sts = gdh_ClassAttrToAttrref( classid, ".PresMinLimit", &attrref);
+    sts = gdh_ArefANameToAref( arp, "PresMinLimit", &attrref);
     if ( ODD(sts))
     {
-      attrref.Objid = objid;
       sts = gdh_GetObjectInfoAttrref( &attrref, (void *)&min_limit, sizeof(min_limit));
       if ( EVEN(sts)) return sts;
       presminlimit_found = 1;
@@ -1592,7 +1582,7 @@ static void graph_object_collect_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_collect( Graph *graph, pwr_tObjid objid)
+static int graph_object_collect( Graph *graph, pwr_sAttrRef *attrref)
 {
   int sts;
   graph_sObjectCollect *od = (graph_sObjectCollect *)graph->graph_object_data;
@@ -1601,7 +1591,7 @@ static int graph_object_collect( Graph *graph, pwr_tObjid objid)
   if ( !od)
     return 1;
 
-  sts = graph->trend_init( &od->trend1, pwr_cNObjid);
+  sts = graph->trend_init( &od->trend1, attrref);
 
   for ( i = 0; i < od->trend_cnt; i++) {
     GeDyn *dyn;
@@ -1612,7 +1602,7 @@ static int graph_object_collect( Graph *graph, pwr_tObjid objid)
   return 1;
 }
 
-static int graph_object_collect_build( Graph *graph, pwr_tObjid objid)
+static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 {
   pwr_sAttrRef *alist, *ap;
   int *is_attrp, *is_attr;
@@ -1945,7 +1935,7 @@ static void graph_object_PlcThread_close( Graph *graph)
   free( graph->graph_object_data);
 }
 
-static int graph_object_PlcThread( Graph *graph, pwr_tObjid objid)
+static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *arp)
 {
   pwr_sAttrRef attrref;
   int sts;
@@ -1954,6 +1944,7 @@ static int graph_object_PlcThread( Graph *graph, pwr_tObjid objid)
   pwr_tFloat32 max_limit = 1;
   pwr_tFloat32 min_limit = 0;
   double scan_time;
+  pwr_tObjid objid = arp->Objid;
 
   od = (graph_sObjectPlcThread *) calloc( 1, sizeof(graph_sObjectPlcThread));
   graph->graph_object_data = (void *) od;

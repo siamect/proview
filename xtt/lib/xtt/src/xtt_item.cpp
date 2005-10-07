@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.12 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.13 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -329,9 +329,35 @@ int ItemBaseObject::open_attributes( XNavBrow *brow, double x, double y)
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
 	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
 	continue;
-      if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId && 
-	   brow->usertype == brow_eUserType_XNav && !((XNav *)brow->userdata)->gbl.show_truedb)
+      if ( (bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
+	    bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) && 
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_truedb) ||
+	    brow->usertype == brow_eUserType_XAttNav))
 	continue;
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE &&
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_allattr) ||
+	    brow->usertype == brow_eUserType_XAttNav))
+	continue;
+
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR &&
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_truedb) ||
+	    brow->usertype == brow_eUserType_XAttNav)) {
+	pwr_sAttrRef aref = cdh_ObjidToAref( objid);
+	pwr_sAttrRef aaref;
+	pwr_tDisableAttr disabled;
+
+	sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
+	if ( EVEN(sts)) return sts;
+
+	sts = gdh_ArefDisabled( &aaref, &disabled);
+	if ( EVEN(sts)) return sts;
+
+	if ( disabled)
+	  continue;
+      }
 
       elements = 1;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
@@ -975,10 +1001,39 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
 	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
 	continue;
+      if ( (bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
+	    bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) && 
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_truedb) ||
+	    brow->usertype == brow_eUserType_XAttNav))
+	continue;
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE &&
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_allattr) ||
+	    brow->usertype == brow_eUserType_XAttNav))
+	continue;
 
       strcpy( attr_name, name);
       strcat( attr_name, ".");
       strcat( attr_name, bd[i].attrName);
+
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR &&
+	   ((brow->usertype == brow_eUserType_XNav && 
+	     !((XNav *)brow->userdata)->gbl.show_truedb) ||
+	    brow->usertype == brow_eUserType_XAttNav)) {
+	pwr_sAttrRef aref = cdh_ObjidToAref( objid);
+	pwr_sAttrRef aaref;
+	pwr_tDisableAttr disabled;
+
+	sts = gdh_ArefANameToAref( &aref, attr_name, &aaref);
+	if ( EVEN(sts)) return sts;
+
+	sts = gdh_ArefDisabled( &aaref, &disabled);
+	if ( EVEN(sts)) return sts;
+
+	if ( disabled)
+	  continue;
+      }
 
       elements = 1;
       if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.h,v 1.10 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_gdb.h,v 1.11 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -595,6 +595,7 @@ typedef struct {
   gdb_sClassAttrKey	key;
   int			numOffset;
   pwr_tUInt32		offset[gdb_cCattOffsetSize];
+  pwr_mAdef		flags[gdb_cCattOffsetSize];
 } gdb_sClassAttr;  
 
 /** Object.

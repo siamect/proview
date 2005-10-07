@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.10 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.11 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -796,7 +796,22 @@ int	WAttNav::object_attr()
       if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
        if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
           continue;
+       if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	    j > 0) {
+	 pwr_tDisableAttr disabled;
+	 pwr_sAttrRef aar;
+	 pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+	 
+	 sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
+	 if ( EVEN(sts)) return sts;
 
+	 sts = ldh_AttributeDisabled( ldhses, &ar, &disabled);
+	 if ( EVEN(sts)) return sts;
+
+	 if ( disabled)
+	   continue;
+        }
+       
         elements = bodydef[j].Par->Output.Info.Elements;
 
         if ( bodydef[j].ParClass == pwr_eClass_Output &&

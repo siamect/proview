@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.30 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.31 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1024,6 +1024,14 @@ void wb_volume::aref( pwr_tCid cid, wb_object o, pwr_sAttrRef *arp)
   arp->Offset = item->offset[0];
   arp->Size = bd_size;
   arp->Body = cid;
+
+  if ( item->flags[0] & PWR_MASK_DISABLEATTR) {
+    wb_attribute a = attribute( arp);
+    if ( a.disabled()) {
+      pwr_sAttrRef aref = *arp;
+      nextObjectAref( cid, &aref, arp);
+    }
+  }
 }
 
 void wb_volume::nextObjectAref( pwr_tCid cid, pwr_sAttrRef *arp,
@@ -1063,12 +1071,19 @@ void wb_volume::nextObjectAref( pwr_tCid cid, pwr_sAttrRef *arp,
     // Find next offset
     for ( int i = 0; i < item->numOffset; i++) {
       if ( item->offset[i] > arp->Offset) {
+
 	*oarp = pwr_cNAttrRef;
 	oarp->Objid = op->oid();
 	oarp->Flags.b.ObjectAttr = 1;
 	oarp->Offset = item->offset[i];
 	oarp->Size = bd_size;
 	oarp->Body = cid;
+
+	if ( item->flags[i] & PWR_MASK_DISABLEATTR) {
+	  wb_attribute a = attribute( oarp);
+	  if ( a.disabled())
+	    continue;
+	}
 	op->unref();
 	return;
       }

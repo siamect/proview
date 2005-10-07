@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_vol.c,v 1.6 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_vol.c,v 1.7 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1633,6 +1633,32 @@ vol_UpdateAlarm (
 
 
 }
+
+pwr_tDisableAttr
+vol_ArefDisabled (
+  pwr_tStatus 		*sts,
+  pwr_sAttrRef		*arp
+)
+{
+  mvol_sAttribute	attribute;
+  mvol_sAttribute	*ap;
+  void			*p;
+  pwr_sAttrRef		daref;
+
+  memset(&attribute, 0, sizeof(attribute));
+
+  gdb_AssumeLocked;
+
+  daref = cdh_ArefToDisableAref( arp);
+  ap = vol_ArefToAttribute(sts, &attribute, &daref, gdb_mLo_native, vol_mTrans_none);
+  if (ap == NULL) return pwr_cNDisableAttr;
+
+  p = vol_AttributeToAddress(sts, ap);
+  if ( p) 
+    return *(pwr_tDisableAttr *)p;
+  return pwr_cNDisableAttr;
+}
+
 #if 0
 
 gdb_sVolume *

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.18 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.19 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2129,7 +2129,7 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
   }
   case pwr_eClass_ClassDef:
   case pwr_eClass_TypeDef: {
-    if ( fth) {
+    if ( fth != memo->fth) {
       *sts = LDH__CLASSMISPLACED;
       return false;
     }

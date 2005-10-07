@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.31 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.32 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -426,12 +426,14 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
   if ( !adp->flags() & PWR_MASK_ARRAY) {
     if ( ODD(*sts)) {
       // Insert in found item
-      item->offset[item->numOffset++] = offset + adp->offset();
+      item->offset[item->numOffset] = offset + adp->offset();
+      item->flags[item->numOffset++] = adp->flags();
     }
     else {
       // Insert a new item
       item = (merep_sClassAttr *) tree_Insert( sts, m_catt_tt, &key);
-      item->offset[item->numOffset++] = offset + adp->offset();
+      item->offset[item->numOffset] = offset + adp->offset();
+      item->flags[item->numOffset++] = adp->flags();
     }
 
     // Look for class attributes in this class
@@ -458,16 +460,18 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
     for ( j = 0; j < adp->nElement(); j++) {
       if ( ODD(*sts) && item->numOffset < merep_cCattOffsetSize) {
 	// Insert in current item
-	item->offset[item->numOffset++] = offset + adp->offset() +
+	item->offset[item->numOffset] = offset + adp->offset() +
 	  j * adp->size() / adp->nElement();
+	item->flags[item->numOffset++] = adp->flags();
       }
       else {
 	// Insert a new item
 	if ( ODD(*sts))
 	  key.idx++;
 	item = (merep_sClassAttr *) tree_Insert( sts, m_catt_tt, &key);
-	item->offset[item->numOffset++] = offset + adp->offset() +
+	item->offset[item->numOffset] = offset + adp->offset() +
 	  j * adp->size() / adp->nElement();
+	item->flags[item->numOffset++] = adp->flags();
       }
 
       // Look for class attributes in this class

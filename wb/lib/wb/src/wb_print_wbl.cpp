@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.13 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.14 2005-10-07 05:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -518,6 +518,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_Float64:
     case pwr_eType_Char:
     case pwr_eType_String:
+    case pwr_eType_ProString:
     case pwr_eType_Int8:
     case pwr_eType_Int16:
     case pwr_eType_Int32:
@@ -527,6 +528,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_Objid:
     case pwr_eType_TypeId:
     case pwr_eType_CastId:
+    case pwr_eType_DisableAttr:
     case pwr_eType_ClassId:
     case pwr_eType_AttrRef:
     case pwr_eType_Time:
@@ -663,6 +665,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     sprintf(sval, "%u", *(pwr_tUInt16 *) val);
     break;
   case pwr_eType_UInt32:
+  case pwr_eType_DisableAttr:
     sprintf(sval, "%u", *(pwr_tUInt32 *) val);
     break;
   case pwr_eType_Mask:
@@ -752,7 +755,8 @@ bool wb_print_wbl::printValue (wb_volume& v,
     }
 #endif
     break;
-  case pwr_eType_String: {
+  case pwr_eType_String:
+  case pwr_eType_ProString: {
     char *s = sval;
     char *t = (char *)val;
     *s++ = '"';

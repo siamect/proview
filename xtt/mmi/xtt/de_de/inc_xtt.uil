@@ -1,0 +1,165 @@
+!
+!  Proview   $Id: inc_xtt.uil,v 1.1 2005-10-07 05:57:29 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  Dieses Programm ist kostenlose Software, sie können es benutzen,
+!  weitergeben und/oder ändern, solange Sie damit nicht gegen die
+!  Bestimmungen der GNU General Public License, wie sie die
+!  Free Software Foundation in der 2.Version festlegt verstossen.
+!  Des weiteren ist es ihnen freigestellt, sich auch an spätere
+!  Regelungen zu halten.
+!
+!  Dieses Programm wird mit der Absicht veröffentlicht eine
+!  Hilfe zu sein, jedoch OHNE JEGLICHE GEWÄHE UND OHNE DIE GARANTIE
+!  FüR EIN BESONDERES PROBLEM ANWENDBAR zu sein. Für weitere
+!  Hinweise lesen Sie bitte die GNU General Public License1
+!
+!  Sie sollten in Zusammenhang mit diesem Programm eine Kopie der
+!  GNU General Public License erhalten haben. Ist die nicht der Fall,
+!  wenden Sie sich bitte an die Free Software Foundation, Inc.,
+!  in 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  Dieser Programmteil definiert Texte auf Deutsch für xtt.
+!
+value
+
+c_File    		: compound_string("Datei");
+c_Close     		: compound_string("Schliessen");
+c_Print   		: compound_string("Drucken");
+c_Edit   		: compound_string("Bearbeiten");
+c_Search   		: compound_string("Suchen");
+c_Find_Object   	: compound_string("Finde Objekt");
+c_Find_Regular_expression : compound_string("Finde richtigen Ausdruck");
+c_Find_Next   		: compound_string("Weitersuchen");
+c_Collapse   		: compound_string("Kollaps");
+c_Functions   		: compound_string("Funktionen");
+c_Open_Object   	: compound_string("Öffne Objekt");
+c_Open_Plc   		: compound_string("Öffne PLC");
+c_Open_ClassGraph   	: compound_string("Öffne ClassGraph");
+c_Show_Crossreferences  : compound_string("Zeige Verweise");
+c_Change_Value   	: compound_string("Ändere Wert");
+c_Command   		: compound_string("Befehl");
+c_Collect_insert   	: compound_string("Eingaben sammeln");
+c_Collect_show   	: compound_string("Ausgaben sammeln");
+c_Advanced_user  	: compound_string("Fortgeschrittene Benutzer");
+c_View   		: compound_string("Ansehen");
+c_Zoom_in   		: compound_string("Heranzoomen");
+c_Zoom_out   		: compound_string("Wegzoomen");
+c_Zoom_reset   		: compound_string("Zoom zurücksetzen");
+c_Help   		: compound_string("Hilfe");
+c_Overview   		: compound_string("Übersicht");
+c_Project   		: compound_string("Projekt");
+c_About_Proview   	: compound_string("Über Proview");
+
+! module xtt_op.uil
+
+c_Alarmlist		: compound_string("Alarmliste");
+c_Eventlist		: compound_string("Ereignisliste");
+c_Blocklist		: compound_string("Blockliste");	
+c_Eventlog		: compound_string("Ereignisprotokoll");
+c_Histlist		: compound_string("Historical Eventlist");
+c_Navigator		: compound_string("Navigator");
+
+! module xtt_xatt.uil
+
+c_Close_change_value	: compound_string("Schliesse Wertebearbeitung");
+c_Display_object_in_navigator : compound_string("Zeige Objekt im Navigator");
+c_Ok			: compound_string("Ok");
+c_Cancel		: compound_string("Beenden");
+
+! module xtt_block
+c_Apply			: compound_string("Anwenden");
+c_Aalarm		: compound_string("A Alarm");
+c_Balarm		: compound_string("B Alarm");
+c_Calarm		: compound_string("C Alarm");
+c_Dalarm		: compound_string("D Alarm");
+c_NoBlock		: compound_string("Nicht Blockieren");
+c_BlockRemove		: compound_string("Blockieren beenden");
+
+! module xtt_eve.uil
+
+c_Acknowledge		: compound_string("Bestätigen");
+c_Display_hundredth	: compound_string("Zeige Hundertstel");
+c_Hide_event_name	: compound_string("Verstecke Ereignisname");
+c_Hide_event_text	: compound_string("Verstecke Ereignistext");
+c_Help_on_selected_event : compound_string("Hilfe bei ausgewähltem Ereignis");
+
+! module xtt_clog.uil
+
+c_Update         	: compound_string("Update");
+c_NextFile         	: compound_string("Nächste Datei");
+c_PreviousFile         	: compound_string("Vorherige Datei");
+c_SelectFile         	: compound_string("Datei wählen");
+c_Filter         	: compound_string("Filter");
+c_Consolelog         	: compound_string("Konsolenprotokoll");
+c_Help_on_selected_msg  : compound_string("Hilfe bei ausgewählter Mitteilung");
+
+! module xtt_trace.uil
+
+c_PrintSelect   	: compound_string("Drucke das Ausgewählte");
+c_SaveTrace		: compound_string("Speichere Pfad");
+c_RestoreTrace		: compound_string("Pfad wiederherstellen");
+c_ClearTrace		: compound_string("Pfad löschen");
+c_Mode			: compound_string("Mode");
+c_Trace			: compound_string("Pfad");
+c_Simulate		: compound_string("Simulieren");
+c_Plc			: compound_string("PLC");
+
+! module xtt_curve.uil
+
+c_Refresh		: compound_string("Auffrischen");
+c_Bright_background	: compound_string("Heller Hintergrund");
+c_Show_names		: compound_string("Namen anzeigen");
+c_Filled_curves		: compound_string("Gefuellte Kurven");
+c_X_axis_limits		: compound_string("Grenze X-Achse");
+k_Min_Max_value		: "Min Max Wert";
+k_MinValue		: "Min-Wert";
+k_MaxValue		: "Max-Wert";
+
+! module xtt_ge.uil
+
+k_Ok			: "Ok";
+k_Yes			: "Ja";
+k_Cancel		: "Abbrechen";
+k_No			: "No";
+k_Help			: "Hilfe";
+k_Confirm		: "Bestätigen";
+k_Enter_Value		: "Wert eingeben";
+k_Message		: "Mitteilung";
+k_Value_input		: "Werteingabe";
+
+! module xhelp
+
+c_SearchNext		: "Suche danach";
+c_SearchPrevious	: "Suche davor";
+
+! module xtt_hist.uil
+    histformtitle	: "zeitliche Ereignisliste: Sucheigenschaften";
+    Search		: "Suchen";
+    Exit		: "Beenden";
+    starttime		: "Startzeitpunkt";
+    priority		: "Priorität";
+    stoptime		: "Endzeitpunkt";
+    eventtype		: "Ereignistyp";
+    eventtext		: "Ereignistext";
+    eventname		: "Ereignisname";
+    a_alarm		: "A-Alarm";
+    b_alarm		: "B-Alarm";
+    c_alarm		: "C-Alarm";
+    d_alarm		: "D-Alarm";
+    message		: "Mitteilung";
+    active		: "Aktiv";
+    acknowledge		: "Bestätigen";
+    return		: "Zurückgeben";
+    nrOfEvents		: "Anzahl der Ereignisse:";
+    
+    today		: "Heute";
+    yesterday		: "Gestern";
+    thisweek		: "Diese Woche";
+    lastweek		: "Letzte Woche";
+    thismonth		: "Diesen Monat";
+    lastmonth		: "Letzten Monat";
+    all			: "Alle";
+    time		: "Zeit";
+    searchcondition     : "Suchbedingungen:";
+    mnemonic_FILE       : 'F';

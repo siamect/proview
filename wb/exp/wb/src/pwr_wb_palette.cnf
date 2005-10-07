@@ -235,13 +235,16 @@ palette ClassNavigatorPalette
   }
   menu Type
   {
+    class $Bit
     class $TypeDef
     class $TypeHier
+    class $Value
   }
   menu Menu
   {
     class $Menu
     class $MenuButton
+    class $MenuCascade
     class $MenuSeparator
     class $RtMenu
   }
@@ -490,6 +493,8 @@ palette PlcEditorPalette
     class Backup
     class CLoop
     class CSub
+    class CArea
+    class Disabled
     class RemTransRcv
     class RemTransSend
     class RunningTime
@@ -631,11 +636,17 @@ palette PlcEditorPalette
   {
     menu BaseComponent
     {
-      class ContactorFo
-      class SafetySwitchFo
-      class CircuitBreakerFo
+      class BaseActuatorAFo
+      class BaseCircuitBreakerFo
+      class BaseContactorFo
+      class BaseCValveFo
+      class BaseManValveFo
+      class BaseMotorFo
+      class BaseMValveFo
+      class BasePositSensorFo
+      class BaseSafetySwitchFo
       class BaseSensorFo
-      class PositSensorFo
+      class BaseSupSwitchFo
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo
@@ -643,26 +654,9 @@ palette PlcEditorPalette
       class CompModeAMFo
       class RunTimeCounterFo
       class FanCbCoSsFo  
-      class ActuatorAPoOr2SwFo
-      class ActuatorAPoOrFo
-      class ActuatorAOrFo
-      class ActuatorAOr2SwFo
-      class ActuatorAOrSwOpFo
-      class ActuatorAOrSwClFo
-      class CValvePoOr2SwFo
-      class CValvePoOrFo
-      class CValveOrFo
-      class CValveOr2SwFo
-      class CValveOrSwOpFo
-      class CValveOrSwClFo
       class DirectValve2OrFo
-      class ManValve2SwFo
-      class MValveOr2SwFo
-      class MValveOrSwOpFo
-      class MValveOrSwClFo
-      class MValveOrNoSwFo
       class PropValveOrFo
-      class SupSwitchFo
+      class FanAggregateFo
     }
     menu ABB
     {
@@ -672,18 +666,12 @@ palette PlcEditorPalette
     }
     menu Simulate
     {
-      class CValvePoOr2SwSim
-      class CValvePoOrSim
-      class CValveOr2SwSim
-      class CValveOrSwOpSim
-      class CValveOrSwClSim
-      class MValveOr2SwSim
-      class MValveOrSwOpSim
-      class MValveOrSwClSim
-      class FanCbCoSsSim
+      class BaseCValveSim
+      class BaseMValveSim
       class BaseSensorSim
       class ABB_ACS800Pump1Sim
       class ABB_ACS800Pump2Sim
+      class FanAggregateSim
     }
   }
 }

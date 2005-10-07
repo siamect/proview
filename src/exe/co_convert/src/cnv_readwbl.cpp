@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.7 2005-09-21 14:21:12 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.8 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1283,6 +1283,8 @@ char *CnvReadWbl::flags_to_string( int value)
   if ( value & pwr_mAdef_buffer) 	strcat( str, "Buffer|");
   if ( value & pwr_mAdef_nowbl) 	strcat( str, "Nowbl|");
   if ( value & pwr_mAdef_alwayswbl) 	strcat( str, "Alwayswbl|");
+  if ( value & pwr_mAdef_disableattr) 	strcat( str, "DisableAttr|");
+  if ( value & pwr_mAdef_rthide) 	strcat( str, "RtHide|");
   if ( str[strlen(str)-1] == '|')
     str[strlen(str)-1] = 0;
   return str;

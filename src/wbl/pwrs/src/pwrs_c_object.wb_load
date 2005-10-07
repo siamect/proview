@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_object.wb_load,v 1.14 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_object.wb_load,v 1.15 2005-10-07 05:57:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -818,6 +818,13 @@ SObject pwrs:Class
 	    Attr ButtonName = "Cast..."
 	    Attr MethodName = "$Object-Cast"
 	    Attr FilterName = "$Object-CastFilter"
+	  EndBody
+	EndObject
+	Object Disable $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Disable"
+	    Attr MethodName = "$Object-Disable"
+	    Attr FilterName = "$Object-DisableFilter"
 	  EndBody
 	EndObject
         Object Help $MenuButton

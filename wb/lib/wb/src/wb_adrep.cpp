@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_adrep.cpp,v 1.18 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_adrep.cpp,v 1.19 2005-10-07 05:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -240,6 +240,8 @@ pwr_sAttrRef wb_adrep::aref()
 
   if ( m_flags & PWR_MASK_CASTATTR)
     aref.Flags.b.CastAttr = 1;
+  if ( m_flags & PWR_MASK_DISABLEATTR)
+    aref.Flags.b.DisableAttr = 1;
 
 
   return aref;
