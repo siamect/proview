@@ -11553,14 +11553,14 @@ ResTrip = trp
 The attribute below must always placed last in this PlcPgm."
             EndBody
           EndObject
-          Object PowerOn ContactorFo 239
+          Object PowerOn BaseContactorFo 239
             Body RtBody
               Attr PlcConnect = "$PlcConnect:ABB-Class-ABB_ACS800Pump1.Contactor"
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "BaseComponent:Class-ContactorFo"
+                Attr cid = "BaseComponent:Class-BaseContactorFo"
                 Attr oid = "ABB:Class-ABB_ACS800Pump1Fo-Code-W-PowerOn"
                 Attr x = 2.400000e+00
                 Attr y = -2.725000e+00
@@ -11591,14 +11591,14 @@ The attribute below must always placed last in this PlcPgm."
               EndBuffer
             EndBody
           EndObject
-          Object SafetySwitch SafetySwitchFo 244
+          Object SafetySwitch BaseSafetySwitchFo 244
             Body RtBody
               Attr PlcConnect = "$PlcConnect:ABB-Class-ABB_ACS800Pump1.SafetySwitch"
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "BaseComponent:Class-SafetySwitchFo"
+                Attr cid = "BaseComponent:Class-BaseSafetySwitchFo"
                 Attr oid = "ABB:Class-ABB_ACS800Pump1Fo-Code-W-SafetySwitch"
                 Attr x = 6.000000e-01
                 Attr y = -3.075000e+00
@@ -11929,14 +11929,14 @@ Yellow = Warning"
               Attr Text = "Mode"
             EndBody
           EndObject
-          Object CircuitBreaker CircuitBreakerFo 275
+          Object CircuitBreaker BaseCircuitBreakerFo 275
             Body RtBody
               Attr PlcConnect = "$PlcConnect:ABB-Class-ABB_ACS800Pump1.CircuitBreaker"
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "BaseComponent:Class-CircuitBreakerFo"
+                Attr cid = "BaseComponent:Class-BaseCircuitBreakerFo"
                 Attr oid = "ABB:Class-ABB_ACS800Pump1Fo-Code-W-CircuitBreaker"
                 Attr x = 6.000000e-01
                 Attr y = -3.275000e+00
@@ -17619,7 +17619,7 @@ if Op reset converter."
           Body SysBody
             Attr PgmName = "Contactor"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-Contactor"
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
         EndObject
         Object ACS800 $Attribute 60
@@ -17640,7 +17640,7 @@ if Op reset converter."
           Body SysBody
             Attr PgmName = "SafetySwitch"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
         EndObject
         Object CastMotor $Attribute 63
@@ -17654,7 +17654,7 @@ if Op reset converter."
           Body SysBody
             Attr PgmName = "Motor"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-Motor"
+            Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
         EndObject
         Object CastPump $Attribute 74
@@ -21982,14 +21982,14 @@ ResTrip = trp
 The attribute below must always placed last in this PlcPgm."
             EndBody
           EndObject
-          Object PowerOn ContactorFo 1481
+          Object PowerOn BaseContactorFo 1481
             Body RtBody
               Attr PlcConnect = "$PlcConnect:ABB-Class-ABB_ACS800Pump2.Contactor"
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "BaseComponent:Class-ContactorFo"
+                Attr cid = "BaseComponent:Class-BaseContactorFo"
                 Attr oid = "ABB:Class-ABB_ACS800Pump2Fo-Code-W-PowerOn"
                 Attr x = 2.400000e+00
                 Attr y = -2.725000e+00
@@ -22020,14 +22020,14 @@ The attribute below must always placed last in this PlcPgm."
               EndBuffer
             EndBody
           EndObject
-          Object SafetySwitch SafetySwitchFo 1483
+          Object SafetySwitch BaseSafetySwitchFo 1483
             Body RtBody
               Attr PlcConnect = "$PlcConnect:ABB-Class-ABB_ACS800Pump2.SafetySwitch"
             EndBody
             Body DevBody
               Buffer PlcNode
                 Attr object_type = 11
-                Attr cid = "BaseComponent:Class-SafetySwitchFo"
+                Attr cid = "BaseComponent:Class-BaseSafetySwitchFo"
                 Attr oid = "ABB:Class-ABB_ACS800Pump2Fo-Code-W-SafetySwitch"
                 Attr x = 6.000000e-01
                 Attr y = -3.075000e+00
