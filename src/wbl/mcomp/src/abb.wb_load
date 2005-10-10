@@ -7023,7 +7023,7 @@ signals are connected to converters digitala input."
           Body SysBody
             Attr PgmName = "CircuitBreaker"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-CircuitBreaker"
+            Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
           EndBody
         EndObject
         Object CastContactor $Attribute 4
@@ -7037,7 +7037,7 @@ signals are connected to converters digitala input."
           Body SysBody
             Attr PgmName = "Contactor"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-Contactor"
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
           EndBody
         EndObject
         Object ACS800 $Attribute 3
@@ -7058,7 +7058,7 @@ signals are connected to converters digitala input."
           Body SysBody
             Attr PgmName = "SafetySwitch"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-SafetySwitch"
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
           EndBody
         EndObject
         Object CastMotor $Attribute 8
@@ -7072,7 +7072,7 @@ signals are connected to converters digitala input."
           Body SysBody
             Attr PgmName = "Motor"
             Attr Flags = 131080
-            Attr TypeRef = "BaseComponent:Class-Motor"
+            Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
         EndObject
         Object CastPump $Attribute 41
