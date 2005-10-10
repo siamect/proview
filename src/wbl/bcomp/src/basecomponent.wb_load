@@ -31198,7 +31198,7 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Graphical Symbol
     !  The graphical symbol for this object is BaseComponent/TempSwitch.
-    !  @image orm_basetempswitch_gs.gif
+    !  @image orm_tempswitch_gs.gif
     ! 
     !  Default dynamic:
     !  - the switch symbol is colored red when the signal value is lost.
@@ -43781,7 +43781,7 @@ Alarm HH, H, L, LL"
     !  @Summary Plc function object to BaseMValve.
     !  Plc function object to BaseMValve.
     ! 
-    !  @image orm_basemvalve_fo.gif
+    !  @image orm_basemvalvefo_fo.gif
     ! 
     !  Connect the function object to an object of class or subclass of
     !  BaseMValve.
