@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ivol.c,v 1.7 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_ivol.c,v 1.8 2005-10-12 13:00:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -287,6 +287,10 @@ mountVolume (
     break;
   case pwr_eClass_MountVolume:
     soid.vid = ((pwr_sMountVolume *)p)->Volume;
+    if ( soid.vid == 0) {
+      *sts = GDH__NOMOUNTOBJECT;
+      return NULL;
+    }
     vp = vol_MountVolume(sts, soid.vid);
     break;
   case pwr_eClass_CreateVolume:
