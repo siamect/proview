@@ -1,7 +1,7 @@
 123
 2
 3
-300 bcomp_cvalvepoor
+300 bcomp_cvalve
 301
 2
 19
@@ -411,25 +411,25 @@
 328 0
 329
 1
-100 1097
+100 3169
 101 3
 102 65532
 103 0
 26
 2600 $hostobject.Actuator.IndError##Boolean
-2601 29
+2601 176
+2602 29
 99
-3
-300 $hostobject.Actuator.IndError##Boolean
-301 176
-302 2
-303 1
+8
+800 $hostobject.Actuator.IndWarning##Boolean
 99
-3
-300 $hostobject.Actuator.IndWarning##Boolean
-301 114
-302 1
-303 3
+61
+6100 $hostobject.Actuator.PosEnum##Int32
+6101 1
+6102 4
+6103 30
+6104 1
+6105 1
 99
 12
 1200 $hostobject.Actuator.Mode.IndMode##String8

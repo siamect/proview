@@ -17,7 +17,7 @@
 117 0
 118 199
 119 155
-120 0
+120 1
 121 Claes context
 122 0
 126 0.5
@@ -33,7 +33,7 @@
 22
 2200 3
 2201 0
-2202 bcomp_manvalve2sw
+2202 bcomp_manvalveswitchopen
 2203 300
 2205 0
 2204
@@ -81,23 +81,13 @@ pwr_exe:
 2243 0
 2244
 1
-100 77
+100 5
 101 3
 102 65532
 103 0
-26
-2600 $hostobject.IndError#Boolean
-2601 174
-99
-3
-300 $hostobject.SwitchClosed.ActualValue##Boolean
-301 30
-302 1
-303 1
-99
 2
 200 $hostobject.SwitchOpen.ActualValue##Boolean
-201 37
+201 30
 99
 50
 5000 $hostobject
@@ -127,6 +117,7 @@ pwr_exe:
 1916 2
 1914 0
 1918 1
+1919 0
 1917 0
 1907 0
 1906

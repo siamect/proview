@@ -1,6 +1,6 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X5705"
+    Attr NextOix = "_X5966"
     Attr NextCix = "_X137"
     Attr NextTix[0] = "_X10"
   EndBody
@@ -43598,7 +43598,7 @@ Alarm HH, H, L, LL"
       Object RtBody $ObjBodyDef 1 28-SEP-2005 13:07:51.76
         Body SysBody 28-SEP-2005 13:08:24.25
           Attr StructName = "BaseMValve"
-          Attr NextAix = "_X45"
+          Attr NextAix = "_X46"
         EndBody
         Object Super $Attribute 19 28-SEP-2005 13:08:41.43
           Body SysBody 28-SEP-2005 13:10:30.98
@@ -43709,6 +43709,12 @@ Alarm HH, H, L, LL"
             Attr PgmName = "ExtInterlock"
             Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PosEnum $Attribute 45 11-OCT-2005 15:22:31.54
+          Body SysBody 11-OCT-2005 15:22:31.54
+            Attr PgmName = "PosEnum"
+            Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
         Object PlcConnect $Attribute 35 28-SEP-2005 13:07:51.76
@@ -43868,38 +43874,39 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4691 28-SEP-2005 14:04:13.97
         Body RtBody 28-SEP-2005 14:04:13.97
         EndBody
-        Body DevBody 30-SEP-2005 09:15:20.97
+        Body DevBody 11-OCT-2005 17:20:32.30
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMValveFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
-            Attr defnamecount[2] = 1
-            Attr defnamecount[11] = 15
-            Attr defnamecount[60] = 2
-            Attr defnamecount[61] = 2
+            Attr defnamecount[2] = 2
+            Attr defnamecount[11] = 30
+            Attr defnamecount[60] = 6
+            Attr defnamecount[61] = 4
             Attr defnamecount[70] = 1
-            Attr defnamecount[90] = 4
-            Attr defnamecount[91] = 4
+            Attr defnamecount[90] = 15
+            Attr defnamecount[91] = 9
             Attr defnamecount[97] = 1
             Attr defnamecount[99] = 1
-            Attr defnamecount[102] = 1
+            Attr defnamecount[102] = 5
             Attr defnamecount[136] = 1
-            Attr defnamecount[137] = 5
+            Attr defnamecount[137] = 6
             Attr defnamecount[139] = 6
             Attr defnamecount[253] = 1
             Attr defnamecount[255] = 5
-            Attr defnamecount[256] = 4
+            Attr defnamecount[256] = 5
             Attr defnamecount[263] = 1
             Attr defnamecount[264] = 1
             Attr defnamecount[266] = 1
             Attr defnamecount[267] = 1
-            Attr connamecount = 54
+            Attr defnamecount[271] = 1
+            Attr connamecount = 129
           EndBuffer
         EndBody
         Object W WindowPlc 4692 28-SEP-2005 14:04:13.97
           Body RtBody 28-SEP-2005 14:04:13.97
           EndBody
-          Body DevBody 30-SEP-2005 09:15:20.97
-            Attr Modified = "30-SEP-2005 09:15:20.97"
+          Body DevBody 11-OCT-2005 17:20:32.30
+            Attr Modified = "11-OCT-2005 17:20:32.30"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -43909,6 +43916,1102 @@ Alarm HH, H, L, LL"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn128 ConDigital 5894 11-OCT-2005 17:20:12.29
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn128"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or4"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-DtoEnum15"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 2.249000e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.310000e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.310000e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.370000e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn127 ConDigital 5893 11-OCT-2005 17:20:10.55
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn127"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or5"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-DtoEnum15"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.370000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.249000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn126 ConDigital 5892 11-OCT-2005 16:45:02.22
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn126"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And12"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or5"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.999000e+00
+                  Attr y = 3.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.034500e+00
+                  Attr y = 3.150000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.034500e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.070000e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn125 ConDigital 5891 11-OCT-2005 16:45:01.11
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn125"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And9"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.070000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.999000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn124 ConDigital 5890 11-OCT-2005 16:44:59.56
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn124"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or8"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And12"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.749000e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn123 ConDigital 5889 11-OCT-2005 16:44:58.34
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn123"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And13"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or8"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.570000e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499000e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn122 ConDigital 5888 11-OCT-2005 16:44:57.27
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn122"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And14"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or8"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.499000e+00
+                  Attr y = 3.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.527556e+00
+                  Attr y = 3.300000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.527556e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.570000e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn121 ConDigital 5887 11-OCT-2005 16:44:56.08
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn121"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDo3"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And14"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.028667e+00
+                  Attr y = 3.350000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn120 ConDigital 5886 11-OCT-2005 16:44:54.56
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn120"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled17"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And14"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.217333e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.268667e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.268667e+00
+                  Attr y = 3.300000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.300000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn119 ConDigital 5885 11-OCT-2005 16:44:53.35
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn119"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled17"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And13"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.217333e+00
+                  Attr y = 3.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn118 ConDigital 5884 11-OCT-2005 16:44:52.31
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn118"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi3"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And13"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.115333e+00
+                  Attr y = 3.200000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn117 ConDigital 5883 11-OCT-2005 16:44:49.63
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn117"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled18"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And12"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.235111e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.784500e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.784500e+00
+                  Attr y = 3.150000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.150000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn116 ConDigital 5882 11-OCT-2005 16:44:47.59
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn116"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled18"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And9"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.235111e+00
+                  Attr y = 3.100000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn115 ConDigital 5881 11-OCT-2005 16:44:45.59
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn115"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi2"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And9"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.133111e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn114 ConDigital 5880 11-OCT-2005 16:44:22.47
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn114"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And4"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or4"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.999000e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.034500e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.034500e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.070000e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn113 ConDigital 5879 11-OCT-2005 16:44:21.11
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn113"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And8"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.070000e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.999000e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn112 ConDigital 5878 11-OCT-2005 16:44:19.47
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn112"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or6"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.749000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn111 ConDigital 5877 11-OCT-2005 16:44:18.14
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn111"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And6"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or6"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.499000e+00
+                  Attr y = 3.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.534500e+00
+                  Attr y = 3.750000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.534500e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.570000e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn110 ConDigital 5876 11-OCT-2005 16:44:16.88
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn110"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDo2"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.028667e+00
+                  Attr y = 3.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn109 ConDigital 5875 11-OCT-2005 16:44:15.25
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn109"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled26"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And6"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.235111e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.277556e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.277556e+00
+                  Attr y = 3.750000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.750000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn108 ConDigital 5874 11-OCT-2005 16:44:09.54
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn108"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled27"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And4"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.217333e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.784500e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.784500e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn107 ConDigital 5873 11-OCT-2005 16:44:01.99
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn107"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And5"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.570000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn106 ConDigital 5872 11-OCT-2005 16:44:00.65
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn106"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled26"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.235111e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn105 ConDigital 5871 11-OCT-2005 16:43:59.58
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn105"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi5"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.133111e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn104 ConDigital 5870 11-OCT-2005 16:43:57.87
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn104"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled27"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And8"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.217333e+00
+                  Attr y = 3.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn103 ConDigital 5869 11-OCT-2005 16:43:55.90
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn103"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi4"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-And8"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.115333e+00
+                  Attr y = 3.500000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn74 ConAnalog 5805 11-OCT-2005 15:26:29.37
+            Body DevBody 11-OCT-2005 16:45:19.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-cn74"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMValveFo-Code-W-DtoEnum15"
+                Attr dest_oid = "BaseComponent:Class-BaseMValveFo-Code-W-StoIp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.720000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.649111e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.674556e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.095000e+00
+                  Attr y = 3.700000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 2.095000e+00
+                  Attr y = 3.900000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 2.170000e+00
+                  Attr y = 3.900000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn49 ConDigital 4768 28-SEP-2005 14:28:11.70
             Body DevBody 28-SEP-2005 14:37:58.63
               Buffer PlcConnection
@@ -45858,7 +46961,7 @@ Alarm HH, H, L, LL"
           Object Disabled10 Disabled 4756 28-SEP-2005 14:25:01.06
             Body RtBody 28-SEP-2005 14:25:01.06
             EndBody
-            Body DevBody 28-SEP-2005 14:36:58.24
+            Body DevBody 11-OCT-2005 15:37:12.37
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchOpen"
               Buffer PlcNode
                 Attr object_type = 11
@@ -45914,7 +47017,7 @@ Alarm HH, H, L, LL"
           Object Disabled12 Disabled 4762 28-SEP-2005 14:26:57.20
             Body RtBody 28-SEP-2005 14:26:57.20
             EndBody
-            Body DevBody 28-SEP-2005 14:37:58.63
+            Body DevBody 11-OCT-2005 15:37:12.37
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchClosed"
               Buffer PlcNode
                 Attr object_type = 11
@@ -45976,6 +47079,476 @@ Alarm HH, H, L, LL"
                 Attr width = 5.902222e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object DtoEnum15 DtoEnum 5763 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-DtoEnum"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-DtoEnum15"
+                Attr x = 2.350000e+00
+                Attr y = -2.175000e+00
+                Attr width = 2.791111e-01
+                Attr heigth = 2.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 6
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or4 Or 5764 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or4"
+                Attr x = 2.050000e+00
+                Attr y = -2.575000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoIp0 StoIp 5765 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 16:45:19.73
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.PosEnum"
+              Buffer PlcNode
+                Attr object_type = 271
+                Attr cid = "pwrb:Class-StoIp"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-StoIp0"
+                Attr x = 2.700000e+00
+                Attr y = -2.025000e+00
+                Attr width = 4.763333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or5 Or 5766 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or5"
+                Attr x = 2.050000e+00
+                Attr y = -2.125000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And4 And 5768 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And4"
+                Attr x = 1.800000e+00
+                Attr y = -2.675000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled17 Disabled 5769 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled17"
+                Attr x = 6.000000e-01
+                Attr y = -2.225000e+00
+                Attr width = 5.673333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled18 Disabled 5770 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled18"
+                Attr x = 6.000000e-01
+                Attr y = -2.075000e+00
+                Attr width = 5.851111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi2 GetDi 5771 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi2"
+                Attr x = 6.500000e-01
+                Attr y = -2.075000e+00
+                Attr width = 4.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And5 And 5772 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And5"
+                Attr x = 1.300000e+00
+                Attr y = -2.725000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi3 GetDi 5776 11-OCT-2005 15:26:29.36
+            Body RtBody 11-OCT-2005 15:26:29.36
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi3"
+                Attr x = 6.500000e-01
+                Attr y = -2.225000e+00
+                Attr width = 4.653333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And6 And 5780 11-OCT-2005 15:26:29.37
+            Body RtBody 11-OCT-2005 15:26:29.37
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And6"
+                Attr x = 1.300000e+00
+                Attr y = -2.825000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document1 Document 5806 11-OCT-2005 15:26:45.50
+            Body DevBody 11-OCT-2005 15:37:12.37
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Document1"
+                Attr x = 5.500000e-01
+                Attr y = -4.175000e+00
+                Attr width = 3.400000e+00
+                Attr heigth = 2.300000e+00
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object GetDi4 GetDi 5808 11-OCT-2005 15:27:36.62
+            Body RtBody 11-OCT-2005 15:27:36.62
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi4"
+                Attr x = 6.500000e-01
+                Attr y = -2.525000e+00
+                Attr width = 4.653333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled26 Disabled 5811 11-OCT-2005 15:27:36.62
+            Body RtBody 11-OCT-2005 15:27:36.62
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled26"
+                Attr x = 6.000000e-01
+                Attr y = -2.675000e+00
+                Attr width = 5.851111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled27 Disabled 5812 11-OCT-2005 15:27:36.62
+            Body RtBody 11-OCT-2005 15:27:36.62
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Disabled27"
+                Attr x = 6.000000e-01
+                Attr y = -2.525000e+00
+                Attr width = 5.673333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And8 And 5813 11-OCT-2005 15:27:36.63
+            Body RtBody 11-OCT-2005 15:27:36.63
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And8"
+                Attr x = 1.800000e+00
+                Attr y = -2.575000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi5 GetDi 5820 11-OCT-2005 15:33:12.11
+            Body RtBody 11-OCT-2005 15:33:12.11
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDi5"
+                Attr x = 6.500000e-01
+                Attr y = -2.675000e+00
+                Attr width = 4.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And9 And 5825 11-OCT-2005 15:34:53.96
+            Body RtBody 11-OCT-2005 15:34:53.96
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And9"
+                Attr x = 1.800000e+00
+                Attr y = -2.125000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text29 Text 5829 11-OCT-2005 15:36:44.55
+            Body DevBody 11-OCT-2005 15:37:12.37
+              Attr Text = "Display valve position"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Text29"
+                Attr x = 6.500000e-01
+                Attr y = -1.969000e+00
+                Attr width = 3.191111e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDo2 GetDo 5832 11-OCT-2005 15:57:48.75
+            Body RtBody 11-OCT-2005 15:57:48.75
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DoObject = "$PlcConnect:BaseComponent-Class-BaseMValve.Order"
+              Buffer PlcNode
+                Attr object_type = 61
+                Attr cid = "pwrb:Class-GetDo"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDo2"
+                Attr x = 6.500000e-01
+                Attr y = -2.825000e+00
+                Attr width = 3.786667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And12 And 5841 11-OCT-2005 16:20:06.01
+            Body RtBody 11-OCT-2005 16:20:06.01
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And12"
+                Attr x = 1.800000e+00
+                Attr y = -2.225000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And13 And 5844 11-OCT-2005 16:20:38.42
+            Body RtBody 11-OCT-2005 16:20:38.42
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And13"
+                Attr x = 1.300000e+00
+                Attr y = -2.275000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object And14 And 5845 11-OCT-2005 16:20:39.57
+            Body RtBody 11-OCT-2005 16:20:39.57
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-And14"
+                Attr x = 1.300000e+00
+                Attr y = -2.375000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or6 Or 5865 11-OCT-2005 16:36:45.01
+            Body RtBody 11-OCT-2005 16:36:45.01
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or6"
+                Attr x = 1.550000e+00
+                Attr y = -2.725000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or8 Or 5867 11-OCT-2005 16:41:21.42
+            Body RtBody 11-OCT-2005 16:41:21.42
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-Or8"
+                Attr x = 1.550000e+00
+                Attr y = -2.275000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDo3 GetDo 5868 11-OCT-2005 16:41:50.90
+            Body RtBody 11-OCT-2005 16:41:50.90
+            EndBody
+            Body DevBody 11-OCT-2005 17:20:32.30
+              Attr DoObject = "$PlcConnect:BaseComponent-Class-BaseMValve.Order"
+              Buffer PlcNode
+                Attr object_type = 61
+                Attr cid = "pwrb:Class-GetDo"
+                Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W-GetDo3"
+                Attr x = 6.500000e-01
+                Attr y = -2.375000e+00
+                Attr width = 3.786667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMValveFo-Code-W"
+                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
@@ -47369,17 +48942,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
-        Object DisablePosEnum $Attribute 35 30-SEP-2005 14:01:24.91
-          Body SysBody 30-SEP-2005 15:28:13.84
-            Attr PgmName = "DisablePosEnum"
-            Attr Flags = 2048
-            Attr TypeRef = "pwrs:Type-$DisableAttr"
-          EndBody
-        EndObject
         Object PosEnum $Attribute 20 30-SEP-2005 13:33:48.65
-          Body SysBody 30-SEP-2005 15:28:22.96
+          Body SysBody 10-OCT-2005 15:32:54.05
             Attr PgmName = "PosEnum"
-            Attr Flags = 4194304
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
@@ -47439,37 +49004,37 @@ Alarm HH, H, L, LL"
               Attr ButtonName = "ConfigureComponent"
             EndBody
             Object TwoSwitches $MenuButton 4878 30-SEP-2005 14:03:36.79
-              Body SysBody 30-SEP-2005 16:15:15.47
+              Body SysBody 10-OCT-2005 15:34:33.18
                 Attr ButtonName = "TwoSwitches"
                 Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "112"
+                Attr MethodArguments[0] = "56"
                 Attr MethodArguments[1] = "0"
                 Attr FilterName = "$Object-ConfigureComponentFilter"
               EndBody
             EndObject
             Object SwitchOpen $MenuButton 4879 30-SEP-2005 14:03:36.79
-              Body SysBody 30-SEP-2005 16:15:37.52
+              Body SysBody 10-OCT-2005 15:36:16.00
                 Attr ButtonName = "SwitchOpen"
                 Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "126"
+                Attr MethodArguments[0] = "62"
                 Attr MethodArguments[1] = "1"
                 Attr FilterName = "$Object-ConfigureComponentFilter"
               EndBody
             EndObject
             Object SwitchClosed $MenuButton 4880 30-SEP-2005 14:03:36.79
-              Body SysBody 30-SEP-2005 16:16:09.58
+              Body SysBody 10-OCT-2005 15:36:40.42
                 Attr ButtonName = "SwitchClosed"
                 Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "125"
+                Attr MethodArguments[0] = "61"
                 Attr MethodArguments[1] = "2"
                 Attr FilterName = "$Object-ConfigureComponentFilter"
               EndBody
             EndObject
             Object NoSwitches $MenuButton 4881 30-SEP-2005 14:03:36.79
-              Body SysBody 30-SEP-2005 14:03:36.79
+              Body SysBody 10-OCT-2005 15:37:07.99
                 Attr ButtonName = "NoSwitches"
                 Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "15"
+                Attr MethodArguments[0] = "7"
                 Attr MethodArguments[1] = "3"
                 Attr FilterName = "$Object-ConfigureComponentFilter"
               EndBody
@@ -47565,32 +49130,36 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4841 30-SEP-2005 13:47:08.06
         Body RtBody 30-SEP-2005 13:47:08.06
         EndBody
-        Body DevBody 30-SEP-2005 13:59:18.20
+        Body DevBody 11-OCT-2005 18:37:49.21
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseManValveFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 1
-            Attr defnamecount[11] = 7
-            Attr defnamecount[60] = 4
-            Attr defnamecount[90] = 2
+            Attr defnamecount[11] = 21
+            Attr defnamecount[60] = 10
+            Attr defnamecount[61] = 2
+            Attr defnamecount[90] = 20
+            Attr defnamecount[91] = 9
             Attr defnamecount[99] = 1
-            Attr defnamecount[137] = 4
+            Attr defnamecount[102] = 3
+            Attr defnamecount[137] = 7
             Attr defnamecount[139] = 2
             Attr defnamecount[141] = 1
             Attr defnamecount[255] = 1
+            Attr defnamecount[256] = 3
             Attr defnamecount[263] = 1
             Attr defnamecount[264] = 1
             Attr defnamecount[266] = 1
             Attr defnamecount[267] = 1
             Attr defnamecount[271] = 1
-            Attr connamecount = 22
+            Attr connamecount = 105
           EndBuffer
         EndBody
         Object W WindowPlc 4842 30-SEP-2005 13:47:08.06
           Body RtBody 30-SEP-2005 13:47:08.06
           EndBody
-          Body DevBody 30-SEP-2005 13:59:18.20
-            Attr Modified = "30-SEP-2005 13:59:18.20"
+          Body DevBody 11-OCT-2005 18:37:49.21
+            Attr Modified = "11-OCT-2005 18:37:49.21"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -47600,8 +49169,1057 @@ Alarm HH, H, L, LL"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn104 ConDigital 5966 11-OCT-2005 18:12:31.27
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn104"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And19"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDp2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.029778e+00
+                  Attr y = 2.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.550000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn103 ConDigital 5964 11-OCT-2005 18:12:29.66
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn103"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And18"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.029778e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn100 ConDigital 5958 11-OCT-2005 18:11:49.09
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn100"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled18"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And19"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.185111e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.227556e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.227556e+00
+                  Attr y = 2.500000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.500000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn99 ConDigital 5957 11-OCT-2005 18:11:45.42
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn99"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled16"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And18"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.167333e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.218667e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.218667e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn98 ConDigital 5956 11-OCT-2005 18:11:41.08
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn98"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or8"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And10"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.699000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn97 ConDigital 5955 11-OCT-2005 18:11:39.54
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn97"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And19"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or8"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.449000e+00
+                  Attr y = 2.500000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.484500e+00
+                  Attr y = 2.500000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.484500e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn96 ConDigital 5954 11-OCT-2005 18:11:38.20
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn96"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And11"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or8"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.449000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn95 ConDigital 5953 11-OCT-2005 18:11:36.30
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn95"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And18"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or7"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.449000e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.484500e+00
+                  Attr y = 2.000000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.484500e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn94 ConDigital 5952 11-OCT-2005 18:11:35.22
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn94"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And16"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or7"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.449000e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn93 ConDigital 5951 11-OCT-2005 18:11:33.82
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn93"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or7"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And15"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.699000e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn92 ConDigital 5946 11-OCT-2005 17:57:06.02
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn92"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or3"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-DtoEnum3"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 2.199000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.259500e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.259500e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.320000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn90 ConDigital 5944 11-OCT-2005 17:57:00.02
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn90"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or4"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-DtoEnum3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.320000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.199000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn87 ConDigital 5941 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn87"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi8"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And13"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.065333e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn86 ConDigital 5940 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn86"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled19"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And13"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.167333e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn85 ConDigital 5939 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn85"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi9"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And11"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.083111e+00
+                  Attr y = 2.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn84 ConDigital 5938 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn84"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled18"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And11"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.185111e+00
+                  Attr y = 2.450000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn82 ConDigital 5936 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn82"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled19"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And10"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.167333e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.609500e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.609500e+00
+                  Attr y = 2.350000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 2.350000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn77 ConDigital 5931 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn77"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And13"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.949000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn76 ConDigital 5930 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn76"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And10"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or3"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.949000e+00
+                  Attr y = 2.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.984500e+00
+                  Attr y = 2.350000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.984500e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.020000e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn75 ConDigital 5929 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn75"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi6"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And14"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.083111e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn74 ConDigital 5928 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn74"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled17"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And14"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.185111e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn73 ConDigital 5927 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn73"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled17"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And15"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.185111e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.693083e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.693083e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn72 ConDigital 5926 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn72"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi7"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And16"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.065333e+00
+                  Attr y = 1.900000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn71 ConDigital 5925 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn71"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled16"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And16"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.270000e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.167333e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn65 ConDigital 5919 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn65"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And14"
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.949000e+00
+                  Attr y = 1.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn64 ConDigital 5918 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn64"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And15"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or4"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.949000e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.984500e+00
+                  Attr y = 1.850000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.984500e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.020000e+00
+                  Attr y = 1.800000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn21 ConDigital 4874 30-SEP-2005 13:58:42.13
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn21"
                 Attr object_type = 23
@@ -47612,12 +50230,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.220000e+00
-                  Attr y = 7.500000e-01
+                  Attr x = 1.270000e+00
+                  Attr y = 7.000000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.135111e+00
-                  Attr y = 7.500000e-01
+                  Attr x = 1.185111e+00
+                  Attr y = 7.000000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47640,7 +50258,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn20 ConDigital 4873 30-SEP-2005 13:58:40.66
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn20"
                 Attr object_type = 23
@@ -47650,12 +50268,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-And1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.220000e+00
-                  Attr y = 7.000000e-01
+                  Attr x = 1.270000e+00
+                  Attr y = 6.500000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.117333e+00
-                  Attr y = 7.000000e-01
+                  Attr x = 1.167333e+00
+                  Attr y = 6.500000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47678,7 +50296,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn19 ConDigital 4870 30-SEP-2005 13:56:47.22
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn19"
                 Attr object_type = 23
@@ -47689,12 +50307,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-HasBothSwitches"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.470000e+00
-                  Attr y = 7.000000e-01
+                  Attr x = 1.520000e+00
+                  Attr y = 6.500000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.399000e+00
-                  Attr y = 7.000000e-01
+                  Attr x = 1.449000e+00
+                  Attr y = 6.500000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47717,7 +50335,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn18 ConAnalog 4843 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 18:12:41.73
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn18"
                 Attr object_type = 24
@@ -47728,105 +50346,28 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoIp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.620000e+00
-                  Attr y = 1.400000e+00
+                  Attr x = 2.670000e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.483556e+00
-                  Attr y = 1.400000e+00
+                  Attr x = 2.583555e+00
+                  Attr y = 1.750000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 2.526778e+00
+                  Attr y = 3.600000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 2.570000e+00
+                  Attr y = 3.600000e+00
                 EndBuffer
                 Buffer point[4]
+                  Attr x = 3.284375e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn16 ConDigital 4844 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn16"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-DtoEnum3"
-                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi3"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.115333e+00
-                  Attr y = 1.450000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.220000e+00
-                  Attr y = 1.450000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn15 ConDigital 4845 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn15"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseManValveFo-Code-W-DtoEnum3"
-                Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi2"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.133111e+00
-                  Attr y = 1.400000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.220000e+00
-                  Attr y = 1.400000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 7.750000e-01
-                  Attr y = 1.050000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.558556e+00
-                  Attr y = 1.050000e+00
-                EndBuffer
-                Buffer point[4]
-                  Attr x = 1.558556e+00
-                  Attr y = 1.200000e+00
-                EndBuffer
-                Buffer point[5]
-                  Attr x = 1.333111e+00
-                  Attr y = 1.200000e+00
+                  Attr x = 3.320000e+00
+                  Attr y = 2.000000e+00
                 EndBuffer
                 Buffer point[6]
                 EndBuffer
@@ -47841,7 +50382,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn12 ConAnalog 4846 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn12"
                 Attr object_type = 24
@@ -47852,12 +50393,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoSp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.520000e+00
-                  Attr y = 9.000000e-01
+                  Attr x = 2.420000e+00
+                  Attr y = 8.500000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.366000e+00
-                  Attr y = 9.000000e-01
+                  Attr x = 2.266000e+00
+                  Attr y = 8.500000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47880,7 +50421,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn10 ConAnalog 4847 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn10"
                 Attr object_type = 24
@@ -47890,12 +50431,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetSp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.088667e+00
-                  Attr y = 9.000000e-01
+                  Attr x = 2.038667e+00
+                  Attr y = 8.500000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.170000e+00
-                  Attr y = 9.000000e-01
+                  Attr x = 2.070000e+00
+                  Attr y = 8.500000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47918,7 +50459,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn8 ConAnalog 4848 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn8"
                 Attr object_type = 24
@@ -47929,12 +50470,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-Strcat1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.170000e+00
-                  Attr y = 9.500000e-01
+                  Attr x = 2.070000e+00
+                  Attr y = 9.000000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.072111e+00
-                  Attr y = 9.500000e-01
+                  Attr x = 2.022111e+00
+                  Attr y = 9.000000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -47957,7 +50498,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn7 ConDigital 4849 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn7"
                 Attr object_type = 23
@@ -47968,20 +50509,20 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-DSup0"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.399000e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.299000e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.501778e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.359500e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.501778e+00
-                  Attr y = 1.150000e+00
+                  Attr x = 2.359500e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.520000e+00
-                  Attr y = 1.150000e+00
+                  Attr x = 2.420000e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -48000,7 +50541,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn5 ConDigital 4850 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn5"
                 Attr object_type = 23
@@ -48011,12 +50552,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoDp0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.520000e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.420000e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.399000e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.299000e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -48039,7 +50580,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn3 ConDigital 4851 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn3"
                 Attr object_type = 23
@@ -48050,12 +50591,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi1"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.133111e+00
-                  Attr y = 1.150000e+00
+                  Attr x = 2.083111e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.220000e+00
-                  Attr y = 1.150000e+00
+                  Attr x = 2.120000e+00
+                  Attr y = 1.100000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -48078,7 +50619,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn2 ConDigital 4852 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-cn2"
                 Attr object_type = 23
@@ -48088,12 +50629,12 @@ Alarm HH, H, L, LL"
                 Attr dest_oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.115333e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.065333e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.220000e+00
-                  Attr y = 1.100000e+00
+                  Attr x = 2.120000e+00
+                  Attr y = 1.050000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 6.750000e-01
@@ -48143,13 +50684,13 @@ Alarm HH, H, L, LL"
           Object And0 And 4854 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And0"
-                Attr x = 2.200000e+00
-                Attr y = -1.750000e-01
+                Attr x = 2.100000e+00
+                Attr y = -1.250000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48161,14 +50702,14 @@ Alarm HH, H, L, LL"
           Object GetDi0 GetDi 4855 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
               Buffer PlcNode
                 Attr object_type = 60
                 Attr cid = "pwrb:Class-GetDi"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi0"
-                Attr x = 1.650000e+00
-                Attr y = -1.250000e-01
+                Attr x = 1.600000e+00
+                Attr y = -7.499995e-02
                 Attr width = 4.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48179,14 +50720,14 @@ Alarm HH, H, L, LL"
           Object GetDi1 GetDi 4856 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
               Buffer PlcNode
                 Attr object_type = 60
                 Attr cid = "pwrb:Class-GetDi"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi1"
-                Attr x = 1.650000e+00
-                Attr y = -1.750000e-01
+                Attr x = 1.600000e+00
+                Attr y = -1.250000e-01
                 Attr width = 4.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48197,14 +50738,14 @@ Alarm HH, H, L, LL"
           Object StoDp0 StoDp 4857 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.IndError"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoDp0"
-                Attr x = 2.500000e+00
-                Attr y = -1.250000e-01
+                Attr x = 2.400000e+00
+                Attr y = -7.499995e-02
                 Attr width = 4.607778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48215,13 +50756,13 @@ Alarm HH, H, L, LL"
           Object DSup0 DSup 4858 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-DSup0"
-                Attr x = 2.500000e+00
-                Attr y = -1.750000e-01
+                Attr x = 2.400000e+00
+                Attr y = -1.250000e-01
                 Attr width = 3.020000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48232,15 +50773,15 @@ Alarm HH, H, L, LL"
           Object NameToStr0 NameToStr 4859 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve"
               Attr ObjectSegments = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-NameToStr"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-NameToStr0"
-                Attr x = 1.600000e+00
-                Attr y = 7.500001e-02
+                Attr x = 1.550000e+00
+                Attr y = 1.250000e-01
                 Attr width = 4.221111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48252,13 +50793,13 @@ Alarm HH, H, L, LL"
           Object Strcat1 Strcat 4860 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Strcat1"
-                Attr x = 2.150000e+00
-                Attr y = 7.500003e-02
+                Attr x = 2.050000e+00
+                Attr y = 1.250000e-01
                 Attr width = 1.960000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48270,14 +50811,14 @@ Alarm HH, H, L, LL"
           Object GetSp0 GetSp 4861 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr SpObject = "$PlcConnect:BaseComponent-Class-BaseManValve.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetSp0"
-                Attr x = 1.600000e+00
-                Attr y = 1.250000e-01
+                Attr x = 1.550000e+00
+                Attr y = 1.750000e-01
                 Attr width = 4.386667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48288,14 +50829,14 @@ Alarm HH, H, L, LL"
           Object StoSp0 StoSp 4862 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 10-OCT-2005 15:31:07.41
               Attr Object = "BaseComponent:Class-BaseManValveFo-Code-W-DSup0.DetectText"
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoSp0"
-                Attr x = 2.500000e+00
-                Attr y = 1.250000e-01
+                Attr x = 2.400000e+00
+                Attr y = 1.750000e-01
                 Attr width = 4.674444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48304,15 +50845,15 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object Text2 Text 4863 30-SEP-2005 13:47:08.06
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr Text = "Check if both switches are concurrently set"
               Attr FrameAttribute = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Text2"
-                Attr x = 1.650000e+00
-                Attr y = 1.810000e-01
+                Attr x = 1.600000e+00
+                Attr y = 2.310000e-01
                 Attr width = 6.080000e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48320,57 +50861,19 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object DtoEnum3 DtoEnum 4864 30-SEP-2005 13:47:08.06
-            Body RtBody 30-SEP-2005 13:47:08.06
-              Attr EnumValues[0] = 1
-              Attr EnumValues[1] = 2
+            Body RtBody 10-OCT-2005 15:19:42.20
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 18:12:41.73
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-DtoEnum"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-DtoEnum3"
-                Attr x = 2.200000e+00
-                Attr y = -5.250000e-01
+                Attr x = 2.300000e+00
+                Attr y = -8.750000e-01
                 Attr width = 2.635556e-01
                 Attr heigth = 2.000000e-01
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
-                Attr mask[0] = 3
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDi2 GetDi 4865 30-SEP-2005 13:47:08.06
-            Body RtBody 30-SEP-2005 13:47:08.06
-            EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
-              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
-              Buffer PlcNode
-                Attr object_type = 60
-                Attr cid = "pwrb:Class-GetDi"
-                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi2"
-                Attr x = 1.650000e+00
-                Attr y = -4.250000e-01
-                Attr width = 4.831111e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDi3 GetDi 4866 30-SEP-2005 13:47:08.06
-            Body RtBody 30-SEP-2005 13:47:08.06
-            EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
-              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
-              Buffer PlcNode
-                Attr object_type = 60
-                Attr cid = "pwrb:Class-GetDi"
-                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi3"
-                Attr x = 1.650000e+00
-                Attr y = -4.750001e-01
-                Attr width = 4.653333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 6
                 Attr mask[1] = 1
               EndBuffer
             EndBody
@@ -48378,14 +50881,14 @@ Alarm HH, H, L, LL"
           Object StoIp0 StoIp 4867 30-SEP-2005 13:47:08.06
             Body RtBody 30-SEP-2005 13:47:08.06
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 18:12:41.73
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.PosEnum"
               Buffer PlcNode
                 Attr object_type = 271
                 Attr cid = "pwrb:Class-StoIp"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-StoIp0"
-                Attr x = 2.600000e+00
-                Attr y = -3.750000e-01
+                Attr x = 2.650000e+00
+                Attr y = -7.250000e-01
                 Attr width = 4.763333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48396,16 +50899,17 @@ Alarm HH, H, L, LL"
           Object HasBothSwitches CArea 4868 30-SEP-2005 13:59:03.14
             Body RtBody 30-SEP-2005 13:56:11.55
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
-              Attr AreaWidth = 2.000000e+00
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr AreaWidth = 1.550000e+00
+              Attr AreaHeight = 6.000000e-01
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArea"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-HasBothSwitches"
-                Attr x = 1.450000e+00
-                Attr y = -6.250000e-01
-                Attr width = 2.030000e+00
-                Attr heigth = 1.000000e+00
+                Attr x = 1.500000e+00
+                Attr y = -1.750000e-01
+                Attr width = 1.580000e+00
+                Attr heigth = 6.000000e-01
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
                 Attr mask[0] = 1
               EndBuffer
@@ -48414,13 +50918,13 @@ Alarm HH, H, L, LL"
           Object And1 And 4869 30-SEP-2005 13:56:44.55
             Body RtBody 30-SEP-2005 13:56:44.55
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And1"
-                Attr x = 1.200000e+00
-                Attr y = 2.250000e-01
+                Attr x = 1.250000e+00
+                Attr y = 2.750000e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48433,14 +50937,14 @@ Alarm HH, H, L, LL"
           Object Disabled5 Disabled 4871 30-SEP-2005 13:56:55.02
             Body RtBody 30-SEP-2005 13:56:55.02
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Disabled"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled5"
-                Attr x = 5.000000e-01
-                Attr y = 3.250000e-01
+                Attr x = 5.500000e-01
+                Attr y = 3.750000e-01
                 Attr width = 5.673333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
@@ -48451,15 +50955,432 @@ Alarm HH, H, L, LL"
           Object Disabled6 Disabled 4872 30-SEP-2005 13:56:56.36
             Body RtBody 30-SEP-2005 13:56:56.36
             EndBody
-            Body DevBody 30-SEP-2005 13:59:18.20
+            Body DevBody 11-OCT-2005 17:58:39.53
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Disabled"
                 Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled6"
-                Attr x = 5.000000e-01
-                Attr y = 2.750000e-01
+                Attr x = 5.500000e-01
+                Attr y = 3.250000e-01
                 Attr width = 5.851111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or3 Or 5895 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or3"
+                Attr x = 2.000000e+00
+                Attr y = -1.325000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or4 Or 5896 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or4"
+                Attr x = 2.000000e+00
+                Attr y = -8.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And10 And 5897 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And10"
+                Attr x = 1.750000e+00
+                Attr y = -1.425000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled16 Disabled 5898 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled16"
+                Attr x = 5.500000e-01
+                Attr y = -9.250001e-01
+                Attr width = 5.673333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled17 Disabled 5899 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled17"
+                Attr x = 5.500000e-01
+                Attr y = -7.750000e-01
+                Attr width = 5.851111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi6 GetDi 5900 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi6"
+                Attr x = 6.000000e-01
+                Attr y = -7.750000e-01
+                Attr width = 4.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And11 And 5901 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And11"
+                Attr x = 1.250000e+00
+                Attr y = -1.475000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi7 GetDi 5902 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi7"
+                Attr x = 6.000000e-01
+                Attr y = -9.250000e-01
+                Attr width = 4.653333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi8 GetDi 5904 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi8"
+                Attr x = 6.000000e-01
+                Attr y = -1.275000e+00
+                Attr width = 4.653333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled18 Disabled 5905 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled18"
+                Attr x = 5.500000e-01
+                Attr y = -1.425000e+00
+                Attr width = 5.851111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled19 Disabled 5906 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchOpen"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Disabled19"
+                Attr x = 5.500000e-01
+                Attr y = -1.275000e+00
+                Attr width = 5.673333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And13 And 5907 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And13"
+                Attr x = 1.750000e+00
+                Attr y = -1.325000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDi9 GetDi 5908 11-OCT-2005 17:54:25.05
+            Body RtBody 11-OCT-2005 17:54:25.05
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseManValve.SwitchClosed"
+              Buffer PlcNode
+                Attr object_type = 60
+                Attr cid = "pwrb:Class-GetDi"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDi9"
+                Attr x = 6.000000e-01
+                Attr y = -1.425000e+00
+                Attr width = 4.831111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And14 And 5909 11-OCT-2005 17:54:25.06
+            Body RtBody 11-OCT-2005 17:54:25.06
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And14"
+                Attr x = 1.750000e+00
+                Attr y = -8.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text20 Text 5910 11-OCT-2005 17:54:25.06
+            Body DevBody 11-OCT-2005 17:58:39.53
+              Attr Text = "Display valve position"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Text20"
+                Attr x = 6.000000e-01
+                Attr y = -6.690000e-01
+                Attr width = 3.191111e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object And15 And 5912 11-OCT-2005 17:54:25.06
+            Body RtBody 11-OCT-2005 17:54:25.06
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And15"
+                Attr x = 1.750000e+00
+                Attr y = -9.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And16 And 5913 11-OCT-2005 17:54:25.06
+            Body RtBody 11-OCT-2005 17:54:25.06
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And16"
+                Attr x = 1.250000e+00
+                Attr y = -9.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or7 Or 5947 11-OCT-2005 18:11:11.35
+            Body RtBody 11-OCT-2005 18:11:11.35
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or7"
+                Attr x = 1.500000e+00
+                Attr y = -9.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Or8 Or 5948 11-OCT-2005 18:11:12.88
+            Body RtBody 11-OCT-2005 18:11:12.88
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-Or8"
+                Attr x = 1.500000e+00
+                Attr y = -1.475000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And18 And 5949 11-OCT-2005 18:11:18.26
+            Body RtBody 11-OCT-2005 18:11:18.26
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And18"
+                Attr x = 1.250000e+00
+                Attr y = -1.075000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And19 And 5950 11-OCT-2005 18:11:19.86
+            Body RtBody 11-OCT-2005 18:11:19.86
+            EndBody
+            Body DevBody 11-OCT-2005 18:37:49.21
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-And19"
+                Attr x = 1.250000e+00
+                Attr y = -1.575000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp1 GetDp 5963 11-OCT-2005 18:12:29.66
+            Body RtBody 11-OCT-2005 18:12:29.66
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseManValve.IndClosed"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDp1"
+                Attr x = 6.000000e-01
+                Attr y = -1.075000e+00
+                Attr width = 4.297778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp2 GetDp 5965 11-OCT-2005 18:12:31.27
+            Body RtBody 11-OCT-2005 18:12:31.27
+            EndBody
+            Body DevBody 11-OCT-2005 18:12:41.73
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseManValve.IndClosed"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W-GetDp2"
+                Attr x = 6.000000e-01
+                Attr y = -1.575000e+00
+                Attr width = 4.297778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseManValveFo-Code-W"
                 Attr mask[1] = 1

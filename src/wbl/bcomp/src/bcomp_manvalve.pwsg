@@ -1,7 +1,7 @@
 123
 2
 3
-300 bcomp_manvalveswop
+300 bcomp_manvalve
 301
 2
 19
@@ -19,6 +19,7 @@
 1916 2
 1914 0
 1918 1
+1919 0
 1917 0
 1907 0
 1906
@@ -304,13 +305,30 @@
 328 0
 329
 1
-100 5
+100 2113
 101 3
 102 65532
 103 0
-2
-200 $hostobject.SwitchOpen.ActualValue##Boolean
-201 30
+26
+2600 $hostobject.IndError#Boolean
+2601 176
+2602 29
+99
+61
+6100 
+6101 1
+6102 4
+6103 30
+6104 2
+6105 1
+99
+61
+6100 $hostobject.PosEnum##Int32
+6101 0
+6102 4
+6103 37
+6104 1
+6105 3
 99
 50
 5000 $hostobject
