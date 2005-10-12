@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.22 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.23 2005-10-12 12:58:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -351,6 +351,7 @@ extern "C" {
     ge_eSave_Trend_maxvalue_attr2      	= 2305,
     ge_eSave_DigFlash_attribute		= 2600,
     ge_eSave_DigFlash_color		= 2601,
+    ge_eSave_DigFlash_color2		= 2602,
     ge_eSave_FillLevel_attribute       	= 2700,
     ge_eSave_FillLevel_color		= 2701,
     ge_eSave_FillLevel_direction       	= 2702,
@@ -945,7 +946,8 @@ class GeDigError : public GeDynElem {
 class GeDigFlash : public GeDynElem {
  public:
   char attribute[120];		//!< Database reference to digital attribute.
-  glow_eDrawType  color;	//!< Flash color when the signal is high.
+  glow_eDrawType  color;	//!< First flash color when the signal is high.
+  glow_eDrawType  color2;	//!< Second flash color when the signal is high.
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -958,10 +960,11 @@ class GeDigFlash : public GeDynElem {
 
   GeDigFlash( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_DigFlash, (ge_mActionType) 0, ge_eDynPrio_DigFlash),
-    color(glow_eDrawType_Inherit), on(true)
+    color(glow_eDrawType_Inherit), color2(glow_eDrawType_Inherit), on(true)
     { strcpy( attribute, "");}
   GeDigFlash( const GeDigFlash& x) : 
-    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color), on(x.on)
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color), 
+    color2(x.color2), on(x.on)
     { strcpy( attribute, x.attribute);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
@@ -1179,7 +1182,7 @@ class GeAnalogColor : public GeDynElem {
     { strcpy( attribute, ""); instance = e_instance;}
   GeAnalogColor( const GeAnalogColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), limit(x.limit), 
-    limit_type(x.limit_type), color(x.color) 
+    limit_type(x.limit_type), color(x.color), p(0)
     { strcpy( attribute, x.attribute);
     instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);

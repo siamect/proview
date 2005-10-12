@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.31 2005-09-20 13:25:38 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.32 2005-10-12 12:58:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2139,6 +2139,11 @@ void GeDigFlash::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = &color;
     attrinfo[i].type = glow_eType_ToneOrColor;
     attrinfo[i++].size = sizeof( color);
+
+    strcpy( attrinfo[i].name, "DigFlash.Tone2");
+    attrinfo[i].value = &color2;
+    attrinfo[i].type = glow_eType_ToneOrColor;
+    attrinfo[i++].size = sizeof( color2);
   }
   else {
     strcpy( attrinfo[i].name, "DigFlash.Attribute");
@@ -2150,6 +2155,11 @@ void GeDigFlash::get_attributes( attr_sItem *attrinfo, int *item_count)
     attrinfo[i].value = &color;
     attrinfo[i].type = glow_eType_Color;
     attrinfo[i++].size = sizeof( color);
+
+    strcpy( attrinfo[i].name, "DigFlash.Color2");
+    attrinfo[i].value = &color2;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( color2);
   }
   *item_count = i;
 }
@@ -2192,6 +2202,7 @@ void GeDigFlash::save( ofstream& fp)
   fp << int(ge_eSave_DigFlash) << endl;
   fp << int(ge_eSave_DigFlash_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_DigFlash_color) << FSPACE << int(color) << endl;
+  fp << int(ge_eSave_DigFlash_color2) << FSPACE << int(color2) << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2212,6 +2223,7 @@ void GeDigFlash::open( ifstream& fp)
         fp.getline( attribute, sizeof(attribute));
         break;
       case ge_eSave_DigFlash_color: fp >> tmp; color = (glow_eDrawType)tmp; break;
+      case ge_eSave_DigFlash_color2: fp >> tmp; color2 = (glow_eDrawType)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDigFlash:open syntax error" << endl;
@@ -2283,10 +2295,19 @@ int GeDigFlash::scan( grow_tObject object)
 	dyn->ignore_color = true;
       }
       else {
-	if ( color >= (glow_eDrawType) glow_eDrawTone__)
-	  grow_ResetObjectFillColor( object);
-	grow_ResetObjectColorTone( object);
-	dyn->reset_color = true;
+	if ( color2 == glow_eDrawType_Inherit) {
+	  if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	    grow_ResetObjectFillColor( object);
+	  grow_ResetObjectColorTone( object);
+	  dyn->reset_color = true;
+	}
+	else {
+	  if ( color >= (glow_eDrawType) glow_eDrawTone__)
+	    grow_SetObjectFillColor( object, color2);
+	  else
+	    grow_SetObjectColorTone( object, (glow_eDrawTone) color2);
+	  dyn->ignore_color = true;
+	}
       }
       on = on ? false : true;
     }
@@ -2304,8 +2325,14 @@ int GeDigFlash::scan( grow_tObject object)
 	dyn->ignore_color = true;
       }
       else {
-	grow_ResetObjectFillColor( object);
-	dyn->reset_color = true;
+	if ( color2 == glow_eDrawType_Inherit) {
+	  grow_ResetObjectFillColor( object);
+	  dyn->reset_color = true;
+	}
+	else {
+	  grow_SetObjectFillColor( object, color2);
+	  dyn->ignore_color = true;
+	}
       }
       on = on ? false : true;
     }
@@ -3728,7 +3755,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
       attrinfo[i].type = glow_eType_Double;
       attrinfo[i++].size = sizeof( limit);
 
-      sprintf( attrinfo[i].name, "AnalogColor%d.Tone", inst);
+      sprintf( attrinfo[i].name, "AnalogColor%d.Color", inst);
       attrinfo[i].value = &color;
       attrinfo[i].type = glow_eType_Color;
       attrinfo[i++].size = sizeof( limit_type);
