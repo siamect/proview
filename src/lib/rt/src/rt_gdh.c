@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.19 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.20 2005-10-12 12:59:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -125,8 +125,8 @@ pwr_tStatus
 gdh_AttrrefToName (
   pwr_sAttrRef		*arp,     /**< Supplies the attribute reference structure 
                                        that defines an attribute. */
-  char			*name,    /**< Receives the name of the form <object name>,
-				       <attributename>. */
+  char			*name,    /**< Receives the name of the form 'object name',
+				       'attributename'. */
   unsigned int		size,     /**< Supplies the maximun length of the buffer */
   pwr_tBitMask		nametype  /**< ZZZ */
 )

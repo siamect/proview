@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growfolder.h,v 1.4 2005-10-12 12:59:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,8 @@ class GrowFolder : public GrowWindow {
     \param h		Height.
     \param border_d_type Border color.
     \param line_w	Linewidth of border.
+    \param sel_color	Color for selected tab.
+    \param unsel_color	Color for unselected tab.
     \param display_lev	Displaylevel when this object is visible.
     \param nodraw	Don't draw the object now.
   */

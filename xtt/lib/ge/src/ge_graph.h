@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.15 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.16 2005-10-12 12:57:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -264,7 +264,7 @@ class GraphApplList {
   
   //! Constructor
   /*!
-    \param root		The root of the list.
+    \param appl_key	Application key.
     \param appl_ctx	Application object.
   */
   GraphApplList( void *appl_key, void *appl_ctx) :
@@ -276,8 +276,8 @@ class GraphApplList {
   GraphApplList		*next;		//!< Next element in list.
 
   //! Insert an application in list.
-  /*! \param key	Key for application. */
-  /*! \param ctx	Application object to insert. */
+  /*! \param key	Key for application.
+      \param ctx	Application object to insert. */
   void 		insert( void *key, void *ctx);
 
   //! Remove an application from list.
@@ -910,6 +910,7 @@ class Graph {
     \param inverted	The attribute is inverted.
     \param type		Type of attribute.
     \param size		Size of attribute.
+    \param elem		Array element.
 
     The attribute reference is of type !VKV-P1-Str1.ActualValue##String80 which
     is inverted (!), of type pwr_eType_String with size 80.

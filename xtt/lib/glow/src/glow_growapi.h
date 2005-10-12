@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.14 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.15 2005-10-12 12:59:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -987,6 +987,8 @@ typedef GlowTraceData glow_sTraceData;
     \param height	Height of the rectangle.
     \param draw_type	Border color.
     \param line_width	Line width of border.
+    \param fill		Table filled.
+    \param fillcolor	Fill color.
     \param display_level Display levels when the object is visible.
     \param user_data	User data.
     \param bar		Created GrowWindow object.
@@ -1645,7 +1647,7 @@ typedef GlowTraceData glow_sTraceData;
   //! Set object visibility.
   /*!
     \param object      	Object.
-    \param visible   	1 object is visible, 0 object is invisible.
+    \param visibility   	1 object is visible, 0 object is invisible.
   */
   void grow_SetObjectVisibility( grow_tObject object, glow_eVis visibility);
 

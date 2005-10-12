@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.5 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.6 2005-10-12 12:59:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -615,7 +615,6 @@ class GrowCtx : public GlowCtx {
   //! Send a table callback if such a callback is registred.
   /*!
     \param object	Menu object.
-    \param item		Activated menu item.
     \param event	Menu event.
     \param x		x coordinate.
     \param y		y coordinate.
