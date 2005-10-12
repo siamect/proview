@@ -187,29 +187,23 @@ menu Other
 {
   menu BaseComponent
   {
-    subgraph    ManValve2Sw 	pwr_exe:bcomp_manvalve2sw.pwsg 		4
-    subgraph    ManValveNoSw 	pwr_exe:bcomp_manvalvenosw.pwsg 	4
-    subgraph    ManValveSwCl 	pwr_exe:bcomp_manvalveswcl.pwsg 	4
-    subgraph    ManValveSwOp	pwr_exe:bcomp_manvalveswop.pwsg 	4
-    subgraph    MValveOr2Sw 	pwr_exe:bcomp_mvalveor2sw.pwsg 		1
-    subgraph    MValveOrSwCl 	pwr_exe:bcomp_mvalveorswcl.pwsg 	1
-    subgraph    MValveOrSwOp	pwr_exe:bcomp_mvalveorswop.pwsg 	1
-    subgraph    MValveOrNoSw 	pwr_exe:bcomp_mvalveornosw.pwsg 	1
-    subgraph    CValveOr 	pwr_exe:bcomp_cvalveor.pwsg 		2
-    subgraph    CValveOr2Sw 	pwr_exe:bcomp_cvalveor2sw.pwsg 		2
-    subgraph    CValveOrSwCl 	pwr_exe:bcomp_cvalveorswcl.pwsg 	2
-    subgraph    CValveOrSwOp 	pwr_exe:bcomp_cvalveorswop.pwsg 	2
-    subgraph    CValvePoOr 	pwr_exe:bcomp_cvalvepoor.pwsg 		2
-    subgraph    CValvePoOr2Sw 	pwr_exe:bcomp_cvalvepoor2sw.pwsg 	2
-    subgraph    FanCbCoSs 	pwr_exe:bcomp_fancbcoss.pwsg 		6
+    subgraph    CValve 		pwr_exe:bcomp_cvalve.pwsg 		2
+    subgraph    FanAggr 	pwr_exe:bcomp_fanaggr.pwsg 		6
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
-    subgraph    SupSwitch 	pwr_exe:bcomp_supswitch.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
+    subgraph    ManValve 	pwr_exe:bcomp_manvalve.pwsg 		4
+    subgraph    ManValveNoSwitches pwr_exe:bcomp_manvalvenoswitches.pwsg 4
+    subgraph    ManValveSwitchClosed pwr_exe:bcomp_manvalveswitchclosed.pwsg 4
+    subgraph    ManValveSwitchOpen pwr_exe:bcomp_manvalveswitchopen.pwsg 4
+    subgraph    ManValveTwoSwitches pwr_exe:bcomp_manvalvetwoswitches.pwsg 4
+    subgraph    MValve 		pwr_exe:bcomp_mvalve.pwsg 		1
+    subgraph    MValveNoSwitches pwr_exe:bcomp_mvalvenoswitches.pwsg 	1
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
     subgraph    PressureSwitch 	pwr_exe:bcomp_pressureswitch.pwsg 	16
+    subgraph    SupSwitch 	pwr_exe:bcomp_supswitch.pwsg 		16
     subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
     subgraph    TempSwitch 	pwr_exe:bcomp_tempswitch.pwsg 		16
-    subgraph	ABB_ACS800Pump  pwr_exe:mcomp_abb_acs800pump.pwsg	16
+    subgraph	ABB_ACS800PumpAggr  pwr_exe:mcomp_abb_acs800pumpaggr.pwsg 16
   }
   menu Animations
   {
