@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm11.c,v 1.1 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_goenm11.c,v 1.2 2005-10-12 13:01:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -152,8 +152,9 @@ int goen_create_nodetype_m11(
   f_height = frame_height;
   f_width = frame_width;
   
-  flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Document, 
+  flow_CreateNodeClass( ctx, name, flow_eNodeGroup_Common, 
 			&nc);
+  flow_SetNoConObstacle( nc, 1);
 
   /* Draw the rectangle for the frame */
   flow_AddRect( nc, 0, -y_offs, f_width, y_offs * 2, 
