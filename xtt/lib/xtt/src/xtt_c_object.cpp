@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.11 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.12 2005-10-12 13:06:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1160,21 +1160,67 @@ static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
 
   strcat( name, ".SimConnect");
   sts = gdh_GetObjectInfo( name, (void *)&simconnect, sizeof(simconnect));
-  if ( EVEN(sts)) return sts;
-
-  sts = gdh_AttrrefToName( &simconnect,
-		  name, sizeof(name), cdh_mNName);
-  if ( EVEN(sts)) return sts;
-
-  // Check if object is mounted with other name
-  sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
   if ( EVEN(sts)) {
-    sts = gdh_AttrrefToName( &simconnect,
-		  name, sizeof(name), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return sts;
-  }
-  sprintf( cmd, "open graph/class/inst=%s/name=\"%s\"", name, name);
+    // Look for sim graph to main object
+    pwr_tClassId classid;
+    char		classname[80];
+    char		fname[120];
+    char		found_file[120];
+    char		*s;
 
+    sts = gdh_GetAttrRefTid( objar, &classid);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			   classname, sizeof(classname), cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+    cdh_ToLower( classname, classname);
+
+    if ( classname[0] == '$')
+      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
+    else
+      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
+    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    if ( EVEN(sts)) {
+      sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+      sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    }
+    if ( EVEN(sts)) return sts;
+
+    s = strrchr( fname, '.');
+    *s = 0;
+    s = strrchr( fname, '/');
+
+    sts = gdh_AttrrefToName( objar,
+			     name, sizeof(name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    // Check if object is mounted with other name
+    sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
+    if ( EVEN(sts)) {
+      sts = gdh_AttrrefToName( objar,
+			       name, sizeof(name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
+
+    sprintf( cmd, "open graph %s/inst=%s/name=\"%s\"", s+1, name, name);
+  }
+  else {
+    sts = gdh_AttrrefToName( &simconnect,
+			     name, sizeof(name), cdh_mNName);
+    if ( EVEN(sts)) return sts;
+
+    // Check if object is mounted with other name
+    sts = gdh_NameToAttrref( pwr_cNObjid, name, &aref);
+    if ( EVEN(sts)) {
+      sts = gdh_AttrrefToName( &simconnect,
+			       name, sizeof(name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
+    }
+    sprintf( cmd, "open graph/class/inst=%s/name=\"%s\"", name, name);
+  }
   ((XNav *)ip->EditorContext)->command( cmd);
   return XNAV__SUCCESS;
 }
@@ -1211,7 +1257,32 @@ static pwr_tStatus SimulateFilter( xmenu_sMenuCall *ip)
 
   strcat( name, ".SimConnect");
   sts = gdh_GetObjectInfo( name, (void *)&simconnect, sizeof(simconnect));
-  if ( EVEN(sts) || cdh_ObjidIsNull( simconnect.Objid))
+  if ( EVEN(sts)) {
+    // Look for sim graph to main object
+    sts = gdh_GetAttrRefTid( objar, &classid);
+    if ( EVEN(sts)) return XNAV__INVISIBLE;
+
+    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			   classname, sizeof(classname), cdh_mName_object);
+    if ( EVEN(sts)) return sts;
+    cdh_ToLower( classname, classname);
+
+    if ( classname[0] == '$')
+      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
+    else
+      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
+    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    if ( EVEN(sts)) {
+      sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+      sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+      dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+    }
+    if ( ODD(sts))
+      return XNAV__SUCCESS;
+    return XNAV__INVISIBLE;
+  }
+  else if ( cdh_ObjidIsNull( simconnect.Objid))
     return XNAV__INVISIBLE;
 
   // Simconnect found
