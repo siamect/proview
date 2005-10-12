@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.4 2005-10-12 12:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -230,6 +230,7 @@ int flow_GetConPointTraceAttr( flow_tObject object, int num, char *trace_attr,
 int flow_GetConPoint( flow_tObject object,  int num, double *x, double *y, 
 	flow_eDirection *dir);
 void flow_SetClickSensitivity( flow_tCtx ctx, int value);
+void flow_SetNoConObstacle( flow_tNodeClass nc, int no_obstacle);
 
 #if defined __cplusplus
 }

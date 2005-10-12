@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.4 2005-10-12 12:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -674,4 +674,9 @@ int flow_GetConPoint( flow_tObject object,  int num, double *x, double *y,
 void flow_SetClickSensitivity( flow_tCtx ctx, int value)
 {
   flow_draw_set_click_sensitivity( ctx, value);
+}
+
+void flow_SetNoConObstacle( flow_tNodeClass nc, int no_obstacle)
+{
+  ((FlowNodeClass *)nc)->set_no_con_obstacle( no_obstacle);
 }

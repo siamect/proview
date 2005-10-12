@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.7 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow.h,v 1.8 2005-10-12 12:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -395,6 +395,7 @@ typedef enum {
 	flow_eSave_NodeClass_nc_name		= 300,
 	flow_eSave_NodeClass_a			= 301,
 	flow_eSave_NodeClass_group		= 302,
+	flow_eSave_NodeClass_no_con_obstacle	= 303,
 	flow_eSave_ConClass_cc_name		= 400,
 	flow_eSave_ConClass_con_type		= 401,
 	flow_eSave_ConClass_corner		= 402,

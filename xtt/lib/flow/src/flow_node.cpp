@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.5 2005-10-12 12:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -968,7 +968,7 @@ void FlowNode::get_borders()
   x_left = y_low = 1e37;
   x_right = y_high = -1e37;
   get_node_borders();
-  if ( nc->group == flow_eNodeGroup_Document)
+  if ( nc->group == flow_eNodeGroup_Document || nc->no_con_obstacle)
   {
     obst_x_left = obst_y_low = 1e37;
     obst_x_right = obst_y_high = -1e37;

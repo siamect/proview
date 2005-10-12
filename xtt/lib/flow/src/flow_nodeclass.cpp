@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.5 2005-10-12 12:56:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 
 FlowNodeClass::FlowNodeClass( FlowCtx *flow_ctx, char *name, 
 	flow_eNodeGroup grp)
-  : ctx(flow_ctx), a(10,10), group(grp)
+  : ctx(flow_ctx), a(10,10), group(grp), no_con_obstacle(0)
 {
   strcpy( nc_name, name);
 }
@@ -55,6 +55,7 @@ void FlowNodeClass::save( ofstream& fp, flow_eSaveMode mode)
   fp <<	int(flow_eSave_NodeClass_a) << endl;
   a.save( fp, mode);
   fp <<	int(flow_eSave_NodeClass_group) << FSPACE << int(group) << endl;
+  fp << int(flow_eSave_NodeClass_no_con_obstacle) << FSPACE << no_con_obstacle << endl;
   fp <<	int(flow_eSave_End) << endl;
 }
 
@@ -76,6 +77,7 @@ void FlowNodeClass::open( ifstream& fp)
         break;
       case flow_eSave_NodeClass_a: a.open( ctx, fp); break;
       case flow_eSave_NodeClass_group: fp >> tmp; group = (flow_eNodeGroup)tmp; break;
+      case flow_eSave_NodeClass_no_con_obstacle: fp >> no_con_obstacle; break;
       case flow_eSave_End: end_found = 1; break;
       default:
         cout << "FlowNodeClass:open syntax error" << endl;
@@ -308,18 +310,14 @@ void FlowNodeClass::get_obstacle_borders( double pos_x, double pos_y, double *x_
 { 
   int i;
 
-  switch ( group)
-  {
-    case flow_eNodeGroup_Document:
-      for ( i = 0; i < a.a_size; i++)
-      {
-        if ( a.a[i]->type() == flow_eObjectType_Rect)
-          a.a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
-      }
-      break;
-    default:
-      a.get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
+  if ( group == flow_eNodeGroup_Document || no_con_obstacle) {
+    for ( i = 0; i < a.a_size; i++) {
+      if ( a.a[i]->type() == flow_eObjectType_Rect)
+	a.a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
+    }
   }
+  else
+    a.get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
 }
 
 void FlowNodeClass::get_object_name( char *name)
