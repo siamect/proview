@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.20 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: ini.c,v 1.21 2005-10-12 13:03:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -444,6 +444,7 @@ loadSectRbody (
 
     bp = ivol_GetBody(sts, ob.oid, NULL);
     if (bp == NULL) {
+      *sts = INI__SUCCESS;
       // errh_LogError(&cp->log, "Cannot find body of object %s\n%m", cdh_ObjidToString(NULL, ob.oid, 0), *sts);
     } else {
       if (dbs_dAlign(bp->size) < ob.size) {
