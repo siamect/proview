@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.17 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.18 2005-10-12 13:07:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -806,14 +806,14 @@ union pwr_u_ParDef
 
 struct pwr_s_Bit
     {
-    pwr_tString32 Text;
+    pwr_tString80 Text;
     pwr_tString32 PgmName;
     pwr_tUInt32	Value;
     };
 
 struct pwr_s_Value
     {
-    pwr_tString32 Text;
+    pwr_tString80 Text;
     pwr_tString32 PgmName;
     pwr_tInt32	Value;
     };
