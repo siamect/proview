@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_value.wb_load,v 1.2 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_value.wb_load,v 1.3 2005-10-12 13:01:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@ SObject pwrs:Class
       EndBody
        Object Text $Attribute 1
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$String32"
+          Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
       Object PgmName $Attribute 2
