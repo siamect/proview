@@ -54,9 +54,19 @@ pwsgsources := $(sort \
              ) \
            )
 
+flwsources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.flw) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 wbl_sources := $(filter %.wb_load,$(wblsources))
 pwg_sources := $(filter %.pwg,$(pwgsources))
 pwsg_sources := $(filter %.pwsg,$(pwsgsources))
+flw_sources := $(filter %.flw,$(flwsources))
 export_wbl_dbs := $(patsubst %.wb_load,$(load_dir)/%.dbs,$(wbl_sources))
 export_wbl_h := $(patsubst %.wb_load,$(inc_dir)/pwr_%classes.h,$(wbl_sources))
 export_wbl_hpp := $(patsubst %.wb_load,$(inc_dir)/pwr_%classes.hpp,$(wbl_sources))
@@ -68,6 +78,7 @@ export_wbl_ps_en_us := $(patsubst %.wb_load,$(doc_dir)/en_us/%.ps,$(wbl_sources)
 export_wbl_ps_sv_se := $(patsubst %.wb_load,$(doc_dir)/sv_se/%.ps,$(wbl_sources))
 export_pwg := $(patsubst %.pwg,$(exe_dir)/%.pwg,$(pwg_sources))
 export_pwsg := $(patsubst %.pwsg,$(exe_dir)/%.pwsg,$(pwsg_sources))
+export_flw := $(patsubst %.flw,$(load_dir)/%.flw,$(flw_sources))
 
 clean_dbs := $(patsubst %.wb_load,clean_%.dbs,$(wbl_sources))
 clean_h := $(patsubst %.wb_load,clean_%.h,$(wbl_sources))
@@ -130,6 +141,10 @@ $(exe_dir)/%.pwsg : ../../%.pwsg
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(load_dir)/%.flw : ../../%.flw
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 .PHONY : all init copy lib exe clean realclean\
          $(clean_wbl)
 
@@ -142,7 +157,8 @@ lib  : $(export_wbl_dbs)
 copy : $(export_wbl_h) \
        $(export_wbl_hpp) \
        $(export_pwg) \
-       $(export_pwsg)
+       $(export_pwsg) \
+       $(export_flw)
 
 exe:   $(export_wbl_xtthelp_en_us) \
        $(export_wbl_xtthelp_sv_se) \
