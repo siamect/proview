@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_io.h,v 1.6 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_macro_io.h,v 1.7 2005-10-18 05:11:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -210,6 +210,14 @@
 */
 #define resdi_exec(obj,in)						\
   if ( in ) obj->ActualValue = false;
+
+/*_*
+  TOGGLEDI								
+  Toggle digital input (Simulate)			
+  @aref toggledi ToggleDi
+*/
+#define toggledi_exec(obj,in)						\
+  if ( in) obj->ActualValue = !obj->ActualValue;
 
 /*_*
   STOAI								
