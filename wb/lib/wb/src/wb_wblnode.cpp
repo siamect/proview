@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.49 2005-10-07 11:28:25 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.50 2005-10-18 05:14:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -107,6 +107,8 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTdix_ClassDefFlags", pwr_eTdix_ClassDefFlags }
   ,{ "pwr_eTypeDef_ObjBodyDefFlags", pwr_eTypeDef_ObjBodyDefFlags }
   ,{ "pwr_eTdix_ObjBodyDefFlags", pwr_eTdix_ObjBodyDefFlags }
+  ,{ "pwr_eType_DataRef", pwr_eType_DataRef }
+  ,{ "pwr_eTix_DataRef", pwr_eTix_DataRef }
   ,{ 0, 0 }
 };
 
@@ -2167,6 +2169,18 @@ int wb_wblnode::attrStringToValue( int type_id, char *value_str,
       sts = m_vrep->nameToAttrRef( value_str, &attrref);
       if (EVEN(sts)) return 0;
       memcpy( buffer_ptr, &attrref, sizeof(attrref));
+
+      break;
+    }
+    case pwr_eType_DataRef:
+    {
+      pwr_tDataRef	dataref;
+
+      sts = m_vrep->nameToAttrRef( value_str, &dataref.Aref);
+      if (EVEN(sts)) return 0;
+      
+      dataref.Ptr = 0;
+      memcpy( buffer_ptr, &dataref, sizeof(dataref));
 
       break;
     }

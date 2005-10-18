@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.21 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.22 2005-10-18 05:07:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -416,6 +416,16 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
   	memcpy( buffer_ptr, &attrref, sizeof(attrref));
       break;
     }
+    case pwr_eType_DataRef:
+    {
+      pwr_tDataRef	dataref;
+
+      sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &dataref.Aref);
+      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+      dataref.Ptr = 0;
+      memcpy( buffer_ptr, &dataref, sizeof(dataref));
+      break;
+    }
     case pwr_eType_Time:
     {
       pwr_tTime	time;
@@ -596,7 +606,22 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     case pwr_eType_AttrRef:
     {
       attrref = (pwr_sAttrRef *) value_ptr;
-      sts = gdh_AttrrefToName ( attrref, hiername, sizeof(hiername), cdh_mNName);
+      sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
+      if (EVEN(sts))
+      {
+        strcpy( str, "");
+        *len = 0;
+        break;
+      }
+      *len = sprintf( str, "%s", hiername);
+      break;
+    }
+    case pwr_eType_DataRef:
+    {
+      pwr_tDataRef *dataref;
+
+      dataref = (pwr_tDataRef *) value_ptr;
+      sts = gdh_AttrrefToName( &dataref->Aref, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
       {
         strcpy( str, "");

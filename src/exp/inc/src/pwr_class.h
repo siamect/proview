@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.18 2005-10-12 13:07:42 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.19 2005-10-18 05:07:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -146,6 +146,7 @@ typedef enum {
   pwr_eTix_CastId	= 31,	/* Basic type */
   pwr_eTix_ProString	= 32,	/* Basic type */
   pwr_eTix_DisableAttr	= 33,	/* Basic type */
+  pwr_eTix_DataRef	= 34,	/* Basic type */
   pwr_eTix_
 } pwr_eTix;
 
@@ -189,6 +190,7 @@ typedef enum {
   pwr_eType_CastId	= pwr_TypeId(pwr_eTix_CastId),
   pwr_eType_ProString	= pwr_TypeId(pwr_eTix_ProString),
   pwr_eType_DisableAttr	= pwr_TypeId(pwr_eTix_DisableAttr),
+  pwr_eType_DataRef	= pwr_TypeId(pwr_eTix_DataRef),
   pwr_eType_		= pwr_TypeId(pwr_eTix_)
 } pwr_eType;
 

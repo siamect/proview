@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.18 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: pwr.h,v 1.19 2005-10-18 05:07:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -465,6 +465,14 @@ typedef struct {
   pwr_tUInt32       Size;	//!< Attribute size.
   pwr_mAttrRef      Flags;	//!< Attribute flags.
 } pwr_sAttrRef;
+
+/*_*
+  @aref dataref DataRef
+*/
+typedef struct {
+  void		    *Ptr;	//!< Private plc pointer to data object.
+  pwr_sAttrRef      Aref;	//!< Attribute reference to data object.
+} pwr_tDataRef;
 
 /*_*
   @aref constants Constants

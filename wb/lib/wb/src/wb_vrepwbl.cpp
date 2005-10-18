@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.44 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.45 2005-10-18 05:13:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1128,21 +1128,46 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
 
   if ( !aname.hasAttribute()) {
     // No attribute given, attrref to whole RtBody
-    wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
-    if ( EVEN(sts)) return sts;
 
-    wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
-    if ( EVEN(sts)) return sts;
+    ref_wblnode cn = findClass( cid);
+    if ( cn) {
+      if ( !cn->o->is_built)
+        cn->build( 0);
 
-    attrref->Objid = oid;
-    attrref->Offset = 0;
-    attrref->Size = bdrep->size();
-    attrref->Body = cdh_TypeObjidToId( bdrep->boid());
-    attrref->Flags.m = 0;
-    attrref->Flags.b.Object = 1;
+      // Get body object
+      wb_wblnode *n_body = cn->o->fch;
+      while( n_body) {
+        if ( n_body->isObjBodyDef() && n_body->o->b.bix == pwr_eBix_rt) 
+          break;
+        n_body = n_body->o->fws;
+      }
+      if ( !n_body)
+        return LDH__NOSUCHBODY;
 
-    delete cdrep;
-    delete bdrep;
+      attrref->Objid = oid;
+      attrref->Offset = 0;
+      attrref->Size = n_body->o->b.size;
+      attrref->Body = cdh_TypeObjidToId( n_body->o->m_oid);
+      attrref->Flags.m = 0;
+      attrref->Flags.b.Object = 1;
+    }
+    else {
+      wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+      if ( EVEN(sts)) return sts;
+
+      wb_bdrep *bdrep = cdrep->bdrep( &sts, pwr_eBix_rt);
+      if ( EVEN(sts)) return sts;
+
+      attrref->Objid = oid;
+      attrref->Offset = 0;
+      attrref->Size = bdrep->size();
+      attrref->Body = cdh_TypeObjidToId( bdrep->boid());
+      attrref->Flags.m = 0;
+      attrref->Flags.b.Object = 1;
+
+      delete cdrep;
+      delete bdrep;
+    }
   }
   else {
     aname.setShadowed(true);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.24 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.25 2005-10-18 05:14:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -274,6 +274,16 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
   	memcpy( buffer_ptr, &attrref, sizeof(attrref));
       break;
     }
+    case pwr_eType_DataRef:
+    {
+      pwr_tDataRef	dataref;
+
+      dataref.Ptr = 0;
+      sts = ldh_NameToAttrRef( ldhses, value_str, &dataref.Aref);
+      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+  	memcpy( buffer_ptr, &dataref, sizeof(dataref));
+      break;
+    }
     case pwr_eType_Time:
     {
       pwr_tTime	time;
@@ -430,6 +440,30 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
 	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, &name_p, len);
       else
 	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, &name_p, len);
+
+      if (EVEN(sts))
+      {
+        strcpy( str, "");
+        *len = 0;
+	*buff = str;
+        break;
+      }
+      strcpy( str, name_p);
+      *buff = str;
+      break;
+    }
+    case pwr_eType_DataRef:
+    {
+      char *name_p;
+      pwr_tDataRef *dataref;
+      ldh_sVolumeInfo info;
+      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+
+      dataref = (pwr_tDataRef *) value_ptr;
+      if ( dataref->Aref.Objid.vid == info.Volume)
+	sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_Aref, &name_p, len);
+      else
+	sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_ArefVol, &name_p, len);
 
       if (EVEN(sts))
       {
@@ -1187,6 +1221,7 @@ static void  wnav_type_id_to_name( int type_id, char *type_id_name)
     case pwr_eType_ObjectIx: strcpy( type_id_name, "ObjectIx"); break;
     case pwr_eType_RefId: strcpy( type_id_name, "RefId"); break;
     case pwr_eType_DeltaTime: strcpy( type_id_name, "DeltaTime"); break;
+    case pwr_eType_DataRef: strcpy( type_id_name, "DataRef"); break;
     default: strcpy( type_id_name, "");
   }
 }

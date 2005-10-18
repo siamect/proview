@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.14 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.15 2005-10-18 05:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -540,6 +540,7 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_Enum:
     case pwr_eType_Status:
     case pwr_eType_NetStatus:
+    case pwr_eType_DataRef:
       varOffset = varSize * i;
       val = valueb + varOffset;
       tval = tvalueb + varOffset;
@@ -747,13 +748,25 @@ bool wb_print_wbl::printValue (wb_volume& v,
         sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
       }
     }
-
 #if 0      
     } else {
       ConvertObjectName( root, sp, conv_name);
       sprintf(sval, "\"%s\"", conv_name);
     }
 #endif
+    break;
+  case pwr_eType_DataRef:
+    if (cdh_ObjidIsNull(((pwr_tDataRef*)val)->Aref.Objid))
+      sprintf(sval, "0");
+    else {
+      wb_attribute a = v.attribute( &((pwr_tDataRef*)val)->Aref);
+      if (a)
+        sprintf(sval, "\"%s\"", a.longName().c_str());
+      else {
+        sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, &((pwr_tDataRef*)val)->Aref, 1));
+      }
+    }
+
     break;
   case pwr_eType_String:
   case pwr_eType_ProString: {

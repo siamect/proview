@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_treeimport.cpp,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_treeimport.cpp,v 1.5 2005-10-18 05:12:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,6 +119,20 @@ bool wb_treeimport::importUpdateSubClass( wb_adrep *subattr, char *body, wb_vrep
 	  }
 	  break;
 	}
+	case pwr_eType_DataRef: {
+	  pwr_tDataRef *drp = (pwr_tDataRef *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( drp->Aref.Objid.vid == m_import_source_vid && 
+		 (oix = importTranslate( drp->Aref.Objid.oix))) {
+	      drp->Aref.Objid.vid = vrep->vid();
+	      drp->Aref.Objid.oix = oix;
+	      *modified = true;
+	    }
+	    drp++;
+	  }
+	  break;
+	}
 	default:
 	  ;
 	}
@@ -165,7 +179,7 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
 	switch ( adrep->type()) {
 	case pwr_eType_Objid: {
 	  pwr_tOid *oidp = (pwr_tOid *)(body + adrep->offset());
-	  for ( i = 0; i < elements; i++) {
+	  for ( int j = 0; j < elements; j++) {
 	    if ( oidp->vid == m_import_source_vid && (oix = importTranslate( oidp->oix))) {
 	      oidp->vid = vrep->vid();
 	      oidp->oix = oix;
@@ -177,13 +191,26 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
 	}
 	case pwr_eType_AttrRef: {
 	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + adrep->offset());
-	  for ( i = 0; i < elements; i++) {
+	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_import_source_vid && (oix = importTranslate( arp->Objid.oix))) {
 	      arp->Objid.vid = vrep->vid();
 	      arp->Objid.oix = oix;
 	      modified = true;
 	    }
 	    arp++;
+	  }
+	  break;
+	}
+	case pwr_eType_DataRef: {
+	  pwr_tDataRef *drp = (pwr_tDataRef *)(body + adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( drp->Aref.Objid.vid == m_import_source_vid && 
+		 (oix = importTranslate( drp->Aref.Objid.oix))) {
+	      drp->Aref.Objid.vid = vrep->vid();
+	      drp->Aref.Objid.oix = oix;
+	      modified = true;
+	    }
+	    drp++;
 	  }
 	  break;
 	}
