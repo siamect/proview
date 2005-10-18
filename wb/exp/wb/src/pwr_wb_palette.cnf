@@ -573,6 +573,7 @@ palette PlcEditorPalette
     }
     menu Data
     {
+      class CStoAttrRefP
       class DataCollect
       class GetData
     }
@@ -599,6 +600,7 @@ palette PlcEditorPalette
       class StoDi
       class StoIi
       class StoPi
+      class ToggleDi
     }
     menu Function
     {
@@ -655,7 +657,7 @@ palette PlcEditorPalette
       class CompModeDMFo
       class CompModeD2MFo
       class CompModeAMFo
-      class FanAggregateFo
+      class BaseMotorAggrFo
       class RunTimeCounterFo
     }
     menu ABB
@@ -666,11 +668,12 @@ palette PlcEditorPalette
     }
     menu Simulate
     {
-      class ABB_ACS800PumpAggrSim
+      class ABB_ACS800MotorAggrSim
       class BaseCValveSim
       class BaseMValveSim
       class BaseSensorSim
-      class FanAggregateSim
+      class BaseMotorAggrSim
+      class BaseMotorSim
     }
   }
 }

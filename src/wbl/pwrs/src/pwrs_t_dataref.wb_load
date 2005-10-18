@@ -1,0 +1,40 @@
+! 
+!  Proview   $Id: pwrs_t_dataref.wb_load,v 1.1 2005-10-18 05:06:22 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_t_dataref.wb_load -- Defines the basic type DataRef
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  Basic type for data object pointer.
+!
+!  Pointer to a data object used as data input and output of function bocks 
+!  in the plc program.
+! 
+!  The type contains a pointer to the data object and the attribute reference 
+!  of the data object.
+!*/
+  Object $DataRef pwr_eClass_Type pwr_eTix_DataRef
+    Body SysBody
+      Attr Type = pwr_eType_DataRef
+      Attr Size = 28
+    EndBody
+  EndObject
+EndSObject
