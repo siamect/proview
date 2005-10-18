@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_object.wb_load,v 1.15 2005-10-07 05:57:31 claes Exp $
+!  Proview   $Id: pwrs_c_object.wb_load,v 1.16 2005-10-18 05:15:36 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -1005,6 +1005,13 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-OpenGraphFilter"
 	EndBody
       EndObject
+      Object OpenObjectGraph $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Object Graph"
+	  Attr MethodName = "$Object-OpenObjectGraph"
+	  Attr FilterName = "$Object-OpenObjectGraphFilter"
+	EndBody
+      EndObject
       Object OpenTrend $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Trend"
@@ -1063,13 +1070,6 @@ SObject pwrs:Class
 	  Attr FilterName = "$Object-RtNavigatorFilter"
 	EndBody
       EndObject
-      Object OpenObjectGraph $MenuButton
-	Body SysBody
-	  Attr ButtonName = "Object Graph"
-	  Attr MethodName = "$Object-OpenObjectGraph"
-	  Attr FilterName = "$Object-OpenObjectGraphFilter"
-	EndBody
-      EndObject
       Object OpenCrossref $MenuButton
 	Body SysBody
 	  Attr ButtonName = "Crossreferences"
@@ -1110,6 +1110,13 @@ SObject pwrs:Class
 	  Attr ButtonName = "Collect"
 	  Attr MethodName = "$Object-Collect"
 	  Attr FilterName = "$Object-CollectFilter"
+	EndBody
+      EndObject
+      Object Simulate $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Simulate"
+	  Attr MethodName = "$Object-Simulate"
+	  Attr FilterName = "$Object-SimulateFilter"
 	EndBody
       EndObject
     EndObject
