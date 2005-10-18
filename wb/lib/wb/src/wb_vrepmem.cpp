@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.19 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.20 2005-10-18 05:13:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1236,6 +1236,18 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  }
 	  break;
 	}
+	case pwr_eType_DataRef: {
+	  pwr_tDataRef *drp = (pwr_tDataRef *)(body + i * subattr->size() / subattr_elements + 
+					adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
+	      drp->Aref.Objid.vid = m_vid;
+	    else if ( !keepref)
+	      drp->Aref.Objid = pwr_cNOid;
+	    drp++;
+	  }
+	  break;
+	}
 	default:
 	  ;
 	}
@@ -1276,7 +1288,7 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	switch ( adrep->type()) {
 	case pwr_eType_Objid: {
 	  pwr_tOid *oidp = (pwr_tOid *)(body + adrep->offset());
-	  for ( i = 0; i < elements; i++) {
+	  for ( int j = 0; j < elements; j++) {
 	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
 	      oidp->vid = m_vid;
 	    else if ( !keepref)
@@ -1287,12 +1299,23 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	}
 	case pwr_eType_AttrRef: {
 	  pwr_sAttrRef *arp = (pwr_sAttrRef *)(body + adrep->offset());
-	  for ( i = 0; i < elements; i++) {
+	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
 	      arp->Objid.vid = m_vid;
 	    else if ( !keepref)
 	      arp->Objid = pwr_cNOid;
 	    arp++;
+	  }
+	  break;
+	}
+	case pwr_eType_DataRef: {
+	  pwr_tDataRef *drp = (pwr_tDataRef *)(body + adrep->offset());
+	  for ( int j = 0; j < elements; j++) {
+	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
+	      drp->Aref.Objid.vid = m_vid;
+	    else if ( !keepref)
+	      drp->Aref.Objid = pwr_cNOid;
+	    drp++;
 	  }
 	  break;
 	}
