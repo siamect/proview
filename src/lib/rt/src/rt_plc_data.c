@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_data.c,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_data.c,v 1.5 2005-10-18 05:10:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -121,3 +121,14 @@ void DataCollect_exec(
 	}
 }
 
+/*_*
+  @aref cstoattrefp CStoAttrRefP
+*/
+void CStoAttrRefP_exec(
+  plc_sThread		*tp,
+  pwr_sClass_CStoAttrRefP *o,
+  pwr_sAttrRef 		*aref)
+{
+  if ( *o->CondP)
+    *aref = o->InP->Aref;
+}

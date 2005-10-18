@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.24 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.25 2005-10-18 05:11:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -210,6 +210,7 @@ int	gcg_comp_m59();
 int	gcg_comp_m60();
 int	gcg_comp_m61();
 int	gcg_comp_m62();
+int	gcg_comp_m63();
 
 int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m0,
@@ -274,7 +275,8 @@ int	(* gcg_comp_m[70]) () = {
 	&gcg_comp_m59,
 	&gcg_comp_m60,
 	&gcg_comp_m61,
-	&gcg_comp_m62
+	&gcg_comp_m62,
+	&gcg_comp_m63
 	};
 
 
@@ -7755,6 +7757,7 @@ vldh_t_node	node;
 	         class == pwr_cClass_stodp ||
                  class == pwr_cClass_stodi ||
                  class == pwr_cClass_setdi ||
+                 class == pwr_cClass_toggledi ||
                  class == pwr_cClass_resdi) {
 	      /* compile this nodes here */
 	      sts = gcg_node_comp( gcgctx, next_node);
@@ -11137,7 +11140,7 @@ vldh_t_node	node;
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for STODI, SETDI, RESDI, STOAI, CSTOAI
+*	Compile method for STODI, SETDI, RESDI, TOGGLEDI, STOAI, CSTOAI
 *	If the object is connected to an order it will be called
 *	from the order method.
 *	
@@ -11190,6 +11193,7 @@ vldh_t_node	node;
         if ( !gcgctx->order_comp) {
           if ( class == pwr_cClass_stodi ||
 	       class == pwr_cClass_setdi ||
+	       class == pwr_cClass_toggledi ||
 	       class == pwr_cClass_resdi) {
             /* Check first if the object is connected to an order object,
               if it is, it will be compiled when by the ordermethod, when
@@ -11241,6 +11245,7 @@ vldh_t_node	node;
 
 	/* Check that the class of the referenced object is correct */
 	if ( node->ln.cid == pwr_cClass_setdi ||	
+	     node->ln.cid == pwr_cClass_toggledi ||	
 	     node->ln.cid == pwr_cClass_resdi) {
 	  if ( class != pwr_cClass_Di) {
 	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
@@ -14203,7 +14208,9 @@ vldh_t_node	node;
 	pwr_tObjid		template_plc;
 	pwr_tObjid		template_window;
 	pwr_sAttrRef		*connect_aref;
-
+	pwr_sAttrRef		caref, ccaref;
+	pwr_tObjName		cname;
+	
 	ldhses = (node->hn.wind)->hw.ldhses; 
 
 	/* Check if there is a PlcConnected */
@@ -14232,6 +14239,23 @@ vldh_t_node	node;
 	  }
 
 	  gcg_aref_insert( gcgctx, aref, GCG_PREFIX_REF);
+
+	  // Make connection mutual
+	  sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( node->ln.cid), 
+				 ldh_eName_Object, cname, sizeof( cname), &size);
+	  if( EVEN(sts)) return sts;
+
+	  if ( strlen(cname) > 3 && strcmp( &cname[strlen(cname)-3], "Sim") == 0)
+	    sts = ldh_ArefANameToAref( ldhses, &aref, "SimConnect", &caref);
+	  else
+	    sts = ldh_ArefANameToAref( ldhses, &aref, "PlcConnect", &caref);
+          if ( ODD(sts)) {
+	    sts = ldh_ReadAttribute( ldhses, &caref, &ccaref, sizeof(ccaref));
+	    if ( ODD(sts) && cdh_ObjidIsNotEqual( ccaref.Objid, node->ln.oid)) {
+	      ccaref = cdh_ObjidToAref( node->ln.oid);
+	      sts = ldh_WriteAttribute( ldhses, &caref, &ccaref, sizeof(caref));
+	    }
+	  }
 	}
 
 	/* Check first if there is a subwindow */
@@ -14961,6 +14985,246 @@ vldh_t_node	node;
 
 	/* Insert object in ref list */
 	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m63()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for CStoAttrRefP.
+*
+*	Syntax control:
+*	Check that the referenced object exists and that the referenced
+*	parameter exists in this object, and that the object is of
+*	the correct type.
+*
+*	Generating code:
+*	Declares and links a rtdb pointer to the referenced object.
+*	Prints an exec call.
+*
+**************************************************************************/
+
+int	gcg_comp_m63( gcgctx, node)
+gcg_ctx		gcgctx;
+vldh_t_node	node;
+{
+	pwr_sAttrRef		refattrref;
+	pwr_sAttrRef		*refattrref_ptr;
+	ldh_tSesContext 	ldhses;
+	pwr_tClassId		class;
+	pwr_tAName     		aname;
+	char			*name_p;
+	ldh_sAttrRefInfo	info;
+	char			parameter[80];
+	char			*s;
+       	unsigned long		point;
+	unsigned long		par_inverted;
+	vldh_t_node		output_node;
+	unsigned long		output_count;
+	unsigned long		output_point;
+	ldh_sParDef 		*bodydef;
+	ldh_sParDef 		output_bodydef;
+	int 			rows, sts;
+	int			i, output_found, first_par;
+	pwr_sAttrRef		output_attrref;
+	int			output_type;
+	char			output_prefix;
+	char			output_par[32];
+	char			*name;
+	int			size;
+
+	ldhses = (node->hn.wind)->hw.ldhses;
+
+	/* Get the attref of the referenced object stored in the
+	  first parameter in devbody */
+
+	/* Get the devbody parameters for this class */
+	sts = ldh_GetObjectBodyDef( ldhses,
+			node->ln.cid, "DevBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	sts = ldh_GetObjectPar( ldhses,
+			node->ln.oid, 
+			"DevBody",
+			bodydef[0].ParName,
+			(char **)&refattrref_ptr, &size); 
+	if ( EVEN(sts)) return sts;
+	refattrref = *refattrref_ptr;
+	free((char *) refattrref_ptr);
+	free((char *) bodydef);	
+
+	sts = gcg_replace_ref( gcgctx, &refattrref, node);
+	if ( EVEN(sts)) return sts;
+
+	/* Check that this is objdid of an existing object */
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	sts = ldh_GetAttrRefInfo( ldhses, &refattrref, &info);
+	if ( EVEN(sts)) return sts;
+
+	/* Get rid of last attribute segment of the referenced object */
+	sts = ldh_AttrRefToName( ldhses, &refattrref, ldh_eName_Aref, 
+				 &name_p, &size);
+	if ( EVEN(sts)) return sts;
+
+	strcpy( aname, name_p);
+	if ( (s = strrchr( aname, '.')) == 0) { 
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTPAR;
+	}
+
+	*s = 0;
+	sts = ldh_NameToAttrRef( ldhses, aname, &refattrref);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
+
+	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
+	if ( EVEN(sts)) return sts;
+	
+	sts = gcg_parname_to_pgmname(ldhses, class, s+1, parameter);
+	if ( EVEN(sts)) return sts;
+
+	if ( info.flags & PWR_MASK_RTVIRTUAL) {
+	  /* Attribute is not defined in runtime */
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  return GSX__NEXTNODE;
+	} 
+
+	if ( info.flags & PWR_MASK_ARRAY) {
+	  if ( info.nElement == -1) {
+	    /* No index in attribute */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  if ( info.index > info.nElement - 1) {
+	    /* Element index to large */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+	}
+
+	switch ( info.type ) {
+        case pwr_eType_AttrRef : 
+	  if ( !( node->ln.cid == pwr_cClass_CStoAttrRefP)) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
+	default:
+	  /* Not allowed type */
+	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  return GSX__NEXTNODE;
+	}
+
+	/* Insert object in ref list */
+	gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if( EVEN(sts)) return sts;
+
+	/* Print the execute command */
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		       "%s_exec( tp, %c%s, &%c%s->%s);\n",
+		       name,
+		       GCG_PREFIX_REF,
+		       vldh_IdToStr(0, node->ln.oid), 
+		       GCG_PREFIX_REF,
+		       vldh_AttrRefToStr(0, refattrref),
+		       parameter);
+
+	/* Get the runtime parameters for this class */
+	sts = ldh_GetObjectBodyDef((node->hn.wind)->hw.ldhses, 
+			node->ln.cid, "RtBody", 1, 
+			&bodydef, &rows);
+	if ( EVEN(sts) ) return sts;
+
+	i = 0;
+	first_par = 1;
+	while( 	(i < rows) &&
+		(bodydef[i].ParClass == pwr_eClass_Input))
+	{
+	  /* Get the point for this parameter if there is one */
+	  output_found = 0;
+	  sts = gcg_get_inputpoint( node, i, &point, &par_inverted);
+	  if ( ODD( sts))
+	  {
+	    /* Look for an output connected to this point */
+	    sts = gcg_get_output( node, point, &output_count, &output_node,
+			&output_point, &output_bodydef, 
+			GOEN_CON_SIGNAL | GOEN_CON_OUTPUTTOINPUT);
+	    if ( EVEN(sts)) return sts;
+
+	    if ( output_count > 0 )
+	    {
+	    output_found = 1;
+	      if ( output_count > 1) 
+	      gcg_error_msg( gcgctx, GSX__CONOUTPUT, output_node);
+
+	      sts = gcg_get_outputstring( gcgctx, output_node, &output_bodydef, 
+			&output_attrref, &output_type, &output_prefix, output_par);
+	      if ( sts == GSX__NEXTPAR ) 
+	      {
+	        i++;
+	        continue;
+	      }
+	      if ( EVEN(sts)) return sts;
+
+	      if ( par_inverted ) 
+	        gcg_error_msg( gcgctx, GSX__INV, node);
+
+	      IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			"%c%s->%sP = &%c%s->%s;\n", 
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName,
+			output_prefix,
+			output_type == GCG_OTYPE_OID ? 
+			     vldh_IdToStr(1, output_attrref.Objid) : 
+			     vldh_AttrRefToStr(0, output_attrref),
+			output_par);
+	    }
+	    else
+	    {
+	      /* Point visible but not connected, errormessage */
+	      gcg_error_msg( gcgctx, GSX__NOTCON, node);  
+	    }
+	    first_par = 0;
+	  }
+	  if ( !output_found )
+	  {
+	    /* The point is not connected and will point to its
+	       own object */
+
+	    IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+			"%c%s->%sP = &%c%s->%s;\n", 
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName,
+			GCG_PREFIX_REF,
+			vldh_IdToStr(1, node->ln.oid),
+			bodydef[i].Par->Param.Info.PgmName);
+	  }
+	  i++;
+	}
+	free((char *) bodydef);
 
 	return GSX__SUCCESS;
 }
