@@ -43,6 +43,7 @@ menu Electric
   subgraph 	Fuse3		pwr_exe:pwr_fuse3.pwsg 			6
   subgraph 	EmergencyStop	pwr_exe:pwr_emergencystop.pwsg 		34
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
+  subgraph 	MotorMan	pwr_exe:pwr_motorman.pwsg 		23
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		6
   subgraph 	SpeedSwitch	pwr_exe:pwr_speedswitch.pwsg 		24
   subgraph	Rod		pwr_exe:pwr_rod.pwsg			6
