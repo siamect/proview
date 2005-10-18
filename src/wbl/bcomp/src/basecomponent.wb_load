@@ -1,7 +1,7 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X5966"
-    Attr NextCix = "_X137"
+    Attr NextOix = "_X6082"
+    Attr NextCix = "_X138"
     Attr NextTix[0] = "_X10"
   EndBody
   Object Type $TypeHier 87 08-SEP-2005 13:01:47.00
@@ -51415,7 +51415,7 @@ Alarm HH, H, L, LL"
       Object RtBody $ObjBodyDef 1 03-OCT-2005 16:41:33.02
         Body SysBody 03-OCT-2005 16:41:46.66
           Attr StructName = "BaseMotor"
-          Attr NextAix = "_X40"
+          Attr NextAix = "_X43"
         EndBody
         Object Super $Attribute 23 03-OCT-2005 16:41:56.54
           Body SysBody 03-OCT-2005 16:42:10.59
@@ -51472,9 +51472,29 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
         EndObject
+        Object IndError $Attribute 40 13-OCT-2005 13:02:17.51
+          Body SysBody 13-OCT-2005 13:02:17.51
+            Attr PgmName = "IndError"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IndWarning $Attribute 41 13-OCT-2005 13:02:17.51
+          Body SysBody 13-OCT-2005 13:02:17.51
+            Attr PgmName = "IndWarning"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
         Object PlcConnect $Attribute 32 03-OCT-2005 16:41:33.02
           Body SysBody 03-OCT-2005 16:41:33.02
             Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object SimConnect $Attribute 42 14-OCT-2005 15:38:16.91
+          Body SysBody 14-OCT-2005 15:38:20.73
+            Attr PgmName = "SimConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
@@ -51516,7 +51536,7 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseMotor 2177859584 01-JAN-1970 01:00:00.00
-        Body RtBody 04-OCT-2005 15:46:34.46
+        Body RtBody 13-OCT-2005 15:00:09.91
           Attr TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr DisableTempSensor = 1
           Attr TempSensor.Super.DisableValue = 1
@@ -51572,12 +51592,19 @@ Alarm HH, H, L, LL"
       Object RtBody $ObjBodyDef 1 04-OCT-2005 13:26:52.83
         Body SysBody 04-OCT-2005 15:34:12.31
           Attr StructName = "BaseMotorFo"
-          Attr NextAix = "_X2"
+          Attr NextAix = "_X3"
         EndBody
         Object PlcConnect $Intern 1 04-OCT-2005 13:26:52.83
           Body SysBody 04-OCT-2005 13:26:52.83
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object OverTemp $Output 2 13-OCT-2005 13:11:13.79
+          Body SysBody 13-OCT-2005 13:12:36.02
+            Attr PgmName = "OverTemp"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "ote"
           EndBody
         EndObject
       EndObject
@@ -51592,18 +51619,18 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 5496 04-OCT-2005 13:26:52.83
-        Body SysBody 04-OCT-2005 13:27:21.62
+        Body SysBody 13-OCT-2005 13:12:54.26
           Attr object_type = 11
           Attr parameters[0] = 0
           Attr parameters[1] = 1
-          Attr parameters[2] = 0
+          Attr parameters[2] = 1
           Attr parameters[3] = 0
           Attr subwindows = 1
           Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
           Attr graphmethod = 0
           Attr graphindex = 0
           Attr default_mask[0] = 0
-          Attr default_mask[1] = 0
+          Attr default_mask[1] = 1
           Attr segname_annotation = 1
           Attr compmethod = 58
           Attr compindex = 0
@@ -51626,7 +51653,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 5499 04-OCT-2005 13:26:52.83
         Body RtBody 04-OCT-2005 13:26:52.83
         EndBody
-        Body DevBody 04-OCT-2005 13:42:01.04
+        Body DevBody 13-OCT-2005 13:14:14.79
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -51634,14 +51661,16 @@ Alarm HH, H, L, LL"
             Attr defnamecount[11] = 6
             Attr defnamecount[60] = 1
             Attr defnamecount[137] = 1
-            Attr connamecount = 4
+            Attr defnamecount[139] = 5
+            Attr defnamecount[255] = 5
+            Attr connamecount = 14
           EndBuffer
         EndBody
         Object W WindowPlc 5500 04-OCT-2005 13:36:33.65
           Body RtBody 04-OCT-2005 13:36:33.65
           EndBody
-          Body DevBody 04-OCT-2005 13:42:01.04
-            Attr Modified = "04-OCT-2005 13:42:01.04"
+          Body DevBody 13-OCT-2005 13:14:14.79
+            Attr Modified = "13-OCT-2005 13:14:14.79"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -51651,6 +51680,209 @@ Alarm HH, H, L, LL"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn13 ConDigital 5986 13-OCT-2005 13:13:55.25
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn13"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSensor"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp4"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.714667e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.742333e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.742333e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn11 ConDigital 5982 13-OCT-2005 13:13:46.28
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn11"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSwitch"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp3"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.735000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.752500e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.752500e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn9 ConDigital 5978 13-OCT-2005 13:05:17.13
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn9"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSensor"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.714667e+00
+                  Attr y = 1.300000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn8 ConDigital 5976 13-OCT-2005 13:05:13.57
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn8"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSensor"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.714667e+00
+                  Attr y = 1.250000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.742333e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.770000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn5 ConDigital 5970 13-OCT-2005 13:04:50.52
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn5"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSwitch"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.735000e+00
+                  Attr y = 9.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn1 ConDigital 5509 04-OCT-2005 13:39:10.54
             Body DevBody 04-OCT-2005 13:41:13.27
               Buffer PlcConnection
@@ -51690,7 +51922,7 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object cn0 ConDigital 5506 04-OCT-2005 13:39:05.24
-            Body DevBody 04-OCT-2005 13:41:13.27
+            Body DevBody 13-OCT-2005 13:05:58.69
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-cn0"
                 Attr object_type = 23
@@ -51748,16 +51980,17 @@ Alarm HH, H, L, LL"
             Body RtBody 04-OCT-2005 13:41:45.81
               Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSwitch"
             EndBody
-            Body DevBody 04-OCT-2005 13:42:01.04
+            Body DevBody 13-OCT-2005 13:14:14.79
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "BaseComponent:Class-BaseSupSwitchFo"
                 Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSwitch"
                 Attr x = 1.400000e+00
-                Attr y = 7.500002e-02
-                Attr width = 2.550000e-01
-                Attr heigth = 1.000000e-01
+                Attr y = 2.500002e-02
+                Attr width = 2.850000e-01
+                Attr heigth = 1.500000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
@@ -51765,24 +51998,25 @@ Alarm HH, H, L, LL"
             Body RtBody 04-OCT-2005 13:41:55.09
               Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSensor"
             EndBody
-            Body DevBody 04-OCT-2005 13:42:01.04
+            Body DevBody 13-OCT-2005 13:14:14.79
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "BaseComponent:Class-BaseSensorFo"
                 Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-TempSensor"
                 Attr x = 1.400000e+00
-                Attr y = -2.750000e-01
-                Attr width = 2.346667e-01
-                Attr heigth = 1.000000e-01
+                Attr y = -3.750000e-01
+                Attr width = 2.646667e-01
+                Attr heigth = 2.000000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[1] = 6
               EndBuffer
             EndBody
           EndObject
           Object HasTempSwitch CArea 5504 04-OCT-2005 13:38:54.36
             Body RtBody 04-OCT-2005 13:38:20.44
             EndBody
-            Body DevBody 04-OCT-2005 13:41:13.27
-              Attr AreaWidth = 6.000000e-01
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Attr AreaWidth = 1.000000e+00
               Attr AreaHeight = 3.000000e-01
               Buffer PlcNode
                 Attr object_type = 11
@@ -51790,7 +52024,7 @@ Alarm HH, H, L, LL"
                 Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-HasTempSwitch"
                 Attr x = 1.300000e+00
                 Attr y = 2.499999e-02
-                Attr width = 6.300000e-01
+                Attr width = 1.030000e+00
                 Attr heigth = 3.000000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
                 Attr mask[0] = 1
@@ -51837,26 +52071,824 @@ Alarm HH, H, L, LL"
           Object HasTempSensor CArea 5508 04-OCT-2005 13:39:21.99
             Body RtBody 04-OCT-2005 13:39:10.54
             EndBody
-            Body DevBody 04-OCT-2005 13:41:13.27
-              Attr AreaWidth = 6.000000e-01
-              Attr AreaHeight = 3.000000e-01
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Attr AreaWidth = 1.000000e+00
+              Attr AreaHeight = 3.500000e-01
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArea"
                 Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-HasTempSensor"
                 Attr x = 1.300000e+00
-                Attr y = -3.250000e-01
-                Attr width = 6.300000e-01
-                Attr heigth = 3.000000e-01
+                Attr y = -3.750000e-01
+                Attr width = 1.030000e+00
+                Attr heigth = 3.500000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[2] = 1
               EndBuffer
             EndBody
           EndObject
+          Object StoDp0 StoDp 5969 13-OCT-2005 13:04:50.52
+            Body RtBody 13-OCT-2005 13:04:50.52
+            EndBody
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotor.IndError"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp0"
+                Attr x = 1.750000e+00
+                Attr y = 7.500003e-02
+                Attr width = 4.607778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp1 StoDp 5975 13-OCT-2005 13:05:13.56
+            Body RtBody 13-OCT-2005 13:05:13.56
+            EndBody
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotor.IndError"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp1"
+                Attr x = 1.750000e+00
+                Attr y = -2.750000e-01
+                Attr width = 4.607778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp2 StoDp 5977 13-OCT-2005 13:05:17.13
+            Body RtBody 13-OCT-2005 13:05:17.13
+            EndBody
+            Body DevBody 13-OCT-2005 13:05:58.69
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotor.IndWarning"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp2"
+                Attr x = 1.750000e+00
+                Attr y = -3.250000e-01
+                Attr width = 4.963333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp3 StoDp 5981 13-OCT-2005 13:13:46.28
+            Body RtBody 13-OCT-2005 13:13:46.28
+            EndBody
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseMotorFo.OverTemp"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp3"
+                Attr x = 1.750000e+00
+                Attr y = 2.500001e-02
+                Attr width = 4.496667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoDp4 StoDp 5985 13-OCT-2005 13:13:55.25
+            Body RtBody 13-OCT-2005 13:13:55.25
+            EndBody
+            Body DevBody 13-OCT-2005 13:14:14.79
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseMotorFo.OverTemp"
+              Buffer PlcNode
+                Attr object_type = 255
+                Attr cid = "pwrb:Class-StoDp"
+                Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W-StoDp4"
+                Attr x = 1.750000e+00
+                Attr y = -2.250001e-01
+                Attr width = 4.496667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorFo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object Template BaseMotorFo 2182053888 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object BaseMotorSim $ClassDef 137 14-OCT-2005 15:38:50.29
+      Body SysBody 14-OCT-2005 15:38:45.05
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 14-OCT-2005 15:38:55.23
+        Body SysBody 14-OCT-2005 15:38:59.29
+          Attr StructName = "BaseMotorSim"
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcConnect $Intern 1 14-OCT-2005 15:38:55.23
+          Body SysBody 14-OCT-2005 15:38:55.23
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object ToggleSwitch $Intern 2 17-OCT-2005 14:06:37.75
+          Body SysBody 17-OCT-2005 14:06:17.43
+            Attr PgmName = "ToggleSwitch"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 14-OCT-2005 15:38:55.23
+        Body SysBody 14-OCT-2005 15:38:55.23
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 14-OCT-2005 15:38:55.23
+          Body SysBody 14-OCT-2005 15:38:55.23
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 6003 14-OCT-2005 15:38:55.23
+        Body SysBody 14-OCT-2005 15:38:55.23
+          Attr object_type = 11
+          Attr parameters[0] = 0
+          Attr parameters[1] = 0
+          Attr parameters[2] = 0
+          Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 0
+          Attr default_mask[1] = 0
+          Attr segname_annotation = 1
+          Attr compmethod = 58
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "BaseMotorSim"
+          Attr graphname = "BaseMotorSim"
+        EndBody
+      EndObject
+      Object RtXtt $RtMenu 6004 14-OCT-2005 15:38:55.23
+        Object PlcConnect $MenuRef 6005 14-OCT-2005 15:38:55.23
+          Body SysBody 14-OCT-2005 15:38:55.23
+            Attr ButtonName = "PlcConnect"
+            Attr RefAttribute = "PlcConnect"
+          EndBody
+        EndObject
+      EndObject
+      Object Code PlcTemplate 6006 14-OCT-2005 15:38:55.23
+        Body RtBody 14-OCT-2005 15:38:55.23
+        EndBody
+        Body DevBody 17-OCT-2005 14:10:25.28
+          Buffer PlcProgram
+            Attr oid = "BaseComponent:Class-BaseMotorSim-Code"
+            Attr cid = "pwrb:Class-PlcTemplate"
+            Attr defnamecount[2] = 1
+            Attr defnamecount[11] = 11
+            Attr defnamecount[90] = 2
+            Attr defnamecount[117] = 1
+            Attr defnamecount[118] = 1
+            Attr defnamecount[137] = 1
+            Attr defnamecount[256] = 2
+            Attr defnamecount[258] = 1
+            Attr connamecount = 10
+          EndBuffer
+        EndBody
+        Object W WindowPlc 6007 14-OCT-2005 15:39:19.31
+          Body RtBody 14-OCT-2005 15:39:19.31
+          EndBody
+          Body DevBody 17-OCT-2005 14:10:25.28
+            Attr Modified = "17-OCT-2005 14:10:25.28"
+            Buffer PlcWindow
+              Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              Attr cid = "pwrb:Class-WindowPlc"
+              Attr y = 5.000000e+01
+              Attr width = 1.000000e+03
+              Attr heigth = 7.500000e+02
+              Attr refconcount = 1
+            EndBuffer
+          EndBody
+          Object cn9 ConDigital 6049 17-OCT-2005 14:09:05.35
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn9"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-GetDp1"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-ResDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.088667e+00
+                  Attr y = 1.550000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.445444e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 9.500000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn8 ConDigital 6046 17-OCT-2005 14:07:56.21
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn8"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And1"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-GetDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.088667e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.520000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn6 ConDigital 6042 17-OCT-2005 14:05:05.64
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn6"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-Disabled1"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And1"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.221778e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.370889e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.370889e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn5 ConDigital 6041 17-OCT-2005 14:05:02.78
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn5"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And1"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-ToggleDi0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.699000e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn3 ConDigital 6021 14-OCT-2005 15:40:21.51
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn3"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-FirstScan2"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 6.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 8.800000e-01
+                  Attr y = 6.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn2 ConDigital 6020 14-OCT-2005 15:40:21.51
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn2"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-Disabled1"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.221778e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn1 ConDigital 6019 14-OCT-2005 15:40:21.51
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn1"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-And0"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-SetDi0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.820000e+00
+                  Attr y = 6.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.699000e+00
+                  Attr y = 6.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn0 ConDigital 6018 14-OCT-2005 15:40:21.51
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-cn0"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorSim-Code-W-Disabled3"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorSim-Code-W-HasTempSensor"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.221778e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Document0 Document 6008 14-OCT-2005 15:39:19.62
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Document0"
+                Attr x = 5.000000e-01
+                Attr y = -1.775000e+00
+                Attr width = 3.400000e+00
+                Attr heigth = 2.300000e+00
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object Text0 Text 6009 14-OCT-2005 15:40:21.51
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Attr Text = "Simulate MotorTempSwitch"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Text0"
+                Attr x = 1.500000e+00
+                Attr y = 3.810000e-01
+                Attr width = 3.968889e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled1 Disabled 6010 14-OCT-2005 15:40:21.51
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSwitch"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Disabled1"
+                Attr x = 6.000000e-01
+                Attr y = 3.250000e-01
+                Attr width = 5.717778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object FirstScan2 FirstScan 6011 14-OCT-2005 15:40:21.51
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-FirstScan"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-FirstScan2"
+                Attr x = 6.000000e-01
+                Attr y = 3.750000e-01
+                Attr width = 2.300000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And0 And 6012 14-OCT-2005 15:40:21.51
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 14-OCT-2005 15:46:10.85
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-And0"
+                Attr x = 1.500000e+00
+                Attr y = 2.750000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object SetDi0 SetDi 6013 14-OCT-2005 15:40:21.51
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSwitch.Super.Switch"
+              Buffer PlcNode
+                Attr object_type = 117
+                Attr cid = "pwrb:Class-SetDi"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-SetDi0"
+                Attr x = 1.800000e+00
+                Attr y = 3.750000e-01
+                Attr width = 6.230000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Disabled3 Disabled 6014 14-OCT-2005 15:40:21.51
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSensor"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Disabled"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Disabled3"
+                Attr x = 6.000000e-01
+                Attr y = -7.500003e-02
+                Attr width = 5.717778e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object HasTempSensor CArea 6015 14-OCT-2005 15:50:03.83
+            Body RtBody 14-OCT-2005 15:40:21.51
+            EndBody
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Attr AreaWidth = 2.000000e+00
+              Attr AreaHeight = 3.000000e-01
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-CArea"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-HasTempSensor"
+                Attr x = 1.450000e+00
+                Attr y = -3.250000e-01
+                Attr width = 2.030000e+00
+                Attr heigth = 3.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Sensor BaseSensorSim 6016 14-OCT-2005 17:20:23.64
+            Body RtBody 14-OCT-2005 15:42:07.61
+              Attr RandomCurve = 1
+              Attr Bias = 1.000000e+02
+              Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSensor"
+            EndBody
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "BaseComponent:Class-BaseSensorSim"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Sensor"
+                Attr x = 1.600000e+00
+                Attr y = -2.750000e-01
+                Attr width = 2.890000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text6 Text 6017 14-OCT-2005 15:40:21.51
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Attr Text = "Simulate MotorTempSensor"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Text6"
+                Attr x = 1.500000e+00
+                Attr y = -6.899995e-02
+                Attr width = 3.968889e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object ToggleDi0 ToggleDi 6039 17-OCT-2005 14:04:24.81
+            Body RtBody 17-OCT-2005 14:04:24.81
+            EndBody
+            Body DevBody 17-OCT-2005 14:05:28.60
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotor.TempSwitch.Super.Switch"
+              Buffer PlcNode
+                Attr object_type = 118
+                Attr cid = "pwrb:Class-ToggleDi"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-ToggleDi0"
+                Attr x = 1.800000e+00
+                Attr y = 2.250000e-01
+                Attr width = 6.740000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And1 And 6040 17-OCT-2005 14:04:45.16
+            Body RtBody 17-OCT-2005 14:04:45.16
+            EndBody
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-And1"
+                Attr x = 1.500000e+00
+                Attr y = 1.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp0 GetDp 6045 17-OCT-2005 14:07:56.20
+            Body RtBody 17-OCT-2005 14:07:56.20
+            EndBody
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorSim.ToggleSwitch"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-GetDp0"
+                Attr x = 6.500000e-01
+                Attr y = 1.250000e-01
+                Attr width = 4.386667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp0 ResDp 6047 17-OCT-2005 14:08:50.41
+            Body RtBody 17-OCT-2005 14:08:50.41
+            EndBody
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseMotorSim.ToggleSwitch"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-ResDp0"
+                Attr x = 1.200000e+00
+                Attr y = -5.749999e-01
+                Attr width = 4.896667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp1 GetDp 6048 17-OCT-2005 14:09:02.02
+            Body RtBody 17-OCT-2005 14:09:02.02
+            EndBody
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorSim.ToggleSwitch"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-GetDp1"
+                Attr x = 6.500000e-01
+                Attr y = -5.749999e-01
+                Attr width = 4.386667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text10 Text 6050 17-OCT-2005 14:09:31.30
+            Body DevBody 17-OCT-2005 14:10:25.28
+              Attr Text = "Should always be placed last"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W-Text10"
+                Attr x = 6.500000e-01
+                Attr y = -5.190000e-01
+                Attr width = 4.124444e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object Template BaseMotorSim 2183626752 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
@@ -62009,7 +63041,7 @@ Safety switch"
         EndObject
       EndObject
       Object Template BaseMotorAggr 2182316032 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 13-OCT-2005 15:15:50.76
           Attr Contactor.Order.Description = "Energize contactor"
           Attr Contactor.Feedback.Description = "Contactor is energized"
           Attr Contactor.FbTimeLimit = 1.000000e+00
@@ -62022,6 +63054,27 @@ Safety switch"
           Attr Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed, "
           Attr Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed, "
+          Attr Motor.DisableTempSensor = 1
+          Attr Motor.TempSensor.Super.Value.Unit = "C"
+          Attr Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
+          Attr Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature, "
+          Attr Motor.TempSensor.Super.LimitHH.Limit = 1.300000e+02
+          Attr Motor.TempSensor.Super.LimitHH.Hysteres = 3.000000e+00
+          Attr Motor.TempSensor.Super.LimitHH.TimeDelay = 1.000000e+00
+          Attr Motor.TempSensor.Super.LimitHH.Used = 1
+          Attr Motor.TempSensor.Super.LimitH.AlarmText = "High motor temperature, "
+          Attr Motor.TempSensor.Super.LimitH.Limit = 1.150000e+02
+          Attr Motor.TempSensor.Super.LimitH.Hysteres = 3.000000e+00
+          Attr Motor.TempSensor.Super.LimitH.TimeDelay = 1.000000e+00
+          Attr Motor.TempSensor.Super.LimitH.Used = 1
+          Attr Motor.TempSensor.Super.Trend.Multiple = 1
+          Attr Motor.TempSensor.Super.Trend.DataName = "BaseComponent:Class-BaseMotorAggr-Template.Motor.TempSensor.Super.Value.ActualValue"
+          Attr Motor.TempSensor.Super.Trend.StorageTime = 239
+          Attr Motor.TempSensor.Super.Trend.BufferStatus[0] = 1
+          Attr Motor.TempSensor.Super.Trend.BufferStatus[1] = 1
+          Attr Motor.TempSensor.Super.Trend.NoOfBuffers = 2
+          Attr Motor.TempSensor.Super.Trend.NoOfBufElement = 239
+          Attr Motor.TempSensor.Super.DefTrend = "BaseComponent:Class-BaseMotorAggr-Template.Motor.TempSensor.Super.Trend"
         EndBody
       EndObject
     EndObject
@@ -62156,12 +63209,12 @@ Safety switch"
       Object Code PlcTemplate 5517 05-OCT-2005 13:26:14.71
         Body RtBody 05-OCT-2005 13:26:14.71
         EndBody
-        Body DevBody 05-OCT-2005 15:43:33.41
+        Body DevBody 17-OCT-2005 13:04:05.62
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 4
-            Attr defnamecount[11] = 64
+            Attr defnamecount[11] = 65
             Attr defnamecount[60] = 4
             Attr defnamecount[61] = 1
             Attr defnamecount[71] = 1
@@ -62174,27 +63227,27 @@ Safety switch"
             Attr defnamecount[119] = 1
             Attr defnamecount[132] = 1
             Attr defnamecount[136] = 2
-            Attr defnamecount[137] = 25
+            Attr defnamecount[137] = 27
             Attr defnamecount[138] = 1
             Attr defnamecount[139] = 16
             Attr defnamecount[140] = 3
             Attr defnamecount[252] = 7
             Attr defnamecount[253] = 5
             Attr defnamecount[255] = 14
-            Attr defnamecount[256] = 49
+            Attr defnamecount[256] = 51
             Attr defnamecount[257] = 1
             Attr defnamecount[258] = 9
             Attr defnamecount[263] = 3
             Attr defnamecount[264] = 3
             Attr defnamecount[265] = 4
-            Attr connamecount = 276
+            Attr connamecount = 282
           EndBuffer
         EndBody
         Object W WindowPlc 5518 05-OCT-2005 13:26:14.71
           Body RtBody 05-OCT-2005 13:26:14.71
           EndBody
-          Body DevBody 05-OCT-2005 15:43:33.41
-            Attr Modified = "05-OCT-2005 15:43:33.41"
+          Body DevBody 17-OCT-2005 13:04:05.62
+            Attr Modified = "17-OCT-2005 13:04:05.62"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -62204,6 +63257,174 @@ Safety switch"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn281 ConDigital 6038 17-OCT-2005 13:04:00.93
+            Body DevBody 17-OCT-2005 13:04:05.62
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn281"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or9"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp50"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.770000e+00
+                  Attr y = 7.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.709500e+00
+                  Attr y = 7.000000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.709500e+00
+                  Attr y = 7.050000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.282000e+00
+                  Attr y = 7.050000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn279 ConDigital 6034 17-OCT-2005 13:03:46.90
+            Body DevBody 17-OCT-2005 13:04:05.62
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn279"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or8"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp49"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.246444e+00
+                  Attr y = 6.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.770000e+00
+                  Attr y = 6.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn277 ConDigital 5989 13-OCT-2005 13:33:14.43
+            Body DevBody 13-OCT-2005 13:33:55.61
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn277"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp2"
+                Attr dest_point = 3
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 9.686667e-01
+                  Attr y = 4.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.959500e+00
+                  Attr y = 4.350000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.959500e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.020000e+00
+                  Attr y = 3.650000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn276 ConDigital 5988 13-OCT-2005 13:33:09.85
+            Body DevBody 13-OCT-2005 13:33:55.61
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn276"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Motor"
+                Attr dest_point = 2
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.585000e+00
+                  Attr y = 4.200000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.984500e+00
+                  Attr y = 4.200000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.984500e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.020000e+00
+                  Attr y = 3.600000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn275 ConFeedbackDigital 5696 05-OCT-2005 15:42:13.00
             Body DevBody 05-OCT-2005 15:42:45.11
               Buffer PlcConnection
@@ -62375,7 +63596,7 @@ Safety switch"
             EndBody
           EndObject
           Object cn271 ConDigital 5691 05-OCT-2005 15:40:47.66
-            Body DevBody 05-OCT-2005 15:42:45.11
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn271"
                 Attr object_type = 23
@@ -62384,13 +63605,22 @@ Safety switch"
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-CircuitBreaker"
                 Attr dest_point = 1
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or11"
+                Attr point_count = 4
                 Buffer point[0]
+                  Attr x = 1.602000e+00
+                  Attr y = 3.950000e+00
                 EndBuffer
                 Buffer point[1]
+                  Attr x = 1.698500e+00
+                  Attr y = 3.950000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.698500e+00
+                  Attr y = 3.800000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 1.720000e+00
+                  Attr y = 3.800000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -62832,51 +64062,8 @@ Safety switch"
               EndBuffer
             EndBody
           EndObject
-          Object cn249 ConDigital 5648 05-OCT-2005 14:48:40.52
-            Body DevBody 05-OCT-2005 15:08:24.80
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn249"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp2"
-                Attr dest_point = 2
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 9.686667e-01
-                  Attr y = 4.150000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 2.016759e+00
-                  Attr y = 4.150000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 2.016759e+00
-                  Attr y = 3.600000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 2.020000e+00
-                  Attr y = 3.600000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn248 ConDigital 5647 05-OCT-2005 14:47:54.68
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn248"
                 Attr object_type = 23
@@ -62892,11 +64079,11 @@ Safety switch"
                   Attr y = 3.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.959500e+00
+                  Attr x = 2.000028e+00
                   Attr y = 3.750000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.959500e+00
+                  Attr x = 2.000028e+00
                   Attr y = 3.550000e+00
                 EndBuffer
                 Buffer point[3]
@@ -62970,7 +64157,7 @@ Safety switch"
             EndBody
           EndObject
           Object cn242 ConDigital 5636 05-OCT-2005 14:43:48.88
-            Body DevBody 05-OCT-2005 15:42:45.11
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn242"
                 Attr object_type = 23
@@ -62985,11 +64172,11 @@ Safety switch"
                   Attr y = 3.350000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.018379e+00
+                  Attr x = 2.000028e+00
                   Attr y = 3.350000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.018379e+00
+                  Attr x = 2.000028e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[3]
@@ -63059,13 +64246,13 @@ Safety switch"
             EndBody
           EndObject
           Object cn239 ConDigital 5519 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 17-OCT-2005 13:04:05.62
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn239"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 2
+                Attr source_point = 3
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or9"
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-StoDp7"
                 Attr point_count = 2
@@ -63234,13 +64421,13 @@ Safety switch"
             EndBody
           EndObject
           Object cn219 ConDigital 5527 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 17-OCT-2005 13:04:05.62
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn219"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 2
+                Attr source_point = 3
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or8"
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-StoDp6"
                 Attr point_count = 2
@@ -63582,13 +64769,13 @@ Safety switch"
             EndBody
           EndObject
           Object cn136 ConDigital 5539 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn136"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 3
+                Attr source_point = 4
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-StoDp8"
                 Attr point_count = 2
@@ -63629,13 +64816,13 @@ Safety switch"
             EndBody
           EndObject
           Object cn88 ConDigital 5540 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 15:42:45.11
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn88"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 3
+                Attr source_point = 4
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Error"
                 Attr point_count = 4
@@ -63644,11 +64831,11 @@ Safety switch"
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.534500e+00
+                  Attr x = 2.561889e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.534500e+00
+                  Attr x = 2.561889e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[3]
@@ -63718,13 +64905,13 @@ Safety switch"
             EndBody
           EndObject
           Object cn11 ConDigital 5543 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-cn11"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_point = 3
+                Attr source_point = 4
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Start"
                 Attr point_count = 4
@@ -63733,11 +64920,11 @@ Safety switch"
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.298111e+00
+                  Attr x = 2.299000e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.298111e+00
+                  Attr x = 2.299000e+00
                   Attr y = 4.000000e+00
                 EndBuffer
                 Buffer point[3]
@@ -63869,33 +65056,33 @@ Safety switch"
           Object NotInterlock And 5553 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-NotInterlock"
                 Attr x = 2.000000e+00
-                Attr y = -2.625000e+00
+                Attr y = -2.675000e+00
                 Attr width = 2.562222e-01
-                Attr heigth = 1.500000e-01
+                Attr heigth = 2.000000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
-                Attr mask[0] = 7
+                Attr mask[0] = 15
                 Attr mask[1] = 1
-                Attr mask[2] = 4
+                Attr mask[2] = 8
               EndBuffer
             EndBody
           EndObject
           Object GetDp2 GetDp 5554 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrFo.ExtInterlock"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp2"
                 Attr x = 5.500000e-01
-                Attr y = -3.175000e+00
+                Attr y = -3.375000e+00
                 Attr width = 4.186667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
@@ -64413,17 +65600,17 @@ to avoid restart after error."
           Object Or8 Or 5594 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 17-OCT-2005 13:04:05.62
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or8"
                 Attr x = 1.750000e+00
-                Attr y = -5.775000e+00
+                Attr y = -5.825000e+00
                 Attr width = 1.790000e-01
-                Attr heigth = 1.000000e-01
+                Attr heigth = 1.500000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
-                Attr mask[0] = 3
+                Attr mask[0] = 7
                 Attr mask[1] = 1
               EndBuffer
             EndBody
@@ -64486,17 +65673,17 @@ to avoid restart after error."
           Object Or9 Or 5599 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 17-OCT-2005 13:04:05.62
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Or9"
                 Attr x = 1.750000e+00
-                Attr y = -5.975000e+00
+                Attr y = -6.025000e+00
                 Attr width = 1.790000e-01
-                Attr heigth = 1.000000e-01
+                Attr heigth = 1.500000e-01
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
-                Attr mask[0] = 3
+                Attr mask[0] = 7
                 Attr mask[1] = 1
               EndBuffer
             EndBody
@@ -64648,7 +65835,7 @@ to avoid restart after error."
             EndBody
           EndObject
           Object Text58 Text 5655 05-OCT-2005 14:54:11.68
-            Body DevBody 05-OCT-2005 15:08:24.80
+            Body DevBody 13-OCT-2005 13:33:55.61
               Attr Text = "Auto and Local start"
               Attr TextAttribute = 2
               Attr FrameAttribute = 2
@@ -64657,7 +65844,7 @@ to avoid restart after error."
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Text58"
                 Attr x = 5.500000e-01
-                Attr y = -3.419000e+00
+                Attr y = -3.469000e+00
                 Attr width = 4.213333e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
@@ -64775,10 +65962,10 @@ to avoid restart after error."
             EndBody
           EndObject
           Object CircuitBreaker BaseCircuitBreakerFo 5690 05-OCT-2005 15:43:20.23
-            Body RtBody 05-OCT-2005 15:40:38.12
+            Body RtBody 13-OCT-2005 13:32:20.86
               Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.CircuitBreaker"
             EndBody
-            Body DevBody 05-OCT-2005 15:43:33.41
+            Body DevBody 13-OCT-2005 13:33:55.61
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "BaseComponent:Class-BaseCircuitBreakerFo"
@@ -64808,6 +65995,60 @@ to avoid restart after error."
                 Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
                 Attr mask[0] = 1
                 Attr mask[1] = 3
+              EndBuffer
+            EndBody
+          EndObject
+          Object Motor BaseMotorFo 5987 13-OCT-2005 13:32:10.82
+            Body RtBody 13-OCT-2005 13:32:31.20
+              Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Motor"
+            EndBody
+            Body DevBody 13-OCT-2005 13:33:55.61
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "BaseComponent:Class-BaseMotorFo"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-Motor"
+                Attr x = 1.250000e+00
+                Attr y = -3.275000e+00
+                Attr width = 2.850000e-01
+                Attr heigth = 1.500000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp49 GetDp 6033 17-OCT-2005 13:03:46.90
+            Body RtBody 17-OCT-2005 13:03:46.90
+            EndBody
+            Body DevBody 17-OCT-2005 13:04:05.62
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Motor.IndError"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp49"
+                Attr x = 7.500000e-01
+                Attr y = -5.825000e+00
+                Attr width = 4.964445e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp50 GetDp 6037 17-OCT-2005 13:04:00.93
+            Body RtBody 17-OCT-2005 13:04:00.93
+            EndBody
+            Body DevBody 17-OCT-2005 13:04:05.62
+              Attr DpObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Motor.IndWarning"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W-GetDp50"
+                Attr x = 7.500000e-01
+                Attr y = -6.075000e+00
+                Attr width = 5.320000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
+                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
@@ -64918,27 +66159,29 @@ to avoid restart after error."
       Object Code PlcTemplate 5603 05-OCT-2005 13:26:14.71
         Body RtBody 05-OCT-2005 13:26:14.71
         EndBody
-        Body DevBody 05-OCT-2005 16:01:07.77
+        Body DevBody 17-OCT-2005 16:08:22.00
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
             Attr defnamecount[2] = 1
-            Attr defnamecount[11] = 9
+            Attr defnamecount[11] = 22
             Attr defnamecount[61] = 1
-            Attr defnamecount[90] = 1
+            Attr defnamecount[90] = 6
             Attr defnamecount[97] = 1
-            Attr defnamecount[118] = 3
+            Attr defnamecount[117] = 3
+            Attr defnamecount[118] = 5
             Attr defnamecount[137] = 1
             Attr defnamecount[139] = 4
-            Attr defnamecount[256] = 4
-            Attr connamecount = 14
+            Attr defnamecount[256] = 6
+            Attr defnamecount[258] = 2
+            Attr connamecount = 37
           EndBuffer
         EndBody
         Object W WindowPlc 5604 05-OCT-2005 13:26:14.71
           Body RtBody 05-OCT-2005 13:26:14.71
           EndBody
-          Body DevBody 05-OCT-2005 16:01:07.77
-            Attr Modified = "05-OCT-2005 16:01:07.77"
+          Body DevBody 17-OCT-2005 16:08:22.00
+            Attr Modified = "17-OCT-2005 16:08:22.00"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -64948,23 +66191,24 @@ to avoid restart after error."
               Attr refconcount = 1
             EndBuffer
           EndBody
-          Object cn13 ConDigital 5705 05-OCT-2005 16:00:03.89
-            Body DevBody 05-OCT-2005 16:01:07.77
+          Object cn36 ConDigital 6082 17-OCT-2005 16:07:02.53
+            Body DevBody 17-OCT-2005 16:08:07.13
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn13"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn36"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled8"
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasContactor"
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And4"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ToggleDi4"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.220000e+00
-                  Attr y = 1.450000e+00
+                  Attr x = 1.470000e+00
+                  Attr y = 1.150000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.084000e+00
-                  Attr y = 1.450000e+00
+                  Attr x = 1.399000e+00
+                  Attr y = 1.150000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -64986,15 +66230,174 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object cn12 ConDigital 5702 05-OCT-2005 15:58:56.56
-            Body DevBody 05-OCT-2005 16:01:07.77
+          Object cn35 ConDigital 6081 17-OCT-2005 16:07:00.85
+            Body DevBody 17-OCT-2005 16:08:07.13
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn12"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn35"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And5"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-SetDi2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn34 ConDigital 6080 17-OCT-2005 16:06:53.52
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn34"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp5"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ResDp1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.420000e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.030889e+00
+                  Attr y = 2.300000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn33 ConDigital 6077 17-OCT-2005 16:05:55.21
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn33"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp1"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.030889e+00
+                  Attr y = 1.150000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn32 ConDigital 6076 17-OCT-2005 16:05:53.76
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn32"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled6"
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasSafetySwitch"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And4"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.139556e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.179944e+00
+                  Attr y = 1.100000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.179944e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.200000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn31 ConDigital 6075 17-OCT-2005 16:05:51.27
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn31"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled6"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And5"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.220000e+00
@@ -65024,22 +66427,103 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object cn11 ConDigital 5699 05-OCT-2005 15:58:14.40
-            Body DevBody 05-OCT-2005 16:01:07.77
+          Object cn30 ConDigital 6074 17-OCT-2005 16:05:50.05
+            Body DevBody 17-OCT-2005 16:08:07.13
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn11"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn30"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-FirstScan21"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 7.800000e-01
+                  Attr y = 1.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn29 ConDigital 6068 17-OCT-2005 16:02:51.27
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn29"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
                 Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled4"
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasCircuitBreaker"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And2"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.144000e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.182000e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.182000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.500000e-01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn28 ConDigital 6067 17-OCT-2005 16:02:50.24
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn28"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp0"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And2"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.220000e+00
                   Attr y = 8.000000e-01
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.144000e+00
+                  Attr x = 1.095333e+00
                   Attr y = 8.000000e-01
                 EndBuffer
                 Buffer point[2]
@@ -65062,8 +66546,239 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
+          Object cn27 ConDigital 6066 17-OCT-2005 16:02:45.95
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn27"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled4"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.144000e+00
+                  Attr y = 7.500000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn26 ConDigital 6065 17-OCT-2005 16:02:44.81
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn26"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-FirstScan20"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 7.800000e-01
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn23 ConDigital 6061 17-OCT-2005 16:01:53.62
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn23"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And3"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-SetDi1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 7.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn22 ConDigital 6058 17-OCT-2005 15:58:40.20
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn22"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp4"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ResDp0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.420000e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.095333e+00
+                  Attr y = 2.250000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn19 ConDigital 6053 17-OCT-2005 15:57:17.74
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn19"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And2"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ToggleDi3"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.470000e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.000000e-01
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn13 ConDigital 5705 05-OCT-2005 16:00:03.89
+            Body DevBody 13-OCT-2005 13:58:07.96
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn13"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled8"
+                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasContactor"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.370000e+00
+                  Attr y = 1.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.084000e+00
+                  Attr y = 1.450000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn10 ConDigital 5605 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn10"
                 Attr object_type = 23
@@ -65074,11 +66789,11 @@ to avoid restart after error."
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi2"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.570000e+00
+                  Attr x = 2.720000e+00
                   Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.449000e+00
+                  Attr x = 2.599000e+00
                   Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
@@ -65102,7 +66817,7 @@ to avoid restart after error."
             EndBody
           EndObject
           Object cn8 ConDigital 5606 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn8"
                 Attr object_type = 23
@@ -65113,19 +66828,19 @@ to avoid restart after error."
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp2"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.270000e+00
+                  Attr x = 2.420000e+00
                   Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.239556e+00
+                  Attr x = 2.389555e+00
                   Attr y = 1.600000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.239556e+00
+                  Attr x = 2.389555e+00
                   Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.919778e+00
+                  Attr x = 2.069778e+00
                   Attr y = 1.700000e+00
                 EndBuffer
                 Buffer point[4]
@@ -65145,7 +66860,7 @@ to avoid restart after error."
             EndBody
           EndObject
           Object cn6 ConDigital 5607 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn6"
                 Attr object_type = 23
@@ -65156,11 +66871,11 @@ to avoid restart after error."
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.270000e+00
+                  Attr x = 2.420000e+00
                   Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.209111e+00
+                  Attr x = 2.359111e+00
                   Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[2]
@@ -65184,7 +66899,7 @@ to avoid restart after error."
             EndBody
           EndObject
           Object cn5 ConDigital 5608 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn5"
                 Attr object_type = 23
@@ -65194,88 +66909,12 @@ to avoid restart after error."
                 Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Wait0"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.970000e+00
+                  Attr x = 2.120000e+00
                   Attr y = 1.550000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.866444e+00
+                  Attr x = 2.016444e+00
                   Attr y = 1.550000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn3 ConDigital 5609 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn3"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp1"
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi1"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.020000e+00
-                  Attr y = 1.200000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.830889e+00
-                  Attr y = 1.200000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn1 ConDigital 5610 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-cn1"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp0"
-                Attr dest_oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi0"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 2.020000e+00
-                  Attr y = 9.000000e-01
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.895333e+00
-                  Attr y = 9.000000e-01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -65317,14 +66956,14 @@ to avoid restart after error."
           Object GetDp0 GetDp 5612 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:07.13
               Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.CircuitBreakerTripped"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp0"
-                Attr x = 1.350000e+00
-                Attr y = 7.500003e-02
+                Attr x = 5.500000e-01
+                Attr y = 1.750000e-01
                 Attr width = 5.453333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
@@ -65332,36 +66971,17 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object StoDi0 StoDi 5613 05-OCT-2005 13:26:14.71
-            Body RtBody 05-OCT-2005 13:26:14.71
-            EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.CircuitBreaker.NotTripped"
-              Buffer PlcNode
-                Attr object_type = 118
-                Attr cid = "pwrb:Class-StoDi"
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi0"
-                Attr x = 2.000000e+00
-                Attr y = 1.250000e-01
-                Attr width = 6.963333e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-                Attr mask[0] = 1
-                Attr mask[2] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDp1 GetDp 5614 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:07.13
               Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.SafetySwitchOn"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp1"
-                Attr x = 1.350000e+00
-                Attr y = -2.250001e-01
+                Attr x = 5.500000e-01
+                Attr y = -1.750000e-01
                 Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
@@ -65369,35 +66989,16 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object StoDi1 StoDi 5615 05-OCT-2005 13:26:14.71
-            Body RtBody 05-OCT-2005 13:26:14.71
-            EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.SafetySwitch.On"
-              Buffer PlcNode
-                Attr object_type = 118
-                Attr cid = "pwrb:Class-StoDi"
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi1"
-                Attr x = 2.000000e+00
-                Attr y = -1.750000e-01
-                Attr width = 5.852222e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-                Attr mask[0] = 1
-                Attr mask[2] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object GetDo0 GetDo 5616 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 14-OCT-2005 16:56:30.96
               Attr DoObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Contactor.Order"
               Buffer PlcNode
                 Attr object_type = 61
                 Attr cid = "pwrb:Class-GetDo"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDo0"
-                Attr x = 1.350000e+00
+                Attr x = 1.500000e+00
                 Attr y = -5.749999e-01
                 Attr width = 5.164444e-01
                 Attr heigth = 5.000000e-02
@@ -65410,12 +67011,12 @@ to avoid restart after error."
             Body RtBody 05-OCT-2005 13:26:14.71
               Attr TimerTime = 5.000000e-01
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Wait0"
-                Attr x = 1.950000e+00
+                Attr x = 2.100000e+00
                 Attr y = -6.249999e-01
                 Attr width = 2.391111e-01
                 Attr heigth = 1.000000e-01
@@ -65428,12 +67029,12 @@ to avoid restart after error."
           Object And0 And 5618 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And0"
-                Attr x = 2.250000e+00
+                Attr x = 2.400000e+00
                 Attr y = -6.249999e-01
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
@@ -65447,13 +67048,13 @@ to avoid restart after error."
           Object GetDp2 GetDp 5619 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.ContactorFeedbackLost"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp2"
-                Attr x = 1.350000e+00
+                Attr x = 1.500000e+00
                 Attr y = -7.250000e-01
                 Attr width = 5.697777e-01
                 Attr heigth = 5.000000e-02
@@ -65465,13 +67066,13 @@ to avoid restart after error."
           Object StoDi2 StoDi 5620 05-OCT-2005 13:26:14.71
             Body RtBody 05-OCT-2005 13:26:14.71
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Contactor.Feedback"
               Buffer PlcNode
                 Attr object_type = 118
                 Attr cid = "pwrb:Class-StoDi"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-StoDi2"
-                Attr x = 2.550000e+00
+                Attr x = 2.700000e+00
                 Attr y = -5.250000e-01
                 Attr width = 6.163333e-01
                 Attr heigth = 5.000000e-02
@@ -65481,15 +67082,15 @@ to avoid restart after error."
             EndBody
           EndObject
           Object Text0 Text 5621 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:22.00
               Attr Text = "Simulate CircuitBreaker"
               Attr FrameAttribute = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Text0"
-                Attr x = 1.250000e+00
-                Attr y = 2.310000e-01
+                Attr x = 5.500000e-01
+                Attr y = 3.310000e-01
                 Attr width = 3.413333e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
@@ -65497,15 +67098,15 @@ to avoid restart after error."
             EndBody
           EndObject
           Object Text1 Text 5622 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:07.13
               Attr Text = "Simulate SafetySwitch"
               Attr FrameAttribute = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Text1"
-                Attr x = 1.250000e+00
-                Attr y = -6.899995e-02
+                Attr x = 5.500000e-01
+                Attr y = -1.900000e-02
                 Attr width = 3.368889e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
@@ -65513,14 +67114,14 @@ to avoid restart after error."
             EndBody
           EndObject
           Object Text2 Text 5623 05-OCT-2005 13:26:14.71
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Attr Text = "Simulate Contactor"
               Attr FrameAttribute = 2
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Text"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Text2"
-                Attr x = 1.250000e+00
+                Attr x = 1.400000e+00
                 Attr y = -4.190000e-01
                 Attr width = 2.813333e-01
                 Attr heigth = 4.400000e-02
@@ -65528,37 +67129,17 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object HasCircuitBreaker CArea 5697 05-OCT-2005 15:57:16.15
-            Body RtBody 05-OCT-2005 15:56:57.72
-            EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Attr AreaWidth = 2.000000e+00
-              Attr AreaHeight = 2.000000e-01
-              Buffer PlcNode
-                Attr object_type = 11
-                Attr cid = "pwrb:Class-CArea"
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasCircuitBreaker"
-                Attr x = 1.200000e+00
-                Attr y = 7.499999e-02
-                Attr width = 2.030000e+00
-                Attr heigth = 2.000000e-01
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-                Attr mask[0] = 1
-                Attr mask[2] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object Disabled4 Disabled 5698 05-OCT-2005 15:57:24.49
             Body RtBody 05-OCT-2005 15:57:24.49
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:07.13
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.CircuitBreaker"
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Disabled"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Disabled4"
                 Attr x = 5.000000e-01
-                Attr y = 2.250000e-01
+                Attr y = 2.750000e-01
                 Attr width = 5.940000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
@@ -65566,30 +67147,10 @@ to avoid restart after error."
               EndBuffer
             EndBody
           EndObject
-          Object HasSafetySwitch CArea 5700 05-OCT-2005 15:59:28.18
-            Body RtBody 05-OCT-2005 15:58:56.56
-            EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
-              Attr AreaWidth = 2.000000e+00
-              Attr AreaHeight = 2.000000e-01
-              Buffer PlcNode
-                Attr object_type = 11
-                Attr cid = "pwrb:Class-CArea"
-                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasSafetySwitch"
-                Attr x = 1.200000e+00
-                Attr y = -2.250000e-01
-                Attr width = 2.030000e+00
-                Attr heigth = 2.000000e-01
-                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
-                Attr mask[0] = 1
-                Attr mask[2] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object Disabled6 Disabled 5701 05-OCT-2005 15:58:56.56
             Body RtBody 05-OCT-2005 15:58:56.56
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 17-OCT-2005 16:08:07.13
               Attr Object = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.SafetySwitch"
               Buffer PlcNode
                 Attr object_type = 11
@@ -65607,14 +67168,14 @@ to avoid restart after error."
           Object HasContactor CArea 5703 05-OCT-2005 16:00:41.74
             Body RtBody 05-OCT-2005 16:00:03.88
             EndBody
-            Body DevBody 05-OCT-2005 16:01:07.77
+            Body DevBody 13-OCT-2005 13:58:07.96
               Attr AreaWidth = 2.000000e+00
               Attr AreaHeight = 3.500000e-01
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArea"
                 Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-HasContactor"
-                Attr x = 1.200000e+00
+                Attr x = 1.350000e+00
                 Attr y = -7.250000e-01
                 Attr width = 2.030000e+00
                 Attr heigth = 3.500000e-01
@@ -65639,6 +67200,293 @@ to avoid restart after error."
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
                 Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Text15 Text 6002 13-OCT-2005 13:57:51.46
+            Body DevBody 14-OCT-2005 15:53:10.36
+              Attr Text = "Simulate Motor"
+              Attr FrameAttribute = 2
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Text"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Text15"
+                Attr x = 1.400000e+00
+                Attr y = -8.690000e-01
+                Attr width = 2.302222e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object Motor BaseMotorSim 6026 14-OCT-2005 17:21:06.93
+            Body RtBody 14-OCT-2005 17:18:36.91
+              Attr PlcConnect = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.Motor"
+            EndBody
+            Body DevBody 14-OCT-2005 17:21:10.24
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "BaseComponent:Class-BaseMotorSim"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-Motor"
+                Attr x = 1.350000e+00
+                Attr y = -9.750001e-01
+                Attr width = 2.720000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object And2 And 6051 17-OCT-2005 15:56:42.44
+            Body RtBody 17-OCT-2005 15:56:42.44
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And2"
+                Attr x = 1.200000e+00
+                Attr y = 1.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object ToggleDi3 ToggleDi 6052 17-OCT-2005 15:57:02.90
+            Body RtBody 17-OCT-2005 15:57:02.90
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.CircuitBreaker.NotTripped"
+              Buffer PlcNode
+                Attr object_type = 118
+                Attr cid = "pwrb:Class-ToggleDi"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ToggleDi3"
+                Attr x = 1.450000e+00
+                Attr y = 2.250000e-01
+                Attr width = 7.473333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp0 ResDp 6056 17-OCT-2005 15:58:21.59
+            Body RtBody 17-OCT-2005 15:58:21.59
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.CircuitBreakerTripped"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ResDp0"
+                Attr x = 1.400000e+00
+                Attr y = -1.275000e+00
+                Attr width = 5.963333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp4 GetDp 6057 17-OCT-2005 15:58:25.73
+            Body RtBody 17-OCT-2005 15:58:25.73
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.CircuitBreakerTripped"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp4"
+                Attr x = 5.500000e-01
+                Attr y = -1.275000e+00
+                Attr width = 5.453333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object SetDi1 SetDi 6059 17-OCT-2005 16:01:21.21
+            Body RtBody 17-OCT-2005 16:01:21.21
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.CircuitBreaker.NotTripped"
+              Buffer PlcNode
+                Attr object_type = 117
+                Attr cid = "pwrb:Class-SetDi"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-SetDi1"
+                Attr x = 1.450000e+00
+                Attr y = 3.250000e-01
+                Attr width = 6.963333e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And3 And 6060 17-OCT-2005 16:01:48.81
+            Body RtBody 17-OCT-2005 16:01:48.81
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And3"
+                Attr x = 1.200000e+00
+                Attr y = 2.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object FirstScan20 FirstScan 6063 17-OCT-2005 16:02:12.85
+            Body RtBody 17-OCT-2005 16:02:12.85
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-FirstScan"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-FirstScan20"
+                Attr x = 5.000000e-01
+                Attr y = 3.250000e-01
+                Attr width = 2.300000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp5 GetDp 6069 17-OCT-2005 16:03:48.90
+            Body RtBody 17-OCT-2005 16:03:48.90
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DpObject = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.SafetySwitchOn"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-GetDp5"
+                Attr x = 5.500000e-01
+                Attr y = -1.325000e+00
+                Attr width = 4.808889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ResDp1 ResDp 6070 17-OCT-2005 16:03:55.66
+            Body RtBody 17-OCT-2005 16:03:55.66
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr Object = "$PlcHost:BaseComponent-Class-BaseMotorAggrSim.SafetySwitchOn"
+              Buffer PlcNode
+                Attr object_type = 258
+                Attr cid = "pwrb:Class-ResDp"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ResDp1"
+                Attr x = 1.400000e+00
+                Attr y = -1.325000e+00
+                Attr width = 5.318888e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object FirstScan21 FirstScan 6071 17-OCT-2005 16:05:22.74
+            Body RtBody 17-OCT-2005 16:05:22.74
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-FirstScan"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-FirstScan21"
+                Attr x = 5.000000e-01
+                Attr y = -2.499995e-02
+                Attr width = 2.300000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And4 And 6072 17-OCT-2005 16:05:32.10
+            Body RtBody 17-OCT-2005 16:05:32.10
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And4"
+                Attr x = 1.200000e+00
+                Attr y = -2.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object And5 And 6073 17-OCT-2005 16:05:32.10
+            Body RtBody 17-OCT-2005 16:05:32.10
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-And5"
+                Attr x = 1.200000e+00
+                Attr y = -1.250000e-01
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object SetDi2 SetDi 6078 17-OCT-2005 16:06:11.52
+            Body RtBody 17-OCT-2005 16:06:11.52
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.SafetySwitch.On"
+              Buffer PlcNode
+                Attr object_type = 117
+                Attr cid = "pwrb:Class-SetDi"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-SetDi2"
+                Attr x = 1.450000e+00
+                Attr y = -2.499995e-02
+                Attr width = 5.852222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object ToggleDi4 ToggleDi 6079 17-OCT-2005 16:06:11.53
+            Body RtBody 17-OCT-2005 16:06:11.53
+            EndBody
+            Body DevBody 17-OCT-2005 16:08:07.13
+              Attr DiObject = "$PlcConnect:BaseComponent-Class-BaseMotorAggr.SafetySwitch.On"
+              Buffer PlcNode
+                Attr object_type = 118
+                Attr cid = "pwrb:Class-ToggleDi"
+                Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W-ToggleDi4"
+                Attr x = 1.450000e+00
+                Attr y = -1.250000e-01
+                Attr width = 6.362222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
+                Attr mask[0] = 1
               EndBuffer
             EndBody
           EndObject
@@ -65692,14 +67540,15 @@ to avoid restart after error."
     !  @classlink BaseMotorAggrFo basecomponent_basemotoraggrfo.html
     !  @classlink BaseMotorAggrSim basecomponent_basemotoraggrsim.html
     !*/
-    Object BaseFanAggr $ClassDef 136 06-OCT-2005 15:38:40.22
+    Object BaseFanAggr $ClassDef 136 13-OCT-2005 14:23:11.81
       Body SysBody 06-OCT-2005 15:38:30.49
         Attr Editor = 0
         Attr Method = 0
         Attr Flags = 16
       EndBody
       Object RtBody $ObjBodyDef 1 06-OCT-2005 15:38:46.62
-        Body SysBody 06-OCT-2005 15:38:46.62
+        Body SysBody 13-OCT-2005 14:23:18.10
+          Attr StructName = "BaseFanAggr"
           Attr NextAix = "_X4"
         EndBody
         Object Super $Attribute 1 06-OCT-2005 15:38:57.44
@@ -65725,7 +67574,7 @@ to avoid restart after error."
         EndObject
       EndObject
       Object Template BaseFanAggr 2183364608 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 13-OCT-2005 15:15:16.14
           Attr Super.Contactor.Order.Description = "Energize contactor"
           Attr Super.Contactor.Feedback.Description = "Contactor is energized"
           Attr Super.Contactor.FbTimeLimit = 1.000000e+00
@@ -65738,6 +67587,26 @@ to avoid restart after error."
           Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed, "
           Attr Super.Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Super.Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed, "
+          Attr Super.Motor.DisableTempSensor = 1
+          Attr Super.Motor.TempSensor.Super.Value.Unit = "C"
+          Attr Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
+          Attr Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature, "
+          Attr Super.Motor.TempSensor.Super.LimitHH.Limit = 1.300000e+02
+          Attr Super.Motor.TempSensor.Super.LimitHH.Hysteres = 4.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitHH.TimeDelay = 1.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitHH.Used = 1
+          Attr Super.Motor.TempSensor.Super.LimitH.AlarmText = "High motor temperature, "
+          Attr Super.Motor.TempSensor.Super.LimitH.Limit = 1.150000e+02
+          Attr Super.Motor.TempSensor.Super.LimitH.Hysteres = 4.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitH.TimeDelay = 1.000000e+00
+          Attr Super.Motor.TempSensor.Super.LimitH.Used = 1
+          Attr Super.Motor.TempSensor.Super.Trend.Multiple = 1
+          Attr Super.Motor.TempSensor.Super.Trend.DataName = "BaseComponent:Class-BaseFanAggr-Template.Super.Motor.TempSensor.Super.Value.ActualValue"
+          Attr Super.Motor.TempSensor.Super.Trend.StorageTime = 239
+          Attr Super.Motor.TempSensor.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Motor.TempSensor.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Motor.TempSensor.Super.Trend.NoOfBuffers = 2
+          Attr Super.Motor.TempSensor.Super.Trend.NoOfBufElement = 239
         EndBody
       EndObject
     EndObject
