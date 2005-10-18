@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.24 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.25 2005-10-18 05:09:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3625,6 +3625,31 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     s0 = s + strlen("$object");
   }
   strcpy( t0, s0);
+
+  t0 = out;
+  if ( (s = strchr( out, '&')) && *(s+1) == '(') {
+    // Replace attribute in parenthesis with its value
+    pwr_tAName refname;
+    pwr_sAttrRef aref;
+    pwr_tStatus sts;
+    char *start, *end;
+ 
+    start = s;
+    strcpy( refname, s+2);
+    if ( (s = strchr( refname, ')')) == 0)
+      return;
+
+    *s = 0;
+    end = start + strlen(refname) + 3;
+    sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+    if ( EVEN(sts)) return;
+
+    sts = gdh_AttrrefToName( &aref, str, sizeof(str), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return;
+
+    strcat( str, end);
+    strcpy( start, str);
+  }
 }
 
 graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name, 
@@ -3838,6 +3863,37 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
 			    pwr_tSubid *subid, unsigned int size)
 {
   int dt;
+  pwr_tAName aname;
+  pwr_tStatus sts;
+
+  if ( name[0] == '&') {
+    // Name contains a reference, get the reference
+    pwr_tAName refname;
+    pwr_tAName refattrname = "";
+    char *s;
+    pwr_sAttrRef aref;
+
+    if ( name[1] == '(') {
+      strcpy( refname, &name[2]);
+      if ( (s = strrchr( refname, ')'))) {
+	*s = 0;
+	strcpy( refattrname, s+1);
+      }
+    }
+    else
+      strcpy( refname, &name[1]);
+
+    sts = gdh_GetObjectInfo( refname, &aref, sizeof(aref));
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_AttrrefToName( &aref, aname, sizeof(aname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+
+    strcat( aname, refattrname);
+  }
+  else
+    strcpy( aname, name);
+
   if ( cycle == glow_eCycle_Fast)
     dt = int( fast_scan_time * 1000);
   else
@@ -3845,7 +3901,7 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
   int tmo = int( MAX(2 * dt / 100, 25));
   gdh_SetSubscriptionDefaults( dt, tmo);
 
-  return gdh_RefObjectInfo( name, data, subid, size);
+  return gdh_RefObjectInfo( aname, data, subid, size);
 }
 
 void Graph::create_trend( grow_tObject *object, double x, double y,
