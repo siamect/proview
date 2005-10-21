@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.25 2005-10-18 05:11:59 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.26 2005-10-21 16:10:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -280,12 +280,13 @@ int	(* gcg_comp_m[70]) () = {
 	};
 
 
+#if 0
 static int gcg_get_converted_hiername( 
     ldh_tSesContext ldhses,
     pwr_tObjid	objdid,
     char	*converted_name
 );
-
+#endif
 
 static pwr_tStatus gcg_get_build_host(
     pwr_mOpSys os,
@@ -769,7 +770,7 @@ static int gcg_timer_print(
 *	with "_" so the name can be used in c-code.
 *
 **************************************************************************/
-
+#if 0
 static int gcg_get_converted_hiername( 
     ldh_tSesContext ldhses,
     pwr_tObjid	objdid,
@@ -800,6 +801,8 @@ static int gcg_get_converted_hiername(
 
 	return GSX__SUCCESS;
 }
+#endif
+
 /*************************************************************************
 *
 * Name:		gcg_get_build_host
@@ -1545,7 +1548,6 @@ int gcg_get_connected_parameter (
 {
 	gcg_t_ctx		gcgctx;
 	char			*name;
-	pwr_tOName     		hier_name;
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
@@ -1612,13 +1614,13 @@ int gcg_get_connected_parameter (
 	  if ( EVEN(sts)) return sts;
 	  
 	  /* Get the name of the node */
-	  sts = ldh_ObjidToName( 
+	  sts = ldh_AttrRefToName( 
 		gcgctx.ldhses,
-		output_attrref.Objid, ldh_eName_Hierarchy,
-		hier_name, sizeof( hier_name), &size);
+		&output_attrref, cdh_mNName,
+		&name, &size);
 	  if( EVEN(sts)) return sts;
 
-	  strcpy( conn_obj, hier_name);
+	  strcpy( conn_obj, name);
 
 	  /* Get class of the output object */
 	  sts = ldh_GetObjectClass(
@@ -1932,7 +1934,8 @@ int gcg_get_debug_virtual (
   char		*debug_parname,
   char		*conn_obj,
   char		*conn_par,
-  pwr_eType	*par_type
+  pwr_eType	*par_type,
+  int		*par_inverted
 )
 {
 	gcg_t_ctx		gcgctx;
@@ -1943,7 +1946,7 @@ int gcg_get_debug_virtual (
 	int 			rows;
 	int			par_index, found;
 	unsigned long		point;
-	unsigned long		par_inverted;
+	unsigned long		inverted;
 	vldh_t_node		conn_node;
 
 	gcgctx.ldhses = (node->hn.wind)->hw.ldhses;
@@ -1978,8 +1981,10 @@ int gcg_get_debug_virtual (
 	*par_type = bodydef[par_index].Par->Param.Info.Type;
 
 	/* Get the point for this parameter */
-	sts = gcg_get_point( node, par_index, &point, &par_inverted);
+	sts = gcg_get_point( node, par_index, &point, &inverted);
 	if ( EVEN(sts)) return sts;	
+
+	*par_inverted = inverted;
 
 	/* Get the connected output */
 	sts = gcg_get_connected_parameter( node, point, &conn_node, conn_obj,
@@ -4367,6 +4372,7 @@ static int gcg_node_comp(
 	  if ( EVEN(sts)) return sts;
 	  
 	  compmethod = graphbody->compmethod;
+	  // printf( "Compiling %s\n", node->hn.name);
 	  sts = (gcg_comp_m[ compmethod ]) (gcgctx, node); 
 	}
 	else {
@@ -5687,7 +5693,7 @@ unsigned long	spawn;
 	char			gcdir[80];
 	unsigned long		opsys;
 	char			plclibrary[80];
-	char			plc_name[80];
+	pwr_tOName	       	plc_name;
 
 	/* Reset error and warning counts */
 	*errorcount = 0;
@@ -5734,10 +5740,11 @@ unsigned long	spawn;
 	    }
 	  }
 
+/*
 	  sts = gcg_get_converted_hiername( plc->hp.ldhsesctx, 
 		plc->lp.oid, module_name);
 	  if ( EVEN(sts)) return sts;
-/*	  fprintf( files[ GCGM0_MODULE_FILE ],"#module %s\n\n",
+	  fprintf( files[ GCGM0_MODULE_FILE ],"#module %s\n\n",
 		module_name);
 */
 	  fprintf( files[ GCGM0_MODULE_FILE ],
@@ -5885,7 +5892,7 @@ unsigned long	spawn;
 	char			*name;
 	pwr_mOpSys		operating_system;
 	ldh_sSessInfo		info;
-	char			wind_name[80];
+	pwr_tOName	       	wind_name;
 	ldh_eAccess		session_access;
 	char			gcdir[80];
 	char			plclibrary[80];
@@ -5979,9 +5986,11 @@ unsigned long	spawn;
 
 	}
 
+/*
 	sts = gcg_get_converted_hiername( wind->hw.ldhses, 
 		wind->lw.oid, module_name);
 	if ( EVEN(sts)) return sts;
+*/
 
 	IF_PR fprintf( gcgctx->files[ GCGM1_MODULE_FILE ],
 		"#include \"%s\"\n", MACROINC);
@@ -11053,14 +11062,13 @@ vldh_t_node	node;
 	int 			sts;
 	int			size;
 	ldh_tSesContext 	ldhses;
-	char			parname[80];	
-	pwr_tOName     		conn_obj;	
+	pwr_tAName	       	parname;	
+	pwr_tOName     		conn_obj;
 	char			conn_par[80];	
 	vldh_t_node		conn_node;
 	unsigned long		point = 0;
 	char			*wholeobject;
-	char			*name;
-
+	pwr_sAttrRef		pararef;
 
 	ldhses = (node->hn.wind)->hw.ldhses;  
 
@@ -11098,18 +11106,24 @@ vldh_t_node	node;
 	    strcat( parname, ".");
 	    strcat( parname, conn_par);
 	  }
-	}
-	
+	}	
 	free((char *) wholeobject);
+
+	sts = ldh_NameToAttrRef( ldhses, parname, &pararef);
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTPAR;
+	}
 
 	/* Put the object and parameter in the backup object */
         IF_PR
 	{
 	  sts = ldh_SetObjectPar( ldhses, node->ln.oid,
-		"RtBody", "DataName", parname, sizeof( parname)); 
+		"RtBody", "DataName", (void *)&pararef, sizeof( pararef)); 
 	  if ( EVEN(sts)) return sts;
 	}
-
+#if 0
+	char			*name;
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
 
 	/* Get name for this class */
@@ -11124,7 +11138,7 @@ vldh_t_node	node;
 		vldh_IdToStr(0, node->ln.oid),
 		parname);
 
-
+#endif
 	return GSX__SUCCESS;
 }
 
@@ -15420,7 +15434,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   if ( node->hn.wind->hw.plc->lp.cid == pwr_cClass_PlcTemplate)
     return GSX__NEXTNODE;
 
-  if ( attrref->Objid.vid == ldh_cPlcConnectVolume) {
+  if ( attrref->Objid.vid == ldh_cPlcMainVolume) {
     pwr_sAttrRef *connect_arp;
     pwr_tCid connect_cid;
 
@@ -15480,7 +15494,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
     free( (char *)connect_arp);
     return GSX__REPLACED;
   }
-  else if ( attrref->Objid.vid == ldh_cPlcHostVolume) {
+  else if ( attrref->Objid.vid == ldh_cPlcFoVolume) {
     // Replace objid with host object
 
     /* Get the parent node to this window */
