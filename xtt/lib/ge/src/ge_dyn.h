@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.23 2005-10-12 12:58:22 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.24 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -815,7 +815,7 @@ class GeDynElem {
 //! Set the supplied fill color when the signal is low.
 class GeDigLowColor : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for digital attribute.
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
   glow_eDrawType  color;	//!< Color to set when value is low.
 
   pwr_tBoolean *p;
@@ -849,7 +849,7 @@ class GeDigLowColor : public GeDynElem {
 //! Set the supplied fillcolor when the value is high.
 class GeDigColor : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for digital attribute.
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
   glow_eDrawType  color;	//!< Color to set when value is high.
 
   pwr_tBoolean *p;
@@ -883,7 +883,7 @@ class GeDigColor : public GeDynElem {
 //! Set yellow fill color when the signal is low.
 class GeDigWarning : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for digital attribute.
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -914,7 +914,7 @@ class GeDigWarning : public GeDynElem {
 //! Set red fill color when the signal is high.
 class GeDigError : public GeDynElem {
  public:
-  char attribute[120];		//!< Database refrence for digital attribute.
+  pwr_tAName attribute;		//!< Database refrence for digital attribute.
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -945,7 +945,7 @@ class GeDigError : public GeDynElem {
 //! Flash with the supplied color when the signal is high.
 class GeDigFlash : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference to digital attribute.
+  pwr_tAName attribute;		//!< Database reference to digital attribute.
   glow_eDrawType  color;	//!< First flash color when the signal is high.
   glow_eDrawType  color2;	//!< Second flash color when the signal is high.
 
@@ -982,7 +982,7 @@ class GeDigFlash : public GeDynElem {
 //! Make the object invisible when the signal is high.
 class GeInvisible : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for digital attribute.
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
   int dimmed;			//!< Object is dimmed (not invisible)
 
   pwr_tBoolean *p;
@@ -1017,7 +1017,7 @@ class GeInvisible : public GeDynElem {
 //! Set the supplied border color when the signal is high.
 class GeDigBorder : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference to digital attribute.
+  pwr_tAName attribute;		//!< Database reference to digital attribute.
   glow_eDrawType  color;	//!< Bordercolor to set when the signal is high.
 
   pwr_tBoolean *p;
@@ -1050,7 +1050,7 @@ class GeDigBorder : public GeDynElem {
 //! Set supplied text when the signal is low.
 class GeDigText : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for digital attribute.
+  pwr_tAName attribute;		//!< Database reference for digital attribute.
   char low_text[80];		//!< Text to set when the signal is low.
 
   pwr_tBoolean *p;
@@ -1084,7 +1084,7 @@ class GeDigText : public GeDynElem {
 //! Display the value of a signal.
 class GeValue : public GeDynElem {
  public:
-  char attribute[120];	  	//!< Database reference of an attribute with arbitrary type. 
+  pwr_tAName attribute;	  	//!< Database reference of an attribute with arbitrary type. 
   char format[80];		//!< Format of conversion from value to string.
   int zero_blank;		//!< Blank field when value i zero (integer or float).
 
@@ -1127,8 +1127,8 @@ class GeValueInput : public GeDynElem {
   int clear;			//!< Clear input field it is when opened.
   int popup;			//!< Input in popup dialog.
   int unselect;			//!< Text not selected in input field when opened.
-  char minvalue_attr[120];
-  char maxvalue_attr[120];
+  pwr_tAName minvalue_attr;
+  pwr_tAName maxvalue_attr;
 	
   int annot_typeid;
   int annot_size;
@@ -1162,7 +1162,7 @@ class GeValueInput : public GeDynElem {
 //! Set the supplied fill color when the signal exceeds or is below a specified limit value.
 class GeAnalogColor : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference of analog attribute.
+  pwr_tAName attribute;		//!< Database reference of analog attribute.
   double limit;			//!< Limit value.
   ge_eLimitType limit_type;	//!< Type of limit.
   glow_eDrawType color;		//!< Color to set when limit value is exceeded.
@@ -1201,7 +1201,7 @@ class GeAnalogColor : public GeDynElem {
 //! Rotate the component.
 class GeRotate : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference of analog attribute.
+  pwr_tAName attribute;		//!< Database reference of analog attribute.
   double x0;			//!< x coordinate for rotation point.
   double y0;			//!< y coordinate for rotation point.
   double factor;		//!< Conversion factor from value to rotation angel in degrees.
@@ -1236,10 +1236,10 @@ class GeRotate : public GeDynElem {
 //! Move an scale the component.
 class GeMove : public GeDynElem {
  public:
-  char move_x_attribute[120];
-  char move_y_attribute[120];
-  char scale_x_attribute[120];
-  char scale_y_attribute[120];
+  pwr_tAName move_x_attribute;
+  pwr_tAName move_y_attribute;
+  pwr_tAName scale_x_attribute;
+  pwr_tAName scale_y_attribute;
   double x_offset;
   double y_offset;
   double factor;
@@ -1311,7 +1311,7 @@ class GeMove : public GeDynElem {
 //! Shift between different pages in the subgraph. The value of the signal determine the page number.
 class GeAnalogShift : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;
@@ -1342,7 +1342,7 @@ class GeAnalogShift : public GeDynElem {
 //! Shift between two pages in the subgraph (first and last).
 class GeDigShift : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -1373,7 +1373,7 @@ class GeDigShift : public GeDynElem {
 //! Different types of animations.
 class GeAnimation : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
   ge_eAnimSequence sequence;
 
   pwr_tBoolean *p;
@@ -1425,7 +1425,7 @@ class GeVideo : public GeDynElem {
 //! Color of status attribute.
 class GeStatusColor : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
   glow_eDrawType nostatus_color;
 
   pwr_tStatus *p;
@@ -1460,13 +1460,13 @@ class GeStatusColor : public GeDynElem {
 //! Changes the fill color up to a certain level of the component.
 class GeFillLevel : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
   glow_eDrawType color;
   glow_eDirection direction;
   double min_value;
   double max_value;
-  char minvalue_attr[120];
-  char maxvalue_attr[120];
+  pwr_tAName minvalue_attr;
+  pwr_tAName maxvalue_attr;
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;
@@ -1509,7 +1509,7 @@ class GeFillLevel : public GeDynElem {
 //! HostObject connected to several attributes specified in the subgraph.
 class GeHostObject : public GeDynElem {
  public:
-  char hostobject[120];
+  pwr_tAName hostobject;
 
   GeHostObject( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, ge_mDynType_HostObject, (ge_mActionType) 0, ge_eDynPrio_HostObject)
@@ -1528,7 +1528,7 @@ class GeHostObject : public GeDynElem {
 //! Display the methods popup menu.
 class GePopupMenu : public GeDynElem {
  public:
-  char ref_object[120];
+  pwr_tAName ref_object;
 
   GePopupMenu( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_PopupMenu, ge_eDynPrio_PopupMenu)
@@ -1549,7 +1549,7 @@ class GePopupMenu : public GeDynElem {
 //! Set a digital signal
 class GeSetDig : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   GeSetDig( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_SetDig, ge_eDynPrio_SetDig)
@@ -1572,7 +1572,7 @@ class GeSetDig : public GeDynElem {
 //! Reset a digital signal
 class GeResetDig : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   GeResetDig( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ResetDig, ge_eDynPrio_ResetDig)
@@ -1595,7 +1595,7 @@ class GeResetDig : public GeDynElem {
 //! Toggle a digital signal
 class GeToggleDig : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   GeToggleDig( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ToggleDig, ge_eDynPrio_ToggleDig)
@@ -1617,7 +1617,7 @@ class GeToggleDig : public GeDynElem {
 //! Sto a digital signal,
 class GeStoDig : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   GeStoDig( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_StoDig, ge_eDynPrio_StoDig)
@@ -1639,7 +1639,7 @@ class GeStoDig : public GeDynElem {
 //! Execute a command.
 class GeCommand : public GeDynElem {
  public:
-  char command[120];
+  char command[400];
 
   GeCommand( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_Command, ge_eDynPrio_Command)
@@ -1660,7 +1660,7 @@ class GeCommand : public GeDynElem {
 //! Execute a command on double click.
 class GeCommandDoubleClick : public GeDynElem {
  public:
-  char command[120];
+  char command[400];
 
   GeCommandDoubleClick( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_CommandDoubleClick, 
@@ -1700,7 +1700,7 @@ class GeConfirm : public GeDynElem {
 //! Increase an analog signal.
 class GeIncrAnalog : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
   double increment;
   double min_value;
   double max_value;
@@ -1726,7 +1726,7 @@ class GeIncrAnalog : public GeDynElem {
 //! Dynamics for a radiobutton.
 class GeRadioButton : public GeDynElem {
  public:
-  char attribute[120];
+  pwr_tAName attribute;
 
   pwr_tBoolean *p;
   pwr_tSubid subid;
@@ -1880,10 +1880,10 @@ class GeCloseGraph : public GeDynElem {
 //! Dynamics for a slider object.
 class GeSlider : public GeDynElem {
  public:
-  char attribute[120];
-  char minvalue_attr[120];
-  char maxvalue_attr[120];
-  char insensitive_attr[120];
+  pwr_tAName attribute;
+  pwr_tAName minvalue_attr;
+  pwr_tAName maxvalue_attr;
+  pwr_tAName insensitive_attr;
   int slider_disabled;
 
   pwr_tFloat32 *p;
@@ -1929,9 +1929,9 @@ class GeSlider : public GeDynElem {
 //! Dynamics for a bar object.
 class GeBar : public GeDynElem {
  public:
-  char attribute[120];
-  char minvalue_attr[120];
-  char maxvalue_attr[120];
+  pwr_tAName attribute;
+  pwr_tAName minvalue_attr;
+  pwr_tAName maxvalue_attr;
 
   pwr_tFloat32 *p;
   pwr_tSubid subid;
@@ -1970,12 +1970,12 @@ class GeBar : public GeDynElem {
 //! Dynamics for a trend object.
 class GeTrend : public GeDynElem {
  public:
-  char attribute1[120];
-  char attribute2[120];
-  char minvalue_attr1[120];
-  char maxvalue_attr1[120];
-  char minvalue_attr2[120];
-  char maxvalue_attr2[120];
+  pwr_tAName attribute1;
+  pwr_tAName attribute2;
+  pwr_tAName minvalue_attr1;
+  pwr_tAName maxvalue_attr1;
+  pwr_tAName minvalue_attr2;
+  pwr_tAName maxvalue_attr2;
 
   bool first_scan;
   double scan_time;
@@ -2029,7 +2029,7 @@ class GeTrend : public GeDynElem {
 //! Dynamics for a trend object.
 class GeFastCurve : public GeDynElem {
  public:
-  char fast_object[120];
+  pwr_tAName fast_object;
   int curve_index1;
   int curve_index2;
 
@@ -2071,9 +2071,9 @@ class GeFastCurve : public GeDynElem {
 //! Dynamics for a table object.
 class GeTable : public GeDynElem {
  public:
-  char attribute[TABLE_MAX_COL][120];
+  pwr_tAName attribute[TABLE_MAX_COL];
   char format[TABLE_MAX_COL][80];
-  char sel_attribute[TABLE_MAX_COL][120];
+  pwr_tAName sel_attribute[TABLE_MAX_COL];
 
   int columns;
   int rows;
@@ -2160,7 +2160,7 @@ class GePulldownMenu : public GeDynElem {
 //! Options menu.
 class GeOptionMenu : public GeDynElem {
  public:
-  char attribute[120];		//!< Database reference for analog attribute.
+  pwr_tAName attribute;		//!< Database reference for analog attribute.
   unsigned int items_enum[32];
   char  items_text[80][32];
   unsigned int button_mask;

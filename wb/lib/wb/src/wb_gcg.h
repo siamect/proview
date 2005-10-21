@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.h,v 1.5 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_gcg.h,v 1.6 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,7 +102,7 @@ typedef struct {
 	pwr_tObjid	objdid;
 	pwr_tObjid	thread;
 	unsigned long	executeorder;
-	char		name[120];
+	pwr_tOName     	name;
 	} gcg_t_plclist;
 
 typedef struct {
@@ -197,7 +197,8 @@ int gcg_get_debug_virtual (
   char		*debug_parname,
   char		*conn_obj,
   char		*conn_par,
-  pwr_eType	*par_type);
+  pwr_eType	*par_type,
+  int		*par_inverted);
 
 int gcg_get_inputpoint (
   vldh_t_node	node,

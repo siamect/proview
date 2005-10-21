@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.cpp,v 1.5 2005-10-12 12:56:28 claes Exp $
+ * Proview   $Id: flow_nodeclass.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -163,14 +163,14 @@ int FlowNodeClass::get_conpoint( int num, double *x, double *y,
 int FlowNodeClass::get_conpoint_trace_attr( int num, char *trace_attr, 
 	flow_eTraceType *type)
 {
-  int		i;
+  int		i, inverted;
 
   for ( i = 0; i < a.a_size; i++)
   {
     if ( a.a[i]->type() == flow_eObjectType_ConPoint &&
          ((FlowConPoint *)a.a[i])->number == num)
     {
-      a.a[i]->get_trace_attr( NULL, trace_attr, type);
+      a.a[i]->get_trace_attr( NULL, trace_attr, type, &inverted);
       return FLOW__SUCCESS;
     }
   }

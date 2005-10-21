@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.16 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.17 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -955,8 +955,8 @@ static int ge_get_plant_select_cb( void *ge_ctx, char *select_name)
   pwr_sAttrRef	attrref;
   int		is_attrref;
   int		sts;
-  char		str[120];
-  char buff[256];
+  pwr_tAName   	str;
+  pwr_tAName 	buff;
 
   if ( !gectx->ldhses) {
     sts = wow_GetSelection( gectx->toplevel, str, sizeof(str), gectx->graph_atom);

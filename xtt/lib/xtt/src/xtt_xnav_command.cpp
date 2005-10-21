@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.21 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.22 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -348,9 +348,9 @@ static int	xnav_help_func(		void		*client_data,
   int   width, height;
   int   nr;	
 
-  if ( ODD( dcli_get_qualifier( "/INDEX", file_str)))
+  if ( ODD( dcli_get_qualifier( "/INDEX", file_str, sizeof(file_str))))
   {
-    if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
+    if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str, sizeof(file_str))))
     {
       sts = CoXHelp::dhelp_index( navh_eHelpFile_Other, file_str);
       if ( EVEN(sts))
@@ -358,7 +358,7 @@ static int	xnav_help_func(		void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/BASE", file_str)))
+      if ( ODD( dcli_get_qualifier( "/BASE", 0, 0)))
         sts = CoXHelp::dhelp_index( navh_eHelpFile_Base, NULL);
       else
         sts = CoXHelp::dhelp_index( navh_eHelpFile_Project, NULL);
@@ -366,7 +366,7 @@ static int	xnav_help_func(		void		*client_data,
     return 1;
   }
 
-  if ( ODD( dcli_get_qualifier( "/VERSION", 0))) {
+  if ( ODD( dcli_get_qualifier( "/VERSION", 0, 0))) {
     sts = CoXHelp::dhelp( "version", "", navh_eHelpFile_Other, "$pwr_exe/xtt_version_help.dat", 0);
     if ( EVEN(sts))
       xnav->message('E', "No help on this subject");
@@ -374,28 +374,28 @@ static int	xnav_help_func(		void		*client_data,
   }
 
   int strict = 0;
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg_str, sizeof(arg_str))))
   {
     sts = CoXHelp::dhelp( "help command", "", navh_eHelpFile_Base, NULL, strict);
     return 1;
   }
-  if ( EVEN( dcli_get_qualifier( "/BOOKMARK", bookmark_str)))
+  if ( EVEN( dcli_get_qualifier( "/BOOKMARK", bookmark_str, sizeof(bookmark_str))))
     strcpy( bookmark_str, "");
 
   strcpy( key, arg_str);
-  if ( ODD( dcli_get_qualifier( "dcli_arg2", arg_str)))
+  if ( ODD( dcli_get_qualifier( "dcli_arg2", arg_str, sizeof(arg_str))))
   {
     strcat( key, " ");
     strcat( key, arg_str);
-    if ( ODD( dcli_get_qualifier( "dcli_arg3", arg_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg3", arg_str, sizeof(arg_str))))
     {
       strcat( key, " ");
       strcat( key, arg_str);
-      if ( ODD( dcli_get_qualifier( "dcli_arg3", arg_str)))
+      if ( ODD( dcli_get_qualifier( "dcli_arg3", arg_str, sizeof(arg_str))))
       {
         strcat( key, " ");
         strcat( key, arg_str);
-        if ( ODD( dcli_get_qualifier( "dcli_arg4", arg_str)))
+        if ( ODD( dcli_get_qualifier( "dcli_arg4", arg_str, sizeof(arg_str))))
         {
           strcat( key, " ");
           strcat( key, arg_str);
@@ -403,10 +403,10 @@ static int	xnav_help_func(		void		*client_data,
       }
     }
   }
-  if ( ! ODD( dcli_get_qualifier( "/RETURNCOMMAND", return_str)))
+  if ( ! ODD( dcli_get_qualifier( "/RETURNCOMMAND", return_str, sizeof(return_str))))
     strcpy( return_str, "");
 
-  if ( ODD( dcli_get_qualifier( "/WIDTH", arg_str)))
+  if ( ODD( dcli_get_qualifier( "/WIDTH", arg_str, sizeof(arg_str))))
   {
     // convert to integer
     nr = sscanf( arg_str, "%d", &width);
@@ -419,7 +419,7 @@ static int	xnav_help_func(		void		*client_data,
   else
     width = 0;
 
-  if ( ODD( dcli_get_qualifier( "/HEIGHT", arg_str)))
+  if ( ODD( dcli_get_qualifier( "/HEIGHT", arg_str, sizeof(arg_str))))
   {
     // convert to integer
     nr = sscanf( arg_str, "%d", &height);
@@ -433,9 +433,9 @@ static int	xnav_help_func(		void		*client_data,
     height = 0;
 
 
-  pop =  ODD( dcli_get_qualifier( "/POPNAVIGATOR", file_str));
+  pop =  ODD( dcli_get_qualifier( "/POPNAVIGATOR", 0, 0));
 
-  if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str)))
+  if ( ODD( dcli_get_qualifier( "/HELPFILE", file_str, sizeof(file_str))))
   {
     sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Other, file_str, strict);
     if ( EVEN(sts))
@@ -443,7 +443,7 @@ static int	xnav_help_func(		void		*client_data,
     else if ( strcmp( return_str, "") != 0)
       xnav->set_push_command( return_str);
   }
-  else if ( ODD( dcli_get_qualifier( "/BASE", 0)))
+  else if ( ODD( dcli_get_qualifier( "/BASE", 0, 0)))
   {
     sts = CoXHelp::dhelp( key, bookmark_str, navh_eHelpFile_Base, 0, strict);
     if ( EVEN(sts))
@@ -479,21 +479,21 @@ static int	xnav_define_func(	void		*client_data,
   char 	*arg3_ptr;
   char 	*arg4_ptr;
 	
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
     xnav->message('E',"Syntax error");
     return 1;
   }
-  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
   {
     xnav->message('E',"Syntax error");
     return 1;
   }
-  if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
     arg3_ptr = 0;
   else
     arg3_ptr = arg3_str;
-  if ( EVEN( dcli_get_qualifier( "dcli_arg4", arg4_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg4", arg4_str, sizeof(arg4_str))))
     arg4_ptr = 0;
   else
     arg4_ptr = arg4_str;
@@ -514,12 +514,12 @@ static int	xnav_login_func(	void		*client_data,
   unsigned int	priv;
   char	msg[80];
 	
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
     xnav->message('E',"Syntax error");
     return 1;
   }
-  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
   {
     xnav->message('E',"Syntax error");
     return 1;
@@ -571,7 +571,7 @@ static int	xnav_set_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "JOP_QUEID", strlen( arg1_str)) == 0)
   {
@@ -580,7 +580,7 @@ static int	xnav_set_func(	void		*client_data,
     int		nr;
     int		qid;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       xnav->message('E',"Syntax error");
       return 1;
@@ -623,19 +623,19 @@ static int	xnav_set_func(	void		*client_data,
   else if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
   {
     // Command is "SET PARAMETER"
-    char	name_str[80];
-    char	value_str[80];
+    pwr_tAName	name_str;
+    char	value_str[400];
     int	sts;
     int	bypass;
 
-    bypass = ODD( dcli_get_qualifier( "/BYPASS", name_str));
+    bypass = ODD( dcli_get_qualifier( "/BYPASS", 0, 0));
 
-    if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       xnav->message('E', "Enter name of parameter");
       return XNAV__HOLDCOMMAND;
     }
-    if ( EVEN( dcli_get_qualifier( "/VALUE", value_str)))
+    if ( EVEN( dcli_get_qualifier( "/VALUE", value_str, sizeof(value_str))))
     {
       xnav->message('E', "Enter value");
       return XNAV__HOLDCOMMAND;
@@ -659,16 +659,16 @@ static int	xnav_set_func(	void		*client_data,
     int nr;
     int idx;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
       xnav->message('E', "Graph name is missing");
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/NAME", object_str))) {
+    if ( EVEN( dcli_get_qualifier( "/NAME", object_str, sizeof(object_str)))) {
       xnav->message('E', "Object name is missing");
       return XNAV__HOLDCOMMAND;
     }
-    if ( EVEN( dcli_get_qualifier( "/INDEX", idx_str))) {
+    if ( EVEN( dcli_get_qualifier( "/INDEX", idx_str, sizeof(idx_str)))) {
       xnav->message('E',"Syntax error");
       return XNAV__HOLDCOMMAND;
     }
@@ -690,7 +690,7 @@ static int	xnav_set_func(	void		*client_data,
     char language_str[80];
 
     // Command is "SET LANGUAGE"
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", language_str))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", language_str, sizeof(language_str)))) {
       xnav->message('E', "Enter language");
       return XNAV__HOLDCOMMAND;
     }
@@ -716,7 +716,7 @@ static int	xnav_show_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
   {
@@ -741,14 +741,14 @@ static int	xnav_show_func(	void		*client_data,
     char	message_str[80];
     char  	value[80];
 	 
-    if ( ODD( dcli_get_qualifier( "/ALL", value)))
+    if ( ODD( dcli_get_qualifier( "/ALL", 0, 0)))
     {
       sts = xnav->show_symbols();
       return sts;
     }
     else
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
       {
         sts = xnav->show_symbols();
         return sts;
@@ -831,7 +831,7 @@ static int	xnav_show_func(	void		*client_data,
     int	entry;
     int	nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -862,7 +862,7 @@ static int	xnav_show_func(	void		*client_data,
     char	option_str[80];
     int		hide_dir = 0;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       hide_dir = 1;
       dcli_get_defaultfilename( "*", filename, ".rtt_com");
@@ -873,7 +873,7 @@ static int	xnav_show_func(	void		*client_data,
       dcli_get_defaultfilename( arg2_str, filename, ".rtt_com");
       strcpy( title, "File list");
     }
-    if ( ODD( dcli_get_qualifier( "/OPTION", option_str)))
+    if ( ODD( dcli_get_qualifier( "/OPTION", option_str, sizeof(option_str))))
     {
       if ( strstr( option_str, "HIDE_DIR"))
         hide_dir = 1;
@@ -895,7 +895,7 @@ static int	xnav_show_func(	void		*client_data,
     char	option_str[80];
     int		hide_dir = 0;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       hide_dir = 1;
       dcli_get_defaultfilename( "pwrp_exe:*", filename, ".pwg");
@@ -906,7 +906,7 @@ static int	xnav_show_func(	void		*client_data,
       dcli_get_defaultfilename( arg2_str, filename, ".pwg");
       strcpy( title, "Graph list");
     }
-    if ( ODD( dcli_get_qualifier( "/OPTION", option_str)))
+    if ( ODD( dcli_get_qualifier( "/OPTION", option_str, sizeof(option_str))))
     {
       if ( strstr( option_str, "HIDE_DIR"))
         hide_dir = 1;
@@ -928,7 +928,7 @@ static int	xnav_show_func(	void		*client_data,
     char	option_str[80];
     int		hide_dir = 0;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       hide_dir = 1;
       dcli_get_defaultfilename( "*", filename, ".rtt_log");
@@ -939,7 +939,7 @@ static int	xnav_show_func(	void		*client_data,
       dcli_get_defaultfilename( arg2_str, filename, ".rtt_log");
       strcpy( title, "RttLogFiles");
     }
-    if ( ODD( dcli_get_qualifier( "/OPTION", option_str)))
+    if ( ODD( dcli_get_qualifier( "/OPTION", option_str, sizeof(option_str))))
     {
       if ( strstr( option_str, "HIDE_DIR"))
         hide_dir = 1;
@@ -976,7 +976,7 @@ static int	xnav_show_func(	void		*client_data,
     /* Command is "SHOW MENU" */
     char	name_str[80];
 
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] == '/')
       {
@@ -986,7 +986,7 @@ static int	xnav_show_func(	void		*client_data,
     }
     else
     {
-      if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
       {
         xnav->message('E', "Syntax error, name not found");
         return XNAV__HOLDCOMMAND;
@@ -1007,12 +1007,12 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
   {
     // Command is "SHOW CHILDREN"
-    char        name_str[80];
+    pwr_tOName  name_str;
     pwr_tObjid	objid;
     int         newlist;
 
     IF_NOGDH_RETURN;
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1035,7 +1035,7 @@ static int	xnav_show_func(	void		*client_data,
         return XNAV__SUCCESS;
       }
     }
-    newlist =  ODD( dcli_get_qualifier( "/NEW", NULL));
+    newlist =  ODD( dcli_get_qualifier( "/NEW", 0, 0));
 
     try {
       if ( !newlist)
@@ -1062,13 +1062,13 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
   {
     /* Command is "SHOW OBJECT" */
-    char	class_str[80];
-    char	name_str[80];
-    char	hierarchy_str[80];
+    pwr_tObjName class_str;
+    pwr_tOName	name_str;
+    pwr_tOName	hierarchy_str;
     char	objdid_str[80];
     char	maxobjects_str[80];
     char	type_str[80];
-    char	file_str[80];
+    pwr_tFileName file_str;
     int	maxobjects;
     char	*class_ptr;
     char	*name_ptr;
@@ -1078,7 +1078,7 @@ static int	xnav_show_func(	void		*client_data,
     int	nr;
 
     IF_NOGDH_RETURN;
-    if ( ODD( dcli_get_qualifier( "/OBJID", objdid_str)))
+    if ( ODD( dcli_get_qualifier( "/OBJID", objdid_str, sizeof(objdid_str))))
     {
       pwr_tObjid		objid;
       pwr_tClassId		classid;
@@ -1108,17 +1108,17 @@ static int	xnav_show_func(	void		*client_data,
       sts = 0;
       return sts;
     }
-    else if ( ODD( dcli_get_qualifier( "/TYPE", type_str)))
+    else if ( ODD( dcli_get_qualifier( "/TYPE", type_str, sizeof(type_str))))
     {
       pwr_tObjid		objid;
       char                      *msg;
 
-      if ( EVEN( dcli_get_qualifier( "/FILE", file_str)))
+      if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
       {
         xnav->message('E', "Enter filename");
         return XNAV__HOLDCOMMAND;
       }
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
       {
         sts = gdh_NameToObjid ( name_str, &objid);
         if ( EVEN(sts))
@@ -1149,7 +1149,7 @@ static int	xnav_show_func(	void		*client_data,
     }
 
     /* Get maxobjects qualifier */
-    if ( ODD( dcli_get_qualifier( "/MAXOBJECTS", maxobjects_str)))
+    if ( ODD( dcli_get_qualifier( "/MAXOBJECTS", maxobjects_str, sizeof(maxobjects_str))))
     {
       /* Convert to objid */
       nr = sscanf( maxobjects_str, "%d", &maxobjects);
@@ -1164,7 +1164,7 @@ static int	xnav_show_func(	void		*client_data,
       maxobjects = 0;
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -1177,21 +1177,21 @@ static int	xnav_show_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
         name_ptr = NULL;
     }
 
-    if ( ODD( dcli_get_qualifier( "/CLASS", class_str)))
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str))))
       class_ptr = class_str;
     else
       class_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str)))
+    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str, sizeof(hierarchy_str))))
       hierarchy_ptr = hierarchy_str;
     else
       hierarchy_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/LOCAL", str)))
+    if ( ODD( dcli_get_qualifier( "/LOCAL", str, sizeof(str))))
       global = 0;
     else
       global = 1;
@@ -1205,12 +1205,12 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "OBJID", strlen( arg1_str)) == 0)
   {
     /* Command is "SHOW OBJID" */
-    char		name_str[80];
-    pwr_tObjid	objid;
-    char		msg[160];
+    pwr_tOName		name_str;
+    pwr_tObjid		objid;
+    char		msg[200];
 
     IF_NOGDH_RETURN;
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1243,8 +1243,8 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "SIGNALS", strlen( arg1_str)) == 0)
   {
     /* Command is "SHOW SIGNALS" */
-    char		file_str[80];
-    char		name_str[80];
+    pwr_tFileName      	file_str;
+    pwr_tOName		name_str;
     char		*file_ptr;
     char		*name_ptr;
     pwr_tObjid	objid;
@@ -1253,13 +1253,13 @@ static int	xnav_show_func(	void		*client_data,
     char		classname[80];
 
     IF_NOGDH_RETURN;
-    if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
       file_ptr = file_str;
     else
       file_ptr = NULL;
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -1270,7 +1270,7 @@ static int	xnav_show_func(	void		*client_data,
         return XNAV__HOLDCOMMAND; 	
       } 
     }
-    else if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    else if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
       name_ptr = name_str;
     else
     {
@@ -1333,10 +1333,10 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
   {
     /* Command is "SHOW PARAMETER" */
-    char	parameter_str[80];
-    char	class_str[80];
-    char	name_str[80];
-    char	hierarchy_str[80];
+    pwr_tOName	parameter_str;
+    pwr_tObjName class_str;
+    pwr_tOName	name_str;
+    pwr_tOName	hierarchy_str;
     char	*class_ptr;
     char	*name_ptr;
     char	*hierarchy_ptr;
@@ -1349,7 +1349,7 @@ static int	xnav_show_func(	void		*client_data,
 
     IF_NOGDH_RETURN;
     /* Get maxobjects qualifier */
-    if ( ODD( dcli_get_qualifier( "/MAXOBJECTS", maxobjects_str)))
+    if ( ODD( dcli_get_qualifier( "/MAXOBJECTS", maxobjects_str, sizeof(maxobjects_str))))
     {
       /* Convert to objid */
       nr = sscanf( maxobjects_str, "%d", &maxobjects);
@@ -1363,13 +1363,13 @@ static int	xnav_show_func(	void		*client_data,
       /* Default value */
       maxobjects = 0;
 
-    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str)))
+    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
       parameter_ptr = parameter_str;
     else
       parameter_ptr = NULL;
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -1382,20 +1382,20 @@ static int	xnav_show_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
         name_ptr = NULL;
     }
-    if ( ODD( dcli_get_qualifier( "/CLASS", class_str)))
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str))))
       class_ptr = class_str;
     else
       class_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str)))
+    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str, sizeof(hierarchy_str))))
       hierarchy_ptr = hierarchy_str;
     else
       hierarchy_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/LOCAL", str)))
+    if ( ODD( dcli_get_qualifier( "/LOCAL", str, sizeof(str))))
       global = 0;
     else
       global = 1;
@@ -1411,11 +1411,11 @@ static int	xnav_show_func(	void		*client_data,
 #if 0
     int	on = 0;
     pwr_tObjid	objid; 
-    char		name_str[80];
+    pwr_tAName 	name_str;
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1445,11 +1445,11 @@ static int	xnav_show_func(	void		*client_data,
 #if 0
     int	on = 0;
     pwr_tObjid	objid;
-    char		name_str[80];
+    pwr_tAName		name_str;
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1479,11 +1479,11 @@ static int	xnav_show_func(	void		*client_data,
 #if 0
     int	on = 0;
     pwr_tObjid	objid;
-    char		name_str[80];
+    pwr_tAName		name_str;
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1513,11 +1513,11 @@ static int	xnav_show_func(	void		*client_data,
 #if 0
     int	on = 0;
     pwr_tObjid	objid;
-    char		name_str[80];
+    pwr_tAName		name_str;
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if ( EVEN(sts))
@@ -1576,10 +1576,10 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "HISTLIST", strlen( arg1_str)) == 0)
   {
     char hist_title[40];
-    char name_str[80];
+    pwr_tOName name_str;
     pwr_tObjid objid = pwr_cNObjid;
 
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if (EVEN(sts))
@@ -1751,9 +1751,9 @@ static int	xnav_show_func(	void		*client_data,
     int node_cnt = 0;
     Item *item;
     gdh_sVolumeInfo info;
-    char name[80];
+    pwr_tOName name;
     char vname[120];
-    char cmd[200];
+    pwr_tCmd cmd;
     char descr[120];
     char *descr_p;
 
@@ -1820,7 +1820,7 @@ static int	xnav_eventlist_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "LOAD", strlen( arg1_str)) == 0)
   {
@@ -1874,7 +1874,7 @@ static int	xnav_eventlist_func(	void		*client_data,
 
     if ( xnav->ev)
     {
-      if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str)))
+      if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str, sizeof(prio_str))))
       {
         cdh_ToUpper( prio_str, prio_str);
         if ( strcmp( prio_str, "A") == 0)
@@ -1915,7 +1915,7 @@ static int	xnav_eventlist_func(	void		*client_data,
   {
     // Command is "EVENTLIST BLOCK"
     char prio_str[80];
-    char name_str[80];
+    pwr_tOName name_str;
     pwr_tObjid objid;
     mh_eEventPrio prio;
 
@@ -1924,7 +1924,7 @@ static int	xnav_eventlist_func(	void		*client_data,
       return XNAV__SUCCESS;
     }
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str))) {
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
       sts = gdh_NameToObjid( name_str, &objid);
       if ( EVEN(sts)) {
         xnav->message('E', "Object not found");
@@ -1942,7 +1942,7 @@ static int	xnav_eventlist_func(	void		*client_data,
       }
     }
 
-    if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str))) {
+    if ( ODD( dcli_get_qualifier( "/PRIORITY", prio_str, sizeof(prio_str)))) {
       cdh_ToUpper( prio_str, prio_str);
       switch ( prio_str[0]) {
       case 'A':
@@ -1979,10 +1979,10 @@ static int	xnav_eventlist_func(	void		*client_data,
   else if ( strncmp( arg1_str, "UNBLOCK", strlen( arg1_str)) == 0)
   {
     // Command is "EVENTLIST UNBLOCK"
-    char name_str[80];
+    pwr_tOName name_str;
     pwr_tObjid objid;
 
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str))) {
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
       sts = gdh_NameToObjid( name_str, &objid);
       if ( EVEN(sts)) {
         xnav->message('E', "Object not found");
@@ -2020,15 +2020,15 @@ static int	xnav_add_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "PARAMETER", strlen( arg1_str)) == 0)
   {
     /* Command is "ADD PARAMETER" */
-    char	parameter_str[80];
-    char	class_str[80];
-    char	name_str[80];
-    char	hierarchy_str[80];
+    pwr_tOName	parameter_str;
+    pwr_tObjName class_str;
+    pwr_tOName	name_str;
+    pwr_tOName	hierarchy_str;
     char	*class_ptr;
     char	*name_ptr;
     char	*hierarchy_ptr;
@@ -2038,13 +2038,13 @@ static int	xnav_add_func(	void		*client_data,
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str)))
+    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
       parameter_ptr = parameter_str;
     else
       parameter_ptr = NULL;
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -2057,20 +2057,20 @@ static int	xnav_add_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
         name_ptr = NULL;
     }
-    if ( ODD( dcli_get_qualifier( "/CLASS", class_str)))
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str))))
       class_ptr = class_str;
     else
       class_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str)))
+    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str, sizeof(hierarchy_str))))
       hierarchy_ptr = hierarchy_str;
     else
       hierarchy_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/LOCAL", str)))
+    if ( ODD( dcli_get_qualifier( "/LOCAL", str, sizeof(str))))
       global = 0;
     else
       global = 1;
@@ -2084,9 +2084,9 @@ static int	xnav_add_func(	void		*client_data,
   if ( strncmp( arg1_str, "DEBUG", strlen( arg1_str)) == 0)
   {
     /* Command is "ADD DEBUG" */
-    char	class_str[80];
-    char	name_str[80];
-    char	hierarchy_str[80];
+    pwr_tObjName class_str;
+    pwr_tOName	name_str;
+    pwr_tOName	hierarchy_str;
     char	*class_ptr;
     char	*name_ptr;
     char	*hierarchy_ptr;
@@ -2096,7 +2096,7 @@ static int	xnav_add_func(	void		*client_data,
     IF_NOGDH_RETURN;
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -2109,20 +2109,20 @@ static int	xnav_add_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
         name_ptr = NULL;
     }
-    if ( ODD( dcli_get_qualifier( "/CLASS", class_str)))
+    if ( ODD( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str))))
       class_ptr = class_str;
     else
       class_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str)))
+    if ( ODD( dcli_get_qualifier( "/HIERARCHY", hierarchy_str, sizeof(hierarchy_str))))
       hierarchy_ptr = hierarchy_str;
     else
       hierarchy_ptr = NULL;
-    if ( ODD( dcli_get_qualifier( "/LOCAL", str)))
+    if ( ODD( dcli_get_qualifier( "/LOCAL", str, sizeof(str))))
       global = 0;
     else
       global = 1;
@@ -2144,16 +2144,16 @@ static int	xnav_add_func(	void		*client_data,
     int		object;
     pwr_tObjid	objid;
 
-    if ( EVEN( dcli_get_qualifier( "/TEXT", text_str)))
+    if ( EVEN( dcli_get_qualifier( "/TEXT", text_str, sizeof(text_str))))
     {
       xnav->message('E',"Enter text");	
       return XNAV__HOLDCOMMAND;
     }
-    if ( ODD( dcli_get_qualifier( "/COMMAND", command_str)))
+    if ( ODD( dcli_get_qualifier( "/COMMAND", command_str, sizeof(command_str))))
       command = 1;
     else
       command = 0;
-    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str)))
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
     {
       IF_NOGDH_RETURN;
       object = 1;
@@ -2197,17 +2197,17 @@ static int	xnav_open_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
-    char	object_str[80];
-    char	instance_str[120];
+    pwr_tAName	object_str;
+    pwr_tAName	instance_str;
     char	*instance_p;
     int		classgraph;
     pwr_tStatus sts;
 
-    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str))) {
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
       instance_p = instance_str;
 
       if ( instance_str[0] == '&') {
@@ -2228,7 +2228,7 @@ static int	xnav_open_func(	void		*client_data,
     else
       instance_p = 0;
 
-    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0))) {
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0, 0))) {
       classgraph = 1;
       if ( !instance_p) {
 	xnav->message('E', "Instance is missing");
@@ -2238,10 +2238,10 @@ static int	xnav_open_func(	void		*client_data,
     else
       classgraph = 0;
     
-    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str))) {
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       pwr_tObjid objid;
       pwr_tObjid node_objid;
-      char	xttgraph_name[120];
+      pwr_tAName xttgraph_name;
       int 	sts;
       char focus_str[80];
       char *focus_p;
@@ -2270,9 +2270,9 @@ static int	xnav_open_func(	void		*client_data,
         return XNAV__HOLDCOMMAND;
       }
 
-      inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", NULL));
+      inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", 0, 0));
 
-      if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str)))
+      if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
         focus_p = focus_str;
       else
         focus_p = 0;
@@ -2280,32 +2280,32 @@ static int	xnav_open_func(	void		*client_data,
       xnav->exec_xttgraph( objid, instance_p, focus_p, inputempty);
     }
     else {
-      char file_str[80];
-      char name_str[80];
+      pwr_tFileName file_str;
+      pwr_tAName name_str;
       char focus_str[80];
       char tmp_str[80];
       char *focus_p;
       int  width, height, nr, scrollbar, menu, navigator;
       int  inputempty;
-      char fname[80];
+      pwr_tFileName fname;
       int  use_default_access;
       unsigned int access;
       pwr_tAName aname;
       pwr_tEnum graph_conf;
 
       // Command is "OPEN GRAPH" without graph object
-      scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
+      scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", 0, 0));
 
-      if ( ODD( dcli_get_qualifier( "/COLLECT", NULL))) {
-        scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", NULL));
-        menu =  ODD( dcli_get_qualifier( "/MENU", NULL));
-        navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", NULL));
+      if ( ODD( dcli_get_qualifier( "/COLLECT", 0, 0))) {
+        scrollbar =  ODD( dcli_get_qualifier( "/SCROLLBAR", 0, 0));
+        menu =  ODD( dcli_get_qualifier( "/MENU", 0, 0));
+        navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", 0, 0));
 
         xnav->open_graph( "Collect", "_none_", scrollbar, menu, navigator,
 	  0, 0, 0, 0, "collect", NULL, 0, 0, 0);
         return XNAV__SUCCESS;
       }
-      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str))) {
+      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
         if ( file_str[0] == '/') {
           xnav->message('E', "Syntax error");
           return XNAV__HOLDCOMMAND;
@@ -2321,7 +2321,7 @@ static int	xnav_open_func(	void		*client_data,
 	  strcpy( file_str, fname);
 	}  
       }
-      else if ( ODD( dcli_get_qualifier( "/FILE", file_str))) {
+      else if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
 	// Get base class graphs on $pwr_exe
 	cdh_ToLower( fname, file_str);
 	if ( instance_p && 
@@ -2336,9 +2336,9 @@ static int	xnav_open_func(	void		*client_data,
 	if ( classgraph) {
 	  // Get file from class of instance object
 	  pwr_sAttrRef aref;
-	  char cname[80];
+	  pwr_tObjName cname;
 	  pwr_tCid cid;
-	  char found_file[200];
+	  pwr_tFileName found_file;
 	  
 	  if ( !instance_p) {
 	    xnav->message('E',"Enter instance object");
@@ -2423,7 +2423,7 @@ static int	xnav_open_func(	void		*client_data,
 	  return XNAV__HOLDCOMMAND;
 	}
       }
-      if ( EVEN( dcli_get_qualifier( "/NAME", name_str))) {
+      if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str)))) {
 	if ( instance_p) {
 	  pwr_sAttrRef aref;
 
@@ -2440,16 +2440,16 @@ static int	xnav_open_func(	void		*client_data,
 	else
 	  strcpy( name_str, file_str);
       }
-      if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str)))
+      if ( ODD( dcli_get_qualifier( "/FOCUS", focus_str, sizeof(focus_str))))
         focus_p = focus_str;
       else
         focus_p = 0;
 
-      menu =  ODD( dcli_get_qualifier( "/MENU", NULL));
-      navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", NULL));
-      inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", NULL));
+      menu =  ODD( dcli_get_qualifier( "/MENU", 0, 0));
+      navigator =  ODD( dcli_get_qualifier( "/NAVIGATOR", 0, 0));
+      inputempty = ODD( dcli_get_qualifier( "/INPUTEMPTY", 0, 0));
 
-      if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str))) {
+      if ( ODD( dcli_get_qualifier( "/WIDTH", tmp_str, sizeof(tmp_str)))) {
         nr = sscanf( tmp_str, "%d", &width);
         if ( nr != 1) {
           xnav->message('E', "Syntax error in width");
@@ -2459,7 +2459,7 @@ static int	xnav_open_func(	void		*client_data,
       else
         width = 0;
 
-      if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str))) {
+      if ( ODD( dcli_get_qualifier( "/HEIGHT", tmp_str, sizeof(tmp_str)))) {
         nr = sscanf( tmp_str, "%d", &height);
         if ( nr != 1) {
           xnav->message('E', "Syntax error in height");
@@ -2469,7 +2469,7 @@ static int	xnav_open_func(	void		*client_data,
       else
         height = 0;
 
-      if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str))) {
+      if ( ODD( dcli_get_qualifier( "/ACCESS", tmp_str, sizeof(tmp_str)))) {
         nr = sscanf( tmp_str, "%u", &access);
         if ( nr != 1) {
           xnav->message('E', "Syntax error in access");
@@ -2488,7 +2488,7 @@ static int	xnav_open_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "TRACE", strlen( arg1_str)) == 0)
   {
-    char name_str[80];
+    pwr_tOName name_str;
     char center_str[80];
     char *center_p;
     pwr_sAttrRef attrref;
@@ -2497,7 +2497,7 @@ static int	xnav_open_func(	void		*client_data,
     int		sts;
 
     // Command is "OPEN TRACE"
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToObjid ( name_str, &objid);
       if (EVEN(sts))
@@ -2508,7 +2508,7 @@ static int	xnav_open_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
       {
         sts = gdh_NameToObjid ( name_str, &objid);
         if (EVEN(sts))
@@ -2529,7 +2529,7 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
 
-    if ( ODD( dcli_get_qualifier( "/CENTER", center_str)))
+    if ( ODD( dcli_get_qualifier( "/CENTER", center_str, sizeof(center_str))))
       center_p  = center_str;
     else
       center_p = NULL;
@@ -2544,7 +2544,7 @@ static int	xnav_open_func(	void		*client_data,
 
     if ( !xnav->op)
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", opplace_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", opplace_str, sizeof(opplace_str))))
       {
         xnav->message('E', "Enter opplace");
         return XNAV__HOLDCOMMAND;
@@ -2574,9 +2574,9 @@ static int	xnav_open_func(	void		*client_data,
   else if ( strncmp( arg1_str, "JGRAPH", strlen( arg1_str)) == 0)
   {
     char	arg2_str[80];
-    char	command[200];
+    pwr_tCmd	command;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       xnav->message('E',"Syntax error");
       return 1;
@@ -2598,7 +2598,7 @@ static int	xnav_open_func(	void		*client_data,
     int entry;
     int nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       if ( !strcmp( entry_str, "CURRENT"))
       {
@@ -2621,8 +2621,8 @@ static int	xnav_open_func(	void		*client_data,
       }
       strcpy( file_str, xnav->logg[entry-1].logg_filename);
     }
-    else if ( EVEN( dcli_get_qualifier( "/FILE", file_str))) {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", file_str))) {
+    else if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
         xnav->message('E', "Enter filename");
         return XNAV__HOLDCOMMAND;
       }
@@ -2632,25 +2632,25 @@ static int	xnav_open_func(	void		*client_data,
   else if ( strncmp( arg1_str, "TREND", strlen( arg1_str)) == 0)
   {
 
-    char name_str[80];
+    pwr_tAName name_str;
     char *name_ptr;
-    char title_str[80];
+    pwr_tAName title_str;
     pwr_sAttrRef aref_vect[11];
     Widget w;
     int sts;
-    char name_array[10][120];
+    pwr_tAName name_array[10];
     int i, names;
     int plotgroup_found = 0;
     pwr_sAttrRef plotgroup = pwr_cNAttrRef;
     pwr_tClassId classid;
     pwr_tObjid node_objid;
-    char trend_name[120];
+    pwr_tAName trend_name;
     XttTrend *trend;
 
     // Command is "OPEN TREND"
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str))) {
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str)))) {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
         name_ptr = name_str;
@@ -2660,7 +2660,7 @@ static int	xnav_open_func(	void		*client_data,
       } 
     }
     else {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else {
         /* Get the selected object */
@@ -2720,9 +2720,9 @@ static int	xnav_open_func(	void		*client_data,
     }
     aref_vect[i] = pwr_cNAttrRef;    
 
-    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       if ( plotgroup_found) {
-        char attr[140];
+        pwr_tAName attr;
 
         // Get title from plotgroup object
         strcpy( attr, trend_name);
@@ -2756,9 +2756,9 @@ static int	xnav_open_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
   {
-    char name_str[80];
+    pwr_tAName name_str;
     char *name_ptr;
-    char title_str[80];
+    pwr_tAName title_str;
     pwr_sAttrRef aref;
     Widget w;
     int sts;
@@ -2767,7 +2767,7 @@ static int	xnav_open_func(	void		*client_data,
     // Command is "OPEN FAST"
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -2780,7 +2780,7 @@ static int	xnav_open_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
       {
@@ -2812,7 +2812,7 @@ static int	xnav_open_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       strcpy( title_str, "Fast");
     }
 
@@ -2834,7 +2834,7 @@ static int	xnav_open_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
   {
-    char name_str[80];
+    pwr_tAName name_str;
     char *name_ptr;
     char title_str[80];
     pwr_sAttrRef aref;
@@ -2844,10 +2844,10 @@ static int	xnav_open_func(	void		*client_data,
 
     // Command is "OPEN ATTRIBUTE"
 
-    bypass = ODD( dcli_get_qualifier( "/BYPASS", name_str));
+    bypass = ODD( dcli_get_qualifier( "/BYPASS", 0, 0));
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -2860,7 +2860,7 @@ static int	xnav_open_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
       {
@@ -2884,7 +2884,7 @@ static int	xnav_open_func(	void		*client_data,
     sts = gdh_GetAttrRefTid( &aref, &classid);
     if (EVEN(sts)) return sts;
 
-    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str))) {
+    if ( EVEN( dcli_get_qualifier( "/TITLE", title_str, sizeof(title_str)))) {
       strcpy( title_str, "Attribute");
     }
 
@@ -2909,7 +2909,7 @@ static int	xnav_open_func(	void		*client_data,
     char	arg2_str[80];
     int         sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       xnav->message('E',"Syntax error");
       return 1;
@@ -2952,24 +2952,24 @@ static int	xnav_close_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
-    char	object_str[80];
-    char	instance_str[80];
+    pwr_tAName	object_str;
+    pwr_tAName	instance_str;
     char	*instance_p;
 
-    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str)))
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str))))
       instance_p = instance_str;
     else
       instance_p = 0;
 
-    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str)))
+    if ( ODD( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str))))
     {
       pwr_tObjid objid;
       pwr_tObjid node_objid;
-      char	xttgraph_name[120];
+      pwr_tAName xttgraph_name;
       int 	sts;
       pwr_sClass_XttGraph *xttgraph_p;
       char	action[80];
@@ -3011,7 +3011,7 @@ static int	xnav_close_func(	void		*client_data,
       char fname[80];
 
       // Command is "CLOSE GRAPH"
-      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str)))
+      if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str))))
       {
         if ( file_str[0] == '/')
         {
@@ -3019,7 +3019,7 @@ static int	xnav_close_func(	void		*client_data,
           return XNAV__HOLDCOMMAND;
         }
       }
-      else if ( EVEN( dcli_get_qualifier( "/FILE", file_str)))
+      else if ( EVEN( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
       {
         xnav->message('E',"Enter file");
         return XNAV__HOLDCOMMAND;
@@ -3042,20 +3042,20 @@ static int	xnav_close_func(	void		*client_data,
   else if ( strncmp( arg1_str, "TREND", strlen( arg1_str)) == 0)
   {
 
-    char name_str[80];
+    pwr_tAName name_str;
     char *name_ptr;
     pwr_tObjid objid;
     int sts;
     int plotgroup_found = 0;
     pwr_tClassId classid;
     pwr_tObjid node_objid;
-    char trend_name[120];
+    pwr_tOName trend_name;
     XttTrend *trend;
 
     // Command is "CLOSE TREND"
 
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -3068,7 +3068,7 @@ static int	xnav_close_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+      if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
         name_ptr = name_str;
       else
       {
@@ -3142,7 +3142,7 @@ static int	xnav_close_func(	void		*client_data,
 
     // Close everything
 
-    if ( ODD( dcli_get_qualifier( "/EXCEPT", except_str))) {
+    if ( ODD( dcli_get_qualifier( "/EXCEPT", except_str, sizeof(except_str)))) {
       // The except string can contain several items separated by ','
       names = dcli_parse( except_str, ",", "",
 	     (char *) name_array, sizeof( name_array)/sizeof( name_array[0]), 
@@ -3325,14 +3325,13 @@ static int	xnav_create_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "ITEM", strlen( arg1_str)) == 0)
   {
     char text_str[80];
     char destination_str[80];
     char command_str[80];
-    char tmp_str[80];
     char pixmap_str[80];
     menu_ePixmap pixmap;
     int dest_code;
@@ -3340,7 +3339,7 @@ static int	xnav_create_func( void		*client_data,
     xnav_sMenu *menu_item;
 
     // Command is "CREATE ITEM"
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", text_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", text_str, sizeof(text_str))))
     {
       if ( text_str[0] == '/')
       {
@@ -3348,32 +3347,32 @@ static int	xnav_create_func( void		*client_data,
         return XNAV__HOLDCOMMAND;
       }
     }
-    else if ( EVEN( dcli_get_qualifier( "/TEXT", text_str)))
+    else if ( EVEN( dcli_get_qualifier( "/TEXT", text_str, sizeof(text_str))))
     {
       xnav->message('E',"Enter text");
       return XNAV__HOLDCOMMAND;
     }
-    if ( EVEN( dcli_get_qualifier( "/DESTINATION", destination_str)))
+    if ( EVEN( dcli_get_qualifier( "/DESTINATION", destination_str, sizeof(destination_str))))
     {
       xnav->message('E',"Enter destination");
       return XNAV__HOLDCOMMAND;
     }
-    if ( ODD( dcli_get_qualifier( "/COMMAND", command_str)))
+    if ( ODD( dcli_get_qualifier( "/COMMAND", command_str, sizeof(command_str))))
       item_type = xnav_eItemType_Command;
-    if ( ODD( dcli_get_qualifier( "/MENU", tmp_str)))
+    if ( ODD( dcli_get_qualifier( "/MENU", 0, 0)))
       item_type = xnav_eItemType_Menu;
-    if ( ODD( dcli_get_qualifier( "/AFTER", tmp_str)))
+    if ( ODD( dcli_get_qualifier( "/AFTER", 0, 0)))
       dest_code = xnav_eDestCode_After;
-    else if ( ODD( dcli_get_qualifier( "/BEFORE", tmp_str)))
+    else if ( ODD( dcli_get_qualifier( "/BEFORE", 0, 0)))
       dest_code = xnav_eDestCode_Before;
-    else if ( ODD( dcli_get_qualifier( "/FIRSTCHILD", tmp_str)))
+    else if ( ODD( dcli_get_qualifier( "/FIRSTCHILD", 0, 0)))
       dest_code = xnav_eDestCode_FirstChild;
-    else if ( ODD( dcli_get_qualifier( "/LASTCHILD", tmp_str)))
+    else if ( ODD( dcli_get_qualifier( "/LASTCHILD", 0, 0)))
       dest_code = xnav_eDestCode_LastChild;
     else
       dest_code = xnav_eDestCode_After;
 
-    if ( ODD( dcli_get_qualifier( "/PIXMAP", pixmap_str))) {
+    if ( ODD( dcli_get_qualifier( "/PIXMAP", pixmap_str, sizeof(pixmap_str)))) {
       if ( strcmp( pixmap_str, "MAP") == 0)
 	pixmap = menu_ePixmap_Map;
       else if ( strcmp( pixmap_str, "GRAPH") == 0)
@@ -3401,8 +3400,8 @@ static int	xnav_create_func( void		*client_data,
   {
     // Command is "CREATE OBJECT"
 
-    char	name_str[80];
-    char	class_str[80];
+    pwr_tOName	name_str;
+    pwr_tObjName class_str;
 
     IF_NOGDH_RETURN;
 
@@ -3414,13 +3413,13 @@ static int	xnav_create_func( void		*client_data,
       return 0;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/CLASS", class_str)))
+    if ( EVEN( dcli_get_qualifier( "/CLASS", class_str, sizeof(class_str))))
     {
       xnav->message('E',"Enter class");	
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       xnav->message('E',"Enter name");	
       return XNAV__HOLDCOMMAND;
@@ -3444,14 +3443,14 @@ static int	xnav_delete_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "ITEM", strlen( arg1_str)) == 0)
   {
     char name_str[80];
 
     // Command is "DELETE ITEM"
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", name_str, sizeof(name_str))))
     {
       if ( name_str[0] == '/')
       {
@@ -3459,7 +3458,7 @@ static int	xnav_delete_func( void		*client_data,
         return XNAV__HOLDCOMMAND;
       }
     }
-    else if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+    else if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       xnav->message('E',"Enter name");
       return XNAV__HOLDCOMMAND;
@@ -3487,7 +3486,7 @@ static int	xnav_delete_func( void		*client_data,
       return 0;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/NAME", name_str)))
+    if ( EVEN( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       xnav->message('E',"Enter name");	
       return XNAV__HOLDCOMMAND;
@@ -3508,15 +3507,15 @@ static int	xnav_collect_func(	void		*client_data,
   XNav *xnav = (XNav *)client_data;
   int	sts;
   char	arg1_str[80];
-  char	name_str[80];
+  pwr_tAName	name_str;
   pwr_sAttrRef attrref;
   int 	is_attr;
 
   IF_NOGDH_RETURN;
 
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
-    if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &attrref);
       if ( EVEN(sts))
@@ -3567,11 +3566,11 @@ static int	xnav_store_func(	void		*client_data,
 
     IF_NOGDH_RETURN;
 
-    if ( ODD( dcli_get_qualifier( "/SYMBOLS", str)))
+    if ( ODD( dcli_get_qualifier( "/SYMBOLS", str, sizeof(str))))
     {
-      if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+      if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
         file_ptr = file_str;
-      else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str)))
+      else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str, sizeof(file_str))))
       {
         if ( file_str[0] != '/')
           /* Assume that this is the filestring */
@@ -3588,9 +3587,9 @@ static int	xnav_store_func(	void		*client_data,
     }
     else
     {
-      if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+      if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
         file_ptr = file_str;
-      else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str)))
+      else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str, sizeof(file_str))))
       {
         if ( file_str[0] != '/')
           /* Assume that this is the filestring */
@@ -3608,7 +3607,7 @@ static int	xnav_store_func(	void		*client_data,
       } 
 
       /* Store a menue */
-      if ( ODD( dcli_get_qualifier( "/COLLECT", str)))
+      if ( ODD( dcli_get_qualifier( "/COLLECT", str, sizeof(str))))
         collect = 1;
       else
         collect = 0;
@@ -3623,8 +3622,8 @@ static int	xnav_crossref_func(	void		*client_data,
 {
   XNav 		*xnav = (XNav *)client_data;
   int		sts;
-  char		file_str[80];
-  char		name_str[80];
+  pwr_tFileName	file_str;
+  pwr_tAName   	name_str;
   char		string_str[80];
   char		func_str[80];
   char		*file_ptr;
@@ -3634,24 +3633,24 @@ static int	xnav_crossref_func(	void		*client_data,
   int		brief;
   int           window;
   int		case_sens;
-  char		title[120];
+  char		title[420];
 
   IF_NOGDH_RETURN;
 
-  if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+  if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
     file_ptr = file_str;
   else
     file_ptr = NULL;
 
-  if ( ODD( dcli_get_qualifier( "/STRING", string_str)))
+  if ( ODD( dcli_get_qualifier( "/STRING", string_str, sizeof(string_str))))
   {
-    if ( ODD( dcli_get_qualifier( "/FUNCTION", func_str)))
+    if ( ODD( dcli_get_qualifier( "/FUNCTION", func_str, sizeof(func_str))))
     {
       xnav->message('E', "Syntax error");
       return XNAV__SUCCESS;
     }
-    brief = ODD( dcli_get_qualifier( "/BRIEF", name_str));
-    case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", name_str));
+    brief = ODD( dcli_get_qualifier( "/BRIEF", name_str, sizeof(name_str)));
+    case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", name_str, sizeof(name_str)));
     xnav->brow_pop();
     brow_SetNodraw( xnav->brow->ctx);
     sts = xnav_crr_code( xnav->brow, file_ptr, string_str, brief, 0, case_sens);
@@ -3662,10 +3661,10 @@ static int	xnav_crossref_func(	void		*client_data,
       xnav->message(' ', XNav::get_message(sts));
     }
   }
-  else if ( ODD( dcli_get_qualifier( "/FUNCTION", func_str)))
+  else if ( ODD( dcli_get_qualifier( "/FUNCTION", func_str, sizeof(func_str))))
   {
-    brief = ODD( dcli_get_qualifier( "/BRIEF", name_str));
-    case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", name_str));
+    brief = ODD( dcli_get_qualifier( "/BRIEF", 0, 0));
+    case_sens = ODD( dcli_get_qualifier( "/CASE_SENSITIVE", 0, 0));
     xnav->brow_pop();
     brow_SetNodraw( xnav->brow->ctx);
     sts = xnav_crr_code( xnav->brow, file_ptr, func_str, brief, 1, case_sens);
@@ -3679,7 +3678,7 @@ static int	xnav_crossref_func(	void		*client_data,
   else
   {
     /* Get the name qualifier */
-    if ( ODD( dcli_get_qualifier( "dcli_arg1", name_str)))
+    if ( ODD( dcli_get_qualifier( "dcli_arg1", name_str, sizeof(name_str))))
     {
       if ( name_str[0] != '/')
         /* Assume that this is the namestring */
@@ -3690,7 +3689,7 @@ static int	xnav_crossref_func(	void		*client_data,
         return XNAV__SUCCESS;
       } 
     }
-    else if ( ODD( dcli_get_qualifier( "/NAME", name_str)))
+    else if ( ODD( dcli_get_qualifier( "/NAME", name_str, sizeof(name_str))))
     {
       name_ptr = name_str;
       sts = gdh_NameToAttrref( pwr_cNObjid, name_str, &objar);
@@ -3716,7 +3715,7 @@ static int	xnav_crossref_func(	void		*client_data,
     sts = gdh_GetAttrRefTid( &objar, &classid);
     if ( EVEN(sts)) return sts;
 
-    window = ODD( dcli_get_qualifier( "/WINDOW", NULL));
+    window = ODD( dcli_get_qualifier( "/WINDOW", 0, 0));
     if ( window) {
       XCrr *xcrr = new XCrr( xnav->form_widget, xnav, &objar, 
 		       xnav->gbl.advanced_user, &sts);
@@ -3794,16 +3793,16 @@ static int	xnav_search_func(	void		*client_data,
   char	arg1_str[80];
   int	regexp;
 	
-  if ( ODD( dcli_get_qualifier( "/NEXT", NULL)))
+  if ( ODD( dcli_get_qualifier( "/NEXT", 0, 0)))
   {
     sts = xnav->search_next();
     if ( EVEN(sts))
       xnav->message(' ', XNav::get_message(sts));
     return sts;
   }
-  else if ( ODD( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  else if ( ODD( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
-    regexp =  ODD( dcli_get_qualifier( "/REGULAREXPRESSION", NULL));
+    regexp =  ODD( dcli_get_qualifier( "/REGULAREXPRESSION", 0, 0));
 
     sts = xnav->search( arg1_str, regexp);
     if ( EVEN(sts))
@@ -3824,7 +3823,7 @@ static int	xnav_test_func(		void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "BELL", strlen( arg1_str)) == 0)
   {
@@ -3847,7 +3846,7 @@ static int	xnav_logging_func(	void		*client_data,
   int	arg1_sts;
   int	sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "SET", strlen( arg1_str)) == 0 ||
        strncmp( arg1_str, "CREATE", strlen( arg1_str)) == 0)
@@ -3878,7 +3877,7 @@ static int	xnav_logging_func(	void		*client_data,
     int 	create;
     int 	shortname;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       if ( !strcmp( entry_str, "CURRENT"))
       {
@@ -3906,7 +3905,7 @@ static int	xnav_logging_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( ODD( dcli_get_qualifier( "/TIME", time_str)))
+    if ( ODD( dcli_get_qualifier( "/TIME", time_str, sizeof(time_str))))
     {
       /* convert to integer */
       nr = sscanf( time_str, "%d", &logg_time);
@@ -3919,7 +3918,7 @@ static int	xnav_logging_func(	void		*client_data,
     else
       logg_time = 0;
 
-    if ( ODD( dcli_get_qualifier( "/BUFFER_SIZE", buffer_size_str)))
+    if ( ODD( dcli_get_qualifier( "/BUFFER_SIZE", buffer_size_str, sizeof(buffer_size_str))))
     {
       /* convert to integer */
       nr = sscanf( buffer_size_str, "%d", &buffer_size);
@@ -3932,7 +3931,7 @@ static int	xnav_logging_func(	void		*client_data,
     else
       buffer_size = 0;
 
-    if ( ODD( dcli_get_qualifier( "/LINE_SIZE", line_size_str)))
+    if ( ODD( dcli_get_qualifier( "/LINE_SIZE", line_size_str, sizeof(line_size_str))))
     {
       /* convert to integer */
       nr = sscanf( line_size_str, "%d", &line_size);
@@ -3945,22 +3944,22 @@ static int	xnav_logging_func(	void		*client_data,
     else
       line_size = 0;
 
-    if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
       file_ptr = file_str;
     else
       file_ptr = NULL;
 
-    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str)))
+    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
       parameter_ptr = parameter_str;
     else
       parameter_ptr = NULL;
 
-    if ( ODD( dcli_get_qualifier( "/CONDITION", condition_str)))
+    if ( ODD( dcli_get_qualifier( "/CONDITION", condition_str, sizeof(condition_str))))
       condition_ptr = condition_str;
     else
       condition_ptr = NULL;
 
-    if ( ODD( dcli_get_qualifier( "/TYPE", str)))
+    if ( ODD( dcli_get_qualifier( "/TYPE", str, sizeof(str))))
     {
       if ( strncmp( str, "EVENT", strlen( str)) == 0)
         logg_type = xtt_LoggType_Mod;
@@ -3970,7 +3969,7 @@ static int	xnav_logging_func(	void		*client_data,
     else
       logg_type = 0;
 
-    if ( ODD( dcli_get_qualifier( "/PRIORITY", priority_str)))
+    if ( ODD( dcli_get_qualifier( "/PRIORITY", priority_str, sizeof(priority_str))))
     {
       /* convert to integer */
       nr = sscanf( priority_str, "%d", &priority);
@@ -3983,26 +3982,26 @@ static int	xnav_logging_func(	void		*client_data,
     else
       priority = -1;
 
-    if ( ODD( dcli_get_qualifier( "/STOP", str)))
+    if ( ODD( dcli_get_qualifier( "/STOP", 0, 0)))
       stop = 1;
-    else if ( ODD( dcli_get_qualifier( "/NOSTOP", str)))
+    else if ( ODD( dcli_get_qualifier( "/NOSTOP", 0, 0)))
       stop = 0;
     else
       stop = -1;
 
-    if ( ODD( dcli_get_qualifier( "/INSERT", str)))
+    if ( ODD( dcli_get_qualifier( "/INSERT", 0, 0)))
       insert = 1;
     else
       insert = 0;
 
-    if ( ODD( dcli_get_qualifier( "/SHORTNAME", str)))
+    if ( ODD( dcli_get_qualifier( "/SHORTNAME", 0, 0)))
       shortname = 1;
-    else if ( ODD( dcli_get_qualifier( "/NOSHORTNAME", str)))
+    else if ( ODD( dcli_get_qualifier( "/NOSHORTNAME", 0, 0)))
       shortname = 0;
     else 
       shortname = -1;
 
-    if ( ODD( dcli_get_qualifier( "/CREATE", str)))
+    if ( ODD( dcli_get_qualifier( "/CREATE", 0, 0)))
       create = 1;
     else
       create = 0;
@@ -4028,7 +4027,7 @@ static int	xnav_logging_func(	void		*client_data,
     int	entry;
     int	nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -4049,7 +4048,7 @@ static int	xnav_logging_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     }
 
-    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str)))
+    if ( ODD( dcli_get_qualifier( "/PARAMETER", parameter_str, sizeof(parameter_str))))
       parameter_ptr = parameter_str;
     else
       return XNAV__SUCCESS;
@@ -4066,7 +4065,7 @@ static int	xnav_logging_func(	void		*client_data,
     int  entry;
     int  nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -4099,7 +4098,7 @@ static int	xnav_logging_func(	void		*client_data,
     int	entry;
     int	nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -4131,7 +4130,7 @@ static int	xnav_logging_func(	void		*client_data,
     int  entry;
     int  nr;
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -4164,9 +4163,9 @@ static int	xnav_logging_func(	void		*client_data,
     int         entry;
     int   	nr;
 
-    if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+    if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
       file_ptr = file_str;
-    else if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str)))
+    else if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str))))
     {
       if ( file_str[0] != '/')
         /* Assume that this is the filestring */
@@ -4183,7 +4182,7 @@ static int	xnav_logging_func(	void		*client_data,
       return XNAV__HOLDCOMMAND;
     } 
 
-    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str)))
+    if ( ODD( dcli_get_qualifier( "/ENTRY", entry_str, sizeof(entry_str))))
     {
       /* convert to integer */
       nr = sscanf( entry_str, "%d", &entry);
@@ -4224,22 +4223,22 @@ static int	xnav_call_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0)
   {
     // Command is "CALL METHOD"
     char	method_str[80];
-    char	object_str[80];
+    pwr_tAName	object_str;
     int		sts;
     xmenu_eItemType menu_type;
     pwr_sAttrRef aref;
 
-    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str))) {
+    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
       xnav->message('E', "Enter method");
       return XNAV__HOLDCOMMAND;
     }
-    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str))) {
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       xnav->message('E', "Enter object");
       return XNAV__HOLDCOMMAND;
     }
@@ -4278,22 +4277,22 @@ static int	xnav_check_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "METHOD", strlen( arg1_str)) == 0)
   {
     // Command is "CHECK METHOD"
     char	method_str[80];
-    char	object_str[80];
+    pwr_tAName	object_str;
     int		sts;
     xmenu_eItemType menu_type;
     pwr_sAttrRef aref;
 
-    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str))) {
+    if ( EVEN( dcli_get_qualifier( "/METHOD", method_str, sizeof(method_str)))) {
       xnav->message('E', "Enter method");
       return XNAV__HOLDCOMMAND;
     }
-    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str))) {
+    if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
       xnav->message('E', "Enter object");
       return XNAV__HOLDCOMMAND;
     }
@@ -4329,26 +4328,26 @@ static int	xnav_print_func(void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
   {
-    char file_str[80];
-    char instance_str[80];
+    pwr_tFileName file_str;
+    pwr_tAName instance_str;
     ge_tCtx gectx;
-    char fname[200];
+    pwr_tFileName fname;
     int classgraph;
     char *instance_p;
     int sts;
 
 
-    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str))) {
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instance_str, sizeof(instance_str)))) {
       instance_p = instance_str;
     }
     else
       instance_p = 0;
 
-    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0))) {
+    if (  ODD( dcli_get_qualifier( "/CLASSGRAPH", 0, 0))) {
       classgraph = 1;
       if ( !instance_p) {
 	xnav->message('E', "Instance is missing");
@@ -4358,22 +4357,22 @@ static int	xnav_print_func(void		*client_data,
     else
       classgraph = 0;
 
-    if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str))) {
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", file_str, sizeof(file_str)))) {
       if ( file_str[0] == '/') {
 	xnav->message('E', "Syntax error");
 	return XNAV__HOLDCOMMAND;
       }
     }
-    else if ( ODD( dcli_get_qualifier( "/FILE", file_str))) {
+    else if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str)))) {
       // Get base class graphs on $pwr_exe
       cdh_ToLower( fname, file_str);
     }
     else if ( classgraph) {
       // Get file from class of instance object
       pwr_sAttrRef aref;
-      char cname[80];
+      pwr_tObjName cname;
       pwr_tCid cid;
-      char found_file[200];
+      pwr_tFileName found_file;
 	  
       if ( !instance_p) {
 	xnav->message('E',"Enter instance object");
@@ -4497,7 +4496,7 @@ pwr_tStatus XNav::get_command_sts()
 
 int XNav::command( char* input_str)
 {
-  char		command[200];
+  char     	command[1000];
   int		sts, sym_sts;
   char		symbol_value[80];
 
@@ -5041,7 +5040,7 @@ static int xnav_getattribute_func(
 
 static int xnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
-  char fname[200];
+  pwr_tFileName fname;
 
   dcli_translate_filename( fname, infile);
   dcli_get_defaultfilename( fname, outfile, ".rtt_com");
@@ -5184,7 +5183,7 @@ static int xnav_attribute_func (
 )
 {
 	int		sts;
-	char		hier_name[80];
+	pwr_tAName     	hier_name;
 	char		object_par[80];
 	char		*object_element;
 	int		element;
@@ -5419,10 +5418,11 @@ int	XNav::show_file(
 {
   int		sts;
   char		title[80] = "FILE LIST";
-  char		found_file[120];
-  char		dev[80], dir[80], file[80], type[80];
+  pwr_tFileName	found_file;
+  pwr_tFileName file, dir;
+  char		dev[80], type[80];
   int		version;
-  char		file_spec[80];
+  pwr_tFileName	file_spec;
   char		text[80];
   item_eFileType file_type;
 
@@ -5532,7 +5532,7 @@ int	XNav::show_par_hier_class_name(
 			int		max_objects)
 {
 	char		parametername_str[80];
-	char		name_str[80];
+	pwr_tOName     	name_str;
 	int		sts;
 	pwr_tClassId	classid;
 	pwr_tObjid	hierobjid;
@@ -5543,7 +5543,7 @@ int	XNav::show_par_hier_class_name(
 	char		elementstr[10];
 	int		len;
 	int		element;
-	char		name_array[2][80];
+	pwr_tOName     	name_array[2];
 	int		names;
 	ItemObject	*item;
 
@@ -5719,7 +5719,7 @@ int	XNav::find_name(
 int XNav::store(	char		*filename,
 			int		collect)
 {
-  char	filename_str[120];
+  pwr_tFileName	filename_str;
   char	msg[120];
   FILE	*outfile;
   int	first;
@@ -5963,8 +5963,8 @@ int XNav::exec_xttgraph( pwr_tObjid xttgraph, char *instance,
   char	action[80];
   char	*s;
   int	sts;
-  char  instance_str[120];
-  char  name[120];
+  pwr_tAName  instance_str;
+  pwr_tAName  name;
 
   sts = gdh_ObjidToName( xttgraph, name, 
 		sizeof(name), cdh_mName_volumeStrict);

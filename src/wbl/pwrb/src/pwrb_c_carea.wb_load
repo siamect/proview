@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_carea.wb_load,v 1.1 2005-10-07 05:57:31 claes Exp $
+!  Proview   $Id: pwrb_c_carea.wb_load,v 1.2 2005-10-21 16:11:24 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,6 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_grafcet.h
 !  @Group Plc,PlcLogic
 !  @Summary Conditional execution of plc-objects in a sub-window
 !  Conditional execution of objects located in an area.
@@ -49,7 +48,7 @@ SObject pwrb:Class
       !/**
       !  Specifies whether the objects in the area  will be executed 
       !  or not. FALSE means no execution and TRUE means execution
-      !  of the objects in the sub-window.
+      !  of the objects in the area.
       !*/
       Object in $Input 1 
         Body SysBody

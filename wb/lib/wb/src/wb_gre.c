@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.c,v 1.15 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_gre.c,v 1.16 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -520,8 +520,8 @@ int gre_get_annotations(
 		  if ( cdh_ObjidIsNull(parattrref->Objid))
 		    strcpy( objid_str, "");
 		  else {
-		    if ( parattrref->Objid.vid == ldh_cPlcConnectVolume ||
-			 parattrref->Objid.vid == ldh_cPlcHostVolume) {
+		    if ( parattrref->Objid.vid == ldh_cPlcMainVolume ||
+			 parattrref->Objid.vid == ldh_cPlcFoVolume) {
 		      sts = ldh_AttrRefToName( ldhses, parattrref, 
 					       ldh_eName_Ref,
 					       &name, &size);
@@ -4184,10 +4184,11 @@ int	gre_init_docobjects(
 	char	annot_str[16];
 	char	systemname[80];
 	char	systemgroup[80];
-	char	plcname[80];
-	char	windname[80];
+	char	plcname[60];
+        pwr_tOName objname;
+	pwr_tOName windname;
 	char	*windname_ptr;
-	char	short_windname[80];
+	pwr_tOName short_windname;
 	int	plclen;
 	vldh_t_wind		wind;
 	int			doc_count;
@@ -4233,9 +4234,10 @@ int	gre_init_docobjects(
 	    /* Plcname in annot 1 */
 	    sts = ldh_ObjidToName( wind->hw.ldhses, 
 	         	plc->lp.oid, ldh_eName_Hierarchy,
-		        plcname, sizeof( plcname), &size);
+		        objname, sizeof( objname), &size);
 	    if ( EVEN(sts)) annot_str[0] = '\0';
 
+	    cdh_StrncpyCutOff( plcname, objname, sizeof(plcname), 1);
             flow_SetAnnotation( doc_obj->hn.node_id, 1, plcname, 
 		strlen(plcname));
 
@@ -4246,8 +4248,8 @@ int	gre_init_docobjects(
 		        windname, sizeof( windname), &size);
 	    if ( EVEN(sts)) annot_str[0] = '\0';
 
-	    /* Take away the plcpart och windowname before printing it */
-	    plclen = strlen( plcname);
+	    /* Take away the plcpart of windowname before printing it */
+	    plclen = strlen( objname);
 	    windname_ptr = windname;
 	    strcpy( short_windname, windname_ptr + plclen + 1);
 
@@ -4381,8 +4383,9 @@ static int	gre_spawn( char *command)
 int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 {
   flow_eTraceType 	trace_type;
-  char			object_str[120];
-  char			attr_str[120] = "";
+  flow_tTraceObj      	object_str;
+  flow_tTraceAttr      	attr_str = "";
+  int			inverted;
   int			sts, i, j, size;
   vldh_t_wind		wind;
   unsigned long		node_count;
@@ -4402,7 +4405,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
   for ( i = 0; i < node_count; i++)
   {
     sts = trace_get_attributes( grectx, *node_ptr, object_str, attr_str,
-		&trace_type);
+		&trace_type, &inverted);
     if ( ODD(sts) && sts != TRA__DISCARD ) {
       if ( host && strncmp( object_str, host, strlen(host)) == 0) {
 	char tmp[120];
@@ -4411,7 +4414,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 	strcpy( object_str, tmp);
       }
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
-		attr_str, trace_type);
+		attr_str, trace_type, inverted);
     }
     else {
       switch( (*node_ptr)->ln.cid ) {
@@ -4486,7 +4489,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 	strcpy( object_str, tmp);
       }
       flow_SetTraceAttr( (*node_ptr)->hn.node_id, object_str,
-      		attr_str, flow_eTraceType_User);
+      		attr_str, flow_eTraceType_User, inverted);
     }
     node_ptr++;
   }

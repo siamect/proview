@@ -15,7 +15,7 @@
 117 0
 118 87
 119 69
-120 1
+120 0
 121 Claes context
 122 0
 126 0.05
@@ -29,7 +29,7 @@
 123
 2
 3
-300 Disabled662
+300 Disabled403
 301
 2
 5
@@ -324,7 +324,7 @@
 303 1
 99
 3
-300 Text144
+300 Text66
 301
 2
 5
@@ -370,7 +370,7 @@
 303 0
 99
 3
-300 Text145
+300 Text67
 301
 2
 5
@@ -416,7 +416,7 @@
 303 0
 99
 3
-300 BodyText146
+300 BodyText68
 301
 2
 5
@@ -462,7 +462,7 @@
 303 0
 99
 3
-300 NameToStr664
+300 NameToStr405
 301
 2
 5
@@ -573,7 +573,7 @@
 303 0
 99
 3
-300 GetSp665
+300 GetSp406
 301
 2
 5
@@ -684,7 +684,7 @@
 303 0
 99
 3
-300 StoSp666
+300 StoSp407
 301
 2
 5
@@ -795,7 +795,7 @@
 303 0
 99
 3
-300 Strcat222
+300 Strcat135
 301
 2
 5
@@ -942,7 +942,7 @@
 303 0
 99
 3
-300 StoDp667
+300 StoDp408
 301
 2
 5
@@ -1053,7 +1053,7 @@
 303 0
 99
 3
-300 DSup668
+300 DSup409
 301
 2
 5
@@ -1206,7 +1206,7 @@
 303 0
 99
 3
-300 GetDi669
+300 GetDi410
 301
 2
 5
@@ -1317,7 +1317,7 @@
 303 0
 99
 3
-300 Document33
+300 Document23
 301
 2
 6
@@ -1590,7 +1590,7 @@
 125
 2
 10
-1000 Disabled662
+1000 Disabled403
 1002 Disabled14
 1005
 0
@@ -1654,6 +1654,7 @@
 1010 $PlcMain:BaseComponent-Class-BaseSafetySwitch
 1011 DisableOn
 1012 0
+1017 0
 99
 10
 1000 CArea23
@@ -1717,12 +1718,13 @@
 700 1.15
 701 0.75
 99
-1010 BaseComponent-Class-BaseSafetySwitch
+1010 $PlcMain:BaseComponent-Class-BaseSafetySwitch
 1011 DisableOn
 1012 0
+1017 1
 99
 10
-1000 Text144
+1000 Text66
 1002 Text12
 1005
 0
@@ -1786,9 +1788,10 @@
 1010 $host-W-Text12
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 Text145
+1000 Text67
 1002 Text11
 1005
 0
@@ -1852,9 +1855,10 @@
 1010 $host-W-Text11
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 BodyText146
+1000 BodyText68
 1002 BodyText8
 1005
 0
@@ -1919,9 +1923,10 @@ Safety switch"
 1010 $host-W-BodyText8
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 NameToStr664
+1000 NameToStr405
 1002 NameToStr2
 1005
 0
@@ -1985,9 +1990,10 @@ Safety switch"
 1010 $host-W-NameToStr2
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 GetSp665
+1000 GetSp406
 1002 GetSp0
 1005
 0
@@ -2051,9 +2057,10 @@ Safety switch"
 1010 $host-W-GetSp0
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 StoSp666
+1000 StoSp407
 1002 StoSp0
 1005
 0
@@ -2117,9 +2124,10 @@ Safety switch"
 1010 $host-W-StoSp0
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 Strcat222
+1000 Strcat135
 1002 MessAndName
 1005
 0
@@ -2183,9 +2191,10 @@ Safety switch"
 1010 $host-W-MessAndName
 1011 DisableOn
 1012 3
+1017 1
 99
 10
-1000 StoDp667
+1000 StoDp408
 1002 StoDp0
 1005
 0
@@ -2249,9 +2258,10 @@ Safety switch"
 1010 $PlcFo:BaseComponent-Class-BaseSafetySwitchFo
 1011 On
 1012 0
+1017 0
 99
 10
-1000 DSup668
+1000 DSup409
 1002 DSup0
 1005
 0
@@ -2316,9 +2326,10 @@ Safety switch"
 1010 $host-W-DSup0
 1011 Action
 1012 0
+1017 0
 99
 10
-1000 GetDi669
+1000 GetDi410
 1002 GetDi0
 1005
 0
@@ -2382,9 +2393,10 @@ Safety switch"
 1010 $PlcMain:BaseComponent-Class-BaseSafetySwitch.On
 1011 ActualValue
 1012 0
+1017 0
 99
 10
-1000 Document33
+1000 Document23
 1002 Document0
 1005
 0
@@ -2443,7 +2455,7 @@ Safety switch"
 "Class-BaseSafetySwitchFo-Code"
 "W"
 "1 (1)"
-"04-OCT-2005 10:34"
+"18-OCT-2005 11:23"
 ""
 1001
 7
@@ -2453,6 +2465,7 @@ Safety switch"
 1010 $host-W-Document0
 1011 ActualValue
 1012 3
+1017 0
 99
 11
 1100 1.77
@@ -2684,7 +2697,7 @@ Safety switch"
 1.2
 1.2
 1122 0
-1123 655696
+1123 1380403009
 1124 
 1125 
 1126 
@@ -2925,7 +2938,7 @@ Safety switch"
 1.25
 1.25
 1122 48
-1123 167752832
+1123 167369136
 1124 
 1125 
 1126 
@@ -3162,7 +3175,7 @@ Safety switch"
 0.9
 0.9
 1122 48
-1123 170075112
+1123 167287952
 1124 
 1125 
 1126 
@@ -3399,7 +3412,7 @@ Safety switch"
 0.9
 0.9
 1122 48
-1123 174746576
+1123 153731672
 1124 
 1125 
 1126 
@@ -3635,8 +3648,8 @@ Safety switch"
 1121
 0.95
 0.95
-1122 160410912
-1123 24
+1122 48
+1123 143925248
 1124 
 1125 
 1126 
@@ -3872,8 +3885,8 @@ Safety switch"
 1121
 0.75
 0.75
-1122 166229248
-1123 25
+1122 48
+1123 153975600
 1124 
 1125 
 1126 

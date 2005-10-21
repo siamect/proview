@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: co_dcli_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: co_dcli_msg.msg,v 1.3 2005-10-21 16:11:23 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -51,5 +51,5 @@ structnotfound	<the struct was not found>				/error
 eof		<end of file>						/error
 undeferr	<undefined error>					/error
 typeundef       <undefined type>                                        /error
-
+toolong		<qualifier value is too long>				/error
 

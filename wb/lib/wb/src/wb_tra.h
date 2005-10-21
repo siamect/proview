@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_tra.h,v 1.4 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,8 @@ int trace_get_attributes( 	gre_ctx		grectx,
 				vldh_t_node	node, 
 				char		*object_str, 
 				char		*attr_str,
-				flow_eTraceType	*trace_type);
+				flow_eTraceType	*trace_type,
+				int		*inverted);
 pwr_tStatus trace_get_attr_con( 	gre_ctx		grectx, 
 					vldh_t_con	con,
 					char		*debug_par,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.17 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.18 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -865,8 +865,8 @@ static int utl_list_sort (
 	utl_t_list	*list_ptr;
 	utl_t_list	**prev;
 	char		*np;
-	char		name1[120];
-	char		name2[120];
+	pwr_tAName     	name1;
+	pwr_tAName     	name2;
 	int		nsize;
 	int		sts;
 
@@ -958,15 +958,15 @@ static int utl_list_classsort (
 	utl_t_list	*next_ptr;
 	utl_t_list	*list_ptr;
 	utl_t_list	**prev;
-	char		name1[120];
-	char		name2[120];
+	pwr_tAName     	name1;
+	pwr_tAName     	name2;
 	int		namesize;
 	int		sts;
 	pwr_tClassId	class1;
 	pwr_tClassId	class2;
-	char		classname1[32];
-	char		classname2[32];
-	char		dummytxt[120];
+	pwr_tObjName   	classname1;
+	pwr_tObjName   	classname2;
+	pwr_tAName     	dummytxt;
 	char		*np;
 
 	if ( *list == NULL)
@@ -7240,7 +7240,7 @@ int utl_list (
 	int		nr;
 	int		new_row;
 	int		print_ok;
-	char		cmd[100];
+	pwr_tCmd       	cmd;
 	int		page;
 	int		first;
 	char		vol_str[UTL_INPUTLIST_MAX + 1][80];
@@ -8287,7 +8287,7 @@ static int utl_list_print_par (
 )
 {
 	char		text[1200];
-	char		hier_name[160];
+	pwr_tAName     	hier_name;
 	int		sts, size;
 	pwr_tClassId	class;
 	utl_t_listpar	*list_pardesc;
@@ -8539,11 +8539,17 @@ static int utl_list_print_par (
 	  if ( EVEN(sts)) return sts;
 	}
 
-	if ( list_pardesc->SizeTabs != 0)
-	  text[ list_pardesc->SizeTabs * 8 - 1 ] = 0;
-	u_print( utlctx, "%s", text);
-	if ( list_pardesc->SizeTabs != 0)
-	  u_posit( utlctx, list_pardesc->SizeTabs, strlen(text));
+	if ( list_pardesc->SizeTabs == -1) {
+	  u_print( utlctx, " ");
+	  u_print( utlctx, "%s", text);
+	}
+	else {
+	  if ( list_pardesc->SizeTabs != 0)
+	    text[ list_pardesc->SizeTabs * 8 - 1 ] = 0;
+	  u_print( utlctx, "%s", text);
+	  if ( list_pardesc->SizeTabs != 0)
+	    u_posit( utlctx, list_pardesc->SizeTabs, strlen(text));
+	}
 	if ( list_pardesc->CarriageRet )
 	  u_row( utlctx);
 	  
@@ -8904,8 +8910,11 @@ static int utl_list_print_columnheader (
 	  }
 	  strcat ( text, listbody_ptr->ParDescription[j].ColumnHeader);
 	  u_print( utlctx, "%s", text);
-	  u_posit( utlctx, listbody_ptr->ParDescription[j].SizeTabs, 
-		strlen(text));
+	  if ( listbody_ptr->ParDescription[j].SizeTabs == -1)
+	    u_print( utlctx, " ");
+	  else
+	    u_posit( utlctx, listbody_ptr->ParDescription[j].SizeTabs, 
+		     strlen(text));
 	  if ( listbody_ptr->ParDescription[j].CarriageRet)
 	    u_row( utlctx);
 	  new_row = listbody_ptr->ParDescription[j].CarriageRet;
@@ -8931,8 +8940,11 @@ static int utl_list_print_columnheader (
 		  i++)
 	        strcat ( text, "-");
 	    u_print( utlctx, "%s", text);
-	    u_posit( utlctx, listbody_ptr->ParDescription[j].SizeTabs, 
-		strlen(text));
+	    if ( listbody_ptr->ParDescription[j].SizeTabs == -1)
+	      u_print( utlctx, " ");
+	    else
+	      u_posit( utlctx, listbody_ptr->ParDescription[j].SizeTabs, 
+		       strlen(text));
 	    if ( listbody_ptr->ParDescription[j].CarriageRet)
 	      u_row( utlctx);
 	    if ( listbody_ptr->ParDescription[j].CarriageRet)
@@ -11188,7 +11200,7 @@ pwr_tStatus utl_replace_symbol( ldh_tSesContext ldhses,
 				pwr_sAttrRef *arp)
 {
   switch ( arp->Objid.vid) {
-  case ldh_cPlcHostVolume: {
+  case ldh_cPlcFoVolume: {
     pwr_tStatus sts;
     pwr_tOid host;
 
@@ -11200,7 +11212,7 @@ pwr_tStatus utl_replace_symbol( ldh_tSesContext ldhses,
     arp->Objid = host;
     break;
   }
-  case ldh_cPlcConnectVolume: {
+  case ldh_cPlcMainVolume: {
     pwr_tStatus sts;
     pwr_tOid host;
     pwr_sAttrRef *con_arp;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.16 2005-10-12 12:57:28 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.17 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -379,8 +379,8 @@ class Graph {
   GraphRecallBuff     	recall;			//! Recall buffer for dynamics.
   void 			*parent_ctx;		//! Parent context.
   Widget		parent_wid;		//! Parent widget.
-  char 			name[120];		//! Name.
-  char 			object_name[120];	//! Name of object for class graphs.
+  char 			name[300];		//! Name.
+  pwr_tAName 	       	object_name;		//! Name of object for class graphs.
   Widget		grow_widget;		//! Grow widget.
   Widget		form_widget;		//! Pane widget.
   Widget		toplevel;		//! Toplevel widget.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_node.h,v 1.4 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,16 +99,17 @@ class FlowNode : public FlowArrayElem {
     FlowNodeClass 	*nc;
     FlowPoint		pos;
     FlowPoint		stored_pos;
-    char		n_name[32];
+    flow_tName		n_name;
     int			highlight;
     int			inverse;
     char		*annotv[10];
     int			annotsize[10];
     flow_sAnnotPixmap	*annotpixmapv[10];
     int			refcon_cnt[MAX_CONPOINTS];
-    char		trace_object[120];
-    char		trace_attribute[120];
+    flow_tTraceObj      trace_object;
+    flow_tTraceAttr     trace_attribute;
     flow_eTraceType	trace_attr_type;
+    int			trace_inverted;
     void		*trace_p;
     FlowNode		*link;
     void		link_insert( FlowArrayElem **start)
@@ -138,8 +139,8 @@ class FlowNode : public FlowArrayElem {
     void *user_data;
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
-    void set_trace_attr( char *object, char *attribute, flow_eTraceType type);
-    void get_trace_attr( char *object, char *attribute, flow_eTraceType *type);
+    void set_trace_attr( char *object, char *attribute, flow_eTraceType type, int inverted);
+    void get_trace_attr( char *object, char *attribute, flow_eTraceType *type, int *inverted);
     void set_trace_data( void *data) { trace_p = data;};
     void trace_scan();
     int trace_init();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_array_elem.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_array_elem.h,v 1.4 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,8 +84,10 @@ class FlowArrayElem {
     virtual void trace_scan() {};
     virtual int trace_init() { return 1;};
     virtual void trace_close() {};
-    virtual void set_trace_attr( char *object, char *attribute, flow_eTraceType type) {};
-    virtual void get_trace_attr( char *object, char *attribute, flow_eTraceType *type) {};
+    virtual void set_trace_attr( char *object, char *attribute, flow_eTraceType type,
+				 int inverted) {};
+    virtual void get_trace_attr( char *object, char *attribute, flow_eTraceType *type,
+				 int *inverted) {};
     virtual void *get_ctx() { return NULL;};
     virtual void configure( void *previous) {};
     virtual void move_widgets( int x, int y) {};

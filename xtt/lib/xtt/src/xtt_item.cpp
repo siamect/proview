@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.13 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.14 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,7 +76,7 @@ ItemObject::ItemObject( XNavBrow *brow, pwr_tObjid item_objid,
   alarm_level(0), max_alarm_level(0), block_level(0), max_block_level(0)
 {
   int sts;
-  char	segname[120];
+  pwr_tAName segname;
   pwr_tObjid child;
   char	descr[80];
 
@@ -216,7 +216,7 @@ int ItemBaseObject::open_trace( XNavBrow *brow, double x, double y)
 {
   pwr_tClassId 	classid;
   pwr_tObjid	parent;
-  char		name[80];
+  pwr_tOName   	name;
   int		sts;
   if ( brow->usertype != brow_eUserType_XNav)
     return 0;
@@ -735,8 +735,8 @@ ItemAttr::ItemAttr( XNavBrow *brow, pwr_tObjid item_objid,
 	ItemBaseAttr( item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type)
 {
-  char	obj_name[120];
-  char	annot[120];
+  pwr_tOName obj_name;
+  pwr_tAName	annot;
   int	sts;
 
   type = xnav_eItemType_Attr;
@@ -822,8 +822,8 @@ ItemAttrArrayElem::ItemAttrArrayElem( XNavBrow *brow, pwr_tObjid item_objid,
 	attr_type_id, attr_tid, attr_size, attr_flags, item_is_root, item_display_type),
 	element(attr_element)
 {
-  char	obj_name[120];
-  char	annot[120];
+  pwr_tOName	obj_name;
+  pwr_tAName	annot;
   int	sts;
 
   type = xnav_eItemType_AttrArrayElem;
@@ -870,8 +870,8 @@ ItemAttrObject::ItemAttrObject( XNavBrow *brow, pwr_tObjid item_objid,
 	cid(attr_cid), size(attr_size), flags(attr_flags), element(attr_element)
 {
   char 		*annot;
-  char		segname[120];
-  char  	classname[32];
+  pwr_tAName   	segname;
+  pwr_tObjName 	classname;
   pwr_sAttrRef 	aref;
   char 		descr[80];
   pwr_tCid 	classid;
@@ -971,7 +971,7 @@ int ItemAttrObject::open_attributes( XNavBrow *brow, double x, double y)
     int		i;
     gdh_sAttrDef *bd;
     int 	rows;
-    char	attr_name[120];
+    pwr_tAName	attr_name;
 
     if ( brow_IsOpen( node) & xnav_mOpen_Children ||
 	 brow_IsOpen( node) & xnav_mOpen_Crossref)
@@ -1396,7 +1396,7 @@ int ItemFile::open_children( XNavBrow *brow, double x, double y)
   {
     case item_eFileType_Script:
     {
-      char cmd[120];
+      pwr_tCmd cmd;
       strcpy( cmd, "@");
       strcat( cmd, file_name);
       sts = xnav->command( cmd);
@@ -1422,7 +1422,7 @@ ItemCollect::ItemCollect( XNavBrow *brow, pwr_tObjid item_objid, char *attr_name
 	attr_type_id, attr_tid, attr_size, 0, item_is_root, item_eDisplayType_Path)
 {
   int sts;
-  char obj_name[120];
+  pwr_tOName obj_name;
   pwr_tObjid tst_objid;
 
   type = xnav_eItemType_Collect;
@@ -1680,7 +1680,7 @@ ItemCrossref::ItemCrossref( XNavBrow *brow, char *item_ref_name,
 	Item( pwr_cNObjid, 0), write(item_write)
 {
   int sts;
-  char window_name[120];
+  pwr_tOName window_name;
   char *s;
 
   type = xnav_eItemType_Crossref;
@@ -1847,7 +1847,7 @@ int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
   double	node_x, node_y;
   int		crossref_exist;
   int		sts;
-  char		signal_name[120];
+  pwr_tOName   	signal_name;
   XNav *xnav;
 
   if ( brow->usertype == brow_eUserType_XNav)
@@ -1920,8 +1920,8 @@ int ItemRemTrans::open_children( XNavBrow *brow, double x, double y)
     return 0;
 
   XNav *xnav = (XNav *) brow->userdata;
-  char          remtrans_name[120];
-  char		namebuf[140];
+  pwr_tOName    remtrans_name;
+  pwr_tAName   	namebuf;
   char		structname[40];
   char		structfile[80];
   int           sts;

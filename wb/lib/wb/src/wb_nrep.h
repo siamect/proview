@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nrep.h,v 1.7 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_nrep.h,v 1.8 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,8 +69,8 @@ private:
   int b_offset;
   wb_namesegments *seg;
   wb_nameattributes *attr;
-  char oname[200];
-  char norm_name[200];
+  pwr_tAName oname;
+  pwr_tAName norm_name;
   pwr_tStatus status;
   bool m_hasSuper;
   bool m_shadowed;

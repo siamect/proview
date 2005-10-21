@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.7 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -471,14 +471,16 @@ void brow_SetTraceAttr( brow_tObject object, char *trace_object,
 		char *trace_attribute, flow_eTraceType trace_attr_type)
 {
   ((FlowArrayElem *)object)->set_trace_attr( trace_object, trace_attribute,
-	trace_attr_type);
+	trace_attr_type, 0);
 }
 
 void brow_GetTraceAttr( brow_tObject object, char *trace_object, 
 		char *trace_attribute, flow_eTraceType *trace_attr_type)
 {
+  int inverted;
+
   ((FlowArrayElem *)object)->get_trace_attr( trace_object, trace_attribute,
-	trace_attr_type);
+	trace_attr_type, &inverted);
 }
 
 void brow_SetTraceData( brow_tObject object, void *trace_data)

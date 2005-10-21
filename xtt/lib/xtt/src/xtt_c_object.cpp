@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.12 2005-10-12 13:06:45 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.13 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,8 +118,8 @@ static pwr_tStatus OpenCrossrefFilter( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus HistEvent( xmenu_sMenuCall *ip)
 {
-  char cmd[200];
-  char name[120];
+  char cmd[420];
+  pwr_tAName name;
   int sts;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -156,12 +156,12 @@ static pwr_tStatus HistEventFilter( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
 {
-  char name[240];
-  char cmd[200];
+  pwr_tAName name;
+  pwr_tCmd cmd;
   int sts;
   pwr_tOid parent;
   pwr_tOid oid;
-  char parent_name[120];
+  pwr_tOName parent_name;
   bool in_plc = false;
   pwr_tCid classid;
   pwr_sAttrRef plcconnect;
@@ -214,7 +214,7 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
   pwr_tObjid parent;
   pwr_tClassId classid;
   pwr_sAttrRef plcconnect;
-  char name[240];
+  pwr_tAName name;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -256,8 +256,8 @@ static pwr_tStatus OpenTraceFilter( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus OpenTrend( xmenu_sMenuCall *ip)
 {
-  char name[120];
-  char cmd[200];
+  pwr_tAName name;
+  char cmd[800];
   int sts;
   pwr_tObjid child;
   pwr_tClassId classid;
@@ -343,7 +343,7 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
   pwr_tObjid child;
   pwr_tClassId classid;
   pwr_sAttrRef deftrend;
-  char name[120];
+  pwr_tAName name;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -393,8 +393,8 @@ static pwr_tStatus OpenTrendFilter( xmenu_sMenuCall *ip)
 //
 static pwr_tStatus OpenFast( xmenu_sMenuCall *ip)
 {
-  char name[120];
-  char cmd[200];
+  pwr_tAName name;
+  char cmd[800];
   int sts;
   pwr_tObjid child;
   pwr_tClassId classid;
@@ -480,7 +480,7 @@ static pwr_tStatus OpenFastFilter( xmenu_sMenuCall *ip)
   pwr_tObjid child;
   pwr_tClassId classid;
   pwr_sAttrRef deffast;
-  char name[120];
+  pwr_tAName name;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -553,8 +553,8 @@ static pwr_tStatus RtNavigatorFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenObjectGraph( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
-  char		cmd[200];
+  pwr_tAName   	name;
+  char     	cmd[800];
   pwr_sAttrRef  aref;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -584,9 +584,9 @@ static pwr_tStatus OpenObjectGraphFilter( xmenu_sMenuCall *ip)
 {
   int		sts;
   pwr_tClassId	classid;
-  char		classname[80];
-  char		fname[120];
-  char		found_file[120];
+  pwr_tObjName 	classname;
+  pwr_tFileName	fname;
+  pwr_tFileName	found_file;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -622,12 +622,12 @@ static pwr_tStatus OpenObjectGraphFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenGraph( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_sAttrRef defgraph;
   pwr_sAttrRef aref;
   pwr_tObjid objid;
   pwr_tClassId classid;
-  char cmd[200];
+  char cmd[400];
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -673,7 +673,7 @@ static pwr_tStatus OpenGraphFilter( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tObjid objid;
-  char name[140];
+  pwr_tAName name;
   pwr_sAttrRef defgraph;
   pwr_sAttrRef aref;
   pwr_tClassId classid;
@@ -773,9 +773,9 @@ static pwr_tStatus CollectFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus Help( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tString40 helptopic;
-  char cmd[200];
+  pwr_tCmd cmd;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -803,7 +803,7 @@ static pwr_tStatus Help( xmenu_sMenuCall *ip)
 static pwr_tStatus HelpFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tString40 helptopic;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -828,7 +828,7 @@ static pwr_tStatus HelpFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus DataSheet( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tURL datasheet;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -854,7 +854,7 @@ static pwr_tStatus DataSheet( xmenu_sMenuCall *ip)
 static pwr_tStatus DataSheetFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tURL datasheet;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -879,7 +879,7 @@ static pwr_tStatus DataSheetFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus Photo( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tURL photo;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -900,7 +900,7 @@ static pwr_tStatus Photo( xmenu_sMenuCall *ip)
   if ( strchr( photo, '.'))
     xnav_open_URL( photo);
   else {
-    char cmd[200];
+    pwr_tCmd cmd;
 
     sprintf( cmd, "help %s", photo);
     sts = ((XNav *)ip->EditorContext)->command( cmd);
@@ -912,7 +912,7 @@ static pwr_tStatus Photo( xmenu_sMenuCall *ip)
 static pwr_tStatus PhotoFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tURL photo;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -938,7 +938,7 @@ static pwr_tStatus CircuitDiagram( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tURL circuitdiagram;
-  char name[140];
+  pwr_tAName name;
   pwr_tObjid objid;
   bool is_parent = false;
   pwr_sAttrRef *objar =
@@ -977,7 +977,7 @@ static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
 {
   int sts;
   pwr_tURL circuitdiagram;
-  char name[140];
+  pwr_tAName name;
   pwr_tObjid objid;
   bool is_parent = false;
   pwr_sAttrRef *objar =
@@ -1014,8 +1014,8 @@ static pwr_tStatus CircuitDiagramFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus Note( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
-  char cmd[200];
+  pwr_tAName name;
+  char cmd[420];
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -1025,7 +1025,7 @@ static pwr_tStatus Note( xmenu_sMenuCall *ip)
 			cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
-  sprintf( cmd, "open attr/bypass/name= %s.Note", name);
+  sprintf( cmd, "open attr/bypass/name=%s.Note", name);
     sts = ((XNav *)ip->EditorContext)->command( cmd);
   // xnav_edit_attribute( name, value);
   return XNAV__SUCCESS;
@@ -1035,7 +1035,7 @@ static pwr_tStatus Note( xmenu_sMenuCall *ip)
 static pwr_tStatus NoteFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_tURL datasheet;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
@@ -1056,7 +1056,7 @@ static pwr_tStatus NoteFilter( xmenu_sMenuCall *ip)
 // Block Events
 static pwr_tStatus BlockEvents( xmenu_sMenuCall *ip)
 {
-  pwr_tCmd cmd;
+  char cmd[420];
   pwr_tOName name;
   pwr_tStatus sts;
 
@@ -1082,9 +1082,9 @@ static pwr_tStatus HelpClass( xmenu_sMenuCall *ip)
   int sts;
   pwr_tClassId classid;
   pwr_tVid vid;
-  char vname[32];
-  char classname[80];
-  char cmd[200];
+  pwr_tObjName vname;
+  pwr_tObjName classname;
+  pwr_tCmd cmd;
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -1145,10 +1145,10 @@ static pwr_tStatus HelpClassFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_sAttrRef simconnect;
   pwr_sAttrRef aref;
-  pwr_tCmd cmd;
+  char cmd[800];
   pwr_sAttrRef *objar =
     !ip->ItemList || cdh_ObjidIsNull( ip->ItemList[ip->ChosenItem].CurrentObject.Objid) ?
     objar = &ip->Pointed : 
@@ -1163,9 +1163,9 @@ static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
   if ( EVEN(sts)) {
     // Look for sim graph to main object
     pwr_tClassId classid;
-    char		classname[80];
-    char		fname[120];
-    char		found_file[120];
+    pwr_tObjName       	classname;
+    pwr_tFileName      	fname;
+    pwr_tFileName      	found_file;
     char		*s;
 
     sts = gdh_GetAttrRefTid( objar, &classid);
@@ -1229,12 +1229,12 @@ static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
 static pwr_tStatus SimulateFilter( xmenu_sMenuCall *ip)
 {
   int sts;
-  char name[140];
+  pwr_tAName name;
   pwr_sAttrRef simconnect;
   pwr_tClassId classid;
-  char		classname[80];
-  char		fname[120];
-  char		found_file[120];
+  pwr_tObjName 	classname;
+  pwr_tFileName	fname;
+  pwr_tFileName found_file;
   pwr_tOid	iohandler;
   pwr_sClass_IOHandler *iohandler_p;
   pwr_sAttrRef *objar =
@@ -1321,13 +1321,13 @@ static pwr_tStatus SimulateFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenTypeGraph( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
-  char		cmd[200];
+  pwr_tAName   	name;
+  char     	cmd[800];
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
   pwr_tUInt32   attr_dimension;
-  char          filename[200];
+  pwr_tFileName filename;
 
   sts = gdh_AttrrefToName( &ip->Pointed, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
@@ -1366,7 +1366,7 @@ static pwr_tStatus OpenTypeGraph( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenTypeGraphFilter( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
@@ -1403,7 +1403,7 @@ static pwr_tStatus OpenTypeGraphFilter( xmenu_sMenuCall *ip)
 static pwr_tStatus RefOpenObject( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
@@ -1463,7 +1463,7 @@ static pwr_tStatus RefOpenObject( xmenu_sMenuCall *ip)
 static pwr_tStatus RefRtNavigator( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
@@ -1527,7 +1527,7 @@ static pwr_tStatus RefRtNavigator( xmenu_sMenuCall *ip)
 static pwr_tStatus OpenURL( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
@@ -1575,7 +1575,7 @@ static pwr_tStatus OpenURL( xmenu_sMenuCall *ip)
 static pwr_tStatus IsRefAttribute( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;
@@ -1612,7 +1612,7 @@ static pwr_tStatus IsRefAttribute( xmenu_sMenuCall *ip)
 static pwr_tStatus IsURLAttribute( xmenu_sMenuCall *ip)
 {
   int		sts;
-  char		name[120];
+  pwr_tAName   	name;
   pwr_tTypeId   attr_type;
   pwr_tUInt32   attr_size;
   pwr_tUInt32   attr_offset;

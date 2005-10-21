@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.14 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.15 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,7 +133,7 @@ static pwr_tStatus io_replace_symbol( pwr_sAttrRef *chan, pwr_sAttrRef *sig)
 {
   if ( chan->Objid.vid == cdh_cIoConnectVolume ) {
     // Replace with attrref in IoConnected
-    char name[120];
+    pwr_tAName name;
     pwr_tStatus sts;
     pwr_sAttrRef connect;
     pwr_tCid cid;
@@ -254,7 +254,7 @@ pwr_tStatus io_init_ai_signals(
   pwr_sClass_Ai			*sig_op;
   pwr_sClass_ChanAi		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -334,7 +334,7 @@ pwr_tStatus io_init_ao_signals(
   pwr_sClass_Ao			*sig_op;
   pwr_sClass_ChanAo		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -412,7 +412,7 @@ pwr_tStatus io_init_di_signals(
   pwr_sClass_Di			*sig_op;
   pwr_sClass_ChanDi		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName		       	buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -491,7 +491,7 @@ pwr_tStatus io_init_do_signals(
   pwr_sClass_Do			*sig_op;
   pwr_sClass_ChanDo		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -610,7 +610,7 @@ pwr_tStatus io_init_co_signals(
   pwr_sClass_Co			*sig_op;
   pwr_sClass_ChanCo		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
 
@@ -823,7 +823,7 @@ pwr_tStatus io_init_ii_signals(
   pwr_sClass_Ii			*sig_op;
   pwr_sClass_ChanIi		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -903,7 +903,7 @@ pwr_tStatus io_init_io_signals(
   pwr_sClass_Io			*sig_op;
   pwr_sClass_ChanIo		*chan_op;
   pwr_sAttrRef			sig_aref;
-  char				buf[140];
+  pwr_tAName   			buf;
   pwr_tUInt32			sig_count = 0;
   pwr_tClassId			class;
   pwr_sClass_IvArea		*iarea_op;
@@ -1432,8 +1432,8 @@ static pwr_tStatus io_init_card(
   pwr_tStatus 	(* CardClose) ();
   pwr_tStatus 	(* CardRead) ();
   pwr_tStatus 	(* CardWrite) ();
-  char		cname[140];
-  char		attrname[140];
+  pwr_tAName   	cname;
+  pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
   io_sCard	*cp;
   io_sCard	*clp;
@@ -1872,8 +1872,8 @@ static pwr_tStatus io_init_rack(
   pwr_tStatus 	(* RackClose) ();
   pwr_tStatus 	(* RackRead) ();
   pwr_tStatus 	(* RackWrite) ();
-  char		rname[140];
-  char		attrname[140];
+  pwr_tAName   	rname;
+  pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
   io_sRack	*rp;
   io_sRack	*rlp;
@@ -1990,8 +1990,8 @@ static pwr_tStatus io_init_agent(
   pwr_tStatus 	(* AgentClose) ();
   pwr_tStatus 	(* AgentRead) ();
   pwr_tStatus 	(* AgentWrite) ();
-  char		aname[140];
-  char		attrname[140];
+  pwr_tAName   	aname;
+  pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
   io_sAgent	*ap;
   io_sAgent	*alp;
@@ -2642,7 +2642,7 @@ pwr_tStatus io_AiRangeToCoef(
   io_sChannel 	*chanp)
 {
   pwr_sClass_ChanAi	*cop;
-  char			buf[120];
+  pwr_tAName   		buf;
   pwr_tStatus		sts;
   pwr_tFloat32		PolyCoef1;
   pwr_tFloat32		PolyCoef0;
@@ -2706,7 +2706,7 @@ pwr_tStatus io_AoRangeToCoef(
   io_sChannel 	*chanp)
 {
   pwr_sClass_ChanAo	*cop;
-  char			buf[120];
+  pwr_tAName   		buf;
   pwr_tStatus		sts;
   pwr_tFloat32		PolyCoef1;
   pwr_tFloat32		PolyCoef0;

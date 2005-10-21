@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.h,v 1.2 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_con.h,v 1.3 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,12 +129,12 @@ class FlowCon : public FlowArrayElem {
     int			temporary_ref;
     int			source_ref_cnt;
     int			dest_ref_cnt;
-    char		c_name[32];
+    flow_tName		c_name;
     int			hot;
     int			highlight;
     flow_eMoveType 	movement_type;
-    char		trace_object[120];
-    char		trace_attribute[32];
+    flow_tTraceObj      trace_object;
+    flow_tTraceAttr     trace_attribute;
     flow_eTraceType	trace_attr_type;
     void		*trace_p;
     FlowCon		*link;
@@ -190,14 +190,15 @@ class FlowCon : public FlowArrayElem {
     void *user_data;
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
-    void set_trace_attr( char *object, char *attribute, flow_eTraceType type)
+    void set_trace_attr( char *object, char *attribute, flow_eTraceType type, int inverted)
         { strncpy( trace_object, object, sizeof( trace_object)); 
           strncpy( trace_attribute, attribute, sizeof( trace_attribute));
           trace_attr_type = type;};
-    void get_trace_attr( char *object, char *attribute, flow_eTraceType *type)
+    void get_trace_attr( char *object, char *attribute, flow_eTraceType *type, int *inverted)
         { strncpy( object, trace_object, sizeof( trace_object)); 
           strncpy( attribute, trace_attribute, sizeof( trace_attribute));
-          *type = trace_attr_type;};
+          *type = trace_attr_type;
+	  *inverted = 0;};
     void trace_scan();
     int trace_init();
     void trace_close();

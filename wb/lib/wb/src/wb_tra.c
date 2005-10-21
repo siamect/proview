@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.c,v 1.10 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_tra.c,v 1.11 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,50 +87,65 @@ static pwr_tStatus trace_get_attr_m0( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 { return TRA__DISCARD;}
 static pwr_tStatus trace_get_attr_m1(	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m2( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m3( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
+static pwr_tStatus trace_get_attr_m5( 	gre_ctx		grectx, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_m9( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type);
+					flow_eTraceType	*trace_type,
+					int		*inverted);
 static pwr_tStatus trace_get_attr_mno( 	gre_ctx		grectx, 
 					vldh_t_node	node, 
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 { return TRA__NOMETHOD;}
 
 pwr_tStatus	(* trace_get_attr_m[TRA_MAX_TRACEMETHOD]) () = {
@@ -139,7 +154,7 @@ pwr_tStatus	(* trace_get_attr_m[TRA_MAX_TRACEMETHOD]) () = {
     &trace_get_attr_m2,
     &trace_get_attr_m3,
     &trace_get_attr_m4,
-    &trace_get_attr_mno,
+    &trace_get_attr_m5,
     &trace_get_attr_mno,
     &trace_get_attr_m7,
     &trace_get_attr_mno,
@@ -150,7 +165,8 @@ int trace_get_attributes( 	gre_ctx		grectx,
 				vldh_t_node	node, 
 				char		*object_str, 
 				char		*attr_str,
-				flow_eTraceType	*trace_type)
+				flow_eTraceType	*trace_type,
+				int		*inverted)
 {
   int			sts, size; 
   pwr_tClassId		bodyclass;
@@ -165,7 +181,7 @@ int trace_get_attributes( 	gre_ctx		grectx,
     return TRA__BADMETHOD;
 
   sts = (trace_get_attr_m[graphbody->tracemethod])( grectx, node, 
-		graphbody->debugpar, object_str, attr_str, trace_type);
+		graphbody->debugpar, object_str, attr_str, trace_type, inverted);
   return sts;
 }
 
@@ -200,10 +216,13 @@ static pwr_tStatus trace_get_attr_m1( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
   pwr_tStatus	sts;
   pwr_eType	par_type;
+
+  *inverted = 0;
 
   /* Get the object and parameter that should be traced */
   sts = gcg_get_debug( node, debug_par, object_str, attr_str, &par_type);
@@ -254,16 +273,19 @@ static pwr_tStatus trace_get_attr_m2( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
   pwr_tStatus	sts;
   pwr_eType	par_type;
+  int		par_inverted;
 
   /* Get the object and parameter that should be traced */
   sts = gcg_get_debug_virtual( node, debug_par, object_str, attr_str, 
-		&par_type);
+		&par_type, &par_inverted);
   if ( EVEN(sts)) return sts;
 
+  *inverted = par_inverted;
   switch( par_type) {
     case pwr_eType_Boolean:
       *trace_type = flow_eTraceType_Boolean;
@@ -307,16 +329,19 @@ static pwr_tStatus trace_get_attr_m3( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
   pwr_tStatus		sts; 
   int			size; 
   ldh_sParDef 		*bodydef;
   int 			i ,rows;
   int			found;
-  char			name[120];
+  pwr_tOName   		name;
   pwr_eType		par_type;
   
+  *inverted = 0;
+
   /* Get the name of the object */
   sts = ldh_ObjidToName( node->hn.wind->hw.ldhses, 
 		node->ln.oid, ldh_eName_Hierarchy, name, sizeof(name), 
@@ -391,9 +416,10 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
-  char			aname[240];
+  pwr_tAName   		aname;
   pwr_tStatus		sts;
   int			size;
   pwr_sAttrRef		*objarp;
@@ -402,6 +428,8 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   pwr_sTypeDef 		*tdef;
   pwr_tTid		tid;
   char			*np, *s;
+
+  *inverted = 0;
 
   /* Get the objdid stored in the parameter Object */
   switch ( node->ln.cid) {
@@ -463,6 +491,76 @@ static pwr_tStatus trace_get_attr_m4( 	gre_ctx		grectx,
   free((char *) tdef);
   return TRA__SUCCESS;
 }
+
+/*************************************************************************
+*
+* Name:		trace_getm5()
+*
+* Type		int
+*
+* Type		Parameter	IOGF	Description
+*
+* Description:
+*	Tracemethod for Disable.
+*
+*	The method should trace the DisableAttr attribute for the
+*       referenced object.
+*
+**************************************************************************/
+
+static pwr_tStatus trace_get_attr_m5( 	gre_ctx		grectx, 
+					vldh_t_node	node, 
+					char		*debug_par,
+					char		*object_str, 
+					char		*attr_str,
+					flow_eTraceType	*trace_type,
+					int		*inverted)
+{
+  pwr_tAName	       	aname;
+  pwr_tStatus		sts;
+  int			size;
+  pwr_sAttrRef		*objarp;
+  pwr_sAttrRef		objar, disar;
+  char			*np, *s;
+  ldh_sAttrRefInfo	info;
+
+  *inverted = 0;
+
+  /* Get the attrref stored in the attribute Object */
+  sts = ldh_GetObjectPar( node->hn.wind->hw.ldhses,  
+		node->ln.oid, "DevBody", "Object",
+		(char **)&objarp, &size); 
+  if ( EVEN(sts)) return sts;
+
+  objar = *objarp;
+  free((char *) objarp);
+
+  sts = ldh_GetAttrRefInfo( node->hn.wind->hw.ldhses,
+	&objar, &info);
+  if( EVEN(sts)) return sts;
+
+  if ( !info.flags & PWR_MASK_DISABLEATTR)
+    return TRA__NOPAR;
+
+  disar = cdh_ArefToDisableAref( &objar);
+
+  /* Get the name of the node */
+  sts = ldh_AttrRefToName( node->hn.wind->hw.ldhses,  
+			   &disar, cdh_mNName, &np,
+			   &size);
+  if( EVEN(sts)) return sts;
+  strcpy( aname, np);
+
+  s = strrchr( aname, '.');
+  if ( !s) return TRA__NOPAR;
+
+  strcpy( attr_str, s + 1);
+  *s = 0;
+  strcpy( object_str, aname);
+
+  *trace_type = flow_eTraceType_Boolean;
+  return TRA__SUCCESS;
+}
 
 
 /*************************************************************************
@@ -491,7 +589,8 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
   pwr_tStatus		sts;
   int			size;
@@ -504,8 +603,10 @@ static pwr_tStatus trace_get_attr_m7( 	gre_ctx		grectx,
   size_t		pos2;
   size_t		len;
   int 			offset;
-  char			name[120];
+  pwr_tOName   		name;
   pwr_eType		par_type;
+
+  *inverted = 0;
 
   /* The size of the parameter is in the runtime body of the object */
 
@@ -673,11 +774,14 @@ static pwr_tStatus trace_get_attr_m9( 	gre_ctx		grectx,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
-					flow_eTraceType	*trace_type)
+					flow_eTraceType	*trace_type,
+					int		*inverted)
 {
   pwr_tStatus		sts;
   char			*attribute;
   int			size;
+
+  *inverted = 0;
 
   /* In class editor, object is always $host */
   strcpy( object_str, "$host");
@@ -755,7 +859,7 @@ pwr_tStatus trace_trasetup( foe_ctx foectx)
 static int trace_connect_bc( flow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, void **p)
 {
-  char		attr_str[160];
+  pwr_tAName   	attr_str;
   int		size;
   vldh_t_node 	vnode;
   pwr_tSubid	*subid_p, subid;
@@ -811,9 +915,10 @@ static int trace_disconnect_bc( flow_tObject object)
   pwr_tSubid	*subid_p;
   vldh_t_node	vnode;
   int 		sts;
-  char          name[120];
-  char          attr[32];
+  flow_tTraceObj name;
+  flow_tTraceAttr attr;
   flow_eTraceType type;
+  int		inverted;
 
   printf( "DisConnecting something...\n");
   if ( flow_GetObjectType( object) == flow_eObjectType_Node)
@@ -826,7 +931,7 @@ static int trace_disconnect_bc( flow_tObject object)
     }
     else
     {
-      flow_GetTraceAttr( object, name, attr, &type);
+      flow_GetTraceAttr( object, name, attr, &type, &inverted);
       if ( !( strcmp( name, "") == 0 || strcmp( attr, "") == 0)) {
         flow_GetUserData( object, (void **) &vnode);
         sts = gdh_UnrefObjectInfo( vnode->hn.trace_subid);
@@ -936,8 +1041,8 @@ int trace_create_analyse( 	gre_ctx grectx,
 {
   static int 		idx = 0;
   vldh_t_conobject 	dummy_con;
-  char			object_str[120];
-  char			attr_str[80];
+  flow_tTraceObj      	object_str;
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
   flow_tNode		n1;
   flow_tCon		c1;
@@ -957,7 +1062,7 @@ int trace_create_analyse( 	gre_ctx grectx,
 
     flow_CreateNode( grectx->flow_ctx, name, grectx->trace_analyse_nc, 
 		x, y, NULL, &n1);
-    flow_SetTraceAttr( n1, object_str, attr_str, trace_type);
+    flow_SetTraceAttr( n1, object_str, attr_str, trace_type, 0);
 
     flow_CreateCon( grectx->flow_ctx, name, grectx->trace_con_cc, 
 	  	source->hn.node_id, n1, source_conpoint, 0, NULL, &c1,
@@ -1266,9 +1371,10 @@ static void trace_changevalue (
   pwr_tStatus 		sts;
   char			name[200];
   pwr_tBoolean		value;
-  char			object_str[120];
-  char			attr_str[80];
+  flow_tTraceObj       	object_str;
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
+  int			inverted;
 
   foectx = (foe_ctx)grectx->cp.parent_ctx;
   ldhses = (grectx->wind)->hw.ldhses ;
@@ -1287,7 +1393,7 @@ static void trace_changevalue (
   else
   {	    
     /* Toggle the value, start to get the current value */
-    flow_GetTraceAttr( fnode, object_str, attr_str, &trace_type);
+    flow_GetTraceAttr( fnode, object_str, attr_str, &trace_type, &inverted);
     strcpy( name, object_str);
     strcat( name, ".");
     strcat( name, attr_str);
@@ -1343,13 +1449,15 @@ static pwr_tStatus	trace_aanalyse_set_value(
   char			name[200];
   pwr_tBoolean		boolean_value;
   pwr_tFloat32		float_value;
-  char			object_str[120];
-  char			attr_str[80];
+  flow_tTraceObj       	object_str;
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
+  int			inverted;
 
   ldhses = ((foectx->grectx)->wind)->hw.ldhses ;
 
-  flow_GetTraceAttr( foectx->grectx->trace_changenode, object_str, attr_str, &trace_type);
+  flow_GetTraceAttr( foectx->grectx->trace_changenode, object_str, attr_str, &trace_type,
+		     &inverted);
   strcpy( name, object_str);
   strcat( name, ".");
   strcat( name, attr_str);

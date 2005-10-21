@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.h,v 1.5 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_menu.h,v 1.6 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,7 +84,7 @@ union xmenu_m_MenuFlags {
 };
 
 struct xmenu_s_MenuItem {
-  pwr_tString40		Name;
+  pwr_tString80		Name;
   pwr_tUInt32		Level;
   xmenu_eMenuItem	Item;
   xmenu_mMenuFlags	Flags;

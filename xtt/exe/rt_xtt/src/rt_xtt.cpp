@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt.cpp,v 1.19 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_xtt.cpp,v 1.20 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -171,7 +171,7 @@ static void xtt_valchanged_cmd_input( Widget w, XEvent *event);
 
 static void xtt_hotkey_Command( Widget w, XKeyEvent* ev, String* av, Cardinal* ac)
 {
-  char cmd[200];
+  pwr_tCmd cmd;
 
   if (*ac == 0)
     return;
@@ -184,7 +184,7 @@ static void xtt_hotkey_Command( Widget w, XKeyEvent* ev, String* av, Cardinal* a
 static void xtt_hotkey_ToggleDig( Widget w, XKeyEvent* ev, String* av, Cardinal* ac)
 {
   pwr_tBoolean  value;
-  char		name[120];
+  pwr_tAName   	name;
   int		sts;
 
 
@@ -214,7 +214,7 @@ static void xtt_hotkey_ToggleDig( Widget w, XKeyEvent* ev, String* av, Cardinal*
 static void xtt_hotkey_SetDig( Widget w, XKeyEvent* ev, String* av, Cardinal* ac)
 {
   pwr_tBoolean  value = 1;
-  char		name[120];
+  pwr_tAName   	name;
   int		sts;
 
 
@@ -236,7 +236,7 @@ static void xtt_hotkey_SetDig( Widget w, XKeyEvent* ev, String* av, Cardinal* ac
 static void xtt_hotkey_ResetDig( Widget w, XKeyEvent* ev, String* av, Cardinal* ac)
 {
   pwr_tBoolean  value = 0;
-  char		name[120];
+  pwr_tAName   	name;
   int		sts;
 
 
@@ -590,12 +590,12 @@ static void xtt_activate_opengraph( Widget w, Xtt *xtt, XmAnyCallbackStruct *dat
 {
   int		sts;
   pwr_tClassId	classid;
-  char		name[240];
-  char		vname[240];
-  char		filename[120];
+  pwr_tAName   	name;
+  pwr_tAName   	vname;
+  pwr_tFileName	filename;
   int		is_attr;
   pwr_sAttrRef	attrref;
-  char		cmd[200];
+  pwr_tCmd     	cmd;
 
   sts = xtt->xnav->get_select( &attrref, &is_attr);
   if ( EVEN(sts))

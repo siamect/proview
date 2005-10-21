@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.8 2005-10-12 12:56:28 claes Exp $
+ * Proview   $Id: flow.h,v 1.9 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,10 @@ extern "C" {
 #define DRAW_PIXMAP_SIZE 9
 
 #define FSPACE " "
+
+typedef char flow_tTraceObj[200];
+typedef char flow_tTraceAttr[200];
+typedef char flow_tName[80];
 
 typedef enum {
 	flow_eCtxType_Flow,
@@ -443,6 +447,7 @@ typedef enum {
 	flow_eSave_Node_obst_x_left		= 1014,
 	flow_eSave_Node_obst_y_high		= 1015,
 	flow_eSave_Node_obst_y_low		= 1016,
+	flow_eSave_Node_trace_inverted		= 1017,
 	flow_eSave_Con_x_right			= 1100,
 	flow_eSave_Con_x_left			= 1101,
 	flow_eSave_Con_y_high			= 1102,

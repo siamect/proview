@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt.cpp,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xatt.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -507,7 +507,7 @@ XAtt::XAtt(
   char		*uid_filename_p = uid_filename;
   Arg 		args[20];
   pwr_tStatus	sts;
-  char 		title[80];
+  pwr_tAName   	title;
   int		i;
   MrmHierarchy s_DRMh;
   MrmType dclass;
@@ -560,6 +560,8 @@ XAtt::XAtt(
 
   *xa_sts = gdh_AttrrefToName( &objar, title, sizeof(title), cdh_mNName);
   if ( EVEN(*xa_sts)) return;
+
+  cdh_StrncpyCutOff( title, title, 100, 1);
 
   reglist[0].value = (caddr_t) this;
 

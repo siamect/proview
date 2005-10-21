@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.c,v 1.10 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_trace.c,v 1.11 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,11 +81,12 @@ pwr_tStatus trace_trasetup( tra_tCtx tractx);
 static char	*trace_IdToStr(  pwr_tObjid 	objid);
 
 static void trace_GetTraceAttr( tra_tCtx tractx, flow_tObject object, 
-				char *object_str, char *attr_str, flow_eTraceType *type)
+				char *object_str, char *attr_str, flow_eTraceType *type,
+				int *inverted)
 {
-  char name[120];
+  pwr_tOName name;
 
-  flow_GetTraceAttr( object, name, attr_str, type);
+  flow_GetTraceAttr( object, name, attr_str, type, inverted);
   if ( tractx->has_host) {
     /* Replace "$host" with hostname */
     if ( strncmp( name, "$host", 5) == 0) {
@@ -112,7 +113,7 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
   FILE *fp;
   pwr_tOid host;
   pwr_tCid cid;
-  char cname[80];
+  pwr_tObjName cname;
   pwr_tFileName fname;
   int sts;
   pwr_tOName name;
@@ -176,7 +177,7 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
 static int trace_connect_bc( flow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, void **p)
 {
-  char		attr_str[160];
+  pwr_tAName   	attr_str;
   int		size;
   pwr_tSubid	*subid_p, subid;
   int		sts;
@@ -215,8 +216,8 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
       strcpy( attr_str, tractx->hostname);
       strcat( attr_str, &name[5]);
     }
-    else if ( strncmp( name, "$PlcHost:", 9) == 0) {
-      /* Replace "$PlcHost:" with hostname */
+    else if ( strncmp( name, "$PlcFo:", 7) == 0) {
+      /* Replace "$PlcFo:" with fo name */
       s = strchr( name, '.');
       if ( !s)
 	strcpy( attr_str, tractx->hostname);
@@ -225,8 +226,8 @@ static int trace_connect_bc( flow_tObject object, char *name, char *attr,
 	strcat( attr_str, s);
       }
     }      
-    else if ( strncmp( name, "$PlcConnect:", 12) == 0) {
-      /* Replace "$PlcConnect:" with plcconnect name */
+    else if ( strncmp( name, "$PlcMain:", 9) == 0) {
+      /* Replace "$PlcMain:" with plcconnect name */
       s = strchr( name, '.');
       if ( !s)
 	strcpy( attr_str, tractx->plcconnect);
@@ -259,21 +260,24 @@ static int trace_disconnect_bc( flow_tObject object)
 {
   pwr_tSubid	*subid_p;
   int 		sts;
-  char          name[120];
-  char          attr[32];
+  flow_tTraceObj name;
+  flow_tTraceAttr attr;
   flow_eTraceType type;
+  int		inverted;
 
   if ( flow_GetObjectType( object) == flow_eObjectType_Node) {
 
-    flow_GetTraceAttr( object, name, attr, &type);
+    flow_GetTraceAttr( object, name, attr, &type, &inverted);
     if ( type != flow_eTraceType_Boolean &&
 	 flow_GetNodeGroup( object) != flow_eNodeGroup_Trace)
       return 1;
 
     if ( !( strcmp( name, "") == 0 || strcmp( attr, "") == 0)) {
       flow_GetUserData( object, (void **) &subid_p);
-      sts = gdh_UnrefObjectInfo( *subid_p);
-      XtFree( (char *) subid_p);
+      if ( subid_p) {
+	sts = gdh_UnrefObjectInfo( *subid_p);
+	XtFree( (char *) subid_p);
+      }
     }
   }
   return 1;
@@ -651,10 +655,11 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 
     if ( tractx->trace_started)
     {
-      char			object_str[120];
-      char			attr_str[120];
-      char			con_attr_str[120];
+      flow_tTraceObj	       	object_str;
+      flow_tTraceAttr  		attr_str;
+      flow_tTraceAttr	       	con_attr_str;
       flow_eTraceType		trace_type;
+      int			inverted;
       flow_tNode		n1;
       flow_tCon			c1;
       int			sts;
@@ -682,7 +687,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 
       /* Find the trace attributes */
       flow_GetTraceAttr( event->con_create.source_object, object_str, attr_str, 
-		&trace_type);
+		&trace_type, &inverted);
 
       /* Get attribute from connection point */
       sts = flow_GetConPointTraceAttr( event->con_create.source_object,
@@ -695,7 +700,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
         return 1;
 
       flow_CreateNode( ctx, name, tractx->trace_analyse_nc, event->object.x, event->object.y, NULL, &n1);
-      flow_SetTraceAttr( n1, object_str, attr_str, trace_type);
+      flow_SetTraceAttr( n1, object_str, attr_str, trace_type, 0);
 
       flow_CreateCon( ctx, name, tractx->trace_con_cc, 
 	  	event->con_create.source_object, n1,
@@ -756,9 +761,10 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_MB3Press:
     {
-      char		object_str[120];
-      char		attr_str[80];
+      flow_tTraceObj   	object_str;
+      flow_tTraceAttr  	attr_str;
       flow_eTraceType	trace_type;
+      int		inverted;
       pwr_tObjid	objid;
       pwr_sAttrRef      attrref;
       int		sts;
@@ -772,7 +778,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 		flow_eNodeGroup_Trace)
           {
             trace_GetTraceAttr( tractx, event->object.object, object_str, attr_str,
-			&trace_type);
+			&trace_type, &inverted);
 
             sts = gdh_NameToObjid( object_str, &objid);
             if ( EVEN(sts)) return 1;
@@ -806,9 +812,10 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB1DoubleClick:
     {
       /* Open attribute editor */
-      char		object_str[120];
-      char		attr_str[80];
+      flow_tTraceObj   	object_str;
+      flow_tTraceAttr  	attr_str;
       flow_eTraceType	trace_type;
+      int		inverted;
       pwr_tObjid	objid;
       int		sts;
 
@@ -820,7 +827,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
 		flow_eNodeGroup_Trace)
           {
             trace_GetTraceAttr( tractx, event->object.object, object_str, attr_str, 
-			&trace_type);
+			&trace_type, &inverted);
 
             sts = gdh_NameToObjid( object_str, &objid);
             if ( EVEN(sts)) return 1;
@@ -855,7 +862,7 @@ static int trace_flow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB1DoubleClickShift:
     {
       pwr_tOName       		name;
-      char			object_name[120];
+      flow_tName       		object_name;
       pwr_tObjid		objid;
       int			sts;
       tra_tCtx			new_tractx;
@@ -964,8 +971,9 @@ static int trace_get_objid( tra_tCtx tractx, flow_tObject node,
   pwr_tOName	        name;
   pwr_tOName   		object_name;
   int			sts;
-  char			attr_str[80];
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
+  int			inverted;
 
   /* Try flow node name */
   sts = gdh_ObjidToName( tractx->objid, name, sizeof(name), cdh_mNName); 
@@ -979,7 +987,7 @@ static int trace_get_objid( tra_tCtx tractx, flow_tObject node,
   if ( EVEN(sts))
   {
     /* Try trace object */
-    trace_GetTraceAttr( tractx, node, object_name, attr_str, &trace_type);
+    trace_GetTraceAttr( tractx, node, object_name, attr_str, &trace_type, &inverted);
 
     sts = gdh_NameToObjid( object_name, objid);
     if ( EVEN(sts)) return sts;
@@ -1140,9 +1148,10 @@ static void trace_changevalue (
   pwr_tStatus 		sts;
   char		       	name[200];
   pwr_tBoolean		value;
-  char			object_str[120];
-  char			attr_str[80];
+  flow_tTraceObj      	object_str;
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
+  int			inverted;
 
   if ( tractx->is_authorized_cb) {
     if ( !(tractx->is_authorized_cb)(tractx->cp.parent_ctx, 
@@ -1163,7 +1172,7 @@ static void trace_changevalue (
   else
   {	    
     /* Toggle the value, start to get the current value */
-    trace_GetTraceAttr( tractx, fnode, object_str, attr_str, &trace_type);
+    trace_GetTraceAttr( tractx, fnode, object_str, attr_str, &trace_type, &inverted);
     strcpy( name, object_str);
     strcat( name, ".");
     strcat( name, attr_str);
@@ -1215,11 +1224,12 @@ static pwr_tStatus	trace_aanalyse_set_value(
   char			name[200];
   pwr_tBoolean		boolean_value;
   pwr_tFloat32		float_value;
-  char			object_str[120];
-  char			attr_str[80];
+  flow_tTraceObj       	object_str;
+  flow_tTraceAttr      	attr_str;
   flow_eTraceType	trace_type;
+  int			inverted;
 
-  flow_GetTraceAttr( tractx->trace_changenode, object_str, attr_str, &trace_type);
+  flow_GetTraceAttr( tractx->trace_changenode, object_str, attr_str, &trace_type, &inverted);
   strcpy( name, object_str);
   strcat( name, ".");
   strcat( name, attr_str);
@@ -1401,7 +1411,7 @@ tra_tCtx trace_new( 	void 		*parent_ctx,
   int		i;
   pwr_tObjid	window_objid;
   pwr_tClassId	class;
-  char   	title[100];
+  char   	title[220];
   int		has_host;
   pwr_tOName   	hostname;
   pwr_tOName   	plcconnect;

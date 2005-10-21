@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.29 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.30 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,9 +40,9 @@ extern "C" {
 #define ldh_cWBVol  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 254) 
 #define ldh_cWBVolLocal  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 252) 
 #define ldh_cDirectoryVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
-#define ldh_cPlcConnectVolume (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
+#define ldh_cPlcMainVolume (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
 
-#define ldh_cPlcHostVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
+#define ldh_cPlcFoVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
 #define ldh_cIoConnectVolume  cdh_cIoConnectVolume
 #define ldh_cProjectListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 248)
 #define ldh_cGlobalVolumeListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 247)

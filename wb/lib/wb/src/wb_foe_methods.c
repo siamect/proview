@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_methods.c,v 1.18 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_foe_methods.c,v 1.19 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -945,16 +945,16 @@ void foe_set_title( foe_ctx foectx)
 {
   Arg 		args[2];
   if ( foectx->function == EDIT) {
-    char new_title[80];
+    pwr_tOName new_title;
     
     strcpy( new_title, "*** ");
-    strcat( new_title, foectx->name);
+    cdh_StrncpyCutOff( &new_title[4], foectx->name, sizeof(new_title)-4, 0);
 
     XtSetArg(args[0],XmNtitle, new_title);
     XtSetValues( foectx->cp.parent_wid, args, 1);
   }
   else if ( foectx->function == VIEW) {
-    char new_title[80];
+    pwr_tOName new_title;
 
     strcpy( new_title, foectx->name);
 

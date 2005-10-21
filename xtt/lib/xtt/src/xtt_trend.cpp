@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.4 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.5 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,10 +75,10 @@ XttTrend::XttTrend(
   pwr_sAttrRef *aref_p;
   pwr_sAttrRef plot_trends[XTT_TREND_MAX];
   pwr_sClass_PlotGroup plot;
-  char trend_name[XTT_TREND_MAX][120];
-  char object_name[XTT_TREND_MAX][120];
+  pwr_tAName trend_name[XTT_TREND_MAX];
+  pwr_tAName object_name[XTT_TREND_MAX];
   pwr_sClass_DsTrend tp[XTT_TREND_MAX];
-  char plot_name[120];
+  pwr_tAName plot_name;
   int i, j, k;
   int start_idx;
   int time;

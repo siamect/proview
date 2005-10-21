@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.34 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.35 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -718,7 +718,7 @@ const char *wb_attribute::attrName() const
 {
   check();
 
-  static char str[200];
+  static pwr_tAName str;
   
   if ( m_adrep) {
     strcpy( str, m_adrep->subName());

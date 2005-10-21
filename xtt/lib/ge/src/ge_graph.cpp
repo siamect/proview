@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.25 2005-10-18 05:09:44 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.26 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,7 +182,7 @@ Graph::Graph(
 	default_access(xn_default_access), keep_mode(false),
         subgraph_dyn(0), was_subgraph(0)
 {
-  strcpy( name, xn_name);
+  cdh_StrncpyCutOff( name, xn_name, sizeof(name), 1);
   strcpy( default_path, xn_default_path);
   memset( arglist_stack, 0, sizeof(arglist_stack));
   if ( xn_object_name)
@@ -446,7 +446,7 @@ void Graph::clear_all()
 //
 void Graph::get_filename( char *inname, char *outname)
 {
-  char fname[120];
+  pwr_tFileName fname;
 
   // Add default directory
   if ( !strchr( inname, ':') && !strchr( inname, '/'))
@@ -465,7 +465,7 @@ void Graph::get_filename( char *inname, char *outname)
 //
 int Graph::save( char *filename)
 {
-  char fname[120];
+  pwr_tFileName fname;
   int grow_version, graph_version;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
@@ -487,7 +487,7 @@ int Graph::save( char *filename)
 //
 int Graph::save_subgraph( char *filename)
 {
-  char fname[120];
+  pwr_tFileName fname;
   int grow_version, graph_version;
 
   grow_GetVersion( grow->ctx, &grow_version, &graph_version);
@@ -508,7 +508,7 @@ int Graph::save_subgraph( char *filename)
 void Graph::open( char *filename)
 {
   int sts;
-  char fname[120];
+  pwr_tFileName fname;
   int grow_version, graph_version;
 
   if ( trace_started)
@@ -555,7 +555,7 @@ void Graph::open( char *filename)
 //
 void Graph::open_subgraph( char *filename)
 {
-  char fname[120];
+  pwr_tFileName fname;
 
   dcli_translate_filename( fname, filename);
   grow_OpenSubGraph( grow->ctx, fname);
@@ -2110,7 +2110,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_MB2Click:
     {
       char 		sub_name[80] = "graph";
-      char 		filename[200];
+      pwr_tFileName    	filename;
       char 		name[80];
       grow_tNodeClass	nc;
       grow_tNode	n1;
@@ -2407,7 +2407,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_MB1DoubleClickCtrl:
     case glow_eEvent_MB1DoubleClickShiftCtrl:
     {
-      char		attr_name[120];
+      pwr_tAName       	attr_name;
       int		sts;
 
       if ( event->object.object_type != glow_eObjectType_NoObject)
@@ -3011,7 +3011,7 @@ static int graph_trace_connect_bc( grow_tObject object,
        dyn->dyn_type & ge_mDynType_Inherit) {
     GeDyn *nodeclass_dyn;
     GeDyn *old_dyn;
-    char hostobject[120];
+    pwr_tAName hostobject;
 
     grow_GetObjectClassUserData( object, (void **) &nodeclass_dyn);
     if ( nodeclass_dyn) {
@@ -3494,7 +3494,7 @@ void Graph::connect( grow_tObject object, char *attr_name, int second)
 {
   GeDyn *dyn;
   char *s;
-  char name[200];
+  pwr_tAName name;
 
   if ( (s = strstr( attr_name,  "-Template.")) != 0) {
     // This is a class graph, replace the template object with '$object'
@@ -3587,10 +3587,10 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 {
   char *s, *t0;
   char *s0 = in;
-  pwr_tCmd str;
+  char str[500];
 
   if ( dyn && dyn->total_dyn_type & ge_mDynType_HostObject) {
-    char hostobject[120];
+    pwr_tAName hostobject;
 
     dyn->get_hostobject( hostobject);
 
@@ -3655,8 +3655,8 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
 graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name, 
 	int *inverted, int *type, int *size, int *elem)
 {
-  char str[200];
-  char str1[200];
+  pwr_tAName str;
+  pwr_tAName str1;
   char *s, *s1;
   int elements;
 

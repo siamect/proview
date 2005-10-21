@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.22 2005-10-18 05:07:40 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.23 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,7 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
 {
   int sts;
   pwr_tClassId classid;
-  char objname[100];
+  pwr_tOName objname;
 
   sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
@@ -454,7 +454,6 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
 void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
 	char *str, int size, int *len, char *format)
 {
-  char			hiername[120];
   pwr_tObjid		objid;
   pwr_sAttrRef		*attrref;
   int			sts;
@@ -587,6 +586,8 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     case pwr_eType_Objid:
     {
+      pwr_tOName hiername;
+
       objid = *(pwr_tObjid *)value_ptr;
       if ( !objid.oix)
         sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
@@ -605,6 +606,8 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     case pwr_eType_AttrRef:
     {
+      pwr_tAName hiername;
+
       attrref = (pwr_sAttrRef *) value_ptr;
       sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -618,6 +621,7 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     case pwr_eType_DataRef:
     {
+      pwr_tAName hiername;
       pwr_tDataRef *dataref;
 
       dataref = (pwr_tDataRef *) value_ptr;
@@ -657,6 +661,8 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     }
     case pwr_eType_ClassId:
     {
+      pwr_tOName hiername;
+
       objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -671,6 +677,8 @@ void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
     case pwr_eType_TypeId:
     case pwr_eType_CastId:
     {
+      pwr_tOName hiername;
+
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -737,9 +745,9 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
 {
   ItemCollect 	*item;
   int		sts;
-  char		attr[120];
+  pwr_tAName   	attr;
   char		*s;
-  char 		obj_name[120];
+  pwr_tAName   	obj_name;
   pwr_sAttrRef 	ar;
   pwr_tTypeId 	a_type_id;
   unsigned int 	a_size;
@@ -928,8 +936,8 @@ void XNav::start_trace_selected()
 void XNav::start_trace( pwr_tObjid objid, char *object_str)
 {
     tra_tCtx 	tractx;
-    char     	name[80];
-    char   	title[100];
+    pwr_tOName  name;
+    char   	title[220];
     int		sts;
     pwr_tClassId classid;
     pwr_tObjid	window_objid;
@@ -1168,9 +1176,9 @@ int XNav::set_attr_value( char *value_str)
   brow_tNode	*node_list;
   int		node_count;
   Item		*base_item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
-  char		buffer[80];
+  char		buffer[400];
   
   // Check authorization
   if ( !((priv & pwr_mPrv_RtWrite) ||
@@ -1354,7 +1362,7 @@ int XNav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
   
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
@@ -1399,7 +1407,7 @@ int XNav::get_select_all( pwr_sAttrRef **attrref, int **is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
   pwr_sAttrRef  *ap;
   int           *ip;
@@ -1456,7 +1464,7 @@ int XNav::get_all_objects( pwr_sAttrRef **attrref, int **is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
   pwr_sAttrRef  *ap;
   int           *ip;
@@ -1512,7 +1520,7 @@ int XNav::get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  char		attr_str[120];
+  pwr_tAName   	attr_str;
   int		sts;
   pwr_sAttrRef  *ap;
   int           *ip;
@@ -1634,7 +1642,7 @@ static void xnav_trace_collect_insert_cb( void *ctx, pwr_tObjid objid)
 {
   XNav 		*xnav = (XNav *) ctx;
   pwr_sAttrRef 	attrref;
-  char		attr_str[140];
+  pwr_tAName   	attr_str;
   int		sts;
 
   sts = gdh_ObjidToName( objid, 
@@ -2076,7 +2084,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             case xnav_eItemType_Attr:
             case xnav_eItemType_AttrArrayElem:
             {
-              char attr_str[140];
+              pwr_tAName attr_str;
 
               sts = gdh_ObjidToName( item->objid, 
 	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
@@ -2095,7 +2103,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             }
             case xnav_eItemType_AttrObject:
             {
-              char attr_str[140];
+              pwr_tAName attr_str;
 
               sts = gdh_ObjidToName( item->objid, 
 	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
@@ -2114,7 +2122,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             }
             case xnav_eItemType_Collect:
             {
-              char attr_str[140];
+              pwr_tAName attr_str;
 
               sts = gdh_ObjidToName( item->objid, 
 	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
@@ -2205,7 +2213,7 @@ void XNav::force_trace_scan()
 static int xnav_trace_scan_bc( brow_tObject object, void *p)
 {
   Item		*base_item;
-  char		buf[120];
+  char		buf[400];
   int		len;
 
   brow_GetUserData( object, (void **)&base_item);
@@ -2407,7 +2415,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
 static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, void **p)
 {
-  char		attr_str[160];
+  pwr_tAName   	attr_str;
   int		sts;
   Item 		*base_item;
 
@@ -3474,7 +3482,7 @@ static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   // Start operator window
   if ( strcmp( xnav->opplace_name, "") != 0)
   {
-    char cmd[100];
+    pwr_tCmd cmd;
     strcpy( cmd, "open op ");
     strcat( cmd, xnav->opplace_name);
     xnav->command( cmd);
@@ -3716,7 +3724,7 @@ int XNav::show_object_as_struct(
   char 		*parameter_ptr;
   char 		*object_ptr;
   pwr_tRefId 	subid;
-  char		objname[120];
+  pwr_tOName   	objname;
   char		attr_str[80];
 
 

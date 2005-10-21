@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_crr.cpp,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_nav_crr.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -183,15 +183,15 @@ int	NavCrr::crr_signal(
 			char	*filename,
 			char	*signalname)
 {
-	char	default_filename[80];
+	pwr_tFileName default_filename;
 	FILE	*file;
-	char	line[200];
+	char	line[1000];
 	int	hierarchy_spaces;
-	char	hierarchy[160];
+	pwr_tAName hierarchy;
 	int	object_spaces;
-	char	object[160];
-	char	objname[80];
-	char	show_objname[80];
+	pwr_tAName object;
+	pwr_tAName objname;
+	pwr_tAName show_objname;
 	int	spaces;
 	int	first;
 	int	sts;	
@@ -199,11 +199,11 @@ int	NavCrr::crr_signal(
 	int	wildcard;
 	int	signalcount = 0;
 	int	crossref_count = 0;
-	char	filestr[80];
+	pwr_tFileName	filestr;
 	int	lines;
 	pwr_tVolumeId	volid;
 	pwr_tObjid	objid;
-	char	line_part[8][80];
+	pwr_tAName	line_part[8];
 	int	nr;
 	int	write;
 
@@ -373,27 +373,27 @@ int	NavCrr::crr_object(
 			char	*filename,
 			char	*objectname)
 {
-	char	default_filename[80];
+	pwr_tFileName default_filename;
 	FILE	*file;
-	char	line[200];
+	char	line[1000];
 	int	hierarchy_spaces;
-	char	hierarchy[160];
+	pwr_tAName hierarchy;
 	int	object_spaces;
-	char	object[160];
-	char	objname[80];
-	char	show_objname[80];
+	pwr_tAName object;
+	pwr_tAName objname;
+	pwr_tAName show_objname;
 	int	spaces;
 	int	first;
 	int	sts;	
 	char	*s;
 	int	wildcard;
 	int	signalcount = 0;
-	char	filestr[80];
+	pwr_tFileName filestr;
 	int	lines;
 	pwr_tVolumeId	volid;
 	pwr_tObjid	objid;
 	int	crossref_count = 0;
-	char	line_part[8][80];
+	pwr_tAName line_part[8];
 	int	nr;
 	int	write;
 
@@ -561,21 +561,21 @@ int	NavCrr::crr_code(
 			int	func,
 			int	case_sensitive)
 {
-	char	default_filename[80];
+	pwr_tFileName default_filename;
 	FILE	*file;
-	char	line[200];
-	char	tst_line[200];
+	char	line[1000];
+	char	tst_line[1000];
 	int	hierarchy_spaces;
-	char	hierarchy[160];
+	pwr_tAName hierarchy;
 	int	object_spaces;
-	char	object[160];
-	char	objname[80];
+	pwr_tAName object;
+	pwr_tAName objname;
 	int	spaces;
 	int	first;
 	int	sts;	
 	char	*s;
 	int	signalcount = 0;
-	char	filestr[80];
+	pwr_tFileName filestr;
 	int	lines;
 	char	title[80];
 	pwr_tVolumeId	volid;
@@ -635,20 +635,21 @@ int	NavCrr::crr_code(
 	first = 1;
 	while ( 1)
 	{
-	  while ( strncmp( line, "_Obj_ ", 6) != 0)
+
+	  while ( strncmp( line, " _Obj_ ", 7) != 0)
 	  {
 	    sts = nav_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
 	    if ( EVEN(sts)) goto finish;
 	  }
-	  strcpy( objname, &line[6]);
+	  strcpy( objname, &line[7]);
 	  for ( s = objname; !(*s == 32 || *s == 9 || *s == 0); s++);
 	  *s = 0;
 
 	  sts = nav_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);
 	  objname_written = 0;
-	  while ( strncmp( line, "_Obj_ ", 6) != 0)
+	  while ( strncmp( line, " _Obj_ ", 7) != 0)
 	  {
 	    if ( !case_sensitive)
 	      cdh_ToUpper( tst_line, line);
@@ -715,7 +716,7 @@ int	NavCrr::crr_code(
 
 	      if ( brief)
 	      {
-	        while ( strncmp( line, "_Obj_ ", 6) != 0)
+	        while ( strncmp( line, " _Obj_ ", 7) != 0)
 	        {	      
 	          sts = nav_get_signal_line( file, line, sizeof( line),
 				&spaces, object, &lines);

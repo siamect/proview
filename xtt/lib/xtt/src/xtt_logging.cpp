@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -264,7 +264,7 @@ int XttLogging::logging_set(
           int *is_attrp, *is_attr;
           pwr_tTypeId attr_type;
           unsigned int attr_size, attr_offset, attr_dimension;
-          char name[120];
+          pwr_tAName name;
 
 	  /* Insert from collection picture */
           sts = ((XNav *)xnav)->get_all_collect_objects( &alist, &is_attr); 
@@ -452,7 +452,7 @@ int XttLogging::store(
 			char		*filename)
 {
 	int		i;
-	char		filename_str[120];
+	pwr_tFileName  	filename_str;
 	FILE		*outfile;
 	char		msg[120];
 	int		found_parameter;
@@ -774,7 +774,7 @@ static void	*xtt_logproc( void *arg)
 	int		first_scan;
 	pwr_tObjid		objid;
 	pwr_sAttrRef		*attrref;
-	char			hiername[120];
+	pwr_tAName     		hiername;
 	char			timstr[64];
 	char			parname[40];
 	char			*s;
@@ -1325,16 +1325,16 @@ int  XttLogging::get_parinfo(
 			char		*parameter_name,
 			pwr_sParInfo	*parinfo)
 {
-	char		hiername[80];
+	pwr_tAName     	hiername;
 	char		parname[80];
-	char		name_array[2][80];
+	pwr_tOName     	name_array[2];
 	int		nr;
 	int		sts;
 	pwr_tObjid	objid;
 	pwr_tObjid	parameter;
 	pwr_tClassId	classid;
-	char		objname[80];
-	char		classname[80];
+	pwr_tAName     	objname;
+	pwr_tObjName   	classname;
 
 	/* Get object name */
 	/* Parse the parameter name into a object and a parameter name */
@@ -1402,7 +1402,7 @@ int  XttLogging::get_parinfo(
 *	Print. Equivalent to fprintf but the character string is put
 *	in a buffer and printed when the buffer size is exceeded or 
 *	when r_print_buffer is called.
-*	The max size of the character string is 200.
+*	The max size of the character string is 500.
 *
 **************************************************************************/
 
@@ -1410,7 +1410,7 @@ int XttLogging::log_print(
 		char		*format,
 		... )
 {
-	char	buff[200];
+	char	buff[500];
 	int	sts;
 	char	*s;
 	va_list ap;

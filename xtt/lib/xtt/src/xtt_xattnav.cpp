@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.12 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.13 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -381,7 +381,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             case xnav_eItemType_AttrObject:
             case xnav_eItemType_Collect:
             {
-              char attr_str[140];
+              pwr_tAName attr_str;
 
               sts = gdh_ObjidToName( item->objid, 
 	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
@@ -545,7 +545,7 @@ static int xattnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 static int xattnav_trace_connect_bc( brow_tObject object, char *name, 
 		       char *attr, flow_eTraceType type, void **p)
 {
-  char		attr_str[160];
+  pwr_tAName   	attr_str;
   int		sts;
   Item 		*base_item;
 
@@ -602,7 +602,7 @@ static int xattnav_trace_disconnect_bc( brow_tObject object)
 static int xattnav_trace_scan_bc( brow_tObject object, void *p)
 {
   Item		*base_item;
-  char		buf[120];
+  char		buf[500];
   int		len;
 
   brow_GetUserData( object, (void **)&base_item);
@@ -695,7 +695,7 @@ static void xattnav_trace_scan( XAttNav *xattnav)
 int	XAttNav::crossref()
 {
   int sts;
-  char name[120];
+  pwr_tAName name;
   pwr_tClassId classid;
 
   sts = gdh_AttrrefToName ( &objar, name, sizeof(name), cdh_mNName);
@@ -739,9 +739,9 @@ int	XAttNav::object_attr()
   int		i;
   gdh_sAttrDef 	*bd;
   int 		rows;
-  char		aname[120];
-  char		attr_name[120];
-  char		name[240];
+  pwr_tAName   	aname;
+  pwr_tAName   	attr_name;
+  pwr_tAName   	name;
   char		*s;
 
   brow_SetNodraw( brow->ctx);
@@ -931,7 +931,7 @@ int XAttNav::set_attr_value( brow_tObject node, char *name, char *value_str)
   Item		*base_item;
   int		sts;
   char 		buff[1024];
-  char          attr_str[120];
+  pwr_tAName    attr_str;
 
   // Check authorization
   if ( is_authorized_cb) {

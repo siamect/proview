@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -400,7 +400,8 @@ static int getAllMenuItems (
 	    (*Item)->Level = Level;
 	    (*Item)->Item = xmenu_eMenuItem_Button;
 	    (*Item)->MenuObject = pwr_cNObjid;
-	    strcpy((*Item)->Name, aname);
+	    strncpy((*Item)->Name, aname, sizeof((*Item)->Name));
+	    (*Item)->Name[sizeof((*Item)->Name)-1] = 0;
 	    (*Item)->MenuObject = pwr_cNObjid;
 	    (*Item)->CurrentObject = currentar;
 	    (*Item)->Flags.f.Sensitive = 1;
@@ -455,7 +456,7 @@ static int xnav_GetObjectMenu(
   pwr_tObjid            child;
   pwr_tObjid		menu_objid;
   char  		menu[80];
-  char  		classname[120];
+  pwr_tOName  		classname;
   pwr_sAttrRef		currentar = pwr_cNAttrRef;
   pwr_tCid		supercid;
 
@@ -471,7 +472,7 @@ static int xnav_GetObjectMenu(
       if ( ODD(sts)) {
         sts = gdh_GetChild( menu_objid, &child);
         while( ODD(sts)) {
-          sts = getAllMenuItems( ip, Item, child, 0, nItems, 0, &currentar);
+          sts = getAllMenuItems( ip, Item, child, Level, nItems, 0, &currentar);
           if ( EVEN(sts)) return sts;
           sts = gdh_GetNextSibling( child, &child);
         }

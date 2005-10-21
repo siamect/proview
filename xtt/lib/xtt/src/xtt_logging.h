@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.h,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_logging.h,v 1.3 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,17 +56,17 @@ class XttLogging {
     int		stop_logg;
     int		logg_type;
     int		logg_priority;
-    char	parameterstr[RTT_LOGG_MAXPAR][120];
-    char	shortname[RTT_LOGG_MAXPAR][120];
+    pwr_tAName	parameterstr[RTT_LOGG_MAXPAR];
+    pwr_tAName	shortname[RTT_LOGG_MAXPAR];
     char	*parameter_ptr[RTT_LOGG_MAXPAR];
     gdh_tDlid	parameter_subid[RTT_LOGG_MAXPAR];
     unsigned long parameter_type[RTT_LOGG_MAXPAR];
     unsigned long parameter_size[RTT_LOGG_MAXPAR];
-    char	conditionstr[120];
+    pwr_tAName	conditionstr;
     char	*condition_ptr;
     gdh_tDlid	condition_subid;
     int		logg_time;
-    char	logg_filename[80];
+    pwr_tFileName logg_filename;
     FILE	*logg_file;	
     char	old_value[RTT_LOGG_MAXPAR][8];
     pwr_tTime	starttime;

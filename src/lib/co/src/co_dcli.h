@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.7 2005-09-22 08:38:31 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,10 @@ extern "C" {
 /* co_dcli.c
    Command line interpreter. */
 
+
+#define DCLI_CMD_SIZE 400
+#define DCLI_QUAL_SIZE 400
+
 typedef	struct	{
 	char	command[20];
 	int	(*func) ( void *, void *);
@@ -50,7 +54,8 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 			void		*userdata1,
 			void		*userdata2);
 int	dcli_get_qualifier( 	char	*qualifier,
-				char	*value);
+				char	*value,
+				size_t  size);
 int	dcli_store_symbols( char	*filename);
 int	dcli_replace_symbol( char *command, char *newcommand, int newsize);
 int	dcli_get_symbol( char *key, char *value);

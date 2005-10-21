@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.cpp,v 1.11 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_ge.cpp,v 1.12 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -443,7 +443,7 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
   Arg 		args[20];
   pwr_tStatus	sts;
   ge_tCtx	gectx;
-  char 		title[80];
+  char 		title[300];
   int		i;
   MrmHierarchy s_DRMh;
   MrmType dclass;
@@ -500,7 +500,7 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
   // Motif
   MrmInitialize();
 
-  strcpy( title, name);
+  cdh_StrncpyCutOff( title, name, sizeof(title), 1);
 
   reglist[0].value = (caddr_t) gectx;
 

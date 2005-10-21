@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_admin_command.cpp,v 1.4 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_admin_command.cpp,v 1.5 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -139,12 +139,12 @@ static int	admin_login_func(	void		*client_data,
     return 1;
   }
 
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
     admin->message('E',"Username and password required");
     return 1;
   }
-  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
   {
     admin->message('E',"Username and password required");
     return 1;
@@ -187,7 +187,7 @@ static int	admin_show_func(void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
   {

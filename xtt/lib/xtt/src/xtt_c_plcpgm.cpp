@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_plcpgm.cpp,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_c_plcpgm.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,8 +38,8 @@
 // Open trace
 static pwr_tStatus OpenTrace( xmenu_sMenuCall *ip)
 {
-  char name[120];
-  char cmd[200];
+  pwr_tOName name;
+  pwr_tCmd cmd;
   int sts;
 
   printf( "OpenProgram method called\n");
@@ -68,7 +68,7 @@ static pwr_tStatus SetScan( xmenu_sMenuCall *ip)
   pwr_tObjid io_handler;
   pwr_sClass_IOHandler *io_handler_p;
   pwr_tBoolean value = 0;
-  char name[120];
+  pwr_tOName name;
   pwr_tClassId classid;
 
   if ( strcmp( "Enable", ip->ItemList[ip->ChosenItem].MethodArguments[0]) == 0)

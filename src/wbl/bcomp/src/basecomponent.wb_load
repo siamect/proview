@@ -31339,7 +31339,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 5464 04-OCT-2005 10:53:23.13
         Body RtBody 04-OCT-2005 10:53:23.13
         EndBody
-        Body DevBody 18-OCT-2005 08:36:32.34
+        Body DevBody 18-OCT-2005 15:29:54.57
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseSupSwitchFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -31365,8 +31365,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 5465 04-OCT-2005 10:53:23.13
           Body RtBody 04-OCT-2005 10:53:23.13
           EndBody
-          Body DevBody 18-OCT-2005 08:36:32.34
-            Attr Modified = "18-OCT-2005 08:36:32.34"
+          Body DevBody 18-OCT-2005 15:29:54.57
+            Attr Modified = "18-OCT-2005 15:29:54.57"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseSupSwitchFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -33236,7 +33236,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4904 30-SEP-2005 17:56:50.19
         Body RtBody 30-SEP-2005 17:56:50.19
         EndBody
-        Body DevBody 18-OCT-2005 08:37:39.87
+        Body DevBody 18-OCT-2005 15:30:38.89
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseActuatorAFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -33269,8 +33269,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 4905 30-SEP-2005 17:56:50.19
           Body RtBody 30-SEP-2005 17:56:50.19
           EndBody
-          Body DevBody 18-OCT-2005 08:37:39.87
-            Attr Modified = "18-OCT-2005 08:37:39.87"
+          Body DevBody 18-OCT-2005 15:30:38.89
+            Attr Modified = "18-OCT-2005 15:30:38.89"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseActuatorAFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -39407,7 +39407,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 5362 04-OCT-2005 09:00:02.99
         Body RtBody 04-OCT-2005 09:00:02.99
         EndBody
-        Body DevBody 18-OCT-2005 09:11:25.15
+        Body DevBody 18-OCT-2005 15:31:05.96
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseContactorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -39434,8 +39434,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 5363 04-OCT-2005 09:00:02.99
           Body RtBody 04-OCT-2005 09:00:02.99
           EndBody
-          Body DevBody 18-OCT-2005 09:11:25.15
-            Attr Modified = "18-OCT-2005 09:11:25.15"
+          Body DevBody 18-OCT-2005 15:31:05.96
+            Attr Modified = "18-OCT-2005 15:31:05.96"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseContactorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -41344,7 +41344,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 5251 03-OCT-2005 10:07:42.50
         Body RtBody 03-OCT-2005 10:07:42.50
         EndBody
-        Body DevBody 18-OCT-2005 08:39:10.75
+        Body DevBody 18-OCT-2005 15:31:37.51
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseCValveSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -41372,8 +41372,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 5252 03-OCT-2005 10:07:42.50
           Body RtBody 03-OCT-2005 10:07:42.50
           EndBody
-          Body DevBody 18-OCT-2005 08:39:10.75
-            Attr Modified = "18-OCT-2005 08:39:10.75"
+          Body DevBody 18-OCT-2005 15:31:37.51
+            Attr Modified = "18-OCT-2005 15:31:37.51"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseCValveSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -43882,7 +43882,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4691 28-SEP-2005 14:04:13.97
         Body RtBody 28-SEP-2005 14:04:13.97
         EndBody
-        Body DevBody 18-OCT-2005 08:39:39.09
+        Body DevBody 18-OCT-2005 15:32:05.41
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMValveFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -43913,8 +43913,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 4692 28-SEP-2005 14:04:13.97
           Body RtBody 28-SEP-2005 14:04:13.97
           EndBody
-          Body DevBody 18-OCT-2005 08:39:39.09
-            Attr Modified = "18-OCT-2005 08:39:39.09"
+          Body DevBody 18-OCT-2005 15:32:05.41
+            Attr Modified = "18-OCT-2005 15:32:05.41"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMValveFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -47673,7 +47673,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4786 30-SEP-2005 10:14:47.29
         Body RtBody 30-SEP-2005 10:14:47.29
         EndBody
-        Body DevBody 18-OCT-2005 08:40:11.74
+        Body DevBody 18-OCT-2005 15:32:31.55
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMValveSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -47693,8 +47693,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 4787 30-SEP-2005 10:14:47.29
           Body RtBody 30-SEP-2005 10:14:47.29
           EndBody
-          Body DevBody 18-OCT-2005 08:40:11.74
-            Attr Modified = "18-OCT-2005 08:40:11.74"
+          Body DevBody 18-OCT-2005 15:32:31.55
+            Attr Modified = "18-OCT-2005 15:32:31.55"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMValveSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -49138,7 +49138,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 4841 30-SEP-2005 13:47:08.06
         Body RtBody 30-SEP-2005 13:47:08.06
         EndBody
-        Body DevBody 18-OCT-2005 08:40:42.77
+        Body DevBody 18-OCT-2005 15:32:53.57
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseManValveFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -49166,8 +49166,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 4842 30-SEP-2005 13:47:08.06
           Body RtBody 30-SEP-2005 13:47:08.06
           EndBody
-          Body DevBody 18-OCT-2005 08:40:42.77
-            Attr Modified = "18-OCT-2005 08:40:42.77"
+          Body DevBody 18-OCT-2005 15:32:53.57
+            Attr Modified = "18-OCT-2005 15:32:53.57"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseManValveFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -51661,7 +51661,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 5499 04-OCT-2005 13:26:52.83
         Body RtBody 04-OCT-2005 13:26:52.83
         EndBody
-        Body DevBody 18-OCT-2005 09:14:25.45
+        Body DevBody 18-OCT-2005 15:33:17.70
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -51677,8 +51677,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 5500 04-OCT-2005 13:36:33.65
           Body RtBody 04-OCT-2005 13:36:33.65
           EndBody
-          Body DevBody 18-OCT-2005 09:14:25.45
-            Attr Modified = "18-OCT-2005 09:14:25.45"
+          Body DevBody 18-OCT-2005 15:33:17.70
+            Attr Modified = "18-OCT-2005 15:33:17.70"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -52264,7 +52264,7 @@ Alarm HH, H, L, LL"
       Object Code PlcTemplate 6006 14-OCT-2005 15:38:55.23
         Body RtBody 14-OCT-2005 15:38:55.23
         EndBody
-        Body DevBody 18-OCT-2005 08:41:39.87
+        Body DevBody 18-OCT-2005 15:33:39.85
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -52282,8 +52282,8 @@ Alarm HH, H, L, LL"
         Object W WindowPlc 6007 14-OCT-2005 15:39:19.31
           Body RtBody 14-OCT-2005 15:39:19.31
           EndBody
-          Body DevBody 18-OCT-2005 08:41:39.87
-            Attr Modified = "18-OCT-2005 08:41:39.87"
+          Body DevBody 18-OCT-2005 15:33:39.85
+            Attr Modified = "18-OCT-2005 15:33:39.85"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -60436,7 +60436,7 @@ else
       Object Code PlcTemplate 5435 04-OCT-2005 10:25:34.21
         Body RtBody 04-OCT-2005 10:25:34.21
         EndBody
-        Body DevBody 18-OCT-2005 08:42:40.38
+        Body DevBody 18-OCT-2005 15:34:12.03
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseSafetySwitchFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -60456,8 +60456,8 @@ else
         Object W WindowPlc 5436 04-OCT-2005 10:25:34.21
           Body RtBody 04-OCT-2005 10:25:34.21
           EndBody
-          Body DevBody 18-OCT-2005 08:42:40.38
-            Attr Modified = "18-OCT-2005 08:42:40.38"
+          Body DevBody 18-OCT-2005 15:34:12.03
+            Attr Modified = "18-OCT-2005 15:34:12.03"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseSafetySwitchFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -63217,7 +63217,7 @@ Safety switch"
       Object Code PlcTemplate 5517 05-OCT-2005 13:26:14.71
         Body RtBody 05-OCT-2005 13:26:14.71
         EndBody
-        Body DevBody 18-OCT-2005 08:45:42.48
+        Body DevBody 18-OCT-2005 15:34:41.38
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -63254,8 +63254,8 @@ Safety switch"
         Object W WindowPlc 5518 05-OCT-2005 13:26:14.71
           Body RtBody 05-OCT-2005 13:26:14.71
           EndBody
-          Body DevBody 18-OCT-2005 08:45:42.48
-            Attr Modified = "18-OCT-2005 08:45:42.48"
+          Body DevBody 18-OCT-2005 15:34:41.38
+            Attr Modified = "18-OCT-2005 15:34:41.38"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorAggrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -66176,7 +66176,7 @@ to avoid restart after error."
       Object Code PlcTemplate 5603 05-OCT-2005 13:26:14.71
         Body RtBody 05-OCT-2005 13:26:14.71
         EndBody
-        Body DevBody 18-OCT-2005 08:46:18.89
+        Body DevBody 18-OCT-2005 15:35:05.66
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -66197,8 +66197,8 @@ to avoid restart after error."
         Object W WindowPlc 5604 05-OCT-2005 13:26:14.71
           Body RtBody 05-OCT-2005 13:26:14.71
           EndBody
-          Body DevBody 18-OCT-2005 08:46:18.89
-            Attr Modified = "18-OCT-2005 08:46:18.89"
+          Body DevBody 18-OCT-2005 15:35:05.66
+            Attr Modified = "18-OCT-2005 15:35:05.66"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorAggrSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"

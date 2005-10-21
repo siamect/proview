@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.32 2005-10-12 12:58:22 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.33 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -590,8 +590,8 @@ graph_eDatabase GeDyn::parse_attr_name( char *name, char *parsed_name,
   if ( total_dyn_type & ge_mDynType_HostObject &&
        (s = strstr( name, "$hostobject"))) {
     // Replace string $hostobject with host object
-    char hostobject[120];
-    char n[120];
+    pwr_tAName hostobject;
+    pwr_tAName n;
 
     get_hostobject( hostobject);
     strncpy( n, name, s - name);
@@ -1494,7 +1494,7 @@ void GeDigLowColor::open( ifstream& fp)
 int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   color = dyn->get_color1( object, color);
@@ -1751,7 +1751,7 @@ void GeDigColor::open( ifstream& fp)
 int GeDigColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   color = dyn->get_color2( object, color);
@@ -1907,7 +1907,7 @@ void GeDigWarning::open( ifstream& fp)
 int GeDigWarning::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   size = 4;
@@ -2048,7 +2048,7 @@ void GeDigError::open( ifstream& fp)
 int GeDigError::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   size = 4;
@@ -2237,7 +2237,7 @@ void GeDigFlash::open( ifstream& fp)
 int GeDigFlash::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   color = dyn->get_color1( object, color);
@@ -2464,7 +2464,7 @@ void GeInvisible::open( ifstream& fp)
 int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   size = 4;
@@ -2475,7 +2475,7 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
     return 1;
 
   if ( cdh_NoCaseStrncmp( parsed_name, "$cmd(", 5) == 0) {
-    char command[256];
+    char command[400];
     char *s;
     pwr_tStatus sts;
     static pwr_tBoolean val_false = 0;
@@ -2669,7 +2669,7 @@ void GeDigBorder::open( ifstream& fp)
 int GeDigBorder::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   color = dyn->get_color1( object, color);
@@ -2823,7 +2823,7 @@ void GeDigText::open( ifstream& fp)
 int GeDigText::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   size = 4;
@@ -3009,7 +3009,7 @@ void GeValue::open( ifstream& fp)
 int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -3407,7 +3407,7 @@ void GeValueInput::open( ifstream& fp)
 int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -3524,7 +3524,7 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 {
   char		buf[200];
   int		sts;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		inverted;
   int		attr_type, attr_size;
   graph_eDatabase db;
@@ -3870,7 +3870,7 @@ void GeAnalogColor::open( ifstream& fp)
 
 int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		inverted;
   int		sts;
   bool		found = false;
@@ -4169,7 +4169,7 @@ void GeRotate::open( ifstream& fp)
 int GeRotate::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		inverted;
   int		sts;
 
@@ -4404,7 +4404,7 @@ void GeMove::open( ifstream& fp)
 
 int GeMove::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		inverted;
   int		sts;
   double	ur_x, ur_y;
@@ -4718,7 +4718,7 @@ void GeAnalogShift::open( ifstream& fp)
 
 int GeAnalogShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		inverted;
   int		sts;
 
@@ -4860,7 +4860,7 @@ void GeDigShift::open( ifstream& fp)
 int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
 
   size = 4;
@@ -4992,7 +4992,7 @@ void GeAnimation::open( ifstream& fp)
 int GeAnimation::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		attr2;
 
@@ -5296,7 +5296,7 @@ void GeBar::open( ifstream& fp)
 int GeBar::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -5529,7 +5529,7 @@ void GeTrend::open( ifstream& fp)
 int GeTrend::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -6040,7 +6040,7 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type;
   int		attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
   glow_sTableInfo info;
@@ -6079,11 +6079,11 @@ int GeTable::connect( grow_tObject object, glow_sTraceData *trace_data)
     else {
       int		h_attr_type;
       int		h_attr_size;
-      char		h_parsed_name[120];
+      pwr_tAName       	h_parsed_name;
       int		h_inverted;
       int		h_elements;
       pwr_tObjid	*objid_value;
-      char		name[120];
+      pwr_tOName       	name;
 
       // Replace $header with the object in the header column
       is_headerref[i] = 1;
@@ -6252,7 +6252,7 @@ int GeTable::scan( grow_tObject object)
 	  break;
 	case pwr_eType_Objid: {
 	  int sts;
-	  char name[120];
+	  pwr_tOName name;
 	  pwr_tObjid objid = *(pwr_tObjid *)headerref_p[i][j];
 	  sts = gdh_ObjidToName ( objid, name, sizeof(name), 
 				  cdh_mName_object);
@@ -6299,7 +6299,7 @@ int GeTable::scan( grow_tObject object)
 	  break;
 	case pwr_eType_Objid: {
 	  int sts;
-	  char name[120];
+	  pwr_tOName name;
 	  pwr_tObjid objid = *(pwr_tObjid *)(p[i] + offs);
 	  sts = gdh_ObjidToName ( objid, name, sizeof(name), 
 				  cdh_mName_object);
@@ -6359,7 +6359,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
     int column, row;
     pwr_tBoolean	value;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     graph_eDatabase 	db;
@@ -6396,7 +6396,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
     int column, row, new_column, new_row;
     pwr_tBoolean	value;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     graph_eDatabase 	db;
@@ -6469,7 +6469,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
   }
   case glow_eEvent_MB3Press: {
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     pwr_sAttrRef    	attrref;
@@ -6650,7 +6650,7 @@ void GeStatusColor::open( ifstream& fp)
 int GeStatusColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -7008,7 +7008,7 @@ void GeFillLevel::open( ifstream& fp)
 int GeFillLevel::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
   glow_eDirection dir;
@@ -7237,7 +7237,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
   switch ( event->event) {
   case glow_eEvent_MB3Press: {
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     pwr_sAttrRef    	attrref;
@@ -7327,7 +7327,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
 
     if ( dyn->graph->call_method_cb) {
       int	       	sts;
-      char              parsed_name[120];
+      pwr_tAName        parsed_name;
       int	       	inverted;
       int	       	attr_type, attr_size;
       char            	*s;
@@ -7494,7 +7494,7 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Click: {
     pwr_tBoolean	value = 1;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     graph_eDatabase 	db;
@@ -7653,7 +7653,7 @@ int GeResetDig::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Click: {
     pwr_tBoolean	value = 0;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     
@@ -7770,7 +7770,7 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_MB1Click: {
     pwr_tBoolean	value;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     
@@ -7880,7 +7880,7 @@ int GeStoDig::action( grow_tObject object, glow_tEvent event)
 {
   pwr_tBoolean	value = 0;
   int			sts;
-  char       		parsed_name[120];
+  pwr_tAName           	parsed_name;
   int			inverted;
   int			attr_type, attr_size;
 
@@ -8001,7 +8001,7 @@ int GeCommand::action( grow_tObject object, glow_tEvent event)
       break;
 
     if ( dyn->graph->command_cb) {
-      char cmd[200];
+      char cmd[400];
 
       dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
@@ -8099,7 +8099,7 @@ int GeCommandDoubleClick::action( grow_tObject object, glow_tEvent event)
     break;
   case glow_eEvent_MB1DoubleClick:
     if ( dyn->graph->command_cb) {
-      char cmd[200];
+      char cmd[400];
 
       dyn->graph->get_command( command, cmd, dyn);
       (dyn->graph->command_cb)( dyn->graph->parent_ctx, cmd);
@@ -8288,7 +8288,7 @@ int GeIncrAnalog::action( grow_tObject object, glow_tEvent event)
   case glow_eEvent_Key_Return:
   case glow_eEvent_MB1Click: {
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName       	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
 
@@ -8412,7 +8412,7 @@ void GeRadioButton::open( ifstream& fp)
 int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName 	parsed_name;
   int		sts;
 
   size = 4;
@@ -8481,7 +8481,7 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
     grow_tObject 	*objectlist, *object_p;
     int 		object_cnt;
     int			sts;
-    char       		parsed_name[120];
+    pwr_tAName       	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     pwr_tBoolean 	value;
@@ -8590,7 +8590,7 @@ int GeTipText::action( grow_tObject object, glow_tEvent event)
     
     if ( text[0] == '&') {
       char 	value[80];
-      char    	parsed_name[120];
+      pwr_tAName parsed_name;
       int       inverted;
       int	attr_type, attr_size;
       int 	sts;
@@ -8709,8 +8709,8 @@ int GeHelp::action( grow_tObject object, glow_tEvent event)
       break;
 
     if ( dyn->graph->command_cb) {
-      char command[200];
-      char cmd[200];
+      char command[400];
+      char cmd[400];
 
       if ( strcmp( bookmark, "") != 0)
 	sprintf( command, "help %s /bookmark=%s", topic, bookmark);
@@ -8837,8 +8837,8 @@ int GeOpenGraph::action( grow_tObject object, glow_tEvent event)
       break;
 
     if ( dyn->graph->command_cb) {
-      char command[200];
-      char cmd[200];
+      char command[400];
+      char cmd[400];
 
       sprintf( command, "open graph/object=%s", graph_object);
       dyn->graph->get_command( command, cmd, dyn);
@@ -8939,8 +8939,8 @@ int GeOpenURL::action( grow_tObject object, glow_tEvent event)
       break;
 
     if ( dyn->graph->command_cb) {
-      char command[200];
-      char cmd[200];
+      char command[400];
+      char cmd[400];
 
       sprintf( command, "open url \"%s\"", url);
       dyn->graph->get_command( command, cmd, dyn);
@@ -9465,7 +9465,7 @@ void GeSlider::open( ifstream& fp)
 int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		inverted;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		a_type, a_size;
 
@@ -9735,7 +9735,7 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
     float 		value;
     int			sts;
     double		ll_x, ll_y, ur_x, ur_y;
-    char		parsed_name[120];
+    pwr_tAName		parsed_name;
     int			inverted;
     int			attr_type, attr_size;
     
@@ -9901,10 +9901,10 @@ void GeFastCurve::open( ifstream& fp)
 int GeFastCurve::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
-  char 		attr_name[120];
+  pwr_tAName   	attr_name;
   pwr_sClass_DsFastCurve fp;
   int		i;
 
@@ -10837,7 +10837,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 	      if ( items_dyn[i]->dyn_type & ge_mDynType_Invisible) {
 		int		attr_type, attr_size;
 		int 		inverted;
-		char		parsed_name[120];
+		pwr_tAName     	parsed_name;
 		int		sts;
 		GeInvisible 	*invis_element = 0;
 		char command[256];
@@ -11354,7 +11354,7 @@ void GeOptionMenu::open( ifstream& fp)
 int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
-  char		parsed_name[120];
+  pwr_tAName   	parsed_name;
   int		sts;
   int		inverted;
 
@@ -11586,7 +11586,7 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
     if ( event->menu.object == menu_object) {
       // Set enum value to attribute
       int 		sts;
-      char		parsed_name[120];
+      pwr_tAName       	parsed_name;
       int      		inverted;
       int      		attr_type, attr_size;
       

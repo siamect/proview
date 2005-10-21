@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.9 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.10 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,8 +79,8 @@ int XNav::show_plcthreads()
   pwr_tTypeId		attrtype;
   unsigned int		attrsize, attroffs, attrelem;
   pwr_tSubid		subid;
-  char			object_name[120];
-  char			attr_name[140];
+  pwr_tOName   		object_name;
+  pwr_tAName   		attr_name;
   char			*s;
   int			sts;
   pwr_tObjid		objid;
@@ -768,8 +768,8 @@ int XNav::show_device()
   pwr_tTypeId		attrtype;
   unsigned int		attrsize, attroffs, attrelem;
   pwr_tSubid		subid;
-  char			object_name[120];
-  char			attr_name[140];
+  pwr_tOName   		object_name;
+  pwr_tAName   		attr_name;
   int			sts;
   pwr_tObjid		rack_objid;
   pwr_tObjid		device_objid;
@@ -917,8 +917,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
   pwr_tTypeId		attrtype;
   unsigned int		attrsize, attroffs, attrelem;
   pwr_tSubid		subid;
-  char			object_name[120];
-  char			attr_name[140];
+  pwr_tOName   		object_name;
+  pwr_tAName   		attr_name;
   int			sts;
   pwr_tObjid		chan_objid;
   pwr_sAttrRef		attrref;
@@ -928,7 +928,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
   void			*attr_ptr;
   ItemChannel		*item;
   pwr_tClassId		chan_classid;
-  char			signal_name[120];
+  pwr_tAName   		signal_name;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -1177,12 +1177,12 @@ int XNav::show_remnode()
   item_sTableHeader 	th;
   item_sTable 		t;
   item_sTableSubid	ts;
-  char			object_name[120];
+  pwr_tOName   		object_name;
   char			id[40];
   char			description[80];
   int			sts;
   pwr_tObjid		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tCid		cid;
   void			*object_ptr;
 
@@ -1287,13 +1287,13 @@ int XNav::show_remtrans( pwr_tObjid remnode_objid)
   pwr_tTypeId		attrtype;
   unsigned int		attrsize, attroffs, attrelem;
   pwr_tSubid		subid;
-  char			object_name[120];
-  char			attr_name[140];
+  pwr_tOName   		object_name;
+  pwr_tAName   		attr_name;
   int			sts;
   pwr_tObjid		objid;
   pwr_sAttrRef		attrref;
   pwr_sClass_RemTrans	*object_ptr;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -1433,13 +1433,13 @@ int XNav::show_plcpgm()
   item_sTableHeader 	th;
   item_sTable 		t;
   item_sTableSubid	ts;
-  char			object_name[120];
-  char			attr_name[140];
+  pwr_tOName   		object_name;
+  pwr_tAName   		attr_name;
   int			sts;
   pwr_tObjid		objid;
   pwr_sClass_PlcThread	*object_ptr;
   pwr_tObjid		thread_objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tObjid		parent;
   pwr_tCid		cid;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.45 2005-10-18 05:13:38 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.46 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1066,10 +1066,10 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     pwr_tCid cid;
     pwr_tVid vid;
 
-    if ( aname.volumeIsEqual( "$PlcConnect"))
-      vid = ldh_cPlcConnectVolume;
-    else if ( aname.volumeIsEqual( "$PlcHost"))
-      vid = ldh_cPlcHostVolume;
+    if ( aname.volumeIsEqual( "$PlcMain"))
+      vid = ldh_cPlcMainVolume;
+    else if ( aname.volumeIsEqual( "$PlcFo"))
+      vid = ldh_cPlcFoVolume;
     else if ( aname.volumeIsEqual( "$IoConnect"))
       vid = ldh_cIoConnectVolume;
 

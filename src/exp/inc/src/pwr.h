@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.19 2005-10-18 05:07:40 claes Exp $
+ * Proview   $Id: pwr.h,v 1.20 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,9 +96,9 @@
 #define pwr_cSizXRef		31
 #define pwr_cSizAttrName	31
 #define pwr_cSizPathName	63
-#define pwr_cSizFullName	119
-#define pwr_cSizOName		119
-#define pwr_cSizAName		239
+#define pwr_cSizFullName	199
+#define pwr_cSizOName		199
+#define pwr_cSizAName		399
 #define pwr_cSizFileName       	255
 #define pwr_cSizCmd       	255
 

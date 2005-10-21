@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.7 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -235,7 +235,7 @@ static int	graph_show_func(void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "VERSION", strlen( arg1_str)) == 0)
   {
@@ -266,7 +266,7 @@ static int	graph_save_func(void		*client_data,
   char	file_str[80];
   char	name[40];
 
-  if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+  if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
   {
     if ( strlen( file_str) > 39)
     {
@@ -275,7 +275,7 @@ static int	graph_save_func(void		*client_data,
     }
     strcpy( name, file_str);    
   }
-  else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str)))
+  else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str, sizeof(file_str))))
   {
     if ( strlen( file_str) > 39)
     {
@@ -326,7 +326,7 @@ static int	graph_open_func(void		*client_data,
   char file_str[80];
   char name[80];
 
-  if ( ODD( dcli_get_qualifier( "/FILE", file_str)))
+  if ( ODD( dcli_get_qualifier( "/FILE", file_str, sizeof(file_str))))
   {
     if ( strlen( file_str) > 39)
     {
@@ -335,7 +335,7 @@ static int	graph_open_func(void		*client_data,
     }
     strcpy( name, file_str);    
   }
-  else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str)))
+  else if ( ODD( dcli_get_qualifier( "dcli_arg1", file_str, sizeof(file_str))))
   {
     if ( strlen( file_str) > 39)
     {
@@ -371,7 +371,7 @@ static int	graph_set_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
@@ -411,7 +411,7 @@ static int	graph_set_func(	void		*client_data,
     int		line_width;
     int		sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -436,7 +436,7 @@ static int	graph_set_func(	void		*client_data,
     float	grid_size;
     int		sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -456,7 +456,7 @@ static int	graph_set_func(	void		*client_data,
     int		text_size, size;
     int		sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -495,7 +495,7 @@ static int	graph_set_func(	void		*client_data,
     int value;
     int sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->set_background_color();
     }
@@ -522,7 +522,7 @@ static int	graph_set_func(	void		*client_data,
     int value;
     int sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -550,7 +550,7 @@ static int	graph_set_func(	void		*client_data,
     int value;
     int sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -578,7 +578,7 @@ static int	graph_set_func(	void		*client_data,
     int value;
     int sts;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -604,7 +604,7 @@ static int	graph_set_func(	void		*client_data,
     char	arg2_str[80];
     int		arg2_sts;
 	
-    arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str);
+    arg2_sts = dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str));
 
     if ( strncmp( arg2_str, "FILLCOLOR", strlen( arg2_str)) == 0)
     {
@@ -623,7 +623,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -664,7 +664,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -705,7 +705,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -741,7 +741,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -777,7 +777,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -814,7 +814,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -849,7 +849,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -889,7 +889,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -929,7 +929,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -973,12 +973,12 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg4", arg4_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg4", arg4_str, sizeof(arg4_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -1057,7 +1057,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -1079,7 +1079,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -1101,7 +1101,7 @@ static int	graph_set_func(	void		*client_data,
         graph->message('E', "Current object type doesn't support this operation"); 
         return GE__CURRENT_TYPE;
       }
-      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
       {
         graph->message('E', "Syntax error");
         return GE__SYNTAX;
@@ -1144,13 +1144,13 @@ static int	graph_set_func(	void		*client_data,
 					""};
 
 	
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
       
-    if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str)))
+    if ( EVEN( dcli_get_qualifier( "dcli_arg3", arg3_str, sizeof(arg3_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1241,7 +1241,7 @@ static int	graph_set_func(	void		*client_data,
     int		sts;
     grow_tObject nodeclass;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
@@ -1260,7 +1260,7 @@ static int	graph_set_func(	void		*client_data,
     int		sts;
     grow_tObject nodeclass;
 
-    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
@@ -1289,7 +1289,7 @@ static int	graph_add_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "POLYLINE", strlen( arg1_str)) == 0)
   {
@@ -1311,7 +1311,7 @@ static int	graph_add_func( void		*client_data,
       graph->message('E', "Current object type doesn't support this operation"); 
       return GE__CURRENT_TYPE;
     }
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1324,7 +1324,7 @@ static int	graph_add_func( void		*client_data,
     }
     x = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1360,7 +1360,7 @@ static int	graph_rotate_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
@@ -1374,7 +1374,7 @@ static int	graph_rotate_func( void		*client_data,
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/ANGEL", str)))
+    if ( EVEN( dcli_get_qualifier( "/ANGEL", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1409,7 +1409,7 @@ static int	graph_flip_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "HORIZONTAL", strlen( arg1_str)) == 0)
   {
@@ -1438,7 +1438,7 @@ static int	graph_select_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
@@ -1464,7 +1464,7 @@ static int	graph_export_func(	void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "JAVA", strlen( arg1_str)) == 0)
   {
@@ -1618,7 +1618,7 @@ static int	graph_scale_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
@@ -1634,7 +1634,7 @@ static int	graph_scale_func( void		*client_data,
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/SCALEX", str)))
+    if ( EVEN( dcli_get_qualifier( "/SCALEX", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1647,7 +1647,7 @@ static int	graph_scale_func( void		*client_data,
     }
     scalex = double(value);
     
-    if ( EVEN( dcli_get_qualifier( "/SCALEY", str)))
+    if ( EVEN( dcli_get_qualifier( "/SCALEY", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1664,7 +1664,7 @@ static int	graph_scale_func( void		*client_data,
     x0 = 0;
     y0 = 0;
 
-    if ( ODD( dcli_get_qualifier( "/X", str)))
+    if ( ODD( dcli_get_qualifier( "/X", str, sizeof(str))))
     {
       sts = sscanf( str, "%f", &value);
       if ( sts != 1)
@@ -1676,7 +1676,7 @@ static int	graph_scale_func( void		*client_data,
       scale_type = glow_eScaleType_FixPoint;
     }
 
-    if ( ODD( dcli_get_qualifier( "/Y", str)))
+    if ( ODD( dcli_get_qualifier( "/Y", str, sizeof(str))))
     {
       sts = sscanf( str, "%f", &value);
       if ( sts != 1)
@@ -1709,7 +1709,7 @@ static int	graph_move_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "CURRENTOBJECT", strlen( arg1_str)) == 0)
   {
@@ -1723,7 +1723,7 @@ static int	graph_move_func( void		*client_data,
       graph->message('E', "No current object");
       return GE__NOCURRENT;
     }
-    if ( EVEN( dcli_get_qualifier( "/X", str)))
+    if ( EVEN( dcli_get_qualifier( "/X", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1736,7 +1736,7 @@ static int	graph_move_func( void		*client_data,
     }
     x0 = double(value);
     
-    if ( EVEN( dcli_get_qualifier( "/Y", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1769,7 +1769,7 @@ static int	graph_create_func( void		*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "RECTANGLE", strlen( arg1_str)) == 0)
   {
@@ -1778,7 +1778,7 @@ static int	graph_create_func( void		*client_data,
     float value;
     double x, y, width, height;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1791,7 +1791,7 @@ static int	graph_create_func( void		*client_data,
     }
     x = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1804,7 +1804,7 @@ static int	graph_create_func( void		*client_data,
     }
     y = value;
     
-    if ( EVEN( dcli_get_qualifier( "/WIDTH", str)))
+    if ( EVEN( dcli_get_qualifier( "/WIDTH", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1817,7 +1817,7 @@ static int	graph_create_func( void		*client_data,
     }
     width = value;
     
-    if ( EVEN( dcli_get_qualifier( "/HEIGHT", str)))
+    if ( EVEN( dcli_get_qualifier( "/HEIGHT", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1845,7 +1845,7 @@ static int	graph_create_func( void		*client_data,
     double x1, y1, x2, y2;
     int angel1, angel2;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1858,7 +1858,7 @@ static int	graph_create_func( void		*client_data,
     }
     x1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1871,7 +1871,7 @@ static int	graph_create_func( void		*client_data,
     }
     y1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/X2", str)))
+    if ( EVEN( dcli_get_qualifier( "/X2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1884,7 +1884,7 @@ static int	graph_create_func( void		*client_data,
     }
     x2 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y2", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1897,7 +1897,7 @@ static int	graph_create_func( void		*client_data,
     }
     y2 = value;
     
-    if ( ODD( dcli_get_qualifier( "/ANGEL1", str)))
+    if ( ODD( dcli_get_qualifier( "/ANGEL1", str, sizeof(str))))
     {
       sts = sscanf( str, "%d", &angel1);
       if ( sts != 1)
@@ -1909,7 +1909,7 @@ static int	graph_create_func( void		*client_data,
     else
       angel1 = 0;
     
-    if ( ODD( dcli_get_qualifier( "/ANGEL2", str)))
+    if ( ODD( dcli_get_qualifier( "/ANGEL2", str, sizeof(str))))
     {
       sts = sscanf( str, "%d", &angel2);
       if ( sts != 1)
@@ -1935,7 +1935,7 @@ static int	graph_create_func( void		*client_data,
     float value;
     double x1, y1, x2, y2;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1948,7 +1948,7 @@ static int	graph_create_func( void		*client_data,
     }
     x1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1961,7 +1961,7 @@ static int	graph_create_func( void		*client_data,
     }
     y1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/X2", str)))
+    if ( EVEN( dcli_get_qualifier( "/X2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -1974,7 +1974,7 @@ static int	graph_create_func( void		*client_data,
     }
     x2 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y2", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2002,7 +2002,7 @@ static int	graph_create_func( void		*client_data,
     glow_sPoint points[2];
     int 	point_cnt;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2015,7 +2015,7 @@ static int	graph_create_func( void		*client_data,
     }
     x1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2028,7 +2028,7 @@ static int	graph_create_func( void		*client_data,
     }
     y1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/X2", str)))
+    if ( EVEN( dcli_get_qualifier( "/X2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2041,7 +2041,7 @@ static int	graph_create_func( void		*client_data,
     }
     x2 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y2", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y2", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2084,7 +2084,7 @@ static int	graph_create_func( void		*client_data,
     float value;
     double x1, y1;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2097,7 +2097,7 @@ static int	graph_create_func( void		*client_data,
     }
     x1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2110,7 +2110,7 @@ static int	graph_create_func( void		*client_data,
     }
     y1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/TEXT", text_str)))
+    if ( EVEN( dcli_get_qualifier( "/TEXT", text_str, sizeof(text_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2153,7 +2153,7 @@ static int	graph_create_func( void		*client_data,
     double	sx, sy;
     double	ll_x, ll_y, ur_x, ur_y;
 
-    if ( EVEN( dcli_get_qualifier( "/X1", str)))
+    if ( EVEN( dcli_get_qualifier( "/X1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2166,7 +2166,7 @@ static int	graph_create_func( void		*client_data,
     }
     x1 = value;
     
-    if ( EVEN( dcli_get_qualifier( "/Y1", str)))
+    if ( EVEN( dcli_get_qualifier( "/Y1", str, sizeof(str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2179,7 +2179,7 @@ static int	graph_create_func( void		*client_data,
     }
     y1 = value;
     
-    if ( ODD( dcli_get_qualifier( "/X2", str)))
+    if ( ODD( dcli_get_qualifier( "/X2", str, sizeof(str))))
     {
       sts = sscanf( str, "%f", &value);
       if ( sts != 1)
@@ -2198,7 +2198,7 @@ static int	graph_create_func( void		*client_data,
     else
       scale_x = 0;
     
-    if ( ODD( dcli_get_qualifier( "/Y2", str)))
+    if ( ODD( dcli_get_qualifier( "/Y2", str, sizeof(str))))
     {
       sts = sscanf( str, "%f", &value);
       if ( sts != 1)
@@ -2217,7 +2217,7 @@ static int	graph_create_func( void		*client_data,
     else
       scale_y = 0;
     
-    if ( EVEN( dcli_get_qualifier( "/SUBGRAPH", subgraph_str)))
+    if ( EVEN( dcli_get_qualifier( "/SUBGRAPH", subgraph_str, sizeof(subgraph_str))))
     {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
@@ -2285,7 +2285,7 @@ static int	graph_convert_func( void	*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
   if ( strncmp( arg1_str, "V40", strlen( arg1_str)) == 0) {
     char name[40];
     char msg[80];
@@ -2320,7 +2320,7 @@ static int	graph_replace_func( void	*client_data,
   char	arg1_str[80];
   int	arg1_sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "ATTRIBUTE", strlen( arg1_str)) == 0)
   {
@@ -2331,17 +2331,17 @@ static int	graph_replace_func( void	*client_data,
     int			replace_cnt = 0;
     int			strict;
 
-    if ( EVEN( dcli_get_qualifier( "/FROM", from_str))) {
+    if ( EVEN( dcli_get_qualifier( "/FROM", from_str, sizeof(from_str)))) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
 
-    if ( EVEN( dcli_get_qualifier( "/TO", to_str))) {
+    if ( EVEN( dcli_get_qualifier( "/TO", to_str, sizeof(to_str)))) {
       graph->message('E', "Syntax error");
       return GE__SYNTAX;
     }
 
-    strict = ODD( dcli_get_qualifier( "/STRICT", 0));
+    strict = ODD( dcli_get_qualifier( "/STRICT", 0, 0));
     if ( !strict)
       cdh_ToLower( from_str, from_str);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_load.c,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_bck_load.c,v 1.4 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -155,10 +155,12 @@ bck_LoadBackup ()
 		&objid, dh.attrref.Objid, 0, pwr_cNObjid);
 
               if (strp != NULL) *strp = '.';
-	    } /* Dynamic object */
 
-	    if (ODD (sts)) {
-	      sts = gdh_SetObjectInfo(dh.dataname, datap, dh.attrref.Size);
+	      if (ODD (sts))
+		sts = gdh_SetObjectInfo(dh.dataname, datap, dh.attrref.Size);
+	    } /* Dynamic object */
+	    else {
+	      sts = gdh_SetObjectInfoAttrref(&dh.attrref, datap, dh.attrref.Size);
 	    }
 	  } /* valid segment */
 

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.15 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.16 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2502,6 +2502,46 @@ cdh_NoCaseStrncmp (
   // return ((*s) & ~(1<<5)) - ((*t) & ~(1<<5));
   return (isalpha(*s) ? ((*s) & ~(1<<5)) : *s) -  
     (isalpha(*t) ? ((*t) & ~(1<<5)) : *t);
+}
+
+//! Copy string, and cut of if the string is to long with ending '...'
+/*!
+  For example the string '0123456789' will return the string '0123...' when
+  the size of the returned string is 8.
+
+  If the string is cut off, the return value is 1, else 0.
+
+  \param t	Out string.
+  \param s	In string.
+  \param n	Size of out string.
+  \param cutleft The first characters of the string is cut.
+  \return 	1 if the string is cut off, else 0.
+*/
+int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
+{
+  if ( strlen(s) < n) {
+    strcpy( t, s);
+    return 0;
+  }  
+  
+  if ( cutleft) {
+    strcpy( t, s + strlen(s) - n - 1);
+    if ( n > 5) {
+      t[0] = '.';
+      t[1] = '.';
+      t[2] = '.';
+    }
+  }
+  else {
+    strncpy( t, s, n);
+    t[n-1] = 0;
+    if ( n > 5) {
+      t[n-2] = '.';
+      t[n-3] = '.';
+      t[n-4] = '.';
+    }
+  }
+  return 1;
 }
 
 //! Convert operating system to string

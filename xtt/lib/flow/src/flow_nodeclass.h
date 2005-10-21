@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_nodeclass.h,v 1.4 2005-10-12 12:56:28 claes Exp $
+ * Proview   $Id: flow_nodeclass.h,v 1.5 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,7 +70,7 @@ class FlowNodeClass : public FlowArrayElem {
     void set_no_con_obstacle( int no_obstacle) { no_con_obstacle = no_obstacle;}
     FlowCtx	*ctx;
     FlowArray 	a;
-    char	nc_name[80];
+    flow_tName	nc_name;
     flow_eNodeGroup group;
     int		no_con_obstacle;
 };

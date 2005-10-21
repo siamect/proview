@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.5 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -771,7 +771,7 @@ int GeCurve::read_file( char *filename)
   char item_str[CURVE_MAX_COLS][80];
   int nr;
   int rows = 0;
-  char fname[120];
+  pwr_tFileName fname;
   int i, j;
   int skip_line;
 
@@ -859,7 +859,7 @@ void GeCurve::pop()
 void GeCurve::set_time( pwr_tTime time)
 {
   char time_str[40];
-  char full_title[200];
+  char full_title[500];
 
   time_AtoAscii( &time, time_eFormat_DateAndTime, time_str, sizeof(time_str));
 
@@ -958,7 +958,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   // Motif
   MrmInitialize();
 
-  strcpy( title, curve_name);
+  cdh_StrncpyCutOff( title, curve_name, sizeof(title), 1);
 
   reglist[0].value = (caddr_t) this;
 

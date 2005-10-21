@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepref.h,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepref.h,v 1.6 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,11 +41,11 @@ public:
     m_merep(erep->merep()), m_nRef(0) {
     m_cid = pwr_eClass_VolatileVolume;
     switch( m_vid) {
-    case ldh_cPlcConnectVolume:
-      strcpy( m_name, "$PlcConnect");
+    case ldh_cPlcMainVolume:
+      strcpy( m_name, "$PlcMain");
       break;
-    case ldh_cPlcHostVolume:
-      strcpy( m_name, "$PlcHost");
+    case ldh_cPlcFoVolume:
+      strcpy( m_name, "$PlcFo");
       break;
     case ldh_cIoConnectVolume:
       strcpy( m_name, "$IoConnect");

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.39 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.40 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -388,9 +388,9 @@ void wb_erep::load( pwr_tStatus *sts, char *db)
     loadMeta( sts, db);
     bindMethods();
     loadLocalWb( sts);
-    wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcConnectVolume);
+    wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcMainVolume);
     addExtern( sts, vrep);
-    vrep = new wb_vrepref( this, ldh_cPlcHostVolume);
+    vrep = new wb_vrepref( this, ldh_cPlcFoVolume);
     addExtern( sts, vrep);
     vrep = new wb_vrepref( this, ldh_cIoConnectVolume);
     addExtern( sts, vrep);
@@ -403,9 +403,9 @@ void wb_erep::load( pwr_tStatus *sts, char *db)
   bindMethods();
   loadLocalWb( sts);
 
-  wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcConnectVolume);
+  wb_vrepref *vrep = new wb_vrepref( this, ldh_cPlcMainVolume);
   addExtern( sts, vrep);
-  vrep = new wb_vrepref( this, ldh_cPlcHostVolume);
+  vrep = new wb_vrepref( this, ldh_cPlcFoVolume);
   addExtern( sts, vrep);
   vrep = new wb_vrepref( this, ldh_cIoConnectVolume);
   addExtern( sts, vrep);
@@ -965,10 +965,10 @@ void wb_erep::setRefMerep( wb_merep *merep)
   pwr_tStatus sts;
   m_ref_merep_occupied = true;
 
-  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
+  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcMainVolume);
   if ( ODD(sts))
     vrepref->setMerep( merep);
-  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcHostVolume);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcFoVolume);
   if ( ODD(sts))
     vrepref->setMerep( merep);
   vrepref = (wb_vrepref *) volume( &sts, ldh_cIoConnectVolume);
@@ -981,10 +981,10 @@ void wb_erep::resetRefMerep()
   pwr_tStatus sts;
   m_ref_merep_occupied = false;
 
-  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcConnectVolume);
+  wb_vrepref *vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcMainVolume);
   if ( ODD(sts))
     vrepref->setMerep( m_merep);
-  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcHostVolume);
+  vrepref = (wb_vrepref *) volume( &sts, ldh_cPlcFoVolume);
   if ( ODD(sts))
     vrepref->setMerep( m_merep);
   vrepref = (wb_vrepref *) volume( &sts, ldh_cIoConnectVolume);

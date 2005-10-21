@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.c,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_dcli.c,v 1.4 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,7 +70,7 @@ typedef	struct	{
 #define	DCLI_SYMBOLTABLE_SIZE 500
 #define CMD_BUFF_SIZE (DCLI_SYMBOLTABLE_SIZE * 160)
 
-static char		dcli_qual_str[10][2][80];
+static char		dcli_qual_str[10][2][400];
 static dcli_t_symboltable dcli_symboltable[DCLI_SYMBOLTABLE_SIZE];
 static int		dcli_symboltable_count;
 
@@ -248,11 +248,11 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 			void		*userdata1,
 			void		*userdata2)
 {
-	char	out_str[20][160];
-	char	value_str[10][160];
+	char	out_str[20][DCLI_QUAL_SIZE];
+	char	value_str[10][DCLI_QUAL_SIZE];
 	int	nr, i, j, valuenr;
 	int	hitnr, sts;
-	char	command[160];
+	char	command[DCLI_CMD_SIZE];
 	int	(*func) ();
 	dcli_tCmdTable	*comtbl_ptr;
 	dcli_tCmdTable	*current_comtbl;
@@ -442,7 +442,8 @@ int	dcli_cli( 	dcli_tCmdTable	*command_table,
 **************************************************************************/
 
 int	dcli_get_qualifier( 	char	*qualifier,
-				char	*value)
+				char	*value,
+				size_t	size)
 {
 	int	i, found;
 
@@ -453,8 +454,11 @@ int	dcli_get_qualifier( 	char	*qualifier,
 	  if ( strcmp( qualifier, (char *) dcli_qual_str[i]) == 0)
 	  {
 	    /* Hit */
-            if ( value)
-	      strcpy( value, (char *) &dcli_qual_str[i][1]);
+            if ( value) {
+	      if ( strlen( dcli_qual_str[i][1]) > size - 1)
+		return DCLI__TOOLONG;
+	      strcpy( value, dcli_qual_str[i][1]);
+	    }
 	    found = 1;
 	  }
 	  i++;
@@ -583,7 +587,7 @@ int	dcli_replace_symbol( char *command, char *newcommand, int newsize)
 	char	symbol[80];
 	char	upper_symbol[80];
 	int	sts;
-	char	new[400];
+	char	new[1000];
 	int	ignore_symbolmode;
 
 	symbolmode = 0;

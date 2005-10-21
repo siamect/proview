@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.21 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.22 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -976,6 +976,14 @@ cdh_NoCaseStrncmp (
   const char		*s,
   const char		*t,
   size_t 		n
+);
+
+int 
+cdh_StrncpyCutOff(
+  char			*s,
+  const char	       	*t,
+  size_t		n,
+  int			cutleft
 );
 
 char *cdh_OpSysToStr( pwr_mOpSys opsys);

@@ -7570,7 +7570,7 @@ signals are connected to converters digitala input."
       Object Code PlcTemplate 212 12-OCT-2005 12:58:20.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 18-OCT-2005 09:24:09.96
+        Body DevBody 18-OCT-2005 15:47:18.70
           Buffer PlcProgram
             Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -7607,8 +7607,8 @@ signals are connected to converters digitala input."
         Object W WindowPlc 213 12-OCT-2005 12:58:20.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 18-OCT-2005 09:24:09.96
-            Attr Modified = "18-OCT-2005 09:24:09.96"
+          Body DevBody 18-OCT-2005 15:47:18.70
+            Attr Modified = "18-OCT-2005 15:47:18.70"
             Buffer PlcWindow
               Attr oid = "ABB:Class-ABB_ACS800MotorAggrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -14652,7 +14652,7 @@ SSAB safetyswitch, Contactor"
       Object Code PlcTemplate 748 12-OCT-2005 12:58:20.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 18-OCT-2005 09:24:29.14
+        Body DevBody 18-OCT-2005 15:47:39.19
           Buffer PlcProgram
             Attr oid = "ABB:Class-ABB_ACS800MotorAggrSim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -14686,8 +14686,8 @@ SSAB safetyswitch, Contactor"
         Object W WindowPlc 749 12-OCT-2005 12:58:20.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 18-OCT-2005 09:24:29.14
-            Attr Modified = "18-OCT-2005 09:24:29.14"
+          Body DevBody 18-OCT-2005 15:47:39.19
+            Attr Modified = "18-OCT-2005 15:47:39.19"
             Buffer PlcWindow
               Attr oid = "ABB:Class-ABB_ACS800MotorAggrSim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"

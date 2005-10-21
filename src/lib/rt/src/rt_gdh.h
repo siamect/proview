@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.12 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.13 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,7 @@ typedef	pwr_tDlid    DLID;
  * gdh_RefObjectInfoList parameter structure.  
  */
 typedef struct {
-  char		        fullname[160]; /**< Name of object or parameter */
+  pwr_tAName		fullname; /**< Name of object or parameter */
   void			*adrs;    /**< Address of requested info */
   unsigned int		bufsize;  /**< Requested buffer size */
 } gdh_sObjRef;

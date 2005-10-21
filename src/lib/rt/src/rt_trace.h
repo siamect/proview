@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.h,v 1.7 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_trace.h,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,11 +82,11 @@ struct tra_sCtx{
 					  unsigned long utility, 
 					  char *arg);
   trace_t_node		*trace_list;
-  char			filename[200];
+  pwr_tFileName	       	filename;
   int			version;
   int			has_host;
-  char			hostname[120];
-  char			plcconnect[120];
+  pwr_tOName   		hostname;
+  pwr_tAName   		plcconnect;
 };
 
 

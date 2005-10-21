@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.5 2005-10-12 12:56:28 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@ FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
 	hot(0), ctx(flow_ctx), nc(node_class), pos(flow_ctx, x1,y1), 
 	stored_pos(flow_ctx, x1, y1),
 	highlight(0), inverse(0), trace_attr_type(flow_eTraceType_Boolean), 
-	trace_p(NULL),
+	trace_inverted(0), trace_p(NULL),
 	level(0), node_open(0),
 	relative_annot_pos(rel_annot_pos), relative_annot_x(0)
 {
@@ -281,6 +281,7 @@ void FlowNode::save( ofstream& fp, flow_eSaveMode mode)
   fp << int(flow_eSave_Node_trace_object) << FSPACE << trace_object << endl;
   fp << int(flow_eSave_Node_trace_attribute) << FSPACE << trace_attribute << endl;
   fp << int(flow_eSave_Node_trace_attr_type) << FSPACE << int(trace_attr_type) << endl;
+  fp << int(flow_eSave_Node_trace_inverted) << FSPACE << trace_inverted << endl;
   fp << int(flow_eSave_End) << endl;  
 }
 
@@ -362,6 +363,7 @@ void FlowNode::open( ifstream& fp)
         fp.getline( trace_attribute, sizeof(trace_attribute));
         break;
       case flow_eSave_Node_trace_attr_type: fp >> tmp; trace_attr_type = (flow_eTraceType)tmp; break;
+      case flow_eSave_Node_trace_inverted: fp >> trace_inverted; break;
       case flow_eSave_End: end_found = 1; break;
       default:
         cout << "FlowNode:open syntax error" << endl;
@@ -840,11 +842,12 @@ void FlowNode::remove_notify()
 }
 
 void FlowNode::set_trace_attr( char *object, char *attribute, 
-	flow_eTraceType type)
+	flow_eTraceType type, int inverted)
 {
   strncpy( trace_object, object, sizeof( trace_object)); 
   strncpy( trace_attribute, attribute, sizeof( trace_attribute));
   trace_attr_type = type;
+  trace_inverted = inverted;
 
   if ( ctx->trace_started && strcmp( trace_object, "") != 0)
     ctx->trace_connect_func( (void *) this, trace_object, trace_attribute, 
@@ -852,11 +855,12 @@ void FlowNode::set_trace_attr( char *object, char *attribute,
 }
 
 void FlowNode::get_trace_attr( char *object, char *attribute, 
-	flow_eTraceType *type)
+	flow_eTraceType *type, int *inverted)
 {
   strncpy( object, trace_object, sizeof( trace_object)); 
   strncpy( attribute, trace_attribute, sizeof( trace_attribute));
   *type = trace_attr_type;
+  *inverted = trace_inverted;
 }
 
 void FlowNode::trace_scan()
@@ -876,7 +880,7 @@ void FlowNode::trace_scan()
   switch( trace_attr_type)
   {
     case flow_eTraceType_Boolean:
-      on = *(unsigned int *) trace_p != 0;
+      on = trace_inverted ? *(unsigned int *) trace_p == 0 : *(unsigned int *) trace_p != 0;
       if ( highlight != on)
         set_highlight( on);
       if ( nc->group == flow_eNodeGroup_Trace)

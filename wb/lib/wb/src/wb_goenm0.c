@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm0.c,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm0.c,v 1.9 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -290,13 +290,13 @@ int goen_create_nodetype_m0(
       flow_NodeClassAdd( nc_pid, cp);
       if (bodydef[i].Par->Output.Info.Type == pwr_eType_Float32)
         flow_SetTraceAttr( cp, NULL, bodydef[i].ParName, 
-		flow_eTraceType_Float32);
+		flow_eTraceType_Float32, 0);
       else if (bodydef[i].Par->Output.Info.Type == pwr_eType_Int32)
         flow_SetTraceAttr( cp, NULL, bodydef[i].ParName, 
-		flow_eTraceType_Int32);
+		flow_eTraceType_Int32, 0);
       else if (bodydef[i].Par->Output.Info.Type == pwr_eType_Boolean)
         flow_SetTraceAttr( cp, NULL, bodydef[i].ParName, 
-		flow_eTraceType_Boolean);
+		flow_eTraceType_Boolean, 0);
       ipoints++;
     }
     pointmask <<= 1;

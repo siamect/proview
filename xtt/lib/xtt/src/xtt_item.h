@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -123,7 +123,7 @@ class Item {
     pwr_tObjid		objid;
     int			is_root;
     brow_tNode		node;
-    char	 	name[120];
+    pwr_tOName	 	name;
 };
 
 class ItemBaseAttr : public Item {

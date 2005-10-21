@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm7.c,v 1.9 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_goenm7.c,v 1.10 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -283,7 +283,7 @@ int goen_create_nodetype_m7(
     default:
       trace_type = flow_eTraceType_Int32;
     }
-    flow_SetTraceAttr( cp, NULL, trace_attr, trace_type);
+    flow_SetTraceAttr( cp, NULL, trace_attr, trace_type, 0);
   }
 
   f_namelength = f_strlength*6;

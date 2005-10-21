@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_callbacks.c,v 1.12 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_foe_callbacks.c,v 1.13 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -197,7 +197,7 @@ XmAnyCallbackStruct	*data;
 	foe_enable_ldh_cb(foectx);
 	error_msg( sts);
 	
-	gre_save(foectx->grectx, 0);
+	// gre_save(foectx->grectx, 0);
 
 	NORMAL_CURSOR;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.h,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_ge.h,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ extern "C" {
 typedef struct ge_sCtx {
   void 		*parent_ctx;
   Widget	parent_wid;
-  char 		name[80];
+  pwr_tAName   	name;
   Widget	grow_widget;
   Widget	form_widget;
   Widget	toplevel;
@@ -40,7 +40,7 @@ typedef struct ge_sCtx {
   Widget	menu_widget;
   void		*graph;
   Widget	graph_form;
-  char		filename[120];
+  pwr_tFileName	filename;
   int		scrollbar;
   int		navigator;
   int		menu;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.c,v 1.13 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_gobj.c,v 1.14 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,7 +128,7 @@ static int	gobj_expand_m2(	foe_ctx		foectx,
 *	Function used in class template PlcPgm's.
 *	If a connection to a template object is made, this is marked
 *	with the vid of a reference volume. The reference is transfered
-*	at compilation to the PlcHost or PlcConnect object.
+*	at compilation to the PlcFo or PlcMain object.
 *
 **************************************************************************/
 
@@ -157,14 +157,14 @@ static pwr_tStatus gobj_ref_replace( ldh_tSesContext ldhses,
     if ( EVEN(sts)) return sts;
 
     if ( cdh_ObjidIsEqual( parent, plcparent)) {
-      // Own template object, use $PlcHost reference
-      attrref->Objid.vid = ldh_cPlcHostVolume;
+      // Own template object, use $PlcFo reference
+      attrref->Objid.vid = ldh_cPlcFoVolume;
       attrref->Objid.oix = cid;
       return FOE__REPLACED;
     }
     else {
-      // Other template object, use $PlcConnect reference
-      attrref->Objid.vid = ldh_cPlcConnectVolume;
+      // Other template object, use $PlcMain reference
+      attrref->Objid.vid = ldh_cPlcMainVolume;
       attrref->Objid.oix = cid;
       return FOE__REPLACED;
     }

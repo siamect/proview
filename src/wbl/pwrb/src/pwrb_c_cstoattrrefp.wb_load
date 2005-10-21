@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_cstoattrrefp.wb_load,v 1.1 2005-10-18 05:06:22 claes Exp $
+!  Proview   $Id: pwrb_c_cstoattrrefp.wb_load,v 1.2 2005-10-21 16:11:24 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -24,10 +24,10 @@ SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_io.h
-!  @Group Plc,PlcIO
+!  @Group Plc,PlcData
 !  @Summary Conditional storage of attribute reference attribute
 !  Conditional Storage of Attribute Reference attribute.
-!  @image orm_cstoatrrefp_fo.gif
+!  @image orm_cstoattrrefp_fo.gif
 !  
 !  Conditional storage of an attribute reference value (parameter,
 !  input, or output signal) on a specified parameter in a

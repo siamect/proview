@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.5 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ class GeCurveData {
     curve_eDataType type;
     int     rows;
     int     cols;
-    char    name[CURVE_MAX_COLS][120];
+    pwr_tAName name[CURVE_MAX_COLS];
     double  *data[CURVE_MAX_COLS];
     double  max_value[CURVE_MAX_COLS];
     double  min_value[CURVE_MAX_COLS];
@@ -130,7 +130,7 @@ class GeCurve {
     int          minmax_idx;
     void 	 (*close_cb)( void *);
     int          initial_right_position;
-    char	 title[120];
+    char	 title[300];
 
     int read_file( char *filename);
     int configure_curves();

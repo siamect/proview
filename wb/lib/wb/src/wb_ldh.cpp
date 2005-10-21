@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.47 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.48 2005-10-21 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1393,58 +1393,64 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
 {
   static char str[512];
   wb_session *sp = (wb_session *)session;
-    
-  switch ( nametype) {
-  case ldh_eName_ArefExport:
-  case ldh_eName_Objid:
-  case ldh_eName_ObjectIx:
-  case ldh_eName_OixString:
-  case ldh_eName_VolumeId:
-  case ldh_eName_VidString: {
-    wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
-    strcpy( str, n.name( nametype));
-    *aname = str;
-    *size = strlen(str);
-    break;
-  }
-  case ldh_eName_Ref: {
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
-    
-    wb_name n = a.longName();
-    strcpy( str, a.name());
-    strcat( str, ".");
-    strcat( str, n.attributesAll());
-    *aname = str;
-    *size = strlen(str);
-    break;
-  }
-  case 0: { // cdh_mNName
-    if ( arp->Objid.vid == sp->vid())
-      nametype = cdh_mName_path | cdh_mName_attribute;
-    else
-      nametype = cdh_mName_volume | cdh_mName_attribute;
 
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
+  try {
     
-    wb_name n = a.longName();
-    strcpy( str, n.name( nametype));
-    *aname = str;
-    *size = strlen(str);
-    break;
+    switch ( nametype) {
+    case ldh_eName_ArefExport:
+    case ldh_eName_Objid:
+    case ldh_eName_ObjectIx:
+    case ldh_eName_OixString:
+    case ldh_eName_VolumeId:
+    case ldh_eName_VidString: {
+      wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
+      strcpy( str, n.name( nametype));
+      *aname = str;
+      *size = strlen(str);
+      break;
+    }
+    case ldh_eName_Ref: {
+      wb_attribute a = sp->attribute(arp);
+      if (!a) return a.sts();
+      
+      wb_name n = a.longName();
+      strcpy( str, a.name());
+      strcat( str, ".");
+      strcat( str, n.attributesAll());
+      *aname = str;
+      *size = strlen(str);
+      break;
+    }
+    case 0: { // cdh_mNName
+      if ( arp->Objid.vid == sp->vid())
+	nametype = cdh_mName_path | cdh_mName_attribute;
+      else
+	nametype = cdh_mName_volume | cdh_mName_attribute;
+      
+      wb_attribute a = sp->attribute(arp);
+      if (!a) return a.sts();
+      
+      wb_name n = a.longName();
+      strcpy( str, n.name( nametype));
+      *aname = str;
+      *size = strlen(str);
+      break;
+    }
+    default: {
+      wb_attribute a = sp->attribute(arp);
+      if (!a) return a.sts();
+      
+      wb_name n = a.longName();
+      strcpy( str, n.name( nametype));
+      *aname = str;
+      *size = strlen(str);
+      break;
+    }
+    }
   }
-  default: {
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
-    
-    wb_name n = a.longName();
-    strcpy( str, n.name( nametype));
-    *aname = str;
-    *size = strlen(str);
-    break;
-  }
-  }
+  catch (wb_error& e) {
+    return e.sts();
+  }  
   return LDH__SUCCESS;
 }
 

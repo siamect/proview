@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.13 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.14 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -181,7 +181,7 @@ class ApplListElem {
     void		*ctx;
     pwr_sAttrRef       	aref;
     char		name[80];
-    char                instance[80];
+    pwr_tAName          instance;
     ApplListElem 	*next;
 };
 
@@ -298,7 +298,7 @@ class XNav {
     Op			*op;
     CLog		*clog;
     int			closing_down;
-    char		opplace_name[80];
+    pwr_tOName		opplace_name;
     char		base_user[80];
     char		user[80];
     unsigned int	base_priv;

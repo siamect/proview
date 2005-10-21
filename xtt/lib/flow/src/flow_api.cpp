@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.4 2005-10-12 12:56:28 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.5 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -458,17 +458,17 @@ flow_tCtx flow_GetCtx( flow_tObject object)
 }
 
 void flow_SetTraceAttr( flow_tObject object, char *trace_object, 
-		char *trace_attribute, flow_eTraceType trace_attr_type)
+		char *trace_attribute, flow_eTraceType trace_attr_type, int inverted)
 {
   ((FlowArrayElem *)object)->set_trace_attr( trace_object, trace_attribute,
-	trace_attr_type);
+	trace_attr_type, inverted);
 }
 
 void flow_GetTraceAttr( flow_tObject object, char *trace_object, 
-		char *trace_attribute, flow_eTraceType *trace_attr_type)
+		char *trace_attribute, flow_eTraceType *trace_attr_type, int *inverted)
 {
   ((FlowArrayElem *)object)->get_trace_attr( trace_object, trace_attribute,
-	trace_attr_type);
+	trace_attr_type, inverted);
 }
 
 extern "C" int flow_TraceInit( flow_tCtx ctx, int (*trace_connect_func)( flow_tObject, 

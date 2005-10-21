@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trend.c,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_trend.c,v 1.8 2005-10-21 16:11:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,7 +237,7 @@ InitTrendList (
   pwr_tTypeId	    Type;
   int		    Tix;
   pwr_sAttrRef	    Aref;
-  char		    Name[81];
+  pwr_tAName   	    Name;
   pwr_sClass_DsTrend  *Trend;
 
   sts = gdh_GetClassListAttrRef(pwr_cClass_DsTrend, &Aref);
