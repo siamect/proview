@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.21 2005-10-12 13:03:45 claes Exp $
+ * Proview   $Id: ini.c,v 1.22 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2052,23 +2052,12 @@ ini_ProcTable (
     ODD(*sts);
     *sts = gdh_GetNextObject(oid, &oid)
   ) {
-    char name[256];
+    pwr_tObjName name;
 
-    gdh_ObjidToName(oid, name, sizeof(name) - 1, cdh_mName_object);
-    /* A workaround untill ObjidToName works */
-    s = strrchr(name, '-');
-    if (s != NULL) {
-      s++;
-    } else {
-      s = strrchr(name, ':');
-      if (s != NULL)
-	s++;
-      else
-	s = name;
-    }
+    gdh_ObjidToName(oid, name, sizeof(name), cdh_mName_object);
 
     if (ODD(*sts = gdh_ObjidToPointer(oid, (pwr_tAddress *)&ap))) {
-      pp = ini_ProcInsert(sts, cp, s, ap->ProgramName, ap->Load, ap->Run,
+      pp = ini_ProcInsert(sts, cp, name, ap->ProgramName, ap->Load, ap->Run,
 	ap->FileName, ap->JobPriority, ap->StartWithDebug, ap->Arg);
       pp->proc.flags.b.user = 1;
     }

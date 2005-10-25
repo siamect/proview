@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.8 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.9 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,8 +135,8 @@ struct s_Active {
   pwr_tObjid		object;		/* Object associated with alarm */
   pwr_tObjid		supObject;	/* Supervisor object */
   pwr_tObjid		outunit;	/* Optional outunit destination */
-  pwr_tString80		objName;
-  pwr_tString80		eventName;
+  pwr_tOName		objName;
+  pwr_tOName		eventName;
   mh_mEventFlags	eventFlags;
   mh_uEventInfo		status;
   mh_eEvent		event;
@@ -864,7 +864,7 @@ applMessage (
   mh_sApplMessage *ip = (mh_sApplMessage*) (hp + 1);
   sEvent *ep;
   sApplActive *aap;
-  pwr_tString80 ObjName;
+  pwr_tOName ObjName;
 
   switch (ap->state) {
   case mh_eApplState_Connected:

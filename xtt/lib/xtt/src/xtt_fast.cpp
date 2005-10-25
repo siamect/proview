@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,11 +73,11 @@ XttFast::XttFast(
   axis_configured(false)
 {
   pwr_sAttrRef aref = pwr_cNAttrRef;
-  char fast_name[120];
-  char attr_name[120];
+  pwr_tAName fast_name;
+  pwr_tAName attr_name;
   pwr_sClass_DsFastCurve fp;
   int i, j;
-  char title[120];
+  char title[250];
     
   *sts = XNAV__SUCCESS;
 
@@ -198,7 +198,7 @@ XttFast::XttFast(
   if ( strcmp( fp.Title, "") != 0)
     strcpy( title, fp.Title);
   else
-    strcpy( title, name);
+    cdh_StrncpyCutOff( title, name, sizeof(title), 1);
   curve = new GeCurve( this, parent_widget, title, NULL, gcd, 0);
   curve->close_cb = fast_close_cb;
 

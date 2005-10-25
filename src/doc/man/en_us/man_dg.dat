@@ -3715,8 +3715,16 @@ fetched from the user database, and affect the access to the system.
 
 <B>wtt> login 'username' 'password'
 
+If you want to create or modify a project, user or register a volume,
+you login as administrator with the qualifier /administrator. You must
+specify a user in the systemgroup 'administrator'. If this systemgroup
+doesn't exist, usename and password is not required.
+
+<B>wtt> login /administrator 'username' 'password'
+
 <H2>related subjects
 logout <LINK> logout
+show user <LINK> show user
 </TOPIC>
 
 <TOPIC> logout <style> function

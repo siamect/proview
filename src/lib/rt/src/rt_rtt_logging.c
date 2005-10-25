@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_logging.c,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_logging.c,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1862,8 +1862,8 @@ static int	rtt_get_parinfo(
 			pwr_sParInfo	*parinfo)
 {
 	pwr_tOName     	hiername;
-	char		parname[80];
-	char		name_array[2][80];
+	pwr_tOName     	parname;
+	pwr_tOName     	name_array[2];
 	int		nr;
 	int		sts;
 	pwr_tObjid	objid;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.16 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.17 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,7 +140,7 @@ WItemObject::WItemObject( WNav *wnav, pwr_tObjid item_objid,
     }
     if ( wnav->gbl.show_alias && classid == pwr_eClass_Alias)
     {
-       char alias_name[80];
+       pwr_tOName alias_name;
        pwr_tObjid *ref_object;
 
        sts = ldh_GetObjectPar( wnav->ldhses, objid, "RtBody", 
@@ -1091,7 +1091,7 @@ int WItemBaseAttr::get_value( char **value)
 
 pwr_sAttrRef WItemBaseAttr::aref()
 {
-  char aname[200];
+  pwr_tAName aname;
   pwr_sAttrRef a;
   pwr_tStatus sts;
 
@@ -1118,8 +1118,8 @@ WItemAttr::WItemAttr(
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
-  char	obj_name[120];
-  char	annot[120];
+  pwr_tOName obj_name;
+  pwr_tAName	annot;
   int	sts;
   int	psize;
   ldh_sSessInfo info;
@@ -1373,7 +1373,7 @@ WItemAttrInput::WItemAttrInput(
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
-  char	obj_name[120];
+  pwr_tOName	obj_name;
   char	annot[120];
   int	sts;
   int	psize;
@@ -1515,7 +1515,7 @@ WItemAttrInputF::WItemAttrInputF(
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
-  char	obj_name[120];
+  pwr_tOName	obj_name;
   char	annot[120];
   int	sts;
   int	psize;
@@ -1637,7 +1637,7 @@ WItemAttrInputInv::WItemAttrInputInv(
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
-  char	obj_name[120];
+  pwr_tOName obj_name;
   char	annot[120];
   int	sts;
   int	psize;
@@ -1759,7 +1759,7 @@ WItemAttrOutput::WItemAttrOutput(
 	WItemBaseAttr( item_brow, item_ldhses, item_objid, attr_name,
 	attr_type_id, attr_tid, attr_size, attr_flags, attr_body)
 {
-  char	obj_name[120];
+  pwr_tOName	obj_name;
   char	annot[120];
   int	sts;
   int	psize;
@@ -1886,7 +1886,7 @@ WItemAttrArray::WItemAttrArray(
 	elements(attr_elements)
 {
   ldh_sSessInfo info;
-  char annot[120];
+  pwr_tOName annot;
   int psize;
   int sts;
 
@@ -2143,7 +2143,7 @@ WItemAttrObject::WItemAttrObject(
 	is_elem(attr_is_elem), idx(attr_idx)
 {
   ldh_sSessInfo info;
-  char annot[120];
+  pwr_tOName annot;
   int psize;
   int sts;
   char *s;
@@ -2268,7 +2268,7 @@ int WItemAttrObject::open_attributes( double x, double y)
   else 
   {
     int			sts;
-    char		parname[80];
+    pwr_tOName		parname;
     pwr_tClassId	classid;
     unsigned long	elements;
     ldh_sParDef 	*bodydef;

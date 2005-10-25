@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_selformat.cpp,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_selformat.cpp,v 1.5 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,7 +79,7 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
 {
   pwr_sAttrRef aref;
   int	ret_len, size, sts;
-  char name[256];
+  pwr_tAName name;
   char attr_name[128], type_buff[80];
   pwr_tClassId	classid, body_class;    
   pwr_sGraphPlcNode *graph_body;

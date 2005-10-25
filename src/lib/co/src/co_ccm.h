@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_ccm.h,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,13 +31,14 @@ extern "C" {
 #define CCM_DECL_FLOAT	3
 #define CCM_DECL_UNKNOWN 4
 
+#define K_STRING_SIZE	400
 
 typedef struct s_arg_ {
 	char			value_name[80];
 	int			value_decl;
 	int			value_int;
 	float			value_float;
-	char			value_string[80];
+	char			value_string[K_STRING_SIZE];
 	int			value_type;
 	int			var_decl;
 	char			var_name[32];

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_subvolumeconfig.wb_load,v 1.4 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_subvolumeconfig.wb_load,v 1.5 2005-10-25 15:28:11 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@ SObject pwrb:Class
       Object Pointed $Menu
 	Object OpenDb $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
+	    Attr ButtonName = "Open Volume..."
 	    Attr MethodName = "SubVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
@@ -55,7 +55,7 @@ SObject pwrb:Class
       Object Pointed $Menu
 	Object OpenDb $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
+	    Attr ButtonName = "Open Volume..."
 	    Attr MethodName = "SubVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
@@ -65,7 +65,7 @@ SObject pwrb:Class
       Object Pointed $Menu
 	Object OpenDb $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
+	    Attr ButtonName = "Open Volume..."
 	    Attr MethodName = "SubVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
@@ -75,7 +75,7 @@ SObject pwrb:Class
       Object Pointed $Menu
 	Object OpenDb $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
+	    Attr ButtonName = "Open Volume..."
 	    Attr MethodName = "SubVolumeConfig-OpenDb"
 	  EndBody
 	EndObject
@@ -85,7 +85,7 @@ SObject pwrb:Class
       Object Pointed $Menu
 	Object OpenDb $MenuButton
 	  Body SysBody
-	    Attr ButtonName = "Open Db..."
+	    Attr ButtonName = "Open Volume..."
 	    Attr MethodName = "SubVolumeConfig-OpenDb"
 	  EndBody
 	EndObject

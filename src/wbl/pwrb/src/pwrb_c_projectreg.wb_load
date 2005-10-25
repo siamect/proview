@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_projectreg.wb_load,v 1.1 2005-09-20 13:18:56 claes Exp $
+!  Proview   $Id: pwrb_c_projectreg.wb_load,v 1.2 2005-10-25 15:28:11 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@ SObject pwrb:Class
       Attr Editor = pwr_eEditor_AttrEd
       Attr Method = pwr_eMethod_Standard
       Attr Flags |= pwr_mClassDef_TopObject
-   EndBody
+    EndBody
     Object RtBody $ObjBodyDef 1
       Object Description $Attribute 1
         Body SysBody
@@ -47,6 +47,77 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      Object CopyFrom $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+        Object OpenProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Project..."
+	    Attr MethodName = "ProjectReg-OpenProject"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+        Object OpenProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Project..."
+	    Attr MethodName = "ProjectReg-OpenProject"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+        Object OpenProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Project..."
+	    Attr MethodName = "ProjectReg-OpenProject"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+        Object OpenProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Project..."
+	    Attr MethodName = "ProjectReg-OpenProject"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+        Object OpenProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Open Project..."
+	    Attr MethodName = "ProjectReg-OpenProject"
+	  EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object ConfiguratorPosos $Menu
+      Object Pointed $Menu
+        Object CopyProject $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Copy Project..."
+	    Attr MethodName = "ProjectReg-CopyProject"
+	  EndBody
+        EndObject
+      EndObject
     EndObject
   EndObject
 EndSObject
+
+
+
+
+

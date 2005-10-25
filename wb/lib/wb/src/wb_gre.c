@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.c,v 1.16 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_gre.c,v 1.17 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -308,7 +308,7 @@ int gre_get_annotations(
 	pwr_tBoolean		*condparvalue;
 	pwr_tBoolean		*segmentsparvalue;
 	int			annot_segments;
-	char			objid_str[120];
+	pwr_tAName     		objid_str;
 	char			*name;
 	char			body[10];
 	ldh_tSesContext		ldhses;
@@ -439,11 +439,12 @@ int gre_get_annotations(
 					     &name, &size);
 		    if ( EVEN(sts)) continue;
 		    
-		    strcat( name, ".SigChanCon");
-		    s = strchr( name, '.');
+		    strcpy( objid_str, name);
+		    strcat( objid_str, ".SigChanCon");
+		    s = strchr( objid_str, '.');
 		    *s = 0;
 
-		    sts = ldh_NameToObjid( ldhses, &oid, name);
+		    sts = ldh_NameToObjid( ldhses, &oid, objid_str);
 		    if ( EVEN(sts)) continue;
 
 	            sts = ldh_GetObjectPar( ldhses, oid,
@@ -4456,7 +4457,7 @@ int	gre_set_trace_attributes( gre_ctx grectx, char *host)
 	    if ( EVEN(sts))
 	      strcpy( object_str, "");
 	    else
-	      strcpy( object_str, np);
+	      strncpy( object_str, np, sizeof(object_str));
 	    free((char *) objarp);
 	    
 	    break;

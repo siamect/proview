@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_fast.cpp,v 1.4 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_fast.cpp,v 1.5 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@ void fastobject::open( double base_scantime)
   pwr_tStatus sts;
   pwr_tUInt32 size, offs, elem;
   pwr_tTypeId type_id;
-  char name[120];
+  pwr_tAName name;
 
   // Link to object
   sts = gdh_DLRefObjectInfoAttrref( &aref, (void **)&p, &p_dlid); 

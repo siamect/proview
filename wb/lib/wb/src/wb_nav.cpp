@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.6 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.7 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1407,7 +1407,7 @@ int Nav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   brow_tNode	*node_list;
   int		node_count;
   Item		*item;
-  char		attr_str[120];
+  pwr_tOName   	attr_str;
   int		sts, size;
   
   brow_GetSelectedNodes( brow_ctx, &node_list, &node_count);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.9 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -339,7 +339,7 @@ static int getAllMenuItems (
     }
     else if ( classid == pwr_eClass_MenuRef && 
 	      cdh_ObjidIsNull( CurrentObject->Objid)) {
-      char aname[240];
+      pwr_tAName aname;
       pwr_sAttrRef currentar;
       pwr_tCid current_cid;
       pwr_tTid a_tid;

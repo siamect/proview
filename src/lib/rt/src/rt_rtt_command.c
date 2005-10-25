@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_command.c,v 1.7 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_command.c,v 1.8 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -343,9 +343,9 @@ int rtt_wildcard(	char	*wildname,
 	char	*s;
 	char	*t;
 	char	*u;
-	char	checkstr[80];
-	char	upper_name[120];
-	char	upper_wildname[120];
+	pwr_tAName	checkstr;
+	pwr_tAName	upper_name;
+	pwr_tAName	upper_wildname;
 
 	/* Convert to upper case */
 	rtt_toupper( upper_name, name);
@@ -499,9 +499,9 @@ static int	monitor_func(	menu_ctx	ctx,
 	  /* Command is "MONITOR GRAFCET" */
 	  pwr_tObjid	objid;
 	  pwr_tClassId	class;
-	  char		classname[80];
+	  pwr_tOName   	classname;
 	  int		found;
-	  char		name_str[160];
+	  pwr_tOName   	name_str;
 
 	  /* Get the selected object */
 	  sts = rtt_get_current_object( ctx, &objid, 
@@ -744,7 +744,7 @@ static int	show_func(	menu_ctx	ctx,
 	{
 	  /* Command is "SHOW OBJECT" */
 	  char	class_str[80];
-	  char	name_str[80];
+	  pwr_tOName name_str;
 	  char	hierarchy_str[80];
 	  char	objdid_str[80];
 	  char	maxobjects_str[80];
@@ -880,7 +880,7 @@ static int	show_func(	menu_ctx	ctx,
 	else if ( strncmp( arg1_str, "OBJID", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "SHOW OBJID" */
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  pwr_tObjid	objid;
 	  char		msg[160];
 
@@ -919,7 +919,7 @@ static int	show_func(	menu_ctx	ctx,
 	{
 	  /* Command is "SHOW SIGNALS" */
 	  char		file_str[80];
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  char		*file_ptr;
 	  char		*name_ptr;
 	  pwr_tObjid	objid;
@@ -1009,7 +1009,7 @@ static int	show_func(	menu_ctx	ctx,
 	  /* Command is "SHOW STEP" */
 	  char		str[80];
 	  int		initstep;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  char		*name_ptr;
 	  pwr_tObjid	objid;
 	  pwr_tObjid	parentobjid;
@@ -1247,7 +1247,7 @@ static int	show_func(	menu_ctx	ctx,
 	{ 
 	  int	on = 0;
 	  pwr_tObjid	objid; 
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -1278,7 +1278,7 @@ static int	show_func(	menu_ctx	ctx,
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -1309,7 +1309,7 @@ static int	show_func(	menu_ctx	ctx,
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -1340,7 +1340,7 @@ static int	show_func(	menu_ctx	ctx,
 	{
 	  int	on = 0;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -1457,7 +1457,7 @@ static int	debug_func(	menu_ctx	ctx,
 	else if ( strncmp( arg1_str, "CHILDREN", strlen( arg1_str)) == 0)
 	{
 	  /* Command is "DEBUG CHILDEN" */
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  pwr_tObjid	objid;
 
 	  /* Get the name qualifier */
@@ -1488,7 +1488,7 @@ static int	debug_func(	menu_ctx	ctx,
 	{
 	  /* Command is "DEBUG SIGNALS" */
 	  char		file_str[80];
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 	  char		*file_ptr;
 	  char		*name_ptr;
 	  pwr_tObjid	objid;
@@ -1808,7 +1808,7 @@ static int	crossref_func(	menu_ctx	ctx,
 {
 	int	sts;
 	char		file_str[80];
-	char		name_str[80];
+	pwr_tAName     	name_str;
 	char		string_str[80];
 	char		func_str[80];
 	char		*file_ptr;
@@ -3203,7 +3203,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	{
 	  int	on;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -3250,7 +3250,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	{
 	  int	on;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -3297,7 +3297,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	{
 	  int	on;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -3344,7 +3344,7 @@ static int	rtt_set_func(	menu_ctx	ctx,
 	{
 	  int	on;
 	  pwr_tObjid	objid;
-	  char		name_str[80];
+	  pwr_tOName   	name_str;
 
 	  IF_NOGDH_RETURN;
 
@@ -5277,10 +5277,10 @@ static int	rtt_show_object_add(
 			void		*dum3,
 			void		*dum4)
 {
-	char	objname[80];
-	int	sts;
-	char	title[120];
-	char	classname[32];
+	pwr_tOName 	objname;
+	int		sts;
+	char		title[450];
+	pwr_tObjName	classname;
 	pwr_tObjid	childobjid;
 	int		j;
 
@@ -5348,12 +5348,12 @@ static int	rtt_show_parameter_add(
 			void		*dum4)
 {
 	int		j;
-	char		objname[100];
+	pwr_tAName     	objname;
 	int		sts;
 	int		elements;
 	char 		*parameter_ptr;
 	SUBID 		subid;
-	char		title[120];
+	char		title[450];
 	char		classname[80];
 	pwr_tObjid	childobjid;
 	char		*s;
@@ -5472,17 +5472,17 @@ int	rtt_debug_object_add(
 			void		*dum4)
 {
 	int		j;
-	char		objname[100];
+	pwr_tAName     	objname;
 	int		sts;
 	char		*s;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	pwr_tClassId	class;
 	unsigned long	elements;
 	char 		*parameter_ptr;
 	SUBID 		subid;
 	pwr_sParInfo	parinfo;
 	char		parname[80];
-	char		title[120];
+	char		title[450];
 	char		classname[80];
 	pwr_tObjid	childobjid;
 	pwr_tTypeId	attrtype;
@@ -5721,20 +5721,20 @@ int	rtt_debug_child_add(
 			void		*dum3,
 			void		*dum4)
 {
-	int	j;
-	char	objname[100];
-	int	sts;
-	char		hiername[80];
+	int		j;
+	pwr_tOName	objname;
+	int		sts;
+	pwr_tOName     	hiername;
 	pwr_tClassId	class;
 	unsigned long	elements;
 	char 		*parameter_ptr;
 	SUBID 		subid;
 	pwr_sParInfo	parinfo;
 	char		parname[32];
-	char		full_parname[120];
-	char		con_parname[120];
-	char		title[120];
-	char		spectitle[80] = "";
+	pwr_tAName     	full_parname;
+	pwr_tAName     	con_parname;
+	char		title[250];
+	char		spectitle[250] = "";
 	char		classname[80];
 	char		*s, *t;
 	pwr_tObjid	con_obj;
@@ -6487,7 +6487,7 @@ static int	rtt_show_par_hier_class_name(
 	char		elementstr[10];
 	int		len;
 	int		element;
-	char		name_array[2][80];
+	pwr_tOName     	name_array[2];
 	int		names;
 
 	if ( max_objects == 0)
@@ -6826,7 +6826,7 @@ int	rtt_collect_insert(
 	int		index;
 	pwr_tObjid	objid;
 	char		*s;
-	char		aname[240];
+	pwr_tAName     	aname;
 	pwr_sAttrRef	aref;
 
 	/* Get next index in the collection picture */
@@ -6865,11 +6865,8 @@ int	rtt_collect_insert(
 
 	if ( aref.Flags.b.Object) {
 	  /* Only object name, debug object */
-	  sts = gdh_NameToObjid ( full_name, &objid);
-	  if (EVEN(sts)) {
-	    rtt_message('E',"Object not found");
-	    return RTT__HOLDCOMMAND;
-	  }
+	  objid = aref.Objid;
+
 	  sts = rtt_debug_object_add( objid, &rtt_collectionmenulist, 
 				      &index, &zero, 0, 0);
 	  if ( (EVEN(sts)) || ( sts == RTT__ITEM_NOCREA)) {
@@ -7077,7 +7074,7 @@ int	rtt_get_objects_hier_class_name(
 	pwr_tObjid		objid;
 	pwr_tClassId		obj_class;
 	int			obj_counter;
-	char			hiername[80];
+	pwr_tOName     		hiername;
 	unsigned int		location;
 
 	obj_counter = 0;
@@ -7192,7 +7189,7 @@ static int	rtt_get_class_hier_class_name(
 	pwr_tObjid		objid;
 	pwr_tClassId		obj_class;
 	int			obj_counter;
-	char			hiername[80];
+	pwr_tOName     		hiername;
 
 	obj_counter = 0;
 	if ( cdh_ObjidIsNotNull( hierobjid))
@@ -7895,7 +7892,7 @@ static int rtt_getcurrentobject_func(
 {
   menu_ctx		ctx;
   pwr_tObjid		objid;
-  char			name_str[80];
+  pwr_tOName   		name_str;
   int			sts;
 
   if ( arg_count != 0)
@@ -8977,12 +8974,12 @@ static int	rtt_set_parameter(
 	/* Get type of the parameter from info in the class object */
 
 	int		sts;
-	char		hiername[80];
-	char		parname[80];
+	pwr_tOName     	hiername;
+	pwr_tOName     	parname;
 	pwr_tClassId	class;
 	pwr_sParInfo	parinfo;
-	char		objname[80];
-	char		name_array[2][80];
+	pwr_tOName     	objname;
+	pwr_tOName     	name_array[2];
 	int		nr;
 	pwr_tObjid	objid;
 	pwr_tObjid	value_objid;
@@ -9358,7 +9355,7 @@ static int	rtt_plcscan(
 	pwr_tObjid	class_objid;
 	pwr_tObjid	hierobjid;
 	int		max_objects = 100000;
-	char		name_str[100];
+	pwr_tOName     	name_str;
 	char		*name = NULL;
 
 	pwr_tString40	classname[]	= { 
@@ -9972,7 +9969,6 @@ static int	rtt_print_restore_item_upd(
 			int		flags,
 			FILE		*outfile)
 {
-	char		hiername[80];
 	pwr_tObjid	objid;
 	int		sts;
 
@@ -10052,6 +10048,8 @@ static int	rtt_print_restore_item_upd(
 	  }
 	  case pwr_eType_Objid:
 	  {
+	    pwr_tOName     	hiername;
+
 	    objid = *(pwr_tObjid *)value_ptr;
 	    sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	    if (EVEN(sts)) break;
@@ -10094,7 +10092,6 @@ static int	rtt_print_item_upd(
 			int		text_size,
 			int		parameter_size)
 {
-	char		hiername[80];
 	pwr_tObjid	objid;
 	int		sts;
 	int		spaces;
@@ -10204,6 +10201,8 @@ static int	rtt_print_item_upd(
 	    }
 	    case pwr_eType_Objid:
 	    {
+	      pwr_tOName     	hiername;
+
 	      objid = *(pwr_tObjid *)value_ptr;
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	      if (EVEN(sts)) break;
@@ -10240,7 +10239,7 @@ int	rtt_edit_debug_signals(
 			void		*dum4)
 {
 	rtt_t_menu_upd	*menu_ptr;
-	char		hiername[80];
+	pwr_tOName     	hiername;
 	int		sts;
 
 	menu_ptr = (rtt_t_menu_upd *) ctx->menu;

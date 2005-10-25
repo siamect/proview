@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.26 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.27 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1710,7 +1710,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 	    pwr_sAttrRef      	*sel_list;
 	    int               	*sel_is_attr;
 	    int		      	sel_cnt = 0;
-	    char 		str[200];
+	    pwr_tOName 		str;
 	    int 		size;
 
 	    if ( item_attr->type_id == pwr_eType_Objid) {

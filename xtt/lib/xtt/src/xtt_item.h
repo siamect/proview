@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.9 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -321,7 +321,7 @@ class ItemCommand : public Item {
     ItemCommand( XNavBrow *brow, char *item_name, char *item_text,
 	brow_tNode dest, flow_eDest dest_code, char *item_command, 
 	int item_is_root, flow_sAnnotPixmap *pixmap);
-    char		command[200];
+    char		command[400];
     int			open_children( XNavBrow *brow, double x, double y);
 };
 

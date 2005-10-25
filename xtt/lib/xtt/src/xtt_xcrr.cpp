@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xcrr.cpp,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xcrr.cpp,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -157,7 +157,7 @@ XCrr::XCrr(
   char		*uid_filename_p = uid_filename;
   Arg 		args[20];
   pwr_tStatus	sts;
-  char 		title[80];
+  pwr_tAName   	title;
   int		i;
   MrmHierarchy s_DRMh;
   MrmType dclass;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.c,v 1.11 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_trace.c,v 1.12 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,7 +116,7 @@ static int trace_get_filename( pwr_tObjid window_objid, char *filename,
   pwr_tObjName cname;
   pwr_tFileName fname;
   int sts;
-  pwr_tOName name;
+  pwr_tAName name;
   pwr_sAttrRef conar;
 
   sprintf( fname, "$pwrp_load/pwr_%s.flw", trace_IdToStr( window_objid));

@@ -3660,8 +3660,17 @@ att hämtas ur användardatabasen, och påverka tillgången till systemet.
 
 <B>wtt> login 'username' 'password'
 
+Om man vill skapa eller modifiera projekt, användare eller registrera
+volymer loggar man in som administratör med kvalifieraren /administrator.
+Här måste man ange en användare i systemgruppen 'administrator'. Om denna
+systemgrupp ej finns, kan användarnamn och passerord utelämnas.
+
+<B>wtt> login /administrator 'username' 'password'
+
+
 <H2>närliggande ämnen
 logout <LINK> logout
+show user <LINK> show user
 </TOPIC>
 
 <TOPIC> logout <style> function

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_print.c,v 1.5 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_bck_print.c,v 1.6 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,6 @@ int print_attribute( pwr_tObjid objid, pwr_tClassId classid, char *object_p, cha
 static void  attrvalue_to_string( int type_id, void *value_ptr, 
 	char *str, int size, int *len, char *format)
 {
-  char			hiername[120];
   pwr_tObjid		objid;
   pwr_sAttrRef		*attrref;
   int			sts;
@@ -145,6 +144,8 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_Objid:
     {
+      pwr_tOName hiername;
+
       objid = *(pwr_tObjid *)value_ptr;
       if ( !objid.oix)
         sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
@@ -163,6 +164,8 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_AttrRef:
     {
+      pwr_tAName hiername;
+
       attrref = (pwr_sAttrRef *) value_ptr;
       sts = gdh_AttrrefToName ( attrref, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -200,6 +203,8 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_ClassId:
     {
+      pwr_tOName hiername;
+
       objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -213,6 +218,8 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
     }
     case pwr_eType_TypeId:
     {
+      pwr_tOName hiername;
+
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -274,9 +281,9 @@ int print_data( pwr_sAttrRef *arp, FILE *fp)
   char		*s;
   pwr_tClassId	classid;
   char		*object_p;
-  char		dataname[120];
-  char		objectname[120];
-  char		attributename[120];
+  pwr_tAName   	dataname;
+  pwr_tAName   	objectname;
+  pwr_tAName   	attributename;
   pwr_tObjid	objid;
   int 		object_backup;
   int		array_element;
@@ -421,7 +428,7 @@ pwr_tStatus bck_print( char *filename)
 {
   char fname[256];
   pwr_sAttrRef aref;
-  char objname[120];
+  pwr_tAName objname;
   FILE *fp = 0;
   pwr_sAttrRef dataname;
   int sts;

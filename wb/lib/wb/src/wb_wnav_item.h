@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.h,v 1.10 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_item.h,v 1.11 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,7 +92,7 @@ class WItem {
     pwr_tObjid		objid;
     int			is_root;
     brow_tNode		node;
-    char	 	name[120];
+    pwr_tOName	 	name;
 };
 
 class WItemBaseObject : public WItem {
@@ -128,7 +128,7 @@ class WItemCommand : public WItem {
     WItemCommand( WNav *wnav, char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, char *item_command, 
 	int item_is_root, flow_sAnnotPixmap *pixmap);
-    char		command[200];
+    char		command[400];
     int			open_children( WNav *wnav, double x, double y);
 };
 
@@ -249,7 +249,7 @@ class WItemBaseAttr : public WItem {
     pwr_tTid tid;
     int size;
     int flags;
-    char attr[120];
+    pwr_tOName attr;
     char body[20];
     pwr_tClassId classid;
 

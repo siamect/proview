@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_asup.c,v 1.4 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_asup.c,v 1.5 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@ PostCreate (
 ) {
   pwr_tStatus sts;
   int size;
-  char Name[255];
+  pwr_tAName Name;
   pwr_sAttrRef Attribute;
   
   /*  If father of ASup has an "ActualValue" attribute, then make this ASup
@@ -69,7 +69,7 @@ PostMove (
 ) {
   pwr_tStatus sts;
   int size;
-  char Name[255];
+  pwr_tAName Name;
   pwr_sAttrRef Attribute;
   
   /*  If father of ASup has an "ActualValue" attribute, then make this ASup

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_cmdmode.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_cmdmode.c,v 1.3 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -703,7 +703,7 @@ int rtt_attribute_func (
 )
 {
 	int		sts;
-	char		hier_name[80];
+	pwr_tAName     	hier_name;
 	char		object_par[80];
 	char		*object_element;
 	int		element;

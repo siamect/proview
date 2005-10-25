@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pcm.c,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_pcm.c,v 1.3 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -378,9 +378,9 @@ char *nodename;
 {
   pwr_tInt32		status;
   pwr_sNode	*node;
-  char		objname[512];
-  char		foundname[512];
-  pwr_tObjid		NodeId;
+  pwr_tOName   	objname;
+  pwr_tAName   	foundname;
+  pwr_tObjid   	NodeId;
   int		i;
 
 /*

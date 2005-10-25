@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.7 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.8 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -594,7 +594,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
   (JNIEnv *env, jclass obj, jobject objid_obj, jint nameType)
 {
   int 		sts;
-  char 		name[200];
+  pwr_tOName	name;
   pwr_tObjid 	objid;
   jclass 	cdhrString_id;
   static jmethodID 	cdhrString_cid = NULL;
@@ -1562,7 +1562,6 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
 static void gdh_AttrToString( int type_id, void *value_ptr,
         char *str, int size, int *len, char *format)
 {
-  char                  hiername[120];
   pwr_tObjid            objid;
   pwr_sAttrRef          *attrref;
   int                   sts;
@@ -1669,6 +1668,8 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     }
     case pwr_eType_Objid:
     {
+      pwr_tOName            hiername;
+
       objid = *(pwr_tObjid *)value_ptr;
       if ( !objid.oix)
         sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername),
@@ -1687,6 +1688,8 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     }
     case pwr_eType_AttrRef:
     {
+      pwr_tAName            hiername;
+
       attrref = (pwr_sAttrRef *) value_ptr;
       sts = gdh_AttrrefToName ( attrref, hiername, sizeof(hiername), 
          cdh_mNName);
@@ -1725,6 +1728,8 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     }
     case pwr_eType_ClassId:
     {
+      pwr_tOName            hiername;
+
       objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -1738,6 +1743,8 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
     }
     case pwr_eType_TypeId:
     {
+      pwr_tOName            hiername;
+
       objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
       sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
       if (EVEN(sts))
@@ -1820,10 +1827,10 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getClassAttribute
   (JNIEnv *env, jclass obj, jint classid, jobject objid_obj)
 {
   int		sts;
-  char		classname[80];
-  char		hiername[80];
+  pwr_tOName   	classname;
+  pwr_tOName   	hiername;
   char		parname[80];
-  char		fullname[80];
+  pwr_tOName   	fullname;
   char		*s;
   pwr_sParInfo	parinfo;
   pwr_tObjid   	body;

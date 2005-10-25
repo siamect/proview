@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.18 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.19 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1429,7 +1429,7 @@ static int utl_tableofcont_insert (
 {
 	int		size, sts;
 	utl_t_contlist	*list_ptr;
-	pwr_tOName     	hier_name;
+	pwr_tAName     	hier_name;
 	char		*np;
 	
 	/* Get object name */
@@ -4219,7 +4219,7 @@ static int utl_print_object_par (
 	pwr_tClassId	class;
 	pwr_tAName     	pname;
 	char		*np, *s;
-	pwr_tOName     	hier_name;
+	pwr_tAName     	hier_name;
 	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
@@ -4888,8 +4888,6 @@ static int utl_set_parameter (
 	int		parsize;
 	pwr_tClassId	class;
 	pwr_tOName     	hier_name;
-	char		objdid_name[80];
-	char		*objdid_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
 	char		body[20];	
@@ -5151,6 +5149,8 @@ static 	char		value[200];
 	    }
 	    case pwr_eType_ObjDId:
 	    {
+	      pwr_tOName  	objdid_name;
+
  	      /* Get the object name from ldh */
 	      p_ObjDId = (pwr_tObjid *)object_element;
 	      sts = ldh_ObjidToName( ldhses, *p_ObjDId, ldh_eName_Hierarchy,  
@@ -5180,6 +5180,9 @@ static 	char		value[200];
 	    }
 	    case pwr_eType_AttrRef:
 	    {
+	      pwr_tAName  	objdid_name;
+	      char  		*objdid_name_p;
+
  	      /* Get the object name from ldh */
 	      p_AttrRef = (pwr_sAttrRef *)object_element;
 	      sts = ldh_AttrRefToName( ldhses, p_AttrRef, 
@@ -5822,7 +5825,7 @@ int utl_crossref_hier_class_name (
 	utl_t_list	*crrlist_ptr;
 	char		title[] = 
 "  Object							 Class";
-	pwr_tOName     	crrhier_name;
+	pwr_tAName     	crrhier_name;
 	char		crrclass_name[80];
 	pwr_tClassId	crrclass;
 	char		class_str[UTL_INPUTLIST_MAX + 1][80];
@@ -8582,8 +8585,6 @@ static int utl_list_get_parvalue (
 {
 	int		sts, size, i, j;
 	pwr_tClassId	class;
-	pwr_tOName     	hier_name;
-	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;
 	char		body[20];	
@@ -8792,6 +8793,8 @@ static int utl_list_get_parvalue (
             }
             case pwr_eType_ObjDId:
             {
+	      pwr_tOName     	hier_name;
+
               /* Get the object name from ldh */
               p_ObjDId = (pwr_tObjid *)object_element;
 	      if ( cdh_ObjidIsNull( *p_ObjDId))
@@ -8816,6 +8819,9 @@ static int utl_list_get_parvalue (
             }
             case pwr_eType_AttrRef:
             {
+	      pwr_tAName     	hier_name;
+	      char		*hier_name_p;
+
               /* Get the object name from ldh */
               p_AttrRef = (pwr_sAttrRef *)object_element;
               sts = ldh_AttrRefToName( utlctx->ldhses, 

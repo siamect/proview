@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_block.cpp,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_block.cpp,v 1.3 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -180,7 +180,7 @@ Block::Block( void *b_parent_ctx,
   MrmHierarchy 	s_DRMh;
   MrmType 	dclass;
   char 		title[200];
-  pwr_tOName	aname;
+  pwr_tAName	aname;
 
   static MrmRegisterArg	reglist[] = {
         { "blk_ctx", 0 },

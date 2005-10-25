@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.c,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wccm.c,v 1.6 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -175,7 +175,7 @@ static int wccm_getchild_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	parent_objid;
   pwr_tObjid	child_objid;
   int		size;
@@ -222,7 +222,7 @@ static int wccm_getparent_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	parent_objid;
   pwr_tObjid	child_objid;
   int		size;
@@ -270,7 +270,7 @@ static int wccm_getnextsibling_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   pwr_tObjid	next_objid;
   int		size;
@@ -318,7 +318,7 @@ static int wccm_getrootlist_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   int		size;
   ldh_tSesContext ldhses;
@@ -603,7 +603,7 @@ static int wccm_getnodeobject_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   int		size;
   unsigned long	node_count;
   pwr_tObjid	*nodelist;
@@ -774,7 +774,7 @@ static int wccm_attribute_func (
 {
 	int		sts, size, i, j;
 	pwr_tClassId	class;
-	char		hier_name[80];
+	pwr_tAName     	hier_name;
 	char		*hier_name_p;
 	ldh_sParDef 	*bodydef;
 	int		rows;

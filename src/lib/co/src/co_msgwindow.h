@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_msgwindow.h,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,6 +92,7 @@ class MsgWindow {
     static void map_default() { if ( default_window) default_window->map();}
     static void dset_nodraw() { if ( default_window) default_window->set_nodraw();}
     static void dreset_nodraw() { if ( default_window) default_window->reset_nodraw();}
+    static void get_parent_widget( Widget *w) { *w = default_window->parent_wid;}
 };
 
 #endif

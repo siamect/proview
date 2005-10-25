@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.22 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.23 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -472,8 +472,8 @@ static int	xnav_define_func(	void		*client_data,
 {
   XNav *xnav = (XNav *)client_data;
   int	sts;
-  char	arg1_str[80];
-  char	arg2_str[80];
+  char	arg1_str[200];
+  char	arg2_str[200];
   char	arg3_str[80];
   char	arg4_str[80];
   char 	*arg3_ptr;
@@ -738,8 +738,8 @@ static int	xnav_show_func(	void		*client_data,
   {
     /* Command is "SHOW SYMBOL" */
     char	arg2_str[80];
-    char	message_str[80];
-    char  	value[80];
+    char	message_str[400];
+    char  	value[DCLI_SYM_VALUE_SIZE];
 	 
     if ( ODD( dcli_get_qualifier( "/ALL", 0, 0)))
     {
@@ -1751,8 +1751,8 @@ static int	xnav_show_func(	void		*client_data,
     int node_cnt = 0;
     Item *item;
     gdh_sVolumeInfo info;
-    pwr_tOName name;
-    char vname[120];
+    pwr_tObjName name;
+    pwr_tOName vname;
     pwr_tCmd cmd;
     char descr[120];
     char *descr_p;
@@ -4498,7 +4498,7 @@ int XNav::command( char* input_str)
 {
   char     	command[1000];
   int		sts, sym_sts;
-  char		symbol_value[80];
+  char		symbol_value[DCLI_SYM_VALUE_SIZE];
 
 
   if ( input_str[0] == '@')
@@ -4597,7 +4597,7 @@ static int xnav_getcurrentobject_func(
   char *return_string)
 {
   XNav			*xnav;
-  char			name[80];
+  pwr_tOName   		name;
   int			sts;
   pwr_sAttrRef		attrref;
   int			is_attr;
@@ -4628,7 +4628,7 @@ static int xnav_getchild_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	parent_objid;
   pwr_tObjid	child_objid;
 
@@ -4664,7 +4664,7 @@ static int xnav_getparent_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	parent_objid;
   pwr_tObjid	child_objid;
 
@@ -4700,7 +4700,7 @@ static int xnav_getnextsibling_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   pwr_tObjid	next_objid;
 
@@ -4736,7 +4736,7 @@ static int xnav_getclasslist_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tClassId	classid;
   pwr_tObjid	objid;
 
@@ -4772,7 +4772,7 @@ static int xnav_getrootlist_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
 
   if ( arg_count != 0)
@@ -4801,7 +4801,7 @@ static int xnav_getnodeobject_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
 
   if ( arg_count != 0)
@@ -4830,7 +4830,7 @@ static int xnav_getnextobject_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   pwr_tObjid	next_objid;
 
@@ -4867,7 +4867,7 @@ static int xnav_getobjectclass_func(
   char *return_string)
 {
   int		sts;
-  char		name[80];
+  pwr_tOName   	name;
   pwr_tObjid	objid;
   pwr_tClassId	classid;
 
@@ -5183,7 +5183,6 @@ static int xnav_attribute_func (
 )
 {
 	int		sts;
-	pwr_tAName     	hier_name;
 	char		object_par[80];
 	char		*object_element;
 	int		element;
@@ -5317,6 +5316,8 @@ static int xnav_attribute_func (
           }
           case pwr_eType_Objid:
           {
+	    pwr_tOName hier_name;
+
             /* Get the object name from ldh */
             sts = gdh_ObjidToName( *(pwr_tObjid *)object_element, 
 		hier_name, sizeof( hier_name), cdh_mName_volumeStrict);
@@ -5330,6 +5331,8 @@ static int xnav_attribute_func (
           }
 	  case pwr_eType_AttrRef:
           {
+	    pwr_tAName hier_name;
+
             /* Get the object name from ldh */
             sts = gdh_AttrrefToName( (pwr_sAttrRef *)object_element,
 		hier_name, sizeof(hier_name), cdh_mName_volumeStrict);
@@ -5788,9 +5791,9 @@ int XNav::show_symbols()
 {
   int sts;
   int i;
-  char	key[80];
-  char	value[80];
-  char	text[160];
+  char	key[DCLI_SYM_KEY_SIZE];
+  char	value[DCLI_SYM_VALUE_SIZE];
+  char	text[400];
 
   i = 0;
   while( 1)
@@ -6184,7 +6187,7 @@ int XNav::search_root( char *search_str, pwr_tObjid *found_objid, int next)
 int XNav::search_object( pwr_tObjid objid, char *search_str, 
 	pwr_tObjid *found_objid, int next)
 {
-  char	name[80];
+  pwr_tObjName	name;
   int	sts, search_sts;
   pwr_tObjid child;
   pwr_tClassId classid;

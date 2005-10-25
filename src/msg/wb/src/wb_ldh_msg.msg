@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_ldh_msg.msg,v 1.13 2005-09-20 13:28:26 claes Exp $
+!  Proview   $Id: wb_ldh_msg.msg,v 1.14 2005-10-25 15:28:11 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -127,8 +127,7 @@ msgget		<msgget failed>						/error
 msgsnd		<msgsnd failed>						/error
 msgrcv		<msgrcv failed>						/error
 newfile		<New file>						/info
-
-
+confirm		<Confirm required>					/info
 
 
 

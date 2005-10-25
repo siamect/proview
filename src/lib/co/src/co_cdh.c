@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.16 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.17 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2525,7 +2525,7 @@ int cdh_StrncpyCutOff( char *t, const char *s, size_t n, int cutleft)
   }  
   
   if ( cutleft) {
-    strcpy( t, s + strlen(s) - n - 1);
+    strcpy( t, s + strlen(s) - n + 1);
     if ( n > 5) {
       t[0] = '.';
       t[1] = '.';

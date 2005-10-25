@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.17 2005-09-20 13:21:45 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.18 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -727,7 +727,7 @@ int main( int argc, char *argv[])
     pwr_wtt_open_volume( 0, wb_eType_ClassEditor, filename, wow_eFileSelType_WblClass);
   }
   else if ( sw_projectlist) {
-    pwr_wtt_open_volume( 0, wb_eType_Volume, "ProjectList", wow_eFileSelType_);
+    pwr_wtt_open_volume( 0, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   }
   else if ( nav_display) {
     if ( login_prv.priv & pwr_mPrv_DevRead ) {

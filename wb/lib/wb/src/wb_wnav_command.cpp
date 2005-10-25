@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.33 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.34 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -529,8 +529,8 @@ static int	wnav_define_func(	void		*client_data,
 {
   WNav *wnav = (WNav *)client_data;
   int	sts;
-  char	arg1_str[80];
-  char	arg2_str[80];
+  char	arg1_str[200];
+  char	arg2_str[200];
   char	arg3_str[80];
   char	arg4_str[80];
   char 	*arg3_ptr;
@@ -1516,8 +1516,8 @@ static int	wnav_show_func(	void		*client_data,
   {
     /* Command is "SHOW SYMBOL" */
     char	arg2_str[80];
-    char	message_str[80];
-    char  	value[80];
+    char	message_str[400];
+    char  	value[DCLI_SYM_VALUE_SIZE];
 	 
     if ( ODD( dcli_get_qualifier( "/ALL", 0, 0)))
     {
@@ -2903,7 +2903,7 @@ static int	wnav_sort_func(	void		*client_data,
 {
   WNav *wnav = (WNav *)client_data;
 
-  char		parentstr[80];
+  pwr_tOName   	parentstr;
   int		sts;
   int		sorttype;
 
@@ -4281,7 +4281,7 @@ int WNav::command( char* input_str)
 {
   pwr_tCmd     	command;
   int		sts, sym_sts;
-  char		symbol_value[80];
+  char		symbol_value[DCLI_SYM_VALUE_SIZE];
   pwr_tFileName	filename;
 
   dcli_toupper( input_str, input_str);
@@ -4383,7 +4383,7 @@ static int wnav_getcurrentobject_func(
   char *return_string)
 {
   WNav			*wnav;
-  char			name[80];
+  pwr_tOName   		name;
   int			sts;
   pwr_sAttrRef		*sel_list;
   int                   *sel_is_attr;
@@ -5015,9 +5015,9 @@ int WNav::show_symbols()
 {
   int sts;
   int i;
-  char	key[80];
-  char	value[80];
-  char	text[160];
+  char	key[DCLI_SYM_KEY_SIZE];
+  char	value[DCLI_SYM_VALUE_SIZE];
+  char	text[500];
 
   if ( window_type == wnav_eWindowType_No)
   {

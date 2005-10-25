@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck.c,v 1.9 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_bck.c,v 1.10 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -926,6 +926,8 @@ bck_list_insert (
       gdh_GetObjectClass(attrref.Objid, &blep->datahead.class);
       UNLOCK;
       blep->datahead.valid = TRUE;
+
+      /* Assume that name for dynamic object is less than 80 char ! */
       gdh_AttrrefToName(&attrref, blep->datahead.dataname, 
 			sizeof(blep->datahead.dataname), cdh_mNName);
       blep->datahead.attrref = attrref;
@@ -1234,7 +1236,7 @@ pwr_tUInt32 bck_init ()
   pwr_tUInt32 c;
   pwr_tObjid objid;
   pwr_tBoolean local;
-  char name [256];
+  pwr_tOName name;
   pwr_tDlid dlid;
   pthread_t thr_file;
   pthread_t thr_coll [2];

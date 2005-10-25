@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_trans.c,v 1.6 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: rs_nmps_trans.c,v 1.7 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -177,7 +177,7 @@ typedef struct {
 	gdh_tDlid		cell_subid;
 	cnv_t_conv_table	*conv_table;
 	int			conv_table_count;
-	char			parent_name[80];
+	pwr_tOName     		parent_name;
 	int			wait_for_accept;
 	char			display_object_key[40];
 	int			cell_full_msg_sent;
@@ -208,7 +208,7 @@ typedef struct {
 	gdh_tDlid		cell_subid;
 	cnv_t_conv_table	*conv_table;
 	int			conv_table_count;
-	char			parent_name[80];
+	pwr_tOName     		parent_name;
 	int			wait_for_accept;
 	char			display_object_key[40];
 	int			cell_full_msg_sent;
@@ -836,7 +836,7 @@ static int	nmpstrans_send_datasend( trans_ctx	transctx,
 	char			key[40];
 	pwr_tObjid		*objid_ptr;
 	char			*s;
-	char			name[80];
+	pwr_tOName     		name;
 
 	if ( snd_ptr->send_remtrans_type == NMPS_TRANSTYPE_REM)
 	{

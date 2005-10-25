@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini_alias.c,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_ini_alias.c,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -557,12 +557,12 @@ static int ini_set_attribute (
 
 	int		sts;
 	pwr_tOName     	hiername;
-	char		parname[80];
+	pwr_tOName     	parname;
 	pwr_tClassId    class;
 	pwr_tObjid	classObject;
 	pwr_sParInfo	parinfo;
 	pwr_tOName     	objname;
-	char		name_array[2][80];
+	pwr_tOName     	name_array[2];
 	int		nr;
 	pwr_tObjid	objid;
 	pwr_tObjid	value_objid;

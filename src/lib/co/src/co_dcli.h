@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.9 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,9 @@ extern "C" {
 
 #define DCLI_CMD_SIZE 400
 #define DCLI_QUAL_SIZE 400
+#define DCLI_SYM_KEY_SIZE 200
+#define DCLI_SYM_VALUE_SIZE 200
+
 
 typedef	struct	{
 	char	command[20];

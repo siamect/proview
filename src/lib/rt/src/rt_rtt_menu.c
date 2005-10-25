@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.9 2005-09-06 14:17:55 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.10 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -455,7 +455,7 @@ static int	rtt_rttconfig()
 	pwr_tObjid	objid;
 	pwr_tObjid	node;
 	pwr_tOName     	hiername;
-	char		parname[80];
+	pwr_tAName     	parname;
 	int		found;
 	int		sts;
 	char		*s;
@@ -1802,7 +1802,7 @@ int	rtt_menu_create_ctx(
 	(*ctx)->parent_ctx = (void *) parent_ctx;
 	(*ctx)->menu = menu;
 	(*ctx)->menutype = menutype;
-	strncpy( (*ctx)->title, title, 80); 
+	cdh_StrncpyCutOff( (*ctx)->title, title, 80, 1); 
 
 	if ( rtt_collectionmenulist && 
 	     (rtt_t_menu_upd *) ((*ctx)->menu) == rtt_collectionmenulist)
@@ -5119,7 +5119,6 @@ static int	rtt_print_value(
 			int		y,
 			unsigned long	priv)
 {
-	pwr_tOName     		hiername;
 	pwr_tObjid		objid;
 	pwr_sAttrRef		*attrref;
 	int			sts;
@@ -5291,6 +5290,8 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_ObjDId:
 	    {
+	      pwr_tOName     		hiername;
+
 	      objid = *(pwr_tObjid *)value_ptr;
 	      if ( !objid.oix)
 	        sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
@@ -5305,6 +5306,8 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_AttrRef:
 	    {
+	      pwr_tAName     		hiername;
+
 	      attrref = (pwr_sAttrRef *) value_ptr;
 	      sts = gdh_AttrrefToName ( attrref, hiername, sizeof(hiername), cdh_mNName);
 	      if ( EVEN(sts)) break;
@@ -5338,6 +5341,8 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_ClassId:
 	    {
+	      pwr_tOName     		hiername;
+
 	      objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	      if (EVEN(sts)) break;
@@ -5347,6 +5352,8 @@ static int	rtt_print_value(
 	    }
 	    case pwr_eType_TypeId:
 	    {
+	      pwr_tOName     		hiername;
+
 	      objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	      if (EVEN(sts)) break;
@@ -5515,7 +5522,6 @@ static int	rtt_edit_print_value(
 			rtt_t_menu_upd	*menu_ptr,
 			unsigned long	init)
 {
-	pwr_tOName     	hiername;
 	pwr_tObjid	objid;
 	int		sts;
 	char		*s;
@@ -5801,6 +5807,8 @@ static int	rtt_edit_print_value(
 	    }
 	    case pwr_eType_ObjDId:
 	    {
+	      pwr_tOName     	hiername;
+
 	      objid = *(pwr_tObjid *)menu_ptr->value_ptr;
 	      if ( !objid.oix)
 	        sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
@@ -5836,6 +5844,8 @@ static int	rtt_edit_print_value(
 	    }
 	    case pwr_eType_AttrRef:
 	    {
+	      pwr_tAName     	hiername;
+
 	      attrref = (pwr_sAttrRef *) menu_ptr->value_ptr;
 	      sts = gdh_AttrrefToName ( attrref, hiername, sizeof(hiername), cdh_mNName);
 	      if ( EVEN(sts)) break;
@@ -5893,6 +5903,8 @@ static int	rtt_edit_print_value(
 	    }
 	    case pwr_eType_ClassId:
 	    {
+	      pwr_tOName     	hiername;
+
 	      objid = cdh_ClassIdToObjid( 
 			*((pwr_tClassId *) menu_ptr->value_ptr));
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
@@ -5918,6 +5930,8 @@ static int	rtt_edit_print_value(
 	    }
 	    case pwr_eType_TypeId:
 	    {
+	      pwr_tOName     	hiername;
+
 	      objid = cdh_TypeIdToObjid( *((pwr_tTypeId *) menu_ptr->value_ptr));
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	      if (EVEN(sts))
@@ -6456,7 +6470,7 @@ int	rtt_object_parameters(
 	char		parnameindex[80];
 	char		classname[80];
 	char		*s;
-	char		title[80];
+	char		title[250];
 	rtt_t_menu_upd	*menulist = 0;
 	int		i, j;
 	pwr_tClassId	class;
@@ -6893,7 +6907,7 @@ int	rtt_hierarchy_child(
 	char		description[80];
 	pwr_tAName     	objname;
 	char		*s;
-	char		title[80];
+	char     	title[250];
 	rtt_t_menu	*menulist = 0;
 	int		i, j;
 	pwr_tObjid	childobjid;
@@ -7219,7 +7233,7 @@ int	rtt_debug_child(
 			void		*arg4)
 {
 	int		sts;
-	char		title[80];
+	char		title[250];
 	rtt_t_menu_upd	*menulist = 0;
 	int		index = 0;
 	pwr_tObjid	objid;
@@ -8733,7 +8747,7 @@ static int	rtt_menu_new_update_add(
 {
 	int		sts;
 	pwr_tOName     	hiername;
-	char		parname[80];
+	pwr_tOName     	parname;
 	pwr_tClassId	class;
 	unsigned long	elements;
 	char 		*parameter_ptr;
@@ -8742,7 +8756,7 @@ static int	rtt_menu_new_update_add(
 	parinfo;
 	pwr_tOName     	objname;
 	char		*s;
-	char		name_array[2][80];
+	pwr_tOName     	name_array[2];
 	int		nr;
 	pwr_tObjid	objid;
 

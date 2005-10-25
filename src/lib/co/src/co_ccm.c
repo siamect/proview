@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.c,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_ccm.c,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,8 +45,7 @@
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
 
-#define K_LINE_SIZE	160
-#define K_STRING_SIZE	80
+#define K_LINE_SIZE	400
 
 #define K_ACTION_NO	0
 #define K_ACTION_DOWN	1

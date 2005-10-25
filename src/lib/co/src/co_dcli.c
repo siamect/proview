@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.c,v 1.4 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: co_dcli.c,v 1.5 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,8 +63,8 @@
 #define DCLI_SUBST_EQUAL 4
 
 typedef	struct	{
-	char	key[80];
-	char	value[80];
+	char	key[DCLI_SYM_KEY_SIZE];
+	char	value[DCLI_SYM_VALUE_SIZE];
 	} dcli_t_symboltable;
 
 #define	DCLI_SYMBOLTABLE_SIZE 500
@@ -774,7 +774,7 @@ int	dcli_get_symbol_cmd( char *key, char *value)
 int	dcli_define_symbol( char *key, char *arg1, char *arg2, char *arg3)
 {
 	int	i;
-	char	value[80];
+	char	value[DCLI_SYM_VALUE_SIZE];
 	int	int_value;
 	float	float_value;
 	int	int_value1;
@@ -846,7 +846,7 @@ int	dcli_define_symbol( char *key, char *arg1, char *arg2, char *arg3)
 	else if ( arg2 == 0)
 	{
 	  /* arg1 is the value */
-	  strcpy( value, arg1);
+	  cdh_StrncpyCutOff( value, arg1, sizeof(value), 0);
 	}
 	else
 	{

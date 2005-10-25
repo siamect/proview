@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_crr.c,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_crr.c,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -232,9 +232,9 @@ int	rtt_crossref_channel(
 			void		*arg3,
 			void		*arg4)
 {
-	char 		hiername[120];
+	pwr_tAName     	hiername;
 	int		sts;
-	pwr_tObjid	signal_objid;
+	pwr_sAttrRef	signal_aref;
 
 	sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
 	if ( EVEN(sts)) 
@@ -243,11 +243,11 @@ int	rtt_crossref_channel(
 	  return RTT__NOPICTURE;
 	}
 	strcat( hiername, ".SigChanCon");
-	sts = gdh_GetObjectInfo ( hiername, (pwr_tAddress) &signal_objid,
-		sizeof(signal_objid));
+	sts = gdh_GetObjectInfo ( hiername, (pwr_tAddress) &signal_aref,
+		sizeof(signal_aref));
 	if ( EVEN(sts)) return sts;
 
-	sts = gdh_ObjidToName ( signal_objid, hiername, sizeof(hiername), cdh_mNName);
+	sts = gdh_AttrrefToName( &signal_aref, hiername, sizeof(hiername), cdh_mNName);
 	if ( EVEN(sts)) 
 	{
 	  rtt_message('E', "Cross reference not defined");
@@ -277,13 +277,13 @@ int	rtt_crr_signal(
 {
 	pwr_tFileName	default_filename;
 	FILE		*file;
-	char		line[200];
+	char		line[500];
 	int		hierarchy_spaces;
-	char		hierarchy[80];
+	pwr_tOName     	hierarchy;
 	int		object_spaces;
-	char		object[80];
+	pwr_tOName     	object;
 	pwr_tOName     	objname;
-	char		show_objname[80];
+	pwr_tOName     	show_objname;
 	int		spaces;
 	int		first;
 	int		sts;	
@@ -681,12 +681,12 @@ int	rtt_crr_code(
 {
 	pwr_tFileName	default_filename;
 	FILE		*file;
-	char		line[200];
-	char		tst_line[200];
+	char		line[500];
+	char		tst_line[500];
 	int		hierarchy_spaces;
-	char		hierarchy[80];
+	pwr_tOName     	hierarchy;
 	int		object_spaces;
-	char		object[80];
+	pwr_tAName     	object;
 	pwr_tOName	objname;
 	int		spaces;
 	int		first;
@@ -920,16 +920,16 @@ int	rtt_show_signals(
 {
 	pwr_tFileName	default_filename;
 	FILE		*file;
-	char		line[200];
+	char		line[500];
 	int		window_spaces;
-	char		window[80];
-	char		object[80];
+	pwr_tOName     	window;
+	pwr_tOName     	object;
 	pwr_tOName     	objname;
 	int		spaces = 30;
 	int		sts;	
 	char		*s;
 	int		wildcard;
-	char		title[120];
+	char		title[250];
 	char		classname[32];
 	int		j;
 	int		index = 0;

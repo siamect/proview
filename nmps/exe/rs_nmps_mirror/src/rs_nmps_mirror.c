@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_mirror.c,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: rs_nmps_mirror.c,v 1.3 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,7 +141,7 @@ typedef struct nmpsmir_data_tag{
 	unsigned char			collect;
 	pwr_tObjid			collect_cell;
 	float				release_time;
-	char				orig_data_name[80];
+	pwr_tOName     			orig_data_name;
 	int				error_logged;
 	struct nmpsmir_data_tag		*next_ptr;
 	struct nmpsmir_data_tag		*prev_ptr;
@@ -769,8 +769,8 @@ static pwr_tStatus	nmpsmir_data_db_create(
 	nmpsmir_t_data_list	*next_ptr;
 	pwr_tBoolean		local;
 	pwr_tStatus		sts;
-	char			name[132];
-	char			new_name[132];
+	pwr_tOName     		name;
+	pwr_tOName     		new_name;
 	pwr_sAttrRef		attrref;
 	char			*s;
 	pwr_tStatus		return_sts;
@@ -985,7 +985,7 @@ static pwr_tStatus	nmpsmir_data_db_find_orig_name(
 			pwr_tObjid		mircell_objid,
 			nmpsmir_t_data_list	**datalist_ptr)
 {
-	char			name[80];
+	pwr_tOName     		name;
 	nmpsmir_t_data_list	*data_ptr;
 	int			found;
 	int			sts;
@@ -1077,7 +1077,7 @@ static pwr_tStatus	nmpsmir_origcell_init(
 {
 	pwr_sAttrRef		attrref;
 	pwr_tStatus		sts;
-	char			name[132];
+	pwr_tAName     		name;
 
 	sts = gdh_GetObjectLocation( objid , orig_local);
 	if ( EVEN(sts)) 
@@ -1623,7 +1623,7 @@ static pwr_tStatus	nmpsmir_cellmir_handler( mir_ctx	mirctx)
 	char			orig_cellbuf[NMPS_CELLBUFF_SIZE];
 	int			change_detected;
 	pwr_tBoolean		val;
-	char			name[80];
+	pwr_tOName     		name;
 	
 	/* Loop through the CellMir objects */
 	cellmir_ptr = mirctx->cellmirlist;

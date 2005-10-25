@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.23 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.24 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,7 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
 {
   int sts;
   pwr_tClassId classid;
-  pwr_tOName objname;
+  pwr_tAName objname;
 
   sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
@@ -754,6 +754,7 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
   unsigned int 	a_offset;
   unsigned int 	a_dim;
   pwr_tTid	a_tid;
+  pwr_tAName	name;
 
   sts = gdh_AttrrefToName ( arp, name, sizeof(name), cdh_mNName);
   if ( EVEN(sts)) return sts;
@@ -2671,7 +2672,7 @@ int XNav::display_object( pwr_sAttrRef *arp, int open)
 	brow_CenterObject( brow->ctx, item->node, 0.80);
     }
     else {
-      char name[240];
+      pwr_tAName name;
       cdh_sParseName parsename;
       cdh_sParseName *pn;
       Item *aitem;
@@ -2925,8 +2926,8 @@ int	XNavGbl::load_config( void *xnav)
   pwr_tClassId	classid;
   pwr_tObjid	objid;
   pwr_tObjid	node;
-  char		config_name[80];
-  char		parname[80];
+  pwr_tOName   	config_name;
+  pwr_tAName   	parname;
   int		found;
   int		sts;
   char		*s;

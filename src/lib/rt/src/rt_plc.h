@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc.h,v 1.6 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc.h,v 1.7 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,7 +112,7 @@ typedef struct {
 
 struct plc_sThread {
   thread_s		tid;
-  char			name[40];
+  pwr_tOName   		name;
 #if defined OS_LYNX || defined OS_LINUX
   sem_t			ScanSem;
   pwr_tUInt32		ScanMultiple;

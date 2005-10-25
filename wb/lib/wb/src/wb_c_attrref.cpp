@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_attrref.cpp,v 1.3 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_attrref.cpp,v 1.4 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,7 +129,7 @@ static pwr_tStatus Connect (
 		mb.MethodArguments[0], (char *) &ip->Selected[0], sizeof(ip->Selected[0]));
   else {
     char *name_p;
-    char name[200];
+    pwr_tAName name;
     int size;
     pwr_tCid cid;
 
@@ -162,10 +162,10 @@ static pwr_tStatus Connect (
     }
   }
   if ( ip->message_cb) {
-    char msg[200];
+    char msg[500];
     
     if ( ODD(sts)) {
-      char name[120];
+      pwr_tAName name;
       char *name_p;
       int len;
 
@@ -278,7 +278,7 @@ static pwr_tStatus IoConnect (
   pwr_sAttrRef 		aref = ip->Selected[0];
   pwr_sAttrRef	    	PattrRef;
   char			*name_p;
-  char			name[120];
+  pwr_tAName   		name;
   int			size;
 
   sts = ldh_ReadObjectBody(ip->PointedSession,
@@ -343,10 +343,10 @@ static pwr_tStatus IoConnect (
   }
 
   if ( ip->message_cb) {
-    char msg[200];
+    char msg[500];
     
     if ( ODD(sts)) {
-      char name[120];
+      pwr_tAName name;
       char *name_p;
       int len;
 

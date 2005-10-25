@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: dtt_rttsys.c,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: dtt_rttsys.c,v 1.5 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1616,9 +1616,9 @@ int RTTSYS_OBJECT_PID( 	menu_ctx	ctx,
   static gdh_tSubid	mode_subid;
   static int		mode_found;
   pwr_tObjid 		objid;
-  char			namebuf[80];
-  char			modename[80];
-  char			parametername[80];
+  pwr_tOName   		namebuf;
+  pwr_tOName   		modename;
+  pwr_tAName   		parametername;
   pwr_tObjid		mode_objid;
   int			value;
 
@@ -2107,8 +2107,8 @@ int RTTSYS_OBJECT_AV( 	menu_ctx	ctx,
   static gdh_tSubid	av_subid;
   static gdh_tSubid	av_actval_subid;
   pwr_tObjid 		objid;
-  char			namebuf[80];
-  char			parameter_name[80];
+  pwr_tOName   		namebuf;
+  pwr_tAName   		parameter_name;
   pwr_tFloat32		*actval_ptr;
 	  
   /**********************************************************
@@ -2445,7 +2445,7 @@ int RTTSYS_GRAFCET( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menulist;
   int			i, j;
   int			found;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   rttsys_t_plcpgm_list	*plclist_ptr;
   rttsys_t_step_list *initsteplist_ptr;
   pwr_tObjid 		initstep_objid;
@@ -2729,7 +2729,7 @@ static int rttsys_steplist_add(	pwr_tObjid		step_objid,
 {
 	rttsys_t_step_list	*steplist_ptr;
 	rttsys_t_step_list	*new_steplist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 
@@ -2781,7 +2781,7 @@ static int rttsys_orderlist_add( pwr_tObjid		order_objid,
 {
 	rttsys_t_step_list	*orderlist_ptr;
 	rttsys_t_step_list	*new_orderlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 
@@ -3375,7 +3375,7 @@ static int rttsys_objectlist_add( pwr_tObjid		object_objid,
 {
 	rttsys_t_step_list	*objectlist_ptr;
 	rttsys_t_step_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 
@@ -3723,7 +3723,7 @@ static int rttsys_pid_object_start( 	menu_ctx	ctx,
 				void		*arg3,
 				void		*arg4)
 {
-	char	objectname[80];
+	pwr_tOName objectname;
 	int	sts;
 	
 	sts = gdh_ObjidToName ( objid, objectname, sizeof(objectname), cdh_mNName);
@@ -3822,7 +3822,7 @@ static int rttsys_objectlist_modname_plc( rttsys_t_step_list	*objectlist,
   char			*s;
   pwr_tObjid		plc_objid;
   int			offs;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   int			sts;
 
   objectlist_ptr = objectlist;
@@ -5362,7 +5362,7 @@ int	rttsys_start_grafcet_monitor(
 			pwr_tObjid	plc_objid)
 {
   int	sts, return_sts;
-  char	plc_name[80];
+  pwr_tOName plc_name;
   int	plc_alloc;
   rttsys_t_plcpgm_list	*plclist_ptr;
   rttsys_t_step_list *initsteplist_ptr;
@@ -5573,7 +5573,7 @@ static int	rttsys_cell_object_start( 	menu_ctx	ctx,
 				void		*arg3,
 				void		*arg4)
 {
-	char	objectname[80];
+	pwr_tOName objectname;
 	int	sts;
 	
 	sts = gdh_ObjidToName ( objid, objectname, sizeof(objectname), cdh_mNName);
@@ -5598,7 +5598,7 @@ int RTTSYS_OBJECT_CELL( menu_ctx	ctx,
   static pwr_tObjid 	cell_objid;
   static pwr_tClassId 	cell_class;
   static pwr_tObjid 	cell_class_objid;
-  char			cell_name[80];
+  pwr_tOName   		cell_name;
   int			i, j, k, l;
   static int		page;	
 
@@ -5939,7 +5939,7 @@ static int rttsys_cellist_add( 	pwr_tObjid		object_objid,
 {
 	rttsys_t_cell_list	*objectlist_ptr;
 	rttsys_t_cell_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 
@@ -6425,7 +6425,7 @@ int	rttsys_show_signal_from_chan(
 			void		*arg3,
 			void		*arg4)
 {
-	char 		hiername[120];
+	pwr_tOName     	hiername;
 	int		sts;
 	pwr_tObjid	signal_objid;
 
@@ -6458,8 +6458,8 @@ static int rttsys_chan_start( menu_ctx	ctx,
 				void		*arg3,
 				void		*arg4)
 {
-	char	objectname[80];
-	int	sts;
+	pwr_tOName 	objectname;
+	int		sts;
 	pwr_tClassId	class;
 	pwr_tObjid	chan_objid;
 	
@@ -6667,11 +6667,11 @@ int RTTSYS_CHANDI( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   pwr_tObjid 		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tBoolean	 	local;
   pwr_tObjid		chan_objid;
   int			chan_alloc;
-  char			card_name[80];
+  pwr_tOName   		card_name;
   rttsys_t_chan_list	*chanlist_ptr;
   int			i, j;
 
@@ -7260,11 +7260,11 @@ int RTTSYS_CHANDO( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   pwr_tObjid 		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tBoolean	 	local;
   pwr_tObjid		chan_objid;
   int			chan_alloc;
-  char			card_name[80];
+  pwr_tOName   		card_name;
   rttsys_t_chan_list	*chanlist_ptr;
   int			i, j;
 
@@ -7828,11 +7828,11 @@ int RTTSYS_CHANAI( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   pwr_tObjid 		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tBoolean	 	local;
   pwr_tObjid		chan_objid;
   int			chan_alloc;
-  char			card_name[80];
+  pwr_tOName   		card_name;
   rttsys_t_chan_list	*chanlist_ptr;
   int			i, j;
 
@@ -8216,7 +8216,7 @@ static int rttsys_chanao_change_testmode( menu_ctx	ctx,
 {
 	int		sts;
 	pwr_tBoolean 	test_on;
-	char		name[120];
+	pwr_tOName     	name;
 
 	sts = gdh_ObjidToName ( objid, name, sizeof(name),
 			cdh_mName_volumeStrict);
@@ -8394,11 +8394,11 @@ int RTTSYS_CHANAO( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   pwr_tObjid 		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tBoolean	 	local;
   pwr_tObjid		chan_objid;
   int			chan_alloc;
-  char			card_name[80];
+  pwr_tOName   		card_name;
   rttsys_t_chan_list	*chanlist_ptr;
   int			i, j;
 
@@ -8984,11 +8984,11 @@ int RTTSYS_CHANCO( 	menu_ctx	ctx,
   rtt_t_menu_upd	*menu_ptr;
   rtt_t_menu_upd	*menulist;
   pwr_tObjid 		objid;
-  char			namebuf[80];
+  pwr_tOName   		namebuf;
   pwr_tBoolean	 	local;
   pwr_tObjid		chan_objid;
   int			chan_alloc;
-  char			card_name[80];
+  pwr_tOName   		card_name;
   rttsys_t_chan_list	*chanlist_ptr;
   int			i, j;
 
@@ -9342,7 +9342,7 @@ static int rttsys_devicelist_add( pwr_tObjid		device_objid,
 {
 	rttsys_t_device_list	*devicelist_ptr;
 	rttsys_t_device_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	pwr_tClassId		class;
@@ -9703,7 +9703,7 @@ static int rttsys_remnodelist_add( pwr_tObjid		remnode_objid,
 {
 	rttsys_t_remnode_list	*remnodelist_ptr;
 	rttsys_t_remnode_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			local;
@@ -10301,8 +10301,8 @@ static int rttsys_remtrans_start( menu_ctx	ctx,
 				void		*arg3,
 				void		*arg4)
 {
-	char	objectname[80];
-	int	sts;
+	pwr_tOName	objectname;
+	int		sts;
 	pwr_tObjid	chan_objid;
 	
 	sts = gdh_ObjidToName ( objid, objectname, sizeof(objectname), cdh_mNName);
@@ -10328,7 +10328,7 @@ static int rttsys_remtranslist_add( pwr_tObjid		remtrans_objid,
 {
 	rttsys_t_remtrans_list	*remtranslist_ptr;
 	rttsys_t_remtrans_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			local;
@@ -10400,8 +10400,8 @@ static int rttsys_remtrans_buffer( menu_ctx	ctx,
 {
 	int	sts;
 	pwr_tObjid	buff_objid;
-	char		remtrans_name[120];
-	char		namebuf[140];
+	pwr_tOName     	remtrans_name;
+	pwr_tOName     	namebuf;
 	char		structname[40];
 	char		structfile[80];
 	
@@ -10749,7 +10749,7 @@ static int rttsys_runningtimelist_add( pwr_tObjid		runningtime_objid,
 {
 	rttsys_t_runningtime_list	*runningtimelist_ptr;
 	rttsys_t_runningtime_list	*new_objectlist;
-	char			namebuf[120];
+	pwr_tOName     		namebuf;
 	int			sts;
 	pwr_sAttrRef		attrref;
 	int			local;

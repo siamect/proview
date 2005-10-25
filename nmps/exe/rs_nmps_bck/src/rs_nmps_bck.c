@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_bck.c,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: rs_nmps_bck.c,v 1.4 2005-10-25 15:28:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -486,7 +486,7 @@ static pwr_tStatus	nmpsbck_data_db_create(
 	pwr_sAttrRef		attrref;
 	pwr_tClassId		class;
 	unsigned int		size;
-	char			data_name[120];
+	pwr_tOName     		data_name;
 	char			*data_ptr;
 	gdh_tDlid		data_subid;
 

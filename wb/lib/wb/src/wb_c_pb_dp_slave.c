@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.c,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.c,v 1.4 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,11 +37,11 @@ static pwr_tStatus Configure (
   ldh_sMenuCall *ip
 )
 {
-  char name[120];
+  pwr_tOName name;
   char *gsd;
   int size;
   int sts;
-  char cmd[200];
+  pwr_tCmd cmd;
 
   sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
 			ldh_eName_Hierarchy, name, sizeof(name), &size);

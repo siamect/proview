@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.c,v 1.14 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_gobj.c,v 1.15 2005-10-25 15:28:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -998,7 +998,7 @@ unsigned long	index;
 	int		is_attr;
 	char		*aname;
 	int		size;
-	char		msg[200];
+	char		msg[450];
 	pwr_tOid	woid;
 	pwr_tCid	cid;
 
@@ -1208,10 +1208,10 @@ unsigned long	index;
 	ldh_tSesContext	ldhses;
 	int		sts;
 	vldh_t_plc	plc;
-	unsigned long		node_count;
-	vldh_t_node		*nodelist;
-	vldh_t_node		object;
-	char		name[200];
+	unsigned long  	node_count;
+	vldh_t_node    	*nodelist;
+	vldh_t_node    	object;
+	pwr_tAName     	name;
 	int		size;
 	pwr_sAttrRef	attrref;
 	int		is_attr;
@@ -2775,7 +2775,7 @@ unsigned long	index;
 	int		is_attr;
 	char		*aname;
 	int		size;
-	char		msg[200];
+	char		msg[450];
 	pwr_tOid	woid;
 	pwr_tCid	cid;
 
