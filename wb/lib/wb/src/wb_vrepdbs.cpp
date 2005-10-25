@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.45 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.46 2005-10-25 15:27:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -383,8 +383,8 @@ wb_orep *wb_vrepdbs::parent(pwr_tStatus *sts, const wb_orep *o)
   *sts = LDH__SUCCESS;
 
   dbs_sObject *op = dbs_Parent(sts, dbsenv(), ((wb_orepdbs *)o)->o());
-  if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+  if (op == 0 || op->oid.oix == 0) {
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
