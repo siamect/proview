@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.32 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.33 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -326,7 +326,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"LOGIN",
 			&wnav_login_func,
-			{ "dcli_arg1", "dcli_arg2", ""}
+			{ "dcli_arg1", "dcli_arg2", "/ADMINISTRATOR", ""}
 		},
 		{
 			"TWO",
@@ -774,14 +774,53 @@ static int	wnav_login_func(	void		*client_data,
   char	systemgroup[80];
   unsigned int	priv;
   char	msg[80];
+  int 	administrator;
 	
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
-  {
+  administrator = ODD(dcli_get_qualifier( "/ADMINISTRATOR", 0, 0));
+
+  if ( administrator) {
+    sts = user_CheckSystemGroup( "administrator");
+    if ( EVEN(sts)) {
+      // Username and password are not required
+      strcpy( wnav->user, "Administrator");
+      wnav->priv = pwr_mPrv_Administrator;
+      strcpy( login_prv.username, "Administrator");
+      login_prv.priv = (pwr_mPrv) wnav->priv;
+      wnav->message('I', "Administrator logged in");
+      return WNAV__SUCCESS;
+    }
+    else {
+      // Check user and password in systemgroup "aministrator"
+      if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str)))) {
+	wnav->message('E',"Username and password required");
+	return WNAV__SYNTAX;
+      }
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+	wnav->message('E',"Password required");
+	return WNAV__SYNTAX;
+      }
+      cdh_ToLower( arg1_str, arg1_str);
+      cdh_ToLower( arg2_str, arg2_str);
+      sts = user_CheckUser( "administrator", arg1_str, arg2_str, &priv);
+      if ( EVEN(sts))
+	wnav->message('E',"Login failure");
+      else {
+	strcpy( wnav->user, arg1_str);
+	wnav->priv = pwr_mPrv_Administrator;
+	strcpy( login_prv.username, arg1_str);
+	login_prv.priv = (pwr_mPrv) wnav->priv;
+	sprintf( msg, "User %s logged in", arg1_str);
+	wnav->message('I', msg);
+      }
+      return WNAV__SUCCESS;
+    }
+  }
+
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str)))) {
     wnav->message('E',"Syntax error");
     return WNAV__SYNTAX;
   }
-  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str))))
-  {
+  if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
     wnav->message('E',"Syntax error");
     return WNAV__SYNTAX;
   }

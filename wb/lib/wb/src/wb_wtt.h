@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.13 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.14 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -267,6 +267,7 @@ class Wtt {
     void pop();
     int find( pwr_tOid oid);
     int find_plc( pwr_tOid oid);
+    char *script_filename();
 
     ~Wtt();
 };

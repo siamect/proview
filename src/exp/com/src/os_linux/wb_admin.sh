@@ -1,6 +1,6 @@
-#! /bin/bash
+#!/bin/bash
 #
-# Proview   $Id: wb_admin.sh,v 1.4 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: wb_admin.sh,v 1.5 2005-10-25 12:05:37 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -42,7 +42,7 @@ echo "args: $1 $2 $3 $4 $5"
     source pwrp_env.sh setdb $database
   fi
   
-  wb "$username" "$password" $volume &
+  wb -q "$username" "$password" $volume &
 }
 
 wb_adm_create_func ()

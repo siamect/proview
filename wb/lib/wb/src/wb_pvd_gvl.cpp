@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.cpp,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.cpp,v 1.2 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,8 +57,8 @@ void wb_pvd_gvl::save( pwr_tStatus *sts)
 void wb_pvd_gvl::save_item( pwr_tOix oix, ofstream& of)
 {
   switch ( m_list[oix].cid) {
-  case pwr_eClass_PlantHier: {
-    pwr_sPlantHier *body = (pwr_sPlantHier *)m_list[oix].body;
+  case pwr_eClass_Hier: {
+    pwr_sHier *body = (pwr_sHier *)m_list[oix].body;
     of << "!**Menu " << m_list[oix].name << " { // "  << body->Description << endl;
 
     for ( int ix = m_list[oix].fchoix; ix; ix = m_list[ix].fwsoix)
@@ -106,7 +106,7 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
   // Create Root object
   pitem rootitem;
   strcpy( rootitem.name, "GlobalVolumeList");
-  rootitem.cid = pwr_eClass_PlantHier;
+  rootitem.cid = pwr_eClass_Hier;
   rootitem.oix = 0; 
   m_list.push_back(rootitem);
   menu_stack[menu_cnt] = rootitem.oix;
@@ -117,7 +117,7 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
     line_cnt++;
     if ( line[0] == '!') {
       if ( strncmp( line, "!**Menu", 7) == 0) {
-	// Add PlantHier
+	// Add Hier
 	char *s = strstr( line, "// ");
 	if ( s) {
 	  strncpy( description, s+3, sizeof(description));
@@ -136,13 +136,13 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
 
 	pitem plantitem;
 	strcpy( plantitem.name, line_item[1]);
-	plantitem.cid = pwr_eClass_PlantHier;
+	plantitem.cid = pwr_eClass_Hier;
 	plantitem.oix = next_oix++;
 	plantitem.fthoix = menu_stack[menu_cnt - 1];
 	plantitem.bwsoix = m_list[plantitem.fthoix].lchoix;
 	plantitem.fwsoix = 0;
-	plantitem.body_size = sizeof(pwr_sPlantHier);
-	pwr_sPlantHier *plantbody = (pwr_sPlantHier *) calloc( 1, plantitem.body_size); 
+	plantitem.body_size = sizeof(pwr_sHier);
+	pwr_sHier *plantbody = (pwr_sHier *) calloc( 1, plantitem.body_size); 
 	plantitem.body = plantbody;
 	strcpy( plantbody->Description, description);
 

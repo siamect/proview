@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_i_base_methods.c,v 1.6 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_i_base_methods.c,v 1.7 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@ pwr_dImport pwr_BindMethods(DsHist);
 pwr_dImport pwr_BindMethods(DsTrend);
 pwr_dImport pwr_BindMethods(DSup);
 pwr_dImport pwr_BindMethods(PlcPgm);
-pwr_dImport pwr_BindMethods(DbConfig);
+pwr_dImport pwr_BindMethods(ProjectReg);
 pwr_dImport pwr_BindMethods(RootVolumeConfig);
 pwr_dImport pwr_BindMethods(SubVolumeConfig);
 pwr_dImport pwr_BindMethods(SharedVolumeConfig);
@@ -83,7 +83,7 @@ pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(DsTrend),
   pwr_BindClass(DSup),
   pwr_BindClass(PlcPgm),
-  pwr_BindClass(DbConfig),
+  pwr_BindClass(ProjectReg),
   pwr_BindClass(RootVolumeConfig),
   pwr_BindClass(SubVolumeConfig),
   pwr_BindClass(SharedVolumeConfig),

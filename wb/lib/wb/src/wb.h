@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.h,v 1.8 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb.h,v 1.9 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,8 @@ typedef enum {
 	wb_eType_Directory,
 	wb_eType_Class,
 	wb_eType_Buffer,
-	wb_eType_ClassEditor
+	wb_eType_ClassEditor,
+	wb_eType_ExternVolume
 } wb_eType;
 
 typedef enum {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.h,v 1.5 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_vrepext.h,v 1.6 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,8 @@ class ext_object
       m_flags.m = 0;
       m_oid.oix = 0;
       m_oid.vid = 0;
+      time.tv_sec = 0;
+      time.tv_nsec = 0;
     }
   ext_object( vext_sAMsgObject *msg, pwr_tVid vid, wb_cdef &cdef) : 
     rbody_size(0), dbody_size(0), rbody(0), dbody(0)
@@ -69,6 +71,8 @@ class ext_object
       lchoid.vid = vid;      
       m_cid = msg->cid;
       m_flags = cdef.flags();
+      time.tv_sec = 0;
+      time.tv_nsec = 0;
     }
   ~ext_object() {
     if ( rbody_size) free( rbody);

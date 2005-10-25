@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.26 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.27 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -436,6 +436,45 @@ void Wtt::menu_setup()
         XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
       break; 
+    case wb_eType_ExternVolume:
+      XtUnmanageChild( menu_createstruct_w);
+      if ( editmode) {
+        XtSetValues( menu_save_w, sensitive, 1);
+        XtSetValues( menu_revert_w, sensitive, 1);
+        XtSetValues( menu_cut_w, sensitive, 1);
+        XtSetValues( menu_copy_w, sensitive, 1);
+        XtSetValues( menu_paste_w, sensitive, 1);
+        XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_rename_w, sensitive, 1);
+        XtSetValues( menu_utilities_w, nosensitive, 1);
+        XtSetValues( menu_openplc_w, nosensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+        XtSetValues( menu_createload_w, nosensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, sensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
+      }
+      else {
+        XtSetValues( menu_save_w, nosensitive, 1);
+        XtSetValues( menu_revert_w, nosensitive, 1);
+        XtSetValues( menu_cut_w, nosensitive, 1);
+        XtSetValues( menu_copy_w, nosensitive, 1);
+        XtSetValues( menu_paste_w, nosensitive, 1);
+        XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_rename_w, nosensitive, 1);
+        XtSetValues( menu_utilities_w, nosensitive, 1);
+        XtSetValues( menu_openplc_w, nosensitive, 1);
+        XtSetValues( menu_compile_w, nosensitive, 1);
+        XtSetValues( menu_createload_w, nosensitive, 1);
+        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_distribute_w, nosensitive, 1);
+        XtSetValues( menu_change_value_w, nosensitive, 1);
+        XtSetValues( menu_edit_w, sensitive, 1);
+        XtSetValues( menu_classeditor_w, nosensitive, 1);
+      }
+      break; 
     default:
       ;
   }
@@ -452,17 +491,31 @@ int Wtt::restore_settings()
   return 1;
 }
 
+static char *wtt_script_filename_cb( void *ctx)
+{
+ return ((Wtt *)ctx)->script_filename();
+}
+
+char *Wtt::script_filename()
+{
+  static pwr_tFileName fname;
+
+  if ( wb_type == wb_eType_Volume)
+    sprintf( fname, "%s.pwr_com", wnav_cInitFile);
+  else
+    sprintf( fname, "%s%d.pwr_com", wnav_cInitFile, (int)wb_type);
+  dcli_translate_filename( fname, fname);
+  return fname;
+}
+
 int Wtt::save_settings()
 {
   ofstream fp;
-  char	filename[80];
   Arg args[5]; 
   int i;
   short width, height;
 
-  dcli_get_defaultfilename( wnav_cInitFile, filename, ".pwr_com");
-  dcli_translate_filename( filename, filename);
-  fp.open( filename);
+  fp.open( script_filename());
 
   i = 0;
   XtSetArg(args[i], XmNwidth, &width);i++;
@@ -769,7 +822,8 @@ static void wtt_save_cb( void *ctx)
       return;
     }
   }
-  wtt->message( 'I', "Session saved");
+  if ( sts != LDH__CONFIRM)
+    wtt->message( 'I', "Session saved");
 }
 
 static void wtt_revert_ok( Wtt *wtt)
@@ -1103,10 +1157,22 @@ int Wtt::set_edit()
     return 1;
   }
 
-  if ( !(login_prv.priv & pwr_mPrv_DevConfig))
-  {
-    message( 'E', "User is not authorized to configure");
-    return 1;
+  switch ( volid) {
+  case ldh_cProjectListVolume:
+  case ldh_cGlobalVolumeListVolume:
+  case ldh_cUserDatabaseVolume:
+    // Privilege Administrator required
+    if ( !(login_prv.priv & pwr_mPrv_Administrator)) {
+      message( 'E', "User is not authorized to administrate");
+      return 1;
+    }
+    break;
+  default:
+    // Privilege DevConfig required
+    if ( !(login_prv.priv & pwr_mPrv_DevConfig)) {
+      message( 'E', "User is not authorized to configure");
+      return 1;
+    }
   }
 
   sts = ldh_CloseSession( ldhses);
@@ -2089,7 +2155,7 @@ static void wtt_activate_openpl( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->set_clock_cursor();
   if ( wtt->open_volume_cb)
-    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "ProjectList", wow_eFileSelType_);
+    (wtt->open_volume_cb) ( wtt, wb_eType_ExternVolume, "ProjectList", wow_eFileSelType_);
   wtt->reset_cursor();
 }
 
@@ -2097,7 +2163,7 @@ static void wtt_activate_opengvl( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->set_clock_cursor();
   if ( wtt->open_volume_cb)
-    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "GlobalVolumeList", wow_eFileSelType_);
+    (wtt->open_volume_cb) ( wtt, wb_eType_ExternVolume, "GlobalVolumeList", wow_eFileSelType_);
   wtt->reset_cursor();
 }
 
@@ -2105,7 +2171,7 @@ static void wtt_activate_openudb( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->set_clock_cursor();
   if ( wtt->open_volume_cb)
-    (wtt->open_volume_cb) ( wtt, wb_eType_Volume, "UserDatabase", wow_eFileSelType_);
+    (wtt->open_volume_cb) ( wtt, wb_eType_ExternVolume, "UserDatabase", wow_eFileSelType_);
   wtt->reset_cursor();
 }
 
@@ -3322,6 +3388,7 @@ Wtt::Wtt(
   char		layout_palette[80];
   char		title_w1[40];
   char		title_w2[40];
+  int		hide_wnavnode = 0;
 
   static char translations[] = "\
 <FocusIn>: wtt_inputfocus()\n";
@@ -3489,7 +3556,51 @@ Wtt::Wtt(
       strcpy( title_w1, "Plant Configuration");
       strcpy( title_w2, "Node Configuration");
       sprintf( title, "PwR Navigator Buffer %s, %s", volname, name);
+      hide_wnavnode = 1;
       break;
+    case pwr_eClass_ExternVolume: {
+      switch ( volid) {
+      case ldh_cProjectListVolume:
+	wb_type = wb_eType_ExternVolume;
+	strcpy( layout_w1, "PrListNavigatorW1");
+	strcpy( layout_w2, "PrListNavigatorW1");
+	strcpy( layout_palette, "PrListNavigatorPalette");
+	strcpy( title_w1, "Project List");
+	strcpy( title_w2, "");
+	sprintf( title, "PwR Project List");
+	hide_wnavnode = 1;
+	break;
+      case ldh_cGlobalVolumeListVolume:
+	wb_type = wb_eType_ExternVolume;
+	strcpy( layout_w1, "GvListNavigatorW1");
+	strcpy( layout_w2, "GvListNavigatorW1");
+	strcpy( layout_palette, "GvListNavigatorPalette");
+	strcpy( title_w1, "Global Volume List");
+	strcpy( title_w2, "");
+	sprintf( title, "PwR Global Volume List");
+	hide_wnavnode = 1;
+	break;
+      case ldh_cUserDatabaseVolume:
+	wb_type = wb_eType_ExternVolume;
+	strcpy( layout_w1, "UserDbNavigatorW1");
+	strcpy( layout_w2, "UserDbNavigatorW1");
+	strcpy( layout_palette, "UserDbNavigatorPalette");
+	strcpy( title_w1, "User Database");
+	strcpy( title_w2, "");
+	sprintf( title, "PwR User Database");
+	hide_wnavnode = 1;
+	break;
+      default:
+	wb_type = wb_eType_ExternVolume;
+	strcpy( layout_w1, "NavigatorW1");
+	strcpy( layout_w2, "NavigatorW2");
+	strcpy( layout_palette, "NavigatorPalette");
+	strcpy( title_w1, "Plant Configuration");
+	strcpy( title_w2, "Node Configuration");
+	sprintf( title, "PwR Navigator Volume %s, %s", volname, name);
+      }
+      break;
+    }
     default:
       wb_type = wb_eType_Volume;
       strcpy( layout_w1, "NavigatorW1");
@@ -3580,6 +3691,7 @@ Wtt::Wtt(
   wnav->create_popup_menu_cb = &wtt_create_popup_menu_cb;
   wnav->save_cb = &wtt_save_cb;
   wnav->revert_cb = &wtt_revert_cb;
+  wnav->script_filename_cb = &wtt_script_filename_cb;
   wnav->format_selection_cb = wtt_format_selection;
   wnav->get_global_select_cb = wtt_get_global_select_cb;
   wnav->global_unselect_objid_cb = wtt_global_unselect_objid_cb;
@@ -3611,6 +3723,7 @@ Wtt::Wtt(
   wnavnode->create_popup_menu_cb = &wtt_create_popup_menu_cb;
   wnavnode->save_cb = &wtt_save_cb;
   wnavnode->revert_cb = &wtt_revert_cb;
+  wnavnode->script_filename_cb = &wtt_script_filename_cb;
   wnavnode->format_selection_cb = wtt_format_selection;
   wnavnode->get_global_select_cb = wtt_get_global_select_cb;
   wnavnode->global_unselect_objid_cb = wtt_global_unselect_objid_cb;

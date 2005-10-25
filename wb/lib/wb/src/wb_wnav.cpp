@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.25 2005-10-18 05:14:05 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.26 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1092,7 +1092,7 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
         sts = ldh_NameToAttrRef( ldhses, attr_str, ap);
         if ( EVEN(sts)) {
           // ldh_NameToAttrRef doesn't handle objects with no RtBody...
-          ap->Objid = item->objid;
+          *ap = cdh_ObjidToAref( item->objid);
         }
         *is_attr_p = 0;
     }
@@ -3465,14 +3465,15 @@ static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   wnav_trace_scan( wnav);
 
   // Execute the init file
-  strcpy( cmd, "@");
-  dcli_translate_filename( &cmd[1], wnav_cInitFile);
-  ((WNav *)wnav)->command( cmd);
+  if ( wnav->script_filename_cb) {
+    strcpy( cmd, "@");
+    strcat( cmd, (wnav->script_filename_cb)( wnav->parent_ctx));
+    ((WNav *)wnav)->command( cmd);
 
-  // Execute the symbolfile
-  if ( wnav->window_type == wnav_eWindowType_W1)
-    wnav->gbl.symbolfile_exec( wnav);
-
+    // Execute the symbolfile
+    if ( wnav->window_type == wnav_eWindowType_W1)
+      wnav->gbl.symbolfile_exec( wnav);
+  }
   return 1;
 }
 

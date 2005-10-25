@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.11 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.12 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,7 +69,7 @@ extern "C" {
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
 #define wnav_cScriptInvisKey	"!** Invisible"
-#define wnav_cInitFile "pwrp_login:wtt_init.pwr_com"
+#define wnav_cInitFile "pwrp_login:wtt_init"
 #define wnav_cSymbolFile "pwrp_login:wtt_symbols.pwr_com"
 #define WNAV_BROW_MAX	25
 
@@ -247,6 +247,7 @@ class WNav {
     void 		(*create_popup_menu_cb)( void *, pwr_sAttrRef, int, int);
     void 		(*save_cb)( void *);
     void 		(*revert_cb)( void *, int confirm);
+    char 		*(*script_filename_cb)( void *);
     pwr_tBoolean 	(*format_selection_cb)( void *, pwr_sAttrRef, XtPointer *,
 			   unsigned long *, pwr_tBoolean, pwr_tBoolean, wnav_eSelectionFormat);
     int 		(*get_global_select_cb)( void *, pwr_sAttrRef **, 

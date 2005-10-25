@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.8 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.9 2005-10-25 12:05:37 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -50,6 +50,7 @@ declare -i pwrc__projnameinv=26
 declare -i pwrc__mysqldbcopy=27
 declare -i pwrc__mysqldbrena=28
 declare -i pwrc__mysql=29
+declare -i pwrc__noroot=30
 
 
 pwrc_get_variables()

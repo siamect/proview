@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_file.cpp,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_pvd_file.cpp,v 1.2 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -168,9 +168,10 @@ void wb_pvd_file::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
     }
   }
 
+  
   switch (cid) {
-  case pwr_eClass_PlantHier:
-    item.body_size = sizeof(pwr_sPlantHier);
+  case pwr_eClass_Hier:
+    item.body_size = sizeof(pwr_sHier);
     item.body = calloc( 1, item.body_size);
     break;
   case pwr_cClass_VolumeReg:
@@ -185,11 +186,20 @@ void wb_pvd_file::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
     item.body_size = sizeof( pwr_sClass_UserReg);
     item.body = calloc( 1, item.body_size);
     break;
+  case pwr_cClass_ProjectReg:
+    item.body_size = sizeof( pwr_sClass_ProjectReg);
+    item.body = calloc( 1, item.body_size);
+    break;
+  case pwr_cClass_BaseReg:
+    item.body_size = sizeof( pwr_sClass_BaseReg);
+    item.body = calloc( 1, item.body_size);
+    break;
   }
   if ( strcmp( name, "") == 0)
     sprintf( item.name, "O%d", item.oix);
   else
     strcpy( item.name, name);
+  item.flags |= pitem_mFlags_Created;
   m_list.push_back(item);
 
   pcom->provideObject( 1, item.oix, item.fthoix, item.bwsoix, item.fwsoix,
@@ -442,5 +452,19 @@ char *wb_pvd_file::longname( pwr_tOix oix)
   return m_list[oix].lname;
 }
 
+bool wb_pvd_file::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
+{
+
+  for ( int i = 0; i < (int) m_list.size(); i++) {
+    if  ( !m_list[i].flags & pitem_mFlags_Deleted) {
+      if ( m_list[i].fthoix == fthoix && 
+	   cdh_NoCaseStrcmp( name, m_list[i].name) == 0) {
+	*oix = m_list[i].oix;
+	return true;
+      }
+    }
+  }
+  return false;
+}
 
 

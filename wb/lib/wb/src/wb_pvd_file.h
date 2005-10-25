@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_file.h,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_pvd_file.h,v 1.2 2005-10-25 12:04:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 
 typedef enum {
   pitem_mFlags_Deleted 	= 1 << 0,
-  pitem_mFlags_Created 	= 1 << 1,
+  pitem_mFlags_Created 	= 1 << 1
 } pitem_mFlags;
 
 class pitem {
@@ -41,23 +41,31 @@ public:
   unsigned long flags;
   void *body;
   unsigned int body_size;
+  void *userdata;
+  unsigned int userdata_size;
 
   pitem() : fthoix(0), bwsoix(0), fwsoix(0), fchoix(0), lchoix(0), flags(0),
-    body(0), body_size(0)
+    body(0), body_size(0), userdata(0), userdata_size(0)
     { strcpy(lname,"");}
 
   ~pitem() 
     { 
       if ( body) 
 	free(body);
+      if ( userdata)
+	free(userdata);
     }
 
   pitem( const pitem& x)
     { 
       memcpy( this, &x, sizeof(pitem));
       if ( x.body) {
-	body = calloc( 1, body_size);
+	body = malloc( body_size);
 	memcpy( body, x.body, body_size);
+      }
+      if ( x.userdata) {
+	userdata = malloc( userdata_size);
+	memcpy( userdata, x.userdata, userdata_size);
       }
     }    
   pitem& operator=(const pitem& x)
@@ -66,6 +74,10 @@ public:
     if ( body) {
       body = calloc( 1, body_size);
       memcpy( body, x.body, body_size);
+    }
+    if ( userdata) {
+      userdata = calloc( 1, userdata_size);
+      memcpy( userdata, x.userdata, userdata_size);
     }
     return *this;
   }
@@ -97,6 +109,8 @@ public:
 
   virtual void save( pwr_tStatus *sts) {}
   virtual void load( pwr_tStatus *sts) {}
+
+  virtual bool find( pwr_tOix fthoix, char *name, pwr_tOix *oix);
   
   vector<pitem> m_list;
   pwr_tOix root;
