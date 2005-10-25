@@ -324,6 +324,65 @@ palette ProjectNavigatorPalette
 }
 
 #
+#  ProjectList
+#
+topobjects PrListNavigatorW1
+{
+  class $Hier
+  class ProjectReg
+  class BaseReg
+}
+
+topobjects PrListNavigatorW2
+{
+}
+
+palette PrListNavigatorPalette
+{
+  class BaseReg
+  class $Hier
+  class ProjectReg
+}
+
+#
+#  Global Volume List
+#
+topobjects GvListNavigatorW1
+{
+  class $Hier
+  class VolumeReg
+}
+
+topobjects GvListNavigatorW2
+{
+}
+
+palette GvListNavigatorPalette
+{
+  class $Hier
+  class VolumeReg
+}
+
+#
+#  User Database
+#
+topobjects UserDbNavigatorW1
+{
+  class SystemGroupReg
+  class UserReg
+}
+
+topobjects UserDbNavigatorW2
+{
+}
+
+palette UserDbNavigatorPalette
+{
+  class SystemGroupReg
+  class UserReg
+}
+
+#
 #  PlcEditor
 #
 palette PlcEditorPalette
