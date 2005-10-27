@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.c,v 1.5 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_dcli.c,v 1.6 2005-10-27 08:47:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1121,8 +1121,8 @@ int dcli_wildcard(	char	*wildname,
 	char	*s;
 	char	*t;
 	char	*u;
-	char	checkstr[80];
-	char	upper_name[80];
+	char	checkstr[400];
+	char	upper_name[400];
 
 	/* Convert to upper case */
 	cdh_ToUpper( upper_name, name);
