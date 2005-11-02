@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.19 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.20 2005-11-02 14:30:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2654,7 +2654,7 @@ int utl_set_object_parameter (
 	    elementstr[ len ] = 0;
 	    sscanf( elementstr, "%d", &element);
 	    *s = '\0';
-	    if ( (element < 0) || (element > 100) )
+	    if ( (element < 0) || (element > 10000) )
 	    {
 	      return FOE__PARELSYNT;
 	    }
