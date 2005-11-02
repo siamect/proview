@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.5 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.6 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,7 +111,7 @@ public class JopSessionRep implements JopSessionIfc {
   }
 
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph) {
-    CdhrObjid oid = null;
+    CdhrAttrRef aref = null;
     if ( instance != null) {
       if ( instance.startsWith("&")) {
 	// Objid pointer attribute
@@ -121,39 +121,50 @@ public class JopSessionRep implements JopSessionIfc {
 	instance = cstr.str;
       }
 
-      oid = engine.gdh.nameToObjid( instance);
-      if ( oid.evenSts()) return;
+      JopLog.log("openGraphFrame");
+      aref = engine.gdh.nameToAttrRef( instance);
+      if ( aref.evenSts()) return;
 
       if ( classGraph) {
-	CdhrClassId cid = engine.gdh.getObjectClass( oid.objid);
-	if ( cid.evenSts()) return;
+	CdhrTypeId tid = engine.gdh.getAttrRefTid( aref.aref);
+	if ( tid.evenSts()) return;
 
-        CdhrObjid coid = engine.gdh.classIdToObjid( cid.classId);
+        CdhrObjid coid = engine.gdh.classIdToObjid( tid.typeId);
 	if ( coid.evenSts()) return;
 
 	CdhrString sret = engine.gdh.objidToName( coid.objid, Cdh.mName_object);
 	if ( sret.evenSts()) return;
 
-	System.out.println( "open frame: vid " + coid.objid.vid);
-	if ( coid.objid.vid < Cdh.cUserClassVolMin) {
-	  // Class is a base class, java classname starts with JopC_
+	// Find any GraphConfiguration suffix
+	String suffix = "";
+	CdhrInt gcret = engine.gdh.getObjectInfoInt( instance + ".GraphConfiguration");
+	if ( gcret.oddSts()) {
+	  if ( gcret.value > 0)
+	    suffix = Integer.toString(gcret.value);
+	}
+	if ( coid.objid.vid < Cdh.cUserClassVolMin ||
+	    (coid.objid.vid >= Cdh.cManufactClassVolMin && 
+	     coid.objid.vid <= Cdh.cManufactClassVolMax)) {
+	  // Class is a base class, java classname starts with JopC
 	  if ( coid.objid.vid == 1)
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
-	      sret.str.substring(2).toLowerCase();
+	      sret.str.substring(2).toLowerCase() + suffix;
 	  else
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
-	      sret.str.substring(1).toLowerCase();
+	      sret.str.substring(1).toLowerCase() + suffix;
 	}
 	else
 	  // Java name equals class name
-	  name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
+	  name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase() +
+	      suffix;
+	JopLog.log("openGraphFrame classgraph " + name);
       }
     }
     Object graph;
-    if ( oid == null)
-      graph = getUtility( JopUtility.GRAPH, null, name);
+    if ( aref == null)
+      graph = getUtility( JopUtility.GRAPH, (PwrtObjid)null, name);
     else
-      graph = getUtility( JopUtility.GRAPH, oid.objid, name);
+      graph = getUtility( JopUtility.GRAPH, aref.aref, name);
     if ( graph != null) {
       ((JFrame)graph).setState(Frame.NORMAL);
       ((JFrame)graph).toFront();
@@ -211,6 +222,35 @@ public class JopSessionRep implements JopSessionIfc {
 	       utilityName.equals( name) &&
 	       utilityObjid != null &&
 	       utilityObjid.oix == objid.oix && utilityObjid.vid == objid.vid)
+	    return o;    
+        }
+        else {
+	  if ( ((JopUtilityIfc) o).getUtilityType() == type &&
+	       utilityName.equals( name))
+	    return o;    
+	}
+      }
+      return null;
+    default:
+      return null;
+    }
+
+  }
+
+  public Object getUtility( int type, PwrtAttrRef aref, String name) {
+    switch ( type) {
+    case JopUtility.TRACE:
+      return null;
+    case JopUtility.GRAPH:
+      for ( int i = 0; i < frames.size(); i++) {
+	Object o = frames.get(i);
+	String utilityName = ((JopUtilityIfc) o).getUtilityName();
+        if ( aref != null) {
+	  PwrtAttrRef utilityAref = ((JopUtilityIfc) o).getUtilityAttrRef();
+	  if ( ((JopUtilityIfc) o).getUtilityType() == type &&
+	       utilityName.equals( name) &&
+	       utilityAref != null &&
+	       utilityAref.equals( aref))
 	    return o;    
         }
         else {

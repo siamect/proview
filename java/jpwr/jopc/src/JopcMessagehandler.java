@@ -1,22 +1,3 @@
-/* 
- * Proview   $Id: JopcMessagehandler.java,v 1.3 2005-09-01 14:57:51 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
- *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
@@ -52,7 +33,7 @@ public class JopcMessagehandler extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
+    JopSpider.setSystemName( "äY");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 169);
@@ -687,7 +668,10 @@ protected class pwr_indsquare extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityObjid;
+    return utilityAref.getObjid();
+  }
+  public PwrtAttrRef getUtilityAttrRef() {
+    return utilityAref;
   }
   public String getUtilityName() {
     return this.getClass().getName();

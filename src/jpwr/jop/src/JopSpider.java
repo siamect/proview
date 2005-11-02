@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSpider.java,v 1.7 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopSpider.java,v 1.8 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -259,6 +259,30 @@ System.out.println( "qcom put finished");
 		}
               }
             }
+            else {
+	      // Application
+              boolean newFrame = cli.qualifierFound("/NEW");
+              boolean scrollbar = cli.qualifierFound("/SCROLLBAR");
+	      String frameName = null;
+	      String instanceValue = null;
+	      boolean classGraph = false;
+	      if ( cli.qualifierFound("/INSTANCE")) {
+	        instanceValue = cli.getQualValue("/INSTANCE");
+		classGraph = cli.qualifierFound("/CLASSGRAPH");		      
+	      }
+	      if ( !classGraph) {
+		if ( ! cli.qualifierFound("cli_arg2")) {
+		  System.out.println("Syntax error");
+		  return;
+		}
+		frameName = cli.getQualValue("cli_arg2").toLowerCase();
+
+		frameName = frameName.substring(0,1).toUpperCase() +
+		    frameName.substring(1);
+		System.out.println( "Open frame " + frameName);
+	      }
+	      session.openGraphFrame( frameName, instanceValue, scrollbar, classGraph);
+	    }
           }
           else if ( url.length() >= cli_arg1.length() &&
                url.substring(0,cli_arg1.length()).equals(cli_arg1)) {
@@ -477,7 +501,7 @@ System.out.println( "JopSpiderCmd start");
     try {
       Class clazz = Class.forName( className);
       try {
-	Class argTypeList[] = new Class[] { session.getClass(), className.getClass(),
+	Class argTypeList[] = new Class[] { session.getClass(), instance.getClass(),
 	                                    boolean.class}; 
         Object argList[] = new Object[] { session, instance, new Boolean(scrollbar)};
         Constructor constructor = clazz.getConstructor( argTypeList);
@@ -486,7 +510,7 @@ System.out.println( "JopSpiderCmd start");
           frame = constructor.newInstance( argList);
 	}
 	catch ( Exception e) {
-	  System.out.println("Class instatiation error: " + className);
+	  System.out.println("Class instanciation error: " + className + " " + e.getMessage() + " " + constructor);
 	  return null;
 	}
         // frame = clazz.newInstance();

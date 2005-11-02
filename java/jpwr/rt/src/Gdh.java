@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.5 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.6 2005-11-02 14:02:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -306,13 +306,16 @@ public class Gdh {
 
   public native PwrtStatus unrefObjectInfo( PwrtRefId refid);
   public native CdhrObjid nameToObjid( String objectName);
+  public native CdhrAttrRef nameToAttrRef( String objectName);
   public native CdhrString objidToName( PwrtObjid objid, int nameType);
+  public native CdhrString attrRefToName( PwrtAttrRef aref, int nameType);
   public native CdhrObjid getRootList();
   public native CdhrObjid getNextObject( PwrtObjid objid);
   public native CdhrObjid getChild( PwrtObjid objid);
   public native CdhrObjid getParent( PwrtObjid objid);
   public native CdhrObjid getNextSibling( PwrtObjid objid);
   public native CdhrClassId getObjectClass( PwrtObjid objid);
+  public native CdhrTypeId getAttrRefTid( PwrtAttrRef aref);
   public native CdhrObjid getClassList( int classid);
   public native CdhrObjid classIdToObjid( int classid);
   public native CdhrObjid getNodeObject( int nodeIdx);
@@ -323,6 +326,7 @@ public class Gdh {
   public native CdhrString crrObject( String name);
   public native CdhrString getMsg( int sts);
   public native CdhrString getMsgText( int sts);
+  public native CdhrClassId getSuperClass( int classid, PwrtObjid objid);
 }
 
 

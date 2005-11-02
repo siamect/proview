@@ -1,22 +1,3 @@
-/* 
- * Proview   $Id: JopcDsfastconf.java,v 1.3 2005-09-01 14:57:51 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
- *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
@@ -50,7 +31,7 @@ public class JopcDsfastconf extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
+    JopSpider.setSystemName( "äY");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 711, 128);
@@ -222,15 +203,15 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "Status",14, 45);
+    g.drawString( "Status",14, 44);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "LogMessage",14, 68);
+    g.drawString( "LogMessage",14, 67);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 12));
-    g.drawString( "BaseFrequency",14, 23);
+    g.drawString( "BaseFrequency",14, 22);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
@@ -657,7 +638,10 @@ protected class pwr_valuesmall extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityObjid;
+    return utilityAref.getObjid();
+  }
+  public PwrtAttrRef getUtilityAttrRef() {
+    return utilityAref;
   }
   public String getUtilityName() {
     return this.getClass().getName();

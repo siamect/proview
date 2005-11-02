@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynAnalogShift.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynAnalogShift.java,v 1.3 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,9 @@ public class GeDynAnalogShift extends GeDynElem {
   boolean attrFound;
   PwrtRefId subid;
   int p;
-  float oldValue;
+  public int typeId;
+  float oldValueF;
+  int oldValueI;
   boolean firstScan = true;
 
   public GeDynAnalogShift( GeDyn dyn, String attribute) {
@@ -43,6 +45,7 @@ public class GeDynAnalogShift extends GeDynElem {
 	attrFound = true;
 	p = ret.id;
 	subid = ret.refid;
+	typeId = ret.typeId;
       }
     }
   }
@@ -54,11 +57,30 @@ public class GeDynAnalogShift extends GeDynElem {
     if ( !attrFound)
       return;
 
-    float value0 = dyn.en.gdh.getObjectRefInfoFloat( p);
-    if ( value0 != oldValue  || firstScan) {
-      dyn.comp.setPage( (int)(value0 + 1.5));
-      dyn.repaintNow = true;
-      oldValue = value0;
+    switch ( typeId) {
+    case Pwr.eType_Float32: {
+      float value0 = dyn.en.gdh.getObjectRefInfoFloat( p);
+      if ( value0 != oldValueF  || firstScan) {
+        dyn.comp.setPage( (int)(value0 + 1.5));
+        dyn.repaintNow = true;
+        oldValueF = value0;
+      }
+      break;
+    }
+    case Pwr.eType_Int32:
+    case Pwr.eType_UInt32:
+    case Pwr.eType_Int16:
+    case Pwr.eType_UInt16:
+    case Pwr.eType_Int8:
+    case Pwr.eType_UInt8: {
+      int value0 = dyn.en.gdh.getObjectRefInfoInt( p);
+      if ( value0 != oldValueI  || firstScan) {
+        dyn.comp.setPage( value0 + 1);
+        dyn.repaintNow = true;
+        oldValueI = value0;
+      }
+      break;
+    }
     }
     if ( firstScan)
       firstScan = false;

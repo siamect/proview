@@ -1,22 +1,3 @@
-/* 
- * Proview   $Id: JopcAiGen.java,v 1.3 2005-09-01 14:57:51 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
- *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
@@ -77,7 +58,7 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
+    JopSpider.setSystemName( "äY");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 830, 282);
@@ -299,7 +280,8 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
     pwr_slider115.dd.setActionType(2048);
     pwr_slider115.dd.setAccess(6);
     pwr_slider115.dd.setElements(new GeDynElemIfc[] {
-      new GeDynSlider(pwr_slider115.dd, "$object.ActualValue##Float32",0,100,4,56.7176,203.318)
+      new GeDynSlider(pwr_slider115.dd, "$object.ActualValue##Float32",0,100,4,56.7176,203.318,null,null,
+null)
       });
     jopButtontoggle16.dd.setDynType(0);
     jopButtontoggle16.dd.setActionType(4);
@@ -320,28 +302,28 @@ public class JopcAiGen extends JopFrame implements JopUtilityIfc {
     pwr_valueinputreliefup18.dd.setAccess(65535);
     pwr_valueinputreliefup18.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup18.dd, "$object.PresMaxLimit##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup18.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup18.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup19.dd.setDynType(1024);
     pwr_valueinputreliefup19.dd.setActionType(4096);
     pwr_valueinputreliefup19.dd.setAccess(65535);
     pwr_valueinputreliefup19.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup19.dd, "$object.PresMinLimit##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup19.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup19.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup20.dd.setDynType(1024);
     pwr_valueinputreliefup20.dd.setActionType(4096);
     pwr_valueinputreliefup20.dd.setAccess(65535);
     pwr_valueinputreliefup20.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup20.dd, "$local.ScanTime##Float32","%5.0f")
-      ,new GeDynValueInput(pwr_valueinputreliefup20.dd, 4,100000)
+      ,new GeDynValueInput(pwr_valueinputreliefup20.dd, 4,100000,null,null)
       });
     pwr_valueinputmedium21.dd.setDynType(1024);
     pwr_valueinputmedium21.dd.setActionType(4096);
     pwr_valueinputmedium21.dd.setAccess(6);
     pwr_valueinputmedium21.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium21.dd, "$object.ActualValue##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium21.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium21.dd, 0,0,null,null)
       });
     pwr_mbopenobject22.dd.setDynType(129);
     pwr_mbopenobject22.dd.setActionType(8256);
@@ -3686,7 +3668,10 @@ protected class pwr_mbcrossreferences extends GeComponent {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityObjid;
+    return utilityAref.getObjid();
+  }
+  public PwrtAttrRef getUtilityAttrRef() {
+    return utilityAref;
   }
   public String getUtilityName() {
     return this.getClass().getName();

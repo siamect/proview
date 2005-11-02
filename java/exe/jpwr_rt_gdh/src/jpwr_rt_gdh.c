@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.8 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.9 2005-11-02 14:04:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -590,6 +590,65 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_nameToObjid
   return return_obj; 
 }
 
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_nameToAttrRef
+  (JNIEnv *env, jclass obj, jstring name)
+{
+  int sts;
+  const char *str;
+  char *cstr;
+  pwr_tAttrRef aref;
+  jclass cdhrAttrRef_id;
+  jmethodID cdhrAttrRef_cid;
+  jclass PwrtObjid_id;
+  jmethodID PwrtObjid_cid;
+  jclass PwrtAttrRef_id;
+  jmethodID PwrtAttrRef_cid;
+  jobject objid_obj = NULL;
+  jobject attrref_obj = NULL;
+  jint oix, vid;
+  jint body, offset, size, flags;
+  jobject return_obj;
+  jint jsts;
+
+
+  cdhrAttrRef_id = (*env)->FindClass( env, "jpwr/rt/CdhrAttrRef");
+  cdhrAttrRef_cid = (*env)->GetMethodID( env, cdhrAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtAttrRef;I)V");
+
+  PwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  PwrtObjid_cid = (*env)->GetMethodID( env, PwrtObjid_id,
+    	"<init>", "(II)V");
+
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  PwrtAttrRef_cid = (*env)->GetMethodID( env, PwrtAttrRef_id,
+    	"<init>", "(Ljpwr/rt/PwrtObjid;IIII)V");
+
+  str = (*env)->GetStringUTFChars( env, name, 0);
+  cstr = (char *)str;
+  gdh_ConvertUTFstring( cstr, cstr);
+  sts = gdh_NameToAttrref( pwr_cNOid, cstr, &aref);
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
+
+  if ( ODD(sts)) {
+    oix = (jint) aref.Objid.oix;
+    vid = (jint) aref.Objid.vid;
+    objid_obj = (*env)->NewObject( env, PwrtObjid_id, PwrtObjid_cid,
+    	oix, vid);
+
+    body = (jint) aref.Body;
+    offset = (jint) aref.Offset;
+    size = (jint) aref.Size;
+    flags = (jint) aref.Flags.m;
+    attrref_obj = (*env)->NewObject( env, PwrtAttrRef_id, PwrtAttrRef_cid,
+    	objid_obj, body, offset, size, flags);
+  }
+  
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, cdhrAttrRef_id,
+  	cdhrAttrRef_cid, attrref_obj, jsts);
+  return return_obj; 
+}
+
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
   (JNIEnv *env, jclass obj, jobject objid_obj, jint nameType)
 {
@@ -623,6 +682,59 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
   objid.vid = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getVid);
 
   sts = gdh_ObjidToName( objid, name, sizeof(name), nameType);
+
+  if ( ODD(sts))
+    jname = (*env)->NewStringUTF( env, name);
+  
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, cdhrString_id,
+  	cdhrString_cid, jname, jsts);
+  return return_obj;  
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_attrRefToName
+  (JNIEnv *env, jclass obj, jobject aref_obj, jint nameType)
+{
+  int 		sts;
+  pwr_tOName	name;
+  pwr_tAttrRef 	aref;
+  jclass 	cdhrString_id;
+  static jmethodID 	cdhrString_cid = NULL;
+  jobject 	return_obj;
+  jint 		jsts;
+  jclass 	PwrtAttrRef_id;
+  static jmethodID 	PwrtAttrRef_getOix = NULL;
+  static jmethodID 	PwrtAttrRef_getVid = NULL;
+  static jmethodID 	PwrtAttrRef_getBody = NULL;
+  static jmethodID 	PwrtAttrRef_getOffset = NULL;
+  static jmethodID 	PwrtAttrRef_getSize = NULL;
+  static jmethodID 	PwrtAttrRef_getFlags = NULL;
+  jstring	jname = NULL;
+
+  cdhrString_id = (*env)->FindClass( env, "jpwr/rt/CdhrString");
+  if(cdhrString_cid == NULL) {
+    cdhrString_cid = (*env)->GetMethodID( env, cdhrString_id,
+    	  "<init>", "(Ljava/lang/String;I)V");
+  }
+
+  PwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  if(PwrtAttrRef_getOix == NULL || PwrtAttrRef_getVid == NULL) {
+    PwrtAttrRef_getOix = (*env)->GetMethodID( env, PwrtAttrRef_id, "getOix", "()I");
+    PwrtAttrRef_getVid = (*env)->GetMethodID( env, PwrtAttrRef_id, "getVid", "()I");
+    PwrtAttrRef_getBody = (*env)->GetMethodID( env, PwrtAttrRef_id, "getBody", "()I");
+    PwrtAttrRef_getOffset = (*env)->GetMethodID( env, PwrtAttrRef_id, "getOffset", "()I");
+    PwrtAttrRef_getSize = (*env)->GetMethodID( env, PwrtAttrRef_id, "getSize", "()I");
+    PwrtAttrRef_getFlags = (*env)->GetMethodID( env, PwrtAttrRef_id, "getFlags", "()I");
+  }
+
+  aref.Objid.oix = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getOix);
+  aref.Objid.vid = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getVid);
+  aref.Body = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getBody);
+  aref.Offset = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getOffset);
+  aref.Size = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getSize);
+  aref.Flags.m = (*env)->CallIntMethod( env, aref_obj, PwrtAttrRef_getFlags);
+
+  sts = gdh_AttrrefToName( &aref, name, sizeof(name), nameType);
 
   if ( ODD(sts))
     jname = (*env)->NewStringUTF( env, name);
@@ -912,6 +1024,62 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectClass
   jsts = (jint) sts;
   return_obj = (*env)->NewObject( env, cdhrClassId_id,
   	cdhrClassId_cid, jclassid, jsts);
+  return return_obj;
+
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttrRefTid
+  (JNIEnv *env, jclass obj, jobject aref_obj)
+{
+  int		sts;
+  jclass 	pwrtAttrRef_id;
+  static jmethodID 	pwrtAttrRef_getOix = NULL;
+  static jmethodID 	pwrtAttrRef_getVid = NULL;
+  static jmethodID 	pwrtAttrRef_getBody = NULL;
+  static jmethodID 	pwrtAttrRef_getOffset = NULL;
+  static jmethodID 	pwrtAttrRef_getSize = NULL;
+  static jmethodID 	pwrtAttrRef_getFlags = NULL;
+  pwr_tAttrRef 	aref;
+  jclass 	cdhrTypeId_id;
+  static jmethodID 	cdhrTypeId_cid;
+  jint	 	jtypeid = 0;
+  jobject 	return_obj;
+  jint 		jsts;
+  pwr_tTid	tid;
+
+  cdhrTypeId_id = (*env)->FindClass( env, "jpwr/rt/CdhrTypeId");
+  if(cdhrTypeId_cid == NULL)
+  {
+    cdhrTypeId_cid = (*env)->GetMethodID( env, cdhrTypeId_id,
+    	  "<init>", "(II)V");
+  } 
+
+  pwrtAttrRef_id = (*env)->FindClass( env, "jpwr/rt/PwrtAttrRef");
+  if( pwrtAttrRef_getOix == NULL || pwrtAttrRef_getVid == NULL) {
+    pwrtAttrRef_getOix = (*env)->GetMethodID( env, pwrtAttrRef_id, "getOix", "()I");
+    pwrtAttrRef_getVid = (*env)->GetMethodID( env, pwrtAttrRef_id, "getVid", "()I");
+    pwrtAttrRef_getBody = (*env)->GetMethodID( env, pwrtAttrRef_id, "getBody", "()I");
+    pwrtAttrRef_getOffset = (*env)->GetMethodID( env, pwrtAttrRef_id, "getOffset", "()I");
+    pwrtAttrRef_getSize = (*env)->GetMethodID( env, pwrtAttrRef_id, "getSize", "()I");
+    pwrtAttrRef_getFlags = (*env)->GetMethodID( env, pwrtAttrRef_id, "getFlags", "()I");
+  }
+
+  aref.Objid.oix = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getOix);
+  aref.Objid.vid = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getVid);
+  aref.Body = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getBody);
+  aref.Offset = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getOffset);
+  aref.Size = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getSize);
+  aref.Flags.m = (*env)->CallIntMethod( env, aref_obj, pwrtAttrRef_getFlags);
+
+  sts = gdh_GetAttrRefTid( &aref, &tid);
+  if ( ODD(sts)) {
+    jtypeid = (jint)tid;
+  }
+  printf( "GetAttrRefTid %d\n", tid);
+  
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, cdhrTypeId_id,
+  	cdhrTypeId_cid, jtypeid, jsts);
   return return_obj;
 
 }
@@ -2017,6 +2185,7 @@ static void gdh_crr_insert_cb( void *ctx, void *parent_node,
 	strcat( buf, "2");
 	break;
       }
+      printf( "Insert %s %s\n", text1, text2);
       strcat( buf, text1);
       strcat( buf, "  ");
       strcat( buf, text2);
@@ -2200,6 +2369,61 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
 }
 
 
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
+  (JNIEnv *env, jclass obj, jint classid, jobject objid_obj)
+{
+  int		sts;
+  jclass 	pwrtObjid_id;
+  static jmethodID 	pwrtObjid_getOix = NULL;
+  static jmethodID 	pwrtObjid_getVid = NULL;
+  static jmethodID 	pwrtObjid_cid = NULL;
+  pwr_tObjid 	objid;
+  jclass 	cdhrClassId_id;
+  static jmethodID 	cdhrClassId_cid;
+  jint	 	jsupercid = 0;
+  jobject 	return_obj;
+  jint 		jsts;
+  pwr_tClassId	cid, supercid;
+
+  cdhrClassId_id = (*env)->FindClass( env, "jpwr/rt/CdhrClassId");
+  if(cdhrClassId_cid == NULL)
+  {
+    cdhrClassId_cid = (*env)->GetMethodID( env, cdhrClassId_id,
+    	  "<init>", "(II)V");
+    //printf("cdhrClassId_cid initierad\n");
+  } 
+
+  pwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  if(pwrtObjid_cid == NULL || pwrtObjid_getOix == NULL || pwrtObjid_getVid == NULL)
+  {
+    pwrtObjid_cid = (*env)->GetMethodID( env, pwrtObjid_id,
+    	  "<init>", "(II)V");
+    pwrtObjid_getOix = (*env)->GetMethodID( env, pwrtObjid_id, "getOix", "()I");
+    pwrtObjid_getVid = (*env)->GetMethodID( env, pwrtObjid_id, "getVid", "()I");
+  }
+
+  cid = (pwr_tCid) classid;
+  printf( "cdh_GetSuperClass objid: %d\n", (int)objid_obj);
+
+  if ( objid_obj != 0) {
+    objid.oix = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getOix);
+    objid.vid = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getVid);
+
+    sts = gdh_GetSuperClass( cid, &supercid, objid);
+  }
+  else
+    sts = gdh_GetSuperClass( cid, &supercid, pwr_cNObjid);
+
+  if ( ODD(sts)) {
+    jsupercid = (jint)supercid;
+  }
+  
+  jsts = (jint) sts;
+  return_obj = (*env)->NewObject( env, cdhrClassId_id,
+  	cdhrClassId_cid, jsupercid, jsts);
+  return return_obj;
+
+}
 
 
 

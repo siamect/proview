@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopUtilityIfc.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopUtilityIfc.java,v 1.3 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@ import jpwr.rt.*;
 public interface JopUtilityIfc {
   public int getUtilityType();
   public PwrtObjid getUtilityObjid();
+  public PwrtAttrRef getUtilityAttrRef();
   public String getUtilityName();
 
 }

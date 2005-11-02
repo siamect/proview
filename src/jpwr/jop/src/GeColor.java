@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeColor.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeColor.java,v 1.5 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -411,6 +411,7 @@ public class GeColor {
   public static final int COLOR_298 = 297;
   public static final int COLOR_299 = 298;
   public static final int COLOR_300 = 299;
+  public static final int COLOR_LINEERASE = 300;
   public static final int COLOR_INHERIT = 9999;
   public static final int COLOR_NO = 10000;
 
@@ -420,7 +421,7 @@ public class GeColor {
 0.7, 		0.7, 		0.7,		// 4 Gray
 1, 		1, 		1};		// 4 White
 
-  static Color[] colors = new Color[300];
+  static Color[] colors = new Color[301];
   public static final int NO_COLOR = 9999;
   public static final int NO_TONE = 0;
   public static Color getColor( int idx, int default_color) {
@@ -523,7 +524,11 @@ public class GeColor {
     Rgb rgb;
     Color color = null;
 
-    if ( idx < 4)
+    if ( idx == 300) {
+      // This should be background color TODO...
+      return getColor(33);
+    }
+    else if ( idx < 4)
       color = new Color( (int)(colorValues[3*idx] * 255),
 		(int)(colorValues[3*idx + 1] * 255),
 		(int)(colorValues[3*idx + 2] * 255));
@@ -696,7 +701,7 @@ public class GeColor {
       else if ( 56 <= drawtype && drawtype <= 59)
 	drawtype = drawtype - 4;
     }
-    if ( drawtype < 0 || drawtype >= 300) {
+    if ( drawtype < 0 || drawtype > 300) {
       System.out.println("** Invalid drawtype");
       drawtype = 0;
     }

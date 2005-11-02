@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Cdh.java,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Cdh.java,v 1.4 2005-11-02 14:02:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,9 @@ public class Cdh {
   public static final int cUserVolMin    	= (0 + (0 << 24) + (1 << 16) + (1 << 8) + 1);
   public static final int cUserVolMax  		= (0 + (0 << 24) + (254 << 16) + (254 << 8) + 254);
   public static final int cUserClassVolMin  	= (0 + (0 << 24) + (0 << 16) + (2 << 8) + 1);
-  public static final int cUserClassVolMax  	= (0 + (0 << 24) + (2 << 16) + (254 << 8) + 254);
+  public static final int cUserClassVolMax  	= (0 + (0 << 24) + (0 << 16) + (249 << 8) + 254);
+  public static final int cManufactClassVolMin  = (0 + (0 << 24) + (0 << 16) + (250 << 8) + 0);
+  public static final int cManufactClassVolMax  = (0 + (0 << 24) + (0 << 16) + (254 << 8) + 254);
 
   public static final int mName_volume 		= 1 << 0;
   public static final int mName_path 		= 1 << 1;

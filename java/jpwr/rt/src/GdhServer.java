@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.9 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.10 2005-11-02 14:02:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,6 +148,7 @@ public class GdhServer
 
     GdhServer gdhServer = new GdhServer();
     gdhServer.openServerSocket();
+    gdhServer.errh.setStatus( Errh.PWR__SRVTERM);
     System.out.println("GdhServer exiting");
     System.exit(0);
   }
@@ -231,7 +232,9 @@ public class GdhServer
     }
     catch(IOException e)
     {
-      errh.fatal("Could not listen on port " + PORT);
+      errh = new Errh("GdhServer", Errh.eAnix_webmon);
+      errh.fatal("Open socket port " + PORT + " " + e.getMessage());
+
       return;
     }
 

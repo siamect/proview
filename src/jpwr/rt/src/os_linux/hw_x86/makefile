@@ -3,15 +3,18 @@ include $(pwre_dir_symbols)
 local_java_sources = \
 	PwrtStatus.java \
 	PwrtObjid.java \
+	PwrtAttrRef.java \
 	PwrtRefId.java \
 	Pwr.java \
 	Pwrs.java \
 	Pwrb.java \
 	CdhrBoolean.java \
 	CdhrClassId.java \
+	CdhrTypeId.java \
 	CdhrFloat.java \
 	CdhrInt.java \
 	CdhrObjid.java \
+	CdhrAttrRef.java \
 	CdhrString.java \
 	Cdh.java \
 	CliTable.java \

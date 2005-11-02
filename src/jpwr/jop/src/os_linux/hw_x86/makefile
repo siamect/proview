@@ -1,6 +1,7 @@
 include $(pwre_dir_symbols)
 
 local_java_sources := \
+	JopLog.java \
 	Ge.java \
 	GeCFormat.java \
 	GeDyndata.java \

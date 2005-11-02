@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopMethodsMenu.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopMethodsMenu.java,v 1.5 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,7 +32,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
   JopSession session;
   Gdh gdh;
   String object;
-  PwrtObjid objid;
+  PwrtAttrRef aref;
   int classid;
   int utility;
 
@@ -45,15 +45,16 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 
     if ( object == null)
       return;
-    CdhrObjid oret = gdh.nameToObjid( object);
+    CdhrAttrRef oret = gdh.nameToAttrRef( object);
     if ( oret.evenSts()) return;
 
-    objid = oret.objid;
+    aref = oret.aref;
 
-    CdhrClassId cret = gdh.getObjectClass( objid);
+    CdhrTypeId cret = gdh.getAttrRefTid( aref);
     if ( cret.evenSts()) return;
 
-    classid = cret.classId;
+    classid = cret.typeId;
+    System.out.println( "Menu object: " + object + " cid " + classid);
 
     popup = new JPopupMenu();
 
@@ -61,6 +62,11 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 
     if ( openGraphFilter()) {
       popup.add( item = new JMenuItem( "Graph"));
+      item.addActionListener( this);
+    }
+
+    if ( classGraphFilter()) {
+      popup.add( item = new JMenuItem( "ObjectGraph"));
       item.addActionListener( this);
     }
 
@@ -99,10 +105,6 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
       item.addActionListener( this);
     }
  
-    if ( classGraphFilter()) {
-      popup.add( item = new JMenuItem( "ClassGraph"));
-      item.addActionListener( this);
-    }
     if (openSearchFilter()){
       popup.add(item= new JMenuItem( "Hist Search"));
       item.addActionListener( this);
@@ -142,7 +144,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     else if ( event.getActionCommand().equals("Circuit Diagram")) {
       circuitDiagram();
     }
-    else if ( event.getActionCommand().equals("ClassGraph")) {
+    else if ( event.getActionCommand().equals("ObjectGraph")) {
       classGraph();
     }
     else if ( event.getActionCommand().equals("Hist Search")) {
@@ -160,7 +162,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     return true;
   }
   public void navigator() {
-    session.openNavigator( objid);
+    session.openNavigator( aref.getObjid());
   }
 
   public boolean openCrossrefFilter() {
@@ -181,7 +183,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 	 classid == Pwrb.cClass_windowplc)
       return true;
 
-    CdhrObjid pret = gdh.getParent( objid);
+    CdhrObjid pret = gdh.getParent( aref.getObjid());
     if ( pret.evenSts())
       return false;
 
@@ -203,11 +205,11 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
 	 classid == Pwrb.cClass_windowsubstep ||
 	 classid == Pwrb.cClass_windoworderact ||
 	 classid == Pwrb.cClass_windowplc) {
-      session.openFlowFrame( objid, null);
+      session.openFlowFrame( aref.getObjid(), null);
     }
     else if ( classid == Pwrb.cClass_plc) {
       // Open child 
-      CdhrObjid child = gdh.getChild( objid);
+      CdhrObjid child = gdh.getChild( aref.getObjid());
       if ( child.evenSts()) return;
 
       CdhrClassId cret = gdh.getObjectClass( child.objid);
@@ -222,7 +224,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     }
     else {
       // Open parent window and center object
-      CdhrObjid parent = gdh.getParent( objid);
+      CdhrObjid parent = gdh.getParent( aref.getObjid());
       if ( parent.evenSts()) return;
 
       int idx = object.lastIndexOf('-');
@@ -362,7 +364,9 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     if ( sret.evenSts()) return false;
 
     String name;
-    if ( coid.objid.vid < Cdh.cUserClassVolMin) {
+    if ( coid.objid.vid < Cdh.cUserClassVolMin || 
+	 (coid.objid.vid >= Cdh.cManufactClassVolMin && 
+	  coid.objid.vid <= Cdh.cManufactClassVolMax)) {
       // Class is a base class, java classname starts with JopC_
       if ( coid.objid.vid == 1)
 	name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
@@ -374,6 +378,7 @@ public class JopMethodsMenu implements ActionListener, PopupMenuListener,
     else
       // Java name equals class name
       name = sret.str.substring(0,1).toUpperCase() + sret.str.substring(1).toLowerCase();
+    System.out.println( "classGraphFilter: " + name);
 
     try {
       Class clazz = Class.forName( name);

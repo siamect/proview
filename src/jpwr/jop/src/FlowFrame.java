@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowFrame.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: FlowFrame.java,v 1.4 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -308,6 +308,10 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
 
   public PwrtObjid getUtilityObjid() {
     return utilityObjid;
+  }
+
+  public PwrtAttrRef getUtilityAttrRef() {
+    return new PwrtAttrRef(utilityObjid);
   }
 
   public String getUtilityName() {

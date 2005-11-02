@@ -1,22 +1,3 @@
-/* 
- * Proview   $Id: JopcDoGen.java,v 1.3 2005-09-01 14:57:51 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
- *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
@@ -69,7 +50,7 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
+    JopSpider.setSystemName( "äY");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 818, 191);
@@ -247,14 +228,14 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
     pwr_valueinputmedium11.dd.setAccess(6);
     pwr_valueinputmedium11.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium11.dd, "$object.ActualValue##Boolean","%d")
-      ,new GeDynValueInput(pwr_valueinputmedium11.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium11.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup12.dd.setDynType(1024);
     pwr_valueinputreliefup12.dd.setActionType(4096);
     pwr_valueinputreliefup12.dd.setAccess(65535);
     pwr_valueinputreliefup12.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup12.dd, "$local.ScanTime##Float32","%5.0f")
-      ,new GeDynValueInput(pwr_valueinputreliefup12.dd, 4,100000)
+      ,new GeDynValueInput(pwr_valueinputreliefup12.dd, 4,100000,null,null)
       });
     pwr_mbopenobject13.dd.setDynType(129);
     pwr_mbopenobject13.dd.setActionType(8256);
@@ -3182,7 +3163,10 @@ protected class pwr_framethin extends GeFrameThin {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityObjid;
+    return utilityAref.getObjid();
+  }
+  public PwrtAttrRef getUtilityAttrRef() {
+    return utilityAref;
   }
   public String getUtilityName() {
     return this.getClass().getName();

@@ -1,22 +1,3 @@
-/* 
- * Proview   $Id: JopcPidGen.java,v 1.3 2005-09-01 14:57:51 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
- *
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 package jpwr.jopc;
 import jpwr.rt.*;
 import jpwr.jop.*;
@@ -78,7 +59,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "Œ-i@€l@œá@`ïÿ¿(ïÿ¿ß}");
+    JopSpider.setSystemName( "äY");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 847, 413);
@@ -374,91 +355,91 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
     pwr_valueinputmedium36.dd.setAccess(22);
     pwr_valueinputmedium36.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium36.dd, "$object.SetVal##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium36.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium36.dd, 0,0,null,null)
       });
     pwr_valueinputmedium37.dd.setDynType(1024);
     pwr_valueinputmedium37.dd.setActionType(4096);
     pwr_valueinputmedium37.dd.setAccess(22);
     pwr_valueinputmedium37.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium37.dd, "$object.OutVal##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium37.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium37.dd, 0,0,null,null)
       });
     pwr_valueinputmedium38.dd.setDynType(1024);
     pwr_valueinputmedium38.dd.setActionType(4096);
     pwr_valueinputmedium38.dd.setAccess(22);
     pwr_valueinputmedium38.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium38.dd, "$object.Gain##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium38.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium38.dd, 0,0,null,null)
       });
     pwr_valueinputmedium39.dd.setDynType(1024);
     pwr_valueinputmedium39.dd.setActionType(4096);
     pwr_valueinputmedium39.dd.setAccess(22);
     pwr_valueinputmedium39.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium39.dd, "$object.IntTime##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium39.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium39.dd, 0,0,null,null)
       });
     pwr_valueinputmedium40.dd.setDynType(1024);
     pwr_valueinputmedium40.dd.setActionType(4096);
     pwr_valueinputmedium40.dd.setAccess(22);
     pwr_valueinputmedium40.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium40.dd, "$object.DerTime##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium40.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium40.dd, 0,0,null,null)
       });
     pwr_valueinputmedium41.dd.setDynType(1024);
     pwr_valueinputmedium41.dd.setActionType(4096);
     pwr_valueinputmedium41.dd.setAccess(22);
     pwr_valueinputmedium41.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium41.dd, "$object.DerGain##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium41.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium41.dd, 0,0,null,null)
       });
     pwr_valueinputmedium42.dd.setDynType(1024);
     pwr_valueinputmedium42.dd.setActionType(4096);
     pwr_valueinputmedium42.dd.setAccess(22);
     pwr_valueinputmedium42.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium42.dd, "$object.BiasGain##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium42.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium42.dd, 0,0,null,null)
       });
     pwr_valueinputmedium43.dd.setDynType(1024);
     pwr_valueinputmedium43.dd.setActionType(4096);
     pwr_valueinputmedium43.dd.setAccess(22);
     pwr_valueinputmedium43.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputmedium43.dd, "$object.Bias##Float32","%10.3f")
-      ,new GeDynValueInput(pwr_valueinputmedium43.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputmedium43.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup44.dd.setDynType(1024);
     pwr_valueinputreliefup44.dd.setActionType(4096);
     pwr_valueinputreliefup44.dd.setAccess(22);
     pwr_valueinputreliefup44.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup44.dd, "$object.OutMaxShow##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup44.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup44.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup45.dd.setDynType(1024);
     pwr_valueinputreliefup45.dd.setActionType(4096);
     pwr_valueinputreliefup45.dd.setAccess(22);
     pwr_valueinputreliefup45.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup45.dd, "$object.OutMinShow##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup45.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup45.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup46.dd.setDynType(1024);
     pwr_valueinputreliefup46.dd.setActionType(4096);
     pwr_valueinputreliefup46.dd.setAccess(65535);
     pwr_valueinputreliefup46.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup46.dd, "$local.ScanTime##Float32","%5.0f")
-      ,new GeDynValueInput(pwr_valueinputreliefup46.dd, 4,100000)
+      ,new GeDynValueInput(pwr_valueinputreliefup46.dd, 4,100000,null,null)
       });
     pwr_valueinputreliefup47.dd.setDynType(1024);
     pwr_valueinputreliefup47.dd.setActionType(4096);
     pwr_valueinputreliefup47.dd.setAccess(22);
     pwr_valueinputreliefup47.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup47.dd, "$object.SetMaxShow##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup47.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup47.dd, 0,0,null,null)
       });
     pwr_valueinputreliefup48.dd.setDynType(1024);
     pwr_valueinputreliefup48.dd.setActionType(4096);
     pwr_valueinputreliefup48.dd.setAccess(22);
     pwr_valueinputreliefup48.dd.setElements(new GeDynElemIfc[] {
       new GeDynValue(pwr_valueinputreliefup48.dd, "$object.SetMinShow##Float32","%5.1f")
-      ,new GeDynValueInput(pwr_valueinputreliefup48.dd, 0,0)
+      ,new GeDynValueInput(pwr_valueinputreliefup48.dd, 0,0,null,null)
       });
     engine.setFrameReady();
   }
@@ -1565,7 +1546,10 @@ protected class pwr_valueinputmedium extends GeTextField {
     return JopUtility.GRAPH;
   }
   public PwrtObjid getUtilityObjid() {
-    return utilityObjid;
+    return utilityAref.getObjid();
+  }
+  public PwrtAttrRef getUtilityAttrRef() {
+    return utilityAref;
   }
   public String getUtilityName() {
     return this.getClass().getName();

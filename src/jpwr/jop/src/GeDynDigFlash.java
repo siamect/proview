@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynDigFlash.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynDigFlash.java,v 1.3 2005-11-02 14:02:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@ import jpwr.rt.*;
 public class GeDynDigFlash extends GeDynElem {
   String attribute;
   int color;
+  int color2;
 
   boolean attrFound;
   PwrtRefId subid;
@@ -32,10 +33,11 @@ public class GeDynDigFlash extends GeDynElem {
   boolean firstScan = true;
   boolean on;
 
-  public GeDynDigFlash( GeDyn dyn, String attribute, int color) {
+  public GeDynDigFlash( GeDyn dyn, String attribute, int color, int color2) {
     super( dyn, GeDyn.mDynType_DigFlash, GeDyn.mActionType_No);
     this.attribute = attribute;
     this.color = color;
+    this.color2 = color2;
   }
   public void connect() {
     String attrName = dyn.getAttrName( attribute);
@@ -99,8 +101,14 @@ public class GeDynDigFlash extends GeDynElem {
 	  dyn.ignoreColor = true;
         }
         else {
-	  dyn.comp.resetFillColor();
-	  dyn.resetColor = true;
+	  if ( color2 == GeColor.COLOR_INHERIT) {
+	    dyn.comp.resetFillColor();
+	    dyn.resetColor = true;
+	  }
+	  else {
+	    dyn.comp.tsetFillColor( color2);
+	    dyn.ignoreColor = true;
+	  }
         }
 	on = !on;
       }
