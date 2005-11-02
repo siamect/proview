@@ -22,7 +22,9 @@ main()
   process( "pwr_c_chando");
   process( "pwr_c_chanii");
   process( "pwr_c_chanio");
+  process( "pwr_c_chanpo");
   process( "pwr_c_di");
+  process( "pwr_c_disksup");
   process( "pwr_c_do");
   process( "pwr_c_dsfastconf");
   process( "pwr_c_dstrendconf");
@@ -33,13 +35,16 @@ main()
   process( "pwr_c_iv");
   process( "pwr_c_messagehandler");
   process( "pwr_c_mode");
+  process( "pwr_c_nmpscell");
   process( "pwr_c_node");
   process( "pwr_c_pid");
   process( "pwr_c_plcprocess");
   process( "pwr_c_plcthread");
+  process( "pwr_c_remnode");
   process( "pwr_c_remnodeudp");
   process( "pwr_c_remoteconfig");
   process( "pwr_c_remtrans");
+  process( "pwr_c_sysmonconfig");
 
 endmain
 
