@@ -1,0 +1,67 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  process( "pwr_c_baseactuatora");
+  process( "pwr_c_baseactuatora1");
+  process( "pwr_c_baseactuatora2");
+  process( "pwr_c_baseactuatora3");
+  process( "pwr_c_baseactuatora4");
+  process( "pwr_c_baseactuatora5");
+  process( "pwr_c_baseactuatora6");
+  process( "pwr_c_baseactuatora7");
+  process( "pwr_c_basecircuitbreaker");
+  process( "pwr_c_basecontactor");
+  process( "pwr_c_basecontactor1");
+  process( "pwr_c_basecvalve");
+  process( "pwr_c_basecvalve1");
+  process( "pwr_c_basecvalve2");
+  process( "pwr_c_basecvalve3");
+  process( "pwr_c_basecvalve4");
+  process( "pwr_c_basecvalve5");
+  process( "pwr_c_basecvalve6");
+  process( "pwr_c_basecvalve7");
+  process( "pwr_c_basedirvalve");
+  process( "pwr_c_basefan");
+  process( "pwr_c_baselevelsensor");
+  process( "pwr_c_baselevelswitch");
+  process( "pwr_c_basemanvalve");
+  process( "pwr_c_basemanvalve1");
+  process( "pwr_c_basemanvalve2");
+  process( "pwr_c_basemanvalve3");
+  process( "pwr_c_basemotor");
+  process( "pwr_c_basemotor1");
+  process( "pwr_c_basemotor2");
+  process( "pwr_c_basemvalve");
+  process( "pwr_c_basemvalve1");
+  process( "pwr_c_basemvalve2");
+  process( "pwr_c_basemvalve3");
+  process( "pwr_c_basepositsensor");
+  process( "pwr_c_basepressuresensor");
+  process( "pwr_c_basepressureswitch");
+  process( "pwr_c_basepropvalve");
+  process( "pwr_c_basepump");
+  process( "pwr_c_basesafetyswitch");
+  process( "pwr_c_basesensor");
+  process( "pwr_c_basesupswitch");
+  process( "pwr_c_basetempsensor");
+  process( "pwr_c_basetempswitch");
+  process( "pwr_c_basevalve");
+  process( "pwr_c_fanaggregate");
+  process( "pwr_c_runtimecounter");
+
+endmain
+
+
+
+
