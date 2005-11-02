@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopTrend.java,v 1.5 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopTrend.java,v 1.6 2005-11-02 14:00:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -376,13 +376,21 @@ public class JopTrend extends JComponent implements GeComponentIfc,
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}
   String[] pwrAttribute = new String[2];
+  String[] minValueAttr = new String[2];
+  String[] maxValueAttr = new String[2];
   public void setPwrAttribute1( String pwrAttribute) { this.pwrAttribute[0] = pwrAttribute;}
   public String getPwrAttribute1() { return pwrAttribute[0];}
   public void setPwrAttribute2( String pwrAttribute) { this.pwrAttribute[1] = pwrAttribute;}
   public String getPwrAttribute2() { return pwrAttribute[1];}
+  public void setMinValueAttr1( String minValueAttr1) { this.minValueAttr[0] = minValueAttr1;}
+  public void setMaxValueAttr1( String maxValueAttr1) { this.maxValueAttr[0] = maxValueAttr1;}
+  public void setMinValueAttr2( String minValueAttr2) { this.minValueAttr[1] = minValueAttr2;}
+  public void setMaxValueAttr2( String maxValueAttr2) { this.maxValueAttr[1] = maxValueAttr2;}
   float[] valueOld = new float[2];
   boolean firstScan = true;
   GdhrRefObjectInfo[] retColor = {null, null};
+  GdhrRefObjectInfo[] retMinVal = {null, null};
+  GdhrRefObjectInfo[] retMaxVal = {null, null};
   boolean[] attrFound = {false, false};
   float[] minValue = {0,0};
   float[] maxValue = {100, 100};
@@ -415,8 +423,10 @@ public class JopTrend extends JComponent implements GeComponentIfc,
   }
   public void reset() {
     for ( int j = 0; j < 2; j++) {
-      for ( int i = 0; i < noOfPoints; i++)
-        y_values[j][i] = original_height;
+      if ( y_values[j] != null) {
+        for ( int i = 0; i < noOfPoints; i++)
+          y_values[j][i] = original_height;
+      }
     }
     repaint();
   }
@@ -432,12 +442,28 @@ public class JopTrend extends JComponent implements GeComponentIfc,
         else
           attrFound[j] = true;
       }
+      if ( minValueAttr[j] != null && minValueAttr[j].compareTo("") != 0) {
+	String attrName = dd.getAttrName(minValueAttr[j]);
+        retMinVal[j] = en.gdh.refObjectInfo( attrName);
+        if ( retMinVal[j].evenSts())
+          System.out.println( "refObjectInfoError " + minValueAttr[j]);
+      }
+      if ( maxValueAttr[j] != null && maxValueAttr[j].compareTo("") != 0) {
+	String attrName = dd.getAttrName(maxValueAttr[j]);
+        retMaxVal[j] = en.gdh.refObjectInfo( attrName);
+        if ( retMaxVal[j].evenSts())
+          System.out.println( "refObjectInfoError " + maxValueAttr[j]);
+      }
     }
   }
   public void dynamicClose() {
     for ( int j = 0; j < 2; j++) {
       if ( attrFound[j])
         en.gdh.unrefObjectInfo( retColor[j].refid);
+      if ( retMinVal[j] != null && retMinVal[j].oddSts())
+	en.gdh.unrefObjectInfo( retMinVal[j].refid);
+      if ( retMaxVal[j] != null && retMaxVal[j].oddSts())
+	en.gdh.unrefObjectInfo( retMaxVal[j].refid);
     }
   }
   public void dynamicUpdate( boolean animationOnly) {
@@ -455,6 +481,18 @@ public class JopTrend extends JComponent implements GeComponentIfc,
 
     for ( j = 0; j < 2; j++) {
       if ( attrFound[j]) {
+
+	if ( retMinVal[j] != null && retMaxVal[j] != null && 
+	     retMinVal[j].oddSts() && retMaxVal[j].oddSts()) {
+	  float minVal = en.gdh.getObjectRefInfoFloat( retMinVal[j].id);
+	  float maxVal = en.gdh.getObjectRefInfoFloat( retMaxVal[j].id);
+	  if ( (minVal != minValue[j] || maxVal != maxValue[j]) && maxVal != minVal) {
+	    minValue[j] = minVal;
+	    maxValue[j] = maxVal;
+	    reset();
+	  }
+        }
+
 	switch( retColor[j].typeId) {
 	  case Pwr.eType_Boolean:
 	    if ( en.gdh.getObjectRefInfoBoolean( retColor[j].id))

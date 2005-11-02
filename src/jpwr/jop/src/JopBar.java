@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopBar.java,v 1.5 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopBar.java,v 1.6 2005-11-02 14:00:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -242,12 +242,18 @@ public class JopBar extends JComponent implements GeComponentIfc,
   public void setLowColor( int lowColor) { this.lowColor = lowColor;}
   public int getLowColor() { return lowColor;}
   String pwrAttribute = new String();
+  String minValueAttr;
+  String maxValueAttr;
   public void setPwrAttribute( String pwrAttribute) { this.pwrAttribute = pwrAttribute;}
   public String getPwrAttribute() { return pwrAttribute;}
+  public void setMinValueAttr( String minValueAttr) { this.minValueAttr = minValueAttr;}
+  public void setMaxValueAttr( String maxValueAttr) { this.maxValueAttr = maxValueAttr;}
   float valueColor;
   float valueColorOld;
   boolean firstScan = true;
   GdhrRefObjectInfo retColor = null;
+  GdhrRefObjectInfo retMinVal = null;
+  GdhrRefObjectInfo retMaxVal = null;
   boolean colorAttrFound = false;
   float minValue = 0;
   float maxValue = 100;
@@ -281,19 +287,44 @@ public class JopBar extends JComponent implements GeComponentIfc,
       else
         colorAttrFound = true;
     }
+    if ( minValueAttr != null) {
+      String attrName = dd.getAttrName( minValueAttr);
+      retMinVal = en.gdh.refObjectInfo( attrName);
+    }
+    if ( maxValueAttr != null) {
+      String attrName = dd.getAttrName( maxValueAttr);
+      retMaxVal = en.gdh.refObjectInfo( attrName);
+    }
   }
   public void dynamicClose() {
     if ( colorAttrFound)
       en.gdh.unrefObjectInfo( retColor.refid);
+    if ( retMinVal != null && retMinVal.oddSts())
+      en.gdh.unrefObjectInfo( retMinVal.refid);
+    if ( retMaxVal != null && retMinVal.oddSts())
+      en.gdh.unrefObjectInfo( retMaxVal.refid);
   }
   public void dynamicUpdate( boolean animationOnly) {
-    if ( maxValue == minValue)
+    if ( maxValue == minValue && minValueAttr == null && maxValueAttr == null)
       return;
     if ( animationOnly)
       return;
     if ( colorAttrFound) {
       if ( shapes[0] == null)
         return;
+
+      if ( retMinVal != null && retMaxVal != null && 
+	   retMinVal.oddSts() && retMaxVal.oddSts()) {
+	float minVal = en.gdh.getObjectRefInfoFloat( retMinVal.id);
+	float maxVal = en.gdh.getObjectRefInfoFloat( retMaxVal.id);
+	if ( (minVal != minValue || maxVal != maxValue) && maxVal != minVal) {
+	  minValue = minVal;
+	  maxValue = maxVal;
+	  firstScan = true;
+	}
+      }
+
+
       valueColor = en.gdh.getObjectRefInfoFloat( retColor.id);
       if ( valueColorOld != valueColor || firstScan) {
         float bar_height;

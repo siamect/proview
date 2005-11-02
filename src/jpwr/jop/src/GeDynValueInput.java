@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynValueInput.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynValueInput.java,v 1.5 2005-11-02 14:00:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,15 +25,20 @@ import javax.swing.*;
 public class GeDynValueInput extends GeDynElem {
   double minValue;
   double maxValue;
+  String minValueAttr;
+  String maxValueAttr;
 
   boolean attrFound = false;
   int typeId;
   GeDynValue valueElement;
 
-  public GeDynValueInput( GeDyn dyn, double minValue, double maxValue) {
+  public GeDynValueInput( GeDyn dyn, double minValue, double maxValue,
+			  String minValueAttr, String maxValueAttr) {
     super( dyn, GeDyn.mDynType_No, GeDyn.mActionType_ValueInput);
     this.minValue = minValue;
     this.maxValue = maxValue;
+    this.minValueAttr = minValueAttr;
+    this.maxValueAttr = maxValueAttr;
   }
   public void connect() {
     // Find the value element
@@ -73,10 +78,42 @@ public class GeDynValueInput extends GeDynElem {
       PwrtStatus sts;
 
       try {
+	double minval = 0;
+        double maxval = 0;
+	if ( minValueAttr != null) {
+	  String attrName = dyn.getAttrName( minValueAttr);
+	  int typeId = dyn.getTypeId( minValueAttr);
+	  if ( typeId < 0 || typeId == Pwr.eType_Float32) {
+	    CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
+	    if ( ret.evenSts()) {
+	      System.out.println( "ValueInput " + attrName);
+	      return;
+	    }
+	    minval = ret.value;
+	  }
+	}
+	else
+	  minval = minValue;
+
+	if ( maxValueAttr != null) {
+	  String attrName = dyn.getAttrName( maxValueAttr);
+	  int typeId = dyn.getTypeId( maxValueAttr);
+	  if ( typeId < 0 || typeId == Pwr.eType_Float32) {
+	    CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
+	    if ( ret.evenSts()) {
+	      System.out.println( "ValueInput " + attrName);
+	      return;
+	    }
+	    maxval = ret.value;
+	  }
+	}
+	else
+	  maxval = maxValue;
+
 	if ( typeId == Pwr.eType_Float32) {
 	  float inputValue = Float.parseFloat( text.trim());
 	  valueElement.oldValueF = inputValue;
-	  if ( minValue == 0 && maxValue == 0) {
+	  if ( minval == 0 && maxval == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);
 	    if ( !valueElement.localDb)
 	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
@@ -86,8 +123,8 @@ public class GeDynValueInput extends GeDynElem {
 	      System.out.println( "setObjectInfoError " + sts);
 	  }
 	  else {
-	    if ( inputValue >= minValue && inputValue <= maxValue ) {
-	      String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
+	    if ( inputValue >= minval && inputValue <= maxval ) {
+	      String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);
 	      if ( !valueElement.localDb)
 	        sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
 	      else
@@ -107,7 +144,7 @@ public class GeDynValueInput extends GeDynElem {
 		  typeId == Pwr.eType_UInt8) {
 	  int inputValue = Integer.parseInt( text.trim(), 10);
 	  valueElement.oldValueI = inputValue;
-	  if ( minValue == 0 && maxValue == 0) {
+	  if ( minval == 0 && maxval == 0) {
 	    String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
 	    if ( !valueElement.localDb)
 	      sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);
@@ -117,7 +154,7 @@ public class GeDynValueInput extends GeDynElem {
 	      System.out.println( "setObjectInfoError " + sts);
 	  }
 	  else {
-	    if ( inputValue >= minValue && inputValue <= maxValue ) {
+	    if ( inputValue >= minval && inputValue <= maxval ) {
 	      String attrName = dyn.getAttrNameNoSuffix( valueElement.attribute);        
 	      if ( !valueElement.localDb)
 	        sts = dyn.en.gdh.setObjectInfo( attrName, inputValue);

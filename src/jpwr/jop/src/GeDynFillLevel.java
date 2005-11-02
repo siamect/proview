@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynFillLevel.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynFillLevel.java,v 1.3 2005-11-02 14:00:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,15 +29,22 @@ public class GeDynFillLevel extends GeDynElem {
   double maxValue;
   double minPos;
   double maxPos;
+  String minValueAttr;
+  String maxValueAttr;
 
   boolean attrFound;
   PwrtRefId subid;
   int p;
   float oldValue;
   boolean firstScan = true;
+  int minValueP;
+  int maxValueP;
+  PwrtRefId minValueSubid;
+  PwrtRefId maxValueSubid;
 
   public GeDynFillLevel( GeDyn dyn, String attribute, int color, int direction,
-			 double minValue, double maxValue, double minPos, double maxPos) {
+			 double minValue, double maxValue, double minPos, double maxPos,
+			 String minValueAttr, String maxValueAttr) {
     super( dyn, GeDyn.mDynType_FillLevel, GeDyn.mActionType_No);
     this.attribute = attribute;
     this.color = color;
@@ -46,9 +53,11 @@ public class GeDynFillLevel extends GeDynElem {
     this.maxValue = maxValue;
     this.minPos = minPos;
     this.maxPos = maxPos;
+    this.minValueAttr = minValueAttr;
+    this.maxValueAttr = maxValueAttr;
   }
   public void connect() {
-    if ( minValue == maxValue)
+    if ( minValue == maxValue && minValueAttr == null && maxValueAttr == null)
       return;
 
     String attrName = dyn.getAttrName( attribute);
@@ -74,14 +83,54 @@ public class GeDynFillLevel extends GeDynElem {
 	  dyn.comp.setLevelFillColor( color);
       }
     }
+    minValueP = 0;
+    if ( minValueAttr != null) {
+      attrName = dyn.getAttrName( minValueAttr);
+      if ( attrName.compareTo("") != 0) {
+	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	if ( ret.evenSts())
+	  System.out.println( "FillLevel: " + attrName);
+	else {
+	  minValueP = ret.id;
+	  minValueSubid = ret.refid;
+	}
+      }
+    }
+    maxValueP = 0;
+    if ( maxValueAttr != null) {
+      attrName = dyn.getAttrName( maxValueAttr);
+      if ( attrName.compareTo("") != 0) {
+	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	if ( ret.evenSts())
+	  System.out.println( "FillLevel: " + attrName);
+	else {
+	  maxValueP = ret.id;
+	  maxValueSubid = ret.refid;
+	}
+      }
+    }
   }
   public void disconnect() {
     if ( attrFound)
       dyn.en.gdh.unrefObjectInfo( subid);
+    if ( minValueP != 0)
+      dyn.en.gdh.unrefObjectInfo( minValueSubid);
+    if ( maxValueP != 0)
+      dyn.en.gdh.unrefObjectInfo( maxValueSubid);
   }
   public void scan() {
     if ( !attrFound)
       return;
+    if ( minValueP != 0 && maxValueP != 0) {
+      double minVal = dyn.en.gdh.getObjectRefInfoFloat( minValueP);
+      double maxVal = dyn.en.gdh.getObjectRefInfoFloat( maxValueP);
+      if ( (minVal != minValue || maxVal != maxValue) && maxVal != minVal) {
+	minValue = minVal;
+	maxValue = maxVal;
+	firstScan = true;
+      }
+    }
+
     float value = dyn.en.gdh.getObjectRefInfoFloat( p);
     if ( !firstScan) {
       if ( value == oldValue)
