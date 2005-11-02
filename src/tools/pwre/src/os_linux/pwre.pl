@@ -198,6 +198,7 @@ sub build_all ()
   _build("lib", "wb", "init copy");
   _build("lib", "co", "init copy");
   _build("lib", "dtt", "init copy");
+  _build("exp", "wb", "init copy");
   _build("lib", "flow", "all");
   _build("lib", "glow", "all");
   _build("lib", "co", "all");
@@ -214,6 +215,7 @@ sub build_all ()
   _build("lib", "rt", "all");
   _build("lib", "rs", "all");
   _build("exp", "rt", "all");
+  _build("exp", "wb", "all");
   _build("lib", "msg_dummy", "all");
   _build("exe", "wb*", "all");
   _build("lib", "dtt", "all");
@@ -225,10 +227,10 @@ sub build_all ()
   _build("mmi", "*", "copy");
   _build("jpwr", "rt", "all");
   _build("jpwr", "jop", "all");
+  _build("jpwr", "jopc", "all");
   _build("jpwr", "beans", "all");
   _build("jpwr", "rt_client", "all");
 #  _build("db", "wb", "init");
-  _build("exp", "wb", "copy");
   _build("wbl", "pwrs", "lib");
   _build("wbl", "pwrb", "lib");
   _build("wbl", "nmps", "lib");
@@ -348,6 +350,7 @@ sub create()
   create_dir($newdir . "/exe");
   create_dir($newdir . "/exe/sv_se");
   create_dir($newdir . "/exe/en_us");
+  create_dir($newdir . "/exe/de_de");
   create_dir($newdir . "/inc");
   create_dir($newdir . "/load");
   create_dir($newdir . "/lib");
