@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.12 2005-09-20 13:26:17 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.13 2005-11-02 14:08:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3062,8 +3062,10 @@ void GrowCtx::to_pixel( double x, double y, double *pix_x, double *pix_y)
 void GrowCtx::set_javaframe( double *pix_x_right, double *pix_x_left, 
 	double *pix_y_high, double *pix_y_low)
 { 
-  if ( java_width == 0 || ( x0 == 0 && x1 == 0))
+  if ( java_width == 0 || ( x0 == 0 && x1 == 0)) {
+    unzoom();
     measure_javabean( pix_x_right, pix_x_left, pix_y_high, pix_y_low);
+  }
   else
   {
     // Zoom to desired zoom factor
