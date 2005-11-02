@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.33 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.34 2005-11-02 14:07:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2353,7 +2353,8 @@ int GeDigFlash::export_java( grow_tObject object, ofstream& fp, bool first, char
     fp << "      ";
   else
     fp << "      ,";
-  fp << "new GeDynDigFlash(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << ")" << endl;
+  fp << "new GeDynDigFlash(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << 
+      "," << color2 << ")" << endl;
   return 1;
 }
 
@@ -3406,10 +3407,6 @@ void GeValueInput::open( ifstream& fp)
 
 int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
-  int		attr_type, attr_size;
-  pwr_tAName   	parsed_name;
-  int		sts;
-  int		inverted;
 
   // Get the Value element
   annot_typeid = annot_size = 0;
@@ -3423,37 +3420,11 @@ int GeValueInput::connect( grow_tObject object, glow_sTraceData *trace_data)
     }
   }
 
-  min_value_p = 0;
-  dyn->parse_attr_name( minvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
-  if ( strcmp(parsed_name, "") != 0 && 
-       attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&min_value_p, 
-				       &min_value_subid, attr_size);
-  }
-
-  max_value_p = 0;
-  dyn->parse_attr_name( maxvalue_attr, parsed_name,
-				    &inverted, &attr_type, &attr_size);
-  if ( strcmp(parsed_name, "") != 0 && 
-       attr_type == pwr_eType_Float32) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&max_value_p, 
-				       &max_value_subid, attr_size);
-  }
-
   return 1;
 }
 
 int GeValueInput::disconnect( grow_tObject object)
 {
-  if ( min_value_p) {
-    gdh_UnrefObjectInfo( min_value_subid);
-    min_value_p = 0;
-  }
-  if ( max_value_p) {
-    gdh_UnrefObjectInfo( max_value_subid);
-    max_value_p = 0;
-  }
   return 1;
 }
 
@@ -3558,10 +3529,25 @@ int GeValueInput::change_value( grow_tObject object, char *text)
     return sts;
   }
 
-  if ( max_value_p)
-    max_value = *max_value_p;
-  if ( min_value_p)
-    min_value = *min_value_p;
+  if ( strcmp( minvalue_attr, "") != 0) {
+    pwr_tAName  pname;
+
+    dyn->parse_attr_name( minvalue_attr, pname, &inverted, &attr_type, &attr_size);
+    if ( attr_type == pwr_eType_Float32) {
+      sts = gdh_GetObjectInfo( pname, &min_value, sizeof(min_value));
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  if ( strcmp( maxvalue_attr, "") != 0) {
+    pwr_tAName  pname;
+
+    dyn->parse_attr_name( maxvalue_attr, pname, &inverted, &attr_type, &attr_size);
+    if ( attr_type == pwr_eType_Float32) {
+      sts = gdh_GetObjectInfo( pname, &max_value, sizeof(max_value));
+      if ( EVEN(sts)) return sts;
+    }
+  }
+
   if ( !(max_value == 0 && min_value == 0)) {
     // Max value is supplied
     int 	max_exceeded = 0;
@@ -3653,8 +3639,15 @@ int GeValueInput::export_java( grow_tObject object, ofstream& fp, bool first, ch
     fp << "      ";
   else
     fp << "      ,";
-  fp << "new GeDynValueInput(" << var_name << ".dd, " << min_value << "," << max_value 
-     << ")" << endl;
+  fp << "new GeDynValueInput(" << var_name << ".dd, " << min_value << "," << max_value  << ",";
+  if ( strcmp( minvalue_attr, "") == 0)
+    fp << "null,";
+  else
+    fp << "\"" << minvalue_attr << "\",";
+  if ( strcmp( maxvalue_attr, "") == 0)
+    fp << "null)" << endl;
+  else
+    fp << "\"" << maxvalue_attr << "\")" << endl;
   return 1;
 }
 
@@ -7159,7 +7152,15 @@ int GeFillLevel::export_java( grow_tObject object, ofstream& fp, bool first, cha
   else
     fp << "      ,";
   fp << "new GeDynFillLevel(" << var_name << ".dd, \"" << attribute << "\"," << jcolor << "," <<
-    dir << "," << min_value << "," << max_value << "," << min_limit << "," << max_limit << ")" << endl;
+    dir << "," << min_value << "," << max_value << "," << min_limit << "," << max_limit << ",";
+  if ( strcmp( minvalue_attr, "") == 0)
+    fp << "null,";
+  else
+    fp << "\"" << minvalue_attr << "\",";
+  if ( strcmp( maxvalue_attr, "") == 0)
+    fp << "null)" << endl;
+  else
+    fp << "\"" << maxvalue_attr << "\")" << endl;
 
   return 1;
 }
@@ -9816,7 +9817,19 @@ int GeSlider::export_java( grow_tObject object, ofstream& fp, bool first, char *
     fp << "      ,";
   fp << "new GeDynSlider(" << var_name << ".dd, \"" << attribute << "\"," 
      << min_value << "," << max_value << "," << direction << ","
-     << min_pos << "," << max_pos << ")" << endl;
+     << min_pos << "," << max_pos << ",";
+  if ( strcmp( minvalue_attr, "") == 0)
+    fp << "null,";
+  else
+    fp << "\"" << minvalue_attr << "\",";
+  if ( strcmp( maxvalue_attr, "") == 0)
+    fp << "null," << endl;
+  else
+    fp << "\"" << maxvalue_attr << "\"," << endl;
+  if ( strcmp( insensitive_attr, "") == 0)
+    fp << "null)" << endl;
+  else
+    fp << "\"" << insensitive_attr << "\")" << endl;
   return 1;
 }
 

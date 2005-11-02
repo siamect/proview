@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.24 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.25 2005-11-02 14:07:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1133,10 +1133,6 @@ class GeValueInput : public GeDynElem {
   int annot_typeid;
   int annot_size;
   GeValue *value_element;
-  pwr_tFloat32 *min_value_p;
-  pwr_tFloat32 *max_value_p;
-  pwr_tSubid min_value_subid;
-  pwr_tSubid max_value_subid;
 
   GeValueInput( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ValueInput, 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.8 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.9 2005-11-02 14:07:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1924,7 +1924,10 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
 "    return JopUtility.GRAPH;" << endl <<
 "  }" << endl <<
 "  public PwrtObjid getUtilityObjid() {" << endl <<
-"    return utilityObjid;" << endl <<
+"    return utilityAref.getObjid();" << endl <<
+"  }" << endl <<
+"  public PwrtAttrRef getUtilityAttrRef() {" << endl <<
+"    return utilityAref;" << endl <<
 "  }" << endl <<
 "  public String getUtilityName() {" << endl <<
 "    return this.getClass().getName();" << endl <<
@@ -2211,7 +2214,13 @@ int Graph::export_BarTraceAttr( ofstream& fp, grow_tObject object, int cnt)
     if ( elem->dyn_type == ge_mDynType_Bar) {
       if ( strcmp( ((GeBar *)elem)->attribute, "") != 0)
 	fp <<
-"    " << var_name << ".setPwrAttribute(\"" << ((GeTrend *)elem)->attribute1 << "\");" << endl;
+"    " << var_name << ".setPwrAttribute(\"" << ((GeBar *)elem)->attribute << "\");" << endl;
+      if ( strcmp( ((GeBar *)elem)->minvalue_attr, "") != 0)
+	fp <<
+"    " << var_name << ".setMinValueAttr(\"" << ((GeBar *)elem)->minvalue_attr << "\");" << endl;
+      if ( strcmp( ((GeBar *)elem)->maxvalue_attr, "") != 0)
+	fp <<
+"    " << var_name << ".setMaxValueAttr(\"" << ((GeBar *)elem)->maxvalue_attr << "\");" << endl;
     }
     break;
   }
@@ -2260,6 +2269,18 @@ int Graph::export_TrendTraceAttr( ofstream& fp, grow_tObject object, int cnt)
       if ( strcmp( ((GeTrend *)elem)->attribute2, "") != 0)
 	fp <<
 "    " << var_name << ".setPwrAttribute2(\"" << ((GeTrend *)elem)->attribute2 << "\");" << endl;
+      if ( strcmp( ((GeTrend *)elem)->minvalue_attr1, "") != 0)
+	fp <<
+"    " << var_name << ".setMinValueAttr1(\"" << ((GeTrend *)elem)->minvalue_attr1 << "\");" << endl;
+      if ( strcmp( ((GeTrend *)elem)->maxvalue_attr1, "") != 0)
+	fp <<
+"    " << var_name << ".setMaxValueAttr1(\"" << ((GeTrend *)elem)->maxvalue_attr1 << "\");" << endl;
+      if ( strcmp( ((GeTrend *)elem)->minvalue_attr2, "") != 0)
+	fp <<
+"    " << var_name << ".setMinValueAttr2(\"" << ((GeTrend *)elem)->minvalue_attr2 << "\");" << endl;
+      if ( strcmp( ((GeTrend *)elem)->maxvalue_attr2, "") != 0)
+	fp <<
+"    " << var_name << ".setMaxValueAttr2(\"" << ((GeTrend *)elem)->maxvalue_attr2 << "\");" << endl;
     }
     break;
   }
