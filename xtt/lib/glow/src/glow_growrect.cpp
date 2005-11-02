@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.6 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.7 2005-11-02 14:09:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1201,7 +1201,7 @@ void GrowRect::align( double x, double y, glow_eAlignDirection direction)
 void GrowRect::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
-  if ( !(display_level & ctx->display_level))
+  if ( !(display_level & ctx->display_level) || invisible)
     return;
   int idx;
 
