@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynSlider.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynSlider.java,v 1.5 2005-11-02 13:59:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,9 @@ public class GeDynSlider extends GeDynElem {
   double maxValue;
   double minPos;
   double maxPos;
+  String minValueAttr;
+  String maxValueAttr;
+  String insensitiveAttr;
 
   boolean attrFound;
   PwrtRefId subid;
@@ -43,9 +46,16 @@ public class GeDynSlider extends GeDynElem {
   Point offset = new Point();
   float original_width = 0;
   float original_height = 0;
+  int minValueP;
+  int maxValueP;
+  int insensitiveP;
+  PwrtRefId minValueSubid;
+  PwrtRefId maxValueSubid;
+  PwrtRefId insensitiveSubid;
 
   public GeDynSlider( GeDyn dyn, String attribute, double minValue, double maxValue,
-		      int direction, double minPos, double maxPos) {
+		      int direction, double minPos, double maxPos, String minValueAttr, 
+		      String maxValueAttr, String insensitiveAttr) {
     super( dyn, GeDyn.mDynType_No, GeDyn.mActionType_Slider);
     this.attribute = attribute;
     this.minValue = minValue;
@@ -53,6 +63,9 @@ public class GeDynSlider extends GeDynElem {
     this.direction = direction;
     this.minPos = minPos;
     this.maxPos = maxPos;
+    this.minValueAttr = minValueAttr;
+    this.maxValueAttr = maxValueAttr;
+    this.insensitiveAttr = insensitiveAttr;
   }
   public void setMinValue( double minValue) {
     this.minValue = minValue;
@@ -85,14 +98,69 @@ public class GeDynSlider extends GeDynElem {
 	typeId = ret.typeId;
       }
     }
+    minValueP = 0;
+    if ( minValueAttr != null) {
+      attrName = dyn.getAttrName( minValueAttr);
+      if ( attrName.compareTo("") != 0) {
+	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	if ( ret.evenSts())
+	  System.out.println( "FillLevel: " + attrName);
+	else {
+	  minValueP = ret.id;
+	  minValueSubid = ret.refid;
+	}
+      }
+    }
+    maxValueP = 0;
+    if ( maxValueAttr != null) {
+      attrName = dyn.getAttrName( maxValueAttr);
+      if ( attrName.compareTo("") != 0) {
+	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	if ( ret.evenSts())
+	  System.out.println( "FillLevel: " + attrName);
+	else {
+	  maxValueP = ret.id;
+	  maxValueSubid = ret.refid;
+	}
+      }
+    }
+    insensitiveP = 0;
+    if ( insensitiveAttr != null) {
+      attrName = dyn.getAttrName( insensitiveAttr);
+      if ( attrName.compareTo("") != 0) {
+	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	if ( ret.evenSts())
+	  System.out.println( "FillLevel: " + attrName);
+	else {
+	  insensitiveP = ret.id;
+	  insensitiveSubid = ret.refid;
+	}
+      }
+    }
   }
   public void disconnect() {
     if ( attrFound)
       dyn.en.gdh.unrefObjectInfo( subid);
+    if ( minValueP != 0)
+      dyn.en.gdh.unrefObjectInfo( minValueSubid);
+    if ( maxValueP != 0)
+      dyn.en.gdh.unrefObjectInfo( maxValueSubid);
+    if ( insensitiveP != 0)
+      dyn.en.gdh.unrefObjectInfo( insensitiveSubid);
   }
   public void scan() {
     if ( !attrFound || moveActive)
       return;
+
+    if ( minValueP != 0 && maxValueP != 0) {
+      double minVal = dyn.en.gdh.getObjectRefInfoFloat( minValueP);
+      double maxVal = dyn.en.gdh.getObjectRefInfoFloat( maxValueP);
+      if ( (minVal != minValue || maxVal != maxValue) && maxVal != minVal) {
+	minValue = minVal;
+	maxValue = maxVal;
+	firstScan = true;
+      }
+    }
 
     float width = ((JComponent)dyn.comp).getParent().getWidth();
     float height = ((JComponent)dyn.comp).getParent().getHeight();
@@ -188,6 +256,11 @@ public class GeDynSlider extends GeDynElem {
       // dyn.repaintNow = true;
       break;
     case GeDyn.eEvent_SliderMoved:
+      if ( insensitiveP != 0) {
+	boolean insensitive = dyn.en.gdh.getObjectRefInfoBoolean( insensitiveP);
+	if ( insensitive)
+	  return;
+      }
       float value;
       double minPos;
       double maxPos;
