@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_backup.c,v 1.5 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_c_backup.c,v 1.6 2005-11-02 14:25:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,8 +61,8 @@ static pwr_tStatus PostCreate (
   sts = ldh_NameToAttrRef(Session, Name, &Attribute);
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  sts = ldh_SetObjectPar(Session, Object, "RtBody", "DataName", Name,
-    strlen(Name) + 1);
+  sts = ldh_SetObjectPar(Session, Object, "RtBody", "DataName", (char *)&Attribute,
+    sizeof(Attribute));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
   return PWRB__SUCCESS;
