@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.9 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.10 2005-11-02 14:05:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -181,7 +181,7 @@ struct s_Event {
   LstHead(sActive)	activeIdx_l;
   pwr_tObjid	  outunit;
   pwr_tObjid	  object;
-  pwr_tString80	  objName;
+  pwr_tOName	  objName;
   mh_eEvent	  event;
   pwr_tUInt32	  msgSize;
   pwr_tBoolean	  local;
