@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSpider.java,v 1.8 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: JopSpider.java,v 1.9 2005-11-04 11:48:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -418,7 +418,7 @@ System.out.println( "qcom put finished");
       }
     }
     else
-      System.out.println( "JopSpider: Pasre error " + cli.getStsString());
+      System.out.println( "JopSpider: Parse error " + cli.getStsString());
 
     if ( !local_cmd) {
       // Send to xtt
@@ -497,13 +497,17 @@ System.out.println( "JopSpiderCmd start");
   public static Object loadFrame( JopSession session, String className, 
 				  String instance, boolean scrollbar) {
     Object frame;
+    if ( instance == null)
+      instance = "";
     
+    JopLog.log("JopSpider.loadFrame: Loading frame \"" + className + "\" instance \"" + instance + "\"");
     try {
       Class clazz = Class.forName( className);
       try {
 	Class argTypeList[] = new Class[] { session.getClass(), instance.getClass(),
 	                                    boolean.class}; 
         Object argList[] = new Object[] { session, instance, new Boolean(scrollbar)};
+	System.out.println( "JopSpider.loadFrame getConstructor");
         Constructor constructor = clazz.getConstructor( argTypeList);
 
 	try {
@@ -514,6 +518,7 @@ System.out.println( "JopSpiderCmd start");
 	  return null;
 	}
         // frame = clazz.newInstance();
+	JopLog.log( "JopSpider.loadFrame openFrame");
         openFrame( frame);
         return frame;
       }
