@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopFrame.java,v 1.3 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: JopFrame.java,v 1.4 2005-11-04 11:43:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,8 +56,9 @@ public class JopFrame extends JFrame
       engine.setInstance( instance);
 
       CdhrAttrRef oret = engine.gdh.nameToAttrRef( instance);
-      if ( oret.oddSts())
+      if ( oret.oddSts()) {
 	utilityAref = oret.aref;
+      }
     }
     enableEvents(AWTEvent.WINDOW_EVENT_MASK);
   }
