@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.4 2005-11-04 11:52:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -309,6 +309,7 @@ int XttLogging::logging_set(
 
 	      strcpy(  parameterstr[i], name);
 	      parameter_type[i] = attr_type; 
+	      parameter_size[i] = attr_size/attr_dimension; 
 	      switch( parameter_type[i])
 	      {
 	        case pwr_eType_Float32:
