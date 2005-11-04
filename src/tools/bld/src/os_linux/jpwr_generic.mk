@@ -125,11 +125,12 @@ $(export_lib) : $(objects)
 		$(rm) $(export_lib); \
 	  fi
 	@ cd $(pwre_broot)/$(pwre_target)/bld; \
-	gifs=`eval ls jpwr/$(comp_name)/*.gif 2>/dev/null`; \
-	if [ "$(gifs)" = "" ]; then \
-	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
-	else \
+	if ls jpwr/$(comp_name)/*.gif >/dev/null 2>/dev/null; then \
+	  echo "Inserting gif files"; \
 	  jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif; \
+	else \
+	  echo "No gif files found"; \
+	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
 	fi
 #	@ jar cvfm $(export_lib) ../../manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 
