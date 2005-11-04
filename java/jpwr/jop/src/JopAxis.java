@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopAxis.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopAxis.java,v 1.4 2005-11-04 11:42:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,10 +114,7 @@ public class JopAxis extends JComponent {
   public void setRotate( double rotate) { this.rotate = rotate;}
   public double getRotate() { return rotate;}
   Shape[] shapes = null;
-  GeneralPath[] curve = new GeneralPath[2];
   Line2D.Float[] hLines;
-  float[][] y_values = new float[2][];
-  float[][] x_values = new float[2][];
   public void paint(Graphics g1) {
     super.paint(g1);
     Graphics2D g = (Graphics2D) g1;
@@ -137,6 +134,8 @@ public class JopAxis extends JComponent {
   float hTextPosX[];
   float hTextPosY[];
   String hText[];
+  float oldWidth;
+  float widthOrig = 0;
   public void paintComponent(Graphics g1) {
     int i, j;
     Graphics2D g = (Graphics2D) g1;
@@ -145,19 +144,27 @@ public class JopAxis extends JComponent {
     AffineTransform save = g.getTransform();
     float delta;
     float value;
+    boolean drawText = (minValue != maxValue);
 
-    g.setFont( font);
+    if ( widthOrig == 0)
+      widthOrig = width;
 
-    if ( shapes == null) {
+    //g.setFont( font);
+    g.setFont( font.deriveFont( width / widthOrig * font.getSize()));
+
+    if ( shapes == null || width != oldWidth) {
+      float lineLength = this.lineLength * width / widthOrig;
       shapes = new Shape[1];
       FontRenderContext frc = g.getFontRenderContext();
 
       if ( lines > 0)
       {
         hLines = new Line2D.Float[lines];
-        hText = new String[lines/valueQuotient + 1];
-        hTextPosY = new float[lines/valueQuotient + 1];
-        hTextPosX = new float[lines/valueQuotient + 1];
+	if ( drawText) {
+          hText = new String[lines/valueQuotient + 1];
+          hTextPosY = new float[lines/valueQuotient + 1];
+          hTextPosX = new float[lines/valueQuotient + 1];
+	}
 
         if ( 315 <= rotate || rotate < 45.0) {
           shapes[0] = new Line2D.Float(width, 0F, width, height);
@@ -169,7 +176,7 @@ public class JopAxis extends JComponent {
             else
 	      hLines[i] = new Line2D.Float( width - 2F/3F*lineLength, 
 					  delta * i, width, delta * i);
-	    if ( i % valueQuotient == 0) {
+	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
               else
@@ -199,7 +206,7 @@ public class JopAxis extends JComponent {
             else
 	      hLines[i] = new Line2D.Float( delta * i, 
 			  height - 2F/3F*lineLength, delta * i, height);
-	    if ( i % valueQuotient == 0) {
+	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = (maxValue - minValue) / ( lines - 1) * i;
               else
@@ -230,7 +237,7 @@ public class JopAxis extends JComponent {
             else
 	      hLines[i] = new Line2D.Float( 0F, 
 			      delta * i, 2F/3F*lineLength, delta * i);
-	    if ( i % valueQuotient == 0) {
+	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = (maxValue - minValue) / ( lines - 1) * i;
 	      else
@@ -260,7 +267,7 @@ public class JopAxis extends JComponent {
             else
 	      hLines[i] = new Line2D.Float( delta * i, 
 			  0F , delta * i, 2F/3F*lineLength);
-	    if ( i % valueQuotient == 0) {
+	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = maxValue - (maxValue - minValue) / ( lines - 1) * i;
               else
@@ -307,12 +314,15 @@ public class JopAxis extends JComponent {
     g.draw( shapes[0]);
     for ( i = 0; i < lines; i++)
       g.draw( hLines[i]);
-    for ( i = 0; i < lines; i++) {
-      if ( i % valueQuotient == 0) {
-	g.drawString( hText[i/valueQuotient], hTextPosX[i/valueQuotient], 
-		      hTextPosY[i/valueQuotient]);
+    if ( drawText) {
+      for ( i = 0; i < lines; i++) {
+        if ( i % valueQuotient == 0) {
+	  g.drawString( hText[i/valueQuotient], hTextPosX[i/valueQuotient], 
+			hTextPosY[i/valueQuotient]);
+	}
       } 
     }
+    oldWidth = width;
   }
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}

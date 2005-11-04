@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynMove.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynMove.java,v 1.5 2005-11-04 11:41:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,12 +48,15 @@ public  String moveYAttribute;
   float moveYOldValue;
   float scaleXOldValue;
   float scaleYOldValue;
-  public double         xOrig;
-  public double         yOrig;
+  public double xOrig;
+  public double yOrig;
   public double wOrig;
   public double hOrig;
-  public double         xScale = 1;
-  public double         yScale = 1;
+  public double wRootOrig;
+  public double wRootOld;
+  public double xScale = 1;
+  public double yScale = 1;
+  JRootPane rootpane;
   boolean firstScan = true;
 
   public GeDynMove( GeDyn dyn, String moveXAttribute, String moveYAttribute, 
@@ -135,10 +138,15 @@ public  String moveYAttribute;
       Dimension size = ((JComponent)dyn.comp).getSize();
       wOrig= (double) size.width;
       hOrig= (double) size.height;
+      rootpane = ((JComponent)dyn.comp).getRootPane();
+      wRootOrig = (double) rootpane.getWidth();
     }
+
+    double wRoot = (double) rootpane.getWidth();
 
     if ( attrMoveXFound || attrMoveYFound) {
       // Move
+
       Point loc = ((JComponent)dyn.comp).getLocation();
       Dimension size = ((JComponent)dyn.comp).getSize();
       float valueMoveX = 0;
@@ -160,11 +168,11 @@ public  String moveYAttribute;
       }
       if ( repaintNow) {
 	  if ( attrMoveXFound){
-	    double xRatio=(size.width/wOrig);
+	    double xRatio = wRoot/wRootOrig;
 	    loc.x = (int) ((xOrig + (valueMoveX - xOffset) * factor) * xRatio);
 	  }
 	  if ( attrMoveYFound){
-	    double yRatio=(size.height/hOrig);
+	    double yRatio = wRoot/wRootOrig;
 	    loc.y = (int) ((yOrig + (valueMoveY - yOffset) * factor) * yRatio);
 	  }
 	((JComponent)dyn.comp).setLocation( loc);
@@ -181,14 +189,14 @@ public  String moveYAttribute;
 
       if ( attrScaleXFound) {
         valueScaleX = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleXp) * scaleFactor);
-        if ( valueScaleX != scaleXOldValue  || firstScan) {
+        if ( valueScaleX != scaleXOldValue  || firstScan || wRoot != wRootOld) {
           repaintNow = true;
  	  scaleXOldValue = valueScaleX;
         }
       }
       if ( attrScaleYFound) {
         valueScaleY = (float) (dyn.en.gdh.getObjectRefInfoFloat( scaleYp) * scaleFactor);
-        if ( valueScaleY != scaleYOldValue  || firstScan) {
+        if ( valueScaleY != scaleYOldValue  || firstScan || wRoot != wRootOld) {
 	  repaintNow = true;
 	  scaleYOldValue = valueScaleY;
         }
@@ -196,19 +204,19 @@ public  String moveYAttribute;
       if ( repaintNow) {
         Rectangle rect = ((JComponent)dyn.comp).getBounds();
         if ( attrScaleXFound) {
-	  rect.width = (int) (xScale * valueScaleX);
+	  rect.width = (int) (xScale * valueScaleX * wRoot / wRootOrig);
 	  if ( rect.width < 1)
 	    rect.width = 1;
         }
         if ( attrScaleYFound) {
-	  rect.height = (int) (yScale * valueScaleY);
+	  rect.height = (int) (yScale * valueScaleY * wRoot / wRootOrig);
 	  if ( rect.height < 1)
 	    rect.height = 1;
         }
         ((JComponent)dyn.comp).setBounds( rect);
       }
     }
-
+    wRootOld = wRoot;
     if ( firstScan)
       firstScan = false;
   }
