@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeColor.java,v 1.5 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: GeColor.java,v 1.6 2005-11-04 11:39:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -524,11 +524,7 @@ public class GeColor {
     Rgb rgb;
     Color color = null;
 
-    if ( idx == 300) {
-      // This should be background color TODO...
-      return getColor(33);
-    }
-    else if ( idx < 4)
+    if ( idx < 4)
       color = new Color( (int)(colorValues[3*idx] * 255),
 		(int)(colorValues[3*idx + 1] * 255),
 		(int)(colorValues[3*idx + 2] * 255));
@@ -615,6 +611,11 @@ public class GeColor {
     int	incr;
     int intensity = color_intensity;
     int brightness = color_brightness;
+
+    if ( local_drawtype == 300) {
+      // This should be background color TODO...
+      return 33;
+    }
 
     if ( default_color == NO_COLOR && color_tone != NO_TONE) {
       int tone = color_tone;
@@ -718,7 +719,7 @@ public class GeColor {
 	int color_intensity, int color_brightness, int color_inverse, 
 	int default_color, boolean dimmed) {
     int drawtype = getDrawtype( local_drawtype, color_tone, color_shift, color_intensity,
-				color_brightness, color_inverse, default_color, dimmed);
+			      color_brightness, color_inverse, default_color, dimmed);
     if ( colors[drawtype] == null)
       colors[drawtype] = rgbColor( drawtype);
     return colors[drawtype];
