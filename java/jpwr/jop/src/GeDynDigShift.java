@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynDigShift.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynDigShift.java,v 1.3 2005-11-04 11:41:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,8 @@
 
 package jpwr.jop;
 import jpwr.rt.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class GeDynDigShift extends GeDynElem {
   String attribute;
@@ -75,6 +77,8 @@ public class GeDynDigShift extends GeDynElem {
         dyn.comp.setFirstPage();
       dyn.repaintNow = true;
     }
+    if ( dyn.repaintNow) // Test
+      ((JComponent)dyn.comp).repaint();
     oldValue = value0;
   }
 }

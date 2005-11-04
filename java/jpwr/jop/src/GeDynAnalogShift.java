@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynAnalogShift.java,v 1.3 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: GeDynAnalogShift.java,v 1.4 2005-11-04 11:40:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,8 @@
 
 package jpwr.jop;
 import jpwr.rt.*;
+import java.awt.*;
+import javax.swing.*;
 
 public class GeDynAnalogShift extends GeDynElem {
   String attribute;
@@ -81,6 +83,10 @@ public class GeDynAnalogShift extends GeDynElem {
       }
       break;
     }
+    }
+    if ( dyn.repaintNow) {
+      ((JComponent)dyn.comp).repaint();
+      dyn.repaintNow = false;
     }
     if ( firstScan)
       firstScan = false;
