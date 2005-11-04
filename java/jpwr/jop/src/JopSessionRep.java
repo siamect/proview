@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.6 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.7 2005-11-04 11:45:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,7 +112,7 @@ public class JopSessionRep implements JopSessionIfc {
 
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph) {
     CdhrAttrRef aref = null;
-    if ( instance != null) {
+    if ( instance != null && !instance.equals("")) {
       if ( instance.startsWith("&")) {
 	// Objid pointer attribute
         CdhrString cstr = engine.gdh.getObjectInfoString( instance.substring(1));
@@ -121,16 +121,19 @@ public class JopSessionRep implements JopSessionIfc {
 	instance = cstr.str;
       }
 
-      JopLog.log("openGraphFrame");
+      JopLog.log("openGraphFrame " + name + " " + instance);
       aref = engine.gdh.nameToAttrRef( instance);
       if ( aref.evenSts()) return;
 
       if ( classGraph) {
+
 	CdhrTypeId tid = engine.gdh.getAttrRefTid( aref.aref);
 	if ( tid.evenSts()) return;
 
         CdhrObjid coid = engine.gdh.classIdToObjid( tid.typeId);
 	if ( coid.evenSts()) return;
+
+	CdhrClassId cid = engine.gdh.getSuperClass( tid.typeId, null);
 
 	CdhrString sret = engine.gdh.objidToName( coid.objid, Cdh.mName_object);
 	if ( sret.evenSts()) return;
@@ -250,7 +253,7 @@ public class JopSessionRep implements JopSessionIfc {
 	  if ( ((JopUtilityIfc) o).getUtilityType() == type &&
 	       utilityName.equals( name) &&
 	       utilityAref != null &&
-	       utilityAref.equals( aref))
+	       utilityAref.isEqual( aref))
 	    return o;    
         }
         else {
