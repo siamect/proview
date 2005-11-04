@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.5 2005-09-05 08:42:03 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.6 2005-11-04 11:53:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -866,6 +866,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp)
 {
   int i;
+  int draw_text = (fabs(increment) > DBL_EPSILON);
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   double rotation;
   int bold;
@@ -906,45 +907,59 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   // Calculate max value line width
   if ( 45 >= rotation || rotation > 315)
   {
-    for ( i = 0; i < lines; i++)
-    {
-      if ( i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
-                max( 0, idx), &z_width, &z_height, &z_descent);
-        if ( max_z_width < z_width)
-          max_z_width = z_width;
+    if ( draw_text) {
+      for ( i = 0; i < lines; i++) {
+	if ( i % valuequotient == 0) {
+	  sprintf( text, format, max_value - i * increment);
+	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+				max( 0, idx), &z_width, &z_height, &z_descent);
+	  if ( max_z_width < z_width)
+	    max_z_width = z_width;
+	}
       }
+      line_length = int(ur_x - ll_x) - max_z_width;
     }
-    line_length = int(ur_x - ll_x) - max_z_width;
+    else
+      line_length = int(ur_x - ll_x);
   }
   else if ( 45 < rotation && rotation <= 135)  
   {
-    draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+    if ( draw_text) {
+      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 
-    line_length = int(ur_y - ll_y) - (z_height - z_descent);
+      line_length = int(ur_y - ll_y) - (z_height - z_descent);
+    }
+    else
+      line_length = int(ur_y - ll_y);
   }
   else if ( 135 < rotation && rotation <= 225)
   {
-    for ( i = 0; i < lines; i++)
-    {
-      if ( i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+    if ( draw_text) {
+      for ( i = 0; i < lines; i++) {
+	if ( i % valuequotient == 0) {
+	  sprintf( text, format, max_value - i * increment);
+	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
-        if ( max_z_width < z_width)
-          max_z_width = z_width;
+	  if ( max_z_width < z_width)
+	    max_z_width = z_width;
+	}
       }
+      line_length = int(ur_x - ll_x) - max_z_width;
     }
-    line_length = int(ur_x - ll_x) - max_z_width;
+    else
+      line_length = int(ur_x - ll_x);
   }
   else // if ( 225 < rotation && rotation <= 315)
   {
-    draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+    if ( draw_text) {
+      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 
-    line_length = int(ur_y - ll_y) - (z_height - z_descent);
+      line_length = int(ur_y - ll_y) - (z_height - z_descent);
+    }
+    else
+      line_length = int(ur_y - ll_y);
   }
   if ( line_length < 3)
     line_length = 3;
