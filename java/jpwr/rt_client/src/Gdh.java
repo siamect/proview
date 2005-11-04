@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.8 2005-11-04 11:50:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,6 +76,10 @@ public class Gdh
   public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
   public final static int GET_MSG = 50;
   public final static int GET_MSG_TEXT = 51;
+  public final static int NAME_TO_ATTRREF = 52;
+  public final static int ATTRREF_TO_NAME = 53;
+  public final static int GET_ATTRREF_TID = 54;
+  public final static int GET_SUPER_CLASS = 55;
 
 
 
@@ -953,6 +957,36 @@ public class Gdh
   }
 
 
+  public CdhrAttrRef nameToAttrRef(String objectName)
+  {
+    try
+    {
+      out.writeInt(NAME_TO_ATTRREF);
+      out.writeUTF(objectName);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrAttrRef(null, sts);
+      }
+
+      int oix = in.readInt();
+      int vid = in.readInt();
+      int body = in.readInt();
+      int offset = in.readInt();
+      int size = in.readInt();
+      int flags = in.readInt();
+      PwrtAttrRef aref = new PwrtAttrRef( new PwrtObjid(oix, vid), body, 
+					  offset, size, flags);
+      return new CdhrAttrRef(aref, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrAttrRef(null, __IO_EXCEPTION);
+    }
+  }
+
+
   public CdhrString objidToName(PwrtObjid objid, int nameType)
   {
     try
@@ -960,6 +994,35 @@ public class Gdh
       out.writeInt(OBJID_TO_NAME);
       out.writeInt(objid.oix);
       out.writeInt(objid.vid);
+      out.writeInt(nameType);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrString(null, sts);
+      }
+
+      String name = in.readUTF();
+      return new CdhrString(name, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrString("", __IO_EXCEPTION);
+    }
+  }
+
+
+  public CdhrString attrRefToName(PwrtAttrRef aref, int nameType)
+  {
+    try
+    {
+      out.writeInt(ATTRREF_TO_NAME);
+      out.writeInt(aref.objid.oix);
+      out.writeInt(aref.objid.vid);
+      out.writeInt(aref.body);
+      out.writeInt(aref.offset);
+      out.writeInt(aref.size);
+      out.writeInt(aref.flags);
       out.writeInt(nameType);
       out.flush();
       int sts = in.readInt();
@@ -1125,6 +1188,65 @@ public class Gdh
     catch(IOException e)
     {
       return new CdhrClassId(0, __IO_EXCEPTION);
+    }
+  }
+
+
+  public CdhrClassId getSuperClass(int cid, PwrtObjid objid)
+  {
+    try
+    {
+      out.writeInt(GET_SUPER_CLASS);
+      out.writeInt(cid);
+      if ( objid == null) {
+	out.writeInt(0);
+	out.writeInt(0);
+      }
+      else {
+	out.writeInt(objid.oix);
+	out.writeInt(objid.vid);
+      }
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrClassId(0, sts);
+      }
+
+      int classId = in.readInt();
+      return new CdhrClassId(classId, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrClassId(0, __IO_EXCEPTION);
+    }
+  }
+
+
+  public CdhrTypeId getAttrRefTid(PwrtAttrRef aref)
+  {
+    try
+    {
+      out.writeInt(GET_ATTRREF_TID);
+      out.writeInt(aref.objid.oix);
+      out.writeInt(aref.objid.vid);
+      out.writeInt(aref.body);
+      out.writeInt(aref.offset);
+      out.writeInt(aref.size);
+      out.writeInt(aref.flags);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrTypeId(0, sts);
+      }
+
+      int typeId = in.readInt();
+      return new CdhrTypeId(typeId, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrTypeId(0, __IO_EXCEPTION);
     }
   }
 
@@ -1729,6 +1851,14 @@ public class Gdh
     if(suffix.compareTo("ATTRREF") == 0)
     {
       return Pwr.eType_AttrRef;
+    }
+    if(suffix.compareTo("STATUS") == 0)
+    {
+      return Pwr.eType_Status;
+    }
+    if(suffix.compareTo("NETSTATUS") == 0)
+    {
+      return Pwr.eType_NetStatus;
     }
     if(suffix.substring(0, 6).compareTo("STRING") == 0)
     {

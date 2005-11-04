@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.10 2005-11-02 14:02:20 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.11 2005-11-04 11:50:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,6 +87,10 @@ public class GdhServer
   public final static int GET_OBJECT_REF_INFO_STRING_ARRAY = 49;
   public final static int GET_MSG = 50;
   public final static int GET_MSG_TEXT = 51;
+  public final static int NAME_TO_ATTRREF = 52;
+  public final static int ATTRREF_TO_NAME = 53;
+  public final static int GET_ATTRREF_TID = 54;
+  public final static int GET_SUPER_CLASS = 55;
 
   public final static int PORT = 4445;
 
@@ -564,13 +568,12 @@ public class GdhServer
               try
               {
                 String attrName = in.readUTF();
-
                 Sub ret = this.refObjectInfo(attrName, threadNumber);
 
-                thSub.add(ret);
                 out.writeInt(ret.sts);
                 if(ret.oddSts())
                 {
+		  thSub.add(ret);
                   out.writeInt(ret.refid.rix);
                   out.writeInt(ret.refid.nid);
                   out.writeInt(thSub.size() - 1);
@@ -963,6 +966,29 @@ public class GdhServer
                 System.out.println("nameToObjid: IO exception");
               }
               break;
+            case NAME_TO_ATTRREF:
+              try
+              {
+                String name = in.readUTF();
+                CdhrAttrRef ret = gdh.nameToAttrRef(name);
+                out.writeInt(ret.getSts());
+                out.flush();
+                if(ret.oddSts())
+                {
+                  out.writeInt(ret.aref.objid.oix);
+                  out.writeInt(ret.aref.objid.vid);
+                  out.writeInt(ret.aref.body);
+                  out.writeInt(ret.aref.offset);
+                  out.writeInt(ret.aref.size);
+                  out.writeInt(ret.aref.flags);
+                  out.flush();
+                }
+              }
+              catch(IOException e)
+              {
+                System.out.println("nameToAttrRef: IO exception");
+              }
+              break;
             case OBJID_TO_NAME:
               try
               {
@@ -981,6 +1007,31 @@ public class GdhServer
               catch(IOException e)
               {
                 System.out.println("objidToName: IO exception");
+              }
+              break;
+            case ATTRREF_TO_NAME:
+              try
+              {
+                int oix = in.readInt();
+                int vid = in.readInt();
+                int body = in.readInt();
+                int offset = in.readInt();
+                int size = in.readInt();
+                int flags = in.readInt();
+                int nameType = in.readInt();
+                PwrtObjid objid = new PwrtObjid(oix, vid);
+		PwrtAttrRef aref = new PwrtAttrRef( objid, body, offset, size, flags);
+                CdhrString ret = gdh.attrRefToName(aref, nameType);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeUTF(ret.str);
+                }
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("attrRefToName: IO exception");
               }
               break;
             case GET_ROOT_LIST:
@@ -1104,6 +1155,50 @@ public class GdhServer
               catch(IOException e)
               {
                 System.out.println("getObjectClass: IO exception");
+              }
+              break;
+            case GET_SUPER_CLASS:
+              try
+              {
+                int cid = in.readInt();
+                int oix = in.readInt();
+                int vid = in.readInt();
+                PwrtObjid objid = new PwrtObjid(oix, vid);
+                CdhrClassId ret = gdh.getSuperClass(cid, objid);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeInt(ret.classId);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getSuperClass: IO exception");
+              }
+              break;
+            case GET_ATTRREF_TID:
+              try
+              {
+                int oix = in.readInt();
+                int vid = in.readInt();
+                int body = in.readInt();
+                int offset = in.readInt();
+                int size = in.readInt();
+                int flags = in.readInt();
+                PwrtObjid objid = new PwrtObjid(oix, vid);
+		PwrtAttrRef aref = new PwrtAttrRef(objid, body, offset, size, flags);
+                CdhrTypeId ret = gdh.getAttrRefTid(aref);
+                out.writeInt(ret.getSts());
+                if(ret.oddSts())
+                {
+                  out.writeInt(ret.typeId);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getAttrRefTid: IO exception");
               }
               break;
             case GET_CLASS_LIST:

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.9 2005-11-02 14:04:56 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.10 2005-11-04 11:51:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -240,7 +240,7 @@ JNIEXPORT jint JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoInt
   (JNIEnv *env, jclass obj, jint id)
 {
   pwr_tInt32 value;
-  
+
   value = *(pwr_tInt32 *)id;
   return (jint) value;
 }
