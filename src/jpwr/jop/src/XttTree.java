@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttTree.java,v 1.7 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: XttTree.java,v 1.8 2005-11-04 11:47:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1096,7 +1096,7 @@ public class XttTree extends JPanel
     this.newMethod(english, LAN_EN, "LAN_EN", /*false,*/ 1, null);
     this.newMethod("INCLOG", INCLOG, "INCLOG", /*false,*/ -1, "ctrl O");
     this.newMethod("DECLOG", DECLOG, "DECLOG", /*false,*/ -1, "ctrl P");
-    this.newMethod(enterComm, COMM,"COMM",0,"ctrl C");
+    this.newMethod(enterComm, COMM,"COMM",0,"ctrl B");
 
     inputMap.setParent(this.tree.getInputMap(JComponent.WHEN_FOCUSED));
     this.tree.setInputMap(JComponent.WHEN_FOCUSED, inputMap);
@@ -1190,24 +1190,20 @@ public class XttTree extends JPanel
 	    if(tp == null) return;
 	    DefaultMutableTreeNode tn = (DefaultMutableTreeNode)(tp.getLastPathComponent());
 	    if(tn == null) return;
-	    try
-		{
-		    TreeObj obj = (TreeObj)tn.getUserObject();
-		    String name = obj.fullName;
-		      if(name == null)
-			  {
-			      return;
-			  }
-		      new JopMethodsMenu( session, 
-					  name, 
-					  JopUtility.TRACE,(Component) tree, 
-					  e.getX(), e.getY());
-		      
-		}
-	    catch(Exception ex)
-		{
-		    Logg.logg("Error in showCross() " + ex.toString(),0);
-		}
+	    try {
+	      TreeObj obj = (TreeObj)tn.getUserObject();
+	      String name = obj.fullName;
+	      if(name == null)
+		return;
+
+	      new JopMethodsMenu( session, name, 
+				  JopUtility.NAVIGATOR,(Component) tree, 
+				  e.getX(), e.getY());
+	      
+	    }
+	    catch(Exception ex) {
+	      Logg.logg("Error in showCross() " + ex.toString(),0);
+	    }
 	    Logg.loggToApplet("");
 	    // popup.show((Component)e.getSource(), e.getX(), e.getY());
           }
