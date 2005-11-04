@@ -244,7 +244,7 @@ public class JopcBasecvalve5 extends JopFrame implements JopUtilityIfc {
     jopAxis44.setLines(51);
     jopAxis44.setLongQuotient(5);
     jopAxis44.setValueQuotient(5);
-    jopAxis44.setLineLength(3);
+    jopAxis44.setLineLength(11);
     jopAxis44.setLineWidth(1);
     jopAxis44.setRotate(0);
     jopAxis44.setFont(new Font("Helvetica", Font.PLAIN, 10));

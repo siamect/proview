@@ -230,7 +230,7 @@ public class JopcBasecvalve extends JopFrame implements JopUtilityIfc {
     jopAxis43.setLines(51);
     jopAxis43.setLongQuotient(5);
     jopAxis43.setValueQuotient(5);
-    jopAxis43.setLineLength(3);
+    jopAxis43.setLineLength(11);
     jopAxis43.setLineWidth(1);
     jopAxis43.setRotate(0);
     jopAxis43.setFont(new Font("Helvetica", Font.PLAIN, 10));

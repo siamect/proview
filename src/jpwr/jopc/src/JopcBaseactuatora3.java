@@ -200,7 +200,7 @@ public class JopcBaseactuatora3 extends JopFrame implements JopUtilityIfc {
     jopAxis33.setLines(51);
     jopAxis33.setLongQuotient(5);
     jopAxis33.setValueQuotient(5);
-    jopAxis33.setLineLength(3);
+    jopAxis33.setLineLength(11);
     jopAxis33.setLineWidth(1);
     jopAxis33.setRotate(0);
     jopAxis33.setFont(new Font("Helvetica", Font.PLAIN, 10));

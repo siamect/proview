@@ -221,7 +221,7 @@ public class JopcBasesensor extends JopFrame implements JopUtilityIfc {
     jopAxis29.setLines(51);
     jopAxis29.setLongQuotient(5);
     jopAxis29.setValueQuotient(5);
-    jopAxis29.setLineLength(3);
+    jopAxis29.setLineLength(9);
     jopAxis29.setLineWidth(1);
     jopAxis29.setRotate(0);
     jopAxis29.setFont(new Font("Helvetica", Font.PLAIN, 10));
