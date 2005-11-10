@@ -61393,7 +61393,8 @@ Safety switch"
         Attr Flags = 144
       EndBody
       Object RtBody $ObjBodyDef 1 15-SEP-2005 09:48:41.23
-        Body SysBody 15-SEP-2005 09:48:41.23
+        Body SysBody 09-NOV-2005 16:36:50.63
+          Attr StructName = "BasePropValveFo"
           Attr NextAix = "_X6"
         EndBody
         Object ExtOrder $Input 2 15-SEP-2005 09:49:33.64
