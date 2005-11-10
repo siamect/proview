@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.26 2005-10-21 16:10:50 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.27 2005-11-10 08:23:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -14531,7 +14531,7 @@ vldh_t_node	node;
 
 	/* Print the window execute command */
 	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE],
-		       "%c%s_exec( tp);",
+		       "%c%s_exec( tp);\n",
 		       GCG_PREFIX_MOD,
 		       vldh_IdToStr(0, window_objid));
 
