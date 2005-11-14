@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.7 2005-11-14 16:18:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,7 +237,8 @@ static void gec_activate_minmax_ok( Widget w, GeCurve *curve, XmAnyCallbackStruc
   curve->cd->scale( curve->cd->axis_type[i], curve->cd->value_type[i], 
        min_value,  max_value, 
        &curve->cd->min_value_axis[i], &curve->cd->max_value_axis[i], 
-       &curve->cd->lines[i], curve->cd->format[i], 
+       &curve->cd->trend_lines[i], &curve->cd->axis_lines[i], &curve->cd->axis_linelongq[i],
+       &curve->cd->axis_valueq[i], curve->cd->format[i], 
        &curve->cd->axis_width[i], 1, 1);
 
 
@@ -327,11 +328,11 @@ static int ge_growaxis_cb( GlowCtx *ctx, glow_tEvent event)
         for ( int i = 0; i < curve->cd->cols; i++) {
           if ( event->object.object == curve->axis_object[i]) {
             grow_SetTrendLines( curve->curve_object,
-	              curve->cd->lines[0] - 2,
-		      2 * curve->cd->lines[i] - 3);
+	              curve->cd->trend_lines[0] - 2,
+		      2 * curve->cd->trend_lines[i] - 3);
             grow_Redraw( curve->growcurve_ctx);
             grow_SetAxisConf( curve->axis_lineobject, 0, 10,
-                  2 * curve->cd->lines[i] - 1, 1, 10, 0, "%2.0f");
+                  2 * curve->cd->trend_lines[i] - 1, 1, 10, 0, "%2.0f");
             grow_Redraw( curve->growaxis_ctx);
             break;
           }
@@ -607,7 +608,7 @@ int GeCurve::configure_axes()
                        glow_eDrawType_TextHelvetica, NULL,
 		       &axis_lineobject);
   grow_SetAxisConf( axis_lineobject, 0, 10,
-         2 * cd->lines[idx] - 1, 1, 10, 0, "%1.0f");
+         2 * cd->trend_lines[idx] - 1, 1, 10, 0, "%1.0f");
 
   x = 0;
   for ( i = 1; i < cd->cols; i++) {
@@ -621,7 +622,7 @@ int GeCurve::configure_axes()
 
       grow_SetAxisConf( axis_object[i], cd->max_value_axis[i],
          cd->min_value_axis[i],
-         2 * cd->lines[i] - 1, 2, 2, 0, cd->format[i]);
+         2 * cd->trend_lines[i] - 1, 2, 2, 0, cd->format[i]);
       x += cd->axis_width[i];
     }
   }
@@ -697,8 +698,8 @@ int GeCurve::configure_curves()
 
   grow_SetTrendLines( curve_object,
 	 // int(cd->max_value_axis[0] - cd->min_value_axis[0] - 1),
-		      cd->lines[0] - 2,
-	 2 * cd->lines[idx] - 3);
+		      cd->trend_lines[0] - 2,
+		      2 * cd->trend_lines[idx] - 3);
 
   if ( cd->x_reverse) {
     minval = cd->max_value_axis[0];
@@ -711,8 +712,8 @@ int GeCurve::configure_curves()
 
   grow_SetAxisConf( curve_axisobject, minval, maxval, 
 	 // 10 * int( cd->max_value_axis[0] - cd->min_value_axis[0]) + 1, 
-	 cd->lines[0] * 2 - 1,
-         2, 2, 270, cd->format[0]);
+	 cd->axis_lines[0],
+         cd->axis_linelongq[0], cd->axis_valueq[0], 270, cd->format[0]);
 
   grow_CurveConfigure( curve_object, &gcd); 
   
@@ -1044,7 +1045,11 @@ GeCurveData::GeCurveData( curve_eDataType datatype) :
     min_value[i] = 0;
     min_value_axis[i] = 0;
     max_value_axis[i] = 0;
-    lines[i] = 0;
+    trend_lines[i] = 0;
+    axis_lines[i] = 0;
+    axis_linelongq[i] = 0;
+    axis_valueq[i] = 0;
+    
     axis_width[i] = 0;
   }
 }
@@ -1083,7 +1088,8 @@ void GeCurveData::get_default_axis()
   for ( int i = 0; i < cols; i++) {
 
     scale( axis_type[i], value_type[i], min_value[i],  max_value[i], 
-       &min_value_axis[i], &max_value_axis[i], &lines[i], format[i], 
+       &min_value_axis[i], &max_value_axis[i], &trend_lines[i], &axis_lines[i], 
+       &axis_linelongq[i], &axis_valueq[i], format[i], 
        &axis_width[i], 0, 0);
   }
 }
@@ -1205,8 +1211,8 @@ void GeCurveData::select_color( bool dark_bg)
 void GeCurveData::scale( int axis_type, int value_type, 
      double min_value, double max_value, 
      double *min_value_axis, double *max_value_axis, 
-     int *lines, char *format,
-     double *axis_width, int not_zero, int allow_odd)
+     int *trend_lines, int *axis_lines, int *axis_linelongq, int *axis_valueq, 
+     char *format, double *axis_width, int not_zero, int allow_odd)
 {
   double value, maxval, minval;
   int i_value;
@@ -1214,6 +1220,10 @@ void GeCurveData::scale( int axis_type, int value_type,
   int min_lines, max_lines;
   int min_zero, max_zero;
   int format_int, format_dec;
+  int format_type  = 0;
+  int trendlinequot = 2;
+  int axlinequot = 2;
+  int axvaluequot = 2;
   
   // Scale 0 - 10 for boolean
   if ( value_type == pwr_eType_Boolean) {
@@ -1253,7 +1263,7 @@ void GeCurveData::scale( int axis_type, int value_type,
         minval = i_value;
         min_lines = abs(i_value) / 10;
       }
-      else {
+      else if ( max_value - min_value < 10000) {
         i_value = int(max_value/100) * 100 + 100;
         maxval = i_value;
         max_lines = i_value / 100;
@@ -1264,6 +1274,67 @@ void GeCurveData::scale( int axis_type, int value_type,
           i_value = int(min_value/100) * 100 - 100;
         minval = i_value;
         min_lines = abs(i_value) / 100;
+      }
+      else if ( max_value - min_value < 30000) {
+        i_value = int(max_value/600) * 600 + 600;
+        maxval = i_value;
+        max_lines = i_value / 60;
+
+        if ( fabs( min_value) < DBL_EPSILON)
+          i_value = 0;
+        else
+          i_value = int(min_value/60) * 60 - 60;
+        minval = i_value;
+        min_lines = abs(i_value) / 60;
+	format_type = 1;
+	trendlinequot = 2;
+	axlinequot = 10;
+	axvaluequot = 10;
+      }
+      else if ( max_value - min_value < 60000) {
+        i_value = int(max_value/600) * 600 + 600;
+        maxval = i_value;
+        max_lines = i_value / 600;
+
+        if ( fabs( min_value) < DBL_EPSILON)
+          i_value = 0;
+        else
+          i_value = int(min_value/600) * 600 - 600;
+        minval = i_value;
+        min_lines = abs(i_value) / 600;
+	axlinequot = 6;
+	axvaluequot = 2;
+	format_type = 1;
+      }
+      else if ( max_value - min_value < 140000) {
+        i_value = int(max_value/600) * 600 + 600;
+        maxval = i_value;
+        max_lines = i_value / 600;
+
+        if ( fabs( min_value) < DBL_EPSILON)
+          i_value = 0;
+        else
+          i_value = int(min_value/600) * 600 - 600;
+        minval = i_value;
+        min_lines = abs(i_value) / 600;
+	axlinequot = 6;
+	axvaluequot = 12;
+	format_type = 1;
+      }
+      else {
+        i_value = int(max_value/600) * 3600 + 3600;
+        maxval = i_value;
+        max_lines = i_value / 3600;
+
+        if ( fabs( min_value) < DBL_EPSILON)
+          i_value = 0;
+        else
+          i_value = int(min_value/3600) * 3600 - 3600;
+        minval = i_value;
+        min_lines = abs(i_value) / 3600;
+	axlinequot = 2;
+	axvaluequot = 2;
+	format_type = 2;
       }
     }
     else {
@@ -1383,24 +1454,41 @@ void GeCurveData::scale( int axis_type, int value_type,
   }
   *max_value_axis = maxval;
   *min_value_axis = minval;
-  *lines = max_lines + min_lines + 1;
+  *trend_lines = max_lines + min_lines + 1;
+  *axis_lines = (*trend_lines - 1) * trendlinequot + 1;
+  *axis_linelongq = axlinequot;
+  *axis_valueq = axvaluequot;
 
-  format_int = abs(n) + 1;
-  if ( n > 0)
-    format_dec = 0;
-  else {
-    format_dec = abs(n);
-    format_int++;
+  switch ( format_type) {
+  case 0:
+    // Float format
+    format_int = abs(n) + 1;
+    if ( n > 0)
+      format_dec = 0;
+    else {
+      format_dec = abs(n);
+      format_int++;
+    }
+    if ( minval < 0)
+      format_int++;
+    
+    sprintf( format, "%%%d.%df", format_int, format_dec);
+    *axis_width = 0.65 * format_int + 0.4;
+    break;
+  case 1:
+    // Hour and minute format
+    strcpy( format, "%2t");
+    *axis_width = 0.65 * format_int + 0.4;
+    break;
+  case 2:
+    // Days and hour format
+    strcpy( format, "%3t");
+    *axis_width = 0.65 * format_int + 0.4;
+    break;
   }
-  if ( minval < 0)
-    format_int++;
-  sprintf( format, "%%%d.%df", format_int, format_dec);
-
-  *axis_width = 0.65 * format_int + 0.4;
-
   printf( "%f	%f	%f	%f	%3d %5s %4.1f\n", 
               min_value, max_value, 
-              *min_value_axis, *max_value_axis, *lines, format, *axis_width);
+              *min_value_axis, *max_value_axis, *trend_lines, format, *axis_width);
   return;
 }
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.5 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.6 2005-11-14 16:14:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -260,7 +260,8 @@ XttTrend::XttTrend(
         gcd->scale( gcd->axis_type[i+1], gcd->value_type[i+1], 
           plot.YMinValue[i],  plot.YMaxValue[i], 
           &gcd->min_value_axis[i+1], &gcd->max_value_axis[i+1], 
-          &gcd->lines[i+1], gcd->format[i+1], 
+          &gcd->trend_lines[i+1], &gcd->axis_lines[i+1], &gcd->axis_linelongq[i+1], 
+	  &gcd->axis_valueq[i+1], gcd->format[i+1], 
           &gcd->axis_width[i+1], 1, 1);
     }
   }

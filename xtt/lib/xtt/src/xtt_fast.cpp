@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.5 2005-11-14 16:15:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,8 +182,8 @@ XttFast::XttFast(
 	gcd->scale( gcd->axis_type[j], gcd->value_type[j],
 		    fp.YMinValue[i],  fp.YMaxValue[i],
 		    &gcd->min_value_axis[j], &gcd->max_value_axis[j],
-		    &gcd->lines[j], gcd->format[j],
-		    &gcd->axis_width[j], 1, 1);
+		    &gcd->trend_lines[j], &gcd->axis_lines[j], &gcd->axis_linelongq[j], 
+		    &gcd->axis_valueq[j], gcd->format[j], &gcd->axis_width[j], 1, 1);
       else
 	axis_configured = false;
     }
@@ -422,7 +422,9 @@ void fast_scan( XttFast *fast)
       fast->gcd->scale( fast->gcd->axis_type[0], fast->gcd->value_type[0],
 		    fast->gcd->min_value[0],  fast->gcd->max_value[0],
 		    &fast->gcd->min_value_axis[0], &fast->gcd->max_value_axis[0],
-		    &fast->gcd->lines[0], fast->gcd->format[0],
+		    &fast->gcd->trend_lines[0], &fast->gcd->axis_lines[0], 
+		    &fast->gcd->axis_linelongq[0], 
+		    &fast->gcd->axis_valueq[0], fast->gcd->format[0],
 		    &fast->gcd->axis_width[0], 1, 1);
       if ( !fast->first_scan) {
 	fast->curve->configure_curves();

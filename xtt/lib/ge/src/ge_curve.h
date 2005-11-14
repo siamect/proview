@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.5 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.6 2005-11-14 16:18:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,10 @@ class GeCurveData {
     double  min_value[CURVE_MAX_COLS];
     double  max_value_axis[CURVE_MAX_COLS];
     double  min_value_axis[CURVE_MAX_COLS];
-    int     lines[CURVE_MAX_COLS];
+    int     trend_lines[CURVE_MAX_COLS];
+    int     axis_lines[CURVE_MAX_COLS];
+    int     axis_linelongq[CURVE_MAX_COLS];
+    int     axis_valueq[CURVE_MAX_COLS];
     glow_eDrawType color[CURVE_MAX_COLS];
     glow_eDrawType fillcolor[CURVE_MAX_COLS];
     glow_eDrawType axiscolor[CURVE_MAX_COLS];
@@ -77,7 +80,8 @@ class GeCurveData {
     void scale( int axis_type, int value_type, 
                 double min_value, double max_value, 
                 double *min_value_axis, double *max_value_axis, 
-                int *lines, char *format,
+                int *trend_lines, int *axis_lines, int *axis_linelongq, 
+		int *axis_valueq,char *format,
 		double *axis_width, int not_zero, int allow_odd);
     ~GeCurveData();
 };
