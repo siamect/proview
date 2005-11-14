@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op.cpp,v 1.6 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_op.cpp,v 1.7 2005-11-14 16:13:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -394,7 +394,7 @@ void  Op::update_alarm_info()
       XmStringFree( cstr);
 
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
-		XmRString, "blue", 7, NULL);
+		XmRString, "lightblue", 7, NULL);
 
       cstr=XmStringCreateLtoR( "C", "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
@@ -421,7 +421,7 @@ void  Op::update_alarm_info()
       XmStringFree( cstr);
 
       XtVaSetValues( balarm_label, XtVaTypedArg, XmNbackground,
-		XmRString, "magenta", 7, NULL);
+		XmRString, "violet", 7, NULL);
 
       cstr=XmStringCreateLtoR( "D", "ISO8859-1");
       XtSetArg(args[j=0],XmNlabelString, cstr);j++;
