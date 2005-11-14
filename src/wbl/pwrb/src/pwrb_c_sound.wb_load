@@ -1,0 +1,170 @@
+! 
+!  Proview   $Id: pwrb_c_sound.wb_load,v 1.1 2005-11-14 16:26:20 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_sound.wb_load -- Defines the class Sound.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Summary Defines a sound
+!  The Sound object defines a sound for an alarm, or for sound dynamics in
+!  the operator environment.
+!
+!  The sound is specified by a souce, that can be a code word (for sinus waves) or a
+!  filepath to a sampled file.
+!*/
+  Object Sound $ClassDef 438
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "Sound"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Sound source. A codeword or a filepath.
+      !*/
+      Object Source $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Sound priority.
+      !*/
+      Object Prio $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Default base tone for sine and square waves.
+      !*/
+      Object BaseTone $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-AudioToneEnum"
+        EndBody
+      EndObject
+      !/**
+      !  Tone table.
+      !*/
+      Object ToneTable $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+        EndBody
+      EndObject
+      !/**
+      !  Volume table.
+      !*/
+      Object VolumeTable $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 8
+        EndBody
+      EndObject
+      !/**
+      !  Volume in percentage (0 - 100)
+      !*/
+      Object Volume $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Attack time in seconds.
+      !*/
+      Object Attack $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Timeconstant for sound decay.
+      !*/
+      Object Decay $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Sustain level in the interval 0 - 100
+      !*/
+      Object Sustain $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Release time in seconds.
+      !*/
+      Object Release $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Default length of sound in seconds.
+      !*/
+      Object Length $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Tremolo.
+      !*/
+      Object Tremolo $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+    EndObject
+    Object Template Sound
+      Body RtBody
+        Attr Source = "Sine"
+        Attr BaseTone = 33
+        Attr VolumeTable[0] = 100
+        Attr Volume = 100
+	Attr Sustain = 100
+	Attr Length = 0.3
+      EndBody
+    EndObject
+    Object RtXtt $RtMenu
+      Object Play $MenuButton
+	Body SysBody
+	  Attr ButtonName = "Play"
+	  Attr MethodName = "Sound-Play"
+          Attr FilterName = "Sound-PlayFilter"
+	EndBody
+      EndObject
+    EndObject
+  EndObject
+EndSObject

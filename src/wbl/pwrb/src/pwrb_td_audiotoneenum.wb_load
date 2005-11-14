@@ -1,0 +1,721 @@
+! 
+!  Proview   $Id: pwrb_td_audiotoneenum.wb_load,v 1.1 2005-11-14 16:26:20 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_audiotoneenum.wb_load -- Defines the enum type AudioToneEnum
+!
+SObject pwrb:Type
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enum for tone scale.
+!*/
+  Object AudioToneEnum $TypeDef 35
+    Body SysBody
+      Attr TypeRef = "pwrs:Type-$Enum"
+      Attr PgmName = "AudioToneEnum"
+    EndBody
+    Object C2 $Value
+     Body SysBody
+       Attr PgmName = "C2"
+       Attr Text = "C2"
+       Attr Value = 0
+     EndBody
+    EndObject
+    Object Db2 $Value
+     Body SysBody
+       Attr PgmName = "Db2"
+       Attr Text = "Db2"
+       Attr Value = 1
+     EndBody
+    EndObject
+    Object D2 $Value
+     Body SysBody
+       Attr PgmName = "D2"
+       Attr Text = "D2"
+       Attr Value = 2
+     EndBody
+    EndObject
+    Object Eb2 $Value
+     Body SysBody
+       Attr PgmName = "Eb2"
+       Attr Text = "Eb2"
+       Attr Value = 3
+     EndBody
+    EndObject
+    Object E2 $Value
+     Body SysBody
+       Attr PgmName = "E2"
+       Attr Text = "E2"
+       Attr Value = 4
+     EndBody
+    EndObject
+    Object F2 $Value
+     Body SysBody
+       Attr PgmName = "F2"
+       Attr Text = "F2"
+       Attr Value = 5
+     EndBody
+    EndObject
+    Object Gb2 $Value
+     Body SysBody
+       Attr PgmName = "Gb2"
+       Attr Text = "Gb2"
+       Attr Value = 6
+     EndBody
+    EndObject
+    Object G2 $Value
+     Body SysBody
+       Attr PgmName = "G2"
+       Attr Text = "G2"
+       Attr Value = 7
+     EndBody
+    EndObject
+    Object Ab2 $Value
+     Body SysBody
+       Attr PgmName = "Ab2"
+       Attr Text = "Ab2"
+       Attr Value = 8
+     EndBody
+    EndObject
+    Object A2 $Value
+     Body SysBody
+       Attr PgmName = "A2"
+       Attr Text = "A2"
+       Attr Value = 9
+     EndBody
+    EndObject
+    Object Bb2 $Value
+     Body SysBody
+       Attr PgmName = "Bb2"
+       Attr Text = "Bb2"
+       Attr Value = 10
+     EndBody
+    EndObject
+    Object B2 $Value
+     Body SysBody
+       Attr PgmName = "B2"
+       Attr Text = "B2"
+       Attr Value = 11
+     EndBody
+    EndObject
+    Object C3 $Value
+     Body SysBody
+       Attr PgmName = "C3"
+       Attr Text = "C3"
+       Attr Value = 12
+     EndBody
+    EndObject
+    Object Db3 $Value
+     Body SysBody
+       Attr PgmName = "Db3"
+       Attr Text = "Db3"
+       Attr Value = 13
+     EndBody
+    EndObject
+    Object D3 $Value
+     Body SysBody
+       Attr PgmName = "D3"
+       Attr Text = "D3"
+       Attr Value = 14
+     EndBody
+    EndObject
+    Object Eb3 $Value
+     Body SysBody
+       Attr PgmName = "Eb3"
+       Attr Text = "Eb3"
+       Attr Value = 15
+     EndBody
+    EndObject
+    Object E3 $Value
+     Body SysBody
+       Attr PgmName = "E3"
+       Attr Text = "E3"
+       Attr Value = 16
+     EndBody
+    EndObject
+    Object F3 $Value
+     Body SysBody
+       Attr PgmName = "F3"
+       Attr Text = "F3"
+       Attr Value = 17
+     EndBody
+    EndObject
+    Object Gb3 $Value
+     Body SysBody
+       Attr PgmName = "Gb3"
+       Attr Text = "Gb3"
+       Attr Value = 18
+     EndBody
+    EndObject
+    Object G3 $Value
+     Body SysBody
+       Attr PgmName = "G3"
+       Attr Text = "G3"
+       Attr Value = 19
+     EndBody
+    EndObject
+    Object Ab3 $Value
+     Body SysBody
+       Attr PgmName = "Ab3"
+       Attr Text = "Ab3"
+       Attr Value = 20
+     EndBody
+    EndObject
+    Object A3 $Value
+     Body SysBody
+       Attr PgmName = "A3"
+       Attr Text = "A3"
+       Attr Value = 21
+     EndBody
+    EndObject
+    Object Bb3 $Value
+     Body SysBody
+       Attr PgmName = "Bb3"
+       Attr Text = "Bb3"
+       Attr Value = 22
+     EndBody
+    EndObject
+    Object B3 $Value
+     Body SysBody
+       Attr PgmName = "B3"
+       Attr Text = "B3"
+       Attr Value = 23
+     EndBody
+    EndObject
+    Object C4 $Value
+     Body SysBody
+       Attr PgmName = "C4"
+       Attr Text = "C4"
+       Attr Value = 24
+     EndBody
+    EndObject
+    Object Db4 $Value
+     Body SysBody
+       Attr PgmName = "Db4"
+       Attr Text = "Db4"
+       Attr Value = 25
+     EndBody
+    EndObject
+    Object D4 $Value
+     Body SysBody
+       Attr PgmName = "D4"
+       Attr Text = "D4"
+       Attr Value = 26
+     EndBody
+    EndObject
+    Object Eb4 $Value
+     Body SysBody
+       Attr PgmName = "Eb4"
+       Attr Text = "Eb4"
+       Attr Value = 27
+     EndBody
+    EndObject
+    Object E4 $Value
+     Body SysBody
+       Attr PgmName = "E4"
+       Attr Text = "E4"
+       Attr Value = 28
+     EndBody
+    EndObject
+    Object F4 $Value
+     Body SysBody
+       Attr PgmName = "F4"
+       Attr Text = "F4"
+       Attr Value = 29
+     EndBody
+    EndObject
+    Object Gb4 $Value
+     Body SysBody
+       Attr PgmName = "Gb4"
+       Attr Text = "Gb4"
+       Attr Value = 30
+     EndBody
+    EndObject
+    Object G4 $Value
+     Body SysBody
+       Attr PgmName = "G4"
+       Attr Text = "G4"
+       Attr Value = 31
+     EndBody
+    EndObject
+    Object Ab4 $Value
+     Body SysBody
+       Attr PgmName = "Ab4"
+       Attr Text = "Ab4"
+       Attr Value = 32
+     EndBody
+    EndObject
+    Object A4 $Value
+     Body SysBody
+       Attr PgmName = "A4"
+       Attr Text = "A4"
+       Attr Value = 33
+     EndBody
+    EndObject
+    Object Bb4 $Value
+     Body SysBody
+       Attr PgmName = "Bb4"
+       Attr Text = "Bb4"
+       Attr Value = 34
+     EndBody
+    EndObject
+    Object B4 $Value
+     Body SysBody
+       Attr PgmName = "B4"
+       Attr Text = "B4"
+       Attr Value = 35
+     EndBody
+    EndObject
+    Object C5 $Value
+     Body SysBody
+       Attr PgmName = "C5"
+       Attr Text = "C5"
+       Attr Value = 36
+     EndBody
+    EndObject
+    Object Db5 $Value
+     Body SysBody
+       Attr PgmName = "Db5"
+       Attr Text = "Db5"
+       Attr Value = 37
+     EndBody
+    EndObject
+    Object D5 $Value
+     Body SysBody
+       Attr PgmName = "D5"
+       Attr Text = "D5"
+       Attr Value = 38
+     EndBody
+    EndObject
+    Object Eb5 $Value
+     Body SysBody
+       Attr PgmName = "Eb5"
+       Attr Text = "Eb5"
+       Attr Value = 39
+     EndBody
+    EndObject
+    Object E5 $Value
+     Body SysBody
+       Attr PgmName = "E5"
+       Attr Text = "E5"
+       Attr Value = 40
+     EndBody
+    EndObject
+    Object F5 $Value
+     Body SysBody
+       Attr PgmName = "F5"
+       Attr Text = "F5"
+       Attr Value = 41
+     EndBody
+    EndObject
+    Object Gb5 $Value
+     Body SysBody
+       Attr PgmName = "Gb5"
+       Attr Text = "Gb5"
+       Attr Value = 42
+     EndBody
+    EndObject
+    Object G5 $Value
+     Body SysBody
+       Attr PgmName = "G5"
+       Attr Text = "G5"
+       Attr Value = 43
+     EndBody
+    EndObject
+    Object Ab5 $Value
+     Body SysBody
+       Attr PgmName = "Ab5"
+       Attr Text = "Ab5"
+       Attr Value = 44
+     EndBody
+    EndObject
+    Object A5 $Value
+     Body SysBody
+       Attr PgmName = "A5"
+       Attr Text = "A5"
+       Attr Value = 45
+     EndBody
+    EndObject
+    Object Bb5 $Value
+     Body SysBody
+       Attr PgmName = "Bb5"
+       Attr Text = "Bb5"
+       Attr Value = 46
+     EndBody
+    EndObject
+    Object B5 $Value
+     Body SysBody
+       Attr PgmName = "B5"
+       Attr Text = "B5"
+       Attr Value = 47
+     EndBody
+    EndObject
+    Object C6 $Value
+     Body SysBody
+       Attr PgmName = "C6"
+       Attr Text = "C6"
+       Attr Value = 48
+     EndBody
+    EndObject
+    Object Db6 $Value
+     Body SysBody
+       Attr PgmName = "Db6"
+       Attr Text = "Db6"
+       Attr Value = 49
+     EndBody
+    EndObject
+    Object D6 $Value
+     Body SysBody
+       Attr PgmName = "D6"
+       Attr Text = "D6"
+       Attr Value = 50
+     EndBody
+    EndObject
+    Object Eb6 $Value
+     Body SysBody
+       Attr PgmName = "Eb6"
+       Attr Text = "Eb6"
+       Attr Value = 51
+     EndBody
+    EndObject
+    Object E6 $Value
+     Body SysBody
+       Attr PgmName = "E6"
+       Attr Text = "E6"
+       Attr Value = 52
+     EndBody
+    EndObject
+    Object F6 $Value
+     Body SysBody
+       Attr PgmName = "F6"
+       Attr Text = "F6"
+       Attr Value = 53
+     EndBody
+    EndObject
+    Object Gb6 $Value
+     Body SysBody
+       Attr PgmName = "Gb6"
+       Attr Text = "Gb6"
+       Attr Value = 54
+     EndBody
+    EndObject
+    Object G6 $Value
+     Body SysBody
+       Attr PgmName = "G6"
+       Attr Text = "G6"
+       Attr Value = 55
+     EndBody
+    EndObject
+    Object Ab6 $Value
+     Body SysBody
+       Attr PgmName = "Ab6"
+       Attr Text = "Ab6"
+       Attr Value = 56
+     EndBody
+    EndObject
+    Object A6 $Value
+     Body SysBody
+       Attr PgmName = "A6"
+       Attr Text = "A6"
+       Attr Value = 57
+     EndBody
+    EndObject
+    Object Bb6 $Value
+     Body SysBody
+       Attr PgmName = "Bb6"
+       Attr Text = "Bb6"
+       Attr Value = 58
+     EndBody
+    EndObject
+    Object B6 $Value
+     Body SysBody
+       Attr PgmName = "B6"
+       Attr Text = "B6"
+       Attr Value = 59
+     EndBody
+    EndObject
+    Object C7 $Value
+     Body SysBody
+       Attr PgmName = "C7"
+       Attr Text = "C7"
+       Attr Value = 60
+     EndBody
+    EndObject
+    Object Db7 $Value
+     Body SysBody
+       Attr PgmName = "Db7"
+       Attr Text = "Db7"
+       Attr Value = 61
+     EndBody
+    EndObject
+    Object D7 $Value
+     Body SysBody
+       Attr PgmName = "D7"
+       Attr Text = "D7"
+       Attr Value = 62
+     EndBody
+    EndObject
+    Object Eb7 $Value
+     Body SysBody
+       Attr PgmName = "Eb7"
+       Attr Text = "Eb7"
+       Attr Value = 63
+     EndBody
+    EndObject
+    Object E7 $Value
+     Body SysBody
+       Attr PgmName = "E7"
+       Attr Text = "E7"
+       Attr Value = 64
+     EndBody
+    EndObject
+    Object F7 $Value
+     Body SysBody
+       Attr PgmName = "F7"
+       Attr Text = "F7"
+       Attr Value = 65
+     EndBody
+    EndObject
+    Object Gb7 $Value
+     Body SysBody
+       Attr PgmName = "Gb7"
+       Attr Text = "Gb7"
+       Attr Value = 66
+     EndBody
+    EndObject
+    Object G7 $Value
+     Body SysBody
+       Attr PgmName = "G7"
+       Attr Text = "G7"
+       Attr Value = 67
+     EndBody
+    EndObject
+    Object Ab7 $Value
+     Body SysBody
+       Attr PgmName = "Ab7"
+       Attr Text = "Ab7"
+       Attr Value = 68
+     EndBody
+    EndObject
+    Object A7 $Value
+     Body SysBody
+       Attr PgmName = "A7"
+       Attr Text = "A7"
+       Attr Value = 69
+     EndBody
+    EndObject
+    Object Bb7 $Value
+     Body SysBody
+       Attr PgmName = "Bb7"
+       Attr Text = "Bb7"
+       Attr Value = 70
+     EndBody
+    EndObject
+    Object B7 $Value
+     Body SysBody
+       Attr PgmName = "B7"
+       Attr Text = "B7"
+       Attr Value = 71
+     EndBody
+    EndObject
+    Object C8 $Value
+     Body SysBody
+       Attr PgmName = "C8"
+       Attr Text = "C8"
+       Attr Value = 72
+     EndBody
+    EndObject
+    Object Db8 $Value
+     Body SysBody
+       Attr PgmName = "Db8"
+       Attr Text = "Db8"
+       Attr Value = 73
+     EndBody
+    EndObject
+    Object D8 $Value
+     Body SysBody
+       Attr PgmName = "D8"
+       Attr Text = "D8"
+       Attr Value = 74
+     EndBody
+    EndObject
+    Object Eb8 $Value
+     Body SysBody
+       Attr PgmName = "Eb8"
+       Attr Text = "Eb8"
+       Attr Value = 75
+     EndBody
+    EndObject
+    Object E8 $Value
+     Body SysBody
+       Attr PgmName = "E8"
+       Attr Text = "E8"
+       Attr Value = 76
+     EndBody
+    EndObject
+    Object F8 $Value
+     Body SysBody
+       Attr PgmName = "F8"
+       Attr Text = "F8"
+       Attr Value = 77
+     EndBody
+    EndObject
+    Object Gb8 $Value
+     Body SysBody
+       Attr PgmName = "Gb8"
+       Attr Text = "Gb8"
+       Attr Value = 78
+     EndBody
+    EndObject
+    Object G8 $Value
+     Body SysBody
+       Attr PgmName = "G8"
+       Attr Text = "G8"
+       Attr Value = 79
+     EndBody
+    EndObject
+    Object Ab8 $Value
+     Body SysBody
+       Attr PgmName = "Ab8"
+       Attr Text = "Ab8"
+       Attr Value = 80
+     EndBody
+    EndObject
+    Object A8 $Value
+     Body SysBody
+       Attr PgmName = "A8"
+       Attr Text = "A8"
+       Attr Value = 81
+     EndBody
+    EndObject
+    Object Bb8 $Value
+     Body SysBody
+       Attr PgmName = "Bb8"
+       Attr Text = "Bb8"
+       Attr Value = 82
+     EndBody
+    EndObject
+    Object B8 $Value
+     Body SysBody
+       Attr PgmName = "B8"
+       Attr Text = "B8"
+       Attr Value = 83
+     EndBody
+    EndObject
+    Object C9 $Value
+     Body SysBody
+       Attr PgmName = "C9"
+       Attr Text = "C9"
+       Attr Value = 84
+     EndBody
+    EndObject
+    Object Db9 $Value
+     Body SysBody
+       Attr PgmName = "Db9"
+       Attr Text = "Db9"
+       Attr Value = 85
+     EndBody
+    EndObject
+    Object D9 $Value
+     Body SysBody
+       Attr PgmName = "D9"
+       Attr Text = "D9"
+       Attr Value = 86
+     EndBody
+    EndObject
+    Object Eb9 $Value
+     Body SysBody
+       Attr PgmName = "Eb9"
+       Attr Text = "Eb9"
+       Attr Value = 87
+     EndBody
+    EndObject
+    Object E9 $Value
+     Body SysBody
+       Attr PgmName = "E9"
+       Attr Text = "E9"
+       Attr Value = 88
+     EndBody
+    EndObject
+    Object F9 $Value
+     Body SysBody
+       Attr PgmName = "F9"
+       Attr Text = "F9"
+       Attr Value = 89
+     EndBody
+    EndObject
+    Object Gb9 $Value
+     Body SysBody
+       Attr PgmName = "Gb9"
+       Attr Text = "Gb9"
+       Attr Value = 90
+     EndBody
+    EndObject
+    Object G9 $Value
+     Body SysBody
+       Attr PgmName = "G9"
+       Attr Text = "G9"
+       Attr Value = 91
+     EndBody
+    EndObject
+    Object Ab9 $Value
+     Body SysBody
+       Attr PgmName = "Ab9"
+       Attr Text = "Ab9"
+       Attr Value = 92
+     EndBody
+    EndObject
+    Object A9 $Value
+     Body SysBody
+       Attr PgmName = "A9"
+       Attr Text = "A9"
+       Attr Value = 93
+     EndBody
+    EndObject
+    Object Bb9 $Value
+     Body SysBody
+       Attr PgmName = "Bb9"
+       Attr Text = "Bb9"
+       Attr Value = 94
+     EndBody
+    EndObject
+    Object B9 $Value
+     Body SysBody
+       Attr PgmName = "B9"
+       Attr Text = "B9"
+       Attr Value = 95
+     EndBody
+    EndObject
+    Object C10 $Value
+     Body SysBody
+       Attr PgmName = "C10"
+       Attr Text = "C10"
+       Attr Value = 96
+     EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
+

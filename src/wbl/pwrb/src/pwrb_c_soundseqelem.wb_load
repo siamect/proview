@@ -1,0 +1,104 @@
+! 
+!  Proview   $Id: pwrb_c_soundseqelem.wb_load,v 1.1 2005-11-14 16:26:20 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_soundsequence.wb_load -- Defines the class SoundSequence.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Summary Defines an element sound sequence
+!  Definition of an element in a sound sequence.
+!*/
+  Object SoundSeqElem $ClassDef 440
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 1
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "SoundSeqElem"
+      EndBody
+      !/**
+      !  Element is used.
+      !*/
+      Object Used $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Sound index.
+      !*/
+      Object SoundIdx $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      !  Start time.
+      !*/
+      Object StartTime $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Start time.
+      !*/
+      Object EndTime $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Element volume, right channel (1 - 100)
+      !*/
+      Object VolumeRight $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Element volume, left channel (1 - 100)
+      !*/
+      Object VolumeLeft $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      !  Element tone.
+      !*/
+      Object Tone $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-AudioToneEnum"
+        EndBody
+      EndObject
+    EndObject
+    Object Template SoundSeqElem
+      Body RtBody
+        Attr VolumeRight = 80
+        Attr VolumeLeft = 80
+	Attr EndTime = 0.3
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+

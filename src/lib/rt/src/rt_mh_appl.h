@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mh_appl.h,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_mh_appl.h,v 1.5 2005-11-14 16:29:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,6 +111,7 @@ struct mhs_ApplMessage {
 				     This attribute is only used when calling mh_ApplGetMsgInfo.*/ 
   mh_uSupInfo	    SupInfo;      /**< Supplies the type of supervision data that should be associated 
 				     with the message: analog, digital or none. See mh_eSupType.*/ 
+  pwr_sAttrRef	    EventSound;    /**< Reference to sound object. Determines the alarm sound. */
 };
 
 /**@}*/

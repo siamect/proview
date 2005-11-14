@@ -31084,7 +31084,7 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseTempSensor 2178646016 01-JAN-1970 01:00:00.00
-        Body RtBody 04-OCT-2005 10:17:56.86
+        Body RtBody 11-NOV-2005 08:58:38.19
           Attr Super.Super.Specification = "TemperatureSensor"
           Attr Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, tempsensor, "
@@ -31096,7 +31096,7 @@ Alarm HH, H, L, LL"
           Attr Super.LimitLL.AlarmText = "Below Low limit, tempsensor, "
           Attr Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Trend.Multiple = 1
-          Attr Super.Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
+          Attr Super.Trend.DataName = "BaseComponent:Class-BaseTempSensor-Template.Super.Value.ActualValue"
           Attr Super.Trend.StorageTime = 239
           Attr Super.Trend.BufferStatus[0] = 1
           Attr Super.Trend.BufferStatus[1] = 1
@@ -43430,7 +43430,7 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseLevelSensor 2178121728 01-JAN-1970 01:00:00.00
-        Body RtBody 04-OCT-2005 10:19:58.90
+        Body RtBody 11-NOV-2005 08:59:20.90
           Attr Super.Super.Specification = "Sensor"
           Attr Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor, "
@@ -43442,7 +43442,7 @@ Alarm HH, H, L, LL"
           Attr Super.LimitLL.AlarmText = "Below LowLow limit, levelsensor, "
           Attr Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Trend.Multiple = 1
-          Attr Super.Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
+          Attr Super.Trend.DataName = "BaseComponent:Class-BaseLevelSensor-Template.Super.Value.ActualValue"
           Attr Super.Trend.StorageTime = 239
           Attr Super.Trend.BufferStatus[0] = 1
           Attr Super.Trend.BufferStatus[1] = 1
@@ -53042,7 +53042,7 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BasePositSensor 2172878848 01-JAN-1970 01:00:00.00
-        Body RtBody 03-OCT-2005 17:41:06.50
+        Body RtBody 11-NOV-2005 08:59:55.97
           Attr Super.Super.Specification = "PositionalSensor"
           Attr Super.Value.PresMaxLimit = 1.000000e+02
           Attr Super.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
@@ -53054,13 +53054,13 @@ Alarm HH, H, L, LL"
           Attr Super.LimitLL.AlarmText = "Below LowLow limit, sensor, "
           Attr Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Trend.Multiple = 1
-          Attr Super.Trend.DataName = "BaseComponent:Class-BaseSensor-Template.Value.ActualValue"
+          Attr Super.Trend.DataName = "BaseComponent:Class-BasePressureSensor-Template.Super.Value.ActualValue"
           Attr Super.Trend.StorageTime = 239
           Attr Super.Trend.BufferStatus[0] = 1
           Attr Super.Trend.BufferStatus[1] = 1
           Attr Super.Trend.NoOfBuffers = 2
           Attr Super.Trend.NoOfBufElement = 239
-          Attr Super.DefTrend = "BaseComponent:Class-BaseSensor-Template.Trend"
+          Attr Super.DefTrend = "BaseComponent:Class-BasePressureSensor-Template.Super.Trend"
           Attr Gain = 1.000000e+00
         EndBody
       EndObject
