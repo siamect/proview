@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.22 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.23 2005-11-14 16:27:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,7 @@ typedef enum {
 } cdh_eVId3;
 
 #define cdh_cIoConnectVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 249)
+#define cdh_cRtVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 245)
 
 //! Get volme identity for class identity.
 #define cdh_CidToVid(cid) ((cid) >> 16)

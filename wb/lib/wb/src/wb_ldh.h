@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.30 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.31 2005-11-14 16:30:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@ extern "C" {
 #define ldh_cProjectListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 248)
 #define ldh_cGlobalVolumeListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 247)
 #define ldh_cUserDatabaseVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 246)
+#define ldh_cRtVolume  cdh_cRtVolume
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
 
