@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt.cpp,v 1.20 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_xtt.cpp,v 1.21 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -898,6 +898,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   qcom_sQattr qAttr;
   qcom_sQid qini;
   int quiet = 0;
+  int attach_audio = 0;
 
   hot_xtt = this;
 
@@ -933,6 +934,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
       Lng::set( argv[i+1]);
     else if ( strcmp( argv[i], "-q") == 0)
       quiet = 1;
+    else if ( strcmp( argv[i], "-a") == 0)
+      attach_audio = 1;
     else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
       char oname[80];
 
@@ -1044,6 +1047,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   xnav->map_cb = &xtt_map;
   xnav->change_value_cb = &xtt_change_value;
   xnav->set_dimension_cb = &xtt_set_dimension;
+  xnav->attach_audio = attach_audio;
 
   // Create help window
   CoXHelp *xhelp = new CoXHelp( toplevel, this, xhelp_eUtility_Xtt, &sts);

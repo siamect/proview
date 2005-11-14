@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.14 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.15 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,6 +96,10 @@ extern "C" {
 
 #ifndef xtt_clog_h
 #include "xtt_clog.h"
+#endif
+
+#ifndef xtt_audio_h
+#include "xtt_audio.h"
 #endif
 
 #define xnav_cVersion	"X3.0b"
@@ -312,6 +316,8 @@ class XNav {
     int			search_compiled;
     xnav_eSearchType	search_type;
     int                 init_help;
+    int			attach_audio;
+    XttAudio		*audio;
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     void start_trace_selected();
@@ -370,6 +376,8 @@ class XNav {
     int open_crossref( pwr_sAttrRef *arp);
     void swap( int mode);
     int update_alarminfo();
+    int sound( pwr_tAttrRef *arp);
+    int sound_attached();
 
 
     // Command module member functions

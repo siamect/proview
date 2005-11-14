@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.11 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.12 2005-11-14 16:19:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,7 @@ static attrnav_sEnumElement elem_dyn_type[] = {
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
 	{ (int) ge_mDynType_HostObject		, "HostObject"},
+	{ (int) ge_mDynType_DigSound		, "DigSound"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_dyn_type_tone[] = {
@@ -129,6 +130,7 @@ static attrnav_sEnumElement elem_dyn_type_tone[] = {
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
 	{ (int) ge_mDynType_HostObject		, "HostObject"},
+	{ (int) ge_mDynType_DigSound		, "DigSound"},
 	{ 0, ""}};
 
 static attrnav_sEnumElement elem_action_type[] = {

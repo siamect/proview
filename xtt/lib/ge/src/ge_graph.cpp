@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.26 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.27 2005-11-14 16:18:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -165,7 +165,7 @@ Graph::Graph(
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
-	linewidth(1), linetype(glow_eLineType_Solid), textsize(0), textbold(0), 
+	sound_cb(0), linewidth(1), linetype(glow_eLineType_Solid), textsize(0), textbold(0), 
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
 	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Routed),
 	con_corner(glow_eCorner_Rounded),
@@ -3555,6 +3555,13 @@ int Graph::set_folder_index( char *name, int idx)
     return 0;
 
   return grow_SetFolderIndex( object, idx);
+}
+
+int Graph::sound( pwr_tAttrRef *aref)
+{
+  if ( sound_cb)
+    (sound_cb)( parent_ctx, aref);
+  return 1;
 }
 
 static void graph_remove_space( char *out_str, char *in_str)

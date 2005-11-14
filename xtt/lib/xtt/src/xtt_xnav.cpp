@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.24 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.25 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1082,7 +1082,8 @@ XNav::XNav(
 	set_dimension_cb(NULL), ccm_func_registred(0), verify(0),
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
-        current_logging_index(-1), search_last_found(0), search_compiled(0)
+        current_logging_index(-1), search_last_found(0), search_compiled(0), 
+	attach_audio(0), audio(0)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
@@ -3810,4 +3811,31 @@ void XNav::swap( int mode)
   }
 }
 
+int XNav::sound( pwr_tAttrRef *sound)
+{
+  if ( !attach_audio)
+    return 0;
+
+  if ( !audio)
+    audio = new XttAudio( brow_widget);
+
+  if ( audio->audio_ok) {
+    audio->beep( sound);
+    return 1;
+  }
+  return 0;
+}
+
+int XNav::sound_attached()
+{
+  if ( !attach_audio)
+    return 0;
+
+  if ( !audio)
+    audio = new XttAudio( brow_widget);
+
+  if ( audio->audio_ok)
+    return 1;
+  return 0;
+}
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev.cpp,v 1.7 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_ev.cpp,v 1.8 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,16 +53,17 @@ extern "C" {
 
 static Ev *ev = NULL;
 
-static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
-static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
-static void ev_blk_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp);
+static void ev_eve_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
+static void ev_ala_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
+static void ev_blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
 static char *ev_name_to_alias_cb( void *ctx, char *name);
 static void ev_eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
 static void ev_blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
-static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
+static void ev_popup_menu_cb( void *ctx, pwr_tAttrRef attrref,
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, Widget *popup);
+static int ev_sound_cb( void *ctx, pwr_tAttrRef *attrref);
 static void ev_eve_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 static void ev_ala_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
 static void ev_blk_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
@@ -132,7 +133,7 @@ Ev::Ev(
 	user(ev_user), eve_display_ack(display_ack), 
 	eve_display_return(display_return),
 	start_trace_cb(NULL), display_in_xnav_cb(NULL), update_info_cb(NULL),
-	help_cb(NULL), eve(NULL), ala(NULL),
+	help_cb(NULL), popup_menu_cb(0), sound_cb(0), eve(NULL), ala(NULL),
 	connected(0), ala_displayed(0), eve_displayed(0), beep(ev_beep)
 {
   char		uid_filename[120] = {"xtt_eve.uid"};
@@ -325,6 +326,7 @@ Ev::Ev(
   ala->display_in_xnav_cb = &ev_ala_display_in_xnav_cb;
   ala->name_to_alias_cb = &ev_name_to_alias_cb;
   ala->popup_menu_cb = &ev_popup_menu_cb;
+  ala->sound_cb = &ev_sound_cb;
   blk = new EvList( this, form_blk, ev_eType_BlockList, blk_size, &blk_widget);
   blk->start_trace_cb = &ev_blk_start_trace_cb;
   blk->display_in_xnav_cb = &ev_blk_display_in_xnav_cb;
@@ -477,7 +479,7 @@ static void ev_blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name)
     ((Ev *)ctx)->start_trace_cb( ((Ev *)ctx)->parent_ctx, objid, name);
 }
 
-static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
+static void ev_popup_menu_cb( void *ctx, pwr_tAttrRef attrref,
 			      unsigned long item_type, unsigned long utility,
 			      char *arg, Widget *popup)
 {
@@ -486,24 +488,31 @@ static void ev_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
 				   utility, arg, popup);
 }
 
+static int ev_sound_cb( void *ctx, pwr_tAttrRef *attrref)
+{
+  if ( ((Ev *)ctx)->sound_cb)
+    return (((Ev *)ctx)->sound_cb) ( ((Ev *)ctx)->parent_ctx, attrref);
+  return 0;
+}
+
 static char *ev_name_to_alias_cb( void *ctx, char *name)
 {
   return ((Ev *)ctx)->name_to_alias( name);
 }
 
-static void ev_eve_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
+static void ev_eve_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
     ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
 }
 
-static void ev_ala_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
+static void ev_ala_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
     ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);
 }
 
-static void ev_blk_display_in_xnav_cb( void *ctx, pwr_sAttrRef *arp)
+static void ev_blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp)
 {
   if ( ((Ev *)ctx)->display_in_xnav_cb)
     ((Ev *)ctx)->display_in_xnav_cb( ((Ev *)ctx)->parent_ctx, arp);

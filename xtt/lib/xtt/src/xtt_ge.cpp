@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.cpp,v 1.12 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_ge.cpp,v 1.13 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -189,6 +189,16 @@ static int ge_command_cb( void *ge_ctx, char *command)
     sts = (gectx->command_cb)( gectx, command);
     return sts;
   }
+  return 0;
+}
+
+static int ge_sound_cb( void *ge_ctx, pwr_tAttrRef *aref)
+{
+  ge_tCtx	gectx = (ge_tCtx)ge_ctx;
+
+  if ( gectx->sound_cb)
+    return (gectx->sound_cb)( gectx->parent_ctx, aref);
+
   return 0;
 }
 
@@ -587,6 +597,7 @@ extern "C" ge_tCtx ge_new( Widget parent_wid,
   ((Graph *)gectx->graph)->get_current_objects_cb = &ge_get_current_objects_cb;
   ((Graph *)gectx->graph)->popup_menu_cb = &ge_popup_menu_cb;
   ((Graph *)gectx->graph)->call_method_cb = &ge_call_method_cb;
+  ((Graph *)gectx->graph)->sound_cb = &ge_sound_cb;
  
   XtPopup( gectx->toplevel, XtGrabNone);
 

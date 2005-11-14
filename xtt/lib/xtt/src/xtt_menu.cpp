@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.9 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.10 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,10 +66,12 @@ extern "C" {
 
 pwr_dImport pwr_BindXttMethods($Object);
 pwr_dImport pwr_BindXttMethods(PlcPgm);
+pwr_dImport pwr_BindXttMethods(Sound);
 
 pwr_BindXttClasses(Base) = {
   pwr_BindXttClass($Object),
   pwr_BindXttClass(PlcPgm),
+  pwr_BindXttClass(Sound),
   pwr_NullClass
 };
 

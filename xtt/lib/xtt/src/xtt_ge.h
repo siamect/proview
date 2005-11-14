@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.h,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_ge.h,v 1.9 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,7 @@ typedef struct ge_sCtx {
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
+  int           (*sound_cb)(void *, pwr_tAttrRef *);
   int		width;
   int		height;
   int		set_focus_disabled;

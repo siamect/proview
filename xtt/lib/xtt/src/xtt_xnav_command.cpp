@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.23 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.24 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,7 +102,9 @@ static pwr_tStatus command_sts = 1;
 
 static void xnav_ev_help_cb( void *xnav, char *key);
 static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
+static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ev_update_info_cb( void *xnav);
+static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp);
 static void xnav_ge_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp);
 static int xnav_ge_is_authorized_cb( void *xnav, unsigned int access);
 static int xnav_attribute_func ( 
@@ -1568,6 +1570,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
+      xnav->ev->sound_cb = xnav_ev_sound_cb;
     }
     else
       xnav->ev->map_eve();
@@ -1634,6 +1637,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
+      xnav->ev->sound_cb = xnav_ev_sound_cb;
     }
     else
       xnav->ev->map_ala();
@@ -1664,6 +1668,7 @@ static int	xnav_show_func(	void		*client_data,
       xnav->ev->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
+      xnav->ev->sound_cb = xnav_ev_sound_cb;
     }
     else
       xnav->ev->map_blk();
@@ -1848,6 +1853,7 @@ static int	xnav_eventlist_func(	void		*client_data,
       xnav->ev->display_in_xnav_cb = xnav_ev_display_in_xnav_cb;
       xnav->ev->update_info_cb = xnav_ev_update_info_cb;
       xnav->ev->popup_menu_cb = xnav_popup_menu_cb;
+      xnav->ev->sound_cb = xnav_ev_sound_cb;
     }
     else
     {
@@ -5887,6 +5893,16 @@ static void xnav_ev_display_in_xnav_cb( void *xnav, pwr_sAttrRef *arp)
   ((XNav *)xnav)->pop();
 }
 
+static int xnav_ev_sound_cb( void *xnav, pwr_sAttrRef *arp)
+{
+  return ((XNav *)xnav)->sound( arp);
+}
+
+static int xnav_ge_sound_cb( void *xnav, pwr_sAttrRef *arp)
+{
+  return ((XNav *)xnav)->sound( arp);
+}
+
 static void xnav_ev_update_info_cb( void *xnav)
 {
   if (((XNav *)xnav)->op)
@@ -5940,6 +5956,7 @@ void XNav::open_graph( char *name, char *filename, int scrollbar, int menu,
     gectx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
     gectx->popup_menu_cb = xnav_popup_menu_cb;
     gectx->call_method_cb = xnav_call_method_cb;
+    gectx->sound_cb = xnav_ge_sound_cb;
 
     appl.insert( applist_eType_Graph, (void *)gectx, pwr_cNObjid, filename,
 		   object_name);

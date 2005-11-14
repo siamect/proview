@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.17 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.18 2005-11-14 16:18:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -415,6 +415,7 @@ class Graph {
 				 unsigned long, char *, Widget *); 
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
+  int         	(*sound_cb)(void *, pwr_tAttrRef *);
   int			linewidth;		//!< Selected linewidth.
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
@@ -1174,6 +1175,12 @@ class Graph {
     \param idx		Index of folder to display.
   */
   int set_folder_index( char *name, int idx);
+
+  //! Play a sound.
+  /*!
+    \param aref		Pointer to sound object aref.
+  */
+  int sound( pwr_tAttrRef *aref);
 
   //
   // Command module

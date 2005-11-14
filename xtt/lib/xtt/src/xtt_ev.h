@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev.h,v 1.6 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_ev.h,v 1.7 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,11 +84,12 @@ class Ev {
     int			eve_display_ack;
     int			eve_display_return;
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
-    void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
+    void 		(*display_in_xnav_cb)( void *, pwr_tAttrRef *);
     void 		(*update_info_cb)( void *);
     void 		(*help_cb)( void *, char *);
-    void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
+    void 		(*popup_menu_cb)( void *, pwr_tAttrRef, unsigned long,
 					  unsigned long, char *, Widget * );
+    int			(*sound_cb)( void *, pwr_tAttrRef *);
     EvList		*eve;
     EvList		*ala;
     EvList		*blk;

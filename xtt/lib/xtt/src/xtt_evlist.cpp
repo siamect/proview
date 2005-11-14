@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.11 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.12 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -371,7 +371,8 @@ EvList::EvList(
 	parent_ctx(ev_parent_ctx), parent_wid(ev_parent_wid),
 	type(ev_type), size(0), max_size(ev_size), display_hundredth(0),
 	hide_object(0), hide_text(0),
-	start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), acc_beep_time(0),
+	start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
+	sound_cb(0), acc_beep_time(0),
 	beep_interval(4)
 {
   if ( max_size <= 0) {
@@ -445,8 +446,8 @@ void EvList::event_info( mh_sMessage *msg)
 	event->Info.EventTime, event->Msg.EventText,
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, msg->Status, evlist_eEventType_Info,
-	dest_node, dest_code);
+	event->Info.Object, &event->Msg.EventSound, msg->Status, 
+        evlist_eEventType_Info, dest_node, dest_code);
   size++;
 }
 
@@ -487,8 +488,8 @@ void EvList::event_alarm( mh_sMessage *msg)
 	event->Info.EventTime, event->Msg.EventText,
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, msg->Status, evlist_eEventType_Alarm,
-	dest_node, dest_code);
+	event->Info.Object, &event->Msg.EventSound, msg->Status, 
+	evlist_eEventType_Alarm, dest_node, dest_code);
   size++;
 }
 
@@ -535,7 +536,7 @@ void EvList::event_block( mh_sBlock *msg)
 		     event->Info.EventTime, event->Info.EventName,
 		     text, event->Info.EventFlags,
 		     event->Info.EventPrio, event->Info.Id,
-		     event->Info.Object, 0, evlist_eEventType_Block,
+		     event->Info.Object, 0, 0, evlist_eEventType_Block,
 		     dest_node, dest_code);
       size++;
       break;
@@ -591,7 +592,7 @@ void EvList::event_block( mh_sBlock *msg)
 				     event->Info.EventTime, text, 
 				     event->Info.EventName, event->Info.EventFlags,
 				     event->Info.EventPrio, event->Info.Id,
-				     event->Info.Object, 0, evlist_eEventType_Block,
+				     event->Info.Object, 0, 0, evlist_eEventType_Block,
 				     dest_node, dest_code);
 
     switch( msg->Info.EventType) {
@@ -681,7 +682,7 @@ void EvList::event_ack( mh_sAck *msg)
 	event->Info.EventTime, "",
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, 0, evlist_eEventType_Ack,
+	event->Info.Object, 0, 0, evlist_eEventType_Ack,
 	dest_node, dest_code);
     size++;
   }
@@ -754,7 +755,7 @@ void EvList::event_return( mh_sReturn *msg)
 	event->Info.EventTime, event->Msg.EventText,
 	event->Info.EventName, event->Info.EventFlags,
 	event->Info.EventPrio, event->Info.Id,
-	event->Info.Object, 0, evlist_eEventType_Return,
+	event->Info.Object, 0, 0, evlist_eEventType_Return,
 	dest_node, dest_code);
     size++;
   }
@@ -848,10 +849,20 @@ void EvList::beep( double scantime)
      acc_beep_time = 0;
 
   sts = get_last_not_acked_beep( &id);
-  if ( ODD(sts))
-  {
-    if ( acc_beep_time == 0)
-      flow_Bell( form_widget);
+  if ( ODD(sts)) {
+    if ( acc_beep_time == 0) {
+      sts = 0;
+      if ( sound_cb) {
+	ItemAlarm *item;
+
+	if ( id_to_item( id, (void **)&item)) {
+	  sts = (sound_cb)( parent_ctx, &item->eventsound);
+	}
+      }
+      if ( EVEN(sts))
+	// Sound is not loaded
+	flow_Bell( form_widget);
+    }
     acc_beep_time += scantime;
   }
   else
@@ -1180,8 +1191,8 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
 ItemAlarm::ItemAlarm( EvList *item_evlist, char *item_name, pwr_tTime item_time,
 	char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
-	pwr_tObjid item_object, unsigned long item_status,
-	evlist_eEventType item_event_type,
+	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, 
+	unsigned long item_status, evlist_eEventType item_event_type,
 	brow_tNode dest, flow_eDest dest_code):
 	event_type(item_event_type), evlist(item_evlist), time(item_time), 
 	eventflags(item_eventflags), eventprio(item_eventprio),
@@ -1199,6 +1210,8 @@ ItemAlarm::ItemAlarm( EvList *item_evlist, char *item_name, pwr_tTime item_time,
     strcpy( alias, evlist->name_to_alias_cb( evlist->parent_ctx, eventname));
   else
     strcpy( alias, "");
+  if ( item_eventsound)
+    eventsound = *item_eventsound;
 
 
   switch ( event_type) { 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.h,v 1.8 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_evlist.h,v 1.9 2005-11-14 16:17:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -161,10 +161,11 @@ class EvList {
     int			hide_object;
     int			hide_text;
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
-    void 		(*display_in_xnav_cb)( void *, pwr_sAttrRef *);
-    void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
+    void 		(*display_in_xnav_cb)( void *, pwr_tAttrRef *);
+    void 		(*popup_menu_cb)( void *, pwr_tAttrRef, unsigned long,
 					  unsigned long, char *, Widget *);
     char		*(*name_to_alias_cb)( void *, char *);
+    int			(*sound_cb)( void *, pwr_tAttrRef *);
     double		acc_beep_time;
     double		beep_interval;
 
@@ -205,7 +206,7 @@ class ItemAlarm {
     ItemAlarm( EvList *evlist, char *item_name, pwr_tTime item_time,
 	char *item_eventtext, char *item_eventname, int item_eventflags,
 	unsigned long item_eventprio, mh_sEventId item_eventid,
-	pwr_tObjid item_object, unsigned long item_status,
+	pwr_tObjid item_object, pwr_tAttrRef *item_eventsound, unsigned long item_status,
 	evlist_eEventType item_event_type,
 	brow_tNode dest, flow_eDest dest_code);
     evlist_eItemType	type;
@@ -222,6 +223,7 @@ class ItemAlarm {
     pwr_tObjid		object;
     unsigned long	status;
     char		alias[40];
+    pwr_tAttrRef	eventsound;
 
     void	update_text();
 };
