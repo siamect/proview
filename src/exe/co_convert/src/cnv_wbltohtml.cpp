@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.9 2005-09-22 14:36:58 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.10 2005-11-14 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@ extern "C" {
 #include "pwr.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 }
 #include "co_lng.h"
 
@@ -409,6 +410,7 @@ int CnvWblToHtml::class_exec()
   pwr_tFileName fname;
   int i;
   pwr_tFileName html_file_name;
+  pwr_tFileName ctree_file;
   char full_class_name[80];
   char ref_name[200];
   pwr_tFileName struct_file;
@@ -418,6 +420,8 @@ int CnvWblToHtml::class_exec()
   char txt[200];
   char timestr[80];
   int lng_sts = 1;
+
+  cdp_created = false;
 
   if ( Lng::current() != lng_eLanguage_en_us)
     lng_sts = ctx->rw->read_lng( ctx->rw->class_name, 0);
@@ -442,6 +446,12 @@ int CnvWblToHtml::class_exec()
   strcpy( html_file_name, low_volume_name);
   strcat( html_file_name, "_");
   strcat( html_file_name, low_class_name);
+
+  strcpy( ctree_file, low_volume_name);
+  strcat( ctree_file, "_");
+  strcat( ctree_file, low_class_name);
+  strcat( ctree_file, "_ctree.html");
+
 
   // Add into index file
   fp_html_index <<
@@ -522,7 +532,8 @@ endl <<
 "&nbsp;|&nbsp;<A HREF=\"#detail\">Detail</A>" << endl <<
 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C Binding: " << endl <<
 "&nbsp;<A HREF=\"" << struct_file << "#" << ctx->rw->class_name << "\">Struct</A>" << endl <<
-"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl;
+"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl <<
+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<A HREF=\"" << ctree_file << "\">ClassTree</A>" << endl;
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
     CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
@@ -753,7 +764,23 @@ int CnvWblToHtml::class_close()
 
   html_class_open = 0;
 
+  if ( !cdp_created) {
+    create_cdp_file( ctx->rw->volume_name, ctx->rw->class_name, "-");
+    cdp_created = true;
+  }
   return 1;
+}
+
+// Create class dependency file
+void CnvWblToHtml::create_cdp_file( char *volume_name, char *class_name, char *attr_typeref)
+{
+  pwr_tFileName fname;
+
+  sprintf( fname, "$pwre_broot/$pwre_target/bld/wbl/%s.cdp", CnvCtx::low(class_name));
+  dcli_translate_filename( fname, fname);
+  
+  ofstream fp( fname);
+  fp << volume_name << " " << class_name << " " << attr_typeref << endl;
 }
 
 int CnvWblToHtml::attribute_exec()
@@ -763,6 +790,11 @@ int CnvWblToHtml::attribute_exec()
   char typeref_href[80];
   char attrtype_href[80];
   int lng_sts = 1;
+
+  if ( strcmp( CnvCtx::low( ctx->rw->attr_name), "super") == 0) {
+    create_cdp_file( ctx->rw->volume_name, ctx->rw->class_name, ctx->rw->attr_typeref);
+    cdp_created = true;
+  }
 
   if ( strcmp( ctx->rw->attr_typeref, "CastId") == 0 ||
        strcmp( ctx->rw->attr_typeref, "DisableAttr") == 0)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.9 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.10 2005-11-14 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@ extern "C" {
 #include "cnv_xtthelptoxml.h"
 #include "cnv_xtthelptops.h"
 #include "cnv_xtthelptopdf.h"
+#include "cnv_classdep.h"
 
 typedef char cnv_tName[200];
 
@@ -195,94 +196,8 @@ int main( int argc, char *argv[])
           case 'o':
             ctx->common_structfile_only = 1;
             break;
-          case 'v':
-            ctx->verbose = 1;
-            break;
-          case 't':
-            xtthelp_to_html = 1;
-            break;
-          case 'm':
-            xtthelp_to_xml = 1;
-            break;
-          case 'n':
-            xtthelp_to_ps = 1;
-            break;
-          case 'f':
-            xtthelp_to_pdf = 1;
-            break;
-          default:
-            usage();
-            exit(0);
-        }
-        s++;
-      }
-    }
-    else
-      strcpy( files, argv[i]);
-  }
-  for ( i = 1; i < argc; i++) {
-    if ( strcmp( argv[i], "-d") == 0) {
-      if ( i+1 >= argc) {
-        usage();
-        exit(0);
-      }
-      strcpy( ctx->dir, argv[i+1]);
-      i++;
-#if defined OS_VMS
-      if ( ctx->dir[strlen(ctx->dir)-1] != ':' &&
-	   (ctx->dir[strlen(ctx->dir)-1] != '>' &&
-	    ctx->dir[strlen(ctx->dir)-1] != ']' ))
-        strcat( ctx->dir , ":");
-#else
-      if ( ctx->dir[strlen(ctx->dir)-1] != '/')
-        strcat( ctx->dir , "/");
-#endif
-    }
-    if ( strcmp( argv[i], "-g") == 0) {
-      if ( i+1 >= argc) {
-        usage();
-        exit(0);
-      }
-      strcpy( ctx->setup_filename, argv[i+1]);
-      i++;
-    }
-    if ( strcmp( argv[i], "-l") == 0) {
-      if ( i+1 >= argc) {
-        usage();
-        exit(0);
-      }
-      Lng::set( argv[i+1]);
-      i++;
-    }
-    else if ( argv[i][0] == '-') {
-      s = &argv[i][1];
-      while( *s) {
-        switch( *s) {
-          case 'h':
-            help();
-            exit(0);
-          case 'w':
-            ctx->generate_html = 1;
-            break;
-          case 'x':
-            ctx->generate_xtthelp = 1;
-            break;
-          case 'c':
-            ctx->generate_src = 1;
-            break;
-          case 's':
-            ctx->generate_struct = 1;
-            break;
-          case 'q':
-            ctx->generate_ps = 1;
-            ctx->common_structfile_only = 1;
-            break;
-          case 'p':
-            ctx->generate_struct = 1;
-	    ctx->hpp = 1;
-            break;
-          case 'o':
-            ctx->common_structfile_only = 1;
+          case 'k':
+            ctx->generate_cdp = 1;
             break;
           case 'v':
             ctx->verbose = 1;
@@ -345,6 +260,12 @@ int main( int argc, char *argv[])
     ctx->rx->read_xtthelp();
     delete ctx->rx;
     delete xtthelpto;
+    exit(0);
+  }
+  if ( ctx->generate_cdp) {
+    CnvClassDep *classdep = new CnvClassDep( ctx);
+    classdep->read();
+    delete classdep;
     exit(0);
   }
 

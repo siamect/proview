@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.h,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.h,v 1.4 2005-11-14 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@ class CnvReadWbl;
 class CnvWblToHtml : public CnvWblTo {
  public:
   CnvWblToHtml( CnvCtx *cnv_ctx) : ctx(cnv_ctx),
-    html_class_open(0), html_index_open(0), js_all_first(0) {}
+    html_class_open(0), html_index_open(0), js_all_first(0), cdp_created(false) {}
   virtual ~CnvWblToHtml() {}
 
   CnvCtx	*ctx;
@@ -52,6 +52,7 @@ class CnvWblToHtml : public CnvWblTo {
   int		html_index_open;
   bool		js_all_first;
   bool		js_group_first[80];
+  bool		cdp_created;
   
   int init( char *first);
   int close();
@@ -69,6 +70,7 @@ class CnvWblToHtml : public CnvWblTo {
   Cnv_eWblToType type() { return Cnv_eWblToType_Html;}
   int class_open() { return html_class_open;}
   int index_open() { return html_index_open;}
+  void create_cdp_file( char *volume_name, char *class_name, char *attr_typeref);
   
 };
 

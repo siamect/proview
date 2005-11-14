@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_readwbl.cpp,v 1.8 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: cnv_readwbl.cpp,v 1.9 2005-11-14 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -722,7 +722,7 @@ int CnvReadWbl::attribute_attr( char *name, char *value)
 	attr_array = 1;
       if ( strcmp( value, "PWR_MASK_RTVIRTUAL") == 0)
 	attr_rtvirtual = 1;
-      if ( strcmp( value, "PWR_MASK_ISCLASS") == 0)
+      if ( strcmp( value, "PWR_MASK_CLASS") == 0)
 	attr_isclass = 1;
     }
     else {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_ctx.h,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_ctx.h,v 1.3 2005-11-14 16:11:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@ class CnvReadXtthelp;
 class CnvCtx {
  public:
   CnvCtx() : generate_html(0), generate_xtthelp(0), generate_src(0),
-    generate_struct(0), generate_ps(0), common_structfile_only(0), hpp(0), 
+    generate_struct(0), generate_ps(0), generate_cdp(0), common_structfile_only(0), hpp(0), 
     verbose(0), first_class(1), setup(0), wblto(0), rw(0), rx(0)
     {
       strcpy( dir, "");
@@ -50,6 +50,7 @@ class CnvCtx {
   int		generate_src;
   int		generate_struct;
   int		generate_ps;
+  int		generate_cdp;
   int		common_structfile_only;
   int		hpp;
   int	       	verbose;
