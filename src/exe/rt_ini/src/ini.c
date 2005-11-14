@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.22 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: ini.c,v 1.23 2005-11-14 16:36:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1177,6 +1177,19 @@ ini_ReadBootFile (
   }
 
   fclose(f);
+
+  /* Insert global shared volume rt */
+  vid = cdh_cRtVolume;
+  vp = tree_Insert(sts, cp->vid_t, &vid);
+  strcpy(vp->name, "rt");
+  lst_InsertPred(NULL, &cp->vol_lh, &vp->ll, vp);
+  vp->oid_t = tree_CreateTable(sts, sizeof(pwr_tObjectIx),
+	offsetof(ivol_sObject, oix), sizeof(ivol_sObject), 10,
+	tree_Comp_oix);
+  lst_Init(NULL, &vp->upd_lh, NULL);
+  lst_Init(NULL, &vp->upd_io_lh, NULL);
+  lst_Init(NULL, &vp->cre_lh, NULL);
+
 }
 
 pwr_tBoolean
