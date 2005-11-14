@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.6 2005-11-04 11:53:46 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.7 2005-11-14 16:28:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -298,7 +298,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
-	  sprintf( text, format, max_value - i * increment);
+	  format_text( text, format, max_value - i * increment);
 	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
 				max( 0, text_idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
@@ -324,7 +324,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
         glow_draw_line( ctx, ur_x -  int( 2.0 / 3 * line_length), y, 
           ur_x, y, drawtype, idx, 0);
       if ( draw_text) {
-	sprintf( text, format, max_value - i * increment);
+	format_text( text, format, max_value - i * increment);
 
 	if ( text_idx >= 0 && max_z_width < ur_x - ll_x &&
 	     i % valuequotient == 0) {
@@ -369,7 +369,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
           ur_y, drawtype, idx, 0);
 
       if ( draw_text && i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
+        format_text( text, format, max_value - i * increment);
         draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);
 
@@ -396,7 +396,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
-	  sprintf( text, format, max_value - i * increment);
+	  format_text( text, format, max_value - i * increment);
 	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
 				max( 0, text_idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
@@ -421,7 +421,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
       else
         glow_draw_line( ctx, ll_x, y, 
           ll_x + int( 2.0 / 3 * line_length), y, drawtype, idx, 0);
-      sprintf( text, format, max_value - i * increment);
+      format_text( text, format, max_value - i * increment);
 
       if ( draw_text && 
 	   text_idx >= 0 && max_z_width < ur_x - ll_x &&
@@ -465,7 +465,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
         glow_draw_line( ctx, x, ll_y, x, 
           ll_y  +  int( 2.0 / 3 * line_length), drawtype, idx, 0);
       if ( draw_text && i % valuequotient == 0) {
-        sprintf( text, format, max_value - i * increment);
+        format_text( text, format, max_value - i * increment);
         draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);
 
@@ -910,7 +910,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
-	  sprintf( text, format, max_value - i * increment);
+	  format_text( text, format, max_value - i * increment);
 	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
 				max( 0, idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
@@ -938,7 +938,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
-	  sprintf( text, format, max_value - i * increment);
+	  format_text( text, format, max_value - i * increment);
 	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
@@ -996,6 +996,35 @@ void GrowAxis::set_axis_info( glow_sAxisInfo *info)
   longquotient = info->longquotient;
   valuequotient = info->valuequotient;
   strcpy( format, info->format);
+}
+
+void GrowAxis::format_text( char *text, char *fmt, double value) 
+{
+  if ( strcmp( fmt, "%1t") == 0) {
+    // Hours, minutes and seconds, value in seconds
+    int val = (int) nearbyint(value);
+    int hours = val / 3600;
+    int minutes = (val - hours * 3600) / 60; 
+    int seconds = (val - hours * 3600 - minutes * 60); 
+    sprintf( text, "%d:%02d:%02d", hours, minutes, seconds);
+  }
+  else if ( strcmp( fmt, "%2t") == 0) {
+    // Hours and minutes, value in seconds
+    int val = (int) nearbyint(value);
+    int hours = val / 3600;
+    int minutes = (val - hours * 3600) / 60; 
+    sprintf( text, "%d:%02d", hours, minutes);
+  }
+  else if ( strcmp( fmt, "%3t") == 0) {
+    // Days, hours and minues, value in seconds
+    int val = (int) nearbyint(value);
+    int days = val / (24 * 3600);
+    int hours = (val - days * 24 * 3600) / 3600; 
+    int minutes = (val - days * 24 * 3600 - hours * 3600) / 60; 
+    sprintf( text, "%d %02d:%02d", days, hours, minutes);
+  }
+  else
+    sprintf( text, fmt, value);
 }
 
 void GrowAxis::convert( glow_eConvert version) 

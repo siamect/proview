@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growaxis.h,v 1.4 2005-11-14 16:28:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -242,6 +242,14 @@ class GrowAxis : public GrowRect {
   */
   void set_original_text_color( glow_eDrawType drawtype) 
 	{ text_color_drawtype = drawtype; draw();};
+
+  //! Format axis text.
+  /*!
+    \param text		Formated text.
+    \param fmt		Format specification, c syntax or %1t(h:m:s), %2t (d h:m) for time formats.
+    \param value	Value to format.
+  */
+  void format_text( char *text, char *fmt, double value);
 };
 
 
