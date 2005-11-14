@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.50 2005-10-18 05:14:05 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.51 2005-11-14 16:32:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -779,11 +779,12 @@ void wb_wblnode::postBuild()
 	    if ( cdh_tidIsCid( attr->o->a.tid)) {
 	      // Copy template for this object to offset of the attribute
 	      if ( m_vrep->getTemplateBody( attr->o->a.tid, pwr_eBix_sys, &size, &body)) {
-		if ( size != attr->o->a.size ||
-		     attr->o->a.offset + size > o->rbody_size) 
+		if ( size * attr->o->a.elements != attr->o->a.size ||
+		     attr->o->a.offset + size * attr->o->a.elements > o->rbody_size) 
 		  m_vrep->error( "AttrObject size mismatch", getFileName(), line_number);
 		else
-		  memcpy( (char *)o->rbody + attr->o->a.offset, body, size);
+		  for ( int i = 0; i < attr->o->a.elements; i++)
+		    memcpy( (char *)o->rbody + attr->o->a.offset + i * size, body, size);
 		free( body);
 	      }
 	    }
