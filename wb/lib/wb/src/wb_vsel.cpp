@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.12 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.13 2005-11-14 16:30:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -365,7 +365,8 @@ WVsel::WVsel (
       if (EVEN(sts)) { *status = sts; return; }
   
       if ( classid == pwr_eClass_ClassVolume ||
- 	   classid == pwr_eClass_WorkBenchVolume )
+ 	   classid == pwr_eClass_WorkBenchVolume ||
+	   volume == ldh_cRtVolume)
       {
         sts = ldh_GetNextVolume( wbctx, volume, &volume);
         continue;
@@ -554,7 +555,8 @@ pwr_tStatus WVsel::load_volumelist()
 	  if ( !all)
 	  {
 	    if ( classid == pwr_eClass_ClassVolume ||
-	         classid == pwr_eClass_WorkBenchVolume )
+	         classid == pwr_eClass_WorkBenchVolume  ||
+		 volume == ldh_cRtVolume)
 	    {
 	      sts = ldh_GetNextVolume( wbctx, volume, &volume);
 	      continue;
@@ -714,7 +716,7 @@ pwr_tStatus WVsel::check_volumelist(
 
 	  if ( classid == pwr_eClass_RootVolume ||
 	       classid == pwr_eClass_SubVolume ||
-	       classid == pwr_eClass_SharedVolume ||
+	       (classid == pwr_eClass_SharedVolume && volume != ldh_cRtVolume) ||
 	       (classid == pwr_eClass_ClassVolume && 
 		(cdh_cUserClassVolMin <= volume && volume <= cdh_cUserClassVolMax))) 
 	  {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.25 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.26 2005-11-14 16:29:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -823,6 +823,8 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
     rbSize = sizeof(pwr_sDirectoryVolume);
     break;
   case pwr_eClass_SharedVolume:
+    rbSize = sizeof(pwr_sSharedVolume);
+    break;
   case pwr_eClass_CreateVolume:
   case pwr_eClass_MountVolume:
   case pwr_eClass_MountObject:

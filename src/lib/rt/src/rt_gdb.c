@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.c,v 1.6 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_gdb.c,v 1.7 2005-11-14 16:28:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1033,14 +1033,15 @@ gdb_LoadVolume (
   vp->l.flags.b.sub		= load.b.native && cid == pwr_eClass_SubVolume;
   vp->l.flags.b.system		= load.b.native && cid == pwr_eClass_SystemVolume;
   vp->l.flags.b.dynamic		= vp->l.flags.b.system | (load.b.native && cid == pwr_eClass_DynamicVolume);
-  vp->l.flags.b.shared		= cid == pwr_eClass_DynamicVolume;
+  vp->l.flags.b.shared		= cid == pwr_eClass_DynamicVolume || cid == pwr_eClass_SharedVolume;
   vp->l.flags.b.classvol	= cid == pwr_eClass_ClassVolume;
   vp->l.flags.b.netCached	= load.b.netCached;
   vp->l.flags.b.fileCached	= load.b.fileCached;
   vp->l.flags.b.remote		= load.b.netCached | load.b.fileCached;
 
   vp->l.flags.b.isOwned		= nid == gdbroot->db->nid && (vp->l.flags.b.root | vp->l.flags.b.sub
-				| vp->l.flags.b.system | vp->l.flags.b.dynamic |vp->l.flags.b.classvol);
+				| vp->l.flags.b.system | vp->l.flags.b.dynamic | vp->l.flags.b.classvol
+			        | vp->l.flags.b.shared);
 
   if (vp->l.flags.b.isOwned) {
     vp->g.nid = nid;
