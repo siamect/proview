@@ -1,0 +1,256 @@
+Volume rt $SharedVolume 254.254.254.245 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X15"
+  EndBody
+  Object Sounds $Hier 1 10-NOV-2005 13:10:06.12
+    Body SysBody 10-NOV-2005 13:09:55.69
+    EndBody
+    Object AAlarm Sound 2 10-NOV-2005 16:50:28.05
+      Body RtBody 10-NOV-2005 16:51:21.77
+        Attr BaseTone = 36
+        Attr Attack = 5.000000e-02
+      EndBody
+    EndObject
+    Object BAlarm Sound 8 10-NOV-2005 16:51:37.95
+      Body RtBody 10-NOV-2005 16:51:43.04
+        Attr BaseTone = 12
+        Attr Attack = 5.000000e-02
+      EndBody
+    EndObject
+    Object S0001 Sound 3 10-NOV-2005 16:52:38.27
+      Body RtBody 10-NOV-2005 16:41:36.65
+        Attr Source = "Square"
+        Attr ToneTable[1] = 13
+        Attr ToneTable[2] = 26
+        Attr ToneTable[3] = 39
+        Attr ToneTable[4] = 41
+        Attr VolumeTable[0] = 5.000000e+01
+        Attr VolumeTable[1] = 5.000000e+01
+        Attr VolumeTable[2] = 2.000000e+01
+        Attr VolumeTable[3] = 3.000000e+01
+        Attr VolumeTable[4] = 3.000000e+01
+        Attr Attack = 2.000000e-02
+        Attr Decay = 2.000000e-02
+        Attr Sustain = 0.000000e+00
+      EndBody
+    EndObject
+    Object S0002 Sound 4 10-NOV-2005 16:52:47.63
+      Body RtBody 10-NOV-2005 16:41:36.65
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0001 Sound 9 10-NOV-2005 16:53:27.22
+      Body RtBody 10-NOV-2005 16:53:47.39
+        Attr Source = "wav0001.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0002 Sound 15 10-NOV-2005 17:02:50.12
+      Body RtBody 10-NOV-2005 17:02:54.31
+        Attr Source = "wav0002.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0003 Sound 14 10-NOV-2005 17:03:00.90
+      Body RtBody 10-NOV-2005 17:03:04.59
+        Attr Source = "wav0003.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0004 Sound 13 10-NOV-2005 17:03:12.30
+      Body RtBody 10-NOV-2005 17:03:15.49
+        Attr Source = "wav0004.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0005 Sound 12 10-NOV-2005 17:03:22.17
+      Body RtBody 10-NOV-2005 17:03:29.18
+        Attr Source = "wav0005.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0006 Sound 11 10-NOV-2005 17:04:01.03
+      Body RtBody 10-NOV-2005 17:04:04.56
+        Attr Source = "wav0006.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Wav0007 Sound 10 10-NOV-2005 17:04:14.10
+      Body RtBody 10-NOV-2005 17:04:17.82
+        Attr Source = "wav0007.wav"
+        Attr BaseTone = 21
+        Attr ToneTable[1] = 3
+        Attr ToneTable[2] = 7
+        Attr ToneTable[3] = 13
+        Attr VolumeTable[0] = 4.000000e+01
+        Attr VolumeTable[1] = 3.000000e+01
+        Attr VolumeTable[2] = 3.000000e+01
+        Attr VolumeTable[3] = 2.000000e+01
+        Attr Attack = 3.000000e-01
+        Attr Decay = 1.000000e-01
+        Attr Release = 2.000000e-01
+        Attr Length = 8.000000e-01
+      EndBody
+    EndObject
+    Object Seq0001 SoundSequence 5 10-NOV-2005 16:52:56.63
+      Body RtBody 10-NOV-2005 17:41:29.55
+        Attr SoundObject[0] = "rt:Sounds-S0001"
+        Attr Length = 4.000000e-01
+        Attr Echo = 3.000000e+01
+        Attr SequenceTable[0].EndTime = 2.000000e-01
+        Attr SequenceTable[0].VolumeRight = 6.000000e+01
+        Attr SequenceTable[0].VolumeLeft = 4.000000e+01
+        Attr SequenceTable[0].Tone = 33
+        Attr SequenceTable[1].Used = 1
+        Attr SequenceTable[1].StartTime = 1.000000e-01
+        Attr SequenceTable[1].EndTime = 3.000000e-01
+        Attr SequenceTable[1].VolumeRight = 3.000000e+01
+        Attr SequenceTable[1].VolumeLeft = 3.000000e+01
+        Attr SequenceTable[1].Tone = 36
+        Attr SequenceTable[2].Used = 1
+        Attr SequenceTable[2].StartTime = 2.000000e-01
+        Attr SequenceTable[2].EndTime = 4.000000e-01
+        Attr SequenceTable[2].VolumeRight = 4.000000e+01
+        Attr SequenceTable[2].VolumeLeft = 6.000000e+01
+        Attr SequenceTable[2].Tone = 40
+      EndBody
+    EndObject
+    Object Seq0002 SoundSequence 6 10-NOV-2005 16:53:02.24
+      Body RtBody 10-NOV-2005 17:41:52.04
+        Attr SoundObject[0] = "rt:Sounds-S0001"
+        Attr Length = 4.000000e-01
+        Attr Echo = 3.000000e+01
+        Attr SequenceTable[0].EndTime = 2.000000e-01
+        Attr SequenceTable[0].VolumeRight = 6.000000e+01
+        Attr SequenceTable[0].VolumeLeft = 4.000000e+01
+        Attr SequenceTable[0].Tone = 36
+        Attr SequenceTable[1].Used = 1
+        Attr SequenceTable[1].StartTime = 1.000000e-01
+        Attr SequenceTable[1].EndTime = 3.000000e-01
+        Attr SequenceTable[1].VolumeRight = 2.000000e+01
+        Attr SequenceTable[1].VolumeLeft = 2.000000e+01
+        Attr SequenceTable[1].Tone = 31
+        Attr SequenceTable[2].Used = 1
+        Attr SequenceTable[2].StartTime = 1.500000e-01
+        Attr SequenceTable[2].EndTime = 3.500000e-01
+        Attr SequenceTable[2].VolumeRight = 3.000000e+01
+        Attr SequenceTable[2].VolumeLeft = 3.000000e+01
+        Attr SequenceTable[2].Tone = 30
+        Attr SequenceTable[3].Used = 1
+        Attr SequenceTable[3].StartTime = 2.000000e-01
+        Attr SequenceTable[3].EndTime = 4.000000e-01
+        Attr SequenceTable[3].VolumeRight = 3.000000e+01
+        Attr SequenceTable[3].VolumeLeft = 3.000000e+01
+        Attr SequenceTable[3].Tone = 12
+      EndBody
+    EndObject
+    Object Seq0003 SoundSequence 7 10-NOV-2005 16:53:06.80
+      Body RtBody 10-NOV-2005 17:42:09.40
+        Attr SoundObject[0] = "rt:Sounds-S0001"
+        Attr SoundObject[1] = "rt:Sounds-S0002"
+        Attr Length = 4.000000e-01
+        Attr Echo = 8.000000e+01
+        Attr SequenceTable[0].EndTime = 1.000000e+00
+        Attr SequenceTable[0].Tone = 21
+        Attr SequenceTable[1].Used = 1
+        Attr SequenceTable[1].SoundIdx = 1
+        Attr SequenceTable[1].StartTime = 5.000000e-01
+        Attr SequenceTable[1].EndTime = 8.000000e-01
+        Attr SequenceTable[1].VolumeRight = 1.000000e+02
+        Attr SequenceTable[1].VolumeLeft = 1.000000e+02
+        Attr SequenceTable[1].Tone = 36
+        Attr SequenceTable[2].Used = 1
+        Attr SequenceTable[2].SoundIdx = 1
+        Attr SequenceTable[2].StartTime = 6.000000e-01
+        Attr SequenceTable[2].EndTime = 9.000000e-01
+        Attr SequenceTable[2].VolumeRight = 1.000000e+02
+        Attr SequenceTable[2].VolumeLeft = 1.000000e+02
+        Attr SequenceTable[2].Tone = 33
+        Attr SequenceTable[3].Used = 1
+        Attr SequenceTable[3].SoundIdx = 1
+        Attr SequenceTable[3].StartTime = 7.000000e-01
+        Attr SequenceTable[3].EndTime = 1.000000e+00
+        Attr SequenceTable[3].VolumeRight = 1.000000e+02
+        Attr SequenceTable[3].VolumeLeft = 1.000000e+02
+        Attr SequenceTable[3].Tone = 36
+      EndBody
+    EndObject
+  EndObject
+EndVolume
