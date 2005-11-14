@@ -43,10 +43,22 @@ sources := $(sort \
 
 gif_sources := $(filter %.gif,$(sources))
 
+sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.wav) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+wav_sources := $(filter %.wav,$(sources))
+
 export_obj := $(patsubst %.c,$(obj_dir)/%.o,$(c_sources))
 clean_obj := $(patsubst %.c,clean_%.o,$(c_sources))
 export_gif := $(patsubst %.gif,$(exe_dir)/%.gif,$(gif_sources))
 export_gifdoc := $(patsubst %.gif,$(doc_dir)/help/%.gif,$(gif_sources))
+export_wav := $(patsubst %.wav,$(exe_dir)/%.wav,$(wav_sources))
 
 .PHONY : all init copy lib exe clean realclean\
          $(clean_c)
@@ -55,7 +67,7 @@ all : init copy lib
 
 init :
 
-copy : $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc)
+copy : $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc) $(export_wav)
 
 lib : $(export_obj)
 
@@ -64,6 +76,12 @@ exe :
 clean :
 
 realclean : clean $(clean_obj) 
+
+.SUFFIXES:
+
+$(exe_dir)/%.wav : ../../%.wav
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/xtt_help.dat : xtt_help.dat
 	@ echo "Copying xtt_help.dat"

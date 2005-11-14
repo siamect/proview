@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.10 2005-11-02 14:05:26 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.11 2005-11-14 16:35:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,6 +140,7 @@ struct s_Active {
   mh_mEventFlags	eventFlags;
   mh_uEventInfo		status;
   mh_eEvent		event;
+  pwr_tAttrRef		eventSound;
   pwr_tBoolean		local;
   sEventTab		*detect_etp;
   sEventTab		*return_etp;
@@ -237,6 +238,7 @@ struct s_Sup {
   mh_eEvent	  EventType;
   mh_eEventPrio   EventPriority;
   mh_mEventFlags  EventFlags;
+  pwr_tAttrRef	  Sound;
   /* Internal attributes */
   pwr_sAttrRef    Attribute;
   mh_uEventInfo   AlarmStatus;
@@ -907,6 +909,7 @@ applMessage (
   cdh_ToUpper(aap->link.objName, NULL);
   strncpy(aap->link.eventName, ip->EventName, sizeof(aap->link.eventName));
   aap->link.eventFlags = ip->EventFlags;
+  aap->link.eventSound = ip->EventSound;
   aap->link.event = ip->EventType;
 
   aap->message = *ip;
@@ -1494,6 +1497,7 @@ formatApplEvent (
     strncpy(mp->EventText, aap->message.EventText, sizeof(mp->EventText));
     mp->SupInfo.SupType = aap->message.SupInfo.SupType;
     memcpy(&mp->SupInfo, &aap->message.SupInfo, sizeof(mh_uSupInfo));
+    mp->EventSound = aap->link.eventSound;
     *size = sizeof(mh_sMessage);
     break;
   case mh_eEvent_Ack:
@@ -1587,6 +1591,7 @@ formatSupEvent (
       sp->supInfoSize = sizeof(mp->SupInfo.mh_uSupInfo_u);
     }
 #endif
+    mp->EventSound = sp->link.eventSound;
     memcpy(&mp->SupInfo.mh_uSupInfo_u, sp->supInfoP, sp->supInfoSize);
     *size = sizeof(mh_sMessage);
     break;
@@ -2583,6 +2588,7 @@ initSupActiveCB (
     sp->supInfoSize = sizeof(mh_sASupInfo);
     sp->supInfoP = &asp->Info; 
     sp->attribute = asp->Sup.Attribute; 
+    sp->link.eventSound = asp->Sup.Sound; 
     sp->timer = &asp->Timer;
     sp->op = (void *) asp;
     sp->agent = getAgent(sp);
@@ -2596,6 +2602,7 @@ initSupActiveCB (
     sp->supInfoSize = sizeof(mh_sDSupInfo);
     sp->supInfoP = &dsp->Info; 
     sp->attribute = dsp->Sup.Attribute;
+    sp->link.eventSound = dsp->Sup.Sound;
     sp->timer = &dsp->Timer;
     sp->op = (void *) dsp;
     sp->agent = getAgent(sp);
@@ -2608,6 +2615,7 @@ initSupActiveCB (
     sp->sup = (sSup *)&nlsp->ControlP;
     sp->supInfoSize = 0;
     sp->supInfoP = NULL;
+    sp->link.eventSound = nlsp->Sound; 
     sp->attribute.Objid = Object;
     sp->attribute.Offset = pwr_Offset(nlsp, LinkUp);
     sp->attribute.Size = sizeof(nlsp->LinkUp);
@@ -2623,6 +2631,7 @@ initSupActiveCB (
     sp->sup = (sSup *)&csp->ControlP;
     sp->supInfoSize = 0;
     sp->supInfoP = NULL;
+    sp->link.eventSound = csp->Sound; 
     sp->attribute.Objid = Object;
     sp->attribute.Offset = pwr_Offset(csp, DelayLimit);
     sp->attribute.Size = sizeof(csp->DelayLimit);

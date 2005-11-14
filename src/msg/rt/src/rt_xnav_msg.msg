@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_xnav_msg.msg,v 1.4 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_xnav_msg.msg,v 1.5 2005-11-14 16:37:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -49,9 +49,10 @@ objnotfound	<Object is not found>				/error
 stringtolong	<String is too long>				/error
 fastconfig	<Error in fast configuration>			/error
 nochildren	<Item has no children>				/error
-
-
-
+queued		<Request queued>				/info
+queuefull	<Queue is full>					/error
+waveformat	<Unsupported wavefile format>			/error
+filecorrupt	<File is corrupt>				/error
 
 
 
