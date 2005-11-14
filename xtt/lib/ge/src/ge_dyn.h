@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.25 2005-11-02 14:07:36 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.26 2005-11-14 16:21:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,6 +93,7 @@ extern "C" {
 
   //! Priority order for dyntypes and actiontypes. Lower value gives higher priority.
   typedef enum {
+    ge_eDynPrio_DigSound,
     ge_eDynPrio_HostObject,
     ge_eDynPrio_Invisible,
     ge_eDynPrio_DigFlash,
@@ -171,7 +172,8 @@ extern "C" {
     ge_mDynType_AnalogText	= 1 << 23,
     ge_mDynType_Table		= 1 << 24,
     ge_mDynType_StatusColor    	= 1 << 25,
-    ge_mDynType_HostObject    	= 1 << 26
+    ge_mDynType_HostObject    	= 1 << 26,
+    ge_mDynType_DigSound    	= 1 << 27
   } ge_mDynType;
 
   //! Action types.
@@ -267,6 +269,7 @@ extern "C" {
     ge_eSave_Table	       		= 30,
     ge_eSave_StatusColor             	= 31,
     ge_eSave_HostObject             	= 32,
+    ge_eSave_DigSound	             	= 33,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -309,6 +312,8 @@ extern "C" {
     ge_eSave_DigBorder_color		= 1001,
     ge_eSave_DigText_attribute		= 1100,
     ge_eSave_DigText_low_text		= 1101,
+    ge_eSave_DigText_instance		= 1102,
+    ge_eSave_DigText_instance_mask    	= 1103,
     ge_eSave_Value_attribute		= 1200,
     ge_eSave_Value_format	       	= 1201,
     ge_eSave_Value_instance      	= 1202,
@@ -402,6 +407,12 @@ extern "C" {
     ge_eSave_StatusColor_attribute     	= 3100,
     ge_eSave_StatusColor_nostatus_color = 3101,
     ge_eSave_HostObject_object     	= 3200,
+    ge_eSave_DigSound_attribute     	= 3300,
+    ge_eSave_DigSound_soundobject     	= 3301,
+    ge_eSave_DigSound_level     	= 3302,
+    ge_eSave_DigSound_interval     	= 3303,
+    ge_eSave_DigSound_instance		= 3304,
+    ge_eSave_DigSound_instance_mask    	= 3305,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -590,6 +601,8 @@ class GeDyn {
   bool		reset_color;		//!< An element of higher prio is passing color dynamics to elements of lower prio.
   bool		ignore_invisible;	//!< All remaining elements with lower prio should ignore invisible dynamics.
   bool		reset_invisible;	//!< An element of higher prio is passing invisible dynamics to elements of lower prio.
+  bool		ignore_text_a1;		//!< All remaining elements with lower prio should ignore a1 text dynamics.
+  bool		reset_text_a1;		//!< An element of higher prio is passing a1 text dynamics to elements of lower prio.
   ge_mDynType	dyn_type;		//!< Dynamic type.
   ge_mDynType	total_dyn_type;		//!< Total dynamic type, including the dyntype of the nodeclass if Inherit is set.
   ge_mActionType action_type;		//!< Action type.
@@ -1062,12 +1075,13 @@ class GeDigText : public GeDynElem {
   pwr_tBoolean old_value;
   char high_text[80];
 
-  GeDigText( GeDyn *e_dyn) : 
+  GeDigText( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_DigText, (ge_mActionType) 0, ge_eDynPrio_DigText)
-    { strcpy( attribute, ""); strcpy( low_text, "");}
+    { strcpy( attribute, ""); strcpy( low_text, ""); instance = e_instance;}
   GeDigText( const GeDigText& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio)
-    { strcpy( attribute, x.attribute); strcpy( low_text, x.low_text);}
+    { strcpy( attribute, x.attribute); strcpy( low_text, x.low_text);
+    instance = x.instance; instance_mask = x.instance_mask;}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   int get_transtab( char **tt);
   void save( ofstream& fp);
@@ -1519,6 +1533,42 @@ class GeHostObject : public GeDynElem {
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
   int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
+};
+
+//! Play sound specified by a Sound or SoundSequence object.
+class GeDigSound : public GeDynElem {
+ public:
+  pwr_tAName attribute;
+  pwr_tAName soundobject;
+  int level;
+  double interval;
+
+  pwr_tAttrRef soundaref;
+  pwr_tBoolean *p;
+  pwr_tSubid subid;
+  int size;
+  graph_eDatabase db;
+  int inverted;
+  bool first_scan;
+  pwr_tBoolean old_value;
+  double time_since_last;
+
+  GeDigSound( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType_DigSound, (ge_mActionType) 0, ge_eDynPrio_DigSound),
+    level(0), interval(10), time_since_last(0)
+    { strcpy( attribute, ""); strcpy( soundobject, ""); instance = e_instance;}
+  GeDigSound( const GeDigSound& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), level(x.level),
+    interval(x.interval), time_since_last(0)
+    { strcpy( attribute, x.attribute); strcpy(soundobject, x.soundobject);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void open( ifstream& fp);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
 };
 
 //! Display the methods popup menu.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.34 2005-11-02 14:07:36 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.35 2005-11-14 16:21:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -190,6 +190,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeStatusColor((const GeStatusColor&) *elem); break;
     case ge_mDynType_HostObject:
       e = new GeHostObject((const GeHostObject&) *elem); break;
+    case ge_mDynType_DigSound:
+      e = new GeDigSound((const GeDigSound&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -300,6 +302,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_Table: e = (GeDynElem *) new GeTable(this); break;
       case ge_eSave_StatusColor: e = (GeDynElem *) new GeStatusColor(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
+      case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
       case ge_eSave_PopupMenu: e = (GeDynElem *) new GePopupMenu(this); break;
       case ge_eSave_SetDig: e = (GeDynElem *) new GeSetDig(this); break;
       case ge_eSave_ResetDig: e = (GeDynElem *) new GeResetDig(this); break;
@@ -955,7 +958,7 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
     e = (GeDynElem *) new GeDigBorder(this);
     break;
   case ge_mDynType_DigText:
-    e = (GeDynElem *) new GeDigText(this);
+    e = (GeDynElem *) new GeDigText(this, (ge_mInstance)instance);
     break;
   case ge_mDynType_Value:
     e = (GeDynElem *) new GeValue(this, (ge_mInstance)instance);
@@ -1004,6 +1007,9 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
     break;
   case ge_mDynType_HostObject:
     e = (GeDynElem *) new GeHostObject(this);
+    break;
+  case ge_mDynType_DigSound:
+    e = (GeDynElem *) new GeDigSound(this, (ge_mInstance)instance);
     break;
   default: ;
   }
@@ -1153,6 +1159,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
     case ge_mDynType_HostObject:
       e = (GeDynElem *) new GeHostObject((GeHostObject&) x);
       break;
+    case ge_mDynType_DigSound:
+      e = (GeDynElem *) new GeDigSound((GeDigSound&) x);
+      break;
     default: ;
     }
   }
@@ -1273,6 +1282,8 @@ int GeDyn::scan( grow_tObject object)
   ignore_color = false;
   reset_invisible = false;
   ignore_invisible = false;
+  reset_text_a1 = false;
+  ignore_text_a1 = false;
   for ( GeDynElem *elem = elements; elem; elem = elem->next)
     elem->scan( object);
   return 1;
@@ -2743,15 +2754,41 @@ void GeDigText::get_attributes( attr_sItem *attrinfo, int *item_count)
 {
   int i = *item_count;
 
-  strcpy( attrinfo[i].name, "DigText.Attribute");
-  attrinfo[i].value = attribute;
-  attrinfo[i].type = glow_eType_String;
-  attrinfo[i++].size = sizeof( attribute);
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "DigText.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+    
+    strcpy( attrinfo[i].name, "DigText.LowText");
+    attrinfo[i].value = low_text;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( low_text);
 
-  strcpy( attrinfo[i].name, "DigText.LowText");
-  attrinfo[i].value = low_text;
-  attrinfo[i].type = glow_eType_String;
-  attrinfo[i++].size = sizeof( low_text);
+    strcpy( attrinfo[i].name, "DigText.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "DigText%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "DigText%d.HighText", inst);
+    attrinfo[i].value = low_text;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( low_text);
+  }
 
   *item_count = i;
 }
@@ -2774,7 +2811,13 @@ void GeDigText::set_attribute( grow_tObject object, char *attr_name, int *cnt)
     char msg[200];
 
     strncpy( attribute, attr_name, sizeof( attribute));
-    sprintf( msg, "DigText.Attribute = %s", attr_name);
+    if ( instance == ge_mInstance_1) {
+      sprintf( msg, "DigText.Attribute = %s", attr_name);
+    }
+    else {
+      sprintf( msg, "DigText%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	       attr_name);
+    }
     dyn->graph->message( 'I', msg);
   }
 }
@@ -2789,6 +2832,8 @@ void GeDigText::save( ofstream& fp)
   fp << int(ge_eSave_DigText) << endl;
   fp << int(ge_eSave_DigText_attribute) << FSPACE << attribute << endl;
   fp << int(ge_eSave_DigText_low_text) << FSPACE << low_text << endl;
+  fp << int(ge_eSave_DigText_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_DigText_instance_mask) << FSPACE << int(instance_mask) << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -2796,6 +2841,7 @@ void GeDigText::open( ifstream& fp)
 {
   int		type;
   int 		end_found = 0;
+  int		tmp;
   char		dummy[40];
 
   for (;;)
@@ -2811,6 +2857,8 @@ void GeDigText::open( ifstream& fp)
         fp.get();
         fp.getline( low_text, sizeof(low_text));
         break;
+      case ge_eSave_DigText_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_DigText_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeDigText:open syntax error" << endl;
@@ -2854,23 +2902,49 @@ int GeDigText::disconnect( grow_tObject object)
 
 int GeDigText::scan( grow_tObject object)
 {
-  if ( !p)
+  if ( !p || dyn->ignore_text_a1)
     return 1;
 
-  if ( !first_scan) {
-    if ( old_value == *p) {
-      // No change since last time
-      return 1;
+  if ( instance == ge_mInstance_1) {
+    // Write low_text on low signal
+    if ( !first_scan) {
+      if ( old_value == *p && !dyn->reset_text_a1) {
+	// No change since last time
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( (!inverted && !*p) || (inverted && *p)) {
+      grow_SetAnnotation( object, 1, low_text, strlen(low_text));
+      dyn->reset_text_a1 = true;
+    }
+    else {
+      grow_SetAnnotation( object, 1, high_text, strlen(high_text));      
     }
   }
-  else
-    first_scan = false;
-
-  if ( (!inverted && !*p) || (inverted && *p)) {
-    grow_SetAnnotation( object, 1, low_text, strlen(low_text));
-  }
   else {
-    grow_SetAnnotation( object, 1, high_text, strlen(high_text));
+    // Instance > 1, write low_text on high signal
+    if ( !first_scan) {
+      if ( old_value == *p && !dyn->reset_text_a1) {
+	// No change since last time
+	if ( (!inverted && *p) || (inverted && !*p))
+	  dyn->ignore_text_a1 = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( (!inverted && *p) || (inverted && !*p)) {
+      grow_SetAnnotation( object, 1, low_text, strlen(low_text));
+      dyn->ignore_text_a1 = true;
+    }
+    else {
+      grow_SetAnnotation( object, 1, high_text, strlen(high_text));
+      dyn->reset_text_a1 = true;      
+    }
   }
   old_value = *p;
   return 1;
@@ -6877,6 +6951,213 @@ int GeHostObject::export_java( grow_tObject object, ofstream& fp, bool first, ch
   grow_GetObjectClassUserData( object, (void **) &nodeclass_dyn);
   for ( GeDynElem *elem = nodeclass_dyn->elements; elem; elem = elem->next)
     elem->export_java( object, fp, false, var_name);
+
+  return 1;
+}
+
+
+void GeDigSound::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+  
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "DigSound.Attribute");
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    strcpy( attrinfo[i].name, "DigSound.SoundObject");
+    attrinfo[i].value = soundobject;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( soundobject);
+    
+    strcpy( attrinfo[i].name, "DigSound.Level");
+    attrinfo[i].value = &level;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( level);
+
+    strcpy( attrinfo[i].name, "DigSound.Interval");
+    attrinfo[i].value = &interval;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( interval);
+
+    strcpy( attrinfo[i].name, "DigSound.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i++].size = sizeof( instance_mask);
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "DigSound%d.Attribute", inst);
+    attrinfo[i].value = attribute;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( attribute);
+
+    sprintf( attrinfo[i].name, "DigSound%d.SoundObject", inst);
+    attrinfo[i].value = soundobject;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( soundobject);
+    
+    sprintf( attrinfo[i].name, "DigSound%d.Level", inst);
+    attrinfo[i].value = &level;
+    attrinfo[i].type = glow_eType_Boolean;
+    attrinfo[i++].size = sizeof( level);
+
+    sprintf( attrinfo[i].name, "DigSound%d.Interval", inst);
+    attrinfo[i].value = &interval;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( interval);
+  }
+  
+  *item_count = i;
+}
+
+void GeDigSound::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( attribute, attr_name, sizeof( attribute));
+    if ( instance == ge_mInstance_1) {
+      sprintf( msg, "DigSound.Attribute = %s", attr_name);
+    }
+    else {
+      sprintf( msg, "DigSound%d.Attribute = %s", GeDyn::instance_to_number( instance),
+	       attr_name);
+    }
+    dyn->graph->message( 'I', msg);
+  }
+}
+
+void GeDigSound::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( attribute, sizeof(attribute), from, to, cnt, strict);
+}
+
+void GeDigSound::save( ofstream& fp)
+{
+  fp << int(ge_eSave_DigSound) << endl;
+  fp << int(ge_eSave_DigSound_attribute) << FSPACE << attribute << endl;
+  fp << int(ge_eSave_DigSound_soundobject) << FSPACE << soundobject << endl;
+  fp << int(ge_eSave_DigSound_level) << FSPACE << level << endl;
+  fp << int(ge_eSave_DigSound_interval) << FSPACE << interval << endl;
+  fp << int(ge_eSave_DigSound_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_DigSound_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeDigSound::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_DigSound: break;
+      case ge_eSave_DigSound_attribute:
+        fp.get();
+        fp.getline( attribute, sizeof(attribute));
+        break;
+      case ge_eSave_DigSound_soundobject:
+        fp.get();
+        fp.getline( soundobject, sizeof(soundobject));
+        break;
+      case ge_eSave_DigSound_level: fp >> level; break;
+      case ge_eSave_DigSound_interval: fp >> interval; break;
+      case ge_eSave_DigSound_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_DigSound_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeDigSound:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }  
+}
+
+int GeDigSound::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		inverted;
+  pwr_tStatus 	sts;
+
+  p = 0;
+
+  // Check soundobject
+  sts = gdh_NameToAttrref( pwr_cNObjid, soundobject, &soundaref);
+  if ( EVEN(sts)) return 1;
+
+  size = 4;
+  db = dyn->parse_attr_name( attribute, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") == 0)
+    return 1;
+
+  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+  if ( EVEN(sts)) return sts;
+
+  if ( p)
+    trace_data->p = p;
+  first_scan = true;
+
+  return 1;
+}
+
+int GeDigSound::disconnect( grow_tObject object)
+{
+  if ( p && db == graph_eDatabase_Gdh)
+    gdh_UnrefObjectInfo( subid);
+  p = 0;
+
+  return 1;
+}
+
+int GeDigSound::scan( grow_tObject object)
+{
+  if ( !p)
+    return 1;
+
+  if ( !first_scan) {
+    if ( old_value == *p && !level) {
+      // No change since last time
+      return 1;
+    }
+  }
+  else
+    first_scan = false;
+
+  if ( !level) {
+    // Sound on positive edge
+    if ( (!inverted && *p && !old_value) || (inverted && !*p && old_value))
+      dyn->graph->sound( &soundaref);
+  }
+  else {
+    if ( (!inverted && *p) || (inverted && !*p)) {
+      if ( time_since_last >= interval)
+	time_since_last = 0;
+      if ( time_since_last == 0)
+	dyn->graph->sound( &soundaref);
+
+      time_since_last += dyn->graph->scan_time;
+    }
+    else
+      time_since_last = 0;
+  }
+  old_value = *p;
 
   return 1;
 }
