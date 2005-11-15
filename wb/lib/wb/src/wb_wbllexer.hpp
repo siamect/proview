@@ -1,21 +1,24 @@
 #ifndef INC_wb_wbllexer_hpp_
 #define INC_wb_wbllexer_hpp_
 
-#include "antlr/config.hpp"
-/* $ANTLR 2.7.1: "wb_wbllexer.g" -> "wb_wbllexer.hpp"$ */
-#include "antlr/CommonToken.hpp"
-#include "antlr/InputBuffer.hpp"
-#include "antlr/BitSet.hpp"
+#include <antlr/config.hpp>
+/* $ANTLR 2.7.4: "wb_wbllexer.g" -> "wb_wbllexer.hpp"$ */
+#include <antlr/CommonToken.hpp>
+#include <antlr/InputBuffer.hpp>
+#include <antlr/BitSet.hpp>
 #include "wb_wblvocabTokenTypes.hpp"
-#include "antlr/CharScanner.hpp"
-class wb_wbllexer : public ANTLR_USE_NAMESPACE(antlr)CharScanner, public wb_wblvocabTokenTypes
- {
+#include <antlr/CharScanner.hpp>
+class CUSTOM_API wb_wbllexer : public ANTLR_USE_NAMESPACE(antlr)CharScanner, public wb_wblvocabTokenTypes
+{
 #line 1 "wb_wbllexer.g"
 #line 15 "wb_wbllexer.hpp"
 private:
 	void initLiterals();
 public:
-	bool getCaseSensitiveLiterals() const;
+	bool getCaseSensitiveLiterals() const
+	{
+		return true;
+	}
 public:
 	wb_wbllexer(ANTLR_USE_NAMESPACE(std)istream& in);
 	wb_wbllexer(ANTLR_USE_NAMESPACE(antlr)InputBuffer& ib);

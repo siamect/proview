@@ -1,12 +1,12 @@
 #ifndef INC_wb_wblparser_hpp_
 #define INC_wb_wblparser_hpp_
 
-#include "antlr/config.hpp"
-/* $ANTLR 2.7.1: "wb_wblparser.g" -> "wb_wblparser.hpp"$ */
-#include "antlr/TokenStream.hpp"
-#include "antlr/TokenBuffer.hpp"
+#include <antlr/config.hpp>
+/* $ANTLR 2.7.4: "wb_wblparser.g" -> "wb_wblparser.hpp"$ */
+#include <antlr/TokenStream.hpp>
+#include <antlr/TokenBuffer.hpp>
 #include "wb_wblparserTokenTypes.hpp"
-#include "antlr/LLkParser.hpp"
+#include <antlr/LLkParser.hpp>
 
 #line 8 "wb_wblparser.g"
 
@@ -19,11 +19,14 @@ extern int wblparser_error_cnt;
 #include "wb_wblnode.h"
 
 #line 24 "wb_wblparser.hpp"
-class wb_wblparser : public ANTLR_USE_NAMESPACE(antlr)LLkParser, public wb_wblparserTokenTypes
- {
+class CUSTOM_API wb_wblparser : public ANTLR_USE_NAMESPACE(antlr)LLkParser, public wb_wblparserTokenTypes
+{
+  // This_declarations_should_be_moved_inside_parser_class_in_wb_wblparser_hpp_!!
 void reportError(const RecognitionException& ex);
 #line 1 "wb_wblparser.g"
 #line 28 "wb_wblparser.hpp"
+public:
+	void initializeASTFactory( ANTLR_USE_NAMESPACE(antlr)ASTFactory& factory );
 protected:
 	wb_wblparser(ANTLR_USE_NAMESPACE(antlr)TokenBuffer& tokenBuf, int k);
 public:
@@ -33,6 +36,19 @@ protected:
 public:
 	wb_wblparser(ANTLR_USE_NAMESPACE(antlr)TokenStream& lexer);
 	wb_wblparser(const ANTLR_USE_NAMESPACE(antlr)ParserSharedInputState& state);
+	int getNumTokens() const
+	{
+		return wb_wblparser::NUM_TOKENS;
+	}
+	const char* getTokenName( int type ) const
+	{
+		if( type > getNumTokens() ) return 0;
+		return wb_wblparser::tokenNames[type];
+	}
+	const char* const* getTokenNames() const
+	{
+		return wb_wblparser::tokenNames;
+	}
 	public: void unit();
 	public: void volume();
 	public: void sobject();
@@ -44,12 +60,22 @@ public:
 	public: void value();
 	public: void oname();
 public:
-	ref_wblnode getAST();
+	ANTLR_USE_NAMESPACE(antlr)RefAST getAST()
+	{
+		return ANTLR_USE_NAMESPACE(antlr)RefAST(returnAST);
+	}
 	
 protected:
 	ref_wblnode returnAST;
 private:
-	static const char* _tokenNames[];
+	static const char* tokenNames[];
+#ifndef NO_STATIC_CONSTS
+	static const int NUM_TOKENS = 36;
+#else
+	enum {
+		NUM_TOKENS = 36
+	};
+#endif
 	
 	static const unsigned long _tokenSet_0_data_[];
 	static const ANTLR_USE_NAMESPACE(antlr)BitSet _tokenSet_0;

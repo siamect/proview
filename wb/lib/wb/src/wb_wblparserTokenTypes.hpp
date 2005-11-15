@@ -1,8 +1,15 @@
 #ifndef INC_wb_wblparserTokenTypes_hpp_
 #define INC_wb_wblparserTokenTypes_hpp_
 
-/* $ANTLR 2.7.1: "wb_wblparser.g" -> "wb_wblparserTokenTypes.hpp"$ */
-struct wb_wblparserTokenTypes {
+/* $ANTLR 2.7.4: "wb_wblparser.g" -> "wb_wblparserTokenTypes.hpp"$ */
+
+#ifndef CUSTOM_API
+# define CUSTOM_API
+#endif
+
+#ifdef __cplusplus
+struct CUSTOM_API wb_wblparserTokenTypes {
+#endif
 	enum {
 		EOF_ = 1,
 		OBJECT = 4,
@@ -39,5 +46,7 @@ struct wb_wblparserTokenTypes {
 		SWEC = 35,
 		NULL_TREE_LOOKAHEAD = 3
 	};
+#ifdef __cplusplus
 };
+#endif
 #endif /*INC_wb_wblparserTokenTypes_hpp_*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.46 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.47 2005-11-15 15:43:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1339,9 +1339,10 @@ int wb_vrepwbl::load_files( const char *file_spec)
     file[file_cnt]->parser->setFilename( found_file);
 
     // Antlr 2.7.3 seems to want an ASTFactory here...
-    // wb_wblfactory *factory = new wb_wblfactory();
-    // file[file_cnt]->parser->setASTNodeFactory( factory);
-    file[file_cnt]->parser->setASTNodeFactory( wb_wblnode::factory);
+    ASTFactory wblfactory("ref_wblnode", wb_wblnode::factory);
+    file[file_cnt]->parser->initializeASTFactory( wblfactory);
+    file[file_cnt]->parser->setASTNodeFactory( &wblfactory);
+    // file[file_cnt]->parser->setASTNodeFactory( wb_wblnode::factory);
 
     try {
       // Parse the input expression

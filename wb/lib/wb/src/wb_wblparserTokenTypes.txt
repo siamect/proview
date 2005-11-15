@@ -1,4 +1,4 @@
-// $ANTLR 2.7.1: wb_wblparser.g -> wb_wblparserTokenTypes.txt$
+// $ANTLR 2.7.4: wb_wblparser.g -> wb_wblparserTokenTypes.txt$
 wb_wblparser    // output token vocab name
 OBJECT=4
 ENDOBJECT=5
