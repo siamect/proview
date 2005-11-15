@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.3 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.4 2005-11-15 15:42:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -655,7 +655,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
 
     projitem.cid = pwr_cClass_ProjectReg;
     projitem.oix = next_oix++;
-    projitem.fthoix = menu_stack[menu_cnt - 1];
+    projitem.fthoix = hieroix; // menu_stack[menu_cnt - 1];
     projitem.bwsoix = m_list[projitem.fthoix].lchoix;
     projitem.fwsoix = 0;
     strcpy( projbody->Description, line_item[4]);
