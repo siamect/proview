@@ -881,7 +881,7 @@ Användare och systemgrupper skapas i administratören.
 
 - Starta administratören med kommandot 'pwra'.
 - Gå in i User mod från menyn, 'File/Show Users'.
-- Logga in med login commandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
+- Logga in med login kommandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
   skriv 'login' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
   dessutom addera användarnamn och passerord för en användare definierad i administrator-
   systemgruppen.
