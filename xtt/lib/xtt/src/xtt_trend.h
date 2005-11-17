@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.h,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_trend.h,v 1.4 2005-11-17 09:03:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,6 +63,7 @@ class XttTrend {
     int        last_buffer[XTT_TREND_MAX];
     int        last_next_index[XTT_TREND_MAX];
     void       (*close_cb)( void *, XttTrend *);
+    void       (*help_cb)( void *, char *);
     void pop();
     ~XttTrend();
 };

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.5 2005-11-14 16:15:02 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.6 2005-11-17 09:03:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,7 @@ extern "C" {
 }
 
 static void fast_close_cb( void *ctx);
+static void fast_help_cb( void *ctx);
 static void fast_scan( XttFast *fast);
 
 XttFast::XttFast(
@@ -69,7 +70,7 @@ XttFast::XttFast(
 	Widget *w,
         pwr_sAttrRef *fast_arp,
         int *sts) :
-  xnav(parent_ctx), parent_widget(parent_wid), fast_cnt(0), close_cb(0), first_scan(1),
+  xnav(parent_ctx), parent_widget(parent_wid), fast_cnt(0), close_cb(0), help_cb(0), first_scan(1),
   axis_configured(false)
 {
   pwr_sAttrRef aref = pwr_cNAttrRef;
@@ -201,6 +202,7 @@ XttFast::XttFast(
     cdh_StrncpyCutOff( title, name, sizeof(title), 1);
   curve = new GeCurve( this, parent_widget, title, NULL, gcd, 0);
   curve->close_cb = fast_close_cb;
+  curve->help_cb = fast_help_cb;
 
   // timerid = XtAppAddTimeOut(
   //	XtWidgetToApplicationContext(parent_widget), 1000,
@@ -230,6 +232,14 @@ static void fast_close_cb( void *ctx)
     (fast->close_cb)( fast->xnav, fast);
   else
     delete fast;
+}
+
+static void fast_help_cb( void *ctx)
+{
+  XttFast *fast = (XttFast *) ctx;
+
+  if ( fast->help_cb)
+    (fast->help_cb)( fast->xnav, "fastwindow");
 }
 
 void fast_scan( XttFast *fast)

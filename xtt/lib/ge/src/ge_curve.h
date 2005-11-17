@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.6 2005-11-14 16:18:32 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.7 2005-11-17 09:03:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,6 +133,7 @@ class GeCurve {
     int          axis_displayed;
     int          minmax_idx;
     void 	 (*close_cb)( void *);
+    void 	 (*help_cb)( void *);
     int          initial_right_position;
     char	 title[300];
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.6 2005-11-14 16:14:55 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.7 2005-11-17 09:03:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,7 @@ extern "C" {
 }
 
 static void trend_close_cb( void *ctx);
+static void trend_help_cb( void *ctx);
 static void trend_scan( XttTrend *trend);
 
 XttTrend::XttTrend(
@@ -69,7 +70,7 @@ XttTrend::XttTrend(
         pwr_sAttrRef *trend_list,
         pwr_sAttrRef *plotgroup,
         int *sts) :
-  xnav(parent_ctx), parent_widget(parent_wid), trend_cnt(0), close_cb(0)
+  xnav(parent_ctx), parent_widget(parent_wid), trend_cnt(0), close_cb(0), help_cb(0)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
@@ -268,6 +269,7 @@ XttTrend::XttTrend(
 
   curve = new GeCurve( this, parent_widget, name, NULL, gcd, 1);
   curve->close_cb = trend_close_cb;
+  curve->help_cb = trend_help_cb;
 
   timerid = XtAppAddTimeOut(
 	XtWidgetToApplicationContext(parent_widget), 1000,
@@ -297,6 +299,14 @@ static void trend_close_cb( void *ctx)
     (trend->close_cb)( trend->xnav, trend);
   else
     delete trend;
+}
+
+static void trend_help_cb( void *ctx)
+{
+  XttTrend *trend = (XttTrend *) ctx;
+
+  if ( trend->help_cb)
+    (trend->help_cb)( trend->xnav, "trendwindow");
 }
 
 static void trend_scan( XttTrend *trend)
