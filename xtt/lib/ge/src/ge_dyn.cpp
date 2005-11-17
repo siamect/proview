@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.35 2005-11-14 16:21:48 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.36 2005-11-17 09:04:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -7092,7 +7092,6 @@ int GeDigSound::connect( grow_tObject object, glow_sTraceData *trace_data)
 {
   int		attr_type, attr_size;
   pwr_tAName   	parsed_name;
-  int		inverted;
   pwr_tStatus 	sts;
 
   p = 0;
