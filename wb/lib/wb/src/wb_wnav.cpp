@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.27 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.28 2005-11-17 09:05:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -206,7 +206,7 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     {
       pwr_tObjid	objid;
 
-      if ( strcmp( value_str, "") == 0)
+      if ( strcmp( value_str, "0") == 0 || strcmp( value_str, "") == 0)
 	objid = pwr_cNObjid;
       else {
 	sts = ldh_NameToObjid ( ldhses, &objid, value_str);
@@ -269,9 +269,13 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     {
       pwr_sAttrRef	attrref;
 
-      sts = ldh_NameToAttrRef( ldhses, value_str, &attrref);
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, &attrref, sizeof(attrref));
+      if ( strcmp( value_str, "0") == 0)
+	attrref = pwr_cNAttrRef;
+      else {
+	sts = ldh_NameToAttrRef( ldhses, value_str, &attrref);
+	if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+      }
+      memcpy( buffer_ptr, &attrref, sizeof(attrref));
       break;
     }
     case pwr_eType_DataRef:
@@ -441,10 +445,16 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
       else
 	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, &name_p, len);
 
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
+      if (EVEN(sts)) {
+	if ( cdh_ObjidIsNull( attrref->Objid)) {
+	  strcpy( str, "");
+	  *len = 0;
+	}
+	else {
+	  strcpy( str, "");
+	  cdh_ArefToString( str, attrref, 1);
+	  *len = strlen(str);
+	}
 	*buff = str;
         break;
       }
