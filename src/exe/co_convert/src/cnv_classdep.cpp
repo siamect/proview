@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_classdep.cpp,v 1.1 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: cnv_classdep.cpp,v 1.2 2005-11-17 08:59:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -152,18 +152,32 @@ void CnvClassDep::print_html_classtable( int idx)
 "  </head>" << endl <<
 "  <body>" << endl;
 
-  if ( parent_cnt == 0 && classlist[idx].fch == 0)
-    fp << "There are no superclass and no known subclasses to this class" << endl;
+  if ( parent_cnt == 0 && classlist[idx].fch == 0) {
+    switch( Lng::current()) {
+    case lng_eLanguage_sv_se:
+      fp << "Det finns ingen superklass eller kända subklasser till klass " << classlist[idx].name << "." << endl;
+      break;
+    default:
+      fp << "There are no superclass or known subclasses to class " << classlist[idx].name << "." << endl;
+    }    
+  }
   else {
-    fp << "<table border><tr>" << endl;
+    switch( Lng::current()) {
+    case lng_eLanguage_sv_se:
+      fp << "<h2>Klassträd " << classlist[idx].name << "</h2>" << endl;
+      break;
+    default:
+      fp << "<h2>ClassTree " << classlist[idx].name << "</h2>" << endl;
+    }
+    fp << "<table id=\"ctree\"><tr>" << endl;
     for ( int i = parent_cnt - 1; i >= 0; i--) {
       sprintf( href, "%s_%s.html", classlist[parentlist[i]].volumename, classlist[parentlist[i]].name);
       cdh_ToLower( href, href);
-      fp << "<td><a href=\"" << href << "\">" <<  classlist[parentlist[i]].name << "</a></td>" << endl;
+      fp << "<td id=\"ctree\"><a href=\"" << href << "\">" <<  classlist[parentlist[i]].name << "</a></td>" << endl;
     }
     sprintf( href, "%s_%s.html", classlist[idx].volumename, classlist[idx].name);
     cdh_ToLower( href, href);
-    fp << "<td bgcolor=\"lightblue\"><a href=\"" << href << "\">" << classlist[idx].name << "</a></td><td>" << endl;
+    fp << "<td id=\"ctree\" bgcolor=\"lightblue\"><a href=\"" << href << "\">" << classlist[idx].name << "</a></td><td id=\"ctree\">" << endl;
 
     print_html_classtable_children( fp, idx);
     fp << "</td></table>" << endl;
@@ -180,13 +194,13 @@ void CnvClassDep::print_html_classtable_children( ofstream& fp, int idx)
   if ( classlist[idx].fch == 0)
     return;
 
-  fp << "<table border>" << endl;
+  fp << "<table id=\"ctree\">" << endl;
   for ( int i = classlist[idx].fch; i; i = classlist[i].fws) {
     sprintf( href, "%s_%s.html", classlist[i].volumename, classlist[i].name);
     cdh_ToLower( href, href);
-    fp << "<tr><td><a href=\"" << href << "\">" << classlist[i].name << "</a>" << endl;
+    fp << "<tr><td id=\"ctree\"><a href=\"" << href << "\">" << classlist[i].name << "</a>" << endl;
     if ( classlist[i].fch) {
-      fp << "<td>" << endl;
+      fp << "<td id=\"ctree\">" << endl;
       print_html_classtable_children( fp, i);
       fp << "</td></tr>" << endl;
     }

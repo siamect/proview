@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.10 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.11 2005-11-17 08:59:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -532,14 +532,15 @@ endl <<
 "&nbsp;|&nbsp;<A HREF=\"#detail\">Detail</A>" << endl <<
 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C Binding: " << endl <<
 "&nbsp;<A HREF=\"" << struct_file << "#" << ctx->rw->class_name << "\">Struct</A>" << endl <<
-"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl <<
-"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<A HREF=\"" << ctree_file << "\">ClassTree</A>" << endl;
+"&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl;
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
     CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
     html_clf->f <<
 "&nbsp;|&nbsp;<A HREF=\"" << ref_name << "#" << low_class_name << "\">Code</A>" << endl;
   }
+  html_clf->f <<
+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<A HREF=\"" << ctree_file << "\">ClassTree</A>" << endl;
 
   html_clf->f <<
 "</FONT></TD>" << endl <<
