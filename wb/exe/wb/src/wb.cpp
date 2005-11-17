@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.18 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.19 2005-11-17 09:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,7 +105,16 @@ int	pwr_time_to_exit( void *wttctx);
 
 static void usage()
 {
-  printf("\nUsage: wb [-a] [-l language] [username] [password] [volume]\n");
+  printf("\n\
+Usage: wb [-a][-q][-c][-p] [-l language] [username] [password] [volume]\n\
+\n\
+  -a    Attach all databases.\n\
+  -q    Quiet. Hide license information.\n\
+  -c    Start class editor.\n\
+  -p    Open project list.\n\
+  -l    Language specification, sv_se or en_us.\n\
+  -h    Display this help text.\n\
+\n");
 }
 
 void wttlist_add( pwr_tStatus *sts, Wtt *wtt, pwr_tVid vid)
@@ -564,6 +573,9 @@ int main( int argc, char *argv[])
   for ( i = 1; i < argc; i++) {
     if ( argv[i][0] == '-') {
       switch ( argv[i][1]) {
+      case 'h':
+	usage();
+	exit(0);
       case 'a':
 	// Load all volumes
 	sw_projectvolume = 0;
