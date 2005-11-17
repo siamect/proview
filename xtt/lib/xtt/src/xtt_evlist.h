@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.h,v 1.9 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_evlist.h,v 1.10 2005-11-17 09:01:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -168,6 +168,11 @@ class EvList {
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     double		acc_beep_time;
     double		beep_interval;
+    pwr_tAttrRef	aalarm_sound;
+    pwr_tAttrRef	balarm_sound;
+    pwr_tAttrRef	calarm_sound;
+    pwr_tAttrRef	dalarm_sound;
+    pwr_tAttrRef	info_sound;
 
     void event_info( mh_sMessage *msg);
     void event_alarm( mh_sMessage *msg);

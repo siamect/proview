@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.24 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.25 2005-11-17 09:01:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -125,7 +125,9 @@ static void xnav_op_map_cb( void *ctx);
 static int xnav_op_get_alarm_info_cb( void *xnav, evlist_sAlarmInfo *info);
 static void xnav_op_ack_last_cb( void *xnav, unsigned long type, unsigned long prio);
 static void xnav_trend_close_cb( void *ctx, XttTrend *trend);
+static void xnav_trend_help_cb( void *ctx, char *key);
 static void xnav_fast_close_cb( void *ctx, XttFast *fast);
+static void xnav_fast_help_cb( void *ctx, char *key);
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao);
 static void xnav_clog_close_cb( void *ctx);
 
@@ -174,6 +176,8 @@ static int	xnav_call_func(		void		*client_data,
 static int	xnav_check_func(       	void		*client_data,
 					void		*client_flag);
 static int	xnav_print_func(       	void		*client_data,
+					void		*client_flag);
+static int	xnav_sound_func(       	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	xnav_command_table[] = {
@@ -322,6 +326,11 @@ dcli_tCmdTable	xnav_command_table[] = {
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
 			  "/OBJECT", "/CLASSGRAPH", "/INSTANCE",
 			  ""}
+		},
+		{
+			"SOUND",
+			&xnav_sound_func,
+			{ "dcli_arg1", "/OBJECT", ""}
 		},
 		{"",}};
 
@@ -2751,14 +2760,18 @@ static int	xnav_open_func(	void		*client_data,
           xnav->message('E',"Error in trend configuration");
         else {
           trend->close_cb = xnav_trend_close_cb;
+          trend->help_cb = xnav_trend_help_cb;
           xnav->appl.insert( applist_eType_Trend, (void *)trend, &plotgroup, "",
 		   NULL);
         }
       }
     }
-    else
-      new XttTrend( xnav, xnav->parent_wid, title_str, &w, aref_vect, 
+    else {
+      trend = new XttTrend( xnav, xnav->parent_wid, title_str, &w, aref_vect, 
 		  0, &sts);
+      if ( ODD(sts)) 
+	trend->help_cb = xnav_trend_help_cb;
+    }
   }
   else if ( strncmp( arg1_str, "FAST", strlen( arg1_str)) == 0)
   {
@@ -2833,6 +2846,7 @@ static int	xnav_open_func(	void		*client_data,
 	xnav->message('E',"Error in fast configuration");
       else {
 	fast->close_cb = xnav_fast_close_cb;
+	fast->help_cb = xnav_fast_help_cb;
 	xnav->appl.insert( applist_eType_Fast, (void *)fast, &aref, "",
 			   NULL);
       }
@@ -3306,12 +3320,38 @@ static void xnav_trend_close_cb( void *ctx, XttTrend *trend)
   delete trend;
 }
 
+static void xnav_trend_help_cb( void *ctx, char *key)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  int	sts;
+
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+  if ( EVEN(sts))
+    xnav->message( 'E', "Unable to find topic");
+  else
+    xnav->message( ' ', null_str);
+}
+
 static void xnav_fast_close_cb( void *ctx, XttFast *fast)
 {
   XNav *xnav = (XNav *) ctx;
 
   xnav->appl.remove( (void *)fast);
   delete fast;
+}
+
+static void xnav_fast_help_cb( void *ctx, char *key)
+{
+  XNav *xnav = (XNav *) ctx;
+
+  int	sts;
+
+  sts = CoXHelp::dhelp( key, "", navh_eHelpFile_Base, NULL, 0);
+  if ( EVEN(sts))
+    xnav->message( 'E', "Unable to find topic");
+  else
+    xnav->message( ' ', null_str);
 }
 
 static void xnav_xao_close_cb( void *ctx, XAttOne *xao)
@@ -4446,6 +4486,33 @@ static int	xnav_print_func(void		*client_data,
   }
   else
     xnav->message('E',"Syntax error");
+
+  return XNAV__SUCCESS;	
+}
+
+static int	xnav_sound_func(void		*client_data,
+				void		*client_flag)
+{
+  XNav *xnav = (XNav *)client_data;
+
+  pwr_tOName object_str;
+  int sts;
+  pwr_tAttrRef aref;
+
+  if ( EVEN( dcli_get_qualifier( "/OBJECT", object_str, sizeof(object_str)))) {
+    if ( EVEN( dcli_get_qualifier( "dcli_arg1", object_str, sizeof(object_str)))) {
+      xnav->message('E', "Object is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+  }
+
+  sts = gdh_NameToAttrref( pwr_cNObjid, object_str, &aref);
+  if ( EVEN(sts)) {
+    xnav->message('E',"Sound object not found");
+    return XNAV__HOLDCOMMAND;
+  }
+
+  xnav->sound( &aref);
 
   return XNAV__SUCCESS;	
 }

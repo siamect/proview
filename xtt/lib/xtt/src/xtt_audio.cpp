@@ -139,11 +139,14 @@ int XttAudio::beep( pwr_tAttrRef *arp)
   short *buffer;
   pwr_tTid tid;
   pwr_tStatus sts;
+  pwr_tAttrRef prioaref;
+  pwr_tInt32 prio;
 
   if ( write_buffer) {
+
     // Busy, add to que...
     if ( queue_cnt == AUDIO_QUESIZE) {
-      // Queue full, skip beep      
+      // Queue full, skip beep
       return XNAV__QUEUEFULL;
     }
     // Check if already inserted
@@ -151,7 +154,36 @@ int XttAudio::beep( pwr_tAttrRef *arp)
       if ( cdh_ArefIsEqual( arp, &queue[i]))
 	return XNAV__SUCCESS;
     }
-    queue[ queue_cnt++] = *arp;
+    // Insert in priority order
+    // Get prio
+
+    sts = gdh_ArefANameToAref( arp, "Prio", &prioaref);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetObjectInfoAttrref( &prioaref, (void *) &prio, sizeof(prio));
+    if ( EVEN(sts)) return sts;
+
+    for ( int i = queue_cnt - 1; i >= -1; i--) {
+      if ( i == -1) {
+	queue[0] = *arp;
+	queue_prio[0] = prio;
+	queue_cnt++;
+	break;
+      }
+      if ( queue_prio[i] >= prio) {
+	// Insert
+	queue[i+1] = *arp;
+	queue_prio[i+1] = prio;
+	queue_cnt++;
+	break;
+      }
+      else {
+	// Shift
+	queue[i+1] = queue[i];
+	queue_prio[i+1] = queue_prio[i];
+      }
+    }
+    
     return XNAV__QUEUED;
   }
 
@@ -185,12 +217,12 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 	      if ( strncmp( sound.Source, "Sine", 4) == 0) {
 		MakeSine( buffer, size, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
 			  sound.Volume/100 * sound.VolumeTable[i], sound.Volume/100 * sound.VolumeTable[i], 
-			  sound.Attack, sound.Decay, sound.Sustain/100, sound.Release);
+			  sound.Attack, sound.Decay, sound.Sustain/100, sound.Release, sound.Tremolo/100);
 	      }
 	      else if ( strncmp( sound.Source, "Square", 6) == 0) {
 		MakeSquare( buffer, size, 0, 0, sound.Length, sound.BaseTone + sound.ToneTable[i], 
 			    sound.Volume/100 * sound.VolumeTable[i], sound.Volume/100 * sound.VolumeTable[i], 
-			    sound.Attack, sound.Decay, sound.Sustain/100, sound.Release);
+			    sound.Attack, sound.Decay, sound.Sustain/100, sound.Release, sound.Tremolo/100);
 	      }
 	    }
 	  }
@@ -330,7 +362,8 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 			  sound[seq.SequenceTable[i].SoundIdx].Attack, 
 			  sound[seq.SequenceTable[i].SoundIdx].Decay, 
 			  sound[seq.SequenceTable[i].SoundIdx].Sustain/100, 
-			  sound[seq.SequenceTable[i].SoundIdx].Release);
+			  sound[seq.SequenceTable[i].SoundIdx].Release,
+			  sound[seq.SequenceTable[i].SoundIdx].Tremolo/100);
 	      }
 	      else if ( strncmp( sound[seq.SequenceTable[i].SoundIdx].Source, "Square", 6) == 0) {
 		MakeSquare( buffer, size, 0, seq.SequenceTable[i].StartTime, 
@@ -341,7 +374,8 @@ int XttAudio::beep( pwr_tAttrRef *arp)
 			    sound[seq.SequenceTable[i].SoundIdx].Attack, 
 			    sound[seq.SequenceTable[i].SoundIdx].Decay, 
 			    sound[seq.SequenceTable[i].SoundIdx].Sustain/100, 
-			    sound[seq.SequenceTable[i].SoundIdx].Release);
+			    sound[seq.SequenceTable[i].SoundIdx].Release,
+			    sound[seq.SequenceTable[i].SoundIdx].Tremolo/100);
 	      }
 	    }
 	  }
@@ -378,7 +412,7 @@ int XttAudio::beep( pwr_tAttrRef *arp)
     buffer = (short *) calloc( sizeof(short), size);
     if(!buffer) return XNAV__NOMEMORY;
 
-    MakeSine( buffer, size, 0, 0, 0.3, 38, 100.0, 100.0, 0, 0, 0, 0);
+    MakeSine( buffer, size, 0, 0, 0.3, 38, 100.0, 100.0, 0, 0, 0, 0, 0);
   }
 
   write_buffer = buffer;
@@ -594,6 +628,8 @@ int XttAudio::Init_OSS(char *device, int samplerate)
 double XttAudio::envelope( double time, double endtime, double attack, double decay, double sustain, 
 			   double release)
 {
+#if 0
+  // Version with linear decay, replaced by exponential decay
   if ( time < endtime) {
     if ( time >= attack + decay)
       return sustain;
@@ -603,15 +639,29 @@ double XttAudio::envelope( double time, double endtime, double attack, double de
   }
   if ( time >= endtime + release)
     return 0;
-  return 1.0 - (time - endtime) / release;
+  return (1.0 - (time - endtime) / release) * sustain;
+#endif
+  if ( time < endtime) {
+    if ( time <= attack)
+      return time / attack;
+    if ( sustain == 1.0)
+      return 1.0;
+    return sustain + (1.0 - sustain) * exp( -(time - attack) / decay);
+  }
+  if ( time >= endtime + release)
+    return 0;
+  if ( sustain == 1.0)
+    return ( 1.0 - (time - endtime) / release);
+  return (1.0 - (time - endtime) / release) * (sustain + (1.0 - sustain) * exp( -(endtime - attack) / decay));
 }
 
 void XttAudio::MakeSine(short *buffer, int buffersize, double time, double starttime, double endtime,
 			int tone, double volume_ch1, double volume_ch2, double attack, double decay,  
-			double sustain, double release)
+			double sustain, double release, double tremolo)
 {
   int i;
   double val;
+  double valtremolo;
   double sum;
   double ampl;
   double t;
@@ -627,13 +677,18 @@ void XttAudio::MakeSine(short *buffer, int buffersize, double time, double start
     
     val = ampl * sin( freq[tone] * t * 2 * M_PI);
 
-    sum = 327.67 * volume_ch1 * val + buffer[i];
+    if ( tremolo != 0)
+      valtremolo = 1 - tremolo * (sin( t * 6 * 2 * M_PI) + 1) / 2;
+    else
+      valtremolo = 1;
+
+    sum = 327.67 * volume_ch1 * val * valtremolo + buffer[i];
     if ( sum > 32767)
       buffer[i] = 32767;
     else
       buffer[i] = (unsigned short) sum;
 
-    sum = 327.67 * volume_ch2 * val + buffer[i+1];
+    sum = 327.67 * volume_ch2 * val * valtremolo + buffer[i+1];
     if ( sum > 32767)
       buffer[i+1] = 32767;
     else
@@ -643,10 +698,11 @@ void XttAudio::MakeSine(short *buffer, int buffersize, double time, double start
 
 void XttAudio::MakeSquare(short *buffer, int buffersize, double time, double starttime, double endtime,
 			  int tone, double volume_ch1, double volume_ch2, double attack, double decay,  
-			  double sustain, double release)
+			  double sustain, double release, double tremolo)
 {
   int i;
   double val;
+  double valtremolo;
   double sum;
   double ampl;
   double t;
@@ -662,13 +718,18 @@ void XttAudio::MakeSquare(short *buffer, int buffersize, double time, double sta
     
     val = ampl * ( int(freq[tone] * t * 2) % 2 * 2 - 1);
 
-    sum = 327.67 * volume_ch1 * val + buffer[i];
+    if ( tremolo != 0)
+      valtremolo = 1 - tremolo * (sin( t * 6 * 2 * M_PI) + 1) / 2;
+    else
+      valtremolo = 1;
+
+    sum = 327.67 * volume_ch1 * val * valtremolo + buffer[i];
     if ( sum > 32767)
       buffer[i] = 32767;
     else
       buffer[i] = (unsigned short) sum;
 
-    sum = 327.67 * volume_ch2 * val + buffer[i+1];
+    sum = 327.67 * volume_ch2 * val * valtremolo + buffer[i+1];
     if ( sum > 32767)
       buffer[i+1] = 32767;
     else

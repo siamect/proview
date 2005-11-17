@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.12 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.13 2005-11-17 09:01:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -390,6 +390,31 @@ EvList::EvList(
   form_widget = ScrolledBrowCreate( parent_wid, "EvList", NULL, 0, 
 	evlist_init_brow_cb, this, (Widget *)&brow_widget);
   XtManageChild( form_widget);
+
+  if ( type == ev_eType_AlarmList) {
+    // Fetch sound objects
+    pwr_tStatus sts;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, "rt:Sounds-AAlarm", &aalarm_sound);
+    if ( EVEN(sts))
+      aalarm_sound = pwr_cNAttrRef;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, "rt:Sounds-BAlarm", &balarm_sound);
+    if ( EVEN(sts))
+      balarm_sound = pwr_cNAttrRef;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, "rt:Sounds-CAlarm", &calarm_sound);
+    if ( EVEN(sts))
+      calarm_sound = pwr_cNAttrRef;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, "rt:Sounds-DAlarm", &dalarm_sound);
+    if ( EVEN(sts))
+      dalarm_sound = pwr_cNAttrRef;
+
+    sts = gdh_NameToAttrref( pwr_cNObjid, "rt:Sounds-InfoEvent", &info_sound);
+    if ( EVEN(sts))
+      info_sound = pwr_cNAttrRef;
+  }
 
   *w = form_widget;
 }
@@ -856,7 +881,33 @@ void EvList::beep( double scantime)
 	ItemAlarm *item;
 
 	if ( id_to_item( id, (void **)&item)) {
-	  sts = (sound_cb)( parent_ctx, &item->eventsound);
+	  pwr_tAttrRef *sound_arp;
+
+	  if ( cdh_ObjidIsNotNull(item->eventsound.Objid))
+	    sound_arp = &item->eventsound;
+	  else {
+	    switch ( item->event_type) {
+	    case evlist_eEventType_Alarm:
+	      switch ( item->eventprio) {
+	      case mh_eEventPrio_A:
+		sound_arp = &aalarm_sound;
+		break;
+	      case mh_eEventPrio_B:
+		sound_arp = &balarm_sound;
+		break;
+	      case mh_eEventPrio_C:
+		sound_arp = &calarm_sound;
+		break;
+	      default:
+		sound_arp = &dalarm_sound;
+	      }
+	      break;
+	    default:
+	      sound_arp = &info_sound;
+	      break;
+	    }
+	  }
+	  sts = (sound_cb)( parent_ctx, sound_arp);
 	}
       }
       if ( EVEN(sts))
@@ -1394,25 +1445,42 @@ int EvList::get_last_not_acked_beep( mh_sEventId **id)
   brow_tObject 	*object_list;
   int		object_cnt;
   ItemAlarm	*object_item;
+  int		found = 0;
+  unsigned int 	prio = 0;
 
+  // Get first not acked event with highest priority
   brow_GetObjectList( brow->ctx, &object_list, &object_cnt);
-  for ( i = 0; i < object_cnt; i++)
-  {
+  for ( i = 0; i < object_cnt; i++) {
+
     brow_GetUserData( object_list[i], (void **)&object_item);
-    switch( object_item->type)
-    {
+    switch( object_item->type) {
+
       case evlist_eItemType_Alarm:
         if ( object_item->status & mh_mEventStatus_NotAck &&
 	     object_item->eventflags & mh_mEventFlags_Bell)  {
-          *id = &object_item->eventid;
-          return 1;
+	  switch ( object_item->event_type) {
+          case evlist_eEventType_Alarm:
+	    if ( object_item->eventprio > prio) {
+	      *id = &object_item->eventid;
+	      prio = object_item->eventprio;
+	      found = 1;
+	      if ( prio == mh_eEventPrio_A)
+		return 1;
+	    }
+	    break;
+          case evlist_eEventType_Info:
+	    *id = &object_item->eventid;
+	    prio = 1;
+	    found = 1;
+	    break;
+	  default: ;
+	  }
         }
         break;
-      default:
-        ;
+      default: ;
     }
   }
-  return 0;
+  return found;
 }
 
 int EvList::get_last_not_acked_prio( mh_sEventId **id, unsigned long type, 

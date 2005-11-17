@@ -394,6 +394,55 @@ Help on graph window will soon be written...
 </TOPIC>
 </chapter>
 
+<chapter>
+<TOPIC> trendwindow
+Trend Window
+
+The Trend Window is opened from the object popup menu (method
+"Trend", or with the xtt command 'open trend'.
+
+The window displays a trend stored in a DsTrend objekt, or a number of trends
+specified by a PlotGroup object.
+
+<image> xtt_trendwindow.gif
+
+The limits for the y-axis for a curve can be changed by double clicking
+at the colored axis for that curve. A dialog box is opened where the
+new minimum and maximum values are entered.
+
+The limits for the x-axis are changed from the menu, 'View/X-axis limits'.
+
+When 'View/Show names' in the menu is activated, the name of the signals
+are displayed together with a colored checkbox for each signal. By clicking
+on the checkbox, the curve can be hidden or viewed.
+
+
+</TOPIC>
+
+<TOPIC> fastwindow
+Fast Curve Window
+
+The Fast Curve Window is opened from the object popup menu (method
+"Fast", or with the xtt command 'open fast'.
+
+The window displays a trend stored in a DsTrend objekt, or a number of trends
+specified by a PlotGroup object.
+
+<image> xtt_fastwindow.gif
+
+The limits for the y-axis for a curve can be changed by double clicking
+at the colored axis for that curve. A dialog box is opened where the
+new minimum and maximum values are entered.
+
+The limits for the x-axis are changed from the menu, 'View/X-axis limits'.
+
+When 'View/Show names' in the menu is activated, the name of the signals
+are displayed together with a colored checkbox for each signal. By clicking
+on the checkbox, the curve can be hidden or viewed.
+
+</TOPIC>
+</chapter>
+
 //
 // Commands
 //
@@ -537,6 +586,7 @@ Xtt commands
 <b>show eventlist<t>Show the event list		<LINK> show eventlist
 <b>show alarmlist<t>Show the alarm list		<LINK> show alarmlist
 <b>show user  <t>Show current user		<LINK> show user
+<b>sound      <t>Play a sound defined by a sound object	<LINK> sound
 <b>store      <t>Store an attribute list in a file <LINK> store
 
 <H2>related subjects
@@ -1089,6 +1139,15 @@ Show the current user and his privileges.
 <B>xtt> show user
 </TOPIC>
 
+<TOPIC> sound <style> function
+Command   sound
+
+Play a sound defined by a Sound or SoundSequence object.
+
+<B>xtt> sound 'object'
+
+</TOPIC>
+
 <TOPIC> store <style> function
 Command   store
 
@@ -1129,6 +1188,7 @@ logging show		<LINK> logging show
 logging store		<LINK> logging store
 
 </TOPIC>
+
 </headerlevel>
 </chapter>
 

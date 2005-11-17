@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.25 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.26 2005-11-17 09:01:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -352,9 +352,13 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
     {
       pwr_tObjid	objid;
 
-      sts = gdh_NameToObjid ( value_str, &objid);
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, &objid, sizeof(objid));
+      if ( strcmp( value_str, "0") == 0)
+	objid = pwr_cNObjid;
+      else {
+	sts = gdh_NameToObjid ( value_str, &objid);
+	if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+      }
+      memcpy( buffer_ptr, &objid, sizeof(objid));
       break;
     }
     case pwr_eType_ClassId:
@@ -411,9 +415,13 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
     {
       pwr_sAttrRef	attrref;
 
-      sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, &attrref, sizeof(attrref));
+      if ( strcmp( value_str, "0") == 0)
+	attrref = pwr_cNAttrRef;
+      else {
+	sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
+	if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+      }
+      memcpy( buffer_ptr, &attrref, sizeof(attrref));
       break;
     }
     case pwr_eType_DataRef:

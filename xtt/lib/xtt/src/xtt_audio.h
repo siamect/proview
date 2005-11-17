@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_audio.h,v 1.1 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_audio.h,v 1.2 2005-11-17 09:01:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,7 @@ class XttAudio
     int write_buffer_idx;
     XtIntervalId  timerid;
     pwr_tAttrRef queue[AUDIO_QUESIZE];
+    int queue_prio[AUDIO_QUESIZE];
     int queue_cnt;
 
     int Init_ALSA(char *, unsigned int);
@@ -74,10 +75,10 @@ class XttAudio
 			       double decay, double sustain, double release);
     void MakeSine(short *buffer, int buffersize, double time, double starttime, double endtime,
 		  int tone, double volume_ch1, double volume_ch2, double attack, double decay, 
-		  double sustain, double release);
+		  double sustain, double release, double tremolo);
     void MakeSquare(short *buffer, int buffersize, double time, double starttime, double endtime,
 		    int tone, double volume_ch1, double volume_ch2, double attack, double decay, 
-		    double sustain, double release);
+		    double sustain, double release, double tremolo);
     static void audio_write( XttAudio *);
 };
 
