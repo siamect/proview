@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_env.h,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_env.h,v 1.9 2005-11-22 12:22:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,7 +61,7 @@ public:
     
   wb_volume snapshot(pwr_tVid);
 
-  wb_volume createVolume(pwr_tVid vid, pwr_tCid cid, const char *name);
+  wb_volume createVolume(pwr_tVid vid, pwr_tCid cid, const char *name, bool add=true);
 
   int nextVolatileVid( char *name) { return m_erep->nextVolatileVid( &m_sts, name); }
     

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.40 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.41 2005-11-22 12:22:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ extern "C" {
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
 
-wb_erep::wb_erep() : m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
+wb_erep::wb_erep() : m_nRef(0), m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
 		     m_ref_merep_occupied(false)
 {
   m_merep = new wb_merep(0);
@@ -892,7 +892,7 @@ int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
 }
 
 wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, 
-			      const char *name)
+			      const char *name, bool add)
 {
   char vname[200];
 
@@ -906,7 +906,8 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
   }
 
   wb_vrepdb *vrepdb = new wb_vrepdb( this, vid, cid, name, vname);
-  addDb( sts, vrepdb);
+  if ( add)
+    addDb( sts, vrepdb);
   MsgWindow::message( 'I', "Database created", vname);
 
   return vrepdb;

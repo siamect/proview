@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.h,v 1.20 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_erep.h,v 1.21 2005-11-22 12:22:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,7 +66,8 @@ public:
   wb_vrep *volume(pwr_tStatus *sts);
   wb_vrep *volume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *volume(pwr_tStatus *sts, const char *name);
-  wb_vrep *createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, const char *name);
+  wb_vrep *createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, const char *name,
+			bool add = true);
   wb_vrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *externVolume(pwr_tStatus *sts, pwr_tVid vid);
   wb_vrep *bufferVolume(pwr_tStatus *sts);
