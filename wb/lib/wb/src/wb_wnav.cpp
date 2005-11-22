@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.28 2005-11-17 09:05:10 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.29 2005-11-22 12:30:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,8 +195,16 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
     }
     case pwr_eType_Text:
     case pwr_eType_String:
+    {
+      if ( (int) strlen( value_str) >= attr_size)
+        return WNAV__STRINGTOLONG;
+      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+      break;
+    }
     case pwr_eType_ProString:
     {
+      if ( strchr( value_str, '*') != 0)
+	return WNAV__INPUT_SYNTAX;
       if ( (int) strlen( value_str) >= attr_size)
         return WNAV__STRINGTOLONG;
       strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
