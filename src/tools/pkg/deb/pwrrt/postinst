@@ -1,5 +1,8 @@
 #!/bin/sh
 set -e
+if [ "$pwrrt_xtrace" != "" ]; then
+  set -o xtrace
+fi
 
 # Automatically added by dh_installdocs
 if [ "$1" = "configure" ]; then
@@ -10,7 +13,7 @@ fi
 # End automatically added section
 
 proot="/pwrp"
-aroot="/pwrp/adm"
+aroot="/usr/pwrp/adm"
 
 # Create users...
 new_user=0
@@ -37,7 +40,9 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
     cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
     cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
     cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
+    chmod a+x /home/pwrp/.rtt_start
     cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
+    chmod a+x /home/pwrp/.xtt_start
     cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
 
     chown -R pwrp /home/pwrp
@@ -55,7 +60,9 @@ if ! grep -q "\bskiftel:" /etc/passwd; then
     cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
     cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
     cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
+    chmod a+x /home/skiftel/.rtt_start
     cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
+    chmod a+x /home/skiftel/.xtt_start
     cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
 
     chown -R pwrp /home/skiftel
@@ -73,7 +80,9 @@ if ! grep -q "\bb55:" /etc/passwd; then
     cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
     cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
     cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
+    chmod a+x /home/b55/.rtt_start
     cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
+    chmod a+x /home/b55/.xtt_start
     cp /usr/pwrrt/cnf/op/.xsession /home/b55
 
     chown -R b55 /home/b55
@@ -113,15 +122,22 @@ EOF
 fi
 
 # Create startup link
-if [ -e /etc/rc2.d/S90pwr ]; then
+set +e
+checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
   rm /etc/rc2.d/S90pwr
 fi
 ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 
-if [ -e /etc/rc2.d/S91gdhserver ]; then
+set +e
+checklink=`eval ls /etc/rc2.d/S91gdhserver 2>/dev/null`
+set -e
+if [ "$checklink" != "" ]; then
   rm /etc/rc2.d/S91gdhserver
 fi
-ln -s /etc/init.d/gdhserver /etc/rc2.d/S91gdhserver
+# Obsolete
+#ln -s /etc/init.d/gdhserver /etc/rc2.d/S91gdhserver
 
 # Create project
 new_project=0
@@ -152,7 +168,9 @@ fi
 
 # Copy jar-files to web directory
 if [ -e /etc/proview.cnf ]; then
+  set +e
   web_dir=`eval cat /etc/proview.cnf | grep "\\bwebDirectory\\b" | awk '{print $2}'`
+  set -e
 
   if [ -e "$web_dir" ]; then
     cp /usr/pwrrt/lib/pwr_rt_client.jar $web_dir
@@ -225,13 +243,14 @@ if [ $new_cnf -eq 1 ]; then
   echo "-- Enter QcomBusId in /etc/proview.cnf"
 fi
 
-if [ $new_user -eq 1 ]; then
-  echo "-- Enter OpPlace object as argument to rt_xtt in /home/b55/.xtt_start"
-fi
+#if [ $new_user -eq 1 ]; then
+#  echo "-- Enter OpPlace object as argument to rt_xtt in /home/b55/.xtt_start"
+#fi
 
 if [ $new_project -eq 1 ]; then
-  echo "-- Create file /home/pwrp/.rhost"
-  echo "-- Copy loadfiles and applications to project"
+  nodename=`eval uname -n`
+  echo "-- Create file /home/pwrp/.rhosts"
+  echo "-- Distribute project to $nodename"
 fi
 
 if [ $changes -ne 0 ]; then

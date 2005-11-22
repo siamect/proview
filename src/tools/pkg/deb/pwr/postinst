@@ -13,7 +13,7 @@ if [ "$1" = "configure" ]; then
 fi
 # End automatically added section
 
-aroot="/pwrp/adm"
+aroot="/usr/pwrp/adm"
 
 # Create group pwrp
 if ! grep -q "\bpwrp:" /etc/group; then
@@ -31,8 +31,12 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
     cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bash_profile /home/pwrp
     cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
     cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp
+    chmod a+x /home/pwrp/.rtt_start
     cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp
+    chmod a+x /home/pwrp/.xtt_start
     cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init.pwr_com /home/pwrp
+    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
 
     chown -R pwrp /home/pwrp
     chgrp -R pwrp /home/pwrp
@@ -65,6 +69,7 @@ if ! grep -q "/etc/pwrp_profile\b" /etc/profile; then
 EOF
 fi
 
+# Create and copy adm
 if [ ! -e $aroot/db ]; then
   mkdir -p $aroot/db
 fi
@@ -74,20 +79,36 @@ cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh $aroot/db
 if [ ! -e $aroot/db/pwr_volumelist.dat ]; then
   cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_volumelist.dat $aroot/db
 fi
-if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
-  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
-fi
-if ! grep -q "^%base\b" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b" ; then
-  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+if [ ! -e $aroot/db/pwr_user.dat ]; then
+  cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_user.dat $aroot/db
 fi
 
-chgrp pwrp $pwra_db
-chmod g+w $pwra_db
-chgrp pwrp $pwra_db/*
-chmod g+w $pwra_db/*
-chgrp pwrp /pwrp
-chmod g+w /pwrp
+# Insert base in projectlist
+if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
+  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+else
+  set +e
+  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b"`
+  set -e
+  if [ "$ptst" = "" ]; then
+    echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+  fi
+fi
+
+# Change group to pwrp
+chgrp pwrp $aroot
+chmod g+w $aroot
+chgrp -R pwrp $aroot/*
+chmod -R g+w $aroot/*
 chmod a+w /usr/pwr$ver/$pwre_target/exp/load/*.dbs
+
+# Create project root
+if [ ! -e /usr/local/pwrp ]; then
+  mkdir /usr/local/pwrp
+  chgrp pwrp /usr/local/pwrp
+  chmod g+w /usr/local/pwrp
+fi
+
 
 
 

@@ -8,13 +8,42 @@ fi
 # End automatically added section
 
 proot="/pwrp"
-aroot="/pwrp/adm"
+aroot="/usr/pwrp/adm"
 
 echo ""
 echo -n "Do you wan't to remove project and users (y/n) [n] "
 read remove_all
 
 if [ "$remove_all" = "y" ]; then
+  
+  # Check that any user that is to be remoted isn't logged in
+  set +e
+  user_found=0
+  currentusers=`eval users`
+  userstr=""
+  checkuser=`eval echo $currentusers | grep "\bb55\b"`
+  if [ "$checkuser" != "" ]; then
+    user_found=1
+    userstr=$userstr" b55"
+  fi
+  checkuser=`eval echo $currentusers | grep "\bpwrp\b"`
+  if [ "$checkuser" != "" ]; then
+    user_found=1
+    userstr=$userstr" pwrp"
+  fi
+  checkuser=`eval echo $currentusers | grep "\bskiftel\b"`
+  if [ "$checkuser" != "" ]; then
+    user_found=1
+    userstr=$userstr" skiftel"
+  fi
+
+  if [ $user_found -eq 1 ]; then
+    echo "-- Current users: $currentusers"
+    echo "** Remove user will fail. Logout user $userstr first."
+    exit -1;
+  fi
+  set -e
+
   echo "-- Remove user b55"
   if grep -q "\bb55:" /etc/passwd; then
     userdel b55
@@ -31,8 +60,24 @@ if [ "$remove_all" = "y" ]; then
     rm -r /home/pwrp
   fi
 
+  echo "-- Remove user skiftel"
+  if grep -q "\bskiftel:" /etc/passwd; then
+    userdel skiftel
+  fi
+  if [ -e /home/skiftel ]; then
+    rm -r /home/skiftel
+  fi
+
+  if grep -q "\bb55:" /etc/group; then
+    groupdel b55
+  fi
+
   if grep -q "\bpwrp:" /etc/group; then
     groupdel pwrp
+  fi
+
+  if grep -q "\bskiftel:" /etc/group; then
+    groupdel skiftel
   fi
 
   echo "-- Remove project $proot"
@@ -46,7 +91,8 @@ if [ "$remove_all" = "y" ]; then
 fi
 
 # Remove startup
-if [ -e /etc/rc2.d/S90pwr ]; then
+checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+if [ "$checklink" != "" ]; then
   rm /etc/rc2.d/S90pwr
 fi
 

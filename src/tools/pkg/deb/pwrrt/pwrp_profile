@@ -29,7 +29,7 @@ export pwrp_log=$pwrp_root/common/log
 export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
-export pwra_db=/pwrp/adm/db
+export pwra_db=/usr/pwrp/adm/db
 jdk=`eval ls /usr/local | grep j2re`
 export jdk_home=/usr/local/$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
