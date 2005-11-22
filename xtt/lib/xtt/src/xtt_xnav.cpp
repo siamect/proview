@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.26 2005-11-17 09:01:35 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.27 2005-11-22 12:17:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2892,8 +2892,8 @@ int	XNav::show_logging( int index)
 	pwr_eType_Int32, sizeof( logg[0].logg_type), 0, 0, 0,
 	(void *) &logg[index].logg_type, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, Lng::translate("BufferSize"), "logg_BufferSize", 
-	pwr_eType_Int32, sizeof( logg[0].buffer_size), 0, 0, 0,
-	(void *) &logg[index].buffer_size, NULL, flow_eDest_IntoLast);
+	pwr_eType_Int32, sizeof( logg[0].wanted_buffer_size), 0, 0, 0,
+	(void *) &logg[index].wanted_buffer_size, NULL, flow_eDest_IntoLast);
   new ItemLocal( brow, Lng::translate("FullBufferStop"), "logg_BufferStop", 
 	pwr_eType_Boolean, sizeof( logg[0].intern), 0, 0, 0,
 	(void *) &logg[index].intern, NULL, flow_eDest_IntoLast);
