@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_file.cpp,v 1.2 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_pvd_file.cpp,v 1.3 2005-11-22 12:23:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,6 +104,7 @@ void wb_pvd_file::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
     item.bwsoix = 0;
     item.fchoix = 0;
     item.lchoix = 0;
+    m_list[0].fchoix = item.oix;
   }
   else {
     if ( destoix >= m_list.size() || destoix <= 0) {
