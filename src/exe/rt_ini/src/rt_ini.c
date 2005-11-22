@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini.c,v 1.11 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_ini.c,v 1.12 2005-11-22 12:16:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -579,6 +579,10 @@ createContext (int argc, char **argv)
 #endif
   optind = 0;
 
+  if ( argc > 1 && strcmp( argv[1], "--version") == 0) {
+    system( "cat $pwr_exe/rt_version.dat");
+    exit(1);
+  }
   if (!(cp = ini_CreateContext(&sts))) {
     fprintf(stderr, "%s: could not allocate context\n", argv[0]);
     exit(1);
