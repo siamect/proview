@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_udb.cpp,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_pvd_udb.cpp,v 1.2 2005-11-22 12:25:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,7 +100,7 @@ void wb_pvd_udb::load( pwr_tStatus *rsts)
  
   // Create Root object
   pitem rootitem;
-  strcpy( rootitem.name, "GlobalVolumeList");
+  strcpy( rootitem.name, "UserDatabase");
   rootitem.cid = pwr_eClass_PlantHier;
   rootitem.oix = 0; 
   m_list.push_back(rootitem);
