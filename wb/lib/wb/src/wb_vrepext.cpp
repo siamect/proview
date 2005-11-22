@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.cpp,v 1.5 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.6 2005-11-22 12:28:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,7 +129,7 @@ wb_orep *wb_vrepext::object(pwr_tStatus *sts, pwr_tOid oid)
     wb_cdef cdef = wb_cdef( cdrep);
 
     ext_object exto( &amsg.Object, m_vid, cdef);
-    m_cashe = exto;
+    cashe_insert( exto);
     wb_orepext *orep = new wb_orepext( this, exto);
     return orep;
   }
@@ -411,7 +411,7 @@ wb_orep *wb_vrepext::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   if ( ODD( amsg.Object.Status)) {
     *sts = LDH__SUCCESS;
     ext_object exto( &amsg.Object, m_vid, cdef);
-    m_cashe = exto;
+    cashe_insert( exto);
     wb_orepext *orep = new wb_orepext( this, exto);
     return orep;
   }
@@ -485,7 +485,7 @@ wb_orep *wb_vrepext::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
     wb_cdef cdef = wb_cdef( cdrep);
 
     ext_object exto( &amsg.Object, m_vid, cdef);
-    m_cashe = exto;
+    cashe_insert( exto);
     wb_orepext *orep = new wb_orepext( this, exto);
     return orep;
   }
@@ -612,7 +612,20 @@ bool wb_vrepext::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
     *sts = amsg.Any.Status;
     return false;
   }
+  // Remove from cashe
+  cashe_remove( orep->oid().oix);
   return true;
+}
+
+void wb_vrepext::cashe_insert( ext_object& eo)
+{
+  m_cashe = eo;
+}
+
+void wb_vrepext::cashe_remove( pwr_tOix oix)
+{
+  if ( m_cashe.m_oid.oix == oix)
+    m_cashe.m_oid = pwr_cNObjid;
 }
 
 bool wb_vrepext::commit(pwr_tStatus *sts) 

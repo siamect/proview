@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.h,v 1.6 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_vrepext.h,v 1.7 2005-11-22 12:28:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -299,6 +299,8 @@ public:
  private:
   void put( vext_sQMsg *msg, int size, pwr_tStatus *sts);
   void receive( vext_sAMsg *msg, int size, pwr_tStatus *sts);
+  void cashe_insert( ext_object& eo);
+  void cashe_remove( pwr_tOix oix);
 };
 
 #endif
