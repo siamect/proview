@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.34 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.35 2005-11-22 12:31:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 
 extern "C" {
 #include "pwr_class.h"
+#include "pwr_version.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_time.h"
@@ -87,7 +88,7 @@ extern "C" {
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
 
-static char wtt_version[] = "V4.0.0";
+static char wtt_version[] = pwrv_cPwrVersionStr;
 static WNav *current_wnav[20];
 static int wnav_cnt = 0;
 
