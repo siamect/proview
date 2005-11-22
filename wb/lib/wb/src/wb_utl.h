@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.h,v 1.7 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_utl.h,v 1.8 2005-11-22 12:26:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,11 @@
 #include <X11/Intrinsic.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef struct utl_s_objidlist {
 	pwr_tObjid  objid;
 	struct utl_s_objidlist *next;
@@ -49,11 +54,11 @@ void utl_objidlist_free (
 
 int utl_objidlist_insert (
   pwr_sAttrRef  *arp,
-  utl_t_objidlist **list,
-  int		*count,
-  int		dum1,
-  int		dum2,
-  int		dum3
+  void		*l,
+  void		*c,
+  void		*dum1,
+  void		*dum2,
+  void		*dum3
 );
 
 int utl_toupper ( 
@@ -495,5 +500,9 @@ int utl_revert (
   ldh_tSesContext ldhses,
   int		confirm
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

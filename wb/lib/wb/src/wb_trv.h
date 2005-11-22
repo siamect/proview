@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.h,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_trv.h,v 1.6 2005-11-22 12:26:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,10 @@
 
 #ifndef wb_ldh_h
 #include "wb_ldh.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef enum {
@@ -164,7 +168,11 @@ int trv_get_docobjects (
 
 int trv_object_search(
   trv_ctx	trvctx,
+#ifdef __cplusplus
+  int		(*backcall)( pwr_sAttrRef *, void *, void *, void *, void *, void*),
+#else
   int		(*backcall)(),
+#endif
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -198,6 +206,10 @@ int trv_get_attrobjects (
   void		*arg4,
   void		*arg5
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
