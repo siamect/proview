@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.h,v 1.3 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_logging.h,v 1.4 2005-11-22 12:16:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,6 +81,7 @@ class XttLogging {
     int		parameter_count;
     int		print_shortname;
     int		buffer_size;
+    int		wanted_buffer_size;
     int		buffer_count;
     char	*buffer_ptr;
     

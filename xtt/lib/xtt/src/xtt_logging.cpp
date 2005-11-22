@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.4 2005-11-04 11:52:35 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.5 2005-11-22 12:16:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,7 +93,8 @@ XttLogging::XttLogging() :
   xnav(0), index(0), active(0), intern(0), stop_logg(0), 
   logg_type(xtt_LoggType_Cont), logg_priority(0), condition_ptr(0),
   logg_time(200), logg_file(0), line_size(10000), parameter_count(0), 
-  print_shortname(0), buffer_size(100), buffer_count(0), buffer_ptr(0)
+  print_shortname(0), buffer_size(100), wanted_buffer_size(100), 
+  buffer_count(0), buffer_ptr(0)
 {
   for ( int i = 0; i < RTT_LOGG_MAXPAR; i++) {
     parameterstr[i][0] = 0;
@@ -160,9 +161,10 @@ int XttLogging::logging_set(
 
 	if ( a_buffer_size != 0 || buffer_ptr == 0)
 	{
-          if ( a_buffer_size != 0)
+          if ( a_buffer_size != 0) {
 	    buffer_size = a_buffer_size;
-	
+	    wanted_buffer_size = a_buffer_size;
+	  }	
 	  /* Reallocate the buffer to store logging info in */
 	  if ( buffer_ptr != 0)
 	    free( buffer_ptr);
@@ -172,6 +174,7 @@ int XttLogging::logging_set(
 	    message('E', "Buffer is to large");
 	    /* set default buffer */
 	    buffer_size = RTT_BUFFER_DEFSIZE;
+	    wanted_buffer_size = RTT_BUFFER_DEFSIZE;
 	
 	    /* Reallocate the buffer to store logging info in */
 	    buffer_ptr = (char *) calloc( 1, buffer_size * 512);
@@ -485,7 +488,7 @@ int XttLogging::store(
 	  fprintf( outfile, "logging set/entry=current/time=%d\n",
 		logg_time);
 	fprintf( outfile, "logging set/entry=current/buffer=%d\n", 
-		buffer_size);
+		wanted_buffer_size);
 	fprintf( outfile, "logging set/entry=current/line_size=%d\n", 
 		line_size);
 	fprintf( outfile, "logging set/entry=current/priority=%d\n", 
@@ -547,6 +550,17 @@ int XttLogging::start()
 	  message('E',"Entry is already started");
 	  return XNAV__HOLDCOMMAND;
 	} 
+
+	if ( wanted_buffer_size != buffer_size) {
+	  // Reallocate
+	  if ( buffer_ptr != 0)
+	    free( buffer_ptr);
+	  buffer_ptr = (char *) calloc( 1, wanted_buffer_size * 512);
+	  if (buffer_ptr == 0)
+	    exit( XNAV__NOMEMORY);
+
+	  buffer_size = wanted_buffer_size;
+	}
 
 	/* Get the parameters */
 	found = 0;
