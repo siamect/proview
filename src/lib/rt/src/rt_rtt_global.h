@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_global.h,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_rtt_global.h,v 1.4 2005-11-22 12:20:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,8 @@
 
 #ifndef rt_rtt_global_h
 #define rt_rtt_global_h
+
+#include "pwr_version.h"
 
 /*************************************************************************
 *  	Globala variabler i rtt
@@ -92,7 +94,7 @@ extern	int			rtt_noredraw;
 #ifdef RTT_MENU_MODULE
 /* Datasättning endast i modulen rs_rtt_menu */
 
-char				rtt_version[10] = "V4.0.0";
+char				rtt_version[10] = pwrv_cPwrVersionStr;
 menu_ctx			rtt_collectionmenuctx = 0;
 rtt_t_menu_upd			*rtt_collectionmenulist = 0;
 menu_ctx			rtt_alarm_ctx = 0;
