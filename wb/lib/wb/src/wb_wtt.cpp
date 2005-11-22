@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.27 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.28 2005-11-22 12:32:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -474,7 +474,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
       }
-      break; 
+      break;
     default:
       ;
   }
@@ -485,7 +485,7 @@ int Wtt::restore_settings()
   char cmd[80];
 
   strcpy( cmd, "@");
-  dcli_translate_filename( &cmd[1], wnav_cInitFile);
+  dcli_translate_filename( &cmd[1], script_filename());
   wnav->command( cmd);
   wnavnode->command( cmd);
   return 1;
@@ -3765,8 +3765,7 @@ Wtt::Wtt(
 	&show_descrip, &show_objref, &show_objxref, 
 	&show_attrref, &show_attrxref);
 
-  if ( wbctx && volid)
-  {
+  if ( wbctx && volid) {
     wnav->volume_attached( wbctx, ldhses, 0);
     wnavnode->volume_attached( wbctx, ldhses, 0);
   }
