@@ -81,6 +81,9 @@ fi
 # Convert to html
 co_convert -t -d $pwr_doc $pwr_exe/xtt_version_help.dat
 
+# Print rt version file
+echo "Version: $version" > $pwr_exe/rt_version.dat
+
 if [ "$1" == "-v" ]; then
   exit
 fi
