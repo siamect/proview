@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.19 2005-11-17 09:07:21 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.20 2005-11-22 12:18:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -670,8 +670,8 @@ int main( int argc, char *argv[])
   if ( EVEN(sts)) {
     /* No system object, login as system !! */
     login_insert_login_info( 	"SYSTEM",
-				"",
-				"",
+				username,
+				password,
 				pwr_mAccess_AllPwr,
 				0);
     nav_display = 1;
