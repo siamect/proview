@@ -144,7 +144,7 @@ static int	user_help_func(	void		*client_data,
 {
   char	arg1_str[80];
 	
-  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str)))
+  if ( EVEN( dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str))))
   {
     cout <<
 "pwr_user help" << endl << endl <<
@@ -307,7 +307,7 @@ static int	user_add_func(	void		*client_data,
   int	arg1_sts;
   int	sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
   {
@@ -319,70 +319,70 @@ static int	user_add_func(	void		*client_data,
     unsigned int privilege;
     int		nr;
 
-    if ( EVEN( dcli_get_qualifier( "/user", user_str)))
+    if ( EVEN( dcli_get_qualifier( "/user", user_str, sizeof(user_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str, sizeof(user_str))))
       {
         user_message('E',"Syntax error");
         return 1;
       }
     }
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
       user_message('E',"Enter group");
       return 1;
     }
-    if ( EVEN( dcli_get_qualifier( "/password", password_str)))
+    if ( EVEN( dcli_get_qualifier( "/password", password_str, sizeof(password_str))))
     {
       user_message('E',"Enter password");
       return 1;
     }
     privilege = 0;
-    if ( ODD( dcli_get_qualifier( "/rtread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtRead;
-    if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtEvents;
-    if ( ODD( dcli_get_qualifier( "/system", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/system", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_System;
-    if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Maintenance;
-    if ( ODD( dcli_get_qualifier( "/process", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/process", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Process;
-    if ( ODD( dcli_get_qualifier( "/instrument", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/instrument", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Instrument;
-    if ( ODD( dcli_get_qualifier( "/operator1", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator1", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator1;
-    if ( ODD( dcli_get_qualifier( "/operator2", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator2", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator2;
-    if ( ODD( dcli_get_qualifier( "/operator3", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator3", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator3;
-    if ( ODD( dcli_get_qualifier( "/operator4", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator4", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator4;
-    if ( ODD( dcli_get_qualifier( "/operator5", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator5", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator5;
-    if ( ODD( dcli_get_qualifier( "/operator6", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator6", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator6;
-    if ( ODD( dcli_get_qualifier( "/operator7", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator7", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator7;
-    if ( ODD( dcli_get_qualifier( "/operator8", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator8", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator8;
-    if ( ODD( dcli_get_qualifier( "/operator9", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator9", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator9;
-    if ( ODD( dcli_get_qualifier( "/oper10", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/oper10", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator10;
-    if ( ODD( dcli_get_qualifier( "/devread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevRead;
-    if ( ODD( dcli_get_qualifier( "/devplc", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devplc", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevPlc;
-    if ( ODD( dcli_get_qualifier( "/devconfig", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devconfig", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevConfig;
-    if ( ODD( dcli_get_qualifier( "/devclass", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devclass", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevClass;
     if ( privilege == 0)
     {
-      if ( EVEN( dcli_get_qualifier( "/privilege", privilege_str)))
+      if ( EVEN( dcli_get_qualifier( "/privilege", privilege_str, sizeof(privilege_str))))
       {
         user_message('E',"Enter privilege");
         return 1;
@@ -404,16 +404,16 @@ static int	user_add_func(	void		*client_data,
     char	dummy_str[80];
     unsigned long	attributes;
 
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str, sizeof(system_str))))
       {
         user_message('E',"Syntax error");
         return 1;
       }
     }
     attributes = user_mSystemAttr_UserInherit;
-    if ( ODD( dcli_get_qualifier( "/nouserinherit", dummy_str)))
+    if ( ODD( dcli_get_qualifier( "/nouserinherit", dummy_str, sizeof(dummy_str))))
       attributes &= ~user_mSystemAttr_UserInherit;
     sts = gu->add_system( system_str, attributes);
     cout << gu->get_status(sts) << endl;
@@ -430,7 +430,7 @@ static int	user_remove_func( void		*client_data,
   int	arg1_sts;
   int	sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
   {
@@ -438,15 +438,15 @@ static int	user_remove_func( void		*client_data,
     char	user_str[80];
     char	system_str[80];
 
-    if ( EVEN( dcli_get_qualifier( "/user", user_str)))
+    if ( EVEN( dcli_get_qualifier( "/user", user_str, sizeof(user_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str, sizeof(user_str))))
       {
         user_message('E',"Syntax error");
         return 1;
       }
     }
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
       user_message('E',"Enter group");
       return 1;
@@ -459,9 +459,9 @@ static int	user_remove_func( void		*client_data,
     // Command is "remove group"
     char	system_str[80];
 
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str, sizeof(system_str))))
       {
         user_message('E',"Syntax error");
         return 1;
@@ -482,7 +482,7 @@ static int	user_modify_func( void		*client_data,
   int	arg1_sts;
   int	sts;
 	
-  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str);
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
 
   if ( strncmp( arg1_str, "user", strlen( arg1_str)) == 0)
   {
@@ -495,15 +495,15 @@ static int	user_modify_func( void		*client_data,
     unsigned int privilege;
     int		nr;
 
-    if ( EVEN( dcli_get_qualifier( "/user", user_str)))
+    if ( EVEN( dcli_get_qualifier( "/user", user_str, sizeof(user_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", user_str, sizeof(user_str))))
       {
         user_message('E',"Syntax error");
         return 1;
       }
     }
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
       user_message('E',"Enter group");
       return 1;
@@ -515,98 +515,98 @@ static int	user_modify_func( void		*client_data,
       cout << gu->get_status(sts) << endl;
       return 1;
     }
-    if ( ODD( dcli_get_qualifier( "/password", p_str)))
+    if ( ODD( dcli_get_qualifier( "/password", p_str, sizeof(p_str))))
       strcpy( password_str, p_str);
 
-    if ( ODD( dcli_get_qualifier( "/rtread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtRead;
-    if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtwrite", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/rtevents", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_RtEvents;
-    if ( ODD( dcli_get_qualifier( "/system", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/system", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_System;
-    if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/maintenance", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Maintenance;
-    if ( ODD( dcli_get_qualifier( "/process", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/process", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Process;
-    if ( ODD( dcli_get_qualifier( "/instrument", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/instrument", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Instrument;
-    if ( ODD( dcli_get_qualifier( "/operator1", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator1", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator1;
-    if ( ODD( dcli_get_qualifier( "/operator2", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator2", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator2;
-    if ( ODD( dcli_get_qualifier( "/operator3", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator3", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator3;
-    if ( ODD( dcli_get_qualifier( "/operator4", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator4", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator4;
-    if ( ODD( dcli_get_qualifier( "/operator5", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator5", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator5;
-    if ( ODD( dcli_get_qualifier( "/operator6", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator6", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator6;
-    if ( ODD( dcli_get_qualifier( "/operator7", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator7", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator7;
-    if ( ODD( dcli_get_qualifier( "/operator8", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator8", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator8;
-    if ( ODD( dcli_get_qualifier( "/operator9", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/operator9", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator9;
-    if ( ODD( dcli_get_qualifier( "/oper10", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/oper10", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_Operator10;
-    if ( ODD( dcli_get_qualifier( "/devread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devread", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevRead;
-    if ( ODD( dcli_get_qualifier( "/devplc", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devplc", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevPlc;
-    if ( ODD( dcli_get_qualifier( "/devconfig", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devconfig", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevConfig;
-    if ( ODD( dcli_get_qualifier( "/devclass", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/devclass", privilege_str, sizeof(privilege_str))))
       privilege |= pwr_mPrv_DevClass;
 
-    if ( ODD( dcli_get_qualifier( "/nortread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nortread", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_RtRead;
-    if ( ODD( dcli_get_qualifier( "/nortwrite", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nortwrite", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_RtWrite;
-    if ( ODD( dcli_get_qualifier( "/nortevents", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nortevents", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_RtEvents;
-    if ( ODD( dcli_get_qualifier( "/nosystem", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nosystem", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_System;
-    if ( ODD( dcli_get_qualifier( "/nomaintenance", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nomaintenance", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Maintenance;
-    if ( ODD( dcli_get_qualifier( "/noprocess", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/noprocess", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Process;
-    if ( ODD( dcli_get_qualifier( "/noinstrument", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/noinstrument", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Instrument;
-    if ( ODD( dcli_get_qualifier( "/nooperator1", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator1", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator1;
-    if ( ODD( dcli_get_qualifier( "/nooperator2", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator2", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator2;
-    if ( ODD( dcli_get_qualifier( "/nooperator3", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator3", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator3;
-    if ( ODD( dcli_get_qualifier( "/nooperator4", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator4", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator4;
-    if ( ODD( dcli_get_qualifier( "/nooperator5", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator5", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator5;
-    if ( ODD( dcli_get_qualifier( "/nooperator6", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator6", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator6;
-    if ( ODD( dcli_get_qualifier( "/nooperator7", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator7", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator7;
-    if ( ODD( dcli_get_qualifier( "/nooperator8", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator8", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator8;
-    if ( ODD( dcli_get_qualifier( "/nooperator9", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooperator9", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator9;
-    if ( ODD( dcli_get_qualifier( "/nooper10", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nooper10", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_Operator10;
-    if ( ODD( dcli_get_qualifier( "/nodevread", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nodevread", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_DevRead;
-    if ( ODD( dcli_get_qualifier( "/nodevplc", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nodevplc", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_DevPlc;
-    if ( ODD( dcli_get_qualifier( "/nodevconfig", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nodevconfig", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_DevConfig;
-    if ( ODD( dcli_get_qualifier( "/nodevclass", privilege_str)))
+    if ( ODD( dcli_get_qualifier( "/nodevclass", privilege_str, sizeof(privilege_str))))
       privilege &= ~pwr_mPrv_DevClass;
 
     if ( privilege == 0)
     {
-      if ( EVEN( dcli_get_qualifier( "/privilege", privilege_str)))
+      if ( EVEN( dcli_get_qualifier( "/privilege", privilege_str, sizeof(privilege_str))))
       {
         user_message('E',"Enter privilege");
         return 1;
@@ -628,9 +628,9 @@ static int	user_modify_func( void		*client_data,
     char	dummy_str[80];
     unsigned int attributes;
 
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", system_str, sizeof(system_str))))
       {
         user_message('E',"Syntax error");
         return 1;
@@ -643,9 +643,9 @@ static int	user_modify_func( void		*client_data,
       cout << gu->get_status(sts) << endl;
       return 1;
     }
-    if ( ODD( dcli_get_qualifier( "/nouserinherit", dummy_str)))
+    if ( ODD( dcli_get_qualifier( "/nouserinherit", dummy_str, sizeof(dummy_str))))
       attributes &= ~user_mSystemAttr_UserInherit;
-    if ( ODD( dcli_get_qualifier( "/userinherit", dummy_str)))
+    if ( ODD( dcli_get_qualifier( "/userinherit", dummy_str, sizeof(dummy_str))))
       attributes |= user_mSystemAttr_UserInherit;
     sts = gu->modify_system( system_str, attributes);
     cout << gu->get_status(sts) << endl;
@@ -665,20 +665,20 @@ static int	user_get_func(	void		*client_data,
     unsigned int privilege;
     int		sts;
 
-    if ( EVEN( dcli_get_qualifier( "/user", user_str)))
+    if ( EVEN( dcli_get_qualifier( "/user", user_str, sizeof(user_str))))
     {
-      if ( EVEN( dcli_get_qualifier( "dcli_arg1", user_str)))
+      if ( EVEN( dcli_get_qualifier( "dcli_arg1", user_str, sizeof(user_str))))
       {
         user_message('E',"Syntax error");
         return 1;
       }
     }
-    if ( EVEN( dcli_get_qualifier( "/group", system_str)))
+    if ( EVEN( dcli_get_qualifier( "/group", system_str, sizeof(system_str))))
     {
       user_message('E',"Enter group");
       return 1;
     }
-    if ( EVEN( dcli_get_qualifier( "/password", password_str)))
+    if ( EVEN( dcli_get_qualifier( "/password", password_str, sizeof(password_str))))
     {
       user_message('E',"Enter password");
       return 1;
