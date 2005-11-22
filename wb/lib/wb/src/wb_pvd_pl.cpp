@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.4 2005-11-15 15:42:57 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.5 2005-11-22 12:25:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -505,12 +505,6 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
 
   *rsts = LDH__SUCCESS;
 
-  dcli_translate_filename( fname, "$pwra_db/pwr_projectlist.dat");
-  is.open( fname);
-  if ( !is) {
-    *rsts = LDH__NEWFILE;
-    return;
-  }
 
   // Create Root object
   pitem rootitem;
@@ -531,6 +525,12 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
   m_list[rootitem.oix].lchoix = brootitem.oix;
   m_list.push_back(brootitem);
 
+  dcli_translate_filename( fname, "$pwra_db/pwr_projectlist.dat");
+  is.open( fname);
+  if ( !is) {
+    *rsts = LDH__NEWFILE;
+    return;
+  }
 
   while ( is.getline( line, sizeof(line))) {
     line_cnt++;

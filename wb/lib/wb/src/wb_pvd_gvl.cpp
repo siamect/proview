@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.cpp,v 1.2 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.cpp,v 1.3 2005-11-22 12:24:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@ void wb_pvd_gvl::save( pwr_tStatus *sts)
   pwr_tFileName fname;
   
   *sts = LDH__SUCCESS;
-  dcli_translate_filename( fname, "$pwra_db/pwr_volumelist.tst");
+  dcli_translate_filename( fname, "$pwra_db/pwr_volumelist.dat");
   of.open( fname);
   if ( !of) {
     *sts = LDH__FILEOPEN;
@@ -96,13 +96,6 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
 
   *rsts = LDH__SUCCESS;
 
-  dcli_translate_filename( fname, "$pwra_db/pwr_volumelist.tst");
-  is.open( fname);
-  if ( !is) {
-    *rsts = LDH__NEWFILE;
-    return;
-  }
-
   // Create Root object
   pitem rootitem;
   strcpy( rootitem.name, "GlobalVolumeList");
@@ -112,6 +105,12 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
   menu_stack[menu_cnt] = rootitem.oix;
   menu_cnt++;
 
+  dcli_translate_filename( fname, "$pwra_db/pwr_volumelist.dat");
+  is.open( fname);
+  if ( !is) {
+    *rsts = LDH__NEWFILE;
+    return;
+  }
 
   while ( is.getline( line, sizeof(line))) {
     line_cnt++;
