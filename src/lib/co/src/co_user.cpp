@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_user.cpp,v 1.7 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_user.cpp,v 1.8 2005-11-22 12:19:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -373,7 +373,7 @@ SystemList *GeUser::find_system( SystemName *name)
 
   for ( sl = root; sl; sl = sl->next)
   {
-    if ( strcmp( sl->name, name->segment(0)) == 0)
+    if ( cdh_NoCaseStrcmp( sl->name, name->segment(0)) == 0)
     {
       if ( name->segments == sl->level + 1)
         return sl;
@@ -664,7 +664,7 @@ SystemList *SystemList::find_system( SystemName *name)
 
   for ( sl = childlist; sl; sl = sl->next)
   {
-    if ( strcmp( sl->name, name->segment( sl->level)) == 0)
+    if ( cdh_NoCaseStrcmp( sl->name, name->segment( sl->level)) == 0)
     {
       if ( name->segments == sl->level + 1)
         return sl;
@@ -680,7 +680,7 @@ void *SystemList::find_user( char *name)
 
   for ( ul = (UserList *) userlist; ul != NULL; ul = ul->next)
   {
-    if ( strcmp( ul->name, name) == 0)
+    if ( cdh_NoCaseStrcmp( ul->name, name) == 0)
       return ul;
   }
   return NULL;
@@ -910,7 +910,7 @@ void UserList::get_data( char *password, unsigned int *priv)
 
 int UserList::check_password( char *password)
 {
-  if ( strcmp( this->password, password) == 0)
+  if ( cdh_NoCaseStrcmp( this->password, password) == 0)
     return USER__SUCCESS;
   return USER__NOTAUTHORIZED;
 }
