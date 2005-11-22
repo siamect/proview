@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dir.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_dir.h,v 1.4 2005-11-22 12:21:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,10 @@
 
 /* wb_dir.h -- Directory information
    This module returns information about directory and files.  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 pwr_tStatus dir_parse_filename( char	*filename,
 				char	*dev,
@@ -62,3 +66,8 @@ pwr_tStatus dir_DeassignLogical(
 	char	*name,
 	char	*table
 );
+
+#ifdef __cplusplus
+}
+#endif
+

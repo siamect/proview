@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.h,v 1.6 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_gcg.h,v 1.7 2005-11-22 12:22:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,10 @@
 #include <stdio.h>
 
 #include "wb_vldh.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define	GCG_PRINT_ALLPAR 0
 #define	GCG_PRINT_CONPAR 1
@@ -297,5 +301,9 @@ int gcg_wind_comp_all(
 int	gcg_comp_volume( 
     ldh_tSesContext ldhses
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
