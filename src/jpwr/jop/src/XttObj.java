@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttObj.java,v 1.2 2005-09-01 14:57:51 claes Exp $
+ * Proview   $Id: XttObj.java,v 1.3 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,6 +61,9 @@ public class XttObj extends DynamicObj implements JopDynamic
 //  public String name = null;
   /**  Description of the Field */
   public CdhrObjid objId = null;
+
+  public CdhrAttrRef aref = null;
+
   /**  Description of the Field */
   public XttRefObj refObj = null;
   /**  Description of the Field */
@@ -179,12 +182,49 @@ public class XttObj extends DynamicObj implements JopDynamic
       s = this.fullName + "." + obj.name + suffix;
       obj.fullName = s;
       Logg.logg("XttObj:  Name " + s + "Type " + this.className, 6);
-      if((obj.flags & Pwr.mAdef_array) > 0)
+      if( ((obj.flags & Pwr.mAdef_array) > 0) &&
+          ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
         Logg.logg("XttObj:  Hittat array, vad ska jag göra nu?? " + s, 6);
         XttArrayAttr arrayAttr = new XttArrayAttr(s);
         DefaultMutableTreeNode arrayChildNode = new DefaultMutableTreeNode(arrayAttr);
         obj.treeNode.add(arrayChildNode);
+      }
+      else if((obj.flags & Pwr.mAdef_class) > 0)
+      {
+        Logg.logg("XttObj:  Hittat klass, vad ska jag göra nu?? " + this.fullName + " " + obj.name , 1);
+
+	//	CdhrObjid cdhrObjid = gdh.nameToObjid(this.fullName + obj.name);
+	//	System.out.println("nameToObjid " + cdhrObjid.getSts());
+
+	//	CdhrClassId cdhrClassId = gdh.getObjectClass(cdhrObjid.objid);
+	/*       
+       	CdhrAttrRef aref = gdh.nameToAttrRef(this.fullName + "." + obj.name);
+	System.out.println("nameToAttrRef " + aref.getSts());
+
+      	CdhrTypeId tid = gdh.getAttrRefTid(aref.aref);
+	String className = gdh.attrRefToName(aref.aref, Cdh.mName_object).str;
+
+        XttObj classObj = new XttObj(this.en.gdh, 
+                                     this.en, 
+                                     this.fullName + "." + obj.name, 
+                                     obj.name,
+				     className,
+				     new CdhrObjid(aref.aref.getObjid(),aref.getSts()),
+				     new CdhrClassId(tid.typeId, tid.sts)); 
+	System.out.println("classObj: " + classObj.hasChildren + " " + className);
+	*/
+	/*
+        XttObj classObj = new XttObj(this.en.gdh, 
+                                     this.en, 
+                                     this.fullName + obj.name, 
+                                     obj.name,
+				     "Tjoflöjt",
+				     cdhrObjid,
+				     cdhrClassId); 
+	*/
+	//        DefaultMutableTreeNode classChildNode = new DefaultMutableTreeNode(classObj);
+	//        obj.treeNode.add(classChildNode);
       }
       //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
       else if(obj.name.compareTo("DataPointer") != 0)
@@ -208,15 +248,16 @@ public class XttObj extends DynamicObj implements JopDynamic
         ret = (GdhrRefObjectInfo)retVec.get(i);
         if(ret.evenSts())
         {
-          Logg.logg("XttObj:  refObjectInfo_Vector(" + s + ") Error ", 4);
+          Logg.logg("XttObj:  refObjectInfo_Vector(" + s + ") Error ", 1);
         }
 
         //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
         while(j < attrVector.size() &&
             (((XttObjAttr)attrVector.get(j)).name.compareTo("DataPointer") == 0 ||
-            ((((XttObjAttr)attrVector.get(j)).flags & Pwr.mAdef_array) > 0)))
+            ((((XttObjAttr)attrVector.get(j)).flags & Pwr.mAdef_array) > 0) ||
+	     ((((XttObjAttr)attrVector.get(j)).flags & Pwr.mAdef_class) > 0)) )
         {
-          Logg.logg("Hittat datapointer", 4);
+          Logg.logg("Hittat datapointer", 1);
           j++;
         }
         if(j < attrVector.size())
@@ -253,7 +294,8 @@ public class XttObj extends DynamicObj implements JopDynamic
     for(int i = 0; i < this.attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)this.attrVector.get(i);
-      if((obj.flags & Pwr.mAdef_array) > 0)
+      if( ((obj.flags & Pwr.mAdef_array) > 0) &&
+          ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
         Enumeration enum = obj.treeNode.children();
         while(enum.hasMoreElements())
@@ -265,6 +307,22 @@ public class XttObj extends DynamicObj implements JopDynamic
             this.setObjectAttributeValue(arrayObj);
           }
         }
+
+      }
+      else if((obj.flags & Pwr.mAdef_class) > 0)
+      {
+	  /*
+        Enumeration enum = obj.treeNode.children();
+        while(enum.hasMoreElements())
+        {
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
+          if(arrayObj.elements == obj.elements)
+          {
+            this.setObjectAttributeValue(arrayObj);
+          }
+        }
+	  */
 
       }
       else if(obj.name.compareTo("DataPointer") != 0)
@@ -307,7 +365,8 @@ public class XttObj extends DynamicObj implements JopDynamic
     for(int i = 0; i < attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)attrVector.get(i);
-      if((obj.flags & Pwr.mAdef_array) > 0)
+      if( ((obj.flags & Pwr.mAdef_array) > 0) &&
+          ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
         Enumeration enum = obj.treeNode.children();
         while(enum.hasMoreElements())
@@ -319,6 +378,21 @@ public class XttObj extends DynamicObj implements JopDynamic
             unref_vec.add(arrayObj.refObj.refid);
           }
         }
+      }
+      else if((obj.flags & Pwr.mAdef_class) > 0)
+      {
+	  /*
+        Enumeration enum = obj.treeNode.children();
+        while(enum.hasMoreElements())
+        {
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
+          if(arrayObj.elements == obj.elements)
+          {
+            unref_vec.add(arrayObj.refObj.refid);
+          }
+        }
+	  */
       }
       //på grund av bugg i nuvarande proviewversion DataPointer borde vara PRIVATE
       else if(obj.name.compareTo("DataPointer") != 0)

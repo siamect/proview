@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.6 2005-11-02 14:02:20 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.7 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,17 +129,106 @@ public class Gdh {
     // Used by applets only
     return false;
   }
+
   public Vector getAllClassAttributes( int classid, PwrtObjid objid_obj )
   {
-    CdhrObjAttr attr = (CdhrObjAttr)this.getClassAttribute(classid, objid_obj);
+      //System.out.println("getAllClassAttributes" + classid + " " + objid_obj.oix + " " + objid_obj.vid);
+    //CdhrObjid co = this.classIdToObjid(classid);
+
+    String name = this.objidToName(objid_obj, Cdh.mName_pathStrict).str;
+	  //          fullName = this.attrRefToName( attrRef.aref, Cdh.mName_pathStrict).str;
+
+    CdhrClassId cdhrClassId = this.getObjectClass(objid_obj);
+
+    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(classid, objid_obj);
+
     Vector v = new Vector();
-    while(attr != null)
+    for(int i = 0;i<gdhrsAttrDefArr.length;i++)
     {
-      v.add(attr);
-      attr = this.getClassAttribute(classid, attr.objid);
+      if(gdhrsAttrDefArr[i] == null)
+	break;
+      //System.out.println("getAllClassAttributesFor:" + i + gdhrsAttrDefArr[i].attrName);
+
+      while(gdhrsAttrDefArr[i].attrName.startsWith("Super."))
+	gdhrsAttrDefArr[i].attrName = gdhrsAttrDefArr[i].attrName.substring(6);
+      CdhrObjAttr oa;
+      if((gdhrsAttrDefArr[i].info.Flags & Pwr.mAdef_class) > 0)
+      {
+        oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+                                       gdhrsAttrDefArr[i].attrName,
+				       gdhrsAttrDefArr[i].typeRef,
+				       gdhrsAttrDefArr[i].info.Size,
+				       gdhrsAttrDefArr[i].info.Flags,
+				       gdhrsAttrDefArr[i].info.Elements);
+      }
+      else
+      {
+	  //System.out.println("getAllClassAttr:" + name + "." + gdhrsAttrDefArr[i].attrName);
+        oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+                                       gdhrsAttrDefArr[i].attrName,
+				       gdhrsAttrDefArr[i].info.Type,
+				       gdhrsAttrDefArr[i].info.Size,
+				       gdhrsAttrDefArr[i].info.Flags,
+				       gdhrsAttrDefArr[i].info.Elements);
+      }
+      v.add(oa);
     }
     return v;
   }
+
+  public Vector getAllClassAttributes( String name )
+  {
+    System.out.println("getAllClassAttributes" + name);
+
+    CdhrAttrRef attrRef = this.nameToAttrRef(name);
+    CdhrTypeId cdhrTypeId = this.getAttrRefTid( attrRef.aref );
+
+    GdhrsAttrDef[] gdhrsAttrDefArr = this.getObjectBodyDef(cdhrTypeId.getTypeId(), new PwrtObjid(0,0));
+
+    if(gdhrsAttrDefArr == null)
+    {
+	System.out.println("getAllClassAttributes(String name) gdhrsAttrDefArr == null");
+	return this.getAllClassAttributes(this.getObjectClass(this.nameToObjid(name).objid).classId, this.nameToObjid(name).objid );
+
+    }
+    Vector v = new Vector();
+    for(int i = 0;i<gdhrsAttrDefArr.length;i++)
+    {
+      if(gdhrsAttrDefArr[i] == null)
+	break;
+      //System.out.println("getAllClassAttributesFor:" + i + gdhrsAttrDefArr[i].attrName);
+
+      while(gdhrsAttrDefArr[i].attrName.startsWith("Super."))
+	gdhrsAttrDefArr[i].attrName = gdhrsAttrDefArr[i].attrName.substring(6);
+      CdhrObjAttr oa;
+      if((gdhrsAttrDefArr[i].info.Flags & Pwr.mAdef_class) > 0)
+      {
+        oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+                                       gdhrsAttrDefArr[i].attrName,
+				       gdhrsAttrDefArr[i].typeRef,
+				       gdhrsAttrDefArr[i].info.Size,
+				       gdhrsAttrDefArr[i].info.Flags,
+				       gdhrsAttrDefArr[i].info.Elements);
+      }
+      else
+      {
+	  //System.out.println("getAllClassAttr2:" + name + "." + gdhrsAttrDefArr[i].attrName);
+        oa = new CdhrObjAttr(this.nameToObjid(name + "." + gdhrsAttrDefArr[i].attrName).objid,
+                                       gdhrsAttrDefArr[i].attrName,
+				       gdhrsAttrDefArr[i].info.Type,
+				       gdhrsAttrDefArr[i].info.Size,
+				       gdhrsAttrDefArr[i].info.Flags,
+				       gdhrsAttrDefArr[i].info.Elements);
+      }
+      v.add(oa);
+    }
+    return v;
+  }
+
+
+
+
+
   public Vector getAllSiblings( PwrtObjid objid )
   {
     CdhrObjid sibling = (CdhrObjid)this.getNextSibling(objid);
@@ -205,7 +294,6 @@ public class Gdh {
     }
     return v;
   }
-  
   public Vector getAllXttChildren( PwrtObjid objid )
   {
     String name = null;
@@ -219,10 +307,12 @@ public class Gdh {
     Vector v = new Vector();
     
     CdhrObjid classObj;
+    System.out.println("getAllXttChildren");
     
     cdhrObjId = (CdhrObjid)this.getChild(objid);
     while(cdhrObjId.oddSts())
     {
+	//System.out.println("whilegetAllXttChildren");
       cdhrClassId = this.getObjectClass(cdhrObjId.objid);
       if(cdhrClassId.oddSts())
       {
@@ -259,13 +349,15 @@ public class Gdh {
     }
     return v;
   }
-  
+
   public Vector refObjectInfo_Vector( Vector vec )
   {
     Vector retVec = new Vector();
     for(int i = 0;i < vec.size();i++)
     {
+	//System.out.println("refObjectInfo_vector: " + (String)vec.get(i));
       GdhrRefObjectInfo ret = this.refObjectInfo( (String)vec.get(i) );
+
       retVec.add(ret);
     }
     return retVec;
@@ -305,15 +397,18 @@ public class Gdh {
   public native String[] getObjectRefInfoStringArray( int id, int typeid, int size, int elements);
 
   public native PwrtStatus unrefObjectInfo( PwrtRefId refid);
+
   public native CdhrObjid nameToObjid( String objectName);
   public native CdhrAttrRef nameToAttrRef( String objectName);
   public native CdhrString objidToName( PwrtObjid objid, int nameType);
   public native CdhrString attrRefToName( PwrtAttrRef aref, int nameType);
+
   public native CdhrObjid getRootList();
   public native CdhrObjid getNextObject( PwrtObjid objid);
   public native CdhrObjid getChild( PwrtObjid objid);
   public native CdhrObjid getParent( PwrtObjid objid);
   public native CdhrObjid getNextSibling( PwrtObjid objid);
+
   public native CdhrClassId getObjectClass( PwrtObjid objid);
   public native CdhrTypeId getAttrRefTid( PwrtAttrRef aref);
   public native CdhrObjid getClassList( int classid);
@@ -327,7 +422,13 @@ public class Gdh {
   public native CdhrString getMsg( int sts);
   public native CdhrString getMsgText( int sts);
   public native CdhrClassId getSuperClass( int classid, PwrtObjid objid);
+  public native GdhrsAttrDef[] getObjectBodyDef(int classid, PwrtObjid objid);
+  //  public native GdhrGetXttObj[] getAllXttChildrenNative(PwrtObjid objid);
 }
+
+
+
+
 
 
 

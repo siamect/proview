@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: DynamicObj.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: DynamicObj.java,v 1.4 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,7 +76,9 @@ public class DynamicObj extends TreeObj
         obj.setValue(en.gdh.getObjectRefInfoBoolean(obj.refObj.id));
         break;
       default:
-        Logg.logg("getObjectRefInfoString(" + obj.refObj.id + ")", 6);
+	  //	  Logg.logg(obj.name + " getObjectRefInfoString(" + obj.refObj.id + /*" " + obj.type +*/ ")", 1);
+	  //        Logg.logg("getObjectRefInfoString: " + en.gdh.getObjectRefInfoString(obj.refObj.id, obj.type), 1);
+
         obj.setValue(en.gdh.getObjectRefInfoString(obj.refObj.id, obj.type));
         break;
     }

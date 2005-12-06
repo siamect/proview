@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.10 2005-11-04 11:51:20 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.11 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2425,7 +2425,151 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
 
 }
 
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
+  (JNIEnv *env, jobject obj, jint classid, jobject objid_obj)
+{
+  int		sts,i;
+  int j = 0;
+  jclass                pwrsParInfo_id;
+  static jmethodID      pwrsParInfo_cid = NULL;
 
+  jclass                gdhrsAttrDef_id;
+  static jmethodID      gdhrsAttrDef_cid = NULL;
+
+  //  jclass 	        cdhrClassId_id;
+  //  static jmethodID 	cdhrClassId_cid;
+
+  jclass 	        pwrtObjid_id;
+  static jmethodID 	pwrtObjid_getOix = NULL;
+  static jmethodID 	pwrtObjid_getVid = NULL;
+  static jmethodID 	pwrtObjid_cid = NULL;
+  pwr_tObjid 	        objid = pwr_cNObjid;
+
+  jobjectArray 	        gdhrsAttrDefArr = NULL;
+  jobject               gdhrsAttrDef;
+  jobject 	        pwrsParInfo;
+  //  jint 		        jsts;
+  pwr_tClassId	        cid;
+
+  gdh_sAttrDef *bd;
+  int rows;
+  pwr_sAttrRef aref;
+  pwr_sAttrRef aaref;
+  pwr_tDisableAttr disabled;
+
+  pwrtObjid_id = (*env)->FindClass( env, "jpwr/rt/PwrtObjid");
+  if(pwrtObjid_cid == NULL || pwrtObjid_getOix == NULL || pwrtObjid_getVid == NULL)
+  {
+    pwrtObjid_cid = (*env)->GetMethodID( env, pwrtObjid_id,
+    	  "<init>", "(II)V");
+    pwrtObjid_getOix = (*env)->GetMethodID( env, pwrtObjid_id, "getOix", "()I");
+    pwrtObjid_getVid = (*env)->GetMethodID( env, pwrtObjid_id, "getVid", "()I");
+  }
+
+  //find the class for PwrsParInfo
+  pwrsParInfo_id = (*env)->FindClass(env, "jpwr/rt/PwrsParInfo");
+  gdhrsAttrDef_id = (*env)->FindClass(env, "jpwr/rt/GdhrsAttrDef");
+  if(pwrsParInfo_id == NULL || gdhrsAttrDef_id == NULL)
+  {
+    printf("Fel vid FindClass getObjectBodyDef\n");
+    return (jobjectArray)NULL;
+  }
+  if(pwrsParInfo_cid == NULL)
+  {
+    pwrsParInfo_cid = (*env)->GetMethodID( env, pwrsParInfo_id,
+    	  "<init>", "(Ljava/lang/String;IIIIII)V");
+  }
+  if(gdhrsAttrDef_cid == NULL)
+  {
+    gdhrsAttrDef_cid = (*env)->GetMethodID( env, gdhrsAttrDef_id,
+    	  "<init>", "(Ljava/lang/String;IIIILjpwr/rt/PwrsParInfo;I)V");
+  }
+  if(pwrsParInfo_cid == NULL || gdhrsAttrDef_cid == NULL)
+  {
+    printf("Fel vid GetMethodId getObjectBodyDef\n");
+    return (jobjectArray)NULL;
+  }
+  if ( objid_obj != 0) {
+
+    
+    objid.oix = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getOix);
+    objid.vid = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getVid);
+
+    sts = gdh_GetObjectClass(objid, &cid);
+    if(EVEN(sts))
+    {
+      printf("Fel från GetObjectClass %d\n", sts);
+      //return (jobjectArray)NULL;
+    }
+    
+
+    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, objid);
+    if(EVEN(sts))
+    {
+      printf("Fel från GetObjectBodyDef %d\n", sts);
+      return (jobjectArray)NULL;
+    }
+
+    //create a new GdhrsAttrDef[]
+    gdhrsAttrDefArr = (*env)->NewObjectArray(env, (jint)rows, gdhrsAttrDef_id, NULL);
+
+    for(i = 0;i < rows;i++)
+    {
+      if ( (bd[i].flags & gdh_mAttrDef_Shadowed) ||
+           (bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE) ||
+           (bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL) || 
+	   (bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE) ||
+           (bd[i].attr->Param.Info.Type == pwr_eType_CastId) ||
+	   (bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr) )
+	continue;
+      if(bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR)
+      { 
+	aref = cdh_ObjidToAref( objid);
+
+	sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
+	if ( EVEN(sts)) printf("Fel från ArefANameToAref %d\n", sts);
+
+
+	sts = gdh_ArefDisabled( &aaref, &disabled);
+	if ( EVEN(sts)) printf("Fel från ArefDisabled %d\n", sts);
+
+	if ( disabled)
+	  continue;
+      }
+
+      pwrsParInfo = (*env)->NewObject( env, pwrsParInfo_id,
+  	                               pwrsParInfo_cid,
+				       NULL,
+				       bd[i].attr->Param.Info.Type,
+				       bd[i].attr->Param.Info.Offset,
+				       bd[i].attr->Param.Info.Size,
+				       bd[i].attr->Param.Info.Flags,
+				       bd[i].attr->Param.Info.Elements,
+				       bd[i].attr->Param.Info.ParamIndex);
+
+
+    gdhrsAttrDef = (*env)->NewObject( env, gdhrsAttrDef_id,
+  	                              gdhrsAttrDef_cid,
+				      (*env)->NewStringUTF( env, (char *)bd[i].attrName),
+				      (jint)bd[i].attrLevel,
+				      (jint)bd[i].attrClass,
+				      (jint)bd[i].flags,
+				      (jint)(bd[i].attr->Param.TypeRef),
+				      pwrsParInfo,
+				      (jint)sts);
+
+      (*env)->SetObjectArrayElement(env, gdhrsAttrDefArr, j, gdhrsAttrDef);
+      j++;
+    }
+    free((char *)bd);
+    return gdhrsAttrDefArr;
+
+
+  }
+
+  printf("Fel i getObjectBodyDef Objid är 0\n");
+  return (jobjectArray)NULL;
+}
 
 
 

@@ -356,6 +356,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
   (JNIEnv *, jobject, jint, jobject);
 
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectBodyDef
+ * Signature: (ILjpwr/rt/PwrtObjid;)[Ljpwr/rt/GdhrsAttrDef;
+ */
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
+  (JNIEnv *, jobject, jint, jobject);
+
 #ifdef __cplusplus
 }
 #endif

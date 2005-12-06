@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.8 2005-11-04 11:50:32 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.9 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,7 @@ public class Gdh
   public final static int ATTRREF_TO_NAME = 53;
   public final static int GET_ATTRREF_TID = 54;
   public final static int GET_SUPER_CLASS = 55;
+  public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
 
 
 
@@ -1572,6 +1573,25 @@ public class Gdh
       out.writeInt(classid);
       out.writeInt(objid_obj.oix);
       out.writeInt(objid_obj.vid);
+      out.flush();
+      Vector ret_obj = (Vector)in.readObject();
+      return ret_obj;
+    }
+    catch(IOException e)
+    {
+      return (Vector)null;
+    }
+    catch(ClassNotFoundException e)
+    {
+      return (Vector)null;
+    }
+  }
+  public Vector getAllClassAttributes(String name)
+  {
+    try
+    {
+      out.writeInt(GET_ALL_CLASS_ATTRIBUTES_STRING);
+      out.writeUTF(name);
       out.flush();
       Vector ret_obj = (Vector)in.readObject();
       return ret_obj;

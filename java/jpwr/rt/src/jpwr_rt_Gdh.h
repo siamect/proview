@@ -86,6 +86,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoString
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    getObjectInfoObjid
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrObjid;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoObjid
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    toggleObjectInfo
  * Signature: (Ljava/lang/String;)Ljpwr/rt/PwrtStatus;
  */
@@ -134,6 +142,38 @@ JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoString
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoFloatArray
+ * Signature: (II)[F
+ */
+JNIEXPORT jfloatArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoFloatArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoBooleanArray
+ * Signature: (II)[Z
+ */
+JNIEXPORT jbooleanArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoBooleanArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoIntArray
+ * Signature: (II)[I
+ */
+JNIEXPORT jintArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoIntArray
+  (JNIEnv *, jobject, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectRefInfoStringArray
+ * Signature: (IIII)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectRefInfoStringArray
+  (JNIEnv *, jobject, jint, jint, jint, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    unrefObjectInfo
  * Signature: (Ljpwr/rt/PwrtRefId;)Ljpwr/rt/PwrtStatus;
  */
@@ -150,10 +190,26 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_nameToObjid
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    nameToAttrRef
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrAttrRef;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_nameToAttrRef
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    objidToName
  * Signature: (Ljpwr/rt/PwrtObjid;I)Ljpwr/rt/CdhrString;
  */
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_objidToName
+  (JNIEnv *, jobject, jobject, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    attrRefToName
+ * Signature: (Ljpwr/rt/PwrtAttrRef;I)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_attrRefToName
   (JNIEnv *, jobject, jobject, jint);
 
 /*
@@ -182,6 +238,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getChild
 
 /*
  * Class:     jpwr_rt_Gdh
+ * Method:    getParent
+ * Signature: (Ljpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrObjid;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getParent
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
  * Method:    getNextSibling
  * Signature: (Ljpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrObjid;
  */
@@ -194,6 +258,14 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNextSibling
  * Signature: (Ljpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrClassId;
  */
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectClass
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getAttrRefTid
+ * Signature: (Ljpwr/rt/PwrtAttrRef;)Ljpwr/rt/CdhrTypeId;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttrRefTid
   (JNIEnv *, jobject, jobject);
 
 /*
@@ -215,10 +287,10 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_classIdToObjid
 /*
  * Class:     jpwr_rt_Gdh
  * Method:    getNodeObject
- * Signature: ()Ljpwr/rt/CdhrObjid;
+ * Signature: (I)Ljpwr/rt/CdhrObjid;
  */
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getNodeObject
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint);
 
 /*
  * Class:     jpwr_rt_Gdh
@@ -230,11 +302,11 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeChar
 
 /*
  * Class:     jpwr_rt_Gdh
- * Method:    getObjectAttributes
- * Signature: (Ljpwr/rt/PwrtObjid;)Ljava/util/Vector;
+ * Method:    getClassAttribute
+ * Signature: (ILjpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrObjAttr;
  */
-JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectAttributes
-  (JNIEnv *, jobject, jobject);
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getClassAttribute
+  (JNIEnv *, jobject, jint, jobject);
 
 /*
  * Class:     jpwr_rt_Gdh
@@ -243,6 +315,54 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectAttributes
  */
 JNIEXPORT jstring JNICALL Java_jpwr_rt_Gdh_translateFilename
   (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    crrSignal
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrSignal
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    crrObject
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_crrObject
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getMsg
+ * Signature: (I)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsg
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getMsgText
+ * Signature: (I)Ljpwr/rt/CdhrString;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getMsgText
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getSuperClass
+ * Signature: (ILjpwr/rt/PwrtObjid;)Ljpwr/rt/CdhrClassId;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getSuperClass
+  (JNIEnv *, jobject, jint, jobject);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectBodyDef
+ * Signature: (ILjpwr/rt/PwrtObjid;)[Ljpwr/rt/GdhrsAttrDef;
+ */
+JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Gdh_getObjectBodyDef
+  (JNIEnv *, jobject, jint, jobject);
 
 #ifdef __cplusplus
 }

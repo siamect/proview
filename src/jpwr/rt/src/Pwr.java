@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Pwr.java,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Pwr.java,v 1.4 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,10 @@ public class Pwr {
   public static final int eTix_DeltaTime 	= 28;
   public static final int eTix_Status	 	= 29;
   public static final int eTix_NetStatus 	= 30;
+  public static final int eTix_CastId 		= 31;
+  public static final int eTix_ProString 	= 32;
+  public static final int eTix_DisableAttr 	= 33;
+  public static final int eTix_DataRef	 	= 34;
   public static final int eType_Unknown		= 0;
   public static final int eType_Boolean		= (1 << 16) + (1 << 15) + eTix_Boolean;
   public static final int eType_Float32		= (1 << 16) + (1 << 15) + eTix_Float32;
@@ -90,6 +94,10 @@ public class Pwr {
   public static final int eType_DeltaTime	= (1 << 16) + (1 << 15) + eTix_DeltaTime;
   public static final int eType_Status		= (1 << 16) + (1 << 15) + eTix_Status;
   public static final int eType_NetStatus	= (1 << 16) + (1 << 15) + eTix_NetStatus;
+  public static final int eType_CastId		= (1 << 16) + (1 << 15) + eTix_CastId;
+  public static final int eType_ProString	= (1 << 16) + (1 << 15) + eTix_ProString;
+  public static final int eType_DisableAttr	= (1 << 16) + (1 << 15) + eTix_DisableAttr;
+  public static final int eType_DataRef		= (1 << 16) + (1 << 15) + eTix_DataRef;
 
   public static final int mPrv_RtRead		= 1 << 0;
   public static final int mPrv_RtWrite		= 1 << 1;
@@ -155,6 +163,13 @@ public class Pwr {
   public static final int mAdef_noremove	= 1 << 14;		/*  16384 Cannot be removed, no used chkbx */
   public static final int mAdef_rtdbref	        = 1 << 15;		/*  32768 */
   public static final int mAdef_private	        = 1 << 16;		/*  65536 Private pointer, not to be displayed */
+  public static final int mAdef_class	        = 1 << 17;
+  public static final int mAdef_superclass      = 1 << 18;
+  public static final int mAdef_buffer	        = 1 << 19;
+  public static final int mAdef_nowbl       	= 1 << 20;		/* Don't print to wbl file */
+  public static final int mAdef_alwayswbl       = 1 << 21;		/* Always print to wbl file */
+  public static final int mAdef_disableattr     = 1 << 22;		/* Can be disabled */
+  public static final int mAdef_rthide	        = 1 << 23;		/* Hide in runtime */
 
 
 }

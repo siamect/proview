@@ -29,6 +29,8 @@ local_java_sources = \
 	GdhrGetAttributeChar.java \
 	GdhrGetXttObj.java \
 	CdhrObjAttr.java \
+	PwrsParInfo.java \
+	GdhrsAttrDef.java \
 	Gdh.java \
         Sub.java \
 	SubElement.java \

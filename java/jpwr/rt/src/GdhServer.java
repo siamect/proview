@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.11 2005-11-04 11:50:17 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.12 2005-12-06 11:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -91,6 +91,7 @@ public class GdhServer
   public final static int ATTRREF_TO_NAME = 53;
   public final static int GET_ATTRREF_TID = 54;
   public final static int GET_SUPER_CLASS = 55;
+  public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
 
   public final static int PORT = 4445;
 
@@ -1476,19 +1477,33 @@ public class GdhServer
                 int oix = in.readInt();
                 int vid = in.readInt();
                 PwrtObjid objid = new PwrtObjid(oix, vid);
-                CdhrObjAttr attr = (CdhrObjAttr)gdh.getClassAttribute(classid, objid);
-                Vector v = new Vector();
-                while(attr != null)
-                {
-                  v.add(attr);
-                  attr = gdh.getClassAttribute(classid, attr.objid);
-                }
+		Vector v = gdh.getAllClassAttributes(classid, objid);
+                //CdhrObjAttr attr = (CdhrObjAttr)gdh.getClassAttribute(classid, objid);
+                //Vector v = new Vector();
+                //while(attr != null)
+                //{
+                //  v.add(attr);
+                //  attr = gdh.getClassAttribute(classid, attr.objid);
+                //}
                 out.writeObject(v);
                 out.flush();
               }
               catch(IOException e)
               {
                 System.out.println("getAllClassAttributes: IO exception");
+              }
+              break;
+            case GET_ALL_CLASS_ATTRIBUTES_STRING:
+              try
+              {
+                String name = in.readUTF();
+                Vector v = gdh.getAllClassAttributes(name);
+                out.writeObject(v);
+                out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getAllClassAttributesString: IO exception");
               }
               break;
             case GET_ALL_SIBLINGS:
