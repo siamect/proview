@@ -7817,9 +7817,9 @@ pwr_exe:
 99
 27
 2703 10000
-2704 175
+2704 114
 2722 10000
-2705 175
+2705 114
 2723 10000
 2706 10000
 2708 0
@@ -7929,16 +7929,16 @@ pwr_exe:
 2724 1
 2721
 1
-100 1
-101 3
+100 17
+101 1
 102 65532
 103 0
-2
-200 !$object.TempSwitch.Switch.ActualValue##Boolean
-201 9999
+7
+700 $object.IndError##Boolean
 99
-50
-5000 $object.TempSwitch
+2
+200 $object.IndWarning##Boolean
+201 9999
 99
 99
 99
@@ -8985,16 +8985,39 @@ pwr_exe:
 102 65535
 103 0
 68
-6800 1
+6800 3
 6801 TempSwitch
 6833
 1
-100 1
+100 129
 101 65
 102 65535
 103 0
+9
+900 $object.DisableTempSwitch##Boolean
+901 0
+902 1
+903 1
+99
 55
 5500 open graph /class /inst=$object.TempSwitch
+99
+99
+6802 TempSensor
+6834
+1
+100 129
+101 65
+102 33619964
+103 0
+9
+900 $object.DisableTempSensor##Boolean
+901 0
+902 1
+903 1
+99
+55
+5500 open graph /class /inst=$object.TempSensor
 99
 99
 99
