@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.28 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.29 2005-12-06 10:56:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -402,7 +402,7 @@ wb_orep *wb_cdrep::menuAfter( pwr_tStatus *sts, wb_orep *orep, void **o)
 
   void *menubody;
 
-  menubody = m_orep->vrep()->readBody( sts, after, pwr_eBix_sys, 0);
+  menubody = after->vrep()->readBody( sts, after, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     after->ref();
     after->unref();
@@ -434,7 +434,7 @@ wb_orep *wb_cdrep::menuFirst( pwr_tStatus *sts, wb_orep *orep, void **o)
 
   void *menubody;
 
-  menubody = m_orep->vrep()->readBody( sts, first, pwr_eBix_sys, 0);
+  menubody = first->vrep()->readBody( sts, first, pwr_eBix_sys, 0);
   if ( EVEN(*sts)) {
     first->ref();
     first->unref();
