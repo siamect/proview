@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.c,v 1.7 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: wb_c_object.c,v 1.8 2005-12-06 10:54:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -774,16 +774,32 @@ static pwr_tStatus configure_object( ldh_sMenuCall *ip, pwr_sAttrRef *aref,
   return LDH__SUCCESS;
 }
 
-static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref)
+static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref,
+					   pwr_sMenuButton *mb)
 {
   pwr_tStatus 	sts;
   pwr_tCid 	cid;
   ldh_sParDef 	*bodydef;
   int 		rows;
-  int		i;
+  int		i, j;
   pwr_sAttrRef  aaref, daref;
   pwr_tDisableAttr disable = 0;
+  char 		vect[10][80];
+  int 		vect_cnt;
+  int 		skip;
+  char		*s;
   
+  // Attribute objects in argument 2 are not controlled by the configure method
+  if ( mb) {
+    vect_cnt = dcli_parse( mb->MethodArguments[2], ",", "", (char *)vect, 
+			   sizeof( vect) / sizeof( vect[0]), 
+			   sizeof( vect[0]), 0);
+    for ( j = 0; j < vect_cnt; j++)
+      dcli_trim( vect[j], vect[j]);
+  }
+  else
+    vect_cnt = 0;
+
   sts = ldh_GetAttrRefTid( ip->PointedSession, aref, &cid);
   if ( EVEN(sts)) return sts;
 
@@ -792,8 +808,27 @@ static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref
   if (EVEN(sts)) return sts;
 
   for ( i = 0; i < rows; i++) {
+
+    // Check if attribute is controlled by this method
+    skip = 0;
+    if ( mb) {
+      // Remove leading Super.
+      s = bodydef[i].ParName;
+      while ( strncmp( s, "Super.", 6) == 0)
+	s += 6;
+      for ( j = 0; j < vect_cnt; j++) {
+	if ( cdh_NoCaseStrcmp( vect[j], s) == 0) {
+	  // This object should not be reset
+	  skip = 1;
+	  break;
+	}
+      }
+      if ( skip)
+	continue;
+    }
+
     if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
-      // Disable or enable dependent on mask
+      // Enable all attributes
       sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
       if ( EVEN(sts)) return sts;
 
@@ -809,7 +844,7 @@ static pwr_tStatus configure_object_reset( ldh_sMenuCall *ip, pwr_sAttrRef *aref
       sts = ldh_ArefANameToAref( ip->PointedSession, aref, bodydef[i].ParName, &aaref);
       if ( EVEN(sts)) return sts;
 
-      sts = configure_object_reset( ip, &aaref);
+      sts = configure_object_reset( ip, &aaref, 0);
       if ( EVEN(sts)) return sts;
     }
   }
@@ -835,7 +870,7 @@ static pwr_tStatus ConfigureComponent( ldh_sMenuCall *ip)
     "SysBody", &mb, sizeof(pwr_sMenuButton));
 
   // Reset previoius disable configuration
-  configure_object_reset( ip, &ip->Pointed);
+  configure_object_reset( ip, &ip->Pointed, &mb);
 
   // Set disable attributes from argument 0
   vect_cnt = dcli_parse( mb.MethodArguments[0], ",", "", (char *)vect, 
