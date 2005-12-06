@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.5 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.6 2005-12-06 10:46:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,6 +106,51 @@ extern "C" {
 #include "ge_bitmap_value50.h"
 #include "ge_bitmap_value51.h"
 #include "ge_bitmap_value52.h"
+#include "ge_bitmap_valve53.h"
+#include "ge_bitmap_directvalve54.h"
+#include "ge_bitmap_mvalve55.h"
+#include "ge_bitmap_basevalve56.h"
+#include "ge_bitmap_actuator57.h"
+#include "ge_bitmap_handwheel58.h"
+#include "ge_bitmap_burner59.h"
+#include "ge_bitmap_contactor60.h"
+#include "ge_bitmap_contactor61.h"
+#include "ge_bitmap_controlswitch62.h"
+#include "ge_bitmap_fuse63.h"
+#include "ge_bitmap_fuse64.h"
+#include "ge_bitmap_motor65.h"
+#include "ge_bitmap_overloadrelay66.h"
+#include "ge_bitmap_rod67.h"
+#include "ge_bitmap_rodcoupling68.h"
+#include "ge_bitmap_fan69.h"
+#include "ge_bitmap_fan70.h"
+#include "ge_bitmap_fan71.h"
+#include "ge_bitmap_pump72.h"
+#include "ge_bitmap_pump73.h"
+#include "ge_bitmap_manswitch74.h"
+#include "ge_bitmap_manswitch75.h"
+#include "ge_bitmap_manswitch76.h"
+#include "ge_bitmap_frequencyconv77.h"
+#include "ge_bitmap_slider78.h"
+#include "ge_bitmap_smiley79.h"
+#include "ge_bitmap_sliderbg80.h"
+#include "ge_bitmap_slider81.h"
+#include "ge_bitmap_sliderbg82.h"
+#include "ge_bitmap_button83.h"
+#include "ge_bitmap_button84.h"
+#include "ge_bitmap_button85.h"
+#include "ge_bitmap_button86.h"
+#include "ge_bitmap_button87.h"
+#include "ge_bitmap_checkbox88.h"
+#include "ge_bitmap_radiobutton89.h"
+#include "ge_bitmap_radiobutton90.h"
+#include "ge_bitmap_checkbox91.h"
+#include "ge_bitmap_button92.h"
+#include "ge_bitmap_buttoninfo93.h"
+#include "ge_bitmap_buttonhelp94.h"
+#include "ge_bitmap_button95.h"
+#include "ge_bitmap_notebutton96.h"
+#include "ge_bitmap_pump97.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -133,11 +178,9 @@ void SubPaletteBrow::free_pixmaps()
   brow_FreeAnnotPixmap( ctx, pixmap_leaf);
   brow_FreeAnnotPixmap( ctx, pixmap_map);
   brow_FreeAnnotPixmap( ctx, pixmap_openmap);
-  for ( int i = 0; i < SUBP_PIXMAPS_SIZE; i++)
-  {
-    if ( !pixmaps[i])
-      break;
-    brow_FreeAnnotPixmap( ctx, pixmaps[i]);
+  for ( int i = 0; i < SUBP_PIXMAPS_SIZE - 1; i++) {
+    if ( pixmaps[i])
+      brow_FreeAnnotPixmap( ctx, pixmaps[i]);
   }
 }
 
@@ -151,91 +194,135 @@ void SubPaletteBrow::free_pixmaps()
     pixmap_data[i].height = bitmap ## _height; \
     pixmap_data[i].bits = (char *) bitmap ## _bits; \
   } \
-  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[idx]);
+  if ( idx-1 >= SUBP_PIXMAPS_SIZE) \
+    return; \
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmaps[idx-1]);
 
 void SubPaletteBrow::allocate_pixmaps()
 {
-	flow_sPixmapData pixmap_data;
-	int i;
+  flow_sPixmapData pixmap_data;
+  int i;
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_leaf12_width;
-	    pixmap_data[i].height =xnav_bitmap_leaf12_height;
-	    pixmap_data[i].bits =xnav_bitmap_leaf12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_leaf12_width;
+    pixmap_data[i].height =xnav_bitmap_leaf12_height;
+    pixmap_data[i].bits =xnav_bitmap_leaf12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_map12_width;
-	    pixmap_data[i].height =xnav_bitmap_map12_height;
-	    pixmap_data[i].bits =xnav_bitmap_map12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_map12_width;
+    pixmap_data[i].height =xnav_bitmap_map12_height;
+    pixmap_data[i].bits =xnav_bitmap_map12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_openmap12_width;
-	    pixmap_data[i].height =xnav_bitmap_openmap12_height;
-	    pixmap_data[i].bits =xnav_bitmap_openmap12_bits;
-          }
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_openmap12_width;
+    pixmap_data[i].height =xnav_bitmap_openmap12_height;
+    pixmap_data[i].bits =xnav_bitmap_openmap12_bits;
+  }
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
-	  ALLOC_PIXMAP( ge_bitmap_valve1, 1);
-	  ALLOC_PIXMAP( ge_bitmap_valve2, 2);
-	  ALLOC_PIXMAP( ge_bitmap_pump3, 3);
-	  ALLOC_PIXMAP( ge_bitmap_valve4, 4);
-	  ALLOC_PIXMAP( ge_bitmap_ind5, 5);
-	  ALLOC_PIXMAP( ge_bitmap_ind6, 6);
-	  ALLOC_PIXMAP( ge_bitmap_pushbutton7, 7);
-	  ALLOC_PIXMAP( ge_bitmap_frame8, 8);
-	  ALLOC_PIXMAP( ge_bitmap_crosscon9, 9);
-	  ALLOC_PIXMAP( ge_bitmap_threewaycon10, 10);
-	  ALLOC_PIXMAP( ge_bitmap_cornercon11, 11);
-	  ALLOC_PIXMAP( ge_bitmap_arrow12, 12);
-	  ALLOC_PIXMAP( ge_bitmap_checkvalve13, 13);
-	  ALLOC_PIXMAP( ge_bitmap_tank14, 14);
-	  ALLOC_PIXMAP( ge_bitmap_filter15, 15);
-	  ALLOC_PIXMAP( ge_bitmap_pressureswitch16, 16);
-	  ALLOC_PIXMAP( ge_bitmap_hydrpump17, 17);
-	  ALLOC_PIXMAP( ge_bitmap_pressuregauge18, 18);
-	  ALLOC_PIXMAP( ge_bitmap_releasevalve19, 19);
-	  ALLOC_PIXMAP( ge_bitmap_releasevalve20, 20);
-	  ALLOC_PIXMAP( ge_bitmap_frame21, 21);
-	  ALLOC_PIXMAP( ge_bitmap_pincon22, 22);
-	  ALLOC_PIXMAP( ge_bitmap_motor23, 23);
-	  ALLOC_PIXMAP( ge_bitmap_speedswitch24, 24);
-	  ALLOC_PIXMAP( ge_bitmap_trend25, 25);
-	  ALLOC_PIXMAP( ge_bitmap_bar26, 26);
-	  ALLOC_PIXMAP( ge_bitmap_axis27, 27);
-	  ALLOC_PIXMAP( ge_bitmap_thermometer28, 28);
-	  ALLOC_PIXMAP( ge_bitmap_window29, 29);
-	  ALLOC_PIXMAP( ge_bitmap_table30, 30);
-	  ALLOC_PIXMAP( ge_bitmap_optionsmenu31, 31);
-	  ALLOC_PIXMAP( ge_bitmap_menubar32, 32);
-	  ALLOC_PIXMAP( ge_bitmap_pulldownmenu33, 33);
-	  ALLOC_PIXMAP( ge_bitmap_emergencystop34, 34);
-	  ALLOC_PIXMAP( ge_bitmap_tabbedwindow35, 35);
-	  ALLOC_PIXMAP( ge_bitmap_trafficlight36, 36);
-	  ALLOC_PIXMAP( ge_bitmap_slider37, 37);
-	  ALLOC_PIXMAP( ge_bitmap_sliderbg38, 38);
-	  ALLOC_PIXMAP( ge_bitmap_padlock39, 39);
-	  ALLOC_PIXMAP( ge_bitmap_needle40, 40);
-	  ALLOC_PIXMAP( ge_bitmap_videocamera41, 41);
-	  ALLOC_PIXMAP( ge_bitmap_terminal42, 42);
-	  ALLOC_PIXMAP( ge_bitmap_rack43, 43);
-	  ALLOC_PIXMAP( ge_bitmap_pc44, 44);
-	  ALLOC_PIXMAP( ge_bitmap_pulpet45, 45);
-	  ALLOC_PIXMAP( ge_bitmap_screw46, 46);
-	  ALLOC_PIXMAP( ge_bitmap_ind47, 47);
-	  ALLOC_PIXMAP( ge_bitmap_ind48, 48);
-	  ALLOC_PIXMAP( ge_bitmap_value49, 49);
-	  ALLOC_PIXMAP( ge_bitmap_value50, 50);
-	  ALLOC_PIXMAP( ge_bitmap_value51, 51);
-	  ALLOC_PIXMAP( ge_bitmap_value52, 52);
+  ALLOC_PIXMAP( ge_bitmap_valve1, 1);
+  ALLOC_PIXMAP( ge_bitmap_valve2, 2);
+  ALLOC_PIXMAP( ge_bitmap_pump3, 3);
+  ALLOC_PIXMAP( ge_bitmap_valve4, 4);
+  ALLOC_PIXMAP( ge_bitmap_ind5, 5);
+  ALLOC_PIXMAP( ge_bitmap_ind6, 6);
+  ALLOC_PIXMAP( ge_bitmap_pushbutton7, 7);
+  ALLOC_PIXMAP( ge_bitmap_frame8, 8);
+  ALLOC_PIXMAP( ge_bitmap_crosscon9, 9);
+  ALLOC_PIXMAP( ge_bitmap_threewaycon10, 10);
+  ALLOC_PIXMAP( ge_bitmap_cornercon11, 11);
+  ALLOC_PIXMAP( ge_bitmap_arrow12, 12);
+  ALLOC_PIXMAP( ge_bitmap_checkvalve13, 13);
+  ALLOC_PIXMAP( ge_bitmap_tank14, 14);
+  ALLOC_PIXMAP( ge_bitmap_filter15, 15);
+  ALLOC_PIXMAP( ge_bitmap_pressureswitch16, 16);
+  ALLOC_PIXMAP( ge_bitmap_hydrpump17, 17);
+  ALLOC_PIXMAP( ge_bitmap_pressuregauge18, 18);
+  ALLOC_PIXMAP( ge_bitmap_releasevalve19, 19);
+  ALLOC_PIXMAP( ge_bitmap_releasevalve20, 20);
+  ALLOC_PIXMAP( ge_bitmap_frame21, 21);
+  ALLOC_PIXMAP( ge_bitmap_pincon22, 22);
+  ALLOC_PIXMAP( ge_bitmap_motor23, 23);
+  ALLOC_PIXMAP( ge_bitmap_speedswitch24, 24);
+  ALLOC_PIXMAP( ge_bitmap_trend25, 25);
+  ALLOC_PIXMAP( ge_bitmap_bar26, 26);
+  ALLOC_PIXMAP( ge_bitmap_axis27, 27);
+  ALLOC_PIXMAP( ge_bitmap_thermometer28, 28);
+  ALLOC_PIXMAP( ge_bitmap_window29, 29);
+  ALLOC_PIXMAP( ge_bitmap_table30, 30);
+  ALLOC_PIXMAP( ge_bitmap_optionsmenu31, 31);
+  ALLOC_PIXMAP( ge_bitmap_menubar32, 32);
+  ALLOC_PIXMAP( ge_bitmap_pulldownmenu33, 33);
+  ALLOC_PIXMAP( ge_bitmap_emergencystop34, 34);
+  ALLOC_PIXMAP( ge_bitmap_tabbedwindow35, 35);
+  ALLOC_PIXMAP( ge_bitmap_trafficlight36, 36);
+  ALLOC_PIXMAP( ge_bitmap_slider37, 37);
+  ALLOC_PIXMAP( ge_bitmap_sliderbg38, 38);
+  ALLOC_PIXMAP( ge_bitmap_padlock39, 39);
+  ALLOC_PIXMAP( ge_bitmap_needle40, 40);
+  ALLOC_PIXMAP( ge_bitmap_videocamera41, 41);
+  ALLOC_PIXMAP( ge_bitmap_terminal42, 42);
+  ALLOC_PIXMAP( ge_bitmap_rack43, 43);
+  ALLOC_PIXMAP( ge_bitmap_pc44, 44);
+  ALLOC_PIXMAP( ge_bitmap_pulpet45, 45);
+  ALLOC_PIXMAP( ge_bitmap_screw46, 46);
+  ALLOC_PIXMAP( ge_bitmap_ind47, 47);
+  ALLOC_PIXMAP( ge_bitmap_ind48, 48);
+  ALLOC_PIXMAP( ge_bitmap_value49, 49);
+  ALLOC_PIXMAP( ge_bitmap_value50, 50);
+  ALLOC_PIXMAP( ge_bitmap_value51, 51);
+  ALLOC_PIXMAP( ge_bitmap_value52, 52);
+  ALLOC_PIXMAP( ge_bitmap_valve53, 53);
+  ALLOC_PIXMAP( ge_bitmap_directvalve54, 54);
+  ALLOC_PIXMAP( ge_bitmap_mvalve55, 55);
+  ALLOC_PIXMAP( ge_bitmap_basevalve56, 56);
+  ALLOC_PIXMAP( ge_bitmap_actuator57, 57);
+  ALLOC_PIXMAP( ge_bitmap_handwheel58, 58);
+  ALLOC_PIXMAP( ge_bitmap_burner59, 59);
+  ALLOC_PIXMAP( ge_bitmap_contactor60, 60);
+  ALLOC_PIXMAP( ge_bitmap_contactor61, 61);
+  ALLOC_PIXMAP( ge_bitmap_controlswitch62, 62);
+  ALLOC_PIXMAP( ge_bitmap_fuse63, 63);
+  ALLOC_PIXMAP( ge_bitmap_fuse64, 64);
+  ALLOC_PIXMAP( ge_bitmap_motor65, 65);
+  ALLOC_PIXMAP( ge_bitmap_overloadrelay66, 66);
+  ALLOC_PIXMAP( ge_bitmap_rod67, 67);
+  ALLOC_PIXMAP( ge_bitmap_rodcoupling68, 68);
+  ALLOC_PIXMAP( ge_bitmap_fan69, 69);
+  ALLOC_PIXMAP( ge_bitmap_fan70, 70);
+  ALLOC_PIXMAP( ge_bitmap_fan71, 71);
+  ALLOC_PIXMAP( ge_bitmap_pump72, 72);
+  ALLOC_PIXMAP( ge_bitmap_pump73, 73);
+  ALLOC_PIXMAP( ge_bitmap_manswitch74, 74);
+  ALLOC_PIXMAP( ge_bitmap_manswitch75, 75);
+  ALLOC_PIXMAP( ge_bitmap_manswitch76, 76);
+  ALLOC_PIXMAP( ge_bitmap_frequencyconv77, 77);
+  ALLOC_PIXMAP( ge_bitmap_slider78, 78);
+  ALLOC_PIXMAP( ge_bitmap_smiley79, 79);
+  ALLOC_PIXMAP( ge_bitmap_sliderbg80, 80);
+  ALLOC_PIXMAP( ge_bitmap_slider81, 81);
+  ALLOC_PIXMAP( ge_bitmap_sliderbg82, 82);
+  ALLOC_PIXMAP( ge_bitmap_button83, 83);
+  ALLOC_PIXMAP( ge_bitmap_button84, 84);
+  ALLOC_PIXMAP( ge_bitmap_button85, 85);
+  ALLOC_PIXMAP( ge_bitmap_button86, 86);
+  ALLOC_PIXMAP( ge_bitmap_button87, 87);
+  ALLOC_PIXMAP( ge_bitmap_checkbox88, 88);
+  ALLOC_PIXMAP( ge_bitmap_radiobutton89, 89);
+  ALLOC_PIXMAP( ge_bitmap_radiobutton90, 90);
+  ALLOC_PIXMAP( ge_bitmap_checkbox91, 91);
+  ALLOC_PIXMAP( ge_bitmap_button92, 92);
+  ALLOC_PIXMAP( ge_bitmap_buttoninfo93, 93);
+  ALLOC_PIXMAP( ge_bitmap_buttonhelp94, 94);
+  ALLOC_PIXMAP( ge_bitmap_button95, 95);
+  ALLOC_PIXMAP( ge_bitmap_notebutton96, 96);
+  ALLOC_PIXMAP( ge_bitmap_pump97, 97);
 }
 
 
@@ -986,8 +1073,9 @@ ItemFile::ItemFile( SubPalette *subpalette,
 		dest, dest_code, (void *) this, 1, &node);
 
   brow_SetAnnotPixmap( node, 0, subpalette->brow->pixmap_leaf);
-  if ( subpalette->brow->pixmaps[pixmap])
-    brow_SetAnnotPixmap( node, 1, subpalette->brow->pixmaps[pixmap]);
+  if ( 0 <= (pixmap-1) && (pixmap-1) < SUBP_PIXMAPS_SIZE && 
+       subpalette->brow->pixmaps[pixmap-1])
+    brow_SetAnnotPixmap( node, 1, subpalette->brow->pixmaps[pixmap-1]);
 
   brow_SetAnnotation( node, 0, item_name, strlen(item_name));
 }
