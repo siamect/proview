@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.16 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.17 2005-12-06 09:19:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@
 #include "glow_growarc.h"
 #include "glow_growconpoint.h"
 #include "glow_growsubannot.h"
+#include "glow_growannot.h"
 #include "glow_growpolyline.h"
 #include "glow_growtext.h"
 #include "glow_growbar.h"
@@ -420,13 +421,18 @@ void grow_CreateAnnot( grow_tCtx ctx, double x, double y, int number,
 	text_size);
 }
 
-void grow_AddRect( grow_tNodeClass nc, double x, double y, 
-	double width, double height,
-	glow_eDrawType draw_type, int line_width, int fix_line_width)
+void grow_AddRect( grow_tNodeClass nc, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width, int fix_line_width, 
+	glow_mDisplayLevel display_level, int fill_rect, 
+	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data)
 {
-  GlowRect *rect = new GlowRect( ((GlowNodeClass *)nc)->ctx, x, y, 
-	width, height, draw_type, line_width, fix_line_width);
-  ((GlowNodeClass *)nc)->insert( rect);
+  GrowRect *r1;
+  r1 = new GrowRect( ((GlowNodeClass *)nc)->ctx, name, x, y, width, height, 
+		     draw_type, line_width, fix_line_width, display_level, 
+		     fill_rect, border, shadow, fill_draw_type);
+  r1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( r1);
   
 }
 
@@ -441,41 +447,71 @@ void grow_AddFrame( grow_tNodeClass nc, double x, double y,
   
 }
 
-void grow_AddLine( grow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2,
-	glow_eDrawType draw_type, int line_width)
+void grow_AddLine( grow_tNodeClass nc, char *name, 
+	double x1, double y1, double x2, double y2,
+	glow_eDrawType draw_type, int line_width, int fix_line_width, 
+	void *user_data)
 {
-  GlowLine *line = new GlowLine( ((GlowNodeClass *)nc)->ctx, 
-	x1, y1, x2, y2, draw_type, line_width);
-  ((GlowNodeClass *)nc)->insert( line);
+  GrowLine *l1;
+  l1 = new GrowLine( ((GlowNodeClass *)nc)->ctx, name, x1, y1, x2, y2, 
+		     draw_type, line_width, fix_line_width);
+  l1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( l1);
 }
 
-void grow_AddArc( grow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
-	glow_eDrawType draw_type, int line_width)
+void grow_AddPolyLine( grow_tNodeClass nc, char *name, 
+	glow_sPoint *pointarray, int point_cnt,
+	glow_eDrawType draw_type, int line_width, int fix_line_width,
+	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
+	int closed, void *user_data)
 {
-  GlowArc *arc = new GlowArc( ((GlowNodeClass *)nc)->ctx, 
-	x1, y1, x2, y2, angel1, angel2, draw_type, line_width);
-  ((GlowNodeClass *)nc)->insert( arc);
+  GrowPolyLine *l1;
+  l1 = new GrowPolyLine( ((GlowNodeClass *)nc)->ctx, name, pointarray, point_cnt, draw_type, 
+	line_width, fix_line_width, fill, border, shadow, fill_draw_type, closed);
+  l1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( l1);
 }
 
-void grow_AddText( grow_tNodeClass nc, char *text_str, double x, double y, 
-	glow_eDrawType draw_type, int text_size)
+void grow_AddArc( grow_tNodeClass nc, char *name, 
+	double x1, double y1, double x2, double y2,
+	int angel1, int angel2, glow_eDrawType draw_type, 
+	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
+	void *user_data)
 {
-  GlowText *text = new GlowText( ((GlowNodeClass *)nc)->ctx, 
-	text_str, x, y, draw_type, glow_eDrawType_Line, text_size);
-  ((GlowNodeClass *)nc)->insert( text);
+  GrowArc *a1;
+  a1 = new GrowArc( ((GlowNodeClass *)nc)->ctx, name, x1, y1, x2, y2, 
+		    angel1, angel2, draw_type, 
+		    line_width, fill_arc, border, shadow, fill_draw_type);
+  a1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( a1);
 }
 
-void grow_AddAnnot( grow_tNodeClass nc, double x, double y, int number,
-	glow_eDrawType draw_type, int text_size, glow_eAnnotType annot_type,
-	int relative_pos)
+void grow_AddText( grow_tNodeClass nc, char *name, 
+	char *text, double x, double y,
+	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
+	glow_mDisplayLevel display_level, void *user_data)
 {
-  GlowAnnot *annot = new GlowAnnot( ((GlowNodeClass *)nc)->ctx, 
-	x, y, number, draw_type, glow_eDrawType_Line, text_size, annot_type, relative_pos);
-  ((GlowNodeClass *)nc)->insert( annot);
+  GrowText *t1;
+  t1 = new GrowText( ((GlowNodeClass *)nc)->ctx, name, text, x, y, draw_type, color,
+		     t_size, display_level);
+  t1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( t1);
 }
 
+void grow_AddAnnot( grow_tNodeClass nc,
+	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
+	int t_size, glow_eAnnotType a_type,
+	int rel_pos, glow_mDisplayLevel display_lev,
+	void *user_data)
+{
+  GrowAnnot *a1;
+  a1 = new GrowAnnot( ((GlowNodeClass *)nc)->ctx, x, y, annot_num, d_type, 
+			 color_d_type, t_size, a_type, rel_pos, display_lev);
+  a1->set_user_data( user_data);
+  ((GlowNodeClass *)nc)->insert( a1);
+}
+
+// Old version !!
 void grow_AddAnnotPixmap( grow_tNodeClass nc, int number,
 	double x, double y, glow_eDrawType draw_type, int size, int relative_pos)
 {
@@ -485,6 +521,7 @@ void grow_AddAnnotPixmap( grow_tNodeClass nc, int number,
   ((GlowNodeClass *)nc)->insert( annotpixmap);
 }
 
+// Old version !!
 void grow_AddRadiobutton( grow_tNodeClass nc, double x, double y, 
 	double width, double height, int number,
 	glow_eDrawType draw_type, int line_width)
@@ -3246,6 +3283,11 @@ void grow_SetObjectFill( grow_tObject object, int fill)
 void grow_SetObjectShadow( grow_tObject object, int shadow)
 {
   ((GlowArrayElem *)object)->set_shadow( shadow);
+}
+
+void grow_SetObjectShadowWidth( grow_tObject object, double width)
+{
+  ((GlowArrayElem *)object)->set_shadow_width( width);
 }
 
 void grow_SetObjectDrawtype( grow_tObject object, glow_eDrawType drawtype)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.15 2005-10-12 12:59:05 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.16 2005-12-06 09:19:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -485,23 +485,37 @@ typedef GlowTraceData glow_sTraceData;
 	grow_tObject *annot_pixmap);
   void grow_CreateAnnot( grow_tCtx ctx, double x, double y, int number, 
 	glow_eDrawType draw_type, int text_size, grow_tObject *annot);
-  void grow_AddRect( grow_tNodeClass nc, double x, double y, 
-	double width, double height,
-	glow_eDrawType draw_type, int line_width, int fix_line_width);
+  void grow_AddRect( grow_tNodeClass nc, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width, int fix_line_width, 
+	glow_mDisplayLevel display_level, int fill_rect, 
+	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data);
   void grow_AddFrame( grow_tNodeClass nc, double x, double y, 
 	double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width);
-  void grow_AddLine( grow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2,
-	glow_eDrawType draw_type, int line_width);
-  void grow_AddArc( grow_tNodeClass nc, double x1, double y1, 
-	double x2, double y2, int angel1, int angel2,
-	glow_eDrawType draw_type, int line_width);
-  void grow_AddText( grow_tNodeClass nc, char *text_str, double x, double y, 
-	glow_eDrawType draw_type, int text_size);
-  void grow_AddAnnot( grow_tNodeClass nc, double x, double y, int number,
-	glow_eDrawType draw_type, int text_size, glow_eAnnotType annot_type,
-	int relative_pos);
+  void grow_AddLine( grow_tNodeClass nc, char *name, 
+	double x1, double y1, double x2, double y2,
+	glow_eDrawType draw_type, int line_width, int fix_line_width, 
+	void *user_data);
+  void grow_AddPolyLine( grow_tNodeClass, char *name, 
+	glow_sPoint *pointarray, int point_cnt,
+	glow_eDrawType draw_type, int line_width, int fix_line_width,
+	int fill, int border, int shadow, glow_eDrawType fill_draw_type, 
+	int closed, void *user_data);
+  void grow_AddArc( grow_tNodeClass nc, char *name, 
+	double x1, double y1, double x2, double y2,
+	int angel1, int angel2, glow_eDrawType draw_type, 
+	int line_width, int fill_arc, int border, int shadow, glow_eDrawType fill_draw_type,
+	void *user_data);
+  void grow_AddText( grow_tNodeClass nc, char *name, 
+	char *text, double x, double y,
+	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
+	glow_mDisplayLevel display_level, void *user_data);
+  void grow_AddAnnot( grow_tNodeClass nc, 
+	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
+	int t_size, glow_eAnnotType a_type,
+	int rel_pos, glow_mDisplayLevel display_lev,
+	void *user_data);
   void grow_AddAnnotPixmap( grow_tNodeClass nc, int number,
 	double x, double y, glow_eDrawType draw_type, int size, int relative_pos);
   void grow_AddRadiobutton( grow_tNodeClass nc, double x, double y, 
@@ -1411,6 +1425,13 @@ typedef GlowTraceData glow_sTraceData;
     \param shadow     	Shadow value. 1 the object is drawn with shadow, 0 without shadow.
   */
   void grow_SetObjectShadow( grow_tObject object, int shadow);
+
+  //! Set shadow width for an object.
+  /*!
+    \param object	Object.
+    \param shadow     	Shadow width in percentage of the smallest of object width and height.
+  */
+  void grow_SetObjectShadowWidth( grow_tObject object, double width);
 
   //! Set object drawtype.
   /*!
