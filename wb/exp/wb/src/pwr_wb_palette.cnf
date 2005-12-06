@@ -706,6 +706,7 @@ palette PlcEditorPalette
       class BaseManValveFo
       class BaseMotorFo
       class BaseMValveFo
+      class BaseOverloadRelayFo
       class BasePositSensorFo
       class BasePropValveFo
       class BaseSafetySwitchFo
@@ -728,6 +729,7 @@ palette PlcEditorPalette
     menu Simulate
     {
       class ABB_ACS800MotorAggrSim
+      class BaseContactorSim
       class BaseCValveSim
       class BaseMValveSim
       class BaseSensorSim

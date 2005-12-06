@@ -214,6 +214,7 @@ B 4.4.19 "Automod aktiv. Manuell start/stop order ej tillåten fläkt, "
 # Motor
 B 4.5.1 "Hög motortemperatur, "
 B 4.5.2 "Hög Hög motortemperatur, "
+E 4.5.3 "ÖverTemperatur"
 # Contactor
 B 4.6.1 "Tappat kontaktorsvar, "
 E 4.6.2 "Kontaktorn är till"

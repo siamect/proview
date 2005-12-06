@@ -217,6 +217,7 @@ B 4.4.19 "Automode active. Manual start/stop order is not allowed fan, "
 # Motor
 B 4.5.1 "High motor temperature, "
 B 4.5.2 "High High motor temperature, "
+E 4.5.3 "OverTemperature"
 # Contactor
 B 4.6.1 "Contactor feedback lost, "
 E 4.6.2 "Contactor is energized"
