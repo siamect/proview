@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_bcomp.c,v 1.3 2005-09-20 13:27:15 claes Exp $
+ * Proview   $Id: rt_plc_bcomp.c,v 1.4 2005-12-06 10:53:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -65,7 +65,7 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
   if ( !co)
     return;
 
-  if ( *o->ResetP)
+  if ( *o->ResetP && !o->OldReset)
     co->TripReset = 1;
 
   time_FloatToD( &TimeSince, *o->ScanTime);
@@ -110,6 +110,8 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
     co->TotalUsage = ((float)co->TotalRunTime.tv_sec) / co->TotalTime.tv_sec * 100;
   if ( co->TripTime.tv_sec)
     co->TripUsage = ((float)co->TripRunTime.tv_sec) / co->TripTime.tv_sec * 100;
+
+  o->OldReset = *o->ResetP;
 }
 
 
