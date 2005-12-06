@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.8 2005-11-17 09:03:20 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.9 2005-12-06 10:45:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,8 @@ extern "C" {
 #include "ge_curve.h"
 #include "ge_msg.h"
 
+#define MARK_WIDTH 2.0
+
 static void gec_activate_exit( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
 {
   if ( curve->close_cb)
@@ -126,35 +128,6 @@ static void gec_activate_background( Widget w, GeCurve *curve, XmAnyCallbackStru
 static void gec_activate_showname( Widget w, GeCurve *curve, 
    XmToggleButtonCallbackStruct *data)
 {
-
-  if ( data->set) {
-    Arg args[2];
-    short width;
-
-    width = 200;
-    XtSetArg(args[0],XmNwidth,width+4);
-    XtSetValues( curve->axisform_widget, args, 1);
-
-    curve->axis_displayed = 0;
-    XtManageChild( curve->grownames_main_widget);
-    XtUnmanageChild( curve->growaxis_main_widget);
-
-  }
-  else {
-    double zoom_x, zoom_y;
-    short width;
-    Arg args[2];
-
-    curve_GetZoom( curve->growcurve_ctx, &zoom_x, &zoom_y);
-
-    width = short( zoom_y * curve->axis_window_width);
-    XtSetArg(args[0],XmNwidth,width+4);
-    XtSetValues( curve->axisform_widget, args, 1);
-
-    curve->axis_displayed = 1;
-    XtManageChild( curve->growaxis_main_widget);
-    XtUnmanageChild( curve->grownames_main_widget);
-  }
 }
 
 static void gec_activate_filledcurves( Widget w, GeCurve *curve, 
@@ -200,6 +173,11 @@ static void gec_create_pane( Widget w, GeCurve *curve, XmAnyCallbackStruct *data
 static void gec_create_growform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
 {
   curve->axisform_widget = w;
+}
+
+static void gec_create_nameform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+{
+  curve->nameform_widget = w;
 }
 
 static void gec_create_curveform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
@@ -262,14 +240,85 @@ static int ge_growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 
   grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &curve);
 
-  switch ( event->event)
-  {
-    case glow_eEvent_MB1Click:
-      printf( "GrowCurve callback MB1\n");
+  switch ( event->event) {
+  case glow_eEvent_MB1Click:
+    break;
+  case glow_eEvent_SliderMoveStart: {
+    printf( "Slider start\n");
+    if ( event->object.object_type == glow_eObjectType_NoObject)
+      grow_SetMoveRestrictions( (GrowCtx *)ctx, glow_eMoveRestriction_Disable, 0, 0, NULL);
+    else
+      grow_SetMoveRestrictions( (GrowCtx *)ctx, glow_eMoveRestriction_HorizontalSlider, 
+				200 - MARK_WIDTH/2, -MARK_WIDTH/2, 
+				curve->curve_markobject);
+    break;
+  }
+  case glow_eEvent_SliderMoved: {
+    char str[40];
+    int row;
+    double ll_x, ll_y, ur_x, ur_y;
+    double time;
 
-      break;
-    default:
-      ;
+    grow_MeasureNode( curve->curve_markobject, &ll_x, &ll_y, &ur_x, &ur_y);
+    
+    curve->last_mark_x = event->any.x;
+
+    if ( !curve->cd->x_reverse)
+      time = event->any.x *
+        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+    else
+      time = (200.0 - event->any.x) *
+        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+
+    row = int ((time - curve->cd->min_value[0]) / 
+		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
+		 (curve->cd->rows - 1) + 0.5);
+    if ( row > curve->cd->rows - 1)
+      row = curve->cd->rows - 1;
+    if ( row < 0)
+      row = 0;
+
+    for ( int i = 1; i < curve->cd->cols; i++) {
+      sprintf( str, "%7.2f", curve->cd->data[i][row]);
+      grow_SetAnnotation( curve->mark_annot[i], 0, str, strlen(str));
+    }
+
+    sprintf( str, "%7.2f", curve->cd->data[0][row]);
+    grow_SetAnnotation( curve->mark_annot[0], 0, str, strlen(str));
+
+    break;
+  }
+  case glow_eEvent_CursorMotion: {
+    char str[40];
+    int row;
+    double time;
+
+    curve->last_cursor_x = event->any.x;
+    if ( !curve->cd->x_reverse)
+      time = event->any.x *
+        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+    else
+      time = (200.0 - event->any.x) *
+        (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
+
+    row = int ((time - curve->cd->min_value[0]) / 
+        (curve->cd->max_value[0] - curve->cd->min_value[0]) *
+        (curve->cd->rows - 1) + 0.5);
+    if ( row > curve->cd->rows - 1)
+      row = curve->cd->rows - 1;
+    if ( row < 0)
+      row = 0;
+    for ( int i = 1; i < curve->cd->cols; i++) {
+      sprintf( str, "%7.2f", curve->cd->data[i][row]);
+      grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
+    }
+
+    sprintf( str, "%7.2f", curve->cd->data[0][row]);
+    grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
+    break;
+  }
+  default:
+    ;
   }
   return 1;
 }
@@ -286,6 +335,8 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
   mask |= grow_eAttr_grid_on;
   grow_attr.grid_on = 0;
   mask |= grow_eAttr_double_buffer_on;
+  grow_attr.default_hot_mode = glow_eHotMode_TraceAction;
+  mask |= grow_eAttr_default_hot_mode;
   grow_attr.double_buffer_on = 1;
   if ( curve->initial_right_position) { 
     mask |= grow_eAttr_initial_position;
@@ -295,9 +346,18 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
 
   grow_SetCtxUserData( curve->growcurve_ctx, curve);
 
+  grow_SetMoveRestrictions( curve->growcurve_ctx, glow_eMoveRestriction_Disable, 0, 0, NULL);
 
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_MB1Click,
   	glow_eEventType_CallBack, ge_growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_CursorMotion, 
+	glow_eEventType_CallBack, ge_growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_SliderMoved, 
+	glow_eEventType_CallBack, ge_growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_SliderMoveStart, 
+	glow_eEventType_CallBack, ge_growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_MB1Press, 
+        glow_eEventType_MoveNode, ge_growcurve_cb);
 
   grow_CreateGrowCurve( curve->growcurve_ctx, "curve", NULL, 0, 0, 200, 30,
 			curve->curve_border, 2, glow_mDisplayLevel_1, 1, 1,
@@ -307,7 +367,25 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
 		       glow_eDrawType_TextHelvetica, curve, 
                        &curve->curve_axisobject);
 
+  grow_tNodeClass nc;
+  grow_CreateNodeClass( curve->growcurve_ctx, "MarkNc", glow_eNodeGroup_Common, &nc);
+  grow_AddLine( nc, "", 0, 0, 0, 32, glow_eDrawType_LineGray, 1, 0, NULL);
+  grow_AddRect( nc, "", -MARK_WIDTH/2, 30.1, MARK_WIDTH, 1.8, glow_eDrawType_LineGray, 1, 0,
+		glow_mDisplayLevel_1, 0, 0, 1,
+		glow_eDrawType_Color33, NULL);
+  glow_sPoint p1[3] = { -0.1, 30.3, {-MARK_WIDTH/2+0.1, 31},{-0.1, 31.7}};
+  grow_AddPolyLine( nc, "", p1, 3, glow_eDrawType_Line, 1, 0, 1, 0, 1, glow_eDrawType_Color38,
+		    1, 0);
+  glow_sPoint p2[3] = { 0.1, 30.3, { MARK_WIDTH/2-0.1, 31},{ 0.1, 31.7}};
+  grow_AddPolyLine( nc, "", p2, 3, glow_eDrawType_Line, 1, 0, 1, 0, 1, glow_eDrawType_Color38,
+		    1, 0);
+  grow_CreateGrowSlider( curve->growcurve_ctx, "", nc, 1, 0, NULL, &curve->curve_markobject);
+  grow_SetSliderInfo( curve->curve_markobject, glow_eDirection_Right,
+	200, 0, 200, 0);
+  // grow_SetMode( curve->growcurve_ctx, grow_eMode_Edit);
+
   curve->configure_curves();
+
   return 1;
 }
 
@@ -414,8 +492,7 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
 
       if ( event->object.object_type != glow_eObjectType_NoObject) {
         for ( int i = 0; i < curve->cd->cols; i++) {
-          if ( event->object.object == curve->name_rect[i] ||
-               event->object.object == curve->hide_rect[i] ) {
+          if ( event->object.object == curve->hide_rect[i] ) {
             if ( curve->hide[i]) {
               // Check max number of curves
               int num = 0;
@@ -431,10 +508,11 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
             }
             curve->hide[i] = !curve->hide[i];
             if ( curve->hide[i])
-              color = curve->cd->color[i];
+              color = glow_eDrawType_LineErase;
             else
               color = glow_eDrawType_Line;
-            grow_SetObjectFillColor( curve->hide_rect[i], color);
+            grow_SetObjectBorderColor( curve->hide_l1[i], color);
+            grow_SetObjectBorderColor( curve->hide_l2[i], color);
 
             if ( curve->auto_refresh) {
               curve->configure_curves();
@@ -442,10 +520,27 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
             }
             break;
           }
+          if ( event->object.object == curve->scale_rect[i] ) {
+	    char value_str[40];
+
+            sprintf( value_str, "%f", 
+                   curve->cd->min_value_axis[i]);
+            XmTextSetString( curve->minmax_textmin_widget, value_str);
+
+            sprintf( value_str, "%f", 
+                   curve->cd->max_value_axis[i]);
+            XmTextSetString( curve->minmax_textmax_widget, value_str);
+
+            curve->minmax_idx = i;
+            XtManageChild( curve->minmax_widget);
+	    break;
+	  }
         }
       }
       break;
     }
+    case glow_eEvent_HotRequest:
+      return 0;
     case glow_eEvent_Resized:
     {
       printf( "GrowNames callback Resized\n");
@@ -522,24 +617,113 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
   	glow_eEventType_CallBack, ge_grownames_cb);
   grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_Resized,
   	glow_eEventType_CallBack, ge_grownames_cb);
+  grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_HotRequest, 
+	glow_eEventType_CallBack, ge_grownames_cb);
 
+  // Create nodeclass for mark values
+  grow_tNodeClass nc;
+  grow_CreateNodeClass( curve->grownames_ctx, "MarkVal", glow_eNodeGroup_Common, &nc);
+  grow_AddRect( nc, "", 0, 0, 3, 0.75, glow_eDrawType_LineGray, 1, 0,
+		glow_mDisplayLevel_1, 0, 0, 0,
+		glow_eDrawType_Line, NULL);
+  grow_AddAnnot( nc, 0.2, 0.7, 0, glow_eDrawType_TextHelvetica, 
+		 glow_eDrawType_Line,
+		 2, glow_eAnnotType_OneLine, 0, glow_mDisplayLevel_1, NULL);
+
+  // Draw header
+  grow_tObject o1;
+  grow_CreateGrowLine( curve->grownames_ctx, "", 0, 0.75, 60, 0.75,
+			 glow_eDrawType_Color34, 2, 0, NULL, &o1);
+  grow_CreateGrowRect( curve->grownames_ctx, "", 0, 0, 60, 0.8,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
+			 glow_eDrawType_Color32, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "View",
+		       0.8, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "Cursor",
+		       3, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "Mark",
+		       5.7, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "Unit",
+		       9.0, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "Scale",
+		       11, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  grow_CreateGrowText( curve->grownames_ctx, "", "Attribute",
+		       14, 0.6, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+  
   for ( int i = 1; i < curve->cd->cols; i++) {
-    grow_CreateGrowRect( curve->grownames_ctx, "", 0, (i-1), 1, 1,
+    // Draw shadowed frame
+    grow_CreateGrowRect( curve->grownames_ctx, "", 0, (i-0.2), 60, 1,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
+			 glow_eDrawType_Color32, NULL, &o1);
+    // Draw color rectangle
+    grow_CreateGrowRect( curve->grownames_ctx, "", 0.25, (i-0.2)+0.3, 0.75, 0.5,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
 			 curve->cd->color[i], NULL, &curve->name_rect[i]);
 
     if ( curve->hide[i])
-      color = curve->cd->color[i];
+      color = glow_eDrawType_LineErase;
     else
       color = glow_eDrawType_Line;
 
-    grow_CreateGrowRect( curve->grownames_ctx, "", 0.25, (i-1)+0.25, 0.5, 0.5,
-			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 0, 0,
-			 color, NULL, &curve->hide_rect[i]);
-    grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->name[i],
-		       1.3, (i-1) + 0.85, glow_eDrawType_TextHelveticaBold, 
+    // Draw checkbox for hide
+    grow_CreateGrowLine( curve->grownames_ctx, "", 1.4, (i-0.2)+0.45, 1.52, (i-0.2)+0.75,
+			 color, 2, 0, NULL, &curve->hide_l1[i]);
+    grow_CreateGrowLine( curve->grownames_ctx, "", 1.50, (i-0.2)+0.75, 1.77, (i-0.2)+0.35,
+			 color, 2, 0, NULL, &curve->hide_l2[i]);
+    grow_CreateGrowRect( curve->grownames_ctx, "", 1.3, (i-0.2)+0.3, 0.5, 0.5,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 1, 1,
+			 glow_eDrawType_Color32, NULL, &curve->hide_rect[i]);
+    // Draw nodes for mark and cursor values
+    grow_CreateGrowNode( curve->grownames_ctx, "", nc, 2.2, (i-0.2)+0.05, NULL, 
+			 &curve->cursor_annot[i]);
+    grow_CreateGrowNode( curve->grownames_ctx, "", nc, 5.4, (i-0.2)+0.05, NULL, 
+			 &curve->mark_annot[i]);
+    // Draw unit
+    grow_CreateGrowText( curve->grownames_ctx, "", "km/h" /* curve->cd->unit[i]*/,
+		       9.0, (i-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+    // Draw button for scale
+    grow_CreateGrowRect( curve->grownames_ctx, "", 11, (i-0.2)+0.1, 1.2, 0.7,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+			 glow_eDrawType_Color33, NULL, &curve->scale_rect[i]);
+    grow_SetObjectShadowWidth( curve->scale_rect[i], 20);
+    // Draw attribute name
+    grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->name[i],
+		       14.0, (i-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+    grow_SetAnnotation( curve->cursor_annot[i], 0, "0", 1);
+    grow_SetAnnotation( curve->mark_annot[i], 0, "0", 1);
   }
+  // Draw nodes for time values
+  // Draw shadowed frame
+  grow_CreateGrowRect( curve->grownames_ctx, "", 0, (curve->cd->cols-0.2), 60, 1,
+			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
+			 glow_eDrawType_Color32, NULL, &o1);
+  grow_CreateGrowNode( curve->grownames_ctx, "", nc, 2.2, (curve->cd->cols-0.2)+0.05, NULL, 
+		       &curve->cursor_annot[0]);
+  grow_CreateGrowNode( curve->grownames_ctx, "", nc, 5.4, (curve->cd->cols-0.2)+0.05, NULL, 
+		       &curve->mark_annot[0]);
+  // Draw unit
+  grow_CreateGrowText( curve->grownames_ctx, "", "s",
+		       9.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+  // Draw button for scale
+  grow_CreateGrowRect( curve->grownames_ctx, "", 11, (curve->cd->cols-0.2)+0.1, 1.2, 0.7,
+		       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
+		       glow_eDrawType_Color33, NULL, &curve->scale_rect[0]);
+  grow_SetObjectShadowWidth( curve->scale_rect[0], 20);
+  // Draw attribute name
+  grow_CreateGrowText( curve->grownames_ctx, "", "Time axis",
+		       14.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
+		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+  grow_SetAnnotation( curve->cursor_annot[0], 0, "0", 1);
+  grow_SetAnnotation( curve->mark_annot[0], 0, "0", 1);
 
   return 1;
 }
@@ -765,6 +949,16 @@ void GeCurve::points_added()
   gcd.x_reverse = cd->x_reverse;
 
   grow_CurveAddPoints( curve_object, &gcd);
+
+  // Simulate cursormotion and slidermoved event to update markvalues
+  glow_sEvent e;
+  e.any.event = glow_eEvent_CursorMotion;
+  e.any.x = last_cursor_x;
+  ge_growcurve_cb( growcurve_ctx, &e);
+  e.any.event = glow_eEvent_SliderMoved;
+  e.any.x = last_mark_x;
+  ge_growcurve_cb( growcurve_ctx, &e);
+
 }
 
 int GeCurve::read_file( char *filename)
@@ -900,7 +1094,8 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   border_dark(glow_eDrawType_Color28),
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
-  minmax_idx(0), close_cb(0), help_cb(0), initial_right_position(pos_right)
+  minmax_idx(0), close_cb(0), help_cb(0), initial_right_position(pos_right),
+  last_cursor_x(0), last_mark_x(0)
 {
   char		uid_filename[120] = {"xtt_curve.uid"};
   char		*uid_filename_p = uid_filename;
@@ -927,6 +1122,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
 	{"gec_activate_help",(caddr_t)gec_activate_help },
 	{"gec_create_pane",(caddr_t)gec_create_pane },
 	{"gec_create_growform",(caddr_t)gec_create_growform },
+	{"gec_create_nameform",(caddr_t)gec_create_nameform },
 	{"gec_create_curveform",(caddr_t)gec_create_curveform },
 	{"gec_create_minmax_textmin",(caddr_t)gec_create_minmax_textmin },
 	{"gec_create_minmax_textmax",(caddr_t)gec_create_minmax_textmax },
@@ -940,6 +1136,11 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   memset( hide, 0, sizeof(hide));
   memset( name_rect, 0, sizeof(name_rect));
   memset( hide_rect, 0, sizeof(hide_rect));
+  memset( scale_rect, 0, sizeof(scale_rect));
+  memset( hide_l1, 0, sizeof(hide_l1));
+  memset( hide_l2, 0, sizeof(hide_l2));
+  memset( mark_annot, 0, sizeof(cursor_annot));
+  memset( mark_annot, 0, sizeof(mark_annot));
   curve_color = background_dark;
   curve_border = border_dark;
   for ( i = TREND_MAX_CURVES; i < CURVE_MAX_COLS; i++)
@@ -994,6 +1195,16 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
       
   XtManageChild( ge_curve_widget);
 
+  Widget w;
+  grownames_main_widget = ScrolledGrowCreate( nameform_widget, 
+		"GeCurveNames", NULL,
+		0, ge_init_grownames_cb, this, &w);
+  i = 0;
+  XtSetArg(args[i],XmNwidth,200);i++;
+  XtSetValues( grownames_main_widget, args,i);
+
+  XtManageChild( grownames_main_widget);
+
   growaxis_main_widget = GrowCreate( axisform_widget, 
 		"GeCurveAxis", NULL,
 		0, ge_init_growaxis_cb, this);
@@ -1002,16 +1213,6 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   XtSetValues( growaxis_main_widget, args,i);
 
   XtManageChild( growaxis_main_widget);
-
-  Widget w;
-  grownames_main_widget = ScrolledGrowCreate( axisform_widget, 
-		"GeCurveNames", NULL,
-		0, ge_init_grownames_cb, this, &w);
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetValues( grownames_main_widget, args,i);
-
-  XtManageChild( grownames_main_widget);
 
   growcurve_main_widget = CurveCreate( curveform_widget, 
 		"GeCurve", NULL,
@@ -1030,8 +1231,6 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   XtPopup( toplevel, XtGrabNone);
   XtRealizeWidget( toplevel);
 
-  XtUnmanageChild( grownames_main_widget);
-
   // Connect the window manager close-button to exit
   flow_AddCloseVMProtocolCb( toplevel, 
 	(XtCallbackProc)gec_activate_exit, this);
@@ -1043,6 +1242,7 @@ GeCurveData::GeCurveData( curve_eDataType datatype) :
 {
   memset( data, 0, sizeof(data));
   for ( int i = 0; i < CURVE_MAX_COLS; i++) {
+    strcpy( unit[i], "");
     max_value[i] = 0;
     min_value[i] = 0;
     min_value_axis[i] = 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.7 2005-11-17 09:03:20 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.8 2005-12-06 10:45:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@ class GeCurveData {
     int     rows;
     int     cols;
     pwr_tAName name[CURVE_MAX_COLS];
+    char    unit[CURVE_MAX_COLS][16];
     double  *data[CURVE_MAX_COLS];
     double  max_value[CURVE_MAX_COLS];
     double  min_value[CURVE_MAX_COLS];
@@ -100,6 +101,7 @@ class GeCurve {
     Widget	grow_widget;
     Widget	curve_widget;
     Widget	axisform_widget;
+    Widget	nameform_widget;
     Widget	curveform_widget;
     Widget	pane_widget;
     Widget	toplevel;
@@ -121,11 +123,17 @@ class GeCurve {
     glow_eDrawType border_bright;
     grow_tObject curve_object;
     grow_tObject curve_axisobject;
+    grow_tObject curve_markobject;
     GeCurveData *cd;
     double       axis_window_width;
     int          hide[CURVE_MAX_COLS];
     grow_tObject name_rect[CURVE_MAX_COLS];
     grow_tObject hide_rect[CURVE_MAX_COLS];
+    grow_tObject hide_l1[CURVE_MAX_COLS];
+    grow_tObject hide_l2[CURVE_MAX_COLS];
+    grow_tObject scale_rect[CURVE_MAX_COLS];
+    grow_tObject mark_annot[CURVE_MAX_COLS];
+    grow_tObject cursor_annot[CURVE_MAX_COLS];
     grow_tObject axis_rect[CURVE_MAX_COLS];
     grow_tObject axis_object[CURVE_MAX_COLS];
     grow_tObject axis_lineobject;
@@ -136,6 +144,8 @@ class GeCurve {
     void 	 (*help_cb)( void *);
     int          initial_right_position;
     char	 title[300];
+    double  	 last_cursor_x;
+    double  	 last_mark_x;
 
     int read_file( char *filename);
     int configure_curves();
