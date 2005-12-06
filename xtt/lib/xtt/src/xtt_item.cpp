@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.14 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.15 2005-12-06 10:52:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1986,7 +1986,7 @@ ItemEnum::ItemEnum(
   brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
   brow_SetAnnotation( node, 0, enum_name, strlen(enum_name));
 
-  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
   if ( EVEN(sts)) throw co_error(sts);
  
   brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
@@ -1997,7 +1997,7 @@ int ItemEnum::set_value()
   pwr_tStatus sts;
   pwr_tAName name;
 
-  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mName_volumeStrict); 
   if ( EVEN(sts)) return sts;
 
   strcat( name, ".");
@@ -2032,7 +2032,7 @@ ItemMask::ItemMask(
   brow_SetAnnotPixmap( node, 0, brow->pixmap_attr);
   brow_SetAnnotation( node, 0, mask_name, strlen(mask_name));
 
-  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mNName); 
+  sts = gdh_ObjidToName( objid, obj_name, sizeof(obj_name), cdh_mName_volumeStrict); 
   if ( EVEN(sts)) throw co_error(sts);
  
   brow_SetTraceAttr( node, obj_name, attr_name, flow_eTraceType_User);
@@ -2044,7 +2044,7 @@ int ItemMask::set_value( int bittrue)
   pwr_tAName name;
   pwr_tMask value;
 
-  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mName_volumeStrict); 
   if ( EVEN(sts)) return sts;
 
   strcat( name, ".");
@@ -2067,7 +2067,7 @@ int ItemMask::toggle_value()
   pwr_tAName name;
   pwr_tMask value;
 
-  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mNName); 
+  sts = gdh_ObjidToName( objid, name, sizeof(name), cdh_mName_volumeStrict); 
   if ( EVEN(sts)) return sts;
 
   strcat( name, ".");
