@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growarc.h,v 1.4 2005-12-06 09:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -475,6 +475,12 @@ class GrowArc : public GlowArc {
     \param shadowval	If 1 the object will be draw with shadow, if 0 the object will be drawn without shadow.
   */
   void set_shadow( int shadowval) { shadow = shadowval; draw();}
+
+  //! Set shadow width.
+  /*!
+    \param width	Width of shadow.
+  */
+  void set_shadow_width( double width) { shadow_width = width; draw();}
 
   void get_ctx( void **c) { *c = (void *)ctx;}; 	//!< Should be replace by get_ctx() !!
 

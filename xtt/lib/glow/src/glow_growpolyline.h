@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growpolyline.h,v 1.4 2005-12-06 09:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -299,6 +299,12 @@ class GrowPolyLine : public GlowPolyLine {
     \param shadowval	If 1 the object will be draw with shadow, if 0 the object will be drawn without shadow.
   */
   void set_shadow( int shadowval) { shadow = shadowval; draw();}
+
+  //! Set shadow width.
+  /*!
+    \param width	Width of shadow.
+  */
+  void set_shadow_width( double width) { shadow_width = width; draw();}
 
   //! todo
   void set_drawtype( glow_eDrawType drawtype);
