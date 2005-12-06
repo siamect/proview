@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.36 2005-11-17 09:04:04 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.37 2005-12-06 10:46:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,24 @@ static int dyn_get_typeid( char *format)
   if ( strchr( format, 'm'))
     return pwr_eType_Status;
   return pwr_eType_Int32;
+}
+
+// Convert a bitmask to binary string
+static char *dyn_mask_to_bits( unsigned int value, int noofbits)
+{
+  static char str[40];
+  unsigned int m;
+
+  m = 1 << (noofbits - 1);
+  strcpy( str, "");
+  for ( int i = 0; i < noofbits; i++) {
+    if ( m & value)
+      strcat( str, "1");
+    else
+      strcat( str, "0");
+    m >>= 1;
+  }
+  return str;
 }
 
 // Replace " to \"
@@ -3352,6 +3370,27 @@ int GeValue::scan( grow_tObject object)
       if ( EVEN(sts))
 	sprintf( buf, "Invalid type");
       len = strlen(buf);
+    }
+    break;
+  }
+  case pwr_eType_Mask: {
+
+    switch ( format[strlen(format)-1]) {
+    case 'b':
+      if ( strncmp( &format[1], "16", 2) == 0)
+	strcpy( buf, dyn_mask_to_bits( *(unsigned int *)p, 16));
+      else
+	strcpy( buf, dyn_mask_to_bits( *(unsigned int *)p, 32));
+      len = strlen(buf);
+      break;
+    default: {
+      int sts;
+      sts = cdh_AttrValueToString( (pwr_eType) annot_typeid, 
+				 p, buf, sizeof(buf));
+      if ( EVEN(sts))
+	sprintf( buf, "Invalid type");
+      len = strlen(buf);
+      }
     }
     break;
   }
@@ -11135,6 +11174,7 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 		GeInvisible 	*invis_element = 0;
 		char command[256];
 		char *s;
+		pwr_tBoolean	value;
 
 		for ( GeDynElem *elem = items_dyn[i]->elements; elem; elem = elem->next) {
 		  if ( elem->dyn_type == ge_mDynType_Invisible) {
@@ -11158,6 +11198,17 @@ int GePulldownMenu::action( grow_tObject object, glow_tEvent event)
 		    sts = (dyn->graph->command_cb)( dyn->graph->parent_ctx, command);
 		    if ( EVEN(sts))
 		      info.item[i].type = glow_eMenuItem_ButtonDisabled;
+		  }
+		  else {
+		    sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
+		    if ( ODD(sts)) {
+		      if ( (!inverted && value) || (inverted && !value)) {
+			if ( invis_element->dimmed) 
+			  info.item[i].type = glow_eMenuItem_ButtonDisabled;
+			else
+			  info.item[i].occupied = false;
+		      }		      
+		    }
 		  }
 		}
 	      }
