@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.13 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.14 2005-12-06 10:49:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1168,24 +1168,27 @@ static pwr_tStatus Simulate( xmenu_sMenuCall *ip)
     pwr_tFileName      	found_file;
     char		*s;
 
-    sts = gdh_GetAttrRefTid( objar, &classid);
-    if ( EVEN(sts)) return sts;
+    for ( sts = gdh_GetAttrRefTid( objar, &classid);
+	  ODD(sts);
+	  sts = gdh_GetSuperClass( classid, &classid, pwr_cNObjid)) {
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			     classname, sizeof(classname), cdh_mName_object);
+      if ( EVEN(sts)) return sts;
+      cdh_ToLower( classname, classname);
 
-    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
-			   classname, sizeof(classname), cdh_mName_object);
-    if ( EVEN(sts)) return sts;
-    cdh_ToLower( classname, classname);
-
-    if ( classname[0] == '$')
-      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
-    else
-      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
-    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-    if ( EVEN(sts)) {
-      sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+      if ( classname[0] == '$')
+	sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
+      else
+	sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
       sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+      if ( EVEN(sts)) {
+	sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+	sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+      }
+      if ( ODD(sts))
+	break;
     }
     if ( EVEN(sts)) return sts;
 
@@ -1259,27 +1262,29 @@ static pwr_tStatus SimulateFilter( xmenu_sMenuCall *ip)
   sts = gdh_GetObjectInfo( name, (void *)&simconnect, sizeof(simconnect));
   if ( EVEN(sts)) {
     // Look for sim graph to main object
-    sts = gdh_GetAttrRefTid( objar, &classid);
-    if ( EVEN(sts)) return XNAV__INVISIBLE;
+    for ( sts = gdh_GetAttrRefTid( objar, &classid);
+	  ODD(sts);
+	  sts = gdh_GetSuperClass( classid, &classid, pwr_cNObjid)) {
 
-    sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
-			   classname, sizeof(classname), cdh_mName_object);
-    if ( EVEN(sts)) return sts;
-    cdh_ToLower( classname, classname);
+      sts = gdh_ObjidToName( cdh_ClassIdToObjid( classid),
+			     classname, sizeof(classname), cdh_mName_object);
+      if ( EVEN(sts)) return sts;
+      cdh_ToLower( classname, classname);
 
-    if ( classname[0] == '$')
-      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
-    else
-      sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
-    sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-    dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
-    if ( EVEN(sts)) {
-      sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+      if ( classname[0] == '$')
+	sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", &classname[1]);
+      else
+	sprintf( fname, "$pwr_exe/pwr_c_%ssim.pwg", classname);
       sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+      if ( EVEN(sts)) {
+	sprintf( fname, "$pwrp_exe/%ssim.pwg", classname);
+	sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
+	dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
+      }
+      if ( ODD(sts))
+	return XNAV__SUCCESS;
     }
-    if ( ODD(sts))
-      return XNAV__SUCCESS;
     return XNAV__INVISIBLE;
   }
   else if ( cdh_ObjidIsNull( simconnect.Objid))
