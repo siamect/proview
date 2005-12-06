@@ -73,7 +73,14 @@ fi
 if ! grep -q "\bb55:" /etc/passwd; then
   echo "-- Add user b55"
   new_user=1
-  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G pwrp -d /home/b55 b55
+
+  # Check if group audio exist
+  if grep -q "\baudio:" /etc/group; then
+    audio="-G audio"
+  else
+    audio=""
+  fi
+  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G pwrp -d /home/b55 $audio b55
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
     cp /usr/pwrrt/cnf/op/.bashrc /home/b55
