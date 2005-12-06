@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.6 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.7 2005-12-06 09:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -848,7 +848,7 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   GlowCtx	*ctx;
   int node_move_event = 0;
 
-  if ( ctx_type == glow_eCtxType_Grow)
+  if ( ctx_type == glow_eCtxType_Grow || ctx_type == glow_eCtxType_Curve)
     return ((GrowCtx *)this)->event_handler( event, x, y, w, h);
   else if ( ctx_type == glow_eCtxType_ColPal)
     return ((ColPalCtx *)this)->event_handler( event, x, y, w, h);
@@ -2030,7 +2030,7 @@ void auto_scrolling( GlowCtx *ctx)
 {
   int delta_x, delta_y;
 
-  if ( ctx->ctx_type == glow_eCtxType_Grow)
+  if ( ctx->ctx_type == glow_eCtxType_Grow || ctx->ctx_type == glow_eCtxType_Curve)
   {
     grow_auto_scrolling((GrowCtx *)ctx);
     return;

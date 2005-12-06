@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.13 2005-11-02 14:08:35 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.14 2005-12-06 09:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include "glow_ctx.h"
 #include "glow_growctx.h"
+#include "glow_curvectx.h"
 #include "glow_node.h"
 #include "glow_point.h"
 #include "glow_rect.h"
@@ -488,6 +489,9 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_Exposure:
     {
       int width, height;
+
+      if ( ctx_type == glow_eCtxType_Curve)
+        ((CurveCtx *)this)->adjust_layout();
 
       glow_draw_get_window_size( ctx, &width, &height);
       if ( window_width != width || window_height != height) {
