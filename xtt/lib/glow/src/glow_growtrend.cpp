@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.cpp,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growtrend.cpp,v 1.5 2005-12-06 09:13:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -289,9 +289,9 @@ void GrowTrend::draw( int ll_x, int ll_y, int ur_x, int ur_y)
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
+  if ( x_right * ctx->zoom_factor_x - ctx->offset_x + 1 >= ll_x &&
       	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
+       	y_high * ctx->zoom_factor_y - ctx->offset_y + 1 >= ll_y &&
        	y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
   {
     if ( !inverse)
