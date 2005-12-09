@@ -16,7 +16,7 @@
 116 0
 117 58
 118 199
-119 290
+119 214
 120 0
 121 Claes context
 122 0
@@ -18482,7 +18482,7 @@ pwr_exe:
 102 65535
 103 0
 50
-5000 open graph /class/instance=$object.ACS800
+5000 $object.ACS800
 99
 55
 5500 open graph /class/instance=$object.ACS800

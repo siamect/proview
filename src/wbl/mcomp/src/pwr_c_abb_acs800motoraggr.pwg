@@ -21328,7 +21328,7 @@ pwr_exe:
 102 65535
 103 0
 50
-5000 open graph /class/instance=$object.ACS800
+5000 $object.ACS800
 99
 55
 5500 open graph /class/instance=$object.ACS800
