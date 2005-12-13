@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.3 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.4 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -137,11 +137,9 @@ static pwr_tStatus IoCardInit (
   pwr_sClass_Pb_Module *op;
   int i, input_count, output_count, chan_size, bit_pos;
   io_sChannel *chanp;
-  pwr_sClass_ChanDi *chan_di;
   pwr_sClass_ChanAi *chan_ai;
   pwr_sClass_ChanAit *chan_ait;
   pwr_sClass_ChanIi *chan_ii;
-  pwr_sClass_ChanDo *chan_do;
   pwr_sClass_ChanAo *chan_ao;
   pwr_sClass_ChanIo *chan_io;
 

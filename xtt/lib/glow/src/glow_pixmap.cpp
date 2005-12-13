@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_pixmap.cpp,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_pixmap.cpp,v 1.3 2005-12-13 15:14:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <iostream.h>
+#include <fstream.h>
 #include "glow_pixmap.h"
 #include "glow_draw.h"
 

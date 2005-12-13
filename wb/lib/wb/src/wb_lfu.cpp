@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.1 2005-11-22 12:15:11 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.2 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,8 @@
 #include "co_regex.h"
 #include "wb_ldh.h"
 #include "wb_nav_macros.h"
+#undef min
+#undef max
 #include "wb_lfu.h"
 #include "wb_utl.h"
 #include "wb_dir.h"
@@ -1446,7 +1448,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 	  distr_status = lfu_eDistrSts_Normal;
 	  if ( !found)  
-	    (int) distr_status |= lfu_eDistrSts_NoRootVolume;
+	    distr_status = (lfu_eDistrSts)((int)distr_status | lfu_eDistrSts_NoRootVolume);
 
 	  fprintf( file, "node %s %s %d %d\n",
 		   nodename_ptr,

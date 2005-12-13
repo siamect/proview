@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.c,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qcom.c,v 1.5 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1290,7 +1290,7 @@ bool_t
 xdr_qcom_sAid(XDR *xdrs, qcom_sAid *objp)
 {
   if (!xdr_int(xdrs, &objp->aix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->nid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->nid)) return FALSE;
 
   return TRUE;
 }
@@ -1299,7 +1299,7 @@ bool_t
 xdr_qcom_sQid(XDR *xdrs, qcom_sQid *objp)
 {
   if (!xdr_int(xdrs, &objp->qix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->nid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->nid)) return FALSE;
 
   return TRUE;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subsm.c,v 1.5 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_subsm.c,v 1.6 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -387,7 +387,7 @@ subsm_SendBuffer (
         cid.c.bix = 0;	/* To get the class id.  */
         classp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
         if (classp != NULL)
-	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, &asize, ndc_eOp_encode, sp->aref.Offset, 0);
+	  ndc_ConvertData(&dp->sts, np, classp, &sp->aref, dp->data, data, (pwr_tUInt32 *)&asize, ndc_eOp_encode, sp->aref.Offset, 0);
 	sp->count++;
 	mp->count++;
       }

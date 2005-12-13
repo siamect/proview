@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.9 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.10 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -110,6 +110,7 @@ class Item {
 	type( xnav_eItemType_Object), objid(item_objid), is_root(item_is_root),
 	node(NULL)
 	{}
+    virtual ~Item() {}
     virtual int open_attributes( XNavBrow *brow, double x, double y)
       { return 1;}
     virtual int	open_children( XNavBrow *brow, double x, double y)
@@ -119,6 +120,7 @@ class Item {
     virtual int open_crossref( XNavBrow *brow, double x, double y)
       { return 1;}
     virtual void close( XNavBrow *brow, double x, double y) {}
+
     xnav_eItemType	type;
     pwr_tObjid		objid;
     int			is_root;

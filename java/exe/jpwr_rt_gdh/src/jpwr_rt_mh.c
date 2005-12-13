@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_mh.c,v 1.6 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: jpwr_rt_mh.c,v 1.7 2005-12-13 15:11:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -138,7 +138,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Mh_outunitAck
   eventId.Idx = (pwr_tUInt32)(*env)->GetIntField(env,id,idx_fid);
     
   jstr = (*env)->GetObjectField(env,id,birthTime_fid);
-  (const char *)str_copy = (*env)->GetStringUTFChars(env,jstr,NULL);
+  str_copy = (char *)(*env)->GetStringUTFChars(env,jstr,NULL);
 
   if (str_copy ==NULL)
   {

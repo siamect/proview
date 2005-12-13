@@ -73,10 +73,9 @@ all : init copy lib exe
 init :
 
 copy : $(export_h) $(export_c) $(export_dat) \
-	$(exe_dir)/ge_help.dat \
 	$(exe_dir)/pwr_wb_palette.cnf $(load_dir)/pwr_volumelist.dat
 
-lib : $(export_obj)
+lib : $(export_obj) $(exe_dir)/ge_help.dat
 
 exe :
 

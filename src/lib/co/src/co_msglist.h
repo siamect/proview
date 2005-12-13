@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_msglist.h,v 1.4 2005-12-13 15:13:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,6 +115,8 @@ class ItemMsg {
     int			severity;
 
     virtual void find() {}
+
+    virtual ~ItemMsg() {}
 };
 
 class ItemMsgObject : public ItemMsg {

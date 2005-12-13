@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subcm.c,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_subcm.c,v 1.5 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -207,7 +207,7 @@ subcm_Data (
 	    rsize = dp->size;
 
             if (classp != NULL)
-              ndc_ConvertData(&sts, np, classp, &cp->aref, dp->data, dp->data, &rsize, ndc_eOp_decode, cp->aref.Offset, 0);
+              ndc_ConvertData(&sts, np, classp, &cp->aref, dp->data, dp->data, (pwr_tUInt32 *)&rsize, ndc_eOp_decode, cp->aref.Offset, 0);
 	  }
           else {
             cp->old = TRUE;
@@ -216,7 +216,7 @@ subcm_Data (
               tbl = pool_Address(&cp->sts, gdbroot->pool, ccp->rnConv);
               if (tbl != NULL) {
 	        rsize = dp->size;
-                ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data, dp->data, &rsize, ndc_eOp_decode, cp->raref.Offset, 0);
+                ndc_ConvertRemoteData(&cp->sts, np, ccp, &cp->raref, dp->data, dp->data, (pwr_tUInt32 *)&rsize, ndc_eOp_decode, cp->raref.Offset, 0);
                 if (ODD(cp->sts))
                   cp->old = FALSE;
               }

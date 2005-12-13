@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.7 2005-11-17 09:03:20 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.8 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,8 @@ extern "C" {
 #include "flow_browapi.h"
 #include "flow_browwidget.h"
 #include "glow_growctx.h"
+#undef min
+#undef max
 #include "glow_growapi.h"
 #include "glow_growwidget.h"
 #include "glow_curvectx.h"

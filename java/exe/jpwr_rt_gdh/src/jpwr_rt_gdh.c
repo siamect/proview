@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.11 2005-12-06 11:17:01 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.12 2005-12-13 15:11:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1418,9 +1418,9 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getAttributeChar
   jint jsts;
   jclass gdhrGetAttributeChar_id;
   jmethodID gdhrGetAttributeChar_cid;
-  int size;
-  int elements;
-  int offset;
+  unsigned int size;
+  unsigned int elements;
+  unsigned int offset;
   pwr_eType type_id;
 
   gdhrGetAttributeChar_id = (*env)->FindClass( env, 

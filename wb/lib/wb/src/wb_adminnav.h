@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_adminnav.h,v 1.4 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_adminnav.h,v 1.5 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -159,6 +159,8 @@ class Item {
     virtual char *identity() { return "";}
     virtual brow_tNode get_node() = 0;
     virtual void print( ofstream& fp) {}
+
+    virtual ~Item() {}
 };
 
 class ItemProjHier : public Item {

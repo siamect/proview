@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.37 2005-12-06 10:46:09 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.38 2005-12-13 15:14:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3198,15 +3198,19 @@ int GeValue::scan( grow_tObject object)
 
   switch( annot_typeid) {
   case pwr_eType_Float32:
-    if ( zero_blank && fabsf( *(pwr_tFloat32 *) p) < FLT_EPSILON)
-      len = sprintf( buf, "");
+    if ( zero_blank && fabsf( *(pwr_tFloat32 *) p) < FLT_EPSILON) {
+      buf[0] = 0;
+      len = 0;
+    }
     else
       len = sprintf( buf, format, *(pwr_tFloat32 *) p);
     break;
   case pwr_eType_Int32:
   case pwr_eType_UInt32:
-    if ( zero_blank && *(pwr_tInt32 *) p == 0)
-      len = sprintf( buf, "");
+    if ( zero_blank && *(pwr_tInt32 *) p == 0) {
+      buf[0] = 0;
+      len = 0;
+    }
     else
       len = sprintf( buf, format, *(pwr_tInt32 *) p);
     break;

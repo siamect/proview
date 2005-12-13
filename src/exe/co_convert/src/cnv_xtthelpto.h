@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_xtthelpto.h,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_xtthelpto.h,v 1.3 2005-12-13 15:10:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,8 @@ class CnvXtthelpTo {
     { return 0;}
   virtual bool confpass() { return false;}
   virtual void set_confpass( bool conf) {};
+
+  virtual ~CnvXtthelpTo() {}
 };
 
 #if defined __cplusplus

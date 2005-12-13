@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.h,v 1.11 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wnav_item.h,v 1.12 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,6 +93,8 @@ class WItem {
     int			is_root;
     brow_tNode		node;
     pwr_tOName	 	name;
+
+    virtual ~WItem() {}
 };
 
 class WItemBaseObject : public WItem {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_topdf.cpp,v 1.3 2005-12-13 15:10:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -372,9 +372,9 @@ void CnvToPdf::print_text( char *text, CnvStyle& style, int mode)
       print_pagebreak( 0);
     }
   }
-  else if ( style.pagebreak && mode & pdf_mPrintMode_Pos)
+  else if ( style.pagebreak && mode & pdf_mPrintMode_Pos) {
     print_pagebreak( 0);
-  
+  }  
 
   if ( mode & pdf_mPrintMode_Pos || mode & pdf_mPrintMode_Start) {
     y -= style.top_offset;
@@ -490,7 +490,8 @@ void CnvToPdf::print_pagebreak( int last)
 "  ET" << endl;
     }
 
-    v_content[page_number[cf]-2].print_end();
+    if ( page_number[cf] > 1)
+      v_content[page_number[cf]-2].print_end();
   }  
 
   if ( last)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg.cpp,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wpkg.cpp,v 1.4 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,8 @@ extern "C" {
 #include "wb_wpkg.h"
 #include "wb_wpkgnav.h"
 #include "wb_wtt.h"
+#undef min
+#undef max
 #include "wb_wnav.h"
 #include "wb_pkg.h"
 #include "wb_error.h"

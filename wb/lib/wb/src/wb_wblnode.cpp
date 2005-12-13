@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.51 2005-11-14 16:32:28 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.52 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -412,8 +412,8 @@ int wb_wblnode::convconst( int *val, char *str)
 
 ref_wblnode wb_wblnode::find( wb_name *oname, int level)
 {
-  switch ( getType()) {
-  case tokens.OBJECT:
+
+  if (getType() == tokens.OBJECT) {
     if ( oname->segmentIsEqual( name(), level)) {
       if ( !oname->hasSegment(level+1))
         return this;
@@ -426,15 +426,15 @@ ref_wblnode wb_wblnode::find( wb_name *oname, int level)
       return o->fws->find( oname, level);
     else
       return 0;
-  case tokens.VOLUME:
+  }
+
+  if ((getType() == tokens.VOLUME) || (getType() == tokens.OBJECT)) {
     if ( oname->volumeIsEqual( name()) && !oname->hasSegment(0))
       return this;
     else if ( o->fch)
       return o->fch->find( oname, 0);
     else
       return 0;
-  default:
-    ;
   }
   return 0;
 }
@@ -1018,8 +1018,7 @@ void wb_wblnode::buildBody( ref_wblnode object)
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  switch ( getType()) {
-  case tokens.BODY:
+  if (getType() == tokens.BODY) {
     if ( cdh_NoCaseStrcmp( name(), "SysBody") == 0)
       bix = pwr_eBix_sys;
     else if ( cdh_NoCaseStrcmp( name(), "RtBody") == 0)
@@ -1056,8 +1055,7 @@ void wb_wblnode::buildBody( ref_wblnode object)
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->buildBody( object);
-    break;
-  default:
+  } else {
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->buildBody( object);
@@ -1080,9 +1078,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   int int_val, current_int_val;
   bool string_continue = false;
 
-  switch ( getType()) {
-  case tokens.ATTRIBUTE:
-  {
+  if (getType() == tokens.ATTRIBUTE) {
     first_child = getFirstChild();
     if ( !first_child) {
       // Attr exception
@@ -1090,16 +1086,12 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       goto error_continue;
     }
 
-    switch ( oper = first_child->getType()) {
-    case tokens.OREQ:
-    case tokens.EQ:
-      break;
-    default:
+    oper = first_child->getType();
+    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
     }
-
 
     if ( !m_vrep->getAttrInfo( name(), (pwr_eBix) bix, object->o->m_cid, &size, &offset,
                                &tid, &elements, &type, &flags)) {
@@ -1193,16 +1185,14 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       // Attr conversion exception
       m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
-    error_continue:
-    break;
+
+error_continue:
+    ;
+
   }
-  case tokens.BUFFER:
+  else if (getType() == tokens.BUFFER)
   {
     buildBuff( object, bix, 0, 0, 0);
-    break;
-  }
-  default:
-    ;
   }
 }
 
@@ -1293,8 +1283,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
   wb_adrep *adrep;
   wb_attrname aname;
 
-  switch ( getType()) {
-  case tokens.ATTRIBUTE:
+  if (getType() == tokens.ATTRIBUTE)
   {
     first_child = getFirstChild();
     if ( !first_child) {
@@ -1303,11 +1292,8 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
       goto error_continue;
     }
 
-    switch ( oper = first_child->getType()) {
-    case tokens.OREQ:
-    case tokens.EQ:
-      break;
-    default:
+    oper = first_child->getType();
+    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
@@ -1462,16 +1448,13 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
       m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
     error_continue:
-    break;
-  }
-  case tokens.BUFFER:
-  {
-    buildBuff( object, bix, buffer_cid, buffer_offset, buffer_size);
-    break;
-  }
-  default:
     ;
   }
+  else if (getType() == tokens.BUFFER)
+  {
+    buildBuff( object, bix, buffer_cid, buffer_offset, buffer_size);
+  }
+
   next_sibling = getNextSibling();
   if ( next_sibling)
     next_sibling->buildBuffAttr( object, bix, buffer_cid, buffer_offset, buffer_size);
@@ -1482,9 +1465,7 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  switch ( getType()) {
-  case tokens.OBJECT:
-  case tokens.VOLUME:
+  if ((getType() == tokens.OBJECT) || (getType() == tokens.VOLUME)) {
     if ( !father) {
       // Volume root
       vol->root_object = this;
@@ -1520,8 +1501,8 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
 	o->docblock = prev;
     }
     // cout << "Linking " << name << endl;
-    break;
-  case tokens.SOBJECT:
+  }
+  else if (getType() == tokens.SOBJECT)
   {
     ref_wblnode snode = m_vrep->find( name());
     if ( !snode) {
@@ -1536,9 +1517,7 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->link( vol, father);
-    break;
-  }
-  default:
+  } else {
     first_child = getFirstChild();
     if ( first_child)
       first_child->link( vol, father);
@@ -1554,12 +1533,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   ref_wblnode first_child = getFirstChild();
   m_vrep = vol;
 
-  switch ( getType()) {
-  case tokens.DOCBLOCK: {
+  if (getType() == tokens.DOCBLOCK) {
     string txt = getText();
-    break;
   }  
-  case tokens.OBJECT:
+  else if (getType() == tokens.OBJECT)
   {
 
     if ( !o)
@@ -1630,9 +1607,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       if ( second_child) {
 	ref_wblnode third_child = second_child->getNextSibling();
 
-        switch ( second_child->getType()) {
-        case tokens.VALUE:
-        case tokens.INT: {
+        if ((second_child->getType() == tokens.VALUE) ||
+            (second_child->getType() == tokens.INT)) {
           string oixstr = second_child->getText();
           if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix)) {
             o->m_oid.oix = m_vrep->nextOix();
@@ -1642,20 +1618,18 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 	    if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
 	      m_vrep->error( "Time syntax", getFileName(), line_number);
 	  }
-          break;
         }
-        case tokens.ASC_TIME: {
+        else if (second_child->getType() == tokens.ASC_TIME) {
 	  string timestr = second_child->getText();
 	  if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
 	    m_vrep->error( "Time syntax", getFileName(), line_number);
-          break;
 	}
-        case tokens.ENDOBJECT:
-        case tokens.OBJECT:
-        case tokens.BODY:
+        else if ((second_child->getType() == tokens.ENDOBJECT) ||
+                 (second_child->getType() == tokens.OBJECT) ||
+                 (second_child->getType() == tokens.BODY)) {
           o->m_oid.oix = m_vrep->nextOix();
-          break;
-        default:
+        }
+        else {
           ; // Syntax exception -- oix
           m_vrep->error( "Syntax", getFileName(), line_number);
         }
@@ -1737,9 +1711,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       if ( !(o->b.bix == pwr_eBix_rt || o->b.bix == pwr_eBix_sys || o->b.bix == pwr_eBix_dev))
         m_vrep->error( "Bad body index", getFileName(), line_number);
     }
-    break;
   }
-  case tokens.VOLUME:
+  else if (getType() == tokens.VOLUME)
   {
     pwr_tVid vid;
     int sts;
@@ -1759,18 +1732,15 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Get oid
       ref_wblnode second_child = first_child->getNextSibling();
       if ( second_child) {
-        switch ( second_child->getType()) {
-        case tokens.OID:
-        {
+        if ( second_child->getType() == tokens.OID) {
           string vidstring = second_child->getText();
           sts = cdh_StringToVolumeId( (char *)vidstring.c_str(), &vid);
           if ( EVEN(sts)) {
             // Syntax exception -- vid
             m_vrep->error( "Volume id syntax", getFileName(), line_number);
           }
-          break;
         }
-        default:
+        else {
           // Syntax exception -- vid
           m_vrep->error( "Volume syntax", getFileName(), line_number);
         }
@@ -1792,18 +1762,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Build to get next oix
       build( false);
     }
-    break;
   }
-  case tokens.ATTRIBUTE:
-  case tokens.SOBJECT:
-  case tokens.BODY:
-  case tokens.VALUE:
-  case tokens.INT:
-  case tokens.NUM_FLOAT:
-  {
-    break;
-  }
-  case tokens.CHAR_LITERAL:
+  else if (getType() == tokens.CHAR_LITERAL)
   {
     // Remove quotes
     char str[10];
@@ -1813,9 +1773,8 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     str[strlen(str)-1] = 0;
     string new_text(str);
     setText(new_text);
-    break;
   }
-  case tokens.STRING_LITERAL:
+  else if (getType() == tokens.STRING_LITERAL)
   {
     // Remove quotes and replace \" with "
     char str[2048];
@@ -1837,10 +1796,6 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     *t = 0;
     string new_text(str);
     setText(new_text);
-    break;
-  }
-  default:
-    ;
   }
 
   ref_wblnode child = first_child;

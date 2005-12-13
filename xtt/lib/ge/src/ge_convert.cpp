@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_convert.cpp,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_convert.cpp,v 1.4 2005-12-13 15:14:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -445,13 +445,13 @@ int Graph::convert_object( grow_tObject object)
 
     switch ( trace_type) {
     case graph_eTrace_Dig:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -473,15 +473,15 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigWithError:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigWarning;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigWarning);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -508,13 +508,13 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigTone:
-      (int)dyn->total_dyn_type = ge_mDynType_Tone;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_Tone;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -536,15 +536,15 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigToneWithError:
-      (int)dyn->total_dyn_type = ge_mDynType_Tone;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_Tone;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigWarning;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigWarning);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -571,11 +571,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Annot:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Value;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Value);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Value) {
@@ -592,11 +592,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigWithText:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigText) {
@@ -613,11 +613,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Bar:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Bar;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Bar);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Bar) {
@@ -633,11 +633,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Trend:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Trend;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Trend);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Trend) {
@@ -654,13 +654,13 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigBorder:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigBorder;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int) dyn->total_dyn_type | ge_mDynType_DigBorder);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int) dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigBorder) {
@@ -682,17 +682,17 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_AnnotWithTone:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Value;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Value);
       if ( strcmp( trace_data->data[1], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[2], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Value) {
@@ -720,15 +720,15 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigTwo:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigColor;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigColor);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -756,15 +756,15 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigToneTwo:
-      (int)dyn->total_dyn_type = ge_mDynType_Tone;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_Tone;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( strcmp( trace_data->data[1], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_DigColor;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigColor);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -792,11 +792,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Invisible:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Invisible) {
@@ -812,17 +812,17 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Rotate:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Rotate;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Rotate);
       if ( strcmp( trace_data->data[3], "") != 0) {
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
       }
       if ( strcmp( trace_data->data[4], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Rotate) {
@@ -870,17 +870,17 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_AnalogShift:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_AnalogShift;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_AnalogShift);
       if ( strcmp( trace_data->data[1], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[2], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type| ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_AnalogShift) {
@@ -909,17 +909,17 @@ int Graph::convert_object( grow_tObject object)
     case graph_eTrace_Animation: 
     case graph_eTrace_DigAnimation: 
     case graph_eTrace_AnimationForwBack: 
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Animation;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Animation);
       if ( strcmp( trace_data->data[1], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[2], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Animation) {
@@ -952,16 +952,17 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigShift:
-      (int)dyn->total_dyn_type |= ge_mDynType_DigShift;
+//      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigShift);
       if ( strcmp( trace_data->data[1], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[2], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigShift) {
@@ -988,17 +989,17 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Move:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Move;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Move);
       if ( strcmp( trace_data->data[2], "") != 0) {
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
       }
       if ( strcmp( trace_data->data[3], "") != 0) 
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type| ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Move) {
@@ -1050,9 +1051,9 @@ int Graph::convert_object( grow_tObject object)
       break;
     case graph_eTrace_SliderBackground:
       dyn->total_dyn_type = ge_mDynType_SliderBackground;
-      (int)dyn->total_action_type = 0;
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_PopupMenu) {
@@ -1064,9 +1065,9 @@ int Graph::convert_object( grow_tObject object)
       break;
     case graph_eTrace_Video:
       dyn->total_dyn_type = ge_mDynType_Video;
-      (int)dyn->total_action_type = 0;
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_PopupMenu) {
@@ -1077,10 +1078,10 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_No:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_PopupMenu) {
@@ -1091,11 +1092,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_SetDig:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_SetDig;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_SetDig);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_SetDig) {
@@ -1111,11 +1112,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ResetDig:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ResetDig;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ResetDig);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ResetDig) {
@@ -1131,11 +1132,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ToggleDig:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ToggleDig;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ToggleDig);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ToggleDig) {
@@ -1151,11 +1152,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Slider:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_Slider;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Slider);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_Slider) {
@@ -1171,11 +1172,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_AnnotInput:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Value;
-      (int)dyn->total_action_type = ge_mActionType_ValueInput;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Value);
+      dyn->total_action_type = ge_mActionType_ValueInput;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Value) {
@@ -1208,11 +1209,11 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_Command:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_Command;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Command);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_Command) {
@@ -1228,12 +1229,12 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_CommandConfirm:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_Command;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Command);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_Command) {
@@ -1254,12 +1255,12 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_SetDigConfirm:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_SetDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_SetDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_SetDig) {
@@ -1280,12 +1281,12 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ResetDigConfirm:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ResetDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ResetDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ResetDig) {
@@ -1306,12 +1307,12 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ToggleDigConfirm:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ToggleDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ToggleDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ToggleDig) {
@@ -1332,18 +1333,18 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_SetDigWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = ge_mActionType_SetDig;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_SetDig;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_SetDig) {
@@ -1376,18 +1377,18 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ResetDigWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = ge_mActionType_ResetDig;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_ResetDig;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ResetDig) {
@@ -1420,18 +1421,18 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ToggleDigWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = ge_mActionType_ToggleDig;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_ToggleDig;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_ToggleDig) {
@@ -1464,15 +1465,15 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_AnnotInputWithTone:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_Value;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Value);
       if ( strcmp( trace_data->data[2], "") != 0) { 
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
-      (int)dyn->total_action_type = ge_mActionType_ValueInput;
+      dyn->total_action_type = ge_mActionType_ValueInput;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_Value) {
@@ -1511,20 +1512,20 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_SetDigConfirmWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) { 
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_SetDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_SetDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1562,20 +1563,20 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ResetDigConfirmWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) { 
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ResetDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ResetDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1613,20 +1614,20 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_ToggleDigConfirmWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) { 
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
-	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = 0;
-      (int)dyn->total_action_type |= ge_mActionType_ToggleDig;
-      (int)dyn->total_action_type |= ge_mActionType_Confirm;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_No;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_ToggleDig);
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Confirm);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1665,19 +1666,19 @@ int Graph::convert_object( grow_tObject object)
       break;
     case graph_eTrace_DigWithCommand:
     case graph_eTrace_DigToneWithCommand:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( trace_type == graph_eTrace_DigToneWithCommand)
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
       if ( strcmp( trace_data->data[1], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_Command;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Command);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_CommandDoubleClick;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_CommandDoubleClick);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1710,21 +1711,21 @@ int Graph::convert_object( grow_tObject object)
       break;
     case graph_eTrace_DigWithErrorAndCommand:
     case graph_eTrace_DigToneWithErrorAndCommand:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( trace_type == graph_eTrace_DigToneWithErrorAndCommand)
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
       if ( strcmp( trace_data->data[1], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigWarning;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type| ge_mDynType_DigWarning);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_Command;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Command);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_CommandDoubleClick;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_CommandDoubleClick);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1761,18 +1762,18 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_StoDigWithTone:
-      (int)dyn->total_dyn_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
       if ( strcmp( trace_data->data[2], "") != 0) {
- 	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       }
       if ( strcmp( trace_data->data[3], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_Invisible;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Invisible);
       if ( strcmp( trace_data->data[4], "") != 0)
- 	(int)dyn->total_dyn_type |= ge_mDynType_DigText;
-      (int)dyn->total_action_type = ge_mActionType_StoDig;
+ 	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigText);
+      dyn->total_action_type = ge_mActionType_StoDig;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->action_type == ge_mActionType_StoDig) {
@@ -1806,21 +1807,21 @@ int Graph::convert_object( grow_tObject object)
       break;
     case graph_eTrace_DigTwoWithCommand:
     case graph_eTrace_DigToneTwoWithCommand:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type |= ge_mDynType_DigLowColor;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigLowColor);
       if ( trace_type == graph_eTrace_DigToneTwoWithCommand)
-	(int)dyn->total_dyn_type |= ge_mDynType_Tone;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Tone);
       if ( strcmp( trace_data->data[1], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigError;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigError);
       if ( strcmp( trace_data->data[2], "") != 0)
-	(int)dyn->total_dyn_type |= ge_mDynType_DigColor;
-      (int)dyn->total_action_type = 0;
+	dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_DigColor);
+      dyn->total_action_type = ge_mActionType_No;
       if ( strcmp( trace_data->data[3], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_Command;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_Command);
       if ( strcmp( trace_data->data[4], "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_CommandDoubleClick;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_CommandDoubleClick);
       if ( strcmp( trace_data->ref_object, "") != 0)
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+        dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
 	if ( elem->dyn_type == ge_mDynType_DigLowColor) {
@@ -1858,10 +1859,10 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_IncrAnalog:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = ge_mActionType_IncrAnalog;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_IncrAnalog;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
         if ( elem->action_type == ge_mActionType_IncrAnalog) {
@@ -1894,10 +1895,10 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_RadioButton:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = ge_mActionType_RadioButton;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_RadioButton;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
         if ( elem->action_type == ge_mActionType_RadioButton) {
@@ -1913,11 +1914,10 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     case graph_eTrace_DigShiftWithToggleDig:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_dyn_type = ge_mDynType_DigShift;
-      (int)dyn->total_action_type = ge_mActionType_ToggleDig;
+      dyn->total_dyn_type = ge_mDynType_DigShift;
+      dyn->total_action_type = ge_mActionType_ToggleDig;
       if ( strcmp( trace_data->ref_object, "") != 0) 
-	(int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+	dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
       dyn->update_elements();
       for ( elem = dyn->elements; elem; elem = elem->next) {
         if ( elem->dyn_type == ge_mDynType_DigShift) {
@@ -1938,16 +1938,16 @@ int Graph::convert_object( grow_tObject object)
       }
       break;
     default:
-      (int)dyn->total_dyn_type = 0;
-      (int)dyn->total_action_type = 0;
+      dyn->total_dyn_type = ge_mDynType_No;
+      dyn->total_action_type = ge_mActionType_No;
 
     }
 
     if ( trace_data->attr_type == (int)graph_eTrace_Inherit) {
       int anim_seq;
       get_class_dyntype( trace_type, &dyn_type, &action_type, &anim_seq);
-      (int)dyn->dyn_type = dyn->total_dyn_type & ~dyn_type | ge_mDynType_Inherit;
-      (int)dyn->action_type = dyn->total_action_type & ~action_type | ge_mActionType_Inherit;
+      dyn->dyn_type =(ge_mDynType)((int)dyn->total_dyn_type & ~dyn_type | ge_mDynType_Inherit);
+      dyn->action_type = (ge_mActionType)((int)dyn->total_action_type & ~action_type | ge_mActionType_Inherit);
     }
     else { 
       dyn->dyn_type = dyn->total_dyn_type;
@@ -1966,11 +1966,11 @@ int Graph::convert_object( grow_tObject object)
     dyn = new GeDyn( this);
     grow_SetUserData( object, (void *) dyn);
 
-    (int)dyn->total_dyn_type = 0;
-    (int)dyn->total_dyn_type |= ge_mDynType_Trend;
-    (int)dyn->total_action_type = 0;
+    dyn->total_dyn_type = ge_mDynType_No;
+    dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Trend);
+    dyn->total_action_type = ge_mActionType_No;
     if ( strcmp( trace_data->ref_object, "") != 0) 
-      (int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
     dyn->update_elements();
     for ( elem = dyn->elements; elem; elem = elem->next) {
       if ( elem->dyn_type == ge_mDynType_Trend) {
@@ -2000,11 +2000,11 @@ int Graph::convert_object( grow_tObject object)
     dyn = new GeDyn( this);
     grow_SetUserData( object, (void *) dyn);
 
-    (int)dyn->total_dyn_type = 0;
-    (int)dyn->total_dyn_type |= ge_mDynType_Bar;
-    (int)dyn->total_action_type = 0;
+    dyn->total_dyn_type = ge_mDynType_No;
+    dyn->total_dyn_type = (ge_mDynType)((int)dyn->total_dyn_type | ge_mDynType_Bar);
+    dyn->total_action_type = ge_mActionType_No;
     if ( strcmp( trace_data->ref_object, "") != 0) 
-      (int)dyn->total_action_type |= ge_mActionType_PopupMenu;
+      dyn->total_action_type = (ge_mActionType)((int)dyn->total_action_type | ge_mActionType_PopupMenu);
     dyn->update_elements();
     for ( elem = dyn->elements; elem; elem = elem->next) {
       if ( elem->dyn_type == ge_mDynType_Bar) {

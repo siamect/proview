@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_appl.h,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_appl.h,v 1.4 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,8 @@ class rt_appl {
   double scantime() { return m_scantime;}
   void set_scantime( double time) { m_scantime = time;}
   pwr_tOid& apploid() { return m_apploid;}
+
+  virtual ~rt_appl() {}
 
  private:
   errh_eAnix m_anix;

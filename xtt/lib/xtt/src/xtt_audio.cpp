@@ -549,7 +549,7 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
       snd_pcm_close(ALSA_handle);
       return -1;
     }
-    if ((err = snd_pcm_hw_params_set_rate_near (ALSA_handle, hw_params, samplerate, 0)) < 0)
+    if ((err = snd_pcm_hw_params_set_rate_near (ALSA_handle, hw_params, &samplerate, 0)) < 0)
     {
       fprintf (stderr, "cannot set sample rate (%s)\n",snd_strerror (err));
       snd_pcm_close(ALSA_handle);
@@ -561,10 +561,10 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
       snd_pcm_close(ALSA_handle);
       return -1;
     }
-    if((err =  snd_pcm_hw_params_set_period_size_near(ALSA_handle, hw_params, period_size, 
+    if((err =  snd_pcm_hw_params_set_period_size_near(ALSA_handle, hw_params, &period_size, 
 						      0)) <0)
     {
-      fprintf(stderr, "could not set period size\n",snd_strerror (err));
+      fprintf(stderr, "could not set period size (%s)\n",snd_strerror (err));
       snd_pcm_close(ALSA_handle);
       return -1;
     }

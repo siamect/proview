@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.11 2005-11-17 08:59:21 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.12 2005-12-13 15:10:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -397,7 +397,7 @@ int CnvWblToHtml::close()
   }
 #endif
 
-  char cmd[200];
+  char cmd[400];
   sprintf( cmd, "cat %s/*.jsf %s/../../orm_menu.js > %s/menu.js", ctx->dir, 
 	   ctx->dir, ctx->dir);
   system( cmd);

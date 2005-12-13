@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mq.h,v 1.2 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_mq.h,v 1.3 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ struct mq_descriptor {
 
 typedef struct mq_descriptor* mqd_t; /* Process-level message queue descriptor */
 
-#define  MQ_PRIO_MAX    (256)
+#define  PWR_MQ_PRIO_MAX    (256)
 
 #define  P4IPC_MSGSIZE	128  /* Implementation specified default size in bytes of
 		       	      * a message.  Used when attr is not specified by 

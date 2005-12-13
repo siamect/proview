@@ -239,6 +239,7 @@ sub build_all ()
   _build("wbl", "bcomp", "lib");
   _build("wbl", "mcomp", "lib");
   _build("wbl", "wb", "lib");
+  _build("wbl", "rt", "lib");
   _build("doc", "web", "all");
   _build("doc", "dweb", "all");
   _build("doc", "orm", "all");

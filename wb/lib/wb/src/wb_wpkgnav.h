@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wpkgnav.h,v 1.4 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,7 +66,7 @@ class WPkgNav {
 	wb_eUtility	wa_utility,
 	Widget 		*w,
 	pwr_tStatus 	*status);
-    ~WPkgNav();
+    virtual ~WPkgNav();
 
     void 		*parent_ctx;
     Widget		parent_wid;
@@ -105,6 +105,8 @@ class WItemPkg {
 
     brow_tNode		node;
     char	 	name[120];
+
+    virtual ~WItemPkg() {}
 };
 
 class WItemPkgNode : public WItemPkg {

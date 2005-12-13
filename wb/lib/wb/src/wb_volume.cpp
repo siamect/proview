@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.31 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.32 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -85,12 +85,13 @@ bool wb_volume::operator!=(const wb_volume& v) const
 
 wb_env wb_volume::env()
 {
-  wb_env e;
 
-  if ( !m_vrep)
+  if ( !m_vrep) {
+    wb_env e;
     return e;
+  }
 
-  e = wb_env(m_vrep->erep());
+  wb_env e = wb_env((wb_erep *) m_vrep->erep());
   return e;
 }
 

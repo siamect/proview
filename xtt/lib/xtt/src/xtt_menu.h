@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.h,v 1.6 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_menu.h,v 1.7 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,7 +129,7 @@ typedef struct {
 #if defined (OS_LYNX)  || defined (OS_LINUX)
 # define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g ## Class ## _XttMethods[]
 # define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g ## Type ## _XttClassMethods[]
-# define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[0])pwr_g ## Class ## _XttMethods}
+# define pwr_BindXttClass(Class) {#Class, (xtt_sMethodBinding (*)[])pwr_g ## Class ## _XttMethods}
 # define pwr_BindXttMethod(Method) {#Method, (pwr_tStatus (*)( xmenu_sMenuCall *))Method}
 #elif defined (OS_VMS)
 # define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g## Class ##_XttMethods[]

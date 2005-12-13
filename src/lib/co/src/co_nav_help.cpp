@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.cpp,v 1.8 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_nav_help.cpp,v 1.9 2005-12-13 15:13:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,7 +129,7 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
   int	bold;
   int	code;
   int	horizontal_line;
-  int	style;
+  int	style = 0;
   char  style_str[80];
   int   image;
   char  imagefile[80];

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hist.cpp,v 1.9 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_hist.cpp,v 1.10 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,7 @@ extern "C" {
 #include "rt_mh_util.h"
 #include "rt_elog.h"
 #include "co_dcli.h"
-#include <db.h>
+#include <db40/db.h>
 }
 
 #include <Xm/Xm.h>

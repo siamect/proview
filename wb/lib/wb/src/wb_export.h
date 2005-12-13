@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_export.h,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_export.h,v 1.6 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,8 @@ public:
   virtual bool exportDocBlock(wb_import &e) = 0;
     
   virtual bool exportMeta(wb_import &e) = 0;
+
+  virtual ~wb_export() {}
 };
 
 #endif

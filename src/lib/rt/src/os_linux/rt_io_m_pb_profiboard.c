@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.4 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.5 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -347,7 +347,7 @@ static pwr_tStatus IoAgentInit (
   pwr_tUInt16 sts;
   pwr_tStatus status;
   io_sAgentLocal *local;
-  unsigned char devname[25];
+  char devname[25];
   struct timespec rqtp, rmtp;
   int i;
   char ok;
@@ -368,7 +368,7 @@ static pwr_tStatus IoAgentInit (
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
 
   /* Open Pb driver */
-  sprintf(devname, "/dev/pbus%1d", op->BusNumber);
+  sprintf(devname, "/dev/pbus%1d", (int)op->BusNumber);
   local->Pb_fp = open(devname, O_RDWR);
 
   if (local->Pb_fp == -1)

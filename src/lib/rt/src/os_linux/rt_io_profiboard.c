@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_profiboard.c,v 1.4 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_io_profiboard.c,v 1.5 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,7 +77,7 @@ pwr_tUInt16 pb_cmi_write(int fp,
   int sts;
 
   cws.sdb_ptr = sdb_ptr;
-  cws.data_ptr = (char *) data_ptr;
+  cws.data_ptr = (unsigned char *) data_ptr;
   cws.data_len_ptr = &data_len;
   cws.retval_ptr = &retval;
 
@@ -358,7 +358,7 @@ pwr_tUInt16 pb_get_slave_cfg(int fp,
   T_PROFI_SERVICE_DESCR sdb;
   T_DP_GET_CFG_REQ gcr; 
   USIGN8 data[256];
-  short data_len;
+  unsigned short data_len;
   pwr_tUInt16 sts;
 
   sdb.comm_ref = 0;

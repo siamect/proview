@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_import.h,v 1.9 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_import.h,v 1.10 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,8 @@ public:
   virtual bool importDocBlock(pwr_tOid oid, size_t size, char *block) = 0;
     
   virtual bool importMeta(dbs_sMenv *mep) = 0;
+
+  virtual ~wb_import() {}
     
 };
 

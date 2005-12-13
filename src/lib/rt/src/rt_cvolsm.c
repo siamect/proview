@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolsm.c,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvolsm.c,v 1.4 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -270,7 +270,7 @@ cvolsm_GetObjectInfo (
     cid.c.bix = 0;	/* To get the class id.  */
     cp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
     if (cp != NULL)    
-      ndc_ConvertData(&sts, np, cp, &mp->aref, rmp->info, p, &size, ndc_eOp_encode, mp->aref.Offset, 0);
+      ndc_ConvertData(&sts, np, cp, &mp->aref, rmp->info, p, (pwr_tUInt32 *)&size, ndc_eOp_encode, mp->aref.Offset, 0);
   }
   rmp->aref = mp->aref;
   rmp->sts  = sts;
@@ -398,7 +398,7 @@ cvolsm_SetObjectInfo (
     cid.c.bix = 0;	/* To get the class id.  */
     cp = hash_Search(&sts, gdbroot->cid_ht, &cid.pwr);
     if (cp != NULL)    
-      ndc_ConvertData(&sts, np, cp, &mp->aref, p, mp->info, &size, ndc_eOp_decode, mp->aref.Offset, 0);
+      ndc_ConvertData(&sts, np, cp, &mp->aref, p, mp->info, (pwr_tUInt32 *)&size, ndc_eOp_decode, mp->aref.Offset, 0);
   }
 
   rmp->aref = mp->aref;

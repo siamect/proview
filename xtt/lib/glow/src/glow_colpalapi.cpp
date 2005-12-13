@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalapi.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_colpalapi.cpp,v 1.4 2005-12-13 15:14:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 #include "glow_std.h"
 
 #include <iostream.h>
+#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

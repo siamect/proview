@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pool.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_pool.c,v 1.3 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -433,8 +433,9 @@ pool_Address (
     return NULL;
 
   prf.m = r;
-  if (prf.b.seg > pool_cSegs)
-    errh_ReturnOrBugcheck(NULL, sts, POOL__BADSEG, "");
+//  comparison always false prf.b.seg 8 bits and pool_cSegs 1 << 8, 9 bits
+//  if (prf.b.seg > pool_cSegs)
+//    errh_ReturnOrBugcheck(NULL, sts, POOL__BADSEG, "");
 
   psp = &php->seg[prf.b.seg];
   gpsp = &php->gphp->seg[prf.b.seg];

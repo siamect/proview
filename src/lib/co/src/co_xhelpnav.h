@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.h,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_xhelpnav.h,v 1.8 2005-12-13 15:13:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -154,6 +154,8 @@ class HItem {
     virtual bool search( char *str, bool strict) { return false;}
     xhelpnav_eHItemType	type;
     brow_tNode		node;
+
+    virtual ~HItem() {}
 };
 
 class HItemHeader : public HItem {

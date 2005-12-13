@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sysmon.h,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_sysmon.h,v 1.3 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@ class sysmon_object {
  public:
   sysmon_object( pwr_sAttrRef *arp) : aref(*arp), p(0), scan_div(0), scan_cnt(0)
     {}
+  virtual ~sysmon_object() {}
   void open( double base_scantime);
   void close();
   void scan();
@@ -52,6 +53,7 @@ class sysmon_object {
   int		scan_div;
   int		scan_cnt;
   virtual void	exec() {};
+
 };
 
 class disksup_object: public sysmon_object {

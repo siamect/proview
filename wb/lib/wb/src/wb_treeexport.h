@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_treeexport.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_treeexport.h,v 1.4 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,8 @@ class wb_treeexport
 public:
 
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid) = 0;
+
+  virtual ~wb_treeexport() {}
 };
 
 #endif

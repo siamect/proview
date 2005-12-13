@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.9 2005-12-06 10:45:12 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.10 2005-12-13 15:14:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -373,10 +373,10 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
   grow_AddRect( nc, "", -MARK_WIDTH/2, 30.1, MARK_WIDTH, 1.8, glow_eDrawType_LineGray, 1, 0,
 		glow_mDisplayLevel_1, 0, 0, 1,
 		glow_eDrawType_Color33, NULL);
-  glow_sPoint p1[3] = { -0.1, 30.3, {-MARK_WIDTH/2+0.1, 31},{-0.1, 31.7}};
+  glow_sPoint p1[3] = { {-0.1, 30.3}, {-MARK_WIDTH/2+0.1, 31},{-0.1, 31.7}};
   grow_AddPolyLine( nc, "", p1, 3, glow_eDrawType_Line, 1, 0, 1, 0, 1, glow_eDrawType_Color38,
 		    1, 0);
-  glow_sPoint p2[3] = { 0.1, 30.3, { MARK_WIDTH/2-0.1, 31},{ 0.1, 31.7}};
+  glow_sPoint p2[3] = { {0.1, 30.3}, { MARK_WIDTH/2-0.1, 31},{ 0.1, 31.7}};
   grow_AddPolyLine( nc, "", p2, 3, glow_eDrawType_Line, 1, 0, 1, 0, 1, glow_eDrawType_Color38,
 		    1, 0);
   grow_CreateGrowSlider( curve->growcurve_ctx, "", nc, 1, 0, NULL, &curve->curve_markobject);

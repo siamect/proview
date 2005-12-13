@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.6 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.7 2005-12-13 15:14:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@
 #include <X11/Xlib.h>
 #include "glow.h"
 #include "glow_ctx.h"
+#include "glow_nodeclass.h"
 
 class GlowExportJBean {
   public:

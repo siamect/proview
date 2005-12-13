@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolc.c,v 1.4 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvolc.c,v 1.5 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -159,7 +159,7 @@ cvolc_GetObjectInfo (
         cid.c.bix = 0;	/* To get the class id.  */
         cp = hash_Search(sts, gdbroot->cid_ht, &cid.pwr);
         if (cp != NULL) {
-	  ndc_ConvertData(sts, np, cp, arp, p, rmp->info, &size, ndc_eOp_decode, arp->Offset, 0);
+	  ndc_ConvertData(sts, np, cp, arp, p, rmp->info, (pwr_tUInt32 *)&size, ndc_eOp_decode, arp->Offset, 0);
 	}
       } else {
 
@@ -189,7 +189,7 @@ cvolc_GetObjectInfo (
         }
         
 	rsize   = rarp->Size;
-        ndc_ConvertRemoteData(sts, np, ccp, rarp, rmp->info, rmp->info, &rsize, ndc_eOp_decode, rarp->Offset, 0);
+        ndc_ConvertRemoteData(sts, np, ccp, rarp, rmp->info, rmp->info, (pwr_tUInt32 *)&rsize, ndc_eOp_decode, rarp->Offset, 0);
         if (ODD(*sts)) {
           if (ccp->flags.b.rnConv) {
             if (tbl == NULL) {
@@ -199,14 +199,14 @@ cvolc_GetObjectInfo (
             }
             gdb_ScopeLock {
               ndc_ConvertRemoteToNativeTable(sts, ccp, tbl, rarp,
-                                               arp, p, rmp->info, &size,
+                                               arp, p, rmp->info, (pwr_tUInt32 *)&size,
 					       arp->Offset, 0, 0, &first, np->nid);
             } gdb_ScopeUnlock;
 
           } else {
             /* The object pointer may be invalid after gdb has been open, reset it */
             ap->op = NULL;
-            ndc_ConvertRemoteToNativeData(sts, ccp, ridx, ap, rarp, arp, p, rmp->info, &size, arp->Offset, 0, 0, np->nid);
+            ndc_ConvertRemoteToNativeData(sts, ccp, ridx, ap, rarp, arp, p, rmp->info, (pwr_tUInt32 *)&size, arp->Offset, 0, 0, np->nid);
           }
         }
       }      
@@ -424,16 +424,16 @@ cvolc_SetObjectInfo (
     cid.c.bix = 0;	/* To get the class id.  */
     cp = hash_Search(sts, gdbroot->cid_ht, &cid.pwr);
     if (cp != NULL) {
-      ndc_ConvertData(sts, np, cp, arp, smp->info, p, &size, ndc_eOp_encode, arp->Offset, 0);
+      ndc_ConvertData(sts, np, cp, arp, smp->info, p, (pwr_tUInt32 *)&size, ndc_eOp_encode, arp->Offset, 0);
     }
   } else {
     /* The object pointer may be invalid after gdb has been open, reset it */
     ap->op = NULL;
     rsize = rarp->Size;
-    ndc_ConvertNativeToRemoteData(sts, ccp, ridx, ap, rarp, arp, smp->info, p, &rsize, rarp->Offset, 0, 0, np->nid);
+    ndc_ConvertNativeToRemoteData(sts, ccp, ridx, ap, rarp, arp, smp->info, p, (pwr_tUInt32 *)&rsize, rarp->Offset, 0, 0, np->nid);
     if (ODD(*sts)) {
       rsize   = rarp->Size;
-      ndc_ConvertRemoteData(sts, np, ccp, rarp, smp->info, smp->info, &rsize, ndc_eOp_encode, rarp->Offset, 0);
+      ndc_ConvertRemoteData(sts, np, ccp, rarp, smp->info, smp->info, (pwr_tUInt32 *)&rsize, ndc_eOp_encode, rarp->Offset, 0);
     }    
     if (EVEN(*sts)) {
       net_Free(NULL, smp);

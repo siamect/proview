@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xdr.c,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_xdr.c,v 1.5 2005-12-13 15:13:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -262,7 +262,7 @@ xdr_pwr_tInt32(XDR *xdrs, pwr_tInt32 *objp)
 bool_t
 xdr_pwr_tInt64(XDR *xdrs, pwr_tInt64 *objp)
 {
-  if (!xdr_int(xdrs, &objp->low)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->low)) return FALSE;
   if (!xdr_int(xdrs, &objp->high)) return FALSE;
 
   return TRUE;
@@ -293,8 +293,8 @@ xdr_pwr_tUInt32(XDR *xdrs, pwr_tUInt32 *objp)
 bool_t
 xdr_pwr_tUInt64(XDR *xdrs, pwr_tUInt64 *objp)
 {
-  if (!xdr_int(xdrs, &objp->low)) return FALSE;
-  if (!xdr_int(xdrs, &objp->high)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->low)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->high)) return FALSE;
 
   return TRUE;
 }
@@ -324,8 +324,8 @@ xdr_pwr_tObjectIx(XDR *xdrs, pwr_tObjectIx *objp)
 bool_t
 xdr_pwr_tObjid(XDR *xdrs, pwr_tObjid *objp)
 {
-  if (!xdr_int(xdrs, &objp->oix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->vid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->oix)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->vid)) return FALSE;
 
   return TRUE;
 }
@@ -397,8 +397,8 @@ xdr_pwr_tNodeIndex(XDR *xdrs, pwr_tNodeIndex *objp)
 bool_t
 xdr_pwr_tRefId(XDR *xdrs, pwr_tRefId *objp)
 {
-  if (!xdr_int(xdrs, &objp->rix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->nid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->rix)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->nid)) return FALSE;
 
   return TRUE;
 }
@@ -407,8 +407,8 @@ xdr_pwr_tRefId(XDR *xdrs, pwr_tRefId *objp)
 bool_t
 xdr_pwr_tDlid(XDR *xdrs, pwr_tDlid *objp)
 {
-  if (!xdr_int(xdrs, &objp->rix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->nid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->rix)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->nid)) return FALSE;
 
   return TRUE;
 }
@@ -417,8 +417,8 @@ xdr_pwr_tDlid(XDR *xdrs, pwr_tDlid *objp)
 bool_t
 xdr_pwr_tSubid(XDR *xdrs, pwr_tSubid *objp)
 {
-  if (!xdr_int(xdrs, &objp->rix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->nid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->rix)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->nid)) return FALSE;
 
   return TRUE;
 }
@@ -558,12 +558,12 @@ xdr_pwr_mAttrRef(XDR *xdrs, pwr_mAttrRef *objp)
 bool_t 
 xdr_pwr_sAttrRef(XDR *xdrs, pwr_sAttrRef *objp)
 {
-  if (!xdr_int(xdrs, &objp->Objid.oix)) return FALSE;
-  if (!xdr_int(xdrs, &objp->Objid.vid)) return FALSE;
-  if (!xdr_int(xdrs, &objp->Body)) return FALSE;
-  if (!xdr_int(xdrs, &objp->Offset)) return FALSE;
-  if (!xdr_int(xdrs, &objp->Size)) return FALSE;
-  if (!xdr_int(xdrs, &objp->Flags.m)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Objid.oix)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Objid.vid)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Body)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Offset)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Size)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&objp->Flags.m)) return FALSE;
 
   return TRUE;
 }

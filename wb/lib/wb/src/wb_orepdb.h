@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_orepdb.h,v 1.12 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_orepdb.h,v 1.13 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,8 @@
 #include "wb_orep.h"
 #include "pwr_class.h"
 #include "wb_db.h"
+
+class wb_vrepdb;
 
 class wb_orepdb : wb_orep
 {

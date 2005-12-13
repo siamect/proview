@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_elog.c,v 1.6 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_elog.c,v 1.7 2005-12-13 15:11:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,7 +67,7 @@ char info_fname[200];
 int 
 main ()
 {
-  pwr_tUInt32 sts;
+  pwr_tStatus sts;
   pwr_tObjid  oid;
   qcom_sQid   my_q = qcom_cNQid;
   qcom_sGet   get;

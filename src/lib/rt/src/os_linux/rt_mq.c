@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mq.c,v 1.2 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_mq.c,v 1.3 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,6 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 
-#define __USE_GNU
 #include <sys/msg.h>
 
 #include <sys/mman.h>
@@ -159,12 +158,12 @@ int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len,
 {
     struct msgbuf* buf;
     int rc;
-    if (msg_prio > MQ_PRIO_MAX) { 
+    if (msg_prio > PWR_MQ_PRIO_MAX) { 
 	errno = EINVAL;
 	return -1;
     }
     buf = (struct msgbuf*)alloca(msg_len + sizeof(long));
-    buf->mtype = MQ_PRIO_MAX - msg_prio;
+    buf->mtype = PWR_MQ_PRIO_MAX - msg_prio;
     memcpy(buf->mtext, msg_ptr, msg_len);
     rc = msgsnd(mqdes->msgid, buf, msg_len, mqdes->flags);
     if (rc == 0 && mqdes->req != NULL && mqdes->req->pid != 0) { 
@@ -179,9 +178,9 @@ ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len,
 		   unsigned int *msg_prio)
 {
     struct msgbuf* buf = (struct msgbuf*)alloca(msg_len + sizeof(long));
-    ssize_t rc = msgrcv(mqdes->msgid, buf, msg_len,-MQ_PRIO_MAX, mqdes->flags);
+    ssize_t rc = msgrcv(mqdes->msgid, buf, msg_len,-PWR_MQ_PRIO_MAX, mqdes->flags);
     if (msg_prio != NULL && rc >= 0) { 
-	*msg_prio = MQ_PRIO_MAX - buf->mtype;
+	*msg_prio = PWR_MQ_PRIO_MAX - buf->mtype;
     }
     if (rc > 0) { 
 	memcpy(msg_ptr, buf->mtext, rc);

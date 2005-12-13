@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.15 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.16 2005-12-13 15:14:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -234,7 +234,7 @@ int io_connect_status( pwr_sAttrRef *sig_aref, pwr_sAttrRef *chan_aref)
   sts = gdh_AttrRefToPointer( &status_aref, (void **)&status_p);
   if ( EVEN(sts)) return 0;
 
-  gdh_StoreRtdbPointer( iostatus_p, status_p);
+  gdh_StoreRtdbPointer( (unsigned int *)iostatus_p, status_p);
 
   last_ioconnect = ioconnect_aref;
   return 1;

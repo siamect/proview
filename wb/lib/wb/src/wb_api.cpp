@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_api.cpp,v 1.7 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_api.cpp,v 1.8 2005-12-13 15:15:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,10 +69,14 @@ extern "C" {
 #include "wb_pal.h"
 #include "wb_nav.h"
 #include "wb_wtt.h"
+#undef min
+#undef max
 #include "wb_watt.h"
 #include "wb_wnav.h"
 #include "wb_wcast.h"
 #include "wb_api.h"
+
+
 
 //
 //  Interface to Pal

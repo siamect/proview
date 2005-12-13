@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.17 2005-12-06 09:19:38 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.18 2005-12-13 15:14:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 #include "glow_std.h"
 
 #include <iostream.h>
+#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>

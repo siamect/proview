@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_hist.cpp,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: jpwr_rt_hist.cpp,v 1.3 2005-12-13 15:11:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@ using namespace std;
 #include <string.h>
 #include <stdio.h>
 #include "jpwr_rt_hist.h"
-#include <db.h>
+#include <db40/db.h>
 
 extern "C" {
 #include "pwr.h"
