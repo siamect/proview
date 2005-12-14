@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.6 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.7 2005-12-14 13:06:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@ FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
 	hot(0), ctx(flow_ctx), nc(node_class), pos(flow_ctx, x1,y1), 
 	stored_pos(flow_ctx, x1, y1),
 	highlight(0), inverse(0), trace_attr_type(flow_eTraceType_Boolean), 
-	trace_inverted(0), trace_p(NULL),
+	trace_inverted(0), trace_p(NULL), user_data(0),
 	level(0), node_open(0),
 	relative_annot_pos(rel_annot_pos), relative_annot_x(0)
 {
