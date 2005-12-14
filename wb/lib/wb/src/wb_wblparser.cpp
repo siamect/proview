@@ -1,4 +1,4 @@
-/* $ANTLR 2.7.4: "wb_wblparser.g" -> "wb_wblparser.cpp"$ */
+/* $ANTLR 2.7.5 (20050128): "wb_wblparser.g" -> "wb_wblparser.cpp"$ */
 #include "wb_wblparser.hpp"
 #include <antlr/NoViableAltException.hpp>
 #include <antlr/SemanticException.hpp>
@@ -84,8 +84,7 @@ void wb_wblparser::unit() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_0);
+		recover(ex,_tokenSet_0);
 	}
 	returnAST = unit_AST;
 }
@@ -160,8 +159,7 @@ void wb_wblparser::volume() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_1);
+		recover(ex,_tokenSet_1);
 	}
 	returnAST = volume_AST;
 }
@@ -217,8 +215,7 @@ void wb_wblparser::sobject() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_1);
+		recover(ex,_tokenSet_1);
 	}
 	returnAST = sobject_AST;
 }
@@ -335,8 +332,7 @@ void wb_wblparser::object() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_2);
+		recover(ex,_tokenSet_2);
 	}
 	returnAST = object_AST;
 }
@@ -374,8 +370,7 @@ void wb_wblparser::cid() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_3);
+		recover(ex,_tokenSet_3);
 	}
 	returnAST = cid_AST;
 }
@@ -433,8 +428,7 @@ void wb_wblparser::body() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_4);
+		recover(ex,_tokenSet_4);
 	}
 	returnAST = body_AST;
 }
@@ -472,8 +466,7 @@ void wb_wblparser::oix() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_5);
+		recover(ex,_tokenSet_5);
 	}
 	returnAST = oix_AST;
 }
@@ -576,8 +569,7 @@ void wb_wblparser::attribute() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_6);
+		recover(ex,_tokenSet_6);
 	}
 	returnAST = attribute_AST;
 }
@@ -633,8 +625,7 @@ void wb_wblparser::value() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_6);
+		recover(ex,_tokenSet_6);
 	}
 	returnAST = value_AST;
 }
@@ -653,8 +644,7 @@ void wb_wblparser::oname() {
 	}
 	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& ex) {
 		reportError(ex);
-		consume();
-		consumeUntil(_tokenSet_0);
+		recover(ex,_tokenSet_0);
 	}
 	returnAST = oname_AST;
 }

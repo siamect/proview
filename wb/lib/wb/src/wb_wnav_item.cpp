@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.17 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.18 2005-12-14 11:20:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2278,6 +2278,23 @@ int WItemAttrObject::open_attributes( double x, double y)
     int			attr_exist = 0;
     int			input_cnt = 0;
     int			output_cnt = 0;
+    int			is_casted = 0;
+
+    // Check if attrobject is casted
+    if ( flags & PWR_MASK_CASTATTR) {
+      pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+      pwr_sAttrRef aar;
+      pwr_tTid tid;
+      
+      sts = ldh_ArefANameToAref( ldhses, &ar, name, &aar);
+      if ( EVEN(sts)) return sts;
+
+      sts = ldh_GetAttrRefOrigTid( ldhses, &aar, &tid);
+      if ( EVEN(sts)) return sts;
+
+      if ( tid != classid)
+	is_casted = 1;
+    }
 
     // Create some attributes
     brow_SetNodraw( brow->ctx);
@@ -2300,9 +2317,20 @@ int WItemAttrObject::open_attributes( double x, double y)
       if ( EVEN(sts))
         continue;
       for ( j = 0; j < rows; j++) {
-	strcpy( parname, name);
-	strcat( parname, ".");
-        strcat( parname, bodydef[j].ParName);
+	if ( is_casted) {
+	  // Remove any leading 'super.' in parname
+	  strcpy( parname, name);
+	  strcat( parname, ".");
+	  if ( strncmp( bodydef[j].ParName, "Super.", 6) == 0)
+	    strcat( parname, &bodydef[j].ParName[6]);
+	  else
+	    strcat( parname, bodydef[j].ParName);
+	}
+	else {
+	  strcpy( parname, name);
+	  strcat( parname, ".");
+	  strcat( parname, bodydef[j].ParName);
+	}
 
         if ( bodydef[j].Flags & ldh_mParDef_Shadowed)
           continue;

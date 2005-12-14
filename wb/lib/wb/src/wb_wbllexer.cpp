@@ -1,4 +1,4 @@
-/* $ANTLR 2.7.4: "wb_wbllexer.g" -> "wb_wbllexer.cpp"$ */
+/* $ANTLR 2.7.5 (20050128): "wb_wbllexer.g" -> "wb_wbllexer.cpp"$ */
 #include "wb_wbllexer.hpp"
 #include <antlr/CharBuffer.hpp>
 #include <antlr/TokenStreamException.hpp>
@@ -151,7 +151,7 @@ ANTLR_USE_NAMESPACE(antlr)RefToken wb_wbllexer::nextToken()
 				theRetToken=_returnToken;
 				break;
 			}
-			case 0x22 /* '"' */ :
+			case 0x22 /* '\"' */ :
 			{
 				mSTRING_LITERAL(true);
 				theRetToken=_returnToken;
@@ -197,11 +197,11 @@ tryAgain:;
 }
 
 void wb_wbllexer::mEQ(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = EQ;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
-	match('=');
+	match('=' /* charlit */ );
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
 	   _token->setText(text.substr(_begin, text.length()-_begin));
@@ -211,9 +211,9 @@ void wb_wbllexer::mEQ(bool _createToken) {
 }
 
 void wb_wbllexer::mOREQ(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = OREQ;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	match("|=");
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
@@ -225,9 +225,9 @@ void wb_wbllexer::mOREQ(bool _createToken) {
 }
 
 void wb_wbllexer::mWS(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = WS;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	{ // ( ... )+
 	int _cnt5=0;
@@ -235,17 +235,17 @@ void wb_wbllexer::mWS(bool _createToken) {
 		switch ( LA(1)) {
 		case 0x20 /* ' ' */ :
 		{
-			match(' ');
+			match(' ' /* charlit */ );
 			break;
 		}
 		case 0x9 /* '\t' */ :
 		{
-			match('\t');
+			match('\t' /* charlit */ );
 			break;
 		}
 		case 0xa /* '\n' */ :
 		{
-			match('\n');
+			match('\n' /* charlit */ );
 			if ( inputState->guessing==0 ) {
 #line 50 "wb_wbllexer.g"
 				newline();
@@ -255,7 +255,7 @@ void wb_wbllexer::mWS(bool _createToken) {
 		}
 		case 0xd /* '\r' */ :
 		{
-			match('\r');
+			match('\r' /* charlit */ );
 			break;
 		}
 		default:
@@ -281,9 +281,9 @@ void wb_wbllexer::mWS(bool _createToken) {
 }
 
 void wb_wbllexer::mCOMMENT(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = COMMENT;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	{
 	if ((LA(1) == 0x21 /* '!' */ ) && (LA(2) == 0x9 /* '\t' */  || LA(2) == 0x20 /* ' ' */ )) {
@@ -292,12 +292,12 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 		switch ( LA(1)) {
 		case 0x20 /* ' ' */ :
 		{
-			match(' ');
+			match(' ' /* charlit */ );
 			break;
 		}
 		case 0x9 /* '\t' */ :
 		{
-			match('\t');
+			match('\t' /* charlit */ );
 			break;
 		}
 		default:
@@ -309,7 +309,7 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 		{ // ( ... )*
 		for (;;) {
 			if ((_tokenSet_0.member(LA(1)))) {
-				matchNot('\n');
+				matchNot('\n' /* charlit */ );
 			}
 			else {
 				goto _loop10;
@@ -318,11 +318,11 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 		}
 		_loop10:;
 		} // ( ... )*
-		match('\n');
+		match('\n' /* charlit */ );
 	}
 	else if ((LA(1) == 0x21 /* '!' */ ) && (LA(2) == 0xa /* '\n' */ )) {
 		match("!");
-		match('\n');
+		match('\n' /* charlit */ );
 	}
 	else {
 		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine(), getColumn());
@@ -343,19 +343,19 @@ void wb_wbllexer::mCOMMENT(bool _createToken) {
 }
 
 void wb_wbllexer::mDOCBLOCK(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = DOCBLOCK;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	match("!/**");
 	{ // ( ... )*
 	for (;;) {
 		if (((LA(1) == 0x21 /* '!' */ ) && ((LA(2) >= 0x3 /* '\3' */  && LA(2) <= 0xff)))&&( LA(2)!='*' )) {
-			match('!');
+			match('!' /* charlit */ );
 		}
 		else if ((LA(1) == 0xd /* '\r' */ ) && (LA(2) == 0xa /* '\n' */ )) {
-			match('\r');
-			match('\n');
+			match('\r' /* charlit */ );
+			match('\n' /* charlit */ );
 			if ( inputState->guessing==0 ) {
 #line 75 "wb_wbllexer.g"
 				newline();
@@ -363,7 +363,7 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 			}
 		}
 		else if ((LA(1) == 0xd /* '\r' */ ) && ((LA(2) >= 0x3 /* '\3' */  && LA(2) <= 0xff))) {
-			match('\r');
+			match('\r' /* charlit */ );
 			if ( inputState->guessing==0 ) {
 #line 76 "wb_wbllexer.g"
 				newline();
@@ -371,7 +371,7 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 			}
 		}
 		else if ((LA(1) == 0xa /* '\n' */ )) {
-			match('\n');
+			match('\n' /* charlit */ );
 			if ( inputState->guessing==0 ) {
 #line 77 "wb_wbllexer.g"
 				newline();
@@ -400,12 +400,12 @@ void wb_wbllexer::mDOCBLOCK(bool _createToken) {
 }
 
 void wb_wbllexer::mINDEX(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = INDEX;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	_saveIndex = text.length();
-	match('[');
+	match('[' /* charlit */ );
 	text.erase(_saveIndex);
 	{ // ( ... )+
 	int _cnt17=0;
@@ -422,7 +422,7 @@ void wb_wbllexer::mINDEX(bool _createToken) {
 	_loop17:;
 	}  // ( ... )+
 	_saveIndex = text.length();
-	match(']');
+	match(']' /* charlit */ );
 	text.erase(_saveIndex);
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
@@ -433,9 +433,9 @@ void wb_wbllexer::mINDEX(bool _createToken) {
 }
 
 void wb_wbllexer::mVALUE(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = VALUE;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	ANTLR_USE_NAMESPACE(antlr)RefToken oname;
 	ANTLR_USE_NAMESPACE(antlr)RefToken soname;
 	ANTLR_USE_NAMESPACE(antlr)RefToken doname;
@@ -548,12 +548,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 			}
 			case 0x24 /* '$' */ :
 			{
-				match('$');
+				match('$' /* charlit */ );
 				break;
 			}
 			case 0x5f /* '_' */ :
 			{
-				match('_');
+				match('_' /* charlit */ );
 				break;
 			}
 			case 0xc4:
@@ -715,22 +715,22 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 					}
 					case 0x24 /* '$' */ :
 					{
-						match('$');
+						match('$' /* charlit */ );
 						break;
 					}
 					case 0x5f /* '_' */ :
 					{
-						match('_');
+						match('_' /* charlit */ );
 						break;
 					}
 					case 0x3a /* ':' */ :
 					{
-						match(':');
+						match(':' /* charlit */ );
 						break;
 					}
 					case 0x2d /* '-' */ :
 					{
-						match('-');
+						match('-' /* charlit */ );
 						break;
 					}
 					case 0xc4:
@@ -892,12 +892,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 							}
 							case 0x24 /* '$' */ :
 							{
-								match('$');
+								match('$' /* charlit */ );
 								break;
 							}
 							case 0x5f /* '_' */ :
 							{
-								match('_');
+								match('_' /* charlit */ );
 								break;
 							}
 							case 0xc4:
@@ -1059,12 +1059,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 									}
 									case 0x24 /* '$' */ :
 									{
-										match('$');
+										match('$' /* charlit */ );
 										break;
 									}
 									case 0x5f /* '_' */ :
 									{
-										match('_');
+										match('_' /* charlit */ );
 										break;
 									}
 									case 0xc4:
@@ -1088,7 +1088,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 								}  // ( ... )+
 								{
 								if ((LA(1) == 0x3a /* ':' */ )) {
-									match(':');
+									match(':' /* charlit */ );
 								}
 								else {
 								}
@@ -1234,12 +1234,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 											}
 											case 0x24 /* '$' */ :
 											{
-												match('$');
+												match('$' /* charlit */ );
 												break;
 											}
 											case 0x5f /* '_' */ :
 											{
-												match('_');
+												match('_' /* charlit */ );
 												break;
 											}
 											case 0xc4:
@@ -1401,12 +1401,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 													}
 													case 0x24 /* '$' */ :
 													{
-														match('$');
+														match('$' /* charlit */ );
 														break;
 													}
 													case 0x5f /* '_' */ :
 													{
-														match('_');
+														match('_' /* charlit */ );
 														break;
 													}
 													case 0xc4:
@@ -1568,12 +1568,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															}
 															case 0x24 /* '$' */ :
 															{
-																match('$');
+																match('$' /* charlit */ );
 																break;
 															}
 															case 0x5f /* '_' */ :
 															{
-																match('_');
+																match('_' /* charlit */ );
 																break;
 															}
 															case 0xc4:
@@ -1588,12 +1588,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															}
 															case 0x5b /* '[' */ :
 															{
-																match('[');
+																match('[' /* charlit */ );
 																break;
 															}
 															case 0x5d /* ']' */ :
 															{
-																match(']');
+																match(']' /* charlit */ );
 																break;
 															}
 															default:
@@ -1608,7 +1608,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 														{ // ( ... )*
 														for (;;) {
 															if ((LA(1) == 0x2e /* '.' */ )) {
-																match('.');
+																match('.' /* charlit */ );
 																{ // ( ... )+
 																int _cnt62=0;
 																for (;;) {
@@ -1689,12 +1689,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																	case 0x24 /* '$' */ :
 																	{
-																		match('$');
+																		match('$' /* charlit */ );
 																		break;
 																	}
 																	case 0x5f /* '_' */ :
 																	{
-																		match('_');
+																		match('_' /* charlit */ );
 																		break;
 																	}
 																	case 0xc4:
@@ -1709,12 +1709,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																	case 0x5b /* '[' */ :
 																	{
-																		match('[');
+																		match('[' /* charlit */ );
 																		break;
 																	}
 																	case 0x5d /* ']' */ :
 																	{
-																		match(']');
+																		match(']' /* charlit */ );
 																		break;
 																	}
 																	default:
@@ -1749,9 +1749,9 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 															try {
 																{
 																mDIGITS(false);
-																match('.');
+																match('.' /* charlit */ );
 																mDIGITS(false);
-																match('.');
+																match('.' /* charlit */ );
 																}
 															}
 															catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
@@ -1762,15 +1762,15 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 														}
 														if ( synPredMatched65 ) {
 															mDIGITS(false);
-															match('.');
+															match('.' /* charlit */ );
 															mDIGITS(false);
-															match('.');
+															match('.' /* charlit */ );
 															mDIGITS(false);
-															match('.');
+															match('.' /* charlit */ );
 															mDIGITS(false);
 															{
 															if ((LA(1) == 0x3a /* ':' */ )) {
-																match(':');
+																match(':' /* charlit */ );
 																mDIGITS(false);
 															}
 															else {
@@ -1797,7 +1797,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	{
 																	matchRange('0','9');
 																	}
-																	match('-');
+																	match('-' /* charlit */ );
 																	{
 																	switch ( LA(1)) {
 																	case 0x61 /* 'a' */ :
@@ -2002,7 +2002,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	}
 																	}
 																	}
-																	match('-');
+																	match('-' /* charlit */ );
 																	}
 																}
 																catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
@@ -2019,7 +2019,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																{
 																matchRange('0','9');
 																}
-																match('-');
+																match('-' /* charlit */ );
 																{
 																switch ( LA(1)) {
 																case 0x61 /* 'a' */ :
@@ -2224,7 +2224,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																}
 																}
 																}
-																match('-');
+																match('-' /* charlit */ );
 																{
 																matchRange('0','9');
 																}
@@ -2237,21 +2237,21 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																{
 																matchRange('0','9');
 																}
-																match(' ');
+																match(' ' /* charlit */ );
 																{
 																matchRange('0','9');
 																}
 																{
 																matchRange('0','9');
 																}
-																match(':');
+																match(':' /* charlit */ );
 																{
 																matchRange('0','9');
 																}
 																{
 																matchRange('0','9');
 																}
-																match(':');
+																match(':' /* charlit */ );
 																{
 																matchRange('0','9');
 																}
@@ -2260,7 +2260,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																}
 																{
 																if ((LA(1) == 0x2e /* '.' */ )) {
-																	match('.');
+																	match('.' /* charlit */ );
 																	{
 																	matchRange('0','9');
 																	}
@@ -2288,7 +2288,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																	try {
 																		{
 																		mDIGITS(false);
-																		match('.');
+																		match('.' /* charlit */ );
 																		}
 																	}
 																	catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
@@ -2299,7 +2299,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																}
 																if ( synPredMatched94 ) {
 																	mDIGITS(false);
-																	match('.');
+																	match('.' /* charlit */ );
 																	{ // ( ... )*
 																	for (;;) {
 																		if (((LA(1) >= 0x30 /* '0' */  && LA(1) <= 0x39 /* '9' */ ))) {
@@ -2318,12 +2318,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		switch ( LA(1)) {
 																		case 0x65 /* 'e' */ :
 																		{
-																			match('e');
+																			match('e' /* charlit */ );
 																			break;
 																		}
 																		case 0x45 /* 'E' */ :
 																		{
-																			match('E');
+																			match('E' /* charlit */ );
 																			break;
 																		}
 																		default:
@@ -2336,12 +2336,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		switch ( LA(1)) {
 																		case 0x2b /* '+' */ :
 																		{
-																			match('+');
+																			match('+' /* charlit */ );
 																			break;
 																		}
 																		case 0x2d /* '-' */ :
 																		{
-																			match('-');
+																			match('-' /* charlit */ );
 																			break;
 																		}
 																		case 0x30 /* '0' */ :
@@ -2396,9 +2396,9 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		inputState->guessing++;
 																		try {
 																			{
-																			match('-');
+																			match('-' /* charlit */ );
 																			mDIGITS(false);
-																			match('.');
+																			match('.' /* charlit */ );
 																			}
 																		}
 																		catch (ANTLR_USE_NAMESPACE(antlr)RecognitionException& pe) {
@@ -2408,9 +2408,9 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		inputState->guessing--;
 																	}
 																	if ( synPredMatched103 ) {
-																		match('-');
+																		match('-' /* charlit */ );
 																		mDIGITS(false);
-																		match('.');
+																		match('.' /* charlit */ );
 																		{ // ( ... )*
 																		for (;;) {
 																			if (((LA(1) >= 0x30 /* '0' */  && LA(1) <= 0x39 /* '9' */ ))) {
@@ -2429,12 +2429,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			switch ( LA(1)) {
 																			case 0x65 /* 'e' */ :
 																			{
-																				match('e');
+																				match('e' /* charlit */ );
 																				break;
 																			}
 																			case 0x45 /* 'E' */ :
 																			{
-																				match('E');
+																				match('E' /* charlit */ );
 																				break;
 																			}
 																			default:
@@ -2447,12 +2447,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			switch ( LA(1)) {
 																			case 0x2b /* '+' */ :
 																			{
-																				match('+');
+																				match('+' /* charlit */ );
 																				break;
 																			}
 																			case 0x2d /* '-' */ :
 																			{
-																				match('-');
+																				match('-' /* charlit */ );
 																				break;
 																			}
 																			case 0x30 /* '0' */ :
@@ -2500,7 +2500,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																	}
 																	else if ((LA(1) == 0x2d /* '-' */ ) && ((LA(2) >= 0x30 /* '0' */  && LA(2) <= 0x39 /* '9' */ ))) {
-																		match('-');
+																		match('-' /* charlit */ );
 																		mDIGITS(false);
 																		if ( inputState->guessing==0 ) {
 #line 139 "wb_wbllexer.g"
@@ -2509,7 +2509,7 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																	}
 																	else if ((LA(1) == 0x2e /* '.' */ )) {
-																		match('.');
+																		match('.' /* charlit */ );
 																		{ // ( ... )+
 																		int _cnt112=0;
 																		for (;;) {
@@ -2530,12 +2530,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			switch ( LA(1)) {
 																			case 0x65 /* 'e' */ :
 																			{
-																				match('e');
+																				match('e' /* charlit */ );
 																				break;
 																			}
 																			case 0x45 /* 'E' */ :
 																			{
-																				match('E');
+																				match('E' /* charlit */ );
 																				break;
 																			}
 																			default:
@@ -2548,12 +2548,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			switch ( LA(1)) {
 																			case 0x2b /* '+' */ :
 																			{
-																				match('+');
+																				match('+' /* charlit */ );
 																				break;
 																			}
 																			case 0x2d /* '-' */ :
 																			{
-																				match('-');
+																				match('-' /* charlit */ );
 																				break;
 																			}
 																			case 0x30 /* '0' */ :
@@ -2673,12 +2673,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																		}
 																		case 0x24 /* '$' */ :
 																		{
-																			match('$');
+																			match('$' /* charlit */ );
 																			break;
 																		}
 																		case 0x5f /* '_' */ :
 																		{
-																			match('_');
+																			match('_' /* charlit */ );
 																			break;
 																		}
 																		case 0xc4:
@@ -2776,12 +2776,12 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 																			}
 																			case 0x24 /* '$' */ :
 																			{
-																				match('$');
+																				match('$' /* charlit */ );
 																				break;
 																			}
 																			case 0x5f /* '_' */ :
 																			{
-																				match('_');
+																				match('_' /* charlit */ );
 																				break;
 																			}
 																			case 0xc4:
@@ -2816,39 +2816,39 @@ void wb_wbllexer::mVALUE(bool _createToken) {
 }
 
 void wb_wbllexer::mSWEC(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = SWEC;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	switch ( LA(1)) {
 	case 0xe5:
 	{
-		match('\345');
+		match(static_cast<unsigned char>('\345') /* charlit */ );
 		break;
 	}
 	case 0xe4:
 	{
-		match('\344');
+		match(static_cast<unsigned char>('\344') /* charlit */ );
 		break;
 	}
 	case 0xf6:
 	{
-		match('\366');
+		match(static_cast<unsigned char>('\366') /* charlit */ );
 		break;
 	}
 	case 0xc5:
 	{
-		match('\305');
+		match(static_cast<unsigned char>('\305') /* charlit */ );
 		break;
 	}
 	case 0xc4:
 	{
-		match('\304');
+		match(static_cast<unsigned char>('\304') /* charlit */ );
 		break;
 	}
 	case 0xd6:
 	{
-		match('\326');
+		match(static_cast<unsigned char>('\326') /* charlit */ );
 		break;
 	}
 	default:
@@ -2865,9 +2865,9 @@ void wb_wbllexer::mSWEC(bool _createToken) {
 }
 
 void wb_wbllexer::mDIGITS(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = DIGITS;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
 	{ // ( ... )+
 	int _cnt128=0;
@@ -2892,24 +2892,24 @@ void wb_wbllexer::mDIGITS(bool _createToken) {
 }
 
 void wb_wbllexer::mCHAR_LITERAL(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = CHAR_LITERAL;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
-	match('\'');
+	match('\'' /* charlit */ );
 	{
 	if ((LA(1) == 0x5c /* '\\' */ )) {
 		mESC(false);
 	}
 	else if ((_tokenSet_4.member(LA(1)))) {
-		matchNot('\'');
+		matchNot('\'' /* charlit */ );
 	}
 	else {
 		throw ANTLR_USE_NAMESPACE(antlr)NoViableAltForCharException(LA(1), getFilename(), getLine(), getColumn());
 	}
 	
 	}
-	match('\'');
+	match('\'' /* charlit */ );
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
 	   _token->setText(text.substr(_begin, text.length()-_begin));
@@ -2919,56 +2919,56 @@ void wb_wbllexer::mCHAR_LITERAL(bool _createToken) {
 }
 
 void wb_wbllexer::mESC(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = ESC;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
-	match('\\');
+	match('\\' /* charlit */ );
 	{
 	switch ( LA(1)) {
 	case 0x6e /* 'n' */ :
 	{
-		match('n');
+		match('n' /* charlit */ );
 		break;
 	}
 	case 0x72 /* 'r' */ :
 	{
-		match('r');
+		match('r' /* charlit */ );
 		break;
 	}
 	case 0x74 /* 't' */ :
 	{
-		match('t');
+		match('t' /* charlit */ );
 		break;
 	}
 	case 0x62 /* 'b' */ :
 	{
-		match('b');
+		match('b' /* charlit */ );
 		break;
 	}
 	case 0x66 /* 'f' */ :
 	{
-		match('f');
+		match('f' /* charlit */ );
 		break;
 	}
-	case 0x22 /* '"' */ :
+	case 0x22 /* '\"' */ :
 	{
-		match('"');
+		match('\"' /* charlit */ );
 		break;
 	}
 	case 0x30 /* '0' */ :
 	{
-		match('0');
+		match('0' /* charlit */ );
 		break;
 	}
 	case 0x27 /* '\'' */ :
 	{
-		match('\'');
+		match('\'' /* charlit */ );
 		break;
 	}
 	case 0x5c /* '\\' */ :
 	{
-		match('\\');
+		match('\\' /* charlit */ );
 		break;
 	}
 	default:
@@ -2986,11 +2986,11 @@ void wb_wbllexer::mESC(bool _createToken) {
 }
 
 void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
-	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; int _begin=text.length();
+	int _ttype; ANTLR_USE_NAMESPACE(antlr)RefToken _token; ANTLR_USE_NAMESPACE(std)string::size_type _begin = text.length();
 	_ttype = STRING_LITERAL;
-	int _saveIndex;
+	ANTLR_USE_NAMESPACE(std)string::size_type _saveIndex;
 	
-	match('"');
+	match('\"' /* charlit */ );
 	{ // ( ... )*
 	for (;;) {
 		switch ( LA(1)) {
@@ -3001,7 +3001,7 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 		}
 		case 0xa /* '\n' */ :
 		{
-			match('\n');
+			match('\n' /* charlit */ );
 			if ( inputState->guessing==0 ) {
 #line 153 "wb_wbllexer.g"
 				newline();
@@ -3011,7 +3011,7 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 		}
 		default:
 			if ((_tokenSet_5.member(LA(1)))) {
-				matchNot('"');
+				matchNot('\"' /* charlit */ );
 			}
 		else {
 			goto _loop125;
@@ -3020,7 +3020,7 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 	}
 	_loop125:;
 	} // ( ... )*
-	match('"');
+	match('\"' /* charlit */ );
 	if ( _createToken && _token==ANTLR_USE_NAMESPACE(antlr)nullToken && _ttype!=ANTLR_USE_NAMESPACE(antlr)Token::SKIP ) {
 	   _token = makeToken(_ttype);
 	   _token->setText(text.substr(_begin, text.length()-_begin));
@@ -3032,11 +3032,11 @@ void wb_wbllexer::mSTRING_LITERAL(bool _createToken) {
 
 const unsigned long wb_wbllexer::_tokenSet_0_data_[] = { 4294966264UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 // 0x3 0x4 0x5 0x6 0x7 0x8 0x9 0xb 0xc 0xd 0xe 0xf 0x10 0x11 0x12 0x13 
-// 0x14 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   ! " # 
+// 0x14 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   ! \" # 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_0(_tokenSet_0_data_,16);
 const unsigned long wb_wbllexer::_tokenSet_1_data_[] = { 4294958072UL, 4294967293UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 // 0x3 0x4 0x5 0x6 0x7 0x8 0x9 0xb 0xc 0xe 0xf 0x10 0x11 0x12 0x13 0x14 
-// 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   " # 
+// 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   \" # 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_1(_tokenSet_1_data_,16);
 const unsigned long wb_wbllexer::_tokenSet_2_data_[] = { 0UL, 67059712UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_2(_tokenSet_2_data_,10);
@@ -3044,7 +3044,7 @@ const unsigned long wb_wbllexer::_tokenSet_3_data_[] = { 0UL, 16UL, 2281701374UL
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_3(_tokenSet_3_data_,16);
 const unsigned long wb_wbllexer::_tokenSet_4_data_[] = { 4294967288UL, 4294967167UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 // 0x3 0x4 0x5 0x6 0x7 0x8 0x9 0xa 0xb 0xc 0xd 0xe 0xf 0x10 0x11 0x12 0x13 
-// 0x14 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   ! " # 
+// 0x14 0x15 0x16 0x17 0x18 0x19 0x1a 0x1b 0x1c 0x1d 0x1e 0x1f   ! \" # 
 const ANTLR_USE_NAMESPACE(antlr)BitSet wb_wbllexer::_tokenSet_4(_tokenSet_4_data_,16);
 const unsigned long wb_wbllexer::_tokenSet_5_data_[] = { 4294966264UL, 4294967291UL, 4026531839UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 4294967295UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL, 0UL };
 // 0x3 0x4 0x5 0x6 0x7 0x8 0x9 0xb 0xc 0xd 0xe 0xf 0x10 0x11 0x12 0x13 

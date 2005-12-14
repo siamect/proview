@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.27 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.28 2005-12-14 11:20:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "co_dcli.h"
-#include "db40/db_cxx.h"
+#include "db_cxx.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
 #include "wb_destination.h"
