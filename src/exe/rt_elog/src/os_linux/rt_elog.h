@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_elog.h,v 1.4 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: rt_elog.h,v 1.5 2005-12-14 13:05:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@
 #include <string.h>
 #include <limits.h>
 #include <time.h>
-#include <db40/db.h>
+#include <db.h>
 #include "co_time.h"
 #include "rt_errh.h"
 #include "rt_gdh.h"
