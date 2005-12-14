@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.17 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.18 2005-12-14 13:07:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <float.h>
+#include <math.h>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/Text.h>
