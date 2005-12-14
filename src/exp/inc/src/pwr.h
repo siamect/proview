@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.21 2005-11-02 14:06:53 claes Exp $
+ * Proview   $Id: pwr.h,v 1.22 2005-12-14 13:05:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,7 +145,7 @@ typedef int             pwr_tInt32;		//!< 32-bit integer type.
 
 //! 64-bit integer type.
 /*_*
-  @aref float64 Float64
+  @aref int64 Int64
 */
 typedef struct {
   unsigned int low;
@@ -154,7 +154,7 @@ typedef struct {
 
 //! 64-bit unsigned integer type.
 /*_*
-  @aref int64 Int64
+  @aref uint64 UInt64
 */
 typedef struct {
   unsigned int low;
