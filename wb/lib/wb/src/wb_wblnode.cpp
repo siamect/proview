@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.52 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.53 2005-12-14 07:22:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,14 +25,52 @@
 #include "wb_orepwbl.h"
 #include "wb_merep.h"
 #include "wb_cdrep.h"
-#include "wb_wblvocabTokenTypes.hpp"
 #include "wb_dbs.h"
 #include "wb_name.h"
 #include "wb_treeimport.h"
 
+#include "wb_wblvocabTokenTypes.hpp"
+typedef	enum {
+		tokensEOF_ = 1,
+		tokensOBJECT = 4,
+		tokensENDOBJECT = 5,
+		tokensVOLUME = 6,
+		tokensENDVOLUME = 7,
+		tokensSOBJECT = 8,
+		tokensENDSOBJECT = 9,
+		tokensBODY = 10,
+		tokensENDBODY = 11,
+		tokensATTRIBUTE = 12,
+		tokensBUFFER = 13,
+		tokensENDBUFFER = 14,
+		tokensDOBJECT = 15,
+		tokensENDDOBJECT = 16,
+		tokensDBUFFER = 17,
+		tokensENDDBUFFER = 18,
+		tokensDATTRIBUTE = 19,
+		tokensNUM_FLOAT = 20,
+		tokensINT = 21,
+		tokensOID = 22,
+		tokensDOCBLOCK = 23,
+		tokensASC_TIME = 24,
+		tokensEQ = 25,
+		tokensOREQ = 26,
+		tokensWS = 27,
+		tokensCOMMENT = 28,
+		tokensINDEX = 29,
+		tokensVALUE = 30,
+		tokensCHAR_LITERAL = 31,
+		tokensSTRING_LITERAL = 32,
+		tokensDIGITS = 33,
+		tokensESC = 34,
+		tokensSWEC = 35,
+		tokensNULL_TREE_LOOKAHEAD = 3
+	} wblnode_eTokens;
+struct wb_wblvocabTokenTypes tokens;
+
+
 #define wblAlign(size) ((size + 3) & ~3)
 
-struct wb_wblvocabTokenTypes tokens;
 
 /* Datatypes */
 static wbl_sSym datatypes[] =
@@ -412,8 +450,8 @@ int wb_wblnode::convconst( int *val, char *str)
 
 ref_wblnode wb_wblnode::find( wb_name *oname, int level)
 {
-
-  if (getType() == tokens.OBJECT) {
+  switch ( getType()) {
+  case tokensOBJECT:
     if ( oname->segmentIsEqual( name(), level)) {
       if ( !oname->hasSegment(level+1))
         return this;
@@ -426,15 +464,15 @@ ref_wblnode wb_wblnode::find( wb_name *oname, int level)
       return o->fws->find( oname, level);
     else
       return 0;
-  }
-
-  if ((getType() == tokens.VOLUME) || (getType() == tokens.OBJECT)) {
+  case tokensVOLUME:
     if ( oname->volumeIsEqual( name()) && !oname->hasSegment(0))
       return this;
     else if ( o->fch)
       return o->fch->find( oname, 0);
     else
       return 0;
+  default:
+    ;
   }
   return 0;
 }
@@ -1018,7 +1056,8 @@ void wb_wblnode::buildBody( ref_wblnode object)
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  if (getType() == tokens.BODY) {
+  switch ( getType()) {
+  case tokensBODY:
     if ( cdh_NoCaseStrcmp( name(), "SysBody") == 0)
       bix = pwr_eBix_sys;
     else if ( cdh_NoCaseStrcmp( name(), "RtBody") == 0)
@@ -1033,7 +1072,7 @@ void wb_wblnode::buildBody( ref_wblnode object)
     first_child = getFirstChild();
 
     // First child might be body time
-    if ( first_child && first_child->getType() == tokens.ASC_TIME) {
+    if ( first_child && first_child->getType() == tokensASC_TIME) {
       string timestr = first_child->getText();
       pwr_tTime bodytime;
       if ( stringToTime( timestr.c_str(), &bodytime)) {
@@ -1055,7 +1094,8 @@ void wb_wblnode::buildBody( ref_wblnode object)
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->buildBody( object);
-  } else {
+    break;
+  default:
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->buildBody( object);
@@ -1078,7 +1118,9 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
   int int_val, current_int_val;
   bool string_continue = false;
 
-  if (getType() == tokens.ATTRIBUTE) {
+  switch ( getType()) {
+  case tokensATTRIBUTE:
+  {
     first_child = getFirstChild();
     if ( !first_child) {
       // Attr exception
@@ -1086,12 +1128,16 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       goto error_continue;
     }
 
-    oper = first_child->getType();
-    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
+    switch ( oper = first_child->getType()) {
+    case tokensOREQ:
+    case tokensEQ:
+      break;
+    default:
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
     }
+
 
     if ( !m_vrep->getAttrInfo( name(), (pwr_eBix) bix, object->o->m_cid, &size, &offset,
                                &tid, &elements, &type, &flags)) {
@@ -1142,7 +1188,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
 
     // printf( "Attr %s %s %d %d %s\n", object->name, name, size, offset, value);
     if ( size == sizeof(int_val) && convconst( &int_val, value)) {
-      if ( oper == tokens.EQ) {
+      if ( oper == tokensEQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys)
           memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                   &int_val, size);
@@ -1150,7 +1196,7 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
           memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                   &int_val, size);
       }
-      else if ( oper == tokens.OREQ) {
+      else if ( oper == tokensOREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
           current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
           int_val |= current_int_val;
@@ -1185,14 +1231,16 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
       // Attr conversion exception
       m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
-
-error_continue:
-    ;
-
+    error_continue:
+    break;
   }
-  else if (getType() == tokens.BUFFER)
+  case tokensBUFFER:
   {
     buildBuff( object, bix, 0, 0, 0);
+    break;
+  }
+  default:
+    ;
   }
 }
 
@@ -1243,7 +1291,7 @@ void wb_wblnode::buildBuff( ref_wblnode object, pwr_eBix bix, pwr_tCid buffer_ci
     delete adrep;
   }
   first_child = getFirstChild();
-  if ( first_child && first_child->getType() == tokens.INDEX) {
+  if ( first_child && first_child->getType() == tokensINDEX) {
     int index;
     int nr = sscanf( first_child->name(), "%d", &index);
     if ( nr != 1) {
@@ -1283,7 +1331,8 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
   wb_adrep *adrep;
   wb_attrname aname;
 
-  if (getType() == tokens.ATTRIBUTE)
+  switch ( getType()) {
+  case tokensATTRIBUTE:
   {
     first_child = getFirstChild();
     if ( !first_child) {
@@ -1292,8 +1341,11 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
       goto error_continue;
     }
 
-    oper = first_child->getType();
-    if ((oper != tokens.OREQ) && (oper != tokens.EQ)) {
+    switch ( oper = first_child->getType()) {
+    case tokensOREQ:
+    case tokensEQ:
+      break;
+    default:
       // Attr exception
       m_vrep->error( "Attribute value required", getFileName(), line_number);
       goto error_continue;
@@ -1412,7 +1464,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
 
     // printf( "Attr %s %s %d %d %s\n", object->name, name, size, offset, value);
     if ( size/elements == sizeof(int_val) && convconst( &int_val, value)) {
-      if ( oper == tokens.EQ) {
+      if ( oper == tokensEQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) 
           memcpy( (char *)((unsigned int) object->o->rbody + offset), 
                   &int_val, size/elements);
@@ -1420,7 +1472,7 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
           memcpy( (char *)((unsigned int) object->o->dbody + offset), 
                   &int_val, size/elements);
       }
-      else if ( oper == tokens.OREQ) {
+      else if ( oper == tokensOREQ) {
         if ( bix == pwr_eBix_rt || bix == pwr_eBix_sys) {
           current_int_val = *(int *) ((unsigned int) object->o->rbody + offset);
           int_val |= current_int_val;
@@ -1448,13 +1500,16 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
       m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
     error_continue:
-    ;
+    break;
   }
-  else if (getType() == tokens.BUFFER)
+  case tokensBUFFER:
   {
     buildBuff( object, bix, buffer_cid, buffer_offset, buffer_size);
+    break;
   }
-
+  default:
+    ;
+  }
   next_sibling = getNextSibling();
   if ( next_sibling)
     next_sibling->buildBuffAttr( object, bix, buffer_cid, buffer_offset, buffer_size);
@@ -1465,7 +1520,9 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
   ref_wblnode first_child;
   ref_wblnode next_sibling;
 
-  if ((getType() == tokens.OBJECT) || (getType() == tokens.VOLUME)) {
+  switch ( getType()) {
+  case tokensOBJECT:
+  case tokensVOLUME:
     if ( !father) {
       // Volume root
       vol->root_object = this;
@@ -1497,12 +1554,12 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
 	prev = child;
 	child = child->getNextSibling();
       }
-      if ( prev && prev->getType() == tokens.DOCBLOCK)
+      if ( prev && prev->getType() == tokensDOCBLOCK)
 	o->docblock = prev;
     }
     // cout << "Linking " << name << endl;
-  }
-  else if (getType() == tokens.SOBJECT)
+    break;
+  case tokensSOBJECT:
   {
     ref_wblnode snode = m_vrep->find( name());
     if ( !snode) {
@@ -1517,7 +1574,9 @@ void wb_wblnode::link( wb_vrepwbl *vol, ref_wblnode father, ref_wblnode parent_a
     next_sibling = getNextSibling();
     if ( next_sibling)
       next_sibling->link( vol, father);
-  } else {
+    break;
+  }
+  default:
     first_child = getFirstChild();
     if ( first_child)
       first_child->link( vol, father);
@@ -1533,10 +1592,12 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
   ref_wblnode first_child = getFirstChild();
   m_vrep = vol;
 
-  if (getType() == tokens.DOCBLOCK) {
+  switch ( getType()) {
+  case tokensDOCBLOCK: {
     string txt = getText();
+    break;
   }  
-  else if (getType() == tokens.OBJECT)
+  case tokensOBJECT:
   {
 
     if ( !o)
@@ -1561,27 +1622,27 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 
       // If $ClassDef, register class in classlist
       if ( !isTemplate()) {
-        if ( first_child->getType() == tokens.VALUE &&
+        if ( first_child->getType() == tokensVALUE &&
              (strcmp( o->cname, "$ClassDef") == 0 ||
               strcmp( o->cname, "pwr_eClass_ClassDef") == 0)) {
           node_type = wbl_eNodeType_ClassDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$Type") == 0 ||
                     strcmp( o->cname, "pwr_eClass_Type") == 0)) {
           node_type = wbl_eNodeType_Type;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$TypeDef") == 0 ||
                     strcmp( o->cname, "pwr_eClass_TypeDef") == 0)) {
           node_type = wbl_eNodeType_TypeDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$ObjBodyDef") == 0 ||
                     strcmp( o->cname, "pwr_eClass_ObjBodyDef") == 0)) {
           node_type = wbl_eNodeType_ObjBodyDef;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$Attribute") == 0 ||
                     strcmp( o->cname, "$Input") == 0 ||
                     strcmp( o->cname, "$Output") == 0 ||
@@ -1591,11 +1652,11 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
                     strcmp( o->cname, "pwr_eClass_Param") == 0)) {
           node_type = wbl_eNodeType_Attribute;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$Buffer") == 0)) {
           node_type = wbl_eNodeType_Buffer;
         }
-        else if ( first_child->getType() == tokens.VALUE &&
+        else if ( first_child->getType() == tokensVALUE &&
                   ( strcmp( o->cname, "$Param") == 0)) {
           m_vrep->error( "Obsolete attribute class, use $Attribute instead",
                          getFileName(), line_number);
@@ -1607,29 +1668,32 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       if ( second_child) {
 	ref_wblnode third_child = second_child->getNextSibling();
 
-        if ((second_child->getType() == tokens.VALUE) ||
-            (second_child->getType() == tokens.INT)) {
+        switch ( second_child->getType()) {
+        case tokensVALUE:
+        case tokensINT: {
           string oixstr = second_child->getText();
           if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix)) {
             o->m_oid.oix = m_vrep->nextOix();
           }
-	  if ( third_child && third_child->getType() == tokens.ASC_TIME) {
+	  if ( third_child && third_child->getType() == tokensASC_TIME) {
 	    string timestr = third_child->getText();
 	    if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
 	      m_vrep->error( "Time syntax", getFileName(), line_number);
 	  }
+          break;
         }
-        else if (second_child->getType() == tokens.ASC_TIME) {
+        case tokensASC_TIME: {
 	  string timestr = second_child->getText();
 	  if ( !stringToTime( timestr.c_str(), &o->m_ohtime))
 	    m_vrep->error( "Time syntax", getFileName(), line_number);
+          break;
 	}
-        else if ((second_child->getType() == tokens.ENDOBJECT) ||
-                 (second_child->getType() == tokens.OBJECT) ||
-                 (second_child->getType() == tokens.BODY)) {
+        case tokensENDOBJECT:
+        case tokensOBJECT:
+        case tokensBODY:
           o->m_oid.oix = m_vrep->nextOix();
-        }
-        else {
+          break;
+        default:
           ; // Syntax exception -- oix
           m_vrep->error( "Syntax", getFileName(), line_number);
         }
@@ -1663,7 +1727,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       ref_wblnode last_child = child;
       string childname;
       while ( child) {
-        if ( child->getType() == tokens.OBJECT) {
+        if ( child->getType() == tokensOBJECT) {
           childname = child->getText();
           if ( strcmp( childname.c_str(), "Template") == 0) {
             o->c.templ = child;
@@ -1683,7 +1747,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
 	wb_wblnode *templ = new wb_wblnode();
 	// ref_wblnode reftempl(templ);
         o->c.templ = templ;
-        o->c.templ->setType( tokens.OBJECT);
+        o->c.templ->setType( tokensOBJECT);
         string tname("Template");
         o->c.templ->setText( tname);
         if ( last_child)
@@ -1711,8 +1775,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       if ( !(o->b.bix == pwr_eBix_rt || o->b.bix == pwr_eBix_sys || o->b.bix == pwr_eBix_dev))
         m_vrep->error( "Bad body index", getFileName(), line_number);
     }
+    break;
   }
-  else if (getType() == tokens.VOLUME)
+  case tokensVOLUME:
   {
     pwr_tVid vid;
     int sts;
@@ -1732,15 +1797,18 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Get oid
       ref_wblnode second_child = first_child->getNextSibling();
       if ( second_child) {
-        if ( second_child->getType() == tokens.OID) {
+        switch ( second_child->getType()) {
+        case tokensOID:
+        {
           string vidstring = second_child->getText();
           sts = cdh_StringToVolumeId( (char *)vidstring.c_str(), &vid);
           if ( EVEN(sts)) {
             // Syntax exception -- vid
             m_vrep->error( "Volume id syntax", getFileName(), line_number);
           }
+          break;
         }
-        else {
+        default:
           // Syntax exception -- vid
           m_vrep->error( "Volume syntax", getFileName(), line_number);
         }
@@ -1762,8 +1830,18 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
       // Build to get next oix
       build( false);
     }
+    break;
   }
-  else if (getType() == tokens.CHAR_LITERAL)
+  case tokensATTRIBUTE:
+  case tokensSOBJECT:
+  case tokensBODY:
+  case tokensVALUE:
+  case tokensINT:
+  case tokensNUM_FLOAT:
+  {
+    break;
+  }
+  case tokensCHAR_LITERAL:
   {
     // Remove quotes
     char str[10];
@@ -1773,8 +1851,9 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     str[strlen(str)-1] = 0;
     string new_text(str);
     setText(new_text);
+    break;
   }
-  else if (getType() == tokens.STRING_LITERAL)
+  case tokensSTRING_LITERAL:
   {
     // Remove quotes and replace \" with "
     char str[2048];
@@ -1796,6 +1875,10 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
     *t = 0;
     string new_text(str);
     setText(new_text);
+    break;
+  }
+  default:
+    ;
   }
 
   ref_wblnode child = first_child;
