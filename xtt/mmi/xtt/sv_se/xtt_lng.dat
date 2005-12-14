@@ -211,6 +211,7 @@ B 4.4.15 "Kontrollera förreglingar. Auto mod ej tillåten fläkt, "
 B 4.4.16 "Lokal mod aktiverad, fjärrstyrning ej tillåten fläkt, "
 B 4.4.17 "Lokal mod aktiverad fläkt, "
 B 4.4.19 "Automod aktiv. Manuell start/stop order ej tillåten fläkt, "
+E 4.4.20 "Motorskydd"
 # Motor
 B 4.5.1 "Hög motortemperatur, "
 B 4.5.2 "Hög Hög motortemperatur, "
@@ -246,6 +247,12 @@ E 4.12.2 "Drift"
 # Contactor
 E 4.13.1 "Svar"
 E 4.13.2 "Tidgräns"
+# BaseMotorIncrDecrAggr
+E 4.14.1 "Öka"
+E 4.14.2 "Minska"
+E 4.14.3 "Kontaktorer"
+E 4.14.4 "Gränslägen"
+B 4.14.5 "Gränsläge ej nått inom utsatt tid, "
 #
 # Manufacturer components
 #

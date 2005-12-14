@@ -715,25 +715,28 @@ palette PlcEditorPalette
       class CompModeDFo
       class CompModeAFo
       class CompModeDMFo
+      class CompModeD2Fo
       class CompModeD2MFo
       class CompModeAMFo
       class BaseMotorAggrFo
+      class BaseMotorIncrDecrAggrFo
       class RunTimeCounterFo
     }
     menu ABB
     {
       class ABB_ACS800_1Fo
       class ABB_ACS800MotorAggrFo
-      class ABB_ACS800PumpAggrFo
     }
     menu Simulate
     {
+      class ABB_ACS800_1Sim
       class ABB_ACS800MotorAggrSim
       class BaseContactorSim
       class BaseCValveSim
       class BaseMValveSim
       class BaseSensorSim
       class BaseMotorAggrSim
+      class BaseMotorIncrDecrAggrSim
       class BaseMotorSim
     }
   }

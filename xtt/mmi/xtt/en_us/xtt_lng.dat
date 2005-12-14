@@ -214,6 +214,7 @@ B 4.4.15 "Check interlocks. Automode is not allowed, not ready fan, "
 B 4.4.16 "Local mode is activated, remote control is not allowed fan, "
 B 4.4.17 "Local mode is activated for fan, "
 B 4.4.19 "Automode active. Manual start/stop order is not allowed fan, "
+E 4.4.20 "Overload relay"
 # Motor
 B 4.5.1 "High motor temperature, "
 B 4.5.2 "High High motor temperature, "
@@ -237,18 +238,24 @@ B 4.8.5 "Automode active. Manual start/stop order is not allowed, "
 E 4.8.6 "Interlock"
 # Safety switch
 B 4.9.1 "Safety switch is not on, "
-# Circuit breaker
+# BaseCircuitBreaker
 B 4.10.1 "CircuitBreaker tripped, "
 E 4.10.2 "CircuitBreaker is tripped"
 # CValve
 E 4.11.1 "Measured valve position"
 E 4.11.2 "Ordered valve position"
-# Runningtime
+# RunTimeCounter
 E 4.12.1 "Starts"
 E 4.12.2 "Run"
 # Contactor
 E 4.13.1 "Feedback"
 E 4.13.2 "TimeLimit"
+# BaseMotorIncrDecrAggr
+E 4.14.1 "Incr"
+E 4.14.2 "Decr"
+E 4.14.3 "Contactors"
+E 4.14.4 "Limit switches"
+B 4.14.5 "Timeout, limit switch not reached, "
 #
 # Manufacturer components
 #
