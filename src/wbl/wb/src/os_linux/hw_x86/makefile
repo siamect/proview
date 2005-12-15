@@ -42,7 +42,7 @@ realclean : clean
 
 $(load_dir)/wb.dbs :
 	@ echo "Generating snapshot for wb"
-	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/wb/src/wb.wb_load\"/out=\"$(target)\"
+	@ wb_cmd -i -q create snapshot /file=\"$(pwre_sroot)/wbl/wb/src/wb.wb_load\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 clean_wbl :
