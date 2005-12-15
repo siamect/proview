@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.48 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.49 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1524,9 +1524,9 @@ ldh_OpenSession(ldh_tSession *session, ldh_tVolume volume,
    it with objects from database on disk.  */
 
 pwr_tStatus
-ldh_OpenWB(ldh_tWorkbench *workbench, char *db)
+ldh_OpenWB(ldh_tWorkbench *workbench, char *db, unsigned int options)
 {
-  wb_erep *erep = new wb_erep();
+  wb_erep *erep = new wb_erep( options);
   wb_env *env = new wb_env(erep);
   env->load( db);
 

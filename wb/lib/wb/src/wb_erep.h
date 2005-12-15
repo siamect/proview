@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.h,v 1.21 2005-11-22 12:22:29 claes Exp $
+ * Proview   $Id: wb_erep.h,v 1.22 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,9 +54,10 @@ class wb_erep
   int m_volatile_idx;
   int m_buffer_max;
   bool m_ref_merep_occupied;
+  unsigned int m_options;
 
 public:
-  wb_erep();
+  wb_erep( unsigned int options = 0);
   ~wb_erep();
   void unref();
   wb_erep *ref();

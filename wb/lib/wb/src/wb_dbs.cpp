@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.23 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.24 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -317,7 +317,7 @@ bool wb_dbs::importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 
     char buf[40];
     time_AtoAscii( &oep->o.time, time_eFormat_DateAndTime, buf, sizeof(buf));
-    printf( "Class version: %s %s\n", name, buf);
+    // printf( "Class version: %s %s\n", name, buf);
   }
 
   return true;
@@ -479,7 +479,7 @@ wb_dbs::openFile()
 
   if ((ret = stat(m_fileName, &sb)) != 0) {
     sts = errno_GetStatus();
-    perror("stat");
+    // perror("stat");
     return sts;
   }
 

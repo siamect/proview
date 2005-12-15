@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.h,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_msgwindow.h,v 1.5 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,6 +75,7 @@ class MsgWindow {
     void 		(*find_plc_cb)( void *, pwr_tObjid);
 
     static MsgWindow 	*default_window;
+    static int	       	hide_info;
 
     void	map();
     void	unmap();
@@ -93,6 +94,7 @@ class MsgWindow {
     static void dset_nodraw() { if ( default_window) default_window->set_nodraw();}
     static void dreset_nodraw() { if ( default_window) default_window->reset_nodraw();}
     static void get_parent_widget( Widget *w) { *w = default_window->parent_wid;}
+    static void hide_info_messages( int hide) { hide_info = hide;}
 };
 
 #endif

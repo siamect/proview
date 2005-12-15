@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd.cpp,v 1.7 2005-09-06 14:13:43 claes Exp $
+ * Proview   $Id: wb_cmd.cpp,v 1.8 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,9 +63,11 @@ extern "C" {
 #include "wb_wnav_msg.h"
 #include "wb_cmdc.h"
 #include "wb.h"
+#include "co_msgwindow.h"
 
 static char cmd_volume[80];
 static char *cmd_volume_p = 0;
+static unsigned int cmd_options = 0;
 
 static void usage()
 {
@@ -100,7 +102,7 @@ static int cmd_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
   }
   else
   {
-    sts = ldh_OpenWB( &cmd->wbctx, cmd_volume_p);
+    sts = ldh_OpenWB( &cmd->wbctx, cmd_volume_p, cmd_options);
     if ( ODD(sts))
       *wbctx = cmd->wbctx;
   }
@@ -297,6 +299,7 @@ int main(int argc, char *argv[])
   int		i;
   char 		str[256] ;
   Cmd		*cmd;
+  int 		quiet = 0;
   
   cmd = new Cmd;
 
@@ -328,6 +331,15 @@ int main(int argc, char *argv[])
 	else
 	  cout << "Syntax error, volume is missing" << endl;
 	break;
+      case 'q':
+	// Quiet
+	quiet = 1;
+	break;
+      case 'i':
+	// Ignore errors for dbs files not yet created
+	cmd_options = ldh_mWbOption_IgnoreDLoadError;
+	MsgWindow::hide_info_messages( 1);
+	break;
       default:
 	cout << "Unknown argument: " << argv[i] << endl;
       }
@@ -339,7 +351,8 @@ int main(int argc, char *argv[])
     }
   }
 
-  cout << "\n\
+  if ( !quiet)
+    cout << "\n\
 Proview is free software; covered by the GNU General Public License.\n\
 You can redistribute it and/or modify it under the terms of this license.\n\
 \n\

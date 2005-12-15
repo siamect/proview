@@ -44,8 +44,8 @@ clean :
 realclean : clean $(clean_wbl)
 
 $(load_dir)/tlog.dbs :
-	@ echo "Generating snapshot for tlog"
-	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/tlog/src/\"/out=\"$(target)\"
+	@ echo "Generating loadfile for tlog"
+	@ wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/tlog/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_tlogclasses.h :

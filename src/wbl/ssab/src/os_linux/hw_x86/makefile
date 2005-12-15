@@ -43,8 +43,8 @@ clean :
 realclean : clean $(clean_wbl)
 
 $(load_dir)/ssab.dbs :
-	@ echo "Generating snapshot for ssab"
-	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/ssab/src/\"/out=\"$(target)\"
+	@ echo "Generating loadfile for ssab"
+	@ wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/ssab/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_ssabclasses.h :

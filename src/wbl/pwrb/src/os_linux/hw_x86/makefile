@@ -46,13 +46,13 @@ clean :
 realclean : clean clean_pwrb_xtthelp clean_pwrb_html clean_baseclasses
 
 $(load_dir)/pwrb.dbs :
-	@ echo "Generating snapshot for pwrb"
-	@ wb_cmd create snapshot /file=\"$(pwre_sroot)/wbl/pwrb/src/\"/out=\"$(target)\"
+	@ echo "Generating loadfile for pwrb"
+	@ wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/pwrb/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_baseclasses.h :
 	@ echo "Generating struct files for pwrb classes..."
-	@ co_convert -sv -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
+	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrb/src/pwrb_*.wb_load"
 
 $(inc_dir)/pwr_baseclasses.hpp :
 	@ echo "Generating hpp files for pwrb classes..."

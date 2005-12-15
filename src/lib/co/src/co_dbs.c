@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dbs.c,v 1.24 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_dbs.c,v 1.25 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -436,7 +436,7 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
 
     if ((ret = stat(filename, &sb)) != 0) {
         *sts = errno_GetStatus();
-        perror("stat");
+        // perror("stat");
         return NULL;
     }
 

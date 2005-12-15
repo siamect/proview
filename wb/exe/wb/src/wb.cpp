@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.20 2005-11-22 12:18:20 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.21 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -661,7 +661,7 @@ int main( int argc, char *argv[])
   CoXHelp *xhelp = new CoXHelp( mainwindow, 0, xhelp_eUtility_Wtt, &sts);
   CoXHelp::set_default( xhelp);
 
-  sts = ldh_OpenWB(&wbctx, volumename_p);
+  sts = ldh_OpenWB(&wbctx, volumename_p, 0);
   psts(sts, NULL);
   if (EVEN(sts)) exit(sts);
 

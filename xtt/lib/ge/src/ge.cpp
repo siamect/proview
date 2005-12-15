@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.18 2005-12-14 13:07:16 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.19 2005-12-15 07:43:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2607,7 +2607,7 @@ static int ge_get_ldhses_cb( void *ctx, ldh_tSesContext *ldhses, int load)
   else
   {
     // Open workbench and attatch some volume
-    sts = ldh_OpenWB( &wbctx, 0);
+    sts = ldh_OpenWB( &wbctx, 0, 0);
     if ( EVEN(sts)) return sts;
 
     // Attach first rootvolume, or if no rootvolume exist some other volume

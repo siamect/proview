@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.8 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,6 +55,7 @@ static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackS
 static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
 
 MsgWindow *MsgWindow::default_window = 0;
+int  MsgWindow::hide_info = 0;
 
 static void msgw_find_wnav_cb( void *ctx, pwr_tOid oid)
 {
@@ -72,10 +73,13 @@ static void msgw_find_plc_cb( void *ctx, pwr_tOid oid)
 
 void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, bool is_plc)
 {
+
   if ( default_window) {
     default_window->insert( severity, text, oid, is_plc);
   }
   else {
+    if ( hide_info && severity == 'I')
+      return;
     if ( severity == 'E' || severity == 'W' || severity == 'F' || severity == 'I')
       printf( "%c %s\n", severity, text);
     else

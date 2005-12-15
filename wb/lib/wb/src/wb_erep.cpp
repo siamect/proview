@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.41 2005-11-22 12:22:29 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.42 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,8 +47,8 @@ extern "C" {
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);
 
-wb_erep::wb_erep() : m_nRef(0), m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
-		     m_ref_merep_occupied(false)
+wb_erep::wb_erep( unsigned int options) : m_nRef(0), m_dir_cnt(0), m_volatile_idx(0), m_buffer_max(10),
+					  m_ref_merep_occupied(false), m_options( options)
 {
   m_merep = new wb_merep(0);
 
@@ -492,7 +492,10 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         MsgWindow::message( 'I', "Volume loaded", vname);
       }
       catch ( wb_error& e) {
-        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	  MsgWindow::message( 'I', "Unable to open volume", vname);
+	else
+	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
       }
     }
     fpm.close();
@@ -592,7 +595,10 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           vol_cnt++;
         }
         catch ( wb_error& e) {
-	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	    MsgWindow::message( 'I', "Unable to open volume", vname);
+	  else
+	    MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
         }
       }
       else {
@@ -613,7 +619,10 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	      MsgWindow::message( 'I', "Volume loaded", vname);
             }
             catch ( wb_error& e) {
-	      MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	        MsgWindow::message( 'I', "Unable to open volume", vname);
+	      else
+	        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
             }
             break;
           }
@@ -646,7 +655,10 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	      MsgWindow::message( 'I', "Volume loaded", vname);
             }
             catch ( wb_error& e) {
-	      MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	        MsgWindow::message( 'I', "Unable to open volume", vname);
+	      else
+	        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
             }
           }
 	  continue;
@@ -677,7 +689,10 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           vol_cnt++;
         }
         catch ( wb_error& e) {
-	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+	  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	    MsgWindow::message( 'I', "Unable to open volume", vname);
+	  else
+	    MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
         }
       }
       else {

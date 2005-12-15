@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.28 2005-11-22 12:32:17 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.29 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1365,7 +1365,7 @@ static int wtt_get_wbctx( void *ctx, ldh_tWBContext *wbctx)
   else
   {
     wtt->set_clock_cursor();
-    sts = ldh_OpenWB( &wtt->wbctx, 0);
+    sts = ldh_OpenWB( &wtt->wbctx, 0, 0);
     if ( ODD(sts))
       *wbctx = wtt->wbctx;
 

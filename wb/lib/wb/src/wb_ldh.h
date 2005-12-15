@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.31 2005-11-14 16:30:13 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.32 2005-12-15 07:41:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -123,6 +123,10 @@ typedef enum {
   ldh_eDId_User = 2,	/* User objects. */
   ldh_eDId_
 } ldh_eDId;
+
+typedef enum {
+  ldh_mWbOption_IgnoreDLoadError = 1 << 0
+} ldh_mWbOption;
 
 typedef enum {
   ldh_eEvent__ = 0,
@@ -945,7 +949,8 @@ ldh_OpenSession (
 pwr_tStatus
 ldh_OpenWB (
   ldh_tWorkbench	*WorkBench,
-  char			*db
+  char			*db,
+  unsigned int		options
 );
 
 pwr_tStatus ldh_Paste (
