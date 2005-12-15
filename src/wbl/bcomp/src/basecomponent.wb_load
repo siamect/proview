@@ -1,8 +1,8 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X7537"
+    Attr NextOix = "_X7626"
     Attr NextCix = "_X147"
-    Attr NextTix[0] = "_X10"
+    Attr NextTix[0] = "_X11"
   EndBody
   Object Type $TypeHier 87 08-SEP-2005 13:01:47.00
     Object ModeEnum $TypeDef 1 08-SEP-2005 13:01:47.00
@@ -348,6 +348,347 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr Text = "FuCo"
           Attr PgmName = "FuCo"
           Attr Value = 11
+        EndBody
+      EndObject
+    EndObject
+    Object BaseMotorIncrDecrAggrGCEnum $TypeDef 10 15-DEC-2005 11:31:15.74
+      Body SysBody 15-DEC-2005 11:30:54.25
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object CbCoOrSs $Value 7538 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CbCoOrSs"
+          Attr PgmName = "CbCoOrSs"
+        EndBody
+      EndObject
+      Object CbCoSs $Value 7539 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CbCoSs"
+          Attr PgmName = "CbCoSs"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object CbCoOr $Value 7540 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CbCoOr"
+          Attr PgmName = "CbCoOr"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object CbCo $Value 7541 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CbCo"
+          Attr PgmName = "CbCo"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object CoOrSs $Value 7542 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CoOrSs"
+          Attr PgmName = "CoOrSs"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object CoOr $Value 7543 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CoOr"
+          Attr PgmName = "CoOr"
+          Attr Value = 5
+        EndBody
+      EndObject
+      Object CoSs $Value 7544 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "CoSs"
+          Attr PgmName = "CoSs"
+          Attr Value = 6
+        EndBody
+      EndObject
+      Object Co $Value 7545 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "Co"
+          Attr PgmName = "Co"
+          Attr Value = 7
+        EndBody
+      EndObject
+      Object FuCoOrSs $Value 7546 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "FuCoOrSs"
+          Attr PgmName = "FuCoOrSs"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object FuCoOr $Value 7547 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "FuCoOr"
+          Attr PgmName = "FuCoOr"
+          Attr Value = 9
+        EndBody
+      EndObject
+      Object FuCoSs $Value 7548 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "FuCoSs"
+          Attr PgmName = "FuCoSs"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object FuCo $Value 7549 15-DEC-2005 11:30:54.27
+        Body SysBody 15-DEC-2005 11:30:54.27
+          Attr Text = "FuCo"
+          Attr PgmName = "FuCo"
+          Attr Value = 11
+        EndBody
+      EndObject
+      Object CbCoOrSs_ForwBack $Value 7550 15-DEC-2005 11:31:56.26
+        Body SysBody 15-DEC-2005 11:39:54.50
+          Attr Text = "CbCoOrSs_ForwBack"
+          Attr PgmName = "CbCoOrSs_ForwBack"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object CbCoSs_ForwBack $Value 7551 15-DEC-2005 11:32:35.62
+        Body SysBody 15-DEC-2005 11:39:57.80
+          Attr Text = "CbCoSs_ForwBack"
+          Attr PgmName = "CbCoSs_ForwBack"
+          Attr Value = 13
+        EndBody
+      EndObject
+      Object CbCoOr_ForwBack $Value 7552 15-DEC-2005 11:32:47.34
+        Body SysBody 15-DEC-2005 11:40:01.08
+          Attr Text = "CbCoOr_ForwBack"
+          Attr PgmName = "CbCoOr_ForwBack"
+          Attr Value = 14
+        EndBody
+      EndObject
+      Object CbCo_ForwBack $Value 7553 15-DEC-2005 11:32:58.02
+        Body SysBody 15-DEC-2005 11:40:03.79
+          Attr Text = "CbCo_ForwBack"
+          Attr PgmName = "CbCo_ForwBack"
+          Attr Value = 15
+        EndBody
+      EndObject
+      Object CoOrSs_ForwBack $Value 7554 15-DEC-2005 11:33:12.57
+        Body SysBody 15-DEC-2005 11:40:06.84
+          Attr Text = "CoOrSs_ForwBack"
+          Attr PgmName = "CoOrSs_ForwBack"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object CoOr_ForwBack $Value 7555 15-DEC-2005 11:33:24.23
+        Body SysBody 15-DEC-2005 11:40:10.59
+          Attr Text = "CoOr_ForwBack"
+          Attr PgmName = "CoOr_ForwBack"
+          Attr Value = 17
+        EndBody
+      EndObject
+      Object CoSs_ForwBack $Value 7556 15-DEC-2005 11:33:36.03
+        Body SysBody 15-DEC-2005 11:40:14.20
+          Attr Text = "CoSs_ForwBack"
+          Attr PgmName = "CoSs_ForwBack"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object Co_ForwBack $Value 7557 15-DEC-2005 11:33:49.34
+        Body SysBody 15-DEC-2005 11:40:17.58
+          Attr Text = "Co_ForwBack"
+          Attr PgmName = "Co_ForwBack"
+          Attr Value = 19
+        EndBody
+      EndObject
+      Object FuCoOrSs_ForwBack $Value 7558 15-DEC-2005 11:34:04.50
+        Body SysBody 15-DEC-2005 11:40:25.45
+          Attr Text = "FuCoOrSs_ForwBack"
+          Attr PgmName = "FuCoOrSs_ForwBack"
+          Attr Value = 20
+        EndBody
+      EndObject
+      Object FuCoOr_ForwBack $Value 7559 15-DEC-2005 11:34:14.99
+        Body SysBody 15-DEC-2005 11:40:33.31
+          Attr Text = "FuCoOr_ForwBack"
+          Attr PgmName = "FuCoOr_ForwBack"
+          Attr Value = 21
+        EndBody
+      EndObject
+      Object FuCoSs_ForwBack $Value 7560 15-DEC-2005 11:34:25.77
+        Body SysBody 15-DEC-2005 11:40:36.67
+          Attr Text = "FuCoSs_ForwBack"
+          Attr PgmName = "FuCoSs_ForwBack"
+          Attr Value = 22
+        EndBody
+      EndObject
+      Object FuCo_ForwBack $Value 7561 15-DEC-2005 11:34:35.88
+        Body SysBody 15-DEC-2005 11:40:40.59
+          Attr Text = "FuCo_ForwBack"
+          Attr PgmName = "FuCo_ForwBack"
+          Attr Value = 23
+        EndBody
+      EndObject
+      Object CbCoOrSs_UpDown $Value 7562 15-DEC-2005 11:35:00.88
+        Body SysBody 15-DEC-2005 11:40:45.81
+          Attr Text = "CbCoOrSs_UpDown"
+          Attr PgmName = "CbCoOrSs_UpDown"
+          Attr Value = 24
+        EndBody
+      EndObject
+      Object CbCoSs_UpDown $Value 7563 15-DEC-2005 11:35:10.87
+        Body SysBody 15-DEC-2005 11:40:49.96
+          Attr Text = "CbCoSs_UpDown"
+          Attr PgmName = "CbCoSs_UpDown"
+          Attr Value = 25
+        EndBody
+      EndObject
+      Object CbCoOr_UpDown $Value 7564 15-DEC-2005 11:35:23.54
+        Body SysBody 15-DEC-2005 11:40:52.97
+          Attr Text = "CbCoOr_UpDown"
+          Attr PgmName = "CbCoOr_UpDown"
+          Attr Value = 26
+        EndBody
+      EndObject
+      Object CbCo_UpDown $Value 7565 15-DEC-2005 11:35:39.44
+        Body SysBody 15-DEC-2005 11:40:56.08
+          Attr Text = "CbCo_UpDown"
+          Attr PgmName = "CbCo_UpDown"
+          Attr Value = 27
+        EndBody
+      EndObject
+      Object CoOrSs_UpDown $Value 7566 15-DEC-2005 11:40:58.70
+        Body SysBody 15-DEC-2005 11:41:04.63
+          Attr Text = "CoOrSs_UpDown"
+          Attr PgmName = "CoOrSs_UpDown"
+          Attr Value = 28
+        EndBody
+      EndObject
+      Object CoOr_UpDown $Value 7567 15-DEC-2005 11:36:09.98
+        Body SysBody 15-DEC-2005 11:41:10.34
+          Attr Text = "CoOr_UpDown"
+          Attr PgmName = "CoOr_UpDown"
+          Attr Value = 29
+        EndBody
+      EndObject
+      Object CoSs_UpDown $Value 7568 15-DEC-2005 11:36:21.79
+        Body SysBody 15-DEC-2005 11:41:14.91
+          Attr Text = "CoSs_UpDown"
+          Attr PgmName = "CoSs_UpDown"
+          Attr Value = 30
+        EndBody
+      EndObject
+      Object Co_UpDown $Value 7569 15-DEC-2005 11:36:36.41
+        Body SysBody 15-DEC-2005 11:41:18.92
+          Attr Text = "Co_UpDown"
+          Attr PgmName = "Co_UpDown"
+          Attr Value = 31
+        EndBody
+      EndObject
+      Object FuCoOrSs_UpDown $Value 7570 15-DEC-2005 11:36:47.47
+        Body SysBody 15-DEC-2005 11:41:23.82
+          Attr Text = "FuCoOrSs_UpDown"
+          Attr PgmName = "FuCoOrSs_UpDown"
+          Attr Value = 32
+        EndBody
+      EndObject
+      Object FuCoOr_UpDown $Value 7571 15-DEC-2005 11:36:58.14
+        Body SysBody 15-DEC-2005 11:41:27.00
+          Attr Text = "FuCoOr_UpDown"
+          Attr PgmName = "FuCoOr_UpDown"
+          Attr Value = 33
+        EndBody
+      EndObject
+      Object FuCoSs_UpDown $Value 7572 15-DEC-2005 11:37:10.45
+        Body SysBody 15-DEC-2005 11:41:30.43
+          Attr Text = "FuCoSs_UpDown"
+          Attr PgmName = "FuCoSs_UpDown"
+          Attr Value = 34
+        EndBody
+      EndObject
+      Object FuCo_UpDown $Value 7573 15-DEC-2005 11:37:20.05
+        Body SysBody 15-DEC-2005 11:41:33.36
+          Attr Text = "FuCo_UpDown"
+          Attr PgmName = "FuCo_UpDown"
+          Attr Value = 35
+        EndBody
+      EndObject
+      Object CbCoOrSs_OpenClose $Value 7574 15-DEC-2005 11:37:49.16
+        Body SysBody 15-DEC-2005 11:41:35.99
+          Attr Text = "CbCoOrSs_OpenClose"
+          Attr PgmName = "CbCoOrSs_OpenClose"
+          Attr Value = 36
+        EndBody
+      EndObject
+      Object CbCoSs_OpenClose $Value 7575 15-DEC-2005 11:37:59.83
+        Body SysBody 15-DEC-2005 11:41:38.95
+          Attr Text = "CbCoSs_OpenClose"
+          Attr PgmName = "CbCoSs_OpenClose"
+          Attr Value = 37
+        EndBody
+      EndObject
+      Object CbCoOr_OpenClose $Value 7576 15-DEC-2005 11:41:41.35
+        Body SysBody 15-DEC-2005 11:41:43.19
+          Attr Text = "CbCoOr_OpenClose"
+          Attr PgmName = "CbCoOr_OpenClose"
+          Attr Value = 38
+        EndBody
+      EndObject
+      Object CbCo_OpenClose $Value 7577 15-DEC-2005 11:38:19.53
+        Body SysBody 15-DEC-2005 11:41:45.82
+          Attr Text = "CbCo_OpenClose"
+          Attr PgmName = "CbCo_OpenClose"
+          Attr Value = 39
+        EndBody
+      EndObject
+      Object CoOrSs_OpenClose $Value 7578 15-DEC-2005 11:38:29.18
+        Body SysBody 15-DEC-2005 11:41:49.73
+          Attr Text = "CoOrSs_OpenClose"
+          Attr PgmName = "CoOrSs_OpenClose"
+          Attr Value = 40
+        EndBody
+      EndObject
+      Object CoOr_OpenClose $Value 7579 15-DEC-2005 11:38:39.09
+        Body SysBody 15-DEC-2005 11:41:54.02
+          Attr Text = "CoOr_OpenClose"
+          Attr PgmName = "CoOr_OpenClose"
+          Attr Value = 41
+        EndBody
+      EndObject
+      Object CoSs_OpenClose $Value 7580 15-DEC-2005 11:38:48.53
+        Body SysBody 15-DEC-2005 11:41:56.96
+          Attr Text = "CoSs_OpenClose"
+          Attr PgmName = "CoSs_OpenClose"
+          Attr Value = 42
+        EndBody
+      EndObject
+      Object Co_OpenClose $Value 7581 15-DEC-2005 11:39:01.33
+        Body SysBody 15-DEC-2005 11:41:59.41
+          Attr Text = "Co_OpenClose"
+          Attr PgmName = "Co_OpenClose"
+          Attr Value = 43
+        EndBody
+      EndObject
+      Object FuCoOrSs_OpenClose $Value 7582 15-DEC-2005 11:39:11.68
+        Body SysBody 15-DEC-2005 11:42:01.89
+          Attr Text = "FuCoOrSs_OpenClose"
+          Attr PgmName = "FuCoOrSs_OpenClose"
+          Attr Value = 44
+        EndBody
+      EndObject
+      Object FuCoOr_OpenClose $Value 7583 15-DEC-2005 11:39:23.65
+        Body SysBody 15-DEC-2005 11:42:05.09
+          Attr Text = "FuCoOr_OpenClose"
+          Attr PgmName = "FuCoOr_OpenClose"
+          Attr Value = 45
+        EndBody
+      EndObject
+      Object FuCoSs_OpenClose $Value 7584 15-DEC-2005 11:39:33.66
+        Body SysBody 15-DEC-2005 11:42:08.29
+          Attr Text = "FuCoSs_OpenClose"
+          Attr PgmName = "FuCoSs_OpenClose"
+          Attr Value = 46
+        EndBody
+      EndObject
+      Object FuCo_OpenClose $Value 7585 15-DEC-2005 11:39:43.64
+        Body SysBody 15-DEC-2005 11:42:12.10
+          Attr Text = "FuCo_OpenClose"
+          Attr PgmName = "FuCo_OpenClose"
+          Attr Value = 47
         EndBody
       EndObject
     EndObject
@@ -87397,9 +87738,9 @@ Motor aggregat"
           EndBody
         EndObject
         Object GraphConfiguration $Attribute 81 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 15-DEC-2005 11:56:13.80
             Attr PgmName = "GraphConfiguration"
-            Attr TypeRef = "BaseComponent:Type-BaseMotorAggrGCEnum"
+            Attr TypeRef = "BaseComponent:Type-BaseMotorIncrDecrAggrGCEnum"
           EndBody
         EndObject
         Object Ready $Attribute 82 05-DEC-2005 10:07:25.63
@@ -87576,125 +87917,505 @@ Motor aggregat"
             Body SysBody 05-DEC-2005 10:07:25.63
               Attr ButtonName = "ConfigureComponent"
             EndBody
-            Object CbCoOrSs $MenuButton 6353 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "CbCoOrSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "0"
-                Attr MethodArguments[1] = "0"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
+            Object IncrDecr $MenuCascade 7622 15-DEC-2005 12:06:56.05
+              Body SysBody 15-DEC-2005 12:06:57.68
+                Attr ButtonName = "IncrDecr"
               EndBody
+              Object CbCoOrSs $MenuButton 6353 15-DEC-2005 12:07:06.76
+                Body SysBody 15-DEC-2005 11:44:15.67
+                  Attr ButtonName = "CbCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "0"
+                  Attr MethodArguments[1] = "0"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoSs $MenuButton 6354 15-DEC-2005 12:07:12.00
+                Body SysBody 15-DEC-2005 11:44:20.60
+                  Attr ButtonName = "CbCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "4, OveloadRelay 1"
+                  Attr MethodArguments[1] = "1"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoOr $MenuButton 6355 15-DEC-2005 12:07:13.32
+                Body SysBody 15-DEC-2005 11:44:24.69
+                  Attr ButtonName = "CbCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "2, SafetySwitch 1"
+                  Attr MethodArguments[1] = "2"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCo $MenuButton 6356 15-DEC-2005 12:07:14.92
+                Body SysBody 15-DEC-2005 11:44:29.86
+                  Attr ButtonName = "CbCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "6, OverloadRelay 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "3"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOrSs $MenuButton 6357 15-DEC-2005 12:07:15.97
+                Body SysBody 15-DEC-2005 11:44:34.43
+                  Attr ButtonName = "CoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "4"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOr $MenuButton 6358 15-DEC-2005 12:07:16.76
+                Body SysBody 15-DEC-2005 11:44:40.40
+                  Attr ButtonName = "CoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "5"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoSs $MenuButton 6359 15-DEC-2005 12:07:17.51
+                Body SysBody 15-DEC-2005 11:44:44.08
+                  Attr ButtonName = "CoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "6"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object Co $MenuButton 6360 15-DEC-2005 12:07:18.27
+                Body SysBody 15-DEC-2005 11:44:48.47
+                  Attr ButtonName = "Co"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "7"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOrSs $MenuButton 6361 15-DEC-2005 12:07:19.49
+                Body SysBody 15-DEC-2005 11:44:53.64
+                  Attr ButtonName = "FuCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "8"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOr $MenuButton 6362 15-DEC-2005 12:07:20.31
+                Body SysBody 15-DEC-2005 11:44:57.85
+                  Attr ButtonName = "FuCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "9"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoSs $MenuButton 6363 15-DEC-2005 12:07:21.39
+                Body SysBody 15-DEC-2005 11:45:01.71
+                  Attr ButtonName = "FuCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "10"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCo $MenuButton 6364 15-DEC-2005 12:07:22.41
+                Body SysBody 15-DEC-2005 11:44:04.05
+                  Attr ButtonName = "FuCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "11"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
             EndObject
-            Object CbCoSs $MenuButton 6354 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:02:49.57
-                Attr ButtonName = "CbCoSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "4, OveloadRelay 1"
-                Attr MethodArguments[1] = "1"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
+            Object ForwBack $MenuCascade 7624 15-DEC-2005 12:08:03.48
+              Body SysBody 15-DEC-2005 12:08:05.86
+                Attr ButtonName = "ForwBack"
               EndBody
+              Object CbCoOrSs $MenuButton 7586 15-DEC-2005 12:14:10.74
+                Body SysBody 15-DEC-2005 12:14:11.71
+                  Attr ButtonName = "CbCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "0"
+                  Attr MethodArguments[1] = "12"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoSs $MenuButton 7587 15-DEC-2005 12:14:16.70
+                Body SysBody 15-DEC-2005 12:14:17.90
+                  Attr ButtonName = "CbCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "4, OveloadRelay 1"
+                  Attr MethodArguments[1] = "13"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoOr $MenuButton 7588 15-DEC-2005 12:14:22.54
+                Body SysBody 15-DEC-2005 12:14:23.38
+                  Attr ButtonName = "CbCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "2, SafetySwitch 1"
+                  Attr MethodArguments[1] = "14"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCo $MenuButton 7589 15-DEC-2005 12:14:27.46
+                Body SysBody 15-DEC-2005 12:14:29.17
+                  Attr ButtonName = "CbCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "6, OverloadRelay 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "15"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOrSs $MenuButton 7590 15-DEC-2005 12:14:33.78
+                Body SysBody 15-DEC-2005 12:14:34.70
+                  Attr ButtonName = "CoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "16"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOr $MenuButton 7591 15-DEC-2005 12:14:38.84
+                Body SysBody 15-DEC-2005 12:14:40.49
+                  Attr ButtonName = "CoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "17"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoSs $MenuButton 7592 15-DEC-2005 12:14:44.58
+                Body SysBody 15-DEC-2005 12:14:45.46
+                  Attr ButtonName = "CoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "18"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object Co $MenuButton 7593 15-DEC-2005 12:14:50.16
+                Body SysBody 15-DEC-2005 12:14:50.92
+                  Attr ButtonName = "Co"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "19"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOrSs $MenuButton 7594 15-DEC-2005 12:14:55.43
+                Body SysBody 15-DEC-2005 12:14:56.69
+                  Attr ButtonName = "FuCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "20"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOr $MenuButton 7595 15-DEC-2005 12:15:01.50
+                Body SysBody 15-DEC-2005 12:15:02.46
+                  Attr ButtonName = "FuCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "21"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoSs $MenuButton 7596 15-DEC-2005 12:15:06.63
+                Body SysBody 15-DEC-2005 12:15:07.63
+                  Attr ButtonName = "FuCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "22"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCo $MenuButton 7597 15-DEC-2005 12:15:11.94
+                Body SysBody 15-DEC-2005 12:15:12.91
+                  Attr ButtonName = "FuCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "23"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
             EndObject
-            Object CbCoOr $MenuButton 6355 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "CbCoOr"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "2, SafetySwitch 1"
-                Attr MethodArguments[1] = "2"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
+            Object UpDown $MenuCascade 7625 15-DEC-2005 12:08:45.91
+              Body SysBody 15-DEC-2005 12:08:46.99
+                Attr ButtonName = "UpDown"
               EndBody
+              Object CbCoOrSs $MenuButton 7598 15-DEC-2005 12:15:18.71
+                Body SysBody 15-DEC-2005 12:15:19.46
+                  Attr ButtonName = "CbCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "0"
+                  Attr MethodArguments[1] = "24"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoSs $MenuButton 7599 15-DEC-2005 12:15:23.26
+                Body SysBody 15-DEC-2005 12:15:24.08
+                  Attr ButtonName = "CbCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "4, OveloadRelay 1"
+                  Attr MethodArguments[1] = "25"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoOr $MenuButton 7600 15-DEC-2005 12:15:27.61
+                Body SysBody 15-DEC-2005 12:15:28.84
+                  Attr ButtonName = "CbCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "2, SafetySwitch 1"
+                  Attr MethodArguments[1] = "26"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCo $MenuButton 7601 15-DEC-2005 12:15:32.47
+                Body SysBody 15-DEC-2005 12:15:43.18
+                  Attr ButtonName = "CbCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "6, OverloadRelay 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "27"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOrSs $MenuButton 7602 15-DEC-2005 12:15:47.37
+                Body SysBody 15-DEC-2005 12:15:48.24
+                  Attr ButtonName = "CoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "28"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOr $MenuButton 7603 15-DEC-2005 12:15:51.81
+                Body SysBody 15-DEC-2005 12:15:57.35
+                  Attr ButtonName = "CoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "29"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoSs $MenuButton 7604 15-DEC-2005 12:16:01.13
+                Body SysBody 15-DEC-2005 12:16:02.02
+                  Attr ButtonName = "CoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "30"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object Co $MenuButton 7605 15-DEC-2005 12:16:05.83
+                Body SysBody 15-DEC-2005 12:16:06.77
+                  Attr ButtonName = "Co"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "31"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOrSs $MenuButton 7606 15-DEC-2005 12:16:10.49
+                Body SysBody 15-DEC-2005 12:16:12.56
+                  Attr ButtonName = "FuCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "32"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOr $MenuButton 7607 15-DEC-2005 12:16:16.16
+                Body SysBody 15-DEC-2005 12:16:17.81
+                  Attr ButtonName = "FuCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "33"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoSs $MenuButton 7608 15-DEC-2005 12:16:21.56
+                Body SysBody 15-DEC-2005 12:16:23.59
+                  Attr ButtonName = "FuCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "34"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCo $MenuButton 7609 15-DEC-2005 12:16:27.23
+                Body SysBody 15-DEC-2005 12:16:28.12
+                  Attr ButtonName = "FuCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "35"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
             EndObject
-            Object CbCo $MenuButton 6356 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:03:42.91
-                Attr ButtonName = "CbCo"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "6, OverloadRelay 1, SafetySwitch 1"
-                Attr MethodArguments[1] = "3"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
+            Object OpenClose $MenuCascade 7626 15-DEC-2005 12:09:20.28
+              Body SysBody 15-DEC-2005 12:09:22.92
+                Attr ButtonName = "OpenClose"
               EndBody
-            EndObject
-            Object CoOrSs $MenuButton 6357 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "CoOrSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "1, CircuitBreaker 1"
-                Attr MethodArguments[1] = "4"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object CoOr $MenuButton 6358 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "CoOr"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
-                Attr MethodArguments[1] = "5"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object CoSs $MenuButton 6359 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:04:16.70
-                Attr ButtonName = "CoSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
-                Attr MethodArguments[1] = "6"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object Co $MenuButton 6360 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:04:48.03
-                Attr ButtonName = "Co"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
-                Attr MethodArguments[1] = "7"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object FuCoOrSs $MenuButton 6361 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "FuCoOrSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "1, CircuitBreaker 1"
-                Attr MethodArguments[1] = "8"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object FuCoOr $MenuButton 6362 05-DEC-2005 10:07:25.63
-              Body SysBody 05-DEC-2005 10:07:25.63
-                Attr ButtonName = "FuCoOr"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
-                Attr MethodArguments[1] = "9"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object FuCoSs $MenuButton 6363 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:05:20.17
-                Attr ButtonName = "FuCoSs"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
-                Attr MethodArguments[1] = "10"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
-            EndObject
-            Object FuCo $MenuButton 6364 05-DEC-2005 10:07:25.63
-              Body SysBody 08-DEC-2005 18:05:39.19
-                Attr ButtonName = "FuCo"
-                Attr MethodName = "$Object-ConfigureComponent"
-                Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
-                Attr MethodArguments[1] = "11"
-                Attr MethodArguments[2] = "Contactor, Motor"
-                Attr FilterName = "$Object-ConfigureComponentFilter"
-              EndBody
+              Object CbCoOrSs $MenuButton 7610 15-DEC-2005 12:16:37.84
+                Body SysBody 15-DEC-2005 12:16:39.96
+                  Attr ButtonName = "CbCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "0"
+                  Attr MethodArguments[1] = "36"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoSs $MenuButton 7611 15-DEC-2005 12:16:44.23
+                Body SysBody 15-DEC-2005 12:16:45.23
+                  Attr ButtonName = "CbCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "4, OveloadRelay 1"
+                  Attr MethodArguments[1] = "37"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCoOr $MenuButton 7612 15-DEC-2005 12:16:48.99
+                Body SysBody 15-DEC-2005 12:16:49.92
+                  Attr ButtonName = "CbCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "2, SafetySwitch 1"
+                  Attr MethodArguments[1] = "38"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CbCo $MenuButton 7613 15-DEC-2005 12:16:53.70
+                Body SysBody 15-DEC-2005 12:16:54.68
+                  Attr ButtonName = "CbCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "6, OverloadRelay 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "39"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOrSs $MenuButton 7614 15-DEC-2005 12:16:58.24
+                Body SysBody 15-DEC-2005 12:16:59.88
+                  Attr ButtonName = "CoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "40"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoOr $MenuButton 7615 15-DEC-2005 12:17:03.60
+                Body SysBody 15-DEC-2005 12:17:12.59
+                  Attr ButtonName = "CoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "41"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object CoSs $MenuButton 7616 15-DEC-2005 12:17:16.50
+                Body SysBody 15-DEC-2005 12:17:17.65
+                  Attr ButtonName = "CoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "42"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object Co $MenuButton 7617 15-DEC-2005 12:17:21.65
+                Body SysBody 15-DEC-2005 12:17:23.33
+                  Attr ButtonName = "Co"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "43"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOrSs $MenuButton 7618 15-DEC-2005 12:17:27.41
+                Body SysBody 15-DEC-2005 12:17:28.87
+                  Attr ButtonName = "FuCoOrSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                  Attr MethodArguments[1] = "44"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoOr $MenuButton 7619 15-DEC-2005 12:17:32.78
+                Body SysBody 15-DEC-2005 12:17:33.72
+                  Attr ButtonName = "FuCoOr"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "3, CircuitBreaker 1, SafetySwitch 1"
+                  Attr MethodArguments[1] = "45"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCoSs $MenuButton 7620 15-DEC-2005 12:17:37.33
+                Body SysBody 15-DEC-2005 12:17:38.79
+                  Attr ButtonName = "FuCoSs"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "5, CircuitBreaker 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "46"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
+              Object FuCo $MenuButton 7621 15-DEC-2005 12:17:42.81
+                Body SysBody 15-DEC-2005 11:55:25.52
+                  Attr ButtonName = "FuCo"
+                  Attr MethodName = "$Object-ConfigureComponent"
+                  Attr MethodArguments[0] = "7, CircuitBreaker 1, SafetySwitch 1, OverloadRelay 1"
+                  Attr MethodArguments[1] = "47"
+                  Attr MethodArguments[2] = "ContactorIncr, ContactorDecr, Motor"
+                  Attr FilterName = "$Object-ConfigureComponentFilter"
+                EndBody
+              EndObject
             EndObject
           EndObject
         EndObject
