@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.7 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.8 2005-12-15 07:40:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ typedef struct {
   typedef pid_t sPid;
 
   static mqd_t mqid = (mqd_t)-1;
-  static const unsigned int prio = MQ_PRIO_MAX - 1;
+  static const unsigned int prio = PWR_MQ_PRIO_MAX - 1;
 
 #endif
 
