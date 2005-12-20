@@ -138,6 +138,7 @@ E 3.2.10 "Out value"
 E 3.3.1 "Components"
 E 3.3.2 "Signals"
 E 3.3.3 "Methods"
+E 3.3.4 "Print"
 #
 # Basecomponent
 E 4.1.1 "On"
@@ -173,7 +174,7 @@ E 4.2.27 "Supervision disabled"
 E 4.2.28 "Level"
 E 4.2.29 "Pressure"
 E 4.2.30 "Temperature"
-# ManValve
+# BaseManValve
 E 4.3.1 "Delay"
 E 4.3.2 "Switch open"
 E 4.3.3 "Switch closed"
@@ -197,7 +198,7 @@ E 4.3.18 "Open"
 E 4.3.19 "Open "
 E 4.3.20 "Closed"
 E 4.3.21 "Close"
-# Fan
+# BaseFanAggr
 E 4.4.1 "Overload"
 E 4.4.2 "Safety switch"
 E 4.4.3 "Ready"
@@ -215,39 +216,39 @@ B 4.4.16 "Local mode is activated, remote control is not allowed fan, "
 B 4.4.17 "Local mode is activated for fan, "
 B 4.4.19 "Automode active. Manual start/stop order is not allowed fan, "
 E 4.4.20 "Overload relay"
-# Motor
+# BaseMotor
 B 4.5.1 "High motor temperature, "
 B 4.5.2 "High High motor temperature, "
 E 4.5.3 "OverTemperature"
-# Contactor
+# BaseContactor
 B 4.6.1 "Contactor feedback lost, "
 E 4.6.2 "Contactor is energized"
 E 4.6.3 "Energize contactor"
-# Switch
+# BaseSwitch
 B 4.7.1 "Switch alarm, "
 B 4.7.2 "Level switch, "
 B 4.7.3 "Pressure switch, "
 B 4.7.4 "Temperature switch, "
 E 4.7.5 "Switch digital input"
-# Mode
+# CompMode
 B 4.8.1 "Check interlocks. Manual start is not allowed, not ready, "
 B 4.8.2 "Check interlocks. Automode is not allowed, not ready, "
 B 4.8.3 "Local mode is activated, remote control is not allowed, "
 B 4.8.4 "Local mode is activated, "
 B 4.8.5 "Automode active. Manual start/stop order is not allowed, "
 E 4.8.6 "Interlock"
-# Safety switch
+# BaseSafetySwitch
 B 4.9.1 "Safety switch is not on, "
 # BaseCircuitBreaker
 B 4.10.1 "CircuitBreaker tripped, "
 E 4.10.2 "CircuitBreaker is tripped"
-# CValve
+# BaseCValve
 E 4.11.1 "Measured valve position"
 E 4.11.2 "Ordered valve position"
 # RunTimeCounter
 E 4.12.1 "Starts"
 E 4.12.2 "Run"
-# Contactor
+# BaseContactor
 E 4.13.1 "Feedback"
 E 4.13.2 "TimeLimit"
 # BaseMotorIncrDecrAggr
@@ -256,6 +257,30 @@ E 4.14.2 "Decr"
 E 4.14.3 "Contactors"
 E 4.14.4 "Limit switches"
 B 4.14.5 "Timeout, limit switch not reached, "
+E 4.14.6 "  Incr"
+E 4.14.7 "  Decr"
+E 4.14.8 "  Stop"
+E 4.14.9 " Man"
+E 4.14.10 " Auto"
+E 4.14.11 "Forw"
+E 4.14.12 "Back"
+E 4.14.13 "Forward"
+E 4.14.14 "Backward"
+E 4.14.15 "   Up"
+E 4.14.16 "  Down"
+E 4.14.17 "Up"
+E 4.14.18 "Down"
+E 4.14.19 " Open"
+E 4.14.20 " Close"
+# BaseDirValve
+E 4.15.1 "Order Increase"
+E 4.15.2 "Order Decrease"
+E 4.15.3 "Order Forward"
+E 4.15.4 "Order Backward"
+E 4.15.5 "Order Up"
+E 4.15.6 "Order Down"
+E 4.15.7 "Order Open"
+E 4.15.8 "Order Close"
 #
 # Manufacturer components
 #
@@ -270,7 +295,7 @@ E 5.1.6 "SetValue"
 E 5.1.7 "Remote control"
 E 5.1.8 "Bus com"
 E 5.1.9 "Reset"
-# ACS800Pump
+# ACS800PumpAggr
 E 5.2.1 "Power/Contactor"
 E 5.2.2 "Fuse"
 

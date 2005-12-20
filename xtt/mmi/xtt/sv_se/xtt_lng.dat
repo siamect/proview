@@ -137,6 +137,7 @@ E 3.2.10 "Ut signal"
 E 3.3.1 "Komponenter"
 E 3.3.2 "Signaler"
 E 3.3.3 "Metoder"
+E 3.3.4 "Skriv ut"
 #
 # Basecomponent
 E 4.1.1 "Till"
@@ -172,7 +173,7 @@ E 4.2.27 "Övervakning stoppad"
 E 4.2.28 "Nivå"
 E 4.2.29 "Tryck"
 E 4.2.30 "Temperatur"
-# ManValve
+# BaseManValve
 E 4.3.1 "Fördröjning"
 E 4.3.2 "Gränsläge öppen"
 E 4.3.3 "Gränsläge stängd"
@@ -194,7 +195,7 @@ E 4.3.18 "Öppen"
 E 4.3.19 "Öppna"
 E 4.3.20 "Stängd"
 E 4.3.21 "Stäng"
-# Fan
+# BaseFanAggr
 E 4.4.1 "Överlast"
 E 4.4.2 "Säkerhetsbrytare"
 E 4.4.3 "Klar"
@@ -212,28 +213,28 @@ B 4.4.16 "Lokal mod aktiverad, fjärrstyrning ej tillåten fläkt, "
 B 4.4.17 "Lokal mod aktiverad fläkt, "
 B 4.4.19 "Automod aktiv. Manuell start/stop order ej tillåten fläkt, "
 E 4.4.20 "Motorskydd"
-# Motor
+# BaseMotor
 B 4.5.1 "Hög motortemperatur, "
 B 4.5.2 "Hög Hög motortemperatur, "
 E 4.5.3 "ÖverTemperatur"
-# Contactor
+# BaseContactor
 B 4.6.1 "Tappat kontaktorsvar, "
 E 4.6.2 "Kontaktorn är till"
 E 4.6.3 "Kontaktor till"
-# Switch
+# BaseSwitch
 B 4.7.1 "Vakt larm, "
 B 4.7.2 "Nivåvakt, "
 B 4.7.3 "Tryckvakt, "
 B 4.7.4 "Temperaturvakt, "
 E 4.7.5 "Vakt digital ingång"
-# Mode
+# CompMode
 B 4.8.1 "Kontrollera förreglingar. Manuell start ej tillåten, "
 B 4.8.2 "Kontrollera förreglingar. Auto mod ej tillåten, "
 B 4.8.3 "Lokal mod aktiverad, fjärrstyrning ej tillåten, "
 B 4.8.4 "Lokal mod aktiverad, "
 B 4.8.5 "Automod aktiv. Manuell start/stop order ej tillåten, "
 E 4.8.6 "Förregling"
-# Safety switch
+# BaseSafetySwitch
 B 4.9.1 "Säkerhetsbrytare är ej till, "
 # Circuit breaker
 B 4.10.1 "Effektbrytare utlöst, "
@@ -241,10 +242,10 @@ E 4.10.2 "Effektbrytaren är utlöst"
 # CValve
 E 4.11.1 "Uppmätt ventilläge"
 E 4.11.2 "Beordrat ventilläge"
-# Runningtime
+# RunTimeCounter
 E 4.12.1 "Starter"
 E 4.12.2 "Drift"
-# Contactor
+# BaseContactor
 E 4.13.1 "Svar"
 E 4.13.2 "Tidgräns"
 # BaseMotorIncrDecrAggr
@@ -253,6 +254,30 @@ E 4.14.2 "Minska"
 E 4.14.3 "Kontaktorer"
 E 4.14.4 "Gränslägen"
 B 4.14.5 "Gränsläge ej nått inom utsatt tid, "
+E 4.14.6 "  Öka"
+E 4.14.7 " Minska"
+E 4.14.8 " Stopp"
+E 4.14.9 " Hand"
+E 4.14.10 " Auto"
+E 4.14.11 "Fram"
+E 4.14.12 "Back"
+E 4.14.13 "Framåt"
+E 4.14.14 "Bakåt"
+E 4.14.15 "  Upp"
+E 4.14.16 "  Ner"
+E 4.14.17 "Upp"
+E 4.14.18 "Ner"
+E 4.14.19 " Öppna"
+E 4.14.20 " Stäng"
+# BaseDirValve
+E 4.15.1 "Order Öka"
+E 4.15.2 "Order Minska"
+E 4.15.3 "Order Framåt"
+E 4.15.4 "Order Bakåt"
+E 4.15.5 "Order Upp"
+E 4.15.6 "Order Ner"
+E 4.15.7 "Order Öppna"
+E 4.15.8 "Order Stäng"
 #
 # Manufacturer components
 #
@@ -267,7 +292,8 @@ E 5.1.6 "BörVärde"
 E 5.1.7 "Fjärr styrning"
 E 5.1.8 "Bus komm"
 E 5.1.9 "Reset"
-# ACS800Pump
+# ACS800PumpAggr
 E 5.2.1 "Effekt/Kontaktor"
 E 5.2.2 "Säkring"
+
 

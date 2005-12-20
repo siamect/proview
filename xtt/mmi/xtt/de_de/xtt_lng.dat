@@ -173,7 +173,7 @@ E 4.2.27 "Überwachung ausgeschalten"
 E 4.2.28 "Level"
 E 4.2.29 "Druck"
 E 4.2.30 "Temperatur"
-# ManValve
+# BaseManValve
 E 4.3.1 "Verzögerung"
 E 4.3.2 "Schalter geöffnet"
 E 4.3.3 "Schalter geschlossen"
@@ -197,7 +197,7 @@ E 4.3.18 "Geöffnet"
 E 4.3.19 "Öffnen "
 E 4.3.20 "Geschlossen"
 E 4.3.21 "Schliessen"
-# Fan
+# BaseFanAggr
 E 4.4.1 "Überlastet"
 E 4.4.2 "Sicherheitsschalter"
 E 4.4.3 "Bereit"
@@ -214,38 +214,38 @@ B 4.4.15 "Überprüfen der Randbedingung. Automatikmodus ist nicht erlaubt, Lüfter
 B 4.4.16 "Handbetrieb aktiviert, Fernsteurung ist nicht erlaubt für Lüfter"
 B 4.4.17 "Handbetrieb aktiviert für Lüfter, "
 B 4.4.19 "Automatikmodus aktiviert. Manuelles starten/stoppen ist nicht erlaubt für Lüfter, "
-# Motor
+# BaseMotor
 B 4.5.1 "Hohe Motortemperature, "
 B 4.5.2 "Extrem Hohe Motortemperatur, "
-# Contactor
+# BaseContactor
 B 4.6.1 "Einschalter Rückführung verloren, "
 E 4.6.2 "Einschalter ist zugeschalten"
 E 4.6.3 "Einschalter zuschalten"
-# Switch
+# BaseSwitch
 B 4.7.1 "Schalte Alarm, "
 B 4.7.2 "Level umschalten, "
 B 4.7.3 "Druck umschalten, "
 B 4.7.4 "Temperatur umschalten, "
 E 4.7.5 "Schalte auf digitale Eingänge "
-# Mode
+# CompMode
 B 4.8.1 "Überprüfen der Randbedingung. manuelles Starten ist nicht erlaubt, nicht bereit, "
 B 4.8.2 "Überprüfen der Randbedingung. Automatikmodus ist nicht erlaubt, nicht bereit, "
 B 4.8.3 "Handbetrieb aktiviert, Fernsteurung ist nicht erlaubt, "
 B 4.8.4 "Handbetrieb aktiviert, "
 B 4.8.5 "Automatikmodus aktiviert. Manuelles starten/stoppen ist nicht erlaubt, "
 E 4.8.6 "Randbedingung"
-# Safety switch
+# BaseSafetySwitch
 B 4.9.1 "Sicherheitsschalter ist nicht AN, "
-# Circuit breaker
+# BaseCircuitBreaker
 B 4.10.1 "Stromkreisunterbrechung ausgelöst, "
 E 4.10.2 "Stromkreisunterbrechung is ausgelöst"
-# CValve
+# BaseCValve
 E 4.11.1 "Gemessene Ventilstellung"
 E 4.11.2 "Gewünschte Ventilstellung"
-# Runningtime
+# RunTimeCounter
 E 4.12.1 "Beginnt"
 E 4.12.2 "Läuft"
-# Contactor
+# BaseContactor
 E 4.13.1 "Rückkopplung"
 E 4.13.2 "Zeitbegrenzung"
 #
@@ -262,6 +262,7 @@ E 5.1.6 "WertEinstellen"
 E 5.1.7 "Fernsteuerung"
 E 5.1.8 "BUS-Kommunikation"
 E 5.1.9 "Reset"
-# ACS800Pump
+# ACS800PumpAggr
 E 5.2.1 "Antriebsleistung/Einschalter"
 E 5.2.2 "Sicherung"
+

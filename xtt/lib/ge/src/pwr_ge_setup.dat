@@ -67,8 +67,6 @@ menu Electric
   subgraph	ManSwitch	pwr_exe:pwr_manswitch.pwsg		74
   subgraph	ManSwitch2	pwr_exe:pwr_manswitch2.pwsg		76
   subgraph	ManSwitch3	pwr_exe:pwr_manswitch3.pwsg		75
-  subgraph	CircuitBreaker	pwr_exe:pwr_circuitbreaker.pwsg		62
-  subgraph	SafetySwitch	pwr_exe:pwr_safetyswitch.pwsg		76
   subgraph	FrequencyConverter pwr_exe:pwr_frequencyconverter.pwsg  77  
 }
 menu Indicators
@@ -216,6 +214,7 @@ menu Components
   {
     subgraph    CValve 		pwr_exe:bcomp_cvalve.pwsg 		53
     subgraph    FanAggr 	pwr_exe:bcomp_fanaggr.pwsg 		71
+    subgraph    FlowSensor 	pwr_exe:bcomp_flowsensor.pwsg 		16
     subgraph    LevelSensor 	pwr_exe:bcomp_levelsensor.pwsg 		16
     subgraph    LevelSwitch 	pwr_exe:bcomp_levelswitch.pwsg 		16
     subgraph    ManValve 	pwr_exe:bcomp_manvalve.pwsg 		4
@@ -223,16 +222,21 @@ menu Components
     subgraph    ManValveSwitchClosed pwr_exe:bcomp_manvalveswitchclosed.pwsg 4
     subgraph    ManValveSwitchOpen pwr_exe:bcomp_manvalveswitchopen.pwsg 4
     subgraph    ManValveTwoSwitches pwr_exe:bcomp_manvalvetwoswitches.pwsg 4
+    subgraph    MotorAggr 	pwr_exe:bcomp_motoraggr.pwsg 		23
+    subgraph    MotorIncrDecrAggr pwr_exe:bcomp_motorincrdecraggr.pwsg 	23
     subgraph    MValve 		pwr_exe:bcomp_mvalve.pwsg 		1
     subgraph    MValveNoSwitches pwr_exe:bcomp_mvalvenoswitches.pwsg 	1
     subgraph    PressureSensor 	pwr_exe:bcomp_pressuresensor.pwsg 	16
     subgraph    PressureSwitch 	pwr_exe:bcomp_pressureswitch.pwsg 	16
+    subgraph    PumpAggr 	pwr_exe:bcomp_pumpaggr.pwsg 		72
     subgraph    SupSwitch 	pwr_exe:bcomp_supswitch.pwsg 		16
     subgraph    TempSensor 	pwr_exe:bcomp_tempsensor.pwsg 		16
     subgraph    TempSwitch 	pwr_exe:bcomp_tempswitch.pwsg 		16
   }
   menu ABB
   {
+    subgraph	ABB_ACS800FanAggr  pwr_exe:mcomp_abb_acs800fanaggr.pwsg 71
+    subgraph	ABB_ACS800MotorAggr  pwr_exe:mcomp_abb_acs800motoraggr.pwsg 23
     subgraph	ABB_ACS800PumpAggr  pwr_exe:mcomp_abb_acs800pumpaggr.pwsg 72
   }
 }
