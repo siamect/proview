@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.29 2005-11-22 12:30:48 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.30 2005-12-20 11:59:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1416,6 +1416,14 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       if ( node_count)
         free( node_list);
       wnav->last_selected = object;
+      break;
+    }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( wnav->brow->ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( wnav->brow->ctx, -0.8);
       break;
     }
     case flow_eEvent_Key_PF1:
