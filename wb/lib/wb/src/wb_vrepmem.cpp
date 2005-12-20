@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.20 2005-10-18 05:13:20 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.21 2005-12-20 11:58:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -876,6 +876,10 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
       strcpy( name_str, name.object());
   }
   else {
+    if ( strcmp( orep->name(), "Template") == 0) {
+      *sts = LDH__CLASSMISPLACED;
+      return 0;
+    }
     if ( !classeditorCheck( code, dest, orep->cid(), &oix, name_str, sts, false))
       return 0;
 
