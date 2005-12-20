@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.49 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.50 2005-12-20 11:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,17 +364,22 @@ ldh_CopyObject(ldh_tSession session, pwr_tObjid *oid, char *name, pwr_tObjid src
 {
   wb_session *sp = (wb_session *)session;
 
-  wb_object s_o = sp->object(srcoid);
-  if ( !s_o) return s_o.sts();
-  wb_object d_o = sp->object(dstoid);
-  if ( !d_o) return d_o.sts();
-  wb_destination d = d_o.destination(dest);
-  wb_object o = sp->copyObject(s_o, d, name);
+  try {
+    wb_object s_o = sp->object(srcoid);
+    if ( !s_o) return s_o.sts();
+    wb_object d_o = sp->object(dstoid);
+    if ( !d_o) return d_o.sts();
+    wb_destination d = d_o.destination(dest);
+    wb_object o = sp->copyObject(s_o, d, name);
 
-  if (!o) return o.sts();
+    if (!o) return o.sts();
     
-  *oid = o.oid();
-  return o.sts();
+    *oid = o.oid();
+    return o.sts();
+  }
+  catch (wb_error& e) {
+    return e.sts();
+  }
 }
 
 pwr_tStatus
@@ -1837,7 +1842,7 @@ ldh_CreateLoadFile(ldh_tSession session)
 
 pwr_tStatus 
 ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name, 
-	    int noindex) 
+	    int noindex, int nofocode) 
 {
   wb_session *sp = (wb_session*)session;
   char fname[200];
@@ -1857,6 +1862,8 @@ ldh_WbDump( ldh_tSession session, char *objname, char *dumpfile, int keep_name,
       wprint.keepName();
     if ( noindex)
       wprint.noIndex();
+    if ( nofocode)
+      wprint.noFoCode();
     if ( !objname)
       wprint.printVolume( *sp);
     else {

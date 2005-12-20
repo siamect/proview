@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.32 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.33 2005-12-20 11:57:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1118,7 +1118,8 @@ ldh_WbDump(
   char *objname,
   char *dumpfile,
   int keep_name,
-  int noindex
+  int noindex,
+  int nofocode
 );
 
 pwr_tStatus 

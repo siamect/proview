@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.35 2005-11-22 12:31:15 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.36 2005-12-20 11:56:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -294,7 +294,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"WB",
 			&wnav_wb_func,
 			{ "dcli_arg1", "/OUTPUT", "/HIERARCHY", "/LOADFILE", "/NOINDEX",
-			  "/KEEPNAME",
+			  "/KEEPNAME", "/NOFOCODE",
 			""}
 		},
 		{
@@ -3881,6 +3881,7 @@ static int	wnav_wb_func( 	void		*client_data,
     pwr_tStatus	sts;
     int		keepname;
     int		noindex;
+    int		nofocode;
 
     if ( EVEN( dcli_get_qualifier( "/OUTPUT" , outputstr, sizeof(outputstr))))
     {
@@ -3895,10 +3896,12 @@ static int	wnav_wb_func( 	void		*client_data,
 
     keepname = ODD( dcli_get_qualifier( "/KEEPNAME", 0, 0));
     noindex = ODD( dcli_get_qualifier( "/NOINDEX", 0, 0));
+    nofocode = ODD( dcli_get_qualifier( "/NOFOCODE", 0, 0));
 
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     
-    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr, keepname, noindex);
+    sts = ldh_WbDump( wnav->ldhses, hierarchystr_p, outputstr, keepname, noindex,
+		      nofocode);
     if ( EVEN(sts))
       wnav->message(' ', wnav_get_message(sts));
     return sts;

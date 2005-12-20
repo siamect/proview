@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: reload.sh,v 1.8 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: reload.sh,v 1.9 2005-12-20 11:56:35 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -106,7 +106,7 @@ reload_dumpdb()
     dump_file=$pwrp_db/$cdb.wb_dmp
 
     echo "Dumping volume $cdb in $dump_file"
-    wb_cmd -v $cdb wb dump/out=\"$dump_file\"
+    wb_cmd -v $cdb wb dump/nofocode/out=\"$dump_file\"
   done
 }
 

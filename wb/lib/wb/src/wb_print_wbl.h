@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.h,v 1.9 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: wb_print_wbl.h,v 1.10 2005-12-20 11:56:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,7 @@ class wb_print_wbl
 protected:
   int  m_errCnt;
   bool m_idxFlag;
+  bool m_noFoCodeFlag;
   bool m_timeFlag;
   int  m_level;
   int  m_levelInd;
@@ -89,6 +90,8 @@ protected:
                   void *val,
                   int varSize,
                   char **svalp);
+  bool isFoCodeObject( wb_volume& v, 
+		       wb_object& o);
     
 
 public:
@@ -99,6 +102,7 @@ public:
   void resetErrCnt() {m_errCnt = 0; }
   void keepName() { m_keepName = true;}
   void noIndex() { m_idxFlag = false;}
+  void noFoCode() { m_noFoCodeFlag = true;}
 
   void printHierarchy(wb_volume& v, wb_object& o); //< Prints a hierarchy
   void printObject(wb_volume& v, wb_object& o, bool recursive = true); //< Prints an object

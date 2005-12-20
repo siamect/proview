@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.15 2005-10-18 05:12:19 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.16 2005-12-20 11:56:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 wb_print_wbl::wb_print_wbl(ostream& os, int levelIndentation) :
   m_errCnt(0),
   m_idxFlag(true),
+  m_noFoCodeFlag(false),
   m_timeFlag(true),
   m_level(0),
   m_levelInd(levelIndentation),
@@ -468,8 +469,10 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   printBody(v, o, templ, cdef, pwr_eBix_dev);
 
   if (recursive) {
-    for (to = o.first(); to; to = to.after())
-      printObject(v, to);
+    if ( !(m_noFoCodeFlag && isFoCodeObject( v, o))) {
+      for (to = o.first(); to; to = to.after())
+	printObject(v, to);
+    }
   }    
 
   indent(-1) << "EndObject" << endl;
@@ -680,7 +683,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     break;
   case pwr_eType_Objid:
     if (cdh_ObjidIsNull(*(pwr_tOid *) val))
-      sprintf(sval, "0");
+      sprintf(sval, "\"_O0.0.0.0:0\"");
     else {
       o = v.object(*(pwr_tOid *)val);
       if (o) {
@@ -739,7 +742,7 @@ bool wb_print_wbl::printValue (wb_volume& v,
     break;
   case pwr_eType_AttrRef: /** @todo */
     if (cdh_ObjidIsNull(((pwr_sAttrRef*)val)->Objid))
-      sprintf(sval, "0");
+      sprintf(sval, "\"_O0.0.0.0:0\"");
     else {
       wb_attribute a = v.attribute((pwr_sAttrRef*)val);
       if (a)
@@ -891,4 +894,26 @@ ostream& wb_print_wbl::indent(int levelIncr)
     m_level += levelIncr;
     
   return m_os;
+}
+
+bool wb_print_wbl::isFoCodeObject( wb_volume& v, wb_object& o)
+{
+  pwr_tInt32 compmethod;
+
+  // Check if object has GraphPlcNode body and compmethod 58
+  wb_cdef cd = v.cdef( o);
+
+  wb_object go = cd.classBody( "GraphPlcNode");
+  if ( !go) 
+    return false;
+
+  wb_attribute a = v.attribute( go, "compmethod");
+  if ( !a) 
+    return false;
+
+  a.value( &compmethod);
+
+  if ( compmethod == 58)
+    return true;
+  return false;
 }
