@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.11 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.12 2005-12-20 12:03:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -405,7 +405,9 @@ void pkg_node::fetchFiles( bool distribute)
     "if [ ! -e $pwrp_tmp/pkg_build ]; then" << endl <<
     "  mkdir $pwrp_tmp/pkg_build" << endl <<
     "else" << endl <<
+    "  rm -r $pwrp_tmp/pkg_build/*.flw" << endl <<
     "  rm -r $pwrp_tmp/pkg_build/*" << endl <<
+    // "  find $pwrp_tmp/pkg_build -name \"*\" | xargs rm -r" << endl <<
     "fi" << endl;
   
   for ( int i = 0; i < (int)m_filelist.size(); i++)
