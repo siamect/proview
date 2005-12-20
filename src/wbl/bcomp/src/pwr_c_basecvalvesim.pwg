@@ -17,7 +17,7 @@
 117 0
 118 199
 119 155
-120 1
+120 0
 121 Claes context
 122 0
 126 1
@@ -2909,10 +2909,16 @@ pwr_exe:
 2724 0
 2721
 1
-100 1
+100 129
 101 8193
 102 65532
 103 0
+9
+900 &($object.PlcConnect).Actuator.DisablePosition##Boolean
+901 0
+902 1
+903 1
+99
 53
 5300 $object.ManPosition##Boolean
 99
@@ -3035,10 +3041,16 @@ pwr_exe:
 2724 1
 2721
 1
-100 1
+100 129
 101 1
 102 65532
 103 0
+9
+900 &($object.PlcConnect).Actuator.DisablePosition##Boolean
+901 0
+902 1
+903 1
+99
 2
 200 $object.ManPosition##Boolean
 201 9999
@@ -3191,10 +3203,16 @@ pwr_exe:
 2724 1
 2721
 1
-100 1
+100 129
 101 1
 102 65532
 103 0
+9
+900 &($object.PlcConnect).Actuator.DisablePosition##Boolean
+901 0
+902 1
+903 1
+99
 12
 1200 $object.ManPositionValue##Float32
 1201 %5.2f
@@ -3454,10 +3472,16 @@ pwr_exe:
 2724 1
 2721
 1
-100 1
+100 129
 101 2049
 102 65532
 103 0
+9
+900 &($object.PlcConnect).Actuator.DisablePosition##Boolean
+901 0
+902 1
+903 1
+99
 60
 6000 $object.ManPositionValue##Float32
 6001 
@@ -3475,7 +3499,7 @@ pwr_exe:
 1904 
 1900 19.3294
 1901 2.31906
-1902 9.40531
+1902 9.4053
 1903 8.59491
 1908 0
 1909 0
