@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trend.c,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_trend.c,v 1.9 2005-12-20 11:54:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,6 +71,7 @@ static pwr_tStatus InitTrendList();
 static void CloseTrendList();
 static pwr_tBoolean IsValidType(pwr_eTix Type);
 static void StoreData();
+static int IsDisabled( pwr_tAttrRef *aaref);
 
     
 int main (int argc, char **argv)
@@ -272,6 +273,9 @@ InitTrendList (
     sts = gdh_DLRefObjectInfoAttrref((pwr_sAttrRef *)&Trend->DataName, 
 		  (pwr_tAddress *)&Trend->DataPointer, &Trend->DataSubId);
     if (EVEN(sts)) {
+      if ( sts == GDH__RTDBNULL && IsDisabled( &Trend->DataName))
+	  continue;
+
       errh_Error("Couldn't get direct link to %s's attribute DataName\n%m", Name, sts);
       gdh_UnrefObjectInfo(LstNode->DsTrendSubId);
       free(LstNode);
@@ -417,4 +421,31 @@ StoreData (
     }	
     Trend->NextMultiple--;
   }
+}
+	
+/* Check if signal is disabled */
+/* aaref points to ActualValue */
+static int IsDisabled( pwr_tAttrRef *aaref)
+{
+  pwr_tDisableAttr disabled;
+  pwr_tAName name;
+  pwr_tAttrRef oaref;
+  pwr_tStatus sts;
+  char *s;
+  
+  sts = gdh_AttrrefToName( aaref, name, sizeof(name), cdh_mNName);  
+  if ( EVEN(sts)) return 0;
+
+  if ( (s = strrchr( name, '.')))
+    *s = 0;
+  else
+    return 0;
+       
+  sts = gdh_NameToAttrref( pwr_cNObjid, name, &oaref);
+  if ( EVEN(sts)) return 0;
+
+  sts = gdh_ArefDisabled( &oaref, &disabled);
+  if ( ODD(sts) && disabled)
+    return 1;
+  return 0;
 }
