@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.10 2005-09-26 07:59:38 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.11 2005-12-21 08:30:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -291,6 +291,10 @@ bool Lng::read_line( Row& r)
       }
       if ( !in_text && *s == '\"')
 	in_text = 1;
+      if ( t > r.text + sizeof(r.text) - 1) {
+	printf( "Error in line %d, file %s\n", r.row, r.fname);
+	break;
+      }
     }      
     *t = 0;
     break;
