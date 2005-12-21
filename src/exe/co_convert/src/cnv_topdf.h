@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.h,v 1.2 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_topdf.h,v 1.3 2005-12-21 08:30:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -125,6 +125,8 @@ class CnvToPdf  {
 	header_number[i] = 0;
       for ( int i = 0; i < pdf_eFile__; i++)
 	page_number[i] = 0;
+      strcpy( previous_chapter, "");
+      strcpy( current_chapter, "");
 
       style[pdf_eId_TitlePage].h1 = 
 	CnvStyle( "Helvetica-Bold-ISOLatin1", 35, 0, 100, 20, cnv_eAlignment_Center, 0, 0, 0);
