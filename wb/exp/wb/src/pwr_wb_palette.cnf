@@ -88,6 +88,7 @@ palette NavigatorPalette
     menu IO_SSAB
     {
       class Rack_SSAB
+      class RemoteRack_SSAB
       menu Cards
       {
         class Di_DIX2
@@ -136,6 +137,7 @@ palette NavigatorPalette
     menu Remote
     {
       class RemoteConfig
+      class RemnodeMQ
       class RemnodeUDP
       class RemnodeTCP
       class RemnodeALCM
