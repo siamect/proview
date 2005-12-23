@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.47 2005-11-15 15:43:29 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.48 2005-12-23 08:51:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1198,6 +1198,10 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     if ( a_flags & pwr_mAdef_array &&
 	 ! an.hasAttrIndex(an.attributes()-1))
       attrref->Flags.b.Array = 1;
+    if ( a_flags & pwr_mAdef_castattr)
+      attrref->Flags.b.CastAttr = 1;
+    if ( a_flags & pwr_mAdef_disableattr)
+      attrref->Flags.b.DisableAttr = 1;
   }
   return LDH__SUCCESS;
 }
