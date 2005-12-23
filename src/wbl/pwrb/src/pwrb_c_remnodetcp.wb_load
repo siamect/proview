@@ -1,22 +1,10 @@
-! 
-!  Proview   $Id: pwrb_c_remnodetcp.wb_load,v 1.3 2005-09-01 14:58:02 claes Exp $
-!  Copyright (C) 2005 SSAB Oxelösund AB.
-!
-!  This program is free software; you can redistribute it and/or 
-!  modify it under the terms of the GNU General Public License as 
-!  published by the Free Software Foundation, either version 2 of 
-!  the License, or (at your option) any later version.
-!
-!  This program is distributed in the hope that it will be useful 
-!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-!  GNU General Public License for more details.
-!
-!  You should have received a copy of the GNU General Public License 
-!  along with the program, if not, write to the Free Software 
-!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-!
 !  pwrb_c_remnodetcp.wb_load -- Defines the class RemnodeTCP.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
 !
 SObject pwrb:Class
 !/**
@@ -51,7 +39,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Process priority for the transport process
+      !  Process priority for the transport process. For future use.
       !*/
       Object Prio $Attribute 2
         Body SysBody
@@ -59,8 +47,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Device name for the ethernet device, ex eth0.
-      !  Dynamic change is not possible.
+      !  Device name for the ethernet device, Not yet implemented, defaults to "eth0".
       !*/
       Object DevName $Attribute 3
         Body SysBody
@@ -110,7 +97,7 @@ SObject pwrb:Class
       !*/
       Object ConnectionMode $Attribute 8
         Body SysBody
-          Attr TypeRef = "pwrb:Type-ClientServerEnum"
+          Attr TypeRef = "pwrs:Type-$Enum"
 	EndBody
       EndObject      
       !/**
@@ -128,7 +115,8 @@ SObject pwrb:Class
 	EndBody
       EndObject
       !/**
-      !  Time in seconds before the link is considered down.
+      !  Time in seconds before the link is considered down. A value of 0 (zero) disables
+      !  the LinkUp supervision.
       !  Dynamic change is possible
       !*/
       Object LinkTimeout $Attribute 10

@@ -1,22 +1,10 @@
-! 
-!  Proview   $Id: pwrb_c_remoteconfig.wb_load,v 1.2 2005-09-01 14:58:02 claes Exp $
-!  Copyright (C) 2005 SSAB Oxelösund AB.
-!
-!  This program is free software; you can redistribute it and/or 
-!  modify it under the terms of the GNU General Public License as 
-!  published by the Free Software Foundation, either version 2 of 
-!  the License, or (at your option) any later version.
-!
-!  This program is distributed in the hope that it will be useful 
-!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-!  GNU General Public License for more details.
-!
-!  You should have received a copy of the GNU General Public License 
-!  along with the program, if not, write to the Free Software 
-!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-!
 !  pwrb_c_remoteconfig.wb_load -- Defines the class RemoteConfig.
+!
+!  PROVIEW/R
+!  Copyright (C) 1997 by Comator Process AB.
+!
+!  <Description>.
+!
 !
 SObject pwrb:Class
 !/**
@@ -51,7 +39,10 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Disable remote communications.
+      !  Disable all remote communication transports. If this attribute is set (value=1) on startup, no
+      !  remote transport will be started. If it is dynamically set during runtime, all remote
+      !  transports will be terminated and restarts will be blocked until the attribute is reset
+      !  (value=0) again.
       !*/
       Object Disable $Attribute 2
         Body SysBody
