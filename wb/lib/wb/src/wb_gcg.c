@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.27 2005-11-10 08:23:38 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.28 2005-12-27 09:43:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -6830,11 +6830,11 @@ vldh_t_node	node;
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
-	  if ( info.index > info.nElement - 1) {
-	    /* Element index to large */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  }
+	  // if ( index > info.nElement - 1) {
+	  //  /* Element index to large */
+	  //  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  //  return GSX__NEXTNODE;
+	  //}
 	}
 
 	switch ( info.type ) {
@@ -8200,11 +8200,11 @@ vldh_t_node	node;
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
-	  if ( info.index > info.nElement - 1) {
-	    /* Element index to large */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  }
+	  // if ( info.index > info.nElement - 1) {
+	  //  /* Element index to large */
+	  //  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  //  return GSX__NEXTNODE;
+	  //}
 	}
 
 	switch ( info.type ) {
@@ -10985,11 +10985,11 @@ vldh_t_node	node;
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
-	  if ( info.index > info.nElement - 1) {
-	    /* Element index to large */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  }
+	  // if ( info.index > info.nElement - 1) {
+	  //  /* Element index to large */
+	  //  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  //  return GSX__NEXTNODE;
+	  //}
 	}
 
 
@@ -12421,8 +12421,8 @@ vldh_t_node	node;
 	pwr_tClassId		windclass;
 	ldh_tSesContext ldhses;
 	char			*name;
-	pwr_sAttrRef		*resattrref_ptr;
-	pwr_sAttrRef		resattrref;
+	pwr_tObjid		*resobjid_ptr;
+	pwr_tAttrRef		resattrref;
 	pwr_tClassId		class;
 
 	ldhses = (node->hn.wind)->hw.ldhses; 
@@ -12446,11 +12446,11 @@ vldh_t_node	node;
 			node->ln.oid,
 			"RtBody",
 			"ResetObject",
-			(char **)&resattrref_ptr, &size);
+			(char **)&resobjid_ptr, &size);
 	if ( EVEN(sts)) return sts;
 
-	resattrref = *resattrref_ptr;
-	free((char *) resattrref_ptr);
+	resattrref = cdh_ObjidToAref( *resobjid_ptr);
+	free((char *) resobjid_ptr);
 
 	if ( cdh_ObjidIsNotNull( resattrref.Objid)) {
 	  sts = gcg_replace_ref( gcgctx, &resattrref, node);
@@ -15126,11 +15126,11 @@ vldh_t_node	node;
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
-	  if ( info.index > info.nElement - 1) {
-	    /* Element index to large */
-	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	    return GSX__NEXTNODE;
-	  }
+	  // if ( info.index > info.nElement - 1) {
+	  //  /* Element index to large */
+	  //  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	  //  return GSX__NEXTNODE;
+	  //}
 	}
 
 	switch ( info.type ) {
