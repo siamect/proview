@@ -461,7 +461,7 @@ void XttAudio::audio_write( XttAudio *audio)
     }
   }
 
-  if(ALSA_audio_ok) {
+  else if(ALSA_audio_ok) {
     int size = audio->write_buffer_size - audio->write_buffer_idx;
     if ( size > ALSA_BUFFER_SIZE/2)
       size = ALSA_BUFFER_SIZE/2;
