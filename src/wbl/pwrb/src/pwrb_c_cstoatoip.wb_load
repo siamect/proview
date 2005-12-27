@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_cstoatoip.wb_load,v 1.3 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_cstoatoip.wb_load,v 1.4 2005-12-27 09:43:56 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -91,29 +91,16 @@ SObject pwrb:Class
     EndObject
     Object DevBody $ObjBodyDef 2 
       !/**
-      !  Specifies the name of the object where to store the
+      !  Specifies the name of the attribute where to store the
       !  value.
       !*/
       Object Object $Intern 1 
         Body SysBody
           Attr PgmName = "Object"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "sts"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
-        EndBody
-      EndObject
-      !/**
-      !  Specifies, in an object specified by Object, the name
-      !  of the attribute where to store the value.
-      !*/
-      Object Parameter $Intern 2 
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr GraphName = "par"
-          Attr NiNaAnnot = 2
-          Attr ConPointNr = 0
         EndBody
       EndObject
       !/**
