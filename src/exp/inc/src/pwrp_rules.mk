@@ -6,15 +6,17 @@ target  	= $@
 tname		= $(notdir $(basename $@))
 cc 		:= gcc
 cxx             := g++
+f77		:= g77
 ld		:= gcc
 ldxx		:= g++
 linkflags	:= -g -L/usr/local/lib -L$(pwr_obj) -L$(pwrp_obj) -lm -lrt
-cflags		:= -c -g -Wall -DGNU_SOURCE -D_REENTRANT
+cflags		:= -c -g -Wall -D_GNU_SOURCE -D_REENTRANT
 cxxflags 	:= $(cflags) -Wno-deprecated
+f77flags	:= 
 linkflags	:= -g -L/usr/local/lib -L$(pwr_lib) -L$(pwrp_lib) -lrt
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
 cinc		:= -I$(pwr_inc) -I$(pwrp_inc) -I$(pwrp_cmn)/common/inc -I/usr/local/include -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
-
+f77inc		:= -I$(pwr_inc) -I$(pwrp_inc)
 
 .SUFFIXES:
 
@@ -43,6 +45,15 @@ $(pwrp_obj)/%.o : %.cpp
 ($(pwrp_obj)/%.o) : %.cpp
 	@ echo "cc ar $(notdir $(source))"
 	@ $(cxx) $(cxxflags) $(csetos) $(cinc) -c -o $% $(source)
+	@ ar r $(target) $%
+
+$(pwrp_obj)/%.o : %.for
+	@ echo "fortran77   $(notdir $(source))"
+	@ $(f77) $(f77flags) $(f77inc) -c -o $(target) $(source)
+
+($(pwrp_obj)/%.o) : %.for
+	@ echo "fortran77 ar $(notdir $(source))"
+	@ $(f77) $(f77flags) $(f77inc) -c -o $% $(source)
 	@ ar r $(target) $%
 
 $(pwrp_inc)/%.h: %.msg
