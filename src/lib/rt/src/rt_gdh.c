@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.22 2005-12-27 09:32:15 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.23 2005-12-27 09:40:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2805,9 +2805,9 @@ gdh_RefObjectInfoList (
     /* Associate buffers and return pwr_tSubid if requested.  */
 
     for (i=0; i<nsub; i++) {
+      objrefp = &objref[xrefarr[i]];
       if ( objrefp->bufsize == 0)
 	return GDH__BADARG;
-      objrefp = &objref[xrefarr[i]];
       gdh_SubAssociateBuffer(subidarr[i], &objrefp->adrs, objrefp->bufsize);
       if (sid != NULL) sid[xrefarr[i]] = subidarr[i];
     }
