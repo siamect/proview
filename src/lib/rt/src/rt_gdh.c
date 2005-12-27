@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.21 2005-11-03 12:29:39 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.22 2005-12-27 09:32:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -928,6 +928,8 @@ gdh_GetAttrRefTid (
 
   gdh_ScopeLock {
 
+    memset(&attribute, 0, sizeof(attribute));
+
     ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
     if (ap != NULL) touchObject(ap->op);
     
@@ -936,11 +938,8 @@ gdh_GetAttrRefTid (
   if (ap != 0 && ap->adef != 0) {
     if ( ap->adef->Info.Flags & PWR_MASK_CASTATTR) {
       pwr_tCastId castid;
-      pwr_sAttrRef cast_aref = *arp;
-      cast_aref.Offset -= sizeof(pwr_tCastId);
-      cast_aref.Size = sizeof(pwr_tCastId);
-      cast_aref.Flags.b.ObjectAttr = 0;
-      
+      pwr_sAttrRef cast_aref = cdh_ArefToCastAref( arp);
+
       sts = gdh_GetObjectInfoAttrref( &cast_aref, &castid, sizeof(castid));
       if ( ODD(sts) && castid != pwr_cNCastId) {
 	*tid = castid;
