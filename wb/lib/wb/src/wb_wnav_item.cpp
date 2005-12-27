@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.18 2005-12-14 11:20:50 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.19 2005-12-27 09:34:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2270,6 +2270,7 @@ int WItemAttrObject::open_attributes( double x, double y)
     int			sts;
     pwr_tOName		parname;
     pwr_tClassId	classid;
+    pwr_tClassId	orig_classid;
     unsigned long	elements;
     ldh_sParDef 	*bodydef;
     int			rows;
@@ -2280,26 +2281,29 @@ int WItemAttrObject::open_attributes( double x, double y)
     int			output_cnt = 0;
     int			is_casted = 0;
 
+    classid = type_id;
+
     // Check if attrobject is casted
     if ( flags & PWR_MASK_CASTATTR) {
       pwr_sAttrRef ar = cdh_ObjidToAref( objid);
       pwr_sAttrRef aar;
-      pwr_tTid tid;
       
       sts = ldh_ArefANameToAref( ldhses, &ar, name, &aar);
       if ( EVEN(sts)) return sts;
 
-      sts = ldh_GetAttrRefOrigTid( ldhses, &aar, &tid);
+      sts = ldh_GetAttrRefOrigTid( ldhses, &aar, &orig_classid);
       if ( EVEN(sts)) return sts;
 
-      if ( tid != classid)
+      if ( orig_classid != classid) {
 	is_casted = 1;
+	if ( ((WNav *)brow->userdata)->gbl.show_truedb)
+	  classid = orig_classid;
+      }
     }
 
     // Create some attributes
     brow_SetNodraw( brow->ctx);
 
-    classid = type_id;
     for ( i = 0; i < 3; i++) {
       if ( i == 0)
         strcpy( body, "RtBody");
