@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.10 2005-12-13 15:14:02 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.11 2005-12-27 09:28:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -270,13 +270,49 @@ static int ge_growcurve_cb( GlowCtx *ctx, glow_tEvent event)
       time = (200.0 - event->any.x) *
         (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
 
+    // Approximate row
     row = int ((time - curve->cd->min_value[0]) / 
-		 (curve->cd->max_value[0] - curve->cd->min_value[0]) *
-		 (curve->cd->rows - 1) + 0.5);
+        (curve->cd->max_value[0] - curve->cd->min_value[0]) *
+        (curve->cd->rows - 1) + 0.5);
     if ( row > curve->cd->rows - 1)
       row = curve->cd->rows - 1;
-    if ( row < 0)
+    else if ( row < 0)
       row = 0;
+    else {
+      // Find exact row
+      double b1, b2;
+      int r = row;
+      for (int i = 0;; i++) {
+	if ( r == 0) {
+	  b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
+	  if ( time < b2)
+	    break;
+	  r++;
+	}
+	else if ( r == curve->cd->rows - 1) {
+	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	  if ( time >= b1)
+	    break;
+	  r--;
+	}
+	else {
+	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	  b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
+	  if ( b1 <= time && time < b2)
+	    break;
+	  if ( b1 <= time)
+	    r++;
+	  else
+	    r--;
+	}
+	if ( i > 100) {
+	  // Corrupt data, se original row
+	  r = row;
+	  break;
+	}	  
+      }
+      row = r;
+    }
 
     for ( int i = 1; i < curve->cd->cols; i++) {
       sprintf( str, "%7.2f", curve->cd->data[i][row]);
@@ -301,13 +337,49 @@ static int ge_growcurve_cb( GlowCtx *ctx, glow_tEvent event)
       time = (200.0 - event->any.x) *
         (curve->cd->max_value_axis[0] - curve->cd->min_value_axis[0]) / 200;
 
+    // Approximate row
     row = int ((time - curve->cd->min_value[0]) / 
         (curve->cd->max_value[0] - curve->cd->min_value[0]) *
         (curve->cd->rows - 1) + 0.5);
     if ( row > curve->cd->rows - 1)
       row = curve->cd->rows - 1;
-    if ( row < 0)
+    else if ( row < 0)
       row = 0;
+    else {
+      // Find exact row
+      double b1, b2;
+      int r = row;
+      for (int i = 0;; i++) {
+	if ( r == 0) {
+	  b2 = (curve->cd->data[0][row] + curve->cd->data[0][r+1]) / 2;
+	  if ( time < b2)
+	    break;
+	  r++;
+	}
+	else if ( r == curve->cd->rows - 1) {
+	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	  if ( time >= b1)
+	    break;
+	  r--;
+	}
+	else {
+	  b1 = (curve->cd->data[0][r] + curve->cd->data[0][r-1]) / 2;
+	  b2 = (curve->cd->data[0][r] + curve->cd->data[0][r+1]) / 2;
+	  if ( b1 <= time && time < b2)
+	    break;
+	  if ( b1 <= time)
+	    r++;
+	  else
+	    r--;
+	}
+	if ( i > 100) {
+	  // Corrupt data, se original row
+	  r = row;
+	  break;
+	}	  
+      }
+      row = r;
+    }
     for ( int i = 1; i < curve->cd->cols; i++) {
       sprintf( str, "%7.2f", curve->cd->data[i][row]);
       grow_SetAnnotation( curve->cursor_annot[i], 0, str, strlen(str));
