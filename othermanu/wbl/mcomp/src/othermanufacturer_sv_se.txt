@@ -1,0 +1,7 @@
+<class>Omron_Contactor_J7KN
+  Funktion och attribut är ärvda av basklassen Contactor. Se 
+
+<attr>Super
+Basklass
+</attr>
+</class>

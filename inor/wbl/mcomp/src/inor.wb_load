@@ -1,0 +1,61 @@
+Volume Inor $ClassVolume 0.0.250.7 
+  Body SysBody
+    Attr NextOix = "_X1"
+    Attr NextCix = "_X2"
+  EndBody
+  Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group TempSensor
+    !  @Summary TempSensor Inor VRS.
+    !  Temperature Sensor Inor VRS.
+    !
+    !  See superclass BaseTempSensor for more information.
+    !  @classlink BaseTempSensor basecomponent_basetempsensor.html
+    !  @link Datasheet ../dsh/inor_tempsensor_vrs.pdf
+    !*/
+    Object Inor_TempSensor_VRS $ClassDef 1
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "Inor_TempSensor_VRS"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Inor_TempSensor_VRS 2147975168
+        Body RtBody
+          Attr Super.Super.Super.Specification = "Inor Tempsensor VRS"
+          Attr Super.Super.Value.PresMaxLimit = 1.000000e+02
+          Attr Super.Super.LimitHH.AlarmText = "HighHigh limit exceeded, levelsensor "
+          Attr Super.Super.LimitHH.Limit = 9.500000e+01
+          Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
+          Attr Super.Super.LimitH.Limit = 9.000000e+01
+          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.Super.LimitL.Limit = 1.000000e+01
+          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.Limit = 5.000000e+00
+          Attr Super.Super.Trend.Multiple = 1
+          Attr Super.Super.Trend.DataName = "Inor:Class-Inor_TempSensor_VRS-Template.Super.Super.Value.ActualValue"
+          Attr Super.Super.Trend.StorageTime = 239
+          Attr Super.Super.Trend.BufferStatus[0] = 1
+          Attr Super.Super.Trend.BufferStatus[1] = 1
+          Attr Super.Super.Trend.NoOfBuffers = 2
+          Attr Super.Super.Trend.NoOfBufElement = 239
+          Attr Super.Super.DefTrend = "Inor:Class-Inor_TempSensor_VRS-Template.Super.Super.Trend"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/inor_tempsensor_vrs.pdf"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume

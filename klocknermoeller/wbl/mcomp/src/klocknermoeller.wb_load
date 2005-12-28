@@ -1,0 +1,86 @@
+Volume KlocknerMoeller $ClassVolume 0.0.250.6 
+  Body SysBody
+    Attr NextOix = "_X1"
+    Attr NextCix = "_X3"
+  EndBody
+  Object Class $ClassHier 1
+    !/**
+    !  @Version 1.0
+    !  @Group CircuitBreaker
+    !  @Summary CircuitBreaker KlocknerMoeller PKZ.
+    !  CircuitBreaker KlocknerMoeller PKZ.
+    !
+    !  See superclass BaseCircuitBreaker for more information.
+    !  @classlink BaseCircuitBreaker basecomponent_basecircuitbreaker.html
+    !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
+    !*/
+    Object KM_CircuitBreaker_PKZ $ClassDef 1
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "KM_CircuitBreaker_PKZ"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseCircuitBreaker"
+          EndBody
+        EndObject
+      EndObject
+      Object Template KM_CircuitBreaker_PKZ 2147975168
+        Body RtBody
+          Attr Super.Super.Specification = "Klockner Moeller type PKZ"
+          Attr Super.NotTripped.Description = "CircuitBreaker is tripped"
+          Attr Super.AlarmText = "Circuit breaker tripped"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Contactor
+    !  @Summary Contactor KlocknerMoeller PKZ.
+    !  Contactor KlocknerMoeller PKZ.
+    !
+    !  See superclass BaseContactor for more information.
+    !  @classlink BaseContactor basecomponent_basecontactor.html
+    !  @link Datasheet ../dsh/km_motor_protective_pkz.pdf
+    !*/
+    Object KM_Contactor_PKZ $ClassDef 2
+      Body SysBody
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1
+        Body SysBody
+          Attr StructName = "KM_Contactor_PKZ"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2
+          Body SysBody
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseContactor"
+          EndBody
+        EndObject
+      EndObject
+      Object Template KM_Contactor_PKZ 2148237312
+        Body RtBody
+          Attr Super.Super.Specification = "Klockner Moeller type PKZ"
+          Attr Super.Feedback.Description = "Contactor is energized"
+          Attr Super.Order.Description = "Energize contactor"
+          Attr Super.FbTimeLimit = 1.000000e+00
+          Attr Super.AlarmText = "Contactor feedback lost "
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/km_motor_protective_pkz.pdf"
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume

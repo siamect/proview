@@ -1,0 +1,4094 @@
+Volume SsabOx $ClassVolume 0.0.250.5 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X57"
+    Attr NextCix = "_X16"
+  EndBody
+  Object Class $ClassHier 1 06-OCT-2005 14:45:53.00
+    !/**
+    !  @Version 1.0
+    !  @Group SafetySwitch
+    !  @Summary SafetySwitch SSAB.
+    !  SafetySwitch SSAB.
+    ! 
+    !  See superclass BaseSafetySwitch for more information.
+    !  @classlink BaseSafetySwitch basecomponent_basesafetyswitch.html
+    !  @link Datasheet ../dsh/ssab_safetyswitch.pdf
+    !*/
+    Object Ssab_SafetySwitch $ClassDef 1 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_SafetySwitch"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseSafetySwitch"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_SafetySwitch 2147975168 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.Super.Specification = "SSAB SafetySwitch"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Base class for a PSS9000 analog card.
+    !  Base class for a PSS9000 analog card.
+    !*/
+    Object Ssab_BaseACard $ClassDef 2 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_BaseACard"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Device name. Used only in VAX_ELN nodes.
+        ! The device name is the identification of the device in the ELN ebuild file.
+        !*/
+        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:32:48.52
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum number of channels of the card.
+        !*/
+        Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:33:49.07
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary QBUS address of the card.
+        ! QBUS address of the card.
+        ! The value is set with address switches on the card.
+        ! NoteThe value in RegAddress is a decimal value
+        ! 
+        ! 	Card number	Octal address	Decimal Address
+        ! 	Ai1		167000		4189696
+        ! 	Ai2		167100		4189760
+        ! 	Ai3		167200		4189824
+        ! 	Ai4		167300		4189888
+        ! 	Ai5		167400		4189952
+        ! 	Ai6		167500		4190016
+        ! 	Ai7		167600		4190080
+        ! 	Ai8		167700		4190144
+        ! 	Ao1		176210		4193416
+        ! 	Ao2		176220		4193424
+        ! 	Ao3		176230		4193432
+        ! 	Ao4		176240		4193440
+        ! 	Ao5		176250		4193448
+        ! 	Ao6		176260		4193456
+        ! 
+        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        !*/
+        Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        !*/
+        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Intern 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_BaseACard 2148237312 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 2 06-OCT-2005 14:45:53.00
+        Object Pointed $Menu 3 06-OCT-2005 14:45:53.00
+          Object Connect $MenuButton 4 06-OCT-2005 14:45:53.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Base card for PSS9000 digital input cards.
+    !  Base card for PSS9000 digital input cards.
+    !*/
+    Object Ssab_BaseDiCard $ClassDef 3 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_BaseDiCard"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Device name. Used only in VAX_ELN nodes.
+        ! The device name is the identification of the device in the ELN ebuild file.
+        !*/
+        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:35:03.07
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum number of channels of the card.
+        !*/
+        Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:35:22.82
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary QBUS address of the card.
+        ! QBUS address of the card.
+        ! The value is set with address switches on the card.
+        ! NoteThe value in RegAddress is a decimal value
+        ! 
+        ! 	Card number	Octal address	Decimal Address
+        ! 	Di1		176100		4193344
+        ! 	Di2		176104		4193348
+        ! 	Di3		176110		4193352
+        ! 	Di4		176114		4193356
+        ! 	Di5		176120		4193360
+        ! 	Di6		176124		4193364
+        ! 	Di7		176130		4193368
+        ! 	Di8		176134		4193372
+        ! 	Di9		176140		4193376
+        ! 	Di10		176144		4193380
+        ! 	Di11		176150		4193384
+        ! 	Di12		176154		4193388
+        ! 	Di13		176160		4193392
+        ! 	Di14		176164		4193396
+        ! 	Di15		176170		4193400
+        ! 	Di16		176174		4193404
+        ! 	Di17		176500		4193600
+        ! 	Di18		176504		4193604
+        ! 
+        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        !*/
+        Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        !*/
+        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Intern 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The conversion mask specifies which channel values that are transfered to signal values. 
+        ! The conversion mask specifies which channel values that are transfered to signal values. 
+        ! If value of a channel, read from the card, should not be used, the corresponding bit in
+        ! the conversion mask is set to 0. The value can then be set from the runtime navigator.
+        ! Channel 1 - 16 is handled by ConvMask1, channel 17 - 32 by ConvMask2.
+        ! The conversion masks are changed with the rtt commands 'set conversion /on' and
+        ! 'set conversion /off'.
+        !*/
+        Object ConvMask1 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask1"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! See ConvMask1. ConvMask2 handles channel 17 - 32.
+        !*/
+        Object ConvMask2 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask2"
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The invert mask specifies which channel values that are inverted. 
+        ! The conversion mask specifies which channel values that are inverted. 
+        ! If value of a channel, read from the card, should be inverted, the corresponding bit in
+        ! the invert mask is set to 0. The value can then be set from the runtime navigator.
+        ! Channel 1 - 16 is handled by InvMask1, channel 17 - 32 by InvMask2.
+        !*/
+        Object InvMask1 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! See InvMask1. InvMask2 handles channel 17 - 32.
+        !*/
+        Object InvMask2 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_BaseDiCard 2148499456 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 5 06-OCT-2005 14:45:53.00
+        Object Pointed $Menu 6 06-OCT-2005 14:45:53.00
+          Object Connect $MenuButton 7 06-OCT-2005 14:45:53.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Base card for PSS9000 digital output cards.
+    !  Base card for PSS9000 digital output cards.
+    !*/
+    Object Ssab_BaseDoCard $ClassDef 4 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_BaseDoCard"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Device name. Used only in VAX_ELN nodes.
+        ! The device name is the identification of the device in the ELN ebuild file.
+        !*/
+        Object DevName $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:35:42.56
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum number of channels of the card.
+        !*/
+        Object MaxNoOfChannels $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:35:50.48
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary QBUS address of the card.
+        ! QBUS address of the card.
+        ! The value is set with address switches on the card.
+        ! NoteThe value in RegAddress is a decimal value
+        ! 
+        ! 	Card number	Octal address	Decimal Address
+        ! 	Do1		176000		4193280
+        ! 	Do2		176004		4193284
+        ! 	Do3		176010		4193288
+        ! 	Do4		176014		4193292
+        ! 	Do5		176020		4193296
+        ! 	Do6		176024		4193300
+        ! 	Do7		176030		4193304
+        ! 	Do8		176034		4193308
+        ! 	Do9		176040		4193312
+        ! 
+        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        !*/
+        Object RegAddress $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        !*/
+        Object VectAddress $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Intern 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The invert mask specifies which channel values that are inverted.
+        ! The invert mask specifies which channel values that are inverted before transfered
+        ! to the hardeware device.
+        ! If value of a channel, should be inverted, the corresponding bit in
+        ! the invert mask is set to 1.
+        ! Channel 1 - 16 is handled by InvMask1, channel 17 - 32 by InvMask2.
+        ! The invert masks are changed with the rtt commands 'set invert /on' and
+        ! 'set invert /off'.
+        !*/
+        Object InvMask1 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! See InvMask1. InvMask2 handles channel 17 - 32.
+        !*/
+        Object InvMask2 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The test mask specifies which channel values that are fetch from the TestValue attribute.
+        ! The test mask specifies which channel values that are fetched from the TestValue
+        ! attribute instead of from the hardeware device.
+        ! If the value of a channel, should be fetched from the TestValue, the corresponding bit in
+        ! the invert mask is set to 1.
+        ! Channel 1 - 16 is handled by TestMask1, channel 17 - 32 by TestMask2.
+        ! The test masks are changed with the rtt commands 'set dotest /on' and
+        ! 'set dotest /off'.
+        !*/
+        Object TestMask1 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TestMask1"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! See TestMask1. TestMask2 handles channel 17 - 32.
+        !*/
+        Object TestMask2 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TestMask2"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The test value specifies the value for channels marked for test in the TestMask attribute.
+        ! The test value specifies the value for channels marked for test in the TestMask attribute.
+        ! Channel 1 - 16 is handled by TestValue1, channel 17 - 32 by TestValue2.
+        ! 
+        ! @b Example
+        ! If you want to put the value 1 in channel 3, bit 3 in TestMask1 should be 1, and bit 3
+        ! in TestValue1 should be 1.
+        ! If you want to put the value 0 in channel 18, bit 2 in TestMask2 should be 1, and bit 2
+        ! in TestValue2 should be 0.
+        ! 
+        ! The test value are changed with the rtt commands 'set testvalue /on' and
+        ! 'set testvalue /off'.
+        !*/
+        Object TestValue1 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TestValue1"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! See TestValue1. TestValue2 handles channel 17 - 32.
+        !*/
+        Object TestValue2 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "TestValue2"
+            Attr Flags = 16
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+        !/**
+        ! Bitmask mapped to channel 1 to 16 at emergency break of the IO, i.e if ErrorHardLimit
+        ! is exceeded in any card. FixedOutValue should normally be 0, because this is the value
+        ! at power loss.
+        !*/
+        Object FixedOutValue1 $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "FixedOutValue1"
+            Attr TypeRef = "pwrb:Type-CardMask1_1"
+          EndBody
+        EndObject
+        !/**
+        ! Se FixedOutValue1. FixedOutValue2 is the value for channel 17 to 32.
+        !*/
+        Object FixedOutValue2 $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "FixedOutValue2"
+            Attr TypeRef = "pwrb:Type-CardMask2_1"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_BaseDoCard 2148761600 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 8 06-OCT-2005 14:45:53.00
+        Object Pointed $Menu 9 06-OCT-2005 14:45:53.00
+          Object Connect $MenuButton 10 06-OCT-2005 14:45:53.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of an analog input card AI32uP
+    !  Configuration of a PSS9000 analog input card AI32uP.
+    ! 
+    !  32 channel input module.
+    !  The Ai_AI32uP object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanAi objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @h2 Configuration
+    !  @b Range
+    !  The ranges for raw value and signal value are configured in the channel objects.
+    ! 
+    !  RawValueRangeLow  -30000
+    !  RawValueRangeHigh  30000
+    ! 
+    !  The signal range can be ±5 V, ±10 V or ±20 mA. This is configured with jumpers in the card,
+    !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_AI32uP $ClassDef 5 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AI32uP"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary Channel 1-32.
+        !  Channel 1-32.
+        !*/
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch18"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch19"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch28"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch29"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AI32uP 2149023744 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 32
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
+          Attr Ch01.ConversionOn = 1
+          Attr Ch01.ScanInterval = 1
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch01.SigValueUnit = "mA"
+          Attr Ch01.SensorPolyType = 1
+          Attr Ch01.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch01.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.Representation = 3
+          Attr Ch02.ConversionOn = 1
+          Attr Ch02.ScanInterval = 1
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch02.SigValueUnit = "mA"
+          Attr Ch02.SensorPolyType = 1
+          Attr Ch02.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch02.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.Representation = 3
+          Attr Ch03.ConversionOn = 1
+          Attr Ch03.ScanInterval = 1
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch03.SigValueUnit = "mA"
+          Attr Ch03.SensorPolyType = 1
+          Attr Ch03.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch03.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.Representation = 3
+          Attr Ch04.ConversionOn = 1
+          Attr Ch04.ScanInterval = 1
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch04.SigValueUnit = "mA"
+          Attr Ch04.SensorPolyType = 1
+          Attr Ch04.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch04.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.Representation = 3
+          Attr Ch05.ConversionOn = 1
+          Attr Ch05.ScanInterval = 1
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch05.SigValueUnit = "mA"
+          Attr Ch05.SensorPolyType = 1
+          Attr Ch05.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch05.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.Representation = 3
+          Attr Ch06.ConversionOn = 1
+          Attr Ch06.ScanInterval = 1
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch06.SigValueUnit = "mA"
+          Attr Ch06.SensorPolyType = 1
+          Attr Ch06.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch06.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.Representation = 3
+          Attr Ch07.ConversionOn = 1
+          Attr Ch07.ScanInterval = 1
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch07.SigValueUnit = "mA"
+          Attr Ch07.SensorPolyType = 1
+          Attr Ch07.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch07.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.Representation = 3
+          Attr Ch08.ConversionOn = 1
+          Attr Ch08.ScanInterval = 1
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch08.SigValueUnit = "mA"
+          Attr Ch08.SensorPolyType = 1
+          Attr Ch08.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch08.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.Representation = 3
+          Attr Ch09.ConversionOn = 1
+          Attr Ch09.ScanInterval = 1
+          Attr Ch09.RawValRangeLow = -3.000000e+04
+          Attr Ch09.RawValRangeHigh = 3.000000e+04
+          Attr Ch09.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch09.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch09.SigValueUnit = "mA"
+          Attr Ch09.SensorPolyType = 1
+          Attr Ch09.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch09.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch09.ActValRangeHigh = 1.000000e+02
+          Attr Ch09.Representation = 3
+          Attr Ch10.ConversionOn = 1
+          Attr Ch10.ScanInterval = 1
+          Attr Ch10.RawValRangeLow = -3.000000e+04
+          Attr Ch10.RawValRangeHigh = 3.000000e+04
+          Attr Ch10.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch10.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch10.SigValueUnit = "mA"
+          Attr Ch10.SensorPolyType = 1
+          Attr Ch10.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch10.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch10.ActValRangeHigh = 1.000000e+02
+          Attr Ch10.Representation = 3
+          Attr Ch11.ConversionOn = 1
+          Attr Ch11.ScanInterval = 1
+          Attr Ch11.RawValRangeLow = -3.000000e+04
+          Attr Ch11.RawValRangeHigh = 3.000000e+04
+          Attr Ch11.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch11.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch11.SigValueUnit = "mA"
+          Attr Ch11.SensorPolyType = 1
+          Attr Ch11.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch11.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch11.ActValRangeHigh = 1.000000e+02
+          Attr Ch11.Representation = 3
+          Attr Ch12.ConversionOn = 1
+          Attr Ch12.ScanInterval = 1
+          Attr Ch12.RawValRangeLow = -3.000000e+04
+          Attr Ch12.RawValRangeHigh = 3.000000e+04
+          Attr Ch12.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch12.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch12.SigValueUnit = "mA"
+          Attr Ch12.SensorPolyType = 1
+          Attr Ch12.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch12.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch12.ActValRangeHigh = 1.000000e+02
+          Attr Ch12.Representation = 3
+          Attr Ch13.ConversionOn = 1
+          Attr Ch13.ScanInterval = 1
+          Attr Ch13.RawValRangeLow = -3.000000e+04
+          Attr Ch13.RawValRangeHigh = 3.000000e+04
+          Attr Ch13.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch13.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch13.SigValueUnit = "mA"
+          Attr Ch13.SensorPolyType = 1
+          Attr Ch13.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch13.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch13.ActValRangeHigh = 1.000000e+02
+          Attr Ch13.Representation = 3
+          Attr Ch14.ConversionOn = 1
+          Attr Ch14.ScanInterval = 1
+          Attr Ch14.RawValRangeLow = -3.000000e+04
+          Attr Ch14.RawValRangeHigh = 3.000000e+04
+          Attr Ch14.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch14.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch14.SigValueUnit = "mA"
+          Attr Ch14.SensorPolyType = 1
+          Attr Ch14.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch14.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch14.ActValRangeHigh = 1.000000e+02
+          Attr Ch14.Representation = 3
+          Attr Ch15.ConversionOn = 1
+          Attr Ch15.ScanInterval = 1
+          Attr Ch15.RawValRangeLow = -3.000000e+04
+          Attr Ch15.RawValRangeHigh = 3.000000e+04
+          Attr Ch15.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch15.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch15.SigValueUnit = "mA"
+          Attr Ch15.SensorPolyType = 1
+          Attr Ch15.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch15.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch15.ActValRangeHigh = 1.000000e+02
+          Attr Ch15.Representation = 3
+          Attr Ch16.ConversionOn = 1
+          Attr Ch16.ScanInterval = 1
+          Attr Ch16.RawValRangeLow = -3.000000e+04
+          Attr Ch16.RawValRangeHigh = 3.000000e+04
+          Attr Ch16.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch16.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch16.SigValueUnit = "mA"
+          Attr Ch16.SensorPolyType = 1
+          Attr Ch16.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch16.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch16.ActValRangeHigh = 1.000000e+02
+          Attr Ch16.Representation = 3
+          Attr Ch17.ConversionOn = 1
+          Attr Ch17.ScanInterval = 1
+          Attr Ch17.RawValRangeLow = -3.000000e+04
+          Attr Ch17.RawValRangeHigh = 3.000000e+04
+          Attr Ch17.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch17.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch17.SigValueUnit = "mA"
+          Attr Ch17.SensorPolyType = 1
+          Attr Ch17.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch17.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch17.ActValRangeHigh = 1.000000e+02
+          Attr Ch17.Representation = 3
+          Attr Ch18.ConversionOn = 1
+          Attr Ch18.ScanInterval = 1
+          Attr Ch18.RawValRangeLow = -3.000000e+04
+          Attr Ch18.RawValRangeHigh = 3.000000e+04
+          Attr Ch18.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch18.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch18.SigValueUnit = "mA"
+          Attr Ch18.SensorPolyType = 1
+          Attr Ch18.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch18.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch18.ActValRangeHigh = 1.000000e+02
+          Attr Ch18.Representation = 3
+          Attr Ch19.ConversionOn = 1
+          Attr Ch19.ScanInterval = 1
+          Attr Ch19.RawValRangeLow = -3.000000e+04
+          Attr Ch19.RawValRangeHigh = 3.000000e+04
+          Attr Ch19.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch19.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch19.SigValueUnit = "mA"
+          Attr Ch19.SensorPolyType = 1
+          Attr Ch19.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch19.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch19.ActValRangeHigh = 1.000000e+02
+          Attr Ch19.Representation = 3
+          Attr Ch20.ConversionOn = 1
+          Attr Ch20.ScanInterval = 1
+          Attr Ch20.RawValRangeLow = -3.000000e+04
+          Attr Ch20.RawValRangeHigh = 3.000000e+04
+          Attr Ch20.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch20.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch20.SigValueUnit = "mA"
+          Attr Ch20.SensorPolyType = 1
+          Attr Ch20.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch20.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch20.ActValRangeHigh = 1.000000e+02
+          Attr Ch20.Representation = 3
+          Attr Ch21.ConversionOn = 1
+          Attr Ch21.ScanInterval = 1
+          Attr Ch21.RawValRangeLow = -3.000000e+04
+          Attr Ch21.RawValRangeHigh = 3.000000e+04
+          Attr Ch21.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch21.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch21.SigValueUnit = "mA"
+          Attr Ch21.SensorPolyType = 1
+          Attr Ch21.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch21.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch21.ActValRangeHigh = 1.000000e+02
+          Attr Ch21.Representation = 3
+          Attr Ch22.ConversionOn = 1
+          Attr Ch22.ScanInterval = 1
+          Attr Ch22.RawValRangeLow = -3.000000e+04
+          Attr Ch22.RawValRangeHigh = 3.000000e+04
+          Attr Ch22.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch22.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch22.SigValueUnit = "mA"
+          Attr Ch22.SensorPolyType = 1
+          Attr Ch22.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch22.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch22.ActValRangeHigh = 1.000000e+02
+          Attr Ch22.Representation = 3
+          Attr Ch23.ConversionOn = 1
+          Attr Ch23.ScanInterval = 1
+          Attr Ch23.RawValRangeLow = -3.000000e+04
+          Attr Ch23.RawValRangeHigh = 3.000000e+04
+          Attr Ch23.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch23.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch23.SigValueUnit = "mA"
+          Attr Ch23.SensorPolyType = 1
+          Attr Ch23.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch23.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch23.ActValRangeHigh = 1.000000e+02
+          Attr Ch23.Representation = 3
+          Attr Ch24.ConversionOn = 1
+          Attr Ch24.ScanInterval = 1
+          Attr Ch24.RawValRangeLow = -3.000000e+04
+          Attr Ch24.RawValRangeHigh = 3.000000e+04
+          Attr Ch24.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch24.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch24.SigValueUnit = "mA"
+          Attr Ch24.SensorPolyType = 1
+          Attr Ch24.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch24.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch24.ActValRangeHigh = 1.000000e+02
+          Attr Ch24.Representation = 3
+          Attr Ch25.ConversionOn = 1
+          Attr Ch25.ScanInterval = 1
+          Attr Ch25.RawValRangeLow = -3.000000e+04
+          Attr Ch25.RawValRangeHigh = 3.000000e+04
+          Attr Ch25.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch25.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch25.SigValueUnit = "mA"
+          Attr Ch25.SensorPolyType = 1
+          Attr Ch25.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch25.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch25.ActValRangeHigh = 1.000000e+02
+          Attr Ch25.Representation = 3
+          Attr Ch26.ConversionOn = 1
+          Attr Ch26.ScanInterval = 1
+          Attr Ch26.RawValRangeLow = -3.000000e+04
+          Attr Ch26.RawValRangeHigh = 3.000000e+04
+          Attr Ch26.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch26.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch26.SigValueUnit = "mA"
+          Attr Ch26.SensorPolyType = 1
+          Attr Ch26.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch26.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch26.ActValRangeHigh = 1.000000e+02
+          Attr Ch26.Representation = 3
+          Attr Ch27.ConversionOn = 1
+          Attr Ch27.ScanInterval = 1
+          Attr Ch27.RawValRangeLow = -3.000000e+04
+          Attr Ch27.RawValRangeHigh = 3.000000e+04
+          Attr Ch27.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch27.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch27.SigValueUnit = "mA"
+          Attr Ch27.SensorPolyType = 1
+          Attr Ch27.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch27.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch27.ActValRangeHigh = 1.000000e+02
+          Attr Ch27.Representation = 3
+          Attr Ch28.ConversionOn = 1
+          Attr Ch28.ScanInterval = 1
+          Attr Ch28.RawValRangeLow = -3.000000e+04
+          Attr Ch28.RawValRangeHigh = 3.000000e+04
+          Attr Ch28.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch28.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch28.SigValueUnit = "mA"
+          Attr Ch28.SensorPolyType = 1
+          Attr Ch28.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch28.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch28.ActValRangeHigh = 1.000000e+02
+          Attr Ch28.Representation = 3
+          Attr Ch29.ConversionOn = 1
+          Attr Ch29.ScanInterval = 1
+          Attr Ch29.RawValRangeLow = -3.000000e+04
+          Attr Ch29.RawValRangeHigh = 3.000000e+04
+          Attr Ch29.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch29.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch29.SigValueUnit = "mA"
+          Attr Ch29.SensorPolyType = 1
+          Attr Ch29.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch29.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch29.ActValRangeHigh = 1.000000e+02
+          Attr Ch29.Representation = 3
+          Attr Ch30.ConversionOn = 1
+          Attr Ch30.ScanInterval = 1
+          Attr Ch30.RawValRangeLow = -3.000000e+04
+          Attr Ch30.RawValRangeHigh = 3.000000e+04
+          Attr Ch30.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch30.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch30.SigValueUnit = "mA"
+          Attr Ch30.SensorPolyType = 1
+          Attr Ch30.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch30.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch30.ActValRangeHigh = 1.000000e+02
+          Attr Ch30.Representation = 3
+          Attr Ch31.ConversionOn = 1
+          Attr Ch31.ScanInterval = 1
+          Attr Ch31.RawValRangeLow = -3.000000e+04
+          Attr Ch31.RawValRangeHigh = 3.000000e+04
+          Attr Ch31.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch31.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch31.SigValueUnit = "mA"
+          Attr Ch31.SensorPolyType = 1
+          Attr Ch31.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch31.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch31.ActValRangeHigh = 1.000000e+02
+          Attr Ch31.Representation = 3
+          Attr Ch32.ConversionOn = 1
+          Attr Ch32.ScanInterval = 1
+          Attr Ch32.RawValRangeLow = -3.000000e+04
+          Attr Ch32.RawValRangeHigh = 3.000000e+04
+          Attr Ch32.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch32.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch32.SigValueUnit = "mA"
+          Attr Ch32.SensorPolyType = 1
+          Attr Ch32.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch32.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch32.ActValRangeHigh = 1.000000e+02
+          Attr Ch32.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 11 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of an analog input card AI16uP
+    !  Configuration of a PSS9000 analog input card AI16uP.
+    ! 
+    !  16 channel input module.
+    !  The Ai_AI16uP object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanAi objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @h2 Configuration
+    !  @b Range
+    !  The ranges for raw value and signal value are configured in the channel objects.
+    ! 
+    !  RawValueRangeLow  -30000
+    !  RawValueRangeHigh  30000
+    ! 
+    !  The signal range can be ±5 V, ±10 V or ±20 mA. This is configured with jumpers in the card,
+    !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_AI16uP $ClassDef 11 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AI16uP"
+          Attr NextAix = "_X34"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AI16uP 2150596608 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 16
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
+          Attr Ch01.ConversionOn = 1
+          Attr Ch01.ScanInterval = 1
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch01.SigValueUnit = "mA"
+          Attr Ch01.SensorPolyType = 1
+          Attr Ch01.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch01.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.Representation = 3
+          Attr Ch02.ConversionOn = 1
+          Attr Ch02.ScanInterval = 1
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch02.SigValueUnit = "mA"
+          Attr Ch02.SensorPolyType = 1
+          Attr Ch02.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch02.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.Representation = 3
+          Attr Ch03.ConversionOn = 1
+          Attr Ch03.ScanInterval = 1
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch03.SigValueUnit = "mA"
+          Attr Ch03.SensorPolyType = 1
+          Attr Ch03.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch03.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.Representation = 3
+          Attr Ch04.ConversionOn = 1
+          Attr Ch04.ScanInterval = 1
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch04.SigValueUnit = "mA"
+          Attr Ch04.SensorPolyType = 1
+          Attr Ch04.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch04.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.Representation = 3
+          Attr Ch05.ConversionOn = 1
+          Attr Ch05.ScanInterval = 1
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch05.SigValueUnit = "mA"
+          Attr Ch05.SensorPolyType = 1
+          Attr Ch05.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch05.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.Representation = 3
+          Attr Ch06.ConversionOn = 1
+          Attr Ch06.ScanInterval = 1
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch06.SigValueUnit = "mA"
+          Attr Ch06.SensorPolyType = 1
+          Attr Ch06.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch06.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.Representation = 3
+          Attr Ch07.ConversionOn = 1
+          Attr Ch07.ScanInterval = 1
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch07.SigValueUnit = "mA"
+          Attr Ch07.SensorPolyType = 1
+          Attr Ch07.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch07.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.Representation = 3
+          Attr Ch08.ConversionOn = 1
+          Attr Ch08.ScanInterval = 1
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch08.SigValueUnit = "mA"
+          Attr Ch08.SensorPolyType = 1
+          Attr Ch08.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch08.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.Representation = 3
+          Attr Ch09.ConversionOn = 1
+          Attr Ch09.ScanInterval = 1
+          Attr Ch09.RawValRangeLow = -3.000000e+04
+          Attr Ch09.RawValRangeHigh = 3.000000e+04
+          Attr Ch09.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch09.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch09.SigValueUnit = "mA"
+          Attr Ch09.SensorPolyType = 1
+          Attr Ch09.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch09.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch09.ActValRangeHigh = 1.000000e+02
+          Attr Ch09.Representation = 3
+          Attr Ch10.ConversionOn = 1
+          Attr Ch10.ScanInterval = 1
+          Attr Ch10.RawValRangeLow = -3.000000e+04
+          Attr Ch10.RawValRangeHigh = 3.000000e+04
+          Attr Ch10.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch10.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch10.SigValueUnit = "mA"
+          Attr Ch10.SensorPolyType = 1
+          Attr Ch10.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch10.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch10.ActValRangeHigh = 1.000000e+02
+          Attr Ch10.Representation = 3
+          Attr Ch11.ConversionOn = 1
+          Attr Ch11.ScanInterval = 1
+          Attr Ch11.RawValRangeLow = -3.000000e+04
+          Attr Ch11.RawValRangeHigh = 3.000000e+04
+          Attr Ch11.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch11.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch11.SigValueUnit = "mA"
+          Attr Ch11.SensorPolyType = 1
+          Attr Ch11.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch11.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch11.ActValRangeHigh = 1.000000e+02
+          Attr Ch11.Representation = 3
+          Attr Ch12.ConversionOn = 1
+          Attr Ch12.ScanInterval = 1
+          Attr Ch12.RawValRangeLow = -3.000000e+04
+          Attr Ch12.RawValRangeHigh = 3.000000e+04
+          Attr Ch12.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch12.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch12.SigValueUnit = "mA"
+          Attr Ch12.SensorPolyType = 1
+          Attr Ch12.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch12.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch12.ActValRangeHigh = 1.000000e+02
+          Attr Ch12.Representation = 3
+          Attr Ch13.ConversionOn = 1
+          Attr Ch13.ScanInterval = 1
+          Attr Ch13.RawValRangeLow = -3.000000e+04
+          Attr Ch13.RawValRangeHigh = 3.000000e+04
+          Attr Ch13.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch13.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch13.SigValueUnit = "mA"
+          Attr Ch13.SensorPolyType = 1
+          Attr Ch13.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch13.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch13.ActValRangeHigh = 1.000000e+02
+          Attr Ch13.Representation = 3
+          Attr Ch14.ConversionOn = 1
+          Attr Ch14.ScanInterval = 1
+          Attr Ch14.RawValRangeLow = -3.000000e+04
+          Attr Ch14.RawValRangeHigh = 3.000000e+04
+          Attr Ch14.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch14.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch14.SigValueUnit = "mA"
+          Attr Ch14.SensorPolyType = 1
+          Attr Ch14.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch14.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch14.ActValRangeHigh = 1.000000e+02
+          Attr Ch14.Representation = 3
+          Attr Ch15.ConversionOn = 1
+          Attr Ch15.ScanInterval = 1
+          Attr Ch15.RawValRangeLow = -3.000000e+04
+          Attr Ch15.RawValRangeHigh = 3.000000e+04
+          Attr Ch15.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch15.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch15.SigValueUnit = "mA"
+          Attr Ch15.SensorPolyType = 1
+          Attr Ch15.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch15.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch15.ActValRangeHigh = 1.000000e+02
+          Attr Ch15.Representation = 3
+          Attr Ch16.ConversionOn = 1
+          Attr Ch16.ScanInterval = 1
+          Attr Ch16.RawValRangeLow = -3.000000e+04
+          Attr Ch16.RawValRangeHigh = 3.000000e+04
+          Attr Ch16.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch16.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch16.SigValueUnit = "mA"
+          Attr Ch16.SensorPolyType = 1
+          Attr Ch16.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch16.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch16.ActValRangeHigh = 1.000000e+02
+          Attr Ch16.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 38 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 39 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 40 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 41 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of an analog input card AI8uP
+    !  Configuration of a PSS9000 analog input card AI8uP.
+    ! 
+    !  8 channel input module.
+    !  The Ai_AI8uP object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanAi objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @h2 Configuration
+    !  @b Range
+    !  The ranges for raw value and signal value are configured in the channel objects.
+    ! 
+    !  RawValueRangeLow  -30000
+    !  RawValueRangeHigh  30000
+    ! 
+    !  The signal range can be ±5 V, ±10 V or ±20 mA. This is configured with jumpers in the card,
+    !  and in the channel object attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_ai32up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_AI8uP $ClassDef 12 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AI8uP"
+          Attr NextAix = "_X34"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AI8uP 2150858752 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 8
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ai32up.pdf"
+          Attr Ch01.ConversionOn = 1
+          Attr Ch01.ScanInterval = 1
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch01.SigValueUnit = "mA"
+          Attr Ch01.SensorPolyType = 1
+          Attr Ch01.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch01.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.Representation = 3
+          Attr Ch02.ConversionOn = 1
+          Attr Ch02.ScanInterval = 1
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch02.SigValueUnit = "mA"
+          Attr Ch02.SensorPolyType = 1
+          Attr Ch02.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch02.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.Representation = 3
+          Attr Ch03.ConversionOn = 1
+          Attr Ch03.ScanInterval = 1
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch03.SigValueUnit = "mA"
+          Attr Ch03.SensorPolyType = 1
+          Attr Ch03.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch03.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.Representation = 3
+          Attr Ch04.ConversionOn = 1
+          Attr Ch04.ScanInterval = 1
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch04.SigValueUnit = "mA"
+          Attr Ch04.SensorPolyType = 1
+          Attr Ch04.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch04.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.Representation = 3
+          Attr Ch05.ConversionOn = 1
+          Attr Ch05.ScanInterval = 1
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch05.SigValueUnit = "mA"
+          Attr Ch05.SensorPolyType = 1
+          Attr Ch05.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch05.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.Representation = 3
+          Attr Ch06.ConversionOn = 1
+          Attr Ch06.ScanInterval = 1
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch06.SigValueUnit = "mA"
+          Attr Ch06.SensorPolyType = 1
+          Attr Ch06.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch06.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.Representation = 3
+          Attr Ch07.ConversionOn = 1
+          Attr Ch07.ScanInterval = 1
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch07.SigValueUnit = "mA"
+          Attr Ch07.SensorPolyType = 1
+          Attr Ch07.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch07.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.Representation = 3
+          Attr Ch08.ConversionOn = 1
+          Attr Ch08.ScanInterval = 1
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.ChannelSigValRangeLow = -2.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 2.000000e+01
+          Attr Ch08.SigValueUnit = "mA"
+          Attr Ch08.SensorPolyType = 1
+          Attr Ch08.SensorSigValRangeLow = 4.000000e+00
+          Attr Ch08.SensorSigValRangeHigh = 2.000000e+01
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 42 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 43 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 44 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 45 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AiuP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a analog output card AO8uP.
+    !  Configuration of a PSS9000 analog output card AO8uP.
+    ! 
+    !  The Ssab_AO8uP object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanAo objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @h2 Configuration
+    !  @b Range
+    !  The ranges for raw value and signal value are configured in the channel objects.
+    ! 
+    !  RawValueRangeLow  -30000
+    !  RawValueRangeHigh  30000
+    ! 
+    !  The signal range can be ±10 V or ±20 mA. This is configured in the channel object 
+    !  attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_ao8up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_AO8uP $ClassDef 6 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AO8uP"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AO8uP 2149285888 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 8
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao8up.pdf"
+          Attr Ch01.OutPolyType = 1
+          Attr Ch01.ActValRangeLow = -1.000000e+02
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch01.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch01.SigValueUnit = "V"
+          Attr Ch01.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.Representation = 3
+          Attr Ch02.OutPolyType = 1
+          Attr Ch02.ActValRangeLow = -1.000000e+02
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch02.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch02.SigValueUnit = "V"
+          Attr Ch02.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.Representation = 3
+          Attr Ch03.OutPolyType = 1
+          Attr Ch03.ActValRangeLow = -1.000000e+02
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch03.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch03.SigValueUnit = "V"
+          Attr Ch03.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.Representation = 3
+          Attr Ch04.OutPolyType = 1
+          Attr Ch04.ActValRangeLow = -1.000000e+02
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch04.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch04.SigValueUnit = "V"
+          Attr Ch04.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.Representation = 3
+          Attr Ch05.OutPolyType = 1
+          Attr Ch05.ActValRangeLow = -1.000000e+02
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch05.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch05.SigValueUnit = "V"
+          Attr Ch05.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.Representation = 3
+          Attr Ch06.OutPolyType = 1
+          Attr Ch06.ActValRangeLow = -1.000000e+02
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch06.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch06.SigValueUnit = "V"
+          Attr Ch06.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.Representation = 3
+          Attr Ch07.OutPolyType = 1
+          Attr Ch07.ActValRangeLow = -1.000000e+02
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch07.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch07.SigValueUnit = "V"
+          Attr Ch07.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.Representation = 3
+          Attr Ch08.OutPolyType = 1
+          Attr Ch08.ActValRangeLow = -1.000000e+02
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch08.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch08.SigValueUnit = "V"
+          Attr Ch08.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 15 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a analog output card AO8uPL.
+    !  Configuration of a PSS9000 analog output card AO8uPL.
+    ! 
+    !  The Ssab_AO8uPL object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanAo objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @h2 Configuration
+    !  @b Range
+    !  The ranges for raw value and signal value are configured in the channel objects.
+    ! 
+    !  RawValueRangeLow  -30000
+    !  RawValueRangeHigh  30000
+    ! 
+    !  The signal range can be ±10 V or ±20 mA. This is configured in the channel object 
+    !  attributes ChannelSigValRangeLow and ChannelSigValRangeHigh.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_ao8up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_AO8uPL $ClassDef 14 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AO8uPL"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AO8uPL 2151383040 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 8
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao8up.pdf"
+          Attr Ch01.OutPolyType = 1
+          Attr Ch01.ActValRangeLow = -1.000000e+02
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch01.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch01.SigValueUnit = "V"
+          Attr Ch01.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.Representation = 3
+          Attr Ch02.OutPolyType = 1
+          Attr Ch02.ActValRangeLow = -1.000000e+02
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch02.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch02.SigValueUnit = "V"
+          Attr Ch02.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.Representation = 3
+          Attr Ch03.OutPolyType = 1
+          Attr Ch03.ActValRangeLow = -1.000000e+02
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch03.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch03.SigValueUnit = "V"
+          Attr Ch03.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.Representation = 3
+          Attr Ch04.OutPolyType = 1
+          Attr Ch04.ActValRangeLow = -1.000000e+02
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch04.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch04.SigValueUnit = "V"
+          Attr Ch04.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.Representation = 3
+          Attr Ch05.OutPolyType = 1
+          Attr Ch05.ActValRangeLow = -1.000000e+02
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch05.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch05.SigValueUnit = "V"
+          Attr Ch05.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.Representation = 3
+          Attr Ch06.OutPolyType = 1
+          Attr Ch06.ActValRangeLow = -1.000000e+02
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch06.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch06.SigValueUnit = "V"
+          Attr Ch06.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.Representation = 3
+          Attr Ch07.OutPolyType = 1
+          Attr Ch07.ActValRangeLow = -1.000000e+02
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch07.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch07.SigValueUnit = "V"
+          Attr Ch07.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.Representation = 3
+          Attr Ch08.OutPolyType = 1
+          Attr Ch08.ActValRangeLow = -1.000000e+02
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch08.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch08.SigValueUnit = "V"
+          Attr Ch08.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 50 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 51 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 52 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 53 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object Ssab_AO16uP_Logger $ClassDef 15 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_AO16uP_Logger"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseACard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_AO16uP_Logger 2151645184 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 16
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_ao16up_logger.pdf"
+          Attr Ch01.OutPolyType = 1
+          Attr Ch01.ActValRangeLow = -1.000000e+02
+          Attr Ch01.ActValRangeHigh = 1.000000e+02
+          Attr Ch01.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch01.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch01.SigValueUnit = "V"
+          Attr Ch01.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch01.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch01.RawValRangeLow = -3.000000e+04
+          Attr Ch01.RawValRangeHigh = 3.000000e+04
+          Attr Ch01.Representation = 3
+          Attr Ch02.OutPolyType = 1
+          Attr Ch02.ActValRangeLow = -1.000000e+02
+          Attr Ch02.ActValRangeHigh = 1.000000e+02
+          Attr Ch02.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch02.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch02.SigValueUnit = "V"
+          Attr Ch02.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch02.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch02.RawValRangeLow = -3.000000e+04
+          Attr Ch02.RawValRangeHigh = 3.000000e+04
+          Attr Ch02.Representation = 3
+          Attr Ch03.OutPolyType = 1
+          Attr Ch03.ActValRangeLow = -1.000000e+02
+          Attr Ch03.ActValRangeHigh = 1.000000e+02
+          Attr Ch03.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch03.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch03.SigValueUnit = "V"
+          Attr Ch03.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch03.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch03.RawValRangeLow = -3.000000e+04
+          Attr Ch03.RawValRangeHigh = 3.000000e+04
+          Attr Ch03.Representation = 3
+          Attr Ch04.OutPolyType = 1
+          Attr Ch04.ActValRangeLow = -1.000000e+02
+          Attr Ch04.ActValRangeHigh = 1.000000e+02
+          Attr Ch04.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch04.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch04.SigValueUnit = "V"
+          Attr Ch04.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch04.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch04.RawValRangeLow = -3.000000e+04
+          Attr Ch04.RawValRangeHigh = 3.000000e+04
+          Attr Ch04.Representation = 3
+          Attr Ch05.OutPolyType = 1
+          Attr Ch05.ActValRangeLow = -1.000000e+02
+          Attr Ch05.ActValRangeHigh = 1.000000e+02
+          Attr Ch05.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch05.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch05.SigValueUnit = "V"
+          Attr Ch05.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch05.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch05.RawValRangeLow = -3.000000e+04
+          Attr Ch05.RawValRangeHigh = 3.000000e+04
+          Attr Ch05.Representation = 3
+          Attr Ch06.OutPolyType = 1
+          Attr Ch06.ActValRangeLow = -1.000000e+02
+          Attr Ch06.ActValRangeHigh = 1.000000e+02
+          Attr Ch06.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch06.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch06.SigValueUnit = "V"
+          Attr Ch06.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch06.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch06.RawValRangeLow = -3.000000e+04
+          Attr Ch06.RawValRangeHigh = 3.000000e+04
+          Attr Ch06.Representation = 3
+          Attr Ch07.OutPolyType = 1
+          Attr Ch07.ActValRangeLow = -1.000000e+02
+          Attr Ch07.ActValRangeHigh = 1.000000e+02
+          Attr Ch07.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch07.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch07.SigValueUnit = "V"
+          Attr Ch07.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch07.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch07.RawValRangeLow = -3.000000e+04
+          Attr Ch07.RawValRangeHigh = 3.000000e+04
+          Attr Ch07.Representation = 3
+          Attr Ch08.OutPolyType = 1
+          Attr Ch08.ActValRangeLow = -1.000000e+02
+          Attr Ch08.ActValRangeHigh = 1.000000e+02
+          Attr Ch08.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch08.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch08.SigValueUnit = "V"
+          Attr Ch08.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch08.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch08.RawValRangeLow = -3.000000e+04
+          Attr Ch08.RawValRangeHigh = 3.000000e+04
+          Attr Ch08.Representation = 3
+          Attr Ch09.OutPolyType = 1
+          Attr Ch09.ActValRangeLow = -1.000000e+02
+          Attr Ch09.ActValRangeHigh = 1.000000e+02
+          Attr Ch09.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch09.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch09.SigValueUnit = "V"
+          Attr Ch09.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch09.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch09.RawValRangeLow = -3.000000e+04
+          Attr Ch09.RawValRangeHigh = 3.000000e+04
+          Attr Ch09.Representation = 3
+          Attr Ch10.OutPolyType = 1
+          Attr Ch10.ActValRangeLow = -1.000000e+02
+          Attr Ch10.ActValRangeHigh = 1.000000e+02
+          Attr Ch10.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch10.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch10.SigValueUnit = "V"
+          Attr Ch10.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch10.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch10.RawValRangeLow = -3.000000e+04
+          Attr Ch10.RawValRangeHigh = 3.000000e+04
+          Attr Ch10.Representation = 3
+          Attr Ch11.OutPolyType = 1
+          Attr Ch11.ActValRangeLow = -1.000000e+02
+          Attr Ch11.ActValRangeHigh = 1.000000e+02
+          Attr Ch11.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch11.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch11.SigValueUnit = "V"
+          Attr Ch11.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch11.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch11.RawValRangeLow = -3.000000e+04
+          Attr Ch11.RawValRangeHigh = 3.000000e+04
+          Attr Ch11.Representation = 3
+          Attr Ch12.OutPolyType = 1
+          Attr Ch12.ActValRangeLow = -1.000000e+02
+          Attr Ch12.ActValRangeHigh = 1.000000e+02
+          Attr Ch12.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch12.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch12.SigValueUnit = "V"
+          Attr Ch12.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch12.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch12.RawValRangeLow = -3.000000e+04
+          Attr Ch12.RawValRangeHigh = 3.000000e+04
+          Attr Ch12.Representation = 3
+          Attr Ch13.OutPolyType = 1
+          Attr Ch13.ActValRangeLow = -1.000000e+02
+          Attr Ch13.ActValRangeHigh = 1.000000e+02
+          Attr Ch13.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch13.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch13.SigValueUnit = "V"
+          Attr Ch13.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch13.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch13.RawValRangeLow = -3.000000e+04
+          Attr Ch13.RawValRangeHigh = 3.000000e+04
+          Attr Ch13.Representation = 3
+          Attr Ch14.OutPolyType = 1
+          Attr Ch14.ActValRangeLow = -1.000000e+02
+          Attr Ch14.ActValRangeHigh = 1.000000e+02
+          Attr Ch14.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch14.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch14.SigValueUnit = "V"
+          Attr Ch14.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch14.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch14.RawValRangeLow = -3.000000e+04
+          Attr Ch14.RawValRangeHigh = 3.000000e+04
+          Attr Ch14.Representation = 3
+          Attr Ch15.OutPolyType = 1
+          Attr Ch15.ActValRangeLow = -1.000000e+02
+          Attr Ch15.ActValRangeHigh = 1.000000e+02
+          Attr Ch15.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch15.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch15.SigValueUnit = "V"
+          Attr Ch15.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch15.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch15.RawValRangeLow = -3.000000e+04
+          Attr Ch15.RawValRangeHigh = 3.000000e+04
+          Attr Ch15.Representation = 3
+          Attr Ch16.OutPolyType = 1
+          Attr Ch16.ActValRangeLow = -1.000000e+02
+          Attr Ch16.ActValRangeHigh = 1.000000e+02
+          Attr Ch16.SensorSigValRangeLow = -1.000000e+01
+          Attr Ch16.SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch16.SigValueUnit = "V"
+          Attr Ch16.ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch16.ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch16.RawValRangeLow = -3.000000e+04
+          Attr Ch16.RawValRangeHigh = 3.000000e+04
+          Attr Ch16.Representation = 3
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 54 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 55 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 56 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 57 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_AouP-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a digital input card DI32D
+    !  Configuration of a PSS9000 digital input card DI32D.
+    ! 
+    !  32 channel input module for DC, positive logic.
+    !  The Di_DIX2 object is positioned below a SSAB_Rack object in the node configuration.
+    !  Each used cannel of the card is configured with a ChanDi object, placed below the
+    !  Di_DIX2 object.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_di32d.pdf
+    !*/
+    Object Ssab_DI32D $ClassDef 7 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_DI32D"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseDiCard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch18"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch19"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch28"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch29"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_DI32D 2149548032 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 32
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_di32d.pdf"
+          Attr Super.ConvMask1 = 65535
+          Attr Super.ConvMask2 = 65535
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 19 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Di-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Di-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Di-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a digital output card DO32DKS
+    !  Configuration of a PSS9000 digital output card DO32DKS.
+    ! 
+    !  32 channel output module, shortcut protected.
+    !  The Do_HVDO32 object is positioned below a SSAB_Rack object in the node configuration.
+    !  Each used channel of the card is configured with a ChanDo or ChanPo object, placed below the
+    !  Do_HVDO32 object.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_do32dks.pdf
+    !*/
+    Object Ssab_DO32DKS $ClassDef 8 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_DO32DKS"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch18"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch19"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch28"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch29"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_DO32DKS 2149810176 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 32
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 23 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a digital output card DO32DKS Stall
+    !  Configuration of a PSS9000 digital output card DO32DKS Stall.
+    ! 
+    !  32 channel output module, shortcut protected, with stall function.
+    !  The Do_HVDO32 object is positioned below a SSAB_Rack object in the node configuration.
+    !  Each used channel of the card is configured with a ChanDo or ChanPo object, placed below the
+    !  Do_HVDO32 object.
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_do32dks.pdf
+    !*/
+    Object Ssab_DO32DKS_Stall $ClassDef 13 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_DO32DKS_Stall"
+          Attr NextAix = "_X34"
+        EndBody
+        Object Super $Attribute 1 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "SsabOx:Class-Ssab_BaseDoCard"
+          EndBody
+        EndObject
+        Object Ch01 $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch02 $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch03 $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch04 $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch05 $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch06 $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch07 $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch08 $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch08"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch09 $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch09"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch10 $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch11 $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch12 $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch13 $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch14 $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch15 $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch16 $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch17 $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch18 $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch18"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch19 $Attribute 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch19"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch20 $Attribute 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch20"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch21 $Attribute 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch21"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch22 $Attribute 23 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch22"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch23 $Attribute 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch23"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch24 $Attribute 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch24"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch25 $Attribute 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch25"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch26 $Attribute 27 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch26"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch27 $Attribute 28 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch27"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch28 $Attribute 29 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch28"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch29 $Attribute 30 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch29"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch30 $Attribute 31 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch30"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch31 $Attribute 32 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch31"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object Ch32 $Attribute 33 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch32"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_DO32DKS_Stall 2151120896 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.MaxNoOfChannels = 32
+          Attr Super.Process = 1
+          Attr Super.DataSheet = "$pwr_lang/dsh/ssab_do32dks.pdf"
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 46 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 47 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 48 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 49 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Do-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_PSS9000
+    !  @Summary Configuration of a counter card CO4uP.
+    !  Configuration of a PSS9000 counter card CO4uP.
+    ! 
+    !  The Co_CO4uP object is positioned below a SSAB_Rack object in the node configuration.
+    !  The channel objects are already configured with internal ChanCo objects in the card object.
+    ! 
+    !  @h2 Console
+    !  The card has a terminal port that can be used to view the signal values of the card and to
+    !  trace trouble. To use the terminal port you
+    !  - connect the serial port of the computer to the terminal port of the card.
+    !  - open a consol window on the screen of the computer from the popup menu of the background,
+    !    menu item 'PSS Kort'.
+    !  - view information and help with (Shift) '?'.
+    !  - view the signal values of the card with 'R'.
+    !  For more information about the console program, follow the link below. 
+    ! 
+    !  @b See hardware specification
+    !  @link Datasheet ../dsh/ssab_co4up.pdf
+    !  @Link Console program http://intern.oxelosund.ssab.se/pss/Hårdvara/PSS-kort-data.htm#AI32uP
+    !*/
+    Object Ssab_CO4uP $ClassDef 9 06-OCT-2005 14:45:53.00
+      Body SysBody 01-JAN-1970 01:00:00.00
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 06-OCT-2005 14:45:53.00
+        Body SysBody 01-JAN-1970 01:00:00.00
+          Attr StructName = "Ssab_CO4uP"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 2 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Device name. Used only in VAX_ELN nodes.
+        ! The device name is the identification of the device in the ELN ebuild file.
+        !*/
+        Object DevName $Attribute 3 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        !/**
+        ! Error counter, incremented for every failed read or write operation of the card.
+        ! When the error counter reaches ErrorSoftLimit, a message is sent to the console log.
+        ! When it reaches ErrorHardLimit, all IO handling is aborted.
+        !*/
+        Object ErrorCount $Attribute 4 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:36:40.89
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when a message is sent to the console log.
+        !*/
+        Object ErrorSoftLimit $Attribute 5 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Value of the error counter, when all IO handling is aborted.
+        !*/
+        Object ErrorHardLimit $Attribute 6 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The conversion mask specifies which channel values that are transfered to signal values. 
+        ! The conversion mask specifies which channel values that is transfered to signal values. 
+        ! If value of a channel, read from the card, should not be used, the corresponding bit in
+        ! the conversion mask is set to 0. The value can then be set from the runtime navigator.
+        !*/
+        Object ConvMask $Attribute 7 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ConvMask"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum number of channels.
+        !*/
+        Object MaxNoOfCounters $Attribute 8 06-OCT-2005 14:45:53.00
+          Body SysBody 21-DEC-2005 09:37:02.98
+            Attr PgmName = "MaxNoOfCounters"
+            Attr Flags = 1056
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary An extended 32-bit absolute value of the counter is calculated and stored.
+        ! An extended 32-bit absolute value of the counter is calculated and stored.
+        ! The extended value is convenient to use if there is any risk of overflow.
+        ! It is fetched into the plc program with the PIX output of the GetPi object.
+        !*/
+        Object COAbsFlag $Attribute 9 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "COAbsFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Number of bits, 16 or 24.
+        ! Number of bits, 16 or 24.
+        ! If NoOfBits is 16, bit 12 is set in the configuration word of the counter.
+        !*/
+        Object NoOfBits $Attribute 10 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "NoOfBits"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Type-SsabCoNoOfBitsEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Internal flag.
+        !*/
+        Object COWrFlag $Attribute 11 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "COWrFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The number of pulses is multiplied with this factor. 2 or 4.
+        ! The number of pulses is multiplied with this factor. 2 or 4.
+        ! If MulCount is 2, bit 11 is set in the configuration word of the counter.
+        !*/
+        Object MulCount $Attribute 12 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "MulCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Type-SsabCoMulCountEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary The number of pulses is divided with 16. No (0) or 16.
+        ! The number of pulses is divided with 16. No (0) or 16.
+        ! If DivCount is 16, bit 9 is set in the configuration word of the counter.
+        !*/
+        Object DivCount $Attribute 13 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DivCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Type-SsabCoDivCountEnum"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Copy the value in SyncRawValue to the counter value, when rough sync is detected.
+        ! Copy the value in SyncRawValue to the counter value, when rough sync is detected.
+        ! Actually, it is the write register that is copied to the counter value, and the
+        ! SyncRawValue is copied to the write register as system startup.
+        ! If CopWrRough is true, bit 13 is set in the configuration word of the counter.
+        !*/
+        Object CopWrRough $Attribute 14 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CopWrRough"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Copy the value in SyncRawValue to the counter value, when fine sync is detected.
+        ! Copy the value in SyncRawValue to the counter value, when fine sync is detected.
+        ! Actually, it is the write register that is copied to the counter value, and the
+        ! SyncRawValue is copied to the write register as system startup.
+        ! If CopWrFine is true, bit 14 is set in the configuration word of the counter.
+        !*/
+        Object CopWrFine $Attribute 15 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "CopWrFine"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Copy the value in SyncRawValue to the write register and to the counter value.
+        ! Copy the value in SyncRawValue to the write register and to the counter value.
+        ! If LoadWrReg is false, the value in SyncRawValue is copied to the write register, but
+        ! not the the counter value.
+        ! Bit 15 in the configuration word of the counter is set, if LoadWrReg is true.
+        !*/
+        Object LoadWrReg $Attribute 16 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LoadWrReg"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Length measurement, triggered by the rough sync signal.
+        ! Length measurement, triggered by the rough sync signal.
+        ! If CopWrRough is true, the counter value will be reset when rough sync is detected,
+        ! if false, count will start from the previous value.
+        ! Bit 10 in the configuration word of the counter is set.
+        !*/
+        Object LengthMeasurement $Attribute 17 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "LengthMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Speed measurement, pulses per second.
+        ! Speed measurement, pulses per second.
+        ! Bit 8 in the configuration word of the counter is set.
+        !*/
+        Object SpeedMeasurement $Attribute 18 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SpeedMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Value copied to the counter value when rough or fine sync is detected.
+        ! Value copied to the counter value when rough or fine sync is detected.
+        ! The value in SyncRawValue is copied to the write register at system startup.
+        ! Due to values of CoWrRough an CoWrFine the value in the write register is
+        ! copied to the counter value, when a rough or fine sync is detected.
+        !*/
+        Object SyncRawValue $Attribute 19 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "SyncRawValue"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary QBUS address of the card.
+        ! QBUS address of the card.
+        ! The value is set with address switches on the card.
+        ! NoteThe value in RegAddress is a decimal value
+        ! 
+        ! 	Card number	Octal address	Decimal address
+        ! 	1		176300		4193472
+        ! 	2		176320		4193488
+        ! 	3		176340		4193504
+        ! 	4		176360		4193520
+        ! 
+        ! For VAX_ELN RegAddress is used for documentation only, and usually specified as an octal value.
+        !*/
+        Object RegAddress $Attribute 20 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Vector address. Used on VAX_ELN only, and only for documentation.
+        !*/
+        Object VectAddress $Attribute 21 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 22 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card read to with the scantime of the thread.
+        !*/
+        Object ThreadObject $Intern 23 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 24 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary Channel object array.
+        !  Array with channel objects.
+        !*/
+        Object Ch1 $Attribute 25 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch1"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanCo"
+          EndBody
+        EndObject
+        Object Ch2 $Attribute 26 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch2"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanCo"
+          EndBody
+        EndObject
+        Object Ch3 $Attribute 27 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch3"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanCo"
+          EndBody
+        EndObject
+        Object Ch4 $Attribute 28 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr PgmName = "Ch4"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanCo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ssab_CO4uP 2150072320 06-OCT-2005 14:45:53.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr ConvMask = 65535
+          Attr MaxNoOfCounters = 4
+          Attr COAbsFlag[0] = 1
+          Attr COAbsFlag[1] = 1
+          Attr COAbsFlag[2] = 1
+          Attr COAbsFlag[3] = 1
+          Attr NoOfBits[0] = 24
+          Attr NoOfBits[1] = 24
+          Attr NoOfBits[2] = 24
+          Attr NoOfBits[3] = 24
+          Attr MulCount[0] = 4
+          Attr MulCount[1] = 4
+          Attr MulCount[2] = 4
+          Attr MulCount[3] = 4
+          Attr CopWrRough[0] = 1
+          Attr CopWrRough[1] = 1
+          Attr CopWrRough[2] = 1
+          Attr CopWrRough[3] = 1
+          Attr CopWrFine[0] = 1
+          Attr CopWrFine[1] = 1
+          Attr CopWrFine[2] = 1
+          Attr CopWrFine[3] = 1
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_co4up.pdf"
+          Attr Ch1.ConversionOn = 1
+          Attr Ch1.SensorPolyType = 1
+          Attr Ch2.ConversionOn = 1
+          Attr Ch2.SensorPolyType = 1
+          Attr Ch3.ConversionOn = 1
+          Attr Ch3.SensorPolyType = 1
+          Attr Ch4.ConversionOn = 1
+          Attr Ch4.SensorPolyType = 1
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 27 06-OCT-2005 14:45:53.00
+        Object Pointed $Menu 28 06-OCT-2005 14:45:53.00
+          Object Connect $MenuButton 29 06-OCT-2005 14:45:53.00
+            Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 30 06-OCT-2005 14:45:53.00
+        Object IoCardInit $Method 31 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Co-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 32 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Co-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 33 06-OCT-2005 14:45:53.00
+          Body SysBody 01-JAN-1970 01:00:00.00
+            Attr MethodName = "Ssab_Co-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+  EndObject
+EndVolume
