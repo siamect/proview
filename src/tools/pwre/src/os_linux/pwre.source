@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # pwre.source
 #
@@ -7,25 +8,51 @@
 # is handled by pwre.perl 
 #
 
-
-
 #
 # Don't call pwre.perl if it is the init verb
 #
 env="$2"
 
-
-if [ $# -eq 0 ] || echo "init" | grep $pwre_silent -v "^$1";  then
-  	$pwre_bin/pwre.pl $@
-elif [ "$env" = "" ]; then
-	echo "++ init what?"
-else
-        if $pwre_bin/pwre.pl _exists $2; then
-		set_env `$pwre_bin/pwre.pl _print $2`
-	else
-		echo "++ Environment $2 doesn't exist"
-	fi		
+local cmd
+cmd="help"
+if [ -z $1 ] || [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
+  $pwre_bin/pwre.pl $@
+  return
 fi
+cmd="init"
+if [ $1 = $cmd ]; then
+  echo "init..."
+  if [ "$env" = "" ]; then
+    echo "++ init what?"
+  else
+    export pwre_module=kernel
+    export pwre_bmodule=kernel
+    if $pwre_bin/pwre.pl _exists $2; then
+      set_env `$pwre_bin/pwre.pl _print $2`
+    else
+      echo "++ Environment $2 doesn't exist"
+    fi		
+    source $pwre_bin/pwre_function
+  fi
+  return
+fi
+
+cmd="module"
+if [ $1 = $cmd ]; then
+  echo "module..."
+  if [ -z $2 ]; then
+    export pwre_module="kernel"
+    export pwre_bmodule="kernel"
+  else
+    export pwre_module=$2
+    export pwre_bmodule=$2
+  fi
+  env=$pwre_env
+  set_env `$pwre_bin/pwre.pl _print $env`
+  return
+fi
+
+$pwre_bin/pwre.pl $@
 
 
 

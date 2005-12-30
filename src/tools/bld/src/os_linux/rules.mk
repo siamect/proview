@@ -228,4 +228,8 @@ $(doc_dir)/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(inc_dir)/%.meth : %.meth
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 endif

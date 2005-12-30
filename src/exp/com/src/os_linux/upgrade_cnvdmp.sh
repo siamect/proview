@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade_cnvdmp.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: upgrade_cnvdmp.sh,v 1.3 2005-12-30 15:47:43 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -32,6 +32,14 @@ s/Attr parent_node_did = /Attr poid = /
 s/Attr dest_node_did = /Attr dest_oid = /
 s/Attr source_node_did = /Attr source_oid = /
 s/Attr reset_objdid = /Attr reset_oid = /
+s/pwrb:Ai_AI32uP/SsabOx:Ai_AI32uP/
+s/pwrb:Ai_HVAI32/SsabOx:Ai_HVAI32/
+s/pwrb:Ao_AO8uP/SsabOx:Ao_AO8uP/
+s/pwrb:Ao_HVAO4/SsabOx:Ao_HVAO4/
+s/pwrb:Co_CO4uP/SsabOx:Co_CO4uP/
+s/pwrb:Co_PI24BO/SsabOx:Co_PI24BO/
+s/pwrb:Di_DIX2/SsabOx:Di_DIX2/
+s/pwrb:Do_HVDO32/SsabOx:Do_HVDO32/
 /PlcProgram$/{
 N
 N
@@ -61,4 +69,5 @@ s/Attr objdid = /Attr oid =/
 s/Attr classid = /Attr cid =/
 }
 ' $1 > $2
+
 

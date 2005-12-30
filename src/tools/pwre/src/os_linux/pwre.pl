@@ -7,13 +7,16 @@
   "add", 	"add:usage_add",
   "build", 	"build:usage_build",
   "build_all", 	"build_all:usage_build_all",
-  "build_ssab", "build_ssab:usage_build_ssab",
+  "build_all_modules", "build_all_modules:usage_build_all_modules",
   "copy", 	"copy:usage_copy",
   "create", 	"create:usage_create",
+  "create_all_modules", "create_all_modules:usage_create_all_modules",
   "delete", 	"dele:usage_dele",
   "help",	"help:usage_help",
   "list",	"list:usage_list",
   "init",	"init:usage_init",
+  "module",	"module:usage_module",
+  "merge",	"merge:usage_merge",
   "modify",	"modify:usage_modify",
   "show",	"show:usage_show",
   "tags",	"tags:usage_tags",
@@ -39,7 +42,6 @@ if ($ENV{"HOSTTYPE"} eq "rs6000") {
   $hw	= "x86";
 }
 $desc	= $user. "'s environment";
-
 @vars;
 $varstr;
 
@@ -167,14 +169,99 @@ sub build () # args: branch, subbranch, phase
 #
 # build_all()
 #
+sub build_all_modules ()
+{
+  _module("kernel");
+  build_all("lib");
+  merge();
+  _module("ssabox");
+  build_all("lib");
+  merge();
+  _module("othermanu");
+  build_all("lib");
+  merge();
+  _module("abb");
+  build_all("lib");
+  merge();
+  _module("siemens");
+  build_all("lib");
+  merge();
+  _module("inor");
+  build_all("lib");
+  merge();
+  _module("klocknermoeller");
+  build_all("lib");
+  merge();
+  _module("telemecanique");
+  build_all("lib");
+  merge();
+  _module("kernel");
+  build_all("","exe");
+  merge();
+  _module("ssabox");
+  build_all("","exe");
+  merge();
+  _module("othermanu");
+  build_all("","exe");
+  merge();
+  _module("abb");
+  build_all("","exe");
+  merge();
+  _module("siemens");
+  build_all("","exe");
+  merge();
+  _module("inor");
+  build_all("","exe");
+  merge();
+  _module("klocknermoeller");
+  build_all("","exe");
+  merge();
+  _module("telemecanique");
+  build_all("","exe");
+  merge();
+  
+#  my($exe_dir) = $ENV{"pwr_exe"};
+#  system("rm $exe_dir/rt_io_comm");
+#  _build("exe", "rt_io_comm", "all");
+#  system("rm $exe_dir/rt_ini");
+#  _build("exe", "rt_ini", "all");
+  merge();
+  
+}
+
+sub create_all_modules ()
+{
+  _module("kernel");
+  create();
+  _module("ssabox");
+  create();
+  _module("othermanu");
+  create();
+  _module("abb");
+  create();
+  _module("siemens");
+  create();
+  _module("inor");
+  create();
+  _module("klocknermoeller");
+  create();
+  _module("telemecanique");
+  create();
+}
+
+#
+# build_all()
+#
 sub build_all ()
 {
-
+  my($to) = $_[0];
+  my($from) = $_[1];
 
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
     exit 1;
   }
+  my($module) = $ENV{"pwre_module"};
 
   printf("--\n");
   printf("-- Build all\n");
@@ -190,70 +277,89 @@ sub build_all ()
 #  }
 
   
-  _build("exp", "inc", "all");
-  _build("exp", "com", "all");
-  _build("tools/exe", "*", "all");
-  _build("msg", "*", "all");
-  _build("lib", "rt", "init copy");
-  _build("lib", "wb", "init copy");
-  _build("lib", "co", "init copy");
-  _build("lib", "dtt", "init copy");
-  _build("exp", "wb", "init copy");
-  _build("lib", "flow", "all");
-  _build("lib", "glow", "all");
-  _build("lib", "co", "all");
-  _build("exe", "co*", "all");
-  _build("wbl", "pwrs", "copy");
-  _build("wbl", "pwrb", "copy");
-  _build("wbl", "nmps", "copy");
-  _build("wbl", "ssab", "copy");
-  _build("wbl", "tlog", "copy");
-  _build("wbl", "bcomp", "copy");
-  _build("wbl", "mcomp", "copy");
-  _build("lib", "ge", "all");
-  _build("lib", "wb", "all");
-  _build("lib", "rt", "all");
-  _build("lib", "rs", "all");
-  _build("exp", "rt", "all");
-  _build("exp", "wb", "all");
-  _build("lib", "msg_dummy", "all");
-  _build("exe", "wb*", "all");
-  _build("lib", "dtt", "all");
-  _build("exp", "rt", "all");
-  _build("exe", "rt*", "all");
-  _build("exe", "rs*", "all");
-  _build("exe", "jpwr*", "all");
-  _build("exp", "ge", "all");
-  _build("mmi", "*", "copy");
-  _build("jpwr", "rt", "all");
-  _build("jpwr", "jop", "all");
-  _build("jpwr", "jopc", "all");
-  _build("jpwr", "beans", "all");
-  _build("jpwr", "rt_client", "all");
-#  _build("db", "wb", "init");
-  _build("wbl", "pwrs", "lib");
-  _build("wbl", "pwrb", "lib");
-  _build("wbl", "nmps", "lib");
-  _build("wbl", "ssab", "lib");
-  _build("wbl", "tlog", "lib");
-  _build("wbl", "bcomp", "lib");
-  _build("wbl", "mcomp", "lib");
-  _build("wbl", "wb", "lib");
-  _build("wbl", "rt", "lib");
-  _build("doc", "web", "all");
-  _build("doc", "dweb", "all");
-  _build("doc", "orm", "all");
-  _build("doc", "prm", "all");
-  _build("doc", "man", "all");
-  _build("doc", "dox", "all");
-  _build("wbl", "pwrs", "exe");
-  _build("wbl", "pwrb", "exe");
-  _build("wbl", "nmps", "exe");
-  _build("wbl", "tlog", "exe");
-  _build("wbl", "ssab", "exe");
-  _build("wbl", "bcomp", "exe");
-  _build("wbl", "mcomp", "exe");
-
+  if ( $module eq "kernel") {
+    if ( $from eq "") {
+      _build("exp", "inc", "all");
+      _build("exp", "com", "all");
+      _build("tools/exe", "*", "all");
+      _build("msg", "*", "all");
+      _build("lib", "rt", "init copy");
+      _build("lib", "wb", "init copy");
+      _build("lib", "co", "init copy");
+      _build("lib", "dtt", "init copy");
+      _build("exp", "wb", "init copy");
+      _build("lib", "flow", "all");
+      _build("lib", "glow", "all");
+      _build("lib", "co", "all");
+      _build("exe", "co*", "all");
+      _build("wbl", "pwrs", "copy");
+      _build("wbl", "pwrb", "copy");
+      _build("wbl", "nmps", "copy");
+      _build("wbl", "ssab", "copy");
+      _build("wbl", "tlog", "copy");
+      _build("wbl", "bcomp", "copy");
+      _build("lib", "ge", "all");
+      _build("lib", "wb", "all");
+      _build("lib", "rt", "all");
+      _build("lib", "rs", "all");
+      _build("exp", "rt", "all");
+      _build("exp", "wb", "all");
+      _build("lib", "msg_dummy", "all");
+      _build("exe", "wb_rtt", "all");
+      _build("lib", "dtt", "all");
+      _build("exp", "rt", "all");
+    }
+    if ( $to eq "lib") {
+	return;
+    }
+    _build("exe", "wb*", "all");
+    _build("exe", "rt*", "all");
+    _build("exe", "rs*", "all");
+    _build("exe", "jpwr*", "all");
+    _build("exp", "ge", "all");
+    _build("mmi", "*", "copy");
+    _build("jpwr", "rt", "all");
+    _build("jpwr", "jop", "all");
+    _build("jpwr", "jopc", "all");
+    _build("jpwr", "beans", "all");
+    _build("jpwr", "rt_client", "all");
+#    _build("db", "wb", "init");
+    _build("wbl", "pwrs", "lib");
+    _build("wbl", "pwrb", "lib");
+    _build("wbl", "nmps", "lib");
+    _build("wbl", "ssab", "lib");
+    _build("wbl", "tlog", "lib");
+    _build("wbl", "bcomp", "lib");
+    _build("wbl", "wb", "lib");
+    _build("wbl", "rt", "lib");
+    _build("doc", "web", "all");
+    _build("doc", "dweb", "all");
+    _build("doc", "orm", "all");
+    _build("doc", "prm", "all");
+    _build("doc", "man", "all");
+    _build("doc", "dox", "all");
+    _build("wbl", "pwrs", "exe");
+    _build("wbl", "pwrb", "exe");
+    _build("wbl", "nmps", "exe");
+    _build("wbl", "tlog", "exe");
+    _build("wbl", "ssab", "exe");
+    _build("wbl", "bcomp", "exe");
+  }
+  else {
+    if ( $from eq "") {
+      _build("wbl", "mcomp", "copy");
+      _build("mmi", "mcomp", "copy");
+      _build("lib", "rt", "all");
+      _build("lib", "wb", "all");
+    }
+    if ( $to eq "lib") {
+	return;
+    }
+    _build("wbl", "mcomp", "lib");
+    _build("wbl", "mcomp", "exe");
+    _build("doc", "dsh", "copy");
+    _build("doc", "orm", "copy");
+  }
 }
 
 
@@ -325,6 +431,7 @@ sub create()
 {
   my($newdir);
   my($root) = $ENV{"pwre_broot"};
+  my($module) = $ENV{"pwre_bmodule"};
 
   if (!defined($root)) {
     printf("++\n++ No build root is defined\n");
@@ -345,31 +452,14 @@ sub create()
   create_dir($newdir . "/msg");
   create_dir($newdir . "/jpwr");
 
-  $newdir = $root . "/exp";
-  create_dir($newdir);
-  create_dir($newdir . "/db");
-  create_dir($newdir . "/exe");
-  create_dir($newdir . "/exe/sv_se");
-  create_dir($newdir . "/exe/en_us");
-  create_dir($newdir . "/exe/de_de");
-  create_dir($newdir . "/inc");
-  create_dir($newdir . "/load");
-  create_dir($newdir . "/lib");
-  create_dir($newdir . "/lis");
-  create_dir($newdir . "/obj");
-  create_dir($newdir . "/src");
-  create_dir($newdir . "/cnf");
-  create_dir($newdir . "/doc");
-  create_dir($newdir . "/doc/dox");
-  create_dir($newdir . "/doc/prm");
-  create_dir($newdir . "/doc/sv_se");
-  create_dir($newdir . "/doc/en_us");
-  create_dir($newdir . "/doc/sv_se/orm");
-  create_dir($newdir . "/doc/en_us/orm");
-  create_dir($newdir . "/doc/sv_se/dsh");
-  create_dir($newdir . "/doc/en_us/dsh");
-  create_dir($newdir . "/doc/help");
-
+  if ($module eq "kernel") {
+    $newdir = $root . "/exp";
+    create_base($newdir);
+  }
+#  else {
+    $newdir = $root . "/$module";
+    create_base($newdir);
+#  }
   $newdir = $root . "/tmp";
   create_dir($newdir);
 }
@@ -566,6 +656,39 @@ sub _build () # args: branch, subbranch, phase
 }
 
 #
+# merge()
+#
+sub merge () 
+{
+  if (!defined($ENV{"pwre_env"})) {
+    print("++ Environment is not initialized!\n");
+    exit 1;
+  }
+
+  my($eroot) = $ENV{"pwre_broot"};
+
+  if (!defined($eroot)) {
+    printf("++\n++ No build root is defined\n");
+    exit 1;
+  }
+#  if ($module eq "kernel") {
+#    printf("++\n++ No merge for module kernel needed\n");
+#    exit 1;
+#  }
+  $eroot .= "/" . $ENV{"pwre_os"};
+  $eroot .= "/" . $ENV{"pwre_hw"};
+  my($mroot) = $eroot;
+  $mroot .= "/" . $ENV{"pwre_module"};
+  $eroot .= "/exp";
+  printf("--\n");
+  printf("-- Merge $module...\n");
+
+  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot;
+  system("$cmd");
+}
+
+
+#
 # _exists()
 #
 sub _exists ()
@@ -609,10 +732,64 @@ sub _print ()
   untie(%envdb)|| die "++ can't untie $dbname!";
 }
 
+sub _module()
+{
+  my($modu) = $_[0];
+  my($sroot) = $ENV{"pwre_sroot"};
+  my($idx) = rindex($sroot,"/");
+  $sroot = substr($sroot, 0, $idx);
+  my($broot) = $ENV{"pwre_broot"} . "/" . $ENV{"pwre_os"} . "/" . $ENV{"pwre_hw"};
+
+  $ENV{"pwre_module"} = $modu;
+  $ENV{"pwre_bmodule"} = $modu;
+  if ( $modu eq "kernel") {
+#    $ENV{"pwre_bmodule"} = "exp";
+    $ENV{"pwre_sroot"} = $sroot . "/src";
+  }
+  else {
+    $ENV{"pwre_sroot"} = $sroot . "/" . $modu;
+  }
+  $ENV{"pwr_exe"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/exe";
+  $ENV{"pwr_inc"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/inc";
+  $ENV{"pwr_load"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/load";
+  $ENV{"pwr_lib"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/lib";
+  $ENV{"pwr_lis"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/lis";
+  $ENV{"pwr_obj"} = $broot . "/" . $ENV{"pwre_bmodule"} . "/obj";
+  $ENV{"pwr_doc"} = $broot . "/" . "exp" . "/doc";
+}
 
 #
 # Misc. subroutines
 # 
+sub create_base()
+{
+  my($newdir) = $_[0];
+
+  create_dir($newdir);
+  create_dir($newdir . "/db");
+  create_dir($newdir . "/exe");
+  create_dir($newdir . "/exe/sv_se");
+  create_dir($newdir . "/exe/en_us");
+  create_dir($newdir . "/exe/de_de");
+  create_dir($newdir . "/inc");
+  create_dir($newdir . "/load");
+  create_dir($newdir . "/lib");
+  create_dir($newdir . "/lis");
+  create_dir($newdir . "/obj");
+  create_dir($newdir . "/src");
+  create_dir($newdir . "/cnf");
+  create_dir($newdir . "/doc");
+  create_dir($newdir . "/doc/dox");
+  create_dir($newdir . "/doc/prm");
+  create_dir($newdir . "/doc/sv_se");
+  create_dir($newdir . "/doc/en_us");
+  create_dir($newdir . "/doc/sv_se/orm");
+  create_dir($newdir . "/doc/en_us/orm");
+  create_dir($newdir . "/doc/sv_se/dsh");
+  create_dir($newdir . "/doc/en_us/dsh");
+  create_dir($newdir . "/doc/help");
+}
+
 sub create_dir()
 {
   my($dir) = $_[0];
@@ -632,7 +809,7 @@ sub get_vars ()
 {
 
   $sroot = 	get_var(" Source root [%s]? ", $sroot);
-  $vmsinc = 	get_var(" pwr_inc on VMS  [%s]? ", $vmsinc);
+# $vmsinc = 	get_var(" pwr_inc on VMS  [%s]? ", $vmsinc);
   $broot = 	get_var(" Build root  [%s]? ", $broot);
   $btype = 	get_var(" Build type  [%s]? ", $btype);
   $os =    	get_var(" OS          [%s]? ", $os);
@@ -668,14 +845,16 @@ sub read_vars ()
 sub show_vars ()
 {
 
+  my($module) = $ENV{"pwre_module"};
+
+  printf("-- Module.........: %s\n", $module);
   printf("-- Source root....: %s\n", $sroot);
-  printf("-- pwr_inc on VMS.: %s\n", $vmsinc);
+# printf("-- pwr_inc on VMS.: %s\n", $vmsinc);
   printf("-- Build root.....: %s\n", $broot);
   printf("-- Build type.....: %s\n", $btype);
   printf("-- OS.............: %s\n", $os);
   printf("-- Hardware.......: %s\n", $hw);
   printf("-- Description....: %s\n", $desc);
-
 }
 
 sub update_db ()
@@ -692,13 +871,25 @@ sub usage_add ()
 sub usage_build ()
 {
   printf("++\n");
-  printf("++ build branch subbranch [phase]: Build, eg.  pwre build exe rt* all\n");
+  printf("++ build 'branch' 'subbranch' ['phase']: Build, eg. pwre build exe rt* all\n");
 }
 
 sub usage_build_all ()
 {
   printf("++\n");
-  printf("++ build_all                     : Builds all\n");
+  printf("++ build_all                     : Builds all in current module\n");
+}
+
+sub usage_build_all_modules ()
+{
+  printf("++\n");
+  printf("++ build_all_modules             : Builds all in all modules\n");
+}
+
+sub usage_create_all_modules ()
+{
+  printf("++\n");
+  printf("++ create_all_modules            : Create build trees for all modules\n");
 }
 
 sub usage_build_ssab ()
@@ -722,7 +913,7 @@ sub usage_create ()
 sub usage_dele ()
 {
   printf("++\n");
-  printf("++ delete env                    : Deletes an environment from the database\n");
+  printf("++ delete 'env'                  : Deletes an environment from the database\n");
 }
 
 sub usage_help ()
@@ -740,13 +931,25 @@ sub usage_list ()
 sub usage_init ()
 {
   printf("++\n");
-  printf("++ init env                      : Inits an environment\n");
+  printf("++ init 'env'                    : Inits an environment\n");
+}
+
+sub usage_module ()
+{
+  printf("++\n");
+  printf("++ module 'module'               : Set module\n");
+}
+
+sub usage_merge ()
+{
+  printf("++\n");
+  printf("++ merge                         : Merge module base to exp base\n");
 }
 
 sub usage_modify ()
 {
   printf("++\n");
-  printf("++ modify env                    : Modfies an existing environment\n");
+  printf("++ modify 'env'                  : Modfies an existing environment\n");
 }
 
 

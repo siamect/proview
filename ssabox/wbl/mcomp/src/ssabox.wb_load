@@ -1,9 +1,132 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X57"
-    Attr NextCix = "_X16"
+    Attr NextOix = "_X147"
+    Attr NextCix = "_X25"
+    Attr NextTix[0] = "_X4"
   EndBody
-  Object Class $ClassHier 1 06-OCT-2005 14:45:53.00
+  Object Type $TypeHier 138 30-DEC-2005 14:28:03.99
+    Object SsabCoDivCountEnum $TypeDef 1 30-DEC-2005 14:28:31.10
+      Body SysBody 30-DEC-2005 14:28:31.10
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "SsabCoDivCount"
+      EndBody
+      Object No $Value 139 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "No"
+          Attr PgmName = "No"
+        EndBody
+      EndObject
+      Object 16 $Value 140 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "16"
+          Attr PgmName = "16"
+          Attr Value = 16
+        EndBody
+      EndObject
+    EndObject
+    Object SsabCoMulCountEnum $TypeDef 2 30-DEC-2005 14:28:31.10
+      Body SysBody 30-DEC-2005 14:28:31.10
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "SsabCoMulCount"
+      EndBody
+      Object 2 $Value 141 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "2"
+          Attr PgmName = "2"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object 4 $Value 142 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "4"
+          Attr PgmName = "4"
+          Attr Value = 4
+        EndBody
+      EndObject
+    EndObject
+    Object SsabCoNoOfBitsEnum $TypeDef 3 30-DEC-2005 14:28:31.10
+      Body SysBody 30-DEC-2005 14:28:31.10
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "SsabCoNoOfBits"
+      EndBody
+      Object 16 $Value 143 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "16"
+          Attr PgmName = "16"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object 24 $Value 144 30-DEC-2005 14:28:31.10
+        Body SysBody 30-DEC-2005 14:28:31.10
+          Attr Text = "24"
+          Attr PgmName = "24"
+          Attr Value = 24
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 1 30-DEC-2005 14:28:05.82
+    Object Rack_SSAB $ClassDef 24 30-DEC-2005 14:44:19.65
+      Body SysBody 30-DEC-2005 14:40:05.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 8208
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 14:40:05.50
+        Body SysBody 30-DEC-2005 14:44:27.57
+          Attr StructName = "Rack_SSAB"
+          Attr NextAix = "_X5"
+        EndBody
+        Object IOSysType $Attribute 1 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr PgmName = "IOSysType"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Description $Attribute 2 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object MaxNoOfCards $Attribute 3 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr PgmName = "MaxNoOfCards"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 4 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 145 30-DEC-2005 14:40:05.50
+        Object IoRackInit $Method 146 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr MethodName = "Rack_SSAB-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 147 30-DEC-2005 14:40:05.50
+          Body SysBody 30-DEC-2005 14:40:05.50
+            Attr MethodName = "Rack_SSAB-IoRackClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Rack_SSAB 2154004480 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 14:46:17.32
+          Attr IOSysType = 1
+          Attr MaxNoOfCards = 16
+          Attr DataSheet = "$pwr_lang/dsh/ssab_rack_ssab.pdf"
+        EndBody
+      EndObject
+    EndObject
     !/**
     !  @Version 1.0
     !  @Group SafetySwitch
@@ -3790,11 +3913,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! If NoOfBits is 16, bit 12 is set in the configuration word of the counter.
         !*/
         Object NoOfBits $Attribute 10 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-DEC-2005 14:30:21.06
             Attr PgmName = "NoOfBits"
             Attr Flags = 2
             Attr Elements = 4
-            Attr TypeRef = "pwrb:Type-SsabCoNoOfBitsEnum"
+            Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
           EndBody
         EndObject
         !/**
@@ -3814,11 +3937,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! If MulCount is 2, bit 11 is set in the configuration word of the counter.
         !*/
         Object MulCount $Attribute 12 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-DEC-2005 14:29:27.64
             Attr PgmName = "MulCount"
             Attr Flags = 2
             Attr Elements = 4
-            Attr TypeRef = "pwrb:Type-SsabCoMulCountEnum"
+            Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
           EndBody
         EndObject
         !/**
@@ -3827,11 +3950,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! If DivCount is 16, bit 9 is set in the configuration word of the counter.
         !*/
         Object DivCount $Attribute 13 06-OCT-2005 14:45:53.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 30-DEC-2005 14:29:57.43
             Attr PgmName = "DivCount"
             Attr Flags = 2
             Attr Elements = 4
-            Attr TypeRef = "pwrb:Type-SsabCoDivCountEnum"
+            Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
           EndBody
         EndObject
         !/**
@@ -4088,6 +4211,1554 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr MethodName = "Ssab_Co-IoCardRead"
           EndBody
         EndObject
+      EndObject
+    EndObject
+    Object Ai_AI32uP $ClassDef 16 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Ai_AI32uP"
+          Attr NextAix = "_X12"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 58 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_AI32uP-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 59 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_AI32uP-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 60 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_AI32uP-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 61 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 62 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 63 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 64 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 65 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_AI32uP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 66 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_AI32uP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 67 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_AI32uP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ai_AI32uP 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:43:21.78
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_ai_ai32up.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Ai_HVAI32 $ClassDef 17 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Ai_HVAI32"
+          Attr NextAix = "_X14"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef0"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef1"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 68 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_HVAI32-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 69 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_HVAI32-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 70 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ai_HVAI32-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 71 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 72 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 73 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 74 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 75 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_HVAI32-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 76 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_HVAI32-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 77 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ai_HVAI32-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ai_HVAI32 2152169472 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:43:15.01
+          Attr MaxNoOfChannels = 32
+          Attr Process = 2
+          Attr DataSheet = "$pwr_lang/dsh/ssab_ai_hvai32.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Ao_AO8uP $ClassDef 18 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Ao_AO8uP"
+          Attr NextAix = "_X14"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef0"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef1"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 78 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 79 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 80 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 81 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 82 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 83 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 84 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 85 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_AO8uP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 86 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_AO8uP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 87 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_AO8uP-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ao_AO8uP 2152431616 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:43:07.74
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 8
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_ao_ao8up.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Ao_HVAO4 $ClassDef 19 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Ao_HVAO4"
+          Attr NextAix = "_X14"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object DevPolyCoef0 $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef0"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DevPolyCoef1 $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevPolyCoef1"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 88 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 89 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 90 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Ao_HVAO4-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 91 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 92 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 93 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 94 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 95 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_HVAO4-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 96 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_HVAO4-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 97 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Ao_HVAO4-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Ao_HVAO4 2152693760 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:42:39.04
+          Attr MaxNoOfChannels = 4
+          Attr Process = 2
+          Attr DataSheet = "$pwr_lang/dsh/ssab_ao_hvao4.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Co_CO4uP $ClassDef 20 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Co_CO4uP"
+          Attr NextAix = "_X24"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ConvMask"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object MaxNoOfCounters $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfCounters"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object COAbsFlag $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "COAbsFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object NoOfBits $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:30:39.00
+            Attr PgmName = "NoOfBits"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
+          EndBody
+        EndObject
+        Object COWrFlag $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "COWrFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object MulCount $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:30:50.25
+            Attr PgmName = "MulCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
+          EndBody
+        EndObject
+        Object DivCount $Attribute 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:30:58.25
+            Attr PgmName = "DivCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
+          EndBody
+        EndObject
+        Object CopWrRough $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "CopWrRough"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CopWrFine $Attribute 14 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "CopWrFine"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LoadWrReg $Attribute 15 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "LoadWrReg"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LengthMeasurement $Attribute 16 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "LengthMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SpeedMeasurement $Attribute 17 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "SpeedMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SyncRawValue $Attribute 18 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "SyncRawValue"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 19 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 21 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 22 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 23 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 98 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 99 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 100 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 101 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 102 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 103 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 104 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 105 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_CO4uP-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 106 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_CO4uP-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 107 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_CO4uP-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Co_CO4uP 2152955904 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:44:27.44
+	Attr ConvMask = 65535
+        Attr COAbsFlag[0] = 1
+        Attr COAbsFlag[1] = 1
+        Attr COAbsFlag[2] = 1
+        Attr COAbsFlag[3] = 1
+        Attr NoOfBits[0] = 24
+        Attr NoOfBits[1] = 24
+        Attr NoOfBits[2] = 24
+        Attr NoOfBits[3] = 24
+        Attr MulCount[0] = 4
+        Attr MulCount[1] = 4
+        Attr MulCount[2] = 4
+        Attr MulCount[3] = 4
+        Attr CopWrRough[0] = 1
+        Attr CopWrRough[1] = 1
+        Attr CopWrRough[2] = 1
+        Attr CopWrRough[3] = 1
+        Attr CopWrFine[0] = 1
+        Attr CopWrFine[1] = 1
+        Attr CopWrFine[2] = 1
+        Attr CopWrFine[3] = 1
+        Attr MaxNoOfCounters = 4
+        Attr Process = 1
+ 	Attr DataSheet = "$pwr_lang/dsh/ssab_co_co4up.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Co_PI24BO $ClassDef 21 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Co_PI24BO"
+          Attr NextAix = "_X24"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ConvMask"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object MaxNoOfCounters $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfCounters"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object COAbsFlag $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "COAbsFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object NoOfBits $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:31:16.33
+            Attr PgmName = "NoOfBits"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoNoOfBitsEnum"
+          EndBody
+        EndObject
+        Object COWrFlag $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "COWrFlag"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object MulCount $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:31:25.83
+            Attr PgmName = "MulCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoMulCountEnum"
+          EndBody
+        EndObject
+        Object DivCount $Attribute 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 14:31:33.34
+            Attr PgmName = "DivCount"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "SsabOx:Type-SsabCoDivCountEnum"
+          EndBody
+        EndObject
+        Object CopWrRough $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "CopWrRough"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CopWrFine $Attribute 14 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "CopWrFine"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LoadWrReg $Attribute 15 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "LoadWrReg"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object LengthMeasurement $Attribute 16 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "LengthMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SpeedMeasurement $Attribute 17 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "SpeedMeasurement"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SyncRawValue $Attribute 18 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "SyncRawValue"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 19 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 20 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 21 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 22 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 23 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 108 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 109 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 110 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Co_PI24BO-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 111 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 112 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 113 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 114 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 115 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_PI24BO-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 116 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_PI24BO-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 117 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Co_PI24BO-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Co_PI24BO 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:45:40.31
+	Attr ConvMask = 65535
+        Attr COAbsFlag[0] = 1
+        Attr COAbsFlag[1] = 1
+        Attr COAbsFlag[2] = 1
+        Attr COAbsFlag[3] = 1
+        Attr NoOfBits[0] = 24
+        Attr NoOfBits[1] = 24
+        Attr NoOfBits[2] = 24
+        Attr NoOfBits[3] = 24
+        Attr MulCount[0] = 4
+        Attr MulCount[1] = 4
+        Attr MulCount[2] = 4
+        Attr MulCount[3] = 4
+        Attr CopWrRough[0] = 1
+        Attr CopWrRough[1] = 1
+        Attr CopWrRough[2] = 1
+        Attr CopWrRough[3] = 1
+        Attr CopWrFine[0] = 1
+        Attr CopWrFine[1] = 1
+        Attr CopWrFine[2] = 1
+        Attr CopWrFine[3] = 1
+        Attr MaxNoOfCounters = 1
+        Attr Process = 1
+ 	Attr DataSheet = "$pwr_lang/dsh/ssab_co_pi24bo.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Di_DIX2 $ClassDef 22 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Di_DIX2"
+          Attr NextAix = "_X16"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ConvMask1 $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ConvMask1"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object ConvMask2 $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ConvMask2"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object InvMask1 $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object InvMask2 $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 14 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 15 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 118 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Di_DIX2-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 119 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Di_DIX2-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 120 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Di_DIX2-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 121 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 122 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 123 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 124 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 125 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Di_DIX2-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 126 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Di_DIX2-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 127 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Di_DIX2-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Di_DIX2 2153480192 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:46:48.47
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr ConvMask1 = 65535
+          Attr ConvMask2 = 65535
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_di_dix2.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Do_HVDO32 $ClassDef 23 30-DEC-2005 11:26:36.69
+      Body SysBody 30-DEC-2005 11:26:36.69
+        Attr Editor = 0
+        Attr Method = 5
+        Attr Flags = 49232
+      EndBody
+      Object RtBody $ObjBodyDef 1 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr StructName = "Do_HVDO32"
+          Attr NextAix = "_X20"
+        EndBody
+        Object Description $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object InvMask1 $Attribute 6 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object InvMask2 $Attribute 7 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object TestMask1 $Attribute 8 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "TestMask1"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object TestMask2 $Attribute 9 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "TestMask2"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+        Object TestValue1 $Attribute 10 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "TestValue1"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object TestValue2 $Attribute 11 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "TestValue2"
+            Attr Flags = 16
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object FixedOutValue1 $Attribute 12 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "FixedOutValue1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object FixedOutValue2 $Attribute 13 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "FixedOutValue2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object MaxNoOfChannels $Attribute 14 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "MaxNoOfChannels"
+            Attr Flags = 32
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 15 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 16 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 17 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Intern 18 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 19 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr NextAix = "_X2"
+        EndBody
+        Object ChannelAllocation $Attribute 1 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr PgmName = "ChannelAllocation"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object AnteAdopt $DbCallBack 128 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Do_HVDO32-AnteAdopt"
+        EndBody
+      EndObject
+      Object PostUnadopt $DbCallBack 129 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Do_HVDO32-PostUnadopt"
+        EndBody
+      EndObject
+      Object PostAdopt $DbCallBack 130 30-DEC-2005 11:26:36.69
+        Body SysBody 30-DEC-2005 11:26:36.69
+          Attr MethodName = "Do_HVDO32-PostAdopt"
+        EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 131 30-DEC-2005 11:26:36.69
+        Object Pointed $Menu 132 30-DEC-2005 11:26:36.69
+          Object Connect $MenuButton 133 30-DEC-2005 11:26:36.69
+            Body SysBody 30-DEC-2005 11:26:36.69
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 134 30-DEC-2005 11:26:36.69
+        Object IoCardInit $Method 135 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Do_HVDO32-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 136 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Do_HVDO32-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 137 30-DEC-2005 11:26:36.69
+          Body SysBody 30-DEC-2005 11:26:36.69
+            Attr MethodName = "Do_HVDO32-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Do_HVDO32 2153742336 01-JAN-1970 01:00:00.00
+        Body RtBody 30-DEC-2005 11:47:49.85
+          Attr ErrorSoftLimit = 15
+          Attr ErrorHardLimit = 50
+          Attr MaxNoOfChannels = 32
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_do_hvdo32.pdf"
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
       EndObject
     EndObject
   EndObject

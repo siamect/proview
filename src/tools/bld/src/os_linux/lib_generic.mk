@@ -10,18 +10,18 @@ lib_generic_mk := 1
 
 
 ifndef variables_mk
- -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
+ -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
 endif
 ifndef variables_mk
- include $(pwre_sroot)/tools/bld/src/$(os_name)/variables.mk
+ include $(pwre_kroot)/tools/bld/src/$(os_name)/variables.mk
 endif
 
 
 ifndef rules_mk
- -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
+ -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
 endif
 ifndef rules_mk
- include $(pwre_sroot)/tools/bld/src/$(os_name)/rules.mk
+ include $(pwre_kroot)/tools/bld/src/$(os_name)/rules.mk
 endif
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
@@ -39,6 +39,7 @@ vpath %.x $(hw_source):$(os_source):$(co_source)
 vpath %.pdr $(hw_source):$(os_source):$(co_source)
 vpath %.java $(hw_source):$(os_source):$(co_source)
 vpath %.pwsg $(hw_source):$(os_source):$(co_source)
+vpath %.meth $(hw_source):$(os_source):$(co_source)
 
 source_dirs = $(hw_source) $(os_source) $(co_source)
 
@@ -105,6 +106,15 @@ pwsg_sources := $(sort \
              ) \
            )
 
+meth_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.meth) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 xdr_includes := $(addprefix $(inc_dir)/,$(patsubst %.x, %.h, $(xdr_sources)))
 xdr_objects := $(patsubst %.x, %_xdr.o, $(xdr_sources))
 
@@ -116,6 +126,7 @@ export_includes := $(addprefix $(inc_dir)/,$(h_includes) $(hpp_includes))
 export_includes += $(xdr_includes) $(pdr_includes)
 
 export_pwsg := $(addprefix $(exe_dir)/,$(pwsg_sources))
+export_meth := $(addprefix $(inc_dir)/,$(meth_sources))
 
 clean_h_includes := $(patsubst %.h,clean_%.h, $(h_includes))
 clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
@@ -144,7 +155,7 @@ all : init copy lib exe
 
 init : dirs
 
-copy : $(export_includes) $(l_copy) $(export_pwsg)
+copy : $(export_includes) $(l_copy) $(export_pwsg) $(export_meth)
 
 lib : $(export_lib)
 

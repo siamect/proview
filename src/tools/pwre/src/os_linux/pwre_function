@@ -1,3 +1,26 @@
+#
+# Proview build environment setup
+#
+# Environment variables
+#
+# $pwre_sroot	Module source root, eg. pwr/ssabox
+# $pwre_kroot	Kernel source root, pwr/src
+# $pwre_broot	Common build root
+# $pwre_module	Module name in source tree, eg. 'ssabox'
+# $pwre_bmodule	Module name in build tree, eg. 'ssabox'
+# $pwre_os	Operating system, eg. 'os_linux'
+# $pwre_hw	Hardware, eg. 'hw_x86'
+# $pwr_exe	Exe directory for module build root, eg. ssabox/exe
+# $pwr_load	Load directory for module build root
+# $pwr_inc	Inc directory for module build root
+# $pwr_obj	Obj directory for module build root
+# $pwr_lib	Lib directory for module build root
+# $pwr_eexe	Exe directory for common build root, ex. exp/exe
+# $pwr_eload	Load directory for common build root
+# $pwr_einc	Inc directory for common build root
+# $pwr_eobj	Obj directory for common build root
+# $pwr_elib	Lib directory for common build root
+
 pwre()
 {
 	if [ "$HOSTTYPE" = "alpha" ]; then
@@ -20,8 +43,19 @@ pwre()
 
 set_env()
 {
+	if [ "$pwr_eexe" != "" ]; then
+	  export PATH=${PATH%:$pwr_eexe}
+	  export PATH=${PATH%:$pwr_exe}
+	fi
+
+	module=$pwre_module
+	if [ $module = "kernel" ]; then
+	  module=src
+	fi
+	sroot=${pwre_sroot%/*}
+	export pwre_sroot=$sroot/$module
+	export pwre_kroot=$sroot/src
 	export pwre_env="$env"
-	export pwre_sroot="$1"
 	export pwre_vmsinc="$2"
 	export pwre_broot="$3"
 	export pwre_btype="$4"
@@ -29,26 +63,38 @@ set_env()
 	export pwre_hw="hw_$6"
 	export pwre_target="$pwre_os/$pwre_hw"
 
-	export pwre_bin="$pwre_sroot/tools/pwre/src/$pwre_os"
+	export pwre_bin="$pwre_kroot/tools/pwre/src/$pwre_os"
 	export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
 
-	export pwr_exe="$pwre_broot/$pwre_os/$pwre_hw/exp/exe"
-	export pwr_inc="$pwre_broot/$pwre_os/$pwre_hw/exp/inc"
-	export pwr_load="$pwre_broot/$pwre_os/$pwre_hw/exp/load"
-	export pwr_lib="$pwre_broot/$pwre_os/$pwre_hw/exp/lib"
-	export pwr_lis="$pwre_broot/$pwre_os/$pwre_hw/exp/lis"
-	export pwr_obj="$pwre_broot/$pwre_os/$pwre_hw/exp/obj"
+	export pwr_exe="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/exe"
+	export pwr_inc="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/inc"
+	export pwr_load="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/load"
+	export pwr_lib="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/lib"
+	export pwr_lis="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/lis"
+	export pwr_obj="$pwre_broot/$pwre_os/$pwre_hw/$pwre_bmodule/obj"
+	# Common doc
 	export pwr_doc="$pwre_broot/$pwre_os/$pwre_hw/exp/doc"
 
-	export co_lib="$pwre_sroot/lib/co/src"
-	export op_lib="$pwre_sroot/lib/op/src"
-	export rt_lib="$pwre_sroot/lib/rt/src"
-	export wb_lib="$pwre_sroot/lib/wb/src"
+	export pwr_eexe="$pwre_broot/$pwre_os/$pwre_hw/exp/exe"
+	export pwr_einc="$pwre_broot/$pwre_os/$pwre_hw/exp/inc"
+	export pwr_eload="$pwre_broot/$pwre_os/$pwre_hw/exp/load"
+	export pwr_elib="$pwre_broot/$pwre_os/$pwre_hw/exp/lib"
+	export pwr_elis="$pwre_broot/$pwre_os/$pwre_hw/exp/lis"
+	export pwr_eobj="$pwre_broot/$pwre_os/$pwre_hw/exp/obj"
+	export pwr_edoc="$pwre_broot/$pwre_os/$pwre_hw/exp/doc"
 
-	export exe="$pwre_sroot/exe"
+	export pwrp_load="./"
+	export pwrp_pop="./"
+
+	export co_lib="$pwre_kroot/lib/co/src"
+	export op_lib="$pwre_kroot/lib/op/src"
+	export rt_lib="$pwre_kroot/lib/rt/src"
+	export wb_lib="$pwre_kroot/lib/wb/src"
+
+	export exe="$pwre_kroot/exe"
 
 # PWR alias
-	alias pwr_root="cd $pwre_sroot" 
+	alias pwr_root="cd $pwre_kroot" 
 
 	alias pwr_exe="cd $pwr_exe" 
 	alias pwr_inc="cd $pwr_inc" 
@@ -58,21 +104,21 @@ set_env()
 	alias pwr_obj="cd $pwr_obj" 
 
 
-	alias co_lib="cd $pwre_sroot/lib/co/src"	
-	alias op_lib="cd $pwre_sroot/lib/op/src"	
-	alias rt_lib="cd $pwre_sroot/lib/rt/src"	
-	alias wb_lib="cd $pwre_sroot/lib/wb/src"	
+	alias co_lib="cd $pwre_kroot/lib/co/src"	
+	alias op_lib="cd $pwre_kroot/lib/op/src"	
+	alias rt_lib="cd $pwre_kroot/lib/rt/src"	
+	alias wb_lib="cd $pwre_kroot/lib/wb/src"	
 
-	alias db="cd $pwre_sroot/db"	
-	alias exe="cd $pwre_sroot/exe"	
-	alias exp="cd $pwre_sroot/exp"	
-	alias inc="cd $pwre_sroot/exp/inc/src"	
-	alias lib="cd $pwre_sroot/lib"	
-	alias hlp="cd $pwre_sroot/hlp"	
-	alias mmi="cd $pwre_sroot/mmi"	
-	alias msg="cd $pwre_sroot/msg"	
-	alias tools="cd $pwre_sroot/tools"	
-	alias wbl="cd $pwre_sroot/wbl"	
+	alias db="cd $pwre_kroot/db"	
+	alias exe="cd $pwre_kroot/exe"	
+	alias exp="cd $pwre_kroot/exp"	
+	alias inc="cd $pwre_kroot/exp/inc/src"	
+	alias lib="cd $pwre_kroot/lib"	
+	alias hlp="cd $pwre_kroot/hlp"	
+	alias mmi="cd $pwre_kroot/mmi"	
+	alias msg="cd $pwre_kroot/msg"	
+	alias tools="cd $pwre_kroot/tools"	
+	alias wbl="cd $pwre_kroot/wbl"	
 
 	alias hw="cd $pwre_target"
 
@@ -87,6 +133,7 @@ set_env()
 	export PWRP_DB=$pwr_my_sqlserver":wb_template_"$pwr_dbversion
 #        export CLASSPATH=$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/rt:$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/jop:$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/beans
         export CLASSPATH=$pwre_broot/$pwre_target/bld
+	export PATH=$PATH:$pwr_exe:$pwr_eexe
 }
 
 pwre_get_variables()
@@ -98,8 +145,8 @@ pwre_get_variables()
     mysql_socket="--socket $socket"
   fi
 
-  if [ -n $pwre_sroot ]; then
-    pwr_dbversion=`eval cat $pwre_sroot/exp/inc/src/pwr_version.h | grep "\bpwrv_cWbdbVersionShortStr\b" | awk '{print $3}'`
+  if [ -n $pwre_kroot ]; then
+    pwr_dbversion=`eval cat $pwre_kroot/exp/inc/src/pwr_version.h | grep "\bpwrv_cWbdbVersionShortStr\b" | awk '{print $3}'`
 
     if [ -z $pwr_dbversion ]; then
       echo "Unable to get pwr db version"

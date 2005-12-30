@@ -1,7 +1,7 @@
 ifndef link_rule_mk
 link_rule_mk := 1
 
-link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) \
+link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
 	$(export_obj) $(objects) $(wb_msg_objs) $(rt_msg_objs) \
 	$(pwr_obj)/rt_io_user.o $(pwr_obj)/wb_provider.o \
 	-L/usr/X11R6/lib -L/usr/local/BerkeleyDB.4.0/lib \

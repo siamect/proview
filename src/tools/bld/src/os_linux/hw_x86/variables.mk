@@ -9,19 +9,22 @@ ifndef variables_mk
 variables_mk := 1
 
 release_root	:= $(pwre_broot)/$(os_name)/$(hw_name)
-exp_root	:= $(release_root)/exp
+module_root	:= $(release_root)/$(pwre_bmodule)
 
-exe_dir	:= $(exp_root)/exe
-lib_dir	:= $(exp_root)/lib
-obj_dir	:= $(exp_root)/obj
-cnf_dir	:= $(exp_root)/cnf
-db_dir	:= $(exp_root)/db
-inc_dir	:= $(exp_root)/inc
-lis_dir	:= $(exp_root)/lis
-kit_dir	:= $(exp_root)/kit
-src_dir	:= $(exp_root)/src
-doc_dir	:= $(exp_root)/doc
-load_dir := $(exp_root)/load
+exe_dir	:= $(module_root)/exe
+lib_dir	:= $(module_root)/lib
+obj_dir	:= $(module_root)/obj
+cnf_dir	:= $(module_root)/cnf
+db_dir	:= $(module_root)/db
+inc_dir	:= $(module_root)/inc
+lis_dir	:= $(module_root)/lis
+kit_dir	:= $(module_root)/kit
+src_dir	:= $(module_root)/src
+load_dir := $(module_root)/load
+
+doc_dir	:= $(release_root)/exp/doc
+elib_dir := $(release_root)/exp/lib
+einc_dir := $(release_root)/exp/inc
 
 bld_dir	:= $(release_root)/bld/$(type_name)/$(comp_name)
 tmp_dir	:= $(release_root)/tmp
@@ -85,7 +88,7 @@ wb_msg_objs 	:= $(obj_dir)/pwr_msg_wb.o $(obj_dir)/pwr_msg_ge.o $(obj_dir)/pwr_m
 
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
-cinc		:= -I$(inc_dir) -I$(hw_source) -I$(os_source) -I$(co_source)  -I$(dbinc) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
+cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source)  -I$(dbinc) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
 
 rm		:= rm
 cp		:= cp
@@ -110,6 +113,7 @@ ifeq ($(pwre_btype),rls)
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT
   cxxflags	:= $(cflags) 
   linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
+  elinkflags	:= -O3 -L/usr/local/lib -L$(elib_dir) -L$(libdir) -lm -lrt
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
@@ -118,6 +122,7 @@ else
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
+  elinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -L$(lib_dir) -lrt
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

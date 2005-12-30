@@ -1,0 +1,21 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  process( "pwr_c_ssab_safetyswitch");
+
+endmain
+
+
+
+

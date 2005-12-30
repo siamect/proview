@@ -1,0 +1,24 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  process( "pwr_c_abb_acs800_1");
+  process( "pwr_c_abb_acs800fanaggr");
+  process( "pwr_c_abb_acs800motoraggr");
+  process( "pwr_c_abb_acs800pumpaggr");
+
+endmain
+
+
+
+
