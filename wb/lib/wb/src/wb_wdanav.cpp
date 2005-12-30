@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.cpp,v 1.6 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wdanav.cpp,v 1.7 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-#include "rt_types.h"
 #include "pwr_baseclasses.h"
 #include "wb_wda_msg.h"
 #include "rt_mh_net.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.5 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.6 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,10 @@ typedef struct io_sCtx *io_tCtx;
 #include "rt_io_supervise.h"
 #endif
 
+#ifndef rt_io_methods_h
+#include "rt_io_methods.h"
+#endif
+
 #ifndef NULL
 #define NULL (void *) 0
 #endif
@@ -52,46 +56,6 @@ typedef struct io_sCtx *io_tCtx;
 extern  pwr_tBoolean io_writeerr;
 extern  pwr_tBoolean io_readerr;
 extern  pwr_tBoolean io_fatal_error;
-
-typedef struct {
-  pwr_tObjName MethodName;
-  pwr_tStatus (*Method)();
-} pwr_sMethodBinding;
-
-typedef struct {
-  pwr_tObjName ClassName;
-  pwr_sMethodBinding (*Methods)[];
-} pwr_sClassBinding;
-
-/* Base methods */
-#if defined (__DECC) || defined (OS_LYNX)  || defined (OS_LINUX)
-# define pwr_BindIoMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _IoMethods[]
-# define pwr_BindIoClasses(Type) pwr_sClassBinding pwr_g ## Type ## _IoClassMethods[]
-# define pwr_BindIoClass(Class) {#Class, (void *)pwr_g ## Class ## _IoMethods}
-# define pwr_BindIoMethod(Method) {#Method, (pwr_tStatus (*)())Method}
-#else
-# define pwr_BindIoMethods(Class) pwr_sMethodBinding pwr_g/**/Class/**/_IoMethods[]
-# define pwr_BindIoClasses(Type) pwr_sClassBinding pwr_g/**/Type/**/_IoClassMethods[]
-# define pwr_BindIoClass(Class) {"Class", pwr_g/**/Class/**/_IoMethods}
-# define pwr_BindIoMethod(Method) {"Method", (pwr_tStatus (*)())Method}
-#endif
-
-/* User methods */
-#if defined (__DECC) || defined (OS_LYNX) || defined(OS_LINUX)
-#define pwr_BindIoUserMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _IoUserMethods[]
-#define pwr_BindIoUserClasses(Type) pwr_sClassBinding pwr_g ## Type ## _IoUserClassMethods[]
-#define pwr_BindIoUserClass(Class) {#Class, (void *)pwr_g ## Class ## _IoUserMethods}
-#define pwr_BindIoUserMethod(Method) {#Method, (pwr_tStatus (*)())Method}
-#else
-#define pwr_BindIoUserMethods(Class) pwr_sMethodBinding pwr_g/**/Class/**/_IoUserMethods[]
-#define pwr_BindIoUserClasses(Type) pwr_sClassBinding pwr_g/**/Type/**/_IoUserClassMethods[]
-#define pwr_BindIoUserClass(Class) {"Class", pwr_g/**/Class/**/_IoUserMethods}
-#define pwr_BindIoUserMethod(Method) {"Method", (pwr_tStatus (*)())Method}
-#endif
-
-#define pwr_NullMethod {"", NULL}
-
-#define pwr_NullClass {"", NULL}
 
 
 typedef enum {

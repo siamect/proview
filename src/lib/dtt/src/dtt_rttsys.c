@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: dtt_rttsys.c,v 1.5 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: dtt_rttsys.c,v 1.6 2005-12-30 15:36:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_io_base.h"
+#include "rt_io_util.h"
 #include "rt_rtt.h"
 #include "rt_rtt_edit.h"
 #include "rt_rtt_menu.h"

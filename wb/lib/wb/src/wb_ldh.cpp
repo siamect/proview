@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.50 2005-12-20 11:57:29 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.51 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -849,11 +849,17 @@ ldh_GetAttrRefOrigTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
     return o.sts();
   }
 
-  wb_attribute a = sp->attribute(arp);
-  if (!a) return a.sts();
-  *tid = a.originalTid();
+  try {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    *tid = a.originalTid();
     
-  return a.sts();
+    return a.sts();
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
+  return LDH__SUCCESS;
 }
 
 pwr_tStatus
@@ -1985,17 +1991,22 @@ pwr_tStatus
 ldh_GetAttrRefInfo(ldh_tSession session, pwr_sAttrRef *arp, ldh_sAttrRefInfo *info)
 {
   wb_session *sp = (wb_session *)session;
-    
-  wb_attribute a = sp->attribute(arp);
-  if (!a) return a.sts();
-    
-  info->size = a.size();
-  info->nElement = a.nElement();
-  info->index = a.index();
-  info->flags = a.flags();
-  info->type = a.type();
-  info->tid = a.tid();
 
+  try {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+
+    info->size = a.size();
+    info->nElement = a.nElement();
+    info->index = a.index();
+    info->flags = a.flags();
+    info->type = a.type();
+    info->tid = a.tid();
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
+   
   return LDH__SUCCESS;
 }
 

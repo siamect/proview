@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_i_base_methods.c,v 1.7 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_i_base_methods.c,v 1.8 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,15 +22,6 @@
 #include "wb_pwrs.h"
 
 pwr_dImport pwr_BindMethods(ASup);
-pwr_dImport pwr_BindMethods(Ai_HVAI32);
-pwr_dImport pwr_BindMethods(Ai_AI32uP);
-pwr_dImport pwr_BindMethods(Ao_HVAO4);
-pwr_dImport pwr_BindMethods(Ao_AO8uP);
-pwr_dImport pwr_BindMethods(Backup);
-pwr_dImport pwr_BindMethods(Co_PI24BO);
-pwr_dImport pwr_BindMethods(Co_CO4uP);
-pwr_dImport pwr_BindMethods(Di_DIX2);
-pwr_dImport pwr_BindMethods(Do_HVDO32);
 pwr_dImport pwr_BindMethods(DsFast);
 pwr_dImport pwr_BindMethods(DsHist);
 pwr_dImport pwr_BindMethods(DsTrend);
@@ -69,15 +60,6 @@ pwr_dImport pwr_BindMethods(Pb_DP_Slave);
 
 pwr_dExport pwr_BindClasses(Base) = {
   pwr_BindClass(ASup),
-  pwr_BindClass(Ai_HVAI32),
-  pwr_BindClass(Ai_AI32uP),
-  pwr_BindClass(Ao_HVAO4),
-  pwr_BindClass(Ao_AO8uP),
-  pwr_BindClass(Backup),
-  pwr_BindClass(Co_PI24BO),
-  pwr_BindClass(Co_CO4uP),
-  pwr_BindClass(Di_DIX2),
-  pwr_BindClass(Do_HVDO32),
   pwr_BindClass(DsFast),
   pwr_BindClass(DsHist),
   pwr_BindClass(DsTrend),

@@ -977,8 +977,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
         !  The current status of the supervision.
         !*/
         Object Status $Attribute 6 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:17:31.10
             Attr PgmName = "Status"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -1022,110 +1023,128 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         Object OpAuto $Attribute 92 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:39:23.41
             Attr PgmName = "OpAuto"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpMan $Attribute 93 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:39:32.90
             Attr PgmName = "OpMan"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManStart $Attribute 94 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:39:41.69
             Attr PgmName = "OpManStart"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManStop $Attribute 95 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:39:48.99
             Attr PgmName = "OpManStop"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 96 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:14:40.89
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalStart $Attribute 97 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:14:47.52
             Attr PgmName = "LocalStart"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Ready $Attribute 98 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:14:54.29
             Attr PgmName = "Ready"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Feedback $Attribute 99 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:01.28
             Attr PgmName = "Feedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Order $Attribute 100 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:14.52
             Attr PgmName = "Order"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoMode $Attribute 101 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:21.70
             Attr PgmName = "AutoMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManStart $Attribute 112 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:27.57
             Attr PgmName = "ManStart"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdDim $Attribute 102 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:33.32
             Attr PgmName = "ManOrdDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoModDim $Attribute 103 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:39.34
             Attr PgmName = "AutoModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManModDim $Attribute 104 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:45.29
             Attr PgmName = "ManModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalModHide $Attribute 105 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:52.74
             Attr PgmName = "LocalModHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManAutoHide $Attribute 106 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:15:59.88
             Attr PgmName = "ManAutoHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdHide $Attribute 107 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:16:08.56
             Attr PgmName = "ManOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExternOrdHide $Attribute 125 20-DEC-2005 09:27:01.98
-          Body SysBody 20-DEC-2005 09:27:01.98
+          Body SysBody 20-DEC-2005 15:16:15.46
             Attr PgmName = "ExternOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -1184,8 +1203,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         Object OutRef $Attribute 122 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:16:28.89
             Attr PgmName = "OutRef"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -1220,8 +1240,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         Object IndMode $Attribute 118 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:16:37.76
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -1266,7 +1287,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Attr NextAix = "_X33"
         EndBody
         Object ExtControl $Input 32 20-DEC-2005 09:28:46.95
-          Body SysBody 20-DEC-2005 09:28:43.35
+          Body SysBody 21-DEC-2005 09:19:05.22
             Attr PgmName = "ExtControl"
             Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -1342,25 +1363,25 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           EndBody
         EndObject
         Object Order $Output 27 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:19:04.14
             Attr PgmName = "Order"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ord"
           EndBody
         EndObject
         Object OutRef $Output 29 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:19:16.03
             Attr PgmName = "OutRef"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "REF"
           EndBody
         EndObject
         Object AutoMode $Output 28 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:19:27.77
             Attr PgmName = "AutoMode"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "aut"
           EndBody
@@ -12803,8 +12824,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object LocalMode $Attribute 12 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:20:55.59
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -12845,8 +12867,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object IndMode $Attribute 10 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:21:08.01
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -12922,9 +12945,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object OutRef $Output 3 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:21:37.26
             Attr PgmName = "OutRef"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "REF"
           EndBody
@@ -15093,104 +15116,121 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object OpAuto $Attribute 61 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:40:51.93
             Attr PgmName = "OpAuto"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpMan $Attribute 67 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:40:56.36
             Attr PgmName = "OpMan"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManStart $Attribute 68 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:41:00.45
             Attr PgmName = "OpManStart"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManStop $Attribute 71 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:41:05.39
             Attr PgmName = "OpManStop"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 70 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:22:46.37
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalStart $Attribute 69 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:22:51.40
             Attr PgmName = "LocalStart"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Ready $Attribute 72 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:22:56.68
             Attr PgmName = "Ready"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Feedback $Attribute 77 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:15.37
             Attr PgmName = "Feedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Order $Attribute 73 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:20.85
             Attr PgmName = "Order"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoMode $Attribute 74 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:26.96
             Attr PgmName = "AutoMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdDim $Attribute 76 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:32.11
             Attr PgmName = "ManOrdDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoModDim $Attribute 81 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:38.14
             Attr PgmName = "AutoModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManModDim $Attribute 82 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:44.47
             Attr PgmName = "ManModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalModHide $Attribute 83 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:50.72
             Attr PgmName = "LocalModHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManAutoHide $Attribute 87 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:23:56.63
             Attr PgmName = "ManAutoHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdHide $Attribute 90 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:24:03.20
             Attr PgmName = "ManOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExternOrdHide $Attribute 92 19-DEC-2005 15:25:54.04
-          Body SysBody 19-DEC-2005 15:25:54.04
+          Body SysBody 20-DEC-2005 15:24:10.28
             Attr PgmName = "ExternOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -15225,8 +15265,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object ManStart $Attribute 79 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:24:23.89
             Attr PgmName = "ManStart"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -15261,8 +15302,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object IndMode $Attribute 78 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:24:30.77
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -15367,17 +15409,17 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object Order $Output 6 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:24:43.45
             Attr PgmName = "Order"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ord"
           EndBody
         EndObject
         Object AutoMode $Output 16 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:24:50.56
             Attr PgmName = "AutoMode"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "aut"
           EndBody
@@ -25846,158 +25888,184 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object OpAuto $Attribute 92 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 21-DEC-2005 08:41:22.68
             Attr PgmName = "OpAuto"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpMan $Attribute 93 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 21-DEC-2005 08:41:26.34
             Attr PgmName = "OpMan"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManIncr $Attribute 94 08-DEC-2005 19:59:09.06
-          Body SysBody 08-DEC-2005 19:59:10.49
+          Body SysBody 21-DEC-2005 08:41:30.51
             Attr PgmName = "OpManIncr"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManDecr $Attribute 120 05-DEC-2005 11:38:11.57
-          Body SysBody 05-DEC-2005 11:38:13.59
+          Body SysBody 21-DEC-2005 08:41:34.58
             Attr PgmName = "OpManDecr"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpManStop $Attribute 95 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 21-DEC-2005 08:41:38.64
             Attr PgmName = "OpManStop"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 96 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:25:44.74
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalIncr $Attribute 97 05-DEC-2005 12:55:39.82
-          Body SysBody 05-DEC-2005 12:55:41.42
+          Body SysBody 20-DEC-2005 15:25:50.87
             Attr PgmName = "LocalIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalDecr $Attribute 126 05-DEC-2005 12:55:51.42
-          Body SysBody 05-DEC-2005 12:55:52.74
+          Body SysBody 20-DEC-2005 15:25:59.42
             Attr PgmName = "LocalDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object Ready $Attribute 98 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:26:10.16
             Attr PgmName = "Ready"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object FeedbackIncr $Attribute 99 05-DEC-2005 11:45:09.03
-          Body SysBody 05-DEC-2005 11:45:10.44
+          Body SysBody 20-DEC-2005 15:26:19.96
             Attr PgmName = "FeedbackIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object FeedbackDecr $Attribute 121 05-DEC-2005 11:45:22.61
-          Body SysBody 05-DEC-2005 11:45:24.94
+          Body SysBody 20-DEC-2005 15:26:30.36
             Attr PgmName = "FeedbackDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LimitSwitchDecr $Attribute 127 05-DEC-2005 12:56:49.69
-          Body SysBody 05-DEC-2005 12:56:51.05
+          Body SysBody 20-DEC-2005 15:26:37.75
             Attr PgmName = "LimitSwitchDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LimitSwitchIncr $Attribute 128 05-DEC-2005 12:57:02.01
-          Body SysBody 05-DEC-2005 12:57:03.72
+          Body SysBody 20-DEC-2005 15:26:43.53
             Attr PgmName = "LimitSwitchIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ErrorDecr $Attribute 135 09-DEC-2005 10:13:30.56
-          Body SysBody 09-DEC-2005 10:13:33.24
+          Body SysBody 20-DEC-2005 15:27:01.42
             Attr PgmName = "ErrorDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ErrorIncr $Attribute 136 09-DEC-2005 10:13:44.53
-          Body SysBody 09-DEC-2005 10:13:45.75
+          Body SysBody 20-DEC-2005 15:27:09.59
             Attr PgmName = "ErrorIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OrderIncr $Attribute 100 05-DEC-2005 11:45:34.63
-          Body SysBody 05-DEC-2005 11:45:36.04
+          Body SysBody 20-DEC-2005 15:27:20.50
             Attr PgmName = "OrderIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OrderDecr $Attribute 122 05-DEC-2005 11:45:51.22
-          Body SysBody 05-DEC-2005 11:45:52.64
+          Body SysBody 20-DEC-2005 15:27:33.99
             Attr PgmName = "OrderDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoMode $Attribute 101 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:27:39.75
             Attr PgmName = "AutoMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdDim $Attribute 102 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:27:47.89
             Attr PgmName = "ManOrdDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object AutoModDim $Attribute 103 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:27:51.95
             Attr PgmName = "AutoModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManModDim $Attribute 104 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:27:56.83
             Attr PgmName = "ManModDim"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalModHide $Attribute 105 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:28:01.02
             Attr PgmName = "LocalModHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManAutoHide $Attribute 106 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:28:05.65
             Attr PgmName = "ManAutoHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManOrdHide $Attribute 107 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:28:10.93
             Attr PgmName = "ManOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManStopHide $Attribute 134 08-DEC-2005 18:37:23.23
-          Body SysBody 08-DEC-2005 18:37:24.52
+          Body SysBody 20-DEC-2005 15:28:17.54
             Attr PgmName = "ManStopHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExternOrdHide $Attribute 138 12-DEC-2005 14:28:26.99
-          Body SysBody 12-DEC-2005 14:28:28.16
+          Body SysBody 20-DEC-2005 15:28:23.08
             Attr PgmName = "ExternOrdHide"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -26044,14 +26112,16 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object ManIncr $Attribute 112 08-DEC-2005 14:21:51.20
-          Body SysBody 08-DEC-2005 14:21:52.55
+          Body SysBody 20-DEC-2005 15:28:31.86
             Attr PgmName = "ManIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ManDecr $Attribute 133 08-DEC-2005 14:21:59.50
-          Body SysBody 08-DEC-2005 14:22:01.19
+          Body SysBody 20-DEC-2005 15:28:39.99
             Attr PgmName = "ManDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -26098,8 +26168,9 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object IndMode $Attribute 118 05-DEC-2005 10:06:13.33
-          Body SysBody 05-DEC-2005 10:06:13.33
+          Body SysBody 20-DEC-2005 15:28:50.40
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -26240,32 +26311,33 @@ Start/Stop, Manual/Auto, Local/Remote"
           EndBody
         EndObject
         Object OrderIncr $Output 27 05-DEC-2005 13:18:29.52
-          Body SysBody 08-DEC-2005 14:13:07.00
+          Body SysBody 20-DEC-2005 15:29:06.90
             Attr PgmName = "OrderIncr"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "oin"
           EndBody
         EndObject
         Object OrderDecr $Output 35 05-DEC-2005 13:18:38.26
-          Body SysBody 08-DEC-2005 14:13:12.47
+          Body SysBody 20-DEC-2005 15:29:13.07
             Attr PgmName = "OrderDecr"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ode"
           EndBody
         EndObject
         Object AutoMode $Output 28 05-DEC-2005 11:35:20.16
-          Body SysBody 05-DEC-2005 11:35:20.16
+          Body SysBody 20-DEC-2005 15:29:21.15
             Attr PgmName = "AutoMode"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "aut"
           EndBody
         EndObject
         Object Error $Output 29 05-DEC-2005 13:03:26.81
-          Body SysBody 05-DEC-2005 13:03:26.81
+          Body SysBody 20-DEC-2005 15:29:26.98
             Attr PgmName = "Error"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
@@ -44424,8 +44496,9 @@ and no Auto/Man button."
           EndBody
         EndObject
         Object IndMode $Attribute 25 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:30:34.38
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -44493,9 +44566,9 @@ and no Auto/Man button."
           EndBody
         EndObject
         Object OutRef $Output 9 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 20-DEC-2005 15:31:02.54
             Attr PgmName = "OutRef"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ref"
           EndBody
@@ -46407,8 +46480,9 @@ and no Auto/Man button."
           EndBody
         EndObject
         Object IndMode $Attribute 33 21-SEP-2005 08:26:22.81
-          Body SysBody 21-SEP-2005 08:26:22.81
+          Body SysBody 20-DEC-2005 15:31:40.44
             Attr PgmName = "IndMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
@@ -46478,17 +46552,17 @@ and no Auto/Man button."
           EndBody
         EndObject
         Object OutOrderIncr $Output 14 15-DEC-2005 16:46:09.63
-          Body SysBody 15-DEC-2005 18:06:12.13
+          Body SysBody 20-DEC-2005 15:31:58.56
             Attr PgmName = "OutOrderIncr"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "oinc"
           EndBody
         EndObject
         Object OutOrderDecr $Output 16 15-DEC-2005 16:46:16.36
-          Body SysBody 15-DEC-2005 18:06:18.86
+          Body SysBody 20-DEC-2005 15:32:06.96
             Attr PgmName = "OutOrderDecr"
-            Attr Flags = 8192
+            Attr Flags = 9216
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "odec"
           EndBody
@@ -48987,8 +49061,9 @@ and no Auto/Man button."
         !  Error indication.
         !*/
         Object IndError $Attribute 82 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:42:51.83
             Attr PgmName = "IndError"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -48996,8 +49071,9 @@ and no Auto/Man button."
         !  Warning indication.
         !*/
         Object IndWarning $Attribute 83 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:42:57.34
             Attr PgmName = "IndWarning"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -49103,8 +49179,9 @@ and no Auto/Man button."
         !  Disable supervision of the limits.
         !*/
         Object DisableSup $Input 44 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 09:20:37.87
             Attr PgmName = "DisableSup"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "dis"
           EndBody
@@ -49125,8 +49202,9 @@ and no Auto/Man button."
         !  Sensor value.
         !*/
         Object Value $Output 43 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:44:28.23
             Attr PgmName = "Value"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "VAL"
           EndBody
@@ -49135,8 +49213,9 @@ and no Auto/Man button."
         !  HighHigh limit is exceeded.
         !*/
         Object HH $Output 38 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:44:37.02
             Attr PgmName = "HH"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "HH"
           EndBody
@@ -49145,8 +49224,9 @@ and no Auto/Man button."
         !  High limit is exceeded.
         !*/
         Object H $Output 39 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:44:41.33
             Attr PgmName = "H"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "H"
           EndBody
@@ -49155,8 +49235,9 @@ and no Auto/Man button."
         !  Value is below Low limit.
         !*/
         Object L $Output 40 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:44:46.97
             Attr PgmName = "L"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "L"
           EndBody
@@ -49165,8 +49246,9 @@ and no Auto/Man button."
         !  Value is below LowLow limit.
         !*/
         Object LL $Output 41 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:44:51.64
             Attr PgmName = "LL"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "LL"
           EndBody
@@ -54028,8 +54110,9 @@ Alarm HH, H, L, LL"
           Attr NextAix = "_X14"
         EndBody
         Object Value $Input 2 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 09:21:11.92
             Attr PgmName = "Value"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -56919,8 +57002,9 @@ Alarm HH, H, L, LL"
           Attr NextAix = "_X8"
         EndBody
         Object Tripped $Output 6 03-OCT-2005 18:00:26.75
-          Body SysBody 03-OCT-2005 18:00:26.75
+          Body SysBody 21-DEC-2005 08:47:24.99
             Attr PgmName = "Tripped"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "trip"
           EndBody
@@ -57843,8 +57927,9 @@ Alarm HH, H, L, LL"
           Attr NextAix = "_X12"
         EndBody
         Object ExtOrder $Input 7 30-SEP-2005 17:56:50.19
-          Body SysBody 30-SEP-2005 17:56:50.19
+          Body SysBody 21-DEC-2005 09:21:45.21
             Attr PgmName = "ExtOrder"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Ord"
           EndBody
@@ -63941,14 +64026,16 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object IndError $Attribute 19 04-OCT-2005 08:55:56.74
-          Body SysBody 04-OCT-2005 08:55:56.74
+          Body SysBody 21-DEC-2005 08:48:50.42
             Attr PgmName = "IndError"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndFeedback $Attribute 31 29-NOV-2005 08:38:50.75
-          Body SysBody 29-NOV-2005 08:38:53.64
+          Body SysBody 21-DEC-2005 08:48:54.63
             Attr PgmName = "IndFeedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -64048,15 +64135,17 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object Feedback $Output 7 04-OCT-2005 09:00:02.99
-          Body SysBody 04-OCT-2005 09:00:02.99
+          Body SysBody 21-DEC-2005 08:49:15.39
             Attr PgmName = "Feedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "fb"
           EndBody
         EndObject
         Object Error $Output 8 04-OCT-2005 09:00:02.99
-          Body SysBody 04-OCT-2005 09:00:02.99
+          Body SysBody 21-DEC-2005 08:49:21.54
             Attr PgmName = "Error"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
@@ -65436,8 +65525,9 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object IndContactorFeedback $Intern 16 30-NOV-2005 13:26:37.16
-          Body SysBody 30-NOV-2005 13:26:37.16
+          Body SysBody 21-DEC-2005 09:22:51.13
             Attr PgmName = "IndContactorFeedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -66471,8 +66561,9 @@ Alarm HH, H, L, LL"
           Attr NextAix = "_X11"
         EndBody
         Object ExtOrder $Input 6 03-OCT-2005 08:47:06.40
-          Body SysBody 03-OCT-2005 08:47:06.40
+          Body SysBody 21-DEC-2005 09:23:07.13
             Attr PgmName = "ExtOrder"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Ord"
           EndBody
@@ -74639,8 +74730,9 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object IndError $Attribute 18 30-SEP-2005 13:33:48.65
-          Body SysBody 30-SEP-2005 13:33:48.65
+          Body SysBody 21-DEC-2005 08:51:03.63
             Attr PgmName = "IndError"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -74672,9 +74764,9 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object IndClosed $Attribute 36 30-SEP-2005 16:13:46.19
-          Body SysBody 30-SEP-2005 16:14:28.18
+          Body SysBody 21-DEC-2005 08:51:12.32
             Attr PgmName = "IndClosed"
-            Attr Flags = 4194304
+            Attr Flags = 4195328
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -77336,8 +77428,9 @@ Alarm HH, H, L, LL"
           EndBody
         EndObject
         Object OverTemp $Output 2 13-OCT-2005 13:11:13.79
-          Body SysBody 13-OCT-2005 13:12:36.02
+          Body SysBody 21-DEC-2005 08:54:14.90
             Attr PgmName = "OverTemp"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ote"
           EndBody
@@ -79675,22 +79768,25 @@ Overload relay"
           Attr NextAix = "_X54"
         EndBody
         Object CalOrder1 $Input 52 15-SEP-2005 15:59:21.03
-          Body SysBody 15-SEP-2005 16:00:44.38
+          Body SysBody 21-DEC-2005 09:24:14.69
             Attr PgmName = "CalOrder1"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "cal1"
           EndBody
         EndObject
         Object CalOrder2 $Input 53 15-SEP-2005 15:59:39.04
-          Body SysBody 15-SEP-2005 16:00:39.74
+          Body SysBody 21-DEC-2005 09:24:20.78
             Attr PgmName = "CalOrder2"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "cal2"
           EndBody
         EndObject
         Object DisableSup $Input 45 15-SEP-2005 15:58:07.56
-          Body SysBody 15-SEP-2005 15:58:07.56
+          Body SysBody 21-DEC-2005 09:24:25.16
             Attr PgmName = "DisableSup"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "dis"
           EndBody
@@ -79709,29 +79805,33 @@ Overload relay"
           EndBody
         EndObject
         Object HH $Output 48 15-SEP-2005 15:58:07.56
-          Body SysBody 15-SEP-2005 15:58:07.56
+          Body SysBody 21-DEC-2005 08:55:25.77
             Attr PgmName = "HH"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "HH"
           EndBody
         EndObject
         Object H $Output 49 15-SEP-2005 15:58:07.56
-          Body SysBody 15-SEP-2005 15:58:07.56
+          Body SysBody 21-DEC-2005 08:55:30.77
             Attr PgmName = "H"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "H"
           EndBody
         EndObject
         Object L $Output 50 15-SEP-2005 15:58:07.56
-          Body SysBody 15-SEP-2005 15:58:07.56
+          Body SysBody 21-DEC-2005 08:55:35.13
             Attr PgmName = "L"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "L"
           EndBody
         EndObject
         Object LL $Output 51 15-SEP-2005 15:58:07.56
-          Body SysBody 15-SEP-2005 15:58:07.56
+          Body SysBody 21-DEC-2005 08:55:39.88
             Attr PgmName = "LL"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "LL"
           EndBody
@@ -86971,8 +87071,9 @@ else
           Attr NextAix = "_X6"
         EndBody
         Object On $Output 4 04-OCT-2005 10:25:34.21
-          Body SysBody 04-OCT-2005 10:25:34.21
+          Body SysBody 21-DEC-2005 08:56:18.35
             Attr PgmName = "On"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "on"
           EndBody
@@ -87687,8 +87788,9 @@ Safety switch"
           EndBody
         EndObject
         Object TripNOfStarts $Attribute 11 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:57:08.25
             Attr PgmName = "TripNOfStarts"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
@@ -87834,8 +87936,9 @@ Safety switch"
           EndBody
         EndObject
         Object Start $Output 6 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 21-DEC-2005 08:57:36.51
             Attr PgmName = "Start"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "sta"
           EndBody
@@ -87998,8 +88101,9 @@ Safety switch"
           Attr NextAix = "_X6"
         EndBody
         Object ExtOrder $Input 2 15-SEP-2005 09:49:33.64
-          Body SysBody 15-SEP-2005 09:50:02.50
+          Body SysBody 21-DEC-2005 09:24:51.76
             Attr PgmName = "ExtOrder"
+            Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "Ord"
           EndBody
@@ -89521,32 +89625,37 @@ Safety switch"
           EndBody
         EndObject
         Object Ready $Attribute 49 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 08:58:31.30
             Attr PgmName = "Ready"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExtInterlock $Attribute 50 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 08:58:41.83
             Attr PgmName = "ExtInterlock"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 51 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 08:58:59.63
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndWarning $Attribute 52 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 08:59:04.64
             Attr PgmName = "IndWarning"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndError $Attribute 53 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 08:59:09.29
             Attr PgmName = "IndError"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -89917,15 +90026,17 @@ Safety switch"
           EndBody
         EndObject
         Object On $Output 24 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 09:00:32.42
             Attr PgmName = "On"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "on"
           EndBody
         EndObject
         Object Err $Output 25 05-OCT-2005 13:26:14.71
-          Body SysBody 05-OCT-2005 13:26:14.71
+          Body SysBody 21-DEC-2005 09:00:38.69
             Attr PgmName = "Err"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
@@ -93348,50 +93459,58 @@ Motor aggregat"
           EndBody
         EndObject
         Object OpToggleCircuitBreaker $Intern 9 30-NOV-2005 08:24:39.00
-          Body SysBody 30-NOV-2005 08:22:55.72
+          Body SysBody 21-DEC-2005 09:00:57.16
             Attr PgmName = "OpToggleCircuitBreaker"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpToggleSafetySwitch $Intern 10 30-NOV-2005 08:25:31.71
-          Body SysBody 30-NOV-2005 08:22:25.01
+          Body SysBody 21-DEC-2005 09:01:01.02
             Attr PgmName = "OpToggleSafetySwitch"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpToggleOverloadRelay $Intern 12 30-NOV-2005 08:26:02.86
-          Body SysBody 30-NOV-2005 08:24:09.76
+          Body SysBody 21-DEC-2005 09:01:07.16
             Attr PgmName = "OpToggleOverloadRelay"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpResetContactorFeedback $Intern 11 30-NOV-2005 13:26:19.71
-          Body SysBody 30-NOV-2005 08:23:38.24
+          Body SysBody 21-DEC-2005 09:01:13.56
             Attr PgmName = "OpResetContactorFeedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndCircuitBreakerTripped $Intern 13 30-NOV-2005 08:25:22.46
-          Body SysBody 30-NOV-2005 08:25:24.34
+          Body SysBody 21-DEC-2005 09:01:20.49
             Attr PgmName = "IndCircuitBreakerTripped"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndSafetySwitchOn $Intern 14 30-NOV-2005 08:25:50.64
-          Body SysBody 30-NOV-2005 08:25:52.44
+          Body SysBody 21-DEC-2005 09:01:24.14
             Attr PgmName = "IndSafetySwitchOn"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndOverloadRelayTripped $Intern 15 30-NOV-2005 08:26:21.04
-          Body SysBody 30-NOV-2005 08:26:23.44
+          Body SysBody 21-DEC-2005 09:01:28.53
             Attr PgmName = "IndOverloadRelayTripped"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndContactorFeedback $Intern 16 30-NOV-2005 08:26:56.47
-          Body SysBody 30-NOV-2005 08:26:58.10
+          Body SysBody 21-DEC-2005 09:01:32.07
             Attr PgmName = "IndContactorFeedback"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -95366,38 +95485,44 @@ Motor aggregat"
           EndBody
         EndObject
         Object Ready $Attribute 82 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:01:46.61
             Attr PgmName = "Ready"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object ExtInterlock $Attribute 83 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:01:51.68
             Attr PgmName = "ExtInterlock"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object LocalMode $Attribute 84 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:03.98
             Attr PgmName = "LocalMode"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndWarning $Attribute 85 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:07.73
             Attr PgmName = "IndWarning"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndError $Attribute 86 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:11.12
             Attr PgmName = "IndError"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndRunning $Attribute 106 08-DEC-2005 18:20:17.70
-          Body SysBody 08-DEC-2005 18:20:19.60
+          Body SysBody 21-DEC-2005 09:02:14.65
             Attr PgmName = "IndRunning"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -96205,22 +96330,25 @@ Motor aggregat"
           EndBody
         EndObject
         Object OnIncr $Output 32 05-DEC-2005 13:57:20.79
-          Body SysBody 05-DEC-2005 14:00:07.75
+          Body SysBody 21-DEC-2005 09:02:29.07
             Attr PgmName = "OnIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "oni"
           EndBody
         EndObject
         Object OnDecr $Output 44 05-DEC-2005 13:57:36.62
-          Body SysBody 05-DEC-2005 14:00:14.24
+          Body SysBody 21-DEC-2005 09:02:33.50
             Attr PgmName = "OnDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "ond"
           EndBody
         EndObject
         Object Err $Output 33 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:38.17
             Attr PgmName = "Err"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "err"
           EndBody
@@ -100509,74 +100637,86 @@ Err (error) = err"
           EndBody
         EndObject
         Object OpToggleCircuitBreaker $Intern 18 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:52.72
             Attr PgmName = "OpToggleCircuitBreaker"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpToggleSafetySwitch $Intern 19 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:02:57.85
             Attr PgmName = "OpToggleSafetySwitch"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpToggleOverloadRelay $Intern 20 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:03:01.63
             Attr PgmName = "OpToggleOverloadRelay"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpResetContactorFeedbackIncr $Intern 21 05-DEC-2005 14:02:51.46
-          Body SysBody 05-DEC-2005 14:02:52.84
+          Body SysBody 21-DEC-2005 09:03:05.78
             Attr PgmName = "OpResetContactorFeedbackIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object OpResetContactorFeedbackDecr $Intern 26 05-DEC-2005 14:03:08.73
-          Body SysBody 05-DEC-2005 14:03:10.04
+          Body SysBody 21-DEC-2005 09:03:10.09
             Attr PgmName = "OpResetContactorFeedbackDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndCircuitBreakerTripped $Intern 22 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:03:14.46
             Attr PgmName = "IndCircuitBreakerTripped"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndSafetySwitchOn $Intern 23 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:03:18.26
             Attr PgmName = "IndSafetySwitchOn"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndOverloadRelayTripped $Intern 24 05-DEC-2005 10:07:25.63
-          Body SysBody 05-DEC-2005 10:07:25.63
+          Body SysBody 21-DEC-2005 09:03:22.13
             Attr PgmName = "IndOverloadRelayTripped"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndContactorFeedbackIncr $Intern 25 05-DEC-2005 14:03:34.22
-          Body SysBody 05-DEC-2005 14:03:35.85
+          Body SysBody 21-DEC-2005 09:03:27.28
             Attr PgmName = "IndContactorFeedbackIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndContactorFeedbackDecr $Intern 27 05-DEC-2005 14:03:46.40
-          Body SysBody 05-DEC-2005 14:03:47.63
+          Body SysBody 21-DEC-2005 09:03:32.63
             Attr PgmName = "IndContactorFeedbackDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndLimitSwitchIncr $Intern 29 05-DEC-2005 14:08:03.50
-          Body SysBody 05-DEC-2005 14:08:04.87
+          Body SysBody 21-DEC-2005 09:03:36.68
             Attr PgmName = "IndLimitSwitchIncr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object IndLimitSwitchDecr $Intern 30 05-DEC-2005 14:08:13.23
-          Body SysBody 05-DEC-2005 14:08:14.39
+          Body SysBody 21-DEC-2005 09:03:40.70
             Attr PgmName = "IndLimitSwitchDecr"
+            Attr Flags = 1024
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject

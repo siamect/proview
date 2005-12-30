@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.36 2005-12-20 11:56:35 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.37 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3556,8 +3556,8 @@ static int	wnav_create_func( void		*client_data,
   }
   else if ( strncmp( arg1_str, "SNAPSHOT", strlen( arg1_str)) == 0)
   {
-    char	filestr[80];
-    char	outstr[80];
+    pwr_tFileName	filestr;
+    pwr_tFileName	outstr;
     char        *outstr_p;
     int         ignore;
     pwr_tStatus	sts;

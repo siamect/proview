@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.11 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.12 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,6 @@
 extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-#include "rt_types.h"
 #include "pwr_baseclasses.h"
 #include "wb_watt_msg.h"
 #include "rt_mh_net.h"

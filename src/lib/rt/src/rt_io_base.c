@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.16 2005-12-13 15:14:27 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.17 2005-12-30 15:36:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,60 +61,7 @@ pwr_tBoolean io_readerr;
 pwr_tBoolean io_fatal_error;
 
 pwr_dImport pwr_BindIoUserClasses(User);
-
-pwr_dImport pwr_BindIoMethods(Node);
-pwr_dImport pwr_BindIoMethods(Rack_SSAB);
-pwr_dImport pwr_BindIoMethods(Di_DIX2);
-pwr_dImport pwr_BindIoMethods(Do_HVDO32);
-pwr_dImport pwr_BindIoMethods(Ao_HVAO4);
-pwr_dImport pwr_BindIoMethods(Ao_AO8uP);  // Share methods with HVAO4
-pwr_dImport pwr_BindIoMethods(Ai_HVAI32);
-pwr_dImport pwr_BindIoMethods(Ai_AI32uP);
-pwr_dImport pwr_BindIoMethods(Co_PI24BO);
-pwr_dImport pwr_BindIoMethods(Co_CO4uP);  // Share methods with PI24BO
-pwr_dImport pwr_BindIoMethods(Pb_Profiboard);
-pwr_dImport pwr_BindIoMethods(Pb_DP_Slave);
-pwr_dImport pwr_BindIoMethods(Pb_Module);
-pwr_dImport pwr_BindIoMethods(Pb_Di);
-pwr_dImport pwr_BindIoMethods(Pb_Do);
-pwr_dImport pwr_BindIoMethods(Pb_Ai);
-pwr_dImport pwr_BindIoMethods(Pb_Ao);
-pwr_dImport pwr_BindIoMethods(Pb_Ii);
-pwr_dImport pwr_BindIoMethods(Pb_Io);
-pwr_dImport pwr_BindIoMethods(Ssab_AiuP);
-pwr_dImport pwr_BindIoMethods(Ssab_AouP);
-pwr_dImport pwr_BindIoMethods(Ssab_Di);
-pwr_dImport pwr_BindIoMethods(Ssab_Do);
-pwr_dImport pwr_BindIoMethods(Ssab_Co);
-
-pwr_BindIoClasses(Base) = {
-  pwr_BindIoClass(Node),
-  pwr_BindIoClass(Rack_SSAB),
-  pwr_BindIoClass(Di_DIX2),
-  pwr_BindIoClass(Do_HVDO32),
-  pwr_BindIoClass(Ao_HVAO4),
-  pwr_BindIoClass(Ao_AO8uP),
-  pwr_BindIoClass(Ai_HVAI32),
-  pwr_BindIoClass(Ai_AI32uP),
-  pwr_BindIoClass(Co_PI24BO),
-  pwr_BindIoClass(Co_CO4uP),
-  pwr_BindIoClass(Pb_Profiboard),
-  pwr_BindIoClass(Pb_DP_Slave),
-  pwr_BindIoClass(Pb_Module),
-  pwr_BindIoClass(Pb_Di),
-  pwr_BindIoClass(Pb_Do),
-  pwr_BindIoClass(Pb_Ai),
-  pwr_BindIoClass(Pb_Ao),
-  pwr_BindIoClass(Pb_Ii),
-  pwr_BindIoClass(Pb_Io),
-  pwr_BindIoClass(Ssab_AiuP),
-  pwr_BindIoClass(Ssab_AouP),
-  pwr_BindIoClass(Ssab_Di),
-  pwr_BindIoClass(Ssab_Do),
-  pwr_BindIoClass(Ssab_Co),
-  pwr_NullClass
-};
-
+pwr_dImport pwr_BindIoClasses(Base);
 typedef struct s_cardlist {
 	pwr_tObjid		objid;
 	pwr_tUInt32		maxnoofchannels;
@@ -1323,97 +1270,6 @@ static pwr_tStatus io_FindMethods(
   if ( !found)
     return IO__NOMETHOD;
   return IO__SUCCESS;
-}
-
-
-/*----------------------------------------------------------------------------*\
-  Find classes belonging to an specific IO-type.
-\*----------------------------------------------------------------------------*/
-pwr_tStatus io_GetIoTypeClasses( 
-  io_eType	type,
-  pwr_tClassId 	**classes,
-  int		*size
-)
-{
-  pwr_tStatus 	sts;
-  pwr_sClassDef cdef;
-  pwr_tOid	oid;
-  int		add_class;
-  pwr_sAttrRef  aref;
-
-  *size = 0;
-  *classes = calloc( IO_CLASSES_SIZE, sizeof(pwr_tCid));
-
-  for ( sts = gdh_GetClassList( pwr_eClass_ClassDef, &oid);
-	ODD(sts);
-	sts = gdh_GetNextObject( oid, &oid)) {
-    
-    aref = cdh_ObjidToAref( oid);
-    sts = gdh_GetObjectInfoAttrref( &aref, &cdef, sizeof(cdef));
-    if ( EVEN(sts)) return sts;
-
-    add_class = 0;
-    switch ( type) {
-    case io_eType_Agent:
-      if ( cdef.Flags.b.IOAgent)
-	add_class = 1;
-      break;
-    case io_eType_Rack:
-      if ( cdef.Flags.b.IORack)
-	add_class = 1;
-      break;
-    case io_eType_Card:
-      if ( cdef.Flags.b.IOCard)
-	add_class = 1;
-      break;
-    default:
-      return IO__NOMETHOD;
-    }
-
-    if ( add_class) {
-      if ( *size >= IO_CLASSES_SIZE)
-	return IO__CLASSEXCEED;
-
-      (*classes)[ *size] = cdh_ClassObjidToId( oid);
-      (*size)++;
-    }
-  }
-  return IO__SUCCESS;
-}
-
-
-/*----------------------------------------------------------------------------*\
-  Check if class is an IO-type.
-\*----------------------------------------------------------------------------*/
-int io_CheckClassIoType( 
-  io_eType	type,
-  pwr_tCid 	cid
-)
-{
-  pwr_tStatus 	sts;
-  pwr_sClassDef cdef;
-  pwr_sAttrRef aref;
-
-  aref = cdh_ObjidToAref( cdh_ClassIdToObjid( cid));
-  sts = gdh_GetObjectInfoAttrref( &aref, &cdef, sizeof(cdef));
-  if ( EVEN(sts)) return 0;
-
-  switch ( type) {
-  case io_eType_Agent:
-    if ( cdef.Flags.b.IOAgent)
-      return 1;
-    break;
-  case io_eType_Rack:
-    if ( cdef.Flags.b.IORack)
-      return 1;
-    break;
-  case io_eType_Card:
-    if ( cdef.Flags.b.IOCard)
-      return 1;
-    break;
-  default: ;
-  }
-  return 0;
 }
 
 
