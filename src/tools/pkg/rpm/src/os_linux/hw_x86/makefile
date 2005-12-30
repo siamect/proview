@@ -29,7 +29,7 @@ copy :
 
 lib :
 
-exe : $(bld_dir)/pwr.spec
+exe : $(bld_dir)/pwr.spec $(bld_dir)/pwrrt.spec
 
 clean :
 
