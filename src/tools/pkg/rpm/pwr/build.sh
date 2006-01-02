@@ -81,7 +81,6 @@ cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/ex
 cp $pwre_sroot/tools/pkg/deb/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 
-export ver=$ver
 # Create package
 echo "-- Building package"
 
@@ -89,7 +88,7 @@ echo "-- Building package"
                 --define "_topdir $pkgroot/rpm" \
                 --define "ver $ver" \
                 --define "pwre_target $pwre_target" \
-                --buildroot $pkgroot pwr.spec > /dev/null 2>&1
+                --buildroot $pkgroot $pkgsrc/pwr.spec > /dev/null 2>&1
 
 mv $pkgroot/rpm/RPMS/i586/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot

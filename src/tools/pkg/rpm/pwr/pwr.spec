@@ -67,7 +67,7 @@ echo "$ver"
   echo ""
   echo %{summary}
   echo "</topic>"
-} > %{buildroot}/usr/pwr$ver/$pwre_target/exp/exe/wtt_version_help.dat
+} > %{buildroot}/usr/pwr%{ver}/%{pwre_target}/exp/exe/wtt_version_help.dat
 
 #%clean
 
@@ -90,16 +90,16 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bash_profile /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bashrc /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bash_profile /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.mwmrc /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.rtt_start /home/pwrp
     chmod a+x /home/pwrp/.rtt_start
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xtt_start /home/pwrp
     chmod a+x /home/pwrp/.xtt_start
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init.pwr_com /home/pwrp
-    cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xsession /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init.pwr_com /home/pwrp
+    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
 
     chown -R pwrp /home/pwrp
     chgrp -R pwrp /home/pwrp
@@ -107,19 +107,19 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
 fi
 
 echo "Change owner of files to pwrp"
-chown -R pwrp /usr/pwr$ver
-chgrp -R pwrp /usr/pwr$ver
+chown -R pwrp /usr/pwr%{ver}
+chgrp -R pwrp /usr/pwr%{ver}
 
-chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_ini
-chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_rtt
-chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_xtt
-chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/rt_bck
-chmod u+s /usr/pwr$ver/$pwre_target/exp/exe/wb_adm
+chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_ini
+chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_rtt
+chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_xtt
+chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_bck
+chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/wb_adm
 
 # Copy configuration files
 new_cnf=0
 if [ ! -e /etc/proview.cnf ]; then
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/proview.cnf /etc
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/proview.cnf /etc
   new_cnf=1
 fi
 
@@ -137,24 +137,25 @@ if [ ! -e $aroot/db ]; then
   mkdir -p $aroot/db
 fi
 
-cp /usr/pwr$ver/$pwre_target/exp/cnf/pwra_env.sh $aroot/db
-cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_setup.sh $aroot/db
+cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwra_env.sh $aroot/db
+cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_setup.sh $aroot/db
 if [ ! -e $aroot/db/pwr_volumelist.dat ]; then
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_volumelist.dat $aroot/db
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_volumelist.dat $aroot/db
 fi
 if [ ! -e $aroot/db/pwr_user.dat ]; then
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/pwr_user.dat $aroot/db
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/pwr_user.dat $aroot/db
 fi
 
 # Insert base in projectlist
+pwrver=%{ver}
 if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
-  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+  echo "%base V${pwrver:0:1}.${pwrver:1:1} /usr/pwr$pwrver" > $aroot/db/pwr_projectlist.dat
 else
   set +e
-  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b"`
+  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${pwrver:0:1}.${pwrver:1:1}\b"`
   set -e
   if [ "$ptst" = "" ]; then
-    echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+    echo "%base V${pwrver:0:1}.${pwrver:1:1} /usr/pwr$pwrver" >> $aroot/db/pwr_projectlist.dat
   fi
 fi
 
@@ -163,7 +164,7 @@ chgrp pwrp $aroot
 chmod g+w $aroot
 chgrp -R pwrp $aroot/*
 chmod -R g+w $aroot/*
-chmod a+w /usr/pwr$ver/$pwre_target/exp/load/*.dbs
+chmod a+w /usr/pwr%{ver}/%{pwre_target}/exp/load/*.dbs
 
 # Create project root
 if [ ! -e /usr/local/pwrp ]; then
