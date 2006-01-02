@@ -1,0 +1,14 @@
+#
+# Configuration file for Proview
+#
+# Default QCOM Bus Id
+#
+qcomBusId               517
+#
+# Web directory
+#
+webDirectory            /pwrp/common/web
+
+
+
+
