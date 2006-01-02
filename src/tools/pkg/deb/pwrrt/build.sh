@@ -11,26 +11,99 @@ if [ -e $pwr_inc/pwr_version.h ]; then
   ver=${ver:2:2}
 fi
 
+# Generate version help file
+{
+  if [ ! -e $pwre_sroot/tools/pkg/deb/pwrrt/control ]; then
+    echo "Controlfile not found"
+    exit 1
+  fi
+  datfile=$pwre_sroot/tools/pkg/deb/pwrrt/control
+
+  echo "<topic> version"
+  d=`eval date +\"%F %X\"`
+
+  {
+    let printout=0
+    while read line; do
+      if [ "${line:0:9}" = "Package: " ]; then 
+        package=${line#Package: }
+      fi
+      if [ "${line:0:9}" = "Version: " ]; then
+        version=${line#Version: }
+      fi
+      if [ "${line:0:14}" = "Architecture: " ]; then
+        arch=${line#Architecture: }
+      fi
+
+      if [ "${line:0:12}" = "Description:" ]; then
+        echo ""
+        echo "<image> pwr_logga.gif"
+	echo ""
+	echo ""
+	echo ""
+        echo "<b>Proview V${version:0:3}"
+	echo "Version V$version"
+        echo ""
+        echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
+        echo ""
+        echo "This program is free software; you can redistribute it and/or"
+        echo "modify it under the terms of the GNU General Public License as" 
+        echo "published by the Free Software Foundation, either version 2 of"
+        echo "the License, or (at your option) any later version."
+        echo ""
+        echo "This program is distributed in the hope that it will be useful" 
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+        echo "For more details, see the"
+        echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
+        echo ""
+        echo "E-mail postmaster@proview.se <weblink> mailto:postmaster@proview.se"
+        echo "Internet www.proview.se <weblink> http://www.proview.se"
+	echo ""
+	echo ""
+	echo "<b>Package"
+	echo "Package $package""_""$version""_""$arch"
+	echo "Build date $d"
+	echo "Package description:"
+	echo ""
+
+        printout=1
+      else
+        if [ $printout -eq 1 ]; then
+          echo $line
+        fi
+      fi
+    done
+  } < $datfile
+  echo "</topic>"
+} > $pwr_exe/xtt_version_help.dat
+
+# Convert to html
+co_convert -t -d $pwr_doc $pwr_exe/xtt_version_help.dat
+
+# Print rt version file
+echo "Version: $version" > $pwr_exe/rt_version.dat
 
 if [ "$1" == "-v" ]; then
   exit
 fi
 
 pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwrrt
-pkgsrc=$pwre_sroot/tools/pkg/rpm/pwrrt
+pkgsrc=$pwre_sroot/tools/pkg/deb/pwrrt
 
 
 # Create directories
 echo "-- Create package tree"
-mkdir -p $pkgroot/rpm/BUILD
-mkdir -p $pkgroot/rpm/RPMS
-mkdir -p $pkgroot/rpm/SPECS
-mkdir -p $pkgroot/rpm/SOURCES
-mkdir -p $pkgroot/rpm/SRPMS
+mkdir -p $pkgroot/DEBIAN
 mkdir -p $pkgroot/usr/share/doc/pwrrt
 mkdir -p $pkgroot/etc/init.d
 
 find $pkgroot -type d | xargs chmod 755
+
+# control
+cp $pkgsrc/control $pkgroot/DEBIAN
+cp $pkgsrc/postinst $pkgroot/DEBIAN
+cp $pkgsrc/prerm $pkgroot/DEBIAN
 
 # copyright
 cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrrt
@@ -39,11 +112,17 @@ cp $pkgsrc/copyright $pkgroot/usr/share/doc/pwrrt
 cp $pkgsrc/changelog $pkgroot/usr/share/doc/pwrrt
 gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog
 
+# changelog.Debian
+cp $pkgsrc/changelog.Debian $pkgroot/usr/share/doc/pwrrt
+gzip -fq --best $pkgroot/usr/share/doc/pwrrt/changelog.Debian
+
 # Startup files
 cp $pkgsrc/pwrp_profile $pkgroot/etc
 chmod a+x $pkgroot/etc/pwrp_profile
 cp $pkgsrc/pwr $pkgroot/etc/init.d
 chmod a+x $pkgroot/etc/init.d/pwr
+#cp $pkgsrc/gdhserver $pkgroot/etc/init.d
+#chmod a+x $pkgroot/etc/init.d/gdhserver
 
 # Man pages
 mkdir -p $pkgroot/usr/share/man/man1
@@ -94,22 +173,11 @@ cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwrrt/cnf/user
 
 # Create package
 echo "-- Building package"
+if which fakeroot > /dev/null; then
+  fakeroot dpkg -b $pkgroot $pwre_broot/$pwre_target/bld/pkg
+else
+  dpkg -b $pkgroot $pwre_broot/$pwre_target/bld/pkg
+fi
 
-  rpmbuild -bb --quiet \
-               --define "_topdir $pkgroot/rpm" \
-               --buildroot $pkgroot $pkgsrc/pwrrt.spec > /dev/null 2>&1
-
-mv $pkgroot/rpm/RPMS/i586/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
-
-
-
-
-
-
-
-
-
-
-
 
