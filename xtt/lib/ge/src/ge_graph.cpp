@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.27 2005-11-14 16:18:58 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.28 2006-01-10 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3007,8 +3007,8 @@ static int graph_trace_connect_bc( grow_tObject object,
 
   // Get Dyn from nodeclass i dyn_type is HostObject
   grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
-  if ( dyn_type & ge_mDynType_HostObject &&
-       dyn->dyn_type & ge_mDynType_Inherit) {
+  if ( dyn_type & ge_mDynType_HostObject && 
+       (dyn->dyn_type & ge_mDynType_Inherit || dyn->dyn_type & ge_mDynType_HostObject)) {
     GeDyn *nodeclass_dyn;
     GeDyn *old_dyn;
     pwr_tAName hostobject;
