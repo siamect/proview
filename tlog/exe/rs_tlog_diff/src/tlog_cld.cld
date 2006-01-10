@@ -1,0 +1,44 @@
+
+module tlog_cld
+
+!  to get help
+define verb help , routine scli_help
+
+!  to stop the game
+define verb exit , routine scli_exit
+define verb quit , routine scli_quit
+
+
+!  tlog commands
+define verb tlog, 
+  parameter p1 , label =p1tlog , value ( required , type = p1tlogtype )
+
+! associate syntax depending of the parameter value
+define type p1tlogtype 
+  keyword difference, syntax = p1tlogdifference_syntax
+  keyword save, syntax = p1tlogsave_syntax
+
+define syntax p1tlogdifference_syntax
+  qualifier file, nonnegatable , value ( required )
+  qualifier output, nonnegatable , value ( required )
+  qualifier time, nonnegatable , value ( required )
+  qualifier since, nonnegatable , value
+  qualifier before, nonnegatable , value
+  qualifier parallell
+  qualifier attribute
+  qualifier text
+  qualifier ttext
+  qualifier noorder
+  qualifier exact
+  disallow attribute and not parallell
+  disallow text and not parallell
+  disallow text and attribute
+  disallow text and ttext
+  disallow ttext and attribute
+  disallow noorder and exact
+  routine scli_tlog_difference
+
+define syntax p1tlogsave_syntax
+  qualifier file, nonnegatable , value ( required )
+  disallow not file
+  routine scli_tlog_save
