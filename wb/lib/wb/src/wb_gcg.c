@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.28 2005-12-27 09:43:08 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.29 2006-01-10 06:29:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1273,7 +1273,7 @@ int	gcg_print_inputs(
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	int			input_count, inputscon_count;
 
 	ldhses = (node->hn.wind)->hw.ldhses;
@@ -1556,7 +1556,7 @@ int gcg_get_connected_parameter (
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	pwr_tClassId		class;
 	unsigned long		par_type;
 	unsigned long		par_inverted;
@@ -1724,7 +1724,7 @@ static int	gcg_get_connected_par_close(
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	pwr_tClassId		class;
 	unsigned long		par_type;
 
@@ -1823,7 +1823,7 @@ int gcg_get_debug (
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			debug_par[32];
 	size_t			pos;
 	ldh_sParDef 		*bodydef;
@@ -2238,10 +2238,10 @@ int	gcg_wind_comp_all(
 			&windlist);
 	if ( EVEN(sts)) return sts;
 
-	/* Store the windows in the order they are loaded, and
-	   unload them later in the opposite order */
-	loaded_windlist = (vldh_t_wind *)XtCalloc( wind_count, sizeof( vldh_t_wind));
-	loaded_list = (int *)XtCalloc( wind_count, sizeof(int));
+	/* Store the windows in the order they are loaded, and unload them 
+           later in the opposite order (make space for possible parent windows) */
+	loaded_windlist = (vldh_t_wind *)XtCalloc( 20 * wind_count, sizeof( vldh_t_wind));
+	loaded_list = (int *)XtCalloc( 20 * wind_count, sizeof(int));
 	loaded_windcount = 0;
 
 	wind_compiled = 0;
@@ -6426,7 +6426,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -7087,7 +7087,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
@@ -7399,7 +7399,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	pwr_tObjid		step_objdid;
 	pwr_tObjid		next_objdid;
 	int			found, pincond_found, pinact_found, wind_found;
@@ -8815,7 +8815,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	unsigned long		point;
 	unsigned long		par_inverted;
 	vldh_t_node		output_node;
@@ -8963,7 +8963,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	ldh_tSesContext ldhses;
 	char			*expression;
@@ -9636,7 +9636,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -9761,7 +9761,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -9900,7 +9900,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -10056,7 +10056,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -10216,7 +10216,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -10370,7 +10370,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	vldh_t_node		output_node;
 	unsigned long		output_count;
 	unsigned long		output_point;
@@ -10737,7 +10737,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	pwr_sAttrRef		*connect_aref;
 	int			size;
@@ -11492,7 +11492,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	ldh_tSesContext ldhses;
 	char			*expression;
@@ -11761,7 +11761,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -11922,7 +11922,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	ldh_tSesContext ldhses;
 	char			*expression;
 	char			*newstr;
@@ -12248,7 +12248,7 @@ vldh_t_node	node;
 	int			size;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
-	char			output_par[32];
+	char			output_par[80];
 	char			output_prefix;
 	char			*name;
 	char			*refstructname;
@@ -12570,7 +12570,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	unsigned long		point;
 	unsigned long		par_inverted;
 	vldh_t_node		output_node;
@@ -12902,7 +12902,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	int 			wind_found;
 	char			*windbuffer;
@@ -13321,7 +13321,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	pwr_tClassId		class;
 
@@ -13609,7 +13609,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	pwr_tObjid		parent;
 	pwr_tObjid		funcextend_objid;
 	pwr_tObjid		*func_objid;
@@ -14213,7 +14213,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
         pwr_tOName	       	oname;
 	pwr_tClassId		class;
@@ -15052,7 +15052,7 @@ vldh_t_node	node;
 	pwr_sAttrRef		output_attrref;
 	int			output_type;
 	char			output_prefix;
-	char			output_par[32];
+	char			output_par[80];
 	char			*name;
 	int			size;
 
