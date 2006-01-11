@@ -199,13 +199,24 @@ EOF
 fi
 
 # Create startup link
-set +e
-checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
-set -e
-if [ "$checklink" != "" ]; then
-  rm /etc/init.d/rc2.d/S90pwr
+
+if [ -e /etc/init.d/rc2.d ]; then 
+  set +e
+  checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
+  set -e
+  if [ "$checklink" != "" ]; then
+    rm /etc/init.d/rc2.d/S90pwr
+  fi
+  ln -s /etc/init.d/pwr /etc/init.d/rc2.d/S90pwr
+elif [ -e /etc/rc2.d ]; then
+  set +e
+  checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+  set -e
+  if [ "$checklink" != "" ]; then
+    rm /etc/rc2.d/S90pwr
+  fi
+  ln -s /etc/init.d/pwr /etc/rc2.d/S90pwr
 fi
-ln -s /etc/init.d/pwr /etc/init.d/rc2.d/S90pwr
 
 # Create project
 new_project=0
@@ -418,9 +429,17 @@ if [ "$remove_all" = "y" ]; then
 fi
 
 # Remove startup
-checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
-if [ "$checklink" != "" ]; then
-  rm /etc/init.d/rc2.d/S90pwr
+
+if [ -e /etc/init.d/rc2.d ]; then
+  checklink=`eval ls /etc/init.d/rc2.d/S90pwr 2>/dev/null`
+  if [ "$checklink" != "" ]; then
+    rm /etc/init.d/rc2.d/S90pwr
+  fi
+elif [ -e /etc/rc2.d ]; then
+  checklink=`eval ls /etc/rc2.d/S90pwr 2>/dev/null`
+  if [ "$checklink" != "" ]; then
+    rm /etc/rc2.d/S90pwr
+  fi
 fi
 
 # Remove jar-files on web directory
