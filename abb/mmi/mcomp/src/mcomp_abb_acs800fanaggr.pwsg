@@ -274,7 +274,7 @@
 1204 0
 99
 18
-1800 $hostobject.Contactor.IndFeedback##Boolean
+1800 $hostobject.ACS800.ConvertRun##Boolean
 99
 50
 5000 $hostobject

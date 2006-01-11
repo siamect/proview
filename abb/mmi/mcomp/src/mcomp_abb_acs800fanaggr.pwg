@@ -17,7 +17,7 @@
 117 0
 118 199
 119 155
-120 0
+120 1
 121 Claes context
 122 0
 126 0.2
@@ -103,7 +103,7 @@ pwr_exe:
 1204 0
 99
 18
-1800 $hostobject.Contactor.IndFeedback##Boolean
+1800 $hostobject.ACS800.ConvertRun##Boolean
 99
 50
 5000 $hostobject
