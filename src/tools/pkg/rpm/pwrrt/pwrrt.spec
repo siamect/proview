@@ -354,7 +354,7 @@ aroot="/usr/pwrp/adm"
 remove_all="n"
 if [ "$remove_all" = "y" ]; then
   
-  # Check that any user that is to be remoted isn't logged in
+  # Check that any user that is to be removed isn't logged in
   set +e
   user_found=0
   currentusers=`eval users`
