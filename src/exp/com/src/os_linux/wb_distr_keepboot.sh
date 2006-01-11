@@ -1,6 +1,6 @@
-#! bin/bash
+#!/bin/bash
 #
-# Proview   $Id: wb_distr_keepboot.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: wb_distr_keepboot.sh,v 1.3 2006-01-11 14:18:38 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
