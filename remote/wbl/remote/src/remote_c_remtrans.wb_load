@@ -1,0 +1,210 @@
+! 
+!  Proview   $Id: remote_c_remtrans.wb_load,v 1.1 2006-01-12 06:39:33 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  remote_c_RemTrans.wb_load -- Defines the class RemTrans.
+!
+SObject Remote:Class
+  !
+  ! RemTrans -	Remote Trans descripton
+  !
+  Object RemTrans $ClassDef 25
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    !
+    ! RemTrans Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemTrans"
+      EndBody
+      !
+      ! Parameter Description
+      !
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !
+      ! Parameter TransName	May be used for trans-identification
+      !		VNET Taskname 6 letters
+      !		ALCM Taskname 6 letters
+      !		PAMS Not used
+      !
+      Object TransName $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !
+      ! Parameter Address 	May be used for trans-identification
+      !		PAMS: Class, Type, ProccessNr.
+      !		ALCM, VNET TransName is translated into this parameter
+      !
+      Object Address $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt16"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 4
+        EndBody
+      EndObject
+      !
+      ! Parameter Direction. (IN = 1, OUT = 2)
+      !
+      Object Direction $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter DataLength
+      !
+      Object DataLength $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter LoggLevel
+      !
+      Object LoggLevel $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter Maxbuffers	(0 = no buffering)
+      !
+      Object MaxBuffers $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter Buffers	Number of used buffers
+      !
+      Object Buffers $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter MaxLength	Length of data-object
+      !
+      Object MaxLength $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter LastSts. (Returkod)
+      !
+      Object LastSts $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter TransTime Date and time for send / receive
+      !
+      Object TransTime $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter TransCount
+      !
+      Object TransCount $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter BuffCount Number of buffered transactions
+      !
+      Object BuffCount $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter LostCount Received but not treated
+      !
+      Object LostCount $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter ErrCount Couldn't send
+      !
+      Object ErrCount $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter DataValid
+      !
+      Object DataValid $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter StructName
+      !
+      Object StructName $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String40"
+        EndBody
+      EndObject
+      !
+      ! Parameter StructFile
+      !
+      Object StructFile $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! Template för RemTrans
+    !
+    Object Template RemTrans
+      Body RtBody
+        Attr Direction = 1
+      EndBody
+    EndObject
+  !
+  ! End RemTrans
+  !
+  EndObject ! $ClassDef
+EndSObject  ! SObject

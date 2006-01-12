@@ -1,0 +1,370 @@
+! 
+!  Proview   $Id: remote_c_remnodealcm.wb_load,v 1.1 2006-01-12 06:39:33 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  remote_c_remnodealcm.wb_load -- Defines the class RemnodeALCM.
+!
+SObject Remote:Class
+!/**
+!  @Version 1.0
+!  @Group Servers,NodeConfiguration
+!  @Summary Configures communication to a remote using the ALCM protocol.
+!  Configures communication to a remote using the ALCM protocol.
+!  ALCM is a simple message oriented protocol that uses low level ethernet
+!  frames with protocol type 60-06 (DEC customer use). On DEC-based systems,
+!  ELN and VMS, the usage is simple and supported by the operating system. The 
+!  DECnet address is used for addressing.
+!  On Linux systems, we have to use raw sockets to gain access to low level
+!  ethernet frames and the device's MAC address for addressing.
+!
+! @b Object graph
+!  @image orm_remnodealcm_og.gif
+!
+! @b See also
+!  @classlink RemoteConfig pwrp_remoteconfig.html
+!  @classlink RemTrans ssab_remtrans.html
+!*/
+  Object RemnodeALCM $ClassDef 2
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemnodeALCM"
+      EndBody
+      !/**
+      !  Optional description.
+      !*/
+      Object Description $Attribute 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  Process priority for the transport process. For future use.
+      !*/
+      Object Prio $Attribute 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  Device name for the ethernet device, Not yet implemented, defaults to "eth0".
+      !*/
+      Object DevName $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  Hostname for the remote node. Used when hostname is to be part of the
+      !  ALCM header in remote I/O or when mirroring common areas.
+      !  Dynamic change is possible.
+      !*/
+      Object RemoteHostname $Attribute 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  DEC-net or MAC-address for the remote node. These to address types have
+      !  the same format and is used directly in the address field of the low
+      !  level ethernet frame. Note that on Linux systems, we often override
+      !  the systems MAC-address in /etc/interfaces when using ALCM. This way we don't 
+      !  have to change address in remote when changing network device.
+      !  
+      !  The notation for DECnet address is node.area, eg 4.21 (decimal notation)
+      !  The notation for MAC address is for example AA:00:A4:00:01:54 (hex notation)
+      !
+      !  Dynamic change is not possible.
+      !*/
+      Object RemoteAddress $Attribute 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String32"
+	EndBody
+      EndObject
+      !/**
+      !  Attribute that indicates connection with the remote node. 
+      !  The link is considered down when we reach the link supervision timeout
+      !  time without receiving any ALCM data or I/O messages. The link is 
+      !  considered up again when receiving any kind of message. Note that this 
+      !  supervision is separated from the remote I/O supervision which uses 
+      !  IOStallFlag and IOStallTime.
+      !*/
+      Object LinkUp $Attribute 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Time in seconds before the link is considered down. A value of 0 (zero) disables
+      !  the LinkUp supervision.
+      !  Dynamic change is possible
+      !*/
+      Object LinkTimeout $Attribute 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  When set, this attribute tells the remote handler not to start 
+      !  or restart the process that handles this remote node. If the transport process 
+      !  is running while the attribute is set it will terminate. Note that in ALCM there
+      !  is only one process that handles all remote nodes.
+      !  Dynamic change is possible.
+      !*/
+      Object Disable $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+	EndBody
+      EndObject
+      !/**
+      !  This attribute shows how many times the remote handler has restarted the 
+      !  transport process that handles this remnode.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartCount $Attribute 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  The restart limit tells the remote handler how many times the transport process
+      !  that handle this remnode can be restarted.
+      !  Dynamic change is possible and can be used in order to earn more restarts.
+      !*/
+      Object RestartLimit $Attribute 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	EndBody
+      EndObject
+      !/**
+      !  The restart time is set by the transport process at startup and therefore
+      !  shows the latest (re)starttime.
+      !*/
+      Object RestartTime $Attribute 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Scantime in seconds for outgoing RemTrans objects.
+      !  Dynamic change is possible.
+      !*/
+      Object ScanTime $Attribute 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  Time in seconds to wait before retransmit when using acknowledge and buffering.
+      !  For more information about acknowledge handling and retransmitting, 
+      !  refer to the documentation of the RemTrans object.
+      !  Dynamic change is possible.
+      !*/
+      Object RetransmitTime $Attribute 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	EndBody
+      EndObject
+      !/**
+      !  Error counter.
+      !*/
+      Object ErrCount $Attribute 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !
+      ! Parameter IOPoll
+      !
+      Object IOPoll $Attribute 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOPollTime
+      !
+      Object IOPollTime $Attribute 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOPollTimeSlow
+      !
+      Object IOPollTimeSlow $Attribute 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOPollDiff
+      !
+      Object IOPollDiff $Attribute 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallTime
+      !
+      Object IOStallTime $Attribute 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallAction
+      !
+      Object IOStallAction $Attribute 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !
+      ! Parameter IOStallFlag
+      !
+      Object IOStallFlag $Attribute 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter IODataArea
+      !
+      Object IODataArea $Attribute 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDI
+      !
+      Object NumberOfDI $Attribute 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDO
+      !
+      Object NumberOfDO $Attribute 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfAI
+      !
+      Object NumberOfAI $Attribute 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfAO
+      !
+      Object NumberOfAO $Attribute 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfDV
+      !
+      Object NumberOfDV $Attribute 27
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !
+      ! Parameter NumberOfCo
+      !
+      Object NumberOfCo $Attribute 28
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      !/**
+      !  Type of remnode. Used in the RemoteConfig classgraph.
+      !*/
+      Object Id $Attribute 29
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String8"
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	EndBody
+      EndObject
+      !/**
+      !  Contains the objid for the RemTrans objects for this remnode.
+      !  The objid's are inserted by the remote process.
+      !*/
+      Object RemTransObjects $Attribute 30
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Objid"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_INVISIBLE
+	  Attr Flags |= PWR_MASK_ARRAY
+	  Attr Elements = 25
+	EndBody
+      EndObject
+    EndObject
+    Object Template RemnodeALCM
+      Body RtBody
+        Attr Prio = 15
+	Attr DevName = "eth0"
+	Attr LinkUp = 0
+	Attr LinkTimeout = 3.0
+	Attr Disable = 0
+	Attr RestartCount = 0
+	Attr RestartLimit = 100
+	Attr ScanTime = 0.1
+	Attr RetransmitTime = 10.0
+	Attr IOPoll = 0
+	Attr IOPollDiff = 0
+	Attr IOPollTime = 1.0
+	Attr IOPollTimeSlow = 5.0
+	Attr IOStallTime = 3.0
+	Attr IOStallAction = 3
+	Attr Id = "Alcm"
+      EndBody
+    EndObject
+  EndObject
+EndSObject

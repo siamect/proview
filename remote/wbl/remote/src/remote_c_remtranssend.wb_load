@@ -1,0 +1,155 @@
+! 
+!  Proview   $Id: remote_c_remtranssend.wb_load,v 1.1 2006-01-12 06:39:33 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  remote_c_remtranssend.wb_load -- Defines the class RemTransSend.
+!
+SObject Remote:Class
+!/**
+!  @Version 1.0
+!  @Code rs_plc_macro_nmps.h
+!  @Group Remote,Plc
+!  @Summary Fill and send a remtrans buffer.
+!  Fill a remtrans buffer and mark the RemTrans object for send.
+!  @image orm_remtranssend_fo.gif
+!
+!  The object has a subwindow where code for fill in data in 
+!  a remtrans buffer can be programmed. The object excecutes the
+!  subwindow and then sets the DataValid attribute in the RemTrans
+!  object, to indicate that new data is present. Status from the
+!  RemTrans object is stored in output attributes of the RemTransSend
+!  object.
+!
+! @b See also
+!  @classlink RemTrans remote_remtrans.html
+!  @classlink RemTransRcv remote_remtransrcv.html
+!*/
+  Object RemTransSend $ClassDef 10
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr PopEditor = 2
+    EndBody
+    !
+    ! REMTRANSSEND Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "RemTransSend"
+      EndBody
+      !/**
+      ! Data input connected to a GetData which refers to the RemTrans object.
+      !*/
+     Object RemTrans $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_PRIVATE
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "Trs"
+        EndBody
+      EndObject
+      !/**
+      ! Data will be sent on positiv edge. The subwindow is executed and
+      ! DataValid is set in the RemTrans object.
+      !*/
+      Object Send $Input 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "snd"
+          Attr Flags |= PWR_MASK_NOINVERT
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+        EndBody
+      EndObject
+      !/**
+      ! Indicates that the RemTrans object can't handle any new transactions
+      ! for the moment. The last transaction is not yet sent, or if buffering
+      ! is used, no more buffers are available.
+      !*/
+      Object Occupied $Output 3
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "occ"
+        EndBody
+      EndObject
+      !/**
+      ! Indicates that there are buffered transactions.
+      !*/
+      Object Buffer $Output 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "buf"
+        EndBody
+      EndObject
+      !/**
+      ! Error status was returned for the last transaction.
+      !*/
+      Object Error $Output 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "err"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! REMTRANSSEND Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 3
+        Attr parameters[3] = 0
+        Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
+        Attr subwindows = 1
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 5
+        Attr segname_annotation = 1
+        Attr devbody_annotation = 0
+        Attr compmethod = 50
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "RemSend"
+        Attr graphname = "RemSend"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+  EndObject
+EndSObject
