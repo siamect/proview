@@ -1,7 +1,7 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X147"
-    Attr NextCix = "_X25"
+    Attr NextOix = "_X148"
+    Attr NextCix = "_X27"
     Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 138 30-DEC-2005 14:28:03.99
@@ -5089,30 +5089,30 @@ Volume SsabOx $ClassVolume 0.0.250.5
       EndObject
       Object Template Co_CO4uP 2152955904 01-JAN-1970 01:00:00.00
         Body RtBody 30-DEC-2005 11:44:27.44
-	Attr ConvMask = 65535
-        Attr COAbsFlag[0] = 1
-        Attr COAbsFlag[1] = 1
-        Attr COAbsFlag[2] = 1
-        Attr COAbsFlag[3] = 1
-        Attr NoOfBits[0] = 24
-        Attr NoOfBits[1] = 24
-        Attr NoOfBits[2] = 24
-        Attr NoOfBits[3] = 24
-        Attr MulCount[0] = 4
-        Attr MulCount[1] = 4
-        Attr MulCount[2] = 4
-        Attr MulCount[3] = 4
-        Attr CopWrRough[0] = 1
-        Attr CopWrRough[1] = 1
-        Attr CopWrRough[2] = 1
-        Attr CopWrRough[3] = 1
-        Attr CopWrFine[0] = 1
-        Attr CopWrFine[1] = 1
-        Attr CopWrFine[2] = 1
-        Attr CopWrFine[3] = 1
-        Attr MaxNoOfCounters = 4
-        Attr Process = 1
- 	Attr DataSheet = "$pwr_lang/dsh/ssab_co_co4up.pdf"
+          Attr ConvMask = 65535
+          Attr MaxNoOfCounters = 4
+          Attr COAbsFlag[0] = 1
+          Attr COAbsFlag[1] = 1
+          Attr COAbsFlag[2] = 1
+          Attr COAbsFlag[3] = 1
+          Attr NoOfBits[0] = 24
+          Attr NoOfBits[1] = 24
+          Attr NoOfBits[2] = 24
+          Attr NoOfBits[3] = 24
+          Attr MulCount[0] = 4
+          Attr MulCount[1] = 4
+          Attr MulCount[2] = 4
+          Attr MulCount[3] = 4
+          Attr CopWrRough[0] = 1
+          Attr CopWrRough[1] = 1
+          Attr CopWrRough[2] = 1
+          Attr CopWrRough[3] = 1
+          Attr CopWrFine[0] = 1
+          Attr CopWrFine[1] = 1
+          Attr CopWrFine[2] = 1
+          Attr CopWrFine[3] = 1
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_co_co4up.pdf"
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
         EndBody
@@ -5352,30 +5352,30 @@ Volume SsabOx $ClassVolume 0.0.250.5
       EndObject
       Object Template Co_PI24BO 2153218048 01-JAN-1970 01:00:00.00
         Body RtBody 30-DEC-2005 11:45:40.31
-	Attr ConvMask = 65535
-        Attr COAbsFlag[0] = 1
-        Attr COAbsFlag[1] = 1
-        Attr COAbsFlag[2] = 1
-        Attr COAbsFlag[3] = 1
-        Attr NoOfBits[0] = 24
-        Attr NoOfBits[1] = 24
-        Attr NoOfBits[2] = 24
-        Attr NoOfBits[3] = 24
-        Attr MulCount[0] = 4
-        Attr MulCount[1] = 4
-        Attr MulCount[2] = 4
-        Attr MulCount[3] = 4
-        Attr CopWrRough[0] = 1
-        Attr CopWrRough[1] = 1
-        Attr CopWrRough[2] = 1
-        Attr CopWrRough[3] = 1
-        Attr CopWrFine[0] = 1
-        Attr CopWrFine[1] = 1
-        Attr CopWrFine[2] = 1
-        Attr CopWrFine[3] = 1
-        Attr MaxNoOfCounters = 1
-        Attr Process = 1
- 	Attr DataSheet = "$pwr_lang/dsh/ssab_co_pi24bo.pdf"
+          Attr ConvMask = 65535
+          Attr MaxNoOfCounters = 1
+          Attr COAbsFlag[0] = 1
+          Attr COAbsFlag[1] = 1
+          Attr COAbsFlag[2] = 1
+          Attr COAbsFlag[3] = 1
+          Attr NoOfBits[0] = 24
+          Attr NoOfBits[1] = 24
+          Attr NoOfBits[2] = 24
+          Attr NoOfBits[3] = 24
+          Attr MulCount[0] = 4
+          Attr MulCount[1] = 4
+          Attr MulCount[2] = 4
+          Attr MulCount[3] = 4
+          Attr CopWrRough[0] = 1
+          Attr CopWrRough[1] = 1
+          Attr CopWrRough[2] = 1
+          Attr CopWrRough[3] = 1
+          Attr CopWrFine[0] = 1
+          Attr CopWrFine[1] = 1
+          Attr CopWrFine[2] = 1
+          Attr CopWrFine[3] = 1
+          Attr Process = 1
+          Attr DataSheet = "$pwr_lang/dsh/ssab_co_pi24bo.pdf"
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
         EndBody
@@ -5758,6 +5758,850 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr DataSheet = "$pwr_lang/dsh/ssab_do_hvdo32.pdf"
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object PID_1uP $ClassDef 25 12-JAN-2006 07:29:56.01
+      Body SysBody 12-JAN-2006 07:29:56.01
+        Attr Method = 5
+        Attr Flags = 2128
+      EndBody
+      Object RtBody $ObjBodyDef 1 12-JAN-2006 07:29:56.01
+        Body SysBody 12-JAN-2006 07:29:56.01
+          Attr StructName = "PID_1uP"
+          Attr NextAix = "_X58"
+        EndBody
+        Object Description $Attribute 1 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DevName $Attribute 2 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "DevName"
+            Attr TypeRef = "pwrs:Type-$String40"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 3 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 4 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 5 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object StallReact $Attribute 6 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "StallReact"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object RegAddress $Attribute 7 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "RegAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object VectAddress $Attribute 8 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "VectAddress"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Process $Attribute 9 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 10 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object PidXCon $Intern 11 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PidXCon"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object SetVal $Attribute 12 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "SetVal"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasD $Attribute 13 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasD"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ForcVal $Attribute 14 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ForcVal"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Force $Attribute 15 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Force"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IntOff $Attribute 16 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "IntOff"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Init $Attribute 17 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Init"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PidAlg $Attribute 18 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PidAlg"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Inverse $Attribute 19 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Inverse"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PidGain $Attribute 20 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PidGain"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IntTime $Attribute 21 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "IntTime"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerTime $Attribute 22 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "DerTime"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerGain $Attribute 23 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "DerGain"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinOut $Attribute 24 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "MinOut"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxOut $Attribute 25 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "MaxOut"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object EndHys $Attribute 26 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "EndHys"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasGain $Attribute 27 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasGain"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object UseDynBias $Attribute 28 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "UseDynBias"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ActMax $Attribute 29 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ActMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ActMin $Attribute 30 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ActMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ActRawMax $Attribute 31 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ActRawMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ActRawMin $Attribute 32 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ActRawMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object BiasMax $Attribute 33 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasMin $Attribute 34 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasRawMax $Attribute 35 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasRawMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object BiasRawMin $Attribute 36 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasRawMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object UseAo $Attribute 37 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "UseAo"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object AoMax $Attribute 38 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "AoMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AoMin $Attribute 39 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "AoMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AoRawMax $Attribute 40 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "AoRawMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AoRawMin $Attribute 41 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "AoRawMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object UsePos3p $Attribute 42 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "UsePos3p"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PosMax $Attribute 43 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PosMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosMin $Attribute 44 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PosMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosRawMax $Attribute 45 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PosRawMax"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object PosRawMin $Attribute 46 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PosRawMin"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ErrSta $Attribute 47 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ErrSta"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ErrSto $Attribute 48 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ErrSto"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Pos3pGain $Attribute 49 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Pos3pGain"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ProcFiltTime $Attribute 50 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "ProcFiltTime"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasFiltTime $Attribute 51 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "BiasFiltTime"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosFiltTime $Attribute 52 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "PosFiltTime"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object UseInc3p $Attribute 53 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "UseInc3p"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Inc3pGain $Attribute 54 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "Inc3pGain"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinTim $Attribute 55 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "MinTim"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxTim $Attribute 56 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "MaxTim"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxInteg $Attribute 57 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr PgmName = "MaxInteg"
+            Attr Flags = 2048
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 12-JAN-2006 07:29:56.01
+        Body SysBody 12-JAN-2006 07:29:56.01
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 12-JAN-2006 07:29:56.01
+          Body SysBody 12-JAN-2006 07:29:56.01
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object PidX $ClassDef 26 12-JAN-2006 07:30:19.53
+      Body SysBody 12-JAN-2006 07:30:19.53
+        Attr Method = 6
+        Attr Flags = 80
+        Attr PopEditor = 2
+      EndBody
+      Object RtBody $ObjBodyDef 1 12-JAN-2006 07:30:19.53
+        Body SysBody 12-JAN-2006 07:30:19.53
+          Attr StructName = "PidX"
+          Attr NextAix = "_X62"
+        EndBody
+        Object SetVal $Input 1 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "SetVal"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "SV"
+          EndBody
+        EndObject
+        Object BiasD $Input 2 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasD"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "BIS"
+          EndBody
+        EndObject
+        Object ForcVal $Input 3 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ForcVal"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "FOV"
+          EndBody
+        EndObject
+        Object Force $Input 4 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Force"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "for"
+          EndBody
+        EndObject
+        Object IntOff $Input 5 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "IntOff"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "iof"
+          EndBody
+        EndObject
+        Object PosVal $Output 6 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "POS"
+          EndBody
+        EndObject
+        Object ProcVal $Output 7 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PV"
+          EndBody
+        EndObject
+        Object Bias $Output 8 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Bias"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "BIS"
+          EndBody
+        EndObject
+        Object Description $Intern 9 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Pid1uPCon $Intern 10 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Pid1uPCon"
+            Attr TypeRef = "pwrs:Type-$Objid"
+            Attr NiNaAnnot = 1
+          EndBody
+        EndObject
+        Object Acc $Intern 11 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Acc"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutVal $Intern 12 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "OutVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ControlDiff $Intern 13 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ControlDiff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object XScanTime $Intern 14 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "XScanTime"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object EndMax $Intern 15 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "EndMax"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object EndMin $Intern 16 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "EndMin"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Init $Intern 17 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Init"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PidAlg $Intern 18 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PidAlg"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object Inverse $Intern 19 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Inverse"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PidGain $Intern 20 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PidGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IntTime $Intern 21 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "IntTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerTime $Intern 22 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "DerTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerGain $Intern 23 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "DerGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinOut $Intern 24 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "MinOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxOut $Intern 25 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "MaxOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object EndHys $Intern 26 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "EndHys"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasGain $Intern 27 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object UseDynBias $Intern 28 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "UseDynBias"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ProcMax $Intern 29 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcMax"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ProcMin $Intern 30 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcMin"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ProcValueUnit $Intern 31 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcValueUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object ProcFiltTime $Intern 32 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcFiltTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ProcRawMax $Intern 33 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcRawMax"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ProcRawMin $Intern 34 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ProcRawMin"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object BiasMax $Intern 35 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasMax"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasMin $Intern 36 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasMin"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasValueUnit $Intern 37 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasValueUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object BiasFiltTime $Intern 38 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasFiltTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object BiasRawMax $Intern 39 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasRawMax"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object BiasRawMin $Intern 40 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "BiasRawMin"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object UseAo $Intern 41 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "UseAo"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object AoMax $Intern 42 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "AoMax"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AoMin $Intern 43 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "AoMin"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AoValueUnit $Intern 44 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "AoValueUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object AoRawMax $Intern 45 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "AoRawMax"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AoRawMin $Intern 46 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "AoRawMin"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object UsePos3p $Intern 47 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "UsePos3p"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PosMax $Intern 48 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosMax"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosMin $Intern 49 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosMin"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosValueUnit $Intern 50 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosValueUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object PosFiltTime $Intern 51 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosFiltTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PosRawMax $Intern 52 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosRawMax"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object PosRawMin $Intern 53 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "PosRawMin"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object ErrSta $Intern 54 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ErrSta"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ErrSto $Intern 55 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "ErrSto"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Pos3pGain $Intern 56 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Pos3pGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object UseInc3p $Intern 57 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "UseInc3p"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Inc3pGain $Intern 58 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "Inc3pGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinTim $Intern 59 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "MinTim"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxTim $Intern 60 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "MaxTim"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxInteg $Intern 61 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr PgmName = "MaxInteg"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 12-JAN-2006 07:30:19.53
+        Body SysBody 12-JAN-2006 07:30:19.53
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 12-JAN-2006 07:30:19.53
+          Body SysBody 12-JAN-2006 07:30:19.53
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 148 12-JAN-2006 07:30:19.53
+        Body SysBody 12-JAN-2006 07:30:19.53
+          Attr object_type = 11
+          Attr parameters[0] = 5
+          Attr parameters[1] = 0
+          Attr parameters[2] = 3
+          Attr parameters[3] = 0
+          Attr graphmethod = 2
+          Attr graphindex = 0
+          Attr default_mask[0] = 1
+          Attr default_mask[1] = 2
+          Attr segname_annotation = 3
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "PidX"
+          Attr graphname = "PidX"
         EndBody
       EndObject
     EndObject

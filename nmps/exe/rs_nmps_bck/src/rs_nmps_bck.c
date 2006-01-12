@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_bck.c,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rs_nmps_bck.c,v 1.5 2006-01-12 05:57:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,9 +69,8 @@
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
-#include "rs_nmps.h"
+#include "nmps.h"
 #include "rs_nmps_msg.h"
-#include "rs_sutl.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
@@ -1131,7 +1130,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	  for (;;)
 	  {
 	    if ( wait_some_time)
-	      sutl_sleep( reopen_time);
+	      time_Sleep( reopen_time);
 	    else
 	      wait_some_time = 1;
 
@@ -1193,7 +1192,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 	  for (;;)
 	  {
 	    if ( wait_some_time)
-	      sutl_sleep( reopen_time);
+	      time_Sleep( reopen_time);
 	    else
 	      wait_some_time = 1;
 
@@ -2518,7 +2517,7 @@ int main()
 #endif
 
 
-	      // sutl_sleep( scantime);
+	      // time_Sleep( scantime);
 
 	      first_scan = 0;
 	    }

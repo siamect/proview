@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_mirror.c,v 1.3 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rs_nmps_mirror.c,v 1.4 2006-01-12 05:57:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,9 +71,8 @@
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
-#include "rs_nmps.h"
+#include "nmps.h"
 #include "rs_nmps_msg.h"
-#include "rs_sutl.h"
 
 /*_Globala variabler______________________________________________________*/
 
@@ -2113,7 +2112,7 @@ int main()
 	  sts = nmps_cellmir_init( mirctx);
 	  if (EVEN(sts)) LogAndExit( sts);
 
-	  sutl_sleep( 5.0);
+	  time_Sleep( 5.0);
 	  scantime = mirctx->mirrorconfig->ScanTime;
 	  for (;;)
 	  {
@@ -2136,7 +2135,7 @@ int main()
 
 	    mirctx->mirrorconfig->LoopCount++;
 
-	    sutl_sleep( scantime);
+	    time_Sleep( scantime);
 	    mirctx->first_scan = 0;
 
 	    if ( mirctx->mirrorconfig->Initialize)

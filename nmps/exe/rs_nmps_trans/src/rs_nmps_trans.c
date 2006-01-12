@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_trans.c,v 1.7 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rs_nmps_trans.c,v 1.8 2006-01-12 05:57:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "pwr_nmpsclasses.h"
-#include "pwr_ssabclasses.h"
+#include "pwr_remoteclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_gdh.h"
@@ -78,10 +78,8 @@
 #include "rt_plc_utl.h"
 #include "rt_gdh_msg.h"
 #include "rt_hash_msg.h"
-#include "rs_nmps_cnv.h"
-#include "rs_sutl.h"
+#include "nmps_cnv.h"
 #include "rs_nmps_msg.h"
-#include "rs_ssabutil.h"
 
 /*_Globala variabler______________________________________________________*/
 
@@ -327,6 +325,7 @@ static int	nmpstrans_req_accept_detected( trans_ctx	transctx,
 				nmpstrans_t_req_list	*req_ptr);
 static int	nmpstrans_req_reset_detected( trans_ctx	transctx,
 				nmpstrans_t_req_list	*req_ptr);
+static int	ssabutil_lopnr_check( pwr_tInt32	lopnr);
 
 
 int nmpstrans_check_checksum( int key)
@@ -2863,4 +2862,52 @@ int main()
 	    }
 	  }
 	}
+}
+
+
+static pwr_tInt32 ssabutil_chksum_calculate(	pwr_tInt32 value,
+						pwr_tInt16 *weights,
+						pwr_tInt16 num_figures)
+{
+   pwr_tInt16   sum;         /* Arbetsvariabel */
+   pwr_tInt16   *weightP;    /* Pekar på vikter */
+
+   /* Beräkna perkaren till entalssiffran */
+
+   weightP = weights + num_figures - 1;
+
+   /* Beräkna den viktade summan av siffrorona i talet */
+   for (sum=0; num_figures>0; num_figures--) {
+       sum += (value % 10) * (*weightP--);
+       value /= 10 ;
+   }
+
+   /* Beräkna skillnaden till närmast högre tiotal */
+   sum = ((sum/10) + 1)*10 - sum;
+   if (sum == 10) sum = 0;
+
+   return (sum);
+}
+
+static pwr_tInt32 ssabutil_chksum_lop(	pwr_tInt32 lopnummer)
+{
+  static  pwr_tInt16   lop_fig_weights[6] = {1,7,3,1,7,3};
+
+  lopnummer=lopnummer*10 + 
+    ssabutil_chksum_calculate( lopnummer, lop_fig_weights, 6);
+
+  return(lopnummer);
+}
+
+static int	ssabutil_lopnr_check( pwr_tInt32	lopnr)
+{
+  pwr_tInt32	tst_lopnr;
+	
+  tst_lopnr = lopnr / 10;
+  tst_lopnr = ssabutil_chksum_lop( tst_lopnr);
+
+  if ( tst_lopnr != lopnr)
+    return 0;
+  else
+    return 1;
 }
