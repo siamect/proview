@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.6 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_time.c,v 1.7 2006-01-13 06:41:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -944,4 +944,22 @@ time_ZeroD (
   return tp;  
 }
 
+void time_Sleep( float time)
+{
+#ifdef OS_VMS
+	int sts;
+        sts = lib$wait(&time);
+#elif OS_ELN
+	LARGE_INTEGER	l_time;
+
+	l_time.high = -1;	
+	l_time.low = - time * 10000000;	
+	ker$wait_any( NULL, NULL, &l_time);
+#elif defined(OS_LYNX) || defined (OS_LINUX)
+	pwr_tDeltaTime	p_time;
+
+	time_FloatToD( &p_time, time);
+	nanosleep( (pwr_tTime *)&p_time, NULL);
+#endif
+}
 

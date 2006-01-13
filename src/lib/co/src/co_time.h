@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.h,v 1.5 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_time.h,v 1.6 2006-01-13 06:41:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,6 +135,7 @@ pwr_tDeltaTime *	time_ClockToD	(pwr_tStatus*, pwr_tDeltaTime*, time_tClock);
 time_tOs *		time_AtoOs	(pwr_tStatus*, time_tOs*, pwr_tTime*);
 time_tOs *		time_DtoOs	(pwr_tStatus*, time_tOs*, pwr_tDeltaTime*);
 pwr_tDeltaTime *	time_ZeroD	(pwr_tDeltaTime*);
+void 			time_Sleep	(float time);
 
 #if defined(OS_ELN)
 int			eln_clock_gettime (clockid_t, struct timespec*);
