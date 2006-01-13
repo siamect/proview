@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.10 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.11 2006-01-13 06:40:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 
 
 #define RTT_MENU_MODULE
+#define RTT_ISAREF 0x99990000
 
 /*_Include files_________________________________________________________*/
 
@@ -6266,7 +6267,7 @@ static int	rtt_attribute_elements(
 		0, 
 		&rtt_object_parameters,
 		0, objid, (void *)aref.Body, (void *)aref.Offset, 
-		(void *)aref.Size, (void *)aref.Flags.m,
+		(void *)aref.Size, (void *)(aref.Flags.m | RTT_ISAREF),
 		parameter_name, RTT_PRIV_NOOP, parameter_ptr, atype, 
 		aflags, asize / elements, subid, 0, 0, 0, 0,
 		0.0, 0.0, RTT_DATABASE_GDH, 0);
@@ -6492,11 +6493,15 @@ int	rtt_object_parameters(
 	int		flags;
 	pwr_tCid	cid;
 
-	objar.Objid = objid;
-	objar.Body = (pwr_tCid) arg1;
-	objar.Offset = (pwr_tUInt32) arg2;
-	objar.Size = (pwr_tUInt32) arg3;
-	objar.Flags.m = (pwr_tBitMask) arg4;
+	if ( ((unsigned int) arg4 & 0xffff0000) == RTT_ISAREF) {
+	  objar.Objid = objid;
+	  objar.Body = (pwr_tCid) arg1;
+	  objar.Offset = (pwr_tUInt32) arg2;
+	  objar.Size = (pwr_tUInt32) arg3;
+	  objar.Flags.m = (pwr_tBitMask) arg4 & 0xffff;
+	}
+	else
+	  objar = cdh_ObjidToAref( objid);
 	
 	/* Get object name */
 	sts = gdh_AttrrefToName( &objar, objname, sizeof(objname), cdh_mName_volumeStrict);
@@ -6663,7 +6668,7 @@ int	rtt_object_parameters(
 			0,
 			&rtt_object_parameters,
 			0, objid, (void *)aref.Body, (void *)aref.Offset, 
-			(void *)aref.Size, (void *)aref.Flags.m,
+			(void *)aref.Size, (void *)(aref.Flags.m | RTT_ISAREF),
 			parameter_name, RTT_PRIV_NO, parameter_ptr - 4,
 			pwr_eType_Int32,
 			flags, 4, pwr_cNDlid, 0, 0, 0, 0,
