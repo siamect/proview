@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.10 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.11 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@ extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
-#include "pwr_ssabclasses.h"
+#include "pwr_remoteclasses.h"
 #include "rt_xnav_msg.h"
 }
 

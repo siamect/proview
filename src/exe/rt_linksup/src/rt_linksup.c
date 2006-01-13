@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_linksup.c,v 1.4 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_linksup.c,v 1.5 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_lst.h"
-#include "pwrb_c_nodelinksup.h"
+#include "pwr_baseclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_errh.h"

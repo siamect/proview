@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ssabox_plc_pidx.c,v 1.1 2006-01-12 05:54:27 claes Exp $
+ * Proview   $Id: ssabox_plc_pidx.c,v 1.2 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,8 @@
 /* PLC-code for PidX */
 #include "pwr.h"
 #include "pwr_baseclasses.h"
+#include "pwr_basecomponentclasses.h"
+#include "pwr_ssaboxclasses.h"
 #include "rt_plc.h"
 
 #define ODD(a)	(((int)(a) & 1) != 0)

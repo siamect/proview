@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.h,v 1.5 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: ini.h,v 1.6 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
-#include "pwrb_c_plcprocess.h"
+#include "pwr_baseclasses.h"
 #include "co_tree.h"
 #include "co_dbs.h"
 #include "rt_ivol.h"

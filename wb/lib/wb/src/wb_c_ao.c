@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_ao.c,v 1.3 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_ao.c,v 1.4 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
-#include "pwrb_c_ao.h"
+#include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 

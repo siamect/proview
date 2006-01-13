@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ssabox_ssabutil.c,v 1.1 2006-01-12 05:54:27 claes Exp $
+ * Proview   $Id: ssabox_ssabutil.c,v 1.2 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@
 
 #include "pwr.h"
 #include "rt_gdh.h"
-#include "rs_ssabutil.h"
+#include "ssabox_ssabutil.h"
 
 /* Nice functions */
 #define ODD(a)	(((int)(a) & 1) != 0)

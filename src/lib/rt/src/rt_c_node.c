@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_c_node.c,v 1.6 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_c_node.c,v 1.7 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 #include "rt_errh.h"
 #include "rt_gdh.h"
 #include "rt_pwr_msg.h"
-#include "pwrs_c_node.h"
+#include "pwr_systemclasses.h"
 
 static pwr_sNode *np = 0;
 

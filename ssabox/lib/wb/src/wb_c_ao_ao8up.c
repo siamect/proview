@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_ao_ao8up.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: wb_c_ao_ao8up.c,v 1.2 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,6 @@
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"
 #include "pwr_ssaboxclasses.h"
-#include "pwrb_c_chanao.h"
 #include "wb_ldh.h"
 #include "wb_wsx.h"
 #include "wb_nav_macros.h"

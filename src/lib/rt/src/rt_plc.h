@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc.h,v 1.7 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_plc.h,v 1.8 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,10 @@
 # include "pwr.h"
 #endif
 
+#ifndef pwr_systemclasses_h
+# include "pwr_systemclasses.h"
+#endif
+
 #ifndef pwr_baseclasses_h
 # include "pwr_baseclasses.h"
 #endif
@@ -52,17 +56,6 @@
 # include "rt_qcom.h"
 #endif
 
-#ifndef pwr_cClass_PlcThread
-# include "pwrb_c_plcthread.h"
-#endif
-
-#ifndef pwr_cClass_Node
-# include "pwrs_c_node.h"
-#endif
-
-#ifndef pwr_cClass_IOHandler
-# include "pwrb_c_iohandler.h"
-#endif
 
 typedef struct plc_sProcess plc_sProcess;
 typedef struct plc_sThread plc_sThread;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_dstrend.c,v 1.4 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_c_dstrend.c,v 1.5 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_pwrb_msg.h"
-#include "pwrb_c_dstrend.h"
+#include "pwr_baseclasses.h"
 #include "wb_ldh.h"
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remotehandler.c,v 1.1 2006-01-12 06:39:33 claes Exp $
+ * Proview   $Id: rs_remotehandler.c,v 1.2 2006-01-13 06:38:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,7 @@
 
 #include "pwr.h"
 #include "pwr_class.h"
-#include "pwrs_c_node.h"
+#include "pwr_systemclasses.h"
 #include "co_cdh.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
