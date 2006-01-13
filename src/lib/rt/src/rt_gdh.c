@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.23 2005-12-27 09:40:56 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.24 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1110,8 +1110,7 @@ gdh_GetLocalParent (
  *
  * Data gets `old' after a certain timeout-time,
  * when no updates are refreshing the data. 
- * @sa gdh_examples.c
- * 
+ *
  * @return pwr_tStatus
  */
 pwr_tStatus

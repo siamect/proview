@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mh_appl.c,v 1.4 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_mh_appl.c,v 1.5 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,7 +90,7 @@ mh_ApplCancel (
 
 
 
- /**
+ /*
  *@example mh_examples.c
  */
 

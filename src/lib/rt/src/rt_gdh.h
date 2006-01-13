@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.13 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.14 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-/**
+/*
  *@example gdh_examples.c
  */
 

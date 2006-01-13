@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.16 2005-12-06 09:19:38 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.17 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1429,7 +1429,7 @@ typedef GlowTraceData glow_sTraceData;
   //! Set shadow width for an object.
   /*!
     \param object	Object.
-    \param shadow     	Shadow width in percentage of the smallest of object width and height.
+    \param width     	Shadow width in percentage of the smallest of object width and height.
   */
   void grow_SetObjectShadowWidth( grow_tObject object, double width);
 

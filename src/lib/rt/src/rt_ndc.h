@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ndc.h,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_ndc.h,v 1.5 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@ typedef enum {
 typedef struct {
   conv_eIdx	cidx;	/**< Index in the conversion routine table */
   pwr_tUInt32	raidx; 	/**< Native attribute index */
-  /*  pwr_tBoolean  private; */ /**< Set if attribute is a private pointer */
+  /*  pwr_tBoolean  private; */
 } ndc_sRemoteToNative;
 
 
@@ -74,7 +74,7 @@ ndc_ConvertData (
   pwr_tUInt32           offs
 );
 
-/**
+/*
  * Converts native data that has a different class version.
  * 
  */
@@ -95,7 +95,7 @@ ndc_ConvertNativeToRemoteData (
   pwr_tNodeId           nid     /**< Node id */
 );
 
-/**
+/*
  * Encodes/decodes data which uses a cached class.
  */
 pwr_tBoolean
@@ -114,7 +114,7 @@ ndc_ConvertRemoteData (
 
 
 
-/**
+/*
  * Converts remote data that has a different class version.
  * The data has already been converted to native data format
  */
@@ -135,7 +135,7 @@ ndc_ConvertRemoteToNativeData (
   pwr_tNodeId           nid     /**< Node id */
 );
 
-/**
+/*
  * Converts remote data that has a different class version.
  * The data has already been converted to native data format
  */
@@ -157,7 +157,7 @@ ndc_ConvertRemoteToNativeTable (
   );
 
 
-/**
+/*
  * Converts a native attribute reference to a remote attribute.
  * 
  * @return The argument rarp or NULL if an error

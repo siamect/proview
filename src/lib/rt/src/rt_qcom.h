@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.h,v 1.5 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qcom.h,v 1.6 2006-01-13 16:32:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -267,10 +267,6 @@ pwr_tBoolean		qcom_AidIsNull (
   const qcom_sAid	*a
 );
 
-/**
- * Testing what will happen if we write documentation
- * both in .c file and in .h file.
- */
 void*			qcom_Alloc (
   pwr_tStatus		*sts,
   unsigned int		size
