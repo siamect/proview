@@ -172,52 +172,94 @@ sub build () # args: branch, subbranch, phase
 sub build_all_modules ()
 {
   _module("kernel");
-  build_all("lib");
+  build_all("copy");
   merge();
-  _module("ssabox");
-  build_all("lib");
-  merge();
-  _module("othermanu");
-  build_all("lib");
-  merge();
-  _module("abb");
-  build_all("lib");
-  merge();
-  _module("siemens");
-  build_all("lib");
-  merge();
-  _module("inor");
-  build_all("lib");
-  merge();
-  _module("klocknermoeller");
-  build_all("lib");
-  merge();
-  _module("telemecanique");
-  build_all("lib");
+  _module("wb");
+  build_all("copy");
   merge();
   _module("kernel");
-  build_all("","exe");
+  build_all("lib");
+  merge();
+  _module("wb");
+  build_all("lib");
+  merge();
+  _module("nmps");
+  build_all("copy", "lib");
+  merge();
+  _module("tlog");
+  build_all("copy", "lib");
+  merge();
+  _module("remote");
+  build_all("copy");
+  merge();
+  _module("bcomp");
+  build_all("copy");
+  merge();
+  _module("java");
+  build_all("copy");
   merge();
   _module("ssabox");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("othermanu");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("abb");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("siemens");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("inor");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("klocknermoeller");
-  build_all("","exe");
+  build_all("copy");
   merge();
   _module("telemecanique");
-  build_all("","exe");
+  build_all("copy");
+  merge();
+  _module("wb");
+  build_all("exe");
+  merge();
+  _module("kernel");
+  build_all("exe");
+  merge();
+  _module("nmps");
+  build_all("lib", "exe");
+  merge();
+  _module("tlog");
+  build_all("lib", "exe");
+  merge();
+  _module("remote");
+  build_all("lib", "exe");
+  merge();
+  _module("bcomp");
+  build_all("lib", "exe");
+  merge();
+  _module("java");
+  build_all("lib", "exe");
+  merge();
+  _module("ssabox");
+  build_all("lib", "exe");
+  merge();
+  _module("othermanu");
+  build_all("lib", "exe");
+  merge();
+  _module("abb");
+  build_all("lib", "exe");
+  merge();
+  _module("siemens");
+  build_all("lib", "exe");
+  merge();
+  _module("inor");
+  build_all("lib", "exe");
+  merge();
+  _module("klocknermoeller");
+  build_all("lib", "exe");
+  merge();
+  _module("telemecanique");
+  build_all("lib", "exe");
   merge();
   
 #  my($exe_dir) = $ENV{"pwr_exe"};
@@ -232,6 +274,18 @@ sub build_all_modules ()
 sub create_all_modules ()
 {
   _module("kernel");
+  create();
+  _module("wb");
+  create();
+  _module("nmps");
+  create();
+  _module("tlog");
+  create();
+  _module("remote");
+  create();
+  _module("java");
+  create();
+  _module("bcomp");
   create();
   _module("ssabox");
   create();
@@ -254,8 +308,24 @@ sub create_all_modules ()
 #
 sub build_all ()
 {
-  my($to) = $_[0];
-  my($from) = $_[1];
+  $copy = 0;
+  $lib = 0;
+  $exe = 0;
+
+  if ( $_[0] eq "copy" || $_[1] eq "copy" || $_[2] eq "copy") {
+    $copy = 1;
+  }
+  if ( $_[0] eq "lib" || $_[1] eq "lib" || $_[2] eq "lib") {
+    $lib = 1;
+  }
+  if ( $_[0] eq "exe" || $_[1] eq "exe" || $_[2] eq "exe") {
+    $exe = 1;
+  }
+  if ( $_[0] eq "") {
+    $copy = 1;
+    $lib = 1;
+    $exe = 1;
+  }
 
   if (!defined($ENV{"pwre_env"})) {
     print("++ Environment is not initialized!\n");
@@ -278,87 +348,92 @@ sub build_all ()
 
   
   if ( $module eq "kernel") {
-    if ( $from eq "") {
+    if ( $copy == 1) {
       _build("exp", "inc", "all");
       _build("exp", "com", "all");
       _build("tools/exe", "*", "all");
+      merge("exe/tools_cmsg2c");
+      merge("exe/tools_msg2cmsg");
       _build("msg", "*", "all");
       _build("lib", "rt", "init copy");
-      _build("lib", "wb", "init copy");
+#      _build("lib", "wb", "init copy");
       _build("lib", "co", "init copy");
       _build("lib", "dtt", "init copy");
-      _build("exp", "wb", "init copy");
+#      _build("exp", "wb", "init copy");
       _build("lib", "flow", "all");
       _build("lib", "glow", "all");
       _build("lib", "co", "all");
       _build("exe", "co*", "all");
       _build("wbl", "pwrs", "copy");
       _build("wbl", "pwrb", "copy");
-      _build("wbl", "nmps", "copy");
-      _build("wbl", "ssab", "copy");
-      _build("wbl", "tlog", "copy");
-      _build("wbl", "bcomp", "copy");
+    }
+
+    if ( $lib == 1) {
       _build("lib", "ge", "all");
-      _build("lib", "wb", "all");
+      _module("nmps");
+      _build("wbl", "nmps", "init copy");
+      merge("inc/pwr_nmpsclasses.h");
+      _module("remote");
+      _build("wbl", "remote", "init copy");
+      merge("inc/pwr_remoteclasses.h");
+      _module("kernel");
       _build("lib", "rt", "all");
-      _build("lib", "rs", "all");
       _build("exp", "rt", "all");
-      _build("exp", "wb", "all");
+#      _build("exp", "wb", "all");
       _build("lib", "msg_dummy", "all");
       _build("exe", "wb_rtt", "all");
       _build("lib", "dtt", "all");
       _build("exp", "rt", "all");
+#      _build("lib", "wb", "all");
     }
-    if ( $to eq "lib") {
-	return;
+    if ( $exe == 1) {
+      _build("exe", "rt*", "all");
+#      _build("exe", "wb*", "all");
+      _build("exp", "ge", "all");
+      _build("mmi", "*", "copy");
+#      _build("db", "wb", "init");
+      _build("wbl", "pwrs", "lib");
+      _build("wbl", "pwrb", "lib");
+      _build("wbl", "wb", "lib");
+      _build("wbl", "rt", "lib");
+      _build("doc", "web", "all");
+      _build("doc", "dweb", "all");
+      _build("doc", "orm", "all");
+      _build("doc", "prm", "all");
+      _build("doc", "man", "all");
+      _build("doc", "dox", "all");
+      _build("wbl", "pwrs", "exe");
+      _build("wbl", "pwrb", "exe");
     }
-    _build("exe", "wb*", "all");
-    _build("exe", "rt*", "all");
-    _build("exe", "rs*", "all");
-    _build("exe", "jpwr*", "all");
-    _build("exp", "ge", "all");
-    _build("mmi", "*", "copy");
-    _build("jpwr", "rt", "all");
-    _build("jpwr", "jop", "all");
-    _build("jpwr", "jopc", "all");
-    _build("jpwr", "beans", "all");
-    _build("jpwr", "rt_client", "all");
-#    _build("db", "wb", "init");
-    _build("wbl", "pwrs", "lib");
-    _build("wbl", "pwrb", "lib");
-    _build("wbl", "nmps", "lib");
-    _build("wbl", "ssab", "lib");
-    _build("wbl", "tlog", "lib");
-    _build("wbl", "bcomp", "lib");
-    _build("wbl", "wb", "lib");
-    _build("wbl", "rt", "lib");
-    _build("doc", "web", "all");
-    _build("doc", "dweb", "all");
-    _build("doc", "orm", "all");
-    _build("doc", "prm", "all");
-    _build("doc", "man", "all");
-    _build("doc", "dox", "all");
-    _build("wbl", "pwrs", "exe");
-    _build("wbl", "pwrb", "exe");
-    _build("wbl", "nmps", "exe");
-    _build("wbl", "tlog", "exe");
-    _build("wbl", "ssab", "exe");
-    _build("wbl", "bcomp", "exe");
+  }
+  elsif ( $module eq "java") {
+    if ( $lib == 1) {
+      _build("jpwr", "rt", "all");
+      _build("jpwr", "jop", "all");
+      _build("jpwr", "jopc", "all");
+      _build("jpwr", "beans", "all");
+      _build("jpwr", "rt_client", "all");
+    }
   }
   else {
-    if ( $from eq "") {
-      _build("wbl", "mcomp", "copy");
-      _build("mmi", "mcomp", "copy");
-      _build("lib", "rt", "all");
-      _build("lib", "wb", "all");
+      printf( "Copy: %d Lib: %d Exe: %d\n", $copy, $lib, $exe);
+    if ( $copy == 1) {
+      _build("wbl", "*", "copy");
+      _build("lib", "*", "init copy");
+      _build("exp", "*", "init copy");
+      _build("mmi", "*", "copy");
     }
-    if ( $to eq "lib") {
-	return;
+    if ( $lib == 1) {
+      _build("lib", "*", "lib");
+      _build("exp", "*", "lib");
     }
-    _build("wbl", "mcomp", "lib");
-    _build("wbl", "mcomp", "exe");
-    _build("doc", "dsh", "copy");
-    _build("doc", "orm", "copy");
+    if ( $exe == 1) {
+      _build("wbl", "*", "lib");
+      _build("wbl", "*", "exe");
+      _build("exe", "*", "all");
+      _build("doc", "dsh", "copy");
+      _build("doc", "orm", "copy");
+    }
   }
 }
 
@@ -671,6 +746,8 @@ sub merge ()
     printf("++\n++ No build root is defined\n");
     exit 1;
   }
+  my($file) = $_[0];
+
 #  if ($module eq "kernel") {
 #    printf("++\n++ No merge for module kernel needed\n");
 #    exit 1;
@@ -681,9 +758,9 @@ sub merge ()
   $mroot .= "/" . $ENV{"pwre_module"};
   $eroot .= "/exp";
   printf("--\n");
-  printf("-- Merge $module...\n");
+  printf("-- Merge %s %s\n", $module, $file);
 
-  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot;
+  my($cmd) = $ENV{pwre_bin} . "/pwre_merge.sh " . $mroot . " " . $eroot . " " . $file;
   system("$cmd");
 }
 

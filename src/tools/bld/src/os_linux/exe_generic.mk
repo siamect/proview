@@ -9,18 +9,18 @@ ifndef exe_generic_mk
 exe_generic_mk := 1
 
 ifndef variables_mk
-  -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
+  -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
 endif
 ifndef variables_mk
-  include $(pwre_sroot)/tools/bld/src/$(os_name)/variables.mk
+  include $(pwre_kroot)/tools/bld/src/$(os_name)/variables.mk
 endif
 
 
 ifndef rules_mk
-  -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
+  -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
 endif
 ifndef rules_mk
-  include $(pwre_sroot)/tools/bld/src/$(os_name)/rules.mk
+  include $(pwre_kroot)/tools/bld/src/$(os_name)/rules.mk
 endif
 
 
@@ -33,7 +33,7 @@ ifndef link_rule_mk
   -include $(link_rule)
 endif
 ifndef link_rule_mk
-  link_rule := $(pwre_sroot)/tools/bld/src/$(os_name)/link_rule_generic.mk
+  link_rule := $(pwre_kroot)/tools/bld/src/$(os_name)/link_rule_generic.mk
   include $(link_rule)
 endif
 

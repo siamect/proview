@@ -51,7 +51,7 @@ $(load_dir)/nmps.dbs :
 
 $(inc_dir)/pwr_nmpsclasses.h :
 	@ echo "Generating struct files for nmps classes..."
-	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
+	@ co_convert -so -d $(inc_dir) "$(pwre_sroot)/wbl/nmps/src/nmps_*.wb_load"
 
 $(inc_dir)/pwr_nmpsclasses.hpp :
 	@ echo "Generating hpp files for nmps classes..."

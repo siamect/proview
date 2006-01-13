@@ -67,7 +67,7 @@ all : init copy lib
 
 init :
 
-copy : $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc) $(export_wav)
+copy : $(load_dir)/pwr_volumelist.dat $(exe_dir)/xtt_help.dat $(exe_dir)/sv_se/pwrb_xtthelp.dat $(exe_dir)/pwr_logga.gif $(export_gif) $(export_gifdoc) $(export_wav)
 
 lib : $(export_obj)
 
@@ -81,6 +81,10 @@ realclean : clean $(clean_obj)
 
 $(exe_dir)/%.wav : ../../%.wav
 	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(load_dir)/pwr_volumelist.dat : ../../pwr_volumelist.dat
+	@ echo "Copying pwr_volumelist.dat"
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/xtt_help.dat : xtt_help.dat

@@ -10,18 +10,18 @@ jpwr_generic_mk := 1
 
 
 ifndef variables_mk
- -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
+ -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/variables.mk
 endif
 ifndef variables_mk
- include $(pwre_sroot)/tools/bld/src/$(os_name)/variables.mk
+ include $(pwre_kroot)/tools/bld/src/$(os_name)/variables.mk
 endif
 
 
 ifndef rules_mk
- -include $(pwre_sroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
+ -include $(pwre_kroot)/tools/bld/src/$(os_name)/$(hw_name)/rules.mk
 endif
 ifndef rules_mk
- include $(pwre_sroot)/tools/bld/src/$(os_name)/rules.mk
+ include $(pwre_kroot)/tools/bld/src/$(os_name)/rules.mk
 endif
 
 

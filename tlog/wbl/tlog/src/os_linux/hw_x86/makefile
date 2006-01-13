@@ -51,7 +51,7 @@ $(load_dir)/tlog.dbs :
 
 $(inc_dir)/pwr_tlogclasses.h :
 	@ echo "Generating struct files for tlog classes..."
-	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
+	@ co_convert -so -d $(inc_dir) "$(pwre_sroot)/wbl/tlog/src/tlog_c_*.wb_load"
 
 $(inc_dir)/pwr_tlogclasses.hpp :
 	@ echo "Generating hpp files for tlog classes..."

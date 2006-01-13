@@ -25,6 +25,8 @@ load_dir := $(module_root)/load
 doc_dir	:= $(release_root)/exp/doc
 elib_dir := $(release_root)/exp/lib
 einc_dir := $(release_root)/exp/inc
+eobj_dir := $(release_root)/exp/obj
+eexe_dir := $(release_root)/exp/exe
 
 bld_dir	:= $(release_root)/bld/$(type_name)/$(comp_name)
 tmp_dir	:= $(release_root)/tmp
@@ -85,6 +87,9 @@ clibobj	= -c -o $(libobj)
 rt_msg_objs 	:= $(obj_dir)/pwr_msg_co.o $(obj_dir)/pwr_msg_rt.o
 rs_msg_objs 	:= $(obj_dir)/pwr_msg_rs.o
 wb_msg_objs 	:= $(obj_dir)/pwr_msg_wb.o $(obj_dir)/pwr_msg_ge.o $(obj_dir)/pwr_msg_flow.o
+rt_msg_eobjs 	:= $(eobj_dir)/pwr_msg_co.o $(eobj_dir)/pwr_msg_rt.o
+rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
+wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
@@ -102,7 +107,7 @@ ld		:= gcc
 cxx             := g++
 ldxx		:= g++
 lex             := flex
-msg2cmsg	:= $(exe_dir)/tools_msg2cmsg
+msg2cmsg	:= $(eexe_dir)/tools_msg2cmsg
 javac		:= javac
 
 #list            = $(to-vms $(lis_dir)/$(sname)$(lis_ext))
@@ -113,7 +118,7 @@ ifeq ($(pwre_btype),rls)
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT
   cxxflags	:= $(cflags) 
   linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
-  elinkflags	:= -O3 -L/usr/local/lib -L$(elib_dir) -L$(libdir) -lm -lrt
+  elinkflags	:= -O3 -L/usr/local/lib -L$(libdir) -L$(elib_dir) -lm -lrt
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
@@ -122,7 +127,7 @@ else
   cxxflags	:= $(cflags) -Wno-deprecated
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
-  elinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -L$(lib_dir) -lrt
+  elinkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lrt
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

@@ -2,10 +2,11 @@ ifndef link_rule_mk
 link_rule_mk := 1
 
 link =	g++ -shared -DHW_X86 -DOS_LINUX \
+	-L${pwr_elib} \
 	-L${pwr_lib} \
 	-L/usr/X11R6/lib \
 	${pwre_broot}/${pwre_target}/bld/lib/co/*.o \
-	$(rt_msg_objs) \
+	$(rt_msg_eobjs) \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_qcom.o \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_op.o \
 	${pwre_broot}/${pwre_target}/bld/lib/msg_dummy/msg_dummy_wb.o \

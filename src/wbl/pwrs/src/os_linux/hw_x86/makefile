@@ -50,7 +50,7 @@ $(load_dir)/pwrs.dbs :
 
 $(inc_dir)/pwr_systemclasses.h :
 	@ echo "Generating struct files for pwrs classes..."
-	@ co_convert -s -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
+	@ co_convert -so -d $(inc_dir) "$(pwre_sroot)/wbl/pwrs/src/pwrs_c_*.wb_load"
 
 $(inc_dir)/pwr_systemclasses.hpp :
 	@ echo "Generating hpp files for pwrs classes..."

@@ -81,7 +81,7 @@ $(load_dir)/%.dbs : ../../%.wb_load
 
 $(inc_dir)/pwr_%classes.h : ../../%.wb_load
 	@ echo "Generating struct files for $(source) classes..."
-	@ co_convert -s -d $(inc_dir) "$(source)"
+	@ co_convert -so -d $(inc_dir) "$(source)"
 
 $(inc_dir)/pwr_%classes.hpp : ../../%.wb_load
 	@ echo "Generating hpp files for $(source) classes..."
