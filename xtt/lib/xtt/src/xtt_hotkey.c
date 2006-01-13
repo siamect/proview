@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hotkey.c,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_hotkey.c,v 1.4 2006-01-13 06:35:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -362,8 +362,8 @@ hotkeySTATUS hotkey_Process (
 * @Abstract:	add grab for one key
 * @Description:
 *	Add grabs for one key. The key is defined by the hotkey structure
-*	passed as the 2:nd argument. Both the normal and 'caps-locked'
-*	keypress is selected.
+*       passed as the 2:nd argument. Both the normal 'Num-locked 
+*       and 'caps-locked' keypress is selected.
 *
 * @Completion_Status:
 *	<@>TkSUCCESS -S- success
@@ -393,6 +393,9 @@ static hotkeySTATUS tkhk_add_grab (
 	    w = RootWindowOfScreen(ScreenOfDisplay(cp->xd, i));
 	    XGrabKey (cp->xd, hk->kcode, hk->mod, w, 1, mode, mode );
 	    XGrabKey (cp->xd, hk->kcode, hk->mod | LockMask, w, 1, mode,mode);
+            XGrabKey (cp->xd, hk->kcode, hk->mod | Mod2Mask, w, 1, mode,mode);
+            XGrabKey (cp->xd, hk->kcode, hk->mod | LockMask | Mod2Mask, w, 1, mode,mode);
+
 	}
 	return TkSUCCESS;
     }
