@@ -23,14 +23,14 @@ merge_dir_func()
           if [ $todir/$file -ot $fromdir/$file ]; then
             echo "Copy $fromdir/$file"
             cp $fromdir/$file $todir
-	    if [ ${file##*.} = "dbs" ]; then
-              # Change access on dbsfiles
-	      chmod a+w $todir/$file
-	    fi
           fi
         else
           echo "Copy $fromdir/$file"
           cp $fromdir/$file $todir
+	  if [ ${file##*.} = "dbs" ]; then
+            # Change access on dbsfiles
+	    chmod a+w $todir/$file
+	  fi
         fi
       fi
     done
