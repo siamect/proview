@@ -53,7 +53,7 @@ set_env()
 	if [ $module = "kernel" ]; then
 	  module=src
 	fi
-	sroot=${pwre_sroot%/*}
+	sroot=${1%/*}
 	export pwre_croot=$sroot
 	export pwre_sroot=$sroot/$module
 	export pwre_kroot=$sroot/src
