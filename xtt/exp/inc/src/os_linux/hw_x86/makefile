@@ -41,7 +41,7 @@ all : init copy lib exe
 
 init :
 
-copy : $(export_includes) $(exe_dir)/pwrp_rules.mk
+copy : $(export_includes)
 
 lib :
 
@@ -54,9 +54,6 @@ realclean : $(clean_includes)
 $(clean_includes) : clean_%.h : %.h
 	@ $(rm) $(rmflags) $(inc_dir)/$*.h
 
-$(exe_dir)/pwrp_rules.mk : ../../pwrp_rules.mk
-	@ $(log_h_h)
-	@ $(cp) $(cpflags) $(source) $(target)
 
 
 

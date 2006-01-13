@@ -171,6 +171,9 @@ sub build () # args: branch, subbranch, phase
 #
 sub build_all_modules ()
 {
+  _module("xtt");
+  build_all("copy");
+  merge();
   _module("kernel");
   build_all("copy");
   merge();
@@ -178,6 +181,9 @@ sub build_all_modules ()
   build_all("copy");
   merge();
   _module("kernel");
+  build_all("lib");
+  merge();
+  _module("xtt");
   build_all("lib");
   merge();
   _module("wb");
@@ -218,6 +224,9 @@ sub build_all_modules ()
   merge();
   _module("telemecanique");
   build_all("copy");
+  merge();
+  _module("xtt");
+  build_all("exe");
   merge();
   _module("wb");
   build_all("exe");
@@ -274,6 +283,8 @@ sub build_all_modules ()
 sub create_all_modules ()
 {
   _module("kernel");
+  create();
+  _module("xtt");
   create();
   _module("wb");
   create();
@@ -360,12 +371,13 @@ sub build_all ()
       _build("lib", "co", "init copy");
       _build("lib", "dtt", "init copy");
 #      _build("exp", "wb", "init copy");
-      _build("lib", "flow", "all");
-      _build("lib", "glow", "all");
+#      _build("lib", "flow", "all");
+#      _build("lib", "glow", "all");
       _build("lib", "co", "all");
       _build("exe", "co*", "all");
       _build("wbl", "pwrs", "copy");
       _build("wbl", "pwrb", "copy");
+      _build("exe", "*", "copy");
     }
 
     if ( $lib == 1) {
@@ -422,6 +434,7 @@ sub build_all ()
       _build("lib", "*", "init copy");
       _build("exp", "*", "init copy");
       _build("mmi", "*", "copy");
+      _build("exe", "*", "copy");
     }
     if ( $lib == 1) {
       _build("lib", "*", "lib");
