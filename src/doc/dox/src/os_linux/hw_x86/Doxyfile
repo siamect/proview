@@ -4,15 +4,15 @@ QUIET = YES
 HIDE_UNDOC_MEMBERS = YES
 HIDE_UNDOC_CLASSES = YES
 SOURCE_BROWSER  = YES
-INPUT 		= $(pwre_sroot)/doc/dox/src/doxygen.dx \
-		  $(pwre_sroot)/exp/inc/src \
-		  $(pwre_sroot)/lib/glow/src \
-		  $(pwre_sroot)/lib/ge/src \
-		  $(pwre_sroot)/lib/rt/src
-		  $(pwre_sroot)/lib/flow/src \
-		  $(pwre_sroot)/lib/co/src \
-		  $(pwre_sroot)/lib/wb/src \
-		  $(pwre_sroot)/exe/rt_xtt/src
+INPUT 		= $(pwre_croot)/src/doc/dox/src/doxygen.dx \
+		  $(pwre_croot)/src/exp/inc/src \
+		  $(pwre_croot)/xtt/lib/glow/src \
+		  $(pwre_croot)/xtt/lib/ge/src \
+		  $(pwre_croot)/src/lib/rt/src
+		  $(pwre_croot)/xtt/lib/flow/src \
+		  $(pwre_croot)/src/lib/co/src \
+		  $(pwre_croot)/wb/lib/wb/src \
+		  $(pwre_croot)/xtt/exe/rt_xtt/src
 FILE_PATTERNS	= *.cpp *.c *.h
 PREDEFINED	= OS_LINUX=1 \
 		  OS=LINUX \

@@ -3,8 +3,9 @@
 #
 # Environment variables
 #
-# $pwre_sroot	Module source root, eg. pwr/ssabox
+# $pwre_croot	Common source root, pwr
 # $pwre_kroot	Kernel source root, pwr/src
+# $pwre_sroot	Module source root, eg. pwr/ssabox
 # $pwre_broot	Common build root
 # $pwre_module	Module name in source tree, eg. 'ssabox'
 # $pwre_bmodule	Module name in build tree, eg. 'ssabox'
@@ -53,6 +54,7 @@ set_env()
 	  module=src
 	fi
 	sroot=${pwre_sroot%/*}
+	export pwre_croot=$sroot
 	export pwre_sroot=$sroot/$module
 	export pwre_kroot=$sroot/src
 	export pwre_env="$env"
