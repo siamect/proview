@@ -7,6 +7,7 @@
   "add", 	"add:usage_add",
   "build", 	"build:usage_build",
   "build_all", 	"build_all:usage_build_all",
+  "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
   "copy", 	"copy:usage_copy",
   "create", 	"create:usage_create",
@@ -167,9 +168,9 @@ sub build () # args: branch, subbranch, phase
 }
 
 #
-# build_all()
+# build_kernel()
 #
-sub build_all_modules ()
+sub build_kernel ()
 {
   _module("xtt");
   build_all("copy");
@@ -189,42 +190,6 @@ sub build_all_modules ()
   _module("wb");
   build_all("lib");
   merge();
-  _module("nmps");
-  build_all("copy", "lib");
-  merge();
-  _module("tlog");
-  build_all("copy", "lib");
-  merge();
-  _module("remote");
-  build_all("copy");
-  merge();
-  _module("bcomp");
-  build_all("copy");
-  merge();
-  _module("java");
-  build_all("copy");
-  merge();
-  _module("ssabox");
-  build_all("copy");
-  merge();
-  _module("othermanu");
-  build_all("copy");
-  merge();
-  _module("abb");
-  build_all("copy");
-  merge();
-  _module("siemens");
-  build_all("copy");
-  merge();
-  _module("inor");
-  build_all("copy");
-  merge();
-  _module("klocknermoeller");
-  build_all("copy");
-  merge();
-  _module("telemecanique");
-  build_all("copy");
-  merge();
   _module("xtt");
   build_all("exe");
   merge();
@@ -234,48 +199,64 @@ sub build_all_modules ()
   _module("kernel");
   build_all("exe");
   merge();
+}
+
+#
+# build_all()
+#
+sub build_all_modules ()
+{
+  build_kernel();
   _module("nmps");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("tlog");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("remote");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("bcomp");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("java");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("ssabox");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("othermanu");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("abb");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("siemens");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("inor");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("klocknermoeller");
-  build_all("lib", "exe");
+  build_all();
   merge();
   _module("telemecanique");
-  build_all("lib", "exe");
+  build_all();
   merge();
   
-#  my($exe_dir) = $ENV{"pwr_exe"};
-#  system("rm $exe_dir/rt_io_comm");
-#  _build("exe", "rt_io_comm", "all");
-#  system("rm $exe_dir/rt_ini");
-#  _build("exe", "rt_ini", "all");
+  # Relink method dependent programs
+  _module("kernel");
+  my($exe_dir) = $ENV{"pwr_exe"};
+  system("rm $exe_dir/rt_io_comm");
+  _build("exe", "rt_io_comm", "all");
+  system("rm $exe_dir/rt_ini");
+  _build("exe", "rt_ini", "all");
+  merge();
+  
+  _module("wb");
+  my($exe_dir) = $ENV{"pwr_exe"};
+  system("rm $exe_dir/wb");
+  _build("exe", "wb", "all");
   merge();
   
 }
@@ -343,6 +324,9 @@ sub build_all ()
     exit 1;
   }
   my($module) = $ENV{"pwre_module"};
+  my($einc) = $ENV{"pwr_einc"};
+  my($remoteclasses) = $einc . "/pwr_remoteclasses.h";
+  my($nmpsclasses) = $einc . "/pwr_nmpsclasses.h";
 
   printf("--\n");
   printf("-- Build all\n");
@@ -365,14 +349,11 @@ sub build_all ()
       _build("tools/exe", "*", "all");
       merge("exe/tools_cmsg2c");
       merge("exe/tools_msg2cmsg");
+      merge("exe/tools_pdrgen");
       _build("msg", "*", "all");
       _build("lib", "rt", "init copy");
-#      _build("lib", "wb", "init copy");
       _build("lib", "co", "init copy");
       _build("lib", "dtt", "init copy");
-#      _build("exp", "wb", "init copy");
-#      _build("lib", "flow", "all");
-#      _build("lib", "glow", "all");
       _build("lib", "co", "all");
       _build("exe", "co*", "all");
       _build("wbl", "pwrs", "copy");
@@ -382,28 +363,28 @@ sub build_all ()
 
     if ( $lib == 1) {
       _build("lib", "ge", "all");
-      _module("nmps");
-      _build("wbl", "nmps", "init copy");
-      merge("inc/pwr_nmpsclasses.h");
-      _module("remote");
-      _build("wbl", "remote", "init copy");
-      merge("inc/pwr_remoteclasses.h");
+      if ( ! -e $nmpsclasses ) {
+        _module("nmps");
+        _build("wbl", "nmps", "init copy");
+        merge("inc/pwr_nmpsclasses.h");
+      }
+      if ( ! -e $remoteclasses ) {
+        _module("remote");
+        _build("wbl", "remote", "init copy");
+        merge("inc/pwr_remoteclasses.h");
+      }
       _module("kernel");
       _build("lib", "rt", "all");
       _build("exp", "rt", "all");
-#      _build("exp", "wb", "all");
       _build("lib", "msg_dummy", "all");
       _build("exe", "wb_rtt", "all");
       _build("lib", "dtt", "all");
       _build("exp", "rt", "all");
-#      _build("lib", "wb", "all");
     }
     if ( $exe == 1) {
       _build("exe", "rt*", "all");
-#      _build("exe", "wb*", "all");
       _build("exp", "ge", "all");
       _build("mmi", "*", "copy");
-#      _build("db", "wb", "init");
       _build("wbl", "pwrs", "lib");
       _build("wbl", "pwrb", "lib");
       _build("wbl", "wb", "lib");
@@ -539,6 +520,7 @@ sub create()
   create_dir($newdir . "/lib");
   create_dir($newdir . "/msg");
   create_dir($newdir . "/jpwr");
+  create_dir($newdir . "/wbl");
 
   if ($module eq "kernel") {
     $newdir = $root . "/exp";
@@ -968,6 +950,12 @@ sub usage_build_all ()
 {
   printf("++\n");
   printf("++ build_all                     : Builds all in current module\n");
+}
+
+sub usage_build_kernel ()
+{
+  printf("++\n");
+  printf("++ build_kernel                     : Builds all in kernel modules (kernel, xtt, wb)\n");
 }
 
 sub usage_build_all_modules ()

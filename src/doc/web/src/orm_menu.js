@@ -22,17 +22,17 @@ foldersTree = gFld("<b>Object Reference Manual</b>", "orm_intro.html")
   aux1 = insFld(foldersTree, gFld("<b>pwrb</b>", "pwrb_index.html"))
   pwrb(aux1)
 
-  aux1 = insFld(foldersTree, gFld("<b>nmps</b>", "nmps_index.html"))
-  NMps(aux1)
-
-  aux1 = insFld(foldersTree, gFld("<b>ssab</b>", "ssab_index.html"))
-  SSAB(aux1)
-
-  aux1 = insFld(foldersTree, gFld("<b>tlog</b>", "tlog_index.html"))
-  TLog(aux1)
-
   aux1 = insFld(foldersTree, gFld("<b>BaseComponent</b>", "basecomponent_index.html"))
   BaseComponent(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>NMps</b>", "nmps_index.html"))
+  NMps(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>Remote</b>", "remote_index.html"))
+  Remote(aux1)
+
+  aux1 = insFld(foldersTree, gFld("<b>TLog</b>", "tlog_index.html"))
+  TLog(aux1)
 
   aux1 = insFld(foldersTree, gFld("<b>OtherManufacturer</b>", "othermanufacturer_index.html"))
   OtherManufacturer(aux1)

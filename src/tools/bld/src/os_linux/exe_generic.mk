@@ -89,7 +89,8 @@ exe_source := $(filter $(exe_name).%, $(c_sources))
 c_sources  := $(filter-out $(exe_source), $(c_sources))
 
 export_exe := $(exe_dir)/$(exe_name)$(exe_ext)
-export_obj := $(obj_dir)/$(exe_name)$(obj_ext)
+#export_obj := $(obj_dir)/$(exe_name)$(obj_ext)
+export_obj := $(bld_dir)/$(exe_name)$(obj_ext)
 export_includes := $(addprefix $(inc_dir)/,$(h_includes) $(hpp_includes))
 
 l_targets := $(addprefix $(bld_dir)/,$(basename $(l_sources)))

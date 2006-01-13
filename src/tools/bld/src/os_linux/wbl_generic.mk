@@ -134,7 +134,7 @@ $(load_dir)/%.flw : ../../%.flw
 
 all : init copy exe
 
-init :
+init : 
 
 lib  : $(export_wbl_dbs)
 
