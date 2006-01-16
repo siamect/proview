@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoh.cpp,v 1.8 2005-10-18 05:07:01 claes Exp $
+ * Proview   $Id: cnv_wbltoh.cpp,v 1.9 2006-01-16 14:59:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -201,13 +201,13 @@ int CnvWblToH::body_exec()
     fp_struct <<
 endl <<
 "#ifndef pwr_cClass_" << cclass_name << endl <<
-"#define pwr_cClass_" << cclass_name << " " << cid << endl <<
+"#define pwr_cClass_" << cclass_name << " " << cid << "UL" << endl <<
 endl;
     if ( !ctx->common_structfile_only)
       cstruc->f <<
 endl <<
 "#ifndef pwr_cClass_" << cclass_name << endl <<
-"#define pwr_cClass_" << cclass_name << " " << cid << endl <<
+"#define pwr_cClass_" << cclass_name << " " << cid << "UL" << endl <<
 endl;
     struct_cclass_written = 1;
   }
@@ -307,13 +307,13 @@ int CnvWblToH::class_close()
     fp_struct <<
 endl <<
 "#ifndef pwr_cClass_" << ctx->rw->class_name << endl <<
-"#define pwr_cClass_" << ctx->rw->class_name << " " << ctx->rw->class_id << endl <<
+"#define pwr_cClass_" << ctx->rw->class_name << " " << ctx->rw->class_id << "UL" << endl <<
 endl;
     if ( !ctx->common_structfile_only && struct_class_open)
       cstruc->f <<
 endl <<
 "#ifndef pwr_cClass_" << ctx->rw->class_name << endl <<
-"#define pwr_cClass_" << ctx->rw->class_name << " " << ctx->rw->class_id << endl <<
+"#define pwr_cClass_" << ctx->rw->class_name << " " << ctx->rw->class_id << "UL" << endl <<
 endl;
 
     struct_cclass_written = 1;
