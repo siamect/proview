@@ -1,0 +1,2231 @@
+Volume Profibus $ClassVolume 0.0.250.7 
+  Body SysBody 05-SEP-2005 17:51:40.00
+    Attr NextOix = "_X66"
+    Attr NextCix = "_X14"
+    Attr NextTix[0] = "_X4"
+  EndBody
+  Object Type $TypeHier 55 16-JAN-2006 10:07:43.21
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for number representation.
+!*/
+    Object PbNumberRepEnum $TypeDef 1 16-JAN-2006 10:08:18.34
+      Body SysBody 16-JAN-2006 10:08:18.34
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "PbNumberRep"
+      EndBody
+    !/**
+    !  Integer Unsigned.
+    !*/
+      Object IntUnsigned $Value 56 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Integer Unsigned"
+          Attr PgmName = "IntUnsigned"
+        EndBody
+      EndObject
+    !/**
+    !  Integer Signed.
+    !*/
+      Object IntSigned $Value 57 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Integer Signed"
+          Attr PgmName = "IntSigned"
+          Attr Value = 1
+        EndBody
+      EndObject
+    !/**
+    !  Floating Point IEEE.
+    !*/
+      Object FloatIEEE $Value 58 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Floating Point IEEE"
+          Attr PgmName = "FloatIEEE"
+          Attr Value = 2
+        EndBody
+      EndObject
+    !/**
+    !  Floating Point VAX.
+    !*/
+      Object FloatVAX $Value 59 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Floating Point VAX"
+          Attr PgmName = "FloatVAX"
+          Attr Value = 3
+        EndBody
+      EndObject
+    !/**
+    !  Floating Point Intel.
+    !*/
+      Object FloatIntel $Value 60 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Floating Point Intel"
+          Attr PgmName = "FloatIntel"
+          Attr Value = 4
+        EndBody
+      EndObject
+    EndObject
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for orientation.
+!*/
+    Object PbOrientationEnum $TypeDef 2 16-JAN-2006 10:08:18.34
+      Body SysBody 16-JAN-2006 10:08:18.34
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "PbOrientation"
+      EndBody
+    !/**
+    !  Byte.
+    !*/
+      Object Byte $Value 61 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Byte"
+          Attr PgmName = "Byte"
+          Attr Value = 16
+        EndBody
+      EndObject
+    !/**
+    !  Word.
+    !*/
+      Object Word $Value 62 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Word"
+          Attr PgmName = "Word"
+          Attr Value = 16
+        EndBody
+      EndObject
+    !/**
+    !  DoubleWord.
+    !*/
+      Object DoubleWord $Value 63 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "DoubleWord"
+          Attr PgmName = "DoubleWord"
+          Attr Value = 32
+        EndBody
+      EndObject
+    EndObject
+!/**
+!  @Version 1.0
+!  @Group Types
+!  Enumeration for profibus stall action.
+!*/
+    Object PbStallActionEnum $TypeDef 3 16-JAN-2006 10:08:18.34
+      Body SysBody 16-JAN-2006 10:08:18.34
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+        Attr PgmName = "PbStallAction"
+      EndBody
+    !/**
+    !  No action.
+    !*/
+      Object No $Value 64 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "No action"
+          Attr PgmName = "No"
+        EndBody
+      EndObject
+    !/**
+    !  Reset inputs.
+    !*/
+      Object ResetInputs $Value 65 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Reset inputs"
+          Attr PgmName = "ResetInputs"
+          Attr Value = 1
+        EndBody
+      EndObject
+    !/**
+    !  Set emergency break.
+    !*/
+      Object EmergencyBreak $Value 66 16-JAN-2006 10:08:18.34
+        Body SysBody 16-JAN-2006 10:08:18.34
+          Attr Text = "Set emergency break"
+          Attr PgmName = "EmergencyBreak"
+          Attr Value = 2
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 1 16-JAN-2006 10:07:45.26
+    Object Pb_Ai $ClassDef 2 16-JAN-2006 09:46:40.49
+      Body SysBody 16-JAN-2006 09:46:40.49
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Ai"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberRepresentation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberRepresentation"
+            Attr TypeRef = "Profibus:Type-PbNumberRepEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesPerChannel $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesPerChannel"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 2 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ai-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ai-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ai-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Ai 2148237312 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr NumberOfChannels = 0
+          Attr BytesPerChannel = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Ao $ClassDef 3 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Ao"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberRepresentation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberRepresentation"
+            Attr TypeRef = "Profibus:Type-PbNumberRepEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesPerChannel $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesPerChannel"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 6 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ao-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ao-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ao-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Ao 2148499456 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr NumberOfChannels = 0
+          Attr BytesPerChannel = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Di $ClassDef 4 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Di"
+          Attr NextAix = "_X13"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Orientation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Orientation"
+            Attr TypeRef = "Profibus:Type-PbOrientationEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ConvMask1 $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConvMask1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ConvMask2 $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConvMask2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InvMask1 $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InvMask2 $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 10 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Di-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Di-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Di-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Di 2148761600 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr Orientation = 0
+          Attr NumberOfChannels = 0
+          Attr ConvMask1 = 0
+          Attr ConvMask2 = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Do $ClassDef 5 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Do"
+          Attr NextAix = "_X17"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Orientation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Orientation"
+            Attr TypeRef = "Profibus:Type-PbOrientationEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object TestMask1 $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "TestMask1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object TestMask2 $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "TestMask2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InvMask1 $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "InvMask1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object InvMask2 $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "InvMask2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object TestValue1 $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "TestValue1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object TestValue2 $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "TestValue2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object FixedOutValue1 $Attribute 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "FixedOutValue1"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object FixedOutValue2 $Attribute 14 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "FixedOutValue2"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 14 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Do-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Do-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 17 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Do-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Do 2149023744 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr Orientation = 0
+          Attr NumberOfChannels = 0
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO,IO_Profibus
+    !  Object that configure one Profibus DP slave.
+    !*/
+    Object Pb_DP_Slave $ClassDef 6 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 8272
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_DP_Slave"
+          Attr NextAix = "_X38"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object GSDfile $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "GSDfile"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Status $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Process $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object SlaveAddress $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveAddress"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ByteOrdering $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ByteOrdering"
+            Attr TypeRef = "pwrb:Type-ByteOrderingEnum"
+          EndBody
+        EndObject
+        Object FloatRepresentation $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "FloatRepresentation"
+            Attr TypeRef = "pwrb:Type-FloatRepEnum"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "StallAction"
+            Attr TypeRef = "Profibus:Type-PbStallActionEnum"
+          EndBody
+        EndObject
+        Object DisableSlave $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "DisableSlave"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object VendorName $Attribute 14 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "VendorName"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ModelName $Attribute 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ModelName"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Revision $Attribute 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Revision"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object HardwareRelease $Attribute 17 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "HardwareRelease"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object SoftwareRelease $Attribute 18 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SoftwareRelease"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object PNOIdent $Attribute 19 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PNOIdent"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object GroupIdent $Attribute 20 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "GroupIdent"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object WdFact1 $Attribute 21 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact1"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object WdFact2 $Attribute 22 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact2"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PrmUserDataLen $Attribute 23 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object PrmUserData $Attribute 24 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserData"
+            Attr Flags = 2
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object AutoConfigure $Attribute 25 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "AutoConfigure"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ConfigDataLen $Attribute 26 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ConfigData $Attribute 27 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigData"
+            Attr Flags = 2
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object SlaveUserDataLen $Attribute 28 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveUserDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object SlaveUserData $Attribute 29 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveUserData"
+            Attr Flags = 2
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 30 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 31 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 32 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 33 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NumberModules $Attribute 34 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberModules"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Inputs $Attribute 35 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Inputs"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Outputs $Attribute 36 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Outputs"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Diag $Attribute 37 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 18 16-JAN-2006 09:46:40.50
+        Object Pointed $Menu 19 16-JAN-2006 09:46:40.50
+          Object HelpClass $MenuButton 20 16-JAN-2006 09:46:40.50
+            Body SysBody 16-JAN-2006 09:46:40.50
+              Attr ButtonName = "Configure"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoscn $Menu 21 16-JAN-2006 09:46:40.50
+        Object Pointed $Menu 22 16-JAN-2006 09:46:40.50
+          Object HelpClass $MenuButton 23 16-JAN-2006 09:46:40.50
+            Body SysBody 16-JAN-2006 09:46:40.50
+              Attr ButtonName = "Configure"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosos $Menu 24 16-JAN-2006 09:46:40.50
+        Object Pointed $Menu 25 16-JAN-2006 09:46:40.50
+          Object HelpClass $MenuButton 26 16-JAN-2006 09:46:40.50
+            Body SysBody 16-JAN-2006 09:46:40.50
+              Attr ButtonName = "Configure"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 27 16-JAN-2006 09:46:40.50
+        Object Pointed $Menu 28 16-JAN-2006 09:46:40.50
+          Object HelpClass $MenuButton 29 16-JAN-2006 09:46:40.50
+            Body SysBody 16-JAN-2006 09:46:40.50
+              Attr ButtonName = "Configure"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 30 16-JAN-2006 09:46:40.50
+        Object IoRackInit $Method 31 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_DP_Slave-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 32 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_DP_Slave-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackRead $Method 33 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_DP_Slave-IoRackRead"
+          EndBody
+        EndObject
+        Object IoRackWrite $Method 34 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_DP_Slave-IoRackWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_DP_Slave 2149285888 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr StallAction = 0
+          Attr ErrorSoftLimit = 0
+          Attr ErrorHardLimit = 0
+          Attr WdFact1 = 0
+          Attr WdFact2 = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_ET200M $ClassDef 7 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_ET200M"
+          Attr NextAix = "_X28"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object SlaveAddress $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveAddress"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Status $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object DisableSlave $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "DisableSlave"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "StallAction"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object WdFact1 $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact1"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object WdFact2 $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact2"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object GroupIdent $Attribute 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "GroupIdent"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PNOIdent $Attribute 14 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PNOIdent"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object PrmUserDataLen $Attribute 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserDataLen"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object PrmUserData $Attribute 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserData"
+            Attr Flags = 1026
+            Attr Elements = 32
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object AutoConfigure $Attribute 17 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "AutoConfigure"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ConfigDataLen $Attribute 18 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ConfigData $Attribute 19 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigData"
+            Attr Flags = 2
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 20 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 21 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 22 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 23 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NumberModules $Attribute 24 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberModules"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Inputs $Attribute 25 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Inputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Outputs $Attribute 26 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Outputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Diag $Attribute 27 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_ET200M 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr StallAction = 0
+          Attr ErrorSoftLimit = 0
+          Attr ErrorHardLimit = 0
+          Attr WdFact1 = 0
+          Attr WdFact2 = 0
+          Attr PNOIdent = 0
+          Attr PrmUserDataLen = 0
+          Attr PrmUserData[0] = 0
+          Attr PrmUserData[1] = 0
+          Attr AutoConfigure = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Euro2500 $ClassDef 8 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Euro2500"
+          Attr NextAix = "_X28"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object SlaveAddress $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveAddress"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Status $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object DisableSlave $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "DisableSlave"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "StallAction"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object WdFact1 $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact1"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object WdFact2 $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact2"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object GroupIdent $Attribute 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "GroupIdent"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PNOIdent $Attribute 14 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PNOIdent"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object PrmUserDataLen $Attribute 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserDataLen"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object PrmUserData $Attribute 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserData"
+            Attr Flags = 1026
+            Attr Elements = 32
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object AutoConfigure $Attribute 17 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "AutoConfigure"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ConfigDataLen $Attribute 18 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ConfigData $Attribute 19 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigData"
+            Attr Flags = 2
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 20 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 21 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 22 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 23 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NumberModules $Attribute 24 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberModules"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Inputs $Attribute 25 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Inputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Outputs $Attribute 26 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Outputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Diag $Attribute 27 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Euro2500 2149810176 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr StallAction = 0
+          Attr ErrorSoftLimit = 0
+          Attr ErrorHardLimit = 0
+          Attr WdFact1 = 0
+          Attr WdFact2 = 0
+          Attr PNOIdent = 0
+          Attr PrmUserDataLen = 0
+          Attr PrmUserData[2] = 0
+          Attr PrmUserData[4] = 0
+          Attr PrmUserData[6] = 0
+          Attr PrmUserData[8] = 0
+          Attr PrmUserData[10] = 0
+          Attr PrmUserData[12] = 0
+          Attr PrmUserData[14] = 0
+          Attr PrmUserData[15] = 0
+          Attr PrmUserData[16] = 0
+          Attr AutoConfigure = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Ii $ClassDef 9 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Ii"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberRepresentation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberRepresentation"
+            Attr TypeRef = "Profibus:Type-PbNumberRepEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesPerChannel $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesPerChannel"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 35 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 36 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ii-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 37 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ii-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 38 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Ii-IoCardRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Ii 2150072320 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr NumberOfChannels = 0
+          Attr BytesPerChannel = 0
+        EndBody
+      EndObject
+    EndObject
+    Object Pb_Io $ClassDef 10 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Io"
+          Attr NextAix = "_X10"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object NumberRepresentation $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberRepresentation"
+            Attr TypeRef = "Profibus:Type-PbNumberRepEnum"
+          EndBody
+        EndObject
+        Object NumberOfChannels $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberOfChannels"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesPerChannel $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesPerChannel"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Status $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 39 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 40 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Io-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 41 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Io-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 42 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Io-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Io 2150334464 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr NumberOfChannels = 0
+          Attr BytesPerChannel = 0
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Configuration of a Profibus module
+    !  Configuration of a Profibus module.
+    ! 
+    !*/
+    Object Pb_Module $ClassDef 11 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16464
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_Module"
+          Attr NextAix = "_X7"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Module specification.
+        !*/
+        Object Specification $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Communication status.
+        !*/
+        Object Status $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        !/**
+        !  @Summary A URL to the data sheet for the equipment in this object.
+        !  A URL to the data sheet for the equipment of this object.
+        !  The data sheet can be displayed from the popup menu for this object.
+        !*/
+        Object DataSheet $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Module 2150596608 16-JAN-2006 09:59:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 43 16-JAN-2006 09:46:40.50
+        Object IoCardInit $Method 44 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Module-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 45 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Module-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 46 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Module-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 47 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr MethodName = "Pb_Module-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+    Object Pb_NPBA12 $ClassDef 12 16-JAN-2006 09:46:40.50
+      Body SysBody 16-JAN-2006 09:46:40.50
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 80
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
+        Body SysBody 16-JAN-2006 09:46:40.50
+          Attr StructName = "Pb_NPBA12"
+          Attr NextAix = "_X28"
+        EndBody
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object SlaveAddress $Attribute 4 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "SlaveAddress"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Status $Attribute 5 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object DisableSlave $Attribute 6 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "DisableSlave"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object StallAction $Attribute 7 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "StallAction"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ErrorCount $Attribute 8 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorCount"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorSoftLimit $Attribute 9 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorSoftLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrorHardLimit $Attribute 10 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ErrorHardLimit"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object WdFact1 $Attribute 11 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact1"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object WdFact2 $Attribute 12 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "WdFact2"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object GroupIdent $Attribute 13 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "GroupIdent"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object PNOIdent $Attribute 14 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PNOIdent"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object PrmUserDataLen $Attribute 15 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserDataLen"
+            Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object PrmUserData $Attribute 16 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "PrmUserData"
+            Attr Flags = 1026
+            Attr Elements = 32
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object AutoConfigure $Attribute 17 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "AutoConfigure"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object ConfigDataLen $Attribute 18 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigDataLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ConfigData $Attribute 19 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "ConfigData"
+            Attr Flags = 2
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object BytesOfInput $Attribute 20 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfInput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object BytesOfOutput $Attribute 21 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "BytesOfOutput"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetInputs $Attribute 22 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetInputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object OffsetOutputs $Attribute 23 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "OffsetOutputs"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object NumberModules $Attribute 24 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "NumberModules"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Inputs $Attribute 25 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Inputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Outputs $Attribute 26 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Outputs"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object Diag $Attribute 27 16-JAN-2006 09:46:40.50
+          Body SysBody 16-JAN-2006 09:46:40.50
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 128
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_NPBA12 2150858752 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr StallAction = 0
+          Attr ErrorSoftLimit = 0
+          Attr ErrorHardLimit = 0
+          Attr WdFact1 = 0
+          Attr WdFact2 = 0
+          Attr PNOIdent = 0
+          Attr AutoConfigure = 0
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    ! @Author Claes Jurstrand
+    ! @Version 1.0
+    ! @Group IO
+    ! @Summary Configurates a Profibus PCI master card (Softing profiboard)
+    ! Configurates a Profibus PCI master card (Softing Profiboard). Available on LynxOS and Linux.
+    ! The object should be named Px, where x is the number of the device, eg P1.
+    ! You can have maximum two buses (master cards) on each system.
+    !*/
+    Object Pb_Profiboard $ClassDef 13 16-JAN-2006 09:46:40.51
+      Body SysBody 16-JAN-2006 09:46:40.51
+        Attr Editor = 0
+        Attr Method = 1
+        Attr Flags = 4176
+      EndBody
+      Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.51
+        Body SysBody 16-JAN-2006 09:46:40.51
+          Attr StructName = "Pb_Profiboard"
+          Attr NextAix = "_X27"
+        EndBody
+        !/**
+        ! Text description of the object (comment).
+        !*/
+        Object Description $Attribute 1 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! Defines the Proview process that will handle I/O for the bus.
+        ! 1 for the PLC process (default).
+        !*/
+        Object Process $Attribute 2 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Defines which of the PLC threads that will handle I/O for the bus (if Process = 1).
+        !*/
+        Object ThreadObject $Attribute 3 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Indicates the current state of the bus in runtime. Updated by the I/O-handler.
+        ! 0 : Bus is not initialized.
+        ! 1 : Bus is in stopped mode.
+        ! 2 : Bus is in cleared mode.
+        ! 3 : Bus is in operating mode (this should be the normal state when running).
+        !*/
+        Object Status $Attribute 4 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Status"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Flag that disables the initialization of the bus. Can´t be set dynamically.
+        !*/
+        Object DisableBus $Attribute 5 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "DisableBus"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Number of configured slaves in the bus. Updated by the I/O-handler.
+        !*/
+        Object NumberSlaves $Attribute 6 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "NumberSlaves"
+            Attr Flags = 3072
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Number of the bus. You can have one or two buses (master cards) on each system.
+        !*/
+        Object BusNumber $Attribute 7 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "BusNumber"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum number of slaves allowed on the bus. Range 0..127.
+        !*/
+        Object MaxNumberSlaves $Attribute 8 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MaxNumberSlaves"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum size of each slaves output area.
+        !*/
+        Object MaxSlaveOutputLen $Attribute 9 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MaxSlaveOutputLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum size of each slaves input area.
+        !*/
+        Object MaxSlaveInputLen $Attribute 10 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MaxSlaveInputLen"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Baud rate for the bus in Kbit/s. Possible values are 500, 1500, 3000, 6000, 12000.
+        ! Note that the values for some of the following attributes are depending on the 
+        ! baud rate. For further information about these bus parameters, please refer to the 
+        ! documentation from Softing.
+        !*/
+        Object BaudRate $Attribute 11 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "BaudRate"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog timer for write supervision in the master card. This watchdog is 
+        ! activated at the first write operation after initialization. If the timer later 
+        ! elapses without a write operation, the master card will reset itself, and the bus 
+        ! will stop, leaving all slaves to stall when their own stalltime elapses.
+        ! Range 100..10000 ms
+        !*/
+        Object StallTime $Attribute 12 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "StallTime"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Slot time, the maximum time a master station must wait for a transaction response. 
+        ! Range 37..16383 Bit Times.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 200
+        ! 1500 kbit/s - 300
+        ! 3000 kbit/s - 400
+        ! 6000 kbit/s - 600
+        ! 12000 kbit/s - 1000
+        !*/
+        Object Tsl $Attribute 13 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Tsl"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Minimum station delay time for responder, the period of time which may elapse before 
+        ! the responder can send the response frame. Range 11..1023 Bit Times.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 11
+        ! 1500 kbit/s - 11
+        ! 3000 kbit/s - 11
+        ! 6000 kbit/s - 11
+        ! 12000 kbit/s - 11
+        !*/
+        Object MinTsdr $Attribute 14 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MinTsdr"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum station delay time for responder, the responder has to send the response frame
+        ! before this time is elapsed. Range 37..2^16-1 Bit Times.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 100
+        ! 1500 kbit/s - 150
+        ! 3000 kbit/s - 250
+        ! 6000 kbit/s - 450
+        ! 12000 kbit/s - 800
+        !*/
+        Object MaxTsdr $Attribute 15 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MaxTsdr"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Quiet time, the period of time which a transmitting station must wait after the end of a frame
+        ! before enabling its receiver. It is significant when using repeaters. Range 0..493 Bit Times.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 0
+        ! 1500 kbit/s - 0
+        ! 3000 kbit/s - 3
+        ! 6000 kbit/s - 6
+        ! 12000 kbit/s - 9
+        !*/
+        Object Tqui $Attribute 16 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Tqui"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Setup time, the time between the occurance of an interrupt request and the necessary request 
+        ! action is performed. Range 1..494-Tqui BitTimes.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 1
+        ! 3000 kbit/s - 4
+        ! 6000 kbit/s - 8
+        ! 12000 kbit/s - 16
+        !*/
+        Object Tset $Attribute 17 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Tset"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Target rotation time, the anticipated time for one token rotation on the bus, including
+        ! allowances for high and low priority transactions and GAP maintenance. 
+        ! Range 256..2^24-1 Bit Times.
+        ! The value is irrelevant in Profibus DP operations.
+        !*/
+        Object Ttr $Attribute 18 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Ttr"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! Gap update factor, defines the number of token rotations between GAP maintenance cycles.
+        ! Range 1..100.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 10
+        ! 3000 kbit/s - 10
+        ! 6000 kbit/s - 10
+        ! 12000 kbit/s - 10
+        !*/
+        Object G $Attribute 19 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "G"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Highest station address. Range 1..126.
+        !*/
+        Object Hsa $Attribute 20 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Hsa"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Maximum retry limit, indicates how often FDL has to repeat the request frame when no response 
+        ! or acknowledge frame is receive from the recognized station within the slot time. Range 0..7.
+        ! Recommended values for each baudrate:
+        ! 500 kbit/s - 1
+        ! 1500 kbit/s - 1
+        ! 3000 kbit/s - 2
+        ! 6000 kbit/s - 3
+        ! 12000 kbit/s - 4
+        !*/
+        Object MaxRetryLimit $Attribute 21 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MaxRetryLimit"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Bus parameter flag. Should not be changed from the default value.
+        !*/
+        Object BpFlag $Attribute 22 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "BpFlag"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        !/**
+        ! Data exchange cycle time in 100 us. Should not be changed from the default value.
+        !*/
+        Object MinSlaveInterval $Attribute 23 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "MinSlaveInterval"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog timer for Master to Master communication.
+        !*/
+        Object PollTimeout $Attribute 24 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "PollTimeout"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Control interval for global control status reports of the DP master.
+        !*/
+        Object DataControlTime $Attribute 25 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "DataControlTime"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        !/**
+        ! Area for receiving diagnostic data from the master. Not implemented yet.
+        !*/
+        Object Diag $Attribute 26 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr PgmName = "Diag"
+            Attr Flags = 3074
+            Attr Elements = 256
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Pb_Profiboard 2151120896 16-JAN-2006 09:59:41.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr Process = 0
+          Attr BusNumber = 0
+          Attr MaxNumberSlaves = 0
+          Attr MaxSlaveOutputLen = 0
+          Attr MaxSlaveInputLen = 0
+          Attr BaudRate = 0
+          Attr StallTime = 0
+          Attr Tsl = 0
+          Attr MinTsdr = 0
+          Attr MaxTsdr = 0
+          Attr Tqui = 0
+          Attr Tset = 0
+          Attr Ttr = 0
+          Attr G = 0
+          Attr Hsa = 0
+          Attr MaxRetryLimit = 0
+          Attr MinSlaveInterval = 0
+          Attr PollTimeout = 0
+          Attr DataControlTime = 0
+        EndBody
+      EndObject
+      Object IoMethods $RtMethod 48 16-JAN-2006 09:46:40.51
+        Object IoAgentInit $Method 49 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr MethodName = "Pb_Profiboard-IoAgentInit"
+          EndBody
+        EndObject
+        Object IoAgentClose $Method 50 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr MethodName = "Pb_Profiboard-IoAgentClose"
+          EndBody
+        EndObject
+        Object IoAgentRead $Method 51 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr MethodName = "Pb_Profiboard-IoAgentRead"
+          EndBody
+        EndObject
+        Object IoAgentWrite $Method 52 16-JAN-2006 09:46:40.51
+          Body SysBody 16-JAN-2006 09:46:40.51
+            Attr MethodName = "Pb_Profiboard-IoAgentWrite"
+          EndBody
+        EndObject
+      EndObject
+    EndObject
+  EndObject
+EndVolume
