@@ -2,8 +2,8 @@ ifndef link_rule_mk
 link_rule_mk := 1
 
 link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
-	$(export_obj) $(objects) $(wb_msg_objs) $(rt_msg_objs) \
-	$(pwr_obj)/rt_io_user.o $(pwr_eobj)/wb_provider.o -L/usr/X11R6/lib \
+	$(export_obj) $(objects) $(wb_msg_eobjs) $(rt_msg_eobjs) \
+	$(pwr_eobj)/rt_io_user.o $(pwr_eobj)/wb_provider.o -L/usr/X11R6/lib \
 	-L/usr/local/BerkeleyDB.4.0/lib \
 	-L/opt/gnome/lib \
 	-lpwr_ge -lpwr_wb -lpwr_flow -lpwr_glow -lpwr_rt -lpwr_co \
