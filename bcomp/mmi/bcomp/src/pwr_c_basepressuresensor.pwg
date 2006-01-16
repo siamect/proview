@@ -17,7 +17,7 @@
 117 0
 118 200
 119 155
-120 0
+120 1
 121 Claes context
 122 0
 126 1
@@ -9747,7 +9747,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitHH.TiimeDelay##Float32
+1200 $object.LimitHH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10331,7 +10331,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitH.TiimeDelay##Float32
+1200 $object.LimitH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10915,7 +10915,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitL.TiimeDelay##Float32
+1200 $object.LimitL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -11499,7 +11499,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitLL.TiimeDelay##Float32
+1200 $object.LimitLL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1

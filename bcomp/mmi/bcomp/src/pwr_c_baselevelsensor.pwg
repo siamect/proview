@@ -17,7 +17,7 @@
 117 0
 118 200
 119 156
-120 1
+120 0
 121 Claes context
 122 0
 126 1
@@ -9666,12 +9666,12 @@ pwr_exe:
 0
 0
 0
-1006 15.0374
-1007 13.1722
+1006 14.9874
+1007 13.1222
 1008 17.2157
 1009 16.5157
-1013 15.0374
-1014 13.1722
+1013 14.9874
+1014 13.1222
 1015 17.2157
 1016 16.5157
 1003
@@ -9712,7 +9712,7 @@ pwr_exe:
 28
 2800 0.810976
 2801 0
-2802 13.1722
+2802 13.1222
 2803 0
 2804 1
 2805 16.5157
@@ -9736,7 +9736,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitHH.TiimeDelay##Float32
+1200 $object.LimitHH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10320,7 +10320,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitH.TiimeDelay##Float32
+1200 $object.LimitH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10904,7 +10904,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitL.TiimeDelay##Float32
+1200 $object.LimitL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -11488,7 +11488,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitLL.TiimeDelay##Float32
+1200 $object.LimitLL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1

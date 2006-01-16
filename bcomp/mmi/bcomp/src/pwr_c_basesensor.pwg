@@ -5176,17 +5176,6 @@ pwr_exe:
 124
 2
 4
-400 cc_3_6_76_5
-401 3
-402 0
-403 76
-404 6
-405 2.4
-406 3.6
-407 0.5
-408 0
-99
-4
 400 cc_3_1_76_5
 401 3
 402 0
@@ -5194,6 +5183,17 @@ pwr_exe:
 404 1
 405 0.4
 406 0.6
+407 0.5
+408 0
+99
+4
+400 cc_3_6_76_5
+401 3
+402 0
+403 76
+404 6
+405 2.4
+406 3.6
 407 0.5
 408 0
 99
@@ -9747,7 +9747,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitHH.TiimeDelay##Float32
+1200 $object.LimitHH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10331,7 +10331,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitH.TiimeDelay##Float32
+1200 $object.LimitH.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10915,7 +10915,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitL.TiimeDelay##Float32
+1200 $object.LimitL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -11499,7 +11499,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitLL.TiimeDelay##Float32
+1200 $object.LimitLL.TimeDelay##Float32
 1201 %5.1f
 1202 1
 1203 1
