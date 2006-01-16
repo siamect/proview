@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.38 2005-12-13 15:14:02 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.39 2006-01-16 14:56:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3651,8 +3651,11 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 
     dyn->parse_attr_name( minvalue_attr, pname, &inverted, &attr_type, &attr_size);
     if ( attr_type == pwr_eType_Float32) {
-      sts = gdh_GetObjectInfo( pname, &min_value, sizeof(min_value));
+      pwr_tFloat32 minval;
+
+      sts = gdh_GetObjectInfo( pname, &minval, sizeof(minval));
       if ( EVEN(sts)) return sts;
+      min_value = minval;
     }
   }
   if ( strcmp( maxvalue_attr, "") != 0) {
@@ -3660,8 +3663,11 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 
     dyn->parse_attr_name( maxvalue_attr, pname, &inverted, &attr_type, &attr_size);
     if ( attr_type == pwr_eType_Float32) {
-      sts = gdh_GetObjectInfo( pname, &max_value, sizeof(max_value));
+      pwr_tFloat32 maxval;
+
+      sts = gdh_GetObjectInfo( pname, &maxval, sizeof(maxval));
       if ( EVEN(sts)) return sts;
+      max_value = maxval;
     }
   }
 
