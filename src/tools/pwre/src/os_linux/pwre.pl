@@ -175,13 +175,13 @@ sub build_kernel ()
   _module("xtt");
   build_all("copy");
   merge();
-  _module("kernel");
+  _module("rt");
   build_all("copy");
   merge();
   _module("wb");
   build_all("copy");
   merge();
-  _module("kernel");
+  _module("rt");
   build_all("lib");
   merge();
   _module("xtt");
@@ -196,7 +196,7 @@ sub build_kernel ()
   _module("wb");
   build_all("exe");
   merge();
-  _module("kernel");
+  _module("rt");
   build_all("exe");
   merge();
 }
@@ -222,6 +222,9 @@ sub build_all_modules ()
   _module("java");
   build_all();
   merge();
+  _module("profibus");
+  build_all();
+  merge();
   _module("ssabox");
   build_all();
   merge();
@@ -245,7 +248,7 @@ sub build_all_modules ()
   merge();
   
   # Relink method dependent programs
-  _module("kernel");
+  _module("rt");
   my($exe_dir) = $ENV{"pwr_exe"};
   system("rm $exe_dir/rt_io_comm");
   _build("exe", "rt_io_comm", "all");
@@ -263,7 +266,7 @@ sub build_all_modules ()
 
 sub create_all_modules ()
 {
-  _module("kernel");
+  _module("rt");
   create();
   _module("xtt");
   create();
@@ -278,6 +281,8 @@ sub create_all_modules ()
   _module("java");
   create();
   _module("bcomp");
+  create();
+  _module("profibus");
   create();
   _module("ssabox");
   create();
@@ -342,7 +347,7 @@ sub build_all ()
 #  }
 
   
-  if ( $module eq "kernel") {
+  if ( $module eq "rt") {
     if ( $copy == 1) {
       _build("exp", "inc", "all");
       _build("exp", "com", "all");
@@ -373,7 +378,7 @@ sub build_all ()
         _build("wbl", "remote", "init copy");
         merge("inc/pwr_remoteclasses.h");
       }
-      _module("kernel");
+      _module("rt");
       _build("lib", "rt", "all");
       _build("exp", "rt", "all");
       _build("lib", "msg_dummy", "all");
@@ -433,45 +438,6 @@ sub build_all ()
 
 
 #
-# build_ssab()
-#
-sub build_ssab ()
-{
-
-
-  if (!defined($ENV{"pwre_env"})) {
-    print("++ Environment is not initialized!\n");
-    exit 1;
-  }
-
-  printf("--\n");
-  printf("-- Build ssab\n");
-  show();
-
-#  my($tmp);
-#  print("-- Copy include files from VMS [n]? ");
-#  $tmp = <STDIN>;
-#  chomp($tmp);
-
-#  if ($tmp =~ /^[yY]/) {
-#    copy();
-#  }
-
-  
-  _build("wbl", "tlog", "copy");
-  _build("msg", "rs", "all");
-  _build("lib", "rs", "all");
-  _build("exe", "rs*", "all");
-  _build("wbl", "nmps", "lib");
-  _build("wbl", "tlog", "lib");
-  _build("wbl", "ssab", "lib");
-  _build("wbl", "nmps", "exe");
-  _build("wbl", "tlog", "exe");
-  _build("wbl", "ssab", "exe");
-
-}
-
-#
 # copy()
 #
 sub copy () 
@@ -522,7 +488,7 @@ sub create()
   create_dir($newdir . "/jpwr");
   create_dir($newdir . "/wbl");
 
-  if ($module eq "kernel") {
+  if ($module eq "rt") {
     $newdir = $root . "/exp";
     create_base($newdir);
   }
@@ -743,8 +709,8 @@ sub merge ()
   }
   my($file) = $_[0];
 
-#  if ($module eq "kernel") {
-#    printf("++\n++ No merge for module kernel needed\n");
+#  if ($module eq "rt") {
+#    printf("++\n++ No merge for module rt needed\n");
 #    exit 1;
 #  }
   $eroot .= "/" . $ENV{"pwre_os"};
@@ -814,7 +780,7 @@ sub _module()
 
   $ENV{"pwre_module"} = $modu;
   $ENV{"pwre_bmodule"} = $modu;
-  if ( $modu eq "kernel") {
+  if ( $modu eq "rt") {
 #    $ENV{"pwre_bmodule"} = "exp";
     $ENV{"pwre_sroot"} = $sroot . "/src";
   }
@@ -968,12 +934,6 @@ sub usage_create_all_modules ()
 {
   printf("++\n");
   printf("++ create_all_modules            : Create build trees for all modules\n");
-}
-
-sub usage_build_ssab ()
-{
-  printf("++\n");
-  printf("++ build_ssab                    : Builds additional components\n");
 }
 
 sub usage_copy ()

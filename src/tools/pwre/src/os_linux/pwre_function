@@ -4,7 +4,7 @@
 # Environment variables
 #
 # $pwre_croot	Common source root, pwr
-# $pwre_kroot	Kernel source root, pwr/src
+# $pwre_kroot	Rt source root, pwr/src
 # $pwre_sroot	Module source root, eg. pwr/ssabox
 # $pwre_broot	Common build root
 # $pwre_module	Module name in source tree, eg. 'ssabox'
@@ -50,7 +50,7 @@ set_env()
 	fi
 
 	module=$pwre_module
-	if [ $module = "kernel" ]; then
+	if [ $module = "rt" ]; then
 	  module=src
 	fi
 	sroot=${1%/*}

@@ -22223,7 +22223,7 @@ ABB ACS800 Aggregate
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Super"
             Attr Flags = 393216
-            Attr TypeRef = "pwrb:Class-Pb_Module"
+            Attr TypeRef = "Profibus:Class-Pb_Module"
           EndBody
         EndObject
         !/**

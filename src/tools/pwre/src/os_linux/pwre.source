@@ -25,8 +25,8 @@ if [ $1 = $cmd ]; then
   if [ "$env" = "" ]; then
     echo "++ init what?"
   else
-    export pwre_module=kernel
-    export pwre_bmodule=kernel
+    export pwre_module=rt
+    export pwre_bmodule=rt
     if $pwre_bin/pwre.pl _exists $2; then
       set_env `$pwre_bin/pwre.pl _print $2`
     else
@@ -41,8 +41,8 @@ cmd="module"
 if [ $1 = $cmd ]; then
   echo "module..."
   if [ -z $2 ]; then
-    export pwre_module="kernel"
-    export pwre_bmodule="kernel"
+    export pwre_module="rt"
+    export pwre_bmodule="rt"
   else
     export pwre_module=$2
     export pwre_bmodule=$2
