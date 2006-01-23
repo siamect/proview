@@ -240,11 +240,12 @@ E 4.8.6 "Interlock"
 # BaseSafetySwitch
 B 4.9.1 "Safety switch is not on, "
 # BaseCircuitBreaker
-B 4.10.1 "CircuitBreaker tripped, "
+B 4.10.1 "Circuit breaker tripped, "
 E 4.10.2 "CircuitBreaker is tripped"
 # BaseCValve
 E 4.11.1 "Measured valve position"
 E 4.11.2 "Ordered valve position"
+B 4.11.3 "Switch error, "
 # RunTimeCounter
 E 4.12.1 "Starts"
 E 4.12.2 "Run"
@@ -295,8 +296,15 @@ E 5.1.6 "SetValue"
 E 5.1.7 "Remote control"
 E 5.1.8 "Bus com"
 E 5.1.9 "Reset"
-# ACS800PumpAggr
+B 5.1.10 "Frequency converter is in local mode, "
+B 5.1.11 "Frequency converter tripped, reset is required, "
+B 5.1.12 "Converter Maintenance: replace of cooling fan is required, "
+B 5.1.13 "Frequency converter warning, "
+B 5.1.14 "Frequency converter error, "
+# ACS800MotorAggr
 E 5.2.1 "Power/Contactor"
 E 5.2.2 "Fuse"
-
+B 5.2.3 "Power not yet ready for restart, wait before retry, "
+B 5.2.4 "Power interlocked, "
+B 5.2.5 "Power in not on, "
 

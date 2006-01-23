@@ -312,6 +312,7 @@
 26
 2600 $hostobject.IndError#Boolean
 2601 174
+2602 29
 99
 3
 300 $hostobject.SwitchClosed.ActualValue##Boolean
