@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: reload.sh,v 1.9 2005-12-20 11:56:35 claes Exp $
+# Proview   $Id: reload.sh,v 1.10 2006-01-23 09:23:06 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -339,7 +339,7 @@ usage()
 
     dumpdb       Dump database to textfile \$pwrp_db/'volume'.wb_dmp
     classvolumes Create structfiles and loadfiles for classvolumes
-    renamedb     Rename the old database database
+    renamedb     Rename the old database
     dirvolume    Load directory volume
     loaddb       Load the dump into the new database
     compile      Compile all plcprograms in the database
