@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.h,v 1.9 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_ge.h,v 1.10 2006-01-23 08:47:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,6 +73,7 @@ void ge_pop( ge_tCtx gectx);
 void ge_print( ge_tCtx gectx);
 int ge_set_object_focus( ge_tCtx gectx, char *name, int empty);
 int ge_set_folder_index( ge_tCtx gectx, char *name, int idx);
+int ge_set_subwindow_source( ge_tCtx gectx, char *name, char *source);
 void ge_swap( ge_tCtx gectx, int mode);
 
 extern "C" ge_tCtx ge_new( Widget parent_wid,

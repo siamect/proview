@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.25 2005-11-17 09:01:35 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.26 2006-01-23 08:47:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -279,7 +279,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"SET",
 			&xnav_set_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/VALUE",
-			"/BYPASS", "/INDEX", ""}
+			"/BYPASS", "/INDEX", "/SOURCE", ""}
 		},
 		{
 			"SETUP",
@@ -695,6 +695,36 @@ static int	xnav_set_func(	void		*client_data,
       return XNAV__HOLDCOMMAND; 	
     }
     ge_set_folder_index( gectx, object_str, idx);
+  }
+  else if ( strncmp( arg1_str, "SUBWINDOW", strlen( arg1_str)) == 0)
+  {    
+    // Command is "SET SUBWINDOW"
+    ge_tCtx gectx;
+    char graph_str[80];
+    char object_str[80];
+    char source_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", graph_str, sizeof(graph_str)))) {
+      xnav->message('E', "Graph name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", object_str, sizeof(object_str)))) {
+      xnav->message('E', "Object name is missing");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/SOURCE", source_str, sizeof(source_str)))) {
+      xnav->message('E',"Syntax error");
+      return XNAV__HOLDCOMMAND;
+    }
+
+    if ( !xnav->appl.find( applist_eType_Graph, graph_str, 0, 
+		  (void **) &gectx)) {
+      xnav->message('E', "Graph is not open");
+      return XNAV__HOLDCOMMAND; 	
+    }
+    ge_set_subwindow_source( gectx, object_str, source_str);
   }
   else if ( strncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    

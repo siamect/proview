@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.18 2005-11-14 16:18:58 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.19 2006-01-23 08:46:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -321,13 +321,15 @@ class GraphGrow {
     \param grow_ctx	Grow context.
     \param xn		Graph.
   */
-  GraphGrow( GrowCtx *grow_ctx, void *xn) : ctx(grow_ctx), graph(xn) {};
+  GraphGrow( GrowCtx *grow_ctx, void *xn) : ctx(grow_ctx), graph(xn), stack_cnt(0) {};
 
   //! Destructor.
   ~GraphGrow();
 
   GrowCtx	*ctx;		//!< Grow context.
+  GrowCtx	*ctx_stack[10];	//!< Base grow context.
   void		*graph;		//!< Graph than owns the GraphGrow.
+  int		stack_cnt; 	//!< Graph context is pushed.
  
   //! Setup grow for editmode.
   /*! Set attribute and enable events for edit mode. */
@@ -336,6 +338,19 @@ class GraphGrow {
   //! Setup grow for runtime mode.
   /*! Set attribute and enable events for runtime mode. */
   void grow_trace_setup();
+
+  void pop( GrowCtx *context) { 
+    if ( stack_cnt >= 10) {
+      printf( "** Graph->grow stack overflow\n");
+      return;
+    }
+    ctx_stack[stack_cnt++] = ctx;
+    ctx = context; 
+  }
+  void push() {
+    if ( stack_cnt > 0)
+      ctx = ctx_stack[--stack_cnt];
+  }
 };
 
 
@@ -1175,6 +1190,13 @@ class Graph {
     \param idx		Index of folder to display.
   */
   int set_folder_index( char *name, int idx);
+
+  //! Set graph source file for a window object.
+  /*!
+    \param name		Object name of window object.
+    \param source      	Name of source graph.
+  */
+  int set_subwindow_source( char *name, char *source);
 
   //! Play a sound.
   /*!

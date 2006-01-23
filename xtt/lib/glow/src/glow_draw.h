@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.5 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,8 @@ typedef void *ImlibData;
 typedef void *ImlibImage;
 #endif
 
+#define DRAW_CLIP_SIZE 10
+
 typedef struct {
         Widget  toplevel;
         Widget	nav_shell;
@@ -76,7 +78,7 @@ typedef struct {
 	XtIntervalId	timer_id;
 	int	clip_on;
   	int	clip_cnt;
-	XRectangle clip_rectangle[2];
+	XRectangle clip_rectangle[DRAW_CLIP_SIZE];
 	int	click_sensitivity;
         ImlibData *imlib;
         Pixmap  background_pixmap;
@@ -242,6 +244,7 @@ void glow_reset_image_clip_mask( GlowCtx *ctx);
 int glow_draw_set_clip_rectangle( GlowCtx *ctx,
 		int ll_x, int ll_y, int ur_x, int ur_y);
 void glow_draw_reset_clip_rectangle( GlowCtx *ctx);
+int glow_draw_clip_level( GlowCtx *ctx);
 char *glow_color_to_name( glow_eDrawType drawtype);
 char *glow_colortone_to_name( glow_eDrawType drawtype);
 int glow_draw_point( GlowCtx *ctx, int x1, int y1, glow_eDrawType gc_type);

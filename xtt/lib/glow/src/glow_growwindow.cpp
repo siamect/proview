@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.5 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 #include "glow_growscrollbar.h"
+#include "glow_msg.h"
 
 GrowWindow::GrowWindow( GlowCtx *glow_ctx, char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, 
@@ -41,7 +42,7 @@ GrowWindow::GrowWindow( GlowCtx *glow_ctx, char *name, double x, double y,
 		scrollbar_width(0.5), v_scrollbar(0), h_scrollbar(0),
 		v_value(0), h_value(0), wctx_x0(0), wctx_x1(0), wctx_y0(0), wctx_y1(0),
 		scrollbar_color(glow_eDrawType_LightGray), scrollbar_bg_color(glow_eDrawType_MediumGray),
-		window_scale(1), y_low_offs(0)
+		window_scale(1), y_low_offs(0), input_focus(0)
 {
   strcpy( file_name, "");
   strcpy( input_file_name, "");
@@ -273,9 +274,12 @@ void GrowWindow::draw( GlowTransform *t, int highlight, int hot, void *node, voi
     ur_x = int( (dx2 - vertical_scrollbar * scrollbar_width) * ctx->zoom_factor_x) - ctx->offset_x;
     ur_y = int( (dy2 - horizontal_scrollbar * scrollbar_width) * ctx->zoom_factor_y) - ctx->offset_y;
 
+    window_ctx->window_width = int((x_right - x_left) * ctx->zoom_factor_x);
+    window_ctx->window_height = int((y_high - y_low) * ctx->zoom_factor_y);
+    window_ctx->window_x = int(x_left * ctx->zoom_factor_x - ctx->offset_x);
+    window_ctx->window_y = int(y_low * ctx->zoom_factor_y - ctx->offset_y);
     window_ctx->offset_x = - ll_x + int( h_value * ctx->zoom_factor_x);
     window_ctx->offset_y = - ll_y + int( v_value * ctx->zoom_factor_y);
-
     window_ctx->zoom_factor_x = window_scale * ctx->zoom_factor_x;
     window_ctx->zoom_factor_y = window_scale * ctx->zoom_factor_y;
     window_ctx->draw_buffer_only = ctx->draw_buffer_only;
@@ -459,6 +463,7 @@ int GrowWindow::trace_init()
 			    ctx->trace_disconnect_func, 
 			    ctx->trace_scan_func);
     memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
+    window_ctx->event_move_node = ctx->event_move_node;
   }
     
   return sts;
@@ -575,6 +580,31 @@ int GrowWindow::event_handler( glow_eEvent event, int x, int y, double fx,
 {
   int sts, v_sts, h_sts;
 
+  switch ( event) {
+  case glow_eEvent_Key_Right:
+  case glow_eEvent_Key_Left:
+  case glow_eEvent_Key_Up:
+  case glow_eEvent_Key_Down:
+  case glow_eEvent_Key_BackSpace:
+  case glow_eEvent_Key_Return:
+  case glow_eEvent_Key_Tab:
+  case glow_eEvent_Key_ShiftTab:
+  case glow_eEvent_Key_Escape:
+  case glow_eEvent_Key_Ascii:
+    if ( input_focus) {
+      window_ctx->event_handler( event, 0, 0, x, 0);
+      if ( !window_ctx->inputfocus_object) {
+	ctx->register_inputfocus( this, 0);
+	input_focus = 0;
+      }
+      return 1;
+    }
+    else
+      return 0;
+  default:
+    ;
+  }
+
   v_sts = h_sts = 0;
   if ( v_scrollbar)
     v_sts = v_scrollbar->event_handler( event, x, y, fx, fy);
@@ -592,8 +622,10 @@ int GrowWindow::event_handler( glow_eEvent event, int x, int y, double fx,
     ctx->callback_object = 0;
     ctx->callback_object_type = glow_eObjectType_NoObject;
   }
-  if ( event == glow_eEvent_ButtonMotion)
-    return 0;
+  if ( !ctx->trace_started) {
+    if ( event == glow_eEvent_ButtonMotion)
+      return 0;
+  }
 
   if ( ctx->hot_mode == glow_eHotMode_TraceAction) {
     double rx, ry;
@@ -619,16 +651,41 @@ int GrowWindow::event_handler( glow_eEvent event, int x, int y, double fx,
     window_ctx->redraw_callback = redraw_cb;
     window_ctx->redraw_data = (void *)this;
 
-    window_ctx->event_handler( event, x, y, 0, 0);
+    sts = window_ctx->event_handler( event, x, y, 0, 0);
+    if ( sts == GLOW__TERMINATED)
+      return sts;
 
     window_ctx->redraw_callback = 0;
     window_ctx->redraw_data = 0;
     glow_draw_reset_clip_rectangle( ctx);
 
+    if ( window_ctx->inputfocus_object && !input_focus) {
+      ctx->register_inputfocus( this, 1);
+      input_focus = 1;
+    }
+    else if ( !window_ctx->inputfocus_object && input_focus) {
+      ctx->register_inputfocus( this, 0);
+      input_focus = 0;
+    }
+
     // if ( window_ctx->callback_object)
     //  ctx->register_callback_object( window_ctx->callback_object_type, window_ctx->callback_object);
   }
   return sts;
+}
+
+void GrowWindow::set_input_focus( int focus)
+{
+  if ( focus && !input_focus) {
+    input_focus = 1;
+    ctx->register_inputfocus( this, 1);
+  }
+  else if ( !focus && input_focus) {
+    if ( window_ctx->inputfocus_object)
+      window_ctx->inputfocus_object->set_input_focus(0);
+    input_focus = 0;
+    ctx->register_inputfocus( this, 0);
+  }
 }
 
 void GrowWindow::update_attributes()
@@ -772,6 +829,7 @@ void GrowWindow::h_value_changed_cb( void *o, double value)
 void GrowWindow::new_ctx() 
 {
   char fname[200];
+  int sts;
 
   strcpy( fname, "$pwrp_exe/");
   strcat( fname, file_name);
@@ -790,9 +848,12 @@ void GrowWindow::new_ctx()
   window_ctx->default_hot_mode = ctx->default_hot_mode;
   window_ctx->is_component = 1;
   memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
+  window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
 
-  window_ctx->open( fname, glow_eSaveMode_Edit);
+  sts = window_ctx->open( fname, glow_eSaveMode_Edit);
+  if ( EVEN(sts))
+    printf( "** Unable to open graph %s\n", fname);
 
   strcpy( input_file_name, file_name);
   if ( window_ctx->background_color != glow_eDrawType_Inherit) {
@@ -811,8 +872,12 @@ void GrowWindow::new_ctx()
     wctx_y0 = window_ctx->y_low;
     wctx_y1 = window_ctx->y_high;
   }      
-
+  window_ctx->window_width = int((x_right - x_left) * ctx->zoom_factor_x);
+  window_ctx->window_height = int((y_high - y_low) * ctx->zoom_factor_y);
+  window_ctx->window_x = int(x_left * ctx->zoom_factor_x - ctx->offset_x);
+  window_ctx->window_y = int(y_low * ctx->zoom_factor_y - ctx->offset_y);
   window_ctx->zoom_factor_x = window_ctx->zoom_factor_y = ctx->zoom_factor_x * window_scale;
+  window_ctx->move_restriction = glow_eMoveRestriction_Disable;
   window_ctx->a.zoom();
 
   if ( ctx->trace_started) {
@@ -895,4 +960,25 @@ int GrowWindow::get_background_object_limits(GlowTransform *t,
     return window_ctx->get_background_object_limits( type, x, y,
 					      background, min, max, direction);
   return 0;
+}
+
+int GrowWindow::set_source( char *source)
+{
+  int clip_removed = 0;
+
+  if ( glow_draw_clip_level( ctx)) {
+    // Remove any clip
+    glow_draw_reset_clip_rectangle( ctx);
+    clip_removed = 1;
+  }
+
+  strcpy( input_file_name, source);
+  update_attributes();
+  draw();
+
+  if ( clip_removed)
+    // Set a clip to match the previous reset
+    glow_draw_set_clip_rectangle( ctx, 0, 0, ctx->window_width, ctx->window_height);    
+  
+  return 1;
 }

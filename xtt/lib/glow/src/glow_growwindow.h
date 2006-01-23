@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growwindow.h,v 1.4 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -144,6 +144,7 @@ class GrowWindow : public GrowRect {
   glow_eDrawType	scrollbar_bg_color;	//!< Color of scrollbar background.
   double		window_scale;		//!< Scale of window ctx.
   double		y_low_offs;		//!< y low offset.
+  int			input_focus;		//!< Window has input focus.
 
   //! Draw the object.
   /*!
@@ -276,6 +277,8 @@ class GrowWindow : public GrowRect {
 				   glow_eTraceType type,
 				   double x, double y, GlowArrayElem **background,
 				   double *min, double *max, glow_eDirection *direction);
+  void set_input_focus( int focus);
+  int set_source( char *source);
 
   static void v_value_changed_cb( void *o, double value);
   static void h_value_changed_cb( void *o, double value);

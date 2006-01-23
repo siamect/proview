@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.28 2006-01-10 10:51:17 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.29 2006-01-23 08:46:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2639,9 +2639,9 @@ void GraphGrow::grow_setup()
   grow_EnableEvent( ctx, glow_eEvent_ObjectDeleted, glow_eEventType_CallBack, 
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB1Press, glow_eEventType_RegionSelect, 
-	graph_grow_cb);
+  	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB1PressShift, glow_eEventType_RegionAddSelect, 
-	graph_grow_cb);
+  	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB2Press, glow_eEventType_CreateCon,
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB1Press, glow_eEventType_MoveNode, 
@@ -2717,10 +2717,10 @@ void GraphGrow::grow_trace_setup()
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_ObjectDeleted, glow_eEventType_CallBack, 
 	graph_grow_cb);
-  grow_EnableEvent( ctx, glow_eEvent_MB1Press, glow_eEventType_RegionSelect, 
-	graph_grow_cb);
-  grow_EnableEvent( ctx, glow_eEvent_MB1PressShift, glow_eEventType_RegionAddSelect, 
-	graph_grow_cb);
+  // grow_EnableEvent( ctx, glow_eEvent_MB1Press, glow_eEventType_RegionSelect, 
+  //	graph_grow_cb);
+  // grow_EnableEvent( ctx, glow_eEvent_MB1PressShift, glow_eEventType_RegionAddSelect, 
+  //	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB1Press, glow_eEventType_MoveNode, 
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_MB3Click, glow_eEventType_CallBack,
@@ -3077,10 +3077,15 @@ static int graph_trace_scan_bc( grow_tObject object, void *p)
 static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 {
   Graph		*graph;
+  int 		ctx_popped = 0;
 
   grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
   graph->message( ' ', null_str);
 
+  if ( ctx != graph->grow->ctx) {
+    graph->grow->pop((GrowCtx *)ctx);
+    ctx_popped = 1;
+  }  
   switch ( event->event) {
 
     case glow_eEvent_ObjectDeleted: {
@@ -3166,21 +3171,36 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 
         grow_GetUserData( event->object.object, (void **)&dyn);
 	if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider) {
-	  if ( dyn->get_slider_disabled())
+	  if ( dyn->get_slider_disabled()) {
+	    if ( ctx_popped) 
+	      graph->grow->push();
 	    return 0;
+	  }
 	}
         if ( graph->is_authorized( dyn->access) &&
 	     dyn->get_actiontype( event->object.object) & ~ge_mActionType_Inherit) {
-	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu)
+	  if ( dyn->get_actiontype( event->object.object) & ~ge_mActionType_PopupMenu) {
+	    if ( ctx_popped) 
+	      graph->grow->push();
 	    return int(glow_mHotType_CursorCrossHair);
-	  else
+	  }
+	  else {
+	    if ( ctx_popped) 
+	      graph->grow->push();
 	    return int(glow_mHotType_CursorHand);
+	  }
 	}
-	else
+	else {
+	  if ( ctx_popped) 
+	    graph->grow->push();
 	  return 0;
+	}
       }
-      else
+      else {
+	if ( ctx_popped) 
+	  graph->grow->push();
 	return 0;
+      }
       break;
     }
     case glow_eEvent_TipText:
@@ -3231,8 +3251,10 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  case glow_eMB3Action_Close:
 	  case glow_eMB3Action_Both:
             // Close
-            if ( graph->close_cb)
+            if ( graph->close_cb) {
               (graph->close_cb)( graph->parent_ctx);
+	      return GLOW__TERMINATED;
+	    }
             break;
 	  default:
 	    ;
@@ -3284,6 +3306,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     case glow_eEvent_MB1Click:
     {
       GeDyn *dyn;
+      int sts;
 
       if ( event->any.type == glow_eEventType_Table) {
 	grow_GetUserData( event->table.object, (void **)&dyn);
@@ -3330,8 +3353,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       {
 
         grow_GetUserData( event->object.object, (void **)&dyn);
-	dyn->action( event->object.object, event);
-
+	sts = dyn->action( event->object.object, event);
+	if ( sts == GLOW__TERMINATED)
+	  return sts;
       }
       break;
     }
@@ -3464,6 +3488,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       sts = Lng::translate( event->translate.text, new_text);
       if ( sts)
         event->translate.new_text = new_text;
+      if ( ctx_popped) 
+	graph->grow->push();
       return sts;
     }
     case glow_eEvent_GrowDynamics:
@@ -3473,6 +3499,9 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
     default:
       ;
   }
+
+  if ( ctx_popped) 
+    graph->grow->push();
   return 1;
 }
 
@@ -3555,6 +3584,27 @@ int Graph::set_folder_index( char *name, int idx)
     return 0;
 
   return grow_SetFolderIndex( object, idx);
+}
+
+int Graph::set_subwindow_source( char *name, char *source)
+{
+  int  sts;
+  grow_tObject object;
+  GrowCtx *ctx;
+
+  ctx = grow->ctx;
+  grow->push();  // If command executed from a subwindow
+
+  sts = grow_FindObjectByName( grow->ctx, name, &object);
+  if ( EVEN(sts)) return GE__OBJNOTFOUND;
+
+  if ( grow_GetObjectType( object) != glow_eObjectType_GrowWindow)
+    return 0;
+
+  sts =  grow_SetWindowSource( object, source);
+  if ( ctx != grow->ctx)
+    grow->pop(ctx);
+  return sts;
 }
 
 int Graph::sound( pwr_tAttrRef *aref)

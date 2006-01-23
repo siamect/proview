@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.6 2005-10-12 12:59:05 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.7 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,7 +79,7 @@ class GrowCtx : public GlowCtx {
         is_javaapplication(0), cycle(glow_eCycle_Slow),
         mb3_action(glow_eMB3Action_Close), scale_equal(0), translate_on(0),
         input_focus_mark(glow_eInputFocusMark_Relief), background_disabled(0),
-        redraw_callback(0), redraw_data(0)
+        redraw_callback(0), redraw_data(0), has_subwindows(-1)
 	{ ctx_type = glow_eCtxType_Grow;
 	  strcpy( name, "");
 	  strcpy( java_name, ""); 
@@ -109,6 +109,8 @@ class GrowCtx : public GlowCtx {
     routine is registred for the actual event.
   */
   int event_handler( glow_eEvent event, int x, int y, int w, int h);
+
+  int subw_event_handler( glow_eEvent event, int x, int y, int w, int h);
 
   //! Draw a specified area of the window.
   /*!
@@ -834,6 +836,7 @@ class GrowCtx : public GlowCtx {
   int		background_disabled;	//!< Disable drawing of background.
   void 		(*redraw_callback)( void *); //!< Backcall function before drawing (if ctx is window component).
   void 		*redraw_data;		//!< Data for redraw callback.
+  int		has_subwindows;		//!< Graph contains subwindow objects (GrowWindow or GrowFolder)
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);

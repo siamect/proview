@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.18 2005-12-13 15:14:16 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.19 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4358,6 +4358,11 @@ int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent)
 int grow_SetFolderIndex( grow_tObject folder, int idx)
 {
   return ((GrowFolder *)folder)->set_folder( idx);
+}
+
+int grow_SetWindowSource( grow_tObject window, char *source)
+{
+  return ((GrowWindow *)window)->set_source( source);
 }
 
 void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height)

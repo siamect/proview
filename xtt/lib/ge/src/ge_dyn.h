@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.26 2005-11-14 16:21:48 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.27 2006-01-23 08:46:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -713,7 +713,7 @@ class GeDynElem {
   ge_mDynType	dyn_type;	//!< Dyntype of the element.
   ge_mActionType action_type;	//!< Actiontype of the element.
   ge_eDynPrio	prio;		//!< Priority of the element.
-  ge_mInstance	instance_mask;	//!< Instance mask. Only valid in the first instance.
+  unsigned int	instance_mask;	//!< Instance mask. Only valid in the first instance.
   ge_mInstance	instance;	//!< Instance of the element
   GeDynElem	*next;		//!< Pointer to next element in list.
 
@@ -1948,6 +1948,7 @@ class GeSlider : public GeDynElem {
   pwr_tSubid max_value_subid;
   pwr_tBoolean *insensitive_p;
   pwr_tSubid insensitive_subid;
+  int insensitive_inverted;
 
   GeSlider( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, ge_eDynPrio_Slider),

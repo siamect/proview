@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.cpp,v 1.7 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_draw.cpp,v 1.8 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2989,9 +2989,10 @@ int glow_draw_set_clip_rectangle( GlowCtx *ctx,
 {
   draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
-  if ( draw_ctx->clip_cnt >= 2)
+  if ( draw_ctx->clip_cnt >= DRAW_CLIP_SIZE) {
+    printf("** Draw clip refuced\n");
     return 0;
-
+  }
   int x0, x1, y0, y1;
   if ( draw_ctx->clip_cnt == 0) {
     x0 = min( ll_x, ur_x);
@@ -3029,11 +3030,20 @@ void glow_draw_reset_clip_rectangle( GlowCtx *ctx)
 {
   draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
 
-  if ( draw_ctx->clip_cnt == 0)
+  if ( draw_ctx->clip_cnt == 0) {
+    printf( "** Draw clip mismatch\n");
     return;
+  }
   draw_ctx->clip_cnt--;
   if ( draw_ctx->clip_cnt == 0)
     ((draw_tCtx) ctx->draw_ctx)->clip_on = 0;
+}
+
+int glow_draw_clip_level( GlowCtx *ctx)
+{
+  draw_tCtx draw_ctx = (draw_tCtx) ctx->draw_ctx;
+
+  return draw_ctx->clip_cnt;
 }
 
 int glow_draw_point( GlowCtx *ctx, int x1, int y1, glow_eDrawType gc_type)
@@ -3162,8 +3172,8 @@ void glow_draw_buffer_background( GlowCtx *ctx)
       glow_set_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, 0));
 
     XFillRectangle( draw_ctx->display, draw_ctx->buffer,
-			get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
-			0, 0, ctx->window_width, ctx->window_height);
+		    get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
+		    ctx->window_x, ctx->window_y, ctx->window_width, ctx->window_height);
     if ( draw_ctx->clip_on)
       glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, 0));
 
@@ -3251,7 +3261,7 @@ int glow_print( GlowCtx *ctx, char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw.cpp,v 1.7 2005-09-01 14:57:53 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw.cpp,v 1.8 2006-01-23 08:46:54 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

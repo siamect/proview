@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.39 2006-01-16 14:56:23 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.40 2006-01-23 08:46:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,7 @@ char *GeDyn::cmd_cnv( char *instr)
 int GeDyn::instance_to_number( int instance)
 {
   int inst = 1;
-  int m = instance;
+  unsigned int m = instance;
   while( m > 1) {
     m = m >> 1;
     inst++;
@@ -1199,7 +1199,8 @@ void GeDyn::insert_element( GeDynElem *e)
   while ( elem) {
     if ( elem->prio > e->prio)
       break;
-    if ( elem->prio == e->prio && elem->instance < e->instance)
+    if ( elem->prio == e->prio && 
+	 (unsigned int)elem->instance < (unsigned int)e->instance)
       break;
     prev = elem;
     elem = elem->next;
@@ -1627,7 +1628,7 @@ void GeDigColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     else {
       // Get instance number
       int inst = 1;
-      int m = instance;
+      unsigned int m = instance;
       while( m > 1) {
 	m = m >> 1;
 	inst++;
@@ -1664,7 +1665,7 @@ void GeDigColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     else {
       // Get instance number
       int inst = 1;
-      int m = instance;
+      unsigned int m = instance;
       while( m > 1) {
 	m = m >> 1;
 	inst++;
@@ -2410,7 +2411,7 @@ void GeInvisible::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -2791,7 +2792,7 @@ void GeDigText::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -3006,7 +3007,7 @@ void GeValue::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -3409,7 +3410,8 @@ int GeValue::scan( grow_tObject object)
   }
   int annot_num = GeDyn::instance_to_number( instance);
   if ( annot_num == 1)
-    grow_SetAnnotationBrief( object, annot_num, buf, len);
+    // grow_SetAnnotationBrief( object, annot_num, buf, len);
+    grow_SetAnnotation( object, annot_num, buf, len);
   else
     grow_SetAnnotation( object, annot_num, buf, len);
   memcpy( &old_value, p, MIN(size, (int) sizeof(old_value)));
@@ -3808,7 +3810,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     else {
       // Get instance number
       int inst = 1;
-      int m = instance;
+      unsigned int m = instance;
       while( m > 1) {
 	m = m >> 1;
 	inst++;
@@ -3860,7 +3862,7 @@ void GeAnalogColor::get_attributes( attr_sItem *attrinfo, int *item_count)
     else {
       // Get instance number
       int inst = 1;
-      int m = instance;
+      unsigned int m = instance;
       while( m > 1) {
 	m = m >> 1;
 	inst++;
@@ -7038,7 +7040,7 @@ void GeDigSound::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -7722,7 +7724,7 @@ void GeSetDig::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -7881,7 +7883,7 @@ void GeResetDig::get_attributes( attr_sItem *attrinfo, int *item_count)
   else {
     // Get instance number
     int inst = 1;
-    int m = instance;
+    unsigned int m = instance;
     while( m > 1) {
       m = m >> 1;
       inst++;
@@ -9892,7 +9894,7 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   insensitive_p = 0;
   dyn->parse_attr_name( insensitive_attr, parsed_name,
-				    &inverted, &a_type, &a_size);
+				    &insensitive_inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Boolean) {
     sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&insensitive_p, 
@@ -9927,8 +9929,12 @@ int GeSlider::scan( grow_tObject object)
   double max_value, min_value, max_pos, min_pos;
   glow_eDirection direction;
 
-  if ( insensitive_p)
-    slider_disabled = *insensitive_p;
+  if ( insensitive_p) {
+    if ( insensitive_inverted)
+      slider_disabled = !*insensitive_p;
+    else
+      slider_disabled = *insensitive_p;
+  }
 
   if ( max_value_p && min_value_p && 
        ( *max_value_p != old_max_value ||
@@ -10026,8 +10032,11 @@ int GeSlider::scan( grow_tObject object)
 
 int GeSlider::action( grow_tObject object, glow_tEvent event)
 {
-  if ( insensitive_p && *insensitive_p)
-    return 1;
+  if ( insensitive_p) {
+    if ( (insensitive_inverted && !*insensitive_p) ||
+	 (!insensitive_inverted && *insensitive_p))
+      return 1;
+  }
     
   switch ( event->event) {
   case glow_eEvent_MB1Down:

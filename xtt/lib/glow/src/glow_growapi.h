@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.17 2006-01-13 16:32:39 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.18 2006-01-23 08:46:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2870,6 +2870,7 @@ typedef GlowTraceData glow_sTraceData;
   void grow_GetSubmenuPosition( grow_tObject menu, int item, double *x, double *y);
   int grow_GetMenuParent( grow_tObject menu, grow_tObject *parent);
   int grow_SetFolderIndex( grow_tObject folder, int idx);
+  int grow_SetWindowSource( grow_tObject window, char *source);
   void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height);
 
 /*@}*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.cpp,v 1.13 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_ge.cpp,v 1.14 2006-01-23 08:47:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -124,6 +124,8 @@ static void ge_graph_init_cb( void *client_data)
     {
       short x1, x2, y1, y2;
 
+      default_width += 20;
+      default_height += 20;
       i = 0;
       XtSetArg(args[i],XmNwidth, default_width);i++;
       XtSetArg(args[i],XmNheight, default_height);i++;
@@ -390,6 +392,11 @@ int ge_set_object_focus( ge_tCtx gectx, char *name, int empty)
 int ge_set_folder_index( ge_tCtx gectx, char *name, int idx)
 {
   return ((Graph *)gectx->graph)->set_folder_index( name, idx);
+}
+
+int ge_set_subwindow_source( ge_tCtx gectx, char *name, char *source)
+{
+  return ((Graph *)gectx->graph)->set_subwindow_source( name, source);
 }
 
 extern "C" void ge_delete( ge_tCtx gectx)
