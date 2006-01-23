@@ -315,8 +315,8 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Parameter Identification (online parameter handling)
-        !*/        
-	Object InIdPar $Attribute 55 01-DEC-2005 10:37:53.43
+        !*/
+        Object InIdPar $Attribute 55 01-DEC-2005 10:37:53.43
           Body SysBody 01-DEC-2005 10:37:55.64
             Attr PgmName = "InIdPar"
             Attr Flags = 131072
@@ -325,7 +325,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Index for Array (online parameter handling)
-        !*/        
+        !*/
         Object InIndPar $Attribute 61 01-DEC-2005 11:08:20.68
           Body SysBody 01-DEC-2005 11:08:22.06
             Attr PgmName = "InIndPar"
@@ -335,7 +335,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Parameter Value (online parameter handling)
-        !*/        
+        !*/
         Object InValuePar $Attribute 56 01-DEC-2005 10:39:10.30
           Body SysBody 01-DEC-2005 10:39:12.50
             Attr PgmName = "InValuePar"
@@ -345,7 +345,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Actual Value Speed
-        !*/        
+        !*/
         Object ActSpeed $Attribute 3 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActSpeed"
@@ -355,7 +355,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Actual Value Tourque
-        !*/        
+        !*/
         Object ActTorque $Attribute 4 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActTorque"
@@ -365,7 +365,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Actual Value Current
-        !*/        
+        !*/
         Object ActCurrent $Attribute 5 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ActCurrent"
@@ -375,7 +375,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Bit status, Ready, Warning, Error etc.
-        !*/        
+        !*/
         Object StatusWordSW $Attribute 8 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "StatusWordSW"
@@ -385,7 +385,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Bit status, Overcurrent, Earth fault etc.
-        !*/        
+        !*/
         Object FaultWord1 $Attribute 10 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FaultWord1"
@@ -395,7 +395,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Bit status, DC under voltage, Encoder fault etc.
-        !*/        
+        !*/
         Object FaultWord2 $Attribute 11 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "FaultWord2"
@@ -405,7 +405,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Status IO card input channel 1 to 6.
-        !*/        
+        !*/
         Object Di6_1 $Attribute 12 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Di6_1"
@@ -415,7 +415,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Bit status, Interlock input etc.
-        !*/        
+        !*/
         Object StatusWordSW3 $Attribute 41 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "StatusWordSW3"
@@ -425,7 +425,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !    Bit status, BR Overheat etc.
-        !*/        
+        !*/
         Object AlarmWord5 $Attribute 13 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmWord5"
@@ -435,7 +435,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Parameter Identification (online parameter handling)
-        !*/        
+        !*/
         Object OutIdPar $Attribute 52 01-DEC-2005 10:32:42.66
           Body SysBody 01-DEC-2005 10:32:45.89
             Attr PgmName = "OutIdPar"
@@ -445,7 +445,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Index for Array (online parameter handling)
-        !*/        
+        !*/
         Object OutIndPar $Attribute 53 01-DEC-2005 10:32:58.82
           Body SysBody 01-DEC-2005 10:33:02.42
             Attr PgmName = "OutIndPar"
@@ -455,7 +455,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Parameter Value (online parameter handling)
-        !*/        
+        !*/
         Object OutValuePar $Attribute 54 01-DEC-2005 10:33:09.62
           Body SysBody 01-DEC-2005 10:33:11.85
             Attr PgmName = "OutValuePar"
@@ -465,7 +465,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Control Word, start/stop, reset etc
-        !*/        
+        !*/
         Object ControlWordCW $Attribute 7 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "ControlWordCW"
@@ -475,7 +475,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Reference speed
-        !*/        
+        !*/
         Object RefSpeed $Attribute 9 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RefSpeed"
@@ -485,7 +485,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Indicator in object graph showing converter warning
-        !*/        
+        !*/
         Object IndWarning $Attribute 14 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "IndWarning"
@@ -494,7 +494,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Indicator in object graph showing converter Fault
-        !*/        
+        !*/
         Object IndError $Attribute 15 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "IndError"
@@ -503,7 +503,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Button in object graph reset tripped converter
-        !*/        
+        !*/
         Object OpReset $Attribute 18 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:06:05.95
             Attr PgmName = "OpReset"
@@ -513,7 +513,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Button in object graph "more..." write parameter
-        !*/        
+        !*/
         Object OpWritePar $Attribute 62 01-DEC-2005 11:14:25.99
           Body SysBody 21-DEC-2005 09:06:12.64
             Attr PgmName = "OpWritePar"
@@ -523,7 +523,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Button in object graph "more..." read parameter
-        !*/        
+        !*/
         Object OpReadPar $Attribute 63 01-DEC-2005 11:14:39.33
           Body SysBody 21-DEC-2005 09:06:16.97
             Attr PgmName = "OpReadPar"
@@ -533,7 +533,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Button in object graph "more..." backup parameters in converter
-        !*/        
+        !*/
         Object OpBackupPar $Attribute 65 06-DEC-2005 15:22:20.27
           Body SysBody 21-DEC-2005 09:06:22.01
             Attr PgmName = "OpBackupPar"
@@ -543,7 +543,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Communikation link to converter okey
-        !*/        
+        !*/
         Object CommOk $Attribute 16 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:06:37.84
             Attr PgmName = "CommOk"
@@ -553,7 +553,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter has started up, alarm message "ready"
-        !*/        
+        !*/
         Object AlarmOk $Attribute 43 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:06:50.48
             Attr PgmName = "AlarmOk"
@@ -563,7 +563,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter starting up "wait"
-        !*/        
+        !*/
         Object PowerStartUp $Attribute 21 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:06:59.52
             Attr PgmName = "PowerStartUp"
@@ -573,7 +573,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Object ready for remote control
-        !*/        
+        !*/
         Object ReadyRemote $Attribute 22 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:03.76
             Attr PgmName = "ReadyRemote"
@@ -583,7 +583,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter ready to start (status word)
-        !*/        
+        !*/
         Object ConvertReady $Attribute 23 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:08.70
             Attr PgmName = "ConvertReady"
@@ -593,7 +593,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter/motor running (status word)
-        !*/        
+        !*/
         Object ConvertRun $Attribute 24 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:13.04
             Attr PgmName = "ConvertRun"
@@ -603,7 +603,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter has tripped (status word)
-        !*/        
+        !*/
         Object ConvertTripped $Attribute 25 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:16.55
             Attr PgmName = "ConvertTripped"
@@ -613,7 +613,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter/motor fault (status word)
-	!*/        
+        !*/
         Object ConvertFault $Attribute 28 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:20.73
             Attr PgmName = "ConvertFault"
@@ -623,7 +623,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter warning (status word)
-	!*/        
+        !*/
         Object ConvertWarning $Attribute 26 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:24.82
             Attr PgmName = "ConvertWarning"
@@ -633,7 +633,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Converter ready (status word) for remote control
-        !*/        
+        !*/
         Object ConvertRemote $Attribute 27 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:07:29.33
             Attr PgmName = "ConvertRemote"
@@ -643,7 +643,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Time to "boot up" converter when energized
-	!*/        
+        !*/
         Object PowerUpTime $Attribute 19 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PowerUpTime"
@@ -652,7 +652,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Value "requested parameter" in object graph "more..."
-        !*/        
+        !*/
         Object RequestPar $Attribute 58 01-DEC-2005 10:54:06.17
           Body SysBody 21-DEC-2005 09:07:54.33
             Attr PgmName = "RequestPar"
@@ -662,7 +662,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Value "write value parameter" in object graph "more..."
-        !*/        
+        !*/
         Object WriteValuePar $Attribute 57 01-DEC-2005 10:51:59.36
           Body SysBody 21-DEC-2005 09:07:59.61
             Attr PgmName = "WriteValuePar"
@@ -672,7 +672,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Value "read value parameter" in object graph "more..."
-        !*/        
+        !*/
         Object ReadValuePar $Attribute 59 01-DEC-2005 10:58:42.07
           Body SysBody 21-DEC-2005 09:08:04.77
             Attr PgmName = "ReadValuePar"
@@ -682,7 +682,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Value "return code value" in object graph "more..."
-        !*/        
+        !*/
         Object ReadCodePar $Attribute 60 01-DEC-2005 11:10:52.14
           Body SysBody 21-DEC-2005 09:08:10.00
             Attr PgmName = "ReadCodePar"
@@ -692,7 +692,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Value "return code subindex value" in object graph "more..."
-        !*/        
+        !*/
         Object ReadCodeSubPar $Attribute 64 01-DEC-2005 13:27:43.59
           Body SysBody 21-DEC-2005 09:08:15.90
             Attr PgmName = "ReadCodeSubPar"
@@ -702,7 +702,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Alarmmessage
-        !*/        
+        !*/
         Object AlarmLocalMod $Attribute 45 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmLocalMod"
@@ -711,7 +711,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Alarmmessage
-        !*/        
+        !*/
         Object AlarmTripped $Attribute 46 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmTripped"
@@ -720,7 +720,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Alarmmessage
-        !*/        
+        !*/
         Object AlarmFanOld $Attribute 47 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmFanOld"
@@ -729,7 +729,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Alarmmessage
-        !*/        
+        !*/
         Object AlarmWarning $Attribute 49 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmWarning"
@@ -738,7 +738,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Alarmmessage
-        !*/        
+        !*/
         Object AlarmError $Attribute 50 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "AlarmError"
@@ -843,7 +843,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
       EndObject
       Object Template ABB_ACS800_1 2148237312 12-OCT-2005 12:58:20.00
-        Body RtBody 06-DEC-2005 16:04:23.58
+        Body RtBody 23-JAN-2006 09:27:06.19
           Attr Specification = "ABB ACS800 Frequency converter"
           Attr InIdPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_ID"
           Attr InIndPar.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.I_IND"
@@ -867,9 +867,9 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
           Attr RefSpeed.DefTrend = "ABB:Class-ABB_ACS800_1-Template.TrendRefSpeed"
           Attr PowerUpTime = 1.500000e+01
-          Attr AlarmLocalMod = "Frequency converter control location is local, "
-          Attr AlarmTripped = "Frequency converter tripped, you must reset, "
-          Attr AlarmFanOld = "Replace cooling fan in frequency converter, "
+          Attr AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr AlarmFanOld = "Maintenance replace of cooling fan in converter required, "
           Attr AlarmWarning = "Frequency converter warning, "
           Attr AlarmError = "Frequency converter error, "
           Attr DefTrend = "ABB:Class-ABB_ACS800_1-Template.PlotGroup"
@@ -936,7 +936,7 @@ Volume ABB $ClassVolume 0.0.250.2
     ! 
     !  @b See also
     !  @classlink ABB_ACS800_1 abb_abb_acs800_1.html
-    !
+    ! 
     !*/
     Object ABB_ACS800_1Fo $ClassDef 3 07-DEC-2005 13:38:43.05
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -951,7 +951,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndBody
         !/**
         !  Pin name "pwo", indicates energized converter. Used for alarm message.
-        !*/        
+        !*/
         Object PowerOn $Input 1 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:12:05.62
             Attr PgmName = "PowerOn"
@@ -962,7 +962,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "sta", order start/run motor.     
-        !*/        
+        !*/
         Object Start $Input 2 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Start"
@@ -973,7 +973,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "REF", Speed referens motor.     
-        !*/        
+        !*/
         Object RefSpeed $Input 5 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RefSpeed"
@@ -990,7 +990,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "rdy", Ready for remote control.     
-        !*/        
+        !*/
         Object ReadyRemote $Output 6 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:09:21.49
             Attr PgmName = "ReadyRemote"
@@ -1001,7 +1001,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "run", motor started/running.     
-        !*/        
+        !*/
         Object Run $Output 7 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:09:44.11
             Attr PgmName = "Run"
@@ -1012,7 +1012,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di1", status input signal DI1 on the converter.     
-        !*/        
+        !*/
         Object Di1 $Output 9 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:09:55.84
             Attr PgmName = "Di1"
@@ -1023,7 +1023,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di2", status input signal DI2 on the converter.     
-        !*/        
+        !*/
         Object Di2 $Output 10 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:00.34
             Attr PgmName = "Di2"
@@ -1034,7 +1034,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di3", status input signal DI3 on the converter.     
-        !*/        
+        !*/
         Object Di3 $Output 11 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:04.69
             Attr PgmName = "Di3"
@@ -1045,7 +1045,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di4", status input signal DI4 on the converter.     
-        !*/        
+        !*/
         Object Di4 $Output 12 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:08.94
             Attr PgmName = "Di4"
@@ -1056,7 +1056,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di5", status input signal DI5 on the converter.
-        !*/        
+        !*/
         Object Di5 $Output 13 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:13.16
             Attr PgmName = "Di5"
@@ -1067,7 +1067,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "di6", status input signal DI6 on the converter.     
-        !*/        
+        !*/
         Object Di6 $Output 14 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:16.98
             Attr PgmName = "Di6"
@@ -1078,7 +1078,7 @@ Volume ABB $ClassVolume 0.0.250.2
         EndObject
         !/**
         !  Pin name "diil", status input signal DIIL (interlock) on the converter.     
-        !*/        
+        !*/
         Object DiIL $Output 15 12-OCT-2005 12:58:20.00
           Body SysBody 21-DEC-2005 09:10:22.43
             Attr PgmName = "DiIL"
@@ -11434,7 +11434,7 @@ ABB ACS800 Typ 1"
     ! 
     !  @h1 Configuration
     !  
-    !
+    ! 
     !  @b Plc coding
     !  For plc coding the function object ABB_ACS800MotorAggrFo is used.
     !  @image orm_abb_acs800motoraggrfo_fo.gif
@@ -11929,10 +11929,10 @@ ABB ACS800 Typ 1"
         EndObject
       EndObject
       Object Template ABB_ACS800MotorAggr 2148761600 12-OCT-2005 12:58:20.00
-        Body RtBody 06-DEC-2005 16:07:32.85
-          Attr AlarmTextToOften = "Start up converter (power on) to often, wait before try again "
-          Attr AlarmTextPowOnNotOk = "Check interlocks! Start up (power on) converter is not allowed "
-          Attr AlarmTextStartNoOk = "Power is not on, start is not allowed "
+        Body RtBody 23-JAN-2006 09:29:23.78
+          Attr AlarmTextToOften = "Power not yet ready for restart, wait before retry, "
+          Attr AlarmTextPowOnNotOk = "Power interlocked, "
+          Attr AlarmTextStartNoOk = "Power is not on, "
           Attr CircuitBreaker.AlarmText = "Circuit breaker tripped, "
           Attr Contactor.FbTimeLimit = 1.000000e+00
           Attr Contactor.AlarmText = "Feedback contactor lost, "
@@ -11960,9 +11960,9 @@ ABB ACS800 Typ 1"
           Attr ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
           Attr ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr ACS800.PowerUpTime = 1.500000e+01
-          Attr ACS800.AlarmLocalMod = "Frequency converter control location is local, "
-          Attr ACS800.AlarmTripped = "Frequency converter tripped, you must reset, "
-          Attr ACS800.AlarmFanOld = "Replace cooling fan in frequency converter, "
+          Attr ACS800.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr ACS800.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required, "
           Attr ACS800.AlarmWarning = "Frequency converter warning, "
           Attr ACS800.AlarmError = "Frequency converter error, "
           Attr ACS800.DefTrend = "ABB:Class-ABB_ACS800MotorAggr-Template.ACS800.PlotGroup"
@@ -12003,6 +12003,9 @@ ABB ACS800 Typ 1"
           Attr ACS800.PlotGroup.YUnit[2] = "A"
           Attr ACS800.PlotGroup.NumPoints = 478
           Attr SafetySwitch.AlarmText = "Safety switch is off, "
+          Attr Motor.GraphConfiguration = 2
+          Attr Motor.DisableTempSwitch = 1
+          Attr Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Motor.DisableTempSensor = 1
           Attr Motor.TempSensor.Super.DisableValue = 1
@@ -12045,7 +12048,7 @@ ABB ACS800 Typ 1"
     ! 
     !  Connect the function object to an object of class or subclass of
     !  ABB_ACS800MotorAggr.
-    !
+    ! 
     !  @b Example
     !   @image orm_abb_acs800motoraggrfo_ex.gif
     ! 
@@ -21871,10 +21874,10 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS800PumpAggr 2151120896 01-JAN-1970 01:00:00.00
-        Body RtBody 16-DEC-2005 16:21:15.77
-          Attr Super.AlarmTextToOften = "Start up converter (power on) to often, wait before try again "
-          Attr Super.AlarmTextPowOnNotOk = "Check interlocks! Start up (power on) converter is not allowed "
-          Attr Super.AlarmTextStartNoOk = "Power is not on, start is not allowed "
+        Body RtBody 23-JAN-2006 09:29:54.52
+          Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry, "
+          Attr Super.AlarmTextPowOnNotOk = "Power interlocked, "
+          Attr Super.AlarmTextStartNoOk = "Power is not on, "
           Attr Super.CircuitBreaker.AlarmText = "Circuit breaker tripped, "
           Attr Super.Contactor.FbTimeLimit = 1.000000e+00
           Attr Super.Contactor.AlarmText = "Feedback contactor lost, "
@@ -21885,9 +21888,9 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.ActCurrent.PresMaxLimit = 5.000000e+01
           Attr Super.ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr Super.ACS800.PowerUpTime = 1.500000e+01
-          Attr Super.ACS800.AlarmLocalMod = "Frequency converter control location is local, "
-          Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, you must reset, "
-          Attr Super.ACS800.AlarmFanOld = "Replace cooling fan in frequency converter, "
+          Attr Super.ACS800.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required, "
           Attr Super.ACS800.AlarmWarning = "Frequency converter warning, "
           Attr Super.ACS800.AlarmError = "Frequency converter error, "
           Attr Super.ACS800.DefTrend = "ABB:Class-ABB_ACS800PumpAggr-Template.Super.ACS800.PlotGroup"
@@ -21928,6 +21931,9 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.PlotGroup.YUnit[2] = "A"
           Attr Super.ACS800.PlotGroup.NumPoints = 478
           Attr Super.SafetySwitch.AlarmText = "Safety switch is off, "
+          Attr Super.Motor.GraphConfiguration = 2
+          Attr Super.Motor.DisableTempSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Super.Motor.DisableTempSensor = 1
           Attr Super.Motor.TempSensor.Super.DisableValue = 1
@@ -22046,10 +22052,10 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS800FanAggr 2151383040 01-JAN-1970 01:00:00.00
-        Body RtBody 16-DEC-2005 16:23:59.95
-          Attr Super.AlarmTextToOften = "Start up converter (power on) to often, wait before try again "
-          Attr Super.AlarmTextPowOnNotOk = "Check interlocks! Start up (power on) converter is not allowed "
-          Attr Super.AlarmTextStartNoOk = "Power is not on, start is not allowed "
+        Body RtBody 23-JAN-2006 09:30:28.13
+          Attr Super.AlarmTextToOften = "Power not yet ready for restart, wait before retry, "
+          Attr Super.AlarmTextPowOnNotOk = "Power interlocked, "
+          Attr Super.AlarmTextStartNoOk = "Power is not on, "
           Attr Super.CircuitBreaker.AlarmText = "Circuit breaker tripped, "
           Attr Super.Contactor.FbTimeLimit = 1.000000e+00
           Attr Super.Contactor.AlarmText = "Feedback contactor lost, "
@@ -22077,9 +22083,9 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.RefSpeed.SigChanCon = "$IoConnect:ABB-Class-ABB_ACS_PPO5.O_REF"
           Attr Super.ACS800.RefSpeed.PresMaxLimit = 2.000000e+03
           Attr Super.ACS800.PowerUpTime = 1.500000e+01
-          Attr Super.ACS800.AlarmLocalMod = "Frequency converter control location is local, "
-          Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, you must reset, "
-          Attr Super.ACS800.AlarmFanOld = "Replace cooling fan in frequency converter, "
+          Attr Super.ACS800.AlarmLocalMod = "Frequency converter is in local mode,  "
+          Attr Super.ACS800.AlarmTripped = "Frequency converter tripped, reset is required, "
+          Attr Super.ACS800.AlarmFanOld = "Maintenance replace of cooling fan in converter required, "
           Attr Super.ACS800.AlarmWarning = "Frequency converter warning, "
           Attr Super.ACS800.AlarmError = "Frequency converter error, "
           Attr Super.ACS800.DefTrend = "ABB:Class-ABB_ACS800FanAggr-Template.Super.ACS800.PlotGroup"
@@ -22120,6 +22126,9 @@ ABB ACS800 Aggregate
           Attr Super.ACS800.PlotGroup.YUnit[2] = "A"
           Attr Super.ACS800.PlotGroup.NumPoints = 478
           Attr Super.SafetySwitch.AlarmText = "Safety switch is off, "
+          Attr Super.Motor.GraphConfiguration = 2
+          Attr Super.Motor.DisableTempSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Super.Motor.DisableTempSensor = 1
           Attr Super.Motor.TempSensor.Super.DisableValue = 1
@@ -22161,7 +22170,7 @@ ABB ACS800 Aggregate
     !  The object is configured under a PbSlave object in the node hierarchy.
     !  Connect the function object to an object of class or subclass of
     !  ABB_ACS800_1 with the IoConnect method.
-    !
+    ! 
     !  För att anpassa denna PPO5 konfigurations uppbyggnad (I/O) i Proview
     !  krävs inställningar i omriktarens parameterinställningar.
     !  
@@ -22188,7 +22197,7 @@ ABB ACS800 Aggregate
     !  
     !  98.02 = FIELDBUS   Serial communication
     !  98.07 = ABB Drives Communication profile 
-    !
+    ! 
     !  Se also
     !  16.01 = ?          Run enable parameter
     !  20.01 = ?          Limits min speed
@@ -22200,8 +22209,8 @@ ABB ACS800 Aggregate
     !  105, dvs driftvärdet "01.05" som är ärvärdet momentet i omriktaren. Denna
     !  signal är i sin tur knuten till signalnamnet "ActTorque" i objektet
     !  "ABB_ACS800_1".
-    !
-    !  OBS!
+    ! 
+    !  OBS
     !  Övriga inställningar i omriktaren som måste till för en fungerande
     !  kommunikation beaktas inte här. 
     ! 
@@ -22298,7 +22307,7 @@ ABB ACS800 Aggregate
         EndObject
         !/**
         !  Fault word 1 (PZD5 Parameter 51.10 = 305) connected to "FaultWord1".
-	!*/
+        !*/
         Object I_PZD5 $Attribute 9 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "I_PZD5"
@@ -22308,7 +22317,7 @@ ABB ACS800 Aggregate
         EndObject
         !/**
         !  Fault word 2 (PZD6 Parameter 51.12 = 306) connected to "FaultWord2".
-	!*/
+        !*/
         Object I_PZD6 $Attribute 14 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "I_PZD6"
@@ -22318,7 +22327,7 @@ ABB ACS800 Aggregate
         EndObject
         !/**
         !  DI6-1 Status Input card on converter (PZD7 Parameter 51.14 = 117) connected to "Di6_1".
-	!*/
+        !*/
         Object I_PZD7 $Attribute 13 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "I_PZD7"
@@ -22328,7 +22337,7 @@ ABB ACS800 Aggregate
         EndObject
         !/**
         !  Alarm word 5 (PZD8 Parameter 51.16 = 318) connected to "AlarmWord5".
-	!*/
+        !*/
         Object I_PZD8 $Attribute 12 12-OCT-2005 12:58:20.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "I_PZD8"

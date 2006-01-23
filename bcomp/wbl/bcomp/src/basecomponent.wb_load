@@ -57885,11 +57885,12 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseActuatorA 2176286720 01-JAN-1970 01:00:00.00
-        Body RtBody 03-OCT-2005 14:10:42.58
+        Body RtBody 23-JAN-2006 09:31:54.36
           Attr Order.Unit = "%"
           Attr Order.PresMaxLimit = 1.000000e+02
           Attr Position.PresMaxLimit = 1.000000e+02
           Attr Mode.OpNoLocal = 1
+          Attr Mode.OpMaxRefMan = 1.000000e+02
           Attr Mode.AlarmLocalMode = "Local mode is activated, "
           Attr MaxPosDiff = 5.000000e+00
           Attr DiffAlarmDelay = 1.000000e+01
@@ -66517,12 +66518,13 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseCValve 2177073152 01-JAN-1970 01:00:00.00
-        Body RtBody 03-OCT-2005 14:10:21.13
+        Body RtBody 23-JAN-2006 09:34:07.12
           Attr Actuator.GraphConfiguration = 4
           Attr Actuator.Order.Unit = "%"
           Attr Actuator.Order.PresMaxLimit = 1.000000e+02
           Attr Actuator.Position.PresMaxLimit = 1.000000e+02
           Attr Actuator.Mode.OpNoLocal = 1
+          Attr Actuator.Mode.OpMaxRefMan = 1.000000e+02
           Attr Actuator.Mode.AlarmLocalMode = "Local mode is activated, "
           Attr Actuator.MaxPosDiff = 5.000000e+00
           Attr Actuator.DiffAlarmDelay = 1.000000e+01
@@ -77365,7 +77367,10 @@ Alarm HH, H, L, LL"
         EndObject
       EndObject
       Object Template BaseMotor 2177859584 01-JAN-1970 01:00:00.00
-        Body RtBody 01-DEC-2005 08:56:14.11
+        Body RtBody 23-JAN-2006 09:32:17.05
+          Attr GraphConfiguration = 2
+          Attr DisableTempSwitch = 1
+          Attr TempSwitch.Super.DisableSwitch = 1
           Attr TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr DisableTempSensor = 1
           Attr TempSensor.Super.DisableValue = 1
@@ -89907,7 +89912,7 @@ Safety switch"
         EndObject
       EndObject
       Object Template BaseMotorAggr 2182316032 01-JAN-1970 01:00:00.00
-        Body RtBody 01-DEC-2005 08:57:09.70
+        Body RtBody 23-JAN-2006 09:32:37.70
           Attr Contactor.Order.Description = "Energize contactor"
           Attr Contactor.Feedback.Description = "Contactor is energized"
           Attr Contactor.FbTimeLimit = 1.000000e+00
@@ -89921,8 +89926,12 @@ Safety switch"
           Attr Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed, "
           Attr Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed, "
+          Attr Motor.GraphConfiguration = 2
+          Attr Motor.DisableTempSwitch = 1
+          Attr Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Motor.DisableTempSensor = 1
+          Attr Motor.TempSensor.Super.DisableValue = 1
           Attr Motor.TempSensor.Super.Value.Unit = "C"
           Attr Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
           Attr Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature, "
@@ -95266,7 +95275,7 @@ Motor aggregat"
         EndObject
       EndObject
       Object Template BaseFanAggr 2183364608 01-JAN-1970 01:00:00.00
-        Body RtBody 16-DEC-2005 15:58:47.74
+        Body RtBody 23-JAN-2006 09:32:57.88
           Attr Super.Contactor.Order.Description = "Energize contactor"
           Attr Super.Contactor.Feedback.Description = "Contactor is energized"
           Attr Super.Contactor.FbTimeLimit = 1.000000e+00
@@ -95280,8 +95289,12 @@ Motor aggregat"
           Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed, "
           Attr Super.Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Super.Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed, "
+          Attr Super.Motor.GraphConfiguration = 2
+          Attr Super.Motor.DisableTempSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Super.Motor.DisableTempSensor = 1
+          Attr Super.Motor.TempSensor.Super.DisableValue = 1
           Attr Super.Motor.TempSensor.Super.Value.Unit = "C"
           Attr Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
           Attr Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature, "
@@ -95380,7 +95393,7 @@ Motor aggregat"
         EndObject
       EndObject
       Object Template BasePumpAggr 2184675328 01-JAN-1970 01:00:00.00
-        Body RtBody 16-DEC-2005 15:58:11.81
+        Body RtBody 23-JAN-2006 09:33:14.26
           Attr Super.Contactor.Order.Description = "Energize contactor"
           Attr Super.Contactor.Feedback.Description = "Contactor is energized"
           Attr Super.Contactor.FbTimeLimit = 1.000000e+00
@@ -95394,8 +95407,12 @@ Motor aggregat"
           Attr Super.Mode.Alarm1LocalMod = "Local mode is activated, remote control is not allowed, "
           Attr Super.Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Super.Mode.AlarmNotManOrd = "Automode active. Manual start/stop order is not allowed, "
+          Attr Super.Motor.GraphConfiguration = 2
+          Attr Super.Motor.DisableTempSwitch = 1
+          Attr Super.Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Super.Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Super.Motor.DisableTempSensor = 1
+          Attr Super.Motor.TempSensor.Super.DisableValue = 1
           Attr Super.Motor.TempSensor.Super.Value.Unit = "C"
           Attr Super.Motor.TempSensor.Super.Value.PresMaxLimit = 1.500000e+02
           Attr Super.Motor.TempSensor.Super.LimitHH.AlarmText = "High High motor temperature, "
@@ -96168,7 +96185,7 @@ Motor aggregat"
         EndObject
       EndObject
       Object Template BaseMotorIncrDecrAggr 2185199616 01-JAN-1970 01:00:00.00
-        Body RtBody 16-DEC-2005 15:56:50.10
+        Body RtBody 23-JAN-2006 09:33:39.14
           Attr ContactorIncr.Order.Description = "Energize contactor"
           Attr ContactorIncr.Feedback.Description = "Contactor is energized"
           Attr ContactorIncr.FbTimeLimit = 1.000000e+00
@@ -96188,6 +96205,9 @@ Motor aggregat"
           Attr Mode.Alarm2LocalMod = "Local mode is activated, "
           Attr Mode.AlarmNotManOrd = "Automode active. Manual order is not allowed, "
           Attr Mode.AlarmOrderTimeOut = "Timeout, limit switch not reached, "
+          Attr Motor.GraphConfiguration = 2
+          Attr Motor.DisableTempSwitch = 1
+          Attr Motor.TempSwitch.Super.DisableSwitch = 1
           Attr Motor.TempSwitch.Super.AlarmText = "High motor temperature, "
           Attr Motor.DisableTempSensor = 1
           Attr Motor.TempSensor.Super.DisableValue = 1

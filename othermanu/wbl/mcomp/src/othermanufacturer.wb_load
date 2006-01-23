@@ -38,12 +38,12 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Ventim_Valve_VM3001 2147975168 06-OCT-2005 09:28:20.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 23-JAN-2006 09:22:29.15
           Attr Super.Super.Specification = "Ventim Butterfly valve VM3001"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/ventim_valve_vm3001.pdf"
           Attr Super.SwitchOpen.Description = "Valve is open"
           Attr Super.SwitchClosed.Description = "Valve is closed"
-          Attr Super.AlarmText = "Valve error"
+          Attr Super.AlarmText = "Valve error, "
         EndBody
       EndObject
     EndObject
@@ -118,7 +118,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
       Object Template Bernard_Actuator_OA 2150858752 06-OCT-2005 09:28:20.00
-        Body RtBody 06-OCT-2005 09:45:37.69
+        Body RtBody 23-JAN-2006 09:25:04.66
           Attr Super.Super.Specification = "Bernard ställdon typ OA"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/bernard_actuator_oa.html"
           Attr Super.GraphConfiguration = 4
@@ -127,6 +127,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Position.Unit = "%"
           Attr Super.Position.PresMaxLimit = 1.000000e+02
           Attr Super.Mode.OpNoLocal = 1
+          Attr Super.Mode.OpMaxRefMan = 1.000000e+02
           Attr Super.Mode.AlarmLocalMode = "Local mode is activated, "
           Attr Super.MaxPosDiff = 5.000000e+00
           Attr Super.DiffAlarmDelay = 1.000000e+01
@@ -249,9 +250,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
           Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.Super.LimitL.AlarmText = "Below Low limit, levelsensor "
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, levelsensor "
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Impac_TempSensor_IN300-Template.Super.Super.Value.ActualValue"
@@ -377,9 +378,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
           Attr Super.Super.LimitH.AlarmText = "High limit exceeded, levelsensor "
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, levelsensor "
+          Attr Super.Super.LimitL.AlarmText = "Below Low limit, levelsensor "
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, levelsensor "
+          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, levelsensor "
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Mobrey_LevelSensor_MSP422-Template.Super.Super.Value.ActualValue"
@@ -467,9 +468,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr Super.Super.LimitHH.Limit = 9.500000e+01
           Attr Super.Super.LimitH.AlarmText = "High limit exceeded, pressuresensor "
           Attr Super.Super.LimitH.Limit = 9.000000e+01
-          Attr Super.Super.LimitL.AlarmText = "Beyond Low limit, pressuresensor "
+          Attr Super.Super.LimitL.AlarmText = "Below Low limit, pressuresensor "
           Attr Super.Super.LimitL.Limit = 1.000000e+01
-          Attr Super.Super.LimitLL.AlarmText = "Beyond LowLow limit, pressuresensor "
+          Attr Super.Super.LimitLL.AlarmText = "Below LowLow limit, pressuresensor "
           Attr Super.Super.LimitLL.Limit = 5.000000e+00
           Attr Super.Super.Trend.Multiple = 1
           Attr Super.Super.Trend.DataName = "OtherManufacturer:Class-Klay_PressureSensor_Series2000-Template.Super.Super.Value.ActualValue"
