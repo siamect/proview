@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errl.c,v 1.5 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_errl.c,v 1.6 2006-01-25 14:34:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,10 +27,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "rt_mq.h"
+#include <unistd.h>
+#if defined _POSIX_MESSAGE_PASSING
+# include <mqueue.h>
+#else
+# include "rt_mq.h"
+#endif
 #include <limits.h>
 #include <pthread.h>
-#include <unistd.h>
 #include <sys/time.h>
 
 #include "rt_errl.h"
