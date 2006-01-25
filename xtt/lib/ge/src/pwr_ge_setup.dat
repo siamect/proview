@@ -28,6 +28,7 @@ menu Process
   subgraph	Fan3		pwr_exe:pwr_fan3.pwsg			70
   subgraph	Fananim		pwr_exe:pwr_fananim.pwsg		69
   subgraph	Fananim2	pwr_exe:pwr_fananim2.pwsg		71
+  subgraph	Fananim3	pwr_exe:pwr_fananim3.pwsg		71
   subgraph	HandWheel	pwr_exe:pwr_handwheel.pwsg		58
   subgraph 	Motor		pwr_exe:pwr_motor.pwsg 			23
   subgraph 	Motor2		pwr_exe:pwr_motor2.pwsg 		65
@@ -49,7 +50,7 @@ menu Process
   subgraph 	Valve	 	pwr_exe:pwr_valve.pwsg 			1
   subgraph 	ValveAnim 	pwr_exe:pwr_valveanim.pwsg		1
   subgraph 	ValveAnim2 	pwr_exe:pwr_valveanim2.pwsg		1
-  subgraph 	ValveManuel	pwr_exe:pwr_valvemanuel.pwsg 		4
+  subgraph 	ValveManual	pwr_exe:pwr_valvemanuel.pwsg 		4
   subgraph 	ValveControl	pwr_exe:pwr_valvecontrol.pwsg 		2
   subgraph 	ValveControl2	pwr_exe:pwr_valvecontrol2.pwsg 		53
 }
