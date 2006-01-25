@@ -9,6 +9,6 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
 	-lpwr_wb -lpwr_rt -lpwr_ge -lpwr_flow -lpwr_glow -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
-	-lrpcsvc -lpthread -lm -ldb_cxx-4.0 -lz
+	-lrpcsvc -lpthread -lm -ldb_cxx -lz
 
 endif
