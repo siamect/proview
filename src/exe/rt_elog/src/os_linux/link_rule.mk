@@ -6,6 +6,6 @@ link = $(ld) $(linkflags) $(domap) -o $(export_exe) \
 	$(pwr_obj)/rt_io_user.o \
 	-lpwr_rt -lpwr_co \
 	-lpwr_msg_dummy \
-	-ldb-4.0 -lrpcsvc -lpthread -lm -lrt
+	-ldb -lrpcsvc -lpthread -lm -lrt
 
 endif
