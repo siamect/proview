@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_elog.c,v 1.7 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: rt_elog.c,v 1.8 2006-01-25 14:50:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -198,7 +198,13 @@ Init ()
     exit(1);
   }
   /*open the database*/
-  if((ret = dataBaseP->open(dataBaseP, fname, NULL, DATABASETYPE, DB_CREATE, 0664)) != 0)
+
+#if (DB_VERSION_MAJOR == 4) && (DB_VERSION_MINOR > 0)
+  ret = dataBaseP->open(dataBaseP, NULL, fname, NULL, DATABASETYPE, DB_CREATE, 0664);
+#else
+  ret = dataBaseP->open(dataBaseP, fname, NULL, DATABASETYPE, DB_CREATE, 0664);
+#endif
+  if(ret != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     sprintf(msg, "db_open: %s, no eventlogger will run", db_strerror(ret));
