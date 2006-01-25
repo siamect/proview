@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.28 2005-12-14 11:20:50 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.29 2006-01-25 14:25:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -356,6 +356,7 @@ wb_db_ohead::wb_db_ohead(wb_db *db, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
   m_o.body[0].size = rbSize;
   m_o.body[1].time = dbTime;
   m_o.body[1].size = dbSize;
+
 }
 
 
@@ -900,7 +901,7 @@ static void printstat(DbEnv *ep, char *s)
   printf("DbEnv loc statistics, %s:\n", s);
   
   ep->lock_stat(&lp, 0);
-  printf("  lastid.......: %d\n", lp->st_lastid);
+  printf("  lastid.......: %d\n", lp->st_id);
   printf("  nmodes.......: %d\n", lp->st_nmodes);
   printf("  maxlocks:....: %d\n", lp->st_maxlocks);
   printf("  maxlockers...: %d\n", lp->st_maxlockers);
@@ -975,7 +976,16 @@ void wb_db::openDb(bool useTxn)
   m_t_class = new Db(m_env, 0);
   m_t_name  = new Db(m_env, 0);
   m_t_info  = new Db(m_env, 0);
-    
+
+#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
+  m_t_ohead->open(NULL, "ohead", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_rbody->open(NULL, "rbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  //  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_class->open(NULL, "class", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_name->open(NULL, "name", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_info->open(NULL, "info", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+#else
   m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   m_t_dbody->open("dbody", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
@@ -983,6 +993,7 @@ void wb_db::openDb(bool useTxn)
   m_t_class->open("class", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   m_t_name->open("name", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   m_t_info->open("info", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
+#endif
   printstat(m_env, "after open databases");
     
 }

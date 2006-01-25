@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hist.cpp,v 1.11 2005-12-14 12:40:10 claes Exp $
+ * Proview   $Id: xtt_hist.cpp,v 1.12 2006-01-25 14:22:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -880,7 +880,16 @@ void Hist::get_hist_list()
     printf(" Fel vid skapande av databashandtag avslutar\n");
     return;
   }
-  if((ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0)) != 0)
+
+#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0
+  //        int  (*open) __P((DB *, DB_TXN *,
+  //              const char *, const char *, DBTYPE, u_int32_t, int));
+
+  ret = dataBaseP->open(dataBaseP, NULL, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#else
+  ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#endif
+  if(ret != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     printf("error db_open: %s\n", db_strerror(ret));
