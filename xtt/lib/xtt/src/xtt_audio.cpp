@@ -549,7 +549,7 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
       snd_pcm_close(ALSA_handle);
       return -1;
     }
-#if defined __GNUC__ && __GNUC__ < 4
+#if defined SND_LIB_MAJOR && SND_LIB_MAJOR < 1
     // Alsa 0.9...
     if ((err = snd_pcm_hw_params_set_rate_near (ALSA_handle, hw_params, samplerate, 0)) < 0)
 #else
@@ -566,7 +566,7 @@ int XttAudio::Init_ALSA(char *device, unsigned int samplerate)
       snd_pcm_close(ALSA_handle);
       return -1;
     }
-#if defined __GNUC__ && __GNUC__ < 4
+#if defined SND_LIB_MAJOR && SND_LIB_MAJOR < 1
     // Alsa 0.9...
     if((err =  snd_pcm_hw_params_set_period_size_near(ALSA_handle, hw_params, period_size, 0)) <0)
 #else
