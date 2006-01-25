@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.8 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.9 2006-01-25 10:46:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -83,8 +83,9 @@ class GlowCtx {
   double	y_low;			//!< Low border of work area.
   int		window_width;		//!< Window width in pixel.
   int		window_height;		//!< Window height in pixel.
-  int		window_x;		//!< Subwindow x coordinate in pixel.
-  int		window_y;		//!< Subwindow y coordinate in pixel.
+  int		subwindow_x;		//!< Subwindow x coordinate in pixel.
+  int		subwindow_y;		//!< Subwindow y coordinate in pixel.
+  double       	subwindow_scale;       	//!< Subwindow scale.
   int		nav_window_width;	//!< Navigation window width in pixel.
   int		nav_window_height;	//!< Navigation window height in pixel.
   int		nav_rect_ll_x;		//!< x coordinate for lower left corner of navigation rectangle in nav window.

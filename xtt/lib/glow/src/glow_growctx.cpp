@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.15 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.16 2006-01-25 10:46:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -132,31 +132,22 @@ int GrowCtx::subw_event_handler( glow_eEvent event, int x, int y, int w, int h)
     // Initialize
     for ( i = 0; i < a.a_size; i++) {
       if ( a[i]->type() == glow_eObjectType_GrowWindow ||
-	   a[i]->type() == glow_eObjectType_GrowFolder) {
+	   a[i]->type() == glow_eObjectType_GrowFolder ||
+	   a[i]->type() == glow_eObjectType_GrowTable) {
 	has_subwindows = 1;
 	break;
       }
-      if ( has_subwindows != 1) {
-	has_subwindows = 0;
-	return 0;
-      }
     }
-  }
-
-  // Check if any menue is active
-  if ( a.a_size && a[a.a_size-1]->type() == glow_eObjectType_GrowMenu) {
-    switch ( event) {
-      case glow_eEvent_CursorMotion:
-	sts = a[a.a_size-1]->event_handler( event, x, y, fx, fy);
-	return 1;
-    default: ;
+    if ( has_subwindows != 1) {
+      has_subwindows = 0;
       return 0;
     }
   }
 
   for ( i = a.a_size - 1; i >= 0; i--) {
     if ( a[i]->type() == glow_eObjectType_GrowWindow ||
-	 a[i]->type() == glow_eObjectType_GrowFolder) {
+	 a[i]->type() == glow_eObjectType_GrowFolder ||
+	 a[i]->type() == glow_eObjectType_GrowTable) {
       switch ( event) {
       case glow_eEvent_Leave:
       case glow_eEvent_Enter:
@@ -176,6 +167,30 @@ int GrowCtx::subw_event_handler( glow_eEvent event, int x, int y, int w, int h)
       case glow_eEvent_Key_Ascii:
 	sts = a[i]->event_handler( event, w, 0,0,0);
 	if ( sts) {
+	  return sts;
+	}
+      case glow_eEvent_MB1Click:
+      case glow_eEvent_MB2Click:
+      case glow_eEvent_MB3Click:
+	sts = a[i]->event_handler( event, x, y, fx, fy);
+	if ( sts) {
+	  // Check if any menue is active
+	  if ( a.a_size && a[a.a_size-1]->type() == glow_eObjectType_GrowMenu) {
+	    // Send backcall to reset menu
+	    if ( event_callback[event] &&
+		 sts != GLOW__NO_PROPAGATE && event != event_move_node) {
+	      static glow_sEvent e;
+
+	      e.event = event;
+	      e.any.type = glow_eEventType_Object;
+	      e.any.x_pixel = x;
+	      e.any.y_pixel = y;
+	      e.any.x = 1.0 * (x + offset_x) / zoom_factor_x;
+	      e.any.y = 1.0 * (y + offset_y) / zoom_factor_y;
+	      e.object.object_type = glow_eObjectType_NoObject;
+	      event_callback[event]( this, &e);
+	    }
+	  }
 	  return sts;
 	}
       default:
@@ -206,8 +221,26 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
 
+  // Check if any menue is active
+  if ( a.a_size && a[a.a_size-1]->type() == glow_eObjectType_GrowMenu) {
+    switch ( event) {
+    case glow_eEvent_CursorMotion:
+      sts = a[a.a_size-1]->event_handler( event, x, y, fx, fy);
+      return 1;
+    case glow_eEvent_MB1Down:
+    case glow_eEvent_MB1Up:
+    case glow_eEvent_MB1Click:
+      sts = a[a.a_size-1]->event_handler( event, x, y, fx, fy);
+      if ( sts)
+	return 1;
+      break;
+    default: ;
+      return 0;
+    }
+  }
+
   // Dispach to event to subwindows
-  if ( has_subwindows) {
+  if ( trace_started && has_subwindows) {
     sts = subw_event_handler( event, x, y, w, h);
     if ( sts)
       return sts;
@@ -587,7 +620,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       }
 
       if ( glow_draw_create_buffer( ctx))
-        draw( window_x, window_y, window_width, window_height);
+        draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
       else
         draw( x, y, x + w, y + h);
       nav_zoom();
@@ -701,6 +734,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_ButtonMotion:
       tiptext->remove();
 
+#if 0
       for ( i = 0; i < a.a_size; i++) {
 	if ( a[i]->type() == glow_eObjectType_GrowWindow ||
 	     a[i]->type() == glow_eObjectType_GrowTable ||
@@ -713,6 +747,7 @@ int GrowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 	  }
 	}
       }
+#endif
       if ( node_movement_active && edit_mode != grow_eMode_EditPolyLine)
       {
         int move_x, move_y;
@@ -2212,7 +2247,7 @@ void GrowCtx::clear_all( int keep_paste)
   reset_nodraw();
   // if ( show_grid)
   //  draw_grid( 0, 0, window_width, window_height);
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y  + window_height);
 }
 
 void GrowCtx::redraw_defered()
@@ -3588,7 +3623,7 @@ void GrowCtx::restore_geometry()
   grid_on = stored_grid_on;
   show_grid = stored_show_grid;
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
 }
 

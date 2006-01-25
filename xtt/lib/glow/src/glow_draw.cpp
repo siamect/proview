@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.cpp,v 1.8 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_draw.cpp,v 1.9 2006-01-25 10:46:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3173,7 +3173,7 @@ void glow_draw_buffer_background( GlowCtx *ctx)
 
     XFillRectangle( draw_ctx->display, draw_ctx->buffer,
 		    get_gc( draw_ctx, glow_eDrawType_LineErase, 0),
-		    ctx->window_x, ctx->window_y, ctx->window_width, ctx->window_height);
+		    ctx->subwindow_x, ctx->subwindow_y, ctx->window_width, ctx->window_height);
     if ( draw_ctx->clip_on)
       glow_reset_clip( draw_ctx, get_gc( draw_ctx, glow_eDrawType_LineErase, 0));
 
@@ -3261,7 +3261,7 @@ int glow_print( GlowCtx *ctx, char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw.cpp,v 1.8 2006-01-23 08:46:54 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw.cpp,v 1.9 2006-01-25 10:46:23 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.8 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.9 2006-01-25 10:46:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@ GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
 	offset_x(offs_x), offset_y(offs_y), nav_zoom_factor_x(zoom_fact), 
 	nav_zoom_factor_y(zoom_fact), print_zoom_factor(100), 
 	x_right(0), x_left(0), y_high(0), y_low(0), 
-        window_width(0), window_height(0), window_x(0), window_y(0), 
+        window_width(0), window_height(0), subwindow_x(0), subwindow_y(0), subwindow_scale(1),
 	nav_window_width(0), nav_window_height(0),
 	nav_rect_ll_x(0), nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), 
 	node_movement_active(0),
@@ -402,7 +402,7 @@ void GlowCtx::zoom( double factor)
 //     offset_x << "," << offset_y << endl;
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -415,7 +415,7 @@ void GlowCtx::zoom_x( double factor)
   zoom_factor_x = factor;
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -428,7 +428,7 @@ void GlowCtx::zoom_y( double factor)
   zoom_factor_y = factor;
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -445,7 +445,7 @@ void GlowCtx::zoom_absolute( double factor)
   zoom_factor_x = zoom_factor_y = factor;
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
 }
 
@@ -617,7 +617,7 @@ void GlowCtx::cut()
   }
   select_clear();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
 }
 
@@ -1014,7 +1014,7 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
       glow_draw_get_window_size( ctx, &window_width, &window_height);
       if ( glow_draw_create_buffer( ctx))
-        draw( window_x, window_y, window_width, window_height);
+        draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
       else
         draw( x, y, x + w, y + h);
       nav_zoom();
@@ -1584,7 +1584,7 @@ void GlowCtx::remove_trace_objects()
   }
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
 }
 
@@ -1674,7 +1674,7 @@ void GlowCtx::center_object( GlowArrayElem *object)
   offset_y = int( ((ur_y + ll_y)/2 ) * zoom_factor_y - window_height/2);
 
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -1746,7 +1746,7 @@ void GlowCtx::reconfigure()
   reset_nodraw();
   a.zoom();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
 }
 
@@ -1755,7 +1755,7 @@ void GlowCtx::redraw()
   glow_draw_get_window_size( this, &window_width, &window_height);
   get_borders();
   clear();
-  draw( window_x, window_y, window_width, window_height);
+  draw( subwindow_x, subwindow_y, subwindow_x + window_width, subwindow_y + window_height);
   nav_zoom();
   change_scrollbar();
 }

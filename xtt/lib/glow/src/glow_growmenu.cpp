@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.7 2005-12-06 09:13:08 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.8 2006-01-25 10:46:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,6 +49,14 @@ GrowMenu::GrowMenu( GlowCtx *glow_ctx, char *name, glow_sMenuInfo *menu_info, do
 
 GrowMenu::~GrowMenu()
 {
+  // Remove this as parent from any submenu
+  for ( int i = 0; i < ctx->a.a_size; i++) {
+    if ( ctx->a[i]->type() == glow_eObjectType_GrowMenu) {
+      if ( ((GrowMenu *)ctx->a[i])->parent_menu == this)
+	((GrowMenu *)ctx->a[i])->parent_menu = 0;
+    }
+  }
+
   if ( input_focus && parent_menu)
     ((GrowMenu *)parent_menu)->set_input_focus( 1);
 
