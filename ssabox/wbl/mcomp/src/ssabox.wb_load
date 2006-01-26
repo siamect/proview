@@ -1,7 +1,7 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X149"
-    Attr NextCix = "_X28"
+    Attr NextOix = "_X151"
+    Attr NextCix = "_X29"
     Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 138 30-DEC-2005 14:28:03.99
@@ -157,9 +157,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
       EndObject
       Object Template Ssab_SafetySwitch 2147975168 06-OCT-2005 14:45:53.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 25-JAN-2006 14:55:38.69
           Attr Super.Super.Specification = "SSAB SafetySwitch"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/ssab_safetyswitch.pdf"
+          Attr Super.AlarmText = "Safety switch is not on, "
         EndBody
       EndObject
     EndObject
@@ -6619,14 +6620,68 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndBody
       EndObject
     EndObject
-    Object AntiSway $ClassDef 27 16-JAN-2006 11:27:43.17
+    !/**
+    !  @Version 1.1
+    !  @Author Jonas Haulin
+    !  @Code ssabox_plc_antisway.c
+    !  @Summary Feedforward antisway control for overhead cranes
+    !  Feedforward antisway control for overhead cranes
+    ! 
+    !  @image orm_antisway_fo.gif
+    ! 
+    !  @image orm_antisway_classgraph.gif
+    ! 
+    ! The antsiway object operates in manual or automatic mode. 
+    ! In manual mode, a command velocity is passed to the object, that calculates an acceleration trajectory
+    ! that will render the the crane at the command velocity without sway. 
+    ! The acceleration trajectory is retained in the object, 
+    ! and in each time step a reference velocity output is generated. 
+    ! The object thus works as a very advanced ramp function, with an unramped command velocity input, 
+    ! and a ramped reference velocity output.  
+    ! 
+    ! In automatic mode, the object will give an output that renders the system 
+    ! without sway at a given command position if followed exactly. 
+    ! The object solves the coupled problem of positioning and sway elimination, 
+    ! and its performance depends on how the ability of freqency converters and motors 
+    ! in the system to track a given velocity reference in real time. 
+    ! Frequency converters should be equipped with DTC or an equivalent control technology, 
+    ! and should be tuned to follow ramped references (not step references) with maximum accuracy. 
+    ! Positioning and antisway performance may be enhanced by using the antisway object 
+    ! in combination with a ServoReg object, or some other kind of regulator.
+    ! 
+    ! In manual mode, the object always compensates for hoisting (a changed or changing pendulum length). 
+    ! In automatic mode, compensation can be activated with the compensate attribute, 
+    ! but this may affect travel time performance negatively, and may not be necessary for sway elimination.
+    ! 
+    ! At any time, the antisway object can be switched from automatic to manual mode operation. 
+    ! The result will be smooth adaption to the given command velocity, with maintained antisway control. 
+    ! 
+    ! Technical details and more information can be found in the thesis report
+    ! "Feedforward Anti-Sway Control for Overhead Cranes - Development and Implementation in Proview", by the author.
+    ! 
+    !  @b See also
+    !  @classlink Ssab_ServoReg ssabox_ssab_servoreg.html
+    !*/
+    Object Ssab_AntiSway $ClassDef 27 16-JAN-2006 11:27:43.17
       Body SysBody 16-JAN-2006 11:27:33.77
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
       EndBody
       Object RtBody $ObjBodyDef 1 16-JAN-2006 11:27:48.46
         Body SysBody 16-JAN-2006 11:27:48.46
-          Attr StructName = "AntiSway"
+          Attr StructName = "Ssab_AntiSway"
           Attr NextAix = "_X190"
         EndBody
+        !/**
+        !  Pointer to another antisway object. If this input is used, objects 
+        !  operating in the x- and y-directions (the two horizontal directions of a crane 
+	!  operating in treedimensional space) will communicate and match their 
+        !  set extensions as much as possible, in automatic mode. The result will be that the 
+        !  path travelled by the crane ressembles a straight line. The total 
+        !  travel time will not be different, however. If not connected, or if in manual mode, each 
+        !  object operates individually.
+        !*/
         Object other $Input 155 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "other"
@@ -6635,6 +6690,17 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "Other"
           EndBody
         EndObject
+        !/**
+        ! Integer that defines the setpoint shaping sequence / antisway strategy. 
+        ! The relevant available sequences are
+        ! 
+        ! 0  No antisway
+        ! 1  Double pulse of unity magnitude
+        ! 2  Robust, or double, double pulse - slower, but less sensitive to parameter errors. 
+        ! 3  Triple pulse of unity magnitude - may sometimes give a faster and more smooth operation.
+        ! 
+        ! More information on these and other available sequences may be found in the thesis report. 
+        !*/
         Object mode $Input 156 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "mode"
@@ -6642,6 +6708,12 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "Mode"
           EndBody
         EndObject
+        !/**
+        ! Switch that sets the object in manual (1) or automatic (0) mode. 
+	! The mode can be switched at any time during operation.
+        ! A typical use of the input would be to set the object in manual mode whenever a manual command is given. 
+	! Thus an automatic travel can be aborted by touching a joystick or controller used for manual operation.
+        !*/
         Object manual $Input 157 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "manual"
@@ -6649,6 +6721,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "man"
           EndBody
         EndObject
+        !/**
+        ! Command velocity. Assumed to be in interval [-UMAXSM, UMAXSM] (see umax attribute).
+        !*/
         Object uCommand $Input 158 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "uCommand"
@@ -6656,6 +6731,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "UCOM"
           EndBody
         EndObject
+        !/**
+        ! Command position. Assumed to be in interval [XMIN, XMAX] (see limits attribute).
+        !*/
         Object xCommand $Input 159 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "xCommand"
@@ -6663,6 +6741,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "XCOM"
           EndBody
         EndObject
+        !/**
+        ! Current position
+        !*/
         Object xc $Input 160 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "xc"
@@ -6670,6 +6751,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "POS"
           EndBody
         EndObject
+        !/**
+        ! Current hoisting velocity (defined as dL/dt, i.e. positive direction down).
+        !*/
         Object DLc $Input 161 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "DLc"
@@ -6677,6 +6761,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "dL/dt"
           EndBody
         EndObject
+        !/**
+        ! Current pendulum length. 
+        ! The pendulum length of a crane is best calibrated by measuring a number 
+        ! of oscillation periods and then calculating L as L=g*(T/(2pi))^2
+        !*/
         Object Lc $Input 162 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "Lc"
@@ -6684,6 +6773,12 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "L"
           EndBody
         EndObject
+        !/**
+        ! Digital input used to switch to a second UMAXSA, (soft maximum velocity in automatic mode) 
+	! provided in the umax attribute.  
+        ! In automatic mode, the object will accomodate the trajectory to the new maximum velocity. 
+        ! The feature may be used if low-speed restrictions apply to parts of the operation area.
+        !*/
         Object umax2 $Input 163 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "umax2"
@@ -6691,6 +6786,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "umax2"
           EndBody
         EndObject
+        !/**
+        ! On/Off switch. If the object has been stopped due to an error of some kind, 
+	! the error status can be reset, and the object reactivated by toggling enable.
+        !*/
         Object enable $Input 164 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "enable"
@@ -6698,6 +6797,28 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "en"
           EndBody
         EndObject
+        !/**
+        ! Array that contains hard and soft maximum accelerations in manual and automatic mode.
+        ! 
+        ! amax[0] - AMAXHM. Hard limit of acceleration, manual mode.
+        ! amax[1] - AMAXSM. Soft limit of acceleration, manual mode.
+        ! amax[2] - AMAXHA. Hard limit of acceleration, automatic mode.
+        ! amax[3] - AMAXSA. Soft limit of acceleration, automatic mode.
+        ! 
+        ! When the object generates trajectories, the soft maximum acceleration is used. 
+        ! It should be slightly lower than the hard limit, which is the absolute allowed/possible maximum. 
+        ! Having a soft limit serves two purposes. Firstly, compensation for 
+        ! hoisting requires some extra acceleration that can be kicked in when 
+        ! needed. Secondly, a frequency converter will have better chances of 
+        ! tracking the trajectory if not operating at its acceleration limit. 
+        ! A control strategy to ensure trajectory tracking also has better chances 
+        ! of being successful. 
+        ! A suitable value of AMAXS that will leave enough acceleration space for 
+        ! the hoisting compensation can be calculated from the formula; 
+        !    AMAXS = AMAXH/(1.0+(1.5*DLMax/sqrt(g*LMin))), 
+        ! where DLMax is the maximum hoisting speed, g the acceleration of gravity 
+        ! and LMin the minimum pendulum length.
+        !*/
         Object amax $Intern 165 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "amax"
@@ -6706,6 +6827,18 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Array that contains hard and soft maximum velocities in manual and automatic mode.
+        ! 
+        ! umax[0] - UMAXHM. Hard limit of velocity, manual mode.
+        ! umax[1] - UMAXSM. Soft limit of velocity, manual mode.
+        ! umax[2] - UMAXHA. Hard limit of velocity, automatic mode.
+        ! umax[3] - UMAXSA. Soft limit of velocity, automatic mode.
+        ! umax[4] - UMAXSA. Second soft limit of velocity, automatic mode (see umax2 attribute).
+        ! 
+        ! Anologue to the amax array above. Soft maximum velocities will be used in normal trajectory generation.
+        ! 
+        !*/
         Object umax $Intern 166 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "umax"
@@ -6714,6 +6847,29 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Array of adjustable parameter limits. In most cases the default values will do.
+        ! 
+        ! limits[0] - ZEROLIM. Default 0.001. Will set reference velocity 
+	!	      uR to zero if |uR| < limit.
+        ! limits[1] - ERRFACT. Default 2.0. Will stop/deactivate object 
+	!	      if |uR|>limit*umaxH.
+        ! limits[2] - UR_MIN. Default 0.01. Minimum steady state reference 
+	!	      velocity that can be passed to frequency converter.
+        ! limits[3] - XMAX. Default 99999.0. Maximum reference position.
+        ! limits[4] - XMIN. Default -99999.0. Minimum reference position.
+        ! limits[5] - ATTAIN_ERRLIM. Default 0.001. Will warn if final uR 
+	!	      misses uCommand (or zero if auto) with more than limit.
+        ! limits[6] - L_MIN_CHANGE. Default 0.005. Length interval between 
+        !	      compensation for new pendulum length.
+        ! limits[7] - DL_MIN. Default 0.005. Minimum hoisting speed that will 
+	!	      be compensated for.
+        ! limits[8] - XR_ATTAIN_ERRLIM. Default 0.001. Will warn if final xR 
+	!	      misses xCommand with more than limit. Auto only
+        ! limits[9] - XCOM_MIN_CHANGE. Default 0.01. Minimum change in command 
+	!	      position that will invoke a new call. Auto only.
+        ! 
+        !*/
         Object limits $Intern 167 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "limits"
@@ -6722,42 +6878,90 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        ! Compensate for changed / changing pendulum length during automatic travel. 
+        ! 
+        ! 0 - Do not compensate - use the initial pendulum length throughout travel.
+        ! 1 - Compensate for new L
+        ! 2 - Compensate for new L and non-zero dL/dt
+        ! 
+        ! Compensation in automatic mode can reduces time performance, and may not be necessary. 
+        ! Often an automated crane will not lift and move simultaneously, 
+	! and the effect of not compensating may be negligible even if it does.
+        ! An alternative to compensation is to use a more robust antisway strategy, see the mode attribute.
+        !  
+        !*/
         Object compensate $Intern 168 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "compensate"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Integer value. If verbose =0, the object will tell you about 
+        !  its progress (or failure) by printouts to the terminal window 
+	! (i.e. only makes sense if proview is started from a terminal window..). 
+        !  There are three degrees of verbosity:
+        ! 
+        !  1 AS_VERB_DISABLED Object will print message if disabled
+        !  2 AS_VERB_ERR Object will print message if any error occurs
+        !  3 AS_VERB_ALL Object will print message when anything new happens
+        !*/
         Object verbose $Intern 169 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "verbose"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Boolean switch for resetting calculated sway angle 
+	! (there is no damping modeled in the sway simuluation). 
+        !  The calculated sway angle is not used for anything in the algorithms, 
+        !  but is merely a demo/diagnose output.
+        !*/
         Object zeroTheta $Intern 170 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "zeroTheta"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        ! Integer bit mask keeping information of major and minor errors that 
+        ! has occurred since last reset. The status is most easily controlled in the class graph.
+        ! If errstatus > AS_ERR_MINOR, the object will disable itself (it will 
+        ! not affect the value of enable, though). errstatus is reset by 
+        ! switching enable, or by using the reset attribute.
+        !*/
         Object errstatus $Intern 171 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "errstatus"
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
+        !/**
+        !  Integer bit mask used for storing automatic operation status and for 
+        !  communication between objects, via the other input.
+        !*/
         Object autostatus $Intern 172 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "autostatus"
             Attr TypeRef = "pwrs:Type-$Mask"
           EndBody
         EndObject
+        !/**
+        !  Reset errstatus and autostatus. If set, reset is automatically reset once 
+	! the errstatus and autostatus attributes have been reset.
+        !*/
         Object reset $Intern 173 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "reset"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Array that contains the individual status bits of errstatus and autostatus. 
+	! Used for display in the class graph.
+        !*/
         Object flags $Intern 174 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "flags"
@@ -6766,6 +6970,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Reference acceleration, 64-bit.
+        !*/
         Object aR $Intern 175 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "aR"
@@ -6773,6 +6980,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float64"
           EndBody
         EndObject
+        !/**
+        !  Reference velocity, 64-bit.
+        !*/
         Object uR $Intern 176 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "uR"
@@ -6780,6 +6990,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float64"
           EndBody
         EndObject
+        !/**
+        ! xR[0] - Reference position, 64-bit.
+        ! xR[1] - Reference position at previous time step, 64-bit.
+        !*/
         Object xR $Intern 177 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "xR"
@@ -6788,6 +7002,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float64"
           EndBody
         EndObject
+        !/**
+        !  thR[0] - Reference sway angle, 64-bit (diagnose/demo output).
+        !  thR[1] - Reference sway angle at previous time step, 64-bit.
+        !*/
         Object thR $Intern 178 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "thR"
@@ -6796,6 +7014,24 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Float64"
           EndBody
         EndObject
+        !/**
+        ! The phasor set contains all future acceleration commands, 
+        ! in the form of an array of phasors. The set is represented 
+        ! as a 16-byte string. If the struct is changed or if int + 
+        ! double + pointer = 16 byte, it has to be changed. phasor set members are:
+        ! 
+        ! int N	         Number of phasors in the set
+        ! double extSum  Acceleration-weighted phase extension sum. 
+        !                extSum = sum (|phiEnd - phiStart|*Sa), 
+        ! 		 where the sum is taken over all the phasors in the set.
+        !                Positive for positive acc. 
+        ! 		 Usage: Divide by omega to get the velocity change of 
+        !                the set.
+        ! AS_phasor *ph	 Pointer to the array of phasors. Memory is allocated 
+        !                dynamically.
+        ! 		 (see AS_phasor_methods.h for a description of the phasor 
+        !                struct)
+        !*/
         Object Set $Intern 179 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "Set"
@@ -6803,6 +7039,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Queue of warning and error messages.
+        !*/
         Object messageQ $Intern 180 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "messageQ"
@@ -6811,6 +7050,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject
+        !/**
+        !  Current / Last warning (message[1]) and error (message[0]) messages. 
+	! An error means that the object has deactivated itself, and needs to be restarted.
+        !*/
         Object message $Intern 181 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "message"
@@ -6819,6 +7062,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Parameters that determine the behavior of the message system.
+        ! 
+        ! mparams[0] - M_LENGTH. Default 79. Maximum number of characters in message string.
+        ! mparams[1] - M_NLIMIT. Default 80. Maximum numbber of messages in queue.
+        ! mparams[2] - M_ALWAIT. Default 20. Wait this number of cycles before taking next message from queue.
+        ! mparams[3] - M_ALHOLD. Default 30. Hold the current message this number of cycles.
+        !*/
         Object mparams $Intern 182 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "mparams"
@@ -6827,6 +7078,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Reference acceleration, 32-bit.
+        !*/
         Object aRO $Output 183 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "aRO"
@@ -6835,6 +7089,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "AR"
           EndBody
         EndObject
+        !/**
+        !  Reference velocity, 32-bit.
+        !*/
         Object uRO $Output 184 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "uRO"
@@ -6843,6 +7100,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "UR"
           EndBody
         EndObject
+        !/**
+        ! Reference position, 32-bit.
+        !*/
         Object xRO $Output 185 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "xRO"
@@ -6851,6 +7111,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "XR"
           EndBody
         EndObject
+        !/**
+        ! Reference sway angle, 32-bit (demo / diagnose).
+        !*/
         Object thRO $Output 186 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "thRO"
@@ -6859,6 +7122,10 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "THR"
           EndBody
         EndObject
+        !/**
+        ! True if antisway travel is completed. Can be used in automatic mode to activate 
+	! a positioning regulator if not close enough to the command position.
+        !*/
         Object done $Output 187 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "done"
@@ -6867,6 +7134,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "done"
           EndBody
         EndObject
+        !/**
+        ! New error message in message[0]. Can be connected to a DSup, where the message string can be stored as well.
+        !*/
         Object Alarm1 $Output 188 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "Alarm1"
@@ -6875,6 +7145,9 @@ Volume SsabOx $ClassVolume 0.0.250.5
             Attr GraphName = "al1"
           EndBody
         EndObject
+        !/**
+        ! New warning message in message[1]. Can be connected to a DSup, where the message string can be stored as well.
+        !*/
         Object Alarm2 $Output 189 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
             Attr PgmName = "Alarm2"
@@ -6913,8 +7186,451 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Attr traceindex = 0
           Attr connectmethod = 0
           Attr executeordermethod = 2
-          Attr objname = "antisway"
+          Attr objname = "Antisway"
           Attr graphname = "AntiSway"
+        EndBody
+      EndObject
+      Object Template Ssab_AntiSway 2154790912 24-JAN-2006 19:01:17.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+          Attr manual = 1
+          Attr amax[0] = 4.000000e-01
+          Attr amax[1] = 3.800000e-01
+          Attr amax[2] = 4.000000e-01
+          Attr amax[3] = 3.800000e-01
+          Attr umax[0] = 2.000000e+00
+          Attr umax[1] = 1.950000e+00
+          Attr umax[2] = 2.000000e+00
+          Attr umax[3] = 1.950000e+00
+          Attr umax[4] = 5.000000e-01
+          Attr limits[0] = 1.000000e-03
+          Attr limits[1] = 2.000000e+00
+          Attr limits[2] = 1.000000e-02
+          Attr limits[3] = 9.999900e+04
+          Attr limits[4] = -9.999900e+04
+          Attr limits[5] = 1.000000e-03
+          Attr limits[6] = 5.000000e-03
+          Attr limits[7] = 5.000000e-03
+          Attr limits[8] = 1.000000e-03
+          Attr limits[9] = 1.000000e-02
+          Attr mparams[0] = 79
+          Attr mparams[1] = 30
+          Attr mparams[2] = 20
+          Attr mparams[3] = 80
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Author Jonas Haulin
+    !  @Code ssabox_plc_servoreg.c
+    !  @Summary Servoregulator with direct positioning
+    !  Servoregulator with direct positioning
+    ! 
+    !  @image orm_servoreg_fo.gif
+    ! 
+    !  @image orm_servoreg_classgraph.gif
+    ! 
+    ! The function works as a combined servo regulator, deadzone and positioning ramp. 
+    ! The features may be used individually or all at once. 
+    ! It was developed to ensure trajectory tracking and positioning in automated cranes with anti-sway control, 
+    ! but can be deployed for any positioning problem. The output of the function is a velocity reference. 
+    !
+    ! A brief description of the features:
+    !
+    ! 1. The servo regulator is used to enhance the real-time reference tracking of a system.
+    !    It is a simple three-term regulator, where the output is determined as
+    !
+    !	 uReg = kP*(uReference - uMeasured) + kI*(xR - xM) + kD*(aR - aM)
+    !	
+    !	 If a non-zero PID delay time is set (see DelayPID attribute), 
+    !    reference values will be placed in a queue and extracted with the given delay.
+    !	 This is useful if a delay is unavoidable, but acceptable if it is uniform throughout travel.
+    !    The D-part should not be used if a low-noise measured signal aM is not available.
+    !
+    ! 2. The positioning ramp limits the output by
+    ! 
+    !    uRamp = -DelayRamp*amaxS + sqrt(DelayRamp^2*amaxS^2 + 2.0*|Delta x|*amaxS)
+    !
+    !    where Delta x is the remaining distance to the command position. 
+    !    In the case of zero delay, uRamp(x) is just a constant deceleration curve, 
+    !    where amaxS is the magnitude of deceleration. 
+    !    
+    ! 3. The deadzone sets the output to zero, if within its limits. A second larger deadzone that is 
+    !    activated after a specified time within its limits may also be used.
+    ! 
+    !  @b See also
+    !  @classlink Ssab_AntiSway ssabox_ssab_antisway.html
+    !*/
+    Object Ssab_ServoReg $ClassDef 28 25-JAN-2006 14:57:22.76
+      Body SysBody 25-JAN-2006 14:57:10.82
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-JAN-2006 14:57:10.82
+        Body SysBody 25-JAN-2006 14:57:32.75
+          Attr StructName = "Ssab_ServoReg"
+          Attr NextAix = "_X171"
+        EndBody
+	!/**
+        ! Current reference acceleration of the desired trajectory. The input is used by the PID regulator of the object.
+        !*/
+        Object aR $Input 141 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "aR"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "AR"
+          EndBody
+        EndObject
+	!/**
+        ! Current reference velocity of the desired trajectory. The input is used by the PID regulator of the object.
+        !*/
+        Object uR $Input 142 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "uR"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "UR"
+          EndBody
+        EndObject
+	!/**
+        ! Current reference position of the desired trajectory. The input is used by the PID regulator of the object.
+        !*/
+        Object xR $Input 143 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "xR"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "XR"
+          EndBody
+        EndObject
+	!/**
+        ! Current measured acceleration. The input is used by the PID regulator of the object.
+        !*/
+        Object ac $Input 144 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "ac"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "AM"
+          EndBody
+        EndObject
+	!/**
+        ! Current measured velocity. The input is used by the PID regulator of the object.
+        !*/
+        Object uc $Input 145 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "uc"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "UM"
+          EndBody
+        EndObject
+	!/**
+        ! Current measured position. The input is used by the PID regulator of the object.
+        !*/
+        Object xc $Input 146 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "xc"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "XM"
+          EndBody
+        EndObject
+	!/**
+        ! Command position. Final travel destination.
+        !*/
+        Object xCommand $Input 147 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "xCommand"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "XCOM"
+          EndBody
+        EndObject
+	!/**
+        ! Maximum positive output velocity. This value may depend on other system variables, 
+        ! such as local low-speed restrictions etc, and is therefore supplied as an input. 
+        !*/
+        Object umaxP $Input 148 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "umaxP"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "MAXP"
+          EndBody
+        EndObject
+	!/**
+        ! Maximum negative output velocity. Same as above, but this value should be < 0, 
+       	! and reflects a restriction on movement in the other direction.
+        !*/
+        Object umaxN $Input 149 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "umaxN"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "MAXN"
+          EndBody
+        EndObject
+	!/**
+        ! If true, and if the ramp is enabled, the control output is initially set to umaxP or umaxN,
+	! depending on the sign of Delta x, the distance to the command position.
+ 	! The output is then limited by the ramp. The effect is a very accurate positioning, given that
+	! the relevant parameters are set correctly.
+	! Direct positioning disables the PID regulator, as the two cannot be used simultaneously.
+        !*/
+        Object positioning $Input 150 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "positioning"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "pos"
+          EndBody
+        EndObject
+	!/**
+        ! On/Off switch. If false, uR is simply passed untouched through the object.
+        !*/
+        Object enable $Input 151 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "enable"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "en"
+          EndBody
+        EndObject
+	!/**
+        ! "Soft" maximum acceleration, i.e. the acceleration or deceleration that the system
+	! can be guaranteed to uphold. 
+        !*/
+        Object amaxS $Intern 152 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "amaxS"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Enabling or disabling of PID regulator. The positioning input overrides this setting, however.
+        !*/
+        Object enablePID $Intern 153 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "enablePID"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+	!/**
+        ! PID constants:
+	! kPID[0] - kP
+	! kPID[1] - kI
+	! kPID[2] - kD
+        !*/
+        Object kPID $Intern 154 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "kPID"
+            Attr Flags = 2
+            Attr Elements = 3
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Reference delay in seconds. 
+        !*/
+        Object DelayPID $Intern 155 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "DelayPID"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Limit as to how many time steps will be stored in the queue.
+	! If DelayPID / ScanTime > maxdelaysteps, the full delay will not be realized.
+        !*/
+        Object maxdelaysteps $Intern 156 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "maxdelaysteps"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+	!/**
+        ! Pointer to the reference list / queue. 
+        !*/
+        Object RefListp $Intern 157 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "RefListp"
+            Attr Flags = 3089
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Pointer to the reference list / queue. 
+        !*/
+        Object enableRamp $Intern 158 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "enableRamp"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+	!/**
+        ! Delay parameter in the ramp model. A larger delay causes a less steep deceleration. 
+        !*/
+        Object DelayRamp $Intern 159 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "DelayRamp"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Enabling or disabling of deadzone.
+        !*/
+        Object enableDZ $Intern 160 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "enableDZ"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+	!/**
+        ! Determines the extension of the deadzone in both directions about the command position.
+	! Interval = [xCommand - DeadZone, xCommand + DeadZone]
+        !*/
+        Object DeadZone $Intern 161 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "DeadZone"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Enabling or disabling of timer deadzone.
+        !*/
+        Object enableTDZ $Intern 162 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "enableTDZ"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+	!/**
+        ! Determines the extension of the deadzone in both directions about the command position.
+	! Interval = [xCommand - TimerDeadZone, xCommand + TimerDeadZone]
+        !*/
+        Object TimerDeadZone $Intern 163 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "TimerDeadZone"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Waiting time for the timer deadzone. The deadzone is activated after 
+	! TDZTime seconds within the timer deadzone.
+        !*/
+        Object TDZTime $Intern 164 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "TDZTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Time counter of the timer deadzone.
+        !*/
+        Object TDZElapsedTime $Intern 165 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "TDZElapsedTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ScanTime $Intern 166 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "ScanTime"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+	!/**
+        ! Control output velocity.
+        !*/
+        Object uReg $Output 167 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "uReg"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "UREG"
+          EndBody
+        EndObject
+	!/**
+        ! Indicates whether the ramp is active or not, that is if it currently 
+	! limits the magnitude of the control output.
+        !*/
+        Object RampActive $Output 168 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "RampActive"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "ramp"
+          EndBody
+        EndObject
+	!/**
+        ! Indicates whether the deadzone is active or not, that is if it currently 
+	! limits the magnitude of the control output.
+	! The output may be used as a confirmation of completed positioning.
+        !*/
+        Object DZActive $Output 169 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "DZActive"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "dz"
+          EndBody
+        EndObject
+	!/**
+        ! Indicates whether the timer deadzone is active or not, that is if it currently 
+	! limits the magnitude of the control output. 
+	! The output may be used as a confirmation of completed positioning.
+        !*/
+        Object TDZActive $Output 170 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr PgmName = "TDZActive"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "tdz"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 25-JAN-2006 14:57:10.82
+        Body SysBody 25-JAN-2006 14:57:10.82
+          Attr NextAix = "_X6"
+        EndBody
+        Object PlcNode $Buffer 5 25-JAN-2006 14:57:10.82
+          Body SysBody 25-JAN-2006 14:57:10.82
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 151 25-JAN-2006 14:57:10.82
+        Body SysBody 25-JAN-2006 14:57:10.82
+          Attr object_type = 11
+          Attr parameters[0] = 11
+          Attr parameters[1] = 15
+          Attr parameters[2] = 4
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 502
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 4
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 0
+          Attr executeordermethod = 2
+          Attr objname = "servoreg"
+          Attr graphname = "ServoReg"
+        EndBody
+      EndObject
+      Object Template Ssab_ServoReg
+        Body RtBody
+          Attr umaxP = 2.000000e+00
+          Attr umaxN = -2.000000e+00
+          Attr amaxS = 3.800000e-01
+          Attr kPID[0] = 6.000000e-01
+          Attr kPID[1] = 3.000000e-01
+          Attr maxdelaysteps = 1000
+          Attr DelayRamp = 1.000000e-01
+          Attr DeadZone = 2.000000e-02
+          Attr TimerDeadZone = 5.000000e-02
+          Attr TDZTime = 5.000000e+00
+        EndBody
+        Body DevBody
         EndBody
       EndObject
     EndObject
