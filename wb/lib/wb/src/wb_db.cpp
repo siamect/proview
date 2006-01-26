@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.29 2006-01-25 14:25:07 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.30 2006-01-26 11:01:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -901,7 +901,11 @@ static void printstat(DbEnv *ep, char *s)
   printf("DbEnv loc statistics, %s:\n", s);
   
   ep->lock_stat(&lp, 0);
+#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
   printf("  lastid.......: %d\n", lp->st_id);
+#else
+  printf("  lastid.......: %d\n", lp->st_lastid);
+#endif
   printf("  nmodes.......: %d\n", lp->st_nmodes);
   printf("  maxlocks:....: %d\n", lp->st_maxlocks);
   printf("  maxlockers...: %d\n", lp->st_maxlockers);
