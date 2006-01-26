@@ -10,6 +10,7 @@ variables_mk := 1
 
 release_root	:= $(pwre_broot)/$(os_name)/$(hw_name)
 module_root	:= $(release_root)/$(pwre_bmodule)
+export_type	:= $(export_type)
 
 exe_dir	:= $(module_root)/exe
 lib_dir	:= $(module_root)/lib
@@ -118,7 +119,8 @@ ifeq ($(pwre_btype),rls)
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT
   cxxflags	:= $(cflags) 
   linkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -lm -lrt
-  elinkflags	:= -O3 -L/usr/local/lib -L$(libdir) -L$(elib_dir) -lm -lrt
+  elinkflags	:= -O3 -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lm -lrt
+  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lrt
   clis		= /lis=$(list)
   dolist	= /lis=$(list)
   domap		= -Xlinker -Map -Xlinker $(map)
@@ -128,6 +130,7 @@ else
   mmflags	:= -Wno-deprecated
   linkflags	:= -g -L/usr/local/lib -L$(lib_dir) -lrt
   elinkflags	:= -g -L/usr/local/lib -L$(lib_dir) -L$(elib_dir) -lrt
+  explinkflags	:= -g -L/usr/local/lib -L$(elib_dir) -lrt
   dolist	= /lis=$(list)
   clis		:= 
   domap		= -Xlinker -Map -Xlinker $(map)

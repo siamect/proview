@@ -136,7 +136,7 @@ realclean : clean $(clean_h_includes) $(clean_hpp_includes) clean_dirs
 
 $(export_exe) : $(link_rule) $(export_obj) $(objects)
 	@ $(log_link_exe)
-	@ $(link)
+	$(link)
 
 
 # This is for Lynx 2.5 map files, it doesn't work for Linux. ML 
