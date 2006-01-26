@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: nmps_c_celldispmir.wb_load,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: nmps_c_celldispmir.wb_load,v 1.4 2006-01-26 08:15:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 SObject NMps:Class
 !/**
 !  @Version 1.0
-!  @Code rs_plc_nmps_display.c
+!  @Code nmps_plc_display.c
 !  @Group MaterialPlanning,Plc
 !  @Summary Display contents of data object in NMpsMirrorCells.
 !  CellDispMir objects are used to display the content of data objects

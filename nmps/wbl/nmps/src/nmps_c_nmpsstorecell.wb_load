@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: nmps_c_nmpsstorecell.wb_load,v 1.6 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: nmps_c_nmpsstorecell.wb_load,v 1.7 2006-01-26 08:15:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 SObject NMps:Class
 !/**
 !  @Version 1.0
-!  @Code rs_plc_nmps.c
+!  @Code nmps_plc.c
 !  @Group MaterialPlanning,Plc
 !  @Summary Container of data objects with select function.
 !

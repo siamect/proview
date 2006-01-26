@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc_display.c,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps_plc_display.c,v 1.2 2006-01-26 08:15:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,7 +78,7 @@ typedef struct {
   pwr_tFloat32                        *Cell;
 } nmps_sCellInput;
 
-/**
+/*_*
   @aref celldisp CellDisp
 */
 void CellDisp_init( pwr_sClass_CellDisp  *object)
@@ -691,7 +691,7 @@ void CellDisp_exec(
 	object->OldLastIndex = num;
 }
 
-/**
+/*_*
   @aref celldispmir CellDispMir
 */
 void CellDispMir_init( pwr_sClass_CellDispMir  *object)
@@ -1244,7 +1244,7 @@ void CellDispMir_exec(
 }
 
 
-/**
+/*_*
   @aref cellupdate CellUpdate
 */
 void CellUpdate_init( pwr_sClass_CellUpdate  *object)

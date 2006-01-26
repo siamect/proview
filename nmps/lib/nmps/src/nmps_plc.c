@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc.c,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps_plc.c,v 1.2 2006-01-26 08:15:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,7 +115,7 @@ pwr_sClass_NMpsCell  *object;
 	}
 }
 
-/**
+/*_*
   @aref nmpscell NMpsCell
 */
 
@@ -678,7 +678,7 @@ pwr_sClass_NMpsStoreCell  *object;
 	}
 }
 
-/**
+/*_*
   NMpsStoreCell
 
   @aref nmpsstorecell NMpsStoreCell
@@ -1412,7 +1412,7 @@ void NMpsStoreCell_exec(
 	object->NumberOfData = object->DataSelected;
 }
 
-/**
+/*_*
   NMpsOutCell
 
   @aref nmpsoutcell NMpsOutCell
@@ -1441,7 +1441,7 @@ void NMpsOutCell_exec(
 }
 
 
-/**
+/*_*
   NMpsTrp
 
   @aref nmpstrp NMpsTrp
@@ -1865,7 +1865,7 @@ trp_return:
 	}
 }
 
-/**
+/*_*
   NMpsTrpRR
 
   @aref nmpstrprr NMpsTrpRR
@@ -2290,7 +2290,7 @@ trprr_return:
 	}
 }
 
-/**
+/*_*
   NMpsTrpFF
 
   @aref nmpstrpff NMpsTrpFF
@@ -2716,7 +2716,7 @@ trpff_return:
 	}
 }
 
-/**
+/*_*
   DataSelect
 
   @aref dataselect DataSelect
@@ -2777,7 +2777,7 @@ pwr_sClass_NMpsMirrorCell  *object;
 	object->InitFlag = 1;
 }
 
-/**
+/*_*
   NMpsMirrorCell
 
   @aref nmpsmirrorcell NMpsMirrorCell

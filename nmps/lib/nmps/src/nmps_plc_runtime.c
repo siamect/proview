@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc_runtime.c,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps_plc_runtime.c,v 1.2 2006-01-26 08:15:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@
 #endif
 
 
-/**
+/*_*
   RunningTime
 
   @aref runningtime RunningTime

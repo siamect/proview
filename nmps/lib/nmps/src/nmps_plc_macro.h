@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc_macro.h,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps_plc_macro.h,v 1.2 2006-01-26 08:15:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ typedef struct {
 	pwr_tRefId	Data_Dlid;
 	} plc_t_DataInfoMirCell;
 
-/**
+/*_*
   DataCopy
 
   @aref datacopy DataCopy
@@ -59,7 +59,7 @@ typedef struct {
       memcpy( *object->DataToP, *object->DataFromP, datasize);		\
   }
 
-/**
+/*_*
   DataReset
 
   @aref datareset DataReset
@@ -71,7 +71,7 @@ typedef struct {
       memset( *object->DataP, 0, datasize);				\
   }
 
-/**
+/*_*
   NMpsCellSubWind
 
   @aref nmpscellsubwind NMpsCellSubWind
@@ -95,7 +95,7 @@ typedef struct {
     }									\
   }
 
-/**
+/*_*
   NMpsStoreCellSubWind
 
   @aref nmpscellstoresubwind NMpsStoreCellSubWind
@@ -119,7 +119,7 @@ typedef struct {
     }									\
   }
 
-/**
+/*_*
   CLoop
 
   @aref cloop CLoop
@@ -136,7 +136,7 @@ typedef struct {
     }									\
   }
 
-/**
+/*_*
   GetDap
 
   @aref getdap GetDap
@@ -145,7 +145,7 @@ typedef struct {
   memcpy( &object->OutDataP, &attribute, 				\
 	sizeof( object->OutDataP) + sizeof( object->OutData_ObjId));
 
-/**
+/*_*
   GetObjidp
 
   @aref getobjidp GetObjidp
@@ -153,7 +153,7 @@ typedef struct {
 #define GetObjidp_exec( object, attribute)				\
   object->ObjId = attribute;
 
-/**
+/*_*
   Func
 
   @aref func Func
@@ -180,7 +180,7 @@ typedef struct {
     subwindow;							\
   }
 
-/**
+/*_*
   FuncExtend
 
   @aref funcextend FuncExtend
@@ -203,7 +203,7 @@ typedef struct {
   if ( object->d7P) object->d7 = *object->d7P;			\
   if ( object->d8P) object->d8 = *object->d8P;
 
-/**
+/*_*
   FuncInput
 
   @aref funcinput FuncInput
@@ -226,7 +226,7 @@ typedef struct {
   object->d7 = funcobject->d7;					\
   object->d8 = funcobject->d8;
 
-/**
+/*_*
   FuncOutput
 
   @aref funcoutput FuncOutput
@@ -249,7 +249,7 @@ typedef struct {
   funcobject->od7 = *object->od7P;					\
   funcobject->od8 = *object->od8P;
 
-/**
+/*_*
   NMpsMirrorCellSubWind
 
   @aref nmpsmirrorcellsubwind NMpsMirroCellSubWind
@@ -269,56 +269,6 @@ typedef struct {
     object->CurrentIndex = object->Idx;					\
     subwindow;								\
   }
-
-/**
-  RemTransSend
-
-  @aref remtranssend RemTransSend
-*/
-#define RemTransSend_exec( object, subwindow) \
-  if ( *object->SendP && !object->Send) { \
-    if ( ((pwr_sClass_RemTrans *)(*object->RemTransP))->DataValid > 0) \
-      object->Error = 1; \
-    else { \
-      subwindow; \
-      ((pwr_sClass_RemTrans *)(*object->RemTransP))->DataValid = 1; \
-      object->Error = 0; \
-    } \
-  } \
-  else \
-    object->Error = \
-        EVEN( ((pwr_sClass_RemTrans *)(*object->RemTransP))->LastSts); \
- \
-  object->Send = *object->SendP; \
- \
-  if ( ((pwr_sClass_RemTrans *)(*object->RemTransP))->DataValid > 0) \
-    object->Occupied = 1; \
-  else \
-    object->Occupied = 0; \
- \
-  if ( ((pwr_sClass_RemTrans *)(*object->RemTransP))->Buffers > 0) { \
-    object->Buffer = 1; \
-    if ( ((pwr_sClass_RemTrans *)(*object->RemTransP))->Buffers >= \
-         ((pwr_sClass_RemTrans *)(*object->RemTransP))->MaxBuffers) \
-      object->Occupied = 1; \
-  } \
-  else \
-    object->Buffer = 0;
-
-/**
-  RemTransRcv
-
-  @aref remtransrcv RemTransRcv
-*/
-#define RemTransRcv_exec( object, subwindow) \
-  if ( ((pwr_sClass_RemTrans *)(*object->RemTransP))->DataValid > 0) { \
-    subwindow; \
-    ((pwr_sClass_RemTrans *)(*object->RemTransP))->DataValid = 0; \
-      object->Received = 1; \
-  } \
-  else \
-    object->Received = 0;
-
 
 
 
