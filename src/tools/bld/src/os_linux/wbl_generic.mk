@@ -90,15 +90,15 @@ $(inc_dir)/pwr_%classes.hpp : ../../%.wb_load
 $(doc_dir)/en_us/orm/%_allclasses.html : ../../%.wb_load
 	@ echo "Generating html files for $(source) classes en_us..."
 	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
-	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(source)classes.h
-	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(source)classes.hpp
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(pwre_module)classes.h
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_$(pwre_module)classes.hpp
 	@ co_convert -k -d $(doc_dir)/en_us/orm -l en_us
 
 $(doc_dir)/sv_se/orm/%_allclasses.html : ../../%.wb_load
 	@ echo "Generating html files for $(source) classes sv_se..."
 	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/mcomp/src/cnv_setup.dat "$(source)"
-	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(source)classes.h
-	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(source)classes.hpp
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(pwre_module)classes.h
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_$(pwre_module)classes.hpp
 	@ co_convert -k -d $(doc_dir)/sv_se/orm -l sv_se
 
 $(doc_dir)/en_us/%.ps : ../../%.wb_load
