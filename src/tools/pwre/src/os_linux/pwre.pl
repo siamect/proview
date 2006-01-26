@@ -247,8 +247,9 @@ sub build_all_modules ()
   build_all();
   merge();
   
-  # Relink method dependent programs
+  printf("-- Relink method dependent programs");
   _module("rt");
+  $ENV{"export_type"} = "exp";
   my($exe_dir) = $ENV{"pwr_exe"};
   system("rm $exe_dir/rt_io_comm");
   _build("exe", "rt_io_comm", "all");
