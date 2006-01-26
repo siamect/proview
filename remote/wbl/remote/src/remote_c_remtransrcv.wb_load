@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: remote_c_remtransrcv.wb_load,v 1.1 2006-01-12 06:39:33 claes Exp $
+!  Proview   $Id: remote_c_remtransrcv.wb_load,v 1.2 2006-01-26 08:16:39 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 SObject Remote:Class
 !/**
 !  @Version 1.0
-!  @Code rs_plc_macro_nmps.h
+!  @Code remote_plc_macro.h
 !  @Group Remote,Plc
 !  @Summary Supervision of a receive RemTrans object and unpacks the receive buffer.
 !  The object supervises a receive RemTrans object. 

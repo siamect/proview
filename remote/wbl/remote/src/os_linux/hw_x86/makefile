@@ -62,6 +62,7 @@ $(doc_dir)/en_us/orm/remote_allclasses.html :
 	@ co_convert -w -d $(doc_dir)/en_us/orm -g $(pwre_sroot)/wbl/remote/src/cnv_setup.dat "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 	@ echo "Generating html files for remote structs en_us..."
 	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_remoteclasses.h
+	@ co_convert -c -d $(doc_dir)/en_us/orm $(inc_dir)/pwr_remoteclasses.hpp
 	@ echo "Generating html files for remote code en_us..."
 	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_remote.h"
 	@ co_convert -c -d $(doc_dir)/en_us/orm "$(pwre_sroot)/lib/rs/src/rs_plc_*.c"
@@ -69,6 +70,7 @@ $(doc_dir)/en_us/orm/remote_allclasses.html :
 	@ co_convert -w -l sv_se -d $(doc_dir)/sv_se/orm -g $(pwre_sroot)/wbl/remote/src/cnv_setup.dat "$(pwre_sroot)/wbl/remote/src/remote_*.wb_load"
 	@ echo "Generating html files for remote structs sv_se..."
 	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_remoteclasses.h
+	@ co_convert -c -d $(doc_dir)/sv_se/orm $(inc_dir)/pwr_remoteclasses.hpp
 	@ echo "Generating html files for remote code sv_se..."
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_macro_remote.h"
 	@ co_convert -c -d $(doc_dir)/sv_se/orm "$(pwre_sroot)/lib/rs/src/rs_plc_*.c"

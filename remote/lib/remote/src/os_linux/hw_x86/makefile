@@ -10,3 +10,7 @@ endif
 ifeq ($($(type_name)_generic_mk),)
  include $(pwre_kroot)/tools/bld/src/$(type_name)_generic.mk
 endif
+
+-include ../../special.mk
+-include ../special.mk
+-include special.mk
