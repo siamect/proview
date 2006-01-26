@@ -1,6 +1,6 @@
-Volume Inor $ClassVolume 0.0.250.6 
+Volume Inor $ClassVolume 0.0.250.8 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X2"
+    Attr NextOix = "_X3"
     Attr NextCix = "_X2"
   EndBody
   Object Class $ClassHier 1 26-JAN-2006 17:55:50.00
@@ -33,7 +33,7 @@ Volume Inor $ClassVolume 0.0.250.6
           EndBody
         EndObject
       EndObject
-      Object Template Inor_TempSensor_VRS 2147975168 26-JAN-2006 17:55:50.00
+      Object Template Inor_TempSensor_VRS 2147975168 26-JAN-2006 18:11:41.00
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Super.Specification = "Inor Tempsensor VRS"
           Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/inor_tempsensor_vrs.pdf"
