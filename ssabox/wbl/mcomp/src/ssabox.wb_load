@@ -6635,14 +6635,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
     ! In manual mode, a command velocity is passed to the object, that calculates an acceleration trajectory
     ! that will render the the crane at the command velocity without sway. 
     ! The acceleration trajectory is retained in the object, 
-    ! and in each time step a reference velocity output is generated. 
-    ! The object thus works as a very advanced ramp function, with an unramped command velocity input, 
+    ! and at each time step a reference velocity output is generated. 
+    ! The object thus works as an advanced ramp function, with an unramped command velocity input, 
     ! and a ramped reference velocity output.  
     ! 
     ! In automatic mode, the object will give an output that renders the system 
     ! without sway at a given command position if followed exactly. 
     ! The object solves the coupled problem of positioning and sway elimination, 
-    ! and its performance depends on how the ability of freqency converters and motors 
+    ! and its performance depends on the ability of the freqency converters and motors 
     ! in the system to track a given velocity reference in real time. 
     ! Frequency converters should be equipped with DTC or an equivalent control technology, 
     ! and should be tuned to follow ramped references (not step references) with maximum accuracy. 
@@ -6654,7 +6654,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
     ! but this may affect travel time performance negatively, and may not be necessary for sway elimination.
     ! 
     ! At any time, the antisway object can be switched from automatic to manual mode operation. 
-    ! The result will be smooth adaption to the given command velocity, with maintained antisway control. 
+    ! The result will be a smooth adaption to the given command velocity, with maintained antisway control. 
     ! 
     ! Technical details and more information can be found in the thesis report
     ! "Feedforward Anti-Sway Control for Overhead Cranes - Development and Implementation in Proview", by the author.
@@ -6806,7 +6806,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! amax[3] - AMAXSA. Soft limit of acceleration, automatic mode.
         ! 
         ! When the object generates trajectories, the soft maximum acceleration is used. 
-        ! It should be slightly lower than the hard limit, which is the absolute allowed/possible maximum. 
+        ! It should be slightly lower than the hard limit, which is the absolute maximum allowed or possible. 
         ! Having a soft limit serves two purposes. Firstly, compensation for 
         ! hoisting requires some extra acceleration that can be kicked in when 
         ! needed. Secondly, a frequency converter will have better chances of 
@@ -6900,7 +6900,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         !/**
         !  Integer value. If verbose =0, the object will tell you about 
         !  its progress (or failure) by printouts to the terminal window 
-	! (i.e. only makes sense if proview is started from a terminal window..). 
+	! (i.e. it only makes sense if proview is started from a terminal window..). 
         !  There are three degrees of verbosity:
         ! 
         !  1 AS_VERB_DISABLED Object will print message if disabled
@@ -6930,7 +6930,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! has occurred since last reset. The status is most easily controlled in the class graph.
         ! If errstatus > AS_ERR_MINOR, the object will disable itself (it will 
         ! not affect the value of enable, though). errstatus is reset by 
-        ! switching enable, or by using the reset attribute.
+        ! switching enable, or by using the reset attribute, below.
         !*/
         Object errstatus $Intern 171 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
@@ -6949,7 +6949,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
           EndBody
         EndObject
         !/**
-        !  Reset errstatus and autostatus. If set, reset is automatically reset once 
+        !  Reset errstatus and autostatus. If set, "reset" is automatically reset once 
 	! the errstatus and autostatus attributes have been reset.
         !*/
         Object reset $Intern 173 16-JAN-2006 11:27:48.46
@@ -7066,7 +7066,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         ! Parameters that determine the behavior of the message system.
         ! 
         ! mparams[0] - M_LENGTH. Default 79. Maximum number of characters in message string.
-        ! mparams[1] - M_NLIMIT. Default 80. Maximum numbber of messages in queue.
+        ! mparams[1] - M_NLIMIT. Default 80. Maximum number of messages in queue.
         ! mparams[2] - M_ALWAIT. Default 20. Wait this number of cycles before taking next message from queue.
         ! mparams[3] - M_ALHOLD. Default 30. Hold the current message this number of cycles.
         !*/
@@ -7124,7 +7124,7 @@ Volume SsabOx $ClassVolume 0.0.250.5
         EndObject
         !/**
         ! True if antisway travel is completed. Can be used in automatic mode to activate 
-	! a positioning regulator if not close enough to the command position.
+	! a positioning regulator if not close enough to the command position at end of travel.
         !*/
         Object done $Output 187 16-JAN-2006 11:27:48.46
           Body SysBody 16-JAN-2006 11:27:48.46
@@ -7244,14 +7244,14 @@ Volume SsabOx $ClassVolume 0.0.250.5
     !
     !	 uReg = kP*(uReference - uMeasured) + kI*(xR - xM) + kD*(aR - aM)
     !	
-    !	 If a non-zero PID delay time is set (see DelayPID attribute), 
-    !    reference values will be placed in a queue and extracted with the given delay.
-    !	 This is useful if a delay is unavoidable, but acceptable if it is uniform throughout travel.
+    !    If a non-zero PID delay time is set (see DelayPID attribute), input reference
+    !    values will be placed in a queue and extracted to the PID regulator with the given delay.
+    !    This is useful if a delay is unavoidable, but acceptable if it is uniform throughout travel.
     !    The D-part should not be used if a low-noise measured signal aM is not available.
     !
-    ! 2. The positioning ramp limits the output by
+    ! 2. The positioning ramp limits the output according to the equation
     ! 
-    !    uRamp = -DelayRamp*amaxS + sqrt(DelayRamp^2*amaxS^2 + 2.0*|Delta x|*amaxS)
+    !	 uRamp = -DelayRamp*amaxS + sqrt(DelayRamp^2*amaxS^2 + 2.0*|Delta x|*amaxS)
     !
     !    where Delta x is the remaining distance to the command position. 
     !    In the case of zero delay, uRamp(x) is just a constant deceleration curve, 
