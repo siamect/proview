@@ -35,7 +35,8 @@ void Ssab_AntiSway_init(object)
   AS_OBJ_SETP->ph = NULL;
   object->other=NULL;
   for (i=0; i<2; i++) {
-    AS_OBJ_MESSAGEQP(i) = NULL;
+    object->messageQ[(i)]  =  NULL;
+//    AS_OBJ_MESSAGEQP(i) =  NULL;
     (object->message[i])[79]='\0';
   }
 }
