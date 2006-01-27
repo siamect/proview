@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.30 2006-01-26 11:01:28 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.31 2006-01-27 11:15:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -762,10 +762,12 @@ void wb_db::close()
 
 void wb_db::copy(wb_export &e, const char *fileName)
 {
+  pwr_tStatus sts;
   dcli_translate_filename(m_fileName, fileName);
   //int rc = m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
   
   openDb(false);
+
   importVolume(e);
   close();
   openDb(true);
@@ -778,6 +780,7 @@ void wb_db::copy(wb_export &e, const char *fileName)
     m_vid = i.vid();
     m_cid = i.cid();
     strcpy(m_volumeName, i.name());
+    commit(&sts);
   }
   catch (DbException &e) {
     //txn->abort();
@@ -982,13 +985,16 @@ void wb_db::openDb(bool useTxn)
   m_t_info  = new Db(m_env, 0);
 
 #if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
-  m_t_ohead->open(NULL, "ohead", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
-  m_t_rbody->open(NULL, "rbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
-  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  u_int32_t flags;
+  if (useTxn) flags = DB_CREATE | DB_AUTO_COMMIT; 
+  else flags = DB_CREATE;
+  m_t_ohead->open(NULL, "ohead", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_rbody->open(NULL, "rbody", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
   //  m_t_dbody->open(NULL, "dbody", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
-  m_t_class->open(NULL, "class", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
-  m_t_name->open(NULL, "name", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
-  m_t_info->open(NULL, "info", NULL, DB_BTREE, DB_CREATE | DB_AUTO_COMMIT, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_class->open(NULL, "class", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_name->open(NULL, "name", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
+  m_t_info->open(NULL, "info", NULL, DB_BTREE, flags, 0 /* S_IRUSR | S_IWUSR */);
 #else
   m_t_ohead->open("ohead", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
   m_t_rbody->open("rbody", NULL, DB_BTREE, DB_CREATE, 0 /* S_IRUSR | S_IWUSR */);
@@ -1154,9 +1160,10 @@ bool wb_db::deleteOset(pwr_tStatus *sts, wb_oset *o)
 
 bool wb_db::importVolume(wb_export &e)
 {
+  //  pwr_tStatus sts;
   try {
-    //m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
-//    m_txn = 0;
+    //    m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
+    //    m_txn = 0;
     
   printstat(m_env, "importVolume");
     e.exportHead(*this);
@@ -1167,16 +1174,16 @@ bool wb_db::importVolume(wb_export &e)
   printstat(m_env, "after dbody");
     e.exportMeta(*this);
   printstat(m_env, "after meta");
-    
-  //txn->commit(0);
+  //  commit(&sts);    
+  // txn->commit(0);
   printstat(m_env, "after commit");
-  //m_env->txn_checkpoint(0, 0, 0);
+  //  m_env->txn_checkpoint(0, 0, 0);
   printstat(m_env, "after checkpoint");
     return true;
   }
   catch (DbException &e) {
   printstat(m_env, "after exception");
-  //txn->abort();
+  //  m_txn->abort();
     printf("exeption: %s\n", e.what());
   printstat(m_env, "after abort");
     return false;
