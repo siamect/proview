@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.14 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.15 2006-01-30 09:03:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1047,7 +1047,7 @@ mvol_ClassListAttrRef (
 	  if ( item->flags[0].m & PWR_MASK_DISABLEATTR &&
 	       vol_ArefDisabled( sts, oarp)) {
 	    aref = *oarp;
-	    mvol_ClassListAttrRef(sts, cid, &aref, oarp, list);
+	    mvol_ClassListAttrRef(sts, cid, &aref, oarp, mvol_eList_next);
 	    return;
 	  }
 	  pwr_ReturnVoid( sts, MVOL__SUCCESS);
