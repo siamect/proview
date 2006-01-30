@@ -57,7 +57,8 @@ cd $currentdir
 echo "-- Building package"
   rpmbuild -bb --quiet \
                --define "_topdir $pkgroot/rpm" \
+               --define "ver $ver" \
                --buildroot $pkgroot $pkgsrc/pwrdemo.spec > /dev/null 2>&1
                                                                                 
-mv $pkgroot/rpm/RPMS/i586/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
+mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
