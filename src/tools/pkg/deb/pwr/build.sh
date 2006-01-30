@@ -78,7 +78,7 @@ fi
     done
   } < $datfile
   echo "</topic>"
-} > $pwr_exe/wtt_version_help.dat
+} > $pwr_eexe/wtt_version_help.dat
 
 if [ "$1" == "-v" ]; then
   exit

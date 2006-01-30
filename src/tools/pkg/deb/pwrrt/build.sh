@@ -76,13 +76,13 @@ fi
     done
   } < $datfile
   echo "</topic>"
-} > $pwr_exe/xtt_version_help.dat
+} > $pwr_eexe/xtt_version_help.dat
 
 # Convert to html
-co_convert -t -d $pwr_doc $pwr_exe/xtt_version_help.dat
+co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
 
 # Print rt version file
-echo "Version: $version" > $pwr_exe/rt_version.dat
+echo "Version: $version" > $pwr_eexe/rt_version.dat
 
 if [ "$1" == "-v" ]; then
   exit
@@ -147,7 +147,7 @@ tar -xf $tarfile
 rm $tarfile
 rm -r $pkgroot/usr/pwrrt/lib/*.a
 rm -r $pkgroot/usr/pwrrt/exe/wb*
-cp $pwr_exe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
+cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
 cd $currentdir
 
 # Copy configuration files to cnf
