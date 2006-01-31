@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_provider.cpp,v 1.5 2005-11-02 15:42:38 claes Exp $
+ * Proview   $Id: wb_provider.cpp,v 1.6 2006-01-31 09:11:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,59 +141,59 @@ void wb_procom::dispatch( vext_sQMsg *qmsg)
 {
   switch( qmsg->Any.Type) {
   case vext_eMsgType_Object:
-    printf( "Object\n");
+    // printf( "Object\n");
     m_provider->object( this);
     break;
   case vext_eMsgType_ObjectOid:
-    printf( "ObjectOid %d\n", qmsg->Oid.Oix);
+    // printf( "ObjectOid %d\n", qmsg->Oid.Oix);
     m_provider->objectOid( this, qmsg->Oid.Oix);
     break;
   case vext_eMsgType_ObjectBody:
-    printf( "ObjectBody %d\n", qmsg->Oid.Oix);
+    // printf( "ObjectBody %d\n", qmsg->Oid.Oix);
     m_provider->objectBody( this, qmsg->Oid.Oix);
     break;
   case vext_eMsgType_ObjectName:
-    printf( "ObjectName %s\n", qmsg->ObjectName.Name);
+    // printf( "ObjectName %s\n", qmsg->ObjectName.Name);
     m_provider->objectName( this, qmsg->ObjectName.Name);
     break;
   case vext_eMsgType_CreateObject:
-    printf( "CreateObject %s\n", qmsg->CreateObject.Name);
+    // printf( "CreateObject %s\n", qmsg->CreateObject.Name);
     m_provider->createObject( this, qmsg->CreateObject.DestOix, qmsg->CreateObject.DestType,
 			      qmsg->CreateObject.Cid, qmsg->CreateObject.Name);
     break;
   case vext_eMsgType_MoveObject:
-    printf( "MoveObject %d\n", qmsg->Oid.Oix);
+    // printf( "MoveObject %d\n", qmsg->Oid.Oix);
     m_provider->moveObject( this, qmsg->MoveObject.Oix, qmsg->MoveObject.DestOix, 
 			      qmsg->MoveObject.DestType);
     break;
   case vext_eMsgType_CopyObject:
-    printf( "CopyObject %d\n", qmsg->Oid.Oix);
+    // printf( "CopyObject %d\n", qmsg->Oid.Oix);
     m_provider->copyObject( this, qmsg->CopyObject.Oix, qmsg->CopyObject.DestOix, 
 			      qmsg->CopyObject.DestType, qmsg->CopyObject.Name);
     break;
   case vext_eMsgType_DeleteObject:
-    printf( "DeleteObject %d\n", qmsg->Oid.Oix);
+    // printf( "DeleteObject %d\n", qmsg->Oid.Oix);
     m_provider->deleteObject( this, qmsg->DeleteObject.Oix);
     break;
   case vext_eMsgType_DeleteFamily:
-    printf( "DeleteFamily %d\n", qmsg->Oid.Oix);
+    // printf( "DeleteFamily %d\n", qmsg->Oid.Oix);
     m_provider->deleteFamily( this, qmsg->DeleteFamily.Oix);
     break;
   case vext_eMsgType_RenameObject:
-    printf( "RenameObject %d\n", qmsg->Oid.Oix);
+    // printf( "RenameObject %d\n", qmsg->Oid.Oix);
     m_provider->renameObject( this, qmsg->RenameObject.Oix, qmsg->RenameObject.Name);
     break;
   case vext_eMsgType_WriteAttr:
-    printf( "WriteAttr %d\n", qmsg->Oid.Oix);
+    // printf( "WriteAttr %d\n", qmsg->Oid.Oix);
     m_provider->writeAttribute( this, qmsg->WriteAttr.Oix, qmsg->WriteAttr.Offset, 
 				qmsg->WriteAttr.Size, qmsg->WriteAttr.Buffer);
     break;
   case vext_eMsgType_Commit:
-    printf( "Commit\n");
+    // printf( "Commit\n");
     m_provider->commit( this);
     break;
   case vext_eMsgType_Abort:
-    printf( "Abort\n");
+    // printf( "Abort\n");
     m_provider->abort( this);
     break;
   default:
