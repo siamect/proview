@@ -10,7 +10,7 @@
 
 Name:		pwrrt
 Summary: 	Proview/R runtime environment
-Version:        4.1.1
+Version:        4.1.3
 Release: 	1	
 Copyright:	(c) 2005 SSAB Oxelösund AB, Sweden
 #License:        GPL
@@ -457,5 +457,5 @@ fi
 #%postun
 
 %changelog
-* Tue Jan 31 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.1-1
+* Tue Jan 31 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
 - Base release 
