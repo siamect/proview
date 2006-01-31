@@ -114,7 +114,6 @@ chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_ini
 chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_rtt
 chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_xtt
 chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/rt_bck
-chmod u+s /usr/pwr%{ver}/%{pwre_target}/exp/exe/wb_adm
 
 # Copy configuration files
 new_cnf=0

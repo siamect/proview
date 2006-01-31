@@ -42,7 +42,7 @@ set -e
 #
 aroot="/usr/pwrp/adm"
 
-chown -R pwrp /usr/pwrp/pwrdemo%{ver}
+chown -R pwrp:pwrp /usr/pwrp/pwrdemo%{ver}
 
 # Register volume
 if [ -e $aroot/db/pwr_volumelist.dat ]; then
