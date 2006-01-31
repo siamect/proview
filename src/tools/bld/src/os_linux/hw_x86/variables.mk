@@ -94,7 +94,7 @@ wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/p
 
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source)  -I$(dbinc) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
+cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux -I$(dbinc)
 
 rm		:= rm
 cp		:= cp
