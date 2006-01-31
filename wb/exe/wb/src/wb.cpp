@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.21 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.22 2006-01-31 06:47:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -302,7 +302,7 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
   char systemgroup[80];
   pwr_tStatus sts;
 
-  if ( login_prv.priv & pwr_mPrv_DevRead )
+  if ( login_prv.priv & pwr_mPrv_DevRead || login_prv.priv & pwr_mPrv_Administrator)
   {
     if ( !filename) {
       utl_get_systemname( systemname, systemgroup);
@@ -469,7 +469,8 @@ void	pwr_wtt_open_volume( void *wttctx, wb_eType type, char *filename, wow_eFile
   }
   else {
     printf( "No privileges to enter development environment");
-    exit(LOGIN__NOPRIV);
+    if (appl_count == 0)
+      exit(LOGIN__NOPRIV);
   }
 }
 
