@@ -2,7 +2,7 @@ Package: pwrrt
 Version: 4.1.3-1
 Section: base
 Priority: optional
-Architecture: i586
+Architecture: i386
 Depends: libc6 (>= 2.2.4-4)
 Replaces: pwr34,pwr39,pwr40,pwr41
 Maintainer: Proview <postmaster@proview.se>

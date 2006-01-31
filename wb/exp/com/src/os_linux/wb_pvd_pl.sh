@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Proview   $Id: wb_pvd_pl.sh,v 1.1 2006-01-23 08:44:30 claes Exp $
+# Proview   $Id: wb_pvd_pl.sh,v 1.2 2006-01-31 09:10:21 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -17,7 +17,8 @@
 # along with the program, if not, write to the Free Software 
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
-set -o xtrace
+
+#set -o xtrace
 
 declare -ix pwrc_status=$pwrc__success
 declare -i pwrc__success=0
@@ -71,9 +72,9 @@ echo "args: $1 $2 $3 $4 $5"
   
   source pwrp_env.sh set project $project
   
-  if [ "$database" != "dbdirectory" ]; then
-    source pwrp_env.sh setdb $database
-  fi
+  #if [ "$database" != "dbdirectory" ]; then
+  #  source pwrp_env.sh setdb $database
+  #fi
   
   wb -q "$username" "$password" $volume &
 }

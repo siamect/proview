@@ -33,7 +33,7 @@ if [ -e $aroot/db/pwr_projectlist.dat ]; then
   ptst=`eval grep "'\bpwrdemo$ver\b'" $aroot/db/pwr_projectlist.dat`
   set -e
   if [ "$ptst" = "" ]; then
-    echo "pwrdemo$ver V${ver:0:1}.${ver:1:1} /usr/pwrp/pwrdemo$ver \"\" " >> $aroot/db/pwr_projectlist.dat
+    echo "pwrdemo$ver V${ver:0:1}.${ver:1:1} /usr/pwrp/pwrdemo$ver pwrdemo$ver \"\" " >> $aroot/db/pwr_projectlist.dat
   fi
 fi
 

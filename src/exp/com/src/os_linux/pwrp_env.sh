@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.9 2005-10-25 12:05:37 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.10 2006-01-31 09:10:21 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -850,7 +850,7 @@ pwrc_set_func()
     export pwrp_projectname=$pname
 
     # Set directorydb as default database
-    pwrc_setdb_func ""
+    # pwrc_setdb_func ""
       
     # Execute local setup script
     if [ -e "$pwrp_login/login.sh" ]; then
@@ -1113,7 +1113,6 @@ pwrc_modify_func()
     let something_modified=0
     
     echo "Modify project: $@"
-    set +o xtrace
         
     pname=$2
     shift 2

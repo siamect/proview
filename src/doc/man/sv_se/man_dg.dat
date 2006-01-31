@@ -880,20 +880,26 @@ förälder.
 Användare och systemgrupper skapas i administratören.
 
 - Starta administratören med kommandot 'pwra'.
-- Gå in i User mod från menyn, 'File/Show Users'.
+- Gå in i Användardatabasen från menyn, 'File/Open/UserDatabase'.
 - Logga in med login kommandot. Öppna kommando-prompten från menyn, 'Functions/Command' och
-  skriv 'login' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
+  skriv 'login /adm' på kommandoraden. Om systemgruppen 'administrator' finns definierad måste man
   dessutom addera användarnamn och passerord för en användare definierad i administrator-
   systemgruppen.
-- Gå in i edit mod från menyn, 'Mode/Edit'.
-- Öppna New System Group dialogen ('Edit/New SystemGroup' i menyn) och skriv in namn och
-  attribut. Ange fullständigt hierakinamn, t ex 'Main.West'.
-- Välj ut en systemgrupp och öppna 'New User' dialogen ('Edit/New User' i menyn) och ange
-  anvädarnamn, passerord och privilegier för användaren.
-- Klicka på Ok knappen.
-- Logga ut med kommandot 'logout'.
+- Gå in i edit mod från menyn, 'Edit/Edit mode'.
+  Systemgrupper och användare representeras av objekt av klasserna SystemGroupReg resp UserReg
+  som visas i paletten till vänster. Objekt skapas genom att man väljer en klass i paletten,
+  och därefter klickar med MB2 (mittenknappen) i det högra fönstret. Objekten läggs i en 
+  trädstruktur och klickar man på mappen/lövet på ett existerande objekt läggs det nya objeket 
+  som första barn, om kan klicka till höger om mappen/lövet läggs det som syskon.
+- Skapa en systemgrupp genom att markera 'SystemGroupReg' i paletten till vänster, och klicka
+  med MB2 (mittenknappen) i det högra fönstret. Öppna SystemGroup objektet och ange namn och
+  attribut för systemgruppen. Ange fullständigt hierarkinamn, t ex 'Main.West'.
+- Skapa en användare genom att markera 'UserReg' i paletten och klicka med MB2 på mappen/lövet
+  till det SystemGroupReg objekt som UserReg objektet ska ligga under. Öppna UserReg objektet
+  och ange anvädarnamn, passerord och privilegier för användaren.
+- Spara och logga ut med kommandot 'logout'.
 
-Användardatabase ligger på katalogen $pwra_db.
+Användardatabasen ligger på katalogen $pwra_db.
 
 </topic>
 
@@ -906,15 +912,15 @@ säkerställa detta registreras alla volymer i en global volymslista.
 Registreringen görs från administratören:
 
 - Starta administratören med kommandot 'pwra'.
-- Gå in i Volume mode från menyn, 'File/Show volumes'.
-- Logga in.
-- Gå in i editerings läge, 'Mode/Edit' i menyn.
-- Om en volym väljs i volymslistan kommer den nya volymen att läggas in efter den utvalda
-  volymen. Annars läggs den in sist.
-- Öppna 'New volume' dialogen ('Edit/New Volume' i menyn), ange volymsnamn, volyms
-  identitet, och systemnamn.
-- Klicka på Ok-knappen.
-- Logga ut med 'logout'-kommandot.
+- Gå in i Globala Volymslistan från menyn, 'File/Open/GlobalVolumeList'.
+- Logga in som administratör.
+- Gå in i editerings läge, 'Edit/Edit mode' i menyn.
+  Volymer registreras mha objekt av klassen VolumeReg som visas i paletten till vänster.
+  I paletten finns även $Hier klassen, med vilken man kan ordna VolumeReg objekten 
+  hierarktisk.
+- Skapa ett VolumeReg objekt, öppna objektet och ange volymsnamn (= objektsnamn), 
+  volymsidentitet och projekt.
+- Spara och logga ut med 'logout'-kommandot.
 
 <h2>Volymsnamn
 Namn på volymen, ska vara unikt och får ha max 31 tecken.
@@ -950,16 +956,18 @@ försvårar uppgradering av projektet.
 Skapa ett projekt i administratören:
 
 - Starta administratören med kommandot 'pwra'.
-- Project mod är default när man startar administratören. Om den nuvarande moden är User
-  eller Volume, gå in i Project mod med 'File/Show projects' i menyn.
-- Logga in.
-- Gå in i edit mode från meny, 'Mode/Edit'.
-- Öppna Create Volume dialogen ('Edit/Create Project' i menyn), och ange projektnamn, 
-  basversion, filkatalog, hierarki och beskrivning.
-- logga ut.
+- Projektlistan visas när man startar administratören. Den kan även öppnas från menyn 
+  (File/Open/ProjectList).
+- Logga in som administratör.
+- Gå in i edit mode från meny, 'Edit/Edit mode'.
+  Projekt representeras av object av klassen ProjectReg, som visas i paletten till vänster.
+  ProjectReg objekten kan ordnas i hierakier mha $Hier objekt.
+- Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog, hierarki och 
+  beskrivning.
+- Projektet skapas när man sparar, efter att en verifiering har gjorts. Spara och logga ut.
 
 <h2>Projektnamn
-Ett projekt har ett projeknamn som identifierar projektet i utvecklingsmiljön. Jämför 
+Ett projekt har ett projektnamn som identifierar projektet i utvecklingsmiljön. Jämför 
 systemnamnet som definierar projektet i runtimemiljön. Projektnamn och systemnamn är ofta
 lika, men behöver inte vara det. Ett system kan faktiska ha många projekt i 
 utvecklingsmiljön. När man uppgraderar, eller gör större förändringar i systemet, tar man
@@ -990,12 +998,12 @@ Konfigurera Directory volymen
 
 <h1>Öppna ett projekt
 När projektet har skapas han man hitta det i administratören projektträd. Man öppnar ett
-projekt genom att markera ett projekt, och aktivera 'Edit/Open Project' i menyn.
-Arbetsbänken öppna nu för projektet, och volymsväljar fönstret, som listar alla volymer
+projekt genom att aktivera 'Open Project' i popupmenyn för ett ProjectReg objekt.
+Arbetsbänken öppnas nu för projektet, och volymsväljar fönstret, som listar alla volymer
 i projektet, visas. Hittills är endast directory volymen skapad, och vår första uppgift
-är att konfigurera denna volymen, med de volymer och noder som ingår i systemet.
+är att konfigurera denna volym, med de volymer och noder som ingår i systemet.
 
-?????
+
 Välj ut directory volymen och klicka på Ok knappen för att öppna navigatören för volymen.
 
 <image> dg_fig23.gif
@@ -1915,7 +1923,7 @@ Editering innebär att man skapar nya objekt, kopierar objekt, tar bort objekt el
 värde på attribut.
 
 <h2>Skapa objekt
-Man skapar ett objekt genom att välja ut objekets klass i paletten. Paletten är uppdelad i
+Man skapar ett objekt genom att välja ut objekts klass i paletten. Paletten är uppdelad i
 mapparna Plant, Node och AllClasses. Under Plant finns de vanligaste klasserna i anläggnings
 hierakin, och under Node finns de vanligaste i nodhierakin. Om klassen inte finns med här,
 finns samtliga klasser åtkomliga under AllClasses. Här listas alla klassvolymer, och under

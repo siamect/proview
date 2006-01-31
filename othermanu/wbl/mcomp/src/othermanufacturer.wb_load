@@ -55,7 +55,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     ! 
     !  See superclass BaseMValve for more information.
     !  @classlink BaseMValve basecomponent_basemvalve.html
-    !  @link Datasheet ../dsh/kla_armatur.pdf
+    !  @link Datasheet ../dsh/durholdt_valve_100_103.pdf
     !*/
     Object Durholdt_valve_100_103 $ClassDef 18 06-OCT-2005 09:28:20.00
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -79,7 +79,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Template Durholdt_valve_100_103 2152431616 06-OCT-2005 09:28:20.00
         Body RtBody 06-OCT-2005 09:43:11.22
           Attr Super.Super.Specification = "Durholdt valve 100.103"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/durholdt_valve_100_103.pdf"
           Attr Super.GraphConfiguration = 3
           Attr Super.DisableSwitchOpen = 1
           Attr Super.DisableSwitchClosed = 1
@@ -310,7 +310,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     ! 
     !  See superclass BasePressureSwitch for more information.
     !  @classlink BasePressureSwitch basecomponent_basepressureswitch.html
-    !  @link Datasheet ../dsh/kla_armatur.pdf
+    !  @link Datasheet ../dsh/suco_presswitch_ec.pdf
     !*/
     Object Suco_PresSwitch_27AF $ClassDef 19 06-OCT-2005 09:28:20.00
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -334,7 +334,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Template Suco_PresSwitch_27AF 2152693760 06-OCT-2005 09:28:20.00
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Super.Specification = "Suco Pressure switch 27 AF"
-          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/kla_armatur.pdf"
+          Attr Super.Super.Super.DataSheet = "$pwr_lang/dsh/suco_presswitch_27af.pdf"
           Attr Super.Super.Switch.Description = "Switch digital input"
           Attr Super.Super.AlarmText = "Pressure switch, "
         EndBody
@@ -553,7 +553,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Template Metso_Pump_VS 2151120896 06-OCT-2005 09:28:20.00
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Super.Super.Specification = "Metso minerals vertikala sumppumpar SALA serien VS"
-          Attr Super.Super.DataSheet = "$pwr_lang/dsh/metso_pump_vs.html"
+          Attr Super.Super.DataSheet = "$pwr_lang/dsh/metso_pump_vs.pdf"
         EndBody
       EndObject
     EndObject

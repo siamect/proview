@@ -2,7 +2,7 @@ Package: pwrdemo41
 Version: 4.1.1-1
 Section: base
 Priority: optional
-Architecture: i586
+Architecture: i386
 Depends: pwr41 (>= 4.1.1-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>

@@ -1,5 +1,5 @@
 #
-# Proview   $Id: wb_open_db.sh,v 1.1 2006-01-23 08:44:30 claes Exp $
+# Proview   $Id: wb_open_db.sh,v 1.2 2006-01-31 09:10:21 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@ password=$2
 database=$3
 title=$4
 
-set -o xtrace
+#set -o xtrace
 if [ -z $database ]; then
   echo "Database is missing"
   return
