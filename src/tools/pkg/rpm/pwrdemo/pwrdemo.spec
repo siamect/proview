@@ -61,7 +61,7 @@ if [ -e $aroot/db/pwr_projectlist.dat ]; then
   ptst=`eval grep "'\bpwrdemo%{ver}\b'" $aroot/db/pwr_projectlist.dat`
   set -e
   if [ "$ptst" = "" ]; then
-    echo "pwrdemo%{ver} V${pwrver:0:1}.${pwrver:1:1} /usr/pwrp/pwrdemo%{ver} \"\" " >> $aroot/db/pwr_projectlist.dat
+    echo "pwrdemo%{ver} V${pwrver:0:1}.${pwrver:1:1} /usr/pwrp/pwrdemo%{ver} Demos-pwrdemo%{ver} \"\" " >> $aroot/db/pwr_projectlist.dat
   fi
 fi
 
@@ -111,4 +111,4 @@ fi
 
 %changelog
 * Fri Jan 27 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
-- Tested 
+- Base release 

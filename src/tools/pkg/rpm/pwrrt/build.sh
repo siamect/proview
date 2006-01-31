@@ -68,7 +68,7 @@ tar -xf $tarfile
 rm $tarfile
 rm -r $pkgroot/usr/pwrrt/lib/*.a
 rm -r $pkgroot/usr/pwrrt/exe/wb*
-cp $pwr_exe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
+cp $pwr_eexe/wb_distr_keepboot.sh $pkgroot/usr/pwrrt/exe
 cd $currentdir
 
 # Copy configuration files to cnf
@@ -99,7 +99,7 @@ echo "-- Building package"
                --define "_topdir $pkgroot/rpm" \
                --buildroot $pkgroot $pkgsrc/pwrrt.spec > /dev/null 2>&1
 
-mv $pkgroot/rpm/RPMS/i586/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
+mv $pkgroot/rpm/RPMS/i386/*.rpm $pwre_broot/$pwre_target/bld/pkg/.
 rm -r $pkgroot
 
 

@@ -8,13 +8,13 @@
 #
 
 
-Name:		pwr
+Name:		pwr41
 Summary: 	Proview/R development and runtime environment
 Version:        4.1.1
 Release: 	1	
 Copyright:	(c) 2005 SSAB Oxelösund AB, Sweden
 #License:        GPL
-#BuildArch:      i586
+BuildArch:      i386
 Packager: 	robert.karlsson@ssabox.com
 Group: 		Development/Tools/Other
 Url:            http://www.proview.se
@@ -179,4 +179,4 @@ fi
 
 %changelog
 * Fri Dec 23 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.1-1
-- Tested 
+- Base release 

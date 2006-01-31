@@ -14,7 +14,7 @@ Version:        4.1.1
 Release: 	1	
 Copyright:	(c) 2005 SSAB Oxelösund AB, Sweden
 #License:        GPL
-#BuildArch:      i586
+BuildArch:      i386
 Packager: 	robert.karlsson@ssabox.com
 Group: 		Applications/System
 Url:            http://www.proview.se
@@ -457,5 +457,5 @@ fi
 #%postun
 
 %changelog
-* Fri Dec 30 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.1-1
-- Tested 
+* Tue Jan 31 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.1-1
+- Base release 
