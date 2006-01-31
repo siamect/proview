@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.cpp,v 1.22 2006-01-31 06:47:58 claes Exp $
+ * Proview   $Id: wb.cpp,v 1.23 2006-01-31 09:11:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -607,6 +607,7 @@ int main( int argc, char *argv[])
       case 'p':
 	sw_projectlist = 1;
 	sw_projectvolume = 0;
+	strcpy( volumename, "");
 	break;
       default:
 	printf("Unknown argument: %s\n", argv[i]);
