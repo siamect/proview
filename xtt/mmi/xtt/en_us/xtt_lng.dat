@@ -57,6 +57,7 @@ E 1.1.51 "System"
 E 1.1.52 "Exit"
 E 1.1.53 "Close"
 E 1.1.54 "value >"
+E 1.1.55 "Print"
 #
 # Logging entry
 E 1.2.1 "Active"
@@ -301,6 +302,7 @@ B 5.1.11 "Frequency converter tripped, reset is required, "
 B 5.1.12 "Converter Maintenance: replace of cooling fan is required, "
 B 5.1.13 "Frequency converter warning, "
 B 5.1.14 "Frequency converter error, "
+E 5.1.15 "Local control"
 # ACS800MotorAggr
 E 5.2.1 "Power/Contactor"
 E 5.2.2 "Fuse"

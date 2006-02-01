@@ -1,5 +1,5 @@
 !
-!  Proview   $Id: inc_xtt.uil,v 1.1 2005-10-07 05:57:29 claes Exp $
+!  Proview   $Id: inc_xtt.uil,v 1.2 2006-02-01 15:10:09 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  Dieses Programm ist kostenlose Software, sie können es benutzen,
@@ -35,12 +35,12 @@ c_Collapse   		: compound_string("Kollaps");
 c_Functions   		: compound_string("Funktionen");
 c_Open_Object   	: compound_string("Öffne Objekt");
 c_Open_Plc   		: compound_string("Öffne PLC");
-c_Open_ClassGraph   	: compound_string("Öffne ClassGraph");
+c_Open_ClassGraph   	: compound_string("Öffne ObjectGraph");
 c_Show_Crossreferences  : compound_string("Zeige Verweise");
 c_Change_Value   	: compound_string("Ändere Wert");
 c_Command   		: compound_string("Befehl");
 c_Collect_insert   	: compound_string("Eingaben sammeln");
-c_Collect_show   	: compound_string("Ausgaben sammeln");
+c_Collect_show   	: compound_string("Zeige gesammelte Eingaben");
 c_Advanced_user  	: compound_string("Fortgeschrittene Benutzer");
 c_View   		: compound_string("Ansehen");
 c_Zoom_in   		: compound_string("Heranzoomen");
