@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.29 2005-12-06 10:56:32 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.30 2006-02-01 07:36:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -238,13 +238,14 @@ void wb_cdrep::templateBody( pwr_tStatus *sts, pwr_eBix bix, void *p, pwr_tOid o
     if ( ODD(status) && templ->cid() == cid()) {
       templ->ref();
       localwb->readBody( &status, templ, bix, p);
-      templ->unref();
       if ( ODD(status)) {
 	if ( cdh_ObjidIsNotNull(o))
 	  updateTemplate( bix, p, o, templ->oid());
 	*sts = LDH__SUCCESS;
+	templ->unref();
 	return;
       }
+      templ->unref();
     }
   }
 

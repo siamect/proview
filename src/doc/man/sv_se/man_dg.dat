@@ -892,12 +892,13 @@ Användare och systemgrupper skapas i administratören.
   trädstruktur och klickar man på mappen/lövet på ett existerande objekt läggs det nya objeket 
   som första barn, om kan klicka till höger om mappen/lövet läggs det som syskon.
 - Skapa en systemgrupp genom att markera 'SystemGroupReg' i paletten till vänster, och klicka
-  med MB2 (mittenknappen) i det högra fönstret. Öppna SystemGroup objektet och ange namn och
+  med MB2 (mittenknappen) i det högra fönstret. Öppna SystemGroupReg objektet och ange namn och
   attribut för systemgruppen. Ange fullständigt hierarkinamn, t ex 'Main.West'.
 - Skapa en användare genom att markera 'UserReg' i paletten och klicka med MB2 på mappen/lövet
   till det SystemGroupReg objekt som UserReg objektet ska ligga under. Öppna UserReg objektet
   och ange anvädarnamn, passerord och privilegier för användaren.
-- Spara och logga ut med kommandot 'logout'.
+- Spara.
+- Logga ut med kommandot 'logout'.
 
 Användardatabasen ligger på katalogen $pwra_db.
 
@@ -917,10 +918,11 @@ Registreringen görs från administratören:
 - Gå in i editerings läge, 'Edit/Edit mode' i menyn.
   Volymer registreras mha objekt av klassen VolumeReg som visas i paletten till vänster.
   I paletten finns även $Hier klassen, med vilken man kan ordna VolumeReg objekten 
-  hierarktisk.
+  hierarktiskt.
 - Skapa ett VolumeReg objekt, öppna objektet och ange volymsnamn (= objektsnamn), 
   volymsidentitet och projekt.
-- Spara och logga ut med 'logout'-kommandot.
+- Spara.
+- Logga ut med 'logout'-kommandot.
 
 <h2>Volymsnamn
 Namn på volymen, ska vara unikt och får ha max 31 tecken.
@@ -962,8 +964,7 @@ Skapa ett projekt i administratören:
 - Gå in i edit mode från meny, 'Edit/Edit mode'.
   Projekt representeras av object av klassen ProjectReg, som visas i paletten till vänster.
   ProjectReg objekten kan ordnas i hierakier mha $Hier objekt.
-- Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog, hierarki och 
-  beskrivning.
+- Skapa ett ProjectReg objekt och ange projektnamn, basversion, filkatalog och beskrivning.
 - Projektet skapas när man sparar, efter att en verifiering har gjorts. Spara och logga ut.
 
 <h2>Projektnamn
@@ -985,10 +986,6 @@ vilket bas projektet ska peka på.
 Projektet består av ett filkatalogsträd där databaser, källkodsfiler, arkiv mm lagras.
 Path är rot katalogen till det här trädet.
 
-<h2>Hierarchy
-Administratören kan ordna projekten i en trädstruktur, och hierarkin är namnet på noderna
-i träden separerade med '-'. Hierarki noderna i träden skapas av administratören för att
-matcha det specificerade namnet.
 </topic>
 </chapter>
 

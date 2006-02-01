@@ -8,7 +8,7 @@ link = $(ldxx) $(linkflags) $(domap) -o $(export_exe) \
 	-L/usr/X11R6/lib -L/usr/local/BerkeleyDB.4.0/lib\
 	-L/opt/gnome/lib \
 	-lpwr_wb -lpwr_ge -lpwr_rt -lpwr_co -lpwr_flow -lpwr_glow\
-	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -ldb_cxx-4.0\
+	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp -ldb_cxx\
         -lXmu -lSM -lICE\
 	-lrpcsvc -lpthread -lm -lrt
 

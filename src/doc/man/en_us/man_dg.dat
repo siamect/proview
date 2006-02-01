@@ -901,17 +901,26 @@ inherits all the users of the parent.
 Users and systemgroups are created in the administrator:
 
 - Start the administrator with the command 'pwra'
-- Enter user mode from the menu 'File/Show Users'.
-- Login by entering the login command. Open the login prompt from the menu 'Functions/Command' 
-  and enter 'login’ on the command line. If the systemgroup 'administrator’ is present you
-  also has to add username and password to a user defined in the administrator systemgroup.
-- Enter edit mode from the menu 'Mode/Edit'.
-- Open the New System Group ('Edit/New SystemGroup' in the menu) dialog and enter name and 
-  attributes. Supply the full hierarchy name, e.g. 'Main.West’.
-- Select a system group and open the New User dialog ('Edit/New User') and enter username, 
-  password and privileges for the user.
-- Click in the Ok button.
-- Logout with the command 'logout’.
+- Enter the UserDatabase from the menu 'File/Open/UserDatabase'.
+- Login by entering the login command. Open the login prompt from the menu 'Functions/Command'
+  and enter 'login /adm’ on the command line. If the systemgroup 'administrator’ is presen
+  you also has to add username and password to a user defined in the administrator systemgroup.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Systemgroups and users are represented by object of the classes SystemGroupReg and
+  UserReg, that are displayed in the palette to the left. An object is created by selecting
+  a class in the palette. After that, you click with the middle mousebutton on the future 
+  sibling or parent to the new object. If you click on the map/leaf in the destination object, 
+  the new object is placed as the first child, if you click to the right of the map/leaf, 
+  it is placed as a sibling.
+- Create a systemgroup by selecting 'SystemGroupReg' in the palette, and click with MB2
+  (the middle mousebutton) in the right window. Open the SystemGroupReg object and enter
+  name ant attribute for the system group. Enter the complete hierarchy name, e.g. 
+  'Main.West'.
+- Create a user by selecting 'UserReg' in the palette and click with MB2 on the map/leaf
+  of the SystemGroupReg object that the UserReg should be a child of. Open the object and
+  enter username, password and privileges for the user.
+- Save.
+- Logout with the command 'logout'.
 
 
 The user database reside in the directory $pwra_db.
@@ -927,15 +936,16 @@ all volumes is registered in a global volume.
 The registration is done by the administrator:
 
 - Start the administrator with the command 'pwra’
-- Enter volume mode from the menu 'File/Show volumes'.
-- Login
-- Enter edit mode from the menu 'Mode/Edit'.
-- If a volume in the volume list is selected, the new volume will be inserted after this 
-  volume, otherwise it is inserted last in the list.
-- Open the New volume dialog (Edit/New Volume), enter volume name, volume identity, and 
-  system name.
-- Click on the Ok button.
-- Logout with the command 'logout'
+- Enter volume mode from the menu 'File/Open/GlobalVolumeList'.
+- Login as administartor.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Volumes are registred by objects of class VolumeReg, that is dislayed in the palette to
+  the left. In the palette, there is also the $Hier class, that can be used to order the
+  VolumeReg objects in a tree structure.
+- Create a VolumeReg object, open the object and enter volumename (equals objectname),
+  volumeidentity and project.  
+- Save.
+- Logout with the command 'logout'.
 
 <h2>Volume name
 The name of the volume, a unic name with max 31 characters.
@@ -969,13 +979,15 @@ overhead and make it harder to upgrade the project.
 Create the project in the administrator:
 
 - Start the administrator with the command 'pwra’.
-- The project mode is default when starting the administrator. If the current mode is User 
-  of Volume, enter Project mode from the menu 'File/Show projects'.
-- Login.
-- Enter edit mode from the menu 'Mode/Edit'.
-- Open the Create Volume dialog (Edit/Create Project), and enter project name, base version, 
-  path, hierarchy and description.
-- Logout.
+- The projectlist is shown as default when starting the administrator. It can also be opened
+  from the menu (File/Open/ProjectList).
+- Login as administrator.
+- Enter edit mode from the menu 'Edit/Edit mode'.
+  Projects are represented by objects of class ProjectReg, that is displayed in the palette
+  to the left. $Hier objects can be used to order the ProjectReg objects in a tree structure.
+- Create a ProjectReg object and enter project name, base version, path and description.
+- The project is created when saving. First you have to confirm the changes.
+- Save and logout.
 
 <h2>Project name
 A project has a project name that identifies the project in the development environment. It is 
@@ -996,10 +1008,6 @@ when creating a project you have to choose which base the project should point a
 The project consist of a directory tree where databases, source files, archives etc is stored. 
 The path is the root directory of this tree.
 
-<h2>Hierarchy
-The administrator can order the projects in a tree structure, and the hierarchy is the name 
-of the nodes in the tree separated by '-'. The hierarchy nodes of the tree will be created 
-by the administrator to match the specified name.
 </topic>
 </chapter>
 
@@ -1009,12 +1017,11 @@ Directory Volume Configuration
 
 <h1>Open a project
 When the project is created, it is found in the administrator project tree. You open a project 
-by selecting it and activate 'Edit/Open Project' in the menu. The workbench is now opened for 
-the project, and the Volume selection window is displayed, showing all the volumes in the 
-project. So far, only the DirectoryVolume is created, and our first task is to configure this 
-volume, with the volumes and nodes of the system.
+by activating 'Open Project' in the popupmenu for a ProjectReg object. The workbench is now 
+opened for the project, and the Volume selection window is displayed, showing all the volumes 
+in the project. So far, only the DirectoryVolume is created, and our first task is to configure 
+this volume, with the volumes and nodes of the system.
 
-?????
 Select the DirectoryVolume and click on the Ok button to open the configuration editor for the 
 volume. 
 

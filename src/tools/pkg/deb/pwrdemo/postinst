@@ -15,7 +15,7 @@ fi
 aroot="/usr/pwrp/adm"
 
 echo "Change owner of files to pwrp"
-chown -R pwrp /usr/pwrp/pwrdemo$ver
+chown -R pwrp:pwrp /usr/pwrp/pwrdemo$ver
 
 # Register volume
 if [ -e $aroot/db/pwr_volumelist.dat ]; then

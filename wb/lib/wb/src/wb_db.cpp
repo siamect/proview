@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.31 2006-01-27 11:15:48 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.32 2006-02-01 07:36:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -930,6 +930,46 @@ static void printstat(DbEnv *ep, char *s)
   printf("\n");
 }
 
+extern "C" {
+  //! Compare wb_db_class keys
+  /*!
+    - return <0 if ap < tp
+    - return 0 if ap = tp.
+    - return >0 if ap > tp.
+  */
+  typedef struct {
+    pwr_tCid cid;
+    pwr_tOid oid;
+  } k_t;
+
+  int wb_db_class_bt_compare(DB *dp, const DBT *ap, const DBT *tp)
+  {
+
+    k_t *akp = (k_t *)ap->data;
+    k_t *tkp = (k_t *)tp->data;
+
+    if (ap->size == 0 || tp->size == 0 || ap->size != tp->size)
+      printf("a.size: %d, t.size: %d\n", ap->size, tp->size);
+
+    if (akp->cid == tkp->cid) {
+      if (akp->oid.vid == tkp->oid.vid) {
+	if (akp->oid.oix == tkp->oid.oix)
+	  return 0;
+	else if (akp->oid.oix < tkp->oid.oix)
+	  return -1;
+	else
+	  return 1;
+      } else if (akp->oid.vid < tkp->oid.vid)
+	return -1;
+      else
+	return 1;
+    } else if (akp->cid < tkp->cid)
+      return -1;
+    else
+      return 1;
+  }
+};
+
 void wb_db::openDb(bool useTxn)
 {
   struct stat sb;
@@ -983,6 +1023,9 @@ void wb_db::openDb(bool useTxn)
   m_t_class = new Db(m_env, 0);
   m_t_name  = new Db(m_env, 0);
   m_t_info  = new Db(m_env, 0);
+
+  rc = m_t_class->set_bt_compare(wb_db_class_bt_compare);
+  // printf("m_t_class->set_bt_compare %d\n", rc);
 
 #if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0    
   u_int32_t flags;
