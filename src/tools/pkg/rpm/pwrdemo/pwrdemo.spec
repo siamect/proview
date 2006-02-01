@@ -31,6 +31,7 @@ For more information please see www.proview.se.
 #%clean
 
 %files
+%defattr(-,root,root)
 /usr
 
 %post

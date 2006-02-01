@@ -77,6 +77,7 @@ echo "Version: %{version}-%{release}" > %{buildroot}/usr/pwrrt/exe/rt_version.da
 #%clean
 
 %files
+%defattr(-,root,root)
 /usr
 /etc
 

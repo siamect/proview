@@ -72,6 +72,7 @@ echo "$ver"
 #%clean
 
 %files
+%defattr(-,root,root)
 /usr
 /etc
 
