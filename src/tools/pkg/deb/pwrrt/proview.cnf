@@ -3,11 +3,11 @@
 #
 # Default QCOM Bus Id
 #
-qcomBusId              999 
+qcomBusId              517 
 #
 # Web directory
 #
-#webDirectory            /pwrp/common/web
+webDirectory            /pwrp/common/web
 
 
 
