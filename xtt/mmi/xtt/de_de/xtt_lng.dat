@@ -263,8 +263,7 @@ E 5.1.6 "Sollwert"
 E 5.1.7 "Fernsteuerung"
 E 5.1.8 "BUS-Kom."
 E 5.1.9 "Reset"
-E 5.1.15 "Lokal gesteuert
-"
+E 5.1.15 "Lokal gesteuert"
 # ACS800PumpAggr
 E 5.2.1 "Leistung/Kontaktor"
 E 5.2.2 "Sicherung"

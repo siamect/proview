@@ -106,18 +106,18 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-    cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
-    cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
-    cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
-    cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
-    chmod a+x /home/pwrp/.rtt_start
-    cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
-    chmod a+x /home/pwrp/.xtt_start
-    cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
-
-    chown -R pwrp /home/pwrp
-    chgrp -R pwrp /home/pwrp
   fi
+  /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
+  /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
+  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
+  /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
+  chmod a+x /home/pwrp/.rtt_start
+  /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
+  chmod a+x /home/pwrp/.xtt_start
+  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+
+  chown -R pwrp /home/pwrp
+  chgrp -R pwrp /home/pwrp
 fi
 
 if ! grep -q "\bskiftel:" /etc/passwd; then
@@ -126,18 +126,18 @@ if ! grep -q "\bskiftel:" /etc/passwd; then
   useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel
   if [ ! -e /home/pwrp ]; then
     mkdir /home/skiftel
-    cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
-    cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
-    cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
-    cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
-    chmod a+x /home/skiftel/.rtt_start
-    cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
-    chmod a+x /home/skiftel/.xtt_start
-    cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
-
-    chown -R pwrp /home/skiftel
-    chgrp -R pwrp /home/skiftel
   fi
+  /bin/cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
+  /bin/cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
+  /bin/cp /usr/pwrrt/cnf/user/.mwmrc /home/skiftel
+  /bin/cp /usr/pwrrt/cnf/user/.rtt_start /home/skiftel
+  chmod a+x /home/skiftel/.rtt_start
+  /bin/cp /usr/pwrrt/cnf/user/.xtt_start /home/skiftel
+  chmod a+x /home/skiftel/.xtt_start
+  /bin/cp /usr/pwrrt/cnf/user/.xsession /home/skiftel
+
+  chown -R pwrp /home/skiftel
+  chgrp -R pwrp /home/skiftel
 fi
 
 if ! grep -q "\bb55:" /etc/passwd; then
@@ -153,19 +153,19 @@ if ! grep -q "\bb55:" /etc/passwd; then
   useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G pwrp -d /home/b55 $audio b55
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
-    cp /usr/pwrrt/cnf/op/.bashrc /home/b55
-    cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
-    cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
-    cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
-    chmod a+x /home/b55/.rtt_start
-    cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
-    chmod a+x /home/b55/.xtt_start
-    cp /usr/pwrrt/cnf/op/.xsession /home/b55
-
-    chown -R b55 /home/b55
-    chgrp -R pwrp /home/b55
-    chmod a+rwx /home/b55
   fi
+  /bin/cp /usr/pwrrt/cnf/op/.bashrc /home/b55
+  /bin/cp /usr/pwrrt/cnf/op/.bash_profile /home/b55
+  /bin/cp /usr/pwrrt/cnf/op/.mwmrc /home/b55
+  /bin/cp /usr/pwrrt/cnf/op/.rtt_start /home/b55
+  chmod a+x /home/b55/.rtt_start
+  /bin/cp /usr/pwrrt/cnf/op/.xtt_start /home/b55
+  chmod a+x /home/b55/.xtt_start
+  /bin/cp /usr/pwrrt/cnf/op/.xsession /home/b55
+
+  chown -R b55 /home/b55
+  chgrp -R pwrp /home/b55
+  chmod a+rwx /home/b55
 fi
 
 #echo "Change owner of files to pwrp"

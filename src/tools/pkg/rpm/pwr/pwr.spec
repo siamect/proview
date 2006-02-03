@@ -91,20 +91,20 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -d /home/pwrp pwrp
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bashrc /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bash_profile /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.mwmrc /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.rtt_start /home/pwrp
-    chmod a+x /home/pwrp/.rtt_start
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xtt_start /home/pwrp
-    chmod a+x /home/pwrp/.xtt_start
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xsession /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init.pwr_com /home/pwrp
-    cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
-
-    chown -R pwrp /home/pwrp
-    chgrp -R pwrp /home/pwrp
   fi
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bashrc /home/pwrp
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.bash_profile /home/pwrp
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.mwmrc /home/pwrp
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.rtt_start /home/pwrp
+  chmod a+x /home/pwrp/.rtt_start
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xtt_start /home/pwrp
+  chmod a+x /home/pwrp/.xtt_start
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/.xsession /home/pwrp
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init.pwr_com /home/pwrp
+  cp /usr/pwr%{ver}/%{pwre_target}/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
+
+  chown -R pwrp /home/pwrp
+  chgrp -R pwrp /home/pwrp
 fi
 
 echo "Change owner of files to pwrp"
