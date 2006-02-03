@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt.cpp,v 1.21 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: rt_xtt.cpp,v 1.22 2006-02-03 07:34:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1056,7 +1056,7 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 
   XtRealizeWidget( toplevel);
 
-  if ( !opplace_found && !quiet)
+  if ( !quiet)
     wow_DisplayWarranty( toplevel);
 
 //  XmProcessTraversal( xnav->brow_widget, XmTRAVERSE_CURRENT);
