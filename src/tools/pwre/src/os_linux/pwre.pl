@@ -9,6 +9,7 @@
   "build_all", 	"build_all:usage_build_all",
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
+  "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
   "create", 	"create:usage_create",
   "create_all_modules", "create_all_modules:usage_create_all_modules",
@@ -246,15 +247,21 @@ sub build_all_modules ()
   _module("telemecanique");
   build_all();
   merge();
-  
+
+  method_build();
+}  
+
+
+sub method_build ()
+{
   printf("-- Relink method dependent programs");
   _module("rt");
   $ENV{"export_type"} = "exp";
   my($exe_dir) = $ENV{"pwr_exe"};
   system("rm $exe_dir/rt_io_comm");
   _build("exe", "rt_io_comm", "all");
-  system("rm $exe_dir/rt_ini");
-  _build("exe", "rt_ini", "all");
+#  system("rm $exe_dir/rt_ini");
+#  _build("exe", "rt_ini", "all");
   merge();
   
   _module("wb");
@@ -389,6 +396,7 @@ sub build_all ()
     }
     if ( $exe == 1) {
       _build("exe", "rt*", "all");
+      _build("exe", "pwr_user", "all");
       _build("exp", "ge", "all");
       _build("mmi", "*", "copy");
       _build("wbl", "pwrs", "lib");
@@ -929,6 +937,12 @@ sub usage_build_all_modules ()
 {
   printf("++\n");
   printf("++ build_all_modules             : Builds all in all modules\n");
+}
+
+sub usage_method_build ()
+{
+  printf("++\n");
+  printf("++ method_build                  : Rebuild method dependent programs\n");
 }
 
 sub usage_create_all_modules ()

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.17 2005-12-30 15:36:36 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.18 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2704,3 +2704,35 @@ void io_ConvertAit (
   *actvalue_p = Intercept + sigvalue * Slope; 
 }
 
+/*----------------------------------------------------------------------------*\
+  Print io methods
+\*----------------------------------------------------------------------------*/
+void io_methods_print()
+{
+  int i, j;
+
+  printf( "Base Methods\n");
+  for ( i = 0;; i++) {
+    if (pwr_gBase_IoClassMethods[i].ClassName[0] == 0)
+      break;
+    printf( "  %3d %-20s ", i, pwr_gBase_IoClassMethods[i].ClassName);
+    for ( j = 0;; j++) {
+      if ((*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      printf( "%s ", (*pwr_gBase_IoClassMethods[i].Methods)[j].MethodName);
+    }
+    printf( "\n");
+  }
+  printf( "\nUser Methods\n");
+  for ( i = 0;; i++) {
+    if (pwr_gUser_IoUserClassMethods[i].ClassName[0] == 0)
+      break;
+    printf( "  %3d %-20s ", i, pwr_gUser_IoUserClassMethods[i].ClassName);
+    for ( j = 0;; j++) {
+      if ((*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      printf( "%s ", (*pwr_gUser_IoUserClassMethods[i].Methods)[j].MethodName);
+    }
+    printf( "\n");
+  }
+}

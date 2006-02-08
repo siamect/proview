@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_comm.c,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_io_comm.c,v 1.4 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,16 @@
 
 static pwr_sClass_IOHandler* init(qcom_sQid*, lst_sEntry**);
 
-int main()
+static void usage()
+{
+  printf( "\
+rt_io_comm     I/O Communication program\n\
+\n\
+     -m        Print loaded I/O methods\n\
+\n");
+}
+
+int main (int argc, char **argv)
 {
   pwr_tStatus sts = 1;
   io_tCtx io_ctx;
@@ -73,6 +82,17 @@ int main()
   pwr_tDeltaTime cycle;
   lst_sEntry *csup_lh;
   int delay_action = 0;
+
+  if ( argc > 1) {
+    if ( strcmp( argv[1], "-m") == 0) {
+      io_methods_print();
+      exit(0);
+    }
+    if ( strcmp( argv[1], "-h") == 0) {
+      usage();
+      exit(0);
+    }
+  }
 
   ihp = init(&qid, &csup_lh);
 

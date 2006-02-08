@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.37 2005-12-30 15:36:36 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.38 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1901,6 +1901,12 @@ static int	wnav_show_func(	void		*client_data,
       return sts;
     }
     return sts;
+  }
+  else if ( strncmp( arg1_str, "METHODS", strlen( arg1_str)) == 0)
+  {
+    // Command is "SHOW METHODS"
+    wb_erep *erep = *(wb_env *)wnav->wbctx;
+    erep->printMethods();
   }
   else
   {

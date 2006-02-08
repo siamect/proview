@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.h,v 1.22 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_erep.h,v 1.23 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,6 +95,7 @@ public:
   void setRefMerep( wb_merep *merep);
   void resetRefMerep();
   bool refMerepOccupied() { return m_ref_merep_occupied;}
+  void printMethods();
 
   static void volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename);
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.6 2005-12-30 15:36:36 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.7 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -248,4 +248,7 @@ int io_CheckClassIoType(
   io_eType	type,
   pwr_tCid 	cid
 );
+
+void io_methods_print();
+
 #endif

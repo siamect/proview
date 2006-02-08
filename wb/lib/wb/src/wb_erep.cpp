@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.43 2005-12-27 09:32:43 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.44 2006-02-08 13:53:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -895,6 +895,35 @@ void wb_erep::bindMethods()
     cout << " Method: " << it->first << endl;
   }
 #endif
+}
+
+void wb_erep::printMethods()
+{
+  int i, j;
+
+  printf("System Methods\n");
+  for (i = 0;; i++) {
+    if (pwr_gSystem_ClassMethods[i].ClassName[0] == '\0')
+      break;
+    printf( "%3d %-20s\n", i, pwr_gSystem_ClassMethods[i].ClassName);
+    for (j = 0;; j++) {
+      if ((*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      printf( "       %s\n", (*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName);
+    }
+  }
+
+  printf( "Base Methods\n");
+  for (i = 0;; i++) {
+    if (pwr_gBase_ClassMethods[i].ClassName[0] == '\0') break;
+
+    printf( "%3d %-20s\n", i, pwr_gBase_ClassMethods[i].ClassName);
+    for (j = 0;; j++) {
+      if ((*pwr_gBase_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      printf( "       %s\n", (*pwr_gBase_ClassMethods[i].Methods)[j].MethodName);
+    }
+  }
 }
 
 int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
