@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_merge.c,v 1.1 2005-12-30 15:46:25 claes Exp $
+ * Proview   $Id: co_merge.c,v 1.2 2006-02-08 11:32:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,8 +97,10 @@ int main(  int argc, char *argv[])
 
   switch ( mtype) {
   case merge_eMtype_IoBase: {
-    strcpy( cfile, "/tmp/rt_io_base_methods.c");
-    strcpy( ofile, "/tmp/rt_io_base_methods.o");
+    strcpy( cfile, "$pwre_broot/$pwre_target/bld/lib/rt/rt_io_base_methods.c");
+    strcpy( ofile, "$pwre_broot/$pwre_target/bld/lib/rt/rt_io_base_methods.o");
+    dcli_translate_filename( cfile, cfile);
+    dcli_translate_filename( ofile, ofile);
 
     outfp = fopen( cfile, "w");
     if ( !outfp) {
@@ -149,9 +151,9 @@ int main(  int argc, char *argv[])
   system( cmd);
   sprintf( cmd, "ar r %s %s", outfile, cfile);
   system(cmd);
-  sprintf( cmd, "rm %s", ofile);
-  system(cmd);
-  sprintf( cmd, "rm %s", cfile);
-  system(cmd);
+  // sprintf( cmd, "rm %s", ofile);
+  // system(cmd);
+  // sprintf( cmd, "rm %s", cfile);
+  // system(cmd);
   return 1;
 }
