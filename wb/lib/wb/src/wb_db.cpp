@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.32 2006-02-01 07:36:23 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.33 2006-02-08 08:37:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -801,6 +801,9 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
   pwr_uVolume volume;
   pwr_tTime time;  
   pwr_tOid oid;
+  pwr_mClassDef flags;
+
+  flags.m = pwr_mClassDef_System | pwr_mClassDef_TopObject;
   
   
   openDb(true);
@@ -831,19 +834,24 @@ void wb_db::create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const cha
     break;
   case pwr_eClass_CreateVolume:
   case pwr_eClass_MountVolume:
-  case pwr_eClass_MountObject:
-  case pwr_eClass_VolatileVolume:
-  case pwr_eClass_DynamicVolume:
-  default:
+    flags.m = pwr_mClassDef_System | pwr_mClassDef_NoAdopt;
     break;
+  case pwr_eClass_MountObject:
+    flags.m = pwr_mClassDef_System | pwr_mClassDef_TopObject | pwr_mClassDef_NoAdopt;
+    break;
+  case pwr_eClass_VolatileVolume:
+  case pwr_eClass_ExternVolume:
+    flags.m = pwr_mClassDef_System | pwr_mClassDef_TopObject | pwr_mClassDef_DevOnly;
+    break;
+  case pwr_eClass_DynamicVolume:
+    break;
+  default: ;
   }
   
   oid.vid = vid;
   oid.oix = pwr_cNOix;
   wb_name n(volumeName);
-  pwr_mClassDef flags;
   
-
   try {
     m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
     
