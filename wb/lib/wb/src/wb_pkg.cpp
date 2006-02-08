@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.12 2005-12-20 12:03:54 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.13 2006-02-08 13:56:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,6 +179,14 @@ void wb_pkg::readConfig()
 	// Add volumes
 	for ( int j = 0; j < volcount; j++) {
 	  char dir[80];
+
+	  if ( (vollist[j] >= cdh_cManufactClassVolMin && 
+		vollist[j] <= cdh_cManufactClassVolMax) ||
+	       (vollist[j] >= cdh_cSystemClassVolMin && 
+		vollist[j] <= cdh_cSystemClassVolMax)) {
+	    // Base volume, skip
+	    continue;
+	  }	       
 
 	  strcpy( dir, "$pwrp_load/");
 	  sprintf( fname, "%s%s.dbs", dir, cdh_Low( (char *)(volnamelist + j))); 
