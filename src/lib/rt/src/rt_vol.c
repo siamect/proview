@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_vol.c,v 1.8 2006-02-09 13:42:02 claes Exp $
+ * Proview   $Id: rt_vol.c,v 1.9 2006-02-09 14:29:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1634,6 +1634,9 @@ vol_UpdateAlarm (
 
 }
 
+//
+// Get DisableAttr value on local object
+//
 pwr_tDisableAttr
 vol_ArefDisabled (
   pwr_tStatus 		*sts,
@@ -1650,7 +1653,7 @@ vol_ArefDisabled (
   gdb_AssumeLocked;
 
   daref = cdh_ArefToDisableAref( arp);
-  ap = vol_ArefToAttribute(sts, &attribute, &daref, gdb_mLo_global, vol_mTrans_all);
+  ap = vol_ArefToAttribute(sts, &attribute, &daref, gdb_mLo_native, vol_mTrans_none);
   if (ap == NULL) return pwr_cNDisableAttr;
 
   p = vol_AttributeToAddress(sts, ap);

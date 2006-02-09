@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.24 2006-01-13 16:32:39 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.25 2006-02-09 14:29:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3601,13 +3601,10 @@ pwr_tStatus gdh_ArefDisabled( pwr_sAttrRef *arp,
 			      pwr_tDisableAttr *disabled)
 {
   pwr_tStatus sts;
+  pwr_sAttrRef		daref;
 
-  gdh_ScopeLock {
-
-    *disabled = vol_ArefDisabled( &sts, arp);
-
-  } gdh_ScopeUnlock;
-
+  daref = cdh_ArefToDisableAref( arp);
+  sts = gdh_GetObjectInfoAttrref( &daref, disabled, sizeof(*disabled));
   return sts;
 }
 
