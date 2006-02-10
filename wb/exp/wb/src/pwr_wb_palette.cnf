@@ -560,8 +560,7 @@ palette PlcEditorPalette
     class RemTransRcv
     class RemTransSend
     class RunningTime
-    class AntiSwayA
-    class AntiSwayM
+    class AntiSway
   }
   menu Signals
   {
