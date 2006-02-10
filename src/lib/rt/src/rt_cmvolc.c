@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cmvolc.c,v 1.7 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cmvolc.c,v 1.8 2006-02-10 07:03:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -452,6 +452,7 @@ cmvolc_GetNonExistingClass (
         j++;
         pwr_Assert(j < msgcnt);
         gap = msgs[j]->attr;
+        gap--;
       }
 
     }
