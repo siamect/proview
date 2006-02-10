@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.h,v 1.6 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qdb.h,v 1.7 2006-02-10 14:40:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -753,7 +753,7 @@ void		qdb_Eput	(pwr_tStatus*, qdb_sQue*);
 pwr_tBoolean	qdb_Signal	(pwr_tStatus*, qdb_sQue*);
 int		qdb_Wait	(pwr_tStatus*, qdb_sQue*, qdb_sQue*, int);
 void		qdb_Free	(pwr_tStatus*, qdb_sBuffer*);
-qdb_sBuffer *	qdb_Get		(pwr_tStatus*, qdb_sQue*, int, qcom_sGet*);
+qdb_sBuffer *	qdb_Get		(pwr_tStatus*, qdb_sQue*, int, qcom_sGet*, pwr_tBoolean multipleGet);
 qdb_sQbond *	qdb_GetBond	(pwr_tStatus*, qdb_sQue*, qdb_sQue*);
 void		qdb_GetInfo	(qcom_sGet*, qdb_sBuffer*);
 qdb_sLocal *	qdb_MapDb	(pwr_tStatus*);
@@ -765,7 +765,7 @@ void		qdb_RemoveAppl	(pwr_tStatus*, qdb_sAppl*);
 void		qdb_PutInfo	(qdb_sBuffer*, qcom_sPut *, const qcom_sQid*, qcom_tRid);
 pwr_tBoolean	qdb_RemoveQue	(pwr_tStatus*, qdb_sQue*);
 qdb_sQue *	qdb_Que		(pwr_tStatus*, const qcom_sQid*, qdb_sNode**);
-void *		qdb_Request	(pwr_tStatus*, qdb_sBuffer*, qdb_sQue*, qdb_sQue*, int, qcom_sGet*);
+void *		qdb_Request	(pwr_tStatus*, qdb_sBuffer*, qdb_sQue*, qdb_sQue*, int, qcom_sGet*, pwr_tBoolean);
 
 void		qdb_DumpPool ();
 #endif

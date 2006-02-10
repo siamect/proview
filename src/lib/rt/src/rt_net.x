@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_net.x,v 1.7 2005-09-01 14:57:56 claes Exp $
+% * Proview   $Id: rt_net.x,v 1.8 2006-02-10 14:40:45 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -1300,11 +1300,12 @@ struct net_sGetCclass {
 %
 %void *
 %net_Request (
-%  pwr_tStatus	*sts,
-%  qcom_sQid	*tgt,
-%  qcom_sPut	*put,
-%  qcom_sGet	*get,
-%  net_eMsg	gtype
+%  pwr_tStatus	 *sts,
+%  qcom_sQid	 *tgt,
+%  qcom_sPut	 *put,
+%  qcom_sGet	 *get,
+%  net_eMsg	 gtype,
+%  pwr_tBoolean  multipleReq
 %);
 %
 %pwr_tBoolean

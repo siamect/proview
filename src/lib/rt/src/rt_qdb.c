@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.c,v 1.8 2006-02-10 07:02:41 claes Exp $
+ * Proview   $Id: rt_qdb.c,v 1.9 2006-02-10 14:40:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -929,7 +929,8 @@ qdb_Get (
   pwr_tStatus	*status,
   qdb_sQue	*qp,
   int		tmo,
-  qcom_sGet	*gp
+  qcom_sGet	*gp,
+  pwr_tBoolean  multipleGet
 )
 {
   pwr_tStatus	csts;
@@ -940,8 +941,8 @@ qdb_Get (
 
   qdb_AssumeLocked;
 
-  //  if (!pool_QisEmpty(sts, &qdb->pool, &qp->read_lh))
-  //    pwr_Return(NULL, sts, QCOM__ALLOCQUOTA);
+  if (!multipleGet && !pool_QisEmpty(sts, &qdb->pool, &qp->read_lh))
+    pwr_Return(NULL, sts, QCOM__ALLOCQUOTA);
 
   bp = qdb_Deque(sts, qp, tmo);
   if (bp == NULL) return NULL;
@@ -1161,7 +1162,8 @@ qdb_Request (
   qdb_sQue	*pqp,
   qdb_sQue	*gqp,
   int		tmo,
-  qcom_sGet	*gp
+  qcom_sGet	*gp,
+  pwr_tBoolean  multipleReq
 )
 {
   qdb_sBuffer	*gbp = NULL;
@@ -1191,7 +1193,7 @@ qdb_Request (
   gqp->flags.b.reply = 1;
   if (!qdb_Enque(sts, pbp, pqp))
     return NULL;
-  gbp = qdb_Get(sts, gqp, tmo, gp);
+  gbp = qdb_Get(sts, gqp, tmo, gp, multipleReq);
   gqp->flags.b.reply = 0;
   if (!pbp->c.flags.b.remote)
     return gbp;

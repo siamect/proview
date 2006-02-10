@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cmvolc.c,v 1.8 2006-02-10 07:03:44 claes Exp $
+ * Proview   $Id: rt_cmvolc.c,v 1.9 2006-02-10 14:40:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -229,7 +229,7 @@ cmvolc_GetCachedClass (
       smp->time = time;
       smp->aidx = nextIdx;
     
-      rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getCclassR);
+      rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getCclassR, NO);
       if (rmp == NULL || EVEN(rmp->sts))
         goto netError;
     
@@ -393,7 +393,7 @@ cmvolc_GetNonExistingClass (
     smp->cid = cid;
     smp->aidx = nextIdx;
     
-    rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getGclassR);
+    rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getGclassR, YES);
     if (rmp == NULL || EVEN(rmp->sts))
       goto netError;
     
