@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.c,v 1.7 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_qdb.c,v 1.8 2006-02-10 07:02:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -940,8 +940,8 @@ qdb_Get (
 
   qdb_AssumeLocked;
 
-  if (!pool_QisEmpty(sts, &qdb->pool, &qp->read_lh))
-    pwr_Return(NULL, sts, QCOM__ALLOCQUOTA);
+  //  if (!pool_QisEmpty(sts, &qdb->pool, &qp->read_lh))
+  //    pwr_Return(NULL, sts, QCOM__ALLOCQUOTA);
 
   bp = qdb_Deque(sts, qp, tmo);
   if (bp == NULL) return NULL;
