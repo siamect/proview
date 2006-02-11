@@ -733,6 +733,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  Baseclass for a component.
     !  The baseclass contains the Description attribute and attributes for the
     !  common methods.
+    ! 
+    !  Note that all attributes, except Description and Specification are hidden
+    !  in runtime (has flag RtHide).
     !*/
     Object Component $ClassDef 13 04-OCT-2005 14:02:34.13
       Body SysBody 01-JAN-1970 01:00:00.00
@@ -845,6 +848,9 @@ Volume BaseComponent $ClassVolume 0.0.0.10
     !  Baseclass for an aggregate of components.
     !  The baseclass contains the Description attribute and attributes for the
     !  common methods.
+    ! 
+    !  Note that all attributes, except Description and Specification are hidden
+    !  in runtime (has flag RtHide).
     !*/
     Object Aggregate $ClassDef 135 05-OCT-2005 13:31:43.57
       Body SysBody 05-OCT-2005 13:31:36.19
@@ -48966,6 +48972,17 @@ and no Auto/Man button."
     !  @b Object Graph
     !  @image orm_basesensor_og.gif
     ! 
+    !  @h1 Configuration
+    !  @b Signals
+    !  The object contains the Ai signal 'Value' that should be connected to a
+    !  Ai-channel.
+    ! 
+    !  @b Supervision
+    !  BaseSensor has four limit, each represented by a CompLimit object. For
+    !  each CompLimit object, specify in the Used-attribute if the limit is
+    !  active of not. If the limit is active, specify also the limit value, and
+    !  possible hysteresis and delay. 
+    ! 
     !  @b Plc coding
     !  For plc coding the function object BaseSensorFo is used.
     !  @image orm_basesensorfo_fo.gif
@@ -55826,6 +55843,7 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basetempsensor_og.gif
     ! 
+    !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object BaseSensorFo is used.
     !  @image orm_basesensorfo_fo.gif
@@ -55896,6 +55914,11 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Object Graph
     !  @image orm_basesupswitch_og.gif
+    ! 
+    !  @h1 Configuration
+    !  @b Signals
+    !  The object contains the Di signal 'Switch' that should be connected to a
+    !  Di-channel.
     ! 
     !  @b Plc coding
     !  For plc coding the function object BaseSupSwitchFo is used.
@@ -55989,6 +56012,7 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basetempswitch_og.gif
     ! 
+    !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object BaseSupSwitchFo is used.
     !  @image orm_basesupswitchfo_fo.gif
@@ -56911,8 +56935,17 @@ Alarm HH, H, L, LL"
     !  @Group CircuitBreaker
     !  @Summary CircuitBreaker.
     !  Base component for a circuit breaker.
+    ! 
+    !  The signal from the circuit breaker is supervised, and an alarm is sent if
+    !  the signal is lost.
+    ! 
     !  @b Object Graph
     !  @image orm_basecircuitbreaker_og.gif
+    ! 
+    !  @h1 Configuration
+    !  @b Signals
+    !  The object contains the Di signal 'NotTripped' that should be connected to a
+    !  Di-channel.
     ! 
     !  @b Plc coding
     !  For plc coding the function object BaseCircuitBreakerFo is used.
@@ -57578,6 +57611,45 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_baseactuatora_og.gif
     ! 
+    !  @b Mode
+    !  The mode, Auto, Manual or Local, is handled by the mode object. See class 
+    !  CompModeAM for more information.
+    !  
+    !  @b Supervision
+    !  If the actuator has positional feedback, the ordered position is compared
+    !  with the positional feedback, and if the difference exceeds the value specified
+    !  in 'MaxPosDiff', an alarm is sent.
+    ! 
+    !  If the actuator has limit switches, also the switches are supervised. If a
+    !  positional feedback signal is present, the switches are matched against this
+    !  signal, otherwise they are matched against the ordered position. If the
+    !  position is below 'PosSwitchClosed' and the SwitchClosed signal is missing,
+    !  an alarm is sent. If the position is over 'PosSwitchOpen' and the 
+    !  SwitchOpen signal is missing, an alarm is sent.
+    !  If both switches are simultaneously activated, an alarm is also sent.
+    ! 
+    !  @h1 Configuration
+    !  @b Component Configuration
+    !  There are eight configuration alternatives, that specifies whether the actuator
+    !  has limit switches and/or positional feedback.
+    ! 
+    !  - TwoSwitches            Switch open and switch closed. No positional feedback.
+    !  - SwitchOpen             Switch open and no positional feedback.
+    !  - SwitchClosed           Switch closed and no positional feedback.
+    !  - NoSwitches             No switches and no positional feedback.
+    !  - PositionTwoSwitches    Positional feedback, switch open and switch closed.
+    !  - PositionSwitchOpen     Positional feedback and switch open.
+    !  - PositionSwitchClosed   Positional feedback and switch closed.
+    !  - PositionNoSwitches     Positional feedback and no switches.
+    ! 
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    ! 
+    !  - Order        Ao
+    !  - Position     Ai (optional) 
+    !  - SwitchOpen   Di (optional)
+    !  - SwitchClosed Di (optional)
+    ! 
     !  @b Plc coding
     !  For plc coding the function object BaseActuatorAFo is used.
     !  @image orm_baseactuatorafo_fo.gif
@@ -57586,6 +57658,7 @@ Alarm HH, H, L, LL"
     ! 
     !  @b See also
     !  @classlink BaseActuatorAFo basecomponent_baseactuatorafo.html
+    !  @classlink CompModeAM basecomponent_compmodeam.html
     !*/
     Object BaseActuatorA $ClassDef 109 30-SEP-2005 16:56:36.13
       Body SysBody 30-SEP-2005 16:56:17.26
@@ -63961,6 +64034,21 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basecontactor_og.gif
     ! 
+    !  @b Supervision
+    !  If the contactor has feedback signal, the feedback is supervised. If it is
+    !  lost, or doesn't arrive in time, an alarm is sent.
+    ! 
+    !  @h1 Configuration
+    !  @b Component Configuration
+    !  - Feedback	The contactor has feedback signal.
+    !  - NoFeedback	Feedback signal is not available.
+    !  
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    ! 
+    !  - Order        Do
+    !  - Feedback     Di (optional) 
+    ! 
     !  @b Plc coding
     !  For plc coding the function object BaseContactorFo is used.
     !  @image orm_basecontactorfo_fo.gif
@@ -66360,6 +66448,32 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Object Graph
     !  @image orm_basecvalve_og.gif
+    ! 
+    !  @b Mode and supervision
+    !  Mode and supervision is handled by the actuator object. See class
+    !  BaseActuatorA for more information.
+    ! 
+    !  @h1 Configuration
+    !  @b Component Configuration
+    !  There are eight configuration alternatives, that specifies whether the actuator
+    !  has limit switches and/or positional feedback.
+    ! 
+    !  - TwoSwitches            Switch open and switch closed. No positional feedback.
+    !  - SwitchOpen             Switch open and no positional feedback.
+    !  - SwitchClosed           Switch closed and no positional feedback.
+    !  - NoSwitches             No switches and no positional feedback.
+    !  - PositionTwoSwitches    Positional feedback, switch open and switch closed.
+    !  - PositionSwitchOpen     Positional feedback and switch open.
+    !  - PositionSwitchClosed   Positional feedback and switch closed.
+    !  - PositionNoSwitches     Positional feedback and no switches.
+    ! 
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    ! 
+    !  - Actuator.Order        Ao
+    !  - Actuator.Position     Ai (optional) 
+    !  - Actuator.SwitchOpen   Di (optional)
+    !  - Actuator.SwitchClosed Di (optional)
     ! 
     !  @b Plc coding
     !  For plc coding the function object BaseCValveFo is used.
@@ -69129,6 +69243,7 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_baseflowsensor_og.gif
     ! 
+    !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object BaseSensorFo is used.
     !  @image orm_basesensorfo_fo.gif
@@ -69201,6 +69316,7 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_baselevelsensor_og.gif
     ! 
+    !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object BaseSensorFo is used.
     !  @image orm_basesensorfo_fo.gif
@@ -69384,6 +69500,38 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Object Graph
     !  @image orm_basemvalve_og.gif
+    ! 
+    !  @b Mode
+    !  Auto or manual mode is selected from the object graph, with the buttons 'Auto'
+    !  and 'Man'. The possibility to set the valve in manual mode might be disabled. In
+    !  this case, the Auto/Man buttons are not displayed in the object graph.
+    ! 
+    !  - Auto. The order output is controlled by the plc.
+    !  - Manual. The order output is controlled by the operator, from the object graph.
+    !    The valve is opened with the 'Open' button, and closed with the 'Close' button.
+    ! 
+    !  @b Supervision
+    !  If limit switches for open and closed position are available, they are matched
+    !  against the order output. If a switch doesn't correspond to the order within
+    !  a time limit, an alarm is sent.
+    ! 
+    !  @h1 Configuration
+    !  @b Component configuration
+    !  - TwoSwitches            Switch open and switch closed.
+    !  - SwitchOpen             Switch open.
+    !  - SwitchClosed           Switch closed.
+    !  - NoSwitches             No switches.
+    ! 
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    ! 
+    !  - Order        Do
+    !  - SwitchOpen   Di (optional)
+    !  - SwitchClosed Di (optional)
+    ! 
+    !  @b Mode
+    !  If the valve always should be controlled by the plc, the manual mode is
+    !  disabled by setting Mode.OpAutoOnly to 1.
     ! 
     !  @b Plc coding
     !  For plc coding the function object BaseMValveFo is used.
@@ -74666,6 +74814,26 @@ Alarm HH, H, L, LL"
     ! 
     !  @b Object Graph
     !  @image orm_basemanvalve_og.gif
+    ! 
+    !  If the valve doesn't have any limit switches, it is possible to set the
+    !  displayed position of the valve from the object graph.
+    ! 
+    !  @b Supervision
+    !  If both limit switches for open and closed position are available, it is
+    !  controlled that they aren't concurrently set. If the are, an alarm is sent.
+    ! 
+    !  @h1 Configuration
+    !  @b Component configuration
+    !  - TwoSwitches            Switch open and switch closed.
+    !  - SwitchOpen             Switch open.
+    !  - SwitchClosed           Switch closed.
+    !  - NoSwitches             No switches.
+    ! 
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    ! 
+    !  - SwitchOpen   Di (optional)
+    !  - SwitchClosed Di (optional)
     ! 
     !  @b Plc coding
     !  For plc coding the function object BaseManValveFo is used.
@@ -88075,7 +88243,8 @@ Safety switch"
         EndObject
       EndObject
       Object Template BasePropValve 2172354560 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 11-FEB-2006 10:25:18.32
+          Attr Order.PresMaxLimit = 1.000000e+02
           Attr Mode.OpNoLocal = 1
           Attr Mode.AlarmLocalMode = "Local mode is activated, "
         EndBody
