@@ -26294,17 +26294,17 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr GraphName = "fbd"
           EndBody
         EndObject
-        Object LimitSwitchDecr $Input 32 05-DEC-2005 13:15:13.24
-          Body SysBody 08-DEC-2005 14:12:42.83
-            Attr PgmName = "LimitSwitchDecr"
+        Object LimitSwitchIncr $Input 33 05-DEC-2005 13:15:23.42
+          Body SysBody 13-FEB-2006 09:50:48.45
+            Attr PgmName = "LimitSwitchIncr"
             Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "sin"
           EndBody
         EndObject
-        Object LimitSwitchIncr $Input 33 05-DEC-2005 13:15:23.42
-          Body SysBody 08-DEC-2005 14:12:55.02
-            Attr PgmName = "LimitSwitchIncr"
+        Object LimitSwitchDecr $Input 32 13-FEB-2006 09:51:22.21
+          Body SysBody 13-FEB-2006 09:50:43.65
+            Attr PgmName = "LimitSwitchDecr"
             Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "sde"
@@ -26394,7 +26394,7 @@ Start/Stop, Manual/Auto, Local/Remote"
       Object Code PlcTemplate 6556 05-DEC-2005 11:35:20.16
         Body RtBody 05-DEC-2005 11:35:20.16
         EndBody
-        Body DevBody 20-DEC-2005 09:19:15.04
+        Body DevBody 13-FEB-2006 09:33:53.00
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-CompModeD2Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -26426,8 +26426,8 @@ Start/Stop, Manual/Auto, Local/Remote"
         Object W WindowPlc 6557 05-DEC-2005 11:35:20.16
           Body RtBody 05-DEC-2005 11:35:20.16
           EndBody
-          Body DevBody 20-DEC-2005 09:19:15.04
-            Attr Modified = "20-DEC-2005 09:19:15.04"
+          Body DevBody 13-FEB-2006 09:33:53.00
+            Attr Modified = "13-FEB-2006 09:33:53.00"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -96464,20 +96464,20 @@ Motor aggregat"
             Attr GraphName = "ilk"
           EndBody
         EndObject
-        Object LimitSwitchDecr $Input 42 05-DEC-2005 13:56:11.48
-          Body SysBody 05-DEC-2005 13:59:10.89
-            Attr PgmName = "LimitSwitchDecr"
-            Attr Flags = 8192
-            Attr TypeRef = "pwrs:Type-$Boolean"
-            Attr GraphName = "lsd"
-          EndBody
-        EndObject
         Object LimitSwitchIncr $Input 43 05-DEC-2005 13:56:14.84
           Body SysBody 05-DEC-2005 13:59:20.63
             Attr PgmName = "LimitSwitchIncr"
             Attr Flags = 8192
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "lsi"
+          EndBody
+        EndObject
+        Object LimitSwitchDecr $Input 42 13-FEB-2006 09:56:56.47
+          Body SysBody 05-DEC-2005 13:59:10.89
+            Attr PgmName = "LimitSwitchDecr"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "lsd"
           EndBody
         EndObject
         Object LocMode $Input 28 05-DEC-2005 10:07:25.63
@@ -96588,7 +96588,7 @@ Motor aggregat"
       Object Code PlcTemplate 6368 05-DEC-2005 10:07:25.63
         Body RtBody 05-DEC-2005 10:07:25.63
         EndBody
-        Body DevBody 12-DEC-2005 16:39:19.49
+        Body DevBody 13-FEB-2006 09:53:03.59
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseMotorIncrDecrAggrFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -96625,8 +96625,8 @@ Motor aggregat"
         Object W WindowPlc 6369 05-DEC-2005 10:07:25.63
           Body RtBody 05-DEC-2005 10:07:25.63
           EndBody
-          Body DevBody 12-DEC-2005 16:39:19.49
-            Attr Modified = "12-DEC-2005 16:39:19.49"
+          Body DevBody 13-FEB-2006 09:53:03.59
+            Attr Modified = "13-FEB-2006 09:53:03.59"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseMotorIncrDecrAggrFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -96966,7 +96966,7 @@ Motor aggregat"
             EndBody
           EndObject
           Object cn325 ConDigital 7482 12-DEC-2005 16:33:25.98
-            Body DevBody 12-DEC-2005 16:38:29.07
+            Body DevBody 13-FEB-2006 09:53:03.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorIncrDecrAggrFo-Code-W-cn325"
                 Attr object_type = 23
@@ -97009,7 +97009,7 @@ Motor aggregat"
             EndBody
           EndObject
           Object cn324 ConDigital 7481 12-DEC-2005 16:33:23.61
-            Body DevBody 12-DEC-2005 16:38:29.07
+            Body DevBody 13-FEB-2006 09:53:03.59
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseMotorIncrDecrAggrFo-Code-W-cn324"
                 Attr object_type = 23
@@ -100664,7 +100664,7 @@ Motor Incr/Decr aggregat"
           Object GetDp56 GetDp 7163 08-DEC-2005 18:16:24.63
             Body RtBody 08-DEC-2005 18:16:24.63
             EndBody
-            Body DevBody 12-DEC-2005 16:33:49.13
+            Body DevBody 13-FEB-2006 09:53:03.59
               Attr DpObject = "$PlcFo:BaseComponent-Class-BaseMotorIncrDecrAggrFo.LimitSwitchIncr"
               Buffer PlcNode
                 Attr object_type = 256
@@ -100682,7 +100682,7 @@ Motor Incr/Decr aggregat"
           Object GetDp57 GetDp 7165 08-DEC-2005 18:16:29.70
             Body RtBody 08-DEC-2005 18:16:29.70
             EndBody
-            Body DevBody 12-DEC-2005 16:33:49.13
+            Body DevBody 13-FEB-2006 09:53:03.59
               Attr DpObject = "$PlcFo:BaseComponent-Class-BaseMotorIncrDecrAggrFo.LimitSwitchDecr"
               Buffer PlcNode
                 Attr object_type = 256

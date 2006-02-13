@@ -37,6 +37,7 @@ menu Process
   subgraph	MValve		pwr_exe:pwr_mvalve.pwsg			55
   subgraph 	Padlock		pwr_exe:pwr_padlock.pwsg 		39
   subgraph 	PadlockAnim 	pwr_exe:pwr_padlockanim.pwsg		39
+  subgraph 	PIDController 	pwr_exe:pwr_pidcontroller.pwsg		5
   subgraph	Pump2		pwr_exe:pwr_pump2.pwsg			72
   subgraph	Pump3		pwr_exe:pwr_pump3.pwsg			73
   subgraph 	PumpAnim 	pwr_exe:pwr_pumpanim.pwsg		97
