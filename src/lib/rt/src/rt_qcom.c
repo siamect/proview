@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.c,v 1.6 2006-02-10 14:40:45 claes Exp $
+ * Proview   $Id: rt_qcom.c,v 1.7 2006-02-14 05:27:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -404,7 +404,7 @@ qcom_Get (
     if (qp->aid.aix != qdb->my_aix) pwr_StatusBreak(*sts, QCOM__NOTOWNED); 
     if (qp->type != qdb_eQue_private) pwr_StatusBreak(*sts, QCOM__NOTOWNED);
 
-    bp = qdb_Get(sts, qp, tmo, gp, NO);
+    bp = qdb_Get(sts, qp, tmo, gp, 0);
 
     if (bp != NULL) {
       qdb->ap->get_count++;
@@ -949,7 +949,7 @@ qcom_Request (
   const qcom_sQid	*gqid,
   qcom_sGet		*gp,
   int			tmo,
-  pwr_tBoolean          multipleReq
+  pwr_tBitMask          flags
 )
 {
   qdb_sBuffer		*pbp;
@@ -1009,7 +1009,7 @@ qcom_Request (
       pbp->b.noderef = pool_Reference(sts, &qdb->pool, np);
     }
 
-    gbp = qdb_Request(sts, pbp, pqp, gqp, tmo, gp, multipleReq);
+    gbp = qdb_Request(sts, pbp, pqp, gqp, tmo, gp, flags);
     if (ODD(sts)) qdb->ap->request_count++;
 
   } qdb_ScopeUnlock;

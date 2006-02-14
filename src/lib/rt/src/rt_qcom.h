@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.h,v 1.7 2006-02-10 14:40:45 claes Exp $
+ * Proview   $Id: rt_qcom.h,v 1.8 2006-02-14 05:27:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -414,7 +414,7 @@ void*			qcom_Request (
   const qcom_sQid	*myQ,
   qcom_sGet		*get,
   int			tmo_ms,
-  pwr_tBoolean          multipleReq
+  pwr_tBitMask          flags
 );
 
 pwr_tBoolean		qcom_Unbind (

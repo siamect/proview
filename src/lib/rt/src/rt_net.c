@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_net.c,v 1.6 2006-02-10 14:40:45 claes Exp $
+ * Proview   $Id: rt_net.c,v 1.7 2006-02-14 05:27:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -147,7 +147,7 @@ Request (
   qcom_sPut		*put,
   qcom_sGet		*get,
   net_eMsg		subtype,
-  pwr_tBoolean          multipleReq
+  pwr_tBitMask          flags
 );
 
 typedef bool_t (*tFuncXdr)(XDR*, void*); 
@@ -486,7 +486,7 @@ Request (
   qcom_sPut		*put,
   qcom_sGet		*get,
   net_eMsg		subtype,
-  pwr_tBoolean          multipleReq
+  pwr_tBitMask          flags
 )
 {
   void			*gmp;
@@ -505,7 +505,7 @@ Request (
   if (!ConvertPut(sts, tgt, put, put->data))
     return NULL;
 
-  gmp = qcom_Request(sts, tgt, put, &gdbroot->my_qid, get, net_cSendRcvTmo, multipleReq); 
+  gmp = qcom_Request(sts, tgt, put, &gdbroot->my_qid, get, net_cSendRcvTmo, flags); 
   if (gmp == NULL) 
     return NULL;
 
@@ -666,7 +666,7 @@ net_Request (
   qcom_sPut		*put,
   qcom_sGet		*get,
   net_eMsg		gtype,
-  pwr_tBoolean          multipleReq
+  pwr_tBitMask          flags
 )
 {
   void			*p;
@@ -678,7 +678,7 @@ net_Request (
   ((net_sMessage *)put->data)->nid = gdbroot->db->nid;
 
   NET_LOCK;
-  p = Request(sts, tgt, put, get, gtype, multipleReq);
+  p = Request(sts, tgt, put, get, gtype, flags);
   NET_UNLOCK;
 
   return p;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qmon.c,v 1.7 2006-02-10 14:53:03 claes Exp $
+ * Proview   $Id: rt_qmon.c,v 1.8 2006-02-14 05:28:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -761,7 +761,7 @@ export_thread ()
   while (qdb->g->up) {
     sched_yield();
     qdb_ScopeLock {
-      bp = qdb_Get(&sts, qp, qcom_cTmoEternal, NULL, NO);
+      bp = qdb_Get(&sts, qp, qcom_cTmoEternal, NULL, 0);
       if (bp != NULL)
 	bp = qdb_DetachBuffer(&sts, bp);
     } qdb_ScopeUnlock;

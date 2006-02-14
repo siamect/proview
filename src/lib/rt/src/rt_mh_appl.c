@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mh_appl.c,v 1.6 2006-02-10 14:40:45 claes Exp $
+ * Proview   $Id: rt_mh_appl.c,v 1.7 2006-02-14 05:27:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -361,7 +361,7 @@ sendAndReceive (
 
   get.data = NULL;
 
-  rvoid = qcom_Request(&sts, &lAppl.handler, &put, &lAppl.head.qid, &get, 1000*3600, NO);
+  rvoid = qcom_Request(&sts, &lAppl.handler, &put, &lAppl.head.qid, &get, 1000*3600, 0);
   if (EVEN(sts)) {
     errh_Error("mhAppl, sendAndReceive, qcom_Get failed\n%m", sts);
     qcom_Free(NULL, put.data);
