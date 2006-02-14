@@ -9,6 +9,7 @@
   "build_all", 	"build_all:usage_build_all",
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
+  "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
   "create", 	"create:usage_create",
@@ -249,6 +250,29 @@ sub build_all_modules ()
   merge();
 
   method_build();
+}  
+
+#
+# clean_exe_all()
+#
+sub clean_exe_all ()
+{
+  _module("xtt");
+  _build("exe","*","clean_exe");
+  _module("rt");
+  _build("exe","rt*","clean_exe");
+  _build("exe","co*","clean_exe");
+  _build("exe","wb*","clean_exe");
+  _module("wb");
+  _build("exe","*","clean_exe");
+  _module("nmps");
+  _build("exe","*","clean_exe");
+  _module("tlog");
+  _build("exe","*","clean_exe");
+  _module("remote");
+  _build("exe","*","clean_exe");
+  _module("rt");
+
 }  
 
 
@@ -937,6 +961,12 @@ sub usage_build_all_modules ()
 {
   printf("++\n");
   printf("++ build_all_modules             : Builds all in all modules\n");
+}
+
+sub usage_clean_exe_all ()
+{
+  printf("++\n");
+  printf("++ clean_exe_all             : Cleans all exe in all modules\n");
 }
 
 sub usage_method_build ()
