@@ -11,7 +11,7 @@
 Name:		pwr41
 Summary: 	Proview/R development and runtime environment
 Version:        4.1.3
-Release: 	1	
+Release: 	2
 Copyright:	(c) 2005 SSAB Oxelösund AB, Sweden
 #License:        GPL
 BuildArch:      i386
@@ -178,5 +178,12 @@ fi
 #%postun
 
 %changelog
-* Tue Jan 31 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
+* Tue Feb 14 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-2
+- Template values in Profibus objects added.
+- Template IoConnections for ABB_ACS800PumpAggr added.
+- Bugfix in BaseMotorIncrDecrAggr. LimitSwitchIncr/LimitSwitchDecr was switched.
+- Bugfix in volume creation. Flags in volume object was not initialized.
+- Bugfix in gdh_DisableAttr. Didn't work on remote objects.
+- Bugfix in classcache. Large classes wasn't loaded correctly.
+* Tue Jan 31 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
 - Base release 
