@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.11 2005-12-27 09:28:55 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.12 2006-02-14 11:20:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -757,7 +757,7 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
     grow_CreateGrowNode( curve->grownames_ctx, "", nc, 5.4, (i-0.2)+0.05, NULL, 
 			 &curve->mark_annot[i]);
     // Draw unit
-    grow_CreateGrowText( curve->grownames_ctx, "", "km/h" /* curve->cd->unit[i]*/,
+    grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->unit[i],
 		       9.0, (i-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
