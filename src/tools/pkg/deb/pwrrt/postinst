@@ -36,18 +36,18 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,skiftel -d /home/pwrp pwrp
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
-    cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
-    cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
-    cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
-    cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
-    chmod a+x /home/pwrp/.rtt_start
-    cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
-    chmod a+x /home/pwrp/.xtt_start
-    cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
-
-    chown -R pwrp /home/pwrp
-    chgrp -R pwrp /home/pwrp
   fi
+  cp /usr/pwrrt/cnf/user/.bashrc /home/pwrp
+  cp /usr/pwrrt/cnf/user/.bash_profile /home/pwrp
+  cp /usr/pwrrt/cnf/user/.mwmrc /home/pwrp
+  cp /usr/pwrrt/cnf/user/.rtt_start /home/pwrp
+  chmod a+x /home/pwrp/.rtt_start
+  cp /usr/pwrrt/cnf/user/.xtt_start /home/pwrp
+  chmod a+x /home/pwrp/.xtt_start
+  cp /usr/pwrrt/cnf/user/.xsession /home/pwrp
+
+  chown -R pwrp /home/pwrp
+  chgrp -R pwrp /home/pwrp
 fi
 
 if ! grep -q "\bskiftel:" /etc/passwd; then
