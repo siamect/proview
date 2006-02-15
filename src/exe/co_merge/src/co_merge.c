@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_merge.c,v 1.3 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: co_merge.c,v 1.4 2006-02-15 06:01:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,10 +97,8 @@ int main(  int argc, char *argv[])
 
   switch ( mtype) {
   case merge_eMtype_IoBase: {
-    strcpy( cfile, "$pwre_broot/$pwre_target/bld/lib/rt/rt_io_base_methods.c");
-    strcpy( ofile, "$pwre_broot/$pwre_target/bld/lib/rt/rt_io_base_methods.o");
-    dcli_translate_filename( cfile, cfile);
-    dcli_translate_filename( ofile, ofile);
+    strcpy( cfile, "/tmp/rt_io_base_methods.c");
+    strcpy( ofile, "/tmp/rt_io_base_methods.o");
 
     outfp = fopen( cfile, "w");
     if ( !outfp) {
@@ -122,11 +120,6 @@ int main(  int argc, char *argv[])
     break;
   }
   case merge_eMtype_WbBase: {
-    strcpy( cfile, "$pwre_broot/$pwre_target/bld/lib/wb/wb_i_base_methods.c");
-    strcpy( ofile, "$pwre_broot/$pwre_target/bld/lib/wb/wb_i_base_methods.o");
-    dcli_translate_filename( cfile, cfile);
-    dcli_translate_filename( ofile, ofile);
-
     strcpy( cfile, "/tmp/wb_i_base_methods.c");
     strcpy( ofile, "/tmp/wb_i_base_methods.o");
 
@@ -158,8 +151,8 @@ int main(  int argc, char *argv[])
   sprintf( cmd, "ar r %s %s", outfile, ofile);
   // printf( "co_merge: %s\n", cmd);
   system(cmd);
-  // sprintf( cmd, "rm %s", ofile);
-  // system(cmd);
+  sprintf( cmd, "rm %s", ofile);
+  system(cmd);
   sprintf( cmd, "rm %s", cfile);
   system(cmd);
   return 1;
