@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.c,v 1.9 2005-09-20 13:24:27 claes Exp $
+ * Proview   $Id: co_wow.c,v 1.10 2006-02-15 14:19:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -750,6 +750,15 @@ void warranty_help_cb( void *ctx, void *data)
   wow_DisplayLicense( (Widget) data);
 }
 
+int wow_HideWarranty()
+{
+  static int hide = 0;
+  int prev = hide;
+
+  hide = 1;
+  return prev;
+}
+
 int wow_DisplayWarranty( Widget father)
 {
     char    text[4000];
@@ -764,6 +773,10 @@ int wow_DisplayWarranty( Widget father)
     FILE 	*fp;
     int 	i;
     char 	fname[256];
+
+    // Display only once
+    if ( wow_HideWarranty())
+      return 1;
 
     sprintf( fname, "$pwr_exe/%s/acceptlicense.txt", lng_get_language_str());
     dcli_translate_filename( fname, fname);

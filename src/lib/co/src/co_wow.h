@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.8 2005-09-20 13:24:47 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.9 2006-02-15 14:19:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,6 +95,7 @@ void wow_GetLabel( Widget w, char *label);
 void wow_GetCSText( XmString ar_value, char *t_buffer);
 int wow_GetSelection( Widget w, char *str, int size, Atom atom);
 void wow_GetAtoms( Widget w, Atom *graph_atom, Atom *objid_atom, Atom *attrref_atom);
+int wow_HideWarranty();
 int wow_DisplayWarranty( Widget father);
 void wow_DisplayLicense( Widget father);
 

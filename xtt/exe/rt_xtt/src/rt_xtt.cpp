@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt.cpp,v 1.22 2006-02-03 07:34:30 claes Exp $
+ * Proview   $Id: rt_xtt.cpp,v 1.23 2006-02-15 14:19:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -932,8 +932,10 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   for ( i = 1; i < argc; i++) {
     if ( strcmp( argv[i], "-l") == 0 && i + 1 < argc)
       Lng::set( argv[i+1]);
-    else if ( strcmp( argv[i], "-q") == 0)
+    else if ( strcmp( argv[i], "-q") == 0) {
+      wow_HideWarranty();
       quiet = 1;
+    }
     else if ( strcmp( argv[i], "-a") == 0)
       attach_audio = 1;
     else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
