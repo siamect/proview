@@ -1,6 +1,6 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X8072"
+    Attr NextOix = "_X8089"
     Attr NextCix = "_X148"
     Attr NextTix[0] = "_X12"
   EndBody
@@ -1252,6 +1252,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 119 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -12885,6 +12891,12 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 11 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -15314,6 +15326,12 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 59 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -15476,7 +15494,7 @@ Start/Stop, Manual/Auto, Local/Remote"
       Object Code PlcTemplate 116 08-SEP-2005 13:01:47.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 20-DEC-2005 09:04:02.11
+        Body DevBody 15-FEB-2006 14:37:50.09
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-CompModeDFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -15485,7 +15503,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr defnamecount[60] = 2
             Attr defnamecount[71] = 1
             Attr defnamecount[90] = 30
-            Attr defnamecount[91] = 23
+            Attr defnamecount[91] = 24
             Attr defnamecount[93] = 5
             Attr defnamecount[99] = 6
             Attr defnamecount[119] = 6
@@ -15499,14 +15517,14 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr defnamecount[264] = 6
             Attr defnamecount[265] = 4
             Attr defnamecount[266] = 2
-            Attr connamecount = 298
+            Attr connamecount = 302
           EndBuffer
         EndBody
         Object W WindowPlc 117 08-SEP-2005 13:01:47.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 20-DEC-2005 09:04:02.11
-            Attr Modified = "20-DEC-2005 09:04:02.11"
+          Body DevBody 15-FEB-2006 14:37:50.09
+            Attr Modified = "15-FEB-2006 14:37:50.09"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-CompModeDFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -15516,6 +15534,177 @@ Start/Stop, Manual/Auto, Local/Remote"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn301 ConDigital 8077 15-FEB-2006 14:37:12.24
+            Body DevBody 15-FEB-2006 14:37:50.09
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn301"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or20"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or23"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.100444e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn300 ConDigital 8076 15-FEB-2006 14:36:44.42
+            Body DevBody 15-FEB-2006 14:37:50.09
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn300"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or23"
+                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-ExtAndIntMan"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.299000e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.491001e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn299 ConDigital 8075 15-FEB-2006 14:36:41.43
+            Body DevBody 15-FEB-2006 14:37:50.09
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn299"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or23"
+                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-GetDp77"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.003111e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.042667e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.003111e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn298 ConDigital 8074 15-FEB-2006 14:36:39.08
+            Body DevBody 15-FEB-2006 14:37:50.09
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn298"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-GetDp78"
+                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or23"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.120000e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 9.653333e-01
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.022889e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 2.900000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn297 ConDigital 7903 20-DEC-2005 09:02:44.80
             Body DevBody 20-DEC-2005 09:04:02.11
               Buffer PlcConnection
@@ -17170,7 +17359,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn241 ConDigital 7781 19-DEC-2005 15:48:43.62
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn241"
                 Attr object_type = 23
@@ -17182,14 +17371,14 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.299000e+00
-                  Attr y = 2.950000e+00
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.462001e+00
-                  Attr y = 2.950000e+00
+                  Attr x = 1.934222e+00
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.462001e+00
+                  Attr x = 1.934222e+00
                   Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[3]
@@ -17436,7 +17625,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn235 ConDigital 7775 19-DEC-2005 15:47:43.89
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn235"
                 Attr object_type = 23
@@ -17449,14 +17638,14 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.299000e+00
-                  Attr y = 2.950000e+00
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.400250e+00
-                  Attr y = 2.950000e+00
+                  Attr x = 1.359500e+00
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.400250e+00
+                  Attr x = 1.359500e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[3]
@@ -17527,7 +17716,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn233 ConDigital 7772 19-DEC-2005 15:47:05.62
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn233"
                 Attr object_type = 23
@@ -17537,94 +17726,22 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-ExtAndIntMan"
                 Attr dest_point = 2
                 Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or20"
-                Attr point_count = 2
+                Attr point_count = 4
                 Buffer point[0]
+                  Attr x = 1.520000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.339750e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.339750e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[3]
                   Attr x = 1.299000e+00
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.520000e+00
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn232 ConDigital 7771 19-DEC-2005 15:47:03.87
-            Body DevBody 19-DEC-2005 16:47:05.05
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn232"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-GetDp78"
-                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-ExtAndIntMan"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.520000e+00
-                  Attr y = 2.900000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 9.653333e-01
-                  Attr y = 2.900000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn231 ConDigital 7768 19-DEC-2005 15:46:30.52
-            Body DevBody 19-DEC-2005 16:47:05.05
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn231"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeDFo-Code-W-Or20"
-                Attr dest_oid = "BaseComponent:Class-CompModeDFo-Code-W-GetDp77"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.003111e+00
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.120000e+00
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -17643,7 +17760,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn229 ConDigital 7764 19-DEC-2005 15:46:22.04
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-cn229"
                 Attr object_type = 23
@@ -17655,15 +17772,19 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.120000e+00
-                  Attr y = 3.000000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.080889e+00
-                  Attr y = 3.000000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -24812,14 +24933,14 @@ No letters  = Auto mod
           Object GetDp68 GetDp 1369 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Attr DpObject = "$PlcMain:BaseComponent-Class-CompModeD.OpExtAndIntMan"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-GetDp68"
                 Attr x = 6.000000e-01
-                Attr y = -2.025000e+00
+                Attr y = -2.075000e+00
                 Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
@@ -25080,14 +25201,14 @@ No letters  = Auto mod
           Object Or20 Or 7763 19-DEC-2005 15:46:11.71
             Body RtBody 19-DEC-2005 15:46:11.71
             EndBody
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-Or20"
                 Attr x = 1.100000e+00
-                Attr y = -2.025000e+00
-                Attr width = 1.917778e-01
+                Attr y = -2.075000e+00
+                Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
                 Attr mask[0] = 3
@@ -25098,7 +25219,7 @@ No letters  = Auto mod
           Object GetDp77 GetDp 7767 19-DEC-2005 15:46:30.52
             Body RtBody 19-DEC-2005 15:46:30.52
             EndBody
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Attr DpObject = "$PlcMain:BaseComponent-Class-CompModeD.OpExtOnly"
               Buffer PlcNode
                 Attr object_type = 256
@@ -25116,7 +25237,7 @@ No letters  = Auto mod
           Object GetDp78 GetDp 7769 19-DEC-2005 15:46:33.79
             Body RtBody 19-DEC-2005 15:46:33.79
             EndBody
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Attr DpObject = "$PlcFo:BaseComponent-Class-CompModeDFo.ExtControl"
               Buffer PlcNode
                 Attr object_type = 256
@@ -25134,7 +25255,7 @@ No letters  = Auto mod
           Object ExtAndIntMan And 7770 19-DEC-2005 15:47:20.21
             Body RtBody 19-DEC-2005 15:47:00.67
             EndBody
-            Body DevBody 19-DEC-2005 16:47:05.05
+            Body DevBody 15-FEB-2006 14:37:50.09
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -25851,6 +25972,24 @@ Start/Stop, Manual/Auto, Local/Remote"
               EndBuffer
             EndBody
           EndObject
+          Object Or23 Or 8073 15-FEB-2006 14:36:26.18
+            Body RtBody 15-FEB-2006 14:36:26.18
+            EndBody
+            Body DevBody 15-FEB-2006 14:37:50.09
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-CompModeDFo-Code-W-Or23"
+                Attr x = 1.100000e+00
+                Attr y = -1.975000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeDFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object Template CompModeDFo 2152169472 08-SEP-2005 13:01:47.00
@@ -26180,6 +26319,12 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 119 05-DEC-2005 10:06:13.33
           Body SysBody 05-DEC-2005 10:06:13.33
             Attr PgmName = "PlcConnect"
@@ -26394,7 +26539,7 @@ Start/Stop, Manual/Auto, Local/Remote"
       Object Code PlcTemplate 6556 05-DEC-2005 11:35:20.16
         Body RtBody 05-DEC-2005 11:35:20.16
         EndBody
-        Body DevBody 13-FEB-2006 09:33:53.00
+        Body DevBody 15-FEB-2006 14:41:24.14
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-CompModeD2Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -26403,14 +26548,14 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr defnamecount[60] = 3
             Attr defnamecount[71] = 1
             Attr defnamecount[90] = 66
-            Attr defnamecount[91] = 43
+            Attr defnamecount[91] = 45
             Attr defnamecount[93] = 9
             Attr defnamecount[97] = 2
             Attr defnamecount[98] = 6
             Attr defnamecount[99] = 7
             Attr defnamecount[119] = 8
-            Attr defnamecount[137] = 43
-            Attr defnamecount[139] = 18
+            Attr defnamecount[137] = 44
+            Attr defnamecount[139] = 19
             Attr defnamecount[253] = 1
             Attr defnamecount[255] = 33
             Attr defnamecount[256] = 217
@@ -26420,14 +26565,14 @@ Start/Stop, Manual/Auto, Local/Remote"
             Attr defnamecount[264] = 7
             Attr defnamecount[265] = 4
             Attr defnamecount[266] = 2
-            Attr connamecount = 624
+            Attr connamecount = 632
           EndBuffer
         EndBody
         Object W WindowPlc 6557 05-DEC-2005 11:35:20.16
           Body RtBody 05-DEC-2005 11:35:20.16
           EndBody
-          Body DevBody 13-FEB-2006 09:33:53.00
-            Attr Modified = "13-FEB-2006 09:33:53.00"
+          Body DevBody 15-FEB-2006 14:41:24.14
+            Attr Modified = "15-FEB-2006 14:41:24.14"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -26437,6 +26582,173 @@ Start/Stop, Manual/Auto, Local/Remote"
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn631 ConDigital 8089 15-FEB-2006 14:40:53.14
+            Body DevBody 15-FEB-2006 14:41:24.14
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn631"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or44"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-ExtAndIntMan"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.620000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.299000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.553250e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.620000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn630 ConDigital 8088 15-FEB-2006 14:40:50.21
+            Body DevBody 15-FEB-2006 14:41:24.14
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn630"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or35"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or44"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.050000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn628 ConDigital 8085 15-FEB-2006 14:40:44.00
+            Body DevBody 15-FEB-2006 14:41:24.14
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn628"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-GetDp179"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or44"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.003111e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.000000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn627 ConDigital 8084 15-FEB-2006 14:40:42.21
+            Body DevBody 15-FEB-2006 14:41:24.14
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn627"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-GetDp178"
+                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or44"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.120000e+00
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 9.653333e-01
+                  Attr y = 2.950000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn623 ConDigital 7912 20-DEC-2005 09:18:30.38
             Body DevBody 20-DEC-2005 09:19:15.04
               Buffer PlcConnection
@@ -27730,7 +28042,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn555 ConDigital 7537 13-DEC-2005 17:46:58.62
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn555"
                 Attr object_type = 23
@@ -27745,16 +28057,16 @@ Start/Stop, Manual/Auto, Local/Remote"
                   Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.329250e+00
+                  Attr x = 1.392750e+00
                   Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.329250e+00
-                  Attr y = 3.000000e+00
+                  Attr x = 1.392750e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.299000e+00
-                  Attr y = 3.000000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -28276,7 +28588,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn539 ConDigital 7516 13-DEC-2005 17:36:56.35
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn539"
                 Attr object_type = 23
@@ -28289,14 +28601,14 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 1.299000e+00
-                  Attr y = 3.000000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.389750e+00
-                  Attr y = 3.000000e+00
+                  Attr x = 1.594875e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.389750e+00
+                  Attr x = 1.594875e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[3]
@@ -28320,7 +28632,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn536 ConDigital 7510 12-DEC-2005 17:50:49.91
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn536"
                 Attr object_type = 23
@@ -28332,15 +28644,19 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.120000e+00
-                  Attr y = 3.050000e+00
+                  Attr y = 3.100000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.080889e+00
-                  Attr y = 3.050000e+00
+                  Attr y = 3.100000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.100444e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 1.120000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -28359,7 +28675,7 @@ Start/Stop, Manual/Auto, Local/Remote"
             EndBody
           EndObject
           Object cn535 ConDigital 7508 12-DEC-2005 17:50:28.66
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn535"
                 Attr object_type = 23
@@ -28369,94 +28685,22 @@ Start/Stop, Manual/Auto, Local/Remote"
                 Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or35"
                 Attr dest_point = 1
                 Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-ExtAndIntMan"
-                Attr point_count = 2
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.620000e+00
-                  Attr y = 3.000000e+00
-                EndBuffer
-                Buffer point[1]
                   Attr x = 1.299000e+00
-                  Attr y = 3.000000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn534 ConDigital 7507 12-DEC-2005 17:50:26.68
-            Body DevBody 13-DEC-2005 17:48:24.55
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn534"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-GetDp179"
-                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or35"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.120000e+00
-                  Attr y = 3.000000e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.003111e+00
-                  Attr y = 3.000000e+00
+                  Attr x = 1.569750e+00
+                  Attr y = 3.050000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.569750e+00
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn532 ConDigital 7504 12-DEC-2005 17:50:14.87
-            Body DevBody 13-DEC-2005 17:48:24.55
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-cn532"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-GetDp178"
-                Attr dest_oid = "BaseComponent:Class-CompModeD2Fo-Code-W-ExtAndIntMan"
-                Attr point_count = 2
-                Buffer point[0]
                   Attr x = 1.620000e+00
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 9.653333e-01
-                  Attr y = 2.950000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
+                  Attr y = 3.000000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -43701,7 +43945,7 @@ to avoid restart after error."
           Object ExtAndIntMan And 7430 13-DEC-2005 17:42:21.84
             Body RtBody 12-DEC-2005 13:56:24.79
             EndBody
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
@@ -43719,7 +43963,7 @@ to avoid restart after error."
           Object GetDp178 GetDp 7432 12-DEC-2005 13:56:24.79
             Body RtBody 12-DEC-2005 13:56:24.79
             EndBody
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Attr DpObject = "$PlcFo:BaseComponent-Class-CompModeD2Fo.ExtControl"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43737,7 +43981,7 @@ to avoid restart after error."
           Object GetDp179 GetDp 7433 12-DEC-2005 13:56:24.79
             Body RtBody 12-DEC-2005 13:56:24.79
             EndBody
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Attr DpObject = "$PlcMain:BaseComponent-Class-CompModeD2.OpExtOnly"
               Buffer PlcNode
                 Attr object_type = 256
@@ -43897,13 +44141,13 @@ and no Auto/Man button."
           Object Or35 Or 7506 12-DEC-2005 17:50:23.83
             Body RtBody 12-DEC-2005 17:50:23.83
             EndBody
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or35"
                 Attr x = 1.100000e+00
-                Attr y = -2.075000e+00
+                Attr y = -2.125000e+00
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
@@ -43915,14 +44159,14 @@ and no Auto/Man button."
           Object GetDp194 GetDp 7509 12-DEC-2005 17:50:46.68
             Body RtBody 12-DEC-2005 17:50:46.68
             EndBody
-            Body DevBody 13-DEC-2005 17:48:24.55
+            Body DevBody 15-FEB-2006 14:41:24.14
               Attr DpObject = "$PlcMain:BaseComponent-Class-CompModeD2.OpExtAndIntMan"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-GetDp194"
                 Attr x = 6.000000e-01
-                Attr y = -2.075000e+00
+                Attr y = -2.125000e+00
                 Attr width = 4.808889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
@@ -44432,6 +44676,24 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
+          Object Or44 Or 8081 15-FEB-2006 14:40:32.39
+            Body RtBody 15-FEB-2006 14:40:32.39
+            EndBody
+            Body DevBody 15-FEB-2006 14:41:24.14
+              Buffer PlcNode
+                Attr object_type = 91
+                Attr cid = "pwrb:Class-Or"
+                Attr oid = "BaseComponent:Class-CompModeD2Fo-Code-W-Or44"
+                Attr x = 1.100000e+00
+                Attr y = -2.025000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-CompModeD2Fo-Code-W"
+                Attr mask[0] = 5
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object Template CompModeD2Fo 2185986048 01-JAN-1970 01:00:00.00
@@ -44508,6 +44770,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 27 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -46492,6 +46760,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$String8"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 34 21-SEP-2005 08:26:22.81
           Body SysBody 21-SEP-2005 08:26:22.81
             Attr PgmName = "PlcConnect"
@@ -49113,6 +49387,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrb:Class-DsTrend"
           EndBody
         EndObject
+        !/**
+        !  Trend object displayed by the trend method. Normally a reference to
+        !  the previous attribute object 'Trend'.
+        !*/
         Object DefTrend $Attribute 85 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DefTrend"
@@ -54109,6 +54387,15 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basesensorsim_og.gif
     ! 
+    !  The sensor value is the sum of
+    !  - the Value input, which can be connected in the plc, or given an
+    !    an initial value and modified by the slider in the object graph.
+    !  - a bias component.
+    !  - a sinus component.
+    !  - a sawtooth component.
+    !  - a random component.
+    !  
+    !  @h1 Configuration
     !  Connect the function object to an object of class or subclass of
     !  BaseSensor.
     ! 
@@ -54133,60 +54420,90 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  If true, the sinus component is added to the simulated value.
+        !*/
         Object SinusCurve $Intern 3 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SinusCurve"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  If true, the sawtooth component is added to the simulated value.
+        !*/
         Object SawToothedCurve $Intern 4 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SawToothedCurve"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  If true, the random component is added to the simulated value.
+        !*/
         Object RandomCurve $Intern 5 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Random"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  If true, the simulated value is set to zero.
+        !*/
         Object DisableValue $Intern 6 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "DisableValue"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Period of sinus and sawtoothed component.
+        !*/
         Object Period $Intern 9 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Period"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Value of bias component.
+        !*/
         Object Bias $Intern 10 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "Bias"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Amplitude of sinus component.
+        !*/
         Object SinusAmplitude $Intern 11 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SinusAmplitude"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Amplitued of sawtoothed component.
+        !*/
         Object SawToothedAmplitude $Intern 13 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "SawToothedAmplitude"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Amplitude of random component.
+        !*/
         Object RandomAmplitude $Intern 12 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "RandomAmplitude"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Used by the connect method. Reference to the main sensor object.
+        !*/
         Object PlcConnect $Intern 1 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -55865,6 +56182,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseTempSensor"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 3 03-OCT-2005 17:47:25.54
           Body SysBody 03-OCT-2005 17:47:25.54
             Attr PgmName = "Super"
@@ -55915,6 +56235,9 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basesupswitch_og.gif
     ! 
+    !  @b Supervision
+    !  If the signal value is list, an alarm is sent.
+    ! 
     !  @h1 Configuration
     !  @b Signals
     !  The object contains the Di signal 'Switch' that should be connected to a
@@ -55940,6 +56263,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseSupSwitch"
           Attr NextAix = "_X26"
         EndBody
+        !/**
+        ! Super class.
+        !*/
         Object Super $Attribute 13 04-OCT-2005 10:54:12.64
           Body SysBody 04-OCT-2005 10:54:27.22
             Attr PgmName = "Super"
@@ -55954,6 +56280,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        ! Switch digital input.
+        !*/
         Object Switch $Attribute 15 04-OCT-2005 10:53:23.13
           Body SysBody 04-OCT-2005 10:56:33.04
             Attr PgmName = "Switch"
@@ -55961,24 +56290,39 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        ! True if the switch signal is lost.
+        !*/
         Object AlarmStatus $Attribute 16 04-OCT-2005 10:53:23.13
           Body SysBody 04-OCT-2005 10:53:23.13
             Attr PgmName = "AlarmStatus"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        ! Alarm text when the signal is lost.
+        !*/
         Object AlarmText $Attribute 17 04-OCT-2005 10:53:23.13
           Body SysBody 04-OCT-2005 10:53:23.13
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        ! Alarm delay in seconds.
+        !*/
         Object Delay $Attribute 18 04-OCT-2005 10:53:23.13
           Body SysBody 04-OCT-2005 10:53:23.13
             Attr PgmName = "Delay"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 24 04-OCT-2005 10:53:23.13
           Body SysBody 04-OCT-2005 10:53:23.13
             Attr PgmName = "PlcConnect"
@@ -56012,6 +56356,9 @@ Alarm HH, H, L, LL"
     !  @b Object Graph
     !  @image orm_basetempswitch_og.gif
     ! 
+    !  @b Supervision
+    !  If the signal value is list, an alarm is sent.
+    ! 
     !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object BaseSupSwitchFo is used.
@@ -56034,6 +56381,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseTempSwitch"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 2 04-OCT-2005 11:05:10.54
           Body SysBody 04-OCT-2005 11:06:37.19
             Attr PgmName = "Super"
@@ -56967,6 +57317,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseCircuitBreaker"
           Attr NextAix = "_X22"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 11 03-OCT-2005 17:57:49.35
           Body SysBody 03-OCT-2005 17:58:03.45
             Attr PgmName = "Super"
@@ -56994,6 +57347,12 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 20 03-OCT-2005 17:57:18.92
           Body SysBody 03-OCT-2005 17:57:18.92
             Attr PgmName = "PlcConnect"
@@ -57671,6 +58030,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseActuatorA"
           Attr NextAix = "_X93"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 54 30-SEP-2005 16:57:52.01
           Body SysBody 30-SEP-2005 16:58:04.47
             Attr PgmName = "Super"
@@ -57678,6 +58040,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 89 30-SEP-2005 17:16:22.74
           Body SysBody 30-SEP-2005 17:16:35.56
             Attr PgmName = "GraphConfiguration"
@@ -57691,6 +58057,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Analog output signal for the position order value.
+        !*/
         Object Order $Attribute 57 30-SEP-2005 17:33:45.76
           Body SysBody 04-OCT-2005 08:16:39.86
             Attr PgmName = "Order"
@@ -57705,6 +58074,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Analog input signal for the position feedback.
+        !*/
         Object Position $Attribute 56 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:59:02.67
             Attr PgmName = "Position"
@@ -57719,6 +58091,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input switch open.
+        !*/
         Object SwitchOpen $Attribute 58 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:00:57.87
             Attr PgmName = "SwitchOpen"
@@ -57733,6 +58108,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input switch closed.
+        !*/
         Object SwitchClosed $Attribute 59 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:01:05.10
             Attr PgmName = "SwitchClosed"
@@ -57740,6 +58118,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 60 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "Mode"
@@ -57754,6 +58135,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Maximum difference between ordered and measured position.
+        !  If the difference exceeds this value, an alarm is sent.
+        !*/
         Object MaxPosDiff $Attribute 61 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:10:25.79
             Attr PgmName = "MaxPosDiff"
@@ -57768,6 +58153,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Delay for position difference alarm in seconds.
+        !*/
         Object DiffAlarmDelay $Attribute 62 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:10:34.00
             Attr PgmName = "DiffAlarmDelay"
@@ -57782,6 +58170,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for position difference alarm.
+        !*/
         Object DiffAlarmText $Attribute 63 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:10:43.12
             Attr PgmName = "DiffAlarmText"
@@ -57796,6 +58187,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm in seconds.
+        !*/
         Object SwitchAlarmDelay $Attribute 91 30-SEP-2005 17:32:39.51
           Body SysBody 30-SEP-2005 17:32:41.09
             Attr PgmName = "SwitchAlarmDelay"
@@ -57810,6 +58204,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for switch alarm.
+        !*/
         Object SwitchAlarmText $Attribute 64 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 17:10:53.54
             Attr PgmName = "SwitchAlarmText"
@@ -57817,18 +58214,33 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Position for limitswitch open.
+        !  If the position feedback (or ordered position, if feedback is 
+        !  not present) exceeds this value, and the switch open signal is
+        !  missing, an switch alarm is sent.
+        !*/
         Object PosSwitchOpen $Attribute 65 30-SEP-2005 16:56:17.26
           Body SysBody 03-OCT-2005 09:37:01.77
             Attr PgmName = "PosSwitchOpen"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Position for limitswitch closed.
+        !  If the position feedback (or ordered position, if feedback is 
+        !  not present) is below this value, and the switch closed signal is
+        !  missing, an switch alarm is sent.
+        !*/
         Object PosSwitchClosed $Attribute 66 30-SEP-2005 16:56:17.26
           Body SysBody 03-OCT-2005 09:37:08.86
             Attr PgmName = "PosSwitchClosed"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Indication for error.
+        !*/
         Object IndError $Attribute 67 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "IndError"
@@ -57836,6 +58248,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Indication for warning.
+        !*/
         Object IndWarning $Attribute 68 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "IndWarning"
@@ -57843,6 +58258,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  A switch error is detected.
+        !*/
         Object SwitchError $Attribute 69 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "SwitchError"
@@ -57850,6 +58268,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  A position difference error is detected.
+        !*/
         Object DiffPosError $Attribute 70 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "DiffPosError"
@@ -57857,18 +58278,33 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Enumeration for valve position (open, closed or in between).
+        !*/
         Object PosEnum $Attribute 71 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 74 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 75 30-SEP-2005 16:56:17.26
           Body SysBody 30-SEP-2005 16:56:17.26
             Attr PgmName = "SimConnect"
@@ -64073,6 +64509,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseContactor"
           Attr NextAix = "_X33"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 15 04-OCT-2005 08:56:26.24
           Body SysBody 04-OCT-2005 08:57:00.57
             Attr PgmName = "Super"
@@ -64080,6 +64519,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 30 04-OCT-2005 09:35:54.39
           Body SysBody 04-OCT-2005 09:36:05.25
             Attr PgmName = "GraphConfiguration"
@@ -64093,6 +64536,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital output signal for order.
+        !*/
         Object Order $Attribute 18 04-OCT-2005 08:58:32.77
           Body SysBody 04-OCT-2005 08:59:10.79
             Attr PgmName = "Order"
@@ -64107,6 +64553,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input signal for feedback.
+        !*/
         Object Feedback $Attribute 17 04-OCT-2005 08:55:56.74
           Body SysBody 04-OCT-2005 08:59:43.46
             Attr PgmName = "Feedback"
@@ -64114,6 +64563,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Indication for error.
+        !*/
         Object IndError $Attribute 19 04-OCT-2005 08:55:56.74
           Body SysBody 21-DEC-2005 08:48:50.42
             Attr PgmName = "IndError"
@@ -64121,6 +64573,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Indication for feedback.
+        !  If there is no feedback signal, the order signal is indicated.
+        !*/
         Object IndFeedback $Attribute 31 29-NOV-2005 08:38:50.75
           Body SysBody 21-DEC-2005 08:48:54.63
             Attr PgmName = "IndFeedback"
@@ -64128,24 +64584,44 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Feedback time limit.
+        !  If the order is set, and feedback signal hasn't arrived within
+        !  this time limit, an alarm is sent.
+        !*/
         Object FbTimeLimit $Attribute 20 04-OCT-2005 08:55:56.74
           Body SysBody 04-OCT-2005 08:55:56.74
             Attr PgmName = "FbTimeLimit"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for feedback error.
+        !*/
         Object AlarmText $Attribute 21 04-OCT-2005 08:55:56.74
           Body SysBody 04-OCT-2005 08:55:56.74
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 27 04-OCT-2005 08:55:56.74
           Body SysBody 04-OCT-2005 08:55:56.74
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 32 02-DEC-2005 10:41:01.05
           Body SysBody 02-DEC-2005 10:41:01.05
             Attr PgmName = "SimConnect"
@@ -66496,6 +66972,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseCValve"
           Attr NextAix = "_X39"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 25 03-OCT-2005 08:44:22.15
           Body SysBody 03-OCT-2005 08:44:39.84
             Attr PgmName = "Super"
@@ -66503,6 +66982,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 38 03-OCT-2005 14:08:39.46
           Body SysBody 03-OCT-2005 14:08:39.46
             Attr PgmName = "GraphConfiguration"
@@ -66516,6 +66999,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Actuator object. Handles the signals and the mode of the valve.
+        !*/ 
         Object Actuator $Attribute 28 03-OCT-2005 08:43:30.46
           Body SysBody 03-OCT-2005 08:44:12.43
             Attr PgmName = "Actuator"
@@ -66530,6 +67016,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$CastId"
           EndBody
         EndObject
+        !/**
+        !  Valve object.
+        !*/
         Object Valve $Attribute 30 03-OCT-2005 08:43:30.46
           Body SysBody 03-OCT-2005 08:43:30.46
             Attr PgmName = "Valve"
@@ -66537,12 +67026,24 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-BaseValve"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 36 03-OCT-2005 08:43:30.46
           Body SysBody 03-OCT-2005 08:43:30.46
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 37 03-OCT-2005 08:43:30.46
           Body SysBody 03-OCT-2005 08:43:30.46
             Attr PgmName = "SimConnect"
@@ -69265,6 +69766,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseFlowSensor"
           Attr NextAix = "_X5"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 4 19-DEC-2005 10:59:32.32
           Body SysBody 19-DEC-2005 10:59:32.32
             Attr PgmName = "Super"
@@ -69338,6 +69842,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseLevelSensor"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 2 03-OCT-2005 17:43:31.72
           Body SysBody 03-OCT-2005 17:43:31.72
             Attr PgmName = "Super"
@@ -69409,6 +69916,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseLevelSwitch"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 2 04-OCT-2005 11:05:10.54
           Body SysBody 04-OCT-2005 11:06:13.36
             Attr PgmName = "Super"
@@ -69464,6 +69974,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BasePressureSwitch"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 2 04-OCT-2005 11:05:10.54
           Body SysBody 04-OCT-2005 11:06:25.23
             Attr PgmName = "Super"
@@ -69557,6 +70070,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseMValve"
           Attr NextAix = "_X46"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 19 28-SEP-2005 13:08:41.43
           Body SysBody 28-SEP-2005 13:10:30.98
             Attr PgmName = "Super"
@@ -69564,6 +70080,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 43 30-SEP-2005 08:53:46.13
           Body SysBody 04-OCT-2005 10:10:31.90
             Attr PgmName = "GraphConfiguration"
@@ -69577,6 +70097,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital output signal for order.
+        !*/
         Object Order $Attribute 21 28-SEP-2005 13:07:51.76
           Body SysBody 04-OCT-2005 08:10:41.34
             Attr PgmName = "Order"
@@ -69591,6 +70114,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input signal for switch open.
+        !*/
         Object SwitchOpen $Attribute 22 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:11:58.54
             Attr PgmName = "SwitchOpen"
@@ -69605,6 +70131,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input signal for switch closed.
+        !*/
         Object SwitchClosed $Attribute 23 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:12:41.93
             Attr PgmName = "SwitchClosed"
@@ -69612,6 +70141,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Mode object.
+        !*/
         Object Mode $Attribute 24 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "Mode"
@@ -69626,6 +70158,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Delay for switch alarm in seconds.
+        !*/
         Object SwitchAlarmDelay $Attribute 25 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:14:56.33
             Attr PgmName = "SwitchAlarmDelay"
@@ -69640,6 +70175,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Alarm text for switch alarm.
+        !*/
         Object SwitchAlarmText $Attribute 26 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:15:08.75
             Attr PgmName = "SwitchAlarmText"
@@ -69647,6 +70185,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Indication for error.
+        !*/
         Object IndError $Attribute 27 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "IndError"
@@ -69654,6 +70195,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Indication for warning.
+        !*/
         Object IndWarning $Attribute 28 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "IndWarning"
@@ -69661,6 +70205,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  External interlock.
+        !*/
         Object ExtInterlock $Attribute 29 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "ExtInterlock"
@@ -69668,18 +70215,33 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Enumeration for valve position (open, closed or in between).
+        !*/
         Object PosEnum $Attribute 45 11-OCT-2005 15:22:31.54
           Body SysBody 11-OCT-2005 15:22:31.54
             Attr PgmName = "PosEnum"
             Attr TypeRef = "BaseComponent:Type-ValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 35 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 36 28-SEP-2005 13:07:51.76
           Body SysBody 28-SEP-2005 13:07:51.76
             Attr PgmName = "SimConnect"
@@ -74858,6 +75420,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseManValve"
           Attr NextAix = "_X38"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 14 30-SEP-2005 13:34:37.54
           Body SysBody 30-SEP-2005 13:34:55.06
             Attr PgmName = "Super"
@@ -74865,6 +75430,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 27 30-SEP-2005 13:36:06.45
           Body SysBody 30-SEP-2005 13:45:35.07
             Attr PgmName = "GraphConfiguration"
@@ -74878,6 +75447,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+	!/**
+        !  Digital input signal for switch open.
+        !*/
         Object SwitchOpen $Attribute 16 30-SEP-2005 13:33:48.65
           Body SysBody 30-SEP-2005 15:27:36.44
             Attr PgmName = "SwitchOpen"
@@ -74892,6 +75464,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+	!/**
+        !  Digital input signal for switch closed.
+        !*/
         Object SwitchClosed $Attribute 17 30-SEP-2005 13:33:48.65
           Body SysBody 30-SEP-2005 15:27:50.44
             Attr PgmName = "SwitchClosed"
@@ -74899,6 +75474,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+	!/**
+        !  Indication for error.
+        !*/
         Object IndError $Attribute 18 30-SEP-2005 13:33:48.65
           Body SysBody 21-DEC-2005 08:51:03.63
             Attr PgmName = "IndError"
@@ -74913,6 +75491,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+	!/**
+        !  Alarm text for switch alarm.
+        !*/
         Object AlarmText $Attribute 19 30-SEP-2005 13:33:48.65
           Body SysBody 30-SEP-2005 15:28:06.02
             Attr PgmName = "AlarmText"
@@ -74920,6 +75501,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Enumeration for valve position (open, closed or in between).
+        !*/
         Object PosEnum $Attribute 20 30-SEP-2005 13:33:48.65
           Body SysBody 10-OCT-2005 15:32:54.05
             Attr PgmName = "PosEnum"
@@ -74933,6 +75517,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Indication for switch closed, if OpIndication is used.
+        !*/
         Object IndClosed $Attribute 36 30-SEP-2005 16:13:46.19
           Body SysBody 21-DEC-2005 08:51:12.32
             Attr PgmName = "IndClosed"
@@ -74947,6 +75534,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Configures that the operator can set the position of the valve from
+        !  the class graph. Only used if no switches are available.
+        !*/
         Object OpIndication $Attribute 28 30-SEP-2005 13:37:11.03
           Body SysBody 30-SEP-2005 15:28:35.60
             Attr PgmName = "OpIndication"
@@ -74961,6 +75552,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Backup object for IndClosed.
+        !*/
         Object OpIndBackup $Attribute 29 30-SEP-2005 13:37:11.03
           Body SysBody 30-SEP-2005 15:28:49.99
             Attr PgmName = "OpIndBackup"
@@ -74968,6 +75562,12 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Backup"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 26 30-SEP-2005 13:33:48.65
           Body SysBody 30-SEP-2005 13:33:48.65
             Attr PgmName = "PlcConnect"
@@ -77409,6 +78009,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseMotor"
           Attr NextAix = "_X44"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 23 03-OCT-2005 16:41:56.54
           Body SysBody 03-OCT-2005 16:42:10.59
             Attr PgmName = "Super"
@@ -77416,6 +78019,10 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 37 04-OCT-2005 10:08:28.11
           Body SysBody 04-OCT-2005 10:10:39.13
             Attr PgmName = "GraphConfiguration"
@@ -77436,6 +78043,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Temperature switch object.
+        !*/
         Object TempSwitch $Attribute 25 04-OCT-2005 09:38:21.78
           Body SysBody 05-OCT-2005 08:33:04.73
             Attr PgmName = "TempSwitch"
@@ -77457,6 +78067,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Temperature sensor object.
+        !*/
         Object TempSensor $Attribute 36 04-OCT-2005 09:39:27.22
           Body SysBody 05-OCT-2005 08:33:41.01
             Attr PgmName = "TempSensor"
@@ -77464,6 +78077,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-BaseTempSensor"
           EndBody
         EndObject
+        !/**
+        !  Indication for error.
+        !*/
         Object IndError $Attribute 40 13-OCT-2005 13:02:17.51
           Body SysBody 13-OCT-2005 13:02:17.51
             Attr PgmName = "IndError"
@@ -77471,6 +78087,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Indication for warning.
+        !*/
         Object IndWarning $Attribute 41 13-OCT-2005 13:02:17.51
           Body SysBody 13-OCT-2005 13:02:17.51
             Attr PgmName = "IndWarning"
@@ -77478,6 +78097,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Internal value to display or hide indications in the object graph.
+        !*/
         Object DisplayInd $Attribute 43 28-NOV-2005 13:43:34.99
           Body SysBody 28-NOV-2005 13:43:36.36
             Attr PgmName = "DisplayInd"
@@ -77485,12 +78107,24 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 32 03-OCT-2005 16:41:33.02
           Body SysBody 03-OCT-2005 16:41:33.02
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 42 14-OCT-2005 15:38:16.91
           Body SysBody 14-OCT-2005 15:38:20.73
             Attr PgmName = "SimConnect"
@@ -79103,6 +79737,9 @@ Alarm HH, H, L, LL"
           Attr StructName = "BaseOverloadRelay"
           Attr NextAix = "_X28"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 23 22-NOV-2005 16:33:14.92
           Body SysBody 22-NOV-2005 16:33:14.92
             Attr PgmName = "Super"
@@ -79117,6 +79754,9 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
+        !/**
+        !  Digital input signal for overload.
+        !*/
         Object Overload $Attribute 25 22-NOV-2005 16:35:52.60
           Body SysBody 22-NOV-2005 16:36:01.14
             Attr PgmName = "Overload"
@@ -79124,12 +79764,21 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
+        !/**
+        !  Overload alarm text.
+        !*/
         Object AlarmText $Attribute 26 22-NOV-2005 16:33:14.92
           Body SysBody 22-NOV-2005 16:33:14.92
             Attr PgmName = "AlarmText"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 27 22-NOV-2005 16:33:14.92
           Body SysBody 22-NOV-2005 16:33:14.92
             Attr PgmName = "PlcConnect"
@@ -79786,6 +80435,9 @@ Overload relay"
           Attr StructName = "BasePositSensor"
           Attr NextAix = "_X17"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1 15-SEP-2005 14:53:10.77
           Body SysBody 15-SEP-2005 15:33:08.91
             Attr PgmName = "Super"
@@ -87079,6 +87731,9 @@ else
           Attr StructName = "BasePressureSensor"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 3 03-OCT-2005 17:45:51.21
           Body SysBody 03-OCT-2005 17:45:51.21
             Attr PgmName = "Super"
@@ -87175,6 +87830,9 @@ else
           Attr StructName = "BaseSafetySwitch"
           Attr NextAix = "_X23"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 12 04-OCT-2005 10:22:06.88
           Body SysBody 04-OCT-2005 10:22:28.20
             Attr PgmName = "Super"
@@ -87202,6 +87860,12 @@ else
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 21 04-OCT-2005 10:21:41.86
           Body SysBody 04-OCT-2005 10:21:41.86
             Attr PgmName = "PlcConnect"
@@ -87845,6 +88509,9 @@ Safety switch"
           Attr StructName = "BaseSwitch"
           Attr NextAix = "_X18"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 9 04-OCT-2005 10:36:02.98
           Body SysBody 04-OCT-2005 10:36:48.89
             Attr PgmName = "Super"
@@ -88030,6 +88697,12 @@ Safety switch"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 23 08-SEP-2005 13:01:47.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr PgmName = "PlcConnect"
@@ -88194,6 +88867,9 @@ Safety switch"
           Attr StructName = "BasePropValve"
           Attr NextAix = "_X18"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1 06-OCT-2005 15:19:30.19
           Body SysBody 06-OCT-2005 15:14:44.51
             Attr PgmName = "Super"
@@ -88229,12 +88905,24 @@ Safety switch"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 12 15-SEP-2005 09:44:29.15
           Body SysBody 15-SEP-2005 09:44:29.15
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 13 15-SEP-2005 09:44:29.15
           Body SysBody 15-SEP-2005 09:44:29.15
             Attr PgmName = "SimConnect"
@@ -88780,6 +89468,9 @@ Safety switch"
           Attr StructName = "BaseDirValve"
           Attr NextAix = "_X50"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 35 06-OCT-2005 15:15:32.35
           Body SysBody 06-OCT-2005 15:15:41.98
             Attr PgmName = "Super"
@@ -88787,6 +89478,10 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 49 15-DEC-2005 16:32:01.51
           Body SysBody 15-DEC-2005 16:32:12.14
             Attr PgmName = "GraphConfiguration"
@@ -88834,6 +89529,12 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Type-DirValvePosEnum"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 46 21-SEP-2005 09:24:56.91
           Body SysBody 21-SEP-2005 09:24:56.91
             Attr PgmName = "PlcConnect"
@@ -89785,6 +90486,9 @@ Safety switch"
           Attr StructName = "BaseMotorAggr"
           Attr NextAix = "_X80"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 47 05-OCT-2005 13:32:44.05
           Body SysBody 05-OCT-2005 13:33:00.09
             Attr PgmName = "Super"
@@ -89792,6 +90496,10 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 76 05-OCT-2005 15:17:46.84
           Body SysBody 05-OCT-2005 15:18:08.42
             Attr PgmName = "GraphConfiguration"
@@ -89938,12 +90646,24 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 71 05-OCT-2005 13:26:14.71
           Body SysBody 05-OCT-2005 13:26:14.71
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 72 05-OCT-2005 13:26:14.71
           Body SysBody 05-OCT-2005 13:26:14.71
             Attr PgmName = "SimConnect"
@@ -95421,6 +96141,9 @@ Motor aggregat"
           Attr StructName = "BaseFanAggr"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 1 06-OCT-2005 15:38:57.44
           Body SysBody 06-OCT-2005 15:39:20.19
             Attr PgmName = "Super"
@@ -95539,6 +96262,9 @@ Motor aggregat"
           Attr StructName = "BasePumpAggr"
           Attr NextAix = "_X7"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 4 30-NOV-2005 13:21:11.80
           Body SysBody 30-NOV-2005 13:21:11.80
             Attr PgmName = "Super"
@@ -95657,6 +96383,9 @@ Motor aggregat"
           Attr StructName = "BaseMotorIncrDecrAggr"
           Attr NextAix = "_X107"
         EndBody
+        !/**
+        !  Super class.
+        !*/
         Object Super $Attribute 80 05-DEC-2005 10:07:25.63
           Body SysBody 05-DEC-2005 10:07:25.63
             Attr PgmName = "Super"
@@ -95664,6 +96393,10 @@ Motor aggregat"
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
         EndObject
+	!/**
+        !  Enumeration for object graph configuration.
+        !  Handled by the ConfigureComponent method.
+        !*/
         Object GraphConfiguration $Attribute 81 05-DEC-2005 10:07:25.63
           Body SysBody 15-DEC-2005 11:56:13.80
             Attr PgmName = "GraphConfiguration"
@@ -95831,12 +96564,24 @@ Motor aggregat"
             Attr TypeRef = "BaseComponent:Class-BaseMotor"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 102 05-DEC-2005 10:07:25.63
           Body SysBody 05-DEC-2005 10:07:25.63
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The simulate plc function object connected to this object.
+        !  The simulate plc function object connected to this object.
+        !  This attribute is set when the simulate functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object SimConnect $Attribute 103 05-DEC-2005 10:07:25.63
           Body SysBody 05-DEC-2005 10:07:25.63
             Attr PgmName = "SimConnect"
