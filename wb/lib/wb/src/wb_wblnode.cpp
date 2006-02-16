@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.54 2005-12-14 11:28:19 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.55 2006-02-16 13:04:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 #include "pwr_class.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "wb_wblnode.h"
 #include "wb_vrepwbl.h"
 #include "wb_orepwbl.h"
@@ -317,6 +318,8 @@ static wbl_sSym attr_flags[] =
   ,{ "pwr_mClassDef_HasCallBack", pwr_mClassDef_HasCallBack }
   ,{ 0, 0 }
 };
+
+static int check_conversion_error( const char *attr);
 
 void wb_wblnode::initialize( antlr::RefToken t )
 {
@@ -1183,7 +1186,8 @@ void wb_wblnode::buildAttr( ref_wblnode object, pwr_eBix bix)
     }
     else {
       // Attr conversion exception
-      m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
+      if ( !check_conversion_error( name()))
+	m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
 
 error_continue:
@@ -1445,7 +1449,8 @@ void wb_wblnode::buildBuffAttr( ref_wblnode object, pwr_eBix bix, pwr_tCid buffe
     }
     else {
       // Attr conversion exception
-      m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
+      if ( !check_conversion_error( name()))
+	m_vrep->error( "Unable to convert string to value", getFileName(), line_number);
     }
     error_continue:
     ;
@@ -2228,4 +2233,27 @@ bool wb_wblnode::docBlock( char **block, int *size) const
   return true;
 }
 
+static int check_conversion_error( const char *attr)
+{
+  char seg[20][80];
+  int nr;
 
+  // subwind_oid[0] is a probably a not dumped fo window
+  if ( strcmp( attr, "subwind_oid[0]") == 0)
+    return 1;
+
+  // PlcConnect and SimConnect are ok in attribute objects
+  nr = dcli_parse( (char *)attr, ".", "", (char *)seg, 
+		   sizeof( seg) / sizeof( seg[0]), sizeof( seg[0]), 0);
+  if ( nr <= 1)
+    return 0;
+  
+  if ( strcmp( seg[nr-1], "PlcConnect") == 0 || strcmp( seg[nr-1], "SimConnect") == 0) {
+    for ( int i = nr - 2; i >= 0; i--) {
+      if ( strcmp( seg[i], "Super") != 0)
+	return 1;
+    }
+  }
+
+  return 0;
+}
