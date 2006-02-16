@@ -11,7 +11,7 @@
 Name:		pwrdemo41
 Summary: 	Proview/R demo project
 Version:        4.1.3
-Release: 	1	
+Release: 	2
 Copyright:	(c) 2005 SSAB Oxelound AB, Sweden
 #License:        GPL
 BuildArch:      i386
@@ -111,5 +111,8 @@ fi
 #%postun
 
 %changelog
-* Fri Jan 27 2005 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
+* Thu Feb 16 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-2
+- Demo graphs for BaseComponents added.
+- Demo graph for level control added. 
+* Fri Jan 27 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
 - Base release 
