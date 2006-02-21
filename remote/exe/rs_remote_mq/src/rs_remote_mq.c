@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_mq.c,v 1.1 2006-02-09 09:51:05 claes Exp $
+ * Proview   $Id: rs_remote_mq.c,v 1.2 2006-02-21 14:10:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -360,7 +360,7 @@ if (debug) printf("Before remtrans_init\n");
 			 NULL,
 			 NULL);
 			 
-  if (sts != PAMS__SUCCESS) {
+  if (sts != PAMS__SUCCESS && sts != PAMS__JOURNAL_ON) {
     errh_Fatal("pams_attach_q, %d", sts);
     errh_SetStatus(PWR__SRVTERM);
     exit(sts);
