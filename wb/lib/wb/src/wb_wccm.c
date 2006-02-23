@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.c,v 1.6 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wccm.c,v 1.7 2006-02-23 14:41:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,6 +29,7 @@
 #include "co_time.h"
 #include "co_ccm.h"
 #include "co_cdh.h"
+#include "co_api.h"
 #include "wb_utl.h"
 #include "wb_trv.h"
 #include "wb_cmd_msg.h"
@@ -667,6 +668,88 @@ static int wccm_getprojectname_func(
   return 1;
 }
 
+static int wccm_setattribute_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  ccm_s_arg *arg_p2; 
+  int sts;
+  char buf[400];
+  pwr_tAName name;
+  pwr_tOName attr;
+  char *s;
+  ldh_tSesContext ldhses;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts)) {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  switch ( arg_p2->value_decl) {
+    case CCM_DECL_STRING:
+      strcpy( buf, arg_p2->value_string);
+      break;
+    case CCM_DECL_INT:
+      sprintf( buf, "%d", arg_p2->value_int);
+      break;
+    case CCM_DECL_FLOAT:
+      sprintf( buf, "%f", arg_p2->value_float);
+      break;
+  }
+
+  strcpy( name, arg_list->value_string);
+  if ( (s = strrchr( name, '.'))) {
+    *s = 0;
+    strcpy( attr, s+1);
+  }
+  else
+    return CMD__ATTRIBUTE;
+
+  sts = utl_set_object_parameter( ldhses, 0, 0, name, attr, buf, 0, "", 0, 0);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wccm_checksystemgroup_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int sts;
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+
+  sts = user_CheckSystemGroup( arg_list->value_string);
+
+  *return_int = ODD(sts);
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
 /*************************************************************************
 *
 * Name:		wccm_register()
@@ -715,6 +798,10 @@ int	wccm_register(
     sts = ccm_register_function( "ObjectExist", wccm_objectexist_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetProjectName", wccm_getprojectname_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetAttribute", wccm_setattribute_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CheckSystemGroup", wccm_checksystemgroup_func);
     if ( EVEN(sts)) return sts;
 
     sts = ccm_create_external_var( "cmd_status", CCM_DECL_INT, 0, 1, 
