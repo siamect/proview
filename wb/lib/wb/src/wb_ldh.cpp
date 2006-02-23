@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.51 2005-12-30 15:36:36 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.52 2006-02-23 14:39:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -435,8 +435,13 @@ ldh_DeleteObject(ldh_tSession session, pwr_tOid oid)
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
     
-  sp->deleteObject(o);
-  return sp->sts();
+  try {
+    sp->deleteObject(o);
+    return sp->sts();
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
 }
 
 pwr_tStatus
@@ -447,7 +452,12 @@ ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid)
   wb_object o = sp->object(oid);
   if (!o) return o.sts();
     
-  return sp->deleteFamily(o);
+  try {
+    return sp->deleteFamily(o);
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
 }
 
 
