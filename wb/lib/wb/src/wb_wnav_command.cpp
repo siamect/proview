@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.38 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.39 2006-02-23 14:43:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,6 +71,7 @@ extern "C" {
 #include "wb_foe_msg.h"
 #include "ge.h"
 #include "wb_wda.h"
+#include "wb_wge.h"
 #include "co_xhelp.h"
 
 extern "C" {
@@ -135,22 +136,24 @@ static int	wnav_paste_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_move_func(		void		*client_data,
 					void		*client_flag);
-static int	wnav_open_func(	void		*client_data,
-				void		*client_flag);
-static int	wnav_create_func( void		*client_data,
-				void		*client_flag);
-static int	wnav_new_func( void		*client_data,
-				void		*client_flag);
-static int	wnav_delete_func( void		*client_data,
-				void		*client_flag);
-static int	wnav_connect_func( void		*client_data,
-				void		*client_flag);
-static int	wnav_disconnect_func( void	*client_data,
-				void		*client_flag);
-static int	wnav_wb_func( 	void		*client_data,
-				void		*client_flag);
-static int	wnav_exit_func(	void		*client_data,
-				void		*client_flag);
+static int	wnav_open_func(		void		*client_data,
+					void		*client_flag);
+static int	wnav_close_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_create_func( 	void		*client_data,
+					void		*client_flag);
+static int	wnav_new_func( 		void		*client_data,
+					void		*client_flag);
+static int	wnav_delete_func( 	void		*client_data,
+					void		*client_flag);
+static int	wnav_connect_func( 	void		*client_data,
+					void		*client_flag);
+static int	wnav_disconnect_func( 	void		*client_data,
+					void		*client_flag);
+static int	wnav_wb_func( 		void		*client_data,
+					void		*client_flag);
+static int	wnav_exit_func(		void		*client_data,
+					void		*client_flag);
 static int	wnav_setup_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_set_func(		void		*client_data,
@@ -169,6 +172,8 @@ static int	wnav_crossref_func(     void		*client_data,
 				        void		*client_flag);
 static int	wnav_distribute_func(   void		*client_data,
 				        void		*client_flag);
+static int	wnav_release_func(	void		*client_data,
+					void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
 		{
@@ -254,7 +259,12 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_open_func,
 			{ "dcli_arg1", "dcli_arg2", "/NAME", "/FILE", 
 			"/SCROLLBAR", "/WIDTH", "/HEIGHT", "/MENU", 
-			"/NAVIGATOR", "/CENTER", "/OBJECT", ""}
+			"/NAVIGATOR", "/CENTER", "/OBJECT", "/MODAL", "/INSTANCE", ""}
+		},
+		{
+			"CLOSE",
+			&wnav_close_func,
+			{ "dcli_arg1", "dcli_arg2", "/FILE", "/INSTANCE", ""}
 		},
 		{
 			"CREATE",
@@ -358,7 +368,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/CLASS", "/HIERARCHY", "/NAME", "/ATTRIBUTE", 
 			"/SIGNALOBJECTSEG", "/SIGCHANCONSEG", 
 			"/SHOSIGCHANCON", "/SHODETECTTEXT", "/VOLUMENAME",
-			"/VALUE", ""}
+			"/VALUE", "/SOURCE", "/MODAL", ""}
 		},
 		{
 			"SETUP",
@@ -403,6 +413,11 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_distribute_func,
 			{ "/NODE", ""}
 		},
+		{
+			"RELEASE",
+			&wnav_release_func,
+			{ "dcli_arg1", "dcli_arg2", ""}
+		},
 		{"",}};
 
 
@@ -422,6 +437,18 @@ static void wnav_free_stored_wnav()
 static void wnav_get_stored_wnav( WNav **wnav)
 {
   *wnav = current_wnav[wnav_cnt -1];
+}
+
+static void wnav_wge_close_cb( void *ctx)
+{
+  WGe *wge = (WGe *)ctx;
+  ((WNav *)wge->parent_ctx)->appl.remove( (void *)wge);
+}
+
+static int wnav_wge_command_cb( void *ctx, char *cmd)
+{
+  WGe *wge = (WGe *)ctx;
+  return ((WNav *)wge->parent_ctx)->command( cmd);
 }
 
 static int	wnav_help_func(		void		*client_data,
@@ -1474,6 +1501,58 @@ static int	wnav_set_func(	void		*client_data,
   else if ( strncmp( arg1_str, "DB", strlen( arg1_str)) == 0)
   {
     wnav->message('E', "command \"set db\" is obsolete");
+  }
+  else if ( strncmp( arg1_str, "SUBWINDOW", strlen( arg1_str)) == 0)
+  {
+    char filenamestr[80];
+    char sourcestr[80];
+    char objectstr[80];
+    int modal;
+    WGe *wge;
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    modal = ODD(dcli_get_qualifier( "/MODAL", 0, 0));
+
+    if ( EVEN( dcli_get_qualifier( "/SOURCE", sourcestr, sizeof(sourcestr)))) {
+      wnav->message('E',"Syntax error");
+      return WNAV__SYNTAX;
+    }
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", objectstr, sizeof(objectstr)))) {
+      wnav->message('E',"Syntax error");
+      return WNAV__SYNTAX;
+    }
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", filenamestr, sizeof(filenamestr)))) {
+      wnav->message('E',"Syntax error");
+      return WNAV__SYNTAX;
+    }
+    cdh_ToLower( filenamestr, filenamestr);
+    cdh_ToLower( sourcestr, sourcestr);
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( wnav->appl.find( applist_eType_Graph, filenamestr, (void **) &wge)) {
+      wge->set_subwindow_source( objectstr, sourcestr, modal);
+      if ( modal) {
+	XEvent 	Event;
+
+	for (;;) {
+	  XtAppNextEvent( XtWidgetToApplicationContext( wnav->parent_wid), &Event);
+	  XtDispatchEvent( &Event);
+	  
+	  if ( wge->subwindow_release) {
+	    wge->subwindow_release = 0;
+	    break;
+	  }
+	}
+      }
+    }
+    else {
+      wnav->message('E', "Graph not found");
+    }
   }
   else
   {
@@ -3273,8 +3352,104 @@ static int	wnav_open_func(	void		*client_data,
     if ( wnav->open_vsel_cb)
       (wnav->open_vsel_cb)( wnav->parent_ctx, wb_eType_ClassEditor, filenamestr, wow_eFileSelType_WblClass);
   }
+  else if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
+  {
+    pwr_tFileName	filenamestr;
+    pwr_tAName		instancestr;
+    char		*instance_p;
+    WGe 		*wge;
+    int			modal;
+
+    // Command is "OPEN GRAPH" 
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", filenamestr, sizeof(filenamestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", filenamestr, sizeof(filenamestr)))) {
+	wnav->message('E', "File is missing");
+	return WNAV__SYNTAX;
+      }
+    }
+    cdh_ToLower( filenamestr, filenamestr);
+
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instancestr, sizeof(instancestr))))
+      instance_p = instancestr;
+    else
+      instance_p = 0;
+
+    modal = ODD( dcli_get_qualifier( "/MODAL", 0, 0));
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+
+    wge = new WGe( wnav->parent_wid, wnav, "Name", filenamestr, 0,0,0,0,0,0,0, instance_p,
+		   modal);
+    if ( modal) {
+      XEvent 	Event;
+
+      wge->command_cb = wnav_wge_command_cb;
+      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, filenamestr);
+
+      for (;;) {
+	XtAppNextEvent( XtWidgetToApplicationContext( wnav->parent_wid), &Event);
+	XtDispatchEvent( &Event);
+
+	if ( wge->terminated) {
+	  wnav->appl.remove( (void *)wge);
+	  delete wge;
+	  break;      
+	}
+      }
+    }
+    else {
+      wge->close_cb = wnav_wge_close_cb;
+      wge->command_cb = wnav_wge_command_cb;
+      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, filenamestr);
+    }
+  }
   else
   {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return WNAV__SUCCESS;
+}
+
+static int	wnav_close_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( strncmp( arg1_str, "GRAPH", strlen( arg1_str)) == 0)
+  {
+    pwr_tFileName	filenamestr;
+    pwr_tOName		instancestr;
+    WGe 		*wge;
+
+    // Command is "CLOSE GRAPH" 
+
+    if ( EVEN( dcli_get_qualifier( "/FILE", filenamestr, sizeof(filenamestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", filenamestr, sizeof(filenamestr)))) {
+	wnav->message('E', "File is missing");
+	return WNAV__SYNTAX;
+      }
+    }
+    cdh_ToLower( filenamestr, filenamestr);
+    if ( ODD( dcli_get_qualifier( "/INSTANCE", instancestr, sizeof(instancestr)))) {
+    }
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( wnav->appl.find( applist_eType_Graph, filenamestr, (void **) &wge)) {
+      wnav->appl.remove( (void *)wge);
+      delete wge;
+    }
+  }
+  else {
     wnav->message('E', "Syntax error");
     return WNAV__SYNTAX;
   }
@@ -4159,6 +4334,42 @@ static int	wnav_distribute_func(	void		*client_data,
   return 1;
 }
 
+static int	wnav_release_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+
+  if ( strncmp( arg1_str, "SUBWINDOW", strlen( arg1_str)) == 0) {
+    WGe *wge;
+    char filenamestr[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", filenamestr, sizeof(filenamestr)))) {
+      wnav->message('E', "Syntax error");
+      return WNAV__SYNTAX;
+    }
+    cdh_ToLower( filenamestr, filenamestr);
+
+    if ( wnav->window_type == wnav_eWindowType_No)
+      return WNAV__CMDMODE;
+
+    if ( wnav->appl.find( applist_eType_Graph, filenamestr, (void **) &wge))
+      wge->set_subwindow_release();
+    else
+      wnav->message('E', "Graph not found");
+  }
+  else
+  {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return 1;
+}
+
 int WNav::show_database()
 {
   int		sts;
@@ -4847,6 +5058,131 @@ static int wnav_promptdialog_func(
   return 1;
 }
 
+static int wnav_opengraph_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  WNav *wnav;
+  ccm_s_arg *arg_p2; 
+  int sts;
+  pwr_tCmd cmd;
+
+  if ( arg_count != 2)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p2->value_decl != CCM_DECL_INT)
+    return CCM__VARTYPE;
+
+  wnav_get_stored_wnav( &wnav);
+  if ( wnav->window_type == wnav_eWindowType_No)
+    return WNAV__CMDMODE;
+      
+  strcpy( cmd, "open graph/file=");
+  strcat( cmd, arg_list->value_string);
+  if ( arg_p2->value_int)
+    strcat( cmd, " /modal");
+
+  sts = wnav->command( cmd);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wnav_closegraph_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  WNav *wnav;
+  int sts;
+  pwr_tCmd cmd;
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+
+  wnav_get_stored_wnav( &wnav);
+  if ( wnav->window_type == wnav_eWindowType_No)
+    return WNAV__CMDMODE;
+
+  strcpy( cmd, "close graph/file=");
+  strcat( cmd, arg_list->value_string);
+
+  sts = wnav->command( cmd);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
+
+static int wnav_setsubwindow_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  WNav *wnav;
+  ccm_s_arg *arg_p2; 
+  ccm_s_arg *arg_p3; 
+  ccm_s_arg *arg_p4; 
+  int sts;
+  pwr_tCmd cmd;
+
+  if ( arg_count != 4)
+    return CCM__ARGMISM;
+
+  arg_p2 = arg_list->next;
+  arg_p3 = arg_p2->next;
+  arg_p4 = arg_p3->next;
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p2->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p3->value_decl != CCM_DECL_STRING)
+    return CCM__VARTYPE;
+  if ( arg_p4->value_decl != CCM_DECL_INT)
+    return CCM__VARTYPE;
+
+  wnav_get_stored_wnav( &wnav);
+  if ( wnav->window_type == wnav_eWindowType_No)
+    return WNAV__CMDMODE;
+      
+  strcpy( cmd, "set subwindow ");
+  strcat( cmd, arg_list->value_string);
+  strcat( cmd, "/name=");
+  strcat( cmd, arg_p2->value_string);
+  strcat( cmd, "/source=");
+  strcat( cmd, arg_p3->value_string);
+  if ( arg_p4->value_int)
+    strcat( cmd, " /modal");
+
+  sts = wnav->command( cmd);
+
+  *return_int = sts;
+  *return_decl = CCM_DECL_INT;
+  
+  return 1;
+}
 
 static int wnav_ccm_deffilename_func( char *outfile, char *infile, void *client_data)
 {
@@ -4923,6 +5259,12 @@ int WNav::readcmdfile( 	char		*incommand)
     sts = ccm_register_function( "PromptDialog", wnav_promptdialog_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "SetDialogSize", wnav_setdialogsize_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "OpenGraph", wnav_opengraph_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "CloseGraph", wnav_closegraph_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "SetSubwindow", wnav_setsubwindow_func);
     if ( EVEN(sts)) return sts;
 
     ccm_func_registred = 1;
