@@ -41,11 +41,20 @@ uil_sources := $(sort \
              ) \
            )
 
-pwg_sources := $(sort \
+pwg_c_sources := $(sort \
              $(foreach file, \
                $(foreach dir, \
                  $(source_dirs), \
                  $(wildcard $(dir)/pwr_c_*.pwg) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+pwg_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/$(comp_name)*.pwg) \
                ), $(notdir $(file)) \
              ) \
            )
@@ -60,6 +69,7 @@ pwsg_sources := $(sort \
            )
 
 export_uid := $(addprefix $(exe_dir)/, $(patsubst %.uil, %.uid, $(uil_sources)))
+export_c_pwg := $(addprefix $(exe_dir)/, $(pwg_c_sources))
 export_pwg := $(addprefix $(exe_dir)/, $(pwg_sources))
 export_pwsg := $(addprefix $(exe_dir)/, $(pwsg_sources))
 
@@ -68,6 +78,7 @@ $(exe_dir)/%.uid : %.uil
 	@ export -n LANG; uil -o $(target) $(source)
 
 clean_uid := $(patsubst %.uil,clean_%.uid,$(uil_sources))
+clean_c_pwg := $(patsubst %.pwg,clean_%.pwg,$(pwg_c_sources))
 clean_pwg := $(patsubst %.pwg,clean_%.pwg,$(pwg_sources))
 clean_pwsg := $(patsubst %.pwsg,clean_%.pwsg,$(pwsg_sources))
 
@@ -78,7 +89,7 @@ all : init copy
 
 init : dirs
 
-copy : $(export_uid) $(export_pwg) $(export_pwsg)
+copy : $(export_uid) $(export_c_pwg) $(export_pwg) $(export_pwsg)
 
 lib :
 
@@ -95,6 +106,10 @@ $(clean_uid) : clean_%.uid : %.uil
 	@ $(rm) $(rmflags) $(exe_dir)/$*.uid  
 
 $(clean_pwg) : clean_%.pwg : %.pwg
+	@ echo "Removing pwg"
+	@ $(rm) $(rmflags) $(exe_dir)/$*.pwg  
+
+$(clean_c_pwg) : clean_%.pwg : %.pwg
 	@ echo "Removing pwg"
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pwg  
 
