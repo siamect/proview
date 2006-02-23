@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.h,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_ccm.h,v 1.5 2006-02-23 14:34:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,12 +77,33 @@ int ccm_create_external_var(
   char			*value_string
 );
 
+int ccm_delete_external_var(
+  char			*name,
+  float			value_float,
+  int			value_int,
+  char			*value_string
+);
+
 int ccm_set_external_var(
   char			*name,
   int			decl,
   float			value_float,
   int			value_int,
   char			*value_string
+);
+
+int ccm_get_external_var(
+  char			*name,
+  int			decl,
+  float			*value_float,
+  int			*value_int,
+  char			*value_string
+);
+
+int ccm_ref_external_var(
+  char			*name,
+  int			decl,
+  void 			**valuep
 );
 
 #ifdef __cplusplus

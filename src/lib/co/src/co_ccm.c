@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.c,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_ccm.c,v 1.5 2006-02-23 14:34:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,6 +93,7 @@
 #define K_ACTION_FUNCTION 43
 #define K_ACTION_RETURN 44
 #define K_ACTION_BACKSLASH 45
+#define K_ACTION_DELETE 46
 
 #define K_OPERAND_NO	0
 #define K_OPERAND_NAME	1
@@ -102,6 +103,7 @@
 #define K_OPERAND_EXTERN 5
 #define K_OPERAND_FUNCTION 6
 #define K_OPERAND_RETURN 7
+#define K_OPERAND_DELETE 8
 
 #define K_LOCTYPE_NO	0
 #define K_LOCTYPE_BEFORE 1
@@ -297,6 +299,12 @@ static int ccm_createvar(
   float			value_float,
   int			value_int,
   char			*value_string,
+  ccm_s_intvar		**intlist,
+  ccm_s_floatvar	**floatlist,
+  ccm_s_stringvar	**stringlist
+);
+static int ccm_deletevar(
+  char			*name,
   ccm_s_intvar		**intlist,
   ccm_s_floatvar	**floatlist,
   ccm_s_stringvar	**stringlist
@@ -1182,6 +1190,12 @@ static int operand_found( t_row_ctx rowctx)
     {
       operand_p->type = K_OPERAND_EXTERN;
       operand_p->operator = K_ACTION_NO;
+      rowctx->last_type = K_TYPE_OPERATOR;
+    }
+    else if ( strcmp( upname, "DELETE") == 0)
+    {
+      operand_p->type = K_OPERAND_DELETE;
+      operand_p->operator = K_ACTION_DELETE;
       rowctx->last_type = K_TYPE_OPERATOR;
     }
     else if ( strcmp( upname, "RETURN") == 0)
@@ -2566,15 +2580,26 @@ int ccm_operate_exec(
       case K_ACTION_CREAEXTINT:
         sts = ccm_createvar( next->name, K_DECL_INT, 0, 0, NULL,
 		&extint_list, &extfloat_list, &extstring_list);
+	if ( sts == CCM__VARALREXIST)
+	  sts = CCM__SUCCESS;
         if ( EVEN(sts)) return sts;
         break;
       case K_ACTION_CREAEXTFLOAT:
         sts = ccm_createvar( next->name, K_DECL_FLOAT, 0, 0, NULL,
 		&extint_list, &extfloat_list, &extstring_list);
+	if ( sts == CCM__VARALREXIST)
+	  sts = CCM__SUCCESS;
         if ( EVEN(sts)) return sts;
         break;
       case K_ACTION_CREAEXTSTRING:
         sts = ccm_createvar( next->name, K_DECL_STRING, 0, 0, "",
+		&extint_list, &extfloat_list, &extstring_list);
+	if ( sts == CCM__VARALREXIST)
+	  sts = CCM__SUCCESS;
+        if ( EVEN(sts)) return sts;
+        break;
+      case K_ACTION_DELETE:
+        sts = ccm_deletevar( next->name,
 		&extint_list, &extfloat_list, &extstring_list);
         if ( EVEN(sts)) return sts;
         break;
@@ -3173,7 +3198,157 @@ int ccm_set_external_var(
       }
     }
     if ( found)
-      strncpy( string_p->value + element*K_STRING_SIZE, value_string, sizeof( string_p->value));
+      strncpy( string_p->value + element*K_STRING_SIZE, value_string, K_STRING_SIZE);
+  }
+  if ( !found)
+    return CCM__VARNOTFOUND;
+  return 1;
+}
+
+int ccm_get_external_var( 
+  char		*name,
+  int		decl,
+  float		*value_float,
+  int		*value_int,
+  char		*value_string)
+{
+  ccm_s_intvar		*int_p;
+  ccm_s_floatvar	*float_p;
+  ccm_s_stringvar	*string_p;
+  ccm_s_intvar		*int_list;
+  ccm_s_floatvar	*float_list;
+  ccm_s_stringvar	*string_list;
+  int			found;
+  int			sts;
+  int			array;
+  int			element;
+  char			varname[80];
+
+  sts = ccm_varname_parse( NULL, name, varname, &array, &element);
+  if ( EVEN(sts)) return sts;
+
+  found = 0;
+
+  if ( decl == K_DECL_INT)
+  { 
+    int_list = extint_list;
+
+    for ( int_p = int_list; int_p; int_p = int_p->next)
+    {
+      if ( strcmp( int_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      *value_int = *(int_p->value + element);
+  }
+  else if ( decl == K_DECL_FLOAT)
+  { 
+    /* Search float */
+    float_list = extfloat_list;
+
+    for ( float_p = float_list; float_p; float_p = float_p->next)
+    {
+      if ( strcmp( float_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      *value_float = *(float_p->value + element);
+  }
+  else if ( decl == K_DECL_STRING)
+  { 
+    /* Search string */
+    string_list = extstring_list;
+
+    for ( string_p = string_list; string_p; string_p = string_p->next)
+    {
+      if ( strcmp( string_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      strncpy( value_string, string_p->value + element*K_STRING_SIZE, K_STRING_SIZE);
+  }
+  if ( !found)
+    return CCM__VARNOTFOUND;
+  return 1;
+}
+
+int ccm_ref_external_var( 
+  char		*name,
+  int		decl,
+  void		**valuep)
+{
+  ccm_s_intvar		*int_p;
+  ccm_s_floatvar	*float_p;
+  ccm_s_stringvar	*string_p;
+  ccm_s_intvar		*int_list;
+  ccm_s_floatvar	*float_list;
+  ccm_s_stringvar	*string_list;
+  int			found;
+  int			sts;
+  int			array;
+  int			element;
+  char			varname[80];
+
+  sts = ccm_varname_parse( NULL, name, varname, &array, &element);
+  if ( EVEN(sts)) return sts;
+
+  found = 0;
+
+  if ( decl == K_DECL_INT)
+  { 
+    int_list = extint_list;
+
+    for ( int_p = int_list; int_p; int_p = int_p->next)
+    {
+      if ( strcmp( int_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      *valuep = (void *)(int_p->value + element);
+  }
+  else if ( decl == K_DECL_FLOAT)
+  { 
+    /* Search float */
+    float_list = extfloat_list;
+
+    for ( float_p = float_list; float_p; float_p = float_p->next)
+    {
+      if ( strcmp( float_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      *valuep = (void *)(float_p->value + element);
+  }
+  else if ( decl == K_DECL_STRING)
+  { 
+    /* Search string */
+    string_list = extstring_list;
+
+    for ( string_p = string_list; string_p; string_p = string_p->next)
+    {
+      if ( strcmp( string_p->name, varname) == 0)
+      {
+        found = 1;
+        break;
+      }
+    }
+    if ( found)
+      *valuep = (void *) (string_p->value + element*K_STRING_SIZE);
   }
   if ( !found)
     return CCM__VARNOTFOUND;
@@ -3261,6 +3436,84 @@ static int ccm_createvar(
   return 1;
 }
 
+static int ccm_deletevar(
+  char			*name,
+  ccm_s_intvar		**int_list,
+  ccm_s_floatvar	**float_list,
+  ccm_s_stringvar	**string_list
+)
+{
+  ccm_s_intvar		*int_p, *int_prev;
+  ccm_s_floatvar	*float_p, *float_prev;
+  ccm_s_stringvar	*string_p, *string_prev;
+  int			array;
+  int			elements;
+  char			varname[80];
+  int			sts;
+  int			found;
+
+  sts = ccm_varname_parse( NULL, name, varname, &array, &elements);
+  if ( EVEN(sts)) return sts;
+  elements++;
+
+  int_prev = 0;
+  found = 0;
+  for ( int_p = *int_list; int_p; int_p = int_p->next) {
+    if ( strcmp( int_p->name, varname) == 0) {	
+      found = 1;
+      
+      if ( !int_prev)
+	*int_list = int_p->next;
+      else 
+	int_prev->next = int_p->next;
+      free( int_p->value);
+      free( int_p);
+      break;
+    }
+    int_prev = int_p;
+  }
+
+  if ( found)
+    return 1;
+
+  float_prev = 0;
+  for ( float_p = *float_list; float_p; float_p = float_p->next) {
+    if ( strcmp( float_p->name, varname) == 0) {
+      found = 1;
+    
+      if ( !float_prev)
+	*float_list = float_p->next;
+      else 
+	float_prev->next = float_p->next;
+      free( float_p->value);
+      free( float_p);
+      break;
+    }
+    float_prev = float_p;
+  }
+  if ( found)
+    return 1;
+
+  string_prev = 0;
+  for ( string_p = *string_list; string_p; string_p = string_p->next) {
+    if ( strcmp( string_p->name, varname) == 0) {
+      found = 1;
+
+      if ( !string_prev)
+	*string_list = string_p->next;
+      else 
+	string_prev->next = string_p->next;
+      free( string_p->value);
+      free( string_p);
+      break;
+    }
+    string_prev = string_p;
+  }
+  if ( !found)
+    return CCM__VARNOTFOUND;
+  return 1;
+}
+
 int ccm_create_external_var(
   char			*name,
   int			decl,
@@ -3273,8 +3526,21 @@ int ccm_create_external_var(
 
   sts = ccm_createvar( name, decl, value_float, value_int, value_string,
 	&extint_list, &extfloat_list, &extstring_list);
+  if ( sts == CCM__VARALREXIST)
+    return CCM__SUCCESS;
   return sts;
 }
+
+int ccm_delete_external_var(
+  char			*name,
+  float			value_float,
+  int			value_int,
+  char			*value_string
+)
+{
+  return ccm_deletevar( name, &extint_list, &extfloat_list, &extstring_list);
+}
+
 static int	ccm_read_file(
 		ccm_t_file_ctx	filectx,
 		char		*filename,
@@ -3306,7 +3572,7 @@ static int	ccm_read_file(
   {
     row++;
     ccm_remove_blank( str, str);
-    if ( str[0] == '!')
+    if ( str[0] == '!' || str[0] == '#')
       continue;
     /* If last char i backslash, concatenate next line */
     while( str[strlen(str)-1] == '\\')
@@ -3320,7 +3586,7 @@ static int	ccm_read_file(
       }
       row++;
       ccm_remove_blank( str2, str2);
-      if ( str2[0] == '!')
+      if ( str2[0] == '!' || str2[0] == '#')
         continue;
       str[strlen(str)-1] = 0;
       if ( strlen(str)+strlen(str2) > K_LINE_SIZE-1)
