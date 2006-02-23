@@ -1,0 +1,421 @@
+!** Description: Initial configuration of directory volume
+# 
+#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.1 2006-02-23 14:47:36 claes Exp $
+#  Copyright (C) 2005 SSAB Oxelösund AB.
+#
+#  This program is free software; you can redistribute it and/or 
+#  modify it under the terms of the GNU General Public License as 
+#  published by the Free Software Foundation, either version 2 of 
+#  the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful 
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License 
+#  along with the program, if not, write to the Free Software 
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+
+#
+# Get volumes registred in pwr_volumelist.dat
+#
+function string getnextvol( string prev, string project)
+  int vlist;
+  string line;
+  string proj;
+  string vol;
+  string vollow;
+  int prev_found;
+  int found;
+
+  project = tolower( project);
+  if ( prev == "")
+    prev_found = 1;
+  else
+    prev = tolower(prev);
+    prev_found = 0;
+  endif
+
+  vol = "";
+  found = 0;
+  vlist = fopen("$pwra_db/pwr_volumelist.dat", "r");
+  while( fgets( line, vlist))
+    line = edit( line);
+    proj = element(3, " ", line);
+    proj = tolower( proj);
+    if ( proj == project)
+      vol = element(1, " ", line);
+      if ( !prev_found)
+        vollow = tolower(vol);        
+        if ( vollow == prev)
+          prev_found = 1;
+        endif
+      else
+        found = 1;
+        break;
+      endif
+    endif
+  endwhile
+
+  fclose( vlist);
+  if ( found )
+    return vol;
+  endif
+  return "";
+endfunction
+
+#
+# Main script
+#
+main()
+  extern string pwr_wizard_title = "Configure Directory Volume";
+  extern string dv_system_name;
+  extern string dv_system_group = "Common";
+  extern int dv_prd_qbus = 1;
+  extern int dv_sim_qbus = 999;
+  extern int dv_quit = 0;
+  extern int dv_prev = 0;
+  extern string dv_volumes[20];
+  extern int dv_cvol_sel[20];
+  extern int dv_vol_class[20];
+  extern int dv_volume_found[20];
+  extern int dv_node_busid;
+  extern string dv_node_name;
+  extern string dv_node_ip;
+  extern string dv_node_description;
+  extern string dv_node_rootvolume;
+  extern string dv_addvol[20];
+  extern int dv_addvol_sel[20];
+  extern int dv_addvol_occ[20];
+  extern int dv_node_skip;
+  extern int dv_node_skip_inv;
+  extern int dv_node_disdistr;
+  extern int dv_node_distr[15];
+
+  string project;
+  string vol;
+  int volcnt;
+  string rootvolumes[20];
+  int rvolcnt;
+  int i;
+  int j;
+  int k;
+  int ix;
+  int addvolcnt;
+  int addvol_class[20];
+  string node_name[20];
+  string node_ip[20];
+  string node_description[20];
+  string node_rootvolume[20];
+  int node_busid[20];
+  int node_disdistr[20];
+  int node_distr[20];
+  int node_addvol_sel[400];
+  int nodecnt;
+  string prd_bus_name;
+  string sim_bus_name;
+  string classname;
+  string name;
+  string attr;
+  int sts;
+
+  verify(0);
+
+  if ( ! EditMode())
+    MessageDialog("Error", "Enter edit mode before starting wizard");
+    goto exit_now;
+  endif
+
+  project = GetProjectName();
+  if ( project == "")
+    MessageDialog("Error", "Can't get project name, wizard aborted");
+    goto_exit_now;
+  endif   
+
+  dv_system_name = project;
+
+  OpenGraph( "pwr_wizard_frame", 0);
+
+page_1:
+  # System/Busid page
+  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_1", 1);
+  if ( dv_quit)
+    goto exit_now;
+  endif
+
+  # Check that system group exists
+  if ( ! CheckSystemGroup( dv_system_group))
+    MessageDialog("Error", "System Group not found");
+    goto page_1;
+  endif
+    
+  # Get registred volumes for this system
+  for ( i = 0; i < 20; i++)
+    dv_volume_found[i] = 0;
+  endfor
+  volcnt = 0;
+  vol = "";
+  vol = getnextvol( "", dv_system_name);
+  while( vol != "")
+    dv_volumes[volcnt] = vol;
+    dv_volume_found[volcnt] = 1;
+    volcnt++;
+    vol = getnextvol( vol, dv_system_name);
+  endwhile
+
+  # Exit if no volumes are registred
+  if ( !volcnt)
+    SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_2", 1);
+    goto exit_now;
+  endif
+
+page_3:
+  # Volume page
+  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_3", 1);
+  if ( dv_quit)
+    goto exit_now;
+  endif
+  if ( dv_prev)
+    dv_prev = 0;
+    goto page_1;
+  endif
+
+  rvolcnt = 0;
+  for ( i = 0; i < volcnt; i++)
+    if ( dv_vol_class[i] == 0)
+      rootvolumes[rvolcnt] = dv_volumes[i];
+      rvolcnt++;
+    endif
+  endfor
+
+  # Find additional volumes (class, sub or shared)
+  addvolcnt = 0;
+  for ( j = 0; j < 20; j++)
+    dv_addvol_occ[j] = 0;
+  endfor
+  for ( j = 0; j < volcnt; j++)
+    if ( dv_vol_class[j] == 1 || dv_vol_class[j] == 2 || dv_vol_class[j] == 4)
+      dv_addvol[addvolcnt] = dv_volumes[j];
+      addvol_class[addvolcnt] = dv_vol_class[j];
+      dv_addvol_sel[addvolcnt] = 0;
+      dv_addvol_occ[addvolcnt] = 1;
+      addvolcnt++;
+    endif
+  endfor
+
+  nodecnt = 0;
+  for ( k = 0; k < 2; k++)
+    if ( k == 0)
+      dv_node_busid = dv_prd_qbus;
+      dv_node_skip_inv = 1;
+    else
+      dv_node_busid = dv_sim_qbus;
+      dv_node_skip_inv = 0;
+    endif
+
+    for ( i = 0; i < rvolcnt; i++)
+      dv_node_name = tolower( rootvolumes[i]);
+      if ( extract( 1, 3, dv_node_name) == "vol")
+        dv_node_name = extract( 4, 100, dv_node_name);
+      endif
+      dv_node_ip = "0.0.0.0";
+      dv_node_rootvolume = rootvolumes[i];
+      for ( j = 0; j < addvolcnt; j++)
+	if ( addvol_class[j] == 2)
+          dv_addvol_sel[j] = 1;
+        else
+          dv_addvol_sel[j] = 0;
+        endif
+      endfor
+      for ( j = 0; j < 12; j++)
+        dv_node_distr[j] = 1;
+      endfor
+      dv_node_distr[12] = 0;
+      dv_node_disdistr = 0;
+
+page_4:
+      # Node page
+      SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_4", 1);
+      if ( dv_quit)
+        goto exit_now;
+      endif
+      if ( dv_node_skip)
+        dv_node_skip = 0;
+        continue;
+      endif
+      if ( dv_prev)
+        dv_prev = 0;
+        if ( i == 0)
+          goto page_3;
+        endif
+        # Display data for previous node
+        i -= 1;
+	k = node_busid[i];
+        dv_node_name = node_name[i];
+        dv_node_ip = node_ip[i];
+        dv_node_rootvolume = rootvolumes[i];
+        addvolcnt = 0;
+        for ( j = 0; j < 13; j++)
+          if ( node_distr[i] & (1 << j))
+            dv_node_distr[j] = 1;
+          else
+            dv_node_distr[j] = 0;
+          endif
+        endfor
+        for ( j = 0; j < addvolcnt; j++)
+          ix = i * 20 + j;
+          dv_addvol_sel[j] = node_addvol_sel[ix];
+        endfor
+        dv_node_disdistr = node_disdistr[i];
+	if ( k == 0)
+          dv_node_busid = dv_prd_qbus;
+        else
+          dv_node_busid = dv_sim_qbus;
+        endif
+        goto page_4;
+      endif
+    
+      # Store data for current node
+      node_name[nodecnt] = dv_node_name;
+      node_description[nodecnt] = dv_node_description;
+      node_ip[nodecnt] = dv_node_ip;
+      node_rootvolume[nodecnt] = dv_node_rootvolume;
+      node_disdistr[nodecnt] = dv_node_disdistr;
+      node_distr[nodecnt] = 0;
+      node_busid[nodecnt] = k;
+      for ( j = 0; j < 13; j++)
+        if ( dv_node_distr[j])
+          node_distr[nodecnt] = node_distr[nodecnt] | (1 << j);
+        endif
+      endfor
+      for ( j = 0; j < addvolcnt; j++)
+        ix = nodecnt * 20 + j;
+        node_addvol_sel[ix] = dv_addvol_sel[j];
+      endfor
+      nodecnt++;
+    endfor
+  endfor
+
+  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_5", 1);
+  if ( dv_quit)
+    goto exit_now;
+  endif
+
+  # Create system object
+  create object /dest=""/class=$System /name="System" /last
+  SetAttribute( "System.SystemName", dv_system_name);
+  SetAttribute( "System.SystemGroup", dv_system_group);
+
+  # Create volume config objects
+  for ( i = 0; i < volcnt; i++)
+    if ( dv_vol_class[i] == 0)
+      classname = "RootVolumeConfig";
+    endif
+    if ( dv_vol_class[i] == 1)
+      classname = "SubVolumeConfig";
+    endif
+    if ( dv_vol_class[i] == 2)
+      classname = "SharedVolumeConfig";
+    endif
+    if ( dv_vol_class[i] == 3)
+      # Dynamic volume is not configured
+      continue;
+    endif
+    if ( dv_vol_class[i] == 4)
+      classname = "ClassVolumeConfig";
+    endif
+    create object /dest=""/class='classname' /name="'dv_volumes[i]'" /last
+  endfor
+
+  # Create bus config objects
+  prd_bus_name = "Prd" + dv_prd_qbus;
+  create object /dest=""/class=BusConfig /name="'prd_bus_name'" /last
+  attr = prd_bus_name + ".BusNumber";
+  SetAttribute( attr, dv_prd_qbus);
+
+  sim_bus_name = "Sim" + dv_sim_qbus;
+  create object /dest=""/class=BusConfig /name="'sim_bus_name'" /last
+  attr = sim_bus_name + ".BusNumber";
+  SetAttribute( attr, dv_sim_qbus);
+
+  # Create node config objects
+  for ( i = 0; i < nodecnt; i++)
+    if ( node_busid[i] == 0)
+      create object /class=NodeConfig /dest='prd_bus_name' /name="'node_name[i]'" /last
+      name = prd_bus_name + "-" + node_name[i];
+    else
+      create object /class=NodeConfig /dest='sim_bus_name' /name="'node_name[i]'" /last
+      name = sim_bus_name + "-" + node_name[i];
+    endif
+    attr = name + ".Description";
+    SetAttribute( attr, node_description[i]);
+    attr = name + ".NodeName";
+    SetAttribute( attr, node_name[i]);
+    attr = name + ".OperatingSystem";
+    SetAttribute( attr, 64);
+    attr = name + ".Address";
+    SetAttribute( attr, node_ip[i]);
+    if ( !node_disdistr[i])
+      attr = name + ".BootNode";
+      SetAttribute( attr, node_name[i]);
+    else	
+      attr = name + ".DistributeDisable";
+      SetAttribute( attr, 1);
+    endif
+
+    attr = name + "-Distribute.Components";
+    SetAttribute( attr, node_distr[i]);
+
+    attr = GetChild( name);
+    move object/source='attr'/rename="'node_rootvolume[i]'"
+    name = name + "-" + node_rootvolume[i];
+    for ( j = 0; j < addvolcnt; j++)
+      ix = i * 20 + j;
+      if ( node_addvol_sel[ix])
+        if ( addvol_class[j] == 1)
+          classname = "SubVolumeLoad";
+        endif
+        if ( addvol_class[j] == 2)
+          classname = "SharedVolumeLoad";
+        endif
+        if ( dv_vol_class[j] == 4)
+          classname = "ClassVolumeLoad";
+       endif
+        create object /class='classname' /dest='name' /name="'dv_addvol[j]'"/after
+      endif
+    endfor
+  endfor
+
+exit_now:
+  CloseGraph("pwr_wizard_frame");
+  delete dv_quit;
+  delete dv_prev;
+  delete dv_system_name;
+  delete dv_system_group;
+  delete dv_prd_qbus;
+  delete dv_sim_qbus;
+  delete pwr_wizard_title;
+  delete dv_volumes[20];
+  delete dv_cvol_sel[20];
+  delete dv_vol_class[20];
+  delete dv_volume_found[20];
+  delete dv_node_busid;
+  delete dv_node_name;
+  delete dv_node_ip;
+  delete dv_node_description;
+  delete dv_node_rootvolume;
+  delete dv_addvol[20];
+  delete dv_addvol_sel[20];
+  delete dv_addvol_occ[20];
+  delete dv_node_skip;
+  delete dv_node_skip_inv;
+  delete dv_node_disdistr;
+  delete dv_node_distr[15];
+
+endmain
+
+
+
+
