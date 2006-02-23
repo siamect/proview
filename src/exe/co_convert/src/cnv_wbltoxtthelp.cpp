@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.8 2005-09-22 14:36:58 claes Exp $
+ * Proview   $Id: cnv_wbltoxtthelp.cpp,v 1.9 2006-02-23 14:28:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -213,7 +213,7 @@ int CnvWblToXtthelp::attribute_exec()
 
   fp_tmp <<
 endl <<
-"<H2>" << ctx->rw->attr_name << endl;
+"<H2>" << ctx->rw->attr_name << "<BOOKMARK>" << ctx->rw->attr_name << endl;
   if ( ctx->rw->attr_array && ctx->rw->attr_pointer)
     fp_tmp <<
 "<B>Array[" << ctx->rw->attr_elements << "] of pointers to " << ctx->rw->attr_typeref << "   ";
