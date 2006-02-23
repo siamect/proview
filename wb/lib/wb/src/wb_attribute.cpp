@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_attribute.cpp,v 1.35 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_attribute.cpp,v 1.36 2006-02-23 14:38:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,8 +61,12 @@ wb_attribute::wb_attribute(pwr_tStatus sts, wb_orep * orep) :
     }
     wb_bdef bdef(((wb_cdrep *)cdef)->bdrep(&m_sts, pwr_eBix_rt));
     if (EVEN(bdef.sts())) {
-      m_sts = bdef.sts();
-      return;
+      wb_bdef bdefdev(((wb_cdrep *)cdef)->bdrep(&m_sts, pwr_eBix_dev));
+      if (EVEN(bdefdev.sts())) {
+	m_sts = bdefdev.sts();
+	return;
+      }
+      bdef = bdefdev;
     }
 
     m_size = bdef.size();

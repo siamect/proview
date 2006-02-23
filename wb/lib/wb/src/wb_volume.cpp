@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.32 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.33 2006-02-23 14:40:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -353,6 +353,12 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   if (EVEN(sts))
     return wb_attribute();
   orep->ref();
+
+  if ( arp->Flags.b.Object) {
+    wb_attribute a(sts, orep);
+    orep->unref();
+    return a;
+  }
 
   cdrep = new wb_cdrep(*orep);
   if (EVEN(cdrep->sts())) { orep->unref(); return wb_attribute();}
