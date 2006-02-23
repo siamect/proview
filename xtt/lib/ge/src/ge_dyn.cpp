@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.40 2006-01-23 08:46:46 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.41 2006-02-23 14:45:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2528,8 +2528,17 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
     a_typeid = pwr_eType_Boolean;
   }
   else {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
-    if ( EVEN(sts)) return sts;
+    switch ( db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+      if ( EVEN(sts)) return sts;
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p);
+      if ( EVEN(sts)) return sts;
+      break;
+    default: ;
+    }
 
     a_typeid = attr_type;
   }
@@ -3152,6 +3161,12 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
     else
       annot_size = 4;
     break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, &p);
+    if ( EVEN(sts)) return sts;
+    annot_typeid = attr_type;
+    annot_size = attr_size;
+    break;
   default:
     ;
   }
@@ -3189,9 +3204,17 @@ int GeValue::scan( grow_tObject object)
   }
 
   if ( !first_scan) {
-    if ( memcmp( &old_value, p, size) == 0 )
-      // No change since last time
-      return 1;
+    switch ( annot_typeid) {
+    case pwr_eType_String:
+      if ( strncmp( old_value, (char *)p, size) == 0)
+	// No change since last time
+	return 1;	
+      break;
+    default:
+      if ( memcmp( &old_value, p, size) == 0 )
+	// No change since last time
+	return 1;
+    }
   }
   else
     first_scan = false;
@@ -3745,6 +3768,8 @@ int GeValueInput::change_value( grow_tObject object, char *text)
 
   if ( db == graph_eDatabase_Local)
     sts = dyn->graph->localdb_set_value( parsed_name, &buf, annot_size);
+  else if ( db == graph_eDatabase_Ccm)
+    sts = dyn->graph->ccm_set_variable( parsed_name, annot_typeid, &buf);
   else
     sts = gdh_SetObjectInfo( parsed_name, &buf, annot_size);
   if ( EVEN(sts)) printf("AnnotationInput error: %s\n", value_element->attribute);
@@ -4988,9 +5013,17 @@ int GeDigShift::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
-  if ( EVEN(sts)) return sts;
-
+  switch ( db) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
   if ( p)
     trace_data->p = p;
   first_scan = true;
@@ -7845,6 +7878,10 @@ int GeSetDig::action( grow_tObject object, glow_tEvent event)
       sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
       if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
       break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
+      if ( EVEN(sts)) printf("SetDig error: %s\n", attribute);
+      break;
     default:
       ;
     }
@@ -8105,18 +8142,34 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     pwr_tAName         	parsed_name;
     int			inverted;
     int			attr_type, attr_size;
+    graph_eDatabase 	db;
     
     if ( dyn->total_action_type & ge_mActionType_Confirm)
       break;
 
-    dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
-    sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
-    if ( EVEN(sts)) {
-      printf("ToggleDig error: %s\n", attribute);
+    db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
+    switch ( db) {
+    case graph_eDatabase_Gdh:
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
       break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_get_variable( parsed_name, attr_type, &value);
+      break;
+    default: ;
     }
+    if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
+
     value = !value;
-    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+
+    switch ( db) {
+    case graph_eDatabase_Gdh:
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
+      break;
+    default: ;
+    }
     if ( EVEN(sts)) printf("ToggleDig error: %s\n", attribute);
     break;
   }
@@ -8754,8 +8807,17 @@ int GeRadioButton::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
-  if ( EVEN(sts)) return sts;
+  switch ( db) {
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+    if ( EVEN(sts)) return sts;
+    break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, (void **)&p);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
 
   if ( p)
     trace_data->p = p;
@@ -8839,7 +8901,15 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
 	    if ( elem->action_type == ge_mActionType_RadioButton) {
 	      dyn->parse_attr_name( ((GeRadioButton *)elem)->attribute, parsed_name,
 					   &inverted, &attr_type, &attr_size);
-	      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	      switch ( db) {
+	      case graph_eDatabase_Gdh:
+		sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+		break;
+	      case graph_eDatabase_Ccm:
+		sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
+		break;
+	      default: ;
+	      }
 	    }
 	  }
 	}
@@ -8851,7 +8921,15 @@ int GeRadioButton::action( grow_tObject object, glow_tEvent event)
     
     dyn->parse_attr_name( attribute, parsed_name,
 			    &inverted, &attr_type, &attr_size);
-    sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+    switch ( db) {
+    case graph_eDatabase_Gdh:
+      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      break;
+    case graph_eDatabase_Ccm:
+      sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
+      break;
+    default: ;
+    }
     if ( EVEN(sts)) printf("RadioButton error: %s\n", attribute);
     break;
   }
@@ -11743,6 +11821,9 @@ int GeOptionMenu::connect( grow_tObject object, glow_sTraceData *trace_data)
   case graph_eDatabase_User:
     type_id = attr_type;
     break;
+  case graph_eDatabase_Ccm:
+    sts = dyn->graph->ccm_ref_variable( parsed_name, attr_type, &p);
+    type_id = attr_type;
   default:
     ;
   }
@@ -11954,45 +12035,57 @@ int GeOptionMenu::action( grow_tObject object, glow_tEvent event)
       int      		attr_type, attr_size;
       
       dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
-      switch ( type_id) {
-      case pwr_eType_Float32: {
-	pwr_tFloat32 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+
+      switch ( db) {
+      case graph_eDatabase_Gdh:
+	switch ( type_id) {
+	case pwr_eType_Float32: {
+	  pwr_tFloat32 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_Int32: {
+	  pwr_tInt32 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_UInt32: {
+	  pwr_tUInt32 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_Int16: {
+	  pwr_tInt32 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_UInt16: {
+	  pwr_tUInt32 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_Int8: {
+	  pwr_tInt8 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	case pwr_eType_UInt8: {
+	  pwr_tUInt8 value = items_enum[event->menu.item];
+	  sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	  break;
+	}
+	default:
+	  sts = 0;
+	}
 	break;
-      }
-      case pwr_eType_Int32: {
+      case graph_eDatabase_Ccm: {
 	pwr_tInt32 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	sts = dyn->graph->ccm_set_variable( parsed_name, type_id, &value);
 	break;
       }
-      case pwr_eType_UInt32: {
-	pwr_tUInt32 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	break;
+      default : ;
       }
-      case pwr_eType_Int16: {
-	pwr_tInt32 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	break;
-      }
-      case pwr_eType_UInt16: {
-	pwr_tUInt32 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	break;
-      }
-      case pwr_eType_Int8: {
-	pwr_tInt8 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	break;
-      }
-      case pwr_eType_UInt8: {
-	pwr_tUInt8 value = items_enum[event->menu.item];
-	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
-	break;
-      }
-      default:
-	sts = 0;
-      }
+
       if ( EVEN(sts)) printf("Option menu error: %s\n", attribute);
     }
     break;
