@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_system.wb_load,v 1.3 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_system.wb_load,v 1.4 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,12 +21,17 @@
 SObject pwrs:Class
 !/**
 !  @Version 1.0
-!  An object common for all the nodes in a PROVIEW/R
+!  An object common for all the nodes in a Proview
 !  system.
 !  
-!  SystemName is used to identify one PROVIEW/R system
+!  The object is configured on the top level in the directory volume.
+!
+!  In runtime the system object is placed in the SystemVolume below
+!  the pwrNode hierarchy.
+!
+!  SystemName is used to identify one Proview system
 !  among others.
-!  The object is placed on the top level in the directory volume.
+!
 !*/
   Object $System $ClassDef pwr_eCix_System
     Body SysBody
@@ -38,7 +43,7 @@ SObject pwrs:Class
         Attr StructName = "System"
       EndBody
       !/**
-      !  Optional text to describe the use of the object.
+      !  Optional description.
       !*/
       Object Description $Attribute 1
         Body SysBody
@@ -46,10 +51,15 @@ SObject pwrs:Class
         EndBody
       EndObject
       !/**
-      !  Specifies the name or notation of a PROVIEW/R system.
+      !  Specifies the name or notation of a Proview system.
+      !  The systemname is used to identify volumes registred for a system
+      !  in the global volumelist.
       !  
-      !  The SystemName is used by load data files and for
-      !  authorisations.
+      !  In the initial configuration, the system name normally equals 
+      !  the project name. Sometimes, at an upgrade or major revision, it is
+      !  a good idea to make a copy, to keep the current state of the project.
+      !  The copy will have a new projectname, but the system name remains the
+      !  same, and identifies the volumes and node that belongs to the system.
       !*/
       Object SystemName $Attribute 2
         Body SysBody
@@ -59,7 +69,11 @@ SObject pwrs:Class
       !/**
       !  Specifies the name of the system group that the system
       !  is a member of.
-      !  The SystemGroup is used for authorisation.
+      !
+      !  The SystemGroup is used for authorisation in the development
+      !  and operator environment.
+      !
+      !  SystemGroups are configured in the User Database.
       !*/
       Object SystemGroup $Attribute 9
         Body SysBody

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_subvolume.wb_load,v 1.5 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_subvolume.wb_load,v 1.6 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,39 @@
 SObject pwrs:Class
 !/**
 !  @Group Volumes
-!  Sub volume.
+!  Sub volume as an additional volume that, together with the root
+!  volume is loaded into a node at system startup.
+!
+!  Sometimes it is convenient to separate the objects of a node into
+!  two (or more) volumes, for example if a part of the plant is to be
+!  moved to another node later, or if there are several developers that
+!  has to work in different databases. It is then possible to devide the
+!  objects of a node into a rootvolume, and a subvolume (or several 
+!  subvolumes). 
+!
+!  The subvolumes is mounted in the rootvolume with a MountObject. Make
+!  sure to find a suitable mouning point in the root volume. If the
+!  subvolumes should be mounted on remote nodes, e.g. on an operator
+!  station, the mounting point should not be hidden in the object tree
+!  of the root volume.
+!
+!  In one qcom bus, a subvolume can only be loaded into one single node.
+!
+!  The volume has to be registred in the global volume list, and is
+!  identified by a volume identity.
+!  
+!  In the directory volume of a project, a sub volume is configured
+!  by a SubVolumeConfig object, and the node the volume is to be
+!  loaded into is specified with a SubVolumeLoad object.
+!
+!  @b See also
+!  @classlink SubVolumeConfig pwrb_subvolumeconfig.html
+!  @classlink SubVolumeLoad pwrb_subvolumeload.html
+!  @classlink RootVolume pwrs_rootvolume.html
+!  @classlink SharedVolume pwrs_sharedvolume.html
+!  @classlink DynamicVolume pwrs_dynamicvolume.html
+!  @classlink ClassVolume pwrs_classvolume.html
+!  @classlink VolumeId pwrs_volumeid.html
 !*/
   Object $SubVolume $ClassDef pwr_eCix_SubVolume
     Body SysBody

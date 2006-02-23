@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_rootvolume.wb_load,v 1.5 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_rootvolume.wb_load,v 1.6 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,33 @@
 SObject pwrs:Class
 !/**
 !  @Group Volumes
-!  The root volume is loaded at runtime startup.
+!  A root volume contains the root of the object tree of the
+!  realtime database of a node. The volume is loadede into
+!  the database at system startup.
+!
+!  Only one rootvolume can be loaded into a node, and in one
+!  qcom bus, the root volume can only be loaded into one node.
+!
+!  It is possible to mount objects of other volumes in the object
+!  tree of a root volume. SubVolumes, SharedVolumes, DynamicVolumes
+!  and RootVolumes of remote nodes, can be mounted by placing
+!  mount objects in the object tree.
+!
+!  The volume has to be registred in the global volume list, and is
+!  identified by a volume identity.
+!  
+!  In the directory volume of a project, a root volume is configured
+!  by a RootVolumeConfig object, and the node the volume is to be
+!  loaded into is specified with a RootVolumeLoad object.
+!
+!  @b See also
+!  @classlink RootVolumeConfig pwrb_rootvolumeconfig.html
+!  @classlink RootVolumeLoad pwrb_rootvolumeload.html
+!  @classlink SubVolume pwrs_subvolume.html
+!  @classlink SharedVolume pwrs_sharedvolume.html
+!  @classlink DynamicVolume pwrs_dynamicvolume.html
+!  @classlink ClassVolume pwrs_classvolume.html
+!  @classlink VolumeId pwrs_volumeid.html
 !*/
   Object $RootVolume $ClassDef pwr_eCix_RootVolume
     Body SysBody

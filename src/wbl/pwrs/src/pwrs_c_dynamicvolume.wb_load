@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_dynamicvolume.wb_load,v 1.4 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_dynamicvolume.wb_load,v 1.5 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -22,11 +22,23 @@ SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group Volumes
-!  A dynamic volume only exist in runtime, and contains object that is
+!  A dynamic volume only exist in runtime, and contains objects that is
 !  created and deleted in runtime.
-!  When the dynamic volume is created, also a dynamic volume object is created.
-!  This object should not be configured in the configurator.
-!  A dynamic volume is configured by a CreateVolume object.
+!
+!  A dynamic volume is configured by a CreateVolume object, normally
+!  positioned in the node hierarchy. It is not configured in the
+!  directory volume.
+!
+!  The volume can be mounted in the root volume with a MountObject 
+!  object.
+!
+!  The volume has to be registred in the global volume list, and is
+!  identified by a volume identity. 
+!  
+!  @b See also
+!  @classlink CreateVolume pwrs_createvolume.html
+!  @classlink RootVolume pwrs_rootvolume.html
+!  @classlink VolumeId pwrs_volumeid.html
 !*/
   Object $DynamicVolume $ClassDef pwr_eCix_DynamicVolume
     Body SysBody

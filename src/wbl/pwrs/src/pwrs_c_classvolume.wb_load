@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_classvolume.wb_load,v 1.4 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_classvolume.wb_load,v 1.5 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -22,10 +22,46 @@ SObject pwrs:Class
 !/**
 !  @Version 1.0
 !  @Group Volumes,ClassDefinition
-!  A class volume contains class and type definition hierarchies.
-!  When a class volume is created, also a classvolume object is created.
-!  This object is not displayed in the object hierarchy in the navigator,
-!  though it can be opened from menu.
+!  A class volume contains class and type definition objects.
+!  
+!  Classes and types in proview, are specified with objects, such
+!  as ClassDef, ObjBodyDef, Attribute, Type and TypeDef etc.
+!  These classdefinition object reside in classvolumes.
+!
+!  To create an instance object of a specific class, the classvolume of
+!  of this class has to be loaded.
+!
+!  ClassVolumes are divided into the groups system classvolumes, 
+!  manufacturer classvolumes and user classvolumes. System and
+!  manufacturer classvolumes comes with the proview release, and
+!  the loadfiles reside on $pwr_load.
+!
+!  User classvolumes contains local classes for a project. 
+!  The volume has to be registred in the global volume list, and is
+!  identified by a volume identity.
+!  
+!  In the directory volume of a project, a user class volume is 
+!  configured by a ClassVolumeConfig object.
+!
+!  If a node contains instances of classes in a specific classvolume,
+!  this volume is loaded at runtime startup, and doesn't have to be
+!  configured with any volume load object.
+!
+!  If a node doesn't contain any instances, but has to display or
+!  subscribe to remote objects of the class, you should specify
+!  that the class volume should be loaded with a ClassVolumeLoad object
+!  in the directory volume. If this is not done, classes can be loaded
+!  at runtime from remote nodes, using the class cashe. The class cashe
+!  is also used if the class is loaded, but the version of the class 
+!  differs on the remote node.
+!
+!  The user class volume is edited in the class editor, which is opened
+!  from the directory volume, by selecting a ClassVolumeConfig object.
+!
+!  @b See also
+!  @classlink ClassVolumeConfig pwrb_classvolumeconfig.html
+!  @classlink ClassVolumeLoad pwrb_classvolumeload.html
+!  @classlink VolumeId pwrs_volumeid.html
 !*/
   Object $ClassVolume $ClassDef pwr_eCix_ClassVolume
     Body SysBody

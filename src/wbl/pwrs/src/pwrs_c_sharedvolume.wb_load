@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_sharedvolume.wb_load,v 1.4 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_sharedvolume.wb_load,v 1.5 2006-02-23 14:37:20 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -22,7 +22,26 @@ SObject pwrs:Class
 !/**
 !  @Group Volumes
 !  Volume shared by several nodes.
-!  Not implemented.
+!
+!  A SharedVolume can be loaded into several nodes. Objects that is
+!  common for several nodes, e.g. XttGraph objects or Sound objects, 
+!  can be placed in a shared volume.
+!
+!  The volume has to be registred in the global volume list, and is
+!  identified by a volume identity.
+!  
+!  In the directory volume of a project, a shard volume is configured
+!  by a SharedVolumeConfig object, and the node (or nodes) the volume 
+!  is to be loaded into is specified with a SharedVolumeLoad object.
+!
+!  @b See also
+!  @classlink SharedVolumeConfig pwrb_sharedvolumeconfig.html
+!  @classlink SharedVolumeLoad pwrb_sharedvolumeload.html
+!  @classlink RootVolume pwrs_rootvolume.html
+!  @classlink SubVolume pwrs_subvolume.html
+!  @classlink DynamicVolume pwrs_dynamicvolume.html
+!  @classlink ClassVolume pwrs_classvolume.html
+!  @classlink VolumeId pwrs_volumeid.html
 !*/
   Object $SharedVolume $ClassDef pwr_eCix_SharedVolume
     Body SysBody

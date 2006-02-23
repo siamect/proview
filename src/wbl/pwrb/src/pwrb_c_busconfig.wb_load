@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_busconfig.wb_load,v 1.3 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_busconfig.wb_load,v 1.4 2006-02-23 14:37:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -23,11 +23,21 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Group ProjectConfiguration
 !  @Summary Configures a Qcom bus.
-!  The Bus object configures a qcom bus that nodes in the project will
+!  The Bus object configures a Qcom bus that nodes in the project will
 !  communicate on.
 !
-!  The object should be configured in the  project volume as a top object,
-!  and have the NodeConfig object of the nodes in the bus as children.
+!  Qcom is the communication protocoll for proview nodes and proview
+!  processes. Nodes that will communicate over Qcom has to use the same
+!  Qcom bus. Communication between nodes in different busses is not possible.
+!  
+!  A Qcom bus is specified with a busnumber in the interval 0-999.
+!
+!  The BusConfig object should be configured in the directory volume as a top 
+!  object. Below this, each node of the system, that belong to this Qcom bus, 
+!  should be configured with a NodeConfig object.
+!
+!  It is common to configure at least two different Qcom busses in a system, one
+!  for the production nodes and one for simulation nodes.
 !
 !  @b See also
 !  @classlink NodeConfig pwrb_nodeconfig.html
@@ -40,7 +50,7 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       !/**
-      ! Description of the bus
+      ! Description of the bus.
       !*/
       Object Description $Attribute 1 
         Body SysBody
@@ -48,7 +58,8 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      ! QCOM bus number.
+      ! Specification of a Qcom bus. 
+      ! A number in the intervall 1-999.
       !*/
       Object BusNumber $Attribute 2
         Body SysBody
