@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_cmd_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_cmd_msg.msg,v 1.3 2006-02-23 14:49:00 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -47,6 +47,7 @@ ifendif		<error in if-endif structure>			/error
 ifelse		<error in if-else-endif structure>		/error
 filalron	<file is already on>				/error
 name		<name is missing>				/error
+attribute	<attribute is missing>				/error
 cmdarg		<to many arguments in commandfile call>		/error
 novolattached	<no volume is attached>				/error
 nowbattached	<no database is attached>			/error

@@ -3529,8 +3529,9 @@ su kräver password.
 <TOPIC> help command
 Wtt kommandon
 
-<b>exit        <t>stäng wtt			<LINK> exit
-<b>edit        <t>sätt edit mod			<LINK> edit
+<b>exit        <t>Stäng wtt			<LINK> exit
+<b>edit        <t>Sätt edit mod			<LINK> edit
+<b>close graph <t>Stäng en Ge graf		<LINK> close graph
 <b>compile    <t>Kompilera plcpgm		<LINK> compile
 <b>configure card<t>Konfigurera ett kort objekt	<LINK> configure card
 <b>connect    <t>Koppla ihop signal med kanal	<LINK> connect
@@ -3562,9 +3563,11 @@ Wtt kommandon
 <b>new buffer  <t>Skapa en ny buffer		<LINK> new buffer
 <b>one         <t>Ett fönster			<LINK> one
 <b>open buffer <t>Öppna buffer väljar fönstret	<LINK> open buffer
+<b>open graph  <t>Öppna en Ge graf		<LINK> open graph
 <b>paste       <t>Klistra buffer		<LINK> paste
 <b>print      <t>Skriv ut plcpgm		<LINK> print
 <b>redraw     <t>Rita om plcpgm			<LINK> redraw
+<b>release subwindow <t>Forsätt exekveringen med graf i window objekt. <LINK>release subwindow
 <b>revert      <t>Backa sessionen		<LINK> revert
 <b>save        <t>Spara sessionen		<LINK> save
 <b>search      <t>Sök	 			<LINK> search
@@ -3580,6 +3583,7 @@ Wtt kommandon
 <b>set showdescription<t>Visa beskrivning	<LINK> set showdescription
 <b>set showobjref<t>Visa objekt referenser 	<LINK> set showobjref
 <b>set showobjxref<t>Visa objekt x-referenser <LINK> set showobjxref
+<b>set subwindow <t>Öppna en graph i ett window objekt <LINK>set subwindow
 <b>set template<t>Sätt templatevärden på objekt <LINK> set template
 <b>set verify  <t>Verifiera script	 	<LINK> set verify
 <b>set window  <t>Sätt fönsterstorlek	 	<LINK> set window
@@ -4443,6 +4447,54 @@ Ladda databasen från wb_load-fil eller dbs-fil.
 
 </TOPIC>
 
+<TOPIC> open graph <style> function
+Command   open graph
+
+Öppna en Ge graf.
+I modal mod, fortsätter inte exekveringen av skriptet förrän
+grafen stängs.
+
+<B>wtt> open graph /file= /modal
+
+/file	<t>Namn Ge grafen.
+/modal  <t>Modal mod.
+</TOPIC>
+
+<TOPIC> close graph <style> function
+Command   close graph
+
+Stäng en Ge graf.
+
+<B>wtt> close graph /file=
+
+/file	<t>Namn på Ge grafen.
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Command   set subwindow
+
+Öppna en graf i ett window objekt i en tidigare öppnad graf.
+
+<B>wtt> set subwindow 'graph' /name= /source=
+
+/name	<t>Namn på window objektet.
+/source	<t>Namn på grafen som ska öppnas i window objektet.
+</TOPIC>
+
+<TOPIC> release subwindow <style> function
+Command   release subwindow
+
+Släpp loss exekveringen av ett skript som öppnat en graf
+i ett window objekt med kommandot 'set subwindow' eller
+funktionen 'SetSubwindow' i modal mod.
+Release kommandot exekveras från en trycknapp i bilden med
+actiontyp command.
+
+<B>wtt> release subwindow 'graph'
+
+graph	<t>Namnet på huvud grafen.
+</TOPIC>
+
 <TOPIC> symbol
 Symbol
 
@@ -4519,7 +4571,9 @@ GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
 GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
+SetAttribute()		<LINK> setattribute()
 GetProjectName()	<LINK> getprojectname()  
+CheckSystemGroup()	<LINK> checksystemgroup()
 CutObjectName()		<LINK> cutobjectname()
 MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
@@ -4533,6 +4587,10 @@ MessageDialog()		<LINK> messagedialog()
 ConfirmDialog()		<LINK> confirmdialog()
 ContinueDialog()	<LINK> continuedialog()
 PromptDialog()		<LINK> promptdialog()
+OpenGraph()		<LINK> opengraph()
+CloseGraph()		<LINK> closegraph()
+SetSubwindow()		<LINK> setsubwindow()
+
 </TOPIC>
 
 <TOPIC> execute script
@@ -4592,17 +4650,21 @@ En deklaration består av
 - tabellen (global eller extern, om local ska inte tabellen anges)
 - datatypen (int, float eller string)
 - variabelnamn (känsligt för stora och små bokstäver)
+- antal element, om variabeln är en vektor
 - likameds tecken följt av initierings värde, om det utelämnas är 
   intitialvärdet 0 eller en null-sträng
 - semikolon.
 
+En extern variabel bör tas bort (med delete) när den inte längre används.
 <b>Exempel
 
 <c>int             i;
 <c>float           flow = 33.4;
 <c>string          str = "Hello";
-<c>extern int      jakob;
+<c>extern int      jakob[20];
 <c>global float    ferdinand = 1234;
+<c>...
+<c>delete jakob[20];
 </TOPIC>
 
 <TOPIC> operators
@@ -5025,6 +5087,7 @@ Returnerar de extraherade tecknen som en sträng.
 <b>Argument
 
 int		<t>start	<t>start positionen för första tecknet.
+				<t><t>Första tecknet har position 1.
 int		<t>length	<t>antalet tecken som ska extraheras.
 string		<t>str		<t>sträng som tecknen ska extraheras från.
 
@@ -5429,6 +5492,27 @@ GetNextVolume().
 <c>  endwhile
 </TOPIC>
 
+<TOPIC> setattribute() <style> function
+SetAttribute()
+
+int SetAttribute( string name, (godtycklig typ) value)
+
+<b>Description
+
+Sätt värde på ett attribut.
+Attributet specificeras med fullt objects och attributnamn.
+Returnerar operationens status.
+
+<b>Argument
+
+string          name            attributets name.
+godtycklig typ  value		attributets värde.
+
+<b>Exempel
+
+<c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+</TOPIC>
+
 <TOPIC> getprojectname() <style> function
 GetProjectName()
 
@@ -5444,6 +5528,23 @@ Returnerar projektets namn.
 <c>  string name;
 
 <c>  name = GetProjectName();
+</TOPIC>
+
+<TOPIC> checksystemgroup() <style> function
+CheckSystemGroup()
+
+int CheckSystemGroup()
+
+<b>Beskrivning
+
+Kontrollera om en system grupp existerar.
+Returnerar 1 om systemgruppen existerar, annars 0.
+
+<b>Exempel
+
+<c>  if ( !CheckSystemGroup( "MyGroup"))
+<c>    return;
+<c>  endif
 </TOPIC>
 
 <TOPIC> cutobjectname() <style> function
@@ -5701,6 +5802,71 @@ string		<t>value	<t>Innehåller inmatat värde.
 <c>  else
 <c>    printf( "Cancel...\n");
 <c>  endif
+
+</TOPIC>
+
+<TOPIC> opengraph() <style> function
+OpenGraph()
+
+int OpenGraph( string name, int modal)
+
+<b>Beskrivning
+
+Öppnar en Ge graf.
+Grafen kan öppnas som modal eller ej modal. Modal innebär att
+exekveringen av scriptet inte fortsätter förrän grafen har stängts.
+
+<b>Argument
+
+string		<t>name		<t>Namn på grafen.
+int		<t>modal	<t>Modal mod.
+
+<b>Exempel
+
+<c>  OpenGraph( "pwr_wizard_frame", 0);
+
+</TOPIC>
+
+<TOPIC> closegraph() <style> function
+CloseGraph()
+
+int CloseGraph( string name)
+
+<b>Beskrivning
+
+Stänger en Ge graf.
+
+<b>Argument
+
+string		<t>name		<t>Namn på grafen.
+
+<b>Exempel
+
+<c>  CloseGraph( "pwr_wizard_frame");
+
+</TOPIC>
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+int SetSubwindow( string name, string windowname, string source, int modal)
+
+<b>Beskrivning
+
+Öppnar en Ge graf i ett window objekt i en tidigare öppnad graf.
+I modal mod, forsätter inte exekveringen förrän kommandot 'release subwindow'
+exekveras av någon trycknapp i bilden.
+
+<b>Argument
+
+string		<t>name		<t>Namn på huvud grafen.
+string		<t>windowname	<t>Namn på window objektet i vilken den
+		<t>		<t>specificerad grafen ska visas.
+string		<t>source	<t>Namn på grafen som ska visas i window objektet.
+int		<t>modal	<t>Modal mod.
+<b>Exempel
+
+<c>  SetSubwindow( "pwr_wizard_frame", "Window1", "MyGraph", 1);
 
 </TOPIC>
 </chapter>

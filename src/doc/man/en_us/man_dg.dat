@@ -3589,6 +3589,7 @@ Wtt commands
 
 <b>exit        <t>close wtt			<LINK> exit
 <b>edit        <t>set edit mode			<LINK> edit
+<b>close graph <t>Close a Ge graph		<LINK> close graph
 <b>compile    <t>Compile plcpgm			<LINK> compile
 <b>configure card<t>Configure a card object	<LINK> configure card
 <b>connect    <t>Connect signal and channel	<LINK> connect
@@ -3620,9 +3621,11 @@ Wtt commands
 <b>new buffer  <t>Create a new buffer		<LINK> new buffer
 <b>one         <t>One window			<LINK> one
 <b>open buffer <t>Open buffer selection window	<LINK> open buffer
+<b>open graph  <t>Open a Ge graph		<LINK> open graph
 <b>paste       <t>Paste buffer			<LINK> paste
 <b>print      <t>Print plcpgm			<LINK> print
 <b>redraw     <t>Redraw plcpgm			<LINK> redraw
+<b>release subwindow <t>Continue execution with graph in window object. <LINK>release subwindow
 <b>revert      <t>Revert session		<LINK> revert
 <b>save        <t>Save session			<LINK> save
 <b>search      <t>Search 			<LINK> search
@@ -3638,6 +3641,7 @@ Wtt commands
 <b>set showdescription<t>Display description 	<LINK> set showdescription
 <b>set showobjref<t>Display object references 	<LINK> set showobjref
 <b>set showobjxref<t>Display object x-references <LINK> set showobjxref
+<b>set subwindow <t>Open a graph in a window object <LINK>set subwindow
 <b>set template<t>Set template values for objects <LINK> set template
 <b>set verify  <t>Script verification	 	<LINK> set verify
 <b>set window  <t>Set window width and height 	<LINK> set window
@@ -4517,6 +4521,55 @@ Load the database or from wb_load-file or dbs-file.
 /loadfile	<t>Name of file. Can be of type .wb_load, .wb_dmp or .dbs.
 
 </TOPIC>
+
+<TOPIC> open graph <style> function
+Command   open graph
+
+Open a Ge graph.
+If modal is selected, the execution av the script is continued
+when the graph is closed.
+
+<B>wtt> open graph /file= /modal
+
+/file	<t>Name of the Ge graph.
+/modal  <t>Modal.
+</TOPIC>
+
+<TOPIC> close graph <style> function
+Command   close graph
+
+Close a Ge graph.
+
+<B>wtt> close graph /file=
+
+/file	<t>Name of the Ge graph.
+</TOPIC>
+
+<TOPIC> set subwindow <style> function
+Command   set subwindow
+
+Open a graph in a window object in a previously opened graph.
+
+<B>wtt> set subwindow 'graph' /name= /source=
+
+/name	<t>Name of the window object.
+/source	<t>Name of graph that is to be opened in the window object.
+</TOPIC>
+
+<TOPIC> release subwindow <style> function
+Command   release subwindow
+
+Continue the execution of a script that has opened a graph
+in a window object by the command 'set subwindow' or the 
+function 'SetSubwindow' with modal selected.
+The release command should be executed from a pushbutton
+in the graph with actiontype command.
+
+<B>wtt> release subwindow 'graph'
+
+graph	<t>Name of the main graph.
+</TOPIC>
+
 <TOPIC> symbol
 Symbol
 
@@ -4594,7 +4647,9 @@ GetNodeObject()		<LINK> getnodeobject()
 GetRootList()		<LINK> getrootlist()
 GetVolumeClass()	<LINK> getvolumeclass()
 GetVolumeList()		<LINK> getvolumelist()
+SetAttribute()		<LINK> setattribute()
 GetProjectName()	<LINK> getprojectname()  
+CheckSystemGroup()	<LINK> checksystemgroup()
 CutObjectName()		<LINK> cutobjectname()
 MessageError()		<LINK> messageerror()
 MessageInfo()		<LINK> messageinfo()
@@ -4608,6 +4663,9 @@ MessageDialog()		<LINK> messagedialog()
 ConfirmDialog()		<LINK> confirmdialog()
 ContinueDialog()	<LINK> continuedialog()
 PromptDialog()		<LINK> promptdialog()
+OpenGraph()		<LINK> opengraph()
+CloseGraph()		<LINK> closegraph()
+SetSubwindow()		<LINK> setsubwindow()
 </TOPIC>
 
 <TOPIC> execute script
@@ -4668,17 +4726,22 @@ A declaration consists of
 - the table (global or extern, if local the table is suppressed)
 - the datatype (int, float or string)
 - the variable name (case sensitive)
+- if array, number of elements
 - equal mark followed by an init value, if omitted the init value is zero or
   null-string
 - semicolon
+
+An extern variable should be deleted (by the delete statement).
 
 <b>Example
 
 <c>int             i;
 <c>float           flow = 33.4;
 <c>string          str = "Hello";
-<c>extern int      jakob;
+<c>extern int      jakob[20];
 <c>global float    ferdinand = 1234;
+<c>...
+<c>delete jakob[20];
 </TOPIC>
 
 <TOPIC> operators
@@ -5102,6 +5165,7 @@ Returns the extracted characters as a string.
 <b>Arguments
 
 int		<t>start	<t>start position of the first character.
+				<t><t>First character has position 1.
 int		<t>length	<t>number of characters to be extracted.
 string		<t>str		<t>string from which characters should be extracted.
 
@@ -5503,6 +5567,28 @@ GetNextVolume().
 <c>  endwhile
 </TOPIC>
 
+<TOPIC> setattribute() <style> function
+SetAttribute()
+
+int SetAttribute( string name, (arbitrary type) value)
+
+<b>Description
+
+Set the value of an attribute.
+The attribute is specified with full object and
+attribute name.
+Returns the status of the operation.
+
+<b>Argument
+
+string          name            attribute name.
+arbitrary type  value		attribute value.
+
+<b>Example
+
+<c>  SetAttribute( "Pump-V1-Switch.Description", "Valve switch open");
+</TOPIC>
+
 <TOPIC> getprojectname() <style> function
 GetProjectName()
 
@@ -5518,6 +5604,23 @@ Returns the name of the project.
 <c>  string name;
 
 <c>  name = GetProjectName();
+</TOPIC>
+
+<TOPIC> checksystemgroup() <style> function
+CheckSystemGroup()
+
+int CheckSystemGroup()
+
+<b>Description
+
+Check if a system group exists.
+Returns 1 if the system group exist, else 0.
+
+<b>Example
+
+<c>  if ( !CheckSystemGroup( "MyGroup"))
+<c>    return;
+<c>  endif
 </TOPIC>
 
 <TOPIC> cutobjectname() <style> function
@@ -5775,6 +5878,71 @@ string		<t>value	<t>Contains the entered value.
 <c>  else
 <c>    printf( "Cancel...\n");
 <c>  endif
+
+</TOPIC>
+<TOPIC> opengraph() <style> function
+OpenGraph()
+
+int OpenGraph( string name, int modal)
+
+<b>Description
+
+Open a Ge graph.
+If modal is selected, the execution of the script is continued when
+the graph is closed.
+
+<b>Arguments
+
+string		<t>name		<t>Graph name.
+int		<t>modal	<t>Modal.
+
+<b>Example
+
+<c>  OpenGraph( "pwr_wizard_frame", 0);
+
+</TOPIC>
+
+<TOPIC> closegraph() <style> function
+CloseGraph()
+
+int CloseGraph( string name)
+
+<b>Description
+
+Close a Ge graph.
+
+<b>Arguments
+
+string		<t>name		<t>Graph name.
+
+<b>Example
+
+<c>  CloseGraph( "pwr_wizard_frame");
+
+</TOPIC>
+
+<TOPIC> setsubwindow() <style> function
+SetSubwindow()
+
+int SetSubwindow( string name, string windowname, string source, int modal)
+
+<b>Description
+
+Open a Ge graph in a window object in a previously opened graph.
+If modal is selected, the execution of the script is continued when
+the command 'release subwindow' is executed by a pushbutton in the graph.
+
+<b>Argument
+
+string		<t>name		<t>Name of the main graph.
+string		<t>windowname	<t>Name of the window object in which
+		<t>		<t>the source graph is to be opened.
+string		<t>source	<t>Name of the graph that is to be opened
+                <t>             <t>in the window object.
+int		<t>modal	<t>Modal.
+<b>Exempel
+
+<c>  SetSubwindow( "pwr_wizard_frame", "Window1", "MyGraph", 1);
 
 </TOPIC>
 </chapter>

@@ -1,11 +1,18 @@
 Package: pwr41
-Version: 4.1.3-1
+Version: 4.1.3-2
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.2.4-4)
-Replaces: pwrrt,pwr34,pwr39,pwr40
+Depends: libc6 (>= 2.2.4-4), imlib11 (>= 1.9.14-14), libmotif (>= 2.1.30-5), libdb4.0 (>=4.0.14-1.3)
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
  4.1.3-1 Base release 
+ Changes in 4.1.3-2:
+   - Template values in Profibus objects added.
+   - Template IoConnections for ABB_ACS800PumpAggr added.
+   - Bugfix in BaseMotorIncrDecrAggr. LimitSwitchIncr/LimitSwitchDecr was switched.
+   - Bugfix in volume creation. Flags in volume object was not initialized.
+   - Bugfix in gdh_DisableAttr. Didn't work on remote objects.
+   - Bugfix in classcashe. Large classes wasn't loaded correctly.

@@ -1,11 +1,14 @@
 Package: pwrdemo41
-Version: 4.1.1-1
+Version: 4.1.3-2
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr41 (>= 4.1.1-1)
+Depends: pwr41 (>= 4.1.3-2)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
- 4.1.1-1 Base release 
+ 4.1.3-1 Base release 
+ Changes in 4.1.3-2:
+   - Demo graphs for BaseComponents added.
+   - Demo graph for level control added.
