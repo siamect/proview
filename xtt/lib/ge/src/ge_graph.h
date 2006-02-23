@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.19 2006-01-23 08:46:46 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.20 2006-02-23 14:46:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,6 +93,7 @@ typedef enum {
   graph_eDatabase_Gdh,		//!< Database rtdb.
   graph_eDatabase_User,		//!< User defined database.
   graph_eDatabase_Local,	//!< Graph local database.
+  graph_eDatabase_Ccm		//!< Scrip external variable database.
 } graph_eDatabase;
 
 typedef enum {
@@ -1327,6 +1328,10 @@ class Graph {
  /*! \param mode  0: swap starting, 1: swap done. */
  void swap( int mode);
  
+ int ccm_set_variable( char *name, int type, void *data);
+ int ccm_get_variable( char *name, int type, void *data);
+ int ccm_ref_variable( char *name, int type, void **data);
+
  //! Destructor
  /*! Stop trace (if started), delete open attribute editors, free local database, delete grow and
    destroy the widget.

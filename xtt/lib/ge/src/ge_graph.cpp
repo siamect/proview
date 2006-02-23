@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.29 2006-01-23 08:46:46 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.30 2006-02-23 14:46:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@ extern "C" {
 extern "C" {
 #include "co_mrm_util.h"
 #include "co_msg.h"
+#include "co_ccm.h"
 #include "flow_x.h"
 }
 #include "co_lng.h"
@@ -120,6 +121,7 @@ static int graph_get_plant_select_cb( void *g, char *value);
 static int graph_get_current_colors_cb( void *g, glow_eDrawType *fill_color, 
 					glow_eDrawType *border_color, glow_eDrawType *text_color);
 static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event);
+static void graph_free_dyn( grow_tObject object);
 
 
 void Graph::message( pwr_tStatus sts)
@@ -230,8 +232,11 @@ Graph::~Graph()
 
   localdb_free();
 
-  for ( int i = 0; i < grow_cnt; i++)
+  for ( int i = 0; i < grow_cnt; i++) {
+    grow_SetCtxUserData( grow_stack[i]->ctx, 0);
     delete grow_stack[i];
+  }
+  grow_SetCtxUserData( grow->ctx, 0);
   delete grow;
   XtDestroyWidget( form_widget);
 }
@@ -1861,7 +1866,11 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
   Graph		*graph;
 
   grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
-  if ( graph->closing_down)
+
+  if ( event->event == glow_eEvent_ObjectDeleted)
+    graph_free_dyn( event->object.object);
+
+  if ( !graph || graph->closing_down)
     return 1;
 
   if ( event->event != glow_eEvent_CursorMotion)
@@ -2034,25 +2043,11 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
       break;
     case glow_eEvent_ObjectDeleted: {
       if ( graph->current_polyline && 
-	   event->object.object == graph->current_polyline)
-      {
-        grow_PolylineEnd( graph->grow->ctx);
-        graph->current_polyline = 0;
+	   event->object.object == graph->current_polyline) {
+	grow_PolylineEnd( graph->grow->ctx);
+	graph->current_polyline = 0;
       }
       grow_SetModified( graph->grow->ctx, 1);
-
-      if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_NodeClass) {
-	GeDyn *dyn;
-
-        grow_GetUserData( event->object.object, (void **)&dyn);
-        delete dyn;
-      }
 
       Attr		*attrctx;
       if ( graph->attr_list.find( event->object.object, (void **) &attrctx)) {
@@ -3088,21 +3083,8 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
   }  
   switch ( event->event) {
 
-    case glow_eEvent_ObjectDeleted: {
-      if ( grow_GetObjectType( event->object.object) == glow_eObjectType_GrowNode ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowGroup ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
-	   grow_GetObjectType( event->object.object) == glow_eObjectType_NodeClass) {
-	GeDyn *dyn;
-
-        grow_GetUserData( event->object.object, (void **)&dyn);
-        delete dyn;
-      }
+    case glow_eEvent_ObjectDeleted:
       break;
-    }
     case glow_eEvent_MB1Down:
     {
       if ( event->object.object_type != glow_eObjectType_NoObject &&
@@ -3787,6 +3769,36 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
 
     return graph_eDatabase_Local;
   }
+  if ( (s = strstr( str, "$ccm."))) {
+    strcpy( parsed_name, s + strlen("$ccm."));
+    if ( (s = strchr( parsed_name, '#'))) {
+      if ( strcmp( s, "##Float32") == 0) {
+        *type = pwr_eType_Float32;
+	*size = sizeof(pwr_tFloat32);
+      }
+      else if ( strcmp( s, "##Int32") == 0) {
+        *type = pwr_eType_Int32;
+	*size = sizeof(pwr_tInt32);
+      }
+      else if ( strcmp( s, "##Boolean") == 0) {
+        *type = pwr_eType_Boolean;
+	*size = sizeof(pwr_tBoolean);
+      }
+      else {
+        *type = pwr_eType_String;
+	*size = 400;
+      }
+      *s = 0;
+    }
+    if ( str[0] == '!') {
+      *inverted = 1;
+      graph_remove_space( str, &str[1]);
+    }
+    else
+      *inverted = 0;
+
+    return graph_eDatabase_Ccm;
+  }
 
   if ( (s = strstr( str, "$object"))) {
     strcpy( str1, s + strlen("$object"));
@@ -3915,6 +3927,83 @@ void  Graph::string_to_type( char *type_str, pwr_eType *type,
   if ( *elements > 1)
     *size *= *elements;
 } 
+
+int Graph::ccm_ref_variable( char *name, int type, void **data)
+{
+  int ccm_type;
+  int sts;
+
+  switch ( type) {
+  case pwr_eType_UInt32:
+  case pwr_eType_Int32:
+  case pwr_eType_Boolean:
+    ccm_type = CCM_DECL_INT;
+    break;
+  case pwr_eType_Float32:
+    ccm_type = CCM_DECL_FLOAT;
+    break;
+  case pwr_eType_String:
+    ccm_type = CCM_DECL_STRING;
+    break;
+  default:
+    return 0;
+  }
+
+  sts = ccm_ref_external_var( name, ccm_type, data);
+  return sts;
+}
+
+int Graph::ccm_set_variable( char *name, int type, void *data)
+{
+  int ccm_type;
+  int sts;
+
+  switch ( type) {
+  case pwr_eType_UInt32:
+  case pwr_eType_Int32:
+  case pwr_eType_Boolean:
+    ccm_type = CCM_DECL_INT;
+    sts = ccm_set_external_var( name, ccm_type, 0, *(int *)data, 0);
+    return sts;
+  case pwr_eType_Float32:
+    ccm_type = CCM_DECL_FLOAT;
+    sts = ccm_set_external_var( name, ccm_type, *(float *)data, 0, 0);
+    return sts;
+  case pwr_eType_String:
+    ccm_type = CCM_DECL_STRING;
+    sts = ccm_set_external_var( name, ccm_type, 0, 0, (char *)data);
+    return sts;
+  default:
+    return 0;
+  }
+
+}
+
+int Graph::ccm_get_variable( char *name, int type, void *data)
+{
+  int ccm_type;
+  int sts;
+
+  switch ( type) {
+  case pwr_eType_UInt32:
+  case pwr_eType_Int32:
+  case pwr_eType_Boolean:
+    ccm_type = CCM_DECL_INT;
+    sts = ccm_get_external_var( name, ccm_type, 0, (int *)data, 0);
+    return sts;
+  case pwr_eType_Float32:
+    ccm_type = CCM_DECL_FLOAT;
+    sts = ccm_get_external_var( name, ccm_type, (float *)data, 0, 0);
+    return sts;
+  case pwr_eType_String:
+    ccm_type = CCM_DECL_STRING;
+    sts = ccm_get_external_var( name, ccm_type, 0, 0, (char *)data);
+    return sts;
+  default:
+    return 0;
+  }
+
+}
 
 int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
 			    pwr_tSubid *subid, unsigned int size)
@@ -4122,6 +4211,22 @@ void Graph::swap( int mode)
       trace_started = 1;
       graph_trace_scan( this);
     }
+  }
+}
+
+static void graph_free_dyn( grow_tObject object)
+{
+  if ( grow_GetObjectType( object) == glow_eObjectType_GrowNode ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
+       grow_GetObjectType( object) == glow_eObjectType_NodeClass) {
+    GeDyn *dyn;
+    
+    grow_GetUserData( object, (void **)&dyn);
+    delete dyn;
   }
 }
 
