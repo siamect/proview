@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_nav_help.cpp,v 1.9 2005-12-13 15:13:13 claes Exp $
+ * Proview   $Id: co_nav_help.cpp,v 1.10 2006-02-23 14:35:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -382,6 +382,7 @@ int	NavHelp::help( char *help_key, char *help_bookmark,
 	{
           help_remove_spaces( s + 10, bookmark);
 	  *s = 0;
+	  cdh_ToLower( bookmark, bookmark);
           if ( !bookmark_found && !print_all &&
 	       strcmp( search_bookmark, bookmark) == 0)
 	  {
