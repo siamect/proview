@@ -1,0 +1,149 @@
+A guide on how to build Proview
+--------------------------------
+
+Written by: Robert Karlsson
+
+1. Setting up the environment
+-----------------------------
+
+The first thing to do is to set up your environment properly. Add the 
+following lines to .bashrc:
+
+# Where /home/robert/x4-1-3 is replaced with wherever you unpacked the sources.
+export pwre_bin="/home/robert/x4-1-3/pwr/src/tools/pwre/src/os_linux"
+export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
+source $pwre_bin/pwre_function
+export pwre_env_db="/home/robert/pwre_new"
+
+The following libraries (devel and runtime) are needed to build Proview:
+
+Imlib (v1.9.14 recommended)
+Berkeley DB (>= v4.0, recommended v4.3)
+antlr (v2.7.5 recommended )
+openmotif (v2.2.3 recommended)
+alsa (>= 0.9.8, recommended v1.0.6)
+
+2. Creating the environment
+---------------------------
+
+Creating and handling your environment is done with the pwre-function (added
+by sourcing $pwre_bin/pwre_function).
+
+> pwre 
+
+shows all possibilites with the pwre function.
+
+Add environment named 'x413x86' (choose any name you like).
+
+> pwre add x413x86
+
+Source root [...] ? /home/robert/x4-1-3/pwr/src  (where /home/robert/x4-1-3 is
+replaced with wherever you unpacked the sources)
+Build root [...] ? /home/robert/pwr/x4-1-3/rls_dbg  (choose typically .../pwr/version/rls_dbg)
+Build type [dbg] ? 
+OS [linux] ? 
+Hardware [x86] ?
+Description  ? robert's environment  (whatever...)
+
+list all exsiting environments:
+
+> pwre list
+-- Defined environments:
+   x413x86
+--
+himBh
+
+Initiate your new environment:
+
+> pwre init x413x86
+
+Now, create the build tree
+
+> pwre create_all_modules
+
+Finally the environment is set up and we can start the build procedure.
+
+3. Building Proview
+-------------------
+
+To build Proview from scratch 
+
+> pwre build_all_modules
+
+This will build everything and also produces some documentation.
+
+Otherwise Proview is divided in several modules which can be built
+separately. The modules are however not independant of eachother.
+The modules currently consists of:
+
+abb, bcomp, inor, java, klocknermoeller, nmps, othermanu, profibus, remote,
+siemens, ssabox, telemecanique, tlog, wb and xtt.
+
+On top of this there is also a kernel-module under directory src on the top level.
+
+To "move" between the different modules 
+
+> pwre module wb    (for example)
+
+To "move" back to kernel module just do:
+
+> pwre module 
+
+To build all in current module
+
+> pwre build_all
+
+To build parts of current module (for example lib rt in kernel module)
+
+> pwre build lib rt all	  (command syntax build 'branch' 'subbranch' ['pahse'])
+
+Each of the modules have their own build tree. When finished your work in a
+specific module this must be merged to the common build tree. This is done
+via:
+
+> pwre merge 
+
+Some important environment variables:
+
+$pwre_croot    The source root
+$pwre_sroot    Source root in current module
+$pwre_broot    The build root
+$pwr_exe       The common exe directory in build tree
+$pwr_lib       The common library directory in build tree
+$pwr_obj       The common object directory in build tree
+$pwr_eexe      The exe directory for current module
+$pwr_elib      The library directory for current module
+ 
+4. Start using Proview
+
+When finished building it is time to start using Proview. This intention of
+this guide is not to show you how. Instead please refer to documentation from 
+the proview homepage [www.proview.se]. There are though some final things you
+must set up to be able to work with Proview.
+
+Create directory :
+
+/usr/pwrp/adm/db
+
+This is the place that will keeps track of your projects and volumes aswell as
+the different Proview-versions you have installed. If you already have a
+Proview-version installed then this directory probably exists.
+
+Copy some files to this directory (if they do not already exist)
+
+> cp $pwre_croot/src/tools/pkg/deb/adm/pwr_* /usr/pwrp/adm/db/.
+
+Create a file name pwr_projectlist.dat in this directory and add the following
+line to this file:
+
+%base X4.1.3	/home/robert/pwr/X4-1-3/rls_dbg
+
+where the path is your build-root ($pwre_broot).
+
+Add the following two lines to your .bashrc-file:
+
+export pwra_db="/usr/pwrp/adm/db"
+source $pwra_db/pwr_setup.sh
+
+Voila, finished !
+
