@@ -1,0 +1,4 @@
+060220 cs  script    '#' alternative to '!' for comment in script.
+060220 cs  script    'delete' statement added to remove external variables.
+060222 cs  xtthelp   Bugfix, bookmark in xtthelp was case sensitive.
+060222 cs  convert   Bookmark inserted for every attribute in class xtthelp.

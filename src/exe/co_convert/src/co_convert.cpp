@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.10 2005-11-14 16:11:23 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.11 2006-02-27 06:18:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,7 @@ extern "C" {
 #include "cnv_xtthelptops.h"
 #include "cnv_xtthelptopdf.h"
 #include "cnv_classdep.h"
+#include "cnv_changelog.h"
 
 typedef char cnv_tName[200];
 
@@ -124,6 +125,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_xml = 0;
   int   xtthelp_to_ps = 0;
   int   xtthelp_to_pdf = 0;
+  int   changelog = 0;
 
   if ( argc < 2 || argc > 9) {
     usage();
@@ -214,6 +216,9 @@ int main( int argc, char *argv[])
           case 'f':
             xtthelp_to_pdf = 1;
             break;
+          case 'e':
+            changelog = 1;
+            break;
           default:
             usage();
             exit(0);
@@ -230,6 +235,11 @@ int main( int argc, char *argv[])
     ctx->setup->setup( ctx->setup_filename);
   }
 
+  if ( changelog) {
+    CnvChangeLog *c = new CnvChangeLog( ctx);
+    delete c;
+    exit(0);
+  }
   if ( xtthelp_to_html) {
     CnvXtthelpToHtml *xtthelpto = new CnvXtthelpToHtml( ctx);
     ctx->rx = new CnvReadXtthelp( files, ctx->dir, xtthelpto);

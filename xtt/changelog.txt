@@ -1,0 +1,3 @@
+060219 cs  gedyn     Bugfix in GeValue: string was sometimes updated every scan.
+060220 cs  ge        Connect to script extern variables in Value, Invisible,
+                     SetDig, ToggleDig, DigShift and OptionMenu.

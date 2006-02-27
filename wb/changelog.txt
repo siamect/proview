@@ -1,0 +1,9 @@
+060219 cs  wnav      WGe, new class to open Ge graphs in development environment.
+060220 cs  wnav      New commands: open graph, delete graph, set subwindow and
+                     release subwindow.
+060220 cs  script    New script functions SetAttribute, OpenGraph, CloseGraph, 
+                     SetSubwindow and CheckSystemGroup.
+060221 cs  ldh       Bugfix. Unhandled exception in DeleteObject and DeleteTree if
+                     not in edit mode.
+060221 cs  wnav      Popupmenu for object with DevBody only could not be opened.
+060223 cs  wnav      New wizard for configuration of directory volume.
