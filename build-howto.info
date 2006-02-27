@@ -45,7 +45,7 @@ OS [linux] ?
 Hardware [x86] ?
 Description  ? robert's environment  (whatever...)
 
-list all exsiting environments:
+list all existing environments:
 
 > pwre list
 -- Defined environments:
@@ -95,7 +95,7 @@ To build all in current module
 
 To build parts of current module (for example lib rt in kernel module)
 
-> pwre build lib rt all	  (command syntax build 'branch' 'subbranch' ['pahse'])
+> pwre build lib rt all	  (command syntax build 'branch' 'subbranch' ['phase'])
 
 Each of the modules have their own build tree. When finished your work in a
 specific module this must be merged to the common build tree. This is done
@@ -108,11 +108,11 @@ Some important environment variables:
 $pwre_croot    The source root
 $pwre_sroot    Source root in current module
 $pwre_broot    The build root
-$pwr_exe       The common exe directory in build tree
-$pwr_lib       The common library directory in build tree
-$pwr_obj       The common object directory in build tree
-$pwr_eexe      The exe directory for current module
-$pwr_elib      The library directory for current module
+$pwr_eexe      The common exe directory in build tree
+$pwr_elib      The common library directory in build tree
+$pwr_eobj      The common object directory in build tree
+$pwr_exe       The exe directory for current module
+$pwr_lib       The library directory for current module
  
 4. Start using Proview
 
