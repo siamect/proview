@@ -23,6 +23,12 @@ antlr (v2.7.5 recommended )
 openmotif (v2.2.3 recommended)
 alsa (>= 0.9.8, recommended v1.0.6)
 
+Proview has been built with the follwing compilers:
+
+gcc v3.3.3
+gcc v3.4.3
+gcc v4.0.2
+
 2. Creating the environment
 ---------------------------
 
