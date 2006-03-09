@@ -598,7 +598,10 @@ sub list ()
 
   print("-- Defined environments:\n");
   foreach $env (sort keys (%envdb)) {
-    printf("   %s\n", $env);
+      $varstr = $envdb{$env};
+      ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc)  =  split(/:/, $varstr);
+      @vars = ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc);
+    printf("   %s			%s\n", $env, $desc);
   }
   print("--\n");
 
