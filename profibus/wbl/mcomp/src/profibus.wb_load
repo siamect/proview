@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X66"
+    Attr NextOix = "_X78"
     Attr NextCix = "_X14"
     Attr NextTix[0] = "_X4"
   EndBody
@@ -555,12 +555,24 @@ Volume Profibus $ClassVolume 0.0.250.7
       Object RtBody $ObjBodyDef 1 16-JAN-2006 09:46:40.50
         Body SysBody 16-JAN-2006 09:46:40.50
           Attr StructName = "Pb_DP_Slave"
-          Attr NextAix = "_X38"
+          Attr NextAix = "_X40"
         EndBody
         Object Description $Attribute 1 16-JAN-2006 09:46:40.50
           Body SysBody 16-JAN-2006 09:46:40.50
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Specification $Attribute 38 14-MAR-2006 07:48:52.18
+          Body SysBody 14-MAR-2006 07:48:52.18
+            Attr PgmName = "Specification"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object DataSheet $Attribute 39 14-MAR-2006 07:49:15.48
+          Body SysBody 14-MAR-2006 07:49:15.48
+            Attr PgmName = "DataSheet"
+            Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
         Object GSDfile $Attribute 2 16-JAN-2006 09:46:40.50
@@ -801,9 +813,9 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
       Object ConfiguratorPosnn $Menu 18 16-JAN-2006 09:46:40.50
         Object Pointed $Menu 19 16-JAN-2006 09:46:40.50
-          Object HelpClass $MenuButton 20 16-JAN-2006 09:46:40.50
-            Body SysBody 16-JAN-2006 09:46:40.50
-              Attr ButtonName = "Configure"
+          Object ConfigureSlave $MenuButton 20 14-MAR-2006 07:38:53.51
+            Body SysBody 14-MAR-2006 07:38:54.49
+              Attr ButtonName = "ConfigureSlave"
               Attr MethodName = "Pb_DP_Slave-Configure"
               Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
             EndBody
@@ -812,9 +824,9 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
       Object ConfiguratorPoscn $Menu 21 16-JAN-2006 09:46:40.50
         Object Pointed $Menu 22 16-JAN-2006 09:46:40.50
-          Object HelpClass $MenuButton 23 16-JAN-2006 09:46:40.50
-            Body SysBody 16-JAN-2006 09:46:40.50
-              Attr ButtonName = "Configure"
+          Object ConfigureSlave $MenuButton 23 14-MAR-2006 07:39:01.13
+            Body SysBody 14-MAR-2006 07:39:01.89
+              Attr ButtonName = "ConfigureSlave"
               Attr MethodName = "Pb_DP_Slave-Configure"
               Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
             EndBody
@@ -823,9 +835,9 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
       Object ConfiguratorPosos $Menu 24 16-JAN-2006 09:46:40.50
         Object Pointed $Menu 25 16-JAN-2006 09:46:40.50
-          Object HelpClass $MenuButton 26 16-JAN-2006 09:46:40.50
-            Body SysBody 16-JAN-2006 09:46:40.50
-              Attr ButtonName = "Configure"
+          Object ConfigureSlave $MenuButton 26 14-MAR-2006 07:39:06.69
+            Body SysBody 14-MAR-2006 07:39:07.53
+              Attr ButtonName = "ConfigureSlave"
               Attr MethodName = "Pb_DP_Slave-Configure"
               Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
             EndBody
@@ -834,9 +846,53 @@ Volume Profibus $ClassVolume 0.0.250.7
       EndObject
       Object ConfiguratorPoson $Menu 27 16-JAN-2006 09:46:40.50
         Object Pointed $Menu 28 16-JAN-2006 09:46:40.50
-          Object HelpClass $MenuButton 29 16-JAN-2006 09:46:40.50
-            Body SysBody 16-JAN-2006 09:46:40.50
-              Attr ButtonName = "Configure"
+          Object ConfigureSlave $MenuButton 29 14-MAR-2006 07:39:11.97
+            Body SysBody 14-MAR-2006 07:39:12.77
+              Attr ButtonName = "ConfigureSlave"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosnn $Menu 67 15-MAR-2006 08:26:17.37
+        Object Pointed $Menu 68 15-MAR-2006 08:26:02.72
+          Object ConfigureSlave $MenuButton 69 15-MAR-2006 08:26:02.72
+            Body SysBody 15-MAR-2006 08:26:02.72
+              Attr ButtonName = "ConfigureSlave"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoscn $Menu 70 15-MAR-2006 08:26:36.50
+        Object Pointed $Menu 71 15-MAR-2006 08:26:02.72
+          Object ConfigureSlave $MenuButton 72 15-MAR-2006 08:26:02.72
+            Body SysBody 15-MAR-2006 08:26:02.72
+              Attr ButtonName = "ConfigureSlave"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPosos $Menu 73 15-MAR-2006 08:26:45.34
+        Object Pointed $Menu 74 15-MAR-2006 08:26:02.72
+          Object ConfigureSlave $MenuButton 75 15-MAR-2006 08:26:02.72
+            Body SysBody 15-MAR-2006 08:26:02.72
+              Attr ButtonName = "ConfigureSlave"
+              Attr MethodName = "Pb_DP_Slave-Configure"
+              Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object NavigatorPoson $Menu 76 15-MAR-2006 08:26:56.75
+        Object Pointed $Menu 77 15-MAR-2006 08:26:02.72
+          Object ConfigureSlave $MenuButton 78 15-MAR-2006 08:26:02.72
+            Body SysBody 15-MAR-2006 08:26:02.72
+              Attr ButtonName = "ConfigureSlave"
               Attr MethodName = "Pb_DP_Slave-Configure"
               Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
             EndBody
