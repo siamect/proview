@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sub.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_sub.h,v 1.3 2006-03-20 07:20:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -125,6 +125,7 @@ typedef struct {
   gdb_sTmonQlink	tmonq;		/* List of items to be registered by tmon.  */
 
   pwr_tNodeId		nid;		/* Node to receive update */
+  pwr_tUInt32           buf_id;         /* Unique id for this buffer */
   pwr_tUInt32		totsize;	/* Total (accum) data size of buffer */
   pwr_tInt32		dt;		/* Update time in milli seconds.  */
 
