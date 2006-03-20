@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_neth.c,v 1.12 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_neth.c,v 1.13 2006-03-20 06:42:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -845,7 +845,7 @@ sendFlush (
   msg.node.nod_oid  = gdbroot->my_node->nod_oid;
   msg.node.vol_oid  = gdbroot->my_node->vol_oid;
 
-  net_Put(&sts, &tgt, &msg, net_eMsg_flush, size);
+  net_Put(&sts, &tgt, &msg, net_eMsg_flush, 0, size);
   if (EVEN(sts))
     errh_Error("Sending 'flush' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
@@ -880,7 +880,7 @@ sendId (
   msg.node.nod_oid  = gdbroot->my_node->nod_oid;
   msg.node.vol_oid  = gdbroot->my_node->vol_oid;
 
-  net_Put(&sts, &tgt, &msg, net_eMsg_id, size);
+  net_Put(&sts, &tgt, &msg, net_eMsg_id, 0, size);
   if (EVEN(sts))
     errh_Error("Sending 'id' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
@@ -991,7 +991,7 @@ sendVolumes (
   else
     msgtype = net_eMsg_volumes;
   
-  if (!net_Put(&sts, &tgt, mp, msgtype, size))
+  if (!net_Put(&sts, &tgt, mp, msgtype, 0, size))
     errh_Error("Sending 'volumes' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
@@ -1039,7 +1039,7 @@ sendVolumesR (
   tgt.nid  = np->nid;
   tgt.qix = net_cProcHandler;
 
-  if (!net_Put(&sts, &tgt, mp, net_eMsg_volumesR, size)) {
+  if (!net_Put(&sts, &tgt, mp, net_eMsg_volumesR, 0, size)) {
     errh_Error("Sending 'volumesR' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, (pwr_tNodeId)np->nid, 0, 0), sts);
   }
@@ -1366,7 +1366,7 @@ sendIdAck (
 
   } gdb_ScopeUnlock;
 
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck, sizeof(msg)))
+  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck, 0, sizeof(msg)))
     errh_Error("Sending 'idAck' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
@@ -1391,7 +1391,7 @@ sendIdAck2 (
   tgt.nid  = np->nid;
   tgt.qix = net_cProcHandler;
 
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck2, sizeof(msg)))
+  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck2, 0, sizeof(msg)))
     errh_Error("Sending 'idAck2' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
