@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sansm.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_sansm.c,v 1.3 2006-03-20 07:18:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -347,7 +347,7 @@ sansm_Update (
 #if 0
     errh_Info("sansm_Update, put %d to %s", up->count, np->name);
 #endif
-    net_Put(&sts, &tgt, up, net_eMsg_sanUpdate, pwr_Offset(up, data[i]));
+    net_Put(&sts, &tgt, up, net_eMsg_sanUpdate, 0, pwr_Offset(up, data[i]));
   gdb_Lock;
 
   if (EVEN(sts)) return 0;
