@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sect.c,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_sect.c,v 1.3 2006-03-20 07:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -317,7 +317,7 @@ sect_Alloc (
     }
 #endif
 
-    if (0) errh_Info("Mapped %s, base: %x, size: %d", shp->name, shp->base, shp->size);
+    if (1) errh_Info("Mapped %s, base: %x, size: %d", shp->name, shp->base, shp->size);
 
     pwr_Return(shp, sts, lsts);
   } while (0);
