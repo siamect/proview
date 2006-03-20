@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.h,v 1.8 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_qcom.h,v 1.9 2006-03-20 07:08:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -179,6 +179,8 @@ typedef struct {
 typedef struct {
   qcom_sQid	reply;
   qcom_sType	type;
+  unsigned int  msg_id;
+  unsigned int  prio;
   unsigned int	size;
   void		*data;
 } qcom_sPut;

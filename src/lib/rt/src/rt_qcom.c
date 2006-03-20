@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qcom.c,v 1.7 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_qcom.c,v 1.8 2006-03-20 07:08:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -671,6 +671,7 @@ qcom_Put (
     if (qp->qix == qdb_cIexport) {
       bp->c.flags.b.remote = 1;
       bp->b.noderef = pool_Reference(sts, &qdb->pool, np);
+      bp->b.msg_id = pp->msg_id;
     }
 
     qdb_Put(sts, bp, qp);
