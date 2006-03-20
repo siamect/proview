@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvols.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvols.c,v 1.3 2006-03-20 06:54:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,7 +109,7 @@ cvols_Notify (
 
       tgt.nid = np->nid;
 
-      if (!net_Put(&lsts, &tgt, &nmp->msg, nmp->subtype, nmp->size))
+      if (!net_Put(&lsts, &tgt, &nmp->msg, nmp->subtype, 0, nmp->size))
 	errh_Warning("Notify: error %x sending subtype %s to node %s", lsts, "Notify", np->name); 
     }
 
