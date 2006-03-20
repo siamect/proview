@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subc.c,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_subc.c,v 1.5 2006-03-20 07:22:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -541,7 +541,7 @@ subc_ActivateList (
 
 	  gdb_Unlock;
 
-	    net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, pwr_Offset(aep->msg, spec[aep->msg->count]));
+	    net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]));
 
 	  gdb_Lock;
 
@@ -586,7 +586,7 @@ subc_ActivateList (
 
 	    gdb_Unlock;
 
-	      net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	      net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
 
 	    gdb_Lock;
 
@@ -611,7 +611,7 @@ subc_ActivateList (
 	if (rep->msg->count > 0) {
 	  tgt.nid = rep->nid;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
 	}
 	free(rep->msg);
       }
@@ -622,7 +622,7 @@ subc_ActivateList (
 	if (aep->msg->count > 0) {
 	  tgt.nid = aep->nid;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
-	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, pwr_Offset(aep->msg, spec[aep->msg->count]));
+	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]));
 	}
 	free(aep->msg);
       }
@@ -700,7 +700,7 @@ subc_CancelList (
 
 	gdb_Unlock;
 
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
 
 	gdb_Lock;
 
@@ -720,7 +720,7 @@ subc_CancelList (
       if (rep->msg != NULL) {
 	if (rep->msg->count > 0) {
 	  tgt.nid = rep->nid;
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
 	}
 	free(rep->msg);
       }
@@ -898,9 +898,17 @@ subc_SetOld (
   sub_sClient		*cp
 )
 {
+  void   *adrs;
 
   cp->old = TRUE;
 
+  if (cp->userdata != pool_cNRef) {
+    adrs = pool_Address(NULL, gdbroot->rtdb, cp->userdata);
+    if (adrs != NULL) {
+      memset(adrs, 0, cp->usersize);
+    }
+  }
+  
   subc_RemoveFromMessage(cp);
 
 }
