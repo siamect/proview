@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.c,v 1.7 2005-11-14 16:28:52 claes Exp $
+ * Proview   $Id: rt_gdb.c,v 1.8 2006-03-20 06:57:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -504,6 +504,7 @@ gdb_AddNode (
   if (np == NULL) return NULL;
 
   np->nid = nid;
+  np->buf_id = 1; /* Next available buffer id */
 
   pool_Qinit(NULL, gdbroot->pool, &np->nid_htl);
   pool_Qinit(NULL, gdbroot->pool, &np->nod_ll);

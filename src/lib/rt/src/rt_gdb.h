@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.h,v 1.11 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: rt_gdb.h,v 1.12 2006-03-20 06:57:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -929,6 +929,7 @@ typedef struct {
 
   pool_sQlink	nodsubs_lh;	/**< Header of list servers for this node.  */
   pool_sQlink	nodsubb_lh;	/**< Header of list of buffer for this node.  */
+  pwr_tUInt32   buf_id;         /**< Next available buffer id */
 
   /* Subscribed alarm and block notification.  */
 
