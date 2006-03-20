@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.h,v 1.8 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_qdb.h,v 1.9 2006-03-20 07:17:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -535,6 +535,8 @@ typedef struct {
   unsigned int		size;
   unsigned int		cookie;
   unsigned int		seg_size;
+  unsigned int          msg_id;
+  unsigned int          prio;
   pool_tRef		noderef;	/* pool reference to the node block of an external node */
   qdb_sInfo		info;
 } qdb_sBbuffer;
