@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_net.c,v 1.7 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_net.c,v 1.8 2006-03-20 07:01:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,6 +122,7 @@ Put (
   qcom_sQid		*tgt,
   void			*mp,
   net_eMsg		subtype,
+  unsigned int          id,
   unsigned int		size
 );
 
@@ -423,6 +424,7 @@ Put (
   qcom_sQid		*tgt,
   void			*mp,
   net_eMsg		subtype,
+  unsigned int          id,
   unsigned int		size
 )
 {
@@ -432,6 +434,7 @@ Put (
   put.reply  = gdbroot->my_qid;
   put.type.b = net_cMsgClass;
   put.type.s = subtype;
+  put.msg_id = id;
   put.size   = size;
   put.data   = qcom_Alloc(&lsts, size);
 
@@ -624,6 +627,7 @@ net_Put (
   qcom_sQid		*tgt,
   void			*mp,
   net_eMsg		type,
+  unsigned int          id,
   int			size
 )
 {
@@ -634,7 +638,7 @@ net_Put (
   ((net_sMessage *)mp)->nid = gdbroot->db->nid;
 
   NET_LOCK;
-  ok = Put(sts, tgt, mp, type, size);
+  ok = Put(sts, tgt, mp, type, id, size);
   NET_UNLOCK;
 
   return ok;

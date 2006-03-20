@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_net.x,v 1.9 2006-02-14 05:27:43 claes Exp $
+% * Proview   $Id: rt_net.x,v 1.10 2006-03-20 07:01:56 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -1288,6 +1288,7 @@ struct net_sGetCclass {
 %  qcom_sQid	*tgt,
 %  void		*mp,
 %  net_eMsg	type,
+%  unsigned int	id,
 %  int		size
 %);
 %
