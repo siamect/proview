@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subsm.c,v 1.6 2005-12-13 15:14:27 claes Exp $
+ * Proview   $Id: rt_subsm.c,v 1.7 2006-03-20 07:26:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,8 @@ associateBuffer (
 
     bp->nid = sp->nid;
     bp->dt  = sp->dt;
+    bp->buf_id = np->buf_id;
+    np->buf_id++;
     pool_QinsertSucc(NULL, gdbroot->pool, &bp->subb_ll, &gdbroot->db->subb_lh);
     gdbroot->db->subb_lc++;
     pool_QinsertSucc(NULL, gdbroot->pool, &bp->nodsubb_ll, &np->nodsubb_lh);
@@ -408,7 +410,7 @@ subsm_SendBuffer (
 
     gdb_Unlock;
   
-      net_Put(&sts, &tgt, mp, net_eMsg_subData, size);
+      net_Put(&sts, &tgt, mp, net_eMsg_subData, bp->buf_id, size);
 
     gdb_Lock;
 
