@@ -2,3 +2,6 @@
 060220 cs  script    'delete' statement added to remove external variables.
 060222 cs  xtthelp   Bugfix, bookmark in xtthelp was case sensitive.
 060222 cs  convert   Bookmark inserted for every attribute in class xtthelp.
+060317 rk  qcom      Replaces old unsent subscriptions with new fresh ones.
+060317 rk  qcom      Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.
+060317 rk  rt_tmon   Cleaning (zero-ing) of timed out subscription data.
