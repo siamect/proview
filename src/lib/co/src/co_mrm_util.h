@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_mrm_util.h,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_mrm_util.h,v 1.5 2006-03-22 14:45:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,8 @@ typedef enum {
 	mrm_eUtility_Attr,
 	mrm_eUtility_Wda,
 	mrm_eUtility_XAtt,
-	mrm_eUtility_XAttOne
+	mrm_eUtility_XAttOne,
+	mrm_eUtility_GsdAttr
 	} mrm_eUtility;
 
 void mrm_TextInit( Widget w, XtActionProc value_changed_cb, mrm_eUtility utility);

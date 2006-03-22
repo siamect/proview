@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_pb_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_pb_msg.msg,v 1.3 2006-03-22 14:43:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -25,6 +25,15 @@ normal		<normal operating state>				/succ
 initfail	<failed to initialize slave or module>			/error
 disabled	<slave is disabled>					/warning
 noconn		<no connection to slave>				/error
+attrnoedit	<Attribute is no edit>					/error
+noattrsel	<No attributes is selected>				/error
+userprmdatalen  <Mismatch in UserPrmDataLen>				/error
+moduleidx	<Module index out of range>				/error
+modocc		<All modules are occupied>				/error
+gsdfile		<Unable to open gsd file>				/error
+nomodulename	<Module name is missing>				/error
+duplmodulename	<Duplicate module name>					/error
+nomoduleclass	<Module class is missing>				/error
 .end
 
 

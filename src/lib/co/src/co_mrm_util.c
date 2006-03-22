@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_mrm_util.c,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_mrm_util.c,v 1.5 2006-03-22 14:45:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,6 +148,25 @@ void mrm_TextInit( Widget w, XtActionProc value_changed_cb,
       if (compiled_translations_attr == NULL) 
         compiled_translations_attr = XtParseTranslationTable(translations_attr);
       XtOverrideTranslations( w, compiled_translations_attr);
+      break;
+    }
+    case mrm_eUtility_GsdAttr:
+    {
+      static XtTranslations compiled_translations_gsdattr = NULL;
+      static char translations_gsdattr[] = "<KeyDown>: key_down_gsdattr()";
+      static XtActionsRec actions_gsdattr[1] =
+      {
+        {"key_down_gsdattr",      0}
+      };
+      actions_gsdattr[0].proc = value_changed_cb;
+  
+      if (compiled_translations_gsdattr == NULL) 
+        XtAppAddActions( XtWidgetToApplicationContext(w), 
+	    actions_gsdattr, XtNumber(actions_gsdattr));
+
+      if (compiled_translations_gsdattr == NULL) 
+        compiled_translations_gsdattr = XtParseTranslationTable(translations_gsdattr);
+      XtOverrideTranslations( w, compiled_translations_gsdattr);
       break;
     }
     default:
