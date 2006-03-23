@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.12 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.13 2006-03-23 06:23:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1858,6 +1858,8 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
         case 7: text_size = 18; break;
         default: text_size = 24;
       }
+      if ( text_idx < 0)
+	text_size = 6;
       if ( bold)
         strcpy(bold_str, "BOLD");
       else
