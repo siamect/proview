@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopOpWindow.java,v 1.5 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopOpWindow.java,v 1.6 2006-03-28 06:14:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -200,7 +200,7 @@ public class JopOpWindow extends JPanel {
 	      session.executeCommand("help index");
 	      break;
 	    case PROVIEW:
-	      session.executeCommand("open url \"$pwr_doc/index.html\"");
+	      session.executeCommand("open url \"$pwr_doc/sv_se/index.html\"");
 	      break;
 	    case WEBGRAPH:
 	      session.openGraphFrame( action, instance, scrollbar, false);
