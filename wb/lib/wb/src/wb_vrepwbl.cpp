@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.48 2005-12-23 08:51:57 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.49 2006-03-28 15:03:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1370,8 +1370,15 @@ int wb_vrepwbl::load_files( const char *file_spec)
       }
     }
     catch(exception& e) {
-      cerr << "exception: " << e.what() << " " << found_file << " line: " << 
+      cout << "exception: " << e.what() << " " << found_file << " line: " << 
         file[file_cnt]->lexer->getLine() << endl;
+      error_cnt++;
+      return LDH__WBLPARSE;
+    }
+    catch(ANTLRException& e) {
+      cout << "E Wbl parse error: " << " " << found_file << " line: " << 
+        file[file_cnt]->lexer->getLine() << endl;
+      cout << "F Wbl terminated" << endl;
       error_cnt++;
       return LDH__WBLPARSE;
     }
