@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_thread.c,v 1.5 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_thread.c,v 1.6 2006-03-29 12:18:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -241,7 +241,12 @@ thread_Create (
 
 #elif defined OS_VMS || defined OS_LINUX || defined OS_LYNX
 
-  return errno_Status(pthread_create(tp, NULL, routine, arg));
+  pthread_attr_t  attr;
+  
+  pthread_attr_init(&attr);
+  pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED);
+
+  return errno_Status(pthread_create(tp, &attr, routine, arg));
 
 #else
 # error Not defined for this platform !
