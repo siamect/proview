@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qmon.c,v 1.9 2006-03-20 06:47:42 claes Exp $
+ * Proview   $Id: rt_qmon.c,v 1.10 2006-03-29 12:21:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,7 @@
 # include <arpa/inet.h>
 # include <errno.h>
 # include <unistd.h>
+# include <sched.h>
 # if defined OS_LINUX
 #   include <sys/uio.h>
 #   include <sys/socket.h>
