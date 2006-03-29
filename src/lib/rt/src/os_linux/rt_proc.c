@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_proc.c,v 1.3 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_proc.c,v 1.4 2006-03-29 12:24:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,7 +92,8 @@ proc_SetPriority (
 //  if (rc != 0)
 //    return errno_GetStatus();
 
-  sprintf(set, "rt_prio -rp %d %d", prio, pid);
+// Priorities set from rt_ini after start of all processes
+  sprintf(set, "rt_prio -rp %d %d", prio, pid); 
 //  system(set);
   return sts;  
 }
