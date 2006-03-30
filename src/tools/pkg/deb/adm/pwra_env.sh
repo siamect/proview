@@ -18,6 +18,7 @@ pwra_set_func()
   if [ $1 = $cmd ] || [ ${cmd#$1} != $cmd ]; then
     # Command is "set base"
     basename=$2
+    basename=${basename//\./\\.}
     baseroot=`eval cat $pwra_db/pwr_projectlist.dat | grep "\b"$basename"\b" | grep "\b"base"\b" | awk '{print $3}'`
     if [ -z $baseroot ]; then
       echo "Unable to find base '$2'"
@@ -60,6 +61,7 @@ pwra_set_func()
 
     project=$2
     basename=`eval cat $pwra_db/pwr_projectlist.dat | grep "^"$project"\b" | awk '{print $2}'`
+    basename=${basename//\./\\.}
     if [ -z $basename ]; then
       echo "Unable to find project '$2'"
       return
