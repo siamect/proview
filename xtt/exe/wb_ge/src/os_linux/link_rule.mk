@@ -6,7 +6,7 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(export_exe) \
 	$(pwr_eobj)/rt_io_user.o $(pwr_eobj)/wb_provider.o -L/usr/X11R6/lib \
 	-L/usr/local/BerkeleyDB.4.0/lib \
 	-L/opt/gnome/lib \
-	-lpwr_ge -lpwr_wb -lpwr_flow -lpwr_glow -lpwr_rt -lpwr_co \
+	-lpwr_ge -lpwr_wb -lpwr_pb -lpwr_flow -lpwr_glow -lpwr_rt -lpwr_co \
 	-lpwr_msg_dummy -lantlr -lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lXmu -lSM -lICE\
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz
