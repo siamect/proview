@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.19 2005-12-15 07:43:03 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.20 2006-03-31 14:34:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1639,6 +1639,7 @@ static void ge_activate_generate_web( Widget w, ge_tCtx gectx, XmAnyCallbackStru
     ge_message( gectx, 'E', "Error from generate web");
   else
     ge_message( gectx, 'I', "Web-pages generated");
+  Graph::generate_web_help();
 }
 
 static void ge_activate_creanextpage( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data)

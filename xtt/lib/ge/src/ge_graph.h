@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.20 2006-02-23 14:46:05 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.21 2006-03-31 14:34:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1309,6 +1309,9 @@ class Graph {
  //! Generate web site from configuration in database.
  /*! \param ldhses	Ldh session. */
  static int generate_web( ldh_tSesContext ldhses);
+
+ //! Generate web help from xtt_help.
+ static int generate_web_help();
 
  //
  // Convert module

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.7 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.8 2006-03-31 14:34:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -526,6 +526,16 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 
   fp_ows.close();
 
+  printf( "-- Web startpages generated $pwrp_web/%s.html and %s_opwin.html\n", name, name);
+#endif
+  return 1;
+}
+
+int Graph::generate_web_help()
+{
+  pwr_tStatus sts;
+  pwr_tFileName fname;
+
   // Copy default css-file to pwrp_web
   system( "cp $pwr_exe/pwr_css.css $pwrp_web/");
 
@@ -537,10 +547,6 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
   }
   sts = dcli_search_file( "$pwrp_exe/xtt_help.dat", fname,
 			  DCLI_DIR_SEARCH_END);
-
-  printf( "-- Web startpages generated $pwrp_web/%s.html and %s_opwin.html\n", name, name);
-
-#endif
   return 1;
 }
 
