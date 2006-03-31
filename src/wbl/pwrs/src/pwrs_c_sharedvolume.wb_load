@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_sharedvolume.wb_load,v 1.5 2006-02-23 14:37:20 claes Exp $
+!  Proview   $Id: pwrs_c_sharedvolume.wb_load,v 1.6 2006-03-31 14:47:50 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -90,6 +90,12 @@ SObject pwrs:Class
       Object RtBodySize $Attribute 7
         Body SysBody
           Attr TypeRef = "pwrs:Type-$UInt32"
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+      Object Modified $Attribute 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
           Attr Flags |= PWR_MASK_NOEDIT
         EndBody
       EndObject
