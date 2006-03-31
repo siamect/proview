@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.9 2006-01-25 10:46:23 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.10 2006-03-31 14:37:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
         window_width(0), window_height(0), subwindow_x(0), subwindow_y(0), subwindow_scale(1),
 	nav_window_width(0), nav_window_height(0),
 	nav_rect_ll_x(0), nav_rect_ll_y(0), nav_rect_ur_x(0), nav_rect_ur_y(0), 
-	node_movement_active(0),
+	draw_ctx(0), node_movement_active(0),
 	node_movement_paste_active(0), node_movement_paste_pending(0),
 	nav_rect_movement_active(0), nav_rect_zoom_active(0), 
 	select_rect_active(0), 
@@ -277,6 +277,10 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
       case glow_eSave_Ctx_grow:
         ((GrowCtx *)this)->open_grow( fp);
         grow_loaded = 1;
+	if ( mode == glow_eSaveMode_ReadConfigOnly) {
+	  fp.close();
+	  return 1;
+	}
         break;
       case glow_eSave_Ctx_a_nc: a_nc.open( this, fp); break;
       case glow_eSave_Ctx_a_cc: a_cc.open( this, fp); break;

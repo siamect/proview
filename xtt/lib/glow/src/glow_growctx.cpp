@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.16 2006-01-25 10:46:23 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.17 2006-03-31 14:37:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,7 +63,8 @@ extern "C" {
 
 GrowCtx::~GrowCtx()
 {
-  clear_all( 0);
+  if ( draw_ctx)
+    clear_all( 0);
   if ( dynamic)
     free( dynamic);
 }
@@ -2020,7 +2021,8 @@ void GrowCtx::open_grow( ifstream& fp)
     double_buffer_on = 1;
     glow_draw_create_buffer( this);
   }
-  set_background( background_color);
+  if ( draw_ctx)
+    set_background( background_color);
 }
 
 int GrowCtx::save_subgraph( char *filename, glow_eSaveMode mode)

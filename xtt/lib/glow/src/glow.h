@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.11 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow.h,v 1.12 2006-03-31 14:37:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -915,7 +915,8 @@ typedef enum {
 typedef enum {
   glow_eSaveMode_Edit,		//!< Save as graph.
   glow_eSaveMode_Trace,		//!< Not used.
-  glow_eSaveMode_SubGraph	//!< Save as subgraph.
+  glow_eSaveMode_SubGraph,	//!< Save as subgraph.
+  glow_eSaveMode_ReadConfigOnly	//!< Read only configuration data.
 } glow_eSaveMode;
 
 //! Tags used when writing objects to a .pwg fil.

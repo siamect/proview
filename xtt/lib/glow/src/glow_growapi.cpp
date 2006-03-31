@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.19 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.20 2006-03-31 14:37:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4369,6 +4369,22 @@ void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height)
 {
   *width = ((GrowCtx *)ctx)->window_width;
   *height = ((GrowCtx *)ctx)->window_height;
+}
+
+int grow_IsJava( char *name, int *is_frame, int *is_applet, char *java_name)
+{
+  int sts;
+
+  GrowCtx *ctx = new GrowCtx( "tmp");
+  ctx->set_nodraw();
+  sts = ctx->open( name, glow_eSaveMode_ReadConfigOnly);
+  if ( ODD(sts)) {
+    *is_frame = ctx->is_javaapplication;
+    *is_applet = ctx->is_javaapplet;
+    strcpy( java_name, ctx->java_name);
+  }
+  delete ctx;
+  return sts;
 }
 
 /*@}*/
