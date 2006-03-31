@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.19 2005-10-18 05:07:40 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.20 2006-03-31 14:44:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1116,6 +1116,7 @@ struct pwr_s_RootVolume {
   pwr_tUInt32		RtCardinality;
   pwr_tUInt32		RtBodySize;
   pwr_mOpSys		OperatingSystem;
+  pwr_tTime		Modified;
 };
 
 struct pwr_s_SubVolume {
@@ -1127,6 +1128,7 @@ struct pwr_s_SubVolume {
   pwr_tUInt32		RtCardinality;
   pwr_tUInt32		RtBodySize;
   pwr_mOpSys		OperatingSystem;
+  pwr_tTime		Modified;
 };
 
 struct pwr_s_SharedVolume {
@@ -1137,6 +1139,7 @@ struct pwr_s_SharedVolume {
   pwr_tString16		RtCreator;
   pwr_tUInt32		RtCardinality;
   pwr_tUInt32		RtBodySize;
+  pwr_tTime		Modified;
 };
 
 struct pwr_s_DynamicVolume {
