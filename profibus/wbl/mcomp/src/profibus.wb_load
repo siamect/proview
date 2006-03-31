@@ -582,10 +582,10 @@ Volume Profibus $ClassVolume 0.0.250.7
           EndBody
         EndObject
         Object Status $Attribute 3 16-JAN-2006 09:46:40.50
-          Body SysBody 16-JAN-2006 09:46:40.50
+          Body SysBody 23-MAR-2006 09:47:41.08
             Attr PgmName = "Status"
             Attr Flags = 3072
-            Attr TypeRef = "pwrs:Type-$UInt8"
+            Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         Object Process $Attribute 4 16-JAN-2006 09:46:40.50
@@ -1293,10 +1293,10 @@ Volume Profibus $ClassVolume 0.0.250.7
         ! 3 : Bus is in operating mode (this should be the normal state when running).
         !*/
         Object Status $Attribute 4 16-JAN-2006 09:46:40.51
-          Body SysBody 16-JAN-2006 09:46:40.51
+          Body SysBody 23-MAR-2006 09:47:54.90
             Attr PgmName = "Status"
             Attr Flags = 3072
-            Attr TypeRef = "pwrs:Type-$UInt8"
+            Attr TypeRef = "pwrs:Type-$Status"
           EndBody
         EndObject
         !/**
