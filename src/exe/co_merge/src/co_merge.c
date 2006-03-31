@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_merge.c,v 1.4 2006-02-15 06:01:43 claes Exp $
+ * Proview   $Id: co_merge.c,v 1.5 2006-03-31 14:44:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ int main(  int argc, char *argv[])
   char line[200];
   int sts;
   char mtab[1000][32];
-  int mtabcnt;
+  int mtabcnt = 0;
   int i;
   pwr_tCmd cmd;
   pwr_tFileName incdir;
