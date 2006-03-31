@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt.cpp,v 1.23 2006-02-15 14:19:18 claes Exp $
+ * Proview   $Id: rt_xtt.cpp,v 1.24 2006-03-31 14:31:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -666,6 +666,16 @@ static void xtt_activate_collect_show( Widget w, Xtt *xtt, XmAnyCallbackStruct *
   xtt->xnav->collect_show();
 }
 
+static void xtt_activate_collect_remove( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
+{
+  xtt->xnav->collect_remove();
+}
+
+static void xtt_activate_collect_clear( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
+{
+  xtt->xnav->collect_clear();
+}
+
 static void xtt_activate_advanceduser( Widget w, Xtt *xtt, XmAnyCallbackStruct *data)
 {
   char cmd[80];
@@ -874,6 +884,8 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
 	{"xtt_activate_command",(caddr_t)xtt_activate_command },
 	{"xtt_activate_collect_insert",(caddr_t)xtt_activate_collect_insert },
 	{"xtt_activate_collect_show",(caddr_t)xtt_activate_collect_show },
+	{"xtt_activate_collect_remove",(caddr_t)xtt_activate_collect_remove },
+	{"xtt_activate_collect_clear",(caddr_t)xtt_activate_collect_clear },
 	{"xtt_activate_advanceduser",(caddr_t)xtt_activate_advanceduser },
 	{"xtt_activate_zoom_in",(caddr_t)xtt_activate_zoom_in },
 	{"xtt_activate_zoom_out",(caddr_t)xtt_activate_zoom_out },
