@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.27 2005-11-22 12:17:19 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.28 2006-03-31 14:40:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -820,6 +820,27 @@ int XNav::collect_show()
     *brow = *collect_brow;
   }
   return 1;
+}
+
+int XNav::collect_remove()
+{
+
+  if ( brow->ctx == collect_brow->ctx) {
+    brow_tNode	*node_list;
+    int		node_count;
+
+    brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
+    if ( node_count) {
+      for ( int i = 0; i < node_count; i++)
+	brow_DeleteNode( collect_brow->ctx, node_list[i]);
+
+      free( node_list);
+      return XNAV__SUCCESS;
+    }
+    else
+      return XNAV__NOSELECT;
+  }
+  return XNAV__NOTCOLLECTW;
 }
 
 void XNav::collect_clear()

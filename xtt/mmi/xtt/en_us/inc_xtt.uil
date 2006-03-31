@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: inc_xtt.uil,v 1.10 2005-09-06 10:39:34 claes Exp $
+!  Proview   $Id: inc_xtt.uil,v 1.11 2006-03-31 14:41:55 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -36,8 +36,12 @@ c_Open_ClassGraph   	: compound_string("Open ClassGraph");
 c_Show_Crossreferences  : compound_string("Show Crossreferences");
 c_Change_Value   	: compound_string("Change Value");
 c_Command   		: compound_string("Command");
-c_Collect_insert   	: compound_string("Collect insert");
-c_Collect_show   	: compound_string("Collect show");
+c_Collect   		: compound_string("Collect");
+c_Collect_insert   	: compound_string("Collect Insert");
+c_Show   		: compound_string("Show");
+c_Insert   		: compound_string("Insert");
+c_Remove   		: compound_string("Remove");
+c_Clear   		: compound_string("Clear");
 c_Advanced_user  	: compound_string("Advanced user");
 c_View   		: compound_string("View");
 c_Zoom_in   		: compound_string("Zoom in");

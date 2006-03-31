@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: xtt.uil,v 1.3 2005-09-06 10:39:34 claes Exp $
+!  Proview   $Id: xtt.uil,v 1.4 2006-03-31 14:41:55 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -41,6 +41,8 @@ procedure
 	xtt_activate_change_value(integer);
 	xtt_activate_command(integer);
 	xtt_activate_collect_insert(integer);
+	xtt_activate_collect_remove(integer);
+	xtt_activate_collect_clear(integer);
 	xtt_activate_collect_show(integer);
 	xtt_activate_advanceduser(integer);
 	xtt_activate_zoom_in(integer);
@@ -355,35 +357,82 @@ object functions_entry : XmCascadeButton
             XmNactivateCallback = procedure xtt_activate_command(xtt_ctx);
           };
 	};
-        XmPushButton
+        XmCascadeButton 
         {
-          arguments
+          arguments 
           {
-  	    XmNlabelString = c_Collect_insert;
-            XmNmnemonic = keysym('C');
-	    XmNaccelerator = "Ctrl<Key>V";
-	    XmNacceleratorText = compound_string('Ctrl+V');
+	    XmNlabelString = c_Collect;
+	    XmNmnemonic         = keysym("C");
             XmNfontList	   = menu_font;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure xtt_activate_collect_insert(xtt_ctx);
           };
-	};
-        XmPushButton
-        {
-          arguments
+          controls 
           {
-  	    XmNlabelString = c_Collect_show;
-            XmNmnemonic = keysym('s');
-	    XmNaccelerator = "Ctrl<Key>N";
-	    XmNacceleratorText = compound_string('Ctrl+N');
-            XmNfontList	   = menu_font;
+	    XmPulldownMenu 
+            {
+	      arguments 
+              {
+	      };
+	      controls 
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = c_Insert;
+                    XmNmnemonic = keysym('I');
+	            XmNaccelerator = "Ctrl<Key>V";
+	            XmNacceleratorText = compound_string('Ctrl+V');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure xtt_activate_collect_insert(xtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = c_Show;
+                    XmNmnemonic = keysym('s');
+	            XmNaccelerator = "Ctrl<Key>N";
+	            XmNacceleratorText = compound_string('Ctrl+N');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure xtt_activate_collect_show(xtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = c_Remove;
+                    XmNmnemonic = keysym('r');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure xtt_activate_collect_remove(xtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = c_Clear;
+                    XmNmnemonic = keysym('c');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure xtt_activate_collect_clear(xtt_ctx);
+                  };
+	        };
+              };
+	    };
 	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure xtt_activate_collect_show(xtt_ctx);
-          };
 	};
         XmPushButton
         {

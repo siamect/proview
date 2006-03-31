@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.15 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.16 2006-03-31 14:40:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -336,6 +336,7 @@ class XNav {
     int get_all_objects( pwr_sAttrRef **attrref, int **is_attr);
     int get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr);
     int collect_insert( pwr_sAttrRef *attrref);
+    int collect_remove();
     int collect_show();
     void collect_clear();
     void clear();

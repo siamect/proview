@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.26 2006-01-23 08:47:03 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.27 2006-03-31 14:41:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3616,6 +3616,14 @@ static int	xnav_collect_func(	void		*client_data,
   {
     sts = xnav->collect_show();
     return sts;
+  }
+  else if ( strncmp( arg1_str, "REMOVE", strlen( arg1_str)) == 0)
+  {
+    sts = xnav->collect_remove();
+    if ( EVEN(sts))
+      xnav->message(' ', XNav::get_message(sts));
+        
+    return XNAV__SUCCESS;
   }
   else if ( strncmp( arg1_str, "CLEAR", strlen( arg1_str)) == 0)
   {

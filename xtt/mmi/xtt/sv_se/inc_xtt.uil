@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: inc_xtt.uil,v 1.10 2005-09-06 10:39:35 claes Exp $
+!  Proview   $Id: inc_xtt.uil,v 1.11 2006-03-31 14:41:55 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -36,8 +36,12 @@ c_Open_ClassGraph   	: compound_string("Öppna KlassBild");
 c_Show_Crossreferences  : compound_string("Visa korsreferenser");
 c_Change_Value   	: compound_string("Ändra Värde");
 c_Command   		: compound_string("Kommando");
-c_Collect_insert   	: compound_string("Addera till Samlingsbild");
-c_Collect_show   	: compound_string("Visa Samlingsbild");
+c_Collect   		: compound_string("Samlingsbild");
+c_Collect_insert   	: compound_string("Addera till samlingsbild");
+c_Show   		: compound_string("Visa");
+c_Insert   		: compound_string("Addera");
+c_Remove   		: compound_string("Ta bort");
+c_Clear   		: compound_string("Töm");
 c_Advanced_user  	: compound_string("Avancerad användare");
 c_View   		: compound_string("Visa");
 c_Zoom_in   		: compound_string("Zooma in");
