@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.7 2006-01-13 06:41:20 claes Exp $
+ * Proview   $Id: co_time.c,v 1.8 2006-03-31 14:45:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -172,10 +172,10 @@ time_Aadd (
 }
 
 //! Compare two timespecs.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.  
@@ -341,10 +341,10 @@ time_Dadd (
 }
 
 //! Compare two delta times.
-/*!   Returns
-    1 if t1  > t2
-    0 if t1 == t2
-   -1 if t1  < t2
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
    be done as if t2 == 0.  
