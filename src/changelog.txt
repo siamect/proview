@@ -5,3 +5,4 @@
 060317 rk  qcom      Replaces old unsent subscriptions with new fresh ones.
 060317 rk  qcom      Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.
 060317 rk  rt_tmon   Cleaning (zero-ing) of timed out subscription data.
+060331 cs  pwrs      Modified attribute added to RootVolume, SubVolume and SharedVolume.

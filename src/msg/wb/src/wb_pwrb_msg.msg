@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_pwrb_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_pwrb_msg.msg,v 1.4 2006-03-31 14:46:26 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -26,4 +26,8 @@
 success		<successful completion>					/succ
 chanclass	<channel class not allowed on this card>		/error
 alochan		<could not allocate a new channel>			/error
-graphaction     <no action defined in graph object>                      /error
+graphaction     <no action defined in graph object>                     /error
+inlibhier       <Object is in library hierarchy>                      	/info
+nobuilt    	<Nothing is built>					/info
+
+

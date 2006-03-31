@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_foe_msg.msg,v 1.7 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: wb_foe_msg.msg,v 1.8 2006-03-31 14:46:26 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -105,6 +105,7 @@ noconnect	<PlcConnect object is missing>				/error
 refconnect      <Error in PlcConnect object class>			/error
 conbackup	<Backup connected to invalid attribute>			/error
 replaced	<Symbol replaced>					/info
+nomodif		<Nothing is modified>					/info
 
         .facility       FOE,280 /prefix = FOE__ ! Function object editor
 

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_xnav_msg.msg,v 1.5 2005-11-14 16:37:59 claes Exp $
+!  Proview   $Id: rt_xnav_msg.msg,v 1.6 2006-03-31 14:46:26 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@ queued		<Request queued>				/info
 queuefull	<Queue is full>					/error
 waveformat	<Unsupported wavefile format>			/error
 filecorrupt	<File is corrupt>				/error
-
+notcollectw	<Not collect window>				/error
 
 
 

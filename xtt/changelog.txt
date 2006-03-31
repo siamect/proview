@@ -1,3 +1,8 @@
 060219 cs  gedyn     Bugfix in GeValue: string was sometimes updated every scan.
 060220 cs  ge        Connect to script extern variables in Value, Invisible,
                      SetDig, ToggleDig, DigShift and OptionMenu.
+060227 cs  xtt       Command for collect remove and collect remove/clear in menu.
+060307 cs  gedyn     Subscription for Table (select array) and AnalogColor was not
+                     always unreferenced.
+060331 cs  glow      Bugfix in annotation input. Insert of new characters might cause
+                     segmentation fault.
