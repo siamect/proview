@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.30 2005-12-20 11:59:04 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.31 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@ extern "C" {
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "wb_wnav_msg.h"
+#include "wb_ldh_msg.h"
 #include "wb_ldh.h"
 #include "wb_login.h"
 #include "wb_wccm.h"
@@ -644,7 +645,7 @@ WNav::WNav(
 	wnav_eWindowType xn_type,
 	pwr_tStatus *status) :
 
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	ctx_type(wb_eUtility_WNav), parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
 	window_type(xn_type), ldhses(xn_ldhses), wbctx(0),
 	brow(0), brow_cnt(0), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
@@ -1932,53 +1933,65 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       else
         break;
 
-      if ( !sel_cnt)
-      {
+      if ( !sel_cnt) {
         // Create object
         sts = (wnav->get_palette_select_cb)( wnav->parent_ctx, &classid);
-        if ( EVEN(sts))
-        {
+        if ( EVEN(sts)) {
           wnav->message('E', "Select a class");
           break;
         }
-        switch ( event->object.object_type)
-        {
-          case flow_eObjectType_Node:
-            brow_GetUserData( event->object.object, (void **)&item);
-            switch( item->type)
-            {
-              case wnav_eItemType_Object: 
-                brow_MeasureNode( event->object.object, &ll_x, &ll_y,
-			&ur_x, &ur_y);
-	        if ( event->object.x < ll_x + 1.0)
-	          destcode = ldh_eDest_IntoFirst;
-	        else
-	          destcode = ldh_eDest_After;
-                sts = ldh_CreateObject( wnav->ldhses, 
-			&objid,
-			0, classid, ((WItemObject *)item)->objid, 
-			destcode);
-		if (EVEN(sts))
-		  wnav->message(' ', wnav_get_message(sts));
-                break;
-	      default:
-                ;
-            }
-            break;
-          default:
-           // Create toplevel object
-           sts = ldh_CreateObject( wnav->ldhses, &objid,
-		0, classid, pwr_cNObjid, ldh_eDest_IntoLast);
-	   if (EVEN(sts))
-	     wnav->message(' ', wnav_get_message(sts));
+        switch ( event->object.object_type) {
+	case flow_eObjectType_Node:
+	  brow_GetUserData( event->object.object, (void **)&item);
+	  switch( item->type) {
+	  case wnav_eItemType_Object: 
+	    brow_MeasureNode( event->object.object, &ll_x, &ll_y,
+			      &ur_x, &ur_y);
+	    if ( event->object.x < ll_x + 1.0)
+	      destcode = ldh_eDest_IntoFirst;
+	    else
+	      destcode = ldh_eDest_After;
+
+	    if ( destcode == ldh_eDest_After) {
+	      // Check if toplevel object
+	      sts = ldh_GetParent( wnav->ldhses, ((WItemObject *)item)->objid, &objid);
+	      if ( sts == LDH__NO_PARENT) {
+		if ( ! wnav->check_toplevel_class( classid)) {
+		  wnav->message('E', "Class is not a toplevel class in this window");
+		  break;
+		}
+	      }
+	    }
+
+	    sts = ldh_CreateObject( wnav->ldhses,  &objid, 0, classid, 
+				    ((WItemObject *)item)->objid, 
+				    destcode);
+	    if (EVEN(sts))
+	      wnav->message(' ', wnav_get_message(sts));
+	    break;
+	  default:
+	    ;
+	  }
+	  break;
+	default:
+	  // Create toplevel object
+	    
+	  // Check that this is a valid top object in this window
+	  if ( ! wnav->check_toplevel_class( classid)) {
+	    wnav->message('E', "Class is not a toplevel class in this window");
+	    break;
+	  }
+
+	  sts = ldh_CreateObject( wnav->ldhses, &objid, 0, classid, 
+				  pwr_cNObjid, ldh_eDest_IntoLast);
+	  if (EVEN(sts))
+	    wnav->message(' ', wnav_get_message(sts));
         }
       }
-      else
-      {
+      else {
         // Move object
 
-        if ( event->object.object_type == flow_eObjectType_Node)
-        {
+        if ( event->object.object_type == flow_eObjectType_Node) {
           brow_MeasureNode( event->object.object, &ll_x, &ll_y,
 		&ur_x, &ur_y);
 	  if ( event->object.x < ll_x + 1.0)
@@ -1987,8 +2000,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             destcode = ldh_eDest_After;
 
           brow_GetUserData( event->object.object, (void **)&item);
-          if ( item->type == wnav_eItemType_Object)
-          {
+          if ( item->type == wnav_eItemType_Object) {
             sts = ldh_MoveObject( wnav->ldhses, sel_list->Objid, 
 		item->objid, destcode);
             if ( EVEN(sts)) {
@@ -2330,6 +2342,18 @@ int	WNav::setup()
   new WItemLocal( this, "ShowTrueDb", "setup_show_truedb", 
 	pwr_eType_Int32, sizeof( gbl.show_truedb), 0, 1,
 	(void *) &gbl.show_truedb, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.Force", "setup_build_force", 
+	pwr_eType_Int32, sizeof( gbl.build.force), 0, 1,
+	(void *) &gbl.build.force, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.Debug", "setup_build_debug", 
+	pwr_eType_Int32, sizeof( gbl.build.debug), 0, 1,
+	(void *) &gbl.build.debug, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.CrossReferences", "setup_build_cross", 
+	pwr_eType_Int32, sizeof( gbl.build.crossref), 0, 1,
+	(void *) &gbl.build.crossref, NULL, flow_eDest_IntoLast);
+  new WItemLocal( this, "Build.Manual", "setup_build_manual", 
+	pwr_eType_Int32, sizeof( gbl.build.manual), 0, 1,
+	(void *) &gbl.build.manual, NULL, flow_eDest_IntoLast);
 
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
@@ -2357,7 +2381,8 @@ int	WNavGbl::symbolfile_exec( void *wnav)
 }
 
 void WNav::set_options( int sh_class, int sh_alias, int sh_descrip, 
-	int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref)
+        int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
+	int bu_force, int bu_debug, int bu_crossref, int bu_manual)
 {
   gbl.show_class = sh_class;
   gbl.show_alias = sh_alias;
@@ -2366,11 +2391,16 @@ void WNav::set_options( int sh_class, int sh_alias, int sh_descrip,
   gbl.show_objxref = sh_objxref;
   gbl.show_attrref = sh_attrref;
   gbl.show_attrxref = sh_attrxref;
+  gbl.build.force = bu_force;
+  gbl.build.debug = bu_debug;
+  gbl.build.crossref = bu_crossref;
+  gbl.build.manual = bu_manual;
   ldh_refresh( pwr_cNObjid);
 }
 
 void WNav::get_options( int *sh_class, int *sh_alias, int *sh_descrip, 
-	int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref)
+	int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
+	int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual)
 {
   *sh_class =  gbl.show_class;
   *sh_alias =  gbl.show_alias;
@@ -2379,6 +2409,10 @@ void WNav::get_options( int *sh_class, int *sh_alias, int *sh_descrip,
   *sh_objxref =  gbl.show_objxref;
   *sh_attrref =  gbl.show_attrref;
   *sh_attrxref =  gbl.show_attrxref;
+  *bu_force = gbl.build.force;
+  *bu_debug = gbl.build.debug;
+  *bu_crossref = gbl.build.crossref;
+  *bu_manual = gbl.build.manual;
 }
 
 int WNav::save_settnings( ofstream& fp)
@@ -2436,6 +2470,16 @@ int WNav::save_settnings( ofstream& fp)
   if ( strcmp( gbl.symbolfilename, "") != 0)
     fp << "  set symbolfile /local \"" << gbl.symbolfilename << "\"" << endl;
 
+  if ( gbl.build.crossref)
+    fp << "  set buildcrossref /local" << endl;
+  else
+    fp << "  set nobuildcrossref /local" << endl;
+
+  if ( gbl.build.manual)
+    fp << "  set buildmanual /local" << endl;
+  else
+    fp << "  set nobuildmanual /local" << endl;
+ 
   if ( window_type == wnav_eWindowType_W1)
     fp << "endif" << endl;
   else if ( window_type == wnav_eWindowType_W2)

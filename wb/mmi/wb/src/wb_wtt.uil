@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_wtt.uil,v 1.7 2005-09-20 13:28:05 claes Exp $
+!  Proview   $Id: wb_wtt.uil,v 1.8 2006-03-31 14:29:39 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@ procedure
 	wtt_activate_copy(integer);
 	wtt_activate_paste(integer);
 	wtt_activate_pasteinto(integer);
+	wtt_activate_copykeep(integer);
 	wtt_activate_rename(integer);
 	wtt_activate_configure(integer);
 	wtt_activate_utilities(integer);
@@ -56,14 +57,13 @@ procedure
 	wtt_activate_spreadsheet(integer);
 	wtt_activate_openge(integer);
 	wtt_activate_openclasseditor(integer);
-	wtt_activate_createstruct(integer);
-	wtt_activate_createload(integer);
-	wtt_activate_createboot(integer);
+	wtt_activate_buildobject(integer);
+	wtt_activate_buildvolume(integer);
+	wtt_activate_buildnode(integer);
 	wtt_activate_distribute(integer);
 	wtt_activate_twowindows(integer);
 	wtt_activate_messages(integer);
 	wtt_activate_openplc(integer);
-	wtt_activate_compile(integer);
 	wtt_activate_showcrossref(integer);
 	wtt_activate_change_value(integer);
 	wtt_activate_command(integer);
@@ -488,6 +488,7 @@ object edit_entry : XmCascadeButton
 	          arguments 
                   { 
 		    XmNlabelString = compound_string("Normal Syntax"); 
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   {	
@@ -500,6 +501,7 @@ object edit_entry : XmCascadeButton
 	          arguments 
                   { 
 		    XmNlabelString = compound_string("GMS Syntax"); 
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   { 
@@ -512,6 +514,7 @@ object edit_entry : XmCascadeButton
 	          arguments 
                   { 
 		    XmNlabelString = compound_string("Extern Syntax"); 
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   { 
@@ -527,6 +530,7 @@ object edit_entry : XmCascadeButton
 	          arguments 
                   { 
 		    XmNlabelString = compound_string("Add Volume"); 
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   { 
@@ -539,6 +543,7 @@ object edit_entry : XmCascadeButton
 	          arguments 
                   { 
 		    XmNlabelString = compound_string("Add Attribute"); 
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   { 
@@ -550,7 +555,8 @@ object edit_entry : XmCascadeButton
                 {
 	          arguments 
                   { 
-		    XmNlabelString = compound_string("Add Type"); 
+		    XmNlabelString = compound_string("Add Type");
+                    XmNfontList	   = menu_font;
 	          };
 	          callbacks 
                   { 
@@ -597,7 +603,7 @@ object edit_entry : XmCascadeButton
           arguments
           {
   	    XmNlabelString = compound_string("Copy");
-            XmNmnemonic = keysym('C');
+            XmNmnemonic = keysym('o');
 	    XmNaccelerator = "Ctrl<Key>C";
 	    XmNacceleratorText = compound_string('Ctrl+C');
             XmNfontList	   = menu_font;
@@ -606,6 +612,21 @@ object edit_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure wtt_activate_copy(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy KeepReferences");
+            XmNmnemonic = keysym('K');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 17;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_copykeep(wtt_ctx);
 	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
           };
 	};
@@ -678,6 +699,72 @@ object functions_entry : XmCascadeButton
     {
       controls
       {
+        XmCascadeButton 
+        {
+          arguments 
+          {
+	    XmNlabelString = compound_string("Build");
+	    XmNmnemonic         = keysym("S");
+            XmNfontList	   = menu_font;
+          };
+          controls 
+          {
+	    XmPulldownMenu 
+            {
+	      arguments 
+              {
+	      };
+	      controls 
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Object");
+                    XmNmnemonic = keysym('b');
+                    XmNfontList	   = menu_font;
+	            XmNuserData = 13;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_buildobject(wtt_ctx);
+	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Volume");
+                    XmNmnemonic = keysym('u');
+                    XmNfontList	   = menu_font;
+	            XmNuserData = 7;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_buildvolume(wtt_ctx);
+	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Node...");
+                    XmNmnemonic = keysym('N');
+                    XmNfontList	   = menu_font;
+	            XmNuserData = 8;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_buildnode(wtt_ctx);
+	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+                  };
+	        };
+	      };
+	    };
+	  };
+	};
         XmPushButton
         {
           arguments
@@ -782,66 +869,6 @@ object functions_entry : XmCascadeButton
 	  callbacks
           {
             XmNactivateCallback = procedure wtt_activate_openclasseditor(wtt_ctx);
-	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Compile");
-            XmNmnemonic = keysym('m');
-            XmNfontList	   = menu_font;
-	    XmNuserData = 13;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure wtt_activate_compile(wtt_ctx);
-	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Create Loadfile");
-            XmNmnemonic = keysym('L');
-            XmNfontList	   = menu_font;
-	    XmNuserData = 7;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure wtt_activate_createload(wtt_ctx);
-	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Create Structfile");
-            XmNmnemonic = keysym('S');
-            XmNfontList	   = menu_font;
-	    XmNuserData = 17;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure wtt_activate_createstruct(wtt_ctx);
-	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-          };
-	};
-        XmPushButton
-        {
-          arguments
-          {
-  	    XmNlabelString = compound_string("Create Bootfile...");
-            XmNmnemonic = keysym('B');
-            XmNfontList	   = menu_font;
-	    XmNuserData = 8;
-	  };
-	  callbacks
-          {
-            XmNactivateCallback = procedure wtt_activate_createboot(wtt_ctx);
 	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
           };
 	};
@@ -1407,7 +1434,7 @@ procedure
 object optionsForm : XmFormDialog {
     arguments {
 	XmNdialogTitle = 'View Options';
-        XmNwidth = 650;
+        XmNwidth = 850;
         XmNheight = 385;
         XmNautoUnmanage = false;
 	XmNnoResize = true;
@@ -1428,6 +1455,13 @@ object optionsForm : XmFormDialog {
         XmToggleButton  objxref;
         XmToggleButton  attrref;
         XmToggleButton  attrxref;
+
+        XmLabel		buildTitle;
+        XmToggleButton  buildForce;
+        XmToggleButton  buildDebug;
+        XmToggleButton  buildCrossref;
+        XmToggleButton  buildManual;
+
         XmPushButton	okPb;
         XmPushButton	applyPb;
         XmPushButton	cancelPb;
@@ -1628,6 +1662,90 @@ object attrxref : XmToggleButton {
     };
 };
 
+object buildTitle : XmLabel {
+    arguments {
+        XmNlabelString = 'Build';
+	XmNtopAttachment = XmATTACH_FORM;
+	XmNtopOffset = titleTopOffset;
+        XmNleftAttachment = XmATTACH_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNleftOffset = titleTitleLeftOffset;
+    };
+    controls {
+    };
+    callbacks {
+    };
+};
+
+
+object buildForce : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Force';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmLabel buildTitle;
+	XmNtopOffset = titleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 8;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildDebug : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Debug';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildForce;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 9;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildCrossref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Crossreference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildDebug;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 10;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildManual : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Manual';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildCrossref;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 11;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
 
 !----------------------------
 object	okPb : XmPushButton {
@@ -1688,7 +1806,6 @@ procedure
     wtt_boot_ok_cb(any);
     wtt_boot_cancel_cb(any);
     wtt_boot_destroy_cb(any);
-    wtt_boot_deb_cr(any);
     wtt_boot_list_cr(any);
 
 
@@ -1698,7 +1815,7 @@ object bootFilesWindow : XmFormDialog {
     arguments {
 	XmNwidth = 230;
 	XmNheight = 260;
-        XmNdialogTitle = 'Navigator: Create Boot Files';
+        XmNdialogTitle = 'Build Node';
         XmNdefaultButton = XmPushButton bootOk;
         XmNcancelButton = XmPushButton bootCancel;
         XmNbuttonFontList	   	= menu_font;
@@ -1708,7 +1825,6 @@ object bootFilesWindow : XmFormDialog {
     controls {
 	XmPushButton bootOk;
         XmPushButton bootCancel;
-	XmToggleButton bootDebug;
         XmScrolledList bootNodeList;
     };
     callbacks {
@@ -1749,24 +1865,10 @@ object bootCancel : XmPushButton {
     };
 };
 
-object bootDebug : XmToggleButton {
-    arguments {
-	XmNlabelString = compound_string("Link with Debug");
-        XmNleftAttachment = XmATTACH_FORM;
-	XmNleftOffset = 20;
-	XmNbottomAttachment = XmATTACH_WIDGET;
-	XmNbottomWidget = XmPushButton bootCancel;
-	XmNbottomOffset = 15;
-    };
-    callbacks {
-	MrmNcreateCallback = procedure wtt_boot_deb_cr(wtt_ctx);	
-    };
-}; 
-
 object bootNodeList : XmScrolledList {
     arguments {
 	XmNbottomAttachment = XmATTACH_WIDGET;
-	XmNbottomWidget = XmToggleButton bootDebug;
+	XmNbottomWidget = XmPushButton bootOk;
 	XmNbottomOffset = 15;
         XmNrightAttachment = XmATTACH_FORM;
 	XmNrightOffset = 5;

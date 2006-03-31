@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_foe.uil,v 1.5 2005-09-06 10:39:34 claes Exp $
+!  Proview   $Id: wb_foe.uil,v 1.6 2006-03-31 14:29:39 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -388,8 +388,8 @@ object file_entry : XmCascadeButton {
 	};
 	XmPushButton {
 	  arguments {
-	    XmNlabelString = compound_string("Compile");
-	    XmNmnemonic = keysym('C');
+	    XmNlabelString = compound_string("Build");
+	    XmNmnemonic = keysym('B');
 	    XmNfontList	    = menu_font;
 	    XmNuserData = 7;
 	  };

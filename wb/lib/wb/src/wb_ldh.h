@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.33 2005-12-20 11:57:29 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.34 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,6 +69,7 @@ typedef void *ldh_tWorkbench;
 typedef ldh_tWorkbench ldh_tWBContext;    
 typedef void *ldh_tVolume;
 typedef ldh_tVolume ldh_tVolContext;
+typedef pwr_tStatus (* wb_tMethod)();
 
 typedef struct ldh_s_Event	ldh_sEvent;
 typedef struct ldh_s_MenuItem	ldh_sMenuItem;
@@ -328,10 +329,10 @@ struct ldh_s_MenuCall {
   void			*WindowContext;
   ldh_eMenuSet		PointedSet;
   ldh_tSession		PointedSession;
-  pwr_sAttrRef		Pointed;
+  pwr_tAttrRef		Pointed;
   ldh_eMenuSet		SelectedSet;
   ldh_tSession		SelectedSession;
-  pwr_sAttrRef		*Selected;
+  pwr_tAttrRef		*Selected;
   pwr_tUInt32		SelectCount;
   ldh_sMenuItem		*ItemList;
   pwr_tUInt32		ItemCount;
@@ -430,6 +431,11 @@ pwr_tStatus ldh_CallMenuMethod (
   ldh_sMenuCall *CallStruct,
   int Index
 );
+
+pwr_tStatus ldh_GetMethod(
+  ldh_tSession Session,
+  char *Name,
+  wb_tMethod *method);
 
 pwr_tStatus ldh_ChangeObjectName (
   ldh_tSession Session,

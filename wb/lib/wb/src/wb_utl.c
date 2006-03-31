@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.21 2005-11-22 12:26:58 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.22 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -5430,7 +5430,7 @@ int utl_compile (
 	pwr_tClassId	*class_ptr;
 	pwr_tClassId	class_vect[2];
 	ldh_sSessInfo	info;
-	int		status;
+	int		status = GSX__NOMODIF;
 	int		other_volume_attached;
 	ldh_tVolContext	volctx;
 	ldh_tSesContext	l_ldhses;
@@ -5442,6 +5442,7 @@ int utl_compile (
         int             thisvolume;
         pwr_tVolumeId   current_volid;
 	ldh_sVolumeInfo volinfo;	
+	int 		access;
 
 	/* Check that the utilily session is saved */
 	sts = ldh_GetSessionInfo( ldhses, &info);
@@ -5451,6 +5452,7 @@ int utl_compile (
 
 	/* To be able to compile the windows, the session has to 
 	   be set to ReadOnly */
+	access = info.Access;
 	sts = ldh_SetSession( ldhses, ldh_eAccess_ReadOnly);
 	if ( EVEN(sts)) return sts;
 
@@ -5642,7 +5644,8 @@ int utl_compile (
 	        status = sts;
 	        goto error_return;
 	      }	
-
+	      else if ( sts == GSX__NOMODIF)
+		status = sts;
 	      list_ptr = list_ptr->next;
 	    }
 	    utl_objidlist_free( plcpgmlist);
@@ -5686,6 +5689,8 @@ int utl_compile (
 	      status = sts;
 	      goto error_return;
 	    }	
+	    else if ( sts != GSX__NOMODIF)
+	      status = sts;
 	  }
 
 	  if ( windowname != NULL)
@@ -5721,16 +5726,18 @@ int utl_compile (
 	      status = sts;
 	      goto error_return;
 	    }	
+	    else if ( sts != GSX__NOMODIF)
+	      status = sts;
 	  }
 
 	  /* Return to session access ReadWrite */ 
-	  sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+	  sts = ldh_SetSession( ldhses, access);
 	  if ( EVEN(sts)) return sts;
 
-	  return FOE__SUCCESS;
+	  return status;
 
 error_return:
-	  sts = ldh_SetSession( ldhses, ldh_eAccess_ReadWrite);
+	  sts = ldh_SetSession( ldhses, access);
 	  if ( EVEN(sts)) return sts;
 
 	  return status;

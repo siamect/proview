@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt.cpp,v 1.9 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_watt.cpp,v 1.10 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -458,6 +458,8 @@ WAtt::WAtt(
   Arg 		args[20];
   pwr_tStatus	sts;
   char 		title[80];
+  char		*title_p;
+  int		size;
   int		i;
   MrmHierarchy s_DRMh;
   MrmType dclass;
@@ -497,14 +499,17 @@ WAtt::WAtt(
 
   dcli_translate_filename( uid_filename, uid_filename);
 
+  // Compose a title
+  sts = ldh_AttrRefToName( ldhses, &aref, cdh_mName_path | cdh_mName_object | cdh_mName_attribute, 
+			   &title_p, &size);
+  strncpy( title, title_p, sizeof(title));
+
   // Create object context
 //  attrctx->close_cb = close_cb;
 //  attrctx->redraw_cb = redraw_cb;
 
   // Motif
   MrmInitialize();
-
-  strcpy( title, "PwR Object attributes");
 
   reglist[0].value = (caddr_t) this;
 
@@ -518,7 +523,7 @@ WAtt::WAtt(
 
   MrmRegisterNames(reglist, reglist_num);
 
-  parent_wid = XtCreatePopupShell("objectEditor", 
+  parent_wid = XtCreatePopupShell( title, 
 		topLevelShellWidgetClass, parent_wid, args, i);
 
   sts = MrmFetchWidgetOverride( s_DRMh, "watt_window", parent_wid,
@@ -547,7 +552,10 @@ WAtt::WAtt(
   XtUnmanageChild( cmd_scrolled_ok);
   XtUnmanageChild( cmd_scrolled_ca);
 
+  if ( *(wb_eUtility *)parent_ctx == wb_eUtility_WNav)
+    parent_ctx = ((WNav *)parent_ctx)->parent_ctx;
   utility = *(wb_eUtility *)parent_ctx;
+
   wattnav = new WAttNav( (void *)this, wattnav_form, "Plant",
 		ldhses, aref, wa_editmode, wa_advanced_user,
 		wa_display_objectname, utility, &brow_widget, &sts);

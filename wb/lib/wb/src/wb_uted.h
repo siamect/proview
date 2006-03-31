@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_uted.h,v 1.4 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,10 @@
 
 #ifndef wb_uted_h
 #define wb_uted_h
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 #ifndef wb_ldh_h
 #include "wb_ldh.h"
@@ -124,4 +128,8 @@ void uted_set_editmode (
   int		edit,
   ldh_tSesContext ldhses
 );
+
+#if defined __cplusplus
+}
+#endif
 #endif

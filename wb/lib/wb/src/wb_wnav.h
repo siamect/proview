@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.12 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.13 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,9 @@
 
 /* wtt_wnav.h -- Simple navigator */
 
-#if defined __cplusplus
-extern "C" {
-#endif
+//#if defined __cplusplus
+//extern "C" {
+//#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -52,6 +52,10 @@ extern "C" {
 
 #ifndef wb_pal_h
 #include "wb_pal.h"
+#endif
+
+#ifndef wb_build_opt_h
+#include "wb_build_opt.h"
 #endif
 
 #ifndef co_wow_h
@@ -163,15 +167,15 @@ class ApplList {
 class WNavGbl {
   public:
     WNavGbl() :
-	priv(0), verify(0), advanced_user(0), all_toplevel(0), bypass(0),
-	show_class(1), show_alias(0), show_descrip(1), show_attrref(0), 
-        show_attrxref(0), show_objref(0), show_objxref(0), show_truedb(0)
-	{
-	  strcpy( version, wnav_cVersion);
-	  strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
-	  strcpy( node, ""); strcpy( sys, ""); strcpy( default_directory, "");
-	  strcpy( symbolfilename, "");
-	};
+      priv(0), verify(0), advanced_user(0), all_toplevel(0), bypass(0),
+      show_class(1), show_alias(0), show_descrip(1), show_attrref(0), 
+      show_attrxref(0), show_objref(0), show_objxref(0), show_truedb(0)
+      {
+	strcpy( version, wnav_cVersion);
+	strcpy( platform, ""); strcpy( os, ""); strcpy( hw, "");
+	strcpy( node, ""); strcpy( sys, ""); strcpy( default_directory, "");
+	strcpy( symbolfilename, "");
+      };
     char		version[10];
     unsigned long	priv;
     char		platform[20];
@@ -193,6 +197,7 @@ class WNavGbl {
     int			show_objref;
     int			show_objxref;
     int			show_truedb;
+    wb_build_opt 	build;
 
     int			load_config( void *wnav);
     int			symbolfile_exec( void *wnav);
@@ -212,6 +217,7 @@ class WNav {
 	pwr_tStatus *status);
     ~WNav();
 
+    wb_eUtility		ctx_type;
     WNavGbl		gbl;
     ApplList		appl;
     void 		*parent_ctx;
@@ -342,9 +348,11 @@ class WNav {
     void collapse();
     void set_selection_owner();
     void set_options( int sh_class, int sh_alias, int sh_descrip, 
-	int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref);
+	int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
+        int bu_force, int bu_debug, int bu_crossref, int bu_manual);
     void get_options( int *sh_class, int *sh_alias, int *sh_descrip, 
-	int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref);
+	 int *sh_objref, int *sh_objxref, int *sh_attrref, int *sh_attrxref,
+         int *bu_force, int *bu_debug, int *bu_crossref, int *bu_manual);
     int save_settnings( ofstream& fp);
     int node_to_objid( brow_tNode node, pwr_tObjid *objid);
     int unselect_objid( pwr_tObjid objid);
@@ -353,6 +361,7 @@ class WNav {
     int show_database();
     int show_volume( int pop);
     int get_rootlist();
+    int check_toplevel_class( pwr_tCid cid);
     int command( char* input_str);
     int readcmdfile( 	char		*incommand);
     int get_current_object(
@@ -397,7 +406,7 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id,
 	void *value_ptr, char **buff, int *len);
 char *wnav_get_message( int sts);
 
-#if defined __cplusplus
-}
-#endif
+//#if defined __cplusplus
+//}
+//#endif
 #endif

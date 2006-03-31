@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.19 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.20 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -969,6 +969,27 @@ bool wb_session::disableAttribute( pwr_sAttrRef *arp, pwr_tDisableAttr disable)
     return false;
   }  
   return true;
+}
+
+bool wb_session::commit()
+{
+  // Store time in volume object
+  pwr_tOid oid = pwr_cNOid;
+  pwr_tTime time;
+
+  clock_gettime(CLOCK_REALTIME, &time);
+  oid.vid = m_vrep->vid();
+
+  wb_orep *orep = m_vrep->object( &m_sts, oid); 
+  if ( oddSts()) {
+    orep->ref();
+    wb_attribute modtime(m_sts, orep, "SysBody", "Modified");
+    if ( modtime.oddSts())
+      writeAttribute( modtime, &time);
+    orep->unref();
+  }
+
+  return m_srep->commit(&m_sts);
 }
 
 

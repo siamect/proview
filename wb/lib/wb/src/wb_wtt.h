@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.14 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.15 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,9 @@
 
 /* wb_wtt.h -- Simple navigator */
 
-#if defined __cplusplus
-extern "C" {
-#endif
+//#if defined __cplusplus
+//extern "C" {
+//#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -127,6 +127,7 @@ class Wtt {
 	ldh_tVolume wt_volctx,
 	wnav_sStartMenu *root_menu,
 	pwr_tStatus *status);
+    Wtt() {};
 
     wb_eUtility	ctx_type;
     void 	*parent_ctx;
@@ -167,7 +168,6 @@ class Wtt {
     void		(*confirm_no_cb)( Wtt *);
     struct {
       Widget	dia;
-      Widget	deb;
       Widget	list;
       void	*volumelist;
       int	volumecount;
@@ -194,6 +194,10 @@ class Wtt {
     Widget	show_objxref_w;
     Widget	show_attrref_w;
     Widget	show_attrxref_w;
+    Widget	build_force_w;
+    Widget	build_debug_w;
+    Widget	build_crossref_w;
+    Widget	build_manual_w;
     int		show_class;
     int		show_alias;
     int		show_descrip;
@@ -201,25 +205,29 @@ class Wtt {
     int		show_objxref;
     int		show_attrref;
     int		show_attrxref;
+    int		build_force;
+    int		build_debug;
+    int		build_crossref;
+    int		build_manual;
     int		wnav_mapped;
     int		wnavnode_mapped;
     Widget	menu_save_w;
     Widget	menu_revert_w;
     Widget	menu_cut_w;
     Widget	menu_copy_w;
+    Widget	menu_copykeep_w;
     Widget	menu_paste_w;
     Widget	menu_pasteinto_w;
     Widget	menu_rename_w;
     Widget	menu_utilities_w;
     Widget	menu_openplc_w;
-    Widget	menu_compile_w;
-    Widget	menu_createload_w;
-    Widget	menu_createboot_w;
+    Widget	menu_buildobject_w;
+    Widget	menu_buildvolume_w;
+    Widget	menu_buildnode_w;
     Widget	menu_distribute_w;
     Widget	menu_change_value_w;
     Widget	menu_edit_w;
     Widget	menu_classeditor_w;
-    Widget	menu_createstruct_w;
     uted_ctx	utedctx;
     WPkg	*wpkg;
     WNav	*input_wnav;
@@ -275,7 +283,7 @@ class Wtt {
 Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid,
 			      void (*message_cb)(void *, char, char *));
 
-#if defined __cplusplus
-}
-#endif
+//#if defined __cplusplus
+//}
+//#endif
 #endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.52 2006-02-23 14:39:36 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.53 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -258,6 +258,19 @@ ldh_CallMenuMethod(ldh_sMenuCall *mcp, int index)
 
   return sp->callMenuMethod( mcp, index);
 }
+
+pwr_tStatus 
+ldh_GetMethod( ldh_tSession Session, char *Name, wb_tMethod *method)
+{
+  pwr_tStatus sts;
+
+  wb_session *sp = (wb_session *)Session;
+  wb_erep *erep = sp->env();
+
+  erep->method( &sts, Name, method);
+  return sts;
+}
+
 
 pwr_tStatus
 ldh_ChangeObjectName(ldh_tSession session, pwr_tOid oid, char *name)
@@ -1253,22 +1266,12 @@ pwr_tStatus
 ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, char *aname, pwr_sAttrRef *oarp)
 {
   wb_session *sp = (wb_session *)session;
-  pwr_tAName name;
 
   wb_attribute a = sp->attribute(arp);
   if (!a) return a.sts();
-  try {
-    strcpy( name, a.longName().name(cdh_mName_volumeStrict));
-  }
-  catch ( wb_error& e) {
-    return e.sts();
-  }
-  strcat( name, ".");
-  strcat( name, aname);
 
-  wb_attribute oa = sp->attribute(name);
-  if (!oa) return oa.sts();
-  
+  wb_attribute oa( a, 0, aname);
+
   oa.aref(oarp);
 
   return oa.sts();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.39 2006-02-23 14:43:43 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.40 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -85,6 +85,8 @@ extern "C" {
 #include "wb_vrepwbl.h"
 #include "wb_vrepmem.h"
 #include "wb_pkg.h"
+#include "wb_build.h"
+#include "wb_wtt.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -173,6 +175,8 @@ static int	wnav_crossref_func(     void		*client_data,
 static int	wnav_distribute_func(   void		*client_data,
 				        void		*client_flag);
 static int	wnav_release_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_build_func(	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
@@ -417,6 +421,12 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"RELEASE",
 			&wnav_release_func,
 			{ "dcli_arg1", "dcli_arg2", ""}
+		},
+		{
+			"BUILD",
+			&wnav_build_func,
+			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
+			  "/MANUAL", "/NAME", ""}
 		},
 		{"",}};
 
@@ -1173,6 +1183,62 @@ static int	wnav_set_func(	void		*client_data,
       wnav->gbl.show_truedb = 0;
       wnav->ldh_refresh( pwr_cNObjid);
     }
+  }
+  else if ( strncmp( arg1_str, "BUILDFORCE", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDFORCE");
+    else
+      wnav->gbl.build.force = 1;
+  }
+  else if ( strncmp( arg1_str, "NOBUILDFORCE", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDFORCE");
+    else
+      wnav->gbl.build.force = 0;
+  }
+  else if ( strncmp( arg1_str, "BUILDDEBUG", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDDEBUG");
+    else
+      wnav->gbl.build.debug = 1;
+  }
+  else if ( strncmp( arg1_str, "NOBUILDDEBUG", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDDEBUG");
+    else
+      wnav->gbl.build.debug = 0;
+  }
+  else if ( strncmp( arg1_str, "BUILDCROSSREF", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDCROSSREF");
+    else
+      wnav->gbl.build.crossref = 1;
+  }
+  else if ( strncmp( arg1_str, "NOBUILDCROSSREF", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDCROSSREF");
+    else
+      wnav->gbl.build.crossref = 0;
+  }
+  else if ( strncmp( arg1_str, "BUILDMANUAL", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET BUILDMANUAL");
+    else
+      wnav->gbl.build.manual = 1;
+  }
+  else if ( strncmp( arg1_str, "NOBUILDMANUAL", strlen( arg1_str)) == 0)
+  {
+    if ( EVEN( dcli_get_qualifier( "/LOCAL", 0, 0)))
+      (wnav->gbl_command_cb)( wnav->parent_ctx, "SET NOBUILDMANUAL");
+    else
+      wnav->gbl.build.manual = 0;
   }
   else if ( strncmp( arg1_str, "VERIFY", strlen( arg1_str)) == 0)
   {
@@ -3359,6 +3425,8 @@ static int	wnav_open_func(	void		*client_data,
     char		*instance_p;
     WGe 		*wge;
     int			modal;
+    char		*s;
+    char 		applname[80];
 
     // Command is "OPEN GRAPH" 
 
@@ -3381,13 +3449,22 @@ static int	wnav_open_func(	void		*client_data,
       return WNAV__CMDMODE;
 
 
+    if ( (s = strrchr( filenamestr, '/')))
+      strcpy( applname, s + 1);
+    else
+      strcpy( applname, filenamestr);
+    if ( (s = strchr( applname, '.')))
+      *s = 0;
+
     wge = new WGe( wnav->parent_wid, wnav, "Name", filenamestr, 0,0,0,0,0,0,0, instance_p,
 		   modal);
     if ( modal) {
       XEvent 	Event;
 
       wge->command_cb = wnav_wge_command_cb;
-      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, filenamestr);
+
+	   
+      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
 
       for (;;) {
 	XtAppNextEvent( XtWidgetToApplicationContext( wnav->parent_wid), &Event);
@@ -3403,7 +3480,7 @@ static int	wnav_open_func(	void		*client_data,
     else {
       wge->close_cb = wnav_wge_close_cb;
       wge->command_cb = wnav_wge_command_cb;
-      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, filenamestr);
+      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
     }
   }
   else
@@ -3541,7 +3618,15 @@ static int	wnav_create_func( void		*client_data,
       strcpy( filenamestr, "$pwrp_db/userclasses.wb_load");
 
     // Create structfiles
-    sprintf( cmd, "co_convert -sv -d $pwrp_inc/ %s", filenamestr);
+    sprintf( cmd, "co_convert -so -d $pwrp_inc/ %s", filenamestr);
+    sts = system( cmd);
+    if ( sts != 0) {
+      wnav->message('E', "Conversion error, see terminal window for more information");
+      return WNAV__CO_CONVERT;
+    }
+
+    // Create hpp file
+    sprintf( cmd, "co_convert -po -d $pwrp_inc/ %s", filenamestr);
     sts = system( cmd);
     if ( sts != 0) {
       wnav->message('E', "Conversion error, see terminal window for more information");
@@ -4370,6 +4455,178 @@ static int	wnav_release_func(	void		*client_data,
   return 1;
 }
 
+static int	wnav_build_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	arg1_str[80];
+  int	arg1_sts;
+  pwr_tStatus sts;
+
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+  if ( EVEN(sts)) return sts;
+
+  arg1_sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  if ( EVEN(arg1_sts)) {
+    // build object is default
+    strcpy( arg1_str, "OBJECT");
+  }
+
+  if ( strncmp( arg1_str, "NODE", strlen( arg1_str)) == 0) {
+    char namestr[80];
+    void *volumelist;
+    int	volumecount;
+
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+	wnav->message('E', "Syntax error");
+	return WNAV__SYNTAX;
+      }
+    }
+
+    // Load the bootlist
+    sts = lfu_volumelist_load( load_cNameBootList, (lfu_t_volumelist **) &volumelist,
+			       &volumecount);
+    if ( sts == FOE__NOFILE) {
+      wnav->message( 'E', "Project is not configured");
+      return sts;
+    }
+
+    wb_build build( *(wb_session *)wnav->ldhses, wnav, wnav->parent_wid);
+    build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+    build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+    build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+    build.node( namestr, volumelist, volumecount);
+    wnav->message(' ', wnav_get_message(build.sts()));
+
+    XtFree( (char *) volumelist);
+  }
+  else if ( strncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0) {
+    // Build current volume
+    char namestr[80];
+
+    if ( ODD( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      wnav->message('E', "Syntax error");
+      return WNAV__SYNTAX;
+    }
+    if ( ODD( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+      wnav->message('E', "Syntax error");
+      return WNAV__SYNTAX;
+    }
+
+    wb_build build( *(wb_session *)wnav->ldhses, wnav, wnav->parent_wid);
+    build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+    build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+    build.opt.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+    build.volume();
+    wnav->message(' ', wnav_get_message(build.sts()));
+  }
+  else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0) {
+    char 	namestr[80];
+    pwr_tCid	cid;
+    pwr_tAttrRef aref;
+    int 	size;
+    pwr_tOid 	menu_oid;
+    pwr_tOName 	menu;
+    char 	*methodstr_p;
+    pwr_tString80 methodstr;
+    pwr_sAttrRef *sel_list;
+    int		*sel_is_attr;
+    int		sel_cnt;
+    int		name_found;
+    wb_tMethodMenu method;
+    wb_build_opt stored_opt = wnav->gbl.build;
+
+    wnav->gbl.build.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
+    wnav->gbl.build.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
+    wnav->gbl.build.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
+    wnav->gbl.build.manual = ODD( dcli_get_qualifier( "/MANUAL", 0, 0));
+
+    name_found = 1;
+    if ( EVEN( dcli_get_qualifier( "/NAME", namestr, sizeof(namestr)))) {
+      if ( EVEN( dcli_get_qualifier( "dcli_arg2", namestr, sizeof(namestr)))) {
+	name_found = 0;
+      }
+    }
+
+    if ( name_found) {
+      sts = ldh_NameToAttrRef( wnav->ldhses, namestr, &aref);
+      if ( EVEN(sts)) {
+	wnav->message('E', "No such object");
+	wnav->gbl.build = stored_opt;
+	return WNAV__SYNTAX;
+      }
+      sel_list = (pwr_tAttrRef *) calloc( 1, sizeof( pwr_tAttrRef));
+      sel_is_attr = (int *) calloc( 1, sizeof( int));
+      sel_list[0] = aref;
+      sel_cnt = 1;
+    }
+    else {
+      // Get selected objects
+      sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+      if ( EVEN(sts)) {
+	wnav->message('E', "Syntax error");
+	wnav->gbl.build = stored_opt;
+	return WNAV__SYNTAX;
+      }
+    }
+
+    for ( int i = 0; i < sel_cnt; i++) {
+      // Find method
+      sts = ldh_GetAttrRefTid( wnav->ldhses, &sel_list[i], &cid);
+      if ( EVEN(sts)) return sts;
+    
+      sts = ldh_ObjidToName( wnav->ldhses, cdh_ClassIdToObjid( cid),
+			     cdh_mName_volumeStrict, menu, sizeof(menu), &size);
+      if ( EVEN(sts)) return sts;
+
+      strcat( menu, "-NavigatorPoson-Pointed-Build");
+      sts = ldh_NameToObjid( wnav->ldhses, &menu_oid, menu);
+      if ( EVEN(sts)) {
+	// No method
+	continue;
+      }
+    
+      sts = ldh_GetObjectPar( wnav->ldhses, menu_oid, "SysBody", "MethodName",
+			      &methodstr_p, &size);
+      if ( EVEN(sts)) return sts;
+
+      strcpy( methodstr, methodstr_p);
+      free( methodstr_p);
+
+      sts = ldh_GetMethod( wnav->ldhses, methodstr, (wb_tMethod *)&method); 
+      if ( EVEN(sts)) {
+	continue;
+      }
+
+      ldh_sMenuCall menucall;
+      memset( &menucall, 0, sizeof(menucall));
+      menucall.PointedSession = wnav->ldhses;
+      menucall.Pointed = sel_list[i];
+      menucall.EditorContext = wnav;
+      menucall.WindowContext = wnav->parent_wid;  // This is zero for wb_cmd
+
+      sts = (method)( &menucall);
+      if ( EVEN(sts)) {
+	wnav->message(' ', wnav_get_message(sts));
+	return sts;
+      }
+    }
+    free( sel_list);
+    free( sel_is_attr);
+  }
+  else {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return 1;
+}
+
 int WNav::show_database()
 {
   int		sts;
@@ -4496,6 +4753,31 @@ int WNav::get_rootlist()
     }
   }
   return 1;
+}
+
+int WNav::check_toplevel_class( pwr_tCid cid)
+{
+  int		sts;
+  pwr_tCid	valid_class;
+  PalFileMenu     *menu_p;
+
+  if ( !menu)
+    return 0;
+
+  if ( gbl.all_toplevel || strcmp( layout, "") == 0)
+    // All toplevel objects are valid
+    return 1;
+
+  for ( menu_p = menu->child_list; menu_p; menu_p = menu_p->next) {
+    sts = ldh_ClassNameToId( ldhses, &valid_class, menu_p->title);
+    if ( EVEN(sts))
+      continue;
+
+    if ( valid_class == cid)
+      return 1;
+  }
+  // Not found
+  return 0;
 }
 
 int WNav::command( char* input_str)
@@ -5085,8 +5367,9 @@ static int wnav_opengraph_func(
   if ( wnav->window_type == wnav_eWindowType_No)
     return WNAV__CMDMODE;
       
-  strcpy( cmd, "open graph/file=");
+  strcpy( cmd, "open graph/file=\"");
   strcat( cmd, arg_list->value_string);
+  strcat( cmd, "\"");
   if ( arg_p2->value_int)
     strcat( cmd, " /modal");
 
@@ -5171,8 +5454,9 @@ static int wnav_setsubwindow_func(
   strcat( cmd, arg_list->value_string);
   strcat( cmd, "/name=");
   strcat( cmd, arg_p2->value_string);
-  strcat( cmd, "/source=");
+  strcat( cmd, "/source=\"");
   strcat( cmd, arg_p3->value_string);
+  strcat( cmd, "\"");
   if ( arg_p4->value_int)
     strcat( cmd, " /modal");
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.29 2006-01-10 06:29:29 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.30 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2233,6 +2233,7 @@ int	gcg_wind_comp_all(
 	int		*loaded_list;
 	int		loaded_windcount;		
 	pwr_tObjid	parent;
+	pwr_tStatus	sumsts = GSX__SUCCESS;
 
 	sts = trv_get_window_windows( ldhses, window, &wind_count, 
 			&windlist);
@@ -2392,6 +2393,7 @@ int	gcg_wind_comp_all(
 			&warningcount, 1, debug);
 	  if ( sts == GSX__PLCWIND_ERRORS || sts == GSX__AMBIGOUS_EXECUTEORDER) {
 	    /* continue */
+	    sumsts = sts;
 	  }
 	  else if ( EVEN(sts)) return sts;
 	  else
@@ -2422,6 +2424,7 @@ int	gcg_wind_comp_all(
 			debug);
 	  if ( sts == GSX__PLCPGM_ERRORS) {
 	    /* continue */
+	    sumsts = sts;
 	  }
 	  else if ( EVEN(sts)) return sts;
 	}
@@ -2451,7 +2454,9 @@ int	gcg_wind_comp_all(
 	XtFree((char *) loaded_windlist);
 	XtFree((char *) loaded_list);
 
-	return GSX__SUCCESS;
+	if ( !wind_compiled)
+	  return GSX__NOMODIF;
+	return sumsts;
 }
 
 

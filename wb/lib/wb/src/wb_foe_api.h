@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_api.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_foe_api.h,v 1.4 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,10 @@
 /* wb_foe_api.h -- functional object editor
    This module contains the api for the Functional Object Editor (PLC).  */
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 #include "pwr_class.h"
 #include "wb_ldh.h"
 
@@ -41,4 +45,7 @@ foe_Close (
   foe_tContext FoeContext
 );
 
+#if defined __cplusplus
+}
+#endif
 #endif

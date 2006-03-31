@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.29 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.30 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,7 @@ extern "C" {
 #include "ge.h"
 #include "rt_load.h"
 #include "wb_foe_msg.h"
+#include "wb_pwrb_msg.h"
 }
 
 #include "flow.h"
@@ -79,6 +80,8 @@ extern "C" {
 #include "wb_wpkg.h"
 #include "co_msgwindow.h"
 #include "wb_wnav_selformat.h"
+#include "wb_pwrs.h"
+#include "wb_build.h"
 
 
 #define MESSAGE_RETURN_STS(sts)\
@@ -108,7 +111,6 @@ static void wtt_open_confirm( Wtt *wtt, char *text, char *title,
 static void wtt_save_ok( Wtt *wtt);
 static void wtt_save_no( Wtt *wtt);
 static void wtt_open_boot_window( Wtt *wtt);
-static void wtt_boot_deb_cr(Widget w, Wtt *wtt);
 static void wtt_boot_list_cr(Widget w, Wtt *wtt);
 static void wtt_boot_cancel_cb(Widget w, Wtt *wtt);
 static void wtt_boot_destroy_cb(Widget w, Wtt *wtt);
@@ -119,6 +121,15 @@ static void wtt_set_avoid_deadlock( Wtt *wtt, int time);
 static void wtt_set_twowindows_cb( void *wtt, int two, int display_w1,
         int display_w2);
 static void wtt_message_cb( void *ctx, char severity, char *msg);
+
+static int wtt_start_wizard( Wtt *wtt)
+{
+  pwr_tCmd cmd;
+
+  strcpy( cmd, "@$pwr_exe/wb_wiz_directoryvolume");
+  wtt->wnav->command( cmd);
+  return 1;
+}
 
 static void wtt_set_twowindows_cb( void *wtt, int two, int display_w1,
         int display_w2)
@@ -236,7 +247,6 @@ void Wtt::menu_setup()
 
   switch( wb_type) {
     case wb_eType_Directory:
-      XtUnmanageChild( menu_createstruct_w);
       if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
@@ -244,12 +254,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -262,12 +273,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, sensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -275,7 +287,6 @@ void Wtt::menu_setup()
       }
       break;
     case wb_eType_Volume:
-      XtUnmanageChild( menu_createstruct_w);
       if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
@@ -283,12 +294,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -301,15 +313,16 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
-        XtSetValues( menu_compile_w, sensitive, 1);
+        XtSetValues( menu_buildobject_w, sensitive, 1);
 	if ( ldhses && ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
-          XtSetValues( menu_createload_w, nosensitive, 1);
+          XtSetValues( menu_buildvolume_w, nosensitive, 1);
 	else
-          XtSetValues( menu_createload_w, sensitive, 1);
-        XtSetValues( menu_createboot_w, sensitive, 1);
+          XtSetValues( menu_buildvolume_w, sensitive, 1);
+        XtSetValues( menu_buildnode_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -317,7 +330,6 @@ void Wtt::menu_setup()
       }
       break; 
    case wb_eType_Class:
-     XtUnmanageChild( menu_createstruct_w);
      if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
@@ -325,12 +337,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -343,12 +356,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-	XtSetValues( menu_createload_w, sensitive, 1);
-        XtSetValues( menu_createboot_w, sensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+	XtSetValues( menu_buildvolume_w, sensitive, 1);
+        XtSetValues( menu_buildnode_w, sensitive, 1);
         XtSetValues( menu_distribute_w, sensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
 	XtSetValues( menu_edit_w, nosensitive, 1);
@@ -356,9 +370,9 @@ void Wtt::menu_setup()
       }
       break;
    case wb_eType_ClassEditor:
-     XtUnmanageChild( menu_compile_w);
+     XtUnmanageChild( menu_buildobject_w);
      XtUnmanageChild( menu_utilities_w);
-     XtUnmanageChild( menu_createboot_w);
+     XtUnmanageChild( menu_buildnode_w);
      XtUnmanageChild( menu_classeditor_w);
      if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
@@ -367,12 +381,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -385,12 +400,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-	XtSetValues( menu_createload_w, sensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+	XtSetValues( menu_buildvolume_w, sensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
 	XtSetValues( menu_edit_w, sensitive, 1);
@@ -398,7 +414,6 @@ void Wtt::menu_setup()
       }
       break;
     case wb_eType_Buffer:
-      XtUnmanageChild( menu_createstruct_w);
       if ( editmode) {
         XtSetValues( menu_save_w, nosensitive, 1);
         XtSetValues( menu_revert_w, nosensitive, 1);
@@ -406,12 +421,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -424,12 +440,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, sensitive, 1);
         XtSetValues( menu_openplc_w, sensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -437,7 +454,6 @@ void Wtt::menu_setup()
       }
       break; 
     case wb_eType_ExternVolume:
-      XtUnmanageChild( menu_createstruct_w);
       if ( editmode) {
         XtSetValues( menu_save_w, sensitive, 1);
         XtSetValues( menu_revert_w, sensitive, 1);
@@ -445,12 +461,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, sensitive, 1);
         XtSetValues( menu_paste_w, sensitive, 1);
         XtSetValues( menu_pasteinto_w, sensitive, 1);
+        XtSetValues( menu_copykeep_w, sensitive, 1);
         XtSetValues( menu_rename_w, sensitive, 1);
         XtSetValues( menu_utilities_w, nosensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -463,12 +480,13 @@ void Wtt::menu_setup()
         XtSetValues( menu_copy_w, nosensitive, 1);
         XtSetValues( menu_paste_w, nosensitive, 1);
         XtSetValues( menu_pasteinto_w, nosensitive, 1);
+        XtSetValues( menu_copykeep_w, nosensitive, 1);
         XtSetValues( menu_rename_w, nosensitive, 1);
         XtSetValues( menu_utilities_w, nosensitive, 1);
         XtSetValues( menu_openplc_w, nosensitive, 1);
-        XtSetValues( menu_compile_w, nosensitive, 1);
-        XtSetValues( menu_createload_w, nosensitive, 1);
-        XtSetValues( menu_createboot_w, nosensitive, 1);
+        XtSetValues( menu_buildobject_w, nosensitive, 1);
+        XtSetValues( menu_buildvolume_w, nosensitive, 1);
+        XtSetValues( menu_buildnode_w, nosensitive, 1);
         XtSetValues( menu_distribute_w, nosensitive, 1);
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
@@ -1876,6 +1894,39 @@ static void wtt_activate_pasteinto( Widget w, Wtt *wtt, XmAnyCallbackStruct *dat
     MESSAGE_RETURN_STS( sts);
 }
 
+static void wtt_activate_copykeep( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  pwr_sAttrRef	*sel_list;
+  int           *is_attr;
+  int 		sel_cnt;
+  int           sts = 0;
+
+  wtt->message( ' ', "");
+
+  // Get selections in w1 or w2
+  if ( wtt->wnav_mapped)
+    sts = wtt->wnav->get_select( &sel_list, &is_attr, &sel_cnt);
+  if ( EVEN(sts) && wtt->wnavnode_mapped)
+    sts = wtt->wnavnode->get_select( &sel_list, &is_attr, &sel_cnt);
+  if (EVEN(sts)) {
+    wtt->message( 'I', "No object is selected");
+    return;
+  }
+
+  sts = ldh_Copy( wtt->ldhses, sel_list, 1, 0);
+  if (EVEN(sts))
+    MESSAGE_RETURN_STS( sts);
+  if ( sel_cnt == 1)
+    wtt->message( 'I', "Object copied");
+  else
+    wtt->message( 'I', "Objects copied");
+
+  if ( sel_cnt > 0) {
+    free( (char *)sel_list);
+    free( (char *)is_attr);
+  }
+}
+
 static void wtt_activate_rename( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->open_change_name();
@@ -2058,17 +2109,45 @@ static void wtt_activate_openplc( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
   wtt->reset_cursor();
 }
 
-static void wtt_activate_compile( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+static void wtt_activate_buildobject( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
+  pwr_tCmd      cmd;
+  pwr_tStatus 	sts;
   pwr_sAttrRef	*sel_list;
   int           *sel_is_attr;
-  int 		sel_cnt;
-  int           sts = 0;
-  char          cmd[80];
-  ldh_tSesContext ldhses;
+  int		sel_cnt;
 
   wtt->message( ' ', "");
 
+  strcpy( cmd, "build object");
+  if ( wtt->focused_wnav->gbl.build.force)
+    strcat( cmd, " /force");
+  if ( wtt->focused_wnav->gbl.build.debug)
+    strcat( cmd, " /debug");
+  if ( wtt->focused_wnav->gbl.build.crossref)
+    strcat( cmd, " /crossref");
+  if ( wtt->focused_wnav->gbl.build.manual)
+    strcat( cmd, " /manual");
+
+  if ( !wtt->focused_wnav)
+    wtt->set_focus_default();
+
+  // Check that something is selected
+  sts = wtt->focused_wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
+  if ( ODD(sts)) {
+    free( (char *)sel_list);
+    free( (char *)sel_is_attr);
+  }
+  else {
+    wtt->message( 'E', "No object is selected");
+    return;
+  }
+
+  wtt->set_clock_cursor();
+  sts = wtt->focused_wnav->command( cmd);
+  wtt->reset_cursor();
+
+#if 0
   // Get selections in w1 or w2
   if ( wtt->wnav_mapped)
     sts = wtt->wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
@@ -2109,6 +2188,7 @@ static void wtt_activate_compile( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
   else
     sts = wtt->wnav->command( cmd);
   wtt->reset_cursor();
+#endif
 }
 
 static void wtt_activate_openvolume( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
@@ -2321,67 +2401,25 @@ static void wtt_activate_openclasseditor( Widget w, Wtt *wtt, XmAnyCallbackStruc
   wtt->reset_cursor();
 }
 
-static void wtt_activate_createload( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+static void wtt_activate_buildvolume( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
-  int sts;
-
   wtt->message( ' ', "");
 
-  if ( wtt->wb_type != wb_eType_ClassEditor) {
-    wtt->set_clock_cursor();
-    sts = lfu_create_loadfile( wtt->ldhses);
-    wtt->reset_cursor();
-    if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
-    
-    wtt->set_clock_cursor();
-    sts = ldh_CreateLoadFile( wtt->ldhses);
-    wtt->reset_cursor();
-    if ( EVEN(sts)) MESSAGE_RETURN_STS(sts);
-  }
-  else {
-    // Class editor
-    char name[32];
-    int size;
-    char cmd[200];
+  if ( !wtt->focused_wnav)
+    wtt->set_focus_default();
 
-    // Create loadfile from wb_load file
-    sts = ldh_VolumeIdToName( wtt->wbctx, wtt->volid, name, sizeof(name), &size);
-    if ( EVEN(sts)) return;
-
-    cdh_ToLower( name, name);
-
-    sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"", name);
-    if ( !wtt->focused_wnav)
-      wtt->set_focus_default();
-    sts = wtt->focused_wnav->command( cmd);
-  }
+  wtt->set_clock_cursor();
+  wb_build build( *(wb_session *)wtt->ldhses, wtt->focused_wnav, wtt->toplevel);
+  build.opt = wtt->focused_wnav->gbl.build;
+  build.volume();
+  
+  wtt->reset_cursor();
+  if ( build.evenSts()) MESSAGE_RETURN_STS(build.sts());
+  if ( build.sts() == PWRB__NOBUILT)
+    wtt->message('I', "Nothing to build");
 }
 
-static void wtt_activate_createstruct( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
-{
-  int sts;
-
-  wtt->message( ' ', "");
-
-  if ( wtt->wb_type == wb_eType_ClassEditor) {
-    char name[32];
-    int size;
-    char cmd[200];
-
-    // Create structfiles from wb_load file
-    sts = ldh_VolumeIdToName( wtt->wbctx, wtt->volid, name, sizeof(name), &size);
-    if ( EVEN(sts)) return;
-
-    cdh_ToLower( name, name);
-
-    sprintf( cmd, "create struct/file=\"$pwrp_db/%s.wb_load\"", name);
-    if ( !wtt->focused_wnav)
-      wtt->set_focus_default();
-    sts = wtt->focused_wnav->command( cmd);
-  }
-}
-
-static void wtt_activate_createboot( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+static void wtt_activate_buildnode( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   wtt->message(' ',"");
 
@@ -2534,17 +2572,17 @@ void wtt_create_menubutton( Widget w, Wtt *wtt)
     case 4: wtt->menu_rename_w = w; break;
     case 5: wtt->menu_utilities_w = w; break;
     case 6: wtt->menu_openplc_w = w; break;
-    case 7: wtt->menu_createload_w = w; break;
-    case 8: wtt->menu_createboot_w = w; break;
+    case 7: wtt->menu_buildvolume_w = w; break;
+    case 8: wtt->menu_buildnode_w = w; break;
     case 9: wtt->menu_distribute_w = w; break;
     case 10: wtt->menu_change_value_w = w; break;
     case 11: wtt->menu_copy_w = w; break;
     case 12: wtt->menu_paste_w = w; break;
-    case 13: wtt->menu_compile_w = w; break;
+    case 13: wtt->menu_buildobject_w = w; break;
     case 14: wtt->menu_pasteinto_w = w; break;
     case 15: wtt->menu_edit_w = w; break;
     case 16: wtt->menu_classeditor_w = w; break;
-    case 17: wtt->menu_createstruct_w = w; break;
+    case 17: wtt->menu_copykeep_w = w; break;
     default:
       ;
   }
@@ -2906,7 +2944,6 @@ static void wtt_open_boot_window( Wtt *wtt)
 	{"wtt_boot_ok_cb",(caddr_t)wtt_boot_ok_cb },
 	{"wtt_boot_cancel_cb",(caddr_t)wtt_boot_cancel_cb },
 	{"wtt_boot_destroy_cb",(caddr_t)wtt_boot_destroy_cb },
-	{"wtt_boot_deb_cr",(caddr_t)wtt_boot_deb_cr },
 	};
   static int reglist_num = XtNumber(reglist);
 
@@ -2967,12 +3004,6 @@ static void wtt_open_boot_window( Wtt *wtt)
 
 // Callbacks for the Create Boot Files window
 
-// Create callback for the Debug toggle widget
-static void wtt_boot_deb_cr(Widget w, Wtt *wtt)
-{
-    wtt->boot.deb = w;
-}
-
 // Create callback for the list widget
 static void wtt_boot_list_cr(Widget w, Wtt *wtt)
 {
@@ -3000,44 +3031,42 @@ static void wtt_boot_destroy_cb(Widget w, Wtt *wtt)
 static void wtt_boot_ok_cb(Widget w, Wtt *wtt)
 {
     int *pos_list, pos_cnt;
-    int i, j, status, nodecount;
+    int i, j, nodecount;
     lfu_t_volumelist *volumelist_ptr;
     pwr_tString40 nodeconfigname;
     char message[200];
     int bootfile_count;
-    int debug;
-    
-    debug = (pwr_tBoolean) XmToggleButtonGetState(wtt->boot.deb);
+
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
 
     wtt->message( ' ', "");
 
     nodecount = 0;
     bootfile_count = 0;
     volumelist_ptr = (lfu_t_volumelist *)wtt->boot.volumelist;
-    if (XmListGetSelectedPos(wtt->boot.list, &pos_list, &pos_cnt)) 
-    {
-      for (i = 0; i < pos_cnt; i++) 
-      {
+    if (XmListGetSelectedPos(wtt->boot.list, &pos_list, &pos_cnt)) {
+      for (i = 0; i < pos_cnt; i++) {
         strcpy( nodeconfigname, "");
-        for ( j = 0; j < wtt->boot.volumecount; j++)
-        {
-          if ( strcmp(volumelist_ptr->p1, nodeconfigname))
-          {
+        for ( j = 0; j < wtt->boot.volumecount; j++) {
+          if ( strcmp(volumelist_ptr->p1, nodeconfigname)) {
             nodecount++;
 
             strcpy( nodeconfigname, volumelist_ptr->p1);
-	    if ( nodecount == pos_list[i])
-	    {
-	      status = lfu_create_bootfile( nodeconfigname, 
-			(lfu_t_volumelist *)wtt->boot.volumelist, wtt->boot.volumecount, debug);
-	      if ( EVEN(status))
-	      {
+	    if ( nodecount == pos_list[i]) {
+	      wb_build build( *(wb_session *)wtt->ldhses, wtt->focused_wnav, wtt->toplevel);
+	      build.opt = wtt->focused_wnav->gbl.build;
+	      build.node( nodeconfigname, 
+			  wtt->boot.volumelist, wtt->boot.volumecount);
+	      if ( build.evenSts()) {
                 XtDestroyWidget(wtt->boot.dia);
 	        sprintf( message, 
 			"Error creating bootfile for NodeConfig-object %s",
 			nodeconfigname);
 	        MESSAGE_RETURN( message);
 	      }
+	      else if ( build.sts() != PWRB__NOBUILT)
+		bootfile_count++;
               volumelist_ptr++;
 	      break;
 	    }
@@ -3049,7 +3078,7 @@ static void wtt_boot_ok_cb(Widget w, Wtt *wtt)
 
     XtDestroyWidget(wtt->boot.dia);
     if ( !bootfile_count)
-      return;
+      MESSAGE_RETURN("Nothing to build");
     sprintf( message, "Bootfile%s created", (bootfile_count == 1) ? "":"s");
     MESSAGE_RETURN( message);
 	  
@@ -3084,6 +3113,10 @@ void Wtt::update_options_form()
  XmToggleButtonSetState( show_objxref_w, (Boolean) show_objxref, False);
  XmToggleButtonSetState( show_attrref_w, (Boolean) show_attrref, False);
  XmToggleButtonSetState( show_attrxref_w, (Boolean) show_attrxref, False);
+ XmToggleButtonSetState( build_force_w, (Boolean) build_force, False);
+ XmToggleButtonSetState( build_debug_w, (Boolean) build_debug, False);
+ XmToggleButtonSetState( build_crossref_w, (Boolean) build_crossref, False);
+ XmToggleButtonSetState( build_manual_w, (Boolean) build_manual, False);
 
 
 } /* update_options_form */
@@ -3104,13 +3137,19 @@ void Wtt::set_options()
   show_objxref = XmToggleButtonGetState(show_objxref_w);
   show_attrref = XmToggleButtonGetState(show_attrref_w);
   show_attrxref = XmToggleButtonGetState(show_attrxref_w);
+  build_force = XmToggleButtonGetState(build_force_w);
+  build_debug = XmToggleButtonGetState(build_debug_w);
+  build_crossref = XmToggleButtonGetState(build_crossref_w);
+  build_manual = XmToggleButtonGetState(build_manual_w);
 
   wnav->set_options( show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
-	show_attrref, show_attrxref);
+	show_attrref, show_attrxref, build_force, build_debug,
+	build_crossref, build_manual);
   wnavnode->set_options( show_class, show_alias, 
 	show_descrip, show_objref, show_objxref, 
-	show_attrref, show_attrxref);
+        show_attrref, show_attrxref, build_force, build_debug,
+	build_crossref, build_manual);
 
 }/* set_options */
 
@@ -3206,6 +3245,22 @@ void wtt_options_entry_tog_cr( Widget w, Wtt *wtt)
   case 7: /* Attrxref */
     wtt->show_attrxref_w = w;
     wtt->show_attrxref = XmToggleButtonGetState(w);
+    break;
+  case 8:
+    wtt->build_force_w = w;
+    wtt->build_force = XmToggleButtonGetState(w);
+    break;
+  case 9:
+    wtt->build_debug_w = w;
+    wtt->build_debug = XmToggleButtonGetState(w);
+    break;
+  case 10:
+    wtt->build_crossref_w = w;
+    wtt->build_crossref = XmToggleButtonGetState(w);
+    break;
+  case 11:
+    wtt->build_manual_w = w;
+    wtt->build_manual = XmToggleButtonGetState(w);
     break;
   default:
     break;
@@ -3415,11 +3470,11 @@ Wtt::Wtt(
 	{"wtt_activate_copy",(caddr_t)wtt_activate_copy },
 	{"wtt_activate_paste",(caddr_t)wtt_activate_paste },
 	{"wtt_activate_pasteinto",(caddr_t)wtt_activate_pasteinto },
+	{"wtt_activate_copykeep",(caddr_t)wtt_activate_copykeep },
 	{"wtt_activate_rename",(caddr_t)wtt_activate_rename },
 	{"wtt_activate_configure",(caddr_t)wtt_activate_configure },
 	{"wtt_activate_utilities",(caddr_t)wtt_activate_utilities },
 	{"wtt_activate_openplc",(caddr_t)wtt_activate_openplc },
-	{"wtt_activate_compile",(caddr_t)wtt_activate_compile },
 	{"wtt_activate_openobject",(caddr_t)wtt_activate_openobject },
 	{"wtt_activate_openvolobject",(caddr_t)wtt_activate_openvolobject },
 	{"wtt_activate_confproject",(caddr_t)wtt_activate_confproject },
@@ -3433,9 +3488,9 @@ Wtt::Wtt(
 	{"wtt_activate_spreadsheet",(caddr_t)wtt_activate_spreadsheet },
 	{"wtt_activate_openge",(caddr_t)wtt_activate_openge },
 	{"wtt_activate_openclasseditor",(caddr_t)wtt_activate_openclasseditor },
-	{"wtt_activate_createstruct",(caddr_t)wtt_activate_createstruct },
-	{"wtt_activate_createload",(caddr_t)wtt_activate_createload },
-	{"wtt_activate_createboot",(caddr_t)wtt_activate_createboot },
+	{"wtt_activate_buildobject",(caddr_t)wtt_activate_buildobject },
+	{"wtt_activate_buildvolume",(caddr_t)wtt_activate_buildvolume },
+	{"wtt_activate_buildnode",(caddr_t)wtt_activate_buildnode },
 	{"wtt_activate_distribute",(caddr_t)wtt_activate_distribute },
 	{"wtt_activate_showcrossref",(caddr_t)wtt_activate_showcrossref },
 	{"wtt_activate_change_value",(caddr_t)wtt_activate_change_value },
@@ -3763,15 +3818,31 @@ Wtt::Wtt(
 
   wnav->get_options( &show_class, &show_alias, 
 	&show_descrip, &show_objref, &show_objxref, 
-	&show_attrref, &show_attrxref);
+	&show_attrref, &show_attrxref, &build_force, &build_debug,
+	&build_crossref, &build_manual);
 
   if ( wbctx && volid) {
     wnav->volume_attached( wbctx, ldhses, 0);
     wnavnode->volume_attached( wbctx, ldhses, 0);
   }
+
+  if ( wb_type == wb_eType_Directory) {
+    // Start configuration wizard if volume is empty
+    pwr_tOid oid;
+
+    sts = ldh_GetRootList( ldhses, &oid);
+    if ( EVEN( sts)) {
+      wow_HideWarranty();  // Warranty window is hidden behind the wizard
+      set_edit();
+      XtAppAddWorkProc( XtWidgetToApplicationContext(toplevel),
+			(XtWorkProc)wtt_start_wizard, this) ;
+    }
+  }
+
   menu_setup();
   *status = 1;
 }
+
 
 Wtt::~Wtt()
 {

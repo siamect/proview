@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pwrs.h,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_pwrs.h,v 1.6 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,7 +71,6 @@ typedef struct {
   Prototypes for DbCallbacks
 \*----------------------------------------------------------------------------*/
 
-typedef pwr_tStatus (* wb_tMethod)();
 typedef pwr_tStatus (* wb_tMethodMenu)( ldh_sMenuCall *);
 typedef pwr_tStatus (* wb_tMethodMenuFilter)( ldh_sMenuCall *, pwr_sMenuButton *);
 typedef pwr_tStatus (* wb_tMethodAnteCreate) (ldh_tSesContext, pwr_tOid, pwr_tCid);

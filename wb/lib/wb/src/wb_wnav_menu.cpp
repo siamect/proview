@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_menu.cpp,v 1.8 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_menu.cpp,v 1.9 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -221,7 +221,8 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid,
 
   if ( cid != pwr_cNCid) {
     // Popup in palette
-    mcp->EditorContext = (void *)wtt;
+
+    mcp->EditorContext = (void *)wtt->wnav;
     mcp->WindowContext = (void *)wtt->palette_form;
     mcp->PointedSet = ldh_eMenuSet_Class;
 
@@ -236,7 +237,10 @@ Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid,
   }
   else {
     // Popup in wnav
-    mcp->EditorContext = (void *)wtt;
+    if ( !wtt->focused_wnav)
+      wtt->set_focus_default();
+
+    mcp->EditorContext = (void *)wtt->focused_wnav;
     mcp->WindowContext = (void *)wtt->wnav_form;
 
     mcp->Pointed = aref;

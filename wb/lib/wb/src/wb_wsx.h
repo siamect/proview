@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wsx.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wsx.h,v 1.4 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,13 @@
 /* wb_wsx.h -- wb syntax control
    Wb syntax control.
    This module control the syntax for objects.  */
+
+#ifndef wb_wsx_h
+#define wb_wsx_h
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
   wsx_mCardOption_None 		= 0,
@@ -63,4 +70,9 @@ pwr_tStatus wsx_CheckVolume(
 	int		*errorcount,
 	int		*warningcount	
 );
+
+#if defined __cplusplus
+}
+#endif
+#endif
 

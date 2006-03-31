@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.h,v 1.10 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_session.h,v 1.11 2006-03-31 14:29:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,10 +120,10 @@ inline bool wb_session::isReadonly()
   return m_srep->isReadonly(&m_sts);
 }
 
-inline bool wb_session::commit()
-{
-  return m_srep->commit(&m_sts);
-}
+// inline bool wb_session::commit()
+// {
+//   return m_srep->commit(&m_sts);
+// }
 
 inline bool wb_session::abort()
 {
