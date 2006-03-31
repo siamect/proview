@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_xttgraph.wb_load,v 1.5 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_xttgraph.wb_load,v 1.6 2006-03-31 14:47:15 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -190,6 +190,13 @@ SObject pwrb:Class
 	    Attr MethodName = "XttGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "XttGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPoson $Menu
@@ -198,6 +205,13 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Ge..."
 	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "XttGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
       EndObject
@@ -210,6 +224,13 @@ SObject pwrb:Class
 	    Attr MethodName = "XttGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "XttGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosms $Menu
@@ -220,6 +241,13 @@ SObject pwrb:Class
 	    Attr MethodName = "XttGraph-OpenGraph"
 	  EndBody
 	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "XttGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
     Object NavigatorPosmn $Menu
@@ -228,6 +256,13 @@ SObject pwrb:Class
 	  Body SysBody
 	    Attr ButtonName = "Open Ge..."
 	    Attr MethodName = "XttGraph-OpenGraph"
+	  EndBody
+	EndObject
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "XttGraph-Build"
+	    Attr FilterName = "$Object-BuildFilter"
 	  EndBody
 	EndObject
       EndObject

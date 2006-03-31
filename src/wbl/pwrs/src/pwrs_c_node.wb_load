@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_node.wb_load,v 1.10 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_node.wb_load,v 1.11 2006-03-31 14:47:15 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -282,6 +282,61 @@ SObject pwrs:Class
       Body SysBody
         Attr MethodName = "$Node-PostCreate"
       EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$NodeHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$NodeHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$NodeHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$NodeHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$NodeHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
     EndObject
     Object IoMethods $RtMethod
       Object IoAgentInit $Method

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_planthier.wb_load,v 1.9 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_planthier.wb_load,v 1.10 2006-03-31 14:47:15 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -114,6 +114,61 @@ SObject pwrs:Class
         EndBody
       EndObject
     EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$PlantHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$PlantHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$PlantHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$PlantHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "$PlantHier-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
     Object ConfiguratorPoson $Menu
       Object Pointed $Menu
 	Object ConnectGraph $MenuButton
@@ -121,7 +176,7 @@ SObject pwrs:Class
 	    Attr ButtonName = "Connect Graph"
 	    Attr MethodName = "$AttrRef-Connect"
 	    Attr MethodArguments[0] = "DefGraph"
-	    Attr MethodArguments[1] = "XttGraph"
+	    Attr MethodArguments[1] = "PlantHier"
 	    Attr FilterName = "$AttrRef-IsOkConnect"
 	    Attr FilterArguments[0] = "DefGraph"
 	    Attr FilterArguments[1] = "XttGraph"
