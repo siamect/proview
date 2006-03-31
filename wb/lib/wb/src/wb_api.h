@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_api.h,v 1.6 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_api.h,v 1.7 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,7 @@ void nav_set_inputfocus( nav_tCtx navctx, int focus);
 /* Wtt */
 
 typedef void *wtt_tCtx;
+typedef void *wnav_tCtx;
 
 wtt_tCtx wtt_new(
 	void *parent_ctx,
@@ -104,6 +105,7 @@ wtt_tCtx wtt_new(
 int wtt_get_select_first( wtt_tCtx palctx, pwr_sAttrRef *attrref, 
 			  int *is_attr);
 int wtt_command( wtt_tCtx wttctx, char *cmd);
+int wnav_command( wnav_tCtx wnavctx, char *cmd);
 
 typedef void *watt_tCtx;
 watt_tCtx watt_new(

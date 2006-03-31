@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmdc.h,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: wb_cmdc.h,v 1.3 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,10 @@ extern "C" {
 # include "pwr.h"
 #endif
 
+#ifndef wb_h
+# include "wb.h"
+#endif
+
 #ifndef wb_ldh_h
 # include "wb_ldh.h"
 #endif
@@ -44,6 +48,7 @@ class Cmd {
   public:
     Cmd();
     
+    wb_eUtility		ctx_type;
     ldh_tSesContext 	ldhses;
     ldh_tWBContext 	wbctx;
     ldh_tVolContext 	volctx;

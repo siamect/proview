@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.c,v 1.8 2005-12-06 10:54:51 claes Exp $
+ * Proview   $Id: wb_c_object.c,v 1.9 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include "co_api.h"
 #include <X11/Intrinsic.h>
 #include "wb_api.h"
+#include "wb_login.h"
 
 static pwr_tStatus CopyObject (
   ldh_sMenuCall *ip
@@ -564,7 +565,7 @@ static pwr_tStatus ClassHelp( ldh_sMenuCall *ip)
   else
     sprintf( cmd, "help %s /strict", cname);
 
-  wtt_command( ip->EditorContext, cmd);
+  wnav_command( ip->EditorContext, cmd);
   return 1;
 }
 
@@ -597,7 +598,7 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
     sprintf( cmd, "help %s /helpfile=\"$pwr_exe/%s/%s_xtthelp.dat\"/strict", cname, 
 	     lng_get_language_str(), vname);
 
-    wtt_command( ip->EditorContext, cmd);
+    wnav_command( ip->EditorContext, cmd);
     return 1;
   }
 
@@ -606,7 +607,7 @@ static pwr_tStatus HelpClass( ldh_sMenuCall *ip)
   else
     sprintf( cmd, "help %s /strict", cname);
 
-  wtt_command( ip->EditorContext, cmd);
+  wnav_command( ip->EditorContext, cmd);
   return 1;
 }
 
@@ -637,7 +638,7 @@ static pwr_tStatus Help( ldh_sMenuCall *ip)
   sprintf( cmd, "help %s /strict", topic);
   free( topic);
 
-  wtt_command( ip->EditorContext, cmd);
+  wnav_command( ip->EditorContext, cmd);
   return 1;
 }
 
@@ -955,6 +956,16 @@ static pwr_tStatus ConfigureComponentFilter( ldh_sMenuCall *ip)
 }
 
 
+// Common Build filter
+static pwr_tStatus BuildFilter( ldh_sMenuCall *ip) 
+{
+  if ( login_prv.priv & pwr_mPrv_DevConfig)
+    return 1;
+  else
+    return 0;
+}
+
+
 pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(CreateObject),
   pwr_BindMethod(CopyObject),
@@ -980,6 +991,7 @@ pwr_dExport pwr_BindMethods($Object) = {
   pwr_BindMethod(DisableFilter),
   pwr_BindMethod(ConfigureComponent),
   pwr_BindMethod(ConfigureComponentFilter),
+  pwr_BindMethod(BuildFilter),
   pwr_NullMethod
 };
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.h,v 1.10 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_build_opt.h,v 1.1 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,38 +17,17 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef wb_h
-#define wb_h
+#ifndef wb_build_opt_h
+#define wb_build_opt_h
 
-/* wb.h -- work bench */
-
-#ifndef pwr_h
-#include "pwr.h"
-#endif
-
-#define WB_CLASS_NAME "PWR_DEV"
-
-typedef enum {
-	wb_eType_Volume,
-	wb_eType_Directory,
-	wb_eType_Class,
-	wb_eType_Buffer,
-	wb_eType_ClassEditor,
-	wb_eType_ExternVolume
-} wb_eType;
-
-typedef enum {
-	wb_eUtility_Wtt 		= 999,
-	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001,
-	wb_eUtility_Distributor		= 1002,
-	wb_eUtility_SpreadsheetEditor  	= 1003,
-	wb_eUtility_Cmd  		= 1004,
-	wb_eUtility_WNav  		= 1005
-} wb_eUtility;
+class wb_build_opt
+{
+ public:
+  wb_build_opt() : force(0), debug(0), crossref(0), manual(0) {}
+  int force;
+  int debug;
+  int crossref;
+  int manual;
+};
 
 #endif
-
-
-
-

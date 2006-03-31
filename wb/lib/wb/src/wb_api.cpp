@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_api.cpp,v 1.8 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_api.cpp,v 1.9 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -202,6 +202,11 @@ int wtt_get_select_first( wtt_tCtx wttctx, pwr_sAttrRef *attrref, int *is_attr)
 int wtt_command( wtt_tCtx wttctx, char *cmd)
 {
   return ((Wtt *)wttctx)->wnav->command( cmd);
+}
+
+int wnav_command( wnav_tCtx wnavctx, char *cmd)
+{
+  return ((WNav *)wnavctx)->command( cmd);
 }
 
 //

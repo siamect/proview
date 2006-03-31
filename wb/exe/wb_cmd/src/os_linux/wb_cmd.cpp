@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cmd.cpp,v 1.8 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_cmd.cpp,v 1.9 2006-03-31 14:24:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -276,7 +276,8 @@ static void cmd_close_cb( void *ctx)
 }
 
 Cmd::Cmd() :
-  ldhses(0), wbctx(0), volctx(0), volid(0), wnav(0), wb_type(0)
+  ctx_type(wb_eUtility_Cmd), ldhses(0), wbctx(0), volctx(0), volid(0), wnav(0), 
+  wb_type(0)
 {
   Widget	w;
   pwr_tStatus	sts;
