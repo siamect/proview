@@ -1,6 +1,6 @@
 !** Description: Initial configuration of directory volume
 # 
-#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.1 2006-02-23 14:47:36 claes Exp $
+#  Proview   $Id: wb_wiz_directoryvolume.pwr_com,v 1.2 2006-03-31 14:29:23 claes Exp $
 #  Copyright (C) 2005 SSAB Oxelösund AB.
 #
 #  This program is free software; you can redistribute it and/or 
@@ -136,11 +136,11 @@ main()
 
   dv_system_name = project;
 
-  OpenGraph( "pwr_wizard_frame", 0);
+  OpenGraph( "$pwr_exe/wb_wizard_frame", 0);
 
 page_1:
   # System/Busid page
-  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_1", 1);
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_1", 1);
   if ( dv_quit)
     goto exit_now;
   endif
@@ -167,13 +167,13 @@ page_1:
 
   # Exit if no volumes are registred
   if ( !volcnt)
-    SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_2", 1);
+    SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_2", 1);
     goto exit_now;
   endif
 
 page_3:
   # Volume page
-  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_3", 1);
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_3", 1);
   if ( dv_quit)
     goto exit_now;
   endif
@@ -221,6 +221,7 @@ page_3:
         dv_node_name = extract( 4, 100, dv_node_name);
       endif
       dv_node_ip = "0.0.0.0";
+      dv_node_description = "";
       dv_node_rootvolume = rootvolumes[i];
       for ( j = 0; j < addvolcnt; j++)
 	if ( addvol_class[j] == 2)
@@ -237,7 +238,7 @@ page_3:
 
 page_4:
       # Node page
-      SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_4", 1);
+      SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_4", 1);
       if ( dv_quit)
         goto exit_now;
       endif
@@ -255,6 +256,7 @@ page_4:
 	k = node_busid[i];
         dv_node_name = node_name[i];
         dv_node_ip = node_ip[i];
+	dv_node_description = node_description[i];
         dv_node_rootvolume = rootvolumes[i];
         addvolcnt = 0;
         for ( j = 0; j < 13; j++)
@@ -298,7 +300,7 @@ page_4:
     endfor
   endfor
 
-  SetSubwindow( "pwr_wizard_frame", "wizwin", "wb_wiz_directoryvolume_5", 1);
+  SetSubwindow( "wb_wizard_frame", "wizwin", "$pwr_exe/wb_wiz_directoryvolume_5", 1);
   if ( dv_quit)
     goto exit_now;
   endif
@@ -389,7 +391,7 @@ page_4:
   endfor
 
 exit_now:
-  CloseGraph("pwr_wizard_frame");
+  CloseGraph("wb_wizard_frame");
   delete dv_quit;
   delete dv_prev;
   delete dv_system_name;
