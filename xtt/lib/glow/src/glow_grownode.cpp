@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.11 2005-12-06 09:13:08 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.12 2006-03-31 14:38:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2114,7 +2114,7 @@ void GrowNode::annot_input_event( glow_eEvent event, int keycode)
       annotv[idx][0] = 0;
       input_position = 0;
     }
-    if ( annotsize[idx] < (int)strlen(annotv[idx]) + 1) {
+    if ( annotsize[idx] < (int)strlen(annotv[idx]) + 2) {
       // Increase size of annotv
       char *tmp = annotv[idx];
       annotv[idx] = (char *) calloc( 1, annotsize[idx] + 1);
