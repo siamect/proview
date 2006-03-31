@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.1 2006-03-22 14:34:17 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.2 2006-03-31 05:43:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,8 +47,8 @@ extern "C" {
 #include "co_wow.h"
 #include "wb_nav_macros.h"
 }
-#include "pb_gsd.h"
-#include "pb_gsd_attr.h"
+#include "wb_pb_gsd.h"
+#include "wb_pb_gsd_attr.h"
 
 
 #include "wb_pwrs.h"
