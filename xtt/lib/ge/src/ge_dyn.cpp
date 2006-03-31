@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.41 2006-02-23 14:45:38 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.42 2006-03-31 14:35:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4038,7 +4038,7 @@ int GeAnalogColor::connect( grow_tObject object, glow_sTraceData *trace_data)
 
   if ( e->p == 0) {
     e->size = 4;
-    db = dyn->parse_attr_name( e->attribute, parsed_name,
+    e->db = dyn->parse_attr_name( e->attribute, parsed_name,
 				    &inverted, &e->type, &e->size);
     if ( strcmp( parsed_name,"") == 0)
       return 1;
@@ -6331,7 +6331,7 @@ int GeTable::disconnect( grow_tObject object)
     }
 
     if ( sel_p[i] && sel_db[i] == graph_eDatabase_Gdh)
-      gdh_UnrefObjectInfo( subid[i]);
+      gdh_UnrefObjectInfo( sel_subid[i]);
     sel_p[i] = 0;
 
     if ( is_headerref[i]) {
