@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.6 2006-01-25 10:46:23 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.7 2006-03-31 14:40:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -852,8 +852,12 @@ void GrowWindow::new_ctx()
   char fname[200];
   int sts;
 
-  strcpy( fname, "$pwrp_exe/");
-  strcat( fname, file_name);
+  if ( strchr( file_name, '/') == 0) {
+    strcpy( fname, "$pwrp_exe/");
+    strcat( fname, file_name);
+  }
+  else 
+    strcpy( fname, file_name);
   if ( !strchr( fname, '.'))
     strcat( fname, ".pwg");
   dcli_translate_filename( fname, fname);
