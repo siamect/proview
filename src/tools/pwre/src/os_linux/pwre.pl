@@ -9,6 +9,7 @@
   "build_all", 	"build_all:usage_build_all",
   "build_kernel", "build_kernel:usage_build_kernel",
   "build_all_modules", "build_all_modules:usage_build_all_modules",
+  "build_all_wbl", "build_all_wbl:usage_build_all_wbl",
   "clean_exe_all", "clean_exe_all:usage_clean_exe_all",
   "method_build", "method_build:usage_method_build",
   "copy", 	"copy:usage_copy",
@@ -276,6 +277,82 @@ sub clean_exe_all ()
 }  
 
 
+#
+# build_all_wbl()
+#
+sub build_all_wbl ()
+{
+  _module("rt");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "pwrs", "lib");
+  _build("wbl", "pwrb", "lib");
+  _build("wbl", "wb", "lib");
+  _build("wbl", "rt", "lib");
+  merge();
+  _module("nmps");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "nmps", "lib");
+  merge();
+  _module("tlog");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "tlog", "lib");
+  merge();
+  _module("profibus");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("remote");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "remote", "lib");
+  merge();
+  _module("bcomp");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "bcomp", "lib");
+  merge();
+  _module("ssabox");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("abb");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("siemens");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("telemecanique");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("inor");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("klocknermoeller");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("othermanu");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "lib");
+  merge();
+  _module("rt");
+}  
+
 sub method_build ()
 {
   printf("-- Relink method dependent programs");
@@ -292,6 +369,12 @@ sub method_build ()
   my($exe_dir) = $ENV{"pwr_exe"};
   system("rm $exe_dir/wb");
   _build("exe", "wb", "all");
+  merge();
+  
+  _module("xtt");
+  my($exe_dir) = $ENV{"pwr_exe"};
+  system("rm $exe_dir/rt_xtt");
+  _build("exe", "rt_xtt", "all");
   merge();
   
 }
@@ -957,13 +1040,19 @@ sub usage_build_all ()
 sub usage_build_kernel ()
 {
   printf("++\n");
-  printf("++ build_kernel                     : Builds all in kernel modules (kernel, xtt, wb)\n");
+  printf("++ build_kernel                  : Builds all in kernel modules (kernel, xtt, wb)\n");
 }
 
 sub usage_build_all_modules ()
 {
   printf("++\n");
   printf("++ build_all_modules             : Builds all in all modules\n");
+}
+
+sub usage_build_all_wbl ()
+{
+  printf("++\n");
+  printf("++ build_all_wbl                 : Builds wbl in all modules\n");
 }
 
 sub usage_clean_exe_all ()

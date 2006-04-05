@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_merge.c,v 1.5 2006-03-31 14:44:11 claes Exp $
+ * Proview   $Id: co_merge.c,v 1.6 2006-04-05 08:40:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,8 @@
 
 typedef enum {
   merge_eMtype_IoBase,
-  merge_eMtype_WbBase
+  merge_eMtype_WbBase,
+  merge_eMtype_XttBase
 } merge_eMtype;
 
 void usage()
@@ -33,7 +34,7 @@ void usage()
   printf("\
   co_merge_methods\n\
   Arguments : \n\
-      1. Method utilit (io_base, wb_base) \n\
+      1. Method utility (io_base, wb_base, xtt_base) \n\
       2. Methods files, e.g. $pwr_inc/io_base_*.meth\n\
       3. output file\n\
 ");
@@ -66,6 +67,8 @@ int main(  int argc, char *argv[])
     mtype = merge_eMtype_IoBase;
   else if ( strcmp( argv[1], "wb_base") == 0)
     mtype = merge_eMtype_WbBase;
+  else if ( strcmp( argv[1], "xtt_base") == 0)
+    mtype = merge_eMtype_XttBase;
   else {
     usage();
     exit(1);
@@ -137,6 +140,29 @@ int main(  int argc, char *argv[])
     fprintf( outfp, "pwr_BindClasses(Base) = {\n");
     for ( i = 0; i < mtabcnt; i++) {
       fprintf( outfp, "  pwr_BindClass(%s),\n", mtab[i]);    
+    }
+    fprintf( outfp, "  pwr_NullClass};\n");    
+    fclose( outfp);
+    break;
+  }
+  case merge_eMtype_XttBase: {
+    strcpy( cfile, "/tmp/xtt_i_methods.c");
+    strcpy( ofile, "/tmp/xtt_i_methods.o");
+
+    outfp = fopen( cfile, "w");
+    if ( !outfp) {
+      printf( "Unable to open file %s\n", outfile);
+      exit(1);
+    }
+
+    fprintf( outfp, "#include \"xtt_menu.h\"\n");
+    for ( i = 0; i < mtabcnt; i++) {
+      fprintf( outfp, "pwr_dImport pwr_BindXttMethods(%s);\n", mtab[i]);
+    }
+  
+    fprintf( outfp, "pwr_BindXttClasses(Base) = {\n");
+    for ( i = 0; i < mtabcnt; i++) {
+      fprintf( outfp, "  pwr_BindXttClass(%s),\n", mtab[i]);    
     }
     fprintf( outfp, "  pwr_NullClass};\n");    
     fclose( outfp);

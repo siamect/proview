@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.10 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.11 2006-04-05 08:38:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,21 +64,12 @@ extern "C" {
 #include "xtt_menu.h"
 #include "co_api.h"
 
-pwr_dImport pwr_BindXttMethods($Object);
-pwr_dImport pwr_BindXttMethods(PlcPgm);
-pwr_dImport pwr_BindXttMethods(Sound);
-
-pwr_BindXttClasses(Base) = {
-  pwr_BindXttClass($Object),
-  pwr_BindXttClass(PlcPgm),
-  pwr_BindXttClass(Sound),
-  pwr_NullClass
-};
-
 #define MENU_BAR      1
 #define MENU_PULLDOWN 2
 #define MENU_POPUP    3
 #define MENU_OPTION   4
+
+pwr_dImport pwr_BindXttClasses(Base);
 
 typedef struct MENU_ITEM {
     char		*Label;

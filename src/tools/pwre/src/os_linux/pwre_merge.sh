@@ -62,7 +62,7 @@ else
   for lib in $libraries; do
 
     arname=${lib##/*/}
-    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_wb.a" ]; then
+    if [ $arname = "libpwr_rt.a" ] || [ $arname = "libpwr_wb.a" ]|| [ $arname = "libpwr_xtt.a" ]; then
       echo "Merge $lib"
       modules=`eval ar -tf $lib`
       ar -xf $lib
@@ -74,16 +74,23 @@ else
     fi
   done
 
-  #Merge io methods
+  # Merge io methods
   methodfile=$pwr_inc/rt_io_$pwre_module.meth
   if [ -e $methodfile ]; then
     echo "-- Merge io methods"
     co_merge io_base $pwr_einc/rt_io_\*.meth $pwr_elib/libpwr_rt.a
   fi
+  # Merge wb methods
   methodfile=$pwr_inc/wb_$pwre_module.meth
   if [ -e $methodfile ]; then
     echo "-- Merge wb methods"
     co_merge wb_base $pwr_einc/wb_\*.meth $pwr_elib/libpwr_wb.a
+  fi
+  # Merge xtt methods
+  methodfile=$pwr_inc/xtt_$pwre_module.meth
+  if [ -e $methodfile ]; then
+    echo "-- Merge xtt methods"
+    co_merge xtt_base $pwr_einc/xtt_\*.meth $pwr_elib/libpwr_xtt.a
   fi
 fi
 
