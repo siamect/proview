@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.20 2006-03-31 14:44:52 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.21 2006-04-05 08:41:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1029,6 +1029,7 @@ struct pwr_s_PlantHier
     pwr_tObjid          DefTrend;
     pwr_tString40       HelpTopic;
     pwr_tURL            DataSheet;
+    pwr_tURL            Photo;
     };
 
 /* Node defining classes.  */

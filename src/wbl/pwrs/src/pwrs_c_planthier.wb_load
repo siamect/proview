@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_planthier.wb_load,v 1.10 2006-03-31 14:47:15 claes Exp $
+!  Proview   $Id: pwrs_c_planthier.wb_load,v 1.11 2006-04-05 08:41:34 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -110,6 +110,18 @@ SObject pwrs:Class
       !*/
       Object CircuitDiagram $Attribute 6
         Body SysBody
+          Attr TypeRef = "pwrs:Type-$URL"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary A photograph of the plant.
+      !  A photograph of the plant.
+      !  A URL to a photo of the equipment.
+      !  The photo can be displayed from the popup menu for this object.
+      !*/
+      Object Photo $Attribute 7
+        Body SysBody
+          Attr PgmName = "Photo"
           Attr TypeRef = "pwrs:Type-$URL"
         EndBody
       EndObject
