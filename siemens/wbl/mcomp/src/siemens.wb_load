@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X1"
-    Attr NextCix = "_X6"
+    Attr NextCix = "_X7"
   EndBody
   Object Class $ClassHier 1 06-OCT-2005 14:40:44.00
     !/**
@@ -82,8 +82,8 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Ai2 2148237312 06-OCT-2005 14:40:44.00
-        Body RtBody 01-JAN-1970 01:00:00.00
-          Attr Super.Specification = "Siemens ET200S 6ES7 134-4FB00-0AB0 2 Ai U"
+        Body RtBody 04-APR-2006 14:51:29.23
+          Attr Super.Specification = "Siemens ET200S 2 Ai"
           Attr Super.Process = 1
           Attr Ch[0].ConversionOn = 1
           Attr Ch[0].ScanInterval = 1
@@ -149,8 +149,8 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Ao2 2148499456 06-OCT-2005 14:40:44.00
-        Body RtBody 01-JAN-1970 01:00:00.00
-          Attr Super.Specification = "Siemens ET200S 6ES7 135-4FB00-0AB0 2 Ao U"
+        Body RtBody 04-APR-2006 14:51:47.58
+          Attr Super.Specification = "Siemens ET200S 2 Ao"
           Attr Super.Process = 1
           Attr Ch[0].OutPolyType = 1
           Attr Ch[0].ActValRangeLow = -3.276800e+04
@@ -211,8 +211,8 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Di4 2148761600 06-OCT-2005 14:40:44.00
-        Body RtBody 01-JAN-1970 01:00:00.00
-          Attr Super.Specification = "Siemens ET200S 6ES7 131-4BD00-0AA0 4 Di DC24V"
+        Body RtBody 04-APR-2006 14:52:14.24
+          Attr Super.Specification = "Siemens ET200S 4 Di"
           Attr Super.Process = 1
         EndBody
       EndObject
@@ -254,9 +254,41 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Do4 2149023744 06-OCT-2005 14:40:44.00
-        Body RtBody 01-JAN-1970 01:00:00.00
-          Attr Super.Specification = "Siemens ET200S 6ES7 132-4BD00-0AA0 4 Do DC24V/0.5A"
+        Body RtBody 04-APR-2006 14:52:34.39
+          Attr Super.Specification = "Siemens ET200S 4 Do"
           Attr Super.Process = 1
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_ET200S_IM151 $ClassDef 6 04-APR-2006 14:53:41.44
+      Body SysBody 04-APR-2006 15:56:37.14
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 04-APR-2006 14:53:54.09
+        Body SysBody 04-APR-2006 14:54:42.07
+          Attr StructName = "Siemens_ET200S_IM151"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Super $Attribute 1 04-APR-2006 14:54:01.57
+          Body SysBody 04-APR-2006 14:54:29.77
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_IM151 2149285888 01-JAN-1970 01:00:00.00
+        Body RtBody 04-APR-2006 14:56:45.63
+          Attr Super.Specification = "Siemens ET200S IM151"
+          Attr Super.GSDfile = "$pwr_exe/siemens_et200s_im151.gsd"
+          Attr Super.Process = 1
+          Attr Super.StallAction = 1
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.WdFact1 = 100
+          Attr Super.WdFact2 = 10
         EndBody
       EndObject
     EndObject
