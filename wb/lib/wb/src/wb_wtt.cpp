@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.30 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.31 2006-04-05 08:43:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1315,7 +1315,10 @@ void Wtt::set_twowindows( int two, int display_wnav, int display_wnavnode)
 
 static void wtt_message_cb( void *ctx, char severity, char *msg)
 {
- ((Wtt *)ctx)->message( severity, msg);
+  if ( *(wb_eUtility *)ctx == wb_eUtility_Wtt)
+    ((Wtt *)ctx)->message( severity, msg);
+  else if ( *(wb_eUtility *)ctx == wb_eUtility_WNav)
+    ((WNav *)ctx)->message( severity, msg);
 }
 
 void Wtt::message( char severity, char *message)
