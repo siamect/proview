@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pb_gsd_attr.uil,v 1.1 2006-03-22 14:38:11 claes Exp $
+!  Proview   $Id: pb_gsd_attr.uil,v 1.2 2006-04-05 08:36:32 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@ procedure
 	gsdattr_activate_zoom_out(integer);
 	gsdattr_activate_zoom_reset(integer);
 	gsdattr_activate_help(integer);
+	gsdattr_create_menubutton(integer);
 	gsdattr_create_msg_label(integer);
 	gsdattr_create_cmd_prompt(integer);
 	gsdattr_create_cmd_input(integer);
@@ -183,10 +184,12 @@ object edit_entry : XmCascadeButton
 	    XmNaccelerator = "Ctrl<Key>C";
 	    XmNacceleratorText = compound_string('Ctrl+C');
             XmNfontList	   = menu_font;
+	    XmNuserData = 1;
 	  };
 	  callbacks
           {
             XmNactivateCallback = procedure gsdattr_activate_copy(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
           };
 	};
         XmPushButton
@@ -198,10 +201,12 @@ object edit_entry : XmCascadeButton
 	    XmNaccelerator = "Ctrl<Key>X";
 	    XmNacceleratorText = compound_string('Ctrl+X');
             XmNfontList	   = menu_font;
+	    XmNuserData = 2;
 	  };
 	  callbacks
           {
             XmNactivateCallback = procedure gsdattr_activate_cut(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
           };
 	};
         XmPushButton
@@ -213,10 +218,12 @@ object edit_entry : XmCascadeButton
 	    XmNaccelerator = "Ctrl<Key>V";
 	    XmNacceleratorText = compound_string('Ctrl+V');
             XmNfontList	   = menu_font;
+	    XmNuserData = 3;
 	  };
 	  callbacks
           {
             XmNactivateCallback = procedure gsdattr_activate_paste(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
           };
 	};
       };
@@ -246,10 +253,12 @@ object functions_entry : XmCascadeButton
 	    XmNaccelerator = "Ctrl<Key>Q";
 	    XmNacceleratorText = compound_string('Ctrl+Q');
             XmNfontList	   = menu_font;
+	    XmNuserData = 4;
 	  };
 	  callbacks
           {
             XmNactivateCallback = procedure gsdattr_activate_change_value(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
           };
 	};
       };

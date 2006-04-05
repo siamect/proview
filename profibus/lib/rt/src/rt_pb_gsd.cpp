@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.2 2006-04-05 08:36:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1810,12 +1810,14 @@ int pb_gsd::configure_module( gsd_sModuleConf *m)
 	i++;
       }
       if ( m->module->extuserprmdataconst) {
+	memcpy( m->prm_data, m->module->extuserprmdataconst->Const_Prm_Data,
+		m->module->extuserprmdataconst->len);
 	prm_data_to_items( m->prm_dataitems, m->prm_dataitems_cnt, 
-			   m->module->extuserprmdataconst->Const_Prm_Data,
+			   m->prm_data,
 			   m->module->extuserprmdataconst->len, 1);
 	// Test Remove this !!!
 	prm_items_to_data( m->prm_dataitems, m->prm_dataitems_cnt, 
-			   m->module->extuserprmdataconst->Const_Prm_Data,
+			   m->prm_data,
 			   m->module->extuserprmdataconst->len);
       }
     }
@@ -1849,7 +1851,8 @@ void pb_gsd::pack_config( char *config, int *len)
   }
 
   // Length in first two bytes
-  memcpy( config, &conf_idx, sizeof(conf_idx));
+  config[0] = 0;
+  config[1] = conf_idx;
   *len = conf_idx;
 }
 
@@ -1872,10 +1875,10 @@ void pb_gsd::pack_ext_user_prm_data( char *data, int *len)
       continue;
 
     prm_items_to_data( module_conf[i].prm_dataitems, module_conf[i].prm_dataitems_cnt,
-		     module_conf[i].module->extuserprmdataconst->Const_Prm_Data,
+		     module_conf[i].prm_data,
 		     module_conf[i].module->extuserprmdataconst->len);
 
-    memcpy( &data[data_idx], module_conf[i].module->extuserprmdataconst->Const_Prm_Data,
+    memcpy( &data[data_idx], module_conf[i].prm_data,
 	    module_conf[i].module->extuserprmdataconst->len);
     data_idx += module_conf[i].module->extuserprmdataconst->len;
   }
@@ -1900,12 +1903,12 @@ int pb_gsd::unpack_ext_user_prm_data( char *data, int len)
     if ( !module_conf[i].module || !module_conf[i].module->extuserprmdataconst)
       continue;
 
-    memcpy( module_conf[i].module->extuserprmdataconst->Const_Prm_Data, &data[data_idx],
+    memcpy( module_conf[i].prm_data, &data[data_idx],
 	    module_conf[i].module->extuserprmdataconst->len);
     data_idx += module_conf[i].module->extuserprmdataconst->len;
 
     prm_data_to_items( module_conf[i].prm_dataitems, module_conf[i].prm_dataitems_cnt,
-		     module_conf[i].module->extuserprmdataconst->Const_Prm_Data,
+		     module_conf[i].prm_data,
 		     module_conf[i].module->extuserprmdataconst->len);
   }
 
@@ -1935,7 +1938,7 @@ void pb_gsd::compress( char *line)
       continue;
 
     if ( !instr && *s == ',') {
-      while ( *t == ' ')
+      while ( *(t-1) == ' ')
 	t--;
       *t = *s;
       t++;

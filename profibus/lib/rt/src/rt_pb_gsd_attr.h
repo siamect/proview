@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.h,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.h,v 1.2 2006-04-05 08:36:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,10 @@ class GsdAttr {
     Widget	attrnav_form;
     Widget	cmd_ok;
     Widget	cmd_cancel;
+    Widget	menubutton_copy;
+    Widget	menubutton_cut;
+    Widget	menubutton_paste;
+    Widget	menubutton_changevalue;
     int		input_open;
     void 	*object;
     void       	(*close_cb) (void *);

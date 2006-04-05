@@ -1,0 +1,2464 @@
+;=================================================================
+; GSD-File for ET 200S                            Siemens AG   
+; MLFB    : 6ES7 151-1AA02-0AB0
+;           6ES7 151-1AA01-0AB0
+;           6ES7 151-1AA00-0AB0
+;
+; Date    : 12.11.00  V1.7  GW 
+;
+; File    : SIEM806A.GSE
+;=================================================================
+#Profibus_DP
+
+; <Prm-Text-Def-List>
+
+PrmText = 1
+Text(0) = "disable                       "
+Text(1) = "enable                        "
+EndPrmText
+
+PrmText = 2
+Text(0) = "0.1 ms                        "
+Text(1) = "0.1 ms                        "
+Text(2) = "3 ms                          "
+Text(3) = "15 ms                         "
+EndPrmText
+
+PrmText = 3
+Text(0) = "Switch substitute value       "
+Text(1) = "hold last value               "
+EndPrmText
+
+PrmText = 4
+Text(0) = "0                             "
+Text(1) = "1                             "
+EndPrmText
+
+PrmText = 5
+Text(0) = "deactivated                   "
+Text(3) = "Curr. (4-WMT)       4 .. 20 mA"
+Text(4) = "Curr. (4-WMT)        +/- 20 mA"
+EndPrmText
+
+PrmText = 6
+Text(0) = "deactivated                   "
+Text(1) = "Voltage              +/- 80 mV"
+Text(7)  = "TC-EL type T (Cu-CuNi)        "
+Text(8)  = "TC-EL type K (NiCr-Ni)        "
+Text(9)  = "TC-EL type B (PtRh-PtRh)      "
+Text(10) = "TC-EL type N (NiCrSi-NiSi)    "
+Text(11) = "TC-EL type E (NiCr-CuNi)      "
+Text(12) = "TC-EL type R (PtRh-Pt)        "
+Text(13) = "TC-EL type S (PtRh-Pt)        "
+Text(14) = "TC-EL type J (Fe-Cu-Ni)       "
+Text(15) = "TC-EL type L (Fe-CuNi)        "
+EndPrmText
+
+PrmText = 7
+Text(0) = "deactivated                   "
+Text(6) = "Voltage                +/- 5 V"
+Text(7) = "Voltage               1 .. 5 V"
+Text(9) = "Voltage               +/- 10 V"
+EndPrmText
+
+PrmText = 8
+Text(0) = "deactivated                   "
+Text(3) = "Curr. (2-WMT)       4 .. 20 mA"
+EndPrmText
+
+PrmText = 9
+Text(0) = "none                          "
+Text(1) = "weak                          "
+Text(2) = "medium                        "
+Text(3) = "strong                        "
+EndPrmText
+
+PrmText = 10
+Text(0) = "deactivated                   "
+Text(2) = "R-4W 150 ohms                 "
+Text(4) = "R-4W 300 ohms                 "
+Text(6) = "R-4W 600 ohms                 "
+Text(8) = "RTD-4W Pt 100 cl.             "
+Text(9) = "RTD-4W Ni 100 cl.             "
+Text(10) = "RTD-4W Pt 100 std.            "
+Text(11) = "RTD-4W Ni 100 std.            "
+EndPrmText
+
+PrmText = 11
+Text(1) = "1                             "
+Text(2) = "2                             "
+Text(3) = "3                             "
+Text(4) = "4                             "
+Text(5) = "5                             "
+Text(6) = "6                             "
+Text(7) = "7                             "
+Text(8) = "8                             "
+EndPrmText
+
+PrmText = 12
+Text(1) = "None                          "
+Text(2) = "2                             "
+Text(3) = "3                             "
+Text(4) = "4                             "
+Text(5) = "5                             "
+Text(6) = "6                             "
+Text(7) = "7                             "
+Text(8) = "8                             "
+Text(9) = "9                             "
+Text(10) = "10                            "
+Text(11) = "11                            "
+Text(12) = "12                            "
+Text(13) = "13                            "
+Text(14) = "14                            "
+Text(15) = "15                            "
+Text(16) = "16                            "
+Text(17) = "17                            "
+Text(18) = "18                            "
+Text(19) = "19                            "
+Text(20) = "20                            "
+Text(21) = "21                            "
+Text(22) = "22                            "
+Text(23) = "23                            "
+Text(24) = "24                            "
+Text(25) = "25                            "
+Text(26) = "26                            "
+Text(27) = "27                            "
+Text(28) = "28                            "
+Text(29) = "29                            "
+Text(30) = "30                            "
+Text(31) = "31                            "
+Text(32) = "32                            "
+Text(33) = "33                            "
+Text(34) = "34                            "
+Text(35) = "35                            "
+Text(36) = "36                            "
+Text(37) = "37                            "
+Text(38) = "38                            "
+Text(39) = "39                            "
+Text(40) = "40                            "
+Text(41) = "41                            "
+Text(42) = "42                            "
+Text(43) = "43                            "
+Text(44) = "44                            "
+Text(45) = "45                            "
+Text(46) = "46                            "
+Text(47) = "47                            "
+Text(48) = "48                            "
+Text(49) = "49                            "
+Text(50) = "50                            "
+Text(51) = "51                            "
+Text(52) = "52                            "
+Text(53) = "53                            "
+Text(54) = "54                            "
+Text(55) = "55                            "
+Text(56) = "56                            "
+Text(57) = "57                            "
+Text(58) = "58                            "
+Text(59) = "59                            "
+Text(60) = "60                            "
+Text(61) = "61                            "
+Text(62) = "62                            "
+Text(63) = "63                            "
+EndPrmText
+
+PrmText = 13
+Text(0) = "deactivated                   "
+Text(3) = "Current             4 .. 20 mA"
+Text(4) = "Current              +/- 20 mA"
+EndPrmText
+
+PrmText = 14
+Text(0) = "Output de-energized           "
+Text(1) = "Switch substitute value       "
+Text(2) = "hold last value               "
+EndPrmText
+
+PrmText = 15
+Text(0) = "deactivated                   "
+Text(7) = "Voltage               1 .. 5 V"
+Text(9) = "Voltage               +/- 10 V"
+EndPrmText
+
+PrmText = 16
+Text(0) = "shutdown                      "
+Text(1) = "Maintain circuit state        "
+EndPrmText
+
+PrmText = 17
+Text(0) = "SIMATIC S7                    "
+Text(1) = "SIMATIC S5                    "
+EndPrmText
+
+PrmText = 18
+Text(0) = "50 Hz                         "
+Text(1) = "60 Hz                         "
+EndPrmText
+
+PrmText = 19
+Text(0) = "100%                          "
+Text(1) = "80%                           "
+Text(2) = "60%                           "
+Text(3) = "60%                           "
+Text(4) = "40%                           "
+Text(5) = "20%                           "
+Text(6) = "10%                           "
+Text(7) = "5%                            "
+EndPrmText
+
+PrmText = 20
+Text(0) = "disable                       "
+Text(3) = "enable                        "
+EndPrmText
+
+PrmText = 21
+Text(0) = "RTD on channel 0              "
+Text(1) = "RTD on channel 1              "
+EndPrmText
+
+PrmText = 22
+Text(0) = "none                          "
+Text(1) = "RTD                           "
+EndPrmText
+
+PrmText = 23
+Text(0) = "Inactive                      "
+Text(1) = "Forwards                      "
+Text(2) = "Backwards                     "
+Text(3) = "Both directions               "
+EndPrmText
+
+PrmText = 24
+Text(0) = "No sensor                     "
+Text(1) = "SSI-13 bit                    "
+Text(2) = "SSI-21 bit                    "
+Text(3) = "SSI-25 bit                    "
+EndPrmText
+
+PrmText = 25
+Text(0) = "Off                           "
+Text(1) = "On                            "
+EndPrmText
+
+PrmText = 26
+Text(0) = "125 kHz                       "
+Text(1) = "250 kHz                       "
+Text(2) = "500 kHz                       "
+Text(3) = "1 MHz                         "
+Text(4) = "2 MHz                         "
+EndPrmText
+
+PrmText = 27
+Text(0) = "16 us                         "
+Text(1) = "32 us                         "
+Text(2) = "48 us                         "
+Text(3) = "64 us                         "
+EndPrmText
+
+PrmText = 28
+Text(0) = "Inactive                      "
+Text(1) = "With falling edge DI          "
+Text(2) = "With rising edge DI           "
+Text(3) = "With both edges               "
+EndPrmText
+
+PrmText = 29
+Text(0) = "Switch off DO1                "
+Text(1) = "Continue mode                 "
+Text(2) = "DO1 Switch substitute value   "
+Text(3) = "DO1 Hold last value           "
+EndPrmText
+
+PrmText = 30
+Text(0) = "Pulse and direction           "
+Text(1) = "Rotary transducer (single)    "
+Text(2) = "Rotary transducer (dual)      "
+Text(3) = "Rotary transducer (quad)      "
+EndPrmText
+
+PrmText = 31
+Text(0) = "2.5 us (200 kHz)              "
+Text(1) = "25 us (20 kHz)                "
+EndPrmText
+
+PrmText = 32
+Text(0) = "24V P switch, series-mode     "
+Text(1) = "24V M switch                  "
+EndPrmText
+
+PrmText = 33
+Text(0) = "Output                        "
+Text(1) = "Count greater/equal to comp.  "
+Text(2) = "Count less than/equal to comp."
+Text(3) = "Pulse at comparison value     "
+EndPrmText
+
+PrmText = 34
+Text(0) = "Endless counting              "
+Text(1) = "Once-only counting            "
+Text(2) = "Periodic counting             "
+EndPrmText
+
+PrmText = 35
+Text(0) = "Cancel counting               "
+Text(1) = "Interrupt counting            "
+EndPrmText
+
+PrmText = 36
+Text(0) = "none                          "
+Text(1) = "Forwards                      "
+Text(2) = "Backwards                     "
+EndPrmText
+
+PrmText = 37
+Text(0) = "Input                         "
+Text(1) = "Hardware gate                 "
+Text(2) = "Latch retrigger at 0/1 edge   "
+Text(3) = "Synchronization at 0/1 edge   "
+EndPrmText
+
+PrmText = 38
+Text(0) = "Once only                     "
+Text(1) = "Periodic                      "
+EndPrmText
+
+PrmText = 39
+Text(0) = "Output                        "
+Text(1) = "Measurand outside limits      "
+Text(2) = "Value under lower limit       "
+Text(3) = "Value over upper limit        "
+EndPrmText
+
+PrmText = 40
+Text(0) = "Pulse and direction           "
+Text(1) = "Rotary transducer (single)    "
+EndPrmText
+
+PrmText = 41
+Text(3) = "Freq. measurement (0.001 Hz)  "
+Text(4) = "Rot. speed meas. (0.001/min)  "
+Text(5) = "Period measurement (us)       "
+EndPrmText
+
+PrmText = 42
+Text(0) = "Input                         "
+Text(1) = "Hardware gate                 "
+EndPrmText
+
+PrmText = 43
+Text(0) = "0                             "
+Text(1) = "1                             "
+Text(2) = "2                             "
+Text(3) = "3                             "
+Text(4) = "4                             "
+Text(5) = "5                             "
+Text(6) = "6                             "
+Text(7) = "7                             "
+Text(8) = "8                             "
+Text(9) = "9                             "
+Text(10) = "10                            "
+Text(11) = "11                            "
+Text(12) = "12                            "
+Text(13) = "13                            "
+Text(14) = "14                            "
+Text(15) = "15                            "
+EndPrmText
+
+PrmText = 44
+Text(0) = "disable                       "
+Text(15) = "enable                        "
+EndPrmText
+
+PrmText = 45
+Text(0) = "Dual                          "
+Text(1) = "Gray                          "
+EndPrmText
+
+PrmText = 46
+Text(0) = "Normal                        "
+Text(1) = "Inverted                      "
+EndPrmText
+
+PrmText = 47
+Text(0) = "deactivated                   "
+Text(14) = "Voltage               +/- 10 V"
+EndPrmText
+
+PrmText = 48
+Text(0) = "deactivated                   "
+Text(1) = "Curr. (2-WMT)       4 .. 20 mA"
+EndPrmText
+
+PrmText = 49
+Text(0) = "deactivated                   "
+Text(1) = "Curr. (4-WMT)       4 .. 20 mA"
+EndPrmText
+
+PrmText = 50
+Text(0) = "800 Hz                        "
+Text(1) = "400 Hz                        "
+Text(2) = "200 Hz                        "
+Text(3) = "80 Hz                         "
+Text(4) = "40 Hz                         "
+Text(5) = "20 Hz                         "
+Text(6) = "8 Hz                          "
+Text(7) = "4 Hz                          "
+EndPrmText
+
+PrmText = 51
+Text(0) = "External pulse release        "
+Text(1) = "External STOP                 "
+EndPrmText
+
+PrmText = 52
+Text(0) = "Normally closed contact       "
+Text(1) = "Normally open contact         "
+EndPrmText
+
+PrmText = 53
+Text(0) = "free running                  "
+Text(1) = "synchronous                   "
+EndPrmText
+
+PrmText = 54
+Text(1) = "3964-without block check char."
+Text(2) = "3964-with block check char.   "
+EndPrmText
+
+PrmText = 55
+Text(0) = "110                           "
+Text(1) = "300                           "
+Text(2) = "600                           "
+Text(3) = "1200                          "
+Text(4) = "2400                          "
+Text(5) = "4800                          "
+Text(6) = "9600                          "
+Text(7) = "19200                         "
+EndPrmText
+
+PrmText = 56
+Text(0) = "7                             "
+Text(1) = "8                             "
+EndPrmText
+
+PrmText = 57
+Text(0) = "1                             "
+Text(1) = "2                             "
+EndPrmText
+
+PrmText = 58
+Text(0) = "none                          "
+Text(1) = "Even                          "
+Text(2) = "Odd                           "
+Text(3) = "Any                           "
+EndPrmText
+
+PrmText = 59
+Text(0) = "RS232-C                       "
+Text(1) = "RS422 (full duplex)           "
+Text(2) = "RS485 (half duplex)           "
+EndPrmText
+
+PrmText = 60
+;Text(0) = "none                          "
+Text(1) = "R(A)5V / R(B)0V               "
+Text(2) = "R(A)0V / R(B)5V               "
+EndPrmText
+
+PrmText = 61
+Text(0) = "RS232-C                       "
+Text(1) = "RS422                         "
+EndPrmText
+
+PrmText = 62
+Text(0) = "none                          "
+Text(1) = "XON/XOFF                      "
+Text(2) = "RTS/CTS                       "
+Text(3) = "Autom. use of V.24 signal     "
+EndPrmText
+
+PrmText = 63
+Text(0) = "Exp. of character delay time  "
+Text(1) = "Receipt of end character      "
+Text(2) = "Rec. of fixed number of char. "
+EndPrmText
+
+PrmText = 64
+Text(0) = "no                            "
+Text(1) = "yes                           "
+EndPrmText
+
+PrmText = 65
+Text(0) = "Low                           "
+Text(1) = "High                          "
+EndPrmText
+
+PrmText = 66
+Text(0) = "DC                            "
+Text(1) = "AC                            "
+EndPrmText
+
+PrmText = 67
+Text(0) = "Output                        "
+Text(1) = "Count greater/equal to comp.  "
+Text(2) = "Count less than/equal to comp."
+Text(3) = "Pulse at comparison value     "
+Text(4) = "Switch to comparative values  "
+EndPrmText
+
+PrmText = 68
+Text(0) = "deactivated                   "
+Text(3) = "Curr. (2/4-WMT)     4 .. 20 mA"
+Text(4) = "Curr. (2/4-WMT)      +/- 20 mA"
+EndPrmText
+
+;----Ext-User-Prm-Data-Def-List ----------------------------------------
+ExtUserPrmData = 1 "Input delay                   "
+BitArea(2-3) 2 0-3
+Prm_Text_Ref = 2
+EndExtUserPrmData
+
+ExtUserPrmData = 2 "Diag.: Short circuit to GND   "
+Bit(0) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 3 "Behavior at CPU-STOP          "
+Bit(4) 0 0-1
+Prm_Text_Ref = 3
+EndExtUserPrmData
+
+ExtUserPrmData = 4 "Substitute value O0           "
+Bit(6) 0 0-1
+Prm_Text_Ref = 4
+EndExtUserPrmData
+
+ExtUserPrmData = 5 "Substitute value O1           "
+Bit(7) 0 0-1
+Prm_Text_Ref = 4
+EndExtUserPrmData
+
+ExtUserPrmData = 6 "Diagnosis: Wire break O0      "
+Bit(0) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 7 "Diagnosis: Wire break O1      "
+Bit(2) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 8 "Diag.: Short circuit to M O0  "
+Bit(1) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 9 "Diag.: Short circuit to M O1  "
+Bit(3) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 10 "Group diagnosis               "
+Bit(0) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 11 "Diagnosis: Overflow/underflow "
+Bit(1) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 12 "Diagnosis: Wire break I0      "
+Bit(2) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 13 "Wire break I1                 "
+Bit(3) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 14 "Smoothing I0                  "
+BitArea(4-5) 0 0-3
+Prm_Text_Ref = 9
+EndExtUserPrmData
+
+ExtUserPrmData = 15 "Smoothing I1                  "
+BitArea(6-7) 0 0-3
+Prm_Text_Ref = 9
+EndExtUserPrmData
+
+
+ExtUserPrmData = 16 "Measurement type/area I0      "
+BitArea(0-3) 9 0,6,7,9
+Prm_Text_Ref = 7
+EndExtUserPrmData
+
+ExtUserPrmData = 17 "Measurement type/area I1      "
+BitArea(4-7) 9 0,6,7,9
+Prm_Text_Ref = 7
+EndExtUserPrmData
+
+ExtUserPrmData = 18 "Interf. frequency suppression "
+Bit(7) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 19 "Measurement type/area I0      "
+BitArea(0-3) 3 0,3
+Prm_Text_Ref = 8
+EndExtUserPrmData
+
+ExtUserPrmData = 20 "Measurement type/area I1      "
+BitArea(4-7) 3 0,3
+Prm_Text_Ref = 8
+EndExtUserPrmData
+
+ExtUserPrmData = 21 "Measurement type/area I0      "
+BitArea(0-3) 3 0,3,4
+Prm_Text_Ref = 5
+EndExtUserPrmData
+
+ExtUserPrmData = 22 "Measurement type/area I1      "
+BitArea(4-7) 3 0,3,4
+Prm_Text_Ref = 5
+EndExtUserPrmData
+
+ExtUserPrmData = 23 "Measurement type/area I0      "
+BitArea(0-3) 8 0,1,7,8,9,10,11,12,13,14,15
+Prm_Text_Ref = 6
+EndExtUserPrmData
+
+ExtUserPrmData = 24 "Measurement type/area I1      "
+BitArea(4-7) 8 0,1,7,8,9,10,11,12,13,14,15
+Prm_Text_Ref = 6
+EndExtUserPrmData
+
+ExtUserPrmData = 25 "Measurement type/area I0      "
+BitArea(0-3) 10 0,2,4,6,8,9,10,11
+Prm_Text_Ref = 10
+EndExtUserPrmData
+
+ExtUserPrmData = 26 "Measurement type/area I1      "
+BitArea(4-7) 10 0,2,4,6,8,9,10,11
+Prm_Text_Ref = 10
+EndExtUserPrmData
+
+ExtUserPrmData = 27 "Output type/area O0           "
+BitArea(0-3) 9 0,7,9
+Prm_Text_Ref = 15
+EndExtUserPrmData
+
+ExtUserPrmData = 28 "Output type/area O1           "
+BitArea(4-7) 9 0,7,9
+Prm_Text_Ref = 15
+EndExtUserPrmData
+
+ExtUserPrmData = 29 "Diag.: Short circuit to M O0  "
+Bit(4) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 30 "Diag.: Short circuit to M O1  "
+Bit(5) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 31 "Behavior at CPU-STOP          "
+BitArea(6-7) 0 0-2
+Prm_Text_Ref = 14
+EndExtUserPrmData
+
+ExtUserPrmData = 32 "Substitute value O0           "
+Signed16 0 -27648-27648
+EndExtUserPrmData
+
+ExtUserPrmData = 33 "Substitute value O1           "
+Signed16 0 -27648-27648
+EndExtUserPrmData
+
+ExtUserPrmData = 34 "Output type/area O0           "
+BitArea(0-3) 3 0,3,4
+Prm_Text_Ref = 13
+EndExtUserPrmData
+
+ExtUserPrmData = 35 "Output type/area O1           "
+BitArea(4-7) 3 0,3,4
+Prm_Text_Ref = 13
+EndExtUserPrmData
+
+ExtUserPrmData = 36 "Reference junction I0         "
+Bit(4) 0 0-1
+Prm_Text_Ref = 22
+EndExtUserPrmData
+
+ExtUserPrmData = 37 "Reference junction I1         "
+Bit(5) 0 0-1
+Prm_Text_Ref = 22
+EndExtUserPrmData
+
+ExtUserPrmData = 38 "Reference junction number     "
+BitArea(0-3) 1 1,2,3,4,5,6,7,8
+Prm_Text_Ref = 11
+EndExtUserPrmData
+
+ExtUserPrmData=39 "Start-up preset<>actual config"
+Bit(0) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData=40 "module change during operation"
+Bit(7) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData=41 "Diag.: Missing load voltage L+"
+Bit(0) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData=42 "Diagnosis: Fuse blown         "
+Bit(1) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData=43 "Group diagnosis               "
+BitArea(0-1) 0 0,3
+Prm_Text_Ref = 20
+EndExtUserPrmData
+
+ExtUserPrmData = 44 "Behavior at CPU-STOP          "
+Bit(4) 0 0-1
+Prm_Text_Ref = 16
+EndExtUserPrmData
+
+ExtUserPrmData = 45 "Format of the analog values   "
+BitArea(0-1) 0 0,1
+Prm_Text_Ref = 17
+EndExtUserPrmData
+
+ExtUserPrmData = 46 "Interf. frequency suppression "
+BitArea(2-3) 0 0,1
+Prm_Text_Ref = 18
+EndExtUserPrmData
+
+ExtUserPrmData = 47 "I/O bus transmission rate     "
+BitArea(4-6) 0 0-7
+Prm_Text_Ref = 19
+EndExtUserPrmData
+
+ExtUserPrmData=49 "Group diagnosis               "
+BitArea(0-3) 0 0,15
+Prm_Text_Ref = 44
+EndExtUserPrmData
+
+ExtUserPrmData=50 "Slot Reference junction 1     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=51 "Input Reference junction 1    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=52 "Slot Reference junction 2     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=53 "Input Reference junction 2    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=54 "Slot Reference junction 3     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=55 "Input Reference junction 3    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=56 "Slot Reference junction 4     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=57 "Input Reference junction 4    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=58 "Slot Reference junction 5     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=59 "Input Reference junction 5    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=60 "Slot Reference junction 6     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=61 "Input Reference junction 6    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=62 "Slot Reference junction 7     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=63 "Input Reference junction 7    "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData=64 "Slot Reference junction 8     "
+BitArea(0-5) 1 1-63
+Prm_Text_Ref = 12
+EndExtUserPrmData
+
+ExtUserPrmData=65 "Input Reference junction s8   "
+Bit(6) 0 0,1
+Prm_Text_Ref = 21
+EndExtUserPrmData
+
+ExtUserPrmData = 66 "Diagnosis: Wire break O0      "
+Bit(2) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 67 "Diagnosis: Wire break O1      "
+Bit(3) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 68 "Test mode for mC modules      "
+Bit(4) 0 0-1
+Prm_Text_Ref = 25
+EndExtUserPrmData
+
+ExtUserPrmData = 69 "Comparator 1                  "
+BitArea(4-5) 0 0-3
+Prm_Text_Ref = 23
+EndExtUserPrmData
+
+ExtUserPrmData = 70 "Comparator 2                  "
+BitArea(6-7) 0 0-3
+Prm_Text_Ref = 23
+EndExtUserPrmData
+
+ExtUserPrmData = 71 "Sensor type                   "
+BitArea(0-1) 1 0-3
+Prm_Text_Ref = 24
+EndExtUserPrmData
+
+ExtUserPrmData = 72 "Gray/dual converter           "
+Bit(2) 1 0-1
+Prm_Text_Ref = 45
+EndExtUserPrmData
+
+ExtUserPrmData = 73 "Transmission rate             "
+BitArea(3-5) 0 0-4
+Prm_Text_Ref = 26
+EndExtUserPrmData
+
+ExtUserPrmData = 74 "Monoflop time                 "
+BitArea(6-7) 3 0-3
+Prm_Text_Ref = 27
+EndExtUserPrmData
+
+ExtUserPrmData = 75 "Number of trailing bits       "
+BitArea(0-3) 0 0-15
+Prm_Text_Ref = 43
+EndExtUserPrmData
+
+ExtUserPrmData = 76 "Standardization               "
+Bit(4) 0 0-1
+Prm_Text_Ref = 25
+EndExtUserPrmData
+
+ExtUserPrmData = 77 "Direction of rot. reversal    "
+Bit(5) 0 0-1
+Prm_Text_Ref = 25
+EndExtUserPrmData
+
+ExtUserPrmData = 78 "Latch: sensor value           "
+BitArea(6-7) 0 0-3
+Prm_Text_Ref = 28
+EndExtUserPrmData
+
+ExtUserPrmData = 79 "Total steps                   "
+Unsigned32 8192 16-33554432
+EndExtUserPrmData
+
+ExtUserPrmData = 80 "Behavior at CPU-STOP          "
+BitArea(4-5) 0 0-3
+Prm_Text_Ref = 29
+EndExtUserPrmData
+
+ExtUserPrmData = 81 "Signal evaluation A*, B*      "
+BitArea(0-1) 0 0-3
+Prm_Text_Ref = 30
+EndExtUserPrmData
+
+ExtUserPrmData = 82 "Filter - count input A*       "
+Bit(2) 0 0-1
+Prm_Text_Ref = 31
+EndExtUserPrmData
+
+ExtUserPrmData = 83 "Filter - direction input B*   "
+Bit(3) 0 0-1
+Prm_Text_Ref = 31
+EndExtUserPrmData
+
+ExtUserPrmData = 84 "Filter - digital input DI     "
+Bit(4) 0 0-1
+Prm_Text_Ref = 31
+EndExtUserPrmData
+
+ExtUserPrmData = 85 "Sensor A*, B*, DI             "
+Bit(5) 0 0-1
+Prm_Text_Ref = 32
+EndExtUserPrmData
+
+ExtUserPrmData = 86 "Direction input B*            "
+Bit(6) 0 0-1
+Prm_Text_Ref = 46
+EndExtUserPrmData
+
+ExtUserPrmData = 87 "Function DO1                  "
+BitArea(0-1) 0 0-3
+Prm_Text_Ref = 33
+EndExtUserPrmData
+
+ExtUserPrmData = 88 "Substitute value DO1          "
+Bit(3) 0 0-1
+Prm_Text_Ref = 4
+EndExtUserPrmData
+
+ExtUserPrmData = 89 "Function D02                  "
+BitArea(4-5) 0 0-3
+Prm_Text_Ref = 33
+EndExtUserPrmData
+
+ExtUserPrmData = 90 "Diagnosis DO1                 "
+Bit(7) 0 0-1
+Prm_Text_Ref = 25
+EndExtUserPrmData
+
+ExtUserPrmData = 91 "Hysteresis DO1, DO2           "
+Unsigned8 0 0-255
+EndExtUserPrmData
+
+ExtUserPrmData = 92 "Pulse duration (2ms) DO1, DO2 "
+Unsigned8 0 0-255
+EndExtUserPrmData
+
+ExtUserPrmData = 93 "Count mode                    "
+BitArea(0-2) 0 0-2
+Prm_Text_Ref = 34
+EndExtUserPrmData
+
+ExtUserPrmData = 94 "Gate function                 "
+Bit(4) 0 0-1
+Prm_Text_Ref = 35
+EndExtUserPrmData
+
+ExtUserPrmData = 95 "Main count direction          "
+BitArea(5-6) 0 0-2
+Prm_Text_Ref = 36
+EndExtUserPrmData
+
+ExtUserPrmData = 96 "Function DI                   "
+BitArea(0-1) 0 0-3
+Prm_Text_Ref = 37
+EndExtUserPrmData
+
+ExtUserPrmData = 97 "Synchronization               "
+Bit(3) 0 0-1
+Prm_Text_Ref = 38
+EndExtUserPrmData
+
+ExtUserPrmData = 98 "Digital input DI              "
+Bit(6) 0 0-1
+Prm_Text_Ref = 46
+EndExtUserPrmData
+
+ExtUserPrmData = 99 "Upper count limit             "
+Unsigned32 2147483647 2-2147483647
+EndExtUserPrmData
+
+ExtUserPrmData = 100 "Signal evaluation A*, B*      "
+BitArea(0-1) 0 0-1
+Prm_Text_Ref = 40
+EndExtUserPrmData
+
+ExtUserPrmData = 101 "Substitute value DO1          "
+Bit(7) 0 0-1
+Prm_Text_Ref = 4
+EndExtUserPrmData
+
+ExtUserPrmData = 102 "Measuring mode                "
+BitArea(0-2) 3 3-5
+Prm_Text_Ref = 41
+EndExtUserPrmData
+
+ExtUserPrmData = 103 "Function DI                   "
+Bit(3) 0 0-1
+Prm_Text_Ref = 42
+EndExtUserPrmData
+
+ExtUserPrmData = 104 "Function DO1                  "
+BitArea(4-5) 0 0-3
+Prm_Text_Ref = 39
+EndExtUserPrmData
+
+ExtUserPrmData = 105 "Lower limit                   "
+Unsigned32 0 0-100000000
+EndExtUserPrmData
+
+ExtUserPrmData = 106 "Upper limit                   "
+Unsigned32 100000000 1-100000000
+EndExtUserPrmData
+
+ExtUserPrmData = 107 "Integration time (n * 10ms)   "
+Unsigned16 10 1-12000
+EndExtUserPrmData
+
+ExtUserPrmData = 108 "Sensor pulses per rotation    "
+Unsigned16 1 1-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 109 "Total steps - high word       "
+Unsigned16 0 0-512
+EndExtUserPrmData
+
+ExtUserPrmData = 110 "Total steps - low word        "
+Unsigned16 8192 0-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 111 "Upper count limit - high word "
+Unsigned16 0 0-32767
+EndExtUserPrmData
+
+ExtUserPrmData = 112 "Upper count limt - low word   "
+Unsigned16 65535 0-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 113 "Lower limit - high word       "
+Unsigned16 0 0-1525
+EndExtUserPrmData
+
+ExtUserPrmData = 114 "Lower limit - low word        "
+Unsigned16 0 0-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 115 "Upper limit - high word       "
+Unsigned16 0 0-1525
+EndExtUserPrmData
+
+ExtUserPrmData = 116 "Upper limit - low word        "
+Unsigned16 65535 0-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 117 "Measurement type/area I0      "
+BitArea(0-3) 14 0,14
+Prm_Text_Ref = 47
+EndExtUserPrmData
+
+ExtUserPrmData = 118 "Measurement type/area I1      "
+BitArea(4-7) 14 0,14
+Prm_Text_Ref = 47
+EndExtUserPrmData
+
+ExtUserPrmData = 119 "Measurement type/area I0      "
+BitArea(0-3) 1 0,1
+Prm_Text_Ref = 48
+EndExtUserPrmData
+
+ExtUserPrmData = 120 "Measurement type/area I1      "
+BitArea(4-7) 1 0,1
+Prm_Text_Ref = 48
+EndExtUserPrmData
+
+ExtUserPrmData = 121 "Measurement type/area I0      "
+BitArea(0-3) 1 0,1
+Prm_Text_Ref = 49
+EndExtUserPrmData
+
+ExtUserPrmData = 122 "Measurement type/area I1      "
+BitArea(4-7) 1 0,1
+Prm_Text_Ref = 49
+EndExtUserPrmData
+
+ExtUserPrmData = 123 "Interference filtering        "
+Bit(7) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 124 "Runtime calibration           "
+Bit(6) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+
+ExtUserPrmData = 125 "Base frequency Fb             "
+BitArea(0-2) 0 0-7
+Prm_Text_Ref = 50
+EndExtUserPrmData
+
+ExtUserPrmData = 126 "Multiplicator n: Fss = Fb * n "
+Unsigned8 1 1-255
+EndExtUserPrmData
+
+ExtUserPrmData = 127 "Time i: a Fb / (i * 0, 128ms) "
+Unsigned8 1 1-255
+EndExtUserPrmData
+
+ExtUserPrmData = 128 "Function DI                   "
+Bit(0) 0 0-1
+Prm_Text_Ref = 51
+EndExtUserPrmData
+
+ExtUserPrmData = 129 "External STOP, limit switch   "
+Bit(1) 0 0-1
+Prm_Text_Ref = 52
+EndExtUserPrmData
+
+ExtUserPrmData = 130 "capture                       "
+Bit(2) 0 0-1
+Prm_Text_Ref = 53
+EndExtUserPrmData
+
+ExtUserPrmData = 131 "Diagnosis: overload brake     "
+Bit(1) 0 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 132 "Select protocol               "
+BitArea(4-5) 2 1-2
+Prm_Text_Ref = 54
+EndExtUserPrmData
+
+ExtUserPrmData = 133 "Transmission rate             "
+BitArea(0-3) 6 0-7
+Prm_Text_Ref = 55
+EndExtUserPrmData
+
+ExtUserPrmData = 134 "Data bits                     "
+Bit(6) 1 0-1
+Prm_Text_Ref = 56
+EndExtUserPrmData
+
+ExtUserPrmData = 135 "Stop bits                     "
+Bit(7) 0 0-1
+Prm_Text_Ref = 57
+EndExtUserPrmData
+
+ExtUserPrmData = 136 "Parity                        "
+BitArea(4-5) 2 0-3
+Prm_Text_Ref = 58
+EndExtUserPrmData
+
+ExtUserPrmData = 137 "Interface                     "
+BitArea(6-7) 0 0-2
+Prm_Text_Ref = 59
+EndExtUserPrmData
+
+ExtUserPrmData = 138 "Receive line default          "
+BitArea(2-3) 1 1-2
+Prm_Text_Ref = 60
+EndExtUserPrmData
+
+ExtUserPrmData = 139 "Data flow control (default)   "
+BitArea(2-3) 0 0-3
+Prm_Text_Ref = 62
+EndExtUserPrmData
+
+ExtUserPrmData = 140 "Interface                     "
+BitArea(6-7) 0 0-1
+Prm_Text_Ref = 61
+EndExtUserPrmData
+
+ExtUserPrmData = 141 "Receipt of end detection      "
+BitArea(0-1) 0 0-2
+Prm_Text_Ref = 63
+EndExtUserPrmData
+
+ExtUserPrmData = 142 "Character delay time (ms)     "
+Unsigned16 4 4-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 143 "End character 1 (decimal)     "
+Unsigned8 3 1-255
+EndExtUserPrmData
+
+ExtUserPrmData = 144 "End character 2 (decimal)     "
+Unsigned8 0 0-255
+EndExtUserPrmData
+
+ExtUserPrmData = 145 "Receipt of number of char.    "
+Unsigned16 100 1-200
+EndExtUserPrmData
+
+ExtUserPrmData = 146 "Dynamic message frame buffer  "
+Bit(2) 1 0-1
+Prm_Text_Ref = 1
+EndExtUserPrmData
+
+ExtUserPrmData = 147 "Do not exc. mess. frame buffer"
+Bit(1) 1 0-1
+Prm_Text_Ref = 64
+EndExtUserPrmData
+
+ExtUserPrmData = 148 "Character delay time (n*10ms) "
+Unsigned16 22 2-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 149 "Ackn. delay time (n*10ms)     "
+Unsigned16 200 1-65535
+EndExtUserPrmData
+
+ExtUserPrmData = 150 "Setup attempts                "
+Unsigned8 6 1-255
+EndExtUserPrmData
+
+ExtUserPrmData = 151 "Transmission attempts         "
+Unsigned8 6 1-255
+EndExtUserPrmData
+
+ExtUserPrmData = 152 "Priority                      "
+Bit(1) 1 0-1
+Prm_Text_Ref = 65
+EndExtUserPrmData
+
+ExtUserPrmData = 153 "Delete rec. buffer at startup "
+Bit(0) 1 0-1
+Prm_Text_Ref = 64
+EndExtUserPrmData
+
+ExtUserPrmData = 154 "Load voltage                  "
+Bit(6) 0 0-1
+Prm_Text_Ref = 66
+EndExtUserPrmData
+
+ExtUserPrmData = 155 "Function DO1                  "
+BitArea(0-2) 0 0-4
+Prm_Text_Ref = 67
+EndExtUserPrmData
+
+ExtUserPrmData = 156 "Measurement type/area I0      "
+BitArea(0-3) 3 0,3,4
+Prm_Text_Ref = 68
+EndExtUserPrmData
+
+ExtUserPrmData = 157 "Measurement type/area I1      "
+BitArea(4-7) 3 0,3,4
+Prm_Text_Ref = 68
+EndExtUserPrmData
+
+
+; <Unit-Definition-List>
+GSD_Revision=1
+Vendor_Name="SIEMENS                       "
+Model_Name="ET 200S (IM151)               "
+revision = "V1.7                          "
+Ident_Number = 0x806A
+Protocol_Ident = 0
+Station_Type = 0
+FMS_supp = 0
+Hardware_Release = "A1.0                          "
+Software_Release = "Z1.0                          "
+9.6_supp = 1  
+19.2_supp = 1 
+45.45_supp = 1
+93.75_supp = 1
+187.5_supp = 1
+500_supp = 1  
+1.5M_supp = 1 
+3M_supp = 1   
+6M_supp = 1   
+12M_supp = 1  
+MaxTsdr_9.6=60
+MaxTsdr_19.2=60
+MaxTsdr_93.75=60
+MaxTsdr_187.5=60
+MaxTsdr_500=100
+MaxTsdr_1.5M=150
+MaxTsdr_45.45=250
+MaxTsdr_3M=250
+MaxTsdr_6M=450
+MaxTsdr_12M=800
+Implementation_Type = "SPC3                          "
+Bitmap_Device="SI806A_N"
+Bitmap_SF="SI806A_S"
+; Slave-Specification:
+OrderNumber="6ES7 151-1AA0*-0AB0           "
+Freeze_Mode_supp = 1
+Sync_Mode_supp = 1
+Auto_Baud_supp = 1
+Fail_Safe = 1
+Min_Slave_Intervall = 1
+Max_Diag_Data_Len = 64
+Modul_Offset = 1
+Slave_Family=3@TdF@ET200S                       ; Device Family
+Family_Name = "SIMATIC                       "
+Modular_Station = 1
+Max_Module = 63
+Max_Input_Len = 128
+Max_Output_Len = 128
+Max_Data_Len = 256
+Redundancy = 0                                  ; no redundant transmission
+Repeater_Ctrl_Sig = 2                           ; Signal CNTR-P connected
+24V_Pins = 0                                    ; Signal M24V and P24V not connected
+Set_Slave_Add_supp = 0
+
+Max_User_Prm_Data_Len = 237
+
+;---------------------- Kopfparameter -------------------------
+
+; Die ersten 3 Byte entsprechen den DPV1-Prm-Bytes 8-10, die restlichen
+; 16 Bytes stehen fuer die Geraeteparametrierung zur Verfuegung
+
+Ext_User_Prm_Data_Const(0) = 0x00,0x00,0x00,0x10,0x81,0x00,0x00,0x40,\
+0x00,0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+
+;  - chk_cfg_mode
+Ext_User_Prm_Data_Ref(1)=39
+;  - enable_pull_plug_alarm
+Ext_User_Prm_Data_Ref(1)=40
+
+;  - Kopfparamter
+Ext_User_Prm_Data_Ref(10)=45
+Ext_User_Prm_Data_Ref(10)=46
+;Ext_User_Prm_Data_Ref(10)=47
+Ext_User_Prm_Data_Ref(11)=50
+Ext_User_Prm_Data_Ref(11)=51
+Ext_User_Prm_Data_Ref(12)=52
+Ext_User_Prm_Data_Ref(12)=53
+Ext_User_Prm_Data_Ref(13)=54
+Ext_User_Prm_Data_Ref(13)=55
+Ext_User_Prm_Data_Ref(14)=56
+Ext_User_Prm_Data_Ref(14)=57
+Ext_User_Prm_Data_Ref(15)=58
+Ext_User_Prm_Data_Ref(15)=59
+Ext_User_Prm_Data_Ref(16)=60
+Ext_User_Prm_Data_Ref(16)=61
+Ext_User_Prm_Data_Ref(17)=62
+Ext_User_Prm_Data_Ref(17)=63
+Ext_User_Prm_Data_Ref(18)=64
+Ext_User_Prm_Data_Ref(18)=65
+
+;--------------------------------------
+; Herstellerspezifische Kanalfehler
+;--------------------------------------
+Channel_Diag(16) = "Parameter assignment error    "
+Channel_Diag(17) = "Sensor or load voltage missing"
+Channel_Diag(18) = "Fuse defect                   "
+Channel_Diag(19) = "Slot not addressable          "
+Channel_Diag(20) = "Ground error                  "
+Channel_Diag(21) = "Reference channel error       "
+Channel_Diag(22) = "Process alarm lost            "
+Channel_Diag(23) = "Actuator warning              "
+Channel_Diag(24) = "Actuator shut down            "
+Channel_Diag(25) = "Security-rel. shutdown        "
+Channel_Diag(26) = "external fault                "
+Channel_Diag(27) = "internal fault                "
+
+;--------------------------------------
+; Diagnosetexte fuer Modulstatus
+;--------------------------------------
+Unit_Diag_Area = 24-25
+Value(2) = "Slot 1: Wrong module          "
+Value(3) = "Slot 1: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 26-27
+Value(2) = "Slot 2: Wrong module          "
+Value(3) = "Slot 2: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 28-29
+Value(2) = "Slot 3: Wrong module          "
+Value(3) = "Slot 3: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 30-31
+Value(2) = "Slot 4: Wrong module          "
+Value(3) = "Slot 4: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 32-33
+Value(2) = "Slot 5: Wrong module          "
+Value(3) = "Slot 5: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 34-35
+Value(2) = "Slot 6: Wrong module          "
+Value(3) = "Slot 6: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 36-37
+Value(2) = "Slot 7: Wrong module          "
+Value(3) = "Slot 7: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 38-39
+Value(2) = "Slot 8: Wrong module          "
+Value(3) = "Slot 8: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 40-41
+Value(2) = "Slot 9: Wrong module          "
+Value(3) = "Slot 9: No module             "
+Unit_Diag_Area_End
+Unit_Diag_Area = 42-43
+Value(2) = "Slot 10: Wrong module         "
+Value(3) = "Slot 10: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 44-45
+Value(2) = "Slot 11: Wrong module         "
+Value(3) = "Slot 11: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 46-47
+Value(2) = "Slot 12: Wrong module         "
+Value(3) = "Slot 12: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 48-49
+Value(2) = "Slot 13: Wrong module         "
+Value(3) = "Slot 13: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 50-51
+Value(2) = "Slot 14: Wrong module         "
+Value(3) = "Slot 14: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 52-53
+Value(2) = "Slot 15: Wrong module         "
+Value(3) = "Slot 15: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 54-55
+Value(2) = "Slot 16: Wrong module         "
+Value(3) = "Slot 16: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 56-57
+Value(2) = "Slot 17: Wrong module         "
+Value(3) = "Slot 17: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 58-59
+Value(2) = "Slot 18: Wrong module         "
+Value(3) = "Slot 18: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 60-61
+Value(2) = "Slot 19: Wrong module         "
+Value(3) = "Slot 19: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 62-63
+Value(2) = "Slot 20: Wrong module         "
+Value(3) = "Slot 20: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 64-65
+Value(2) = "Slot 21: Wrong module         "
+Value(3) = "Slot 21: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 66-67
+Value(2) = "Slot 22: Wrong module         "
+Value(3) = "Slot 22: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 68-69
+Value(2) = "Slot 23: Wrong module         "
+Value(3) = "Slot 23: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 70-71
+Value(2) = "Slot 24: Wrong module         "
+Value(3) = "Slot 24: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 72-73
+Value(2) = "Slot 25: Wrong module         "
+Value(3) = "Slot 25: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 74-75
+Value(2) = "Slot 26: Wrong module         "
+Value(3) = "Slot 26: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 76-77
+Value(2) = "Slot 27: Wrong module         "
+Value(3) = "Slot 27: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 78-79
+Value(2) = "Slot 28: Wrong module         "
+Value(3) = "Slot 28: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 80-81
+Value(2) = "Slot 29: Wrong module         "
+Value(3) = "Slot 29: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 82-83
+Value(2) = "Slot 30: Wrong module         "
+Value(3) = "Slot 30: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 84-85
+Value(2) = "Slot 31: Wrong module         "
+Value(3) = "Slot 31: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 86-87
+Value(2) = "Slot 32: Wrong module         "
+Value(3) = "Slot 32: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 88-89
+Value(2) = "Slot 33: Wrong module         "
+Value(3) = "Slot 33: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 90-91
+Value(2) = "Slot 34: Wrong module         "
+Value(3) = "Slot 34: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 92-93
+Value(2) = "Slot 35: Wrong module         "
+Value(3) = "Slot 35: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 94-95
+Value(2) = "Slot 36: Wrong module         "
+Value(3) = "Slot 36: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 96-97
+Value(2) = "Slot 37: Wrong module         "
+Value(3) = "Slot 37: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 98-99
+Value(2) = "Slot 38: Wrong module         "
+Value(3) = "Slot 38: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 100-101
+Value(2) = "Slot 39: Wrong module         "
+Value(3) = "Slot 39: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 102-103
+Value(2) = "Slot 40: Wrong module         "
+Value(3) = "Slot 40: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 104-105
+Value(2) = "Slot 41: Wrong module         "
+Value(3) = "Slot 41: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 106-107
+Value(2) = "Slot 42: Wrong module         "
+Value(3) = "Slot 42: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 108-109
+Value(2) = "Slot 43: Wrong module         "
+Value(3) = "Slot 43: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 110-111
+Value(2) = "Slot 44: Wrong module         "
+Value(3) = "Slot 44: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 112-113
+Value(2) = "Slot 45: Wrong module         "
+Value(3) = "Slot 45: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 114-115
+Value(2) = "Slot 46: Wrong module         "
+Value(3) = "Slot 46: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 116-117
+Value(2) = "Slot 47: Wrong module         "
+Value(3) = "Slot 47: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 118-119
+Value(2) = "Slot 48: Wrong module         "
+Value(3) = "Slot 48: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 120-121
+Value(2) = "Slot 49: Wrong module         "
+Value(3) = "Slot 49: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 122-123
+Value(2) = "Slot 50: Wrong module         "
+Value(3) = "Slot 50: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 124-125
+Value(2) = "Slot 51: Wrong module         "
+Value(3) = "Slot 51: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 126-127
+Value(2) = "Slot 52: Wrong module         "
+Value(3) = "Slot 52: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 128-129
+Value(2) = "Slot 53: Wrong module         "
+Value(3) = "Slot 53: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 130-131
+Value(2) = "Slot 54: Wrong module         "
+Value(3) = "Slot 54: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 132-133
+Value(2) = "Slot 55: Wrong module         "
+Value(3) = "Slot 55: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 134-135
+Value(2) = "Slot 56: Wrong module         "
+Value(3) = "Slot 56: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 136-137
+Value(2) = "Slot 57: Wrong module         "
+Value(3) = "Slot 57: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 138-139
+Value(2) = "Slot 58: Wrong module         "
+Value(3) = "Slot 58: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 140-141
+Value(2) = "Slot 59: Wrong module         "
+Value(3) = "Slot 59: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 142-143
+Value(2) = "Slot 60: Wrong module         "
+Value(3) = "Slot 60: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 144-145
+Value(2) = "Slot 61: Wrong module         "
+Value(3) = "Slot 61: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 146-147
+Value(2) = "Slot 62: Wrong module         "
+Value(3) = "Slot 62: No module            "
+Unit_Diag_Area_End
+Unit_Diag_Area = 148-149
+Value(2) = "Slot 63: Wrong module         "
+Value(3) = "Slot 63: No module            "
+Unit_Diag_Area_End
+
+; <Module-Definition-List>
+Module = "6ES7 138-4CA00-0AA0 PM-E DC24V" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 41
+EndModule
+
+Module = "6ES7 138-4CB00-0AB0 PM-E AC230" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 41
+Ext_User_Prm_Data_Ref(2) = 42
+EndModule
+
+Module = "6ES7 138-4CB10-0AB0 PM-E AC230" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 154
+Ext_User_Prm_Data_Ref(2) = 41
+Ext_User_Prm_Data_Ref(2) = 42
+EndModule
+
+Module = "6ES7 131-4BB00-0AB0  2DI DC24V" 0x10
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 2
+EndModule
+
+Module = "6ES7 131-4BB00-0AB0* 2DI DC24V" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 2
+EndModule
+
+Module = "6ES7 131-4BB00-0AA0  2DI DC24V" 0x10
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x14
+EndModule
+
+Module = "6ES7 131-4BB00-0AA0* 2DI DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x14
+EndModule
+
+Module = "6ES7 132-4BB00-0AB0  2DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+Ext_User_Prm_Data_Ref(2) = 6
+Ext_User_Prm_Data_Ref(2) = 7
+Ext_User_Prm_Data_Ref(2) = 8
+Ext_User_Prm_Data_Ref(2) = 9
+EndModule
+
+Module = "6ES7 132-4BB00-0AB0* 2DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+Ext_User_Prm_Data_Ref(2) = 6
+Ext_User_Prm_Data_Ref(2) = 7
+Ext_User_Prm_Data_Ref(2) = 8
+Ext_User_Prm_Data_Ref(2) = 9
+EndModule
+
+Module = "6ES7 132-4BB00-0AA0  2DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x11
+EndModule
+
+Module = "6ES7 132-4BB00-0AA0* 2DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x11
+EndModule
+
+
+Module = "6ES7 132-4BB30-0AB0  2DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+Ext_User_Prm_Data_Ref(2) = 6
+Ext_User_Prm_Data_Ref(2) = 7
+Ext_User_Prm_Data_Ref(2) = 8
+Ext_User_Prm_Data_Ref(2) = 9
+EndModule
+
+Module = "6ES7 132-4BB30-0AB0* 2DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x01,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+Ext_User_Prm_Data_Ref(2) = 6
+Ext_User_Prm_Data_Ref(2) = 7
+Ext_User_Prm_Data_Ref(2) = 8
+Ext_User_Prm_Data_Ref(2) = 9
+EndModule
+
+Module = "6ES7 132-4BB30-0AA0  2DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x11
+EndModule
+
+Module = "6ES7 132-4BB30-0AA0* 2DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x11
+EndModule
+
+Module = "6ES7 132-4HB00-0AB0  2DO Rel. " 0x20
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+EndModule
+
+Module = "6ES7 132-4HB00-0AB0* 2DO Rel. " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+EndModule
+
+;--------------------------------------
+; 4-kanalige Digital-Module
+;--------------------------------------
+Module = "6ES7 131-4BD00-0AB0  4DI DC24V" 0x10
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x38,0x09,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 2
+EndModule
+
+Module = "6ES7 131-4BD00-0AB0* 4DI DC24V" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x38,0x09,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 2
+EndModule
+
+Module = "6ES7 131-4BD00-0AA0  4DI DC24V" 0x10
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x18
+EndModule
+
+Module = "6ES7 131-4BD00-0AA0* 4DI DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x18
+EndModule
+
+Module = "6ES7 132-4BD00-0AA0  4DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x12
+EndModule
+
+Module = "6ES7 132-4BD00-0AA0* 4DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x12
+EndModule
+
+Module = "6ES7 132-4BD30-0AA0  4DO DC24V" 0x20
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x12
+EndModule
+
+Module = "6ES7 132-4BD30-0AA0* 4DO DC24V" 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x12
+EndModule
+
+
+;----------------------------------
+; AC-Module
+;----------------------------------
+Module = "6ES7 131-4EB00-0AB0  2DI 120V " 0x10 
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x08,0x00
+EndModule
+
+Module = "6ES7 131-4EB00-0AB0* 2DI 120V " 0x00 
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x08,0x00
+EndModule
+
+Module = "6ES7 131-4FB00-0AB0  2DI 230V " 0x10 
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x08,0x00
+EndModule
+
+Module = "6ES7 131-4FB00-0AB0* 2DI 230V " 0x00 
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x34,0x08,0x00
+EndModule
+
+Module = "6ES7 132-4FB00-0AB0  2DO 230V " 0x20
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+EndModule
+
+Module = "6ES7 132-4FB00-0AB0* 2DO 230V " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x31,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 3
+Ext_User_Prm_Data_Ref(1) = 4
+Ext_User_Prm_Data_Ref(1) = 5
+EndModule
+
+;----------------------------------
+; Analogmodule bytegranular
+;----------------------------------
+Module = "6ES7 134-4FB00-0AB0 2AI U     " 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x40,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 16
+Ext_User_Prm_Data_Ref(3) = 17
+EndModule
+
+Module = "6ES7 134-4FB50-0AB0 2AI U     " 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x40,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 117
+Ext_User_Prm_Data_Ref(3) = 118
+EndModule
+
+Module = "6ES7 134-4LB00-0AB0 2AI U     " 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x40,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(2) = 123
+Ext_User_Prm_Data_Ref(2) = 124
+Ext_User_Prm_Data_Ref(3) = 16
+Ext_User_Prm_Data_Ref(3) = 17
+EndModule
+
+Module = "6ES7 134-4GB00-0AB0 2AI I 2DMU" 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x40,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 19
+Ext_User_Prm_Data_Ref(3) = 20
+EndModule
+
+Module = "6ES7 134-4GB50-0AB0 2AI I 2DMU" 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x40,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 119
+Ext_User_Prm_Data_Ref(3) = 120
+EndModule
+
+Module = "6ES7 134-4GB10-0AB0 2AI I 4DMU" 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x44,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 21
+Ext_User_Prm_Data_Ref(3) = 22
+EndModule
+
+Module = "6ES7 134-4GB60-0AB0 2AI I 4DMU" 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x44,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 121
+Ext_User_Prm_Data_Ref(3) = 122
+EndModule
+
+Module = "6ES7 134-4MB00-0AB0 2AI I 4DMU" 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x44,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(2) = 123
+Ext_User_Prm_Data_Ref(2) = 124
+Ext_User_Prm_Data_Ref(3) = 156
+Ext_User_Prm_Data_Ref(3) = 157
+EndModule
+
+Module = "6ES7 134-4JB00-0AB0 AI 2xTC   " 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x4C,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(2) = 36
+Ext_User_Prm_Data_Ref(2) = 37
+Ext_User_Prm_Data_Ref(2) = 38
+Ext_User_Prm_Data_Ref(3) = 23
+Ext_User_Prm_Data_Ref(3) = 24
+EndModule
+
+Module = "6ES7 134-4JB50-0AB0 2AI RTD   " 0x51
+Ext_Module_Prm_Data_Len = 4
+Ext_User_Prm_Data_Const(0) = 0x48,0x00,0x80,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 11
+Ext_User_Prm_Data_Ref(1) = 12
+Ext_User_Prm_Data_Ref(1) = 13
+Ext_User_Prm_Data_Ref(1) = 14
+Ext_User_Prm_Data_Ref(1) = 15
+Ext_User_Prm_Data_Ref(3) = 25
+Ext_User_Prm_Data_Ref(3) = 26
+EndModule
+
+Module = "6ES7 135-4FB00-0AB0 2AO U     " 0x61
+Ext_Module_Prm_Data_Len = 7
+Ext_User_Prm_Data_Const(0) = 0x60,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 29
+Ext_User_Prm_Data_Ref(1) = 30
+Ext_User_Prm_Data_Ref(1) = 31
+Ext_User_Prm_Data_Ref(2) = 27
+Ext_User_Prm_Data_Ref(2) = 28
+Ext_User_Prm_Data_Ref(3) = 32
+Ext_User_Prm_Data_Ref(5) = 33
+EndModule
+
+Module = "6ES7 135-4GB00-0AB0 2AO I     " 0x61
+Ext_Module_Prm_Data_Len = 7
+Ext_User_Prm_Data_Const(0) = 0x60,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 66
+Ext_User_Prm_Data_Ref(1) = 67
+Ext_User_Prm_Data_Ref(1) = 31
+Ext_User_Prm_Data_Ref(2) = 34
+Ext_User_Prm_Data_Ref(2) = 35
+Ext_User_Prm_Data_Ref(3) = 32
+Ext_User_Prm_Data_Ref(5) = 33
+EndModule
+
+Module = "6ES7 135-4LB00-0AB0 2AO U     " 0x61
+Ext_Module_Prm_Data_Len = 7
+Ext_User_Prm_Data_Const(0) = 0x60,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 29
+Ext_User_Prm_Data_Ref(1) = 30
+Ext_User_Prm_Data_Ref(1) = 31
+Ext_User_Prm_Data_Ref(2) = 27
+Ext_User_Prm_Data_Ref(2) = 28
+Ext_User_Prm_Data_Ref(3) = 32
+Ext_User_Prm_Data_Ref(5) = 33
+EndModule
+
+Module = "6ES7 135-4MB00-0AB0 2AO I     " 0x61
+Ext_Module_Prm_Data_Len = 7
+Ext_User_Prm_Data_Const(0) = 0x60,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 66
+Ext_User_Prm_Data_Ref(1) = 67
+Ext_User_Prm_Data_Ref(1) = 31
+Ext_User_Prm_Data_Ref(2) = 34
+Ext_User_Prm_Data_Ref(2) = 35
+Ext_User_Prm_Data_Ref(3) = 32
+Ext_User_Prm_Data_Ref(5) = 33
+EndModule
+
+;--------------------------------------
+; Power Module fuer Verbraucherabzweige
+;--------------------------------------
+
+;--- Power Module Drives 15mm ------------------------
+Module="3RK1903-0BA00  PM-D           " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 43
+EndModule
+
+;--- Power Module Drives (überwachter Start) 30mm ----
+Module="3RK1903-1BA00  PM-D F1        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 49
+EndModule
+
+;--- Power Module Drives (Schutztür) 30mm ------------
+Module="3RK1903-1BB00  PM-D F2        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 49
+EndModule
+
+;--- Power Module Drives (zeitverzögert) 30mm --------
+Module="3RK1903-1BD00  PM-D F3        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 49
+EndModule
+
+;--- Power Module Drives (Erweiterungsbaustein) 30mm -
+Module="3RK1903-1BC00  PM-D F4        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 49
+EndModule
+
+;--- Power Module Drives (Erweiterungsbaustein) 30mm -
+Module="3RK1903-1BE00  PM-D F5        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x20,0x01,0x00
+Ext_User_Prm_Data_Ref(2) = 49
+EndModule
+
+;--- Power Module Drives (Externe F-Kreise) 15mm -----
+Module="3RK1903-1CB00 PM-X            " 0x00
+Ext_Module_Prm_Data_Len = 1
+Ext_User_Prm_Data_Const(0) = 0x00
+EndModule
+
+
+
+;------------------------------------
+; Verbraucherabzweige Typ 4DI/4DO
+;------------------------------------
+
+;--- Direktstarter SIRIUS 45mm ----------------------
+Module="3RK1301-xxB00-0AA0  DS        " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-0AA0 *DS        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+;--- Direktstarter SIRIUS mit Erweiterung 45+15mm ---
+
+Module="3RK1301-xxB00-0AA1  DS-x      " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-0AA1 *DS-x      " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A,  0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-0AA2  DS1-x     " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-0AA2 *DS1-x     " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+
+;--- Wendestarter SIRIUS 90mm -----------------------
+Module="3RK1301-xxB00-1AA0  RS        " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-1AA0 *RS        " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+;--- Wendestarter SIRIUS mit Erweiterung 90+15mm ----
+Module="3RK1301-xxB00-1AA1  RS-x      " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-1AA1 *RS-x      " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-1AA2  RS1-x     " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+Module="3RK1301-xxB00-1AA2 *RS1-x     " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x3A, 0x0D, 0x00
+Ext_User_Prm_Data_Ref(1)   = 44
+Ext_User_Prm_Data_Ref(2)   = 43
+EndModule
+
+;--------------------------------------
+; Zusatzmodule fuer Verbraucherabzweige
+;--------------------------------------
+Module="3RK1903-0CE00  xB3 DC24V/4A   " 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x35,0x11,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 131
+EndModule
+
+Module="3RK1903-0CE00 *xB3 DC24V/4A   " 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x35,0x11,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 131
+EndModule
+
+Module="3RK1903-0CF00  xB4 DC500V/0,7A" 0x30
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x35,0x11,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 131
+EndModule
+
+Module="3RK1903-0CF00 *xB4 DC500V/0,7A" 0x00
+Ext_Module_Prm_Data_Len = 3
+Ext_User_Prm_Data_Const(0) = 0x35,0x11,0x00
+Ext_User_Prm_Data_Ref(1) = 1
+Ext_User_Prm_Data_Ref(2) = 131
+EndModule
+
+;--------------------------------------
+; FM
+;--------------------------------------
+Module = "6ES7 138-4DB00-0AB0 1SSI      " 0xF3
+Ext_Module_Prm_Data_Len = 8
+Ext_User_Prm_Data_Const(0) = 0x80,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 130
+Ext_User_Prm_Data_Ref(2) = 71
+Ext_User_Prm_Data_Ref(2) = 72
+Ext_User_Prm_Data_Ref(2) = 73
+Ext_User_Prm_Data_Ref(2) = 74
+Ext_User_Prm_Data_Ref(3) = 76
+Ext_User_Prm_Data_Ref(3) = 75
+Ext_User_Prm_Data_Ref(3) = 77
+;Ext_User_Prm_Data_Ref(4) = 79
+Ext_User_Prm_Data_Ref(4) = 109
+Ext_User_Prm_Data_Ref(6) = 110
+Ext_User_Prm_Data_Ref(3) = 78
+Ext_User_Prm_Data_Ref(1) = 69
+Ext_User_Prm_Data_Ref(1) = 70
+EndModule
+
+Module = "6ES7 138-4DB00-0AB0 1SSI Fast " 0xD1
+Ext_Module_Prm_Data_Len = 8
+Ext_User_Prm_Data_Const(0) = 0x80,0x08,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 130
+Ext_User_Prm_Data_Ref(2) = 71
+Ext_User_Prm_Data_Ref(2) = 72
+Ext_User_Prm_Data_Ref(2) = 73
+Ext_User_Prm_Data_Ref(2) = 74
+Ext_User_Prm_Data_Ref(3) = 76
+Ext_User_Prm_Data_Ref(3) = 75
+Ext_User_Prm_Data_Ref(3) = 77
+;Ext_User_Prm_Data_Ref(4) = 79
+Ext_User_Prm_Data_Ref(4) = 109
+Ext_User_Prm_Data_Ref(6) = 110
+;Ext_User_Prm_Data_Ref(3) = 78
+;Ext_User_Prm_Data_Ref(1) = 69
+;Ext_User_Prm_Data_Ref(1) = 70
+EndModule
+
+Module = "C 6ES7 138-4DA00-0AB0 1CNT24V " 0xF3
+Ext_Module_Prm_Data_Len = 16
+Ext_User_Prm_Data_Const(0) = 0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,\
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 80
+Ext_User_Prm_Data_Ref(2) = 81
+Ext_User_Prm_Data_Ref(2) = 82
+Ext_User_Prm_Data_Ref(2) = 83
+Ext_User_Prm_Data_Ref(2) = 84
+Ext_User_Prm_Data_Ref(2) = 85
+Ext_User_Prm_Data_Ref(2) = 86
+Ext_User_Prm_Data_Ref(3) = 87
+Ext_User_Prm_Data_Ref(3) = 88
+Ext_User_Prm_Data_Ref(3) = 90
+Ext_User_Prm_Data_Ref(3) = 89
+Ext_User_Prm_Data_Ref(4) = 91
+Ext_User_Prm_Data_Ref(5) = 92
+Ext_User_Prm_Data_Ref(6) = 93
+Ext_User_Prm_Data_Ref(6) = 95
+Ext_User_Prm_Data_Ref(6) = 94
+Ext_User_Prm_Data_Ref(7) = 98
+Ext_User_Prm_Data_Ref(7) = 96
+Ext_User_Prm_Data_Ref(7) = 97
+Ext_User_Prm_Data_Ref(8) = 111
+Ext_User_Prm_Data_Ref(10) = 112
+EndModule
+
+Module = "M 6ES7 138-4DA00-0AB0 1CNT24V " 0xF3
+Ext_Module_Prm_Data_Len = 16
+Ext_User_Prm_Data_Const(0) = 0xC0,0x80,0x00,0x00,0x00,0x00,0x00,0x00,\
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 80
+Ext_User_Prm_Data_Ref(2) = 100
+Ext_User_Prm_Data_Ref(2) = 82
+Ext_User_Prm_Data_Ref(2) = 83
+Ext_User_Prm_Data_Ref(2) = 84
+Ext_User_Prm_Data_Ref(2) = 85
+Ext_User_Prm_Data_Ref(2) = 86
+Ext_User_Prm_Data_Ref(3) = 104
+Ext_User_Prm_Data_Ref(2) = 101
+Ext_User_Prm_Data_Ref(3) = 90
+Ext_User_Prm_Data_Ref(3) = 102
+Ext_User_Prm_Data_Ref(3) = 98
+Ext_User_Prm_Data_Ref(3) = 103
+Ext_User_Prm_Data_Ref(4) = 113
+Ext_User_Prm_Data_Ref(6) = 114
+Ext_User_Prm_Data_Ref(8) = 115
+Ext_User_Prm_Data_Ref(10) = 116
+Ext_User_Prm_Data_Ref(12) = 107
+Ext_User_Prm_Data_Ref(14) = 108
+EndModule
+
+Module = "C 6ES7 138-4DA01-0AB0 1CNT24V " 0xF3
+Ext_Module_Prm_Data_Len = 16
+Ext_User_Prm_Data_Const(0) = 0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,\
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 80
+Ext_User_Prm_Data_Ref(2) = 81
+Ext_User_Prm_Data_Ref(2) = 82
+Ext_User_Prm_Data_Ref(2) = 83
+Ext_User_Prm_Data_Ref(2) = 84
+Ext_User_Prm_Data_Ref(2) = 85
+Ext_User_Prm_Data_Ref(2) = 86
+Ext_User_Prm_Data_Ref(3) = 155
+Ext_User_Prm_Data_Ref(3) = 88
+Ext_User_Prm_Data_Ref(3) = 90
+Ext_User_Prm_Data_Ref(3) = 89
+Ext_User_Prm_Data_Ref(4) = 91
+Ext_User_Prm_Data_Ref(5) = 92
+Ext_User_Prm_Data_Ref(6) = 93
+Ext_User_Prm_Data_Ref(6) = 95
+Ext_User_Prm_Data_Ref(6) = 94
+Ext_User_Prm_Data_Ref(7) = 98
+Ext_User_Prm_Data_Ref(7) = 96
+Ext_User_Prm_Data_Ref(7) = 97
+Ext_User_Prm_Data_Ref(8) = 111
+Ext_User_Prm_Data_Ref(10) = 112
+EndModule
+
+Module = "M 6ES7 138-4DA01-0AB0 1CNT24V " 0xF3
+Ext_Module_Prm_Data_Len = 16
+Ext_User_Prm_Data_Const(0) = 0xC0,0x80,0x00,0x00,0x00,0x00,0x00,0x00,\
+0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 80
+Ext_User_Prm_Data_Ref(2) = 100
+Ext_User_Prm_Data_Ref(2) = 82
+Ext_User_Prm_Data_Ref(2) = 83
+Ext_User_Prm_Data_Ref(2) = 84
+Ext_User_Prm_Data_Ref(2) = 85
+Ext_User_Prm_Data_Ref(2) = 86
+Ext_User_Prm_Data_Ref(3) = 104
+Ext_User_Prm_Data_Ref(2) = 101
+Ext_User_Prm_Data_Ref(3) = 90
+Ext_User_Prm_Data_Ref(3) = 102
+Ext_User_Prm_Data_Ref(3) = 98
+Ext_User_Prm_Data_Ref(3) = 103
+Ext_User_Prm_Data_Ref(4) = 113
+Ext_User_Prm_Data_Ref(6) = 114
+Ext_User_Prm_Data_Ref(8) = 115
+Ext_User_Prm_Data_Ref(10) = 116
+Ext_User_Prm_Data_Ref(12) = 107
+Ext_User_Prm_Data_Ref(14) = 108
+EndModule
+
+Module = "6ES7 138-4DC00-0AB0 1Step     " 0xF3
+Ext_Module_Prm_Data_Len = 7
+Ext_User_Prm_Data_Const(0) = 0x60,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(2) = 125
+Ext_User_Prm_Data_Ref(3) = 126
+Ext_User_Prm_Data_Ref(4) = 127
+Ext_User_Prm_Data_Ref(5) = 128
+Ext_User_Prm_Data_Ref(5) = 129
+EndModule
+
+;--------------------------------------
+; CP PtP Serial Interface Module
+;--------------------------------------
+Module = "6ES7 138-4DF00-0AB0 ASCII (8B)" 0xF3
+Ext_Module_Prm_Data_Len = 12
+Ext_User_Prm_Data_Const(0) = 0xA0,0x00,0x00,0x40,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 137
+Ext_User_Prm_Data_Ref(1) = 138
+Ext_User_Prm_Data_Ref(2) = 133
+Ext_User_Prm_Data_Ref(2) = 134
+Ext_User_Prm_Data_Ref(2) = 135
+Ext_User_Prm_Data_Ref(2) = 136
+Ext_User_Prm_Data_Ref(3) = 139
+Ext_User_Prm_Data_Ref(3) = 141
+Ext_User_Prm_Data_Ref(4) = 142
+Ext_User_Prm_Data_Ref(6) = 143
+Ext_User_Prm_Data_Ref(7) = 144
+Ext_User_Prm_Data_Ref(8) = 145
+Ext_User_Prm_Data_Ref(10) = 146
+Ext_User_Prm_Data_Ref(10) = 147
+Ext_User_Prm_Data_Ref(10) = 153
+EndModule
+
+Module = "6ES7 138-4DF00-0AB0 ASCII (4B)" 0xF1
+Ext_Module_Prm_Data_Len = 12
+Ext_User_Prm_Data_Const(0) = 0xA0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 137
+Ext_User_Prm_Data_Ref(1) = 138
+Ext_User_Prm_Data_Ref(2) = 133
+Ext_User_Prm_Data_Ref(2) = 134
+Ext_User_Prm_Data_Ref(2) = 135
+Ext_User_Prm_Data_Ref(2) = 136
+Ext_User_Prm_Data_Ref(3) = 139
+Ext_User_Prm_Data_Ref(3) = 141
+Ext_User_Prm_Data_Ref(4) = 142
+Ext_User_Prm_Data_Ref(6) = 143
+Ext_User_Prm_Data_Ref(7) = 144
+Ext_User_Prm_Data_Ref(8) = 145
+Ext_User_Prm_Data_Ref(10) = 146
+Ext_User_Prm_Data_Ref(10) = 147
+Ext_User_Prm_Data_Ref(10) = 153
+EndModule
+
+Module = "6ES7 138-4DF00-0AB0 3964R(8B) " 0xF3
+Ext_Module_Prm_Data_Len = 12
+Ext_User_Prm_Data_Const(0) = 0xA0,0x20,0x00,0x40,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 140
+Ext_User_Prm_Data_Ref(1) = 138
+Ext_User_Prm_Data_Ref(1) = 132
+Ext_User_Prm_Data_Ref(1) = 152
+Ext_User_Prm_Data_Ref(2) = 133
+Ext_User_Prm_Data_Ref(2) = 134
+Ext_User_Prm_Data_Ref(2) = 135
+Ext_User_Prm_Data_Ref(2) = 136
+Ext_User_Prm_Data_Ref(4) = 148
+Ext_User_Prm_Data_Ref(6) = 149
+Ext_User_Prm_Data_Ref(8) = 150
+Ext_User_Prm_Data_Ref(9) = 151
+Ext_User_Prm_Data_Ref(10) = 153
+EndModule
+
+
+Module = "6ES7 138-4DF00-0AB0 3964R(4B) " 0xF1
+Ext_Module_Prm_Data_Len = 12
+Ext_User_Prm_Data_Const(0) = 0xA0,0x20,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+Ext_User_Prm_Data_Ref(1) = 10
+Ext_User_Prm_Data_Ref(1) = 140
+Ext_User_Prm_Data_Ref(1) = 138
+Ext_User_Prm_Data_Ref(1) = 132
+Ext_User_Prm_Data_Ref(1) = 152
+Ext_User_Prm_Data_Ref(2) = 133
+Ext_User_Prm_Data_Ref(2) = 134
+Ext_User_Prm_Data_Ref(2) = 135
+Ext_User_Prm_Data_Ref(2) = 136
+Ext_User_Prm_Data_Ref(4) = 148
+Ext_User_Prm_Data_Ref(6) = 149
+Ext_User_Prm_Data_Ref(8) = 150
+Ext_User_Prm_Data_Ref(9) = 151
+Ext_User_Prm_Data_Ref(10) = 153
+EndModule
+
+

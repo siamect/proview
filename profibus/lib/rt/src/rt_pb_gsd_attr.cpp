@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.2 2006-04-05 08:36:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -344,6 +344,21 @@ static void gsdattr_activate_cmd_ca( Widget w, GsdAttr *attr, XmAnyCallbackStruc
   }
 }
 
+void gsdattr_create_menubutton( Widget w, GsdAttr *attr) 
+{
+  int key;
+
+  XtVaGetValues (w, XmNuserData, &key, NULL);
+  switch (key) 
+  {
+    case 1: attr->menubutton_copy = w; break;
+    case 2: attr->menubutton_cut = w; break;
+    case 3: attr->menubutton_paste = w; break;
+    case 4: attr->menubutton_changevalue = w; break;
+    default:
+      ;
+  }
+}
 static void gsdattr_create_msg_label( Widget w, GsdAttr *attr, XmAnyCallbackStruct *data)
 {
   attr->msg_label = w;
@@ -465,6 +480,7 @@ GsdAttr::GsdAttr( Widget a_parent_wid,
 	{"gsdattr_activate_change_value",(caddr_t)gsdattr_activate_change_value },
 	{"gsdattr_activate_help",(caddr_t)gsdattr_activate_help },
 	{"gsdattr_create_msg_label",(caddr_t)gsdattr_create_msg_label },
+	{"gsdattr_create_menubutton",(caddr_t)gsdattr_create_menubutton },
 	{"gsdattr_create_cmd_prompt",(caddr_t)gsdattr_create_cmd_prompt },
 	{"gsdattr_create_cmd_input",(caddr_t)gsdattr_create_cmd_input },
 	{"gsdattr_create_attrnav_form",(caddr_t)gsdattr_create_attrnav_form },
@@ -534,6 +550,10 @@ GsdAttr::GsdAttr( Widget a_parent_wid,
     i = 0;
     XtSetArg( args[i], XmNsensitive, 0);i++;
     XtSetValues( cmd_ok, args, i);
+    XtSetValues( menubutton_copy, args, i);
+    XtSetValues( menubutton_cut, args, i);
+    XtSetValues( menubutton_paste, args, i);
+    XtSetValues( menubutton_changevalue, args, i);
   }
 
   // Connect the window manager close-button to exit

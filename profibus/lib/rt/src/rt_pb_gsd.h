@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.h,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd.h,v 1.2 2006-04-05 08:36:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,6 +173,7 @@ typedef struct {
   pwr_tCid cid;
   gsd_sPrmDataItem *prm_dataitems;
   int prm_dataitems_cnt;
+  unsigned char prm_data[237];
 } gsd_sModuleConf;
 
 class pb_gsd {
