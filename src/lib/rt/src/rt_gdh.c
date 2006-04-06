@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.25 2006-02-09 14:29:56 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.26 2006-04-06 04:54:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -197,16 +197,26 @@ gdh_ArefANameToAref (
   char			*s = NULL;
   cdh_sParseName	parseName;
   cdh_sParseName	*pn = NULL;
+  gdb_sObject		*op;
 
   gdh_ScopeLock {
     memset(&Attribute, 0, sizeof(Attribute));
 
-    ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_global, vol_mTrans_all);
-    if (ap == NULL) break;
+    if ( arp->Flags.b.Object) {
+      op = vol_OidToObject(&sts, arp->Objid, gdb_mLo_global, vol_mTrans_none, cvol_eHint_none);
+      if (op == NULL)
+      break;
 
-    touchObject(ap->op);
-    s = vol_AttributeToName(&sts, ap, cdh_mName_volumeStrict, string);
+      touchObject(op);
+      s = vol_ObjectToName(&sts, op, cdh_mName_volumeStrict, string);
+    }
+    else {
+      ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_global, vol_mTrans_all);
+      if (ap == NULL) break;
 
+      touchObject(ap->op);
+      s = vol_AttributeToName(&sts, ap, cdh_mName_volumeStrict, string);
+    }
     strcat( string, ".");
     strcat( string, aname);
 
