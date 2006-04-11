@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.12 2006-02-14 11:20:26 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.13 2006-04-11 08:13:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1696,7 +1696,7 @@ void GeCurveData::scale( int axis_type, int value_type,
       else if ( max_zero) {
         // Use power for min_value
 
-        i_value = int( min_value * pow(10, -min_n)) + 1;
+        i_value = int( min_value * pow(10, -min_n)) + ((min_value < 0) ? -1 : 1);
         if ( fabs(double(i_value+1) - min_value * pow(10, -n)) < 1e-10)
           i_value++;
         if ( ODD(i_value) && i_value != 5 && !allow_odd) 
