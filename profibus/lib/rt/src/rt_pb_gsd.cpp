@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.2 2006-04-05 08:36:31 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.3 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -313,7 +313,7 @@ static void *t_malloc( int a1) {
 
 pb_gsd::pb_gsd() :
   dptype(0), modular_station(0), max_module(0),
-  user_prm_data_len(0), max_user_prm_data_len(0), status(0), datalist(0), 
+  user_prm_data_len(0), max_user_prm_data_len(0), status(0), address(0), datalist(0), 
   modulelist(0), prm_textlist(0), extuserprmdatalist(0), extuserprmdatareflist(0),
   current_module(0), current_area(0), current_prm_text(0), current_extuserprmdata(0),
   extuserprmdataconst(0), prm_dataitems(0), module_conf(0), module_conf_cnt(0),
@@ -934,10 +934,12 @@ int pb_gsd::read( char *filename)
     case gsd_DiagAreaEnd:
     case gsd_DiagType:
     case gsd_Value:
-      if ( part_cnt >= 2)
-	printf( "Line %s %s\n", keyp->name, line_part[1]);
-      else
-	printf( "Line %s\n", keyp->name);
+      if ( part_cnt >= 2) {
+	// printf( "Line %s %s\n", keyp->name, line_part[1]);
+      }
+      else {
+	// printf( "Line %s\n", keyp->name);
+      }
       break;
     default:
       printf("Unknown type, line %d\n", line_cnt);
@@ -1189,10 +1191,10 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
     }
   }
 
-  printf( "To   Data: ");
-  for ( int i = 0; i < data_size; i++)
-    printf( "0x%x,", data[i]);
-  printf("\n");
+  // printf( "To   Data: ");
+  // for ( int i = 0; i < data_size; i++)
+  //   printf( "0x%x,", data[i]);
+  // printf("\n");
 
   return 1;
 }
@@ -1296,10 +1298,10 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     default: ;
     }
   }
-  printf( "From Data: ");
-  for ( int i = 0; i < data_size; i++)
-    printf( "0x%x,", data[i]);
-  printf("\n");
+  // printf( "From Data: ");
+  // for ( int i = 0; i < data_size; i++)
+  //   printf( "0x%x,", data[i]);
+  // printf("\n");
   return 1;
 }
 

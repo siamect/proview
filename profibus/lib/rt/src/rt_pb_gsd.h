@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.h,v 1.2 2006-04-05 08:36:31 claes Exp $
+ * Proview   $Id: rt_pb_gsd.h,v 1.3 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,6 +188,7 @@ class pb_gsd {
   int max_user_prm_data_len;
   int line_cnt;
   int status;
+  int address;
   gsd_sData *datalist;
   gsd_sModule *modulelist;
   gsd_sPrmText *prm_textlist;

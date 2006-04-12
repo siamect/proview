@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.2 2006-04-05 08:36:31 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.3 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -170,7 +170,11 @@ static void gsdattr_activate_exit( Widget w, GsdAttr *attr, XmAnyCallbackStruct 
 
 static void gsdattr_activate_help( Widget w, GsdAttr *attr, XmAnyCallbackStruct *data)
 {
-  // Not yet implemented
+  int sts;
+
+  if ( attr->help_cb)
+    sts = (attr->help_cb)( attr->parent_ctx, "pb_slave_editor /helpfile=\"$pwr_exe/profibus_xtthelp.dat\"");
+  
 }
 
 static void gsdattr_activate_copy( Widget w, GsdAttr *attr, XmAnyCallbackStruct *data)
@@ -445,7 +449,7 @@ GsdAttr::GsdAttr( Widget a_parent_wid,
   pb_gsd  		*a_gsd,
   int 			a_edit_mode) :
   parent_ctx(a_parent_ctx), gsd(a_gsd), edit_mode(a_edit_mode), input_open(0), object(a_object), 
-  close_cb(0), save_cb(0), client_data(0), recall_idx(-1),
+  close_cb(0), save_cb(0), help_cb(0), client_data(0), recall_idx(-1),
   value_current_recall(0)
 {
   char		uid_filename[120] = {"pwr_exe:pb_gsd_attr.uid"};

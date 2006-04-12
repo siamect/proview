@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.h,v 1.2 2006-04-05 08:36:31 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.h,v 1.3 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,6 +75,7 @@ class GsdAttr {
     void 	*object;
     void       	(*close_cb) (void *);
     int		(*save_cb) (void *);
+    int		(*help_cb) (void *, char *);
     void	*client_data;
     int         recall_idx;
     static char	value_recall[30][160];

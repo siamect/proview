@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.1 2006-04-05 08:36:32 claes Exp $
+ * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.2 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,11 +44,21 @@ typedef struct {
   GsdAttr *attr;
   pwr_tAttrRef aref;
   gsd_sModuleClass *mc;
+  void *editor_ctx;
 } slave_sCtx;
+
+static int attr_help_cb( void *sctx, char *text)
+{
+  pwr_tCmd cmd;
+  slave_sCtx *ctx = (slave_sCtx *)sctx;
+
+  strcpy( cmd, "help ");
+  strcat( cmd, text);
+  return ((XNav *)ctx->editor_ctx)->command( cmd);
+}
 
 static void attr_close_cb( void *sctx)
 {
-  printf( "Close gsd\n");
   slave_sCtx *ctx = (slave_sCtx *)sctx;
   delete ctx->attr;
   delete ctx->gsd;
@@ -57,7 +67,6 @@ static void attr_close_cb( void *sctx)
 
 static int attr_save_cb( void *sctx)
 {
-  printf( "Save gsd\n");
   return 1;
 }
 
@@ -108,6 +117,17 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
     ctx->gsd->add_module_conf( cid, oid, name, module_name);
   }
 
+  // Set address
+  pwr_tUInt16 address;
+  
+  sts = gdh_ArefANameToAref( &ctx->aref, "SlaveAddress", &aaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aaref, &address, sizeof(address));
+  if ( EVEN(sts)) return sts;
+
+  ctx->gsd->address = address;
+
   // Set Ext_User_Prm_Data
   pwr_tUInt8 prm_user_data[256];
   pwr_tUInt16 prm_user_data_len;
@@ -136,8 +156,6 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
 // Show Configuration
 static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
 {
-  printf( "ShowConfiguration method called\n");
-
   pwr_tAName name;
   pwr_tString80 gsdfile;
   int sts;
@@ -176,6 +194,7 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
 
   ctx->mc = (gsd_sModuleClass *) calloc( module_cnt + 2, sizeof(gsd_sModuleClass));
   mc_cnt = 0;
+  ctx->editor_ctx = ip->EditorContext;
   
   ctx->mc[0].cid = pwr_cClass_Pb_Module;
   sts = gdh_ObjidToName( cdh_ClassIdToObjid(ctx->mc[0].cid),  
@@ -226,6 +245,7 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
   ctx->attr = new GsdAttr( (Widget) ip->WindowContext, ctx, 0, ctx->gsd, edit_mode);
   ctx->attr->close_cb = attr_close_cb;
   ctx->attr->save_cb = attr_save_cb;
+  ctx->attr->help_cb = attr_help_cb;
 
   return 1;
 }

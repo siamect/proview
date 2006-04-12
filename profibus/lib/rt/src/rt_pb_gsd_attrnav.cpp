@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.2 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1382,6 +1382,12 @@ int	GsdAttrNav::object_attr()
 		       NULL, flow_eDest_IntoLast);
     }    
   }
+
+  p = (void *) &gsd->address;
+  new ItemPbBase( this, "Address", "LocalGsdAttr", 
+		  pwr_eType_Int32, sizeof(pwr_tInt32), 0, 0,
+		  p, 0, 0,
+		  NULL, flow_eDest_IntoLast);
 
   new ItemPbMoreData( this, "SlaveGsdData", NULL, flow_eDest_IntoLast);
   new ItemPbPrmData( this, "UserPrmData", NULL, flow_eDest_IntoLast);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.3 2006-03-31 08:53:55 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.4 2006-04-12 12:17:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,8 @@ extern "C" {
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
 #include "wb_pwrb_msg.h"
+#include "rt_pb_msg.h"
+#include "wb_wnav.h"
 
 using namespace std;
 
@@ -73,6 +75,7 @@ typedef struct {
   ldh_tSession ldhses;
   pwr_tAttrRef aref;
   gsd_sModuleClass *mc;
+  void *editor_ctx;
 } slave_sCtx;
   
 
@@ -89,9 +92,18 @@ static void get_subcid( ldh_tSession ldhses, pwr_tCid cid, vector<pwr_tCid>& v)
   }
 }
 
+static int attr_help_cb( void *sctx, char *text)
+{
+  pwr_tCmd cmd;
+  slave_sCtx *ctx = (slave_sCtx *)sctx;
+
+  strcpy( cmd, "help ");
+  strcat( cmd, text);
+  return ((WNav *)ctx->editor_ctx)->command( cmd);
+}
+
 static void attr_close_cb( void *sctx)
 {
-  printf( "Close gsd\n");
   slave_sCtx *ctx = (slave_sCtx *)sctx;
   delete ctx->attr;
   delete ctx->gsd;
@@ -114,7 +126,14 @@ static int attr_save_cb( void *sctx)
   sts = ldh_ObjidToName(ctx->ldhses, ctx->aref.Objid, 
 			ldh_eName_Hierarchy, name, sizeof(name), &size);
   if ( EVEN(sts)) return sts;
-  printf( "Objid: %s\n", name);
+
+  // SlaveAddress
+  pwr_tUInt16 address = ctx->gsd->address;
+  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "SlaveAddress", &aaref);
+  if ( EVEN(sts)) return sts;
+  
+  sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &address, sizeof(address));
+  if ( EVEN(sts)) return sts;
 
   // VendorName
   sts = ctx->gsd->get_svalue( "Vendor_Name", svalue, sizeof(svalue)); 
@@ -404,6 +423,17 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
     ctx->gsd->add_module_conf( cid, oid, name, module_name);
   }
 
+  // Set address
+  pwr_tUInt16 address;
+
+  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "SlaveAddress", &aaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, &address, sizeof(address));
+  if ( EVEN(sts)) return sts;
+
+  ctx->gsd->address = address;
+
   // Set Ext_User_Prm_Data
   pwr_tUInt8 prm_user_data[256];
   pwr_tUInt16 prm_user_data_len;
@@ -433,12 +463,11 @@ static pwr_tStatus Configure (
   ldh_sMenuCall *ip
 )
 {
-  printf( "Here in SlaveConfigure\n");
-
   pwr_tOName name;
   char *gsdfile;
   int size;
   int sts;
+  int lsts;
   int edit_mode;
   pwr_tFileName fname;
   ldh_sSessInfo Info;
@@ -464,6 +493,7 @@ static pwr_tStatus Configure (
   slave_sCtx *ctx = (slave_sCtx *) calloc( 1, sizeof(slave_sCtx));
   ctx->ldhses = ip->PointedSession;
   ctx->aref = ip->Pointed;
+  ctx->editor_ctx = ip->EditorContext;
 
   get_subcid( ctx->ldhses, pwr_cClass_Pb_Module, mcv);
   ctx->mc = (gsd_sModuleClass *) calloc( mcv.size() + 2, sizeof(gsd_sModuleClass));
@@ -494,20 +524,21 @@ static pwr_tStatus Configure (
     
   ctx->gsd->set_classes( ctx->mc);
 
-  sts = load_modules( ctx);
-  if ( EVEN(sts)) return sts;
+  lsts = load_modules( ctx);
+  if ( lsts != PB__USERPRMDATALEN && EVEN(lsts)) return lsts;
 
   ctx->attr = new GsdAttr( (Widget) ip->WindowContext, ctx, 0, ctx->gsd, edit_mode);
   ctx->attr->close_cb = attr_close_cb;
   ctx->attr->save_cb = attr_save_cb;
+  ctx->attr->help_cb = attr_help_cb;
+
+  if ( EVEN(lsts)) {
+    wow_DisplayError( ctx->attr->toplevel, "Configuration load error", 
+		      "Configuration load error\nCheck configuration data");
+  }
 
   free( gsdfile);
 
-#if 0
-  sprintf( cmd, "@$pwr_exe/pb_slave_config %s", name);
-
-  wtt_command( ip->EditorContext, cmd);
-#endif
   return 1;
 }
 
