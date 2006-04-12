@@ -355,28 +355,57 @@ sub build_all_wbl ()
 
 sub method_build ()
 {
-  printf("-- Relink method dependent programs");
-  _module("rt");
-  $ENV{"export_type"} = "exp";
-  my($exe_dir) = $ENV{"pwr_exe"};
-  system("rm $exe_dir/rt_io_comm");
-  _build("exe", "rt_io_comm", "all");
-#  system("rm $exe_dir/rt_ini");
-#  _build("exe", "rt_ini", "all");
-  merge();
+  my($program) = $_[0];
+  if (!defined($program)) {
+    printf("-- Relink method dependent programs");
+    _module("rt");
+    $ENV{"export_type"} = "exp";
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/rt_io_comm");
+    _build("exe", "rt_io_comm", "all");
+#   system("rm $exe_dir/rt_ini");
+#   _build("exe", "rt_ini", "all");
+    merge();
   
-  _module("wb");
-  my($exe_dir) = $ENV{"pwr_exe"};
-  system("rm $exe_dir/wb");
-  _build("exe", "wb", "all");
-  merge();
+    _module("wb");
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/wb");
+    _build("exe", "wb", "all");
+    merge();
   
-  _module("xtt");
-  my($exe_dir) = $ENV{"pwr_exe"};
-  system("rm $exe_dir/rt_xtt");
-  _build("exe", "rt_xtt", "all");
-  merge();
-  
+    _module("xtt");
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/rt_xtt");
+    _build("exe", "rt_xtt", "all");
+    merge();
+  }  
+  if ( $_[0] eq "rt_io_comm" ) {
+    printf("-- Method build $program");
+    _module("rt");
+    $ENV{"export_type"} = "exp";
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/rt_io_comm");
+    _build("exe", "rt_io_comm", "all");
+    merge();
+  }
+  if ( $_[0] eq "wb" ) {
+    printf("-- Method build $program");
+    _module("wb");
+    $ENV{"export_type"} = "exp";
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/wb");
+    _build("exe", "wb", "all");
+    merge();
+  }  
+  if ( $_[0] eq "rt_xtt" ) {
+    printf("-- Method build $program");
+    _module("xtt");
+    $ENV{"export_type"} = "exp";
+    my($exe_dir) = $ENV{"pwr_exe"};
+    system("rm $exe_dir/rt_xtt");
+    _build("exe", "rt_xtt", "all");
+    merge();
+  }  
 }
 
 sub create_all_modules ()

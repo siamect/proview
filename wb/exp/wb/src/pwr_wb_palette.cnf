@@ -88,7 +88,7 @@ palette NavigatorPalette
     menu IO_SSAB
     {
       class Rack_SSAB
-      class RemoteRack_SSAB
+      class Ssab_RemoteRack
       menu Cards
       {
         class Di_DIX2

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_io_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_io_msg.msg,v 1.4 2006-04-12 12:18:12 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -98,6 +98,8 @@ chanrange	<Error in channel range attributes>			/error
 notconnected	<Object is not connected>				/error
 connectedclass	<Incorrect class of connected object>			/error
 replaced	<Symbol is replaced>					/info
+normal		<Normal operating state>				/succ
+initfail        <Initialization failed>                                 /error
 .end
 
 
