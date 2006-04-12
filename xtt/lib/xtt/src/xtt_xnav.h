@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.16 2006-03-31 14:40:51 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.17 2006-04-12 12:19:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -431,6 +431,7 @@ class XNav {
     int search_next();
     int create_object( char *classname, char *name);
     int delete_object( char *name);
+    void print_methods();
 
     // Table module member functions
     int show_plcthreads();

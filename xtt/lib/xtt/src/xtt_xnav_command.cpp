@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.27 2006-03-31 14:41:16 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.28 2006-04-12 12:19:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -94,6 +94,8 @@ if ( !xnav->gbl.gdh_started)\
 
 #define	XNAV_MENU_CREATE	0
 #define	XNAV_MENU_ADD		1
+
+pwr_dImport pwr_BindXttClasses(Base);
 
 static char null_str[] = "";
 static char xtt_version[] = "V3.3a";
@@ -1840,6 +1842,11 @@ static int	xnav_show_func(	void		*client_data,
     }
     brow_ResetNodraw( xnav->brow->ctx);
     brow_Redraw( xnav->brow->ctx, 0);
+  }
+  else if ( strncmp( arg1_str, "METHODS", strlen( arg1_str)) == 0)
+  {
+    /* Command is "SHOW METHODS" */
+    xnav->print_methods();
   }
   else
   {
@@ -6422,6 +6429,23 @@ int XNav::delete_object(
 
   message('I',"Object deleted");
   return XNAV__SUCCESS;
+}
+
+void XNav::print_methods()
+{
+  int i, j;
+
+  printf( "Base Methods\n");
+  for (i = 0;; i++) {
+    if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0') break;
+
+    printf( "%3d %-20s\n", i, pwr_gBase_XttClassMethods[i].ClassName);
+    for (j = 0;; j++) {
+      if ((*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName[0] == '\0')
+	break;
+      printf( "       %s\n", (*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName);
+    }
+  }
 }
 
 
