@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.3 2006-04-12 12:14:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@
 typedef struct {
 	unsigned int	Address[2];
 	int		Qbus_fp;
+	unsigned int	bfb_item;
 	struct {
 	  pwr_sClass_Po *sop[16];
 	  void	*Data[16];
@@ -68,6 +69,7 @@ static pwr_tStatus IoCardInit (
   pwr_sClass_Do_HVDO32	*op;
   io_sLocal 		*local;
   int			i, j;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Do_HVDO32 *) cp->op;
   local = calloc( 1, sizeof(*local));
@@ -77,8 +79,18 @@ static pwr_tStatus IoCardInit (
 
   local->Address[0] = op->RegAddress;
   local->Address[1] = op->RegAddress + 2;
-  local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->Qbus_fp = r_local->Qbus_fp;
 
+  /* Get item offset from rack's local and increment it */
+  local->bfb_item = r_local->out_items;
+  r_local->out_items += 2;
+
+  /* Set card address in rack´s local out-area and initialize data */
+  r_local->out.item[local->bfb_item].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
+  r_local->out.item[local->bfb_item+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
+  r_local->out.item[local->bfb_item].data = 0;
+  r_local->out.item[local->bfb_item+1].data = 0;
+    
   /* Init filter for Po signals */
   for ( i = 0; i < 2; i++)
   {
@@ -134,7 +146,8 @@ static pwr_tStatus IoCardWrite (
   io_sCard	*cp  
 ) 
 {
-  io_sLocal 		*local;
+  io_sLocal 		*local = (io_sLocal *) cp->Local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Do_HVDO32	*op;
   pwr_tUInt16		invmask;
@@ -144,7 +157,6 @@ static pwr_tStatus IoCardWrite (
   qbus_io_write		wb;
   int			sts;
 
-  local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Do_HVDO32 *) cp->op;
 
 #if defined(OS_ELN)
@@ -193,10 +205,19 @@ static pwr_tStatus IoCardWrite (
       data = (data & ~ testmask) | (testmask & testvalue);
     }
 
-    wb.Data = data;
-    wb.Address = local->Address[i];
-    sts = write( local->Qbus_fp, &wb, sizeof(wb));
-    if ( sts == -1)
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Write to local Q-bus */
+      wb.Data = data;
+      wb.Address = local->Address[i];
+      sts = write( local->Qbus_fp, &wb, sizeof(wb));
+    }
+    else {
+      /* Write to remote Q-bus, I/O-area stored in rack's local */
+      r_local->out.item[local->bfb_item+i].data = data;
+      sts = 1;      
+    }
+
+    if ( sts <= 0)
     {
 #if 0
       /* Exceptionhandler was called */

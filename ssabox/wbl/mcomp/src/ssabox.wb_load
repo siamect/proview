@@ -7635,15 +7635,15 @@ Volume SsabOx $ClassVolume 0.0.250.5
       EndObject
     EndObject
     Object Ssab_RemoteRack $ClassDef 29 10-FEB-2006 15:50:27.32
-      Body SysBody 10-FEB-2006 15:49:38.85
+      Body SysBody 06-APR-2006 08:38:48.21
         Attr Editor = 0
         Attr Method = 1
-        Attr Flags = 2128
+        Attr Flags = 10320
       EndBody
       Object RtBody $ObjBodyDef 1 10-FEB-2006 15:49:38.87
-        Body SysBody 10-FEB-2006 15:49:38.87
-          Attr StructName = "RemoteRack_SSAB"
-          Attr NextAix = "_X7"
+        Body SysBody 07-APR-2006 09:09:48.65
+          Attr StructName = "Ssab_RemoteRack"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 1 10-FEB-2006 15:49:38.87
           Body SysBody 10-FEB-2006 15:49:38.87
@@ -7673,6 +7673,21 @@ Volume SsabOx $ClassVolume 0.0.250.5
           Body SysBody 10-FEB-2006 15:59:53.79
             Attr PgmName = "ThreadObject"
             Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        Object Status $Attribute 7 10-APR-2006 08:44:55.48
+          Body SysBody 10-APR-2006 08:45:13.67
+            Attr TypeRef = "pwrs:Type-$Status"
+          EndBody
+        EndObject
+        Object RX_packets $Attribute 8 10-APR-2006 08:46:05.99
+          Body SysBody 10-APR-2006 08:46:46.68
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object TX_packets $Attribute 9 10-APR-2006 08:47:07.78
+          Body SysBody 10-APR-2006 08:47:00.72
+            Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
       EndObject

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.3 2006-04-12 12:14:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,16 +49,9 @@ static pwr_tStatus IoRackInit (
 ) 
 {
   io_sRackLocal *local;
-  io_sCard *cardp;
-  pwr_tCid cid;
   pwr_sClass_Ssab_RemoteRack *op;
-  int sts, in_offset, out_offset;
+  int sts;
 
-  pwr_sClass_Di_DIX2 *dicp;
-  pwr_sClass_Do_HVDO32 *docp;
-  pwr_sClass_Ai_AI32uP *aicp;
-  pwr_sClass_Co_PI24BO *cocp;
-  
   op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
   local = calloc( 1, sizeof(*local));
   rp->Local = local;
@@ -98,48 +91,8 @@ static pwr_tStatus IoRackInit (
     return IO__ERRINIDEVICE;
   }
   
-  /* Loop all cards */
-  cardp = rp->cardlist;
-  in_offset = 0;
-  out_offset = 0;
   local->in_items = 0;
   local->out_items = 0;
-  
-  while (cardp) {
-    cid = cardp->Class;
-    
-    switch (cid) {
-
-      case pwr_cClass_Di_DIX2:
-        dicp = (pwr_sClass_Di_DIX2 *) cardp->op;
-	cardp->offset = in_offset;
-	in_offset += 2;
-        printf("Di card found, address: %d\n", dicp->RegAddress);
-	break;
-      case pwr_cClass_Do_HVDO32:
-        docp = (pwr_sClass_Do_HVDO32 *) cardp->op;
-        printf("Do card found, address: %d\n", docp->RegAddress);
-	cardp->offset = out_offset;
-	out_offset += 2;
-	break;
-      case pwr_cClass_Ai_AI32uP:
-        aicp = (pwr_sClass_Ai_AI32uP *) cardp->op;
-        printf("Ai card found, address: %d\n", aicp->RegAddress);
-	break;
-      case pwr_cClass_Co_PI24BO:
-        cocp = (pwr_sClass_Co_PI24BO *) cardp->op;
-        printf("Co card found, address: %d\n", cocp->RegAddress);
-	break;
-    }
-    
-    cardp = cardp->next;
-  }
-
-  local->in_items = in_offset;
-  local->out_items = out_offset;
-  
-  local->in.service = 1;
-  local->in.length = local->in_items*4 + 4;
   
   op->RX_packets = 0;
   op->TX_packets = 0;
@@ -202,19 +155,15 @@ static pwr_tStatus IoRackWrite (
   pwr_sClass_Ssab_RemoteRack *op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
 
   // Send write request
-  local->out.service = 2;
-  local->out.length = 8;
-  
-  local->out.item[0].address = 64512;
-  local->out.item[0].data = 0xffff;
+  local->out.service = BFB_SERVICE_WRITE;  
+  local->out.length = local->out_items*4 + 4;
   sts = send(local->s, &local->out, local->out.length, 0);
-
   op->TX_packets++;
   
   // Send read request
-  
+  local->in.service = BFB_SERVICE_READ;  
+  local->in.length = local->in_items*4 + 4;
   sts = send(local->s, &local->in, local->in.length, 0);
-
   op->TX_packets++;
 
   return IO__SUCCESS;

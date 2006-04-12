@@ -1,3 +1,6 @@
+#define BFB_SERVICE_READ 1
+#define BFB_SERVICE_WRITE 2
+
 struct bfb_item {
 	pwr_tUInt16	address;
 	pwr_tUInt16	data;
@@ -6,7 +9,7 @@ struct bfb_item {
 struct bfb_buf {
 	pwr_tUInt16	service;
 	pwr_tUInt16	length;
-	struct bfb_item	item[64];
+	struct bfb_item	item[256];
 };
 
 typedef struct {

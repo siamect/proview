@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_di_dix2.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_di_dix2.c,v 1.3 2006-04-12 12:14:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@
 typedef struct {
 	unsigned int	Address[2];
 	int		Qbus_fp;
+	unsigned int	bfb_item;
 	struct {
 	  pwr_sClass_Di *sop[16];
 	  void	*Data[16];
@@ -80,12 +81,16 @@ static pwr_tStatus IoCardInit (
   local->Address[1] = op->RegAddress + 2;
   local->Qbus_fp = r_local->Qbus_fp;
   
-  /* Set card address in rack´s local */
-  r_local->in.item[cp->offset].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
-  r_local->in.item[cp->offset+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
-  r_local->in.item[cp->offset].data = 0;
-  r_local->in.item[cp->offset+1].data = 0;
-
+  /* Get item offset from rack's local and increment it */
+  local->bfb_item = r_local->in_items;
+  r_local->in_items += 2;
+  
+  /* Set card address in rack´s local in- and out-area */
+  r_local->in.item[local->bfb_item].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
+  r_local->in.item[local->bfb_item+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
+  r_local->in.item[local->bfb_item].data = 0;
+  r_local->in.item[local->bfb_item+1].data = 0;
+  
   /* Init filter */
   for ( i = 0; i < 2; i++)
   {
@@ -176,7 +181,7 @@ static pwr_tStatus IoCardRead (
     }
     else {
       /* Read from remote Q-bus, I/O-area stored in rack's local */
-      data = r_local->in.item[cp->offset+i].data;
+      data = r_local->in.item[local->bfb_item+i].data;
       sts = 1;
     }
     
