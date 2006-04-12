@@ -53,10 +53,10 @@ Volume Profibus $ClassVolume 0.0.250.7
         Attr PgmName = "PbOrientation"
       EndBody
       Object Byte $Value 61 16-JAN-2006 10:08:18.34
-        Body SysBody 16-JAN-2006 10:08:18.34
+        Body SysBody 06-APR-2006 08:24:33.54
           Attr Text = "Byte"
           Attr PgmName = "Byte"
-          Attr Value = 16
+          Attr Value = 8
         EndBody
       EndObject
       Object Word $Value 62 16-JAN-2006 10:08:18.34
