@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_di_dix2.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: rt_io_m_di_dix2.c,v 1.2 2006-04-12 10:14:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@
 #include "rt_io_card_close.h"
 #include "rt_io_card_read.h"
 #include "qbus_io.h"
+#include "rt_io_m_ssab_locals.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -57,10 +58,6 @@ typedef struct {
 	} Filter[2];
 } io_sLocal;
 
-typedef struct {
-	int		Qbus_fp;
-} io_sRackLocal;
-
 static pwr_tStatus IoCardInit (
   io_tCtx	ctx,
   io_sAgent	*ap,
@@ -71,6 +68,7 @@ static pwr_tStatus IoCardInit (
   pwr_sClass_Di_DIX2	*op;
   io_sLocal 		*local;
   int			i, j;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Di_DIX2 *) cp->op;
   local = calloc( 1, sizeof(*local));
@@ -80,7 +78,13 @@ static pwr_tStatus IoCardInit (
 
   local->Address[0] = op->RegAddress;
   local->Address[1] = op->RegAddress + 2;
-  local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->Qbus_fp = r_local->Qbus_fp;
+  
+  /* Set card address in rack´s local */
+  r_local->in.item[cp->offset].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
+  r_local->in.item[cp->offset+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
+  r_local->in.item[cp->offset].data = 0;
+  r_local->in.item[cp->offset+1].data = 0;
 
   /* Init filter */
   for ( i = 0; i < 2; i++)
@@ -135,7 +139,8 @@ static pwr_tStatus IoCardRead (
   io_sCard	*cp  
 ) 
 {
-  io_sLocal 		*local;
+  io_sLocal 		*local = (io_sLocal *) cp->Local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Di_DIX2	*op;
   pwr_tUInt16		invmask;
@@ -144,7 +149,6 @@ static pwr_tStatus IoCardRead (
   int			sts;
   qbus_io_read 		rb;
 
-  local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Di_DIX2 *) cp->op;
 
   for ( i = 0; i < 2; i++)
@@ -164,10 +168,19 @@ static pwr_tStatus IoCardRead (
         break;
     }
 
-    rb.Address = local->Address[i];
-    sts = read( local->Qbus_fp, &rb, sizeof(rb));
-    data = (unsigned short) rb.Data;
-    if ( sts == -1)
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Read from local Q-bus */
+      rb.Address = local->Address[i];
+      sts = read( local->Qbus_fp, &rb, sizeof(rb));
+      data = (unsigned short) rb.Data;
+    }
+    else {
+      /* Read from remote Q-bus, I/O-area stored in rack's local */
+      data = r_local->in.item[cp->offset+i].data;
+      sts = 1;
+    }
+    
+    if ( sts <= 0)
     {
       /* Increase error count and check error limits */
       op->ErrorCount++;

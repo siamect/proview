@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_rack_ssab.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: rt_io_m_rack_ssab.c,v 1.2 2006-04-12 10:14:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,12 +32,8 @@
 #include "rt_io_base.h"
 #include "rt_errh.h"
 #include "rt_io_rack_init.h"
+#include "rt_io_m_ssab_locals.h"
 #include "rt_io_msg.h"
-
-
-typedef struct {
-	int		Qbus_fp;
-} io_sRackLocal;
 
 
 /*----------------------------------------------------------------------------*\

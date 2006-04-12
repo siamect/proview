@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.2 2006-04-12 10:14:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@
 #include "rt_io_card_close.h"
 #include "rt_io_card_write.h"
 #include "qbus_io.h"
+#include "rt_io_m_ssab_locals.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -56,11 +57,6 @@ typedef struct {
 	pwr_tBoolean	OldTestOn[IO_MAXCHAN];
 	int		WriteFirst;
 } io_sLocal;
-
-typedef struct {
-	int		Qbus_fp;
-} io_sRackLocal;
-
 
 static pwr_tStatus AoRangeToCoef( 
   io_sChannel 	*chanp)
