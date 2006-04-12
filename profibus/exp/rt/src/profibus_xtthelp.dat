@@ -1,0 +1,78 @@
+<topic> pb_slave_editor
+Profibus Slave Configuration
+
+The Profibus configuration for slaves are displayed and configured
+from the Profibus Gsd Editor.
+
+The configuration is read from the gsd-file for the slave and from 
+the data of any previous configuration stored in the PrmUserData attribute
+of the slave object.
+
+<b>SlaveGsdData
+Under the map SlaveGsdData data from the gsd-file are displayed. This data
+can't be changed.
+
+<b>UserPrmData
+The UserPrmData map displays the configuration of the slave.
+
+<b>Modules
+There is one module entry for each possible module in the slave. Every
+module might not be occupied.
+
+A module is specified by the 
+- ObjectName.
+- Module type. The available types are listed from the gsd-file,
+  and one is selected. If no module is present, 'No' is selected.
+- UserPrmData, which holds the configuration of the module.
+- Class, i.e. the class of the module object.
+
+<h1> Configuration
+When the GsdEditor is opened from the Configurator in edit mode, it is
+possible to configure a Profibus DP Slave. 
+
+Create an object of class Pb_DP_Slave. The object can also be of a class
+that is a subclass of Pb_DP_Slave.
+
+Configuration data are fetched from a gsd-file. If you use a Pb_DP_Slave
+object, the filename of the gds-file should be inserted into the GSDfile
+attribute. For subclasses, a valid gsd-file is already set as a template
+value.
+
+The GsdEditor is then opened from the popup menu of the Pb_DP_Slave object.
+Open the UserPrmData map and set configuration values for the slave. This
+data is specific for the actual slave type.
+
+Next step is to configure the modules of the slave. Open the first Module
+entry, and select a module type. Under Type all the module types available
+for this slave are listed.
+
+When a module type is choosen, UserPrmData for this type can be edited under 
+the UserPrmData map. This data is specific for the actual module type.
+
+The configuration will create a module object for each module, and you have
+to set an object name and a class for this object. Under the Class entry, all
+available module classes are listed. If you find a special module class
+that matches you module, you choose this, otherwise you choose the Pb_Module 
+class.
+
+Configure the other modules of the slave in the same way, and then press the
+Apply button. Now the configuration data is inserted into the slave object, 
+and the module objects are created.
+
+The configuration in the GsdEditor is now finished and you can leave the 
+GsdEditor. But there are still some configuration to be done.
+
+If you found a matching module class for each module, the module objects will 
+contain the channels for the module. Though, if you had to use the Pb_Module 
+class, you have to create channel objects under the module object. The channel 
+objects should match the data area (input and/or ouput area) of the specific 
+module.
+
+Finally you have to connect the channels to signal objects. In some cases, it
+is possible to connect a module to a component object, and then make all signal/
+channel connections in one operation.
+
+<image> profibus_gsdeditor.gif
+</topic>
+
+
