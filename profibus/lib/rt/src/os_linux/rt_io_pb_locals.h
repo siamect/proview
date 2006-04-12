@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_pb_locals.h,v 1.1 2006-01-16 10:55:42 claes Exp $
+ * Proview   $Id: rt_io_pb_locals.h,v 1.2 2006-04-12 12:16:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,17 +19,20 @@
 
 #define IO_MAXCHAN 96
 
+// These status constants are obsolete from V4.1, except for the old style
+// (Pb_Di, Pb_Do etc)
+
 #define PB_MODULE_STATE_NOTINIT 0
 #define PB_MODULE_STATE_OPERATE 1
 
-#define PB_SLAVE_STATE_NOTINIT 0
-#define PB_SLAVE_STATE_STOPPED 1
-#define PB_SLAVE_STATE_OPERATE 2
+//#define PB_SLAVE_STATE_NOTINIT 0
+//#define PB_SLAVE_STATE_STOPPED 1
+//#define PB_SLAVE_STATE_OPERATE 2
 
-#define PB_MASTER_STATE_NOTINIT 0
-#define PB_MASTER_STATE_STOPPED 1
-#define PB_MASTER_STATE_CLEARED 2
-#define PB_MASTER_STATE_OPERATE 3
+//#define PB_MASTER_STATE_NOTINIT 0
+//#define PB_MASTER_STATE_STOPPED 1
+//#define PB_MASTER_STATE_CLEARED 2
+//#define PB_MASTER_STATE_OPERATE 3
 
 #define PB_STALLACTION_NONE	0
 #define PB_STALLACTION_RESET 	1

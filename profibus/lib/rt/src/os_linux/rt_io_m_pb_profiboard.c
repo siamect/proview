@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.2 2006-01-16 13:56:52 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.3 2006-04-12 12:16:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "rt_io_agent_init.h"
+#include "rt_pb_msg.h"
 
 #include "rt_io_profiboard.h"
 
@@ -284,9 +285,9 @@ static pwr_tStatus init_dp_slave (
   
   local_agent = (io_sAgentLocal *) (ap->Local);
 
-  op->Status = PB_SLAVE_STATE_NOTINIT;
+  op->Status = PB__NOTINIT;
  
-  errh_Info( "Config of Profibus DP Slave %s", name );
+  errh_Info( "Download Profibus DP Slave config - %s", name );
  
   // Try to initialize slave, make three attempts before we give up
 
@@ -327,11 +328,12 @@ static pwr_tStatus init_dp_slave (
     nanosleep(&rqtp, &rmtp);
   }
   if (sts != PB_OK) {
+    op->Status = PB__INITFAIL;
     errh_Info( "ERROR Init Profibus DP slave %s", name);
     return IO__ERRINIDEVICE;
   }
 
-  op->Status = PB_SLAVE_STATE_STOPPED;
+  op->Status = PB__NOCONN;
   return IO__SUCCESS;
 }
 
@@ -368,6 +370,8 @@ static pwr_tStatus IoAgentInit (
   local = (io_sAgentLocal *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
 
+  op->Status = PB__NOTINIT;
+
   /* Open Pb driver */
   sprintf(devname, "/dev/pbus%1d", (int)op->BusNumber);
   local->Pb_fp = open(devname, O_RDWR);
@@ -375,6 +379,7 @@ static pwr_tStatus IoAgentInit (
   if (local->Pb_fp == -1)
   {
     /* Can't open driver */
+    op->Status = PB__INITFAIL;
     errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "open device");
     ctx->Node->EmergBreakTrue = 1;
     return IO__ERRDEVICE;
@@ -383,6 +388,7 @@ static pwr_tStatus IoAgentInit (
   /* If this is not the Profibus I/O process, return */
   
   if ((op->Process & io_mProcess_Profibus) && (ctx->Process != io_mProcess_Profibus)) {
+    op->Status = PB__NOTINIT;
     errh_Info( "Init template I/O agent for Profibus DP Master %s, %d", ap->Name, ctx->Process );
     return IO__SUCCESS;
   }
@@ -395,10 +401,13 @@ static pwr_tStatus IoAgentInit (
     
     while (!ok) {
     
+      op->Status = PB__NOTINIT;
+      
       /* Initialize CMI */
 
       sts = pb_cmi_init(local->Pb_fp);
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "cmi init");
         return IO__ERRINIDEVICE;
       }
@@ -407,6 +416,7 @@ static pwr_tStatus IoAgentInit (
 
       sts = fmb_set_configuration(local->Pb_fp,  op); 
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
         return IO__ERRINIDEVICE;
       }
@@ -415,6 +425,7 @@ static pwr_tStatus IoAgentInit (
 
       sts = dp_init_master(local->Pb_fp,  op); 
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init master");
         return IO__ERRINIDEVICE;
       }
@@ -422,6 +433,7 @@ static pwr_tStatus IoAgentInit (
       /* Set DP bus parameters */
       sts = dp_init_bus(local->Pb_fp,  op); 
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init bus");
         return IO__ERRINIDEVICE;
       }
@@ -430,6 +442,7 @@ static pwr_tStatus IoAgentInit (
       
       sts = pb_set_stalltime(local->Pb_fp, op->StallTime);
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "set stalltime");
         return IO__ERRINIDEVICE;
       }
@@ -437,11 +450,12 @@ static pwr_tStatus IoAgentInit (
       /* Move to STOP mode */
       sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_STOP);
       if (sts != PB_OK) {
+        op->Status = PB__INITFAIL;
         errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
         return IO__ERRINIDEVICE;
       }
 
-      op->Status = PB_MASTER_STATE_STOPPED;
+      op->Status = PB__STOPPED;
 
       /* Loop through all slaves (traverse agent's children) and initialize them */
 
@@ -450,10 +464,9 @@ static pwr_tStatus IoAgentInit (
   
       while (ODD(status)) {
         status = gdh_GetObjectClass(slave_objid, &slave_class);
-        if (slave_class == pwr_cClass_Pb_DP_Slave ) {
-          status = init_dp_slave(ap, slave_objid);
-          op->NumberSlaves++;
-        }
+//	printf("Found slave, class %d\n", slave_class);
+        status = init_dp_slave(ap, slave_objid);
+        op->NumberSlaves++;
         status = gdh_GetNextSibling(slave_objid, &slave_objid);
       }
 
@@ -461,19 +474,19 @@ static pwr_tStatus IoAgentInit (
   
       sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_CLEAR);
       if (sts == PB_OK) {
-        op->Status = PB_MASTER_STATE_CLEARED;
+        op->Status = PB__CLEARED;
         sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_OPERATE);
         if (sts == PB_OK) {
-          op->Status = PB_MASTER_STATE_OPERATE;
+          op->Status = PB__NORMAL;
           errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
         }
         else {
-          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+          errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
           return IO__ERRINIDEVICE;
         }    
       }
       else {
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
+        errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
         return IO__ERRINIDEVICE;
       }
       
@@ -494,6 +507,8 @@ static pwr_tStatus IoAgentInit (
     }
     
   }    
+  else
+    op->Status = PB__DISABLED;
   
   return IO__SUCCESS;
 }
@@ -528,12 +543,12 @@ static pwr_tStatus IoAgentRead (
   
     switch (op->Status) {
   
-      case PB_MASTER_STATE_OPERATE:
+      case PB__NORMAL:
         sts = pb_cmi_poll(local->Pb_fp, NULL, NULL, NULL);
  
         /* In case of device error, move to state NOTINIT */
         if (sts == PB_DEVICE_ERROR) {
-          op->Status = PB_MASTER_STATE_NOTINIT;
+          op->Status = PB__NOTINIT;
         }
         /* In case of diagnostic message, just mark it.
            in the future, take care of it */
@@ -543,7 +558,7 @@ static pwr_tStatus IoAgentRead (
         break;
 
       default:
-        op->Status = PB_MASTER_STATE_NOTINIT;
+        op->Status = PB__NOTINIT;
         errh_Info( "Reconfig of Profibus DP Master %s - %d", ap->Name, count );      
         IoAgentClose(ctx, ap);
         IoAgentInit(ctx, ap);

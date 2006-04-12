@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.2 2006-01-16 13:56:52 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.3 2006-04-12 12:16:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,29 +41,6 @@
 #include "rt_errh.h"
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
-
-pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
-{
-  switch (rep) {
-    case pwr_eDataRepEnum_Int64:
-    case pwr_eDataRepEnum_UInt64:
-    case pwr_eDataRepEnum_Float64:
-      return 8;
-      break;
-    case pwr_eDataRepEnum_Int32:
-    case pwr_eDataRepEnum_UInt32:
-    case pwr_eDataRepEnum_Float32:
-      return 4;
-      break;
-    case pwr_eDataRepEnum_Int16:
-    case pwr_eDataRepEnum_UInt16:
-      return 2;
-      break;
-    default:
-      return 1;
-      break;
-  }
-}
 
 /*----------------------------------------------------------------------------*\
   Convert ai from raw float value to signal value and actual value
@@ -136,101 +113,16 @@ static pwr_tStatus IoCardInit (
 {
   io_sCardLocal *local;
   pwr_sClass_Pb_Module *op;
-  int i, input_count, output_count, chan_size, bit_pos;
-  io_sChannel *chanp;
-  pwr_sClass_ChanAi *chan_ai;
-  pwr_sClass_ChanAit *chan_ait;
-  pwr_sClass_ChanIi *chan_ii;
-  pwr_sClass_ChanAo *chan_ao;
-  pwr_sClass_ChanIo *chan_io;
+  int i;
 
   op = (pwr_sClass_Pb_Module *) cp->op;
   local = (io_sCardLocal *) cp->Local;
   
-  if (op->Status == PB__SUCCESS) {
-    input_count = 0;
-    output_count = 0;
-    bit_pos = 0;
-    for (i=0; i<cp->ChanListSize; i++) {
-      chanp = &cp->chanlist[i];
-      switch (chanp->ChanClass) {
-      /*
-        case pwr_cClass_ChanDi:
-	  printf("Di channel found in %s\n", cp->Name);
-	  chan_di = (pwr_sClass_ChanDi *) chanp->cop;
-          chanp->offset = byte_count;
-	  chan_size = GetChanSize(chan_di->Representation);
-	  chanp->mask = 1<<bit_pos;
-	  bit_pos++;
-	  if (bit_pos >= 8) {
-	    byte_count++;
-	    bit_pos = 0;
-	  }
-	  break;
-       */
-        case pwr_cClass_ChanAi:
-//	  printf("Ai channel found in %s\n", cp->Name);
-	  chan_ai = (pwr_sClass_ChanAi *) chanp->cop;
-          chanp->offset = input_count;
-	  chan_size = GetChanSize(chan_ai->Representation);
-          chanp->size = chan_size;
-	  chanp->mask = 0;
-	  input_count += chan_size;
-          io_AiRangeToCoef(chanp);
-	  break;
-        case pwr_cClass_ChanAit:
-//	  printf("Ait channel found in %s\n", cp->Name);
-	  chan_ait = (pwr_sClass_ChanAit *) chanp->cop;
-          chanp->offset = input_count;
-	  chan_size = GetChanSize(chan_ait->Representation);
-          chanp->size = chan_size;
-	  chanp->mask = 0;
-	  input_count += chan_size;
-          io_AiRangeToCoef(chanp);
-	  break;
-        case pwr_cClass_ChanIi:
-//	  printf("Ii channel found in %s\n", cp->Name);
-	  chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
-          chanp->offset = input_count;
-	  chan_size = GetChanSize(chan_ii->Representation);
-          chanp->size = chan_size;
-	  chanp->mask = 0;
-	  input_count += chan_size;
-	  break;
-	case pwr_cClass_ChanAo:
-//	  printf("Ao channel found in %s\n", cp->Name);
-	  chan_ao = (pwr_sClass_ChanAo *) chanp->cop;
-          chanp->offset = output_count;
-	  chan_size = GetChanSize(chan_ao->Representation);
-          chanp->size = chan_size;
-	  chanp->mask = 0;
-	  output_count += chan_size;
-          io_AoRangeToCoef(chanp);
-	  break;
-        case pwr_cClass_ChanIo:
-//	  printf("Io channel found in %s\n", cp->Name);
-	  chan_io = (pwr_sClass_ChanIo *) chanp->cop;
-          chanp->offset = output_count;
-	  chan_size = GetChanSize(chan_io->Representation);
-          chanp->size = chan_size;
-	  chanp->mask = 0;
-	  output_count += chan_size;
-	  break;
-      }
-    }
-  
-    for (i=0; i<IO_MAXCHAN; i++) {
-      local->scancount[i] = 0;
-    }
-
-  }
-  else {
-    errh_Info( "Error initializing Pb module %s", cp->Name );
-    op->Status = PB__INITFAIL;
+  for (i=0; i<IO_MAXCHAN; i++) {
+    local->scancount[i] = 0;
   }
 
-  printf("Method Pb_Module-IoCardInit\n");
-  printf("Module size: input %d, output %d\n", input_count, output_count);
+  op->Status = PB__NORMAL;
 
   return IO__SUCCESS;
 }
@@ -249,7 +141,8 @@ static pwr_tStatus IoCardRead (
   io_sCardLocal *local;
   pwr_sClass_Pb_Module *op;
   io_sChannel *chanp;
-//  pwr_sClass_ChanDi *chan_di;
+  pwr_sClass_ChanDi *chan_di;
+  pwr_sClass_Di *sig_di;
   pwr_sClass_ChanAi *chan_ai;
   pwr_sClass_Ai *sig_ai;
 //  pwr_sClass_ChanAit *chan_ait;
@@ -268,26 +161,47 @@ static pwr_tStatus IoCardRead (
   op = (pwr_sClass_Pb_Module *) cp->op;
   local = (io_sCardLocal *) cp->Local;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
-  
-  if (slave->Status == PB_SLAVE_STATE_NOTINIT) {
-    op->Status = PB__INITFAIL;
-  }
-  else if (slave->Status == PB_SLAVE_STATE_STOPPED) {
-    op->Status = PB__NOCONN;
-  }
-  else if (slave->Status == PB_SLAVE_STATE_OPERATE) {
-    op->Status = PB__NORMAL;
-  }
 
-  if (slave->DisableSlave == 1) {
-    op->Status = PB__DISABLED;
-  }
-  else {
+  op->Status = slave->Status;  
+
+  if (op->Status == PB__NORMAL) { 
+  
     for (i=0; i<cp->ChanListSize; i++) {
       chanp = &cp->chanlist[i];
       switch (chanp->ChanClass) {
       
+	// Channel type is Di (digital input)
+	
         case pwr_cClass_ChanDi:
+	  chan_di = (pwr_sClass_ChanDi *) chanp->cop;
+	  sig_di = (pwr_sClass_Di *) chanp->sop;
+	  if (chan_di && sig_di && chan_di->ConversionOn) {
+	  
+	    switch (chan_di->Representation) {
+
+              case pwr_eDataRepEnum_Bit8:
+	        memcpy(&udata8, local->input_area + cp->offset + chanp->offset, 1);
+		* (pwr_tUInt16 *) (chanp->vbp) = ((udata8 & chanp->mask) != 0);
+	        break;
+
+              case pwr_eDataRepEnum_Bit16:
+	        memcpy(&udata16, local->input_area + cp->offset + chanp->offset, 2);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
+		* (pwr_tUInt16 *) (chanp->vbp) = ((udata16 & chanp->mask) != 0);
+	        break;
+
+              case pwr_eDataRepEnum_Bit32:
+	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
+		* (pwr_tUInt16 *) (chanp->vbp) = ((udata32 & chanp->mask) != 0);
+	        break;
+
+	    }
+	    
+	    // Invert ?
+	    if (chan_di->InvertOn) * (pwr_tUInt16 *) (chanp->vbp) ^= 1;
+	    
+	  }
 	  break;
 
 	// Channel type is Ai (analog input)
@@ -333,6 +247,13 @@ static pwr_tStatus IoCardRead (
 	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 4);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
 		f_raw = (float) udata32;
+	        break;
+		
+              case pwr_eDataRepEnum_Float32:
+	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian ||
+		    slave->FloatRepresentation == pwr_ePbNumberRep_FloatIEEE) udata32 = swap32(udata32);
+	        memcpy(&f_raw, &udata32, 4);
 	        break;
 		
             }
@@ -416,8 +337,8 @@ static pwr_tStatus IoCardWrite (
   pwr_sClass_Pb_Module *op;
   io_sChannel *chanp;
   
-//  pwr_sClass_ChanDo *chan_do;
-//  pwr_sClass_Do *sig_do;
+  pwr_sClass_ChanDo *chan_do;
+  pwr_sClass_Do *sig_do;
   pwr_sClass_ChanAo *chan_ao;
   pwr_sClass_Ao *sig_ao;
   pwr_sClass_ChanIo *chan_io;
@@ -425,6 +346,7 @@ static pwr_tStatus IoCardWrite (
 
   pwr_sClass_Pb_DP_Slave *slave;
   pwr_tUInt8 udata8 = 0;
+  pwr_tUInt8 *udata8p;
   pwr_tUInt16 udata16 = 0;
   pwr_tUInt32 udata32 = 0;
   pwr_tInt8 data8 = 0;
@@ -438,20 +360,9 @@ static pwr_tStatus IoCardWrite (
   local = (io_sCardLocal *) cp->Local;
   slave = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
-  if (slave->Status == PB_SLAVE_STATE_NOTINIT) {
-    op->Status = PB__INITFAIL;
-  }
-  else if (slave->Status == PB_SLAVE_STATE_STOPPED) {
-    op->Status = PB__NOCONN;
-  }
-  else if (slave->Status == PB_SLAVE_STATE_OPERATE) {
-    op->Status = PB__NORMAL;
-  }
-  
-  if (slave->DisableSlave == 1) {
-    op->Status = PB__DISABLED;
-  }
-  else {
+  op->Status = slave->Status;  
+
+  if (op->Status == PB__NORMAL) { 
 
     fixout = ctx->Node->EmergBreakTrue && ctx->Node->EmergBreakSelect == FIXOUT;
 
@@ -460,6 +371,38 @@ static pwr_tStatus IoCardWrite (
       switch (chanp->ChanClass) {
       
         case pwr_cClass_ChanDo:
+	  chan_do = (pwr_sClass_ChanDo *) chanp->cop;
+	  sig_do = (pwr_sClass_Do *) chanp->sop;
+	  if (chan_do && sig_do) {
+
+	    if (fixout) {}
+
+	    switch (chan_do->Representation) {
+
+              case pwr_eDataRepEnum_Bit8:
+	        udata8p = local->output_area + cp->offset + chanp->offset;
+		if (*(pwr_tInt32 *) chanp->vbp != 0)
+		  *udata8p |= chanp->mask;
+		else
+		  *udata8p &= ~chanp->mask;
+	        break;
+/*
+              case pwr_eDataRepEnum_Bit16:
+	        memcpy(&udata16, local->input_area + cp->offset + chanp->offset, 2);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
+		* (pwr_tUInt16 *) (chanp->vbp) = ((udata16 & chanp->mask) != 0);
+	        break;
+
+              case pwr_eDataRepEnum_Bit32:
+	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
+		* (pwr_tUInt16 *) (chanp->vbp) = ((udata32 & chanp->mask) != 0);
+	        break;
+*/
+	    }
+	    
+	  }
+	  
 	  break;
 
 	// Channel type is Ao (analog output)
@@ -526,6 +469,13 @@ static pwr_tStatus IoCardWrite (
               case pwr_eDataRepEnum_UInt32:
 	        udata32 = (pwr_tUInt32) rawvalue;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
+	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 4);
+	        break;
+		
+              case pwr_eDataRepEnum_Float32:
+	        memcpy(&udata32, &rawvalue, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian ||
+		    slave->FloatRepresentation == pwr_ePbNumberRep_FloatIEEE) udata32 = swap32(udata32);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 4);
 	        break;
 		
