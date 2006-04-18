@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.3 2006-04-18 08:17:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,8 @@
 typedef struct {
 	unsigned int	Address;
 	int		Qbus_fp;
+	unsigned int	bfb_read_item;
+	unsigned int	bfb_write_item;
 	pwr_tInt32	OldValue[IO_MAXCHAN];
 	int		FirstScan[IO_MAXCHAN];
 } io_sLocal;
@@ -76,6 +78,7 @@ static pwr_tStatus IoCardInit (
   pwr_tUInt16		wr_data[2];
   pwr_tUInt32		*wr_data_p;
   qbus_io_write		wb;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Co_PI24BO *) cp->op;
 
@@ -85,10 +88,25 @@ static pwr_tStatus IoCardInit (
     local->FirstScan[i] = 1;
   cp->Local = local;
   local->Address = op->RegAddress;
-  local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->Qbus_fp = r_local->Qbus_fp;
 
   errh_Info( "Init of co card '%s'", cp->Name);
 
+  /* Get item offset from rack's local and increment it */
+  /* This is a CO-card which means that we have both read and write possibilities */
+  local->bfb_read_item = r_local->in_items;
+  r_local->in_items += op->MaxNoOfCounters*2;
+  local->bfb_write_item = r_local->out_items;
+  r_local->out_items += op->MaxNoOfCounters*2;
+  
+  /* Set card address in rack´s local in- and out-area */
+  for (i=0; i<op->MaxNoOfCounters; i++) {
+    r_local->in.item[local->bfb_read_item+i*2].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
+    r_local->in.item[local->bfb_read_item+i*2+1].address = (pwr_tUInt16) ((op->RegAddress+i*2+2) & 0xFFFF);
+    r_local->out.item[local->bfb_write_item+i*2].address =  (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);	// We don´t normally write
+    r_local->out.item[local->bfb_write_item+i*2+1].address = (pwr_tUInt16) ((op->RegAddress+i*2+2) & 0xFFFF);	// We don´t normally write
+  }
+  
   /* Configure card */
   for ( i = 0; i < op->MaxNoOfCounters; i++)
   {
@@ -113,16 +131,23 @@ static pwr_tStatus IoCardInit (
       wr_data[1] |= (1 << 14);
     if ( op->LoadWrReg[i] == 1)
       wr_data[1] |= (1 << 15);
- 
-    wb.Address = local->Address + 4*i;
-    wb.Data = wr_data[0];
-    sts = write( local->Qbus_fp, &wb, sizeof(wb));
-    if ( sts != -1)
-    {
-      wb.Address += 2;
-      wb.Data = wr_data[1];
+
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Write to local Q-bus */
+      wb.Address = local->Address + 4*i;
+      wb.Data = wr_data[0];
       sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      if ( sts != -1) {
+        wb.Address += 2;
+        wb.Data = wr_data[1];
+        sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      }
     }
+    else {
+      /* Write to remote Q-bus, I/O-area stored in rack's local */
+      sts = 1;
+    }
+    
     if ( sts == -1)
     {
       errh_Error( "IO init, Fatal write error, card '%s', IO i stopped", cp->Name);
@@ -190,6 +215,7 @@ static pwr_tStatus IoCardRead (
   int			sts, sts1, sts2;
   qbus_io_read 		rb;
   qbus_io_write		wb;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Co_PI24BO *) cp->op;
@@ -226,16 +252,23 @@ static pwr_tStatus IoCardRead (
         if ( op->LoadWrReg[i] == 1)
           wr_data[1] |= (1 << 15);
  
-        wb.Address = local->Address + 4*i;
-        wb.Data = wr_data[0];
-        sts = write( local->Qbus_fp, &wb, sizeof(wb));
-        if ( sts != -1)
-        {
-          wb.Address += 2;
-          wb.Data = wr_data[1];
+        if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+          /* Write to local Q-bus */
+          wb.Address = local->Address + 4*i;
+          wb.Data = wr_data[0];
           sts = write( local->Qbus_fp, &wb, sizeof(wb));
+          if ( sts != -1)
+          {
+            wb.Address += 2;
+            wb.Data = wr_data[1];
+            sts = write( local->Qbus_fp, &wb, sizeof(wb));
+          }
         }
-
+        else {
+          /* Write to remote Q-bus, I/O-area stored in rack's local */
+          sts = 1;
+        }
+	
         if ( sts == -1)
         {
           errh_Error( "IO init, Fatal write error, card '%s', IO i stopped", cp->Name);
@@ -249,32 +282,37 @@ static pwr_tStatus IoCardRead (
         numofword = 1;			/* 16 bitscounter */
 
       re_data_p = (pwr_tUInt32 *) &re_data;
-#if defined(OS_ELN)
-      vaxc$establish(machfailread_co);
-#endif
-      rb.Address = local->Address + 4*i;
-      sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
-      re_data[0] = (unsigned short) rb.Data;
+      
+      if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+        /* Read from local Q-bus */
+        rb.Address = local->Address + 4*i;
+        sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
+        re_data[0] = (unsigned short) rb.Data;
+      }
+      else {
+        /* Read from remote Q-bus, I/O-area stored in rack's local */
+        re_data[0] = r_local->in.item[local->bfb_read_item+2*i].data;
+	sts1 = 1;
+      }
+      
       if ( numofword == 2)
       {
-        rb.Address += 2;
-        sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
-        re_data[1] = (unsigned short) rb.Data;
+        if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+          /* Read from local Q-bus */
+          rb.Address += 2;
+          sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
+          re_data[1] = (unsigned short) rb.Data;
+	}
+	else {
+          /* Read from remote Q-bus, I/O-area stored in rack's local */
+          re_data[1] = r_local->in.item[local->bfb_read_item+2*i+1].data;
+	  sts2 = 1;
+	}
       }
       else
 	sts2 = 0;
       if ( sts1 == -1 || sts2 == -1)
       {
-#if 0
-        if ( io_fatal_error)
-        {
-          /* Activate emergency break */
-          errh_Error( "Fatal read error, card '%s', IO i stopped", cp->Name);
-          ctx->Node->EmergBreakTrue = 1;
-          return IO__ERRDEVICE;
-        }
-#endif
-
         /* Increase error count and check error limits */
         op->ErrorCount++;
 
