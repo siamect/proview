@@ -1,0 +1,126 @@
+! 
+!  Proview   $Id: pwrb_c_atadd.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_atadd.wb_load -- Defines the class AtAdd.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcTime
+!  @Summary Add an absolute time and a delta time.
+!  Add an absolute time and a delta time.
+!  @image orm_atadd_fo.gif
+!
+!  AtAdd adds the second delta time input to the absolute time
+!  of the first input.
+!
+!  The first input has to be connected to an absolute time, and the
+!  second input to a delta time. The resulting output is an absolute
+!  time.
+!*/
+  Object AtAdd $ClassDef 458 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "AtAdd"
+      EndBody
+      !/**
+      !  @Summary Absolute time.
+      !  The absolute time, that the delta time is added to.
+      !  The input has to be connected to an output of type Time.
+      !*/
+      Object ATime $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Time"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "ATim"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary The second string that is appended to the first string.
+      !  The second string that is appended to the first string.
+      !  The input has to be connected to an output of type String.
+      !*/
+      Object DTime $Input 2 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr GraphName = "DTim"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Output absolute time that contains the result.
+      !  Output absolute time that contains the result of the addition.
+      !*/
+      Object ActVal $Output 3 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr GraphName = "Val"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "AtAdd"
+        Attr graphname = "AdAdd"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+

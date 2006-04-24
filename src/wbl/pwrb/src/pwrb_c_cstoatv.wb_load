@@ -1,0 +1,154 @@
+! 
+!  Proview   $Id: pwrb_c_cstoatv.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_cstoatv.wb_load -- Defines the class CStoATv.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcTime
+!  @Summary Conditional storage of absolute time value.
+!  Conditional storage of absolute time value.
+!  @image orm_cstoatv_fo.gif
+!
+!  Conditional storage of an absolute time value on a specified
+!  local ATv object.
+!  Conditional is aimed at the con-input, which is
+!  supposed to be connected.
+!  
+!  The conditional input signal can be inverted by means
+!  of the Attribute Editor.
+!
+!  The time input can be connected to an output of type Time.
+!  It can also be hidden and instead, a constant time can be inserted,
+!  as a value of the input. The constant time is displayed in the plc-sheet.
+!  
+!  It is not allowed, by means of a function in C or PLC
+!  programs, to write in any of the inputs.
+!*/
+  Object CStoATv $ClassDef 450 
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+      Attr Flags = pwr_mClassDef_DevOnly
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "CStoATv"
+      EndBody
+      !/**
+      !  @Summary Input time.
+      !  The input is connected to a time value or left
+      !  open. In the latter case the value of In, is considered
+      !  to be stored.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr PgmName = "ActualValue"
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr TypeRef = "pwrs:Type-$Time"
+          Attr GraphName = "VAL"
+          Attr NiNaAnnot = 2
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether a storage will be done or not. FALSE
+      !  means no storage and TRUE means storage of an analog
+      !  value.
+      !*/
+      Object Cond $Input 2 
+        Body SysBody
+          Attr PgmName = "Cond"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_RTVIRTUAL
+          Attr Flags |= PWR_MASK_DEVBODYREF
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the name of the object where to store the
+      !  value.
+      !*/
+      Object SvObject $Intern 1 
+        Body SysBody
+          Attr PgmName = "ATvObject"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
+          Attr GraphName = "In"
+          Attr NiNaAnnot = 1
+          Attr NiNaSegments = 1
+        EndBody
+      EndObject
+      !/**
+      !  Specifies how many segments of the ATv object name that
+      !  is to be displayed in the symbol of the CStoSv object.
+      !  The segments are counted from behind.
+      !*/
+      Object ATvObjectSegments $Intern 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 3 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 280
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 8
+        Attr graphindex = 1
+        Attr default_mask[0] = 2
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr rtbody_annotation = 1
+        Attr compmethod = 11
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr connectmethod = 18
+        Attr executeordermethod = 2
+        Attr objname = "CStoATv"
+        Attr graphname = "CStoATv"
+        Attr debugpar = "Cond"
+      EndBody
+    EndObject
+    Object Template CStoATv
+      Body RtBody
+        Attr Cond = 1
+      EndBody
+      Body DevBody
+        Attr ATvObjectSegments = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject
