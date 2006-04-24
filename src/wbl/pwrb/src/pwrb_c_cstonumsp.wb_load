@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_cstonumsp.wb_load,v 1.2 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_cstonumsp.wb_load,v 1.3 2006-04-24 13:15:06 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -149,7 +149,7 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 265
+        Attr object_type = 272
         Attr parameters[0] = 2
         Attr parameters[1] = 0
         Attr parameters[2] = 0
