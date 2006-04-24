@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistServer.java,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: HistServer.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,7 +88,7 @@ public class HistServer
   }
   public void run(Hist hist)
   {
-    boolean keepRunning = true;
+    // boolean keepRunning = true;
     
     ServerSocket serverSocket = null;
     if(test)
@@ -99,7 +99,7 @@ public class HistServer
       boolean[] prio = new boolean[4];
       prio[0] = prio[1] = prio[2] = prio[3] = false;
       HistQuery query = new HistQuery("2003-11-05 09:26:49", "2004-11-05 09:26:49", type, prio, "*", "*");
-      MhrEvent[] ev = hist.getHistList(query.startTime,
+      MhrEvent[] ev = Hist.getHistList(query.startTime,
 				       query.stopTime,
 				       query.type[0],
 				       query.type[1],
@@ -248,7 +248,7 @@ public class HistServer
 
 	}
         //send the answer
-        out.writeObject(hist.getHistList(query.startTime,
+        out.writeObject(Hist.getHistList(query.startTime,
 				       query.stopTime,
 				       query.type[0],
 				       query.type[1],

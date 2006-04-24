@@ -49,7 +49,7 @@ public class JopcDvGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰Y");
+    JopSpider.setSystemName( "");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 801, 160);
@@ -468,7 +468,7 @@ class LocalPanel extends JPanel {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbopenobject extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbopenobject( JopSession session)
   {
     super( session);
@@ -515,7 +515,7 @@ protected class pwr_mbopenobject extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -615,7 +615,7 @@ protected class pwr_mbopenobject extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbtrend extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbtrend( JopSession session)
   {
     super( session);
@@ -661,7 +661,7 @@ protected class pwr_mbtrend extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -755,7 +755,7 @@ protected class pwr_mbtrend extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbfast extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbfast( JopSession session)
   {
     super( session);
@@ -801,7 +801,7 @@ protected class pwr_mbfast extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -895,7 +895,7 @@ protected class pwr_mbfast extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbphoto extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbphoto( JopSession session)
   {
     super( session);
@@ -949,7 +949,7 @@ protected class pwr_mbphoto extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1066,7 +1066,7 @@ protected class pwr_mbphoto extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbdatasheet extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbdatasheet( JopSession session)
   {
     super( session);
@@ -1113,7 +1113,7 @@ protected class pwr_mbdatasheet extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1216,7 +1216,7 @@ protected class pwr_mbdatasheet extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbcircuitdiagram extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbcircuitdiagram( JopSession session)
   {
     super( session);
@@ -1270,7 +1270,7 @@ protected class pwr_mbcircuitdiagram extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1402,7 +1402,7 @@ protected class pwr_mbcircuitdiagram extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbrtnavigator extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbrtnavigator( JopSession session)
   {
     super( session);
@@ -1451,7 +1451,7 @@ protected class pwr_mbrtnavigator extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1565,7 +1565,7 @@ protected class pwr_mbrtnavigator extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhelpclass extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhelpclass( JopSession session)
   {
     super( session);
@@ -1610,7 +1610,7 @@ protected class pwr_mbhelpclass extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1700,7 +1700,7 @@ protected class pwr_mbhelpclass extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbblockevents extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbblockevents( JopSession session)
   {
     super( session);
@@ -1747,7 +1747,7 @@ protected class pwr_mbblockevents extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1845,7 +1845,7 @@ protected class pwr_mbblockevents extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhistevent extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhistevent( JopSession session)
   {
     super( session);
@@ -1891,7 +1891,7 @@ protected class pwr_mbhistevent extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1985,7 +1985,7 @@ protected class pwr_mbhistevent extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbnote extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbnote( JopSession session)
   {
     super( session);
@@ -2030,7 +2030,7 @@ protected class pwr_mbnote extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2120,7 +2120,7 @@ protected class pwr_mbnote extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhelp extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhelp( JopSession session)
   {
     super( session);
@@ -2166,7 +2166,7 @@ protected class pwr_mbhelp extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2260,20 +2260,19 @@ protected class pwr_mbhelp extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class JopButtontoggle extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public JopButtontoggle( JopSession session)
   {
     super( session);
     size = new Dimension( 48, 21);
+    annot1Font = new Font("Helvetica", Font.BOLD, 12);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 12);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 48;
   public int original_height = 21;
   Shape[] shapes = new Shape[] { 
@@ -2316,7 +2315,7 @@ protected class JopButtontoggle extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2426,20 +2425,19 @@ protected class JopButtontoggle extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuelong extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuelong( JopSession session)
   {
     super( session);
     size = new Dimension( 536, 18);
+    annot1Font = new Font("Helvetica", Font.BOLD, 10);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 10);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 536;
   public int original_height = 18;
   Shape[] shapes = new Shape[] { 
@@ -2477,7 +2475,7 @@ protected class pwr_valuelong extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2571,7 +2569,7 @@ protected class pwr_valuelong extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbcrossreferences extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbcrossreferences( JopSession session)
   {
     super( session);
@@ -2621,7 +2619,7 @@ protected class pwr_mbcrossreferences extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2748,8 +2746,6 @@ protected class pwr_valueinputreliefup extends GeTextField {
   int original_width = 50;
   int original_height = 18;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 10);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();
@@ -2770,8 +2766,6 @@ protected class pwr_valueinputmedium extends GeTextField {
   int original_width = 64;
   int original_height = 24;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 14);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();
@@ -2783,20 +2777,19 @@ protected class pwr_valueinputmedium extends GeTextField {
   }
 }
 protected class pwr_valuemedium extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuemedium( JopSession session)
   {
     super( session);
     size = new Dimension( 64, 24);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 64;
   public int original_height = 24;
   Shape[] shapes = new Shape[] { 
@@ -2834,7 +2827,7 @@ protected class pwr_valuemedium extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,

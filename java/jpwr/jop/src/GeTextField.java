@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeTextField.java,v 1.7 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeTextField.java,v 1.8 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,7 +75,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
       if ( en.gdh.isAuthorized( dd.access)) {
         this.addKeyListener(new java.awt.event.KeyAdapter() {
           public void keyPressed(KeyEvent e) {
-            if ( e.getKeyCode() == e.VK_ESCAPE ) {
+            if ( e.getKeyCode() == KeyEvent.VK_ESCAPE ) {
               keyPressedEvent(e);
             }
           }
@@ -300,7 +300,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
   }
 
   void keyPressedEvent(KeyEvent e) {
-    if ( e.getKeyCode() == e.VK_ESCAPE )
+    if ( e.getKeyCode() == KeyEvent.VK_ESCAPE )
     {
       this.getParent().requestFocus();
     }

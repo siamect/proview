@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeFrameThin.java,v 1.5 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeFrameThin.java,v 1.6 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,11 +25,11 @@ import java.awt.image.*;
 import java.awt.font.*;
 import javax.swing.*;
 public class GeFrameThin extends GeComponent {
-  Dimension size;
+  Dimension dsize;
   public GeFrameThin( JopSession session)
   {
     super( session);
-    size = new Dimension( 144, 84);
+    dsize = new Dimension( 144, 84);
   }
   Shape[] shapes = new Shape[] { null, null, null, null};  
   public void paint(Graphics g1) {
@@ -127,8 +127,8 @@ public class GeFrameThin extends GeComponent {
     g.draw( shapes[3]);
     g.setTransform(save);
   }
-  public Dimension getPreferredSize() { return size;}
-  public Dimension getMinimumSize() { return size;}
+  public Dimension getPreferredSize() { return dsize;}
+  public Dimension getMinimumSize() { return dsize;}
 }
 
 

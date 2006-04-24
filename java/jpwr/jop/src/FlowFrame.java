@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowFrame.java,v 1.4 2005-11-02 14:02:18 claes Exp $
+ * Proview   $Id: FlowFrame.java,v 1.5 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -139,7 +139,7 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
     }
     else {
       filename = "$pwrp_load/" + fname;
-      filename = engine.gdh.translateFilename( filename);
+      filename = Gdh.translateFilename( filename);
 
       // filename = "/home/claes/flow/t.t";
       System.out.println( "Fname: " + filename);
@@ -182,13 +182,13 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
   }
 
   JMenuBar createMenu() {
-    JMenuBar menuBar = new JMenuBar();
+    JMenuBar lmenuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
     fileMenu.setMnemonic('F');
     MenuAction closeFileAction = new MenuAction("Close");
     MenuAction subWindowFileAction = new MenuAction("Open Subwindow");
 
-    menuBar = new JMenuBar();
+    lmenuBar = new JMenuBar();
     JMenu functionsMenu = new JMenu("Functions");
     fileMenu.setMnemonic('u');
     MenuAction crossrefFunctionsAction = new MenuAction("Show Crossreferences");
@@ -216,12 +216,12 @@ public class FlowFrame extends JFrame implements JopUtilityIfc {
     item = viewMenu.add( zoomResetViewAction);
     item.setMnemonic('R');
 
-    menuBar.add( fileMenu);
-    menuBar.add( functionsMenu);
-    menuBar.add( viewMenu);
-    menuBar.setBorder( new BevelBorder( BevelBorder.RAISED));
+    lmenuBar.add( fileMenu);
+    lmenuBar.add( functionsMenu);
+    lmenuBar.add( viewMenu);
+    lmenuBar.setBorder( new BevelBorder( BevelBorder.RAISED));
 
-    return menuBar;
+    return lmenuBar;
   }
 
   class MenuAction extends AbstractAction {

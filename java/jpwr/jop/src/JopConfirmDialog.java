@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopConfirmDialog.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopConfirmDialog.java,v 1.4 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,7 +33,7 @@ public class JopConfirmDialog {
       dia = new JDialog();
       dia.setTitle("Confirm");
       dia.setResizable(false);
-      dia.setDefaultCloseOperation( dia.DO_NOTHING_ON_CLOSE);
+      dia.setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE);
       dia.setSize( 400, 150);
       label = new JLabel( text, JLabel.CENTER);
       dia.getContentPane().setLayout( new BorderLayout());

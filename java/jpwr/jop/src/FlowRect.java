@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowRect.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: FlowRect.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ public class FlowRect implements FlowArrayElem {
   }
 
   public void draw( Graphics2D g, FlowPoint p, String[] annotv, boolean highlight) {
-      if ( (display_level & cmn.display_level) == 0)
+      if ( (display_level & FlowCmn.display_level) == 0)
 	return;
 
       Rectangle2D.Double rect = new Rectangle2D.Double( (ll.x + p.x) * cmn.zoom_factor,

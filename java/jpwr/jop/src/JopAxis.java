@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopAxis.java,v 1.4 2005-11-04 11:42:05 claes Exp $
+ * Proview   $Id: JopAxis.java,v 1.5 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -153,7 +153,7 @@ public class JopAxis extends JComponent {
     g.setFont( font.deriveFont( width / widthOrig * font.getSize()));
 
     if ( shapes == null || width != oldWidth) {
-      float lineLength = this.lineLength * width / widthOrig;
+      float lineLen = this.lineLength * width / widthOrig;
       shapes = new Shape[1];
       FontRenderContext frc = g.getFontRenderContext();
 
@@ -171,10 +171,10 @@ public class JopAxis extends JComponent {
           delta = height / ( lines - 1);
 	  for ( i = 0; i < lines; i++) {
             if ( i % longQuotient == 0)
-	      hLines[i] = new Line2D.Float( width - lineLength, delta * i, 
+	      hLines[i] = new Line2D.Float( width - lineLen, delta * i, 
 					    width, delta * i);
             else
-	      hLines[i] = new Line2D.Float( width - 2F/3F*lineLength, 
+	      hLines[i] = new Line2D.Float( width - 2F/3F*lineLen, 
 					  delta * i, width, delta * i);
 	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
@@ -201,11 +201,11 @@ public class JopAxis extends JComponent {
           delta = width / ( lines - 1);
 	  for ( i = 0; i < lines; i++) {
             if ( i % longQuotient == 0)
-	      hLines[i] = new Line2D.Float( delta * i, height - lineLength, 
+	      hLines[i] = new Line2D.Float( delta * i, height - lineLen, 
 					    delta * i, height);
             else
 	      hLines[i] = new Line2D.Float( delta * i, 
-			  height - 2F/3F*lineLength, delta * i, height);
+			  height - 2F/3F*lineLen, delta * i, height);
 	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = (maxValue - minValue) / ( lines - 1) * i;
@@ -233,10 +233,10 @@ public class JopAxis extends JComponent {
 	  for ( i = 0; i < lines; i++) {
             if ( i % longQuotient == 0)
 	      hLines[i] = new Line2D.Float( 0F, delta * i, 
-					    lineLength, delta * i);
+					    lineLen, delta * i);
             else
 	      hLines[i] = new Line2D.Float( 0F, 
-			      delta * i, 2F/3F*lineLength, delta * i);
+			      delta * i, 2F/3F*lineLen, delta * i);
 	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = (maxValue - minValue) / ( lines - 1) * i;
@@ -253,7 +253,7 @@ public class JopAxis extends JComponent {
                 hTextPosY[i/valueQuotient] = 0F + textHeight/2;
               else
                 hTextPosY[i/valueQuotient] = delta * i + textHeight/4;
-              hTextPosX[i/valueQuotient] = lineLength;
+              hTextPosX[i/valueQuotient] = lineLen;
             }
           }
         }
@@ -263,10 +263,10 @@ public class JopAxis extends JComponent {
 	  for ( i = 0; i < lines; i++) {
             if ( i % longQuotient == 0)
 	      hLines[i] = new Line2D.Float( delta * i, 0F,
-					    delta * i, lineLength);
+					    delta * i, lineLen);
             else
 	      hLines[i] = new Line2D.Float( delta * i, 
-			  0F , delta * i, 2F/3F*lineLength);
+			  0F , delta * i, 2F/3F*lineLen);
 	    if ( drawText && i % valueQuotient == 0) {
 	      if ( maxValue > minValue)
 	        value = maxValue - (maxValue - minValue) / ( lines - 1) * i;

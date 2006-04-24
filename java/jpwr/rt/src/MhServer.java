@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: MhServer.java,v 1.4 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: MhServer.java,v 1.5 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -107,7 +107,7 @@ public class MhServer
   /**
    *  Description of the Method
    */
-  public void MhServer()
+  public MhServer()
   {
   }
 

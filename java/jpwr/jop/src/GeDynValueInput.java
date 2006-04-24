@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynValueInput.java,v 1.5 2005-11-02 14:00:47 claes Exp $
+ * Proview   $Id: GeDynValueInput.java,v 1.6 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,8 +82,8 @@ public class GeDynValueInput extends GeDynElem {
         double maxval = 0;
 	if ( minValueAttr != null) {
 	  String attrName = dyn.getAttrName( minValueAttr);
-	  int typeId = dyn.getTypeId( minValueAttr);
-	  if ( typeId < 0 || typeId == Pwr.eType_Float32) {
+	  int tId = GeDyn.getTypeId( minValueAttr);
+	  if ( tId < 0 || tId == Pwr.eType_Float32) {
 	    CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
 	    if ( ret.evenSts()) {
 	      System.out.println( "ValueInput " + attrName);
@@ -97,8 +97,8 @@ public class GeDynValueInput extends GeDynElem {
 
 	if ( maxValueAttr != null) {
 	  String attrName = dyn.getAttrName( maxValueAttr);
-	  int typeId = dyn.getTypeId( maxValueAttr);
-	  if ( typeId < 0 || typeId == Pwr.eType_Float32) {
+	  int tId = GeDyn.getTypeId( maxValueAttr);
+	  if ( tId < 0 || tId == Pwr.eType_Float32) {
 	    CdhrFloat ret = dyn.en.gdh.getObjectInfoFloat( attrName);
 	    if ( ret.evenSts()) {
 	      System.out.println( "ValueInput " + attrName);

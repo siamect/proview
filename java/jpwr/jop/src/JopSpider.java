@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSpider.java,v 1.9 2005-11-04 11:48:35 claes Exp $
+ * Proview   $Id: JopSpider.java,v 1.10 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,7 @@ public class JopSpider {
   static String systemName;
 
   public JopSpider( int op_qcom_qix) {
-    this.op_qcom_qix = op_qcom_qix;
+    JopSpider.op_qcom_qix = op_qcom_qix;
 
     engine = new JopEngine( 1000, (Object)null);
     session = new JopSession( engine, (Object)this);
@@ -654,7 +654,7 @@ System.out.println( "JopSpiderCmd start");
 
   //Main method
   public static void main(String[] args) {
-    int op_qcom_qix = 0;
+    int qcom_qix = 0;
   
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -665,15 +665,15 @@ System.out.println( "JopSpiderCmd start");
     if ( args.length > 0) {
       System.out.println("Queue : " + args[0]);
       try {
-        op_qcom_qix = Integer.parseInt(args[0]);
+        qcom_qix = Integer.parseInt(args[0]);
       }
       catch ( NumberFormatException e) {
         System.out.println("Syntax error in que number");
-	op_qcom_qix = 0;
+	qcom_qix = 0;
       }
     }
     // new Gdh( (Object) null);
-    new JopSpider(op_qcom_qix);
+    new JopSpider(qcom_qix);
   }
 
   public static Image getImage( JopSession session, String image) {

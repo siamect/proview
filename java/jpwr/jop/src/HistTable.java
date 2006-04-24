@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistTable.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: HistTable.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,8 +87,9 @@ public class HistTable extends JScrollPane{
     lang=l;
     for (int i=0; i<alarmTable.getColumnCount();i++)
         alarmTable.getColumnModel().getColumn(i).setHeaderValue(columnNamesEventTable[lang][i]);
-    alarmTable.getTableHeader().resizeAndRepaint();
-
+    //alarmTable.getTableHeader().resizeAndRepaint();
+    alarmTable.validate();
+    alarmTable.repaint();
     }
     
     /*Get a pointer to the local Clipboard, format a string with all cell

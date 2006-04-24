@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: CrrFrame.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: CrrFrame.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ public class CrrFrame extends JFrame {
     crrList = createList(objectName);
     menuBar = createMenu();
     contentPane.add( menuBar, BorderLayout.NORTH);
-    JScrollPane scrollPane = new JScrollPane( crrList);
+    scrollPane = new JScrollPane( crrList);
     contentPane.add(scrollPane, BorderLayout.CENTER);
     contentPane.setOpaque(true);
     this.setTitle(objectName);
@@ -60,7 +60,7 @@ public class CrrFrame extends JFrame {
   }
 
   JMenuBar createMenu() {
-    JMenuBar menuBar = new JMenuBar();
+    menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
     fileMenu.setMnemonic('F');
     MenuAction closeFileAction = new MenuAction("Close");

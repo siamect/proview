@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynSlider.java,v 1.5 2005-11-02 13:59:08 claes Exp $
+ * Proview   $Id: GeDynSlider.java,v 1.6 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,51 +188,51 @@ public class GeDynSlider extends GeDynElem {
     Point loc = ((JComponent)dyn.comp).getLocation();
     int pos;
 	
-    double minPos;
-    double maxPos;
+    double minPosit;
+    double maxPosit;
     switch ( direction) {
     case Ge.DIRECTION_RIGHT:
-	minPos = this.minPos * width / original_width;
-	maxPos = this.maxPos * width / original_width;
+	minPosit = this.minPos * width / original_width;
+	maxPosit = this.maxPos * width / original_width;
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
-		    (maxPos - minPos) + minPos);
-	if ( pos < minPos)
-	  pos = (int)minPos;
-	if ( pos > maxPos)
-	  pos = (int)maxPos;
+		    (maxPosit - minPosit) + minPosit);
+	if ( pos < minPosit)
+	  pos = (int)minPosit;
+	if ( pos > maxPosit)
+	  pos = (int)maxPosit;
 	loc.x = pos;
 	break;
     case Ge.DIRECTION_LEFT:
-	minPos = this.minPos * width / original_width;
-	maxPos = this.maxPos * width / original_width;
+	minPosit = this.minPos * width / original_width;
+	maxPosit = this.maxPos * width / original_width;
 	pos = (int)(value /(maxValue - minValue) *
-		    (maxPos - minPos) + minPos);
-	if ( pos < minPos)
-	  pos = (int)minPos;
-	if ( pos > maxPos)
-	  pos = (int)maxPos;
+		    (maxPosit - minPosit) + minPosit);
+	if ( pos < minPosit)
+	  pos = (int)minPosit;
+	if ( pos > maxPosit)
+	  pos = (int)maxPosit;
 	loc.x = pos;
 	break;
     case Ge.DIRECTION_UP:
-	minPos = this.minPos * height / original_height;
-	maxPos = this.maxPos * height / original_height;
+	minPosit = this.minPos * height / original_height;
+	maxPosit = this.maxPos * height / original_height;
 	pos = (int)((value - minValue)/(maxValue - minValue) *
-		    (maxPos - minPos) + minPos);
-	if ( pos < minPos)
-	  pos = (int)minPos;
-	if ( pos > maxPos)
-	  pos = (int)maxPos;
+		    (maxPosit - minPosit) + minPosit);
+	if ( pos < minPosit)
+	  pos = (int)minPosit;
+	if ( pos > maxPosit)
+	  pos = (int)maxPosit;
 	loc.y = pos;
 	break;
     default:
-	minPos = this.minPos * height / original_height;
-	maxPos = this.maxPos * height / original_height;
+	minPosit = this.minPos * height / original_height;
+	maxPosit = this.maxPos * height / original_height;
 	pos = (int)((maxValue - value)/(maxValue - minValue) *
-		    (maxPos - minPos) + minPos);
-	if ( pos < minPos)
-	  pos = (int)minPos;
-	if ( pos > maxPos)
-	  pos = (int)maxPos;
+		    (maxPosit - minPosit) + minPosit);
+	if ( pos < minPosit)
+	  pos = (int)minPosit;
+	if ( pos > maxPosit)
+	  pos = (int)maxPosit;
 	loc.y = pos;
     }
     ((JComponent)dyn.comp).setLocation( loc);
@@ -262,8 +262,8 @@ public class GeDynSlider extends GeDynElem {
 	  return;
       }
       float value;
-      double minPos;
-      double maxPos;
+      double minPosit;
+      double maxPosit;
       PwrtStatus sts;
       Point new_loc = new Point();
       float width = ((JComponent)dyn.comp).getParent().getWidth();
@@ -276,53 +276,53 @@ public class GeDynSlider extends GeDynElem {
         return;
       switch ( direction) {
       case Ge.DIRECTION_RIGHT:
-	minPos = this.minPos * width / original_width;
-	maxPos = this.maxPos * width / original_width;
+	minPosit = this.minPos * width / original_width;
+	maxPosit = this.maxPos * width / original_width;
 	new_loc.x = loc.x + ePoint.x - offset.x;
 	new_loc.y = loc.y;
-	if ( new_loc.x > maxPos)
-	  new_loc.x = (int) maxPos;
-	if ( new_loc.x < minPos)
-	  new_loc.x = (int) minPos;
-	value = (float)((maxPos - new_loc.x) / (maxPos - minPos) *
+	if ( new_loc.x > maxPosit)
+	  new_loc.x = (int) maxPosit;
+	if ( new_loc.x < minPosit)
+	  new_loc.x = (int) minPosit;
+	value = (float)((maxPosit - new_loc.x) / (maxPosit - minPosit) *
 	        	(maxValue - minValue) + minValue); 
 	break;
       case Ge.DIRECTION_LEFT:
-	minPos = this.minPos * width / original_width;
-	maxPos = this.maxPos * width / original_width;
+	minPosit = this.minPos * width / original_width;
+	maxPosit = this.maxPos * width / original_width;
 	new_loc.x = loc.x + ePoint.x - offset.x;
 	new_loc.y = loc.y;
-	if ( new_loc.x > maxPos)
-	  new_loc.x = (int) maxPos;
-	if ( new_loc.x < minPos)
-	  new_loc.x = (int) minPos;
-	value = (float)((new_loc.x - minPos) / (maxPos - minPos) * 
+	if ( new_loc.x > maxPosit)
+	  new_loc.x = (int) maxPosit;
+	if ( new_loc.x < minPosit)
+	  new_loc.x = (int) minPosit;
+	value = (float)((new_loc.x - minPosit) / (maxPosit - minPosit) * 
 	        	(maxValue - minValue) + minValue);
 	break;
       case Ge.DIRECTION_UP:
-	minPos = this.minPos * height / original_height;
-	maxPos = this.maxPos * height / original_height;
+	minPosit = this.minPos * height / original_height;
+	maxPosit = this.maxPos * height / original_height;
 	new_loc.y = loc.y + ePoint.y - offset.y;
 	new_loc.x = loc.x;
-	if ( new_loc.y > maxPos)
-	  new_loc.y = (int) maxPos;
-	if ( new_loc.y < minPos)
-          new_loc.y = (int) minPos;
-	value = (float)((new_loc.y - minPos) / (maxPos - minPos) *
+	if ( new_loc.y > maxPosit)
+	  new_loc.y = (int) maxPosit;
+	if ( new_loc.y < minPosit)
+          new_loc.y = (int) minPosit;
+	value = (float)((new_loc.y - minPosit) / (maxPosit - minPosit) *
 			(maxValue - minValue) + minValue);
 	// System.out.println("old_y: " + ePoint.y + " new_y: " + new_loc.y + "v: " + value);
 	break;
       default:
-	minPos = this.minPos * height / original_height;
-	maxPos = this.maxPos * height / original_height;
+	minPosit = this.minPos * height / original_height;
+	maxPosit = this.maxPos * height / original_height;
 	  new_loc.y = loc.y + ePoint.y - offset.y;
-	  // System.out.println( "loc.y " + loc.y + " eP.y " + ePoint.y + " offset.y " + offset.y + " new_loc.y " + new_loc.y + " maxPos " + maxPos + " minPos " + minPos);
+	  // System.out.println( "loc.y " + loc.y + " eP.y " + ePoint.y + " offset.y " + offset.y + " new_loc.y " + new_loc.y + " maxPos " + maxPosit + " minPos " + minPosit);
 	  new_loc.x = loc.x;
-	  if ( new_loc.y > maxPos)
-	    new_loc.y = (int) maxPos;
-	  if ( new_loc.y < minPos)
-	    new_loc.y = (int) minPos;
-	  value = (float)((maxPos - new_loc.y) / (maxPos - minPos) *
+	  if ( new_loc.y > maxPosit)
+	    new_loc.y = (int) maxPosit;
+	  if ( new_loc.y < minPosit)
+	    new_loc.y = (int) minPosit;
+	  value = (float)((maxPosit - new_loc.y) / (maxPosit - minPosit) *
 			  (maxValue - minValue) + minValue);
 	  // System.out.println("old_y: " + ePoint.y + " new_y: " + new_loc.y + "v: " + value);
       }

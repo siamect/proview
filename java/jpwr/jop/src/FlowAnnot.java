@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowAnnot.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: FlowAnnot.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,7 +90,7 @@ public class FlowAnnot implements FlowArrayElem {
   public void draw( Graphics2D g, FlowPoint p0, String[] annotv, boolean highlight) { 
     if ( annotv[number] == null)
       return;
-    if ( (display_level & cmn.display_level) == 0)
+    if ( (display_level & FlowCmn.display_level) == 0)
       return;
 
     int tsize;

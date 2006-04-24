@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistStatModel2.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: HistStatModel2.java,v 1.3 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,7 @@ public class HistStatModel2 extends AbstractTableModel{
                     break;
                 case 2:
                     day+=28;
+		    break;
                 default:
                     break;
                 }

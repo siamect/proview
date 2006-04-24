@@ -184,7 +184,7 @@ public class JopcNode extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰Y");
+    JopSpider.setSystemName( "");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 1012, 899);
@@ -1821,7 +1821,7 @@ protected class pwr_framethin extends GeFrameThin {
   }
 }
 protected class pwr_indsquare extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_indsquare( JopSession session)
   {
     super( session);
@@ -1864,7 +1864,7 @@ protected class pwr_indsquare extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1948,20 +1948,19 @@ protected class pwr_indsquare extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuelong extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuelong( JopSession session)
   {
     super( session);
     size = new Dimension( 658, 21);
+    annot1Font = new Font("Helvetica", Font.BOLD, 12);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 12);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 658;
   public int original_height = 21;
   Shape[] shapes = new Shape[] { 
@@ -1999,7 +1998,7 @@ protected class pwr_valuelong extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2093,20 +2092,19 @@ protected class pwr_valuelong extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class JopSmallbutton extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public JopSmallbutton( JopSession session)
   {
     super( session);
     size = new Dimension( 58, 24);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 58;
   public int original_height = 24;
   Shape[] shapes = new Shape[] { 
@@ -2144,7 +2142,7 @@ protected class JopSmallbutton extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2236,7 +2234,7 @@ protected class JopSmallbutton extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp110_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp110_( JopSession session)
   {
     super( session);
@@ -2279,7 +2277,7 @@ protected class Grp110_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2363,7 +2361,7 @@ protected class Grp110_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp144_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp144_( JopSession session)
   {
     super( session);
@@ -2406,7 +2404,7 @@ protected class Grp144_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2490,7 +2488,7 @@ protected class Grp144_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp146_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp146_( JopSession session)
   {
     super( session);
@@ -2533,7 +2531,7 @@ protected class Grp146_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2617,7 +2615,7 @@ protected class Grp146_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp148_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp148_( JopSession session)
   {
     super( session);
@@ -2660,7 +2658,7 @@ protected class Grp148_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2744,7 +2742,7 @@ protected class Grp148_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp150_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp150_( JopSession session)
   {
     super( session);
@@ -2787,7 +2785,7 @@ protected class Grp150_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2871,7 +2869,7 @@ protected class Grp150_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp151_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp151_( JopSession session)
   {
     super( session);
@@ -2914,7 +2912,7 @@ protected class Grp151_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2998,7 +2996,7 @@ protected class Grp151_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp152_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp152_( JopSession session)
   {
     super( session);
@@ -3041,7 +3039,7 @@ protected class Grp152_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3125,7 +3123,7 @@ protected class Grp152_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp153_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp153_( JopSession session)
   {
     super( session);
@@ -3168,7 +3166,7 @@ protected class Grp153_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3252,7 +3250,7 @@ protected class Grp153_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp155_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp155_( JopSession session)
   {
     super( session);
@@ -3295,7 +3293,7 @@ protected class Grp155_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3379,7 +3377,7 @@ protected class Grp155_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp310_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp310_( JopSession session)
   {
     super( session);
@@ -3422,7 +3420,7 @@ protected class Grp310_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3506,7 +3504,7 @@ protected class Grp310_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp311_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp311_( JopSession session)
   {
     super( session);
@@ -3549,7 +3547,7 @@ protected class Grp311_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3633,7 +3631,7 @@ protected class Grp311_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp312_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp312_( JopSession session)
   {
     super( session);
@@ -3676,7 +3674,7 @@ protected class Grp312_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3760,7 +3758,7 @@ protected class Grp312_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp319_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp319_( JopSession session)
   {
     super( session);
@@ -3803,7 +3801,7 @@ protected class Grp319_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3887,7 +3885,7 @@ protected class Grp319_ extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class Grp330_ extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public Grp330_( JopSession session)
   {
     super( session);
@@ -3930,7 +3928,7 @@ protected class Grp330_ extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,

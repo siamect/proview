@@ -59,7 +59,7 @@ public class JopcPidGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰Y");
+    JopSpider.setSystemName( "");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
     size = new Dimension( 847, 413);
@@ -624,8 +624,6 @@ protected class pwr_valueinputreliefup extends GeTextField {
   int original_width = 50;
   int original_height = 18;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 10);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();
@@ -637,7 +635,7 @@ protected class pwr_valueinputreliefup extends GeTextField {
   }
 }
 protected class pwr_indroundlarge extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_indroundlarge( JopSession session)
   {
     super( session);
@@ -699,7 +697,7 @@ protected class pwr_indroundlarge extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -845,20 +843,19 @@ protected class pwr_indroundlarge extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuemedium extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuemedium( JopSession session)
   {
     super( session);
     size = new Dimension( 64, 24);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 64;
   public int original_height = 24;
   Shape[] shapes = new Shape[] { 
@@ -896,7 +893,7 @@ protected class pwr_valuemedium extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -996,20 +993,19 @@ protected class pwr_framethin extends GeFrameThin {
   }
 }
 protected class JopButtontoggle extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public JopButtontoggle( JopSession session)
   {
     super( session);
     size = new Dimension( 48, 21);
+    annot1Font = new Font("Helvetica", Font.BOLD, 12);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 12);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 48;
   public int original_height = 21;
   Shape[] shapes = new Shape[] { 
@@ -1052,7 +1048,7 @@ protected class JopButtontoggle extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1162,20 +1158,19 @@ protected class JopButtontoggle extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuesmall extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuesmall( JopSession session)
   {
     super( session);
     size = new Dimension( 50, 18);
+    annot1Font = new Font("Helvetica", Font.BOLD, 10);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 10);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 50;
   public int original_height = 18;
   Shape[] shapes = new Shape[] { 
@@ -1213,7 +1208,7 @@ protected class pwr_valuesmall extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1307,20 +1302,19 @@ protected class pwr_valuesmall extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_buttoncommand extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_buttoncommand( JopSession session)
   {
     super( session);
     size = new Dimension( 103, 36);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
+  public void setAnnot1Color( int color) { annot1Color = color;}
   public int original_width = 103;
   public int original_height = 36;
   Shape[] shapes = new Shape[] { 
@@ -1375,7 +1369,7 @@ protected class pwr_buttoncommand extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1530,8 +1524,6 @@ protected class pwr_valueinputmedium extends GeTextField {
   int original_width = 64;
   int original_height = 24;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 14);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();

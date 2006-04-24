@@ -50,10 +50,10 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
       geInit();
   }
   public void geInit() {
-    JopSpider.setSystemName( "‰Y");
+    JopSpider.setSystemName( "");
     engine.setAnimationScanTime( 500);
     engine.setScanTime( 500);
-    size = new Dimension( 818, 191);
+    size = new Dimension( 800, 188);
     Dimension dsize = new Dimension(localPanel.original_width,localPanel.original_height);
     this.addComponentListener(new AspectRatioListener(this,size));
     contentPane = (JPanel) this.getContentPane();
@@ -72,7 +72,7 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
     else
       this.setTitle("JopcDoGen");
     jopTrend2 = new JopTrend( session);
-    jopTrend2.setBounds(new Rectangle(186,59,607,32));
+    jopTrend2.setBounds(new Rectangle(182,58,594,32));
     jopTrend2.setFillColor(59);
     jopTrend2.setBorderColor(57);
     jopTrend2.setBorderColorTrend1(142);
@@ -93,88 +93,88 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
     jopTrend2.setRotate(0);
     localPanel.add(jopTrend2, new Proportion(jopTrend2.getBounds(), dsize));
     pwr_framethin3 = new pwr_framethin(session);
-    pwr_framethin3.setBounds(new Rectangle(0,50,169,97));
+    pwr_framethin3.setBounds(new Rectangle(0,49,165,95));
     localPanel.add(pwr_framethin3, new Proportion(pwr_framethin3.getBounds(), dsize));
     pwr_framethin4 = new pwr_framethin(session);
-    pwr_framethin4.setBounds(new Rectangle(177,50,628,67));
+    pwr_framethin4.setBounds(new Rectangle(173,49,614,65));
     localPanel.add(pwr_framethin4, new Proportion(pwr_framethin4.getBounds(), dsize));
     jopButtontoggle6 = new JopButtontoggle(session);
-    jopButtontoggle6.setBounds(new Rectangle(475,92,62,21));
+    jopButtontoggle6.setBounds(new Rectangle(465,90,61,21));
     jopButtontoggle6.setColorTone(1);
     localPanel.add(jopButtontoggle6, new Proportion(jopButtontoggle6.getBounds(), dsize));
     pwr_valuelong7 = new pwr_valuelong(session);
-    pwr_valuelong7.setBounds(new Rectangle(123,22,685,23));
+    pwr_valuelong7.setBounds(new Rectangle(121,22,670,23));
     pwr_valuelong7.setFillColor(51);
     pwr_valuelong7.setBorderColor(56);
     localPanel.add(pwr_valuelong7, new Proportion(pwr_valuelong7.getBounds(), dsize));
     pwr_valuemedium8 = new pwr_valuemedium(session);
-    pwr_valuemedium8.setBounds(new Rectangle(124,83,29,22));
+    pwr_valuemedium8.setBounds(new Rectangle(121,81,29,22));
     pwr_valuemedium8.setFillColor(51);
     pwr_valuemedium8.setBorderColor(56);
     localPanel.add(pwr_valuemedium8, new Proportion(pwr_valuemedium8.getBounds(), dsize));
     pwr_buttoncommand10 = new pwr_buttoncommand(session);
-    pwr_buttoncommand10.setBounds(new Rectangle(5,109,90,30));
+    pwr_buttoncommand10.setBounds(new Rectangle(5,107,89,29));
     pwr_buttoncommand10.setColorTone(1);
     localPanel.add(pwr_buttoncommand10, new Proportion(pwr_buttoncommand10.getBounds(), dsize));
     pwr_valueinputmedium11 = new pwr_valueinputmedium(session);
-    pwr_valueinputmedium11.setBounds(new Rectangle(124,59,30,23));
+    pwr_valueinputmedium11.setBounds(new Rectangle(121,57,29,22));
     pwr_valueinputmedium11.setBorderColor(47);
     localPanel.add(pwr_valueinputmedium11, new Proportion(pwr_valueinputmedium11.getBounds(), dsize));
     pwr_valueinputreliefup12 = new pwr_valueinputreliefup(session);
-    pwr_valueinputreliefup12.setBounds(new Rectangle(186,94,43,19));
+    pwr_valueinputreliefup12.setBounds(new Rectangle(182,92,42,19));
     pwr_valueinputreliefup12.setColorShift(1);
     localPanel.add(pwr_valueinputreliefup12, new Proportion(pwr_valueinputreliefup12.getBounds(), dsize));
     pwr_mbopenobject13 = new pwr_mbopenobject(session);
-    pwr_mbopenobject13.setBounds(new Rectangle(182,0,20,20));
+    pwr_mbopenobject13.setBounds(new Rectangle(178,0,20,20));
     pwr_mbopenobject13.setColorTone(19);
     pwr_mbopenobject13.setShadow(1);
     localPanel.add(pwr_mbopenobject13, new Proportion(pwr_mbopenobject13.getBounds(), dsize));
     pwr_mbtrend14 = new pwr_mbtrend(session);
-    pwr_mbtrend14.setBounds(new Rectangle(40,0,20,20));
+    pwr_mbtrend14.setBounds(new Rectangle(39,0,20,20));
     pwr_mbtrend14.setColorTone(19);
     pwr_mbtrend14.setShadow(1);
     localPanel.add(pwr_mbtrend14, new Proportion(pwr_mbtrend14.getBounds(), dsize));
     pwr_mbfast15 = new pwr_mbfast(session);
-    pwr_mbfast15.setBounds(new Rectangle(60,0,20,20));
+    pwr_mbfast15.setBounds(new Rectangle(59,0,20,20));
     pwr_mbfast15.setColorTone(19);
     pwr_mbfast15.setShadow(1);
     localPanel.add(pwr_mbfast15, new Proportion(pwr_mbfast15.getBounds(), dsize));
     pwr_mbphoto16 = new pwr_mbphoto(session);
-    pwr_mbphoto16.setBounds(new Rectangle(81,0,20,20));
+    pwr_mbphoto16.setBounds(new Rectangle(79,0,20,20));
     pwr_mbphoto16.setColorTone(19);
     pwr_mbphoto16.setShadow(1);
     localPanel.add(pwr_mbphoto16, new Proportion(pwr_mbphoto16.getBounds(), dsize));
     pwr_mbdatasheet17 = new pwr_mbdatasheet(session);
-    pwr_mbdatasheet17.setBounds(new Rectangle(101,0,20,20));
+    pwr_mbdatasheet17.setBounds(new Rectangle(99,0,20,20));
     pwr_mbdatasheet17.setColorTone(19);
     pwr_mbdatasheet17.setShadow(1);
     localPanel.add(pwr_mbdatasheet17, new Proportion(pwr_mbdatasheet17.getBounds(), dsize));
     pwr_mbcircuitdiagram18 = new pwr_mbcircuitdiagram(session);
-    pwr_mbcircuitdiagram18.setBounds(new Rectangle(222,0,20,20));
+    pwr_mbcircuitdiagram18.setBounds(new Rectangle(218,0,20,20));
     pwr_mbcircuitdiagram18.setColorTone(19);
     pwr_mbcircuitdiagram18.setShadow(1);
     localPanel.add(pwr_mbcircuitdiagram18, new Proportion(pwr_mbcircuitdiagram18.getBounds(), dsize));
     pwr_mbrtnavigator19 = new pwr_mbrtnavigator(session);
-    pwr_mbrtnavigator19.setBounds(new Rectangle(162,0,20,20));
+    pwr_mbrtnavigator19.setBounds(new Rectangle(158,0,20,20));
     pwr_mbrtnavigator19.setColorTone(19);
     pwr_mbrtnavigator19.setShadow(1);
     localPanel.add(pwr_mbrtnavigator19, new Proportion(pwr_mbrtnavigator19.getBounds(), dsize));
     pwr_mbhelpclass20 = new pwr_mbhelpclass(session);
-    pwr_mbhelpclass20.setBounds(new Rectangle(243,0,20,20));
+    pwr_mbhelpclass20.setBounds(new Rectangle(238,0,20,20));
     pwr_mbhelpclass20.setColorTone(19);
     pwr_mbhelpclass20.setShadow(1);
     localPanel.add(pwr_mbhelpclass20, new Proportion(pwr_mbhelpclass20.getBounds(), dsize));
     pwr_mbblockevents21 = new pwr_mbblockevents(session);
-    pwr_mbblockevents21.setBounds(new Rectangle(141,0,20,20));
+    pwr_mbblockevents21.setBounds(new Rectangle(138,0,20,20));
     pwr_mbblockevents21.setColorTone(19);
     pwr_mbblockevents21.setShadow(1);
     localPanel.add(pwr_mbblockevents21, new Proportion(pwr_mbblockevents21.getBounds(), dsize));
     pwr_mbhistevent22 = new pwr_mbhistevent(session);
-    pwr_mbhistevent22.setBounds(new Rectangle(121,0,20,20));
+    pwr_mbhistevent22.setBounds(new Rectangle(119,0,20,20));
     pwr_mbhistevent22.setColorTone(19);
     localPanel.add(pwr_mbhistevent22, new Proportion(pwr_mbhistevent22.getBounds(), dsize));
     pwr_mbnote23 = new pwr_mbnote(session);
-    pwr_mbnote23.setBounds(new Rectangle(20,0,20,20));
+    pwr_mbnote23.setBounds(new Rectangle(19,0,20,20));
     pwr_mbnote23.setColorTone(19);
     localPanel.add(pwr_mbnote23, new Proportion(pwr_mbnote23.getBounds(), dsize));
     pwr_mbhelp24 = new pwr_mbhelp(session);
@@ -182,15 +182,15 @@ public class JopcDoGen extends JopFrame implements JopUtilityIfc {
     pwr_mbhelp24.setColorTone(19);
     localPanel.add(pwr_mbhelp24, new Proportion(pwr_mbhelp24.getBounds(), dsize));
     pwr_mbcrossreferences25 = new pwr_mbcrossreferences(session);
-    pwr_mbcrossreferences25.setBounds(new Rectangle(202,0,20,20));
+    pwr_mbcrossreferences25.setBounds(new Rectangle(198,0,20,20));
     pwr_mbcrossreferences25.setColorTone(19);
     localPanel.add(pwr_mbcrossreferences25, new Proportion(pwr_mbcrossreferences25.getBounds(), dsize));
     jopButtontoggle26 = new JopButtontoggle(session);
-    jopButtontoggle26.setBounds(new Rectangle(285,0,49,21));
+    jopButtontoggle26.setBounds(new Rectangle(278,0,48,21));
     jopButtontoggle26.setBorderColor(37);
     localPanel.add(jopButtontoggle26, new Proportion(jopButtontoggle26.getBounds(), dsize));
     pwr_valuelong27 = new pwr_valuelong(session);
-    pwr_valuelong27.setBounds(new Rectangle(341,0,469,23));
+    pwr_valuelong27.setBounds(new Rectangle(333,0,459,23));
     pwr_valuelong27.setFillColor(41);
     pwr_valuelong27.setBorderColor(31);
     localPanel.add(pwr_valuelong27, new Proportion(pwr_valuelong27.getBounds(), dsize));
@@ -420,8 +420,8 @@ class LocalPanel extends JPanel {
   public int getBorderColor() {
     return borderColor;
   }
-  public int original_width = 810;
-  public int original_height = 147;
+  public int original_width = 792;
+  public int original_height = 144;
   double rotate;
   public void setRotate( double rotate) {
     if ( rotate < 0)
@@ -461,26 +461,26 @@ class LocalPanel extends JPanel {
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "Description",10, 40);
+    g.drawString( "Description",11, 38);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "ActualValue",10, 76);
+    g.drawString( "ActualValue",11, 73);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.PLAIN, 10));
-    g.drawString( "0",787, 104);
+    g.drawString( "0",771, 101);
     g.setColor(GeColor.getColor(0, colorTone,
 	 colorShift, colorIntensity, colorBrightness, colorInverse, textColor, dimmed));
     g.setFont(new Font("Helvetica", Font.BOLD, 14));
-    g.drawString( "InitialValue",9, 101);
+    g.drawString( "InitialValue",10, 99);
     g.setTransform(save);
   }
   public Dimension getPreferredSize() { return size;}
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbopenobject extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbopenobject( JopSession session)
   {
     super( session);
@@ -489,13 +489,13 @@ protected class pwr_mbopenobject extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(6.08828F, 6.08828F, 8.17656F, 8.17656F),
+    new Rectangle2D.Float(6F, 6F, 8F, 8F),
     new Polygon( new int[] { 6, 14, 14, 6, 6, 6}, new int[] { 6, 6, 6, 6, 14, 14}, 6), 
     new Polygon( new int[] { 14, 14, 14, 14, 6, 6}, new int[] { 14, 6, 6, 14, 14, 14}, 6), 
-    new Line2D.Float( 14.2648F, 8.13242F, 6.08828F, 8.13242F),
+    new Line2D.Float( 14F, 8F, 6F, 8F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -527,7 +527,7 @@ protected class pwr_mbopenobject extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -627,7 +627,7 @@ protected class pwr_mbopenobject extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbtrend extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbtrend( JopSession session)
   {
     super( session);
@@ -636,11 +636,11 @@ protected class pwr_mbtrend extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 14.2648F, 14.2648F, 6.08828F, 14.2648F),
-    new Line2D.Float( 14.2648F, 6.08828F, 14.2648F, 14.2648F),
+    new Line2D.Float( 14F, 14F, 6F, 14F),
+    new Line2D.Float( 14F, 6F, 14F, 14F),
     new Polygon( new int[] { 14, 12, 10, 7, 5, 7, 10, 12}, new int[] {11, 11, 9, 11, 9, 11, 9, 11}, 8),
   };
   public void paintComponent(Graphics g1) {
@@ -673,7 +673,7 @@ protected class pwr_mbtrend extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -767,7 +767,7 @@ protected class pwr_mbtrend extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbfast extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbfast( JopSession session)
   {
     super( session);
@@ -776,11 +776,11 @@ protected class pwr_mbfast extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 14.2648F, 14.2648F, 6.08828F, 14.2648F),
-    new Line2D.Float( 6.08828F, 6.08828F, 6.08828F, 14.2648F),
+    new Line2D.Float( 14F, 14F, 6F, 14F),
+    new Line2D.Float( 6F, 6F, 6F, 14F),
     new Polygon( new int[] { 6, 8, 11, 13, 15, 13, 11, 8}, new int[] {10, 9, 12, 11, 12, 11, 12, 9}, 8),
   };
   public void paintComponent(Graphics g1) {
@@ -813,7 +813,7 @@ protected class pwr_mbfast extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -907,7 +907,7 @@ protected class pwr_mbfast extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbphoto extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbphoto( JopSession session)
   {
     super( session);
@@ -916,19 +916,19 @@ protected class pwr_mbphoto extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(6.08828F, 6.08828F, 8.17656F, 8.17656F),
+    new Rectangle2D.Float(6F, 6F, 8F, 8F),
     new Polygon( new int[] { 6, 14, 14, 6, 6, 6}, new int[] { 6, 6, 6, 6, 14, 14}, 6), 
     new Polygon( new int[] { 14, 14, 14, 14, 6, 6}, new int[] { 14, 6, 6, 14, 14, 14}, 6), 
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, 0F, 360F, Arc2D.PIE),
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, 35F, 140F, Arc2D.PIE),
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, 215F, 140F, Arc2D.PIE),
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, -5F, 40F, Arc2D.PIE),
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, 175F, 40F, Arc2D.PIE),
-    new Arc2D.Float(9.3078F, 8.28573F, 2.75959F, 2.75959F, 0F, 360F, Arc2D.PIE),
-    new Arc2D.Float(9.15449F, 8.13242F, 3.06621F, 3.06621F, 0F, 360F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, 0F, 360F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, 35F, 140F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, 215F, 140F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, -5F, 40F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, 175F, 40F, Arc2D.PIE),
+    new Arc2D.Float(9.15F, 8.15F, 2.7F, 2.7F, 0F, 360F, Arc2D.PIE),
+    new Arc2D.Float(9F, 8F, 3F, 3F, 0F, 360F, Arc2D.PIE),
     new Polygon( new int[] { 9, 9, 14, 14, 9}, new int[] {14, 10, 10, 14, 14}, 5),
   };
   public void paintComponent(Graphics g1) {
@@ -961,7 +961,7 @@ protected class pwr_mbphoto extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1078,7 +1078,7 @@ protected class pwr_mbphoto extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbdatasheet extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbdatasheet( JopSession session)
   {
     super( session);
@@ -1087,10 +1087,10 @@ protected class pwr_mbdatasheet extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(7.11035F, 6.08828F, 6.13242F, 8.17656F),
+    new Rectangle2D.Float(7F, 6F, 6F, 8F),
     new Polygon( new int[] { 7, 13, 13, 7, 7, 7}, new int[] { 6, 6, 6, 6, 14, 14}, 6), 
     new Polygon( new int[] { 13, 13, 13, 13, 7, 7}, new int[] { 14, 6, 6, 14, 14, 14}, 6), 
     new Polygon( new int[] { 7, 9, 7, 7}, new int[] {10, 6, 6, 10}, 4),
@@ -1125,7 +1125,7 @@ protected class pwr_mbdatasheet extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1228,7 +1228,7 @@ protected class pwr_mbdatasheet extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbcircuitdiagram extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbcircuitdiagram( JopSession session)
   {
     super( session);
@@ -1237,20 +1237,20 @@ protected class pwr_mbcircuitdiagram extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(5.06621F, 7.11035F, 10.2207F, 7.15449F),
+    new Rectangle2D.Float(5F, 7F, 10F, 7F),
     new Polygon( new int[] { 5, 15, 15, 5, 5, 5}, new int[] { 7, 7, 7, 7, 14, 14}, 6), 
     new Polygon( new int[] { 15, 15, 15, 15, 5, 5}, new int[] { 14, 7, 7, 14, 14, 14}, 6), 
-    new Line2D.Float( 15.2869F, 13.2428F, 5.06621F, 13.2428F),
-    new Line2D.Float( 11.1986F, 9.15449F, 5.06621F, 9.15449F),
-    new Line2D.Float( 11.1986F, 11.1986F, 11.1986F, 9.15449F),
-    new Rectangle2D.Float(7.11035F, 11.1986F, 4.08828F, 1.02207F),
+    new Line2D.Float( 15F, 13F, 5F, 13F),
+    new Line2D.Float( 11F, 9F, 5F, 9F),
+    new Line2D.Float( 11F, 11F, 11F, 9F),
+    new Rectangle2D.Float(7F, 11F, 4F, 1F),
     new Polygon( new int[] { 7, 11, 11, 7, 7, 7}, new int[] { 11, 11, 11, 11, 12, 12}, 6), 
     new Polygon( new int[] { 11, 11, 11, 11, 7, 7}, new int[] { 12, 11, 11, 12, 12, 12}, 6), 
-    new Line2D.Float( 15.2869F, 10.1766F, 11.1986F, 10.1766F),
-    new Line2D.Float( 15.2869F, 8.13242F, 11.1986F, 8.13242F),
+    new Line2D.Float( 15F, 10F, 11F, 10F),
+    new Line2D.Float( 15F, 8F, 11F, 8F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -1282,7 +1282,7 @@ protected class pwr_mbcircuitdiagram extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1414,7 +1414,7 @@ protected class pwr_mbcircuitdiagram extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbrtnavigator extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbrtnavigator( JopSession session)
   {
     super( session);
@@ -1423,13 +1423,13 @@ protected class pwr_mbrtnavigator extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(6.08828F, 6.08828F, 4.08828F, 3.06621F),
+    new Rectangle2D.Float(6F, 6F, 4F, 3F),
     new Polygon( new int[] { 6, 10, 10, 6, 6, 6}, new int[] { 6, 6, 6, 6, 9, 9}, 6), 
     new Polygon( new int[] { 10, 10, 10, 10, 6, 6}, new int[] { 9, 6, 6, 9, 9, 9}, 6), 
-    new Rectangle2D.Float(8.13242F, 10.1766F, 4.08828F, 5.11035F),
+    new Rectangle2D.Float(8F, 10F, 4F, 5F),
     new Polygon( new int[] { 8, 12, 12, 8, 8, 8}, new int[] { 10, 10, 10, 10, 15, 15}, 6), 
     new Polygon( new int[] { 12, 12, 12, 12, 8, 8}, new int[] { 15, 10, 10, 15, 15, 15}, 6), 
   };
@@ -1463,7 +1463,7 @@ protected class pwr_mbrtnavigator extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1577,7 +1577,7 @@ protected class pwr_mbrtnavigator extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhelpclass extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhelpclass( JopSession session)
   {
     super( session);
@@ -1586,11 +1586,11 @@ protected class pwr_mbhelpclass extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
     new Polygon( new int[] { 8, 8, 12, 12, 10, 10, 10, 12, 12, 8}, new int[] {8, 7, 7, 10, 10, 12, 10, 10, 7, 7}, 10),
-    new Line2D.Float( 10.1766F, 14.0318F, 10.1766F, 13.2428F),
+    new Line2D.Float( 10F, 13.772F, 10F, 13F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -1622,7 +1622,7 @@ protected class pwr_mbhelpclass extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1712,7 +1712,7 @@ protected class pwr_mbhelpclass extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbblockevents extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbblockevents( JopSession session)
   {
     super( session);
@@ -1721,13 +1721,13 @@ protected class pwr_mbblockevents extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 10.1766F, 14.0318F, 10.1766F, 13.2428F),
-    new Line2D.Float( 10.1766F, 11.1986F, 10.1766F, 6.08828F),
-    new Line2D.Float( 14.2648F, 14.2648F, 6.08828F, 6.08828F),
-    new Line2D.Float( 14.2648F, 6.08828F, 6.08828F, 14.2648F),
+    new Line2D.Float( 10F, 13.772F, 10F, 13F),
+    new Line2D.Float( 10F, 11F, 10F, 6F),
+    new Line2D.Float( 14F, 14F, 6F, 6F),
+    new Line2D.Float( 14F, 6F, 6F, 14F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -1759,7 +1759,7 @@ protected class pwr_mbblockevents extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1857,7 +1857,7 @@ protected class pwr_mbblockevents extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhistevent extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhistevent( JopSession session)
   {
     super( session);
@@ -1866,12 +1866,12 @@ protected class pwr_mbhistevent extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 10.1766F, 14.0318F, 10.1766F, 13.2428F),
+    new Line2D.Float( 10F, 13.772F, 10F, 13F),
     new Polygon( new int[] { 8, 6, 10, 14, 12, 14, 10, 6}, new int[] {14, 14, 6, 14, 14, 14, 6, 14}, 8),
-    new Line2D.Float( 10.1766F, 11.1986F, 10.1766F, 8.13242F),
+    new Line2D.Float( 10F, 11F, 10F, 8F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -1903,7 +1903,7 @@ protected class pwr_mbhistevent extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -1997,7 +1997,7 @@ protected class pwr_mbhistevent extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbnote extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbnote( JopSession session)
   {
     super( session);
@@ -2006,11 +2006,11 @@ protected class pwr_mbnote extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 10.1766F, 14.0318F, 10.1766F, 13.2428F),
-    new Line2D.Float( 10.1766F, 11.1986F, 10.1766F, 6.08828F),
+    new Line2D.Float( 10F, 13.772F, 10F, 13F),
+    new Line2D.Float( 10F, 11F, 10F, 6F),
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -2042,7 +2042,7 @@ protected class pwr_mbnote extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2132,7 +2132,7 @@ protected class pwr_mbnote extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbhelp extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbhelp( JopSession session)
   {
     super( session);
@@ -2141,11 +2141,11 @@ protected class pwr_mbhelp extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Line2D.Float( 10.1766F, 6.87732F, 10.1766F, 6.08828F),
-    new Line2D.Float( 11.0145F, 13.2428F, 8.97041F, 13.2428F),
+    new Line2D.Float( 10F, 6.772F, 10F, 6F),
+    new Line2D.Float( 10.8199F, 13F, 8.81989F, 13F),
     new Polygon( new int[] { 10, 10, 9, 10}, new int[] {13, 9, 9, 9}, 4),
   };
   public void paintComponent(Graphics g1) {
@@ -2178,7 +2178,7 @@ protected class pwr_mbhelp extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2272,31 +2272,30 @@ protected class pwr_mbhelp extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class JopButtontoggle extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public JopButtontoggle( JopSession session)
   {
     super( session);
-    size = new Dimension( 49, 21);
+    size = new Dimension( 48, 21);
+    annot1Font = new Font("Helvetica", Font.BOLD, 12);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 12);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
-  public int original_width = 49;
+  public void setAnnot1Color( int color) { annot1Color = color;}
+  public int original_width = 48;
   public int original_height = 21;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 45.2348F, 17.4433F),
-    new Polygon( new int[] { 2, 47, 46, 3, 3, 2}, new int[] { 2, 2, 3, 3, 19, 19}, 6), 
-    new Polygon( new int[] { 47, 47, 46, 46, 3, 2}, new int[] { 19, 2, 3, 19, 19, 19}, 6), 
-    new Polygon( new int[] { 2, 5, 5, 44, 47, 2, 2}, new int[] {19, 16, 5, 5, 2, 2, 19}, 7),
-    new Polygon( new int[] { 2, 5, 44, 44, 47, 47, 2}, new int[] {19, 16, 16, 5, 2, 19, 19}, 7),
-    new Rectangle2D.Float(2.00001F, 2F, 45.2348F, 17.4433F),
-    new Polygon( new int[] { 2, 47, 46, 3, 3, 2}, new int[] { 2, 2, 3, 3, 19, 19}, 6), 
-    new Polygon( new int[] { 47, 47, 46, 46, 3, 2}, new int[] { 19, 2, 3, 19, 19, 19}, 6), 
+    new Rectangle2D.Float(2F, 2F, 44.2581F, 17.0667F),
+    new Polygon( new int[] { 2, 46, 45, 3, 3, 2}, new int[] { 2, 2, 3, 3, 18, 19}, 6), 
+    new Polygon( new int[] { 46, 46, 45, 45, 3, 2}, new int[] { 19, 2, 3, 18, 18, 19}, 6), 
+    new Polygon( new int[] { 2, 5, 5, 44, 46, 2, 2}, new int[] {19, 16, 5, 5, 2, 2, 19}, 7),
+    new Polygon( new int[] { 2, 5, 44, 44, 46, 46, 2}, new int[] {19, 16, 16, 5, 2, 19, 19}, 7),
+    new Rectangle2D.Float(2.00001F, 2F, 44.2581F, 17.0667F),
+    new Polygon( new int[] { 2, 46, 45, 3, 3, 2}, new int[] { 2, 2, 3, 3, 18, 19}, 6), 
+    new Polygon( new int[] { 46, 46, 45, 45, 3, 2}, new int[] { 19, 2, 3, 18, 18, 19}, 6), 
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -2328,7 +2327,7 @@ protected class JopButtontoggle extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2427,7 +2426,7 @@ protected class JopButtontoggle extends GeComponent {
     g.transform( AffineTransform.getScaleInstance( original_width/width *
       		height/original_height, 1));
     if ( annot1 != null)
-      g.drawString( annot1, 7 * original_height / height * width / original_width, 15F);
+      g.drawString( annot1, 8 * original_height / height * width / original_width, 16F);
     g.setTransform( save_tmp);
     }
     if ( rounds == 2)
@@ -2438,26 +2437,25 @@ protected class JopButtontoggle extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuelong extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuelong( JopSession session)
   {
     super( session);
-    size = new Dimension( 547, 18);
+    size = new Dimension( 536, 18);
+    annot1Font = new Font("Helvetica", Font.BOLD, 10);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 10);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
-  public int original_width = 547;
+  public void setAnnot1Color( int color) { annot1Color = color;}
+  public int original_width = 536;
   public int original_height = 18;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 543.741F, 14.309F),
-    new Polygon( new int[] { 2, 546, 545, 3, 3, 2}, new int[] { 2, 2, 3, 3, 16, 16}, 6), 
-    new Polygon( new int[] { 546, 546, 545, 545, 3, 2}, new int[] { 16, 2, 3, 16, 16, 16}, 6), 
+    new Rectangle2D.Float(2F, 2F, 532F, 14F),
+    new Polygon( new int[] { 2, 534, 533, 3, 3, 2}, new int[] { 2, 2, 3, 3, 15, 16}, 6), 
+    new Polygon( new int[] { 534, 534, 533, 533, 3, 2}, new int[] { 16, 2, 3, 15, 15, 16}, 6), 
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -2489,7 +2487,7 @@ protected class pwr_valuelong extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2583,7 +2581,7 @@ protected class pwr_valuelong extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_mbcrossreferences extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_mbcrossreferences( JopSession session)
   {
     super( session);
@@ -2592,14 +2590,14 @@ protected class pwr_mbcrossreferences extends GeComponent {
   public int original_width = 20;
   public int original_height = 20;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 16.3531F, 16.3531F),
+    new Rectangle2D.Float(2F, 2F, 16F, 16F),
     new Polygon( new int[] { 2, 18, 16, 4, 4, 2}, new int[] { 2, 2, 4, 4, 16, 18}, 6), 
     new Polygon( new int[] { 18, 18, 16, 16, 4, 2}, new int[] { 18, 2, 4, 16, 16, 18}, 6), 
-    new Rectangle2D.Float(10.1766F, 6.08828F, 4.08828F, 8.17656F),
+    new Rectangle2D.Float(10F, 6F, 4F, 8F),
     new Polygon( new int[] { 10, 14, 14, 10, 10, 10}, new int[] { 6, 6, 6, 6, 14, 14}, 6), 
     new Polygon( new int[] { 14, 14, 14, 14, 10, 10}, new int[] { 14, 6, 6, 14, 14, 14}, 6), 
-    new Line2D.Float( 14.2648F, 8.13242F, 10.1766F, 8.13242F),
-    new Line2D.Float( 8.13242F, 10.1766F, 6.08828F, 10.1766F),
+    new Line2D.Float( 14F, 8F, 10F, 8F),
+    new Line2D.Float( 8F, 10F, 6F, 10F),
     new Polygon( new int[] { 8, 8, 10, 8}, new int[] {8, 12, 10, 8}, 4),
     new Polygon( new int[] { 6, 4, 6, 6}, new int[] {8, 10, 12, 8}, 4),
   };
@@ -2633,7 +2631,7 @@ protected class pwr_mbcrossreferences extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -2757,11 +2755,9 @@ protected class pwr_valueinputreliefup extends GeTextField {
     setFont( annotFont);
     setFillColor( annotBackground);
   }
-  int original_width = 51;
+  int original_width = 50;
   int original_height = 18;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 10);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();
@@ -2779,11 +2775,9 @@ protected class pwr_valueinputmedium extends GeTextField {
     setFont( annotFont);
     setFillColor( annotBackground);
   }
-  int original_width = 65;
+  int original_width = 64;
   int original_height = 24;
   boolean fontSet = false;
-  Font annotFont = new Font("Helvetica", Font.BOLD, 14);
-  int annotBackground = 41;
   public void paintComponent(Graphics g1) {
     if ( !fontSet) {
       float width = getWidth();
@@ -2795,43 +2789,42 @@ protected class pwr_valueinputmedium extends GeTextField {
   }
 }
 protected class pwr_buttoncommand extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_buttoncommand( JopSession session)
   {
     super( session);
-    size = new Dimension( 104, 36);
+    size = new Dimension( 102, 36);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
-  public int original_width = 104;
+  public void setAnnot1Color( int color) { annot1Color = color;}
+  public int original_width = 102;
   public int original_height = 36;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 100.163F, 32.7062F),
-    new Polygon( new int[] { 2, 102, 101, 4, 4, 2}, new int[] { 2, 2, 4, 4, 33, 35}, 6), 
-    new Polygon( new int[] { 102, 102, 101, 101, 4, 2}, new int[] { 35, 2, 4, 33, 33, 35}, 6), 
-    new Polygon( new int[] { 2, 8, 8, 96, 102, 2, 2}, new int[] {35, 29, 8, 8, 2, 2, 35}, 7),
-    new Polygon( new int[] { 2, 4, 6, 8}, new int[] { 35, 30, 28,29}, 4),
-    new Polygon( new int[] { 8, 6, 6, 8}, new int[] { 29, 28, 6,8}, 4),
-    new Polygon( new int[] { 8, 6, 95, 96}, new int[] { 8, 6, 6,8}, 4),
-    new Polygon( new int[] { 96, 95, 97, 102}, new int[] { 8, 6, 4,2}, 4),
-    new Polygon( new int[] { 102, 97, 4, 2}, new int[] { 2, 4, 4,2}, 4),
-    new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 4, 30,35}, 4),
-    new Polygon( new int[] { 2, 8, 96, 96, 102, 102, 2}, new int[] {35, 29, 29, 8, 2, 35, 35}, 7),
-    new Polygon( new int[] { 2, 7, 9, 8}, new int[] { 35, 33, 31,29}, 4),
-    new Polygon( new int[] { 8, 9, 98, 96}, new int[] { 29, 31, 31,29}, 4),
-    new Polygon( new int[] { 96, 98, 98, 96}, new int[] { 29, 31, 9,8}, 4),
-    new Polygon( new int[] { 96, 98, 100, 102}, new int[] { 8, 9, 7,2}, 4),
-    new Polygon( new int[] { 102, 100, 100, 102}, new int[] { 2, 7, 33,35}, 4),
-    new Polygon( new int[] { 102, 100, 7, 2}, new int[] { 35, 33, 33,35}, 4),
-    new Rectangle2D.Float(2F, 2F, 100.163F, 32.7062F),
-    new Polygon( new int[] { 2, 102, 101, 4, 4, 2}, new int[] { 2, 2, 4, 4, 33, 35}, 6), 
-    new Polygon( new int[] { 102, 102, 101, 101, 4, 2}, new int[] { 35, 2, 4, 33, 33, 35}, 6), 
+    new Rectangle2D.Float(2F, 2F, 98F, 32F),
+    new Polygon( new int[] { 2, 100, 98, 4, 4, 2}, new int[] { 2, 2, 4, 4, 32, 34}, 6), 
+    new Polygon( new int[] { 100, 100, 98, 98, 4, 2}, new int[] { 34, 2, 4, 32, 32, 34}, 6), 
+    new Polygon( new int[] { 2, 8, 8, 94, 100, 2, 2}, new int[] {34, 28, 8, 8, 2, 2, 34}, 7),
+    new Polygon( new int[] { 2, 4, 6, 8}, new int[] { 34, 29, 27,28}, 4),
+    new Polygon( new int[] { 8, 6, 6, 8}, new int[] { 28, 27, 6,8}, 4),
+    new Polygon( new int[] { 8, 6, 93, 94}, new int[] { 8, 6, 6,8}, 4),
+    new Polygon( new int[] { 94, 93, 95, 100}, new int[] { 8, 6, 4,2}, 4),
+    new Polygon( new int[] { 100, 95, 4, 2}, new int[] { 2, 4, 4,2}, 4),
+    new Polygon( new int[] { 2, 4, 4, 2}, new int[] { 2, 4, 29,34}, 4),
+    new Polygon( new int[] { 2, 8, 94, 94, 100, 100, 2}, new int[] {34, 28, 28, 8, 2, 34, 34}, 7),
+    new Polygon( new int[] { 2, 7, 9, 8}, new int[] { 34, 32, 30,28}, 4),
+    new Polygon( new int[] { 8, 9, 96, 94}, new int[] { 28, 30, 30,28}, 4),
+    new Polygon( new int[] { 94, 96, 96, 94}, new int[] { 28, 30, 9,8}, 4),
+    new Polygon( new int[] { 94, 96, 98, 100}, new int[] { 8, 9, 7,2}, 4),
+    new Polygon( new int[] { 100, 98, 98, 100}, new int[] { 2, 7, 32,34}, 4),
+    new Polygon( new int[] { 100, 98, 7, 2}, new int[] { 34, 32, 32,34}, 4),
+    new Rectangle2D.Float(2F, 2F, 98F, 32F),
+    new Polygon( new int[] { 2, 100, 98, 4, 4, 2}, new int[] { 2, 2, 4, 4, 32, 34}, 6), 
+    new Polygon( new int[] { 100, 100, 98, 98, 4, 2}, new int[] { 34, 2, 4, 32, 32, 34}, 6), 
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -2863,7 +2856,7 @@ protected class pwr_buttoncommand extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3009,26 +3002,25 @@ protected class pwr_buttoncommand extends GeComponent {
   public Dimension getMinimumSize() { return size;}
 }
 protected class pwr_valuemedium extends GeComponent {
-  Dimension size;
+  // Dimension size;
   public pwr_valuemedium( JopSession session)
   {
     super( session);
-    size = new Dimension( 65, 24);
+    size = new Dimension( 64, 24);
+    annot1Font = new Font("Helvetica", Font.BOLD, 14);
   }
-  String annot1 = new String();
+  int annot1Color = 0;
   public String getAnnot1() { return annot1;}
   public void setAnnot1( String s) { annot1 = s;}
-  Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
-  int annot1Color = 0;
   public void setAnnot1Font( Font font) { annot1Font = font;}
-  public void setAnnot1Color( int color) { annot1Color = color;}
   public Font getAnnot1Font() { return annot1Font;}
-  public int original_width = 65;
+  public void setAnnot1Color( int color) { annot1Color = color;}
+  public int original_width = 64;
   public int original_height = 24;
   Shape[] shapes = new Shape[] { 
-    new Rectangle2D.Float(2F, 2F, 61.3242F, 20.4414F),
-    new Polygon( new int[] { 2, 63, 62, 3, 3, 2}, new int[] { 2, 2, 3, 3, 21, 22}, 6), 
-    new Polygon( new int[] { 63, 63, 62, 62, 3, 2}, new int[] { 22, 2, 3, 21, 21, 22}, 6), 
+    new Rectangle2D.Float(2F, 2F, 60F, 20F),
+    new Polygon( new int[] { 2, 62, 61, 3, 3, 2}, new int[] { 2, 2, 3, 3, 21, 22}, 6), 
+    new Polygon( new int[] { 62, 62, 61, 61, 3, 2}, new int[] { 22, 2, 3, 21, 21, 22}, 6), 
   };
   public void paintComponent(Graphics g1) {
     animationCount = 1;
@@ -3060,7 +3052,7 @@ protected class pwr_valuemedium extends GeComponent {
     else
       g.transform( AffineTransform.getScaleInstance( width/original_width,
       		height/original_height));
-    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {
+    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {
       g.rotate( Math.PI * dd.rotate/180, 
 
            (dd.x0 - getX())*original_width/width,
@@ -3143,7 +3135,7 @@ protected class pwr_valuemedium extends GeComponent {
     g.transform( AffineTransform.getScaleInstance( original_width/width *
       		height/original_height, 1));
     if ( annot1 != null)
-      g.drawString( annot1, 9 * original_height / height * width / original_width, 18F);
+      g.drawString( annot1, 8 * original_height / height * width / original_width, 18F);
     g.setTransform( save_tmp);
     }
     if ( rounds == 2)

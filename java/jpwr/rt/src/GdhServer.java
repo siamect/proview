@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.12 2005-12-06 11:17:01 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.13 2006-04-24 13:21:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -162,7 +162,7 @@ public class GdhServer
   /**
    *  Description of the Method
    */
-  public void GdhServer()
+  public GdhServer()
   {
   }
 
