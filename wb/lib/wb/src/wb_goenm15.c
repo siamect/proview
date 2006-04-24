@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm15.c,v 1.8 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_goenm15.c,v 1.9 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -196,12 +196,12 @@ int goen_create_nodetype_m15(
   f_height  = f_repeat * 2;
 
   if ( !annot3_found)	
-    f_width = max( f_strlength * 2 + max( annot_width[0], annot2_width),
+    f_width = co_max( f_strlength * 2 + co_max( annot_width[0], annot2_width),
 			 f_defwidth) 
 			+ f_classnamewidth;
   else
   {
-    f_width = max( f_strlength * 4 + max( annot_width[0], annot2_width) 
+    f_width = co_max( f_strlength * 4 + co_max( annot_width[0], annot2_width) 
 		+ annot3_width, 
 		f_defwidth + f_strlength * 2) + f_classnamewidth;
     f_width_left = f_strlength * 2 + annot3_width;

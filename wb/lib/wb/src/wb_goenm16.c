@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm16.c,v 1.7 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm16.c,v 1.8 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -181,9 +181,9 @@ int goen_create_nodetype_m16(
   points_at_right = (outputpoints != 0);
 
   f_height  = 3 * f_repeat +
-	       (max(inputpoints,outputpoints)-1)*f_repeat;
+	       (co_max(inputpoints,outputpoints)-1)*f_repeat;
 
-  f_width = max( f_strlength * (2 + node_width), f_defwidth);
+  f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
   f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
 			      f_strlength/2.0;
 
@@ -501,8 +501,8 @@ int goen_get_point_info_m16( grectx, graphbody, point_nr, mask, node_width,
 	points_at_left = (inputpoints != 0);
 	points_at_right = (outputpoints != 0);
 
-	f_height  = (max(inputpoints,outputpoints) + 2)*f_repeat;
-	f_width = max( f_strlength * (2 + node_width), f_defwidth);
+	f_height  = (co_max(inputpoints,outputpoints) + 2)*f_repeat;
+	f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
 
 	points_top = 0;
 	points_bottom = 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_mq.c,v 1.2 2006-02-21 14:10:26 claes Exp $
+ * Proview   $Id: rs_remote_mq.c,v 1.3 2006-04-24 13:22:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -270,9 +270,9 @@ int main(int argc, char *argv[])
   /* Read arg number 2, should be id for this instance and id is our queue number */
 
   if (argc >= 2)
-    strcpy(id, argv[1]);
+    strcpy((char *)id, argv[1]);
   else
-    strcpy(id, "0");
+    strcpy((char *)id, "0");
 
   /* Build process name with id */
 

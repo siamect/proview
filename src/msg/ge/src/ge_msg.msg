@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: ge_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: ge_msg.msg,v 1.4 2006-04-24 13:22:24 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ javac		<Java compilation errors>			/error
 nofile 		<File not found>				/error
 nosize		<Size not found>				/error
 no_propagate    <Don't propagate event handling>		/info
-
+isbaseclass     <Is baseclass>                                  /info
 
 
 

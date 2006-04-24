@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_macros.h,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_nav_macros.h,v 1.6 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,12 +46,12 @@
 #define EVEN(a)	(((int)(a) & 1) == 0)
 #endif
 
-#ifndef max
-#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#ifndef co_max
+#define co_max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #endif
 
-#ifndef min
-#define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#ifndef co_min
+#define co_min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 #endif
 
 #define SwapInts(Dragon,Eagle)\

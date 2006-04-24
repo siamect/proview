@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_3964r.c,v 1.1 2006-01-12 06:39:33 claes Exp $
+ * Proview   $Id: rs_remote_3964r.c,v 1.2 2006-04-24 13:22:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -224,7 +224,7 @@ static unsigned int send_it(char *buf, int buffer_size)
   unsigned int          number_of_DLE = 0;
   unsigned char         ch;
   unsigned char         BCC = DLE ^ ETX;
-  unsigned char         *restore_buf_ptr = buf;
+  unsigned char         *restore_buf_ptr = (unsigned char *)buf;
   unsigned char         telegram[MAX_SIZE_TELEGRAM];
   unsigned char		buff;
   static unsigned char  sstx[2] = {STX, '\0'};
@@ -247,7 +247,7 @@ static unsigned int send_it(char *buf, int buffer_size)
 /*************************************************************************/
 /**   Fill up telegram with contents of message and calculate BCC       **/
 /*************************************************************************/
-  buf = restore_buf_ptr;
+  buf = (char *)restore_buf_ptr;
   for ( i=0 ; i<(buffer_size + number_of_DLE) ; i++ )
   {
     ch = telegram[i] = *buf++;
@@ -621,7 +621,7 @@ static unsigned int ReceiveHandler(int fd)
 /*************************************************************************/
   if (!search_remtrans)
   {
-    sts = RemTrans_Receive(remtrans, receive_buffer, data_size-3);
+    sts = RemTrans_Receive(remtrans, (char *)receive_buffer, data_size-3);
     if ( EVEN(sts) )
     {
       remtrans->objp->ErrCount++;
@@ -658,9 +658,9 @@ int main(int argc, char *argv[]) /*argv[2]=remnode name*/
   /* Read arg number 2, should be id for this instance */
 
   if (argc >= 2)
-    strcpy(id, argv[1]);
+    strcpy((char *) id, argv[1]);
   else
-    strcpy(id, "0");
+    strcpy((char *) id, "0");
     
   /* Build process name with id */
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.20 2006-03-31 14:34:12 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.21 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -609,6 +609,8 @@ static void ge_export_gejava( ge_tCtx gectx, char *name)
         ge_message( gectx, 'E', "Java export error");
         return;
       }
+      else if ( sts == GE__ISBASECLASS)
+	return;
 
       // Compile frame
       gectx->graph->get_systemname( systemname);
@@ -628,11 +630,12 @@ static void ge_export_gejava( ge_tCtx gectx, char *name)
 
       // Export applet
       sts = gectx->graph->export_gejava( filename, appletname, 1, 0);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         ge_message( gectx, 'E', "Java export error");
         return;
       }
+      else if ( sts == GE__ISBASECLASS)
+	return;
 
       // Compile applet
       gectx->graph->get_systemname( systemname);

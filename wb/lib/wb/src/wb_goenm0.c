@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm0.c,v 1.9 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_goenm0.c,v 1.10 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,10 +188,10 @@ int goen_create_nodetype_m0(
   }
 	
   f_height  = 3 * f_repeat + 
-	       (max(inputpoints,outputpoints)-1)*f_repeat;
+	       (co_max(inputpoints,outputpoints)-1)*f_repeat;
 
   classname_width = strlen( graphbody->graphname) * f_strlength;
-  f_width = max( f_strlength * 4 + max( classname_width, annot_width),
+  f_width = co_max( f_strlength * 4 + co_max( classname_width, annot_width),
 			 f_defwidth + f_strlength * 2);
   f_namepos = f_width/2.0 - classname_width/2;
 

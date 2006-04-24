@@ -136,6 +136,14 @@ set_env()
 #        export CLASSPATH=$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/rt:$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/jop:$pwre_broot/$pwre_os/$pwre_hw/bld/jpwr/beans
         export CLASSPATH=$pwre_broot/$pwre_target/bld
 	export PATH=$PATH:$pwr_exe:$pwr_eexe
+
+# Configure
+# Dmq
+	if [ -e /usr/lib/libdmq.so ]; then
+          export pwre_conf_mq=1
+	else
+	  export pwre_conf_mq=0
+        fi
 }
 
 pwre_get_variables()

@@ -2,7 +2,7 @@
 #define INC_wb_wblparser_hpp_
 
 #include <antlr/config.hpp>
-/* $ANTLR 2.7.5 (20050128): "wb_wblparser.g" -> "wb_wblparser.hpp"$ */
+/* $ANTLR 2.7.6 (20060211): "wb_wblparser.g" -> "wb_wblparser.hpp"$ */
 #include <antlr/TokenStream.hpp>
 #include <antlr/TokenBuffer.hpp>
 #include "wb_wblparserTokenTypes.hpp"
@@ -21,10 +21,10 @@ extern int wblparser_error_cnt;
 #line 24 "wb_wblparser.hpp"
 class CUSTOM_API wb_wblparser : public ANTLR_USE_NAMESPACE(antlr)LLkParser, public wb_wblparserTokenTypes
 {
+void reportError(const RecognitionException& ex);
 #line 1 "wb_wblparser.g"
 #line 28 "wb_wblparser.hpp"
 public:
-void reportError(const RecognitionException& ex);
 	void initializeASTFactory( ANTLR_USE_NAMESPACE(antlr)ASTFactory& factory );
 protected:
 	wb_wblparser(ANTLR_USE_NAMESPACE(antlr)TokenBuffer& tokenBuf, int k);

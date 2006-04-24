@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ssabox_plc_servoreg.h,v 1.2 2006-02-01 08:21:21 claes Exp $
+ * Proview   $Id: ssabox_plc_servoreg.h,v 1.3 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <float.h>
-#include "libiberty.h"
+//#include "libiberty.h"
 
 #include "pwr_baseclasses.h"
 #include "pwr_basecomponentclasses.h"

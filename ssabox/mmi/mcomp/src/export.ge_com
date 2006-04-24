@@ -12,6 +12,9 @@ endfunction
 
 main()
 
+  set javapath "$pwre_croot/java/jpwr/jopc/src"
+  set javapackage "jopc"
+
   process( "pwr_c_ssab_safetyswitch");
 
 endmain

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.9 2005-11-02 14:07:36 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.10 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,6 +46,7 @@ extern "C" {
 #include "glow_growctx.h"
 #include "glow_growapi.h"
 #include "glow_growwidget.h"
+#include "ge_msg.h"
 
 #include "ge_graph.h"
 #include "ge_dyn.h"
@@ -1445,7 +1446,7 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
 "protected class " << bean_name << " extends GeComponent {" << endl;
 
     fp <<
-"  Dimension size;" << endl;
+"  // Dimension size;" << endl;
 
     // Declarations of GrowNode objects
     grow_ExportNodeClassJavaBean( grow->ctx, nodeclass, fp, 1);
@@ -1732,7 +1733,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
   }
 
   if ( baseclass) {
-    strcpy( fname, "$pwre_sroot/jpwr/jopc/src/");
+    strcpy( fname, java_path);
+    strcat( fname, "/");
     strcat( fname, filename);
   }
   else if ( !strchr( filename, ':') && !strchr( filename, '/'))
@@ -1758,7 +1760,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     fp.open( fname);
 
     if ( baseclass)
-      fp << "package jpwr.jopc;" << endl;
+      fp << "package jpwr." << java_package << ";" << endl;
 
     fp << 
 "import jpwr.rt.*;" << endl <<
@@ -1977,7 +1979,9 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     fp.close();
   }
 
-  return 1;
+  if ( baseclass)
+    return GE__ISBASECLASS;
+  return GE__SUCCESS;
 }
 
 

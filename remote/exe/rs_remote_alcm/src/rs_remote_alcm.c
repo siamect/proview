@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_alcm.c,v 1.1 2006-01-12 06:39:33 claes Exp $
+ * Proview   $Id: rs_remote_alcm.c,v 1.2 2006-04-24 13:22:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -136,8 +136,8 @@ int CalcAddress(unsigned char *str, unsigned char *address)
   int i1, i2, i3, i4, i5, i6;
   unsigned short int node, area;
 
-  if (strchr(str, '.')) {  
-    sscanf(str, "%d.%d", &i1, &i2);
+  if (strchr((char *)str, '.')) {  
+    sscanf((char *)str, "%d.%d", &i1, &i2);
     area = (unsigned short int) i1;
     node = (unsigned short int) i2;
 
@@ -155,8 +155,8 @@ int CalcAddress(unsigned char *str, unsigned char *address)
     
     return 1;
   }
-  else if (strchr(str, ':')) {
-    sscanf(str, "%x:%x:%x:%x:%x:%x", &i1, &i2, &i3, &i4, &i5, &i6);
+  else if (strchr((char *)str, ':')) {
+    sscanf((char *)str, "%x:%x:%x:%x:%x:%x", &i1, &i2, &i3, &i4, &i5, &i6);
     address[0] = (unsigned char) i1;
     address[1] = (unsigned char) i2;
     address[2] = (unsigned char) i3;
@@ -616,7 +616,7 @@ int main(int argc, char *argv[]) {
   remtrans_item *remtrans;
   pwr_tObjid objid;				// För loop
   unsigned int sts;                             // Status från funktionsanrop
-  unsigned char pname[32];
+  char pname[32];
   pwr_tTime tmptime;
   int i;
 
@@ -691,7 +691,7 @@ int main(int argc, char *argv[]) {
       
     // Beräkna ethernet-adress från adress-sträng i objektet
 
-    sts = CalcAddress(rn_local->ref->RemoteAddress, rn_local->address);
+    sts = CalcAddress((unsigned char *)rn_local->ref->RemoteAddress, rn_local->address);
 
     sts = gdh_GetNextObject(objid, &objid);
   }
@@ -770,7 +770,7 @@ int main(int argc, char *argv[]) {
       }
 
       // Beräkna ethernet-adress från objektet
-      CalcAddress(rn_local->ref->RemoteAddress, rn_local->address);
+      CalcAddress((unsigned char *)rn_local->ref->RemoteAddress, rn_local->address);
 
       // Update retransmit time, could have been changed
       rn->retransmit_time = rn_local->ref->RetransmitTime;

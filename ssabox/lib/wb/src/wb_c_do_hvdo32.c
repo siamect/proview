@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_do_hvdo32.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: wb_c_do_hvdo32.c,v 1.2 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,7 +57,7 @@ static pwr_tStatus AnteAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxChan = min(32, RCard.MaxNoOfChannels);
+  MaxChan = co_min(32, RCard.MaxNoOfChannels);
   for (i = 0, Chan = 1; i < MaxChan; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -102,7 +102,7 @@ static pwr_tStatus PostAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxChan = min(32, RCard.MaxNoOfChannels);
+  MaxChan = co_min(32, RCard.MaxNoOfChannels);
   for (i = 0, Chan = 1; i < MaxChan; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -190,7 +190,7 @@ static pwr_tStatus PostUnadopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  MaxChan = min(32, RCard.MaxNoOfChannels);
+  MaxChan = co_min(32, RCard.MaxNoOfChannels);
 
   /*
     get attributes of channel

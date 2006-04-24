@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_co_co4up.c,v 1.1 2005-12-30 15:52:05 claes Exp $
+ * Proview   $Id: wb_c_co_co4up.c,v 1.2 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ AnteAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxCounter = min(32, RCard.MaxNoOfCounters);
+  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
   for (i = 0, Chan = 1; i < MaxCounter; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -100,7 +100,7 @@ PostAdopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return sts;
 
-  MaxCounter = min(32, RCard.MaxNoOfCounters);
+  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
   for (i = 0, Chan = 1; i < MaxCounter; i++, Chan <<= 1) {
     if ((DCard.ChannelAllocation & Chan) == 0)
       break;
@@ -186,7 +186,7 @@ PostUnadopt (
   sts = ldh_ReadObjectBody(Session, Card, "DevBody", &DCard, sizeof(DCard));
   if (EVEN(sts)) return PWRB__SUCCESS;
 
-  MaxCounter = min(32, RCard.MaxNoOfCounters);
+  MaxCounter = co_min(32, RCard.MaxNoOfCounters);
 
   /* Get attributes of channel
 

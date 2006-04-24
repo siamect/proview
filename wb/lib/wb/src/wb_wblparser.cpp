@@ -1,4 +1,4 @@
-/* $ANTLR 2.7.5 (20050128): "wb_wblparser.g" -> "wb_wblparser.cpp"$ */
+/* $ANTLR 2.7.6 (20060211): "wb_wblparser.g" -> "wb_wblparser.cpp"$ */
 #include "wb_wblparser.hpp"
 #include <antlr/NoViableAltException.hpp>
 #include <antlr/SemanticException.hpp>

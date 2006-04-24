@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm5.c,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm5.c,v 1.6 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,11 +174,11 @@ int goen_create_nodetype_m5(
 
 	f_height  = f_repeat;
 	f_ordertypewidth =
-	        max( f_ordertypewidth, annot_width[1] + f_strlength);
+	        co_max( f_ordertypewidth, annot_width[1] + f_strlength);
 	f_backcheckwidth =
-		max( f_backcheckwidth, annot_width[2] + 2 * f_strlength);
+		co_max( f_backcheckwidth, annot_width[2] + 2 * f_strlength);
 	f_width = f_ordertypewidth +
-		  max( f_defwidth, annot_width[0] + 2 * f_strlength) +
+		  co_max( f_defwidth, annot_width[0] + 2 * f_strlength) +
 		  f_backcheckwidth;
 
 	flow_CreateNodeClass(ctx, name, flow_eNodeGroup_Common, 

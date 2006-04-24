@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.21 2006-03-31 14:34:12 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.22 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -481,6 +481,8 @@ class Graph {
   char			confirm_text[200];	//!< Stored confirm text.
   GeDyn			*subgraph_dyn;		//!< Subgraph default dynamics.
   int			was_subgraph;		//!< Parameter to detect graph<->subgraph change.
+  char			java_path[80];		//!< Path for generated java code for baseclasses
+  char			java_package[80];      	//!< Package for generated java code for baseclasses
   
   //! Create navigator window.
   /*! \param parent	Paren widget. */

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.c,v 1.17 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_gre.c,v 1.18 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -895,8 +895,8 @@ int	gre_node_annot_message(
             case pwr_eType_Text:
             {
               strncpy( annot_str, parvalue, 
-                       min( sizeof(annot_str), annot_max_size));
-              annot_str[min( sizeof(annot_str), annot_max_size)-1] = 0;
+                       co_min( sizeof(annot_str), annot_max_size));
+              annot_str[co_min( sizeof(annot_str), annot_max_size)-1] = 0;
               break;
             }
             case pwr_eType_Char:

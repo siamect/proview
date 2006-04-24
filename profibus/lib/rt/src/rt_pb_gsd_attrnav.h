@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.1 2006-03-31 08:46:37 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.2 2006-04-24 13:22:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -155,6 +155,8 @@ class ItemPb {
   brow_tNode		node;
   char	 		name[120];
   int			parent;
+
+  virtual ~ItemPb() {}
   
   virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y) { return 1;}
   virtual int	       	close( GsdAttrNav *attrnav, double x, double y);
@@ -187,6 +189,7 @@ class ItemPbEnum : public ItemPbBase {
 	double attr_max_limit, void *attr_value_p,
         int attr_noedit,  gsd_sPrmText *attr_enumtext,
 	brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbEnum() {}
 
     int 	    old_value;
 
@@ -211,6 +214,7 @@ class ItemPbModule : public ItemPb {
  public:
   ItemPbModule( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
 		brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbModule() {}
 
   gsd_sModuleConf *mconf;
   char 		old_value[80];
@@ -225,6 +229,7 @@ class ItemPbModuleType : public ItemPb {
  public:
   ItemPbModuleType( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
 		    brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbModuleType() {}
 
   gsd_sModuleConf *mconf;
   int 	    old_value;
@@ -238,6 +243,7 @@ class ItemPbModuleData : public ItemPb {
  public:
   ItemPbModuleData( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
 		    brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbModuleData() {}
 
   gsd_sModuleConf *mconf;
   
@@ -250,6 +256,7 @@ class ItemPbModuleClass : public ItemPb {
  public:
   ItemPbModuleClass( GsdAttrNav *attrnav, char *item_name, gsd_sModuleConf *item_mconf,
 		     brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbModuleClass() {}
 
   gsd_sModuleConf *mconf;
   int 	    old_value;
@@ -263,6 +270,7 @@ class ItemPbPrmData : public ItemPb {
  public:
   ItemPbPrmData( GsdAttrNav *attrnav, char *item_name,
 		    brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbPrmData() {}
 
   virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y);
 };
@@ -272,7 +280,7 @@ class ItemPbMoreData : public ItemPb {
  public:
   ItemPbMoreData( GsdAttrNav *attrnav, char *item_name,
 		  brow_tNode dest, flow_eDest dest_code);
-
+  virtual ~ItemPbMoreData() {}
   virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y);
 };
 

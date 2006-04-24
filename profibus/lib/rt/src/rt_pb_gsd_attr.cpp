@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.3 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.cpp,v 1.4 2006-04-24 13:22:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -299,7 +299,7 @@ static void gsdattr_activate_cmd_ok( Widget w, GsdAttr *attr, XmAnyCallbackStruc
 		 attr->gsd->module_conf[idx].name);
 	break;
       default:
-	sprintf( msg, "Syntax error in module %d");
+	sprintf( msg, "Syntax error in module %d", idx + 1);
       }
       attr->message( 'E', msg);
       return;

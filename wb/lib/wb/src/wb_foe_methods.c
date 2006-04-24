@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_methods.c,v 1.19 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_foe_methods.c,v 1.20 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2939,10 +2939,10 @@ int foe_print_overview (
 	  {
 	    /* Calculate coordinates for an overview */
 	    gre_measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
-	    ll_x_min = min( ll_x_min, ll_x);
-	    ll_y_min = min( ll_y_min, ll_y);
-	    ur_x_max = max( ur_x_max, ll_x + width);
-	    ur_y_max = max( ur_y_max, ll_y + height);
+	    ll_x_min = co_min( ll_x_min, ll_x);
+	    ll_y_min = co_min( ll_y_min, ll_y);
+	    ur_x_max = co_max( ur_x_max, ll_x + width);
+	    ur_y_max = co_max( ur_y_max, ll_y + height);
 
 	    doc_count++;	  
 	  }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_tcpip.c,v 1.2 2006-01-13 06:38:27 claes Exp $
+ * Proview   $Id: rs_remote_tcpip.c,v 1.3 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -249,7 +249,7 @@ int Connect()
     /* Get local socket description */
     if (sts == 0) {
       l_addr_len = sizeof(struct sockaddr);
-      sts2 = getsockname(c_socket, (struct sockaddr *) &l_addr, &l_addr_len);
+      sts2 = getsockname(c_socket, (struct sockaddr *) &l_addr, (unsigned int *)&l_addr_len);
       if (sts2 == 0) rn_tcp->LocalPort = ntohs(l_addr.sin_port);
     }
   }
@@ -280,7 +280,7 @@ int Accept()
   if (cs_mode == TCP_SERVER) {
 
     /* Wait for client */
-    c_socket = accept(l_socket, (struct sockaddr *) &r_addr, &l_addr_len);
+    c_socket = accept(l_socket, (struct sockaddr *) &r_addr, (unsigned int *)&l_addr_len);
 
     if (debug) printf("accept: %d\n", c_socket);      
     if (debug && (c_socket < 0)) perror("accept");
@@ -611,9 +611,9 @@ int main(int argc, char *argv[])
   /* Read arg number 2, should be id for this instance */
 
   if (argc >= 2)
-    strcpy(id, argv[1]);
+    strcpy((char *)id, argv[1]);
   else
-    strcpy(id, "0");
+    strcpy((char *)id, "0");
 
   /* Build process name with id */
 

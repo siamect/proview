@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm10.c,v 1.4 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_goenm10.c,v 1.5 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -184,18 +184,18 @@ int goen_create_nodetype_m10(
   }
 	
   f_height  = f_header/2 + f_header/2 +
-	       max((max(i_innr,i_outnr)-1), 1) * f_repeat;
+	       co_max((co_max(i_innr,i_outnr)-1), 1) * f_repeat;
 
   classname_width = strlen( graphbody->graphname) * f_strlength;
   if ( annot_count <= 1)
   {
-    f_width = max( f_strlength * 2 + max( classname_width, annot_width[0]),
+    f_width = co_max( f_strlength * 2 + co_max( classname_width, annot_width[0]),
 			f_defwidth + f_strlength * 2);
     f_width_left = 0;
   }
   else
   {
-    f_width = max( f_strlength * 4 + max( classname_width, annot_width[0])
+    f_width = co_max( f_strlength * 4 + co_max( classname_width, annot_width[0])
 			 + annot_width[1], f_defwidth + f_strlength * 2);
     f_width_left = f_strlength * 2 + annot_width[1];
   }

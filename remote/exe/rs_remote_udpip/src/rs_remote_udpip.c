@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_udpip.c,v 1.2 2006-01-13 06:38:27 claes Exp $
+ * Proview   $Id: rs_remote_udpip.c,v 1.3 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -537,9 +537,9 @@ int main(int argc, char *argv[])
   /* Read arg number 2, should be id for this instance */
 
   if (argc >= 2)
-    strcpy(id, argv[1]);
+    strcpy((char *)id, argv[1]);
   else
-    strcpy(id, "0");
+    strcpy((char *)id, "0");
 
   /* Build process name with id */
 

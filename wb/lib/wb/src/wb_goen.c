@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goen.c,v 1.7 2005-10-07 05:57:29 claes Exp $
+ * Proview   $Id: wb_goen.c,v 1.8 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -731,58 +731,6 @@ int goen_create_contype(
 			line_type, line_width, arrow_width, arrow_length, 
 			round_corner_amount, flow_eConGroup_Common,
 			con_class);
-#if 0	
-	/* Specify linewidth and arrowwidth */
-	if ((graphbody->linewidth < 0.0) || (graphbody->linewidth > 0.5))
-	  return GOEN__BADCONGRAP;
-
-	if (graphbody->arrows >= GOEN_MAX_ARROWS)
-	  return GOEN__BADCONGRAP;
-	  
-	/* Specify dashes */
-	if ((graphbody->dashes < 0.0) || (graphbody->dashes > 1.0))
-	  return GOEN__BADCONGRAP;
-
-		max( 3 * graphbody->linewidth, 0.015);
-
-	/* Specify dashes */
-	if ((graphbody->dashes < 0.0) || (graphbody->dashes > 1.0))
-	  return GOEN__BADCONGRAP;
-
-	/* Specify fillpattern */
-	if (graphbody->fillpattern >= GOEN_MAX_FILLPATTERN)
-	  return GOEN__BADCONGRAP;
-
-	/* Specify color */
-	if (graphbody->color >= GOEN_MAX_COLOR)
-	  return GOEN__BADCONGRAP;
-
- 	if ( (graphbody->curvature == GOEN_ROUTECON) ||
-	     (graphbody->curvature == GOEN_RECTILINEAR) )
-	{
- 	  contype_values.con_curvature = NetedKcurvatureRectilinear;
-	  conmask[0] |= NetedMnbConCurvature;
-
-	  /* Specify round corners */
-	  if ((graphbody->corners > 0.0) && (graphbody->dashes < 0.1))
-	  {
-	    contype_values.corner_round_style = NetedKcornerRound1Line;
-	    conmask[0] |= NetedMnbCornerRoundStyle;
-	    contype_values.corner_round_amount = graphbody->corners;
-	    conmask[0] |= NetedMnbCornerRoundAmount;
-	  }
-	}
- 	contype_values.con_ggc = ggc_contype;
-	conmask[0] |= NetedMnbConGGC;
-
-        sts = NetedCreateConType ( 	widget,
-				0,
-				conmask,
-				2, 
-				&contype_values,
-				con_type_id);
-	tst_neted( sts, "NetedCreateConType ", 150 );
-#endif
 	return GOEN__SUCCESS;
 }
 
@@ -1143,7 +1091,7 @@ int	goen_get_text_width(
 	  XTextExtents( font_id, text_line, length, &direction, &ascent, &descent,
 		&charstruct);
 	  line_width = charstruct.width;
-	  max_width = max( max_width, line_width);
+	  max_width = co_max( max_width, line_width);
 
 	  t = s + 1;
 	  rows++;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.22 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.23 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -7531,7 +7531,7 @@ int utl_list (
 	if ( EVEN (sts)) return sts;
 	
 	listobject_ptr = listobject_list;
-	for ( i = 0; i < min( listobject_count, UTL_LIST_MAX); i++)
+	for ( i = 0; i < co_min( listobject_count, UTL_LIST_MAX); i++)
 	{
 	  sublist_ptr = utlctx->list[0];
 	  while( sublist_ptr)
@@ -7595,7 +7595,7 @@ int utl_list (
 	  if ( listbody_ptr->NoPrintIfNoList)
 	  {
 	    print_ok = 0;
-	    for ( j = 0; j < min( listobject_count, UTL_LIST_MAX); j++)
+	    for ( j = 0; j < co_min( listobject_count, UTL_LIST_MAX); j++)
 	    {
 	      if ( list_ptr->sublistcount[j] !=  0)
 	      {
@@ -7717,7 +7717,7 @@ int utl_list (
 	  }
 
 	  listobject_ptr = listobject_list;
-	  for ( j = 0; j < min( listobject_count, UTL_LIST_MAX); j++)
+	  for ( j = 0; j < co_min( listobject_count, UTL_LIST_MAX); j++)
 	  {
 	    sts = utl_list_sublist_print( utlctx, listobject_ptr->objid, 
 		list_ptr->sublist[j], list_ptr->sublistcount[j], &first); 
@@ -7955,7 +7955,7 @@ static int utl_list_sublist (
 	while ( sublist_ptr)
 	{
 	  listobject_ptr = listobject_list;
-	  for ( j = 0; j < min( listobject_count, UTL_LIST_MAX); j++)
+	  for ( j = 0; j < co_min( listobject_count, UTL_LIST_MAX); j++)
 	  {
 	    sts = utl_list_sublist( utlctx, listobject_ptr->objid, 
 		&(sublist_ptr->sublist[j]), 
@@ -8090,7 +8090,7 @@ static int utl_list_sublist_print (
 	    while( list_ptr)
 	    {
 	      printlist_ok = 0;
-	      for ( j = 0; j < min( listobject_count, UTL_LIST_MAX); j++)
+	      for ( j = 0; j < co_min( listobject_count, UTL_LIST_MAX); j++)
 	      {
 	        if ( list_ptr->sublistcount[j] !=  0)
 	        {
@@ -8127,7 +8127,7 @@ static int utl_list_sublist_print (
 
 	  if ( listbody_ptr->NoPrintIfNoList)
 	  {
-	    for ( j = 0; j < min( listobject_count, UTL_LIST_MAX); j++)
+	    for ( j = 0; j < co_min( listobject_count, UTL_LIST_MAX); j++)
 	    {
 	      print_ok = 0;
 	      if ( list_ptr->sublistcount[j] !=  0)
@@ -8249,7 +8249,7 @@ static int utl_list_sublist_print (
 		page);
 	  }
 	  listobject_ptr = listobject_list;
-	  for ( k = 0; k < min( listobject_count, UTL_LIST_MAX); k++)
+	  for ( k = 0; k < co_min( listobject_count, UTL_LIST_MAX); k++)
 	  {
 	    utl_list_sublist_print( utlctx, listobject_ptr->objid, 
 		list_ptr->sublist[k], 
@@ -9216,7 +9216,7 @@ static int	  utl_config_replace(
 	else
 	  strcpy( outstr, (char *)par_str[0]);
 
-	for ( i = 1; i < min( 5, nr); i++)
+	for ( i = 1; i < co_min( 5, nr); i++)
 	{
 	  strcat( outstr, indexstr);
 	  strcat( outstr, (char *)par_str[i]);
@@ -9983,7 +9983,7 @@ int utl_move_window (
 	  for ( i = 0; i < PWR_OBJTYPES_MAX; i++)
 	  {
 	    source_plcbuffer->defnamecount[i] = 
-		max( source_plcbuffer->defnamecount[i], 
+		co_max( source_plcbuffer->defnamecount[i], 
 		dest_plcbuffer->defnamecount[i]);
 	    dest_plcbuffer->defnamecount[i] = 
 		source_plcbuffer->defnamecount[i];

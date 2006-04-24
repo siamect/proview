@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.5 2005-12-06 10:46:44 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.6 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -178,6 +178,7 @@ class ItemMenu : public Item {
     int     		close( SubPalette *subpalette, double x, double y);
 };
 
+/*@}*/
 #if defined __cplusplus
 }
 #endif

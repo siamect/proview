@@ -2,7 +2,7 @@
 #define INC_wb_wbllexer_hpp_
 
 #include <antlr/config.hpp>
-/* $ANTLR 2.7.5 (20050128): "wb_wbllexer.g" -> "wb_wbllexer.hpp"$ */
+/* $ANTLR 2.7.6 (20060211): "wb_wbllexer.g" -> "wb_wbllexer.hpp"$ */
 #include <antlr/CommonToken.hpp>
 #include <antlr/InputBuffer.hpp>
 #include <antlr/BitSet.hpp>

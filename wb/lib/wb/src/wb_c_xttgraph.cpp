@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_xttgraph.cpp,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_c_xttgraph.cpp,v 1.2 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,8 @@
  **/
 
 /* wb_c_xttgraph.c -- work bench methods of the XttGraph class. */
+
+using namespace std;
 
 #include <X11/Intrinsic.h>
 #undef Status

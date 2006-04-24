@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm3.c,v 1.7 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm3.c,v 1.8 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -239,7 +239,7 @@ int goen_create_nodetype_m3(
 	free((char *) parvalue);	
 
 	f_height = (floor( height / GOEN_F_GRID) + 1) * GOEN_F_GRID - f_delta*2;
-	f_width = max( width + f_strlength *2, f_defwidth) - f_delta*2;
+	f_width = co_max( width + f_strlength *2, f_defwidth) - f_delta*2;
 	if ( (height < GOEN_F_GRID-f_delta*2) && (f_height > GOEN_F_GRID))
 	  f_height = GOEN_F_GRID - f_delta*2; 
 

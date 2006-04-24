@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.13 2006-03-23 06:23:09 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.14 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -332,7 +332,7 @@ void GlowExportJBean::nodeclass( GlowNodeClass *nc, glow_eExportPass pass,
 "    else" << endl <<
 "      g.transform( AffineTransform.getScaleInstance( width/" << original_width << "," << endl <<
 "      		height/" << original_height << "));" << endl <<
-"    if ( (dd.dynType & dd.mDynType_Rotate) != 0 && dd.rotate != 0) {" << endl <<
+"    if ( (dd.dynType & GeDyn.mDynType_Rotate) != 0 && dd.rotate != 0) {" << endl <<
 "      g.rotate( Math.PI * dd.rotate/180, " << endl << endl <<
 "           (dd.x0 - getX())*original_width/width,"<< endl <<
 "           (dd.y0 - getY()) * original_height / height);" << endl <<
@@ -1291,12 +1291,38 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 
   switch ( pass)
   {
-    case glow_eExportPass_Shape:
-    {
+    case glow_eExportPass_Shape: {
       break;
     }
-    case glow_eExportPass_Init:
-    {
+    case glow_eExportPass_Attributes: {
+      char bold_str[20];
+      int text_size;
+
+      if ( number == 1) {
+	// annot1Font is declared in GeComponent
+	if ( bold)
+	  strcpy(bold_str, "BOLD");
+	else
+	  strcpy(bold_str, "PLAIN");
+	switch ( idx) {
+        case 0: text_size = 8; break;
+        case 1: text_size = 10; break;
+        case 2: text_size = 12; break;
+        case 3: text_size = 14; break;
+        case 4: text_size = 14; break;
+        case 5: text_size = 18; break;
+        case 6: text_size = 18; break;
+        case 7: text_size = 18; break;
+        default: text_size = 24;
+	}
+
+	fp <<
+"    annot1Font = new Font(\"Helvetica\", Font." << 
+	bold_str << ", " << text_size << ");" << endl;
+      }
+      break;
+    }
+    case glow_eExportPass_Init: {
       char bold_str[20];
       int text_size;
 
@@ -1304,8 +1330,7 @@ void GlowExportJBean::annot( int x0, int y0, int number,
         strcpy(bold_str, "BOLD");
       else
         strcpy(bold_str, "PLAIN");
-      switch ( idx)
-      {
+      switch ( idx) {
         case 0: text_size = 8; break;
         case 1: text_size = 10; break;
         case 2: text_size = 12; break;
@@ -1317,20 +1342,22 @@ void GlowExportJBean::annot( int x0, int y0, int number,
         default: text_size = 24;
       }
 
-      fp <<
+      if ( number != 1) {
+	fp <<
 "  String annot" << number << " = new String();" << endl <<
-"  public String getAnnot" << number << "() { return annot" << number << ";}" << endl <<
-"  public void setAnnot" << number << "( String s) { annot" << number << 
-	" = s;}" << endl <<
 "  Font annot" << number << "Font = new Font(\"Helvetica\", Font." << 
-	bold_str << ", " << text_size << ");" << endl <<
+	bold_str << ", " << text_size << ");" << endl;
+      }
+      fp <<
 "  int annot" << number << "Color = " << int(text_drawtype) << ";" << endl <<
+"  public String getAnnot" << number << "() { return annot" << number << ";}" << endl <<
+"  public void setAnnot" << number << "( String s) { annot" << number << " = s;}" << endl <<
 "  public void setAnnot" << number << "Font( Font font) { annot" << number << 
 	"Font = font;}" << endl <<
-"  public void setAnnot" << number << "Color( int color) { annot" << number << 
-	"Color = color;}" << endl <<
 "  public Font getAnnot" << number << "Font() { return annot" << number << 
-	"Font;}" << endl;
+	"Font;}" << endl <<
+"  public void setAnnot" << number << "Color( int color) { annot" << number << 
+        "Color = color;}" << endl;
 
       break;
     }
@@ -1385,7 +1412,7 @@ void GlowExportJBean::annot_font( int number, glow_eDrawType drawtype,
     {
       break;
     }
-    case glow_eExportPass_Init:
+    case glow_eExportPass_Attributes:
     {
       char bold_str[20];
       int text_size;
@@ -1408,9 +1435,9 @@ void GlowExportJBean::annot_font( int number, glow_eDrawType drawtype,
       }
 
       fp <<
-"  Font annotFont = new Font(\"Helvetica\", Font." << 
+"    annotFont = new Font(\"Helvetica\", Font." << 
 	bold_str << ", " << text_size << ");" << endl <<
-"  int annotBackground = " << (int) background << ";" << endl;
+"    annotBackground = " << (int) background << ";" << endl;
       break;
     }
     default:

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm14.c,v 1.9 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_goenm14.c,v 1.10 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -177,10 +177,10 @@ int goen_create_nodetype_m14(
     }
   }
 
-  f_height  = (max(inputpoints,outputpoints) + 2)*f_repeat
+  f_height  = (co_max(inputpoints,outputpoints) + 2)*f_repeat
 			+ (floor( code_height / GOEN_F_GRID) + 1) * GOEN_F_GRID;
-  f_width = max( f_strlength * (2 + node_width), f_defwidth);
-  f_width = max( f_width, code_width + f_strlength *2);
+  f_width = co_max( f_strlength * (2 + node_width), f_defwidth);
+  f_width = co_max( f_width, code_width + f_strlength *2);
   f_namepos = f_width/2.0 - strlen( graphbody->graphname)*
 			      f_strlength/2.0;
 
@@ -196,9 +196,9 @@ int goen_create_nodetype_m14(
 		f_height - f_repeat - f_yoffs, flow_eDrawType_Line, 2);
 
   flow_AddLine( nc_pid, 0, 
-	(max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
+	(co_max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
 	f_width, 
-	(max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
+	(co_max(inputpoints,outputpoints) + 1)*f_repeat - f_yoffs, 
 	flow_eDrawType_Line, 2);
 
   if ( subwindowmark == 0 )

@@ -11,6 +11,8 @@ function int process( string graph)
 endfunction
 
 main()
+  set javapath "$pwre_croot/java/jpwr/jopc/src"
+  set javapackage "jopc"
 
   process( "pwr_c_ai");
   process( "pwr_c_ao");

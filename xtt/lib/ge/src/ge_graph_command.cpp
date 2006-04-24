@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.9 2006-04-24 13:22:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1273,6 +1273,30 @@ static int	graph_set_func(	void		*client_data,
 
     grow_SetNodeClassExtern( nodeclass, 0);
   }
+  else if ( strncmp( arg1_str, "JAVAPATH", strlen( arg1_str)) == 0)
+  {
+    char	arg2_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    cdh_ToLower( arg2_str, arg2_str);
+
+    strcpy( graph->java_path, arg2_str);
+  }
+  else if ( strncmp( arg1_str, "JAVAPACKAGE", strlen( arg1_str)) == 0)
+  {
+    char	arg2_str[80];
+
+    if ( EVEN( dcli_get_qualifier( "dcli_arg2", arg2_str, sizeof(arg2_str)))) {
+      graph->message('E', "Syntax error");
+      return GE__SYNTAX;
+    }
+    cdh_ToLower( arg2_str, arg2_str);
+
+    strcpy( graph->java_package, arg2_str);
+  }
   else
   {
     graph->message('E', "Syntax error");
@@ -1478,14 +1502,17 @@ static int	graph_export_func(	void		*client_data,
       // Set default name
       graph->get_name( graph_name);
       if ( strcmp( graph_name, "") != 0) {
-        if ( strncmp( graph_name, "pwr_", 4) == 0)
-        {
+        if ( strncmp( graph_name, "pwr_c_", 6) == 0) {
+          strcpy( name, "Jopc");
+          strcat( name, &graph_name[6]);
+          name[4] = _toupper( name[4]);
+        }
+        else if ( strncmp( graph_name, "pwr_", 4) == 0) {
           strcpy( name, "Jop");
           strcat( name, &graph_name[4]);
           name[3] = _toupper( name[3]);
         }
-        else
-        {
+        else {
           strcpy( name, graph_name);
           name[0] = _toupper( name[0]);
         }
@@ -1528,15 +1555,17 @@ static int	graph_export_func(	void		*client_data,
           return sts;
         }
 
-        // Compile frame
-        graph->get_systemname( systemname);
+	if ( sts != GE__ISBASECLASS) {
+	  // Compile frame
+	  graph->get_systemname( systemname);
 
-        sprintf( cmd, "$pwr_exe/ge_javac.sh java %s %s", filename, systemname);
-        sts = system( cmd);
-        if ( sts != 0) {
-          graph->message( 'E', "Java compilation errors");
-          return GE__JAVAC;
-        }
+	  sprintf( cmd, "$pwr_exe/ge_javac.sh java %s %s", filename, systemname);
+	  sts = system( cmd);
+	  if ( sts != 0) {
+	    graph->message( 'E', "Java compilation errors");
+	    return GE__JAVAC;
+	  }
+	}
       }
 
       if ( graph->is_javaapplet()) {
@@ -1551,27 +1580,29 @@ static int	graph_export_func(	void		*client_data,
           return sts;
         }
 
-        // Compile applet
-        graph->get_systemname( systemname);
+	if ( sts != GE__ISBASECLASS) {
+	  // Compile applet
+	  graph->get_systemname( systemname);
 
-        sprintf( cmd, "$pwr_exe/ge_javac.sh java_web %s %s", filename, systemname);
-        sts = system( cmd);
-        if ( sts != 0) {
-          graph->message( 'E', "Java compilation errors");
-          return GE__JAVAC;
-        }
+	  sprintf( cmd, "$pwr_exe/ge_javac.sh java_web %s %s", filename, systemname);
+	  sts = system( cmd);
+	  if ( sts != 0) {
+	    graph->message( 'E', "Java compilation errors");
+	    return GE__JAVAC;
+	  }
 
-        // Export html
-        strcpy( filename, "$pwrp_web/");
-        strcat( filename, framename);
-        strcat( filename, ".html");
-        cdh_ToLower( filename, filename);
+	  // Export html
+	  strcpy( filename, "$pwrp_web/");
+	  strcat( filename, framename);
+	  strcat( filename, ".html");
+	  cdh_ToLower( filename, filename);
 
-        sts = graph->export_gejava( filename, framename, 0, 1);
-        if ( EVEN(sts)) {
-          graph->message( 'E', "Java export error");
-          return sts;
-        }
+	  sts = graph->export_gejava( filename, framename, 0, 1);
+	  if ( EVEN(sts)) {
+	    graph->message( 'E', "Java export error");
+	    return sts;
+	  }
+	}
       }
       if ( graph->is_javaapplication() && graph->is_javaapplet())
         graph->message( 'I', "Java frame and applet exported");

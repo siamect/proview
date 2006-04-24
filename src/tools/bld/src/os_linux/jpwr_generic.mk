@@ -130,7 +130,8 @@ $(export_lib) : $(objects)
 	  jar cf $(export_lib) jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif; \
 	else \
 	  echo "No gif files found"; \
-	  jar cf $(export_lib) jpwr/$(comp_name)/*.class; \
+	  jar cf $(export_lib); \
+	  find jpwr/$(comp_name) -name "*.class" -exec jar uf $(export_lib) {} \;;\
 	fi
 #	@ jar cvfm $(export_lib) ../../manifest.stub jpwr/$(comp_name)/*.class jpwr/$(comp_name)/*.gif
 
