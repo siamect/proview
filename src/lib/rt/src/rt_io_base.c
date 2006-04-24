@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.18 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.19 2006-04-24 10:03:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,11 +89,17 @@ static pwr_tStatus io_replace_symbol( pwr_sAttrRef *chan, pwr_sAttrRef *sig)
     sts = gdh_AttrrefToName( sig, name, sizeof(name),
 			   cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
-    if ( (s = strrchr( name, '.')))
+
+    while ( (s = strrchr( name, '.'))) {
       *s = 0;
-    strcat( name, ".IoConnect");
-    sts = gdh_GetObjectInfo( name, &connect, sizeof(connect));
+      strcat( name, ".IoConnect");
+      sts = gdh_GetObjectInfo( name, &connect, sizeof(connect));
+      if ( ODD(sts)) 
+	break;
+      *s = 0;
+    }
     if ( EVEN(sts)) return sts;
+
     if ( cdh_ObjidIsNull( connect.Objid)) {
       errh_Info("IO init: Object is not connected '%s'", name);
       return IO__NOTCONNECTED;
