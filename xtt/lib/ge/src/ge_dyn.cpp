@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.42 2006-03-31 14:35:22 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.43 2006-04-25 13:06:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -8150,7 +8150,7 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     db = dyn->parse_attr_name( attribute, parsed_name, &inverted, &attr_type, &attr_size);
     switch ( db) {
     case graph_eDatabase_Gdh:
-      sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
       break;
     case graph_eDatabase_Ccm:
       sts = dyn->graph->ccm_get_variable( parsed_name, attr_type, &value);
