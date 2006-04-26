@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_dataarithm.c,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_foe_dataarithm.c,v 1.6 2006-04-26 07:23:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -891,6 +891,9 @@ static pwr_tStatus dataa_classdef (
 
 	  nr = dataa_parse( comm_str[i], "	 ", "", out_str[0],
 		sizeof( out_str) / sizeof( out_str[0]), sizeof( out_str[0]));
+	  if ( nr == 0)
+	    continue;
+
 	  if ( i == 0)
 	  {
 	    if ( strcmp( out_str[0], "classdef"))
