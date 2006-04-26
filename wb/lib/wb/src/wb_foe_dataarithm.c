@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_dataarithm.c,v 1.6 2006-04-26 07:23:36 claes Exp $
+ * Proview   $Id: wb_foe_dataarithm.c,v 1.7 2006-04-26 07:30:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 #include "pwr.h"
 
 #include "wb_foe_dataarithm.h"
-
+#include "wb_foe_msg.h"
 
 #ifndef max
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
@@ -41,11 +41,6 @@
 #ifndef abs
 #define abs(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
 #endif
-
-#define GSX__SUCCESS 1
-#define GSX__DATAASYNTAX 22
-#define GSX__DATAABUFSIZE 32
-#define GSX__NOMEMORY	42
 
 typedef struct dataa_s_ctx	*dataa_ctx;
 
