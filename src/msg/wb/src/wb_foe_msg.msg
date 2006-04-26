@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_foe_msg.msg,v 1.8 2006-03-31 14:46:26 claes Exp $
+!  Proview   $Id: wb_foe_msg.msg,v 1.9 2006-04-26 07:31:19 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -86,7 +86,7 @@ exfreq		<number of PLC frequencies has exceeded its limit>	/warn
 nosystemobj	<system object is not fount>				/error
 notsaved	<session is not saved>					/error
 openfile	<unable to open file>					/error
-datasyntax	<syntax error in dataarithm expression>			/error
+dataasyntax	<syntax error in dataarithm expression>			/error
 filecreated	<file is created>					/info
 contype		<connected attributes are not of the same type>		/error
 dataabufsize	<intern buffersize to small for code conversion>	/error
