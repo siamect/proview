@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_plcpgm.cpp,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_c_plcpgm.cpp,v 1.2 2006-04-26 04:45:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ static pwr_tStatus OpenProgram (
   ldh_sMenuCall *ip
 )
 {
-  foe_Open (ip->EditorContext, ip->WindowContext, ip->PointedSession,
+  foe_Open (ip->EditorContext2, ip->WindowContext, ip->PointedSession,
     ip->Pointed.Objid);
 
   return 1;
