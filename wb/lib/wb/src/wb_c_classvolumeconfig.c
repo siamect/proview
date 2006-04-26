@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_classvolumeconfig.c,v 1.3 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_classvolumeconfig.c,v 1.4 2006-04-26 04:48:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ static pwr_tStatus EditClassVolume (
   dcli_translate_filename( fname, fname);
   sprintf( cmd, "open classeditor /file=\"%s\"", fname);
 
-  wtt_command( ip->EditorContext, cmd);
+  wnav_command( ip->EditorContext, cmd);
   return 1;
 }
 
