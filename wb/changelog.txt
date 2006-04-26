@@ -15,3 +15,6 @@
                      'build object', 'build volume' and 'build node' also available as wtt
                      commands.
 060331 cs  wtt       Copy with keep references added to wtt menu.
+060426 cs  plc       Bugfix in dataarithm compilation, space at end of line could cause error.
+060426 cs  plc       Bugfix in GetData compilation, error when referenced parameter was
+                     a type (not a class) not handled.
