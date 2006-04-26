@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.30 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.31 2006-04-26 07:22:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -12124,6 +12124,11 @@ vldh_t_node	node;
 	sts = ldh_GetAttrRefOrigTid( ldhses, &refattrref, &class);
 	if ( EVEN(sts)) {
 	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);  
+	  return GSX__NEXTNODE;
+	}
+	/* Check that this is a class, not a type */
+	if ( !cdh_tidIsCid( class)) {
+	  gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
 	  return GSX__NEXTNODE;
 	}
 
