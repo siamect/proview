@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps.h,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps.h,v 1.2 2006-04-27 13:12:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,8 @@
 #define NMPS_TRPFUNC_SLOW               16
 #define NMPS_TRPFUNC_LEVEL              32
  
+#ifndef nmps_data_info
+#define nmps_data_info
 /* Data structure for one dataobjekt in a NMpsCell and NMpsSelectCell */
 typedef struct {
 	pwr_tFloat32	*DataP;
@@ -64,18 +66,19 @@ typedef struct {
 	pwr_tBoolean	Data_OldSelect;
 	} plc_t_DataInfo;
 
-/* Data structure for the DLpointer and the objid in a Cell */
-typedef struct {
-	pwr_tFloat32	*DataP;
-	pwr_tObjid	Data_ObjId;
-	} plc_t_DataInfoBrief;
-
 /* Data structure for one dataobjekt in a NMpsMirrorCell */
 typedef struct {
 	pwr_tFloat32	*DataP;
 	pwr_tObjid	Data_ObjId;
 	gdh_tDlid	Data_Dlid;	
 	} plc_t_DataInfoMirCell;
+#endif
+
+/* Data structure for the DLpointer and the objid in a Cell */
+typedef struct {
+	pwr_tFloat32	*DataP;
+	pwr_tObjid	Data_ObjId;
+	} plc_t_DataInfoBrief;
 
 /* Data structure for the copyarea in a  NMpsMirrorCell */
 typedef struct {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc_macro.h,v 1.2 2006-01-26 08:15:12 claes Exp $
+ * Proview   $Id: nmps_plc_macro.h,v 1.3 2006-04-27 13:12:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,9 @@
 # include <float.h>
 #endif
 
+#ifndef nmps_data_info
+#define nmps_data_info
+
 typedef struct {
 	char		Key[40];
 	pwr_tStatus	Status;
@@ -32,11 +35,11 @@ typedef struct {
 	} nmps_sTrans;
 
 typedef struct {
-	pwr_tUInt32	*DataP;
+	pwr_tFloat32	*DataP;
 	pwr_tObjid	Data_ObjId;
 	pwr_tBoolean	Data_Front;
 	pwr_tBoolean	Data_Back;
-	pwr_tRefId	Data_Dlid;
+	pwr_tDlid	Data_Dlid;
 	pwr_tBoolean	Data_Select;
 	pwr_tBoolean	Data_OldSelect;
 	} plc_t_DataInfo;
@@ -46,6 +49,7 @@ typedef struct {
 	pwr_tObjid	Data_ObjId;
 	pwr_tRefId	Data_Dlid;
 	} plc_t_DataInfoMirCell;
+#endif
 
 /*_*
   DataCopy
