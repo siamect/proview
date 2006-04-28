@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.9 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -392,6 +392,8 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_GetIi:
         case pwr_cClass_GetIo:
         case pwr_cClass_GetIv:
+        case pwr_cClass_GetATv:
+        case pwr_cClass_GetDTv:
         case pwr_cClass_GetDattr:
         case pwr_cClass_GetAattr:
         case pwr_cClass_GetIattr:
@@ -403,8 +405,10 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_GetIpToA:
         case pwr_cClass_GetIp:
         case pwr_cClass_GetSp:
+        case pwr_cClass_GetATp:
+        case pwr_cClass_GetDTp:
         case pwr_cClass_GetData:
-	  pixmap = pal->pixmap_getp; 
+	  pixmap = pal->pixmap_get; 
 	  break;
         case pwr_cClass_stoap:
         case pwr_cClass_stodp:
@@ -424,6 +428,14 @@ PalItemClass::PalItemClass( Pal *pal, char *item_name,
         case pwr_cClass_cstosv:
         case pwr_cClass_cstosp:
         case pwr_cClass_stosp:
+        case pwr_cClass_StoATp:
+        case pwr_cClass_StoDTp:
+          pixmap = pal->pixmap_sto; 
+	  break;
+        case pwr_cClass_CStoATv:
+        case pwr_cClass_CStoDTv:
+        case pwr_cClass_CStoATp:
+        case pwr_cClass_CStoDTp:
         case pwr_cClass_CStoAattr:
         case pwr_cClass_CStoIattr:
         case pwr_cClass_CStoSattr:

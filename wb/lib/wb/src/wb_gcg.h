@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.h,v 1.7 2005-11-22 12:22:42 claes Exp $
+ * Proview   $Id: wb_gcg.h,v 1.8 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,6 +47,8 @@ extern "C" {
 #define	GCG_BOOLEAN 1
 #define	GCG_INT32 2
 #define	GCG_STRING 3
+#define	GCG_ATIME 4
+#define	GCG_DTIME 5
 
 
 #define	GCG_MAXFILES 6
@@ -100,6 +102,8 @@ typedef	union	{
     int		bo;
     float	fl;
     char        str[80];
+    pwr_tTime	atime;
+    pwr_tDeltaTime dtime;
 } gcg_t_nocondef;
 
 typedef struct {

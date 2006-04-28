@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.31 2006-04-26 07:22:32 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.32 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1381,6 +1381,16 @@ int	gcg_print_inputs(
 	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
 		 	"\"%s\"",
 			(nocondef + i)->str);
+	            break;
+	          case GCG_ATIME:
+	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		 	"{%ld,%ld}",
+			(long int)(nocondef + i)->atime.tv_sec, (nocondef + i)->atime.tv_nsec);
+	            break;
+	          case GCG_DTIME:
+	            IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		 	"{%d,%d}",
+			(nocondef + i)->dtime.tv_sec, (nocondef + i)->dtime.tv_nsec);
 	            break;
 	        }
 	      }
@@ -3571,14 +3581,25 @@ static int	gcg_get_outputstring_spec(
     free((char *) attrref);
     return GSX__SPECFOUND;
   }
-  case pwr_cClass_GetSp: {
+  case pwr_cClass_GetSp:
+  case pwr_cClass_GetATp:
+  case pwr_cClass_GetDTp: {
     /**********************************************************
-     *  GETSP
+     *  GetSp, GetATP, GetDTp
      ***********************************************************/	
-     
+
+    char aname[32];
+
+    switch ( output_node->ln.cid) {
+    case pwr_cClass_GetSp: strcpy( aname, "SpObject"); break;
+    case pwr_cClass_GetATp: strcpy( aname, "ATpObject"); break;
+    case pwr_cClass_GetDTp: strcpy( aname, "DTpObject"); break;
+    default: ;
+    }
+
     /* Get the objdid stored in the parameter */
     sts = ldh_GetObjectPar( ldhses, output_node->ln.oid, 
-			    "DevBody", "SpObject",
+			    "DevBody", aname,
 			    (char **)&attrref, &size); 
     if ( EVEN(sts)) return sts;
 	  
@@ -6542,7 +6563,7 @@ vldh_t_node	node;
 *
 * Description:
 *	Compile method for GETDI, GETDO, GETDV, GETAI, GETAO, GETAV,
-*       GETII, GETIO and GETIV node.
+*       GETII, GETIO, GETIV, GetSv, GetATv and GetDTv node.
 *	Checks that the class of the referenced object is correct.
 *	Prints declaration and directlink for a read rtdb pointer
 *	for the refereced io-object. The pointer will point at
@@ -6659,6 +6680,26 @@ vldh_t_node	node;
 	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
 	  return GSX__SUCCESS;
 	}
+	else if ( node->ln.cid == pwr_cClass_GetATv) {
+	  if ( class != pwr_cClass_ATv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	  return GSX__SUCCESS;
+	}
+	else if ( node->ln.cid == pwr_cClass_GetDTv) {
+	  if ( class != pwr_cClass_DTv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+
+	  /* Insert io object in ioread list */
+	  gcg_aref_insert( gcgctx, attrref, GCG_PREFIX_REF);
+	  return GSX__SUCCESS;
+	}
 
 	/* Insert io object in ioread list */
 	gcg_ioread_insert( gcgctx, attrref, GCG_PREFIX_REF);
@@ -6751,7 +6792,7 @@ vldh_t_node	node;
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GETDP, GETAP, GETSP
+*	Compile method for GetDp, GetAp, GetSp, GetATp, GetDTp
 *	Checks that the referenced object exists and that the referenced
 *	parameter exists in that object, and that the type of the parameter
 *	is correct.
@@ -6872,6 +6913,18 @@ vldh_t_node	node;
           break;
         case pwr_eType_String :
 	  if ( node->ln.cid != pwr_cClass_GetSp) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
+        case pwr_eType_Time :
+	  if ( node->ln.cid != pwr_cClass_GetATp) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
+        case pwr_eType_DeltaTime :
+	  if ( node->ln.cid != pwr_cClass_GetDTp) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
@@ -8018,9 +8071,29 @@ vldh_t_node	node;
 	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
 	  nocontype[0] = GCG_STRING;
 	}    
+	else if ( node->ln.cid == pwr_cClass_StoATv || 
+	          node->ln.cid == pwr_cClass_CStoATv) {
+	  if ( class != pwr_cClass_ATv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].atime = *(pwr_tTime *) nocondef_ptr;
+	  nocontype[0] = GCG_ATIME;
+	}    
+	else if ( node->ln.cid == pwr_cClass_StoDTv || 
+	          node->ln.cid == pwr_cClass_CStoDTv) {
+	  if ( class != pwr_cClass_DTv) {
+	    gcg_error_msg( gcgctx, GSX__REFCLASS, node);  
+	    return GSX__NEXTNODE;
+	  }
+	  nocondef[0].dtime = *(pwr_tDeltaTime *) nocondef_ptr;
+	  nocontype[0] = GCG_DTIME;
+	}    
 	free(nocondef_ptr);
 
-        if ( class == pwr_cClass_Sv) {
+        if ( class == pwr_cClass_Sv ||
+	     class == pwr_cClass_ATv ||
+	     class == pwr_cClass_DTv) {
 	  /* Insert io object in ref list */
 	  gcg_aref_insert( gcgctx, refattrref, GCG_PREFIX_REF);
 
@@ -8255,6 +8328,20 @@ vldh_t_node	node;
 	    return GSX__NEXTNODE;
 	  }
           break;
+        case pwr_eType_Time :
+	  if ( !( node->ln.cid == pwr_cClass_StoATp ||
+	          node->ln.cid == pwr_cClass_CStoATp )) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
+        case pwr_eType_DeltaTime :
+	  if ( !( node->ln.cid == pwr_cClass_StoDTp ||
+	          node->ln.cid == pwr_cClass_CStoDTp )) {
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
+          break;
 	default:
 	  /* Not allowed type */
 	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
@@ -8298,6 +8385,16 @@ vldh_t_node	node;
 	          node->ln.cid == pwr_cClass_cstonumsp)  {
 	  strcpy( nocondef[0].str, (char *) nocondef_ptr);
 	  nocontype[0] = GCG_STRING;
+	}    
+	else if ( node->ln.cid == pwr_cClass_StoATp ||
+		  node->ln.cid == pwr_cClass_CStoATp) {
+	  nocondef[0].atime = *(pwr_tTime *) nocondef_ptr;
+	  nocontype[0] = GCG_ATIME;
+	}    
+	else if ( node->ln.cid == pwr_cClass_StoDTp ||
+		  node->ln.cid == pwr_cClass_CStoDTp) {
+	  nocondef[0].dtime = *(pwr_tDeltaTime *) nocondef_ptr;
+	  nocontype[0] = GCG_DTIME;
 	}    
 	free(nocondef_ptr);
 

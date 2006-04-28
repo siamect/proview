@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm4.c,v 1.8 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goenm4.c,v 1.9 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,11 @@ typedef enum {
 	goen_eGraphIndex_StoSgeneric	= 37,
 	goen_eGraphIndex_GetIgeneric	= 38,
 	goen_eGraphIndex_StoIgeneric	= 39,
-	goen_eGraphIndex_FirstScan	= 40
+	goen_eGraphIndex_FirstScan	= 40,
+	goen_eGraphIndex_GetATgeneric	= 41,
+	goen_eGraphIndex_StoATgeneric	= 42,
+	goen_eGraphIndex_GetDTgeneric	= 43,
+	goen_eGraphIndex_StoDTgeneric	= 44
 	} goen_eGraphIndex;
 
 static	float	f_pinlength  = GOEN_F_PINLENGTH;
@@ -406,6 +410,8 @@ int goen_create_nodetype_m4(
     case goen_eGraphIndex_GetDgeneric:
     case goen_eGraphIndex_GetSgeneric:
     case goen_eGraphIndex_GetIgeneric:
+    case goen_eGraphIndex_GetATgeneric:
+    case goen_eGraphIndex_GetDTgeneric:
     {
       f_width = GOEN_F_GRID * 4;
       f_height = GOEN_F_GRID; 
@@ -424,6 +430,12 @@ int goen_create_nodetype_m4(
       else if ( graph_index == goen_eGraphIndex_GetIgeneric)
         flow_AddText( nc, "GetI", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_GetATgeneric)
+        flow_AddText( nc, "GetAT", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_GetDTgeneric)
+        flow_AddText( nc, "GetDT", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "GetD", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
@@ -433,6 +445,8 @@ int goen_create_nodetype_m4(
     case goen_eGraphIndex_StoDgeneric:
     case goen_eGraphIndex_StoSgeneric:
     case goen_eGraphIndex_StoIgeneric:
+    case goen_eGraphIndex_StoATgeneric:
+    case goen_eGraphIndex_StoDTgeneric:
     {
       f_width = GOEN_F_GRID * 4;
       f_height = GOEN_F_GRID; 
@@ -450,6 +464,12 @@ int goen_create_nodetype_m4(
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else if ( graph_index == goen_eGraphIndex_StoIgeneric)
         flow_AddText( nc, "StoI", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_StoATgeneric)
+        flow_AddText( nc, "StoAT", f_strlength, 0.5 * f_strheight,
+		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
+      else if ( graph_index == goen_eGraphIndex_StoDTgeneric)
+        flow_AddText( nc, "StoDT", f_strlength, 0.5 * f_strheight,
 		flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE);
       else
         flow_AddText( nc, "StoD", f_strlength, 0.5 * f_strheight,

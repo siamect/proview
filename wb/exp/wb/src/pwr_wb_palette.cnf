@@ -36,10 +36,12 @@ palette NavigatorPalette
       class Ai
       class Ao
       class Av
+      class ATv
       class Co
       class Di
       class Do
       class Dv
+      class DTv
       class Ii
       class Io
       class Iv
@@ -641,8 +643,8 @@ palette PlcEditorPalette
     menu String
     {
       class CStoNumSp
-      class CStoSv
       class CStoSp
+      class CStoSv
       class GetSp
       class GetSv
       class StoNumSp
@@ -650,6 +652,27 @@ palette PlcEditorPalette
       class StoSv
       class Strcat
       class SubStr
+    }
+    menu Time
+    {
+      class AtAdd
+      class AtSub
+      class AtDtSub
+      class CStoATp
+      class CStoATv
+      class CStoDTp
+      class CStoDTv
+      class DtAdd
+      class DtSub
+      class DtToA
+      class GetATp
+      class GetATv
+      class GetDTp
+      class GetDTv
+      class StoATp
+      class StoATv
+      class StoDTp
+      class StoDTv
     }
     menu Simulate
     {

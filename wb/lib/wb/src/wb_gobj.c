@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.c,v 1.15 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_gobj.c,v 1.16 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 27
+#define	GOBJ_MAX_METHOD 29
 
 int	gobj_get_object_m0();
 int	gobj_get_object_m1();
@@ -75,8 +75,10 @@ int	gobj_get_object_m24();
 int	gobj_get_object_m25();
 int	gobj_get_object_m26();
 int	gobj_get_object_m27();
+int	gobj_get_object_m28();
+int	gobj_get_object_m29();
 
-int	(* gobj_get_object_m[30]) () = {
+int	(* gobj_get_object_m[40]) () = {
 	&gobj_get_object_m0,
 	&gobj_get_object_m1,
 	&gobj_get_object_m2,
@@ -105,6 +107,8 @@ int	(* gobj_get_object_m[30]) () = {
  	&gobj_get_object_m25,
  	&gobj_get_object_m26,
  	&gobj_get_object_m27,
+ 	&gobj_get_object_m28,
+ 	&gobj_get_object_m29,
 	};
 
 static int	gobj_expand_m0(	foe_ctx		foectx,
@@ -2902,6 +2906,295 @@ unsigned long	index;
 
 	return FOE__SUCCESS;
 }
+/*************************************************************************
+*
+* Name:		gobj_get_object_m28()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for GetATgeneric. The selected object in the navigator is 
+*	inserted.
+*	
+*
+**************************************************************************/
+
+int	gobj_get_object_m28( foe_ctx foectx, vldh_t_node node, unsigned long index)
+{
+	pwr_tTid	tid;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+	vldh_t_con  	*con_list;
+	vldh_t_con  	*con_ptr;
+	vldh_t_node	new_node, source, dest;
+	unsigned long	source_point, dest_point;
+	unsigned long	con_count;
+	int		j;
+        pwr_sAttrRef	attrref;
+    	pwr_tClassId    create_classid;
+	char		parname[40];
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.wind)->hw.plc;
+	ldhses =(node->hn.wind)->hw.ldhses;
+
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 
+	  foe_message( foectx,"Select string value or attribute in the navigator");
+	  BEEP;
+	  return sts;
+	}
+
+ 	sts = ldh_GetAttrRefTid( ldhses, &attrref, &tid);
+	if (EVEN(sts)) return sts;
+
+	if ( !cdh_tidIsCid(tid)) {
+	  sts = ldh_GetAttrRefType( ldhses, &attrref, &tid);
+	  if (EVEN(sts)) return sts;
+	}
+
+	sts = vldh_get_cons_node( node, &con_count, &con_list);
+	if ( EVEN(sts)) return sts;
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_GetATgeneric:
+	  switch ( tid)  {
+	  case pwr_eType_Time:
+	    /* Create a GetATp */
+	    create_classid = pwr_cClass_GetATp;
+	    strcpy( parname, "ATpObject");
+	    break;
+	  case pwr_cClass_ATv:
+	    strcpy( parname, "ATvObject");
+	    create_classid = pwr_cClass_GetATv;
+	    break;
+	  default:
+	    foe_message( foectx,"Select a time value or attribute in the navigator");
+	    BEEP;
+	    return 0;
+	  }
+	  break;
+	case pwr_cClass_GetDTgeneric:
+	  switch ( tid)  {
+	  case pwr_eType_DeltaTime:
+	    /* Create a GetDTp */
+	    create_classid = pwr_cClass_GetDTp;
+	    strcpy( parname, "DTpObject");
+	    break;
+	  case pwr_cClass_DTv:
+	    strcpy( parname, "DTvObject");
+	    create_classid = pwr_cClass_GetDTv;
+	    break;
+	  default:
+	    foe_message( foectx,"Select a time value or attribute in the navigator");
+	    BEEP;
+	    return 0;
+	  }
+	  break;
+	}
+	sts = gre_create_node( foectx->grectx, create_classid, 
+			       node->ln.x, node->ln.y, &new_node);
+	if ( EVEN(sts)) return sts;
+
+	/* Create new connections */
+	con_ptr = con_list;
+	for ( j = 0; j < con_count; j++) {
+	  if ( (*con_ptr)->hc.source_node == node) {
+	    source = new_node;
+	    source_point = 0;
+	    dest = (*con_ptr)->hc.dest_node;
+	    dest_point = (*con_ptr)->lc.dest_point;
+	  }
+	  else {
+	    dest = new_node;
+	    dest_point = 0;
+	    source = (*con_ptr)->hc.source_node;
+	    source_point = (*con_ptr)->lc.source_point;
+	  }
+	  sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.cid, 
+				source, source_point,
+				dest, dest_point, (*con_ptr)->lc.drawtype);
+	  if (EVEN(sts)) return sts;
+	  con_ptr++;
+	}
+	    
+	/* Remove old node and connections */
+	gre_delete_node( foectx->grectx, node);
+	foectx->popupmenu_node = 0;
+
+	if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+	  gobj_ref_replace( ldhses, node, &attrref);
+	  if ( EVEN(sts)) return sts;
+	}
+
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+				new_node->ln.oid, 
+				"DevBody",
+				parname,
+				(char *)&attrref, sizeof(attrref)); 
+	if ( EVEN(sts)) return sts;
+	
+	gre_node_update( foectx->grectx, new_node);
+
+	if ( con_count > 0) XtFree((char *) con_list);
+
+	return FOE__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gobj_get_object_m29()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* foe_ctx	foectx		I	foe context.
+* vldh_t_node	node		I	vldh node.
+* unsigned long	index		I	index indicating if the click has hit
+*					the upper or the lower part of the node.
+*
+* Description:	
+*	Method for StoATgeneric. The selected object in the navigator is 
+*	inserted.
+*	
+*
+**************************************************************************/
+
+int	gobj_get_object_m29( foe_ctx foectx, vldh_t_node node, unsigned long index)
+{
+	pwr_tTid	tid;
+	ldh_tSesContext	ldhses;
+	int		sts;
+	vldh_t_plc	plc;
+	vldh_t_con  	*con_list;
+	vldh_t_con  	*con_ptr;
+	vldh_t_node	new_node, source, dest;
+	unsigned long	source_point, dest_point;
+	unsigned long	con_count;
+	int		j;
+        pwr_sAttrRef	attrref;
+    	pwr_tClassId 	create_classid;
+	char		parname[40];
+	int		is_attr;
+
+	/* Get the selected object in the navigator */
+	plc = (node->hn.wind)->hw.plc;
+	ldhses =(node->hn.wind)->hw.ldhses;
+
+	sts = gobj_get_select( foectx, &attrref, &is_attr);
+	if ( EVEN(sts)) { 	
+	  foe_message( foectx,"Select a string value or attribute in the navigator");
+	  BEEP;
+	  return sts;
+	}
+
+ 	sts = ldh_GetAttrRefTid( ldhses, &attrref, &tid);
+	if (EVEN(sts)) return sts;
+
+	if ( !cdh_tidIsCid(tid)) {
+	  sts = ldh_GetAttrRefType( ldhses, &attrref, &tid);
+	  if (EVEN(sts)) return sts;
+	}
+
+	sts = vldh_get_cons_node( node, &con_count, &con_list);
+	if ( EVEN(sts)) return sts;
+
+	switch ( node->ln.cid) {
+	case pwr_cClass_StoATgeneric:
+	  switch ( tid) {
+	  case pwr_eType_Time:
+	    /* Create a StoATp */
+	    strcpy( parname, "Object");
+	    create_classid = pwr_cClass_StoATp;
+	    break;
+	  case pwr_cClass_ATv:
+	    strcpy( parname, "ATvObject");
+	    create_classid = pwr_cClass_StoATv;
+	    break;
+	  default:
+	    foe_message( foectx,"Select a time value or attribute in the navigator");
+	    BEEP;
+	    return 0;
+	  }
+	  break;
+	case pwr_cClass_StoDTgeneric:
+	  switch ( tid) {
+	  case pwr_eType_DeltaTime:
+	    /* Create a StoDTp */
+	    strcpy( parname, "Object");
+	    create_classid = pwr_cClass_StoDTp;
+	    break;
+	  case pwr_cClass_DTv:
+	    strcpy( parname, "DTvObject");
+	    create_classid = pwr_cClass_StoDTv;
+	    break;
+	  default:
+	    foe_message( foectx,"Select a time value or attribute in the navigator");
+	    BEEP;
+	    return 0;
+	  }
+	  break;
+	default:
+	  return 0;
+	}
+	sts = gre_create_node( foectx->grectx, create_classid, 
+			       node->ln.x, node->ln.y, &new_node);
+	if ( EVEN(sts)) return sts;
+
+	/* Create new connections */
+	con_ptr = con_list;
+	for ( j = 0; j < con_count; j++) {
+	  if ( (*con_ptr)->hc.source_node == node)  {
+	    source = new_node;
+	    source_point = 0;
+	    dest = (*con_ptr)->hc.dest_node;
+	    dest_point = (*con_ptr)->lc.dest_point;
+	  }
+	  else {
+	    dest = new_node;
+	    dest_point = 0;
+	    source = (*con_ptr)->hc.source_node;
+	    source_point = (*con_ptr)->lc.source_point;
+	  }
+	  sts = gre_create_con( foectx->grectx, (*con_ptr)->lc.cid, 
+				source, source_point,
+				dest, dest_point, (*con_ptr)->lc.drawtype);
+	  if (EVEN(sts)) return sts;
+	  con_ptr++;
+	}
+	    
+	/* Remove old node and connections */
+	gre_delete_node( foectx->grectx, node);
+	foectx->popupmenu_node = 0;
+
+	if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+	  gobj_ref_replace( ldhses, node, &attrref);
+	  if ( EVEN(sts)) return sts;
+	}
+
+	/* Set the parameter value */
+	sts = ldh_SetObjectPar( ldhses,
+				new_node->ln.oid, 
+				"DevBody",
+				parname,
+				(char *)&attrref, sizeof(attrref)); 
+	if ( EVEN(sts)) return sts;
+
+	gre_node_update( foectx->grectx, new_node);
+
+	if ( con_count > 0) XtFree((char *) con_list);
+
+	return FOE__SUCCESS;
+}
 
 /*************************************************************************
 *
@@ -2973,6 +3266,12 @@ int	gobj_expand(	foe_ctx		foectx,
           case pwr_cClass_cstoii:
           case pwr_cClass_cstoio:
           case pwr_cClass_cstoiv:
+          case pwr_cClass_GetATv:
+          case pwr_cClass_GetDTv:
+          case pwr_cClass_StoATv:
+          case pwr_cClass_StoDTv:
+          case pwr_cClass_CStoATv:
+          case pwr_cClass_CStoDTv:
 	    sts = gobj_expand_m1( foectx, node, compress);
 	    break;
           case pwr_cClass_and:

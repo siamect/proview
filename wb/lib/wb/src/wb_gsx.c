@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gsx.c,v 1.6 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gsx.c,v 1.7 2006-04-28 05:01:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -752,6 +752,18 @@ int gsx_auto_create(
               if ( EVEN(sts)) return sts;
 	      *destpoint = 0;
               break;
+            case pwr_eType_Time:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_GetATgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
+            case pwr_eType_DeltaTime:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_GetDTgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
             default: 
               free((char *) bodydef);
 	      return 0;
@@ -781,6 +793,18 @@ int gsx_auto_create(
               break;
             case pwr_eType_String:
               sts = gre_create_node( foectx->grectx, pwr_cClass_StoSgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
+            case pwr_eType_Time:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_StoATgeneric, 
+			x, y, dest);
+              if ( EVEN(sts)) return sts;
+	      *destpoint = 0;
+              break;
+            case pwr_eType_DeltaTime:
+              sts = gre_create_node( foectx->grectx, pwr_cClass_StoDTgeneric, 
 			x, y, dest);
               if ( EVEN(sts)) return sts;
 	      *destpoint = 0;
