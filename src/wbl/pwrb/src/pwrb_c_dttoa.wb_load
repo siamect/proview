@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dtadd.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
+!  Proview   $Id: pwrb_c_dttoa.wb_load,v 1.1 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -16,23 +16,20 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_dtadd.wb_load -- Defines the class DtAdd.
+!  pwrb_c_dttoa.wb_load -- Defines the class DtToA.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_time.h
 !  @Group Plc,PlcTime
-!  @Summary Add two delta times.
-!  Add two delta times.
-!  @image orm_dtadd_fo.gif
+!  @Summary Convert a delta time to analog value.
+!  Convert a delta time to analog value.
+!  @image orm_dttoa_fo.gif
 !
-!  DtAdd calculates the sum of the first and second deltat time input.
-!
-!  Both inputs have to be connected to delta times. 
-!  The resulting output is a delta time.
+!  DtToA converts a delta time to an analog value.
 !*/
-  Object DtAdd $ClassDef 459 
+  Object DtToA $ClassDef 464 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -40,45 +37,29 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "DtAdd"
+         Attr StructName = "DtToA"
       EndBody
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
+      !  Delta time.
       !*/
-      Object DTime1 $Input 1 
+      Object DTime $Input 1 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$DeltaTime"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_RTVIRTUAL
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOREMOVE
-          Attr GraphName = "DTim1"
+          Attr GraphName = "DTim"
         EndBody
       EndObject
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
-      !*/
-      Object DTime2 $Input 2 
-        Body SysBody
-	  Attr Flags |= PWR_MASK_STATE
-	  Attr Flags |= PWR_MASK_RTVIRTUAL
-	  Attr Flags |= PWR_MASK_NOEDIT
-	  Attr Flags |= PWR_MASK_NOREMOVE
-          Attr TypeRef = "pwrs:Type-$DeltaTime"
-          Attr GraphName = "DTim2"
-        EndBody
-      EndObject
-      !/**
-      !  @Summary Output absolute time that contains the result.
-      !  Output absolute time that contains the result of the addition.
+      !  The time converted to an analog value.
       !*/
       Object ActVal $Output 3 
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr TypeRef = "pwrs:Type-$Float32"
           Attr GraphName = "Val"
         EndBody
       EndObject
@@ -94,14 +75,14 @@ SObject pwrb:Class
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
         Attr object_type = 11
-        Attr parameters[0] = 2
+        Attr parameters[0] = 1
         Attr parameters[1] = 0
         Attr parameters[2] = 1
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 1
         Attr graphindex = 0
-        Attr default_mask[0] = 3
+        Attr default_mask[0] = 1
         Attr default_mask[1] = 1
         Attr segname_annotation = 1
         Attr compmethod = 5
@@ -109,8 +90,8 @@ SObject pwrb:Class
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "DtAdd"
-        Attr graphname = "DtAdd"
+        Attr objname = "DtToA"
+        Attr graphname = "DtToA"
       EndBody
     EndObject
   EndObject

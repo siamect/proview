@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_getatgeneric.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Proview   $Id: pwrb_c_getatgeneric.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -59,7 +59,7 @@ SObject pwrb:Class
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 4
-        Attr graphindex = 36
+        Attr graphindex = 41
         Attr default_mask[0] = 0
         Attr default_mask[1] = 1
         Attr segname_annotation = 0
@@ -67,7 +67,7 @@ SObject pwrb:Class
         Attr compindex = 0
         Attr tracemethod = 1
         Attr traceindex = 1
-        Attr connectmethod = 19
+        Attr connectmethod = 28
 	Attr executeordermethod = 0
         Attr objname = "GetAT"
         Attr graphname = "GetAT"

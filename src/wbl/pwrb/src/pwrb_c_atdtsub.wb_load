@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dtadd.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
+!  Proview   $Id: pwrb_c_atdtsub.wb_load,v 1.1 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -16,23 +16,25 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_dtadd.wb_load -- Defines the class DtAdd.
+!  pwrb_c_atdtsub.wb_load -- Defines the class AtDtSub.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_time.h
 !  @Group Plc,PlcTime
-!  @Summary Add two delta times.
-!  Add two delta times.
-!  @image orm_dtadd_fo.gif
+!  @Summary Subtracts a delta times from an absolute time.
+!  Subtracts a delta time from an absolute time.
+!  @image orm_atdtsub_fo.gif
 !
-!  DtAdd calculates the sum of the first and second deltat time input.
+!  AtDtAdd subtracts the second delta time input from the first absolute time
+!  input.
 !
-!  Both inputs have to be connected to delta times. 
-!  The resulting output is a delta time.
+!  The first input has to be connected to an absolute time, and
+!  the second to a delta time.
+!  The resulting output is an absolute time.
 !*/
-  Object DtAdd $ClassDef 459 
+  Object AtDtSub $ClassDef 463 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -40,45 +42,42 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "DtAdd"
+         Attr StructName = "AtDtSub"
       EndBody
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
+      !  Minuend absolute time.
       !*/
-      Object DTime1 $Input 1 
+      Object ATime $Input 1 
         Body SysBody
-          Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr TypeRef = "pwrs:Type-$Time"
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_RTVIRTUAL
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOREMOVE
-          Attr GraphName = "DTim1"
+          Attr GraphName = "ATim"
         EndBody
       EndObject
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
+      !  Subtrahend absolute time.
       !*/
-      Object DTime2 $Input 2 
+      Object DTime $Input 2 
         Body SysBody
 	  Attr Flags |= PWR_MASK_STATE
 	  Attr Flags |= PWR_MASK_RTVIRTUAL
 	  Attr Flags |= PWR_MASK_NOEDIT
 	  Attr Flags |= PWR_MASK_NOREMOVE
           Attr TypeRef = "pwrs:Type-$DeltaTime"
-          Attr GraphName = "DTim2"
+          Attr GraphName = "DTim"
         EndBody
       EndObject
       !/**
-      !  @Summary Output absolute time that contains the result.
-      !  Output absolute time that contains the result of the addition.
+      !  The result of the subtraction ATime - DTime. The result is an absolute time.
       !*/
       Object ActVal $Output 3 
         Body SysBody
           Attr Flags |= PWR_MASK_STATE
           Attr Flags |= PWR_MASK_NOEDIT
-          Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr TypeRef = "pwrs:Type-$Time"
           Attr GraphName = "Val"
         EndBody
       EndObject
@@ -109,8 +108,8 @@ SObject pwrb:Class
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "DtAdd"
-        Attr graphname = "DtAdd"
+        Attr objname = "AtDtSub"
+        Attr graphname = "AtDtSub"
       EndBody
     EndObject
   EndObject

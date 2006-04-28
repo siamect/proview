@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_dtadd.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
+!  Proview   $Id: pwrb_c_dtsub.wb_load,v 1.1 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -16,23 +16,24 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_dtadd.wb_load -- Defines the class DtAdd.
+!  pwrb_c_dtsub.wb_load -- Defines the class DtSub.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
 !  @Code rt_plc_macro_time.h
 !  @Group Plc,PlcTime
-!  @Summary Add two delta times.
-!  Add two delta times.
-!  @image orm_dtadd_fo.gif
+!  @Summary Subtract two absolute times.
+!  Subtract two delta times.
+!  @image orm_dtsub_fo.gif
 !
-!  DtAdd calculates the sum of the first and second deltat time input.
+!  DtSub subtracts the second delta time input from the first delta time
+!  input.
 !
-!  Both inputs have to be connected to delta times. 
+!  The inputs has to be connected to delta times.
 !  The resulting output is a delta time.
 !*/
-  Object DtAdd $ClassDef 459 
+  Object DtSub $ClassDef 462 
     Body SysBody
       Attr Editor = pwr_eEditor_PlcEd
       Attr Method = pwr_eMethod_Connections
@@ -40,11 +41,10 @@ SObject pwrb:Class
     EndBody
     Object RtBody $ObjBodyDef 1 
       Body SysBody
-         Attr StructName = "DtAdd"
+         Attr StructName = "DtSub"
       EndBody
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
+      !  Minuend delta time.
       !*/
       Object DTime1 $Input 1 
         Body SysBody
@@ -57,8 +57,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary Delta time.
-      !  The input has to be connected to an output of type DeltaTime.
+      !  Subtrahend absolute time.
       !*/
       Object DTime2 $Input 2 
         Body SysBody
@@ -71,8 +70,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary Output absolute time that contains the result.
-      !  Output absolute time that contains the result of the addition.
+      !  The result of the subtraction DTime1 - DTime2. The result is a deltatime.
       !*/
       Object ActVal $Output 3 
         Body SysBody
@@ -109,8 +107,8 @@ SObject pwrb:Class
         Attr tracemethod = 0
         Attr traceindex = 0
 	Attr executeordermethod = 2
-        Attr objname = "DtAdd"
-        Attr graphname = "DtAdd"
+        Attr objname = "DtSub"
+        Attr graphname = "DtSub"
       EndBody
     EndObject
   EndObject

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_stodtv.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Proview   $Id: pwrb_c_stodtv.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_io.h
+!  @Code rt_plc_macro_time.h
 !  @Group Plc,PlcTime
 !  @Summary Storage of delta time value
 !  Storage of delta time value.
@@ -63,7 +63,7 @@ SObject pwrb:Class
       !  Specifies the name of the object where to store the
       !  value.
       !*/
-      Object SvObject $Intern 1 
+      Object DTvObject $Intern 1 
         Body SysBody
           Attr PgmName = "DTvObject"
           Attr TypeRef = "pwrs:Type-$AttrRef"

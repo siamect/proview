@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.22 2005-12-14 13:05:51 claes Exp $
+ * Proview   $Id: pwr.h,v 1.23 2006-04-28 04:59:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -503,6 +503,8 @@ static const pwr_tTid       pwr_cNTid       = 0;	//!< Zero type identity constan
 static const pwr_tVid       pwr_cNVid       = 0;	//!< Zero volume identity constant.
 static const pwr_tNid       pwr_cNNid       = 0;	//!< Zero node identity constant.
 static const pwr_tStatus    pwr_cNStatus    = 0;	//!< Zero status constant.
+static const pwr_tTime      pwr_cNTime      = {0, 0};	//!< Zero time constant.
+static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime constant.
 
 /* Gereral macro definitions  */
 

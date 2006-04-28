@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_getatp.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
+!  Proview   $Id: pwrb_c_stodtp.wb_load,v 1.1 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -16,43 +16,48 @@
 !  along with the program, if not, write to the Free Software 
 !  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
-!  pwrb_c_getatp.wb_load -- Defines the class GetATp.
+!  pwrb_c_stodtp.wb_load -- Defines the class StoDTp.
 !
 SObject pwrb:Class
 !/**
 !  @Version 1.0
+!  @Code rt_plc_macro_io.h
 !  @Group Plc,PlcTime
-!  @Summary Get Absolute time attribute
-!  Get Absolute time attribute.
-!  @image orm_getatp_fo.gif
+!  @Summary Store delta time attribute
+!  Store delta time attribute. Used in run time to write in
+!  time parameters.
+!  @image orm_stodtp_fo.gif
 !
-!  Fetches the value of an absolute time attribute.
-!  
-!  The complete name of quantity has to be supplied.
-!
-!  The GetATp object  
-!   - is a pure address reference,
-!   - contains no relevant information (=data) in rtdb,
-!   - is without executable code.
+!  Stores an absolute time value in specified time
+!  attribute in a local object. The receiving
+!  attribute may not concern a pointer.
+!  The last name segment of the object and the name of the
+!  parameter will be shown in the right empty part of the
+!  StoDTp symbol.
 !*/
-  Object GetATp $ClassDef 445 
+  Object StoDTp $ClassDef 460 
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_RtAndDevBodies
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
       Attr Flags = pwr_mClassDef_DevOnly
     EndBody
     Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "StoDTp"
+      EndBody
       !/**
-      !  Used by the PLC Editor.
+      !  The input is connected to an string attribute or left
+      !  open. In the latter case In is default a NULL string and not
+      !  adjustable in the run time system. The In attribute
+      !  specifies which value should be assigned to the
+      !  parameter.
       !*/
-      Object ActVal $Output 1 
+      Object In $Input 1 
         Body SysBody
-          Attr PgmName = "ActVal"
-          Attr Flags |= PWR_MASK_STATE
+          Attr PgmName = "In"
           Attr Flags |= PWR_MASK_RTVIRTUAL
           Attr Flags |= PWR_MASK_DEVBODYREF
-          Attr Flags |= PWR_MASK_INVISIBLE
-          Attr TypeRef = "pwrs:Type-$Time"
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
           Attr GraphName = "VAL"
         EndBody
       EndObject
@@ -60,26 +65,26 @@ SObject pwrb:Class
     Object DevBody $ObjBodyDef 2 
       !/**
       !  Used by the PLC Editor. Specifies the complete name of
-      !  the actual attribute.
+      !  the current object.
       !*/
-      Object ATpObject $Intern 1 
+      Object Object $Intern 1 
         Body SysBody
-          Attr PgmName = "ATpObject"
+          Attr PgmName = "Object"
           Attr TypeRef = "pwrs:Type-$AttrRef"
-          Attr GraphName = "VAL"
+          Attr GraphName = "sts"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
         EndBody
       EndObject
       !/**
       !  Specifies how many segments of the actual object name
-      !  that is to be displayed in the symbol of the GetSp
+      !  that is to be displayed in the symbol of the StoSp
       !  object. The segments are counted from behind.
       !  
       !  0 and 1 both result in displaying the last segment of
       !  the actual object name.
       !*/
-      Object ATpObjectSegments $Intern 3 
+      Object ObjectSegments $Intern 3 
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Int32"
         EndBody
@@ -93,35 +98,33 @@ SObject pwrb:Class
     EndObject
     Object GraphPlcNode $GraphPlcNode
       Body SysBody
-        Attr object_type = 275
-        Attr parameters[0] = 0
+        Attr object_type = 288
+        Attr parameters[0] = 1
         Attr parameters[1] = 0
-        Attr parameters[2] = 1
+        Attr parameters[2] = 0
         Attr parameters[3] = 0
         Attr subwindows = 0
         Attr graphmethod = 7
         Attr graphindex = 0
-        Attr default_mask[0] = 0
-        Attr default_mask[1] = 1
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 0
         Attr segname_annotation = 0
         Attr devbody_annotation = 1
-        Attr compmethod = 10
+        Attr compmethod = 12
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
         Attr connectmethod = 7
-        Attr executeordermethod = 0
-        Attr objname = "GetATp"
-        Attr graphname = "ATp"
+        Attr executeordermethod = 2
+        Attr objname = "StoDTp"
+        Attr graphname = "StoDTp"
         Attr debugpar = ""
       EndBody
     EndObject
-    Object Template GetATp
+    Object Template StoDTp
       Body DevBody
-        Attr ATpObjectSegments = 2
+        Attr ObjectSegments = 2
       EndBody
     EndObject
   EndObject
 EndSObject
-
-

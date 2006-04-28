@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_getdtp.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Proview   $Id: pwrb_c_getdtp.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -62,7 +62,7 @@ SObject pwrb:Class
       !  Used by the PLC Editor. Specifies the complete name of
       !  the actual attribute.
       !*/
-      Object SpObject $Intern 1 
+      Object DTpObject $Intern 1 
         Body SysBody
           Attr PgmName = "DTpObject"
           Attr TypeRef = "pwrs:Type-$AttrRef"

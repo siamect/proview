@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_atadd.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Proview   $Id: pwrb_c_atadd.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 SObject pwrb:Class
 !/**
 !  @Version 1.0
-!  @Code rt_plc_macro_io.h
+!  @Code rt_plc_macro_time.h
 !  @Group Plc,PlcTime
 !  @Summary Add an absolute time and a delta time.
 !  Add an absolute time and a delta time.
@@ -60,9 +60,9 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  @Summary The second string that is appended to the first string.
-      !  The second string that is appended to the first string.
-      !  The input has to be connected to an output of type String.
+      !  @Summary A delta time that is added to the absolute time.
+      !  A delta time that is added to the absolute time.
+      !  The input has to be connected to an output of type DeltaTime.
       !*/
       Object DTime $Input 2 
         Body SysBody
@@ -114,7 +114,7 @@ SObject pwrb:Class
         Attr traceindex = 0
 	Attr executeordermethod = 2
         Attr objname = "AtAdd"
-        Attr graphname = "AdAdd"
+        Attr graphname = "AtAdd"
       EndBody
     EndObject
   EndObject
