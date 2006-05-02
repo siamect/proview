@@ -6,3 +6,5 @@
 060317 rk  qcom      Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.
 060317 rk  rt_tmon   Cleaning (zero-ing) of timed out subscription data.
 060331 cs  pwrs      Modified attribute added to RootVolume, SubVolume and SharedVolume.
+060502 cs  co        Bugfix in time_Dcomp, 0 was not returned for equal times.
+060502 cs  pwrb      New signals for absolute and delta time, and plc objects for time arithmetics added.
