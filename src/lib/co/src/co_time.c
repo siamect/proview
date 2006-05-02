@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.8 2006-03-31 14:45:55 claes Exp $
+ * Proview   $Id: co_time.c,v 1.9 2006-05-02 07:06:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,10 +364,12 @@ time_Dcomp (
   assertDelta(t1);
   assertDelta(t2);
 
-  if (t1->tv_sec == t2->tv_sec)
+  if (t1->tv_sec == t2->tv_sec) {
+    if (t1->tv_nsec == t2->tv_nsec)
+      return 0;
     return ((t1->tv_nsec > t2->tv_nsec) ? 1 : -1);
-  else
-    return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
+  }
+  return ((t1->tv_sec > t2->tv_sec) ? 1 : -1);
 }
 
 //! Negate a delta time,
