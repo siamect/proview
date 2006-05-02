@@ -1,0 +1,122 @@
+! 
+!  Proview   $Id: pwrb_c_dtgreaterthan.wb_load,v 1.1 2006-05-02 07:05:09 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_dtgreaterthan.wb_load -- Defines the class DtGreaterThan.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_time.h
+!  @Group Plc,PlcTime
+!  @Summary Compare two delta times.
+!  Compare two delta times.
+!  @image orm_dtgreaterthan_fo.gif
+!
+!  DtGreaterThan compares two delta times and returns true if the first are
+!  greater than the second.
+!
+!  Both inputs have to be connected to delta times. The result is a digital value.
+!*/
+  Object DtGreaterThan $ClassDef 470 
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+         Attr StructName = "DtGreaterThan"
+      EndBody
+      !/**
+      !  A delta time.      
+      !  The input has to be connected to an output of type DeltaTime.
+      !*/
+      Object DTime1 $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr GraphName = "DTim1"
+        EndBody
+      EndObject
+      !/**
+      !  A delta time.      
+      !  The input has to be connected to an output of type DeltaTime.
+      !*/
+      Object DTime2 $Input 2 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr TypeRef = "pwrs:Type-$DeltaTime"
+          Attr GraphName = "DTim2"
+        EndBody
+      EndObject
+      !/**
+      !  Status has the value 1 if DTime1 > DTime2, else 0.
+      !*/
+      Object Status $Output 3 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "sts"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 1
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 1
+        Attr compmethod = 5
+        Attr compindex = 0
+        Attr tracemethod = 3
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "DtGt"
+        Attr graphname = "DtGt"
+        Attr debugpar = "Status"
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
