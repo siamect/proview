@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_time.h,v 1.1 2006-04-28 04:59:58 claes Exp $
+ * Proview   $Id: rt_plc_macro_time.h,v 1.2 2006-05-02 07:06:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,6 +128,48 @@
 */
 #define DtToA_exec(obj,t) \
   time_DToFloat( &obj->ActVal, &t);
+
+/*_*
+  ATGREATERTHAN
+  @aref atgreaterthan AtGreaterThan
+*/
+#define AtGreaterThan_exec(obj,t1,t2) \
+  obj->Status = (time_Acomp( &t1, &t2) == 1);
+
+/*_*
+  ATLESSTHAN
+  @aref atlessthan AtLessThan
+*/
+#define AtLessThan_exec(obj,t1,t2) \
+  obj->Status = (time_Acomp( &t1, &t2) == -1);
+
+/*_*
+  ATEQUAL
+  @aref atequal AtEqual
+*/
+#define AtEqual_exec(obj,t1,t2) \
+  obj->Status = (time_Acomp( &t1, &t2) == 0);
+
+/*_*
+  DTGREATERTHAN
+  @aref dtgreaterthan DtGreaterThan
+*/
+#define DtGreaterThan_exec(obj,t1,t2) \
+  obj->Status = (time_Dcomp( &t1, &t2) == 1);
+
+/*_*
+  DTLESSTHAN
+  @aref dtlessthan DtLessThan
+*/
+#define DtLessThan_exec(obj,t1,t2) \
+  obj->Status = (time_Dcomp( &t1, &t2) == -1);
+
+/*_*
+  DTEQUAL
+  @aref dtequalthan DtEqual
+*/
+#define DtEqual_exec(obj,t1,t2) \
+  obj->Status = (time_Dcomp( &t1, &t2) == 0);
 
 
 
