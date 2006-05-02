@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X1"
-    Attr NextCix = "_X7"
+    Attr NextCix = "_X22"
   EndBody
   Object Class $ClassHier 1 06-OCT-2005 14:40:44.00
     !/**
@@ -48,8 +48,8 @@ Volume Siemens $ClassVolume 0.0.250.3
     !/**
     !  @Version 1.0
     !  @Group Profibus
-    !  @Summary Profibus module ET200 with two Ai.
-    !  Profibus module ET200 with two analog inputs.
+    !  @Summary Profibus module ET200S with two Ai.
+    !  Profibus module ET200S with two analog inputs.
     ! 
     !  See also
     !  @classlink Pb_Module profibus_pb_module.html
@@ -82,7 +82,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Ai2 2148237312 06-OCT-2005 14:40:44.00
-        Body RtBody 04-APR-2006 14:51:29.23
+        Body RtBody 02-MAY-2006 13:44:42.59
           Attr Super.Specification = "Siemens ET200S 2 Ai"
           Attr Super.Process = 1
           Attr Ch[0].ConversionOn = 1
@@ -97,6 +97,7 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
           Attr Ch[0].ActValRangeLow = -1.000000e+02
           Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
           Attr Ch[1].ConversionOn = 1
           Attr Ch[1].ScanInterval = 1
           Attr Ch[1].RawValRangeLow = -3.276800e+04
@@ -109,14 +110,15 @@ Volume Siemens $ClassVolume 0.0.250.3
           Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
           Attr Ch[1].ActValRangeLow = -1.000000e+02
           Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
         EndBody
       EndObject
     EndObject
     !/**
     !  @Version 1.0
     !  @Group Profibus
-    !  @Summary Profibus module ET200 with two Ao.
-    !  Profibus module ET200 with two analog outputs.
+    !  @Summary Profibus module ET200S with two Ao.
+    !  Profibus module ET200S with two analog outputs.
     ! 
     !  See also
     !  @classlink Pb_Module profibus_pb_module.html
@@ -149,36 +151,38 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Ao2 2148499456 06-OCT-2005 14:40:44.00
-        Body RtBody 04-APR-2006 14:51:47.58
+        Body RtBody 02-MAY-2006 13:44:58.14
           Attr Super.Specification = "Siemens ET200S 2 Ao"
           Attr Super.Process = 1
           Attr Ch[0].OutPolyType = 1
-          Attr Ch[0].ActValRangeLow = -3.276800e+04
-          Attr Ch[0].ActValRangeHigh = 3.276800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
           Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
           Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
           Attr Ch[0].SigValueUnit = "V"
           Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
           Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
-          Attr Ch[0].RawValRangeLow = -1.000000e+02
-          Attr Ch[0].RawValRangeHigh = 1.000000e+02
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].Representation = 2
           Attr Ch[1].OutPolyType = 1
-          Attr Ch[1].ActValRangeLow = -3.276800e+04
-          Attr Ch[1].ActValRangeHigh = 3.276800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
           Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
           Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
           Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
           Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
-          Attr Ch[1].RawValRangeLow = -1.000000e+02
-          Attr Ch[1].RawValRangeHigh = 1.000000e+02
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].Representation = 2
         EndBody
       EndObject
     EndObject
     !/**
     !  @Version 1.0
     !  @Group Profibus
-    !  @Summary Profibus module ET200 with four Di.
-    !  Profibus module ET200 with four digital inputs.
+    !  @Summary Profibus module ET200S with four Di.
+    !  Profibus module ET200S with four digital inputs.
     ! 
     !  See also
     !  @classlink Pb_Module profibus_pb_module.html
@@ -211,17 +215,70 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Di4 2148761600 06-OCT-2005 14:40:44.00
-        Body RtBody 04-APR-2006 14:52:14.24
+        Body RtBody 02-MAY-2006 13:45:24.97
           Attr Super.Specification = "Siemens ET200S 4 Di"
           Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
         EndBody
       EndObject
     EndObject
     !/**
     !  @Version 1.0
     !  @Group Profibus
-    !  @Summary Profibus module ET200 four Do.
-    !  Profibus module ET200 with four digital outputs.
+    !  @Summary Profibus module ET200S with two Di.
+    !  Profibus module ET200S with two digital inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200S_Di2 $ClassDef 20 02-MAY-2006 13:07:06.94
+      Body SysBody 02-MAY-2006 13:06:58.96
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:06:58.96
+        Body SysBody 02-MAY-2006 13:07:23.00
+          Attr StructName = "Siemens_ET200S_Di2"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 13:06:58.96
+          Body SysBody 02-MAY-2006 13:06:58.96
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 13:06:58.96
+          Body SysBody 02-MAY-2006 13:07:14.65
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Di2 2152955904 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:45:42.10
+          Attr Super.Specification = "Siemens ET200S 2 Di"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200S four Do.
+    !  Profibus module ET200S with four digital outputs.
     ! 
     !  See also
     !  @classlink Pb_Module profibus_pb_module.html
@@ -254,12 +311,1139 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_Do4 2149023744 06-OCT-2005 14:40:44.00
-        Body RtBody 04-APR-2006 14:52:34.39
+        Body RtBody 02-MAY-2006 13:46:12.50
           Attr Super.Specification = "Siemens ET200S 4 Do"
           Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200S with two Do.
+    !  Profibus module ET200S with two digital outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200S_Do2 $ClassDef 21 02-MAY-2006 13:07:37.58
+      Body SysBody 02-MAY-2006 13:07:29.85
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:07:29.85
+        Body SysBody 02-MAY-2006 13:07:44.00
+          Attr StructName = "Siemens_ET200S_Do2"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 13:07:29.85
+          Body SysBody 02-MAY-2006 13:07:29.85
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 13:07:29.85
+          Body SysBody 02-MAY-2006 13:07:48.96
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200S_Do2 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:46:24.18
+          Attr Super.Specification = "Siemens ET200S 2 Do"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 32 Di.
+    !  Profibus module ET200M with 32 digital inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Di32 $ClassDef 8 02-MAY-2006 12:54:13.88
+      Body SysBody 02-MAY-2006 12:53:56.35
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:53:56.35
+        Body SysBody 02-MAY-2006 12:57:27.78
+          Attr StructName = "Siemens_ET200M_Di32"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 12:53:56.35
+          Body SysBody 02-MAY-2006 12:53:56.35
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 12:53:56.35
+          Body SysBody 02-MAY-2006 12:54:26.07
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 32
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Di32 2149810176 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:48:36.11
+          Attr Super.Specification = "Siemens ET200M 32 Di"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+          Attr Ch[8].Representation = 8
+          Attr Ch[9].Number = 1
+          Attr Ch[9].Representation = 8
+          Attr Ch[10].Number = 2
+          Attr Ch[10].Representation = 8
+          Attr Ch[11].Number = 3
+          Attr Ch[11].Representation = 8
+          Attr Ch[12].Number = 4
+          Attr Ch[12].Representation = 8
+          Attr Ch[13].Number = 5
+          Attr Ch[13].Representation = 8
+          Attr Ch[14].Number = 6
+          Attr Ch[14].Representation = 8
+          Attr Ch[15].Number = 7
+          Attr Ch[15].Representation = 8
+          Attr Ch[16].Representation = 8
+          Attr Ch[17].Number = 1
+          Attr Ch[17].Representation = 8
+          Attr Ch[18].Number = 2
+          Attr Ch[18].Representation = 8
+          Attr Ch[19].Number = 3
+          Attr Ch[19].Representation = 8
+          Attr Ch[20].Number = 4
+          Attr Ch[20].Representation = 8
+          Attr Ch[21].Number = 5
+          Attr Ch[21].Representation = 8
+          Attr Ch[22].Number = 6
+          Attr Ch[22].Representation = 8
+          Attr Ch[23].Number = 7
+          Attr Ch[23].Representation = 8
+          Attr Ch[24].Representation = 4
+          Attr Ch[25].Number = 1
+          Attr Ch[25].Representation = 8
+          Attr Ch[26].Number = 2
+          Attr Ch[26].Representation = 8
+          Attr Ch[27].Number = 3
+          Attr Ch[27].Representation = 8
+          Attr Ch[28].Number = 4
+          Attr Ch[28].Representation = 8
+          Attr Ch[29].Number = 5
+          Attr Ch[29].Representation = 8
+          Attr Ch[30].Number = 6
+          Attr Ch[30].Representation = 8
+          Attr Ch[31].Number = 7
+          Attr Ch[31].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 16 Di.
+    !  Profibus module ET200M with 16 digital inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Di16 $ClassDef 10 02-MAY-2006 12:56:19.07
+      Body SysBody 02-MAY-2006 12:55:59.86
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:55:59.86
+        Body SysBody 02-MAY-2006 12:57:19.37
+          Attr StructName = "Siemens_ET200M_Di16"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 12:55:59.86
+          Body SysBody 02-MAY-2006 12:55:59.86
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 12:55:59.86
+          Body SysBody 02-MAY-2006 12:56:47.95
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 16
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Di16 2150334464 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:50:43.51
+          Attr Super.Specification = "Siemens ET200M 16 Di"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+          Attr Ch[8].Representation = 8
+          Attr Ch[9].Number = 1
+          Attr Ch[9].Representation = 8
+          Attr Ch[10].Number = 2
+          Attr Ch[10].Representation = 8
+          Attr Ch[11].Number = 3
+          Attr Ch[11].Representation = 8
+          Attr Ch[12].Number = 4
+          Attr Ch[12].Representation = 8
+          Attr Ch[13].Number = 5
+          Attr Ch[13].Representation = 8
+          Attr Ch[14].Number = 6
+          Attr Ch[14].Representation = 8
+          Attr Ch[15].Number = 7
+          Attr Ch[15].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 8 Di.
+    !  Profibus module ET200M with 8 digital inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Di8 $ClassDef 9 02-MAY-2006 12:56:28.97
+      Body SysBody 02-MAY-2006 12:55:58.53
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:55:58.53
+        Body SysBody 02-MAY-2006 12:57:12.15
+          Attr StructName = "Siemens_ET200M_Di8"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 12:55:58.53
+          Body SysBody 02-MAY-2006 12:55:58.53
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 12:55:58.53
+          Body SysBody 02-MAY-2006 12:56:58.75
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Di8 2150072320 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:51:46.05
+          Attr Super.Specification = "Siemens ET200M 8 Di"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 32 Do.
+    !  Profibus module ET200M with 32 digital outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Do32 $ClassDef 11 02-MAY-2006 12:59:10.16
+      Body SysBody 02-MAY-2006 12:58:55.53
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:58:55.53
+        Body SysBody 02-MAY-2006 12:59:21.79
+          Attr StructName = "Siemens_ET200M_Do32"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 12:58:55.53
+          Body SysBody 02-MAY-2006 12:58:55.53
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 12:58:55.53
+          Body SysBody 02-MAY-2006 12:59:29.84
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 32
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Do32 2150596608 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:55:28.36
+          Attr Super.Specification = "Siemens ET200M 32 Do"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+          Attr Ch[8].Representation = 8
+          Attr Ch[9].Number = 1
+          Attr Ch[9].Representation = 8
+          Attr Ch[10].Number = 2
+          Attr Ch[10].Representation = 8
+          Attr Ch[11].Number = 3
+          Attr Ch[11].Representation = 8
+          Attr Ch[12].Number = 4
+          Attr Ch[12].Representation = 8
+          Attr Ch[13].Number = 5
+          Attr Ch[13].Representation = 8
+          Attr Ch[14].Number = 6
+          Attr Ch[14].Representation = 8
+          Attr Ch[15].Number = 7
+          Attr Ch[15].Representation = 8
+          Attr Ch[16].Representation = 8
+          Attr Ch[17].Number = 1
+          Attr Ch[17].Representation = 8
+          Attr Ch[18].Number = 2
+          Attr Ch[18].Representation = 8
+          Attr Ch[19].Number = 3
+          Attr Ch[19].Representation = 8
+          Attr Ch[20].Number = 4
+          Attr Ch[20].Representation = 8
+          Attr Ch[21].Number = 5
+          Attr Ch[21].Representation = 8
+          Attr Ch[22].Number = 6
+          Attr Ch[22].Representation = 8
+          Attr Ch[23].Number = 7
+          Attr Ch[23].Representation = 8
+          Attr Ch[24].Representation = 8
+          Attr Ch[25].Number = 1
+          Attr Ch[25].Representation = 8
+          Attr Ch[26].Number = 2
+          Attr Ch[26].Representation = 8
+          Attr Ch[27].Number = 3
+          Attr Ch[27].Representation = 8
+          Attr Ch[28].Number = 4
+          Attr Ch[28].Representation = 8
+          Attr Ch[29].Number = 5
+          Attr Ch[29].Representation = 8
+          Attr Ch[30].Number = 6
+          Attr Ch[30].Representation = 8
+          Attr Ch[31].Number = 7
+          Attr Ch[31].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 16 Do.
+    !  Profibus module ET200M with 16 digital outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Do16 $ClassDef 13 02-MAY-2006 12:59:47.60
+      Body SysBody 02-MAY-2006 12:59:38.44
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:59:38.44
+        Body SysBody 02-MAY-2006 12:59:53.72
+          Attr StructName = "Siemens_ET200M_Do16"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 12:59:38.44
+          Body SysBody 02-MAY-2006 12:59:38.44
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 12:59:38.44
+          Body SysBody 02-MAY-2006 12:59:59.94
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 16
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Do16 2151120896 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:57:16.75
+          Attr Super.Specification = "Siemens ET200M 16 Do"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+          Attr Ch[8].Representation = 8
+          Attr Ch[9].Number = 1
+          Attr Ch[9].Representation = 8
+          Attr Ch[10].Number = 2
+          Attr Ch[10].Representation = 8
+          Attr Ch[11].Number = 3
+          Attr Ch[11].Representation = 8
+          Attr Ch[12].Number = 4
+          Attr Ch[12].Representation = 8
+          Attr Ch[13].Number = 5
+          Attr Ch[13].Representation = 8
+          Attr Ch[14].Number = 6
+          Attr Ch[14].Representation = 8
+          Attr Ch[15].Number = 7
+          Attr Ch[15].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 8 Do.
+    !  Profibus module ET200M with 8 digital outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Do8 $ClassDef 12 02-MAY-2006 13:00:26.87
+      Body SysBody 02-MAY-2006 12:59:37.94
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 12:59:37.94
+        Body SysBody 02-MAY-2006 13:00:32.39
+          Attr StructName = "Siemens_ET200M_Do8"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 12:59:37.94
+          Body SysBody 02-MAY-2006 12:59:37.94
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 12:59:37.94
+          Body SysBody 02-MAY-2006 13:00:46.00
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Do8 2150858752 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:58:14.91
+          Attr Super.Specification = "Siemens ET200M 8 Do"
+          Attr Super.Process = 1
+          Attr Ch[0].Representation = 8
+          Attr Ch[1].Number = 1
+          Attr Ch[1].Representation = 8
+          Attr Ch[2].Number = 2
+          Attr Ch[2].Representation = 8
+          Attr Ch[3].Number = 3
+          Attr Ch[3].Representation = 8
+          Attr Ch[4].Number = 4
+          Attr Ch[4].Representation = 8
+          Attr Ch[5].Number = 5
+          Attr Ch[5].Representation = 8
+          Attr Ch[6].Number = 6
+          Attr Ch[6].Representation = 8
+          Attr Ch[7].Number = 7
+          Attr Ch[7].Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 8 Ai.
+    !  Profibus module ET200M with 8 analog inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ai8 $ClassDef 14 02-MAY-2006 13:02:09.59
+      Body SysBody 02-MAY-2006 13:01:52.00
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:01:52.00
+        Body SysBody 02-MAY-2006 13:02:20.26
+          Attr StructName = "Siemens_ET200M_Ai8"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 02-MAY-2006 13:01:52.00
+          Body SysBody 02-MAY-2006 13:01:52.00
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 4 02-MAY-2006 13:01:52.00
+          Body SysBody 02-MAY-2006 13:02:32.38
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ai8 2151383040 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:59:07.09
+          Attr Super.Specification = "Siemens ET200M 8 Ai"
+          Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].ScanInterval = 1
+          Attr Ch[2].RawValRangeLow = -3.276800e+04
+          Attr Ch[2].RawValRangeHigh = 3.276800e+04
+          Attr Ch[2].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].SensorPolyType = 1
+          Attr Ch[2].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].ScanInterval = 1
+          Attr Ch[3].RawValRangeLow = -3.276800e+04
+          Attr Ch[3].RawValRangeHigh = 3.276800e+04
+          Attr Ch[3].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].SensorPolyType = 1
+          Attr Ch[3].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].Representation = 2
+          Attr Ch[4].ConversionOn = 1
+          Attr Ch[4].ScanInterval = 1
+          Attr Ch[4].RawValRangeLow = -3.276800e+04
+          Attr Ch[4].RawValRangeHigh = 3.276800e+04
+          Attr Ch[4].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[4].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[4].SigValueUnit = "V"
+          Attr Ch[4].SensorPolyType = 1
+          Attr Ch[4].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[4].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Ch[4].Representation = 2
+          Attr Ch[5].ConversionOn = 1
+          Attr Ch[5].ScanInterval = 1
+          Attr Ch[5].RawValRangeLow = -3.276800e+04
+          Attr Ch[5].RawValRangeHigh = 3.276800e+04
+          Attr Ch[5].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[5].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[5].SigValueUnit = "V"
+          Attr Ch[5].SensorPolyType = 1
+          Attr Ch[5].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[5].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Ch[5].Representation = 2
+          Attr Ch[6].ConversionOn = 1
+          Attr Ch[6].ScanInterval = 1
+          Attr Ch[6].RawValRangeLow = -3.276800e+04
+          Attr Ch[6].RawValRangeHigh = 3.276800e+04
+          Attr Ch[6].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[6].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[6].SigValueUnit = "V"
+          Attr Ch[6].SensorPolyType = 1
+          Attr Ch[6].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[6].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Ch[6].Representation = 2
+          Attr Ch[7].ConversionOn = 1
+          Attr Ch[7].ScanInterval = 1
+          Attr Ch[7].RawValRangeLow = -3.276800e+04
+          Attr Ch[7].RawValRangeHigh = 3.276800e+04
+          Attr Ch[7].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[7].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[7].SigValueUnit = "V"
+          Attr Ch[7].SensorPolyType = 1
+          Attr Ch[7].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[7].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 4 Ai.
+    !  Profibus module ET200M with 4 analog inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ai4 $ClassDef 16 02-MAY-2006 13:02:55.61
+      Body SysBody 02-MAY-2006 13:02:46.87
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:02:46.87
+        Body SysBody 02-MAY-2006 13:03:03.61
+          Attr StructName = "Siemens_ET200M_Ai4"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 13:02:46.87
+          Body SysBody 02-MAY-2006 13:02:46.87
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 13:02:46.87
+          Body SysBody 02-MAY-2006 13:11:54.34
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ai4 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:59:33.26
+          Attr Super.Specification = "Siemens ET200M 4 Ai"
+          Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].ConversionOn = 1
+          Attr Ch[2].ScanInterval = 1
+          Attr Ch[2].RawValRangeLow = -3.276800e+04
+          Attr Ch[2].RawValRangeHigh = 3.276800e+04
+          Attr Ch[2].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].SensorPolyType = 1
+          Attr Ch[2].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].ConversionOn = 1
+          Attr Ch[3].ScanInterval = 1
+          Attr Ch[3].RawValRangeLow = -3.276800e+04
+          Attr Ch[3].RawValRangeHigh = 3.276800e+04
+          Attr Ch[3].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].SensorPolyType = 1
+          Attr Ch[3].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 2 Ai.
+    !  Profibus module ET200M with 2 analog inputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ai2 $ClassDef 15 02-MAY-2006 13:03:17.09
+      Body SysBody 02-MAY-2006 13:02:46.25
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:02:46.25
+        Body SysBody 02-MAY-2006 13:03:22.67
+          Attr StructName = "Siemens_ET200M_Ai2"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 13:02:46.25
+          Body SysBody 02-MAY-2006 13:02:46.25
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 13:02:46.25
+          Body SysBody 02-MAY-2006 13:03:29.27
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAi"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ai2 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 13:59:48.17
+          Attr Super.Specification = "Siemens ET200M 2 Ai"
+          Attr Super.Process = 1
+          Attr Ch[0].ConversionOn = 1
+          Attr Ch[0].ScanInterval = 1
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].SensorPolyType = 1
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].ConversionOn = 1
+          Attr Ch[1].ScanInterval = 1
+          Attr Ch[1].ChannelSigValRangeLow = -1.000000e+01
+          Attr Ch[1].ChannelSigValRangeHigh = 1.000000e+01
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].SensorPolyType = 1
+          Attr Ch[1].SensorSigValRangeLow = -1.000000e+01
+          Attr Ch[1].SensorSigValRangeHigh = 1.000000e+01
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 8 Ao.
+    !  Profibus module ET200M with 8 analog outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ao8 $ClassDef 19 02-MAY-2006 13:05:02.22
+      Body SysBody 02-MAY-2006 13:04:53.22
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:04:53.22
+        Body SysBody 02-MAY-2006 13:05:05.26
+          Attr StructName = "Siemens_ET200M_Ao8"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 13:04:53.22
+          Body SysBody 02-MAY-2006 13:04:53.22
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 13:04:53.22
+          Body SysBody 02-MAY-2006 13:05:34.03
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 8
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ao8 2152693760 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 14:00:30.43
+          Attr Super.Specification = "Siemens ET200M 8 Ao"
+          Attr Super.Process = 1
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].OutPolyType = 1
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].RawValRangeLow = -3.276800e+04
+          Attr Ch[2].RawValRangeHigh = 3.276800e+04
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].OutPolyType = 1
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].RawValRangeLow = -3.276800e+04
+          Attr Ch[3].RawValRangeHigh = 3.276800e+04
+          Attr Ch[3].Representation = 2
+          Attr Ch[4].OutPolyType = 1
+          Attr Ch[4].ActValRangeLow = -1.000000e+02
+          Attr Ch[4].ActValRangeHigh = 1.000000e+02
+          Attr Ch[4].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[4].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[4].SigValueUnit = "V"
+          Attr Ch[4].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[4].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[4].RawValRangeLow = -3.276800e+04
+          Attr Ch[4].RawValRangeHigh = 3.276800e+04
+          Attr Ch[4].Representation = 2
+          Attr Ch[5].OutPolyType = 1
+          Attr Ch[5].ActValRangeLow = -1.000000e+02
+          Attr Ch[5].ActValRangeHigh = 1.000000e+02
+          Attr Ch[5].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[5].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[5].SigValueUnit = "V"
+          Attr Ch[5].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[5].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[5].RawValRangeLow = -3.276800e+04
+          Attr Ch[5].RawValRangeHigh = 3.276800e+04
+          Attr Ch[5].Representation = 2
+          Attr Ch[6].OutPolyType = 1
+          Attr Ch[6].ActValRangeLow = -1.000000e+02
+          Attr Ch[6].ActValRangeHigh = 1.000000e+02
+          Attr Ch[6].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[6].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[6].SigValueUnit = "V"
+          Attr Ch[6].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[6].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[6].RawValRangeLow = -3.276800e+04
+          Attr Ch[6].RawValRangeHigh = 3.276800e+04
+          Attr Ch[6].Representation = 2
+          Attr Ch[7].OutPolyType = 1
+          Attr Ch[7].ActValRangeLow = -1.000000e+02
+          Attr Ch[7].ActValRangeHigh = 1.000000e+02
+          Attr Ch[7].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[7].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[7].SigValueUnit = "V"
+          Attr Ch[7].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[7].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[7].RawValRangeLow = -3.276800e+04
+          Attr Ch[7].RawValRangeHigh = 3.276800e+04
+          Attr Ch[7].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 4 Ao.
+    !  Profibus module ET200M with 4 analog outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ao4 $ClassDef 18 02-MAY-2006 13:05:18.23
+      Body SysBody 02-MAY-2006 13:04:52.64
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:04:52.64
+        Body SysBody 02-MAY-2006 13:05:22.11
+          Attr StructName = "Siemens_ET200M_Ao4"
+          Attr NextAix = "_X9"
+        EndBody
+        Object Super $Attribute 7 02-MAY-2006 13:04:52.64
+          Body SysBody 02-MAY-2006 13:04:52.64
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 8 02-MAY-2006 13:04:52.64
+          Body SysBody 02-MAY-2006 13:05:40.30
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 4
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ao4 2152431616 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 14:00:54.61
+          Attr Super.Specification = "Siemens ET200M 4 Ao"
+          Attr Super.Process = 1
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[1].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[1].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[1].RawValRangeLow = -3.276800e+04
+          Attr Ch[1].RawValRangeHigh = 3.276800e+04
+          Attr Ch[1].Representation = 2
+          Attr Ch[2].OutPolyType = 1
+          Attr Ch[2].ActValRangeLow = -1.000000e+02
+          Attr Ch[2].ActValRangeHigh = 1.000000e+02
+          Attr Ch[2].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[2].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].SigValueUnit = "V"
+          Attr Ch[2].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[2].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[2].RawValRangeLow = -3.276800e+04
+          Attr Ch[2].RawValRangeHigh = 3.276800e+04
+          Attr Ch[2].Representation = 2
+          Attr Ch[3].OutPolyType = 1
+          Attr Ch[3].ActValRangeLow = -1.000000e+02
+          Attr Ch[3].ActValRangeHigh = 1.000000e+02
+          Attr Ch[3].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[3].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].SigValueUnit = "V"
+          Attr Ch[3].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[3].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[3].RawValRangeLow = -3.276800e+04
+          Attr Ch[3].RawValRangeHigh = 3.276800e+04
+          Attr Ch[3].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus module ET200M with 2 Ao.
+    !  Profibus module ET200M with 2 analog outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Ao2 $ClassDef 17 02-MAY-2006 13:04:28.79
+      Body SysBody 02-MAY-2006 13:04:16.84
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 13:04:16.84
+        Body SysBody 02-MAY-2006 13:04:35.05
+          Attr StructName = "Siemens_ET200M_Ao2"
+          Attr NextAix = "_X7"
+        EndBody
+        Object Super $Attribute 5 02-MAY-2006 13:04:16.84
+          Body SysBody 02-MAY-2006 13:04:16.84
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object Ch $Attribute 6 02-MAY-2006 13:04:16.84
+          Body SysBody 02-MAY-2006 13:04:16.84
+            Attr PgmName = "Ch"
+            Attr Flags = 131074
+            Attr Elements = 2
+            Attr TypeRef = "pwrb:Class-ChanAo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Ao2 2152169472 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 14:01:07.13
+          Attr Super.Specification = "Siemens ET200M 2 Ao"
+          Attr Super.Process = 1
+          Attr Ch[0].OutPolyType = 1
+          Attr Ch[0].ActValRangeLow = -1.000000e+02
+          Attr Ch[0].ActValRangeHigh = 1.000000e+02
+          Attr Ch[0].SensorSigValRangeLow = -3.276800e+04
+          Attr Ch[0].SensorSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].SigValueUnit = "V"
+          Attr Ch[0].ChannelSigValRangeLow = -3.276800e+04
+          Attr Ch[0].ChannelSigValRangeHigh = 3.276800e+04
+          Attr Ch[0].RawValRangeLow = -3.276800e+04
+          Attr Ch[0].RawValRangeHigh = 3.276800e+04
+          Attr Ch[0].Representation = 2
+          Attr Ch[1].OutPolyType = 1
+          Attr Ch[1].ActValRangeLow = -1.000000e+02
+          Attr Ch[1].ActValRangeHigh = 1.000000e+02
+          Attr Ch[1].SensorSigValRangeLow = -5.000000e+00
+          Attr Ch[1].SensorSigValRangeHigh = 5.000000e+00
+          Attr Ch[1].SigValueUnit = "V"
+          Attr Ch[1].ChannelSigValRangeLow = -5.000000e+00
+          Attr Ch[1].ChannelSigValRangeHigh = 5.000000e+00
+          Attr Ch[1].Representation = 2
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus slave ET200S IM151.
+    !  Profibus slave ET200S IM151.
+    ! 
+    !  The slave object is configured below a Profibus master object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Slave' method in the popup menu of the object
+    !  to configure the slave.
+    !
+    !  See also
+    !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
+    !*/
     Object Siemens_ET200S_IM151 $ClassDef 6 04-APR-2006 14:53:41.44
       Body SysBody 04-APR-2006 15:56:37.14
         Attr Editor = 0
@@ -280,10 +1464,60 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200S_IM151 2149285888 01-JAN-1970 01:00:00.00
-        Body RtBody 04-APR-2006 14:56:45.63
+        Body RtBody 02-MAY-2006 14:01:28.58
           Attr Super.Specification = "Siemens ET200S IM151"
           Attr Super.GSDfile = "$pwr_exe/siemens_et200s_im151.gsd"
           Attr Super.Process = 1
+          Attr Super.ByteOrdering = 1
+          Attr Super.StallAction = 1
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.WdFact1 = 100
+          Attr Super.WdFact2 = 10
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
+    !  @Summary Profibus slave ET200M IM153.
+    !  Profibus slave ET200M IM153.
+    ! 
+    !  The slave object is configured below a Profibus master object in
+    !  the node hierarchy. 
+    !  
+    !  @b Configuration
+    !  Use the 'Configure Slave' method in the popup menu of the object
+    !  to configure the slave.
+    !
+    !  See also
+    !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
+    !*/
+    Object Siemens_ET200M_IM153 $ClassDef 7 02-MAY-2006 11:50:15.40
+      Body SysBody 02-MAY-2006 11:49:53.64
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAY-2006 11:49:53.66
+        Body SysBody 02-MAY-2006 12:57:44.27
+          Attr StructName = "Siemens_ET200M_IM153"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Super $Attribute 2 02-MAY-2006 11:49:53.66
+          Body SysBody 02-MAY-2006 11:49:53.66
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_IM153 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 02-MAY-2006 14:01:38.15
+          Attr Super.Specification = "Siemens ET200M IM153"
+          Attr Super.GSDfile = "$pwr_exe/siemens_et200m_im153.gsd"
+          Attr Super.Process = 1
+          Attr Super.ByteOrdering = 1
           Attr Super.StallAction = 1
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
