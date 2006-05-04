@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_td_datarepenum.wb_load,v 1.4 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_td_datarepenum.wb_load,v 1.5 2006-05-04 13:27:18 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -167,6 +167,26 @@ SObject pwrb:Type
        Attr PgmName = "Float64"
        Attr Text = "Float64"
        Attr Value = 13
+     EndBody
+    EndObject
+    !/**
+    !  24-bit signed integer.
+    !*/
+    Object Int24 $Value
+     Body SysBody
+       Attr PgmName = "Int24"
+       Attr Text = "Int24"
+       Attr Value = 14
+     EndBody
+    EndObject
+    !/**
+    !  24-bit unsigned integer.
+    !*/
+    Object UInt24 $Value
+     Body SysBody
+       Attr PgmName = "UInt24"
+       Attr Text = "UInt24"
+       Attr Value = 15
      EndBody
     EndObject
   EndObject
