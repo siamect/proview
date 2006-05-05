@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.13 2006-02-08 13:56:41 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.14 2006-05-05 11:32:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,7 +151,7 @@ void wb_pkg::readConfig()
         pkg_node &n = getNode( line_item[1]);
 
 	// Add ld_node file
-	sprintf( fname, load_cNameNode, load_cDirectory, n.bus());
+	sprintf( fname, load_cNameNode, load_cDirectory, n.name(), n.bus());
 	pkg_pattern pnode( fname, "", 'E');
 	n.push_back( pnode);
 

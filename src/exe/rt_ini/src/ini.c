@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.23 2005-11-14 16:36:35 claes Exp $
+ * Proview   $Id: ini.c,v 1.24 2006-05-05 11:31:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -799,7 +799,7 @@ ini_CheckContext (
   cp->bootfile.logOpenFail = errh_LogFatal;
 
   if (!cp->flags.b.nodefile)
-    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cp->busid);
+    sprintf(cp->nodefile.name, dbs_cNameNode, cp->dir, cp->nodename, cp->busid);
   cdh_ToLower(cp->nodefile.name, cp->nodefile.name);
   cp->nodefile.errcount = &cp->fatals;
   cp->nodefile.logOpenFail = errh_LogFatal;

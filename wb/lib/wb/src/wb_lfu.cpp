@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.2 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.3 2006-05-05 11:32:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
+
 #if defined OS_VMS
 #include <starlet.h>
 #include <libdef.h>
@@ -54,12 +56,13 @@
 #include "wb_gcg.h"
 #include "co_wow.h"
 #include "wb_trv.h"
-#include "co_api.h"
 #include "co_dbs.h"
+#include "co_msgwindow.h"
 
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_session.h"
+#include "wb_object.h"
 #include "wb_vrepdb.h"
 
 #include <Xm/Xm.h>
@@ -73,6 +76,20 @@
 #define LFU_MAX_NODE_VOLUMES  	100
 #define LFU_MAX_BUS  		50
 #define LFU_MAX_VOLREF 		40
+
+class lfu_nodeconf {
+public:
+  lfu_nodeconf() : isfriend(0), port(0), vid(0)
+  { strcpy( address, ""); strcpy( nodename, "");}
+  int isfriend;
+  pwr_tOid oid;
+  pwr_tEnum operatingsystem;
+  pwr_tString80 nodename;
+  pwr_tString16 address;
+  pwr_tUInt32 port;
+  pwr_tVid vid;
+};
+      
 
 typedef struct {
   char name[32];
@@ -619,7 +636,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	nodeobjid;
   pwr_tObjid	busobjid;
   char		*nodename_ptr;
-  char		*volume_ptr;
   pwr_tUInt32	*os_ptr;
   pwr_tUInt32	os;
   pwr_tUInt32	*bus_number_ptr;
@@ -649,8 +665,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	distrobjid;
   pwr_tVolumeId	volume_id;
   lfu_eDistrSts	distr_status;
-  char		*address_ptr;
-  pwr_tUInt32	*port_ptr;
   char		fname[200];
   char          path[80];
   int           path_file_created = 0;
@@ -774,7 +788,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    char msg[200];
             sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
  volume list", name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	  }
         }
@@ -856,7 +870,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	char msg[200];
 	sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
  volume list", name);
-	msgw_message( 'E', msg, msgw_ePop_Default);
+	MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	syntax_error = 1;
       }
       else {
@@ -901,7 +915,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	      char msg[200];
 	      sprintf( msg, "Error, Volume '%s' is not yet created.", 
 		      volume_name);
-	      msgw_message( 'E', msg, msgw_ePop_Default);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    }
 	  }
 	  break;
@@ -919,7 +933,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( wblfile == 0) {
 	      char msg[200];
 	      sprintf( msg, "Error, unable to create file %s, ", fname);
-	      msgw_message( 'E', msg, msgw_ePop_Default);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	      break;
 	    }	    
 
@@ -947,7 +961,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     if ( !fpath) {
       char msg[200];
       sprintf( msg, "Unable to open path file %s\n", filename);
-      msgw_message( 'E', msg, msgw_ePop_Default);
+      MsgWindow::message( 'E', msg, msgw_ePop_Default);
       syntax_error = 1;
     }
     else
@@ -961,7 +975,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   {
     char msg[200];
     sprintf( msg, "** Error, Unable to open file %s", fname);
-    msgw_message( 'E', msg, msgw_ePop_Default);
+    MsgWindow::message( 'E', msg, msgw_ePop_Default);
     return LFU__NOFILE;
   }
 
@@ -987,7 +1001,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       if ( *bus_number_ptr == 0) {
 	char msg[200];
         sprintf( msg, "Error in Bus object '%s', BusNumber is missing", bus_name);
-	msgw_message( 'E', msg, msgw_ePop_Default);
+	MsgWindow::message( 'E', msg, msgw_ePop_Default);
         syntax_error = 1;
       }
 
@@ -1010,7 +1024,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( !strcmp( nodename_ptr, "")) {
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', NodeName is not valid", nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	    free( nodename_ptr);
 	    nodename_ptr = null_nodename;
@@ -1032,7 +1046,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		 os == pwr_mOpSys_AXP_LINUX)) {
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', OperatingSystem is not valid", nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	    os = 0;
 	  }
@@ -1052,7 +1066,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( *scantime_ptr == 0) {
 	      char msg[200];
 	      sprintf( msg, "Error in NodeConfig object '%s', SimulateSingleScanTime is missing", nodeconfig_name);
-	      msgw_message( 'E', msg, msgw_ePop_Default);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	      syntax_error = 1;
 	    }
 	    scantime = *scantime_ptr;
@@ -1116,7 +1130,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		char msg[200];
 		sprintf( msg, "Error in VolumeLoad object,  '%s' is not configured in the global\
  volume list", name);
-		msgw_message( 'E', msg, msgw_ePop_Default);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
 		syntax_error = 1;
 	      }
 	    }
@@ -1138,11 +1152,289 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   system( "purge/nolog " load_cNameBootList);
 #endif
 
-  /* Generate data for nodefiles */
+  // Generate data for nodefiles */
 
-  /* Get the configured nodes */
+  // Find all BusConfig objects */
+  wb_session *sp = (wb_session*)ldhses;
+  pwr_tUInt32 bus_number;
 
-  /* Find all busses */
+  for ( wb_object buso = sp->object(); buso; buso = buso.after()) {
+    if ( buso.cid() != pwr_cClass_BusConfig)
+      continue;
+
+    wb_attribute a = sp->attribute( buso.oid(), "RtBody", "BusNumber");
+    if ( !a) return a.sts();
+
+    a.value( &bus_number);
+    if ( !a) return a.sts();
+
+    if ( bus_number == 0) 
+      continue;
+
+    // Get all nodeconfig and friendnodes for this bus
+    vector<lfu_nodeconf> nodevect;
+    int node_cnt = 0;
+    for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
+
+      switch ( nodeo.cid()) {
+      case pwr_cClass_NodeConfig: {
+	pwr_tString80 volstr;
+	lfu_nodeconf nc;
+
+	nc.oid = nodeo.oid();
+
+	// Get attribute NodeName
+	a = sp->attribute( nodeo.oid(), "RtBody", "NodeName");
+	if ( !a) return a.sts();
+
+	a.value( nc.nodename);
+	if ( !a) return sts;
+
+	// Get attribute OperatingSystem
+	a = sp->attribute( nodeo.oid(), "RtBody", "OperatingSystem");
+	if ( !a) return a.sts();
+
+	a.value( &nc.operatingsystem);
+	if ( !a) return sts;
+
+	// Get attribute Address
+	a = sp->attribute( nodeo.oid(), "RtBody", "Address");
+	if ( !a) return a.sts();
+
+	a.value( nc.address);
+	if ( !a) return sts;
+
+	// Get attribute Port
+	a = sp->attribute( nodeo.oid(), "RtBody", "Port");
+	if ( !a) return a.sts();
+
+	a.value( &nc.port);
+	if ( !a) return sts;
+	
+	if ( !strcmp( nc.nodename, "")) {
+	  char msg[200];
+	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
+		   nodeo.longName().c_str());
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+
+	// Get rootvolume
+	found = 0;
+	for ( wb_object volo = nodeo.first(); volo; volo = volo.after()) {
+	  if ( volo.cid() == pwr_cClass_RootVolumeLoad) {
+	    strcpy( volstr, volo.name());
+
+	    /* Check that the name is in the global volume list */
+	    found = 0;
+	    volumelist_ptr = volumelist;
+	    for ( i = 0; i < volumecount; i++) {
+	      if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
+		nc.vid = volumelist_ptr->volume_id;
+		found = 1;
+		break;
+	      }
+	      volumelist_ptr++;
+	    }
+	  }
+	}
+	if ( !found) {
+	  char msg[200];
+	  sprintf( msg, "No valid RootVolume configured for object '%s'\n",
+		   nodeo.longName().c_str());
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+
+	nodevect.push_back( nc);
+	node_cnt++;
+
+	break;
+      }
+      case pwr_cClass_FriendNodeConfig: {
+	pwr_tString80 volstr;
+	lfu_nodeconf nc;
+
+	nc.oid = nodeo.oid();
+	nc.isfriend = 1;
+
+	// Get attribute NodeName
+	a = sp->attribute( nodeo.oid(), "RtBody", "NodeName");
+	if ( !a) return a.sts();
+
+	a.value( nc.nodename);
+	if ( !a) return sts;
+
+	// Get attribute Address
+	a = sp->attribute( nodeo.oid(), "RtBody", "Address");
+	if ( !a) return a.sts();
+
+	a.value( nc.address);
+	if ( !a) return sts;
+
+	// Get attribute Port
+	a = sp->attribute( nodeo.oid(), "RtBody", "Port");
+	if ( !a) return a.sts();
+
+	a.value( &nc.port);
+	if ( !a) return sts;
+	
+	// Get attribute Volume
+	a = sp->attribute( nodeo.oid(), "RtBody", "Volume");
+	if ( !a) return a.sts();
+
+	a.value( volstr);
+	if ( !a) return sts;
+	
+	/* Check that the name is in the global volume list */
+	found = 0;
+	volumelist_ptr = volumelist;
+	for ( i = 0; i < volumecount; i++) {
+	  if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
+	    nc.vid = volumelist_ptr->volume_id;
+	    found = 1;
+	    break;
+	  }
+	  volumelist_ptr++;
+	}
+
+	if ( !found) {
+	  char msg[200];
+	  sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+
+	if ( !strcmp( nc.nodename, "")) {
+	  char msg[200];
+	  sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
+		   nodeo.longName().c_str());
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+	nodevect.push_back( nc);
+	node_cnt++;
+	break;
+      }
+      default: ;
+      }
+    }
+    // Print file
+    for ( wb_object nodeo = buso.first(); nodeo; nodeo = nodeo.after()) {
+
+      switch ( nodeo.cid()) {
+      case pwr_cClass_NodeConfig: {
+	FILE *fp;
+	int idx;
+	int found = 0;
+
+	for ( idx = 0; idx < (int)nodevect.size(); idx++) {
+	  if ( cdh_ObjidIsEqual( nodevect[idx].oid, nodeo.oid())) {
+	    found = 1;
+	    break;
+	  }
+	}	       
+	if ( !found)
+	  return 0;
+
+	sprintf( filename, load_cNameNode, load_cDirectory, nodevect[idx].nodename, bus_number);
+	dcli_translate_filename( fname, filename);
+        fp = fopen( fname, "w");
+	if ( fp == 0) {
+	  char msg[200];
+	  sprintf( msg, "Error, Unable to open file %s\n", fname);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  return LFU__NOFILE;
+	}
+
+	for ( int i = 0; i < (int)nodevect.size(); i++) {
+	  lfu_nodeconf nc = nodevect[i];
+	  if ( nc.port == 0)
+	    fprintf( fp, "%s %s %s\n", nc.nodename, 
+		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address);
+	  else
+	    fprintf( fp, "%s %s %s %d\n", nc.nodename, 
+		     cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port);
+	}
+
+	// Add specific FriendNodes for the node
+	for ( wb_object fnodeo = nodeo.first(); fnodeo; fnodeo = fnodeo.after()) {
+	  switch ( fnodeo.cid()) {
+	  case pwr_cClass_FriendNodeConfig: {
+	    pwr_tString80 volstr;
+	    lfu_nodeconf nc;
+
+	    nc.isfriend = 1;
+
+	    // Get attribute NodeName
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "NodeName");
+	    if ( !a) return a.sts();
+	  
+	    a.value( nc.nodename);
+	    if ( !a) return sts;
+
+	    // Get attribute Address
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "Address");
+	    if ( !a) return a.sts();
+
+	    a.value( nc.address);
+	    if ( !a) return sts;
+
+	    // Get attribute Port
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "Port");
+	    if ( !a) return a.sts();
+
+	    a.value( &nc.port);
+	    if ( !a) return sts;
+	  
+	    // Get attribute Volume
+	    a = sp->attribute( fnodeo.oid(), "RtBody", "Volume");
+	    if ( !a) return a.sts();
+
+	    a.value( volstr);
+	    if ( !a) return sts;
+	
+	    /* Check that the name is in the global volume list */
+	    found = 0;
+	    volumelist_ptr = volumelist;
+	    for ( int j = 0; j < volumecount; j++) {
+	      if ( cdh_NoCaseStrcmp( volstr, volumelist_ptr->volume_name) == 0) {
+		nc.vid = volumelist_ptr->volume_id;
+		found = 1;
+		break;
+	      }
+	      volumelist_ptr++;
+	    }
+
+	    if ( !found) {
+	      char msg[200];
+	      sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      syntax_error = 1;
+	    }
+
+	    if ( nc.port == 0)
+	      fprintf( fp, "%s %s %s\n", nc.nodename, 
+		       cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address);
+	    else
+	      fprintf( fp, "%s %s %s %d\n", nc.nodename, 
+		      cdh_VolumeIdToString( NULL, nc.vid, 0, 0), nc.address, nc.port);
+	    break;
+	  }
+	  default: ;
+	  }
+	}
+	fclose( fp);
+	break;
+      }
+      default: ;
+      }
+    }
+    
+  }
+    
+#if 0
+
   sts = ldh_GetRootList( ldhses, &busobjid);
   while ( ODD(sts)) {
     FILE *nodefile;
@@ -1169,7 +1461,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
       if ( nodefile == 0) {
 	char msg[200];
 	sprintf( msg, "Error, Unable to open file %s\n", fname);
-	msgw_message( 'E', msg, msgw_ePop_Default);
+	MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	return LFU__NOFILE;
       }
 
@@ -1192,7 +1484,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', NodeName is missing\n",
 		     nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	    free( nodename_ptr);
 	    nodename_ptr = null_nodename;
@@ -1206,7 +1498,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( strcmp( address_ptr, "") == 0) {
 	    char msg[200];
 	    sprintf( msg, "Error in NodeConfig object '%s', Address is not valid", nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	  }
 
@@ -1270,7 +1562,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    char msg[200];
 	    sprintf( msg, "Error in FriendNodeConfig object '%s', NodeName is missing",
 		     nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	    free( nodename_ptr);
 	    nodename_ptr = null_nodename;
@@ -1284,7 +1576,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( strcmp( address_ptr, "") == 0) {
 	    char msg[200];
 	    sprintf( msg, "Error in FriendNodeConfig object '%s', Address is not valid", nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	  }
 	  
@@ -1301,7 +1593,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( *volume_ptr == 0) {
 	    char msg[200];
 	    sprintf( msg, "Error in FriendNodeConfig object '%s', Volume is not valid", nodeconfig_name);
-	    msgw_message( 'E', msg, msgw_ePop_Default);
+	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	    syntax_error = 1;
 	  }
 	  else {
@@ -1333,7 +1625,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    if ( !found) {
 	      char msg[200];
 	      sprintf( msg, "Error in FriendNodeConfig object '%s', Unknown volume", nodeconfig_name);
-	      msgw_message( 'E', msg, msgw_ePop_Default);
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
 	      syntax_error = 1;
 	    }
 	  }
@@ -1350,6 +1642,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
     }
     sts = ldh_GetNextSibling( ldhses, busobjid, &busobjid);
   }
+#endif
+
   /* Generate data for distribution */
   dcli_translate_filename( fname, load_cNameDistribute);
   file = fopen( fname, "w");
@@ -1357,7 +1651,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   {
     char msg[200];
     sprintf( msg, "Error, Unable to open file %s", fname);
-    msgw_message( 'E', msg, msgw_ePop_Default);
+    MsgWindow::message( 'E', msg, msgw_ePop_Default);
     return LFU__NOFILE;
   }
 
@@ -1368,14 +1662,14 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   {
     char msg[200];
     sprintf( msg, "Error in System object, object is missing");
-    msgw_message( 'E', msg, msgw_ePop_Default);
+    MsgWindow::message( 'E', msg, msgw_ePop_Default);
     syntax_error = 1;
   }
   if ( !strcmp( systemname, ""))
   {
     char msg[200];
     sprintf( msg, "Error in System object, SystemName is missing");
-    msgw_message( 'E', msg, msgw_ePop_Default);
+    MsgWindow::message( 'E', msg, msgw_ePop_Default);
     syntax_error = 1;
   }
 
@@ -1556,7 +1850,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		source_ptr = null_nodename;
 		sprintf( msg, "Error in ApplDistribute object '%s', Source is missing", 
 			 appl_name);
-		msgw_message( 'E', msg, msgw_ePop_Default);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
 		syntax_error = 1;
 	      }         
 	      /* Check Target attribute */
@@ -1710,7 +2004,7 @@ static void lfu_creadb_qb_yes( void *ctx, void *d)
   sts = ldh_CreateVolume( ldh_SessionToWB( data->ldhses), &ses, data->vid,
 			  data->name, data->cid);
   if ( EVEN(sts)) {
-    msgw_message( 'E', "Unable to create volume", msgw_ePop_Default);
+    MsgWindow::message( 'E', "Unable to create volume", msgw_ePop_Default);
   }
 
   ldh_CloseSession( ses);
@@ -1725,7 +2019,7 @@ static void lfu_creadb_qb_yes( void *ctx, void *d)
     wb_volume vdb = env.createVolume( data->vid, data->cid, data->name, false);
   }
   catch ( wb_error &e) {
-    msgw_message( 'E', "Unable to create volume", msgw_ePop_Default);
+    MsgWindow::message( 'E', "Unable to create volume", msgw_ePop_Default);
   }
   free( (char *) data);
 }
@@ -1763,7 +2057,7 @@ int lfu_create_bootfiles (
 		&volumelist, &volumecount);
 	if (sts == LFU__NOFILE) 
 	{
-	  msgw_message( 'E', "Project is not configured", msgw_ePop_Default);
+	  MsgWindow::message( 'E', "Project is not configured", msgw_ePop_Default);
 	  return sts;
   	}
 	else if (EVEN(sts)) return sts;

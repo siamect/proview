@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_load.x,v 1.4 2005-09-01 14:57:55 claes Exp $
+% * Proview   $Id: rt_load.x,v 1.5 2006-05-05 11:31:54 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -80,7 +80,7 @@
 %#define	load_cNameAlias		"%spwrp_alias.dat"
 %#define	load_cNameAppl		"%sld_appl_%s_%d.txt"
 %#define	load_cNameBoot		"%sld_boot_%s_%04d.dat"
-%#define	load_cNameNode		"%sld_node_%04d.dat"
+%#define	load_cNameNode		"%sld_node_%s_%04d.dat"
 %#define	load_cNameRc		"%sld_rc_%s_%04d.dat"
 %
 %
