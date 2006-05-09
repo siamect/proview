@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.33 2006-02-23 14:40:33 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.34 2006-05-09 05:43:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -729,8 +729,134 @@ pwr_tStatus wb_volume::triggPostUnadopt( wb_object& father, wb_object& o)
 
 ldh_sRefInfo *wb_volume::refinfo( wb_object o, ldh_sRefInfo *rp)
 {
+  int rows;
   memset( rp, 0, sizeof(*rp));
 
+  wb_cdef c = cdef( o);
+  wb_bdef b = c.bdef( pwr_eBix_rt);
+  if (!b) return rp;
+  
+  wb_attribute body = wb_attribute( b.sts(), (wb_orep *)o, b.name());
+  char *bp = (char *)body.value(0);
+  pwr_tOid oid;
+  pwr_sAttrRef attrref;
+
+  wb_adef asuper[20];
+  int scnt = 0;
+  asuper[scnt++] = b.adef();
+  if ( asuper[scnt-1] && asuper[scnt-1].isSuperClass()) {
+    // Count rows
+    rows = 0;
+    while ( asuper[scnt-1] && asuper[scnt-1].isSuperClass()) {
+      wb_cdef subc = cdef( asuper[scnt-1].subClass());
+      wb_bdef subb = subc.bdef(pwr_eBix_rt);
+      rows += subb.nAttribute() - 1;
+      asuper[scnt++] = subb.adef();
+    }
+    rows += b.nAttribute();
+
+    int j = 0;
+    for ( int i = scnt - 1; i >= 0; i--) {
+      for (wb_adef a = asuper[i]; a; a = a.next()) {
+	if ( a && a.isSuperClass())
+	  continue;
+
+	switch ( a.cid()) {
+	case pwr_eClass_Input:
+	case pwr_eClass_Output:
+	case pwr_eClass_Intern:
+	case pwr_eClass_Param:
+	  switch ( a.type()) {
+	  case pwr_eType_Objid:
+	    for ( int i = 0; i < a.nElement(); i++) {
+	      rp->ObjRef.Total++;
+	      oid = *(pwr_tOid *)(bp + a.offset() + i * a.size() / a.nElement());
+	      if ( cdh_ObjidIsNotNull( oid)) {
+		rp->ObjRef.Used++;
+		wb_object otst = object(oid);
+		if ( !otst)
+		  rp->ObjRef.Errors++;
+	      }
+	    }
+	    break;
+	  case pwr_eType_AttrRef:
+	    for ( int i = 0; i < a.nElement(); i++) {
+	      rp->ObjRef.Total++;
+	      attrref = *(pwr_sAttrRef *)(bp + a.offset() + i * a.size() / a.nElement());
+	      if ( cdh_ObjidIsNotNull( attrref.Objid)) {
+		rp->ObjRef.Used++;
+		wb_object otst = object(attrref.Objid);
+		if ( !otst)
+		  rp->ObjRef.Errors++;
+	      }
+	    }
+	    break;
+	  default: ;
+	  }
+	  break;
+	case pwr_eClass_AttrXRef:
+	  // TODO
+	  break;
+	case pwr_eClass_ObjXRef:
+	  // TODO
+	  break;
+	default: ;
+	}
+      }
+      if ( j > rows)
+	// Something is wrong
+	break;
+    }
+  }
+  else {  
+    rows = b.nAttribute();
+
+    for (wb_adef a = b.adef(); a; a = a.next()) {
+      switch ( a.cid()) {
+      case pwr_eClass_Input:
+      case pwr_eClass_Output:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Param:
+	switch ( a.type()) {
+	case pwr_eType_Objid:
+	  for ( int i = 0; i < a.nElement(); i++) {
+	    rp->ObjRef.Total++;
+	    oid = *(pwr_tOid *)(bp + a.offset() + i * a.size() / a.nElement());
+	    if ( cdh_ObjidIsNotNull( oid)) {
+	      rp->ObjRef.Used++;
+	      wb_object otst = object(oid);
+	      if ( !otst)
+		rp->ObjRef.Errors++;
+	    }
+	  }
+	  break;
+	case pwr_eType_AttrRef:
+	  for ( int i = 0; i < a.nElement(); i++) {
+	    rp->ObjRef.Total++;
+	    attrref = *(pwr_sAttrRef *)(bp + a.offset() + i * a.size() / a.nElement());
+	    if ( cdh_ObjidIsNotNull( attrref.Objid)) {
+	      rp->ObjRef.Used++;
+	      wb_object otst = object(attrref.Objid);
+	      if ( !otst)
+		rp->ObjRef.Errors++;
+	    }
+	  }
+	  break;
+	default: ;
+	}
+	break;
+      case pwr_eClass_AttrXRef:
+	// TODO
+	break;
+      case pwr_eClass_ObjXRef:
+	// TODO
+	break;
+      default: ;
+      }
+    }
+  }    
+
+#if 0
   wb_cdef cd = cdef( o);
   wb_bdef bd = cd.bdef( pwr_eBix_rt);
   if (!bd) return rp;
@@ -785,6 +911,7 @@ ldh_sRefInfo *wb_volume::refinfo( wb_object o, ldh_sRefInfo *rp)
     }
     ad = ad.next();
   }
+#endif
   return rp;
 }
 
