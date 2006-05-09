@@ -1,6 +1,6 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X8089"
+    Attr NextOix = "_X8121"
     Attr NextCix = "_X148"
     Attr NextTix[0] = "_X12"
   EndBody
@@ -932,7 +932,7 @@ Volume BaseComponent $ClassVolume 0.0.0.10
       Object RtBody $ObjBodyDef 1 08-SEP-2005 13:01:47.00
         Body SysBody 01-JAN-1970 01:00:00.00
           Attr StructName = "CompLimit"
-          Attr NextAix = "_X7"
+          Attr NextAix = "_X8"
         EndBody
         !/**
         !  Alarmtext when the limit is passed.
@@ -986,6 +986,12 @@ Volume BaseComponent $ClassVolume 0.0.0.10
           Body SysBody 20-DEC-2005 15:17:31.10
             Attr PgmName = "Status"
             Attr Flags = 1024
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object DisableAlarm $Attribute 7 09-MAY-2006 07:18:27.44
+          Body SysBody 09-MAY-2006 07:18:29.52
+            Attr PgmName = "DisableAlarm"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
@@ -49594,7 +49600,7 @@ and no Auto/Man button."
       Object Code PlcTemplate 1180 08-SEP-2005 13:01:47.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
-        Body DevBody 30-NOV-2005 07:59:49.34
+        Body DevBody 09-MAY-2006 07:52:19.42
           Buffer PlcProgram
             Attr oid = "BaseComponent:Class-BaseSensorFo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -49603,7 +49609,7 @@ and no Auto/Man button."
             Attr defnamecount[60] = 2
             Attr defnamecount[64] = 4
             Attr defnamecount[71] = 1
-            Attr defnamecount[90] = 15
+            Attr defnamecount[90] = 19
             Attr defnamecount[91] = 12
             Attr defnamecount[93] = 3
             Attr defnamecount[97] = 4
@@ -49611,25 +49617,25 @@ and no Auto/Man button."
             Attr defnamecount[123] = 4
             Attr defnamecount[124] = 2
             Attr defnamecount[136] = 4
-            Attr defnamecount[137] = 17
+            Attr defnamecount[137] = 21
             Attr defnamecount[138] = 1
             Attr defnamecount[139] = 10
             Attr defnamecount[253] = 13
             Attr defnamecount[255] = 22
-            Attr defnamecount[256] = 74
+            Attr defnamecount[256] = 78
             Attr defnamecount[257] = 2
             Attr defnamecount[258] = 6
             Attr defnamecount[263] = 9
             Attr defnamecount[264] = 9
             Attr defnamecount[266] = 2
-            Attr connamecount = 213
+            Attr connamecount = 233
           EndBuffer
         EndBody
         Object W WindowPlc 1181 08-SEP-2005 13:01:47.00
           Body RtBody 01-JAN-1970 01:00:00.00
           EndBody
-          Body DevBody 30-NOV-2005 07:59:49.34
-            Attr Modified = "30-NOV-2005 07:59:49.34"
+          Body DevBody 09-MAY-2006 07:52:19.42
+            Attr Modified = "09-MAY-2006 07:52:19.42"
             Buffer PlcWindow
               Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -49639,24 +49645,198 @@ and no Auto/Man button."
               Attr refconcount = 1
             EndBuffer
           EndBody
-          Object cn212 ConDigital 4056 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+          Object cn232 ConDigital 8121 09-MAY-2006 07:47:56.24
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn212"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn232"
                 Attr object_type = 23
                 Attr cid = "pwrb:Class-ConDigital"
                 Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp73"
-                Attr dest_point = 2
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
-                Attr point_count = 2
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And17"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
+                Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.270000e+00
-                  Attr y = 6.750000e+00
+                  Attr x = 1.399000e+00
+                  Attr y = 9.100000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.170889e+00
-                  Attr y = 6.750000e+00
+                  Attr x = 2.008722e+00
+                  Attr y = 9.100000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.008722e+00
+                  Attr y = 8.800000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.070000e+00
+                  Attr y = 8.800000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn231 ConDigital 8120 09-MAY-2006 07:47:50.84
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn231"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And16"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.070000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.241945e+00
+                  Attr y = 8.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.320000e+00
+                  Attr y = 8.700000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn230 ConDigital 8119 09-MAY-2006 07:47:23.38
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn230"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And18"
+                Attr dest_point = 1
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.041111e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.041111e+00
+                  Attr y = 8.100000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.070000e+00
+                  Attr y = 8.100000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn229 ConDigital 8118 09-MAY-2006 07:47:21.07
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn229"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And15"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.070000e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.200556e+00
+                  Attr y = 7.900000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.320000e+00
+                  Attr y = 7.900000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn228 ConDigital 8117 09-MAY-2006 07:44:44.00
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn228"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And18"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp77"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.184222e+00
+                  Attr y = 8.450000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.450000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -49678,8 +49858,492 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
+          Object cn226 ConDigital 8113 09-MAY-2006 07:44:32.14
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn226"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And18"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.499972e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.499972e+00
+                  Attr y = 8.350000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 8.350000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn225 ConDigital 8112 09-MAY-2006 07:44:30.60
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn225"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp63"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And18"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.102000e+00
+                  Attr y = 8.400000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn224 ConDigital 8110 09-MAY-2006 07:44:11.36
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn224"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And17"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp76"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.168667e+00
+                  Attr y = 9.150000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.220000e+00
+                  Attr y = 9.150000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn222 ConDigital 8106 09-MAY-2006 07:44:00.08
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn222"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And17"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 9.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.474778e+00
+                  Attr y = 9.100000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.474778e+00
+                  Attr y = 9.050000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 9.050000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn221 ConDigital 8105 09-MAY-2006 07:43:58.63
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn221"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp62"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And17"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 9.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.086444e+00
+                  Attr y = 9.100000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn220 ConDigital 8103 09-MAY-2006 07:43:43.30
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn220"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And16"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp75"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.173111e+00
+                  Attr y = 8.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn218 ConDigital 8099 09-MAY-2006 07:43:30.34
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn218"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And16"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.491278e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.491278e+00
+                  Attr y = 8.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 8.700000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn217 ConDigital 8098 09-MAY-2006 07:43:22.73
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn217"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp61"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And16"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.090889e+00
+                  Attr y = 8.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn216 ConDigital 8096 09-MAY-2006 07:43:05.20
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn216"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And15"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.399000e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.476000e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.476000e+00
+                  Attr y = 8.000000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.520000e+00
+                  Attr y = 8.000000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn215 ConDigital 8095 09-MAY-2006 07:42:54.46
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn215"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp60"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And15"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.110889e+00
+                  Attr y = 8.050000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn214 ConDigital 8094 09-MAY-2006 07:42:48.84
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn214"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-And15"
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp74"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.193111e+00
+                  Attr y = 8.100000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.220000e+00
+                  Attr y = 8.100000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn212 ConDigital 4056 08-SEP-2005 13:01:47.00
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcConnection
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn212"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp73"
+                Attr dest_point = 2
+                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.920000e+00
+                  Attr y = 6.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.170889e+00
+                  Attr y = 6.750000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.955868e+00
+                  Attr y = 6.700000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.970000e+00
+                  Attr y = 6.700000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn211 ConDigital 4054 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn211"
                 Attr object_type = 23
@@ -49690,7 +50354,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.220000e+00
+                  Attr x = 1.920000e+00
                   Attr y = 6.100000e+00
                 EndBuffer
                 Buffer point[1]
@@ -49718,7 +50382,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn210 ConDigital 4052 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn210"
                 Attr object_type = 23
@@ -49729,7 +50393,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.070000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 4.250000e+00
                 EndBuffer
                 Buffer point[1]
@@ -49757,7 +50421,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn209 ConDigital 4050 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn209"
                 Attr object_type = 23
@@ -49772,7 +50436,7 @@ and no Auto/Man button."
                   Attr y = 3.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.020000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 3.600000e+00
                 EndBuffer
                 Buffer point[2]
@@ -49871,162 +50535,8 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
-          Object cn203 ConDigital 1182 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn203"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp67"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.090889e+00
-                  Attr y = 9.450000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 9.450000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn202 ConDigital 1183 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn202"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp66"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.086444e+00
-                  Attr y = 9.500000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 9.500000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn201 ConDigital 1184 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn201"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_point = 1
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp65"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.102000e+00
-                  Attr y = 9.300000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 9.300000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn200 ConDigital 1185 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn200"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp64"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.110889e+00
-                  Attr y = 9.250000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 9.250000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn199 ConDigital 1186 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn199"
                 Attr object_type = 23
@@ -50037,12 +50547,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp20"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 9.450000e+00
+                  Attr x = 2.320000e+00
+                  Attr y = 8.750000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.500667e+00
-                  Attr y = 9.450000e+00
+                  Attr x = 2.250667e+00
+                  Attr y = 8.750000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -50065,7 +50575,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn198 ConDigital 1187 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn198"
                 Attr object_type = 23
@@ -50076,12 +50586,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp19"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 9.250000e+00
+                  Attr x = 2.320000e+00
+                  Attr y = 8.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.499000e+00
-                  Attr y = 9.250000e+00
+                  Attr x = 2.249000e+00
+                  Attr y = 8.050000e+00
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -50104,7 +50614,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn191 ConDigital 1188 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn191"
                 Attr object_type = 23
@@ -50115,19 +50625,19 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.868000e+00
+                  Attr x = 1.718000e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.959222e+00
+                  Attr x = 1.769000e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.959222e+00
+                  Attr x = 1.769000e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.020000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[4]
@@ -50147,7 +50657,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn190 ConAnalog 1189 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn190"
                 Attr object_type = 24
@@ -50158,11 +50668,11 @@ and no Auto/Man button."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.148667e+00
-                  Attr y = 8.950000e+00
+                  Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 8.950000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.246056e+00
@@ -50193,7 +50703,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn189 ConAnalog 1190 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn189"
                 Attr object_type = 24
@@ -50204,12 +50714,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.320000e+00
-                  Attr y = 9.000000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 8.300000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.027667e+00
-                  Attr y = 9.000000e+00
+                  Attr y = 8.300000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.124324e+00
@@ -50236,7 +50746,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn188 ConAnalog 1191 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn188"
                 Attr object_type = 24
@@ -50247,12 +50757,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp8"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 8.950000e+00
+                  Attr x = 1.520000e+00
+                  Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.529556e+00
-                  Attr y = 8.950000e+00
+                  Attr x = 1.429556e+00
+                  Attr y = 8.250000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.941278e+00
@@ -50278,50 +50788,8 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
-          Object cn187 ConDigital 1192 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn187"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp63"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 9.000000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.584500e+00
-                  Attr y = 9.000000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.584500e+00
-                  Attr y = 9.100000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.102000e+00
-                  Attr y = 9.100000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn186 ConAnalog 1193 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn186"
                 Attr object_type = 24
@@ -50332,11 +50800,11 @@ and no Auto/Man button."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.133111e+00
-                  Attr y = 8.600000e+00
+                  Attr y = 8.950000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 8.600000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 8.950000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.246056e+00
@@ -50367,7 +50835,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn185 ConAnalog 1194 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn185"
                 Attr object_type = 24
@@ -50378,12 +50846,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.320000e+00
-                  Attr y = 8.650000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 9.000000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.027667e+00
-                  Attr y = 8.650000e+00
+                  Attr y = 9.000000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.124324e+00
@@ -50410,7 +50878,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn184 ConAnalog 1195 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn184"
                 Attr object_type = 24
@@ -50421,12 +50889,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp7"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 8.600000e+00
+                  Attr x = 1.520000e+00
+                  Attr y = 8.950000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.529556e+00
-                  Attr y = 8.600000e+00
+                  Attr x = 1.429556e+00
+                  Attr y = 8.950000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.941278e+00
@@ -50452,50 +50920,8 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
-          Object cn183 ConDigital 1196 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn183"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp62"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 8.650000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.599778e+00
-                  Attr y = 8.650000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.599778e+00
-                  Attr y = 8.750000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.086444e+00
-                  Attr y = 8.750000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn182 ConAnalog 1197 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn182"
                 Attr object_type = 24
@@ -50506,11 +50932,11 @@ and no Auto/Man button."
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.137556e+00
-                  Attr y = 8.250000e+00
+                  Attr y = 8.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 8.250000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 8.600000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.246056e+00
@@ -50541,7 +50967,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn181 ConAnalog 1198 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn181"
                 Attr object_type = 24
@@ -50552,12 +50978,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.320000e+00
-                  Attr y = 8.300000e+00
+                  Attr x = 1.220000e+00
+                  Attr y = 8.650000e+00
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.027667e+00
-                  Attr y = 8.300000e+00
+                  Attr y = 8.650000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.124324e+00
@@ -50584,7 +51010,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn180 ConAnalog 1199 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn180"
                 Attr object_type = 24
@@ -50595,12 +51021,12 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp6"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 8.250000e+00
+                  Attr x = 1.520000e+00
+                  Attr y = 8.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.529556e+00
-                  Attr y = 8.250000e+00
+                  Attr x = 1.429556e+00
+                  Attr y = 8.600000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.941278e+00
@@ -50609,48 +51035,6 @@ and no Auto/Man button."
                 Buffer point[3]
                   Attr x = 2.220000e+00
                   Attr y = 7.950000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn179 ConDigital 1200 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn179"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp61"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 8.300000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.599778e+00
-                  Attr y = 8.300000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.599778e+00
-                  Attr y = 8.400000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.090889e+00
-                  Attr y = 8.400000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -50669,7 +51053,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn178 ConAnalog 1201 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn178"
                 Attr object_type = 24
@@ -50680,11 +51064,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp5"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 1.520000e+00
                   Attr y = 7.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.529556e+00
+                  Attr x = 1.429556e+00
                   Attr y = 7.900000e+00
                 EndBuffer
                 Buffer point[2]
@@ -50711,50 +51095,8 @@ and no Auto/Man button."
               EndBuffer
             EndBody
           EndObject
-          Object cn177 ConDigital 1202 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
-              Buffer PlcConnection
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn177"
-                Attr object_type = 23
-                Attr cid = "pwrb:Class-ConDigital"
-                Attr attributes = 90
-                Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6"
-                Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp60"
-                Attr point_count = 4
-                Buffer point[0]
-                  Attr x = 1.670000e+00
-                  Attr y = 7.950000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.599778e+00
-                  Attr y = 7.950000e+00
-                EndBuffer
-                Buffer point[2]
-                  Attr x = 1.599778e+00
-                  Attr y = 8.050000e+00
-                EndBuffer
-                Buffer point[3]
-                  Attr x = 1.110889e+00
-                  Attr y = 8.050000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
           Object cn169 ConAnalog 1203 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn169"
                 Attr object_type = 24
@@ -50765,7 +51107,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 7.950000e+00
                 EndBuffer
                 Buffer point[1]
@@ -50797,7 +51139,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn168 ConAnalog 1204 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn168"
                 Attr object_type = 24
@@ -50811,7 +51153,7 @@ and no Auto/Man button."
                   Attr y = 7.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 7.900000e+00
                 EndBuffer
                 Buffer point[2]
@@ -50843,7 +51185,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn166 ConDigital 1205 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn166"
                 Attr object_type = 23
@@ -50854,11 +51196,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.770000e+00
+                  Attr x = 1.620000e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.650000e+00
+                  Attr x = 1.500000e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[2]
@@ -50886,7 +51228,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn165 ConAnalog 1206 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn165"
                 Attr object_type = 24
@@ -50896,7 +51238,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp55"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.420000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 6.550000e+00
                 EndBuffer
                 Buffer point[1]
@@ -50928,7 +51270,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn164 ConAnalog 1207 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn164"
                 Attr object_type = 24
@@ -50938,28 +51280,28 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.420000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.215417e+00
+                  Attr x = 1.223778e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.215417e+00
-                  Attr y = 5.550000e+00
+                  Attr x = 1.223778e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[3]
                   Attr x = 1.029778e+00
-                  Attr y = 5.550000e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[4]
-                  Attr x = 1.288069e+00
-                  Attr y = 5.784167e+00
+                  Attr x = 1.166000e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[5]
-                  Attr x = 1.179583e+00
-                  Attr y = 5.784167e+00
+                  Attr x = 1.029778e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[6]
                   Attr x = 1.179583e+00
@@ -50978,7 +51320,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn163 ConAnalog 1208 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn163"
                 Attr object_type = 24
@@ -50989,7 +51331,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.420000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 6.400000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51021,7 +51363,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn162 ConDigital 1209 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn162"
                 Attr object_type = 23
@@ -51032,11 +51374,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.770000e+00
+                  Attr x = 1.570000e+00
                   Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.600000e+00
+                  Attr x = 1.500000e+00
                   Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51064,7 +51406,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn161 ConAnalog 1210 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn161"
                 Attr object_type = 24
@@ -51075,7 +51417,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.370000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 5.750000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51107,7 +51449,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn160 ConAnalog 1211 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn160"
                 Attr object_type = 24
@@ -51115,14 +51457,14 @@ and no Auto/Man button."
                 Attr attributes = 90
                 Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
-                Attr point_count = 4
+                Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.029778e+00
-                  Attr y = 5.550000e+00
+                  Attr x = 1.270000e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.318833e+00
-                  Attr y = 5.550000e+00
+                  Attr x = 1.029778e+00
+                  Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[2]
                   Attr x = 1.318833e+00
@@ -51149,7 +51491,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn157 ConAnalog 1212 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn157"
                 Attr object_type = 24
@@ -51163,7 +51505,7 @@ and no Auto/Man button."
                   Attr y = 5.900000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.370000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 5.900000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51191,7 +51533,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn155 ConAnalog 1213 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn155"
                 Attr object_type = 24
@@ -51205,7 +51547,7 @@ and no Auto/Man button."
                   Attr y = 5.950000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.370000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 5.950000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51229,7 +51571,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn154 ConDigital 1214 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn154"
                 Attr object_type = 23
@@ -51240,11 +51582,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp18"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.470000e+00
+                  Attr x = 2.170000e+00
                   Attr y = 6.000000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.399000e+00
+                  Attr x = 2.099000e+00
                   Attr y = 6.000000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51276,7 +51618,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn153 ConDigital 1215 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn153"
                 Attr object_type = 23
@@ -51287,19 +51629,19 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.993556e+00
+                  Attr x = 1.793556e+00
                   Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.167444e+00
+                  Attr x = 1.874500e+00
                   Attr y = 5.700000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.167444e+00
+                  Attr x = 1.874500e+00
                   Attr y = 6.000000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.220000e+00
+                  Attr x = 1.920000e+00
                   Attr y = 6.000000e+00
                 EndBuffer
                 Buffer point[4]
@@ -51319,7 +51661,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn152 ConDigital 1216 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn152"
                 Attr object_type = 23
@@ -51330,7 +51672,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.220000e+00
+                  Attr x = 1.920000e+00
                   Attr y = 6.050000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51358,7 +51700,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn147 ConAnalog 1217 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn147"
                 Attr object_type = 24
@@ -51372,7 +51714,7 @@ and no Auto/Man button."
                   Attr y = 6.600000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.420000e+00
+                  Attr x = 1.270000e+00
                   Attr y = 6.600000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51396,7 +51738,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn146 ConDigital 1218 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn146"
                 Attr object_type = 23
@@ -51407,19 +51749,19 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 2.009111e+00
+                  Attr x = 1.859111e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.200222e+00
+                  Attr x = 1.889556e+00
                   Attr y = 6.350000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.200222e+00
+                  Attr x = 1.889556e+00
                   Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.270000e+00
+                  Attr x = 1.920000e+00
                   Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[4]
@@ -51439,7 +51781,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn145 ConDigital 1219 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn145"
                 Attr object_type = 23
@@ -51450,7 +51792,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.270000e+00
+                  Attr x = 1.920000e+00
                   Attr y = 6.700000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51458,8 +51800,12 @@ and no Auto/Man button."
                   Attr y = 6.700000e+00
                 EndBuffer
                 Buffer point[2]
+                  Attr x = 1.886292e+00
+                  Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[3]
+                  Attr x = 1.970000e+00
+                  Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -51478,7 +51824,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn144 ConDigital 1220 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn144"
                 Attr object_type = 23
@@ -51489,20 +51835,20 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp17"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.520000e+00
+                  Attr x = 2.170000e+00
                   Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.459556e+00
+                  Attr x = 2.109555e+00
                   Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.854667e+00
-                  Attr y = 3.575000e+00
+                  Attr x = 2.356278e+00
+                  Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.530194e+00
-                  Attr y = 3.575000e+00
+                  Attr x = 2.520000e+00
+                  Attr y = 6.650000e+00
                 EndBuffer
                 Buffer point[4]
                   Attr x = 2.530194e+00
@@ -51525,7 +51871,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn143 ConAnalog 1221 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn143"
                 Attr object_type = 24
@@ -51537,23 +51883,27 @@ and no Auto/Man button."
                 Attr point_count = 4
                 Buffer point[0]
                   Attr x = 9.797778e-01
-                  Attr y = 3.050000e+00
+                  Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.241000e+00
-                  Attr y = 3.050000e+00
+                  Attr x = 1.182111e+00
+                  Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 1.241000e+00
+                  Attr x = 1.182111e+00
                   Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[4]
+                  Attr x = 1.179333e+00
+                  Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[5]
+                  Attr x = 1.220000e+00
+                  Attr y = 3.900000e+00
                 EndBuffer
                 Buffer point[6]
                 EndBuffer
@@ -51568,7 +51918,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn142 ConAnalog 1222 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn142"
                 Attr object_type = 24
@@ -51582,7 +51932,7 @@ and no Auto/Man button."
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51606,7 +51956,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn140 ConAnalog 1223 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn140"
                 Attr object_type = 24
@@ -51620,7 +51970,7 @@ and no Auto/Man button."
                   Attr y = 4.050000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 4.050000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51648,7 +51998,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn139 ConDigital 1224 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn139"
                 Attr object_type = 23
@@ -51659,11 +52009,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.670000e+00
+                  Attr x = 1.470000e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.550000e+00
+                  Attr x = 1.450000e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51691,7 +52041,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn138 ConAnalog 1225 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn138"
                 Attr object_type = 24
@@ -51705,7 +52055,7 @@ and no Auto/Man button."
                   Attr y = 4.100000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.320000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 4.100000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51729,7 +52079,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn137 ConDigital 1226 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn137"
                 Attr object_type = 23
@@ -51740,11 +52090,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp16"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.320000e+00
+                  Attr x = 2.070000e+00
                   Attr y = 4.150000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.249000e+00
+                  Attr x = 1.999000e+00
                   Attr y = 4.150000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51776,7 +52126,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn136 ConDigital 1227 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn136"
                 Attr object_type = 23
@@ -51787,19 +52137,19 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr point_count = 4
                 Buffer point[0]
-                  Attr x = 1.898000e+00
+                  Attr x = 1.698000e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.044667e+00
+                  Attr x = 1.778167e+00
                   Attr y = 3.850000e+00
                 EndBuffer
                 Buffer point[2]
-                  Attr x = 2.044667e+00
+                  Attr x = 1.778167e+00
                   Attr y = 4.150000e+00
                 EndBuffer
                 Buffer point[3]
-                  Attr x = 2.070000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 4.150000e+00
                 EndBuffer
                 Buffer point[4]
@@ -51819,7 +52169,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn135 ConDigital 1228 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn135"
                 Attr object_type = 23
@@ -51830,7 +52180,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.070000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 4.200000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51858,7 +52208,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn134 ConDigital 1229 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn134"
                 Attr object_type = 23
@@ -51869,7 +52219,7 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.020000e+00
+                  Attr x = 1.820000e+00
                   Attr y = 3.550000e+00
                 EndBuffer
                 Buffer point[1]
@@ -51901,7 +52251,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn130 ConDigital 1230 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn130"
                 Attr object_type = 23
@@ -51912,11 +52262,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp15"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 2.270000e+00
+                  Attr x = 2.070000e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 2.218444e+00
+                  Attr x = 2.018445e+00
                   Attr y = 3.500000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51948,7 +52298,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn119 ConAnalog 1231 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn119"
                 Attr object_type = 24
@@ -51962,7 +52312,7 @@ and no Auto/Man button."
                   Attr y = 3.450000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.270000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.450000e+00
                 EndBuffer
                 Buffer point[2]
@@ -51986,7 +52336,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn115 ConDigital 1232 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn115"
                 Attr object_type = 23
@@ -51997,11 +52347,11 @@ and no Auto/Man button."
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH"
                 Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.620000e+00
+                  Attr x = 1.470000e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.500000e+00
+                  Attr x = 1.450000e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[2]
@@ -52029,7 +52379,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn114 ConAnalog 1233 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn114"
                 Attr object_type = 24
@@ -52043,7 +52393,7 @@ and no Auto/Man button."
                   Attr y = 3.400000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.270000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.400000e+00
                 EndBuffer
                 Buffer point[2]
@@ -52071,7 +52421,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn112 ConAnalog 1234 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn112"
                 Attr object_type = 24
@@ -52080,13 +52430,13 @@ and no Auto/Man button."
                 Attr source_point = 1
                 Attr source_oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
                 Attr dest_oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi0"
-                Attr point_count = 4
+                Attr point_count = 2
                 Buffer point[0]
-                  Attr x = 1.270000e+00
+                  Attr x = 9.797778e-01
                   Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.109000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.250000e+00
                 EndBuffer
                 Buffer point[2]
@@ -52114,7 +52464,7 @@ and no Auto/Man button."
             EndBody
           EndObject
           Object cn110 ConAnalog 1235 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcConnection
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-cn110"
                 Attr object_type = 24
@@ -52128,7 +52478,7 @@ and no Auto/Man button."
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[1]
-                  Attr x = 1.270000e+00
+                  Attr x = 1.220000e+00
                   Attr y = 3.200000e+00
                 EndBuffer
                 Buffer point[2]
@@ -52621,12 +52971,12 @@ Alarm HH, H, L, LL"
           Object HH Comph 1258 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-HH"
-                Attr x = 1.250000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.325000e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 2.000000e-01
@@ -52658,14 +53008,14 @@ Alarm HH, H, L, LL"
           Object GetAi0 GetAi 1260 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr AiObject = "$PlcMain:BaseComponent-Class-BaseSensor.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi0"
                 Attr x = 6.500000e-01
-                Attr y = -2.075000e+00
+                Attr y = -2.275000e+00
                 Attr width = 3.297778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -52676,14 +53026,14 @@ Alarm HH, H, L, LL"
           Object StoAp39 StoAp 1261 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-HH.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp39"
-                Attr x = 1.250000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.425000e+00
                 Attr width = 3.541111e-01
                 Attr heigth = 5.000000e-02
@@ -52713,12 +53063,12 @@ Alarm HH, H, L, LL"
           Object TimeHH Wait 1263 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH"
-                Attr x = 1.600000e+00
+                Attr x = 1.450000e+00
                 Attr y = -2.275000e+00
                 Attr width = 2.480000e-01
                 Attr heigth = 1.000000e-01
@@ -52731,14 +53081,14 @@ Alarm HH, H, L, LL"
           Object StoAp40 StoAp 1264 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeHH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp40"
-                Attr x = 1.250000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.475000e+00
                 Attr width = 4.363333e-01
                 Attr heigth = 5.000000e-02
@@ -52750,13 +53100,13 @@ Alarm HH, H, L, LL"
           Object StoDp15 StoDp 1265 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp15"
-                Attr x = 2.250000e+00
+                Attr x = 2.050000e+00
                 Attr y = -2.525000e+00
                 Attr width = 5.118889e-01
                 Attr heigth = 5.000000e-02
@@ -52786,12 +53136,12 @@ Alarm HH, H, L, LL"
           Object LimitHH And 1267 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitHH"
-                Attr x = 2.000000e+00
+                Attr x = 1.800000e+00
                 Attr y = -2.625000e+00
                 Attr width = 1.984445e-01
                 Attr heigth = 1.500000e-01
@@ -52821,32 +53171,32 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText46 BodyText 1269 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText46"
-                Attr x = 2.350000e+00
-                Attr y = -2.462000e+00
+                Attr x = 2.100000e+00
+                Attr y = -2.469000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
             EndBody
           EndObject
           Object BodyText47 BodyText 1270 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText47"
-                Attr x = 2.350000e+00
-                Attr y = -3.112000e+00
+                Attr x = 2.100000e+00
+                Attr y = -3.119000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
@@ -52855,12 +53205,12 @@ Alarm HH, H, L, LL"
           Object LimitH And 1271 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitH"
-                Attr x = 2.050000e+00
+                Attr x = 1.800000e+00
                 Attr y = -3.275000e+00
                 Attr width = 1.790000e-01
                 Attr heigth = 1.500000e-01
@@ -52892,12 +53242,12 @@ Alarm HH, H, L, LL"
           Object H Comph 1273 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 123
                 Attr cid = "pwrb:Class-Comph"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-H"
-                Attr x = 1.300000e+00
+                Attr x = 1.200000e+00
                 Attr y = -2.975000e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 2.000000e-01
@@ -52929,14 +53279,14 @@ Alarm HH, H, L, LL"
           Object StoAp47 StoAp 1275 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-H.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp47"
-                Attr x = 1.300000e+00
+                Attr x = 1.200000e+00
                 Attr y = -3.075000e+00
                 Attr width = 3.341111e-01
                 Attr heigth = 5.000000e-02
@@ -52966,12 +53316,12 @@ Alarm HH, H, L, LL"
           Object TimeH Wait 1277 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH"
-                Attr x = 1.650000e+00
+                Attr x = 1.450000e+00
                 Attr y = -2.925000e+00
                 Attr width = 2.280000e-01
                 Attr heigth = 1.000000e-01
@@ -52984,14 +53334,14 @@ Alarm HH, H, L, LL"
           Object StoAp48 StoAp 1278 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeH.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp48"
-                Attr x = 1.300000e+00
+                Attr x = 1.200000e+00
                 Attr y = -3.125000e+00
                 Attr width = 4.163333e-01
                 Attr heigth = 5.000000e-02
@@ -53003,13 +53353,13 @@ Alarm HH, H, L, LL"
           Object StoDp16 StoDp 1279 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp16"
-                Attr x = 2.300000e+00
+                Attr x = 2.050000e+00
                 Attr y = -3.175000e+00
                 Attr width = 4.918889e-01
                 Attr heigth = 5.000000e-02
@@ -53039,13 +53389,13 @@ Alarm HH, H, L, LL"
           Object StoDp17 StoDp 1281 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp17"
-                Attr x = 2.500000e+00
+                Attr x = 2.150000e+00
                 Attr y = -5.675000e+00
                 Attr width = 5.030000e-01
                 Attr heigth = 5.000000e-02
@@ -53057,12 +53407,12 @@ Alarm HH, H, L, LL"
           Object LimitLL And 1282 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitLL"
-                Attr x = 2.250000e+00
+                Attr x = 1.900000e+00
                 Attr y = -5.775000e+00
                 Attr width = 1.895556e-01
                 Attr heigth = 1.500000e-01
@@ -53076,14 +53426,14 @@ Alarm HH, H, L, LL"
           Object StoAp49 StoAp 1283 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp49"
-                Attr x = 1.400000e+00
+                Attr x = 1.250000e+00
                 Attr y = -5.625000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
@@ -53095,12 +53445,12 @@ Alarm HH, H, L, LL"
           Object TimeLL Wait 1284 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeLL"
-                Attr x = 1.750000e+00
+                Attr x = 1.600000e+00
                 Attr y = -5.425000e+00
                 Attr width = 2.391111e-01
                 Attr heigth = 1.000000e-01
@@ -53111,16 +53461,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText48 BodyText 1285 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText48"
-                Attr x = 2.550000e+00
-                Attr y = -5.612000e+00
+                Attr x = 2.200000e+00
+                Attr y = -5.619000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "LL"
@@ -53200,16 +53550,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText49 BodyText 1290 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText49"
-                Attr x = 2.550000e+00
-                Attr y = -4.962000e+00
+                Attr x = 2.250000e+00
+                Attr y = -4.919000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "L"
@@ -53218,12 +53568,12 @@ Alarm HH, H, L, LL"
           Object LimitL And 1291 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 90
                 Attr cid = "pwrb:Class-And"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LimitL"
-                Attr x = 2.200000e+00
+                Attr x = 1.900000e+00
                 Attr y = -5.125000e+00
                 Attr width = 1.790000e-01
                 Attr heigth = 1.500000e-01
@@ -53290,14 +53640,14 @@ Alarm HH, H, L, LL"
           Object GetAi2 GetAi 1295 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr AiObject = "$PlcMain:BaseComponent-Class-BaseSensor.Value"
               Buffer PlcNode
                 Attr object_type = 64
                 Attr cid = "pwrb:Class-GetAi"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetAi2"
                 Attr x = 7.000000e-01
-                Attr y = -4.575000e+00
+                Attr y = -4.725000e+00
                 Attr width = 3.297778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53308,14 +53658,14 @@ Alarm HH, H, L, LL"
           Object StoAp53 StoAp 1296 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-L.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp53"
-                Attr x = 1.350000e+00
+                Attr x = 1.250000e+00
                 Attr y = -4.925000e+00
                 Attr width = 3.296667e-01
                 Attr heigth = 5.000000e-02
@@ -53345,12 +53695,12 @@ Alarm HH, H, L, LL"
           Object TimeL Wait 1298 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 97
                 Attr cid = "pwrb:Class-Wait"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL"
-                Attr x = 1.750000e+00
+                Attr x = 1.550000e+00
                 Attr y = -4.775000e+00
                 Attr width = 2.235556e-01
                 Attr heigth = 1.000000e-01
@@ -53363,14 +53713,14 @@ Alarm HH, H, L, LL"
           Object StoAp54 StoAp 1299 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-TimeL.TimerTime"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp54"
-                Attr x = 1.350000e+00
+                Attr x = 1.250000e+00
                 Attr y = -4.975000e+00
                 Attr width = 4.118889e-01
                 Attr heigth = 5.000000e-02
@@ -53382,13 +53732,13 @@ Alarm HH, H, L, LL"
           Object StoDp18 StoDp 1300 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp18"
-                Attr x = 2.450000e+00
+                Attr x = 2.150000e+00
                 Attr y = -5.025000e+00
                 Attr width = 4.874445e-01
                 Attr heigth = 5.000000e-02
@@ -53418,12 +53768,12 @@ Alarm HH, H, L, LL"
           Object L Compl 1302 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-L"
-                Attr x = 1.350000e+00
+                Attr x = 1.250000e+00
                 Attr y = -4.825000e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 2.000000e-01
@@ -53436,12 +53786,12 @@ Alarm HH, H, L, LL"
           Object LL Compl 1303 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 124
                 Attr cid = "pwrb:Class-Compl"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-LL"
-                Attr x = 1.400000e+00
+                Attr x = 1.250000e+00
                 Attr y = -5.475000e+00
                 Attr width = 2.300000e-01
                 Attr heigth = 2.000000e-01
@@ -53454,14 +53804,14 @@ Alarm HH, H, L, LL"
           Object StoAp55 StoAp 1304 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-LL.Hysteres"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoAp55"
-                Attr x = 1.400000e+00
+                Attr x = 1.250000e+00
                 Attr y = -5.575000e+00
                 Attr width = 3.452222e-01
                 Attr heigth = 5.000000e-02
@@ -53474,13 +53824,13 @@ Alarm HH, H, L, LL"
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Alarm HH"
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6"
-                Attr x = 1.650000e+00
-                Attr y = -6.975000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.025000e+00
                 Attr width = 4.111111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53529,12 +53879,12 @@ Alarm HH, H, L, LL"
           Object Strcat52 Strcat 1308 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat52"
-                Attr x = 1.300000e+00
+                Attr x = 1.200000e+00
                 Attr y = -6.925000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
@@ -53547,14 +53897,14 @@ Alarm HH, H, L, LL"
           Object StoSp5 StoSp 1309 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup6.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp5"
-                Attr x = 1.650000e+00
+                Attr x = 1.500000e+00
                 Attr y = -6.875000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
@@ -53580,16 +53930,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText56 BodyText 1312 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.94
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText56"
-                Attr x = 1.700000e+00
-                Attr y = -6.912000e+00
+                Attr x = 1.550000e+00
+                Attr y = -6.869000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HH"
@@ -53635,7 +53985,7 @@ Alarm HH, H, L, LL"
           Object GetDp60 GetDp 1315 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitHH.Status"
               Buffer PlcNode
                 Attr object_type = 256
@@ -53655,13 +54005,13 @@ Alarm HH, H, L, LL"
               Attr DetectText = "Alarm H"
               Attr EventPriority = 66
             EndBody
-            Body DevBody 30-NOV-2005 07:59:49.34
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7"
-                Attr x = 1.650000e+00
-                Attr y = -7.325000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.725000e+00
                 Attr width = 3.911111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53672,15 +54022,15 @@ Alarm HH, H, L, LL"
           Object StoSp6 StoSp 1317 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup7.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp6"
-                Attr x = 1.650000e+00
-                Attr y = -7.225000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.575000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53691,14 +54041,14 @@ Alarm HH, H, L, LL"
           Object GetDp61 GetDp 1318 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitH.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp61"
                 Attr x = 6.500000e-01
-                Attr y = -7.425000e+00
+                Attr y = -7.775000e+00
                 Attr width = 4.408889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53709,7 +54059,7 @@ Alarm HH, H, L, LL"
           Object NameToStr58 NameToStr 1319 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -53717,7 +54067,7 @@ Alarm HH, H, L, LL"
                 Attr cid = "pwrb:Class-NameToStr"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr58"
                 Attr x = 6.000000e-01
-                Attr y = -7.275000e+00
+                Attr y = -7.625000e+00
                 Attr width = 3.776667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53729,14 +54079,14 @@ Alarm HH, H, L, LL"
           Object GetSp6 GetSp 1320 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr SpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitH.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp6"
                 Attr x = 6.000000e-01
-                Attr y = -7.225000e+00
+                Attr y = -7.575000e+00
                 Attr width = 4.875556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53745,16 +54095,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText59 BodyText 1321 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText59"
-                Attr x = 1.700000e+00
-                Attr y = -7.262000e+00
+                Attr x = 1.550000e+00
+                Attr y = -7.569000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "H"
@@ -53763,13 +54113,13 @@ Alarm HH, H, L, LL"
           Object Strcat61 Strcat 1323 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat61"
-                Attr x = 1.300000e+00
-                Attr y = -7.275000e+00
+                Attr x = 1.200000e+00
+                Attr y = -7.625000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53783,13 +54133,13 @@ Alarm HH, H, L, LL"
               Attr DetectText = "Alarm L"
               Attr EventPriority = 66
             EndBody
-            Body DevBody 30-NOV-2005 07:59:49.34
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8"
-                Attr x = 1.650000e+00
-                Attr y = -7.675000e+00
+                Attr x = 1.500000e+00
+                Attr y = -8.075000e+00
                 Attr width = 3.866667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53800,15 +54150,15 @@ Alarm HH, H, L, LL"
           Object StoSp7 StoSp 1325 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup8.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp7"
-                Attr x = 1.650000e+00
-                Attr y = -7.575000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.925000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53819,14 +54169,14 @@ Alarm HH, H, L, LL"
           Object GetDp62 GetDp 1326 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp62"
                 Attr x = 6.500000e-01
-                Attr y = -7.775000e+00
+                Attr y = -8.125000e+00
                 Attr width = 4.364445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53837,7 +54187,7 @@ Alarm HH, H, L, LL"
           Object NameToStr62 NameToStr 1327 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -53845,7 +54195,7 @@ Alarm HH, H, L, LL"
                 Attr cid = "pwrb:Class-NameToStr"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr62"
                 Attr x = 6.000000e-01
-                Attr y = -7.625000e+00
+                Attr y = -7.975000e+00
                 Attr width = 3.776667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53857,14 +54207,14 @@ Alarm HH, H, L, LL"
           Object GetSp7 GetSp 1328 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr SpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp7"
                 Attr x = 6.000000e-01
-                Attr y = -7.575000e+00
+                Attr y = -7.925000e+00
                 Attr width = 4.831111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53873,16 +54223,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText63 BodyText 1329 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText63"
-                Attr x = 1.700000e+00
-                Attr y = -7.612000e+00
+                Attr x = 1.550000e+00
+                Attr y = -7.919000e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "L"
@@ -53891,13 +54241,13 @@ Alarm HH, H, L, LL"
           Object Strcat65 Strcat 1331 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat65"
-                Attr x = 1.300000e+00
-                Attr y = -7.625000e+00
+                Attr x = 1.200000e+00
+                Attr y = -7.975000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53910,13 +54260,13 @@ Alarm HH, H, L, LL"
             Body RtBody 01-JAN-1970 01:00:00.00
               Attr DetectText = "Alarm LL"
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 99
                 Attr cid = "pwrb:Class-DSup"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9"
-                Attr x = 1.650000e+00
-                Attr y = -8.025000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.375000e+00
                 Attr width = 4.022222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53927,15 +54277,15 @@ Alarm HH, H, L, LL"
           Object StoSp8 StoSp 1333 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "BaseComponent:Class-BaseSensorFo-Code-W-DSup9.DetectText"
               Attr ObjectSegments = 1
               Buffer PlcNode
                 Attr object_type = 264
                 Attr cid = "pwrb:Class-StoSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoSp8"
-                Attr x = 1.650000e+00
-                Attr y = -7.925000e+00
+                Attr x = 1.500000e+00
+                Attr y = -7.225000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53946,14 +54296,14 @@ Alarm HH, H, L, LL"
           Object GetDp63 GetDp 1334 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitLL.Status"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp63"
                 Attr x = 6.500000e-01
-                Attr y = -8.125000e+00
+                Attr y = -7.425000e+00
                 Attr width = 4.520000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53964,7 +54314,7 @@ Alarm HH, H, L, LL"
           Object NameToStr66 NameToStr 1335 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor"
               Attr ObjectSegments = 2
               Buffer PlcNode
@@ -53972,7 +54322,7 @@ Alarm HH, H, L, LL"
                 Attr cid = "pwrb:Class-NameToStr"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-NameToStr66"
                 Attr x = 6.000000e-01
-                Attr y = -7.975000e+00
+                Attr y = -7.275000e+00
                 Attr width = 3.776667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -53984,14 +54334,14 @@ Alarm HH, H, L, LL"
           Object GetSp8 GetSp 1336 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr SpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitLL.AlarmText"
               Buffer PlcNode
                 Attr object_type = 263
                 Attr cid = "pwrb:Class-GetSp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetSp8"
                 Attr x = 6.000000e-01
-                Attr y = -7.925000e+00
+                Attr y = -7.225000e+00
                 Attr width = 4.986667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -54000,16 +54350,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText67 BodyText 1337 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText67"
-                Attr x = 1.700000e+00
-                Attr y = -7.962000e+00
+                Attr x = 1.550000e+00
+                Attr y = -7.218999e+00
                 Attr width = 1.300000e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "LL"
@@ -54018,13 +54368,13 @@ Alarm HH, H, L, LL"
           Object Strcat69 Strcat 1339 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-Strcat"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Strcat69"
-                Attr x = 1.300000e+00
-                Attr y = -7.975000e+00
+                Attr x = 1.200000e+00
+                Attr y = -7.275000e+00
                 Attr width = 2.095556e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -54036,13 +54386,13 @@ Alarm HH, H, L, LL"
           Object Red Or 1340 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Red"
-                Attr x = 1.300000e+00
-                Attr y = -8.325000e+00
+                Attr x = 2.050000e+00
+                Attr y = -7.125000e+00
                 Attr width = 1.790000e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -54054,13 +54404,13 @@ Alarm HH, H, L, LL"
           Object Yellow Or 1341 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 91
                 Attr cid = "pwrb:Class-Or"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-Yellow"
-                Attr x = 1.300000e+00
-                Attr y = -8.525000e+00
+                Attr x = 2.050000e+00
+                Attr y = -7.825000e+00
                 Attr width = 1.806667e-01
                 Attr heigth = 1.000000e-01
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -54070,16 +54420,16 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText70 BodyText 1342 08-SEP-2005 13:01:47.00
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr TextAttribute = 3
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText70"
-                Attr x = 1.700000e+00
-                Attr y = -8.262000e+00
+                Attr x = 2.350000e+00
+                Attr y = -7.019000e+00
                 Attr width = 1.368889e-01
-                Attr heigth = 1.370000e-01
+                Attr heigth = 9.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "HMI"
@@ -54088,14 +54438,14 @@ Alarm HH, H, L, LL"
           Object StoDp19 StoDp 1343 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.IndError"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp19"
-                Attr x = 1.650000e+00
-                Attr y = -8.275000e+00
+                Attr x = 2.300000e+00
+                Attr y = -7.075000e+00
                 Attr width = 4.163333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
@@ -54106,90 +54456,18 @@ Alarm HH, H, L, LL"
           Object StoDp20 StoDp 1344 08-SEP-2005 13:01:47.00
             Body RtBody 01-JAN-1970 01:00:00.00
             EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
+            Body DevBody 09-MAY-2006 07:52:19.42
               Attr Object = "$PlcMain:BaseComponent-Class-BaseSensor.IndWarning"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-StoDp20"
-                Attr x = 1.650000e+00
-                Attr y = -8.474999e+00
+                Attr x = 2.300000e+00
+                Attr y = -7.775000e+00
                 Attr width = 4.518889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
                 Attr mask[0] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDp64 GetDp 1345 08-SEP-2005 13:01:47.00
-            Body RtBody 01-JAN-1970 01:00:00.00
-            EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
-              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitHH.Status"
-              Buffer PlcNode
-                Attr object_type = 256
-                Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp64"
-                Attr x = 6.500000e-01
-                Attr y = -8.275000e+00
-                Attr width = 4.608889e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDp65 GetDp 1346 08-SEP-2005 13:01:47.00
-            Body RtBody 01-JAN-1970 01:00:00.00
-            EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
-              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitLL.Status"
-              Buffer PlcNode
-                Attr object_type = 256
-                Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp65"
-                Attr x = 6.500000e-01
-                Attr y = -8.325000e+00
-                Attr width = 4.520000e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDp66 GetDp 1347 08-SEP-2005 13:01:47.00
-            Body RtBody 01-JAN-1970 01:00:00.00
-            EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
-              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitL.Status"
-              Buffer PlcNode
-                Attr object_type = 256
-                Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp66"
-                Attr x = 6.500000e-01
-                Attr y = -8.525000e+00
-                Attr width = 4.364445e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
-          Object GetDp67 GetDp 1348 08-SEP-2005 13:01:47.00
-            Body RtBody 01-JAN-1970 01:00:00.00
-            EndBody
-            Body DevBody 18-OCT-2005 08:35:53.93
-              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitH.Status"
-              Buffer PlcNode
-                Attr object_type = 256
-                Attr cid = "pwrb:Class-GetDp"
-                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp67"
-                Attr x = 6.500000e-01
-                Attr y = -8.474999e+00
-                Attr width = 4.408889e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
-                Attr mask[1] = 1
               EndBuffer
             EndBody
           EndObject
@@ -54338,14 +54616,14 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText71 BodyText 6167 30-NOV-2005 07:59:04.24
-            Body DevBody 30-NOV-2005 07:59:49.34
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText71"
-                Attr x = 1.700000e+00
-                Attr y = -7.719000e+00
-                Attr width = 1.300000e-01
+                Attr x = 1.550000e+00
+                Attr y = -8.019000e+00
+                Attr width = 1.302222e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
@@ -54353,18 +54631,166 @@ Alarm HH, H, L, LL"
             EndBody
           EndObject
           Object BodyText72 BodyText 6168 30-NOV-2005 07:59:25.71
-            Body DevBody 30-NOV-2005 07:59:49.34
+            Body DevBody 09-MAY-2006 07:52:19.42
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-BodyText"
                 Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-BodyText72"
-                Attr x = 1.700000e+00
-                Attr y = -7.369000e+00
-                Attr width = 1.300000e-01
+                Attr x = 1.550000e+00
+                Attr y = -7.669000e+00
+                Attr width = 1.302222e-01
                 Attr heigth = 4.400000e-02
                 Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
               EndBuffer
               Attr Text = "B-alarm"
+            EndBody
+          EndObject
+          Object And15 And 8090 09-MAY-2006 07:42:33.22
+            Body RtBody 09-MAY-2006 07:42:33.22
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-And15"
+                Attr x = 1.200000e+00
+                Attr y = -7.125000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp74 GetDp 8093 09-MAY-2006 07:42:48.84
+            Body RtBody 09-MAY-2006 07:42:48.84
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitHH.DisableAlarm"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp74"
+                Attr x = 6.500000e-01
+                Attr y = -7.125000e+00
+                Attr width = 5.431111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And16 And 8097 09-MAY-2006 07:43:16.86
+            Body RtBody 09-MAY-2006 07:43:16.86
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-And16"
+                Attr x = 1.200000e+00
+                Attr y = -7.825000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp75 GetDp 8102 09-MAY-2006 07:43:43.30
+            Body RtBody 09-MAY-2006 07:43:43.30
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitH.DisableAlarm"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp75"
+                Attr x = 6.500000e-01
+                Attr y = -7.825000e+00
+                Attr width = 5.231111e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And17 And 8104 09-MAY-2006 07:43:51.89
+            Body RtBody 09-MAY-2006 07:43:51.89
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-And17"
+                Attr x = 1.200000e+00
+                Attr y = -8.175000e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp76 GetDp 8109 09-MAY-2006 07:44:11.36
+            Body RtBody 09-MAY-2006 07:44:11.36
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitL.DisableAlarm"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp76"
+                Attr x = 6.500000e-01
+                Attr y = -8.174999e+00
+                Attr width = 5.186667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object And18 And 8111 09-MAY-2006 07:44:24.87
+            Body RtBody 09-MAY-2006 07:44:24.87
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Buffer PlcNode
+                Attr object_type = 90
+                Attr cid = "pwrb:Class-And"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-And18"
+                Attr x = 1.200000e+00
+                Attr y = -7.474999e+00
+                Attr width = 1.790000e-01
+                Attr heigth = 1.000000e-01
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[0] = 3
+                Attr mask[1] = 1
+                Attr mask[2] = 2
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp77 GetDp 8116 09-MAY-2006 07:44:44.00
+            Body RtBody 09-MAY-2006 07:44:44.00
+            EndBody
+            Body DevBody 09-MAY-2006 07:52:19.42
+              Attr DpObject = "$PlcMain:BaseComponent-Class-BaseSensor.LimitLL.DisableAlarm"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "BaseComponent:Class-BaseSensorFo-Code-W-GetDp77"
+                Attr x = 6.500000e-01
+                Attr y = -7.475000e+00
+                Attr width = 5.342222e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "BaseComponent:Class-BaseSensorFo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
             EndBody
           EndObject
         EndObject
@@ -58040,7 +58466,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -64519,7 +64945,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -66982,7 +67408,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -67001,7 +67427,7 @@ Alarm HH, H, L, LL"
         EndObject
         !/**
         !  Actuator object. Handles the signals and the mode of the valve.
-        !*/ 
+        !*/
         Object Actuator $Attribute 28 03-OCT-2005 08:43:30.46
           Body SysBody 03-OCT-2005 08:44:12.43
             Attr PgmName = "Actuator"
@@ -70080,7 +70506,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -75430,7 +75856,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -75447,7 +75873,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Digital input signal for switch open.
         !*/
         Object SwitchOpen $Attribute 16 30-SEP-2005 13:33:48.65
@@ -75464,7 +75890,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Digital input signal for switch closed.
         !*/
         Object SwitchClosed $Attribute 17 30-SEP-2005 13:33:48.65
@@ -75474,7 +75900,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrb:Class-Di"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Indication for error.
         !*/
         Object IndError $Attribute 18 30-SEP-2005 13:33:48.65
@@ -75491,7 +75917,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "pwrs:Type-$DisableAttr"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Alarm text for switch alarm.
         !*/
         Object AlarmText $Attribute 19 30-SEP-2005 13:33:48.65
@@ -78019,7 +78445,7 @@ Alarm HH, H, L, LL"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -89478,7 +89904,7 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Class-Component"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -90496,7 +90922,7 @@ Safety switch"
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
@@ -96393,7 +96819,7 @@ Motor aggregat"
             Attr TypeRef = "BaseComponent:Class-Aggregate"
           EndBody
         EndObject
-	!/**
+        !/**
         !  Enumeration for object graph configuration.
         !  Handled by the ConfigureComponent method.
         !*/
