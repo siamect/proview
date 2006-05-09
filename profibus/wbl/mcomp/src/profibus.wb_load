@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X80"
+    Attr NextOix = "_X85"
     Attr NextCix = "_X14"
     Attr NextTix[0] = "_X4"
   EndBody
@@ -853,6 +853,17 @@ Volume Profibus $ClassVolume 0.0.250.7
               Attr FilterName = "Pb_DP_Slave-ConfigureFilter"
             EndBody
           EndObject
+          Object ConnectThread $MenuButton 81 05-MAY-2006 15:40:49.74
+            Body SysBody 05-MAY-2006 15:40:49.74
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
         EndObject
       EndObject
       Object NavigatorPosnn $Menu 67 15-MAR-2006 08:26:17.37
@@ -1221,6 +1232,21 @@ Volume Profibus $ClassVolume 0.0.250.7
         Body RtBody 01-JAN-1970 01:00:00.00
           Attr Process = 1
         EndBody
+      EndObject
+      Object ConfiguratorPoson $Menu 82 05-MAY-2006 15:41:43.54
+        Object Pointed $Menu 83 05-MAY-2006 15:41:43.54
+          Object ConnectThread $MenuButton 84 05-MAY-2006 15:41:43.54
+            Body SysBody 05-MAY-2006 15:41:43.54
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
       EndObject
       Object IoMethods $RtMethod 43 16-JAN-2006 09:46:40.50
         Object IoCardInit $Method 44 16-JAN-2006 09:46:40.50
