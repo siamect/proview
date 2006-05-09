@@ -126,15 +126,6 @@ palette NavigatorPalette
       {
         class Pb_DP_Slave
       }
-      menu Modules
-      {
-        class Pb_Di
-        class Pb_Do
-        class Pb_Ai
-        class Pb_Ao
-	class Pb_Ii
-	class Pb_Io
-      }
     }
     menu Remote
     {
@@ -656,13 +647,21 @@ palette PlcEditorPalette
     menu Time
     {
       class AtAdd
+      class AtEqual
+      class AtGreaterThan
+      class AtLessThan
+      class AToDt
       class AtSub
       class AtDtSub
       class CStoATp
       class CStoATv
       class CStoDTp
       class CStoDTv
+      class CurrentTime
       class DtAdd
+      class DtEqual
+      class DtGreaterThan
+      class DtLessThan
       class DtSub
       class DtToA
       class GetATp

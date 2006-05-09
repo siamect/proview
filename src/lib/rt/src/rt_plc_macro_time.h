@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_time.h,v 1.2 2006-05-02 07:06:09 claes Exp $
+ * Proview   $Id: rt_plc_macro_time.h,v 1.3 2006-05-09 05:39:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,6 +128,20 @@
 */
 #define DtToA_exec(obj,t) \
   time_DToFloat( &obj->ActVal, &t);
+
+/*_*
+  ATODT
+  @aref atodt AToDt
+*/
+#define AToDt_exec(obj, val) \
+  time_FloatToD( &obj->DTime, val);
+
+/*_*
+  CURRENTTIME
+  @aref currentime CurrentTime
+*/
+#define CurrentTime_exec(obj) \
+  obj->Time = tp->pp->Node->SystemTime;
 
 /*_*
   ATGREATERTHAN
