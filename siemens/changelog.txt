@@ -1,1 +1,3 @@
 060227 cs  -          Changelog created.
+060504 cs  wbl        New profibus module classes for ET200M, and slave classes
+                      for IM153 and IM155

@@ -1,1 +1,3 @@
 060227 cs  -          Changelog created.
+060509 cs  bcomp      Attribute DisableAlarm added to CompLimit to make it possible to use
+                      the limit supervision in BaseSensor without alarm.

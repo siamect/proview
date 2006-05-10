@@ -18,3 +18,7 @@
 060426 cs  plc       Bugfix in dataarithm compilation, space at end of line could cause error.
 060426 cs  plc       Bugfix in GetData compilation, error when referenced parameter was
                      a type (not a class) not handled.
+060505 cs  wtt       Separate ld_node file for each node. Possibility to configure a
+                     FriendNode object under a NodeConfig object.
+060508 cs  wtt       References in superclass was not displayed in the navigator when option
+                     Object Reference or Attribute Reference was selected.
