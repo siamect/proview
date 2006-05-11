@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.31 2006-04-05 08:43:15 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.32 2006-05-11 10:47:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2424,10 +2424,52 @@ static void wtt_activate_buildvolume( Widget w, Wtt *wtt, XmAnyCallbackStruct *d
 
 static void wtt_activate_buildnode( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
+  pwr_tStatus sts;
+  lfu_t_volumelist *vp, *volp;
+
   wtt->message(' ',"");
 
-  if ( wtt->boot.dia == 0) 
-  {
+  // Check if there is only one node configured for the current volume
+  sts = lfu_volumelist_load( load_cNameBootList, 
+		(lfu_t_volumelist **) &wtt->boot.volumelist,
+		&wtt->boot.volumecount);
+  if (sts == FOE__NOFILE)
+    MESSAGE_RETURN( "Project is not configured");
+  int found = 0;
+  vp = (lfu_t_volumelist *)wtt->boot.volumelist;
+  for ( int i = 0; i < wtt->boot.volumecount; i++) {
+    if ( vp->volume_id == wtt->volid) {
+      if ( found) {
+	found = 0;
+	break;
+      }
+      found = 1;
+      volp = vp;
+    }
+    vp++;
+  }
+  if ( found) {
+    wb_build build( *(wb_session *)wtt->ldhses, wtt->focused_wnav, wtt->toplevel);
+    build.opt = wtt->focused_wnav->gbl.build;
+
+    build.node( volp->p1, wtt->boot.volumelist, wtt->boot.volumecount);
+    if ( build.evenSts()) {
+      char message[80];
+      sprintf( message, "Error building node %s", volp->p1);
+      MESSAGE_RETURN( message);
+    }
+    else if ( build.sts() == PWRB__NOBUILT) {
+      wtt->message('I', "Nothing to build");
+      return;
+    }
+    else {
+      char message[80];
+      sprintf( message, "Node %s built", volp->p1);
+      MESSAGE_RETURN( message);
+    }
+  }
+
+  if ( wtt->boot.dia == 0) {
     wtt->set_clock_cursor();
     wtt_open_boot_window( wtt);
     wtt->reset_cursor();
