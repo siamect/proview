@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.33 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.34 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -136,7 +136,7 @@ public:
 
   wb_orepdbs *new_wb_orepdbs(size_t size);
   void delete_wb_orepdbs(void *p);
-
+  bool time( pwr_tTime *t);
 
 
   virtual wb_vrep *next ();
@@ -144,7 +144,7 @@ public:
   virtual bool isLocal (const wb_orep *);
   virtual pwr_tCid cid () const;
   virtual wb_merep *merep () const;
-  virtual bool createSnapshot (const char *);
+  virtual bool createSnapshot (const char *, const pwr_tTime *);
 
   virtual bool isCommonMeta() const { return false;}
   virtual bool isMeta() const { return (cid() == pwr_eClass_ClassVolume);}

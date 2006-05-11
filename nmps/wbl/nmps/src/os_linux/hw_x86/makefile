@@ -46,7 +46,7 @@ realclean : clean $(clean_wbl)
 $(load_dir)/nmps.dbs :
 	@ echo "Generating loadfile for nmps"
 	@ export pwr_load=$(pwr_eload);\
-	  wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/nmps/src/\"/out=\"$(target)\"
+	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(pwre_sroot)/wbl/nmps/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_nmpsclasses.h :

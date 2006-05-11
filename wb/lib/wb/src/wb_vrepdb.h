@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.h,v 1.28 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepdb.h,v 1.29 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -171,7 +171,7 @@ public:
 
   virtual bool isLocal(const wb_orep *o);
 
-  virtual bool createSnapshot(const char *fileName);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
 
   virtual void objectName(const wb_orep *o, char *str);
 

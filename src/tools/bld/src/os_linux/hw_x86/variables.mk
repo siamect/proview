@@ -114,6 +114,8 @@ javac		:= javac
 #list            = $(to-vms $(lis_dir)/$(sname)$(lis_ext))
 map             = $(bld_dir)/$(tname)$(map_ext)
 mkdir		:= mkdir
+#   Set to /buildversion for frozen dbs versions
+wblflags	:= 
 
 ifeq ($(pwre_btype),rls)			 
   cflags	:= -c -O3 -D_GNU_SOURCE -DPWR_NDEBUG -D_REENTRANT

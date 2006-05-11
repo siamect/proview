@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.53 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.54 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -203,7 +203,7 @@ ldh_CreatVolumeSnapshot(ldh_tWorkbench	workbench, char *name, ldh_tVolume *volum
   //wb_env *wb = (wb_env *)workbench;
     
   wb_volume *v = (wb_volume *)volume;
-  v->createSnapshot(name);
+  v->createSnapshot(name, 0);
 
   return LDH__SUCCESS;
 }
@@ -1851,7 +1851,7 @@ ldh_CreateLoadFile(ldh_tSession session)
   wb_session *sp = (wb_session*)session;
 
   try {
-    sp->createSnapshot( 0);
+    sp->createSnapshot( 0, 0);
   }
   catch (wb_error& e) {
     return e.sts();

@@ -76,7 +76,7 @@ clean_ps_en_us := $(patsubst %.wb_load,clean_%_en_us.ps,$(wbl_sources))
 $(load_dir)/%.dbs : ../../%.wb_load
 	@ echo "Generating loadfile for  $(source)"
 	@ export pwr_load=$(pwr_eload);\
-	  wb_cmd -q -i create snapshot /file=\"$(source)\"/out=\"$(target)\"
+	  wb_cmd -q -i create snapshot $(wblflags) /file=\"$(source)\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_%classes.h : ../../%.wb_load

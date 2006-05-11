@@ -45,7 +45,7 @@ realclean : clean clean_pwrs_xtthelp clean_pwrs_html clean_systemclasses
 
 $(load_dir)/pwrs.dbs :
 	@ echo "Generating loadfile for pwrs"
-	@ wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/pwrs/src/\"/out=\"$(target)\"
+	@ wb_cmd -q -i create snapshot $(wblflags) /file=\"$(pwre_sroot)/wbl/pwrs/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_systemclasses.h :

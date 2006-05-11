@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.17 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.18 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -224,7 +224,7 @@ public:
 
   wb_vrep *next();
 
-  virtual bool createSnapshot(const char *fileName);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
 
   char volume_class[32];
   char volume_name[32];

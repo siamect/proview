@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.40 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.41 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,7 +150,7 @@ bool wb_vrepdb::isLocal(const wb_orep *o)
   return false;
 }
 
-bool wb_vrepdb::createSnapshot(const char *fileName)
+bool wb_vrepdb::createSnapshot(const char *fileName, const pwr_tTime *time)
 {
   try {
     wb_dbs dbs(this);

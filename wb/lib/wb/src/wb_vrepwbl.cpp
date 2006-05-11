@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.49 2006-03-28 15:03:16 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.50 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,13 +127,15 @@ void wb_vrepwbl::info()
 }
 
 bool
-wb_vrepwbl::createSnapshot(const char *fileName)
+wb_vrepwbl::createSnapshot(const char *fileName, const pwr_tTime *time)
 {
   try {
     wb_dbs dbs(this);
         
     if ( fileName)
       dbs.setFileName( fileName);
+    if ( time)
+      dbs.setTime( *time);
 
     dbs.importVolume(*this);
 

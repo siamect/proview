@@ -47,7 +47,7 @@ realclean : clean clean_pwrb_xtthelp clean_pwrb_html clean_baseclasses
 
 $(load_dir)/pwrb.dbs :
 	@ echo "Generating loadfile for pwrb"
-	@ wb_cmd -q -i create snapshot /file=\"$(pwre_sroot)/wbl/pwrb/src/\"/out=\"$(target)\"
+	@ wb_cmd -q -i create snapshot $(wblflags) /file=\"$(pwre_sroot)/wbl/pwrb/src/\"/out=\"$(target)\"
 	@ chmod a+w $(target)
 
 $(inc_dir)/pwr_baseclasses.h :

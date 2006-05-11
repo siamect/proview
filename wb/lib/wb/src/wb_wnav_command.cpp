@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.40 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.41 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -279,7 +279,7 @@ dcli_tCmdTable	wnav_command_table[] = {
 			"/LASTCHILD", "/VOLUME", "/ALL", 
 			"/CLASS", "/DEBUG", "/NODECONFIG",
 			"/NAME", "/IDENTITY", "/FILES", "/OUT", "/IGNORE",
-			"/DIRECTORY", ""}
+			"/DIRECTORY", "/BUILDVERSION", ""}
 		},
 		{
 			"NEW",
@@ -3826,7 +3826,9 @@ static int	wnav_create_func( void		*client_data,
     pwr_tFileName	outstr;
     char        *outstr_p;
     int         ignore;
+    int		buildversion;
     pwr_tStatus	sts;
+    pwr_tTime	buildtime, *timep;
 
     // Command is "CREATE SNAPSHOT"
 
@@ -3842,6 +3844,14 @@ static int	wnav_create_func( void		*client_data,
       outstr_p = 0;
 
     ignore = ODD( dcli_get_qualifier( "/IGNORE", 0, 0));
+    buildversion = ODD( dcli_get_qualifier( "/BUILDVERSION", 0, 0));
+
+    if ( buildversion) {
+      time_AsciiToA( pwrv_cBuildTimeStr, &buildtime);
+      timep = &buildtime;
+    }
+    else
+      timep = 0;
 
     sts = wnav_wccm_get_wbctx_cb( wnav, &wnav->wbctx);
     if ( EVEN(sts)) return sts;
@@ -3853,7 +3863,7 @@ static int	wnav_create_func( void		*client_data,
       wbl->ref();
       sts = wbl->load( filestr);
       if ( ODD(sts) || ignore)
-	wbl->createSnapshot( outstr_p);
+	wbl->createSnapshot( outstr_p, timep);
       delete wbl;
     }
     catch ( wb_error &e) {

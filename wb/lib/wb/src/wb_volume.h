@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.h,v 1.25 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_volume.h,v 1.26 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,8 @@ public:
     
   bool isLocal(wb_object &o) const;
     
-  bool createSnapshot(const char *fileName) { return m_vrep->createSnapshot(fileName);}
+  bool createSnapshot(const char *fileName, const pwr_tTime *time) 
+    { return m_vrep->createSnapshot(fileName, time);}
   bool exportTree( wb_volume &import, pwr_tOid oid);
     
   pwr_tStatus syntaxCheck( int *errorcount, int *warningcount);

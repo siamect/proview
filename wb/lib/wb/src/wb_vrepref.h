@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepref.h,v 1.6 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_vrepref.h,v 1.7 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,7 +76,7 @@ public:
 
   wb_erep *erep() {return m_erep;}
   wb_merep *merep() const { return m_merep;}
-  virtual bool createSnapshot(const char *fileName) { return false;}
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) { return false;}
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOid;}    
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNVid;}    
   virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o) { return pwr_cNOix;}

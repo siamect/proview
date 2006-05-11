@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.21 2005-12-20 11:58:29 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.22 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -191,13 +191,15 @@ void wb_vrepmem::info()
 }
 
 bool
-wb_vrepmem::createSnapshot(const char *fileName)
+wb_vrepmem::createSnapshot(const char *fileName, const pwr_tTime *time)
 {
   try {
     wb_dbs dbs(this);
         
     if ( fileName)
       dbs.setFileName( fileName);
+    if ( time)
+      dbs.setTime( *time);
 
     dbs.importVolume(*this);
 

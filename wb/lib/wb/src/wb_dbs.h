@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.h,v 1.14 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_dbs.h,v 1.15 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,6 +130,7 @@ public:
   bool operator==(const wb_dbs&) const;
     
   void setFileName(const char *name);
+  void setTime(const pwr_tTime t);
 
   void         getAliasServer(sOentry *oep, void *p);
   char        *pathName(sOentry *oep);

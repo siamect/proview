@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.24 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.25 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,6 +104,12 @@ void
 wb_dbs::setFileName(const char *name)
 {
   dcli_translate_filename(m_fileName, name);
+}
+
+void
+wb_dbs::setTime(const pwr_tTime t)
+{
+  m_volume.time = t;
 }
 
 static int

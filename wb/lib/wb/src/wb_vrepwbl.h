@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.h,v 1.35 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrepwbl.h,v 1.36 2006-05-11 07:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,7 +68,7 @@ public:
 
   wb_vrep *next();
 
-  virtual bool createSnapshot(const char *fileName);
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time);
 
   int load( const char *fname);
   int load_files( const char *file_spec);

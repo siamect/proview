@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrep.h,v 1.24 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vrep.h,v 1.25 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,7 +148,7 @@ public:
   virtual const char *name() { return m_name;}
   virtual wb_merep *merep() const = 0;
 
-  virtual bool createSnapshot(const char *fileName) = 0;
+  virtual bool createSnapshot(const char *fileName, const pwr_tTime *time) = 0;
 
   virtual void objectName(const wb_orep *o, char *str) = 0;
   virtual bool isCommonMeta() const { return false;}

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.46 2005-10-25 15:27:47 claes Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.47 2006-05-11 07:12:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -548,7 +548,7 @@ wb_merep *wb_vrepdbs::merep() const
   return m_merep;
 }
 
-bool wb_vrepdbs::createSnapshot(const char *)
+bool wb_vrepdbs::createSnapshot(const char *, const pwr_tTime *)
 {
   return false;
 }
@@ -674,6 +674,14 @@ bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot
   return true;
 }
 
+bool wb_vrepdbs::time( pwr_tTime *t)
+{
+  if ( m_dbsmep) {
+    *t = m_dbsmep->venv->vp->time;
+    return true;
+  }
+  return false;
+}
 
 
 
