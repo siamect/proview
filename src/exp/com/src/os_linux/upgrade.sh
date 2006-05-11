@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.9 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: upgrade.sh,v 1.10 2006-05-11 07:14:45 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -26,11 +26,11 @@ let reload__loaddb=4
 
 let pass__continue=1
 let pass__execute=2
-v40_root="/data1/pwr/x4-0-0/rls_dbg"
+v41_root="/data1/pwr/x4-1-3/rls_dbg"
 
 reload_dumpdb()
 {
-  # Dump V3.4b databases
+  # Dump V4.1.3 databases
 
   reload_checkpass "dumpdb" $start_pass
   if [ $pass_status -ne $pass__execute ]; then
@@ -50,8 +50,8 @@ reload_dumpdb()
     dump_file=$pwrp_db/$cdb.wb_dmp
 
     echo "Dumping volume $cdb in $dump_file"
-    export pwr_load=$v40_root/os_linux/hw_x86/exp/load
-    $v40_root/os_linux/hw_x86/exp/exe/wb_cmd -v $cdb wb dump/out=\"$dump_file\"
+    export pwr_load=$v41_root/os_linux/hw_x86/exp/load
+    $v41_root/os_linux/hw_x86/exp/exe/wb_cmd -v $cdb wb dump/out=\"$dump_file\"
     export pwr_load=$pwrb_root/os_linux/hw_x86/exp/load
   done
 }
@@ -358,12 +358,12 @@ reload_convertge()
   reload_continue "Pass convert ge graphs"
 
   # Create a script that dumps each volume
-  tmpfile=$pwrp_tmp/convertv40.ge_com
+  tmpfile=$pwrp_tmp/convertv41.ge_com
   cat > $tmpfile << EOF
 function int process( string graph)
   printf( "Converting %s...\n", graph);
   open 'graph'
-  convert v40
+  convert v41
   save
 endfunction
 
@@ -465,9 +465,7 @@ usage()
   Pass
 
     dumpdb	   Dump database to textfile \$pwrp_db/'volume'.wb_dmp
-    cnvclassvolume Convert wb_load-files for classvolumes. 
     classvolumes   Create loadfiles for classvolumes.
-    cnvdump        Convert dumpfiles.
     renamedb       Rename old databases.
     dirvolume      Load the directory volume.
     loaddb         Load dumpfiles.
@@ -512,7 +510,7 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb cnvclassvolume classvolumes cnvdump renamedb dirvolume loaddb compile createload createboot"
+passes="dumpdb classvolumes renamedb dirvolume loaddb compile createload createboot"
 echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
