@@ -22,3 +22,5 @@
                      FriendNode object under a NodeConfig object.
 060508 cs  wtt       References in superclass was not displayed in the navigator when option
                      Object Reference or Attribute Reference was selected.
+060511 cs  wtt       Build Node window is not displayed if there is only one configured 
+                     node for the current volume. Submenu on Build removed.
