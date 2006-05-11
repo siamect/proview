@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_wtt.uil,v 1.8 2006-03-31 14:29:39 claes Exp $
+!  Proview   $Id: wb_wtt.uil,v 1.9 2006-05-11 10:46:05 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -699,71 +699,52 @@ object functions_entry : XmCascadeButton
     {
       controls
       {
-        XmCascadeButton 
+        XmPushButton
         {
-          arguments 
+          arguments
           {
-	    XmNlabelString = compound_string("Build");
-	    XmNmnemonic         = keysym("S");
+  	    XmNlabelString = compound_string("Build Node");
+            XmNmnemonic = keysym('N');
             XmNfontList	   = menu_font;
-          };
-          controls 
-          {
-	    XmPulldownMenu 
-            {
-	      arguments 
-              {
-	      };
-	      controls 
-              {
-                XmPushButton
-                {
-                  arguments
-                  {
-  	            XmNlabelString = compound_string("Object");
-                    XmNmnemonic = keysym('b');
-                    XmNfontList	   = menu_font;
-	            XmNuserData = 13;
-	          };
-	          callbacks
-                  {
-                    XmNactivateCallback = procedure wtt_activate_buildobject(wtt_ctx);
-	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-                  };
-	        };
-                XmPushButton
-                {
-                  arguments
-                  {
-  	            XmNlabelString = compound_string("Volume");
-                    XmNmnemonic = keysym('u');
-                    XmNfontList	   = menu_font;
-	            XmNuserData = 7;
-	          };
-	          callbacks
-                  {
-                    XmNactivateCallback = procedure wtt_activate_buildvolume(wtt_ctx);
-	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-                  };
-	        };
-                XmPushButton
-                {
-                  arguments
-                  {
-  	            XmNlabelString = compound_string("Node...");
-                    XmNmnemonic = keysym('N');
-                    XmNfontList	   = menu_font;
-	            XmNuserData = 8;
-	          };
-	          callbacks
-                  {
-                    XmNactivateCallback = procedure wtt_activate_buildnode(wtt_ctx);
-	            MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
-                  };
-	        };
-	      };
-	    };
+	    XmNuserData = 8;
+	    XmNaccelerator = "Shift Ctrl<Key>B";
+	    XmNacceleratorText = compound_string('Ctrl+Shift+B');
 	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildnode(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Build Volume");
+            XmNmnemonic = keysym('u');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 7;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildvolume(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+	XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Build Object");
+            XmNmnemonic = keysym('b');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 13;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildobject(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
 	};
         XmPushButton
         {
