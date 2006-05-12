@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_conv.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_conv.c,v 1.3 2006-05-12 10:44:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,6 +174,9 @@ static pwr_tBoolean uint32ToUInt16(CONV_ARGS);
 
 static pwr_tBoolean stringToString(CONV_ARGS);
 
+static pwr_tBoolean objidToAttrRef(CONV_ARGS);
+static pwr_tBoolean attrRefToObjid(CONV_ARGS);
+
 
 /** @note The member order must match conv_eIdx */
 const convFunction conv_Fctn[] = {
@@ -247,7 +250,11 @@ const convFunction conv_Fctn[] = {
   uint32ToUInt8,
   uint32ToUInt16,
 
-  stringToString
+  stringToString,
+
+  objidToAttrRef,
+  attrRefToObjid
+
 };
 
 
@@ -480,6 +487,22 @@ conv_GetIdx(pwr_eType src, pwr_eType trg)
         case pwr_eType_Int32:
         case pwr_eType_UInt32:
             return conv_eIdx_copy;
+        default:
+            break;
+        }
+
+    case pwr_eType_Objid:
+        switch (trg) {
+        case pwr_eType_AttrRef:
+            return conv_eIdx_objidToAttrRef;
+        default:
+            break;
+        }
+
+    case pwr_eType_AttrRef:
+        switch (trg) {
+        case pwr_eType_Objid:
+            return conv_eIdx_attrRefToObjid;
         default:
             break;
         }
@@ -1002,3 +1025,43 @@ stringToString(CONV_ARGS)
   }
   return TRUE;
 }    
+
+static pwr_tBoolean
+objidToAttrRef(CONV_ARGS)
+{
+  for (; tcount > 0 && *tsize >= sizeof(pwr_tObjid); tcount--, scount--) {
+    if (scount > 0 && !sadef.b.privatepointer) {
+      memset( tp, 0, sizeof(pwr_sAttrRef));
+      ((pwr_sAttrRef *)tp)->Objid = *(pwr_tObjid *)sp;
+      ((pwr_sAttrRef *)tp)->Flags.b.Object = 1;
+      sp += sizeof(pwr_tObjid);
+    } else
+      memset( tp, 0, sizeof(pwr_sAttrRef));
+
+    tp += sizeof(pwr_sAttrRef);
+    *tsize -= sizeof(pwr_sAttrRef);
+  }
+  return TRUE;
+}    
+
+static pwr_tBoolean
+attrRefToObjid(CONV_ARGS)
+{
+  for (; tcount > 0 && *tsize >= sizeof(pwr_sAttrRef); tcount--, scount--) {
+    if (scount > 0 && !sadef.b.privatepointer) {
+      if ( ((pwr_sAttrRef *)sp)->Flags.b.Object) {
+	*(pwr_tObjid *)tp = ((pwr_sAttrRef *)sp)->Objid;
+	sp += sizeof(pwr_sAttrRef);
+      }
+      else 
+	*(pwr_tObjid *)tp = pwr_cNObjid;
+    } 
+    else
+      *(pwr_tObjid *)tp = pwr_cNObjid;
+
+    tp += sizeof(pwr_tObjid);
+    *tsize -= sizeof(pwr_tObjid);
+  }
+  return TRUE;
+}    
+

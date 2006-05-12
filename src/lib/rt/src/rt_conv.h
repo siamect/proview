@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_conv.h,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_conv.h,v 1.3 2006-05-12 10:44:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,9 @@ typedef enum {
     conv_eIdx_uint32ToUInt16,
 
     conv_eIdx_stringToString,
+
+    conv_eIdx_objidToAttrRef,
+    conv_eIdx_attrRefToObjid,
 
     conv_eIdx_
 } conv_eIdx;
