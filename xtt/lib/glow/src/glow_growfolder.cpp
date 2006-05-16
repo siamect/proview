@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.5 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,6 +48,7 @@ GrowFolder::GrowFolder( GlowCtx *glow_ctx, char *name, double x, double y,
     folder_scale[i] = 1;
     folder_v_scrollbar[i] = 0;
     folder_h_scrollbar[i] = 0;
+    strcpy( folder_owner[i], "");
   }
 
   y_low_offs = header_height;
@@ -80,6 +81,7 @@ void GrowFolder::save( ofstream& fp, glow_eSaveMode mode)
     fp << int(glow_eSave_GrowFolder_folder_scale1) + i*5 << FSPACE << folder_scale[i] << endl;
     fp << int(glow_eSave_GrowFolder_folder_v_scrollbar1) + i*5 << FSPACE << folder_v_scrollbar[i] << endl;
     fp << int(glow_eSave_GrowFolder_folder_h_scrollbar1) + i*5 << FSPACE << folder_h_scrollbar[i] << endl;
+    fp << int(glow_eSave_GrowFolder_folder_owner1) + i << FSPACE << folder_owner[i] << endl;
   }
   fp << int(glow_eSave_GrowFolder_window_part) << endl;
   GrowWindow::save( fp, mode);
@@ -190,6 +192,30 @@ void GrowFolder::open( ifstream& fp)
       case glow_eSave_GrowFolder_folder_scale12: fp >> folder_scale[11]; break;
       case glow_eSave_GrowFolder_folder_v_scrollbar12: fp >> folder_v_scrollbar[11]; break;
       case glow_eSave_GrowFolder_folder_h_scrollbar12: fp >> folder_h_scrollbar[11]; break;
+      case glow_eSave_GrowFolder_folder_owner1:
+        fp.getline( folder_owner[0], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner2:
+        fp.getline( folder_owner[1], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner3:
+        fp.getline( folder_owner[2], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner4:
+        fp.getline( folder_owner[3], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner5:
+        fp.getline( folder_owner[4], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner6:
+        fp.getline( folder_owner[5], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner7:
+        fp.getline( folder_owner[6], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner8:
+        fp.getline( folder_owner[7], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner9:
+        fp.getline( folder_owner[8], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner10:
+        fp.getline( folder_owner[9], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner11:
+        fp.getline( folder_owner[10], sizeof(folder_owner[0])); break;
+      case glow_eSave_GrowFolder_folder_owner12:
+        fp.getline( folder_owner[11], sizeof(folder_owner[0])); break;
       case glow_eSave_GrowFolder_window_part: 
         GrowWindow::open( fp);
         break;
@@ -206,6 +232,7 @@ void GrowFolder::open( ifstream& fp)
   window_scale = folder_scale[0];
   vertical_scrollbar = folder_v_scrollbar[0];
   horizontal_scrollbar = folder_h_scrollbar[0];
+  strcpy( owner, folder_owner[0]);
   GrowWindow::update_attributes();
 }
 
@@ -588,7 +615,7 @@ int GrowFolder::event_handler( glow_eEvent event, int x, int y, double fx,
 {
   int sts;
 
-  // Convert koordinates to local koordinates
+  // Convert coordinates to local coordinates
   if ( event == glow_eEvent_MB1Click) {
     if ( x_left <= fx && fx <= x_right &&
 	 y_low <= fy && fy <= y_low + header_height) {
@@ -601,6 +628,7 @@ int GrowFolder::event_handler( glow_eEvent event, int x, int y, double fx,
 	  window_scale = folder_scale[i];
 	  vertical_scrollbar = folder_v_scrollbar[i];
 	  horizontal_scrollbar = folder_h_scrollbar[i];
+	  strcpy( owner, folder_owner[i]);
 	  current_folder = i;
 	  // ctx->set_nodraw();
 	  GrowWindow::update_attributes();
@@ -636,6 +664,7 @@ void GrowFolder::update_attributes()
     window_scale = folder_scale[current_folder];
     vertical_scrollbar = folder_v_scrollbar[current_folder];
     horizontal_scrollbar = folder_h_scrollbar[current_folder];
+    strcpy( owner, folder_owner[current_folder]);
     GrowWindow::update_attributes();
   }
 }
@@ -669,6 +698,7 @@ int GrowFolder::set_folder( int idx)
   window_scale = folder_scale[idx];
   vertical_scrollbar = folder_v_scrollbar[idx];
   horizontal_scrollbar = folder_h_scrollbar[idx];
+  strcpy( owner, folder_owner[idx]);
   current_folder = idx;
   // ctx->set_nodraw();
   GrowWindow::update_attributes();

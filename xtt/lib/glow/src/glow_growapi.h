@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.19 2006-03-31 14:37:31 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.20 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2873,6 +2873,8 @@ typedef GlowTraceData glow_sTraceData;
   int grow_SetWindowSource( grow_tObject window, char *source);
   void grow_GetWindowSize( grow_tCtx ctx, int *width, int *height);
   int grow_IsJava( char *name, int *is_frame, int *is_applet, char *java_name);
+  void grow_GetOwner( grow_tCtx ctx, char *owner);
+  void grow_SetOwner( grow_tCtx ctx, char *owner);
 
 /*@}*/
 #if defined __cplusplus

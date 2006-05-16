@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.27 2006-01-23 08:46:46 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.28 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1006,10 +1006,11 @@ class GeInvisible : public GeDynElem {
   bool first_scan;
   pwr_tBoolean old_value;
   int a_typeid;
+  unsigned int bitmask;
 
   GeInvisible( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_Invisible, (ge_mActionType) 0, ge_eDynPrio_Invisible), 
-    dimmed(0)
+    dimmed(0), bitmask(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeInvisible( const GeInvisible& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), dimmed(x.dimmed)
@@ -1949,6 +1950,7 @@ class GeSlider : public GeDynElem {
   pwr_tBoolean *insensitive_p;
   pwr_tSubid insensitive_subid;
   int insensitive_inverted;
+  graph_eDatabase insensitive_db;
 
   GeSlider( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType)0, ge_mActionType_Slider, ge_eDynPrio_Slider),

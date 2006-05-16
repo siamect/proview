@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.22 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.23 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,6 +95,11 @@ typedef enum {
   graph_eDatabase_Local,	//!< Graph local database.
   graph_eDatabase_Ccm		//!< Scrip external variable database.
 } graph_eDatabase;
+
+//! Extension of proview type pwr_eType. Should not collide with any pwr_eType.
+typedef enum {
+  graph_eType_Bit = 1 << 15 + 1 //!< Type for a bit in a bitmask
+} graph_eType;
 
 typedef enum {
 	graph_eTrace_Inherit		= 0,
@@ -206,7 +211,7 @@ typedef struct {
 
 //! Variable item in local database.
 typedef struct s_LocalDb {
-  char	name[40];		//!< Variable name.
+  char	name[80];		//!< Variable name.
   int	type;			//!< Variable type (pwr_eType).
   char	value[80];		//!< Value.
   char	old_value[80];		//!< Old value.
@@ -1289,6 +1294,7 @@ class Graph {
     \param size		Size of value (max size is 80 bytes).
   */
   int localdb_set_value( char *name, void *value, int size);
+  int localdb_toggle_value( char *name);
 
   //! Create a GrowNode or GrowSlider object.
   /*!

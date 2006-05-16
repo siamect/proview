@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.30 2006-02-23 14:46:05 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.31 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -85,10 +85,11 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"Time",	pwr_eType_Time,     sizeof(pwr_tTime)},
     {"DeltaTime", pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
     {"AttrRef", pwr_eType_AttrRef,  sizeof(pwr_sAttrRef)},
-    {"Status", pwr_eType_Status,  sizeof(pwr_tStatus)},
+    {"Status", 	pwr_eType_Status,   sizeof(pwr_tStatus)},
     {"NetStatus", pwr_eType_NetStatus,  sizeof(pwr_tNetStatus)},
-    {"Enum", pwr_eType_Enum,  sizeof(pwr_tEnum)},
-    {"Mask", pwr_eType_Mask,  sizeof(pwr_tMask)}
+    {"Enum", 	pwr_eType_Enum,     sizeof(pwr_tEnum)},
+    {"Mask", 	pwr_eType_Mask,     sizeof(pwr_tMask)},
+    {"Bit",  	(pwr_eType)graph_eType_Bit,    sizeof(pwr_tBit)}
     };
 
 static char null_str[] = "";
@@ -1234,6 +1235,7 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"ScrollbarWidth", 	"Window.ScrollbarWidth",
 					"ScrollbarColor", 	"Window.ScrollbarColor",
 					"ScrollbarBgColor", 	"Window.ScrollbarBgColor",
+					"Owner", 		"Window.Object",
 					""};
     GeDyn *dyn;
 
@@ -1312,61 +1314,73 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"Scale1",		"Folder1.Scale",
 					"VerticalScrollbar1", 	"Folder1.VerticalScrollbar",
 					"HorizontalScrollbar1",	"Folder1.HorizontalScrollbar",
+					"Owner1",   		"Folder1.Object",
 					"FileName2",   		"Folder2.FileName",
 					"Text2",   		"Folder2.Text",
 					"Scale2",		"Folder2.Scale",
 					"VerticalScrollbar2", 	"Folder2.VerticalScrollbar",
 					"HorizontalScrollbar2",	"Folder2.HorizontalScrollbar",
+					"Owner2",   		"Folder2.Object",
 					"FileName3",   		"Folder3.FileName",
 					"Text3",   		"Folder3.Text",
 					"Scale3",		"Folder3.Scale",
 					"VerticalScrollbar3", 	"Folder3.VerticalScrollbar",
 					"HorizontalScrollbar3",	"Folder3.HorizontalScrollbar",
+					"Owner3",   		"Folder3.Object",
 					"FileName4",   		"Folder4.FileName",
 					"Text4",   		"Folder4.Text",
 					"Scale4",		"Folder4.Scale",
 					"VerticalScrollbar4", 	"Folder4.VerticalScrollbar",
 					"HorizontalScrollbar4",	"Folder4.HorizontalScrollbar",
+					"Owner4",   		"Folder4.Object",
 					"FileName5",   		"Folder5.FileName",
 					"Text5",   		"Folder5.Text",
 					"Scale5",		"Folder5.Scale",
 					"VerticalScrollbar5", 	"Folder5.VerticalScrollbar",
 					"HorizontalScrollbar5",	"Folder5.HorizontalScrollbar",
+					"Owner5",   		"Folder5.Object",
 					"FileName6",   		"Folder6.FileName",
 					"Text6",   		"Folder6.Text",
 					"Scale6",		"Folder6.Scale",
 					"VerticalScrollbar6", 	"Folder6.VerticalScrollbar",
 					"HorizontalScrollbar6",	"Folder6.HorizontalScrollbar",
+					"Owner6",   		"Folder6.Object",
 					"FileName7",   		"Folder7.FileName",
 					"Text7",   		"Folder7.Text",
 					"Scale7",		"Folder7.Scale",
 					"VerticalScrollbar7", 	"Folder7.VerticalScrollbar",
 					"HorizontalScrollbar7",	"Folder7.HorizontalScrollbar",
+					"Owner7",   		"Folder7.Object",
 					"FileName8",   		"Folder8.FileName",
 					"Text8",   		"Folder8.Text",
 					"Scale8",		"Folder8.Scale",
 					"VerticalScrollbar8", 	"Folder8.VerticalScrollbar",
 					"HorizontalScrollbar8",	"Folder8.HorizontalScrollbar",
+					"Owner8",   		"Folder8.Object",
 					"FileName9",   		"Folder9.FileName",
 					"Text9",   		"Folder9.Text",
 					"Scale9",		"Folder9.Scale",
 					"VerticalScrollbar9", 	"Folder9.VerticalScrollbar",
 					"HorizontalScrollbar9",	"Folder9.HorizontalScrollbar",
+					"Owner10",   		"Folder9.Object",
 					"FileName10",   	"Folder10.FileName",
 					"Text10",   		"Folder10.Text",
 					"Scale10",		"Folder10.Scale",
 					"VerticalScrollbar10", 	"Folder10.VerticalScrollbar",
 					"HorizontalScrollbar10","Folder10.HorizontalScrollbar",
+					"Owner11",   		"Folder10.Object",
 					"FileName11",   	"Folder11.FileName",
 					"Text11",   		"Folder11.Text",
 					"Scale11",		"Folder11.Scale",
 					"VerticalScrollbar11", 	"Folder11.VerticalScrollbar",
 					"HorizontalScrollbar11","Folder11.HorizontalScrollbar",
+					"Owner12",   		"Folder11.Object",
 					"FileName12",   	"Folder12.FileName",
 					"Text12",   		"Folder12.Text",
 					"Scale12",		"Folder12.Scale",
 					"VerticalScrollbar12", 	"Folder12.VerticalScrollbar",
 					"HorizontalScrollbar12","Folder12.HorizontalScrollbar",
+					"Owner12",   		"Folder12.Object",
 					""};
     GeDyn *dyn;
 
@@ -2996,9 +3010,24 @@ static int graph_trace_connect_bc( grow_tObject object,
   int			dyn_type;
   int			dyn_action_type;
 
+  GrowCtx *ctx;
+  Graph	*graph;
+  int ctx_popped = 0;
+
+  // Check if new ctx
+  ctx = grow_GetCtx( object);
+  grow_GetCtxUserData( (GrowCtx *)ctx, (void **) &graph);
+  if ( ctx != graph->grow->ctx) {
+    graph->grow->pop( ctx);
+    ctx_popped = 1;
+  }  
+
   grow_GetUserData( object, (void **)&dyn);
-  if ( !dyn)
+  if ( !dyn) {
+    if ( ctx_popped)
+      graph->grow->push();
     return 1;
+  }
 
   // Get Dyn from nodeclass i dyn_type is HostObject
   grow_GetObjectClassDynType( object, &dyn_type, &dyn_action_type);
@@ -3027,6 +3056,8 @@ static int graph_trace_connect_bc( grow_tObject object,
 
   dyn->connect( object, trace_data);
 
+  if ( ctx_popped)
+    graph->grow->push();
   return 1;
 }
 
@@ -3628,6 +3659,12 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   char *s0 = in;
   char str[500];
 
+  char oname[256];
+  if ( grow->stack_cnt == 0)
+    strcpy( oname, object_name);
+  else
+    grow_GetOwner( grow->ctx, oname);
+
   if ( dyn && dyn->total_dyn_type & ge_mDynType_HostObject) {
     pwr_tAName hostobject;
 
@@ -3644,13 +3681,13 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
     }
     strcpy( t0, s0);
 
-    if ( strcmp( object_name, "") == 0) {
+    if ( strcmp( oname, "") == 0) {
       strcpy( out, str);
       return;
     }
     s0 = str;
   }
-  else if ( strcmp( object_name, "") == 0) {
+  else if ( strcmp( oname, "") == 0) {
     strcpy( out, in);
     return;
   }
@@ -3659,8 +3696,8 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   while ( (s = strstr( s0, "$object"))) {
     strncpy( t0, s0, s-s0);
     t0 += s - s0;
-    strcpy( t0, object_name); 
-    t0 += strlen(object_name);
+    strcpy( t0, oname); 
+    t0 += strlen(oname);
     s0 = s + strlen("$object");
   }
   strcpy( t0, s0);
@@ -3767,6 +3804,17 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     else
       *inverted = 0;
 
+    if ( grow->stack_cnt) {
+      // Add suffix to make name unic for subwindow context
+      char owner[256];
+
+      grow_GetOwner( grow->ctx, owner);
+      if ( strcmp( owner, "") != 0) {
+	strcat( parsed_name, "-");
+	strcat( parsed_name, owner);
+      }
+    }
+
     return graph_eDatabase_Local;
   }
   if ( (s = strstr( str, "$ccm."))) {
@@ -3801,8 +3849,14 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
   }
 
   if ( (s = strstr( str, "$object"))) {
+    char oname[256];
+    if ( grow->stack_cnt == 0)
+      strcpy( oname, object_name);
+    else
+      grow_GetOwner( grow->ctx, oname);
+    
     strcpy( str1, s + strlen("$object"));
-    strcpy( s, object_name);
+    strcpy( s, oname);
     strcat( str, str1);
   }
 

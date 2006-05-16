@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.11 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.12 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,7 +93,8 @@ graph_sLocalDb *Graph::localdb_add( char *name, int type)
   graph_sLocalDb *item_p;
 
   item_p = (graph_sLocalDb *) calloc( 1, sizeof(graph_sLocalDb));
-  strcpy( item_p->name, name);
+  strncpy( item_p->name, name, sizeof(item_p->name));
+  item_p->name[sizeof(item_p->name)-1] = 0;
   item_p->type = type;
   item_p->next = local_db;
   local_db = item_p;
@@ -125,6 +126,21 @@ int Graph::localdb_set_value( char *name, void *value, int size)
     if ( strcmp( item_p->name, name) == 0)
     {
       memcpy( item_p->value, value, size);
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int Graph::localdb_toggle_value( char *name)
+{
+  graph_sLocalDb *item_p;
+
+  for ( item_p = local_db; item_p; item_p = item_p->next)
+  {
+    if ( strcmp( item_p->name, name) == 0)
+    {
+      *(pwr_tBoolean *) &item_p->value = !*(pwr_tBoolean *) &item_p->value;
       return 1;
     }
   }

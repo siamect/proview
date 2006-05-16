@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.12 2006-03-31 14:37:31 claes Exp $
+ * Proview   $Id: glow.h,v 1.13 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1454,6 +1454,7 @@ typedef enum {
 	glow_eSave_GrowWindow_scrollbar_color 	= 4006,
 	glow_eSave_GrowWindow_scrollbar_bg_color = 4007,
 	glow_eSave_GrowWindow_window_scale 	= 4008,
+	glow_eSave_GrowWindow_owner	 	= 4009,
 	glow_eSave_GrowFolder_folders 		= 4100,
 	glow_eSave_GrowFolder_text_size        	= 4101,
 	glow_eSave_GrowFolder_text_drawtype    	= 4102,
@@ -1522,6 +1523,18 @@ typedef enum {
 	glow_eSave_GrowFolder_folder_scale12   	= 4177,
 	glow_eSave_GrowFolder_folder_v_scrollbar12 = 4178,
 	glow_eSave_GrowFolder_folder_h_scrollbar12 = 4179,
+	glow_eSave_GrowFolder_folder_owner1 	= 4180,
+	glow_eSave_GrowFolder_folder_owner2 	= 4181,
+	glow_eSave_GrowFolder_folder_owner3 	= 4182,
+	glow_eSave_GrowFolder_folder_owner4 	= 4183,
+	glow_eSave_GrowFolder_folder_owner5 	= 4184,
+	glow_eSave_GrowFolder_folder_owner6 	= 4185,
+	glow_eSave_GrowFolder_folder_owner7 	= 4186,
+	glow_eSave_GrowFolder_folder_owner8 	= 4187,
+	glow_eSave_GrowFolder_folder_owner9 	= 4188,
+	glow_eSave_GrowFolder_folder_owner10 	= 4189,
+	glow_eSave_GrowFolder_folder_owner11 	= 4190,
+	glow_eSave_GrowFolder_folder_owner12 	= 4191,
 	glow_eSave_GrowTable_rect_part	 	= 4200,
 	glow_eSave_GrowTable_userdata_cb	= 4202,
 	glow_eSave_GrowTable_scrollbar_width	= 4203,

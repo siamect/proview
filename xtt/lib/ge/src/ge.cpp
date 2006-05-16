@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.21 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.22 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1819,6 +1819,8 @@ static void ge_activate_open( Widget w, ge_tCtx gectx, XmAnyCallbackStruct *data
     }
     dcli_parse_filename( found_file, dev, dir, file, type, &version);
     strcpy( file_p[file_cnt - 1], file);
+    if ( strcmp( file, "") == 0)
+      file_cnt--;
     sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_NEXT);
   }
   dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);

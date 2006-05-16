@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.20 2006-03-31 14:37:31 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.21 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1820,6 +1820,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Color;
         attrinfo[i++].size = sizeof( op->scrollbar_bg_color);
       }
+      if ( (name = growapi_translate( transtab, "Owner"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = op->owner;
+        attrinfo[i].type = glow_eType_String;
+        attrinfo[i++].size = sizeof( op->owner);
+      }
 
       break;
     }
@@ -2133,6 +2139,13 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
 	  attrinfo[i].value_p = &op->folder_h_scrollbar[j];
 	  attrinfo[i].type = glow_eType_Boolean;
 	  attrinfo[i++].size = sizeof( op->folder_h_scrollbar[0]);
+	}
+	sprintf( tname, "Owner%d", j+1);
+	if ( (name = growapi_translate( transtab, tname))) {
+	  strcpy( attrinfo[i].name, name);
+	  attrinfo[i].value_p = op->folder_owner[j];
+	  attrinfo[i].type = glow_eType_String;
+	  attrinfo[i++].size = sizeof( op->folder_owner[0]);
 	}
       }
       break;
@@ -4386,6 +4399,19 @@ int grow_IsJava( char *name, int *is_frame, int *is_applet, char *java_name)
   delete ctx;
   return sts;
 }
+
+void grow_GetOwner( grow_tCtx ctx, char *owner)
+{
+  
+  ((GrowCtx *)ctx)->get_owner( owner);
+}
+
+void grow_SetOwner( grow_tCtx ctx, char *owner)
+{
+  
+  ((GrowCtx *)ctx)->set_owner( owner);
+}
+
 
 /*@}*/
 

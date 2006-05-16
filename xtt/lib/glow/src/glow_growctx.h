@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.7 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.8 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -85,6 +85,7 @@ class GrowCtx : public GlowCtx {
 	  strcpy( java_name, ""); 
 	  strcpy( next_subgraph, "");
           strcpy( background_image, ""); 
+	  strcpy( owner, "");
 	  memset( argname, 0, sizeof(argname));
 	  memset( argtype, 0, sizeof(argtype));
 	  memset( dyn_color, 0, sizeof(dyn_color));
@@ -761,6 +762,14 @@ class GrowCtx : public GlowCtx {
   /*! \param parent	The parent menu object. */
   void delete_menu_child( GlowArrayElem *parent);
 
+  //! Get owner.
+  /*! \param o		Owner string. */
+  void get_owner( char *o) { strcpy( o, owner);}
+
+  //! Get owner.
+  /*! \param o		Owner string. */
+  void set_owner( char *o) { strcpy( owner, o);}
+
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.
   int		conpoint_num_cnt;	//!< Counter to get next number for when creating conpoints in a subgraph.
@@ -837,6 +846,7 @@ class GrowCtx : public GlowCtx {
   void 		(*redraw_callback)( void *); //!< Backcall function before drawing (if ctx is window component).
   void 		*redraw_data;		//!< Data for redraw callback.
   int		has_subwindows;		//!< Graph contains subwindow objects (GrowWindow or GrowFolder)
+  char		owner[256];		//!< Owner, used by application
 };
 
 void grow_auto_scrolling( GrowCtx *ctx);

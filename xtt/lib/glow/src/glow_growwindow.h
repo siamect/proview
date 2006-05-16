@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.h,v 1.4 2006-01-23 08:46:54 claes Exp $
+ * Proview   $Id: glow_growwindow.h,v 1.5 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,6 +145,7 @@ class GrowWindow : public GrowRect {
   double		window_scale;		//!< Scale of window ctx.
   double		y_low_offs;		//!< y low offset.
   int			input_focus;		//!< Window has input focus.
+  char			owner[256];		//!< Window owner.
 
   //! Draw the object.
   /*!

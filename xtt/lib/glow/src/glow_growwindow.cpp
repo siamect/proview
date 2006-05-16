@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.7 2006-03-31 14:40:14 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.8 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,6 +46,7 @@ GrowWindow::GrowWindow( GlowCtx *glow_ctx, char *name, double x, double y,
 {
   strcpy( file_name, "");
   strcpy( input_file_name, "");
+  strcpy( owner, "");
 
   if ( !nodraw)
     draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
@@ -79,6 +80,7 @@ void GrowWindow::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowWindow_vertical_scrollbar) << FSPACE << vertical_scrollbar << endl;
   fp << int(glow_eSave_GrowWindow_horizontal_scrollbar) << FSPACE << horizontal_scrollbar << endl;
   fp << int(glow_eSave_GrowWindow_window_scale) << FSPACE << window_scale << endl;
+  fp << int(glow_eSave_GrowWindow_owner) << FSPACE << owner << endl;
   fp << int(glow_eSave_GrowWindow_rect_part) << endl;
   GrowRect::save( fp, mode);
   if ( user_data && ctx->userdata_save_callback) {
@@ -108,6 +110,8 @@ void GrowWindow::open( ifstream& fp)
       case glow_eSave_GrowWindow_vertical_scrollbar: fp >> vertical_scrollbar; break;
       case glow_eSave_GrowWindow_horizontal_scrollbar: fp >> horizontal_scrollbar; break;
       case glow_eSave_GrowWindow_window_scale: fp >> window_scale; break;
+      case glow_eSave_GrowWindow_owner: fp >> owner; break;
+        fp.getline( owner, sizeof(owner)); break;
       case glow_eSave_GrowWindow_rect_part: 
         GrowRect::open( fp);
         break;
@@ -690,7 +694,8 @@ void GrowWindow::set_input_focus( int focus)
 
 void GrowWindow::update_attributes()
 {
-  if ( strcmp( input_file_name, file_name) != 0) {
+  if ( strcmp( input_file_name, file_name) != 0 ||
+       strcmp( window_ctx->owner, owner) != 0) {
     // New graph, create new context
 #if 0
     int ur_x = int( (x_right - vertical_scrollbar * scrollbar_width) * ctx->zoom_factor_x) - ctx->offset_x;
@@ -875,6 +880,7 @@ void GrowWindow::new_ctx()
   memcpy( window_ctx->event_callback, ctx->event_callback, sizeof( ctx->event_callback));
   window_ctx->event_move_node = ctx->event_move_node;
   window_ctx->background_disabled = 1;
+  strcpy( window_ctx->owner, owner);
 
   sts = window_ctx->open( fname, glow_eSaveMode_Edit);
   if ( EVEN(sts))

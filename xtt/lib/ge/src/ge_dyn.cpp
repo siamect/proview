@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.43 2006-04-25 13:06:40 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.44 2006-05-16 11:51:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1540,9 +1540,16 @@ int GeDigLowColor::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
-  sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
-  if ( EVEN(sts)) return sts;
-
+  switch ( db) {
+  case graph_eDatabase_Local:
+    p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, attr_type);
+    break;
+  case graph_eDatabase_Gdh:
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&p, &subid, size);
+    if ( EVEN(sts)) return sts;
+    break;
+  default: ;
+  }
   if ( p)
     trace_data->p = p;
   first_scan = true;
@@ -2505,6 +2512,19 @@ int GeInvisible::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( strcmp( parsed_name,"") == 0)
     return 1;
 
+  if ( attr_type == graph_eType_Bit) {
+    // Get bit number from parsed name
+    char *s;
+    int bitnum;
+
+    if ( (s = strchr( parsed_name, '['))) {
+      sscanf( s+1, "%d", &bitnum);
+      *s = 0;
+      if ( bitnum >= 0 && bitnum < 32)
+	bitmask = 1 << bitnum;
+    }
+  }
+
   if ( cdh_NoCaseStrncmp( parsed_name, "$cmd(", 5) == 0) {
     char command[400];
     char *s;
@@ -2592,6 +2612,36 @@ int GeInvisible::scan( grow_tObject object)
     }
     old_value = *p;
     break;
+  case graph_eType_Bit: {
+    pwr_tBoolean val = ((*p & bitmask) != 0);
+
+    if ( !first_scan) {
+      if ( old_value == val && !dyn->reset_invisible) {
+	// No change since last time
+	if ( (!inverted && val) || (inverted && !val))
+	  dyn->ignore_invisible = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( (!inverted && !val) || (inverted && val)) {
+      grow_SetObjectVisibility( object, glow_eVis_Visible);
+      dyn->reset_color = true;
+      dyn->reset_invisible = true;
+    }
+    else {
+      if ( dimmed)
+	grow_SetObjectVisibility( object, glow_eVis_Dimmed);
+      else
+	grow_SetObjectVisibility( object, glow_eVis_Invisible);
+      dyn->ignore_color = true;
+      dyn->ignore_invisible = true;
+    }
+    old_value = val;
+    break;
+  }
   case pwr_eType_String: {
     char *sp = (char *) p;
     char *sp_old = (char *) &old_value;
@@ -8152,6 +8202,9 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     case graph_eDatabase_Gdh:
       sts = gdh_GetObjectInfo( parsed_name, &value, sizeof(value));
       break;
+    case graph_eDatabase_Local:
+      sts = dyn->graph->localdb_toggle_value( parsed_name);
+      break;
     case graph_eDatabase_Ccm:
       sts = dyn->graph->ccm_get_variable( parsed_name, attr_type, &value);
       break;
@@ -8164,6 +8217,8 @@ int GeToggleDig::action( grow_tObject object, glow_tEvent event)
     switch ( db) {
     case graph_eDatabase_Gdh:
       sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+      break;
+    case graph_eDatabase_Local:
       break;
     case graph_eDatabase_Ccm:
       sts = dyn->graph->ccm_set_variable( parsed_name, attr_type, &value);
@@ -9971,12 +10026,20 @@ int GeSlider::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   insensitive_p = 0;
-  dyn->parse_attr_name( insensitive_attr, parsed_name,
+  insensitive_db = dyn->parse_attr_name( insensitive_attr, parsed_name,
 				    &insensitive_inverted, &a_type, &a_size);
   if ( strcmp(parsed_name, "") != 0 && 
        a_type == pwr_eType_Boolean) {
-    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&insensitive_p, 
-				       &insensitive_subid, a_size);
+    switch ( insensitive_db) {
+    case graph_eDatabase_Gdh:
+      sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&insensitive_p, 
+					 &insensitive_subid, a_size);
+      break;
+    case graph_eDatabase_Local:
+      insensitive_p = (pwr_tBoolean *) dyn->graph->localdb_ref_or_create( parsed_name, a_type);
+      break;
+    default:;
+    }
   }
   return 1;
 }
@@ -9995,7 +10058,7 @@ int GeSlider::disconnect( grow_tObject object)
     gdh_UnrefObjectInfo( max_value_subid);
     max_value_p = 0;
   }
-  if ( insensitive_p) {
+  if ( insensitive_p && insensitive_db == graph_eDatabase_Gdh) {
     gdh_UnrefObjectInfo( insensitive_subid);
     insensitive_p = 0;
   }

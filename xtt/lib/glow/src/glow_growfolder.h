@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.h,v 1.4 2005-10-12 12:59:05 claes Exp $
+ * Proview   $Id: glow_growfolder.h,v 1.5 2006-05-16 11:50:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,10 +135,11 @@ class GrowFolder : public GrowWindow {
   double	       	folder_scale[MAX_FOLDERS];	//!< Scale for each folder.
   int			folder_v_scrollbar[MAX_FOLDERS]; //!< Vertical scrollbar for each folder.
   int			folder_h_scrollbar[MAX_FOLDERS]; //!< Horizontal scrollbar for each folder.
+  char			folder_owner[MAX_FOLDERS][256]; //!< Owner for each folder.
   int			current_folder;		//!< The currently selected folder.
   glow_eDrawType	color_selected;		//!< Color of selected folder.
   glow_eDrawType        color_unselected;	//!< Color of unselected folder.
-
+  
   //! Draw the object.
   /*!
     \param t		Transform of parent node. Can be zero.
