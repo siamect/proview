@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.19 2005-12-27 09:34:14 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.20 2006-05-16 11:51:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2789,7 +2789,7 @@ int WItemAttrArrayElem::update()
 	for ( int i = 0; i < rows; i++) {
 	  if ( vd[i].Value->Value == 
 	       * (pwr_tInt32 *)((char *) value + size * element)) {
-	    strcpy( buff, vd[i].Value->Text);
+	    strcpy( buf, vd[i].Value->Text);
 	    buff = buf;        
 	    len = strlen(buf);
 	    found = true;
