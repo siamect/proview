@@ -6,3 +6,9 @@
                      always unreferenced.
 060331 cs  glow      Bugfix in annotation input. Insert of new characters might cause
                      segmentation fault.
+060511 cs  ge        Bugfix in Ge Open window, null filename could cause empty list.
+060516 cs  glow      Owner added to GrowWindow and GrowFolder.
+060516 cs  ge        Object instances can be used in graphs in Window and Folder objects.
+060516 cs  ge        Possibility to use local database in DigLowColor, ToggleDig, Slider
+                     insensitiv, and Invisible.
+060516 cs  ge        Bit type added in Invisible to check visibility on bits in a bitmap.
