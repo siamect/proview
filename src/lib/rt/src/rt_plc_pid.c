@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_pid.c,v 1.5 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_pid.c,v 1.6 2006-05-16 11:48:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -290,6 +290,7 @@ void mode_exec(
 	if (object->OpMod <= 1)
 	{
 	  object->Force = TRUE;
+	  object->ManMode = TRUE;
 	  object->AutMode = FALSE;
 	  object->CascMod = FALSE;
     /* External setpoint ? */
@@ -305,12 +306,14 @@ void mode_exec(
     /* Auto */
 	  if (object->OpMod == 2)
 	  {
+	    object->ManMode = FALSE;
 	    object->AutMode = TRUE;
 	    object->CascMod = FALSE;
 	  }
     /* Cascade mode */
 	  else
 	  {
+	    object->ManMode = FALSE;
 	    object->AutMode = FALSE;
 	    object->CascMod = TRUE;
 	    object->SetVal = object->XSetVal;
