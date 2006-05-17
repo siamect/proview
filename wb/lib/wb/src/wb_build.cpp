@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.2 2006-05-17 06:04:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,6 +89,7 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 
   printf( "Build node %s\n", nodename);
 
+
   if ( !opt.manual) {
     // Check if there is any new dbsfile
     rebuild = 0;
@@ -107,13 +108,13 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	  }
 	
 	  sprintf( fname, load_cNameBoot, 
-		   load_cDirectory, nodename, bussid);
+		   load_cDirectory, vlist[i].p2, bussid);
+	  cdh_ToLower( fname, fname);
 	  dcli_translate_filename( fname, fname);
 	  status = lfu_ReadBootFile( fname, &btime, systemname, systemgroup, &vl, &vnl, 
 				     &vcnt, pname);
 	  if ( EVEN(status)) {
 	    rebuild = 1;
-	    break;
 	  }	 
 	}
       
@@ -130,6 +131,9 @@ void wb_build::node( char *nodename, void *volumelist, int volumecnt)
 	  m_sts = dcli_file_time( fname, &vtime);
 	  if ( evenSts()) {
 	    // Dbs file is missing
+	    char msg[200];
+	    sprintf( msg, "Loadfile for volume %s not created", vname);
+	    MsgWindow::message('E', msg, msgw_ePop_Yes);
 	    return;
 	  }
 	  if ( vtime.tv_sec > btime.tv_sec)
