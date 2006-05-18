@@ -1,7 +1,7 @@
 Volume BaseComponent $ClassVolume 0.0.0.10 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X8121"
-    Attr NextCix = "_X148"
+    Attr NextOix = "_X8124"
+    Attr NextCix = "_X153"
     Attr NextTix[0] = "_X12"
   EndBody
   Object Type $TypeHier 87 08-SEP-2005 13:01:47.00
@@ -49231,6 +49231,820 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object Template CompModeD2MFo 2174189568 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CompModePID $ClassDef 150 18-MAY-2006 14:31:53.29
+      Body SysBody 18-MAY-2006 14:31:46.07
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAY-2006 14:32:01.14
+        Body SysBody 18-MAY-2006 14:32:01.14
+          Attr NextAix = "_X29"
+        EndBody
+        Object XSetVal $Attribute 1 18-MAY-2006 14:33:31.29
+          Body SysBody 18-MAY-2006 15:33:56.70
+            Attr PgmName = "XSetVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ProcVal $Attribute 2 18-MAY-2006 14:33:38.80
+          Body SysBody 18-MAY-2006 15:34:05.90
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object XForcVal $Attribute 3 18-MAY-2006 14:33:46.27
+          Body SysBody 18-MAY-2006 15:34:14.21
+            Attr PgmName = "XForcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Forc1 $Attribute 4 18-MAY-2006 14:33:50.91
+          Body SysBody 18-MAY-2006 15:34:19.83
+            Attr PgmName = "Forc1"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object Forc2 $Attribute 5 18-MAY-2006 14:33:54.80
+          Body SysBody 18-MAY-2006 15:34:25.44
+            Attr PgmName = "Forc2"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OutVal $Attribute 6 18-MAY-2006 14:33:58.60
+          Body SysBody 18-MAY-2006 15:34:31.76
+            Attr PgmName = "OutVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetVal $Attribute 7 18-MAY-2006 14:34:02.85
+          Body SysBody 18-MAY-2006 15:34:43.61
+            Attr PgmName = "SetVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ForcVal $Attribute 8 18-MAY-2006 14:34:09.14
+          Body SysBody 18-MAY-2006 15:34:49.83
+            Attr PgmName = "ForcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Force $Attribute 9 18-MAY-2006 14:34:26.46
+          Body SysBody 18-MAY-2006 15:34:56.13
+            Attr PgmName = "Force"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object AutMode $Attribute 10 18-MAY-2006 14:34:45.53
+          Body SysBody 18-MAY-2006 15:35:12.67
+            Attr PgmName = "AutMode"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object CascMode $Attribute 11 18-MAY-2006 14:34:50.50
+          Body SysBody 18-MAY-2006 15:35:23.78
+            Attr PgmName = "CascMode"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ManMode $Attribute 12 18-MAY-2006 14:34:56.83
+          Body SysBody 18-MAY-2006 15:35:35.63
+            Attr PgmName = "ManMode"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OpMod $Attribute 13 18-MAY-2006 14:35:03.24
+          Body SysBody 18-MAY-2006 14:38:30.03
+            Attr PgmName = "OpMod"
+            Attr TypeRef = "pwrb:Type-PidModeMask"
+          EndBody
+        EndObject
+        Object AccMod $Attribute 14 18-MAY-2006 14:35:07.40
+          Body SysBody 18-MAY-2006 14:38:49.66
+            Attr PgmName = "AccMod"
+            Attr TypeRef = "pwrb:Type-PidModeEnum"
+          EndBody
+        EndObject
+        Object AccOut $Attribute 15 18-MAY-2006 14:35:13.38
+          Body SysBody 18-MAY-2006 14:39:13.15
+            Attr PgmName = "AccOut"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object MinOut $Attribute 16 18-MAY-2006 14:35:17.61
+          Body SysBody 18-MAY-2006 14:39:19.57
+            Attr PgmName = "MinOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxOut $Attribute 17 18-MAY-2006 14:35:22.82
+          Body SysBody 18-MAY-2006 14:39:22.79
+            Attr PgmName = "MaxOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AccSet $Attribute 18 18-MAY-2006 14:35:28.87
+          Body SysBody 18-MAY-2006 14:39:48.69
+            Attr PgmName = "AccSet"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object MinSet $Attribute 19 18-MAY-2006 14:35:33.96
+          Body SysBody 18-MAY-2006 14:39:55.12
+            Attr PgmName = "MinSet"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxSet $Attribute 20 18-MAY-2006 14:35:37.63
+          Body SysBody 18-MAY-2006 14:39:58.39
+            Attr PgmName = "MaxSet"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetMaxShow $Attribute 21 18-MAY-2006 14:35:43.48
+          Body SysBody 18-MAY-2006 14:40:01.58
+            Attr PgmName = "SetMaxShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetMinShow $Attribute 22 18-MAY-2006 14:35:47.67
+          Body SysBody 18-MAY-2006 14:40:04.58
+            Attr PgmName = "SetMinShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMaxShow $Attribute 23 18-MAY-2006 14:35:53.81
+          Body SysBody 18-MAY-2006 14:40:09.36
+            Attr PgmName = "OutMaxShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMinShow $Attribute 24 18-MAY-2006 14:36:06.19
+          Body SysBody 18-MAY-2006 14:40:13.52
+            Attr PgmName = "OutMinShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetEngUnit $Attribute 25 18-MAY-2006 14:36:17.79
+          Body SysBody 18-MAY-2006 14:40:48.75
+            Attr PgmName = "SetEngUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object OutEngUnit $Attribute 26 18-MAY-2006 14:36:23.64
+          Body SysBody 18-MAY-2006 14:40:51.89
+            Attr PgmName = "OutEngUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object PidObjDid $Attribute 27 18-MAY-2006 14:36:32.35
+          Body SysBody 18-MAY-2006 14:41:00.15
+            Attr PgmName = "PidObjDid"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 28 18-MAY-2006 14:48:02.13
+          Body SysBody 18-MAY-2006 14:48:08.41
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template CompModePID 2187034624 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAY-2006 14:42:57.50
+          Attr OpMod = 2
+          Attr AccMod = 3
+          Attr MaxOut = 1.000000e+02
+          Attr SetMaxShow = 1.000000e+02
+          Attr OutMaxShow = 1.000000e+02
+        EndBody
+      EndObject
+    EndObject
+    Object CompModePID_Fo $ClassDef 149 18-MAY-2006 14:25:59.63
+      Body SysBody 18-MAY-2006 14:25:40.74
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 208
+        Attr PopEditor = 1
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAY-2006 14:25:40.74
+        Body SysBody 18-MAY-2006 14:26:08.05
+          Attr StructName = "CompModePID_Fo"
+          Attr NextAix = "_X56"
+        EndBody
+        Object XSetVal $Input 28 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "XSetVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "XSV"
+          EndBody
+        EndObject
+        Object ProcVal $Input 29 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PV"
+          EndBody
+        EndObject
+        Object XForcVal $Input 30 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "XForcVal"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "XFO"
+          EndBody
+        EndObject
+        Object Forc1 $Input 31 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "Forc1"
+            Attr Flags = 9232
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "fo1"
+          EndBody
+        EndObject
+        Object Forc2 $Input 32 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "Forc2"
+            Attr Flags = 9232
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "fo2"
+          EndBody
+        EndObject
+        Object OutVal $Input 33 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "OutVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "OUT"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 55 18-MAY-2006 14:30:38.59
+          Body SysBody 18-MAY-2006 14:29:59.89
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object SetVal $Output 34 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "SetVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "SV"
+          EndBody
+        EndObject
+        Object ForcVal $Output 35 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "ForcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "FOV"
+          EndBody
+        EndObject
+        Object Force $Output 36 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "Force"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "for"
+          EndBody
+        EndObject
+        Object AutMode $Output 37 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "AutMode"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "aut"
+          EndBody
+        EndObject
+        Object CascMod $Output 38 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr PgmName = "CascMod"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "cas"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 18-MAY-2006 14:25:40.74
+        Body SysBody 18-MAY-2006 14:25:40.74
+          Attr NextAix = "_X3"
+        EndBody
+        Object PlcNode $Buffer 2 18-MAY-2006 14:25:40.74
+          Body SysBody 18-MAY-2006 14:25:40.74
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 8123 18-MAY-2006 14:25:40.74
+        Body SysBody 18-MAY-2006 15:55:20.73
+          Attr object_type = 11
+          Attr parameters[0] = 6
+          Attr parameters[1] = 1
+          Attr parameters[2] = 5
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 35
+          Attr default_mask[1] = 7
+          Attr segname_annotation = 1
+          Attr compmethod = 35
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "ModePID"
+          Attr graphname = "ModePID"
+        EndBody
+      EndObject
+      Object Template CompModePID_Fo 2186772480 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+        Body DevBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CompPID $ClassDef 152 18-MAY-2006 14:49:40.40
+      Body SysBody 18-MAY-2006 14:49:01.99
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 144
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAY-2006 14:49:52.65
+        Body SysBody 18-MAY-2006 14:49:57.64
+          Attr StructName = "CompPID"
+          Attr NextAix = "_X50"
+        EndBody
+        Object ProcVal $Attribute 1 18-MAY-2006 15:10:59.46
+          Body SysBody 18-MAY-2006 15:29:39.08
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetVal $Attribute 2 18-MAY-2006 15:11:12.10
+          Body SysBody 18-MAY-2006 15:30:58.87
+            Attr PgmName = "SetVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Bias $Attribute 3 18-MAY-2006 15:19:12.20
+          Body SysBody 18-MAY-2006 15:31:09.68
+            Attr PgmName = "Bias"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ForcVal $Attribute 4 18-MAY-2006 15:11:22.42
+          Body SysBody 18-MAY-2006 15:31:32.58
+            Attr PgmName = "ForcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Force $Attribute 5 18-MAY-2006 15:11:26.18
+          Body SysBody 18-MAY-2006 15:31:38.96
+            Attr PgmName = "Force"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object IntOff $Attribute 6 18-MAY-2006 15:11:31.38
+          Body SysBody 18-MAY-2006 15:31:47.87
+            Attr PgmName = "IntOff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object OutVal $Attribute 7 18-MAY-2006 15:11:36.95
+          Body SysBody 18-MAY-2006 15:32:58.43
+            Attr PgmName = "OutVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutChange $Attribute 8 18-MAY-2006 15:11:42.75
+          Body SysBody 18-MAY-2006 15:32:25.68
+            Attr PgmName = "OutChange"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ControlDiff $Attribute 9 18-MAY-2006 15:11:50.11
+          Body SysBody 18-MAY-2006 15:32:34.17
+            Attr PgmName = "ControlDiff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object EndMax $Attribute 10 18-MAY-2006 15:11:55.36
+          Body SysBody 18-MAY-2006 15:33:20.05
+            Attr PgmName = "EndMax"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object EndMin $Attribute 11 18-MAY-2006 15:12:00.22
+          Body SysBody 18-MAY-2006 15:33:27.61
+            Attr PgmName = "EndMin"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object PidAlg $Attribute 12 18-MAY-2006 15:12:04.04
+          Body SysBody 18-MAY-2006 15:20:47.24
+            Attr PgmName = "PidAlg"
+            Attr TypeRef = "pwrb:Type-PidAlgEnum"
+          EndBody
+        EndObject
+        Object Gain $Attribute 13 18-MAY-2006 15:12:08.55
+          Body SysBody 18-MAY-2006 15:21:10.58
+            Attr PgmName = "Gain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object IntTime $Attribute 14 18-MAY-2006 15:12:13.03
+          Body SysBody 18-MAY-2006 15:21:13.76
+            Attr PgmName = "IntTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerTime $Attribute 15 18-MAY-2006 15:12:17.95
+          Body SysBody 18-MAY-2006 15:21:17.22
+            Attr PgmName = "DerTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object DerGain $Attribute 16 18-MAY-2006 15:12:22.07
+          Body SysBody 18-MAY-2006 15:21:21.10
+            Attr PgmName = "DerGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Inverse $Attribute 17 18-MAY-2006 15:12:26.34
+          Body SysBody 18-MAY-2006 15:21:26.53
+            Attr PgmName = "Inverse"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object BiasGain $Attribute 18 18-MAY-2006 15:12:32.75
+          Body SysBody 18-MAY-2006 15:22:27.77
+            Attr PgmName = "BiasGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinOut $Attribute 19 18-MAY-2006 15:15:23.71
+          Body SysBody 18-MAY-2006 15:22:31.22
+            Attr PgmName = "MinOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxOut $Attribute 20 18-MAY-2006 15:15:27.97
+          Body SysBody 18-MAY-2006 15:22:34.40
+            Attr PgmName = "MaxOut"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object ScanTime $Attribute 21 18-MAY-2006 15:15:32.03
+          Body SysBody 18-MAY-2006 15:23:02.90
+            Attr PgmName = "ScanTime"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object AccGain $Attribute 22 18-MAY-2006 15:15:36.94
+          Body SysBody 18-MAY-2006 15:23:23.11
+            Attr PgmName = "AccGain"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AccInt $Attribute 23 18-MAY-2006 15:15:41.25
+          Body SysBody 18-MAY-2006 15:23:25.85
+            Attr PgmName = "AccInt"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AccDer $Attribute 24 18-MAY-2006 15:23:28.36
+          Body SysBody 18-MAY-2006 15:23:33.39
+            Attr PgmName = "AccDer"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AccDGain $Attribute 25 18-MAY-2006 15:15:53.77
+          Body SysBody 18-MAY-2006 15:23:37.88
+            Attr PgmName = "AccDGain"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AccBias $Attribute 26 18-MAY-2006 15:16:00.77
+          Body SysBody 18-MAY-2006 15:23:41.05
+            Attr PgmName = "AccBias"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object AccBGain $Attribute 27 18-MAY-2006 15:16:12.13
+          Body SysBody 18-MAY-2006 15:23:44.20
+            Attr PgmName = "AccBGain"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object MinGain $Attribute 28 18-MAY-2006 15:16:20.62
+          Body SysBody 18-MAY-2006 15:23:55.31
+            Attr PgmName = "MinGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxGain $Attribute 29 18-MAY-2006 15:16:25.31
+          Body SysBody 18-MAY-2006 15:23:58.16
+            Attr PgmName = "MaxGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinInt $Attribute 30 18-MAY-2006 15:16:32.69
+          Body SysBody 18-MAY-2006 15:24:00.84
+            Attr PgmName = "MinInt"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxInt $Attribute 31 18-MAY-2006 15:16:36.95
+          Body SysBody 18-MAY-2006 15:24:03.29
+            Attr PgmName = "MaxInt"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinDer $Attribute 32 18-MAY-2006 15:16:45.00
+          Body SysBody 18-MAY-2006 15:24:05.83
+            Attr PgmName = "MinDer"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxDer $Attribute 33 18-MAY-2006 15:16:49.98
+          Body SysBody 18-MAY-2006 15:24:08.33
+            Attr PgmName = "MaxDer"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinDGain $Attribute 34 18-MAY-2006 15:16:54.62
+          Body SysBody 18-MAY-2006 15:24:11.29
+            Attr PgmName = "MinDGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxDGain $Attribute 35 18-MAY-2006 15:17:02.60
+          Body SysBody 18-MAY-2006 15:24:13.74
+            Attr PgmName = "MaxDGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinBias $Attribute 36 18-MAY-2006 15:17:12.15
+          Body SysBody 18-MAY-2006 15:24:16.30
+            Attr PgmName = "MinBias"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxBias $Attribute 37 18-MAY-2006 15:17:26.41
+          Body SysBody 18-MAY-2006 15:24:18.75
+            Attr PgmName = "MaxBias"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MinBGain $Attribute 38 18-MAY-2006 15:17:38.73
+          Body SysBody 18-MAY-2006 15:24:21.11
+            Attr PgmName = "MinBGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object MaxBGain $Attribute 39 18-MAY-2006 15:17:43.05
+          Body SysBody 18-MAY-2006 15:24:23.40
+            Attr PgmName = "MaxBGain"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetMaxShow $Attribute 40 18-MAY-2006 15:17:50.62
+          Body SysBody 18-MAY-2006 15:24:32.20
+            Attr PgmName = "SetMaxShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetMinShow $Attribute 41 18-MAY-2006 15:17:57.23
+          Body SysBody 18-MAY-2006 15:24:38.58
+            Attr PgmName = "SetMinShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMaxShow $Attribute 42 18-MAY-2006 15:18:01.66
+          Body SysBody 18-MAY-2006 15:24:41.44
+            Attr PgmName = "OutMaxShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object OutMinShow $Attribute 43 18-MAY-2006 15:18:07.98
+          Body SysBody 18-MAY-2006 15:24:44.30
+            Attr PgmName = "OutMinShow"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object SetEngUnit $Attribute 44 18-MAY-2006 15:18:13.35
+          Body SysBody 18-MAY-2006 15:25:29.00
+            Attr PgmName = "SetEngUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object OutEngUnit $Attribute 45 18-MAY-2006 15:18:20.75
+          Body SysBody 18-MAY-2006 15:25:32.42
+            Attr PgmName = "OutEngUnit"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object ModeObjDid $Attribute 46 18-MAY-2006 15:18:26.58
+          Body SysBody 18-MAY-2006 15:25:40.24
+            Attr PgmName = "ModeObjDid"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object EndHys $Attribute 47 18-MAY-2006 15:18:32.65
+          Body SysBody 18-MAY-2006 15:25:54.52
+            Attr PgmName = "EndHys"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object FiltDer $Attribute 48 18-MAY-2006 15:18:37.56
+          Body SysBody 18-MAY-2006 15:25:57.72
+            Attr PgmName = "FiltDer"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object PlcConnect $Attribute 49 18-MAY-2006 15:27:06.37
+          Body SysBody 18-MAY-2006 15:27:13.67
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+      EndObject
+      Object Template CompPID 2187558912 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object CompPID_Fo $ClassDef 151 18-MAY-2006 14:49:24.32
+      Body SysBody 18-MAY-2006 14:46:20.16
+        Attr Editor = 2
+        Attr Method = 2
+        Attr Flags = 208
+        Attr PopEditor = 1
+      EndBody
+      Object RtBody $ObjBodyDef 1 18-MAY-2006 14:46:20.16
+        Body SysBody 18-MAY-2006 14:49:30.18
+          Attr StructName = "CompPID_Fo"
+          Attr NextAix = "_X50"
+        EndBody
+        Object ProcVal $Input 1 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "ProcVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "PV"
+          EndBody
+        EndObject
+        Object SetVal $Input 2 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "SetVal"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "SV"
+          EndBody
+        EndObject
+        Object Bias $Input 3 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "Bias"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "BIS"
+          EndBody
+        EndObject
+        Object ForcVal $Input 4 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "ForcVal"
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "FOV"
+          EndBody
+        EndObject
+        Object Force $Input 5 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "Force"
+            Attr Flags = 8192
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "for"
+          EndBody
+        EndObject
+        Object IntOff $Input 6 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "IntOff"
+            Attr Flags = 9232
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "iof"
+          EndBody
+        EndObject
+        Object PlcConnect $Intern 49 18-MAY-2006 14:47:32.09
+          Body SysBody 18-MAY-2006 14:47:32.09
+            Attr PgmName = "PlcConnect"
+            Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object OutVal $Output 7 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "OutVal"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "OUT"
+          EndBody
+        EndObject
+        Object OutChange $Output 8 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "OutChange"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "OC"
+          EndBody
+        EndObject
+        Object ControlDiff $Output 9 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "ControlDiff"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+            Attr GraphName = "DIF"
+          EndBody
+        EndObject
+        Object EndMax $Output 10 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "EndMax"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "max"
+          EndBody
+        EndObject
+        Object EndMin $Output 11 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr PgmName = "EndMin"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Boolean"
+            Attr GraphName = "min"
+          EndBody
+        EndObject
+      EndObject
+      Object DevBody $ObjBodyDef 2 18-MAY-2006 14:46:20.16
+        Body SysBody 18-MAY-2006 14:46:20.16
+          Attr NextAix = "_X2"
+        EndBody
+        Object PlcNode $Buffer 1 18-MAY-2006 14:46:20.16
+          Body SysBody 18-MAY-2006 14:46:20.16
+            Attr Flags = 2048
+            Attr Class = "pwrs:Class-$PlcNode"
+          EndBody
+        EndObject
+      EndObject
+      Object GraphPlcNode $GraphPlcNode 8124 18-MAY-2006 14:46:20.16
+        Body SysBody 18-MAY-2006 15:55:08.84
+          Attr object_type = 11
+          Attr parameters[0] = 6
+          Attr parameters[1] = 1
+          Attr parameters[2] = 5
+          Attr parameters[3] = 0
+          Attr graphmethod = 0
+          Attr graphindex = 0
+          Attr default_mask[0] = 27
+          Attr default_mask[1] = 1
+          Attr segname_annotation = 1
+          Attr compmethod = 35
+          Attr compindex = 0
+          Attr tracemethod = 0
+          Attr traceindex = 0
+          Attr connectmethod = 10
+          Attr executeordermethod = 2
+          Attr objname = "PID"
+          Attr graphname = "PID"
+        EndBody
+      EndObject
+      Object Template CompPID_Fo 2187296768 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
         Body DevBody 01-JAN-1970 01:00:00.00
