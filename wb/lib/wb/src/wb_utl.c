@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.23 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.24 2006-05-18 10:26:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4886,21 +4886,16 @@ static int utl_set_parameter (
 )
 {
 	char		*valuestr;
-	static char		yes_or_no[200];	
-	int		sts, size, i, j, k;
+	static char	yes_or_no[200];	
+	int		sts, size, k;
 	int		parsize;
 	pwr_tClassId	class;
 	pwr_tOName     	hier_name;
-	ldh_sParDef 	*bodydef;
-	int		rows;
-	char		body[20];	
-	char		parname[32];
 	char		*object_par;
 	char		*object_element;
 	int		elements;
-	int		found;
 	char		logstr[200];
-static 	char		value[200];
+	static 	char   	value[200];
 	char		*logstrptr = logstr;
 	pwr_tBoolean	*p_Boolean;	
 	pwr_tFloat32	*p_Float32;
@@ -4918,6 +4913,10 @@ static 	char		value[200];
 	int		first_element;
 	int		last_element;
 	pwr_tObjid	objid = arp->Objid;
+	pwr_tAName	aname;
+	pwr_sAttrRef aref;
+	ldh_sAttrRefInfo info;
+	char *np;
 
 #if defined OS_VMS
 	int len;
@@ -4935,93 +4934,62 @@ static 	char		value[200];
 	/* Get the class of the object */
 	sts = ldh_GetObjectClass( ldhses, objid, &class);
 
-	/* Find the parameter */
-	found = 0;
-	for ( i = 0; i < 3; i++ )
-	{
-	  if ( i == 0)
-	    strcpy( body, "RtBody");
-	  else if ( i == 1 )
-	    strcpy( body, "DevBody");
-	  else
-	    strcpy( body, "SysBody");
+	strcpy( aname, hier_name);
+	strcat( aname, ".");
+	strcat( aname, parameter);
 
-    	  /* Get the paramters for this body */
-	  sts = ldh_GetObjectBodyDef(ldhses, class, body, 1,
-	  		&bodydef, &rows);
-	  if ( EVEN(sts) ) continue;
 
-	  for ( j = 0; j < rows; j++)
-	  {
-	    if ( cdh_NoCaseStrcmp( parameter, bodydef[j].ParName) == 0)
-	    {
-	      found = 1;
-	      break;
-	    }
-	  }
-	  if ( found )
-	    break;
-	  free((char *) bodydef);	
-	}
-	if ( !found)
-	{
-	  /* Parametern fanns ej */
-	  return FOE__NOPAR;
-	}
+	sts = ldh_NameToAttrRef( ldhses, aname, &aref);
+	if ( EVEN(sts)) return sts;
 
-	strcpy( parname, bodydef[j].ParName);
+	sts = ldh_AttrRefToName( ldhses, &aref, cdh_mNName, &np,&size);
+	if ( EVEN(sts)) return sts;
 
-	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_POINTER )
-	{
+	strcpy( aname, np);
+
+	sts = ldh_GetAttrRefInfo( ldhses, &aref, &info);
+	if ( EVEN(sts)) return sts;
+
+	if ( info.flags & PWR_MASK_POINTER ) {
 	  /* Don't write pointers */
 	  return FOE__SETPTR;
 	}
 
-	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
-	 elements = bodydef[j].Par->Output.Info.Elements;
+	if ( info.flags & PWR_MASK_ARRAY )
+	 elements = info.nElement;
 	else
 	  elements = 1;
 
 	if ( element != UTL_NOELEMENT)
-	  if ( element + 1 > elements)
-	  {
+	  if ( element + 1 > elements) {
 	    /* Error in element */
 	    return FOE__ELEMENT;
 	  }
 	  
-	if ( element == UTL_NOELEMENT)
-	{
+	if ( element == UTL_NOELEMENT) {
 	  /* No element given, show all the elements */
 	  first_element = 0;
 	  last_element = elements - 1;
 	}
-	else
-	{
+	else {
 	  first_element = element;
 	  last_element = element;
 	}
 
-	for ( k = first_element; k < last_element + 1; k++) 
-	{
+	parsize = info.size;
+	for ( k = first_element; k < last_element + 1; k++) {
 	  /* Get the parameter */
-	  sts = ldh_GetObjectPar( ldhses, objid, body,   
-			parname, (char **)&object_par, &parsize); 
+	  object_par = (char *) calloc( 1, info.size);
+	  sts = ldh_ReadAttribute( ldhses, &aref, object_par, info.size);
 	  if ( EVEN(sts)) return sts;
 	  object_element = object_par + k * parsize / elements;
 
-	  /* Print confirm */
-	  sts = ldh_ObjidToName( ldhses, 
-	           	objid, ldh_eName_Hierarchy,
-  		        hier_name, sizeof( hier_name), &size);
-  	  if ( EVEN(sts)) return sts;
-
-	  sprintf( logstr, "%s.%s",hier_name, parname);
-	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
+	  strcpy( logstr, aname);
+	  if ( info.flags & PWR_MASK_ARRAY )
  	    sprintf( logstrptr + strlen(logstr), "[%d]",k);
 
 	  /* Get the value if not passed */
-	  if ( invaluestr == NULL )
-	  {
+	  if ( invaluestr == NULL ) {
 	    printf( "%s\n", logstr);
 #if defined OS_VMS
  	    sts = lib$get_input ( &value_desc , &prompt_desc , &len ) ; 
@@ -5042,7 +5010,7 @@ static 	char		value[200];
 	  sprintf( logstrptr + strlen(logstr), " = ");
 
 	  /* Put the value in the parameter buffer */
-	  switch ( bodydef[j].Par->Output.Info.Type )
+	  switch ( info.type )
 	  {
 	    case pwr_eType_Boolean:
 	    {
@@ -5143,10 +5111,10 @@ static 	char		value[200];
 	    {
 	      p_String = object_element;
 	      sprintf( logstrptr + strlen(logstr), "( %s ) ", p_String);
-	      strncpy( p_String, valuestr, bodydef[j].Par->Output.Info.Size/elements);
-	      *(p_String + bodydef[j].Par->Output.Info.Size/elements - 1) = 0;
+	      strncpy( p_String, valuestr, info.size/info.nElement);
+	      *(p_String + info.size/info.nElement - 1) = 0;
 	      sprintf( logstrptr + strlen(logstr), "%s", p_String);
-	      if ( strlen( valuestr) > (bodydef[j].Par->Output.Info.Size/elements -1))
+	      if ( strlen( valuestr) > (info.size/info.nElement -1))
 	        printf( "%%FOE-W-LONG_STRING, parameter size is exceeded\n");
 	      break;
 	    }
@@ -5238,8 +5206,7 @@ static 	char		value[200];
 	    u_print( utlctx, "Set %s\n", logstr);
 
 	  /* Set the parameter */
-	  sts = ldh_SetObjectPar( ldhses,
-			objid, body, parname, object_par, parsize); 
+	  sts = ldh_WriteAttribute( ldhses, &aref, object_par, parsize);
 	  if ( EVEN(sts)) return sts;
 
 	  /* Specific updates for grafcet orders */
@@ -5248,7 +5215,6 @@ static 	char		value[200];
 	}
 
 	free((char *) object_par);
-	free((char *) bodydef);	
 
 
 	return FOE__SUCCESS;
