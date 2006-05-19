@@ -7,7 +7,7 @@
 <!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
 %pwrent;
 ]>
-<book version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+<book version="5.0b5" xml:lang="en" xmlns="http://docbook.org/ns/docbook"
       xmlns:mathml="http://www.w3.org/1998/Math/MathML"
       xmlns:svg="http://www.w3.org/2000/svg"
       xmlns:xhtml="http://www.w3.org/1999/xhtml"

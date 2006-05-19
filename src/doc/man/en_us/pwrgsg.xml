@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE article [
+<!ENTITY % isopub PUBLIC
+         "ISO 8879:1986//ENTITIES Publishing//EN//XML"
+         "/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<article version="5.0b5" xml:lang="en" xmlns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:xlink="http://www.w3.org/1999/xlink">
+  <info>
+    <title><application>Proview 4.1</application> Getting Started Guide</title>
+
+    <subtitle>A step-by-step guide to set up a minimal <application>Proview</application> system</subtitle>
+
+    <author>
+      <personname><firstname>Jonas</firstname>
+      <surname>Haulin</surname></personname>
+      <affiliation>
+        <orgname>Proview/R</orgname>
+        <address> <email>info@proview.se</email> </address>
+      </affiliation>
+    </author>
+  </info>
+
+  <section xml:id="pwrgsg_about">
+    <title>About this guide</title>
+
+    <para>This guide will take you through the steps of configuring,
+    developing, simulating and running a small <application>Proview</application> project, on a
+    single-computer system. The guide does not intend to be comprehensive. 
+    For detailed documentation, please consult the <citetitle pubwork="book">Designer's Guide</citetitle>
+    or the <citetitle pubwork="book">GE (graphical editor) Manual</citetitle>. 
+    These documents are available at the <link xlink:href="&pwrsite;">Proview</link> site.
+    </para>
+    
+    <section xml:id="pwrgsg_conventions">
+      <title>Conventions used in this document</title>
+      <para>
+	This document follows general conventions for content formatting, <abbrev>e.g.</abbrev>
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para>System items: <filename>filename</filename>, <systemitem class="username">user</systemitem>, 
+	    <envar>ENVIRON_VARIABLE</envar></para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	    Commands: To use the <command>pwrs</command> command, type <userinput><command>pwrs</command></userinput> at the terminal.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Screen listing
+	    <screen>
+<prompt>bash$</prompt> <userinput><command>cd</command> <parameter><filename>src</filename></parameter></userinput>
+<prompt>bash$</prompt> <userinput><command>ls</command> <option>-al</option></userinput></screen></para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Menu choices:
+	      <menuchoice>
+		<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+		<guimenu>Edit</guimenu>
+		<guimenuitem>Change value</guimenuitem>
+		</menuchoice>.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	In addition, the following Proview add-ons are used:
+	<itemizedlist mark="bullet">
+	  <listitem>
+	    <para>Proview Environments are currently displayed in small caps or sans serif 
+	    (<acronym>PDF</acronym> version), 
+	    <abbrev>e.g.</abbrev> &pwrprojlist;.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Proview Classes are currently displayed in boldface, <abbrev>e.g.</abbrev>
+	    <classname>ProjectReg</classname>.</para> <!--emphasis role="pwrclass">ProjectReg</emphasis>-->
+	  </listitem>
+	  <listitem>
+	    <para>Attributes of Proview Classes are currently displayed in italics, <abbrev>e.g.</abbrev>
+	    <property>ObjectName</property>.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Values of attributes are currently displayed in monospace, <abbrev>e.g.</abbrev>
+	    <literal>56.4</literal> in the case of numbers, or as <quote>Demoprojects</quote> in the case of strings.</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+    </section>
+
+  </section>
+
+  <section xml:id="pwrgsg_pwra">
+    <title>Open the administrator environment</title>
+
+    <para>During installation, the user <systemitem class="username">pwrp</systemitem> 
+    with password <quote>pwrp</quote> is added to the system. 
+    Log in as <systemitem class="username">pwrp</systemitem> and use <command>pwra</command>
+    at the prompt to start the Project Administrator. 
+    To start <application>Proview</application> as another user, 
+    just add the contents of the <filename>.bashrc</filename> file in the <systemitem class="username">pwrp</systemitem>
+    <filename class="directory">home/</filename> directory to that of your user.</para>
+
+    <para>The &pwrprojlist; administrator environment will open up in a new window. 
+    Switch to and from Edit mode with
+    <menuchoice>
+      <shortcut><keycombo><keycap>Ctrl</keycap><keycap>E</keycap></keycombo></shortcut>
+      <guimenu>Edit</guimenu>
+      <guimenuitem>Edit mode</guimenuitem>
+    </menuchoice>.
+    Make sure <keycap>NumLock</keycap> is not set on the keyboard, 
+    as Ctrl commands with NumLock enabled are not yet
+    supported in <application>Proview</application>.</para>
+  </section>
+
+  <section xml:id="pwrgsg_createproj">
+    <title>Create a project in the &pwrprojlist;</title>
+
+    <para>Once in Edit mode, an object palette will appear to the left in the
+    window. The &pwrprojlist; at first only contains the <quote>Bases</quote>
+    hierarchy. To create a hierarchy for the projects, select <classname>Hier</classname> 
+    in the palette, move the cursor to the <quote>Bases</quote> hierarchy 
+    and <mousebutton>middle</mousebutton> click. 
+    A new, empty <classname>Hier</classname> object is inserted below the existing one.</para>
+
+    <para>The hierarchy object is a container for arbitrary objects and it has two attributes: 
+     an <property>ObjectName</property> and a <property>Description</property>. 
+     To expand the object and expose the attributes, select the object and use the <keycap>right arrow</keycap> key. 
+     Now, to edit an attribute, select the attribute and use 
+     <menuchoice>
+       <shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+       <guimenu>Edit</guimenu>
+       <guimenuitem>Change value</guimenuitem>
+     </menuchoice>.
+     <tip><title>Use <command>set adv</command></title>
+       <para>
+	 A more convenient way to edit an attribute is to give the command 
+	 <command>set adv</command> in the Navigator 
+	 (use <keycombo><keycap>Ctrl</keycap><keycap>B</keycap></keycombo>, to get a command line). 
+	 Then object attributes may be open for editing with the <keycap>right arrow</keycap> key. 
+	 In the case of an object with children, <keycap>right arrow</keycap> opens
+	 the next level of the hierarchy, and <keycombo><keycap>Shift</keycap><keycap>right arrow</keycap></keycombo>
+       opens the object itself for editing.</para>
+     </tip>
+    </para>
+    
+    <screenshot>
+      <mediaobject xml:id="screenprojectlist">
+	<imageobject role="html">
+ 	  <imagedata align="center" scale="100" fileref="screen_projectlist.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata align="center" width="100%" fileref="screen_projectlist.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The project list navigator.</para></caption>
+      </mediaobject>
+    </screenshot>
+
+    <para>We choose the name <quote>Demoprojects</quote> for our hierarchy. 
+    We then add a <classname>ProjectReg</classname> object to the 
+    <quote>Demoprojects</quote> hierarchy and name it <quote>Demo</quote>. 
+    We want to add the <classname>ProjectReg</classname> as a child and not as a sibling. 
+    To do this, middle click directly on the desired parent leaf, which is 
+    our <quote>Demoprojects</quote> hierarchy in this case. 
+    An object can be moved or copied in the hierarchy by selecting it and 
+    <mousebutton>Right-clicking</mousebutton> at the desired location. 
+    We need to define the <property>project</property> and 
+    <property>path</property> attributes.  
+    The project name is written in lower case. We use the name <quote>demo</quote>.
+    The <property>path</property> attribute should just reflect the chosen project name.
+    Save the changes to the &pwrprojlist; and exit Edit mode.</para>
+  </section>
+
+  <section xml:id="pwrgsg_createvol">
+    <title>Create a volume in the &pwrvollist;</title>
+
+    <para>In the &pwrvollist;, select
+    <menuchoice>
+      <guimenu>File</guimenu>
+      <guisubmenu>Open..</guisubmenu>
+      <guimenuitem>GlobalVolumeList</guimenuitem>
+    </menuchoice>
+    to open the &pwrvollist;. 
+    Request Edit mode. 
+    In the <quote>ProjectVolumes</quote> hierarchy, add a <classname>VolumeReg</classname> object. 
+    We name our <classname>VolumeReg</classname> object <quote>VolDEMO</quote> 
+    and assign it to the right project by writing demo in its project attribute. 
+    A project may have several volumes assigned to it, but not the other way around. 
+    A unique <property>VolumeId</property> must be given. 
+    We choose <literal>0.1.1.1</literal>, 
+    see the <citetitle pubwork="book">Designer's Guide</citetitle> for a specification of the numbers.
+
+ Save the changes to the
+    volume list and go out of edit mode.</para>
+
+    <screenshot>
+      <mediaobject xml:id="screenvolumelist">
+	<imageobject role="html">
+	  <imagedata align="center" scale="100" fileref="screen_volumelist.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata align="center" width="100%" fileref="screen_volumelist.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The volume list navigator.</para></caption>
+      </mediaobject>
+    </screenshot>
+
+    <section xml:id="pwrgsg_volconf">
+      <title>Configuring the volume</title>
+
+      <para>When a volume is created, open the &pwrdirectory; 
+      Navigator by <mousebutton>right</mousebutton> clicking the <classname>ProjectReg</classname> 
+      object in the &pwrprojlist;, and choosing 
+      <menuchoice>
+	<guimenu>Popup menu</guimenu>
+	<guimenuitem>Open Project...</guimenuitem>
+      </menuchoice>
+      An alternative way is to type
+      <screen><prompt>bash$</prompt> <userinput><command>sdf</command> <parameter>demo</parameter></userinput></screen>      
+      The <command>sdf</command> command sets up environment variables for the project with default values. 
+      The &pwrdirectory; Navigator is then started with 
+      <command>pwrs</command>. 
+      In the Navigator, request Edit mode as before (<keycombo><keycap>Ctrl</keycap><keycap>E</keycap></keycombo>), 
+      and a two-window view (<keycombo><keycap>Ctrl</keycap><keycap>W</keycap></keycombo>). 
+      The upper window corresponds to Volume configuration, and
+      the lower window to Node configuration. In the Volume window, 
+      we add a <classname>RootVolumeConfig</classname> object and name it <quote>VolDEMO</quote>. 
+      In the Node window we add a <classname>System</classname> and two 
+      <classname>BusConfig</classname> objects.</para>
+
+      <para>In the <classname>System</classname> object, 
+      the <property>SystemName</property> attribute is the same as the
+      project name, i e <quote>demo</quote>. 
+      The <property>SystemGroup</property> attribute should be set to
+      <quote>Common</quote>, which gives us authorization to edit the project later.</para>
+
+      <para>The two <classname>BusConfig</classname>
+      objects are for production and simulation, respectively. 
+      We name the objects after their bus numbers, choosing
+      <literal>507</literal> for production, and <literal>999</literal> for simulation. 
+      These values must be set in the <property>BusNumber</property> attributes of the objects. 
+      To each of the <classname>BusConfig</classname> objects, 
+      we add a <classname>NodeConfig</classname> object. 
+      The <classname>NodeConfig</classname> attributes to be set
+      are <property>ObjectName</property>, <property>NodeName</property> 
+      and <property>BootNode</property>, which are set to the name of the
+      runtime machine in question. 
+      We only use the development machine
+      <systemitem class="systemname">susetest</systemitem>, 
+      and it is not possible to have separate buses for simulation and production. 
+      Therefore, we set up a dummy node on the production
+      bus and put <systemitem class="systemname">susetest</systemitem> on the simulation bus. 
+      Finally, the <property>OperatingSystem</property> (normally <quote>Linux on x86</quote>) 
+      and <property>Address</property> (IP-address) of the node need to be specified.</para>
+
+      <screenshot>
+      <mediaobject xml:id="screendirvol1">
+	<imageobject role="html">
+	  <imagedata align="center" scale="100" fileref="screen_directoryvolume1.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata align="center" width="100%" fileref="screen_directoryvolume1.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The directory volume navigator.</para></caption>
+      </mediaobject>
+      </screenshot>
+      
+      <screenshot>
+	<mediaobject xml:id="screendirvol2">
+	  <imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_directoryvolume2.png" format="PNG"/>
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata align="center" width="100%" fileref="screen_directoryvolume2.png" format="PNG"/>
+	  </imageobject>
+	  <caption><para>The directory volume navigator (again).</para></caption>
+	</mediaobject>
+      </screenshot>
+      
+      <para>With each of the <classname>NodeConfig</classname> objects follows two children, 
+      a <classname>RootVolumeLoad</classname> object and a 
+      <classname>Distribute</classname> object. 
+      The <property>ObjectName</property> 
+      of the <classname>RootVolumeLoad</classname> object needs to be set. 
+      It is the same as the corresponding volume, <quote>VolDEMO</quote> in this case.</para>
+
+      <para>Save the changes and exit edit mode.
+      <tip>
+	<para>
+	  The process of configuring project and volumes can be automatated in a script, 
+	  called from the command line in the Navigator. 
+	  See the <citetitle pubwork="book">Designer's Guide</citetitle>, at the  
+	  <link xlink:href="http://www.proview.se/">Proview</link> site.
+	</para>
+      </tip>
+      </para>
+    </section>
+  </section>
+
+  <section xml:id="pwrgsg_plantnode">
+    <title>Setting up plant and node hierarchies in the &pwrvolume; Navigator</title>
+    <para>
+    Open the &pwrdirectory; Navigator with <command>pwrs</command> from a terminal window 
+    (you may have to type <userinput><command>sdf</command> <parameter>demo</parameter></userinput> at the terminal first). 
+    <mousebutton>Right</mousebutton> click on the 
+    <classname>RootVolumeConfig</classname> object and choose 
+    <menuchoice>
+	<guimenu>Popup menu</guimenu>
+	<guimenuitem>Open volume..</guimenuitem>
+    </menuchoice>
+    to open the &pwrvolume; Navigator.
+    It is also possible to open the volume directly from the terminal, by passing
+    the volume name as an argument to <command>pwrs</command>, <abbrev>i.e.</abbrev>
+    <screen><prompt>bash$</prompt> <userinput><command>pwrs</command> <parameter>VolDEMO</parameter></userinput></screen>
+    Enter Edit mode and choose a two-window view. 
+    Make sure that the <property>OperatingSystem</property> attribute is set correctly in 
+    <menuchoice>
+      <guimenu>File</guimenu>
+      <guimenuitem>Volume attributes...</guimenuitem>
+    </menuchoice>
+    </para>
+
+    <para>Now, add a <classname>PlantHier</classname> object to the top window, 
+    and a <classname>NodeHier</classname> object to the bottom window. 
+    To the <classname>NodeHier</classname>, we add a <classname>Node</classname> object, 
+    and name it <quote>SUSETEST</quote>. 
+    The plant hierarchy is a logical representation of the physical system to be controlled. 
+    It will contain the various signals and parameters needed, 
+    as well as the plc programs that perform the control operations. 
+    The node hierarchy is a representation of the hardware, with I/O-channels and system-level configurations. 
+    Proview currently supports the <productname>Profibus/DP</productname> fieldbus standard, 
+    as well as a number of less widespread <hardware>QBUS</hardware> I/O cards. 
+    To keep this demonstration example general, we will leave out I/O configuration, and use internal signals only.
+    </para>
+    
+    <section xml:id="pwrgsg_plantplc">
+      <title>Plant Hierarchy and Plc Programs</title>
+      
+      <para> We will now set up the plant hierarchy, which is a logical model of our physical system, 
+      and create the plc programs that will perform the control operations. 
+      We start by adding some analog and digital signals 
+      (<classname>Av</classname> and <classname>Dv</classname>)
+      to the plant hierarchy from the palette on the left-hand side. 
+      The palette is visible in Edit mode, only. 
+      Then we add a <classname>PlcPgm</classname> to the hierarchy (this is the plc program object). 
+      We need to connect it to the right <classname>PlcThread</classname> in the node hierarchy. 
+      Select the default <quote>100ms</quote> <classname>PlcThread</classname> 
+      under the <classname>PlcProcess</classname> object in the node hierarchy. 
+      Then connect it to the <property>ThreadObject</property> attribute of the newly
+      created <classname>PlcPgm</classname> in the plant hierarchy. 
+      To do this, select the <classname>PlcThread</classname> and 
+      <keycombo action="double-click"><keycap>Ctrl</keycap><mousebutton>Double click</mousebutton></keycombo> 
+      on the <property>ThreadObject</property> attribute.
+      Connections between other objects, e.g. I/O channels and signals, are created with 
+      <keycombo action="double-click"><keycap>Ctrl</keycap><mousebutton>Double click</mousebutton></keycombo> 
+      in a similar way.</para>
+      
+      <para>We need to set the thread priority of the <classname>PlcThread</classname>, 
+      as the default priority of <literal>0</literal> will give poor real time performance. 
+      This is done in the <property>Prio</property> attribute of the 
+      <classname>PlcThread</classname>. 
+      A priority of <literal>20</literal> is suitable.
+      Save the changes made to the volume, and exit Edit mode.</para>
+
+      <screenshot>
+	<mediaobject xml:id="screennavigator">
+	  <imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_navigator.png" format="PNG"/>
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata align="center" width="100%" fileref="screen_navigator.png" format="PNG"/>
+	  </imageobject>
+	  <caption><para>The volume navigator.</para></caption>
+	</mediaobject>
+      </screenshot>  
+      
+      <para>To edit the plc program, make sure the &pwrvolume; 
+      Navigator is not in edit mode. 
+      Then select the <classname>PlcPgm</classname> and choose 
+      <menuchoice>
+	  <shortcut><keycombo><keycap>Ctrl</keycap><keycap>L</keycap></keycombo></shortcut>
+      <guimenu>Functions</guimenu>
+      <guimenuitem>Open program</guimenuitem>
+      </menuchoice>.
+      The plc editor opens in a new window. 
+      Enter Edit mode. 
+      Now, add objects to the program by choosing from the left-hand side palette and middle clicking in the program area. 
+      We build a small example program consisting of a <classname>Ramp</classname> object, 
+      with analog input and output signals. 
+      Save the program and exit the editor.</para>
+
+      <screenshot>
+	<mediaobject xml:id="screenplceditor">
+	  <imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_plceditor.png" format="PNG"/>
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata align="center" width="100%" fileref="screen_plceditor.png" format="PNG"/>
+	  </imageobject>
+	  <caption><para>The plc editor.</para></caption>
+	</mediaobject>
+      </screenshot>       
+      
+      <para>We now need to compile the program and create a load file and a boot file. 
+      This is done in the &pwrvolume; Navigator.
+      Select the whole plant hierarchy and choose 
+      <menuchoice>
+	<guimenu>Functions</guimenu>
+	<guimenuitem>Compile</guimenuitem>
+      </menuchoice>.
+      Then to create load and boot files, use
+      <menuchoice>
+	<guimenu>Functions</guimenu>
+	<guimenuitem>Create Loadfile</guimenuitem>
+      </menuchoice> and
+      <menuchoice>
+	<guimenu>Functions</guimenu>
+	<guimenuitem>Create boot file</guimenuitem>
+      </menuchoice>.
+      Check the outcome of the commands in the terminal window where you started the Navigator.
+      <tip>
+	<para>
+	  The process of compiling plc programs and creating load and boot files can be automated in a wtt script. 
+	  See the <citetitle pubwork="book">Designer's Guide</citetitle>, at the  
+	  <link xlink:href="http://www.proview.se/">Proview</link> site.
+	</para>
+      </tip>
+      </para>
+      
+    </section>
+  </section>
+
+  <section xml:id="pwrgsg_gui">
+    <title>Process graphics and User Interfaces</title>
+
+    <para>To make a small GUI, open the Graphical Editor (GE) with 
+    <menuchoice>
+      <shortcut><keycombo><keycap>Ctrl</keycap><keycap>K</keycap></keycombo></shortcut>
+      <guimenu>Functions</guimenu>
+      <guimenuitem>Open graphical editor</guimenuitem>
+    </menuchoice>
+    To control the example system, add a slider with background and a trendcurve for the analog input and output.
+    Open the object attribute windows, 
+    and connect the relevant attributes to the corresponding signals in the plant hierarchy. 
+    This is done by selecting the signal, and 
+    <keycombo action="double-click"><keycap>Ctrl</keycap><mousebutton>Double click</mousebutton></keycombo> 
+    the attribute.
+    </para>
+    
+    <screenshot>
+      <mediaobject xml:id="screenge">
+	<imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_ge.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata align="center" width="100%" fileref="screen_ge.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The Graphical Editor (GE).</para></caption>
+      </mediaobject>
+    </screenshot>    
+
+    <para>
+      We need to set the size of the image in 
+      <menuchoice>
+	<guimenu>File</guimenu>
+      <guimenuitem>Graph attributes...</guimenuitem>
+    </menuchoice>.
+    Place the cursor in the lower right corner of the image to read off suitable values for the x1 and y1 coordinates.
+    </para>
+    <screenshot>
+      <mediaobject xml:id="screengraphattr">
+	<imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_graphattributes.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	    <imagedata align="center" width="50%" fileref="screen_graphattributes.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The graph attributes window.</para></caption>
+      </mediaobject>
+    </screenshot>
+<para>    
+    Save the process image file as <filename>demo.pwg</filename>. 
+    To use it in runtime we need to copy it from the default location in 
+    <filename role="directory">$pwrp_pop/</filename> to <filename role="directory">$pwrp_exe/</filename>.
+    <footnote>
+    <para>The initial <command>sdf</command> sets <filename role="directory">$pwrp_pop/</filename> 
+    and <filename role="directory">$pwrp_exe/</filename> to point to certain directories in the project tree. 
+    These are <replaceable>projectpath</replaceable><filename role="directory">/common/src/pop/</filename>
+    and <replaceable>projectpath</replaceable><filename role="directory">/x86_linux/exe/</filename>, respectively.</para>
+    </footnote>
+    When we have a lot of process graphics for a project the easiest way is to type 
+<screen>
+<prompt>bash$</prompt> <userinput><command>cp</command> <parameter><filename>$pwrp_pop/*.pwg</filename></parameter> <parameter><filename>$pwrp_exe</filename></parameter></userinput></screen>
+    </para>
+  </section>
+
+  <section xml:id="pwrgsg_runtime">
+    <title>Runtime</title>
+
+    <para>Now our program is compiled, and we have created a load file and a boot file for the volume. 
+    To start the runtime system on the development machine, type 
+    <screen>
+<prompt>bash$</prompt> <userinput><command>rt_ini</command> &amp;</userinput></screen>
+    To stop the runtime processes, type <userinput><command>rt_ini</command> <option>-s</option></userinput>, 
+    or <userinput><command>. pwr_stop.sh</command></userinput> (while this holds for a development machine,  
+    the commands differ slightly on a runtime-only node, with a pwrrt package installed - see separate documentation). 
+    <note>
+      <para>For the runtime system to work correctly, you may have to mount an <systemitem role="filesystem">mqueue</systemitem>
+      on your system. 
+      This can be done by
+      <screen>
+<prompt>bash$</prompt> <userinput><command>su</command></userinput>
+<prompt>bash$</prompt> <userinput><command>mkdir</command> <parameter><filename>/dev/mqueue</filename></parameter></userinput>
+<prompt>bash$</prompt> <userinput><command>mount</command> <option>-t</option> <parameter><systemitem role="filesystem">mqueue</systemitem></parameter> <option>none</option> <parameter><filename>/dev/mqueue</filename></parameter></userinput></screen>
+      The <systemitem role="filesystem">mqueue</systemitem> thus mounted will disappear after reboot. 
+      For a permanent mount, edit the <filename>/etc/fstab</filename> file.
+      </para>
+      <para>
+	You may also want to control that the <envar>$PWR_BUS_ID</envar> 
+	environment variable is set up correctly 
+	(it should match the chosen bus number, which is <literal>999</literal> in this case).
+      </para>
+    </note>
+    If everything goes well, we can now open the &pwrxtt; 
+    Runtime Navigator from the terminal with <command>rt_xtt</command>.
+    </para>
+    <screenshot>
+      <mediaobject xml:id="screenxtt">
+	<imageobject role="html">
+	    <imagedata align="center" scale="100" fileref="screen_xtt.png" format="PNG"/>
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata align="center" width="50%" fileref="screen_xtt.png" format="PNG"/>
+	  </imageobject>
+	  <caption><para>The Xtt navigator.</para></caption>
+      </mediaobject>
+    </screenshot>
+<para>
+    To open the process image in &pwrxtt;, 
+    use <keycombo><keycap>Ctrl</keycap><keycap>B</keycap></keycombo> to get a command line in the
+    navigator, and then type <userinput><command>open graph</command> <parameter><filename>demo</filename></parameter></userinput>.</para>
+    <screenshot>
+      <mediaobject xml:id="screengert">
+	<imageobject role="html">
+	  <imagedata align="center" scale="100" fileref="screen_gert.png" format="PNG"/>
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata align="center" width="9cm" fileref="screen_gert.png" format="PNG"/>
+	</imageobject>
+	<caption><para>The graph in the runtime environment.</para></caption>
+      </mediaobject>
+    </screenshot>
+  </section>
+</article>
