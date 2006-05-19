@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="iso-latin-1"?>
+<!DOCTYPE book [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+]>
+<article>
+<title>Proview Changelog</title>
+<section><title>Changelog entries</title>
+<table xml:id="changelog_43" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   profibus</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cj</td></tr>
+<tr><td><classname>Date</classname></td><td>   09-MAY-2006</td></tr>
+</tbody></table>
+<para>Added some commentation. Fixed bug in pb_ai and pb_di. 3-byte input where not properly aligned when byte swapping.</para>
+<table xml:id="changelog_42" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   bcomp</td></tr>
+<tr><td><classname>Component</classname></td><td>   bcomp</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   09-MAY-2006</td></tr>
+</tbody></table>
+<para>Attribute DisableAlarm added to CompLimit to make it possible to use the limit supervision in BaseSensor without alarm.</para>
+<table xml:id="changelog_41" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   08-MAY-2006</td></tr>
+</tbody></table>
+<para>References in superclass was not displayed in the navigator when option Object Reference or Attribute Reference was selected.</para>
+<table xml:id="changelog_40" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   05-MAY-2006</td></tr>
+</tbody></table>
+<para>Separate ld_node file for each node. Possibility to configure a FriendNode object under a NodeConfig object.</para>
+<table xml:id="changelog_39" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   siemens</td></tr>
+<tr><td><classname>Component</classname></td><td>   wbl</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   04-MAY-2006</td></tr>
+</tbody></table>
+<para>New profibus module classes for ET200M, and slave classes for IM153 and IM155</para>
+<table xml:id="changelog_38" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   pwrb</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   02-MAY-2006</td></tr>
+</tbody></table>
+<para>New signals for absolute and delta time, and plc objects for time arithmetics added.</para>
+<table xml:id="changelog_37" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   co</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   02-MAY-2006</td></tr>
+</tbody></table>
+<para>Bugfix in time_Dcomp, 0 was not returned for equal times.</para>
+<table xml:id="changelog_36" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   plc</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   26-APR-2006</td></tr>
+</tbody></table>
+<para>Bugfix in GetData compilation, error when referenced parameter was a type (not a class) not handled.</para>
+<table xml:id="changelog_35" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   plc</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   26-APR-2006</td></tr>
+</tbody></table>
+<para>Bugfix in dataarithm compilation, space at end of line could cause error.</para>
+<table xml:id="changelog_34" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   31-MAR-2006</td></tr>
+</tbody></table>
+<para>Build methods added. 'Compile', 'create loadfile' and 'create bootfile' replaced by 'build object', 'build volume' and 'build node'. 'build object', 'build volume' and 'build node' also available as wtt commands.</para>
+<table xml:id="changelog_33" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   31-MAR-2006</td></tr>
+</tbody></table>
+<para>Configuration wizard started when entering an empty directoryvolume.</para>
+<table xml:id="changelog_32" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   31-MAR-2006</td></tr>
+</tbody></table>
+<para>Copy with keep references added to wtt menu.</para>
+<table xml:id="changelog_31" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   pwrs</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   31-MAR-2006</td></tr>
+</tbody></table>
+<para>Modified attribute added to RootVolume, SubVolume and SharedVolume.</para>
+<table xml:id="changelog_30" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Component</classname></td><td>   glow</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   31-MAR-2006</td></tr>
+</tbody></table>
+<para>Bugfix in annotation input. Insert of new characters might cause segmentation fault.</para>
+<table xml:id="changelog_29" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   qcom</td></tr>
+<tr><td><classname>Signature</classname></td><td>   rk</td></tr>
+<tr><td><classname>Date</classname></td><td>   17-MAR-2006</td></tr>
+</tbody></table>
+<para>Replaces old unsent subscriptions with new fresh ones.</para>
+<table xml:id="changelog_28" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   qcom</td></tr>
+<tr><td><classname>Signature</classname></td><td>   rk</td></tr>
+<tr><td><classname>Date</classname></td><td>   17-MAR-2006</td></tr>
+</tbody></table>
+<para>Changed interface to qcom_Put. Added attributes msg_id and prio in qcom_sPut structure.</para>
+<table xml:id="changelog_27" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   rt_tmon</td></tr>
+<tr><td><classname>Signature</classname></td><td>   rk</td></tr>
+<tr><td><classname>Date</classname></td><td>   17-MAR-2006</td></tr>
+</tbody></table>
+<para>Cleaning (zero-ing) of timed out subscription data.</para>
+<table xml:id="changelog_26" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Component</classname></td><td>   gedyn</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   07-MAR-2006</td></tr>
+</tbody></table>
+<para>Subscription for Table (select array) and AnalogColor was not always unreferenced.</para>
+<table xml:id="changelog_25" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   klocknermoeller</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_24" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   telemecanique</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_23" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   ssabox</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_22" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   java</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_21" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   tlog</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_20" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   profibus</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_19" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wnav</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Check before creating a toplevel object if class is a valid in the current window.</para>
+<table xml:id="changelog_18" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   nmps</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_17" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   siemens</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_16" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   abb</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_15" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   othermanu</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_14" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   remote</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_13" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   bcomp</td></tr>
+<tr><td><classname>Component</classname></td><td>   -</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Changelog created.</para>
+<table xml:id="changelog_12" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Component</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   27-FEB-2006</td></tr>
+</tbody></table>
+<para>Command for collect remove and collect remove/clear in menu.</para>
+<table xml:id="changelog_11" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wnav</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   23-FEB-2006</td></tr>
+</tbody></table>
+<para>New wizard for configuration of directory volume.</para>
+<table xml:id="changelog_10" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   convert</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   22-FEB-2006</td></tr>
+</tbody></table>
+<para>Bookmark inserted for every attribute in class xtthelp.</para>
+<table xml:id="changelog_9" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   xtthelp</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   22-FEB-2006</td></tr>
+</tbody></table>
+<para>Bugfix, bookmark in xtthelp was case sensitive.</para>
+<table xml:id="changelog_8" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   ldh</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   21-FEB-2006</td></tr>
+</tbody></table>
+<para>Bugfix. Unhandled exception in DeleteObject and DeleteTree if not in edit mode.</para>
+<table xml:id="changelog_7" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wnav</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   21-FEB-2006</td></tr>
+</tbody></table>
+<para>Popupmenu for object with DevBody only could not be opened.</para>
+<table xml:id="changelog_6" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wnav</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   20-FEB-2006</td></tr>
+</tbody></table>
+<para>New commands: open graph, delete graph, set subwindow and release subwindow.</para>
+<table xml:id="changelog_5" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Component</classname></td><td>   ge</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   20-FEB-2006</td></tr>
+</tbody></table>
+<para>Connect to script extern variables in Value, Invisible, SetDig, ToggleDig, DigShift and OptionMenu.</para>
+<table xml:id="changelog_4" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   script</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   20-FEB-2006</td></tr>
+</tbody></table>
+<para>New script functions SetAttribute, OpenGraph, CloseGraph,  SetSubwindow and CheckSystemGroup.</para>
+<table xml:id="changelog_3" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   script</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   20-FEB-2006</td></tr>
+</tbody></table>
+<para>'#' alternative to '!' for comment in script.</para>
+<table xml:id="changelog_2" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   src</td></tr>
+<tr><td><classname>Component</classname></td><td>   script</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   20-FEB-2006</td></tr>
+</tbody></table>
+<para>'delete' statement added to remove external variables.</para>
+<table xml:id="changelog_1" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   wb</td></tr>
+<tr><td><classname>Component</classname></td><td>   wnav</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   19-FEB-2006</td></tr>
+</tbody></table>
+<para>WGe, new class to open Ge graphs in development environment.</para>
+<table xml:id="changelog_0" width="2in" border="0"><tbody><tr><td><classname>Module</classname></td><td>   xtt</td></tr>
+<tr><td><classname>Component</classname></td><td>   gedyn</td></tr>
+<tr><td><classname>Signature</classname></td><td>   cs</td></tr>
+<tr><td><classname>Date</classname></td><td>   19-FEB-2006</td></tr>
+</tbody></table>
+<para>Bugfix in GeValue: string was sometimes updated every scan.</para>
+</section></article>
