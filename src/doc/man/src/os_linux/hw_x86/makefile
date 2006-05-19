@@ -68,6 +68,40 @@ export_gif_en_us := $(patsubst %.gif,$(doc_dir)/en_us/%.gif,$(gif_sources))
 export_gif_exe := $(patsubst %.gif,$(exe_dir)/%.gif,$(gif_sources))
 clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 
+
+#docbook-related, added by jonas_h 2006-04-nn
+
+targetsuffixes := _single.html _index.html .pdf
+
+sv_se_xmlsources := dbpwr.xml upgrade42.xml
+en_us_xmlsources := pwrgsg.xml upgrade42.xml changelog.xml
+
+sv_se_xmltargets := $(addprefix $(doc_dir)/sv_se/, \
+	$(foreach targetsuffix, $(targetsuffixes), \
+	$(foreach basefile, $(basename $(sv_se_xmlsources)), \
+	$(addsuffix $(targetsuffix), $(basefile)))))
+
+en_us_xmltargets := $(addprefix $(doc_dir)/en_us/, \
+	$(foreach targetsuffix, $(targetsuffixes), \
+	$(foreach basefile, $(basename $(en_us_xmlsources)), \
+	$(addsuffix $(targetsuffix), $(basefile)))))
+
+
+csstargets := $(addprefix $(doc_dir)/sv_se/, $(notdir $(wildcard $(pwre_sroot)/doc/man/src/*.css))) \
+	$(addprefix $(doc_dir)/en_us/, $(notdir $(wildcard $(pwre_sroot)/doc/man/src/*.css)))
+
+medianonsources = $(notdir $(wildcard $(pwre_sroot)/doc/man/src/dg_fig*)))
+mediasources := $(filter-out $(medianonsources), $(notdir \
+	$(wildcard $(pwre_sroot)/doc/man/src/*.png) \
+	$(wildcard $(pwre_sroot)/doc/man/src/*.tif) \
+	$(wildcard $(pwre_sroot)/doc/man/src/*.svg) \
+	$(wildcard $(pwre_sroot)/doc/man/src/*.jpg) \
+	$(wildcard $(pwre_sroot)/doc/man/src/*.gif)))
+mediatargets := $(addprefix $(doc_dir)/, $(mediasources))
+
+#end of
+
+
 .SUFFIXES:
 
 $(doc_dir)/%.pdf : ../../%.pdf
@@ -117,10 +151,15 @@ lib :
 
 exe :
 
-
 clean :
 
 realclean : clean $(clean_pdf) $(clean_c)
+
+# added by jonas_h 2006-04-nn
+
+docbook : $(sv_se_xmltargets) $(en_us_xmltargets) $(mediatargets) $(csstargets)
+
+# end of
 
 $(clean_pdf) : clean_%.pdf : %.pdf
 	@ $(rm) $(rmflags) $(doc_dir)/$*.pdf
@@ -200,10 +239,33 @@ $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ co_convert -n -d $(doc_dir)/sv_se $(source)
 
 
+# implicit rules, docbook-related, added by jonas_h 2006-04-nn
 
+%.fo :: %.xml
+	$(xsltproc) $(xsltproc_args) $(fo_xsl) $(source) > $(target)
 
+$(doc_dir)/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl
+	$(fop) $(source) -pdf $(target)
+	rm -f $(source)
 
+$(doc_dir)/%_single.html :: $(pwre_sroot)/doc/man/%.xml 
+	$(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source)
 
+$(doc_dir)/en_us/%_index.html :: $(pwre_sroot)/doc/man/en_us/%.xml
+	$(xsltproc) $(xsltproc_args) $(chunk_args_en_us) $(chunk_xsl) $(source)
 
+$(doc_dir)/sv_se/%_index.html :: $(pwre_sroot)/doc/man/sv_se/%.xml
+	$(xsltproc) $(xsltproc_args) $(chunk_args_sv_se) $(chunk_xsl) $(source)
 
+$(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
+	cp $(source) $(target)
 
+# all-purpose rule for graphics/media
+$(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
+	cp -u $(source) $(target)
+
+# Rule for creating titlepage xsl templates
+$(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
+	$(xsltproc) -o $(target) $(docbook_stylesheetdir)/template/titlepage.xsl $(source)
+
+#end of
