@@ -1,0 +1,10 @@
+<!-- This entity declaration file sets up entities for Proview environments -->
+
+<!ENTITY Proview "<application>Proview</application>">
+<!ENTITY pwrprojlist "<application role='pwrenv'>ProjectList</application>">
+<!ENTITY pwrvollist "<application role='pwrenv'>VolumeList</application>">
+<!ENTITY pwrdirectory "<application role='pwrenv'>Directory</application>">
+<!ENTITY pwrvolume "<application role='pwrenv'>Volume</application>">
+<!ENTITY pwrxtt "<application role='pwrenv'>Xtt</application>">
+
+<!ENTITY pwrsite "http://www.proview.se">
