@@ -49245,7 +49245,7 @@ and no Auto/Man button."
       EndBody
       Object RtBody $ObjBodyDef 1 18-MAY-2006 14:32:01.14
         Body SysBody 18-MAY-2006 14:32:01.14
-          Attr NextAix = "_X29"
+          Attr NextAix = "_X30"
         EndBody
         Object XSetVal $Attribute 1 18-MAY-2006 14:33:31.29
           Body SysBody 18-MAY-2006 15:33:56.70
@@ -49310,22 +49310,22 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object AutMode $Attribute 10 18-MAY-2006 14:34:45.53
-          Body SysBody 18-MAY-2006 15:35:12.67
+        Object AutMode $Attribute 10 18-MAY-2006 18:06:42.08
+          Body SysBody 18-MAY-2006 18:06:44.13
             Attr PgmName = "AutMode"
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object CascMode $Attribute 11 18-MAY-2006 14:34:50.50
-          Body SysBody 18-MAY-2006 15:35:23.78
-            Attr PgmName = "CascMode"
+        Object CascMod $Attribute 11 18-MAY-2006 17:48:24.70
+          Body SysBody 18-MAY-2006 17:48:27.73
+            Attr PgmName = "CascMod"
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object ManMode $Attribute 12 18-MAY-2006 14:34:56.83
-          Body SysBody 18-MAY-2006 15:35:35.63
+        Object ManMode $Attribute 29 18-MAY-2006 18:06:49.15
+          Body SysBody 18-MAY-2006 18:06:54.31
             Attr PgmName = "ManMode"
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
@@ -49429,12 +49429,17 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object Template CompModePID 2187034624 01-JAN-1970 01:00:00.00
-        Body RtBody 18-MAY-2006 14:42:57.50
-          Attr OpMod = 2
+        Body RtBody 18-MAY-2006 18:01:47.74
+          Attr OpMod = 1
           Attr AccMod = 3
+          Attr AccOut = 15
           Attr MaxOut = 1.000000e+02
+          Attr AccSet = 15
+          Attr MaxSet = 1.000000e+02
           Attr SetMaxShow = 1.000000e+02
           Attr OutMaxShow = 1.000000e+02
+          Attr SetEngUnit = "%"
+          Attr OutEngUnit = "%"
         EndBody
       EndObject
     EndObject
@@ -49448,7 +49453,7 @@ and no Auto/Man button."
       Object RtBody $ObjBodyDef 1 18-MAY-2006 14:25:40.74
         Body SysBody 18-MAY-2006 14:26:08.05
           Attr StructName = "CompModePID_Fo"
-          Attr NextAix = "_X56"
+          Attr NextAix = "_X57"
         EndBody
         Object XSetVal $Input 28 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
@@ -49501,6 +49506,13 @@ and no Auto/Man button."
           Body SysBody 18-MAY-2006 14:29:59.89
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnectP $Intern 56 18-MAY-2006 16:04:48.94
+          Body SysBody 18-MAY-2006 16:04:48.94
+            Attr PgmName = "PlcConnectP"
+            Attr Flags = 65537
+            Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject
         Object SetVal $Output 34 18-MAY-2006 14:25:40.74
@@ -49556,10 +49568,10 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 8123 18-MAY-2006 14:25:40.74
-        Body SysBody 18-MAY-2006 15:55:20.73
+        Body SysBody 18-MAY-2006 16:05:23.12
           Attr object_type = 11
           Attr parameters[0] = 6
-          Attr parameters[1] = 1
+          Attr parameters[1] = 2
           Attr parameters[2] = 5
           Attr parameters[3] = 0
           Attr graphmethod = 0
@@ -49723,13 +49735,6 @@ and no Auto/Man button."
         Object MaxOut $Attribute 20 18-MAY-2006 15:15:27.97
           Body SysBody 18-MAY-2006 15:22:34.40
             Attr PgmName = "MaxOut"
-            Attr TypeRef = "pwrs:Type-$Float32"
-          EndBody
-        EndObject
-        Object ScanTime $Attribute 21 18-MAY-2006 15:15:32.03
-          Body SysBody 18-MAY-2006 15:23:02.90
-            Attr PgmName = "ScanTime"
-            Attr Flags = 67585
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
@@ -49903,7 +49908,31 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object Template CompPID 2187558912 01-JAN-1970 01:00:00.00
-        Body RtBody 01-JAN-1970 01:00:00.00
+        Body RtBody 18-MAY-2006 18:00:18.22
+          Attr PidAlg = 3
+          Attr Gain = 1.000000e+00
+          Attr IntTime = 1.200000e+02
+          Attr DerGain = 3.000000e+00
+          Attr Inverse = 1
+          Attr BiasGain = 1.000000e+00
+          Attr MaxOut = 1.000000e+02
+          Attr AccGain = 15
+          Attr AccInt = 15
+          Attr AccDer = 15
+          Attr AccBias = 15
+          Attr AccBGain = 15
+          Attr MinGain = 1.000000e-01
+          Attr MaxGain = 1.000000e+01
+          Attr MinInt = 1.000000e+01
+          Attr MaxInt = 6.000000e+02
+          Attr MaxDer = 2.000000e+01
+          Attr MaxBias = 1.000000e+02
+          Attr MinBGain = -1.000000e+02
+          Attr MaxBGain = 1.000000e+02
+          Attr SetMaxShow = 1.000000e+02
+          Attr OutMaxShow = 1.000000e+02
+          Attr SetEngUnit = "%"
+          Attr OutEngUnit = "%"
         EndBody
       EndObject
     EndObject
@@ -49917,7 +49946,7 @@ and no Auto/Man button."
       Object RtBody $ObjBodyDef 1 18-MAY-2006 14:46:20.16
         Body SysBody 18-MAY-2006 14:49:30.18
           Attr StructName = "CompPID_Fo"
-          Attr NextAix = "_X50"
+          Attr NextAix = "_X52"
         EndBody
         Object ProcVal $Input 1 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
@@ -49964,10 +49993,24 @@ and no Auto/Man button."
             Attr GraphName = "iof"
           EndBody
         EndObject
+        Object ScanTime $Intern 51 19-MAY-2006 07:53:59.35
+          Body SysBody 19-MAY-2006 07:54:41.72
+            Attr PgmName = "ScanTime"
+            Attr Flags = 67585
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
         Object PlcConnect $Intern 49 18-MAY-2006 14:47:32.09
           Body SysBody 18-MAY-2006 14:47:32.09
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
+          EndBody
+        EndObject
+        Object PlcConnectP $Intern 50 18-MAY-2006 16:05:00.77
+          Body SysBody 18-MAY-2006 16:04:54.85
+            Attr PgmName = "PlcConnectP"
+            Attr Flags = 65537
+            Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject
         Object OutVal $Output 7 18-MAY-2006 14:46:20.16
@@ -50023,10 +50066,10 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 8124 18-MAY-2006 14:46:20.16
-        Body SysBody 18-MAY-2006 15:55:08.84
+        Body SysBody 19-MAY-2006 07:55:20.49
           Attr object_type = 11
           Attr parameters[0] = 6
-          Attr parameters[1] = 1
+          Attr parameters[1] = 3
           Attr parameters[2] = 5
           Attr parameters[3] = 0
           Attr graphmethod = 0
