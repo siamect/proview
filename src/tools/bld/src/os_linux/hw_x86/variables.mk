@@ -46,7 +46,7 @@ fhw_source := $(pwre_sroot)/$(type_name)/$(comp_name)/src/$(os_name)/$(hw_name)
 fos_source := $(pwre_sroot)/$(type_name)/$(comp_name)/src/$(os_name)
 fco_source := $(pwre_sroot)/$(type_name)/$(comp_name)/src
 
-#  Realtive names of source directories
+#  Relative names of source directories
 
 hw_source := .
 os_source := ../
@@ -110,6 +110,27 @@ ldxx		:= g++
 lex             := flex
 msg2cmsg	:= $(eexe_dir)/tools_msg2cmsg
 javac		:= javac
+
+
+#docbook-related, added by jonas_h 2006-04-nn
+
+xsltproc := xsltproc
+fop := fop 
+#above is a symlink from /usr/local/bin/fop -> /usr/local/fop-0.92beta/fop
+
+xsltproc_args := --xinclude
+chunk_args_en_us = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/en_us/
+chunk_args_sv_se = --stringparam root.filename $(basename $(notdir $(target))) --stringparam base.dir $(doc_dir)/sv_se/
+
+pwr_stylesheetdir = $(pwre_sroot)/doc/man/src
+docbook_stylesheetdir = /usr/local/share/xml/docbook/stylesheet/snapshot
+html_xsl = $(pwr_stylesheetdir)/pwrxsl-html.xsl
+chunk_xsl = $(pwr_stylesheetdir)/pwrxsl-chunk.xsl
+fo_xsl = $(pwr_stylesheetdir)/pwrxsl-fo.xsl
+
+#end of
+
+
 
 #list            = $(to-vms $(lis_dir)/$(sname)$(lis_ext))
 map             = $(bld_dir)/$(tname)$(map_ext)
