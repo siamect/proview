@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <uri resource="dbpwr_utdata.xml" typeId="DocBook"/>
+  <uri resource="dbpwr_exempel.xml" typeId="DocBook"/>
+  <uri resource="dbpwr_omdocbook.xml" typeId="DocBook"/>
+  <uri resource="dbpwr_intro.xml" typeId="DocBook"/>
+  <uri resource="dbpwr_omdokumentet.xml" typeId="DocBook"/>
+  <uri resource="dbpwr.xml" uri="/usr/local/share/emacs/21.4/site-lisp/nxml-mode-20041004/schema/docbookxi.rnc"/>
+</locatingRules>

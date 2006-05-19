@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="iso-latin-1"?>
+<!DOCTYPE book [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<book version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+      xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <info>
+    <title>Uppgradering till V4.2.0</title>
+    
+    <subtitle>Vägledning</subtitle>
+    <authorgroup>
+      <author>
+	<personname><firstname>Claes</firstname>
+	<surname>Sjöfors</surname></personname>
+	<affiliation>
+	  <orgname>SSAB Oxelösund AB</orgname>
+	</affiliation>
+	<email>postmaster@proview.se</email>
+      </author>
+    </authorgroup>
+    <revhistory>
+      <revision>
+	<revnumber>0.1</revnumber>
+	<date>2006-04-01</date>
+	<authorinitials>cs</authorinitials>
+	<revremark>v0.1</revremark>
+      </revision>
+    </revhistory>
+    <edition xml:lang="sv">v0.1</edition>
+    <copyright><year>2006</year><holder>SSAB Oxelösund AB</holder></copyright>
+    <date>2006-04-01</date>
+    <legalnotice>
+      <para xml:lang="en">Permission is granted to copy, distribute and/or modify this document 
+      under the terms of the GNU Free Documentation License, Version 1.2
+      or any later version published by the Free Software Foundation;
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.</para>
+    </legalnotice>
+    <mediaobject>
+      <imageobject role="html">
+	<imagedata align="center" scale="70" fileref="pwr_logga.gif" format="GIF"/>
+      </imageobject>
+      <imageobject role="fo">
+	<imagedata align="center" width="70%" fileref="pwr_logga.gif" format="GIF"/>
+      </imageobject> 
+    </mediaobject>
+  </info>
+
+  <chapter xml:id="upgradev42_chaintro"><title>Introduktion</title>
+  <section xml:id="upgradev42_intro"><title>Uppgradering till Proview 4.2.0</title>
+  <para>Detta dokument beskriver nya funktioner i Proview V4.2.0, samt hur man
+  uppgraderar från V4.1.3 till V4.2.0.</para>
+  </section>
+  </chapter>
+
+  <chapter xml:id="upgradev42_chanewfunc"><title>Nya funktioner</title>
+  <section xml:id="upgradev42_profibus"><title>Profibus konfigurator</title>
+  <para>Konfigureringen av profibus är förändrad i V4.2.0, både när det gäller 
+  tillvägagångsätt och de objekt som används vid konfigureringen. </para>
+
+  <para>Man börjar genom att skapa ett masterobjekt i nodehierarkin, för Softing profiboard
+  används <classname>Pb_Profiboard</classname>. Under detta läggs de slavar som finns på profibusslingan med
+  <classname>Pb_DP_Slave</classname> objekt, eller objekt som är en subklass av 
+  <classname>Pb_DP_Slave</classname>. Använder man
+  <classname>Pb_DP_Slave</classname> objektet lägger man in namn på gsd-fil, byteordning och ev 
+  flyttalsrepresentation. För vissa slavar finns specifika subclasser, t ex 
+  <classname>Siemens_ET200S_IM151</classname>, <classname>Siemens_ET200M_IM153</classname> 
+  och <classname>ABB_ACS_Pb_Slave</classname>. Här är gsd-filen redan
+  specificerad i objektet, och följer även med proview-releasen. </para>
+
+  <para>Nästa steg är att öppna profibus-konfiguratören för varje slav, genom att aktivera
+  <menuchoice><guimenu>Configure Slave</guimenu></menuchoice> i popupmenyn för slaven. Profibus konfiguratören läser gsd-filen och
+  presenterar data och konfigurations alternativ för slaven. Under mappen <tag>SlaveGsdData</tag> visas 
+  diverse uppgifter om slaven, och under mappen <tag>UserPrmData</tag> konfigurationsdata för slaven.</para>
+
+  <para>
+  <imagedata fileref="upgrade42_pbconf.gif" width="5in" depth="6in"/>
+  </para>
+
+  <para>På slaven finns plats för ett visst antal moduler, och för varje tänkbar modul finns
+  ett modul-entry i konfiguratören. Genom att öppna ett modul-entry kan man ange typ,
+  konfigureringsdata, objektsnamn och objektsklass för modulen.
+  <section xml:id="upgradev42_pb_type"><title>Typ</title>
+  <para>Under Type listas alla möjliga typer finns för den aktuella slaven. Välj ut den
+  önskade typen genom att klicka i checkboxen för typen.</para>
+  </section>
+  <section xml:id="upgradev42_pb_confdata"><title>Konfigurationsdata</title>
+  <para>Under UserPrmData visas konfigurerings alternativen för den valda modulen. Här 
+  anger man data och väljer mellan olika alternativ för att konfigurera modulen. 
+  Se databladet för modulen för närmare information om vad alternativen innebär.
+  </para>
+  </section>
+  <section xml:id="upgradev42_pb_objname"><title>Objektnamn</title>
+  <para>Vid konfigureringen skapar profibus konfiguratorn ett modulobjekt under 
+  slavobjektet. I ObjectName anger man ett namn på detta modulobjekt. Namnet måste
+  vara unikt inom slaven.
+  </para></section>
+  <section xml:id="upgradev42_pb_mclass"><title>Modulklass</title>
+  <para>Under ModuleClass listas möljliga klasser på det modul konfigurations-objekt
+  som skapas under slavobjektet. Den klass som man väljer är beroende av hur
+  dataarean som transporteras på profibussen ser ut. Det finns ett antal specifika
+  klasser t ex <classname>Siemens_ET200S_Ai2, Siemens_ET200SDi2, ABB_ACS_PPO4.</classname>
+  Dessa innehåller en förspecificerad dataarea i form av interna kanalobjekt. Om inte
+  något specifikt modulklass passar, väljer man <classname>Pb_Module</classname> och 
+  specifierar senare dataarean genom att lägga kanal-objekt under modulobjektet.
+  </para>
+  </section>
+  När alla moduler är konfigurerarde klickar man på apply, och de olika modul-objekten
+  skapas. Nu lagras även PrmUserData konfigureringen för slaven och modulerna i 
+  attributet PrmUserData i slavobjektet, tillsammans med diverse andra data.</para>
+
+  <para>Nu återstår att ange Process och PlcThread för alla konfigurations objekt, samt
+  konfiguerar eventuella kanalobjekt under Pb_Module objekten.
+  </para>
+  </section>  
+
+  <section xml:id="upgradev42_buildmeth"><title>Bygg metoder</title>
+  <para>Kompilering av PlcPgm, skapande av laddatafiler och skapande av bootfil utförs
+  numera av Build funktionen. Build funktionen utgörs av bygg-metoder för noder, volymer
+  och objekt.
+  </para>
+
+  <section xml:id="upgradev42_build_obj"><title>Byggmetoder för objekt</title>
+  <section xml:id="upgradev42_build_plc"><title>PlgPgm</title>
+  <para>Byggmetoden för ett PlcPgm kontrollerar om plc-koden är ändrad sedan senaste
+  kompileringen. Om det är ändrad kompileras plcprogrammet med alla underfönster.
+  </para></section>
+
+  <section xml:id="upgradev42_build_xtt"><title>XttGraph</title>
+  <para>Byggmetoden för ett XttGraph kopierar .pwg filen från $pwrp_pop till $pwrp_exe
+  om filen på $pwrp_pop är nyare än den på $pwrp_exe. Om grafen är en java-applet
+  eller java-application exporteras den som java och kompileras.
+  </para></section>
+
+  <section xml:id="upgradev42_build_web"><title>WebHandler</title>
+  <para>Byggmetoden för ett WebHandler objekt skapar en hemsida för en nod (anropar
+  Generate Web).
+  </para></section>
+  </section>
+
+  <section xml:id="upgradev42_build_vol"><title>Byggmetod för volymer</title>
+  <section xml:id="upgradev42_build_rootvol"><title>Rotvolym</title>
+  <para>Rotvolymens byggmetod anropar byggmetoden för samtliga PlcPgm, XttGraph och 
+  WebHandler objekt i volymen. Om volymen är ändrad sedan laddatafiler senast skapades
+  för volymen, skapas nya laddatafiler. Även nya korsreferensfiler skapas om detta är 
+  angett i Options.
+  </para></section>
+
+  <section xml:id="upgradev42_build_classvol"><title>Klassvolym</title>
+  <para>Om klassvolymen är ändrad sedan laddatafiler senast skapades
+  för volymen, skapas nya laddatafiler, och nya structfiler för volymen.
+  </para></section>
+  </section>
+
+  <section xml:id="upgradev42_build_node"><title>Byggmetod för noder</title>
+  <para>Nodens byggmetod anropar byggmetoden för öppnad volym och skapar därefter ny
+  bootfil för noden.
+  <note>Observera att endast volymer som är öppnade byggs om. Om noden innehåller flera
+  volymer måste andra volymer byggas separat, innan noden byggs.
+  </note>
+  </para>
+  </section>
+  </section>
+
+  <section xml:id="upgradev42_remrack"><title>PSS9000 Remote rack</title>
+
+  <para>Ett proview system kan nu hämta data från en PSS9000 rack via ethernet. Racken konfigureras
+  med ett Ssab_RemoteRack objekt i nodhierarkin, och därunder konfiguraras korten i vanlig
+  ordning.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_ld_node"><title>ld_node_xxx.dat</title>
+
+  <para>ld_node filen innehåller de noder en nod tar kontakt med via QCOM vid
+  uppstart av proview. Filen genereras utifrån data i NodeConfig och 
+  FriendNodeConfig objekt i projektvolymen. </para>
+  <para>Tidigare har ld_node filen varit gemensam för alla noder i ett projekt 
+  på samma QCOM bus, men nu har varje nod fått en separat ld_node fil. Detta
+  gör det möjligt att styra vilka externa noder en node tar kontakt med individuellt.</para>
+  <para>Liksom tidigare styrs detta genom att FriendNodeConfig objekt läggs in i 
+  projektvolymen. Dessa har tidigare lagts som syskon till NodeConfig objekten 
+  i en QCOM bus, och medför då att samtliga noder tar kontakt med denna externa nod.
+  Nu kan FriendNodeConfig även läggas som barn till ett NodeConfig objekt, vilket
+  medför att endast denna nod tar kontakt med den externa noden.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_sub"><title>Buffring av prenumerationer borttagen</title>
+
+  <para>Buffringen av prenumerationer, vilken kunde ge upphov till ikappkörnings
+  fenomen vid dålig kommunikation, är nu borttagen.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_wiz"><title>Wizard för konfigurering av projektvolymen</title>
+
+  <para>Konfigureringen av projektvolymen görs nu enkelt mha av en wizard som startar
+  automatisk om man öppnar en tom projektvolym. Wizarden hämtar upp de volymer som är
+  konfigurerade för projektet i den globala volymslistan, och skapar volym- och 
+  nod-konfigurerings objekt för dessa.
+  </para>
+
+  <para>
+  <imagedata fileref="upgrade42_pvconfig.gif"  width="5in" depth="6in" />
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_otime"><title>Objekt för tidshantering</title>
+  <para>Ett antal nya objekt för att hantera tider har tillkommit i V4.2.0. Här finns
+  objekt för att lagra, addera, subtrahera tider mm.
+
+  <section xml:id="upgradev42_otime_sig"><title>Signaler</title>
+  <para>Signal objekten ATv (AboluteTimeValue) och DTv (DeltaTimeValue) lagrar tidsvärden 
+  i form av absoluttid (av typen pwr_tTime, dvs ett datum), resp en deltattid (av typen 
+  pwr_tDeltaTime, dvs ett tidsintervall). </para>
+  <para>Objekten återfinns under signal-mappen i paletten. Någon IO-kopiering av objekten 
+  sker ej.</para>
+  </section>
+  
+  <section xml:id="upgradev42_otime_plc"><title>Plc objekt</title>
+  <para>Addition och subtraktion av tider sker i plc-programmet mha objekten <classname>AtAdd,
+  DtAdd, AtSub, DtSub</classname> och <classname>AtDtSub</classname>. </para>
+  <para>För att hämta upp en ATv eller DTv används objekten <classname>GetATv</classname> resp
+  <classname>GetDTv</classname>. För att
+  hämta ett attribut av typen pwr_tTime och pwr_tDeltaTime i ett objekt, används objekten
+  <classname>GetATp</classname> resp <classname>GetDTp</classname></para>
+  <para>För att lagra ett tidsvärde i en <classname>ATv</classname> eller 
+  <classname>DTv</classname> används <classname>StoATv</classname> resp 
+  <classname>StoDTv</classname>, eller <classname>CStoATv</classname> resp 
+  <classname>CStoDTv</classname> för villkorlig lagring. För att lagra ett tidsvärde i 
+  ett attribut av typen pwr_tTime eller pwr_tDeltaTime används objekten 
+  <classname>StoATp</classname> resp <classname>StoDTp</classname>, eller 
+  <classname>CStoATp</classname> resp <classname>CStoDTp</classname> för villkorlig
+  lagring.</para>
+  <para>För att konvertera en deltatid till flyttal används DtToA, och vice versa AToDt.</para>
+  <para>Samtliga objekten återfinns under mappen Signals->Time i plceditorns palett.</para>
+  </section>
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_types"><title>Ändrade typer</title>
+  <section xml:id="upgradev42_types_repenum"><title>pwrb:DataRepEnum</title>
+  <para>Värdena Int32 och UInt24 har adderats.</para>
+  </section>
+  </section>
+
+  <section xml:id="upgradev42_changed_classes"><title>Ändrade klasser</title>
+
+  <section xml:id="upgradev42_ch_pb"><title>Profibus:Pb_Module</title>
+  <para>Attributet ModuleName har adderats.</para>
+  </section>
+
+  <section xml:id="upgradev42_ch_complimit"><title>BaseComponent:CompLimit</title>
+  <para>Attributet DisableAlarm har adderats, vilket gör det möjligt att använda
+  gränsvärdesövervakningen i BaseSensor utan larm.</para>
+  </section>
+
+  </section>
+
+
+  <section xml:id="upgradev42_new_classes"><title>Nya klasser</title>
+
+  <section xml:id="upgradev42_new_atv"><title>pwrb:ATv</title>
+  <para>Absolute Time Value, lagring av en absoluttid, pwr_tTime.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_dtv"><title>pwrb:DTv</title>
+  <para>Delta Time Value, lagring av en deltatid, pwr_tDeltaTime.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_atadd"><title>pwrb:AtAdd</title>
+  <para>Addition av en absoluttid och en deltatid.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_dtadd"><title>pwrb:DtAdd</title>
+  <para>Addition av två deltatider.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_atsub"><title>pwrb:AtSub</title>
+  <para>Subtraktion av en absoluttid från en absoluttid.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_dtsub"><title>pwrb:DtSub</title>
+  <para>Subtraktion av en deltatid frän en deltatid.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_atdtsub"><title>pwrb:AtDtSub</title>
+  <para>Subtraktion av en deltatid frän en absoluttid.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_ateq"><title>pwrb:AtEqual, pwrb:AtGreaterThan, pwrb:AtLessThan</title>
+  <para>Jämförelse av två absoluttider.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_dteq"><title>pwrb:DtEqual, pwrb:DtGreaterThan, pwrb:DtLessThan</title>
+  <para>Jämförelse av två deltatider.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_currenttime"><title>pwrb:CurrentTime</title>
+  <para>Hämtar systemtiden.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_dttoa"><title>pwrb:DtToA, pwrb:AToDt</title>
+  <para>Konverterar från detatid till flyttal och vice versa.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_getatv"><title>pwrb:GetATv</title>
+  <para>Hämta värdet på en ATv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_getdtv"><title>pwrb:GetDTv</title>
+  <para>Hämta värdet på en DTv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_stoatv"><title>pwrb:StoATv</title>
+  <para>Lagra ett värde i en ATv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_cstoatv"><title>pwrb:CStoATv</title>
+  <para>Villkorlig lagring av ett värde i en ATv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_stodtv"><title>pwrb:StoDTv</title>
+  <para>Lagra ett värde i en DTv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_cstodtv"><title>pwrb:CStoDTv</title>
+  <para>Villkorlig lagring av ett värde i en DTv.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_stoatp"><title>pwrb:StoATp</title>
+  <para>Lagra ett värde i ett absoluttids attribut.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_cstoatp"><title>pwrb:CStoATp</title>
+  <para>Villkorlig lagring av ett värde i ett absoluttids attribut.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_stodtp"><title>pwrb:StoDTp</title>
+  <para>Lagra ett värde i ett deltatids attribut.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_cstodtp"><title>pwrb:CStoDTv</title>
+  <para>Villkorlig lagring av ett värde i ett deltatids attribut.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_remoterack"><title>ssabox:Ssab_RemoteRack</title>
+  <para>Konfigurering av PSS9000 remote rack.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_acc"><title>ABB_ACC800, ABB_ACC800Fo, ABB_ACC800Sim</title>
+  <para>Styrning av motoraggregat som använder kran macrot i ASC800.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_accppo5"><title>ABB_ACC_PPO5</title>
+  <para>Profibus modul till ABB_ACC800.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_acsslave"><title>ABB_ACS_Pb_Slave</title>
+  <para>Profibus slav till ABB_ACS800.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_abbpbbase"><title>ABB_Sensor_Pb_PA, ABB_Sensor_Pb_PA_Fo</title>
+  <para>Basklass för ABB Profibus PA givare.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_abbpb"><title>ABB_TempSensor_TF12, ABB_DiffPressure_265G, ABB_FlowSensor_FXE4000</title>
+  <para>Diverse ABB Profibus PA givare.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200"><title>Siemens_ET200S_IM151, Siemens_ET200M_IM153</title>
+  <para>Profibus slav objekt för ET200S IM151 resp ET200M IM153</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200mdi"><title>Siemens_ET200M_Di32, Siemens_ET200M_Di16, Siemens_ET200S_Di8</title>
+  <para>Profibus modulobjekt för ET200M digitala ingångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200mdo"><title>Siemens_ET200M_Do32, Siemens_ET200M_Do16, Siemens_ET200S_Do8</title>
+  <para>Profibus modulobjekt för ET200M digitala utgångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200mai"><title>Siemens_ET200M_Ai8, Siemens_ET200M_Ai4, Siemens_ET200S_Ai2</title>
+  <para>Profibus modulobjekt för ET200M analoga ingångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200mao"><title>Siemens_ET200M_Ao8, Siemens_ET200M_Ao4, Siemens_ET200S_Ao2</title>
+  <para>Profibus modulobjekt för ET200M analoga utgångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200sdi"><title>Siemens_ET200S_Di4, Siemens_ET200S_Di2</title>
+  <para>Profibus modulobjekt för ET200S digitala ingångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200sdo"><title>Siemens_ET200S_Do4, Siemens_ET200S_Do2</title>
+  <para>Profibus modulobjekt för ET200S digitala utgångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200sai"><title>Siemens_ET200S_Ai2</title>
+  <para>Profibus modulobjekt för ET200S analoga ingångsmoduler</para>
+  </section>
+
+  <section xml:id="upgradev42_new_et200sao"><title>Siemens_ET200S_Ao2</title>
+  <para>Profibus modulobjekt för ET200S analoga utgångsmoduler</para>
+  </section>
+
+  </section>
+  </chapter>
+
+  <chapter xml:id="upgradev42_chascript"><title>Uppgraderings procedur</title>
+  <section xml:id="upgradev42_upgr"><title>Procedur för uppgradering</title>
+  <para>Uppgraderingen måste göras från V4.1.3. Om projektet ligger på en tidigare version måste
+  uppgraderingen ske stegvis enligt följande schema 
+  <classname>V2.1 -> V2.7b -> V3.0 -> V3.3 -> V3.4b -> V4.0.0 -> V4.1.3 -> V4.2.0</classname></para>
+
+  <para>Uppgraderingen görs i två steg: 
+  <itemizedlist>
+  <listitem><para>Ta en kopia av projektet</para></listitem>
+  <listitem><para>Exekvera upgrade.sh</para></listitem>
+  </itemizedlist>
+  </para>
+
+  <section xml:id="upgradev42_copyproj"><title>Ta en kopia av projektet</title>
+  <para>Gör <tag>sdf</tag> till projektet och starta administratören.</para>
+  <prompt>> </prompt><userinput><command>pwra</command></userinput>
+
+  <para>Nu öppnas projektlistan. Gå in i editmode, logga in som adminstratör om du saknar behörighet.
+  Leta upp aktuellt projekt, välj <tag>Copy Project</tag> från 
+  ProjectReg objektets popupmeny. Öppna kopian och ange ett lämpligt projektnamn och 
+  path. Ändra versionen till V4.2.0. Spara därefter och gå ur administratören.
+  </para>
+  <para>Gör sdf till projectet.</para>  
+
+  </section>
+
+  <section xml:id="upgradev42_up_"><title>upgrade.sh</title>
+  <para>upgrade.sh är ett skript som är uppdelat på ett antal olika pass. Efter varje pass får
+  man ange att man vill fortsätta med nästa pass.</para>
+
+  <para>Starta scriptet med </para>
+  <prompt>> </prompt><userinput><filename>upgrade.sh</filename></userinput>
+  <para>och kör igenom de olika passen.</para>  
+
+  <section xml:id="upgradev42_up_dumpdb"><title>dumpdb</title>
+  <para>Går igenom alla databaser och dumpar varje volym i en egen dumpfil. 
+  Dumpfilen för respektive volyme läggs i <filename>$pwrp_db/'volumename'.wb_dmp</filename>
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_up_classvolumes"><title>classvolumes</title>
+  <para>Skapar laddatafiler och structfiler för klassvolymerna.</para>
+  </section>
+  
+  <section xml:id="upgradev42_up_renamedb"><title>renamedb</title>
+  <para>Sparar undan de gamla databaserna med namnet <filename>$pwrp_db/'volumename'.db.1</filename>.</para>
+  </section>
+  
+  <section xml:id="upgradev42_up_dirvolume"><title>dirvolume</title>
+  <para>Skapar en directory databas och laddar in dumpfilen för projektvolymen i denna.</para>
+  </section>
+  
+  <section xml:id="upgradev42_up_loaddb"><title>loaddb</title>
+  <para>Skapar databaser och laddar in dumpfilerna i dem.</para>
+  </section>
+  
+
+  <section xml:id="upgradev42_up_compile"><title>compile</title>
+  <para>Kompilerar om samtliga plcprogram.</para>
+  </section>
+  
+  <section xml:id="upgradev42_up_createload"><title>createload</title>
+  <para>Skapar laddatafiler för rotvolymer.</para>
+  </section>
+  
+  <section xml:id="upgradev42_up_createboot"><title>createboot</title>
+  <para>Skapar bootfiler för alla noder i projektet.</para>
+  </section>
+  
+  <para>Nu återstår att bygga eventuella applikationer. Detta får man göra för hand.</para>
+
+  <para>Rensa bort filer från uppgraderingen:</para>
+  <para><filename>$pwrp_db/*.wb_dmp.*</filename></para>
+  <para><filename>$pwrp_db/*.db.1</filename> (V4.1 databaser, filkataloger vars innehåll även tas bort)</para>
+  
+  
+  </section>
+
+  </section>
+  </chapter>
+</book>
+
+
+
+
+
+
+

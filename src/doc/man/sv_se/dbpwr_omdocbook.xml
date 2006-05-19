@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE chapter [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<chapter xml:id="dbpwr_omdocbook" version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+	 xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+	 xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Mer om DocBook</title>
+  <para>
+    Detta kapitel är framför allt av orienterande karaktär.
+  </para>
+  <section xml:id="dbpwr_bakgrund">
+    <title>Bakgrund</title>
+    <para>Docbook utvecklades ursprungligen av HaL och O'Reilly med början 1991. 
+    1998 blev det en del av SGML Open Consortium, vilket senare blev <acronym>OASIS</acronym> (Organization for the Advancement of Structured Information Standards). </para>
+    <para>
+      Några punkter..
+    </para>
+    <itemizedlist>
+      <listitem><para>xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara</para></listitem>  
+      <listitem><para>Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
+      Möjligt att skapa mer sökbara databaser.</para></listitem>
+      <listitem><para>Kan generera utdata i många olika format från en källa: html, pdf, manpages, rtf, txt, htmlhelp, 
+      Utdata för olika plattformar från samma källa (t ex SuSE / RedHat / Windows) - profiling. 
+      Utdata på olika språk från samma källa (med fallback).</para></listitem>
+      <listitem><para>Enkelt att integrera i byggrutinen för ett projekt. Make-filer, versionshantering.</para></listitem>
+      <listitem><para>OASIS-standard. Används av bl a: Sun, Microsoft, HP, Novell, Red Hat, och open source projekt som 
+      Linux kernel, KDE, Gnome, debian, Ubuntu, Fedora, Free-BSD, LDP, m fl.</para></listitem>
+      <listitem><para>Möjligt att skapa stora korsrefererande dokumentationssystem från fristående komponenter.</para></listitem>
+      <listitem><para>Aktiv open source-utveckling av hela verktygskedjan.</para></listitem>
+    </itemizedlist>
+    <para>Fördelar: Alla ovan.</para>
+    <para>Nackdelar: många taggar, ej entydigt vilka man ska använda, inlärningskurva, sammansatt verktygskedja, 
+    XML (om man inte gillar XML...).</para>
+  </section>
+
+  <section xml:id="dbpwr_verktyg">
+    <title>Vilka verktyg behövs?</title>
+    <para>Detta avsnitt beskriver verktygskedjan för Docbook, och hur man editerar och processar docbook-dokument.</para>
+    <section xml:id="dbpwr_vkedja">
+      <title>DocBook:s verktygskedja</title>
+      <itemizedlist>
+	<listitem><para>Vokabulären specificeras i ett <acronym>RELAX NG</acronym>
+	<footnote><para>REgular LAnguage for XML Next Generation, är en xml-vokabulär för att specificera xml-vokabulärer. 
+	Det går att skriva <acronym>RELAX NG</acronym>-schemat i kompakt notation, men då är schemat inte själv ett xml-dokument.
+	<acronym>RELAX NG</acronym> används som schemaspråk för DocBook, OpenDocument (OpenOffice.org:s dokumentformat), m fl. 
+	Ett alternativ till <acronym>RELAX NG</acronym> är W3C XML Schema.
+	</para></footnote> 
+	schema fr o m Docbook v 5.0, tidigare användes en DTD (Document Type Definition). 
+	Den har bantats ned och stramats upp fr o m 5.0, möjligen ej helt fryst ännu.
+	För detta dokument används v 5.05b.
+	Schemat behövs egentligen bara för validering och för editorer, och om man ska skriva egna stylesheets.</para></listitem>
+	<listitem><para>Stylesheets definierar hur docbookvokabulär transformeras till andra taggar för olika utformat. 
+	Mallarna är skrivna i xsl (extensible stylesheet language) som också är en xml-vokabulär. 
+	Tidigare användes dssl.
+	Senaste släppta versionen är docbook-xsl-1.69.1 (för detta dokument används en snapshot-version från sourceforge).
+	Huvudstylesheets för html, chunk, fo (formatted output), manpages etc. anropas. 
+	Dessa använder sig av ett flertal gemensamma stylesheets.</para></listitem>
+	<listitem><para>En xslt-processor används för att generera utdata (.html, .fo, etc). 
+	Man anropar den med indata och stylesheet som argument, enklast via en make-fil. 
+	xsltproc är standard i många linuxdistributioner, ingår i libxslt. 
+	Andra processorer finns, ex.vis saxon, xalan.
+	För detta dokument används en snapshot-version av libxslt från xmlsoft.org.</para></listitem>
+	<listitem><para>För att skapa utdata för papper (pdf, ps, rtf, txt) 
+	får man processa den skapade .fo-filen ett steg till, med en xsl-fo-processor.
+	xsl-fo är en xml-vokabulär för att beskriva formaterad text. 
+	Den innehåller information om hur texten ska se ut på pappret med fonter, textstorlek, pappersformat, styckeindelningar etc.
+	Den innehåller däremot ingen information om typsättning, radbrytningar, sidbrytningar och avstavning. 
+	För att generera sådan information och utdatafiler i ex.vis pdf-format använder man en xsl-fo-processor.
+	xsl-fo-processorer är typsättningsmotorer, och det finns ett flertal kommersiella och öppna. 
+	Många av dem fungerar bra för de flesta tillämpningar, 
+	men ingen implementerar xsl-fo-standarden fullständigt. 
+	Detta uppges bero på tre saker:
+	<orderedlist>
+	  <listitem><para>Xsl-fo-standarden är ganska ny och omfattande.</para></listitem>
+	  <listitem><para>Den har visat sig svårimplementerad i sin helhet.</para></listitem>
+	  <listitem><para>Typsättning är svårt, generellt.</para></listitem>
+	</orderedlist></para>
+	<para>Den mest använda open source-processorn är Apache's javabaserade FOP. 
+	Senaste stabila releasen var 0.20.5. 
+	En helt omarbetad version 0.90 alfa gjordes tillgänglig nyligen. 
+	För pdf-versionen av detta dokument används 0.92 beta. 
+	En 1.0-version uppges kunna släppas snart.</para>
+	<para>Andra open source fop:ar: PassiveTeX och xmlroff. 
+	Kommersiella: E3, XEP, XPP, XSL Formatter m fl. </para>
+	</listitem>
+      </itemizedlist>
+    </section>
+    <section xml:id="dbpwr_editorer">
+      <title>Editorer för DocBook</title>
+      <para>I princip kan vilken texteditor som helst användas. 
+      Eftersom taggarna ofta är långa (inga förkortningar) blir det dock lätt omständligt utan xml-medveten editor.
+      Två alternativ:
+      <itemizedlist>
+	<listitem><para>Wysiwyg-editorer: Gömmer xml-taggarna. Exempel: oXygen (kommersiellt), XXE (halvt kommersiellt)</para></listitem>
+	<listitem><para>Emacs-lägen, etc.: psgml-mode, nXML-mode</para></listitem>
+      </itemizedlist>
+      </para>
+      <para>För detta dokument har Emacs med nXML-läge använts (Emacs version 21.x krävs). 
+      nXML är skrivet av xml-gurun James Clark (groff, expat, xml-standarden, relax ng mm). 
+      Man kopplar nXML till sitt schema (docbook.rng i detta fall), 
+      och sedan får man bl a:
+      <itemizedlist>
+	<listitem><para>auto-komplettering av taggar (<keycombo><keycap>C</keycap><keycap>RET</keycap></keycombo>): 
+	man skriver de första bokstäverna och autokompletterar sedan.</para></listitem>
+	<listitem><para>Insättning av sluttag 1 
+	(<keycombo><keycap>C</keycap><keycap>c</keycap></keycombo> <keycombo><keycap>C</keycap><keycap>i</keycap></keycombo>): 
+	sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.</para></listitem>
+	<listitem><para>Insättning av sluttag 2 
+	(<keycombo><keycap>C</keycap><keycap>c</keycap></keycombo> <keycombo><keycap>C</keycap><keycap>b</keycap></keycombo>): 
+	sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.</para></listitem>
+	<listitem><para>Insättning av sluttag 3 (<keycombo><keycap>C</keycap><keycap>f</keycap></keycombo>): 
+	Avslutar närmaste öppna tag uppåt i trädet.</para></listitem>
+	<listitem><para>Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.</para></listitem>
+      </itemizedlist>
+      </para>
+      <para>Till Emacs finns också en DocBook-meny att ladda ned.
+      Den innehåller inga kommandon, men länkar till dokumentation, samt alla element/taggar grupperade alfabetiskt och logiskt. Användbart.</para>
+    </section>
+  </section>
+  <section xml:id="dbpwr_referenser">
+    <title>Referenser</title>
+    <itemizedlist>
+      <listitem>
+	<para><link xlink:href="http://www.docbook.org/tdg5/en/html/docbook.html">DocBook 5.0: The Definitive Guide</link>. 
+	Komplett referens över alla element. 
+	Innehåller även en <link xlink:href="http://www.docbook.org/tdg5/en/html/quickref.html">Quick Reference</link>.</para>
+      </listitem>
+      <listitem>
+	<para><link xlink:href="http://www.sagehill.net/docbookxsl/index.html">DocBook XSL: The Complete Guide</link>. 
+	  Använda och sätta upp ett DocBook-system.</para>
+      </listitem>
+      <listitem>
+	<para><link xlink:href="http://docbook.xml-doc.org/snapshots/xsl/doc/">DocBook XSL Stylesheet Reference Documentation</link>. 
+	Referensdokumentation över inställningsparametrar för html och fo.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

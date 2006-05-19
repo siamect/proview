@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE chapter [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<chapter xml:id="dbpwr_editering" version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+	 xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+	 xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Editeringsverktyg</title>
+    <section xml:id="dpbwr_emacsnxml">
+      <title>Emacs + nXML</title>
+      <para>
+	I princip kan vilken texteditor som helst användas för att skriva xml. 
+	En syntaxmedveten editor underlättar dock avsevärt.
+	<application>Emacs 21.3</application> och uppåt med nXML-läge fungerar mycket bra (finns på pwr42). 
+	De viktigaste funktionerna är:
+	<itemizedlist>
+	  <listitem><para>Autokomplettering av taggar (<keycombo><keycap>C</keycap><keycap>RET</keycap></keycombo>): 
+	  man skriver de första bokstäverna och autokompletterar sedan.</para></listitem>
+	  <listitem><para>Insättning av sluttag 1 
+	  (<keycombo><keycap>C</keycap><keycap>c</keycap></keycombo> <keycombo><keycap>C</keycap><keycap>i</keycap></keycombo>): 
+	  sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.</para></listitem>
+	  <listitem><para>Insättning av sluttag 2 
+	  (<keycombo><keycap>C</keycap><keycap>c</keycap></keycombo> <keycombo><keycap>C</keycap><keycap>b</keycap></keycombo>): 
+	  sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.</para></listitem>
+	  <listitem><para>Insättning av sluttag 3 (<keycombo><keycap>C</keycap><keycap>f</keycap></keycombo>): 
+	  Avslutar närmaste öppna tag uppåt i trädet.</para></listitem>
+	  <listitem><para>Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.</para></listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	För att ladda nXML-läget, och för att <application> Emacs</application> ska bete sig acceptabelt i övrigt (scroll-hjul, fonter etc), 
+	behöver man göra en del inställningar i någon eller några av filerna <filename>.emacs</filename>, 
+	<filename>.gnu-emacs</filename> och <filename>.gnu-emacs-custom</filename> i sin hemkatalog. 
+	Exempel på hur detta kan göras finns i <filename class="directory">/home/jonas_h</filename>. 
+	nXML fungerar inte med <application>XEmacs</application>. 
+      </para>
+      <para>
+	Källkod och dokumentation för nXML finns på pwr42 i 
+	<filename class="directory">/usr/local/share/emacs/21.4/site-lisp/nxml-mode-20041004/</filename>. 
+	I underkatalogen <filename class="directory">schema/</filename> finns den senaste versionen av docbook-schemat 
+      (filerna <filename>docbook.rnc</filename> och <filename>docbookxi.rnc</filename>) inlagt. 
+      nXML använder schemat för validering och autkomplettering, så det är bra om man har rätt schema kopplat till sitt dokument.
+    </para>
+    <para>
+      En DocBook-meny till Emacs finns i <filename class="directory">/usr/local/share/emacs/21.4/site-lisp/docbook-menu-0.92/</filename>. 
+      Även den laddas in med inställningar i filerna <filename>.emacs</filename> m fl. 
+      Menyn innehåller inga kommandon, men länkar till dokumentation, samt alla element/taggar grupperade alfabetiskt och logiskt. 
+    Den beskriver DocBook version 4, men skillnaderna mot version 5 är inte jättestora.</para>
+    </section>
+    <section xml:id="dbpwr_alternativ">
+      <title>Andra alternativ</title>
+      <para>Ett flertal xml-editorer finns, både fria och kommersiella, några med WYSIWYG-funktionalitet. 
+      En annan möjlighet som skulle kunna undersökas är att editera via ett wiki/web-gränssnitt.</para>
+    </section>
+</chapter>
+  

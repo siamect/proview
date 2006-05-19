@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE book [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<book version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+      xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <info>
+    <title>Att skriva dokumentation i DocBook för <application>Proview</application></title>
+    
+    <subtitle>Kort introduktion</subtitle>
+    <authorgroup>
+      <author>
+	<personname><firstname>Jonas</firstname>
+	<surname>Haulin</surname></personname>
+	<affiliation>
+	  <orgname>SSAB Oxelösund</orgname>
+	</affiliation>
+	<email>info@proview.se</email>
+      </author>
+    </authorgroup>
+    <revhistory>
+      <revision>
+	<revnumber>0.1</revnumber>
+	<date>2006-04-01</date>
+	<authorinitials>jh</authorinitials>
+	<revremark>v0.1 för Proview v4.2 skapad</revremark>
+      </revision>
+    </revhistory>
+    <edition xml:lang="sv">v0.1 för Proview v4.2</edition>
+    <copyright><year>2006</year><holder>SSAB Oxelösund AB</holder></copyright>
+    <date>2006-04-01</date>
+    <legalnotice>
+      <para xml:lang="en">Permission is granted to copy, distribute and/or modify this document 
+      under the terms of the GNU Free Documentation License, Version 1.2
+      or any later version published by the Free Software Foundation;
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.</para>
+    </legalnotice>
+    <mediaobject>
+      <imageobject role="html">
+	<imagedata align="center" scale="70" fileref="pwr_logga.gif" format="GIF"/>
+      </imageobject>
+      <imageobject role="fo">
+	<imagedata align="center" width="70%" fileref="pwr_logga.gif" format="GIF"/>
+      </imageobject> 
+    </mediaobject>
+  </info>
+
+<xi:include href="dbpwr_intro.xml"/>
+<xi:include href="dbpwr_editering.xml"/>
+<xi:include href="dbpwr_exempel.xml"/>
+<xi:include href="dbpwr_utdata.xml"/>
+<xi:include href="dbpwr_omdocbook.xml"/>
+
+</book>
+

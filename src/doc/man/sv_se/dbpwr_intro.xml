@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE chapter [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<chapter xml:id="dbpwr_intro" version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+      xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <title>Introduktion</title> 
+    <para>Det här dokumentet är en snabböversikt av dokumentationsstandarden Docbook, 
+    och hur den kan användas för dokumentation i <link xlink:href="&pwrsite;">Proview</link>.
+    Texten i dokumentet är för närvarande minimalt uppmärkt/taggad. 
+    För ett mer uppmärkt dokument, se <link xlink:href="../en_us/pwrgsg_index.html">Proview Getting Started Guide</link>.
+    </para>
+    <section>
+      <title>Om DocBook</title>
+      <para>DocBook är en XML-dialekt för teknisk dokumentation.
+      Den används i många stora mjukvaruprojekt, både kommersiella och open source. 
+      Från ett källdokument skrivet i DocBook/XML kan utdata i en mängd format genereras, 
+      exempelvis html, pdf, ps, man-sidor. 
+      Med xml-taggarna anges dokumentets struktur och innehåll, däremot inte dess formatering 
+      - detta beror istället av vilken utdata som skapas.
+      </para>
+      <para>Mer om DocBook i <xref linkend="dbpwr_omdocbook"/></para>
+    </section>
+    <section>
+      <title>Hello world</title>
+<para>Ett minimalt DocBook-dokument kan se ut såhär:
+<programlisting><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="sv">
+  <title>Ett minimalt DocBook-dokument</title>
+  <para>kan se ut såhär.</para>
+</article>
+]]>
+</programlisting>
+</para>
+<para>
+Spara filen ovan som exempelvis <filename>minimalt.xml</filename>.
+  Följande kommando skapar en html-fil.
+  <screen>
+<prompt>bash$</prompt> <command>xsltproc</command> <option>-o</option> <filename>minimalt.html</filename> <filename>/usr/local/share/xml/docbook/stylesheet/snapshot/html/docbook.xsl</filename> <filename>minimalt.xml</filename>
+</screen>
+</para>
+<para>För att skapa en pdf behövs två kommandon.
+<screen>
+<prompt>bash$</prompt> <command>xsltproc</command> <option>-o</option> <filename>minimalt.fo</filename> <filename>/usr/local/share/xml/docbook/stylesheet/snapshot/fo/docbook.xsl</filename> <filename>minimalt.xml</filename>
+<prompt>bash$</prompt> <command>fop</command> <filename>minimalt.fo</filename> <option>-pdf</option> <filename>minimalt.pdf</filename>
+</screen>
+</para>
+</section>
+</chapter>

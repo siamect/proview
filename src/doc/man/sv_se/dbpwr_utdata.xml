@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE chapter [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<chapter xml:id="dbpwr_utdata" version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+	 xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+	 xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <title>Generering av utdata</title>
+  <section xml:id="dbpwr_byggut">
+    <title>Bygga DocBook-dokumentation</title>
+    <para>
+      Generering av dokument från docbook-filer är integrerad i byggrutinen för Proview. 
+      Dessa byggs med kommandot
+      <screen>
+	<prompt>bash$</prompt> <command>pwre</command> <parameter>build doc man docbook</parameter>
+      </screen>
+      vilket ger utdata i form av html och pdf. 
+      Html-dokumentet skapas i två versioner: i en respektive flera filer.
+      I ett sista steg kopieras css- och mediafiler till målkatalogen.
+    </para>
+    <para>Nya xml-dokument kan läggas till genom att placera xml-filerna i 
+    <filename class="directory">$pwre_sroot/doc/man/en_us/</filename>, 
+    eller <filename class="directory">$pwre_sroot/doc/man/sv_se/</filename>. 
+    De grafik- eller mediafiler som dokumenten använder läggs i 
+    <filename class="directory">$pwre_sroot/doc/man/src/</filename>. 
+    För att utdatafiler ska genereras måste man lägga till filnamnet (endast namnet på huvudfilen, om flera) i variablerna 
+    <varname>sv_se_xmlsources</varname> och / eller <varname>en_us_xmlsources</varname> i makefilen. 
+    Huvudkällfilerna måste anges, eftersom det finns xml-filer i katalogen som inte är fristående källfiler (ex.vis kapitelfiler).
+    Mediafiler kopieras automatiskt dit de behövs, och behöver inte anges någonstans.</para>
+  </section>
+  <section xml:id="dbpwr_komponenter">
+    <title>Byggkomponenter</title>
+    <para>För att generera dokumentationen behövs följande:
+    <itemizedlist>
+      <listitem><para>Xsltproc. Standardkomponent i de flesta linuxdistributioner.</para></listitem>
+      <listitem><para>DocBook-xsl-stylesheets. Går att hämta med apt-get, eller från sourceforge. 
+      Finns på pwr42 i <filename class="directory">/usr/local/share/xml/docbook/stylesheet/snapshot/</filename>. 
+      Om man byter stylesheets, eller har dem någon annanstans måste man (tyvärr) ändra i inställningslagren (se nedan).</para></listitem>
+      <listitem><para>Fop. Version 0.92b av Apaches fo-processor är installerad på pwr42 i 
+      <filename class="directory">/usr/local/fop-0.92beta/</filename>. 
+      En symlänk finns i <filename class="directory">/usr/local/bin</filename>.</para></listitem>
+    </itemizedlist>
+    <note><para>Ingen kontroll görs i nuläget för att dessa komponenter finns på systemet. 
+    Detta bör antagligen läggas till i makefilen om möjligt.</para></note>
+    </para>  
+  </section>
+  
+  <section xml:id="dbpwr_instlager">
+    <title>Inställningslager</title>
+    <para>Ett stort antal parametrar går att ställa in för xsl-mallarna. 
+    I de fall man inte vill ha defaultvärdena (sätts i <filename>param.xsl</filename>) kan man ange parametervärden i xsltproc-anropet, 
+    eller i inställningslager (customization layers). 
+    Där kan också modifierade versioner av olika templates i mallarna definieras.
+    Dokumentation över vilka parameterinställningar som kan göras finns på 
+    <link xlink:href="http://docbook.xml-doc.org/snapshots/xsl/doc/">DocBook XSL Stylesheet Reference Documentation</link>.
+    Följande inställningslager ligger under <filename class="directory">$pwre_sroot/doc/man/src/</filename>.
+    <variablelist>
+      <varlistentry><term><filename>pwrxsl-common.xsl</filename></term>
+      <listitem><para>Gemensamma parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+      <varlistentry><term><filename>pwrxsl-html-common.xsl</filename></term>
+      <listitem><para>Html-specifika parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+      <varlistentry><term><filename>pwrxsl-html.xsl</filename></term>
+      <listitem>
+	<orderedlist>
+	  <listitem><para>Importerar <filename>...stylesheet/snapshot/html/docbook.xsl</filename> 
+	  som är grundmallen för html-processning - en utfil.</para></listitem>
+	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
+	  <listitem><para>Hämtar från <filename>pwrxsl-html-common.xsl</filename></para></listitem>
+	  <listitem><para>Sätter parametrar och templates specifika för html - en utfil.</para></listitem>
+      </orderedlist></listitem></varlistentry>
+      <varlistentry><term><filename>pwrxsl-chunk.xsl</filename></term>
+      <listitem> 
+	<orderedlist>
+	  <listitem><para>Importerar <filename>...stylesheet/snapshot/html/chunk.xsl</filename> 
+	  som är grundmallen för html-processning - flera utfiler.</para></listitem>
+	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
+	  <listitem><para>Hämtar från <filename>pwrxsl-html-common.xsl</filename></para></listitem>
+	  <listitem><para>Sätter parametrar och templates specifika för html - flera utfiler.</para></listitem>
+      </orderedlist></listitem></varlistentry>
+      <varlistentry><term><filename>pwrxsl-fo.xsl</filename></term>
+      <listitem>
+	<orderedlist>
+	  <listitem><para>Importerar <filename>...stylesheet/snapshot/fo/docbook.xsl</filename> som är grundmallen för fo-processning.</para></listitem>
+	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
+	  <listitem><para>Sätter parametrar och templates specifika för fo.</para></listitem>
+      </orderedlist></listitem></varlistentry>
+    </variablelist>
+    </para>
+  </section>
+  <section xml:id="dbpwr_anpassningut">
+    <title>Anpassning av utfiler</title>
+    <itemizedlist>
+      <listitem><para>FO/PDF: Justering av utseende, fonter, textstorlek etc. görs helt i inställningslagret, 
+      och behandlas av xslt-processorn.
+      FO-processorn tar inga sådana argument eller parametrar.</para></listitem>
+      <listitem><para>HTML: Slutgiltig formatering bestäms av css. 
+      Man kopplar de element/taggar man använt till formateringsinstruktioner i css:en. 
+      Ger önskad grafisk profil åt dokumentet. 
+      För att det ska fungera krävs dock att uppmärkningen är konsekvent.</para></listitem>
+    </itemizedlist>
+  </section>
+</chapter>

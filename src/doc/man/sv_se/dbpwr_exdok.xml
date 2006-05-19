@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE chapter [
+<!ENTITY % isopub PUBLIC
+"ISO 8879:1986//ENTITIES Publishing//EN//XML"
+"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+%isopub;
+<!ENTITY % pwrent SYSTEM "../src/pwrent.ent">
+%pwrent;
+]>
+<chapter xml:id="dbpwr_exdok" version="5.0b5" xml:lang="sv" xmlns="http://docbook.org/ns/docbook"
+	 xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+	 xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	 xmlns:xlink="http://www.w3.org/1999/xlink"
+	 xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <title>Exempeldokument</title>
+  <section xml:id="dbpwr_prolog">
+    <title>Dokumentprolog</title>
+    <para>Såhär kan en dokumentprolog se ut:
+    <programlisting><![CDATA[
+    <?xml version="1.0" encoding="UTF-8"?> ]]><co xml:id="co.prolog.xml"/><![CDATA[
+    <!DOCTYPE article [     ]]><co xml:id="co.prolog.article"/><![CDATA[
+    <!ENTITY % isopub PUBLIC    ]]><co xml:id="co.prolog.isopub"/><![CDATA[
+    "ISO 8879:1986//ENTITIES Publishing//EN//XML"
+    "/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"> <!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"> -->
+    %isopub;
+    <!ENTITY % pwrent SYSTEM "../src/pwrent.ent"> ]]><co xml:id="co.prolog.pwrent"/><![CDATA[
+    %pwrent;
+    ]>
+    <article version="5.0" xml:lang="en" xmlns="http://docbook.org/ns/docbook" ]]><co xml:id="co.prolog.docbook"/><![CDATA[
+    xmlns:mathml="http://www.w3.org/1998/Math/MathML"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <info>
+      <title><application>Proview 4.1</application> Getting Started Guide</title>
+
+      <subtitle>A step-by-step guide to set up a minimal <application>Proview</application> system</subtitle>
+
+      <author>
+	<personname><firstname>Jonas</firstname>
+	<surname>Haulin</surname></personname>
+	<affiliation>
+	  <orgname>Proview/R</orgname>
+	  <address> <email>info@proview.se</email> </address>
+	</affiliation>
+      </author>
+      </info>]]>
+    </programlisting>
+    <calloutlist>
+      <callout arearefs="co.prolog.xml"><para>Det här är ett XML-dokument.</para></callout>
+      <callout arearefs="co.prolog.article"><para>Detta är en artikel. Kan även vara <quote>book</quote></para></callout>
+      <callout arearefs="co.prolog.isopub"><para>Hämta standard-entity-koder för särskilda tecken.
+      Lokal fil går snabbast. URL:en bortkommenterad.</para></callout>
+      <callout arearefs="co.prolog.pwrent"><para>Egendefinierade entiteter, se <xref linkend="dbpwr_pwruppm"/></para></callout>
+      <callout arearefs="co.prolog.docbook"><para>Detta är en artikel, DocBook (5.0) namespace. Fler namespace följer.
+      Det här är rotelementet för dokumentet, som kommer att avslutas med <tag>&lt;/article&gt;</tag>.</para></callout>
+    </calloutlist>
+  </para>
+</section>
+<section xml:id="dbpwr_uppm">
+  <title>Uppmärkning</title>
+  <section xml:id="dbpwr_dsuppm">
+    <title>Dokumentstruktur</title>
+    <para>För att dela in en article används avsnitt/sections. 
+    Texten delas in i stycken. Det kan se ut så här:
+    <programlisting><![CDATA[
+    <section><title>första avsnittet</title>
+    <para>Ett stycke text</para>
+    <section><title>första underavsnittet</title>
+    <para>Ett stycke text</para>
+    </section>
+    </section>]]>
+    </programlisting>
+    <tag>&lt;section&gt;</tag> kan alltså innehålla sig själv, och underavsnitt skapas rekursivt. 
+    Ett alternativ är att använda <tag>&lt;sect1&gt;</tag>, <tag>&lt;sect2&gt;</tag> etc (upp till 5)
+    för att explicit ange avsnittsstrukturen.
+    </para>
+    <para>Ett dokument av typen <tag>&lt;book&gt;</tag> kan ha en kapitelnivå, <tag>&lt;chapter&gt;</tag>, över avsnitten, 
+    och däröver en delnivå, <tag>&lt;part&gt;</tag>.</para>
+  </section>
+  <section xml:id="dbpwr_liuppm">
+    <title>Listor etc.</title>
+    <para>
+      <programlisting><![CDATA[
+      itemizedlist>
+      <listitem><para>xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara</para></listitem>  
+      <listitem><para>Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
+      Möjligt att skapa mer sökbara databaser.</para></listitem>
+      </itemizedlist>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <itemizedlist>
+	<listitem><para>xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara</para></listitem>  
+	<listitem><para>Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
+	Möjligt att skapa mer sökbara databaser.</para></listitem>
+      </itemizedlist>
+      <tag>&lt;orderedlist&gt;</tag> skapar en numrerad lista istället för en punktlista.
+    </para>
+    <para>
+      <programlisting><![CDATA[
+      <variablelist>
+	<varlistentry><term><filename>pwr_xsl/common-customizations.xsl</filename></term>
+	<listitem><para>Gemensamma parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+	<varlistentry><term><filename>pwr_xsl/html-common.xsl</filename></term>
+	<listitem><para>Html-specifika parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+	</variablelist>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <variablelist>
+	<varlistentry><term><filename>pwr_xsl/common-customizations.xsl</filename></term>
+	<listitem><para>Gemensamma parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+	<varlistentry><term><filename>pwr_xsl/html-common.xsl</filename></term>
+	<listitem><para>Html-specifika parameterinställningar och template-definitioner.</para></listitem></varlistentry>
+      </variablelist>
+    </para>
+    <para>
+      <programlisting><![CDATA[
+      <programlisting>
+	### Document filename without suffix (.xml):
+	###FILE = pwr_gsg
+	FILE = dbpwr                                        <co xml:id="co.makefil.file2"/>
+      </programlisting>
+      <calloutlist>
+	<callout arearefs="co.makefil.file2"><para>Här anges filnamnet utan ändelse för infil (.xml) och utfil (.html, .fo, .pdf)</para></callout>
+	</calloutlist>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <programlisting>
+	### Document filename without suffix (.xml):
+	###FILE = pwr_gsg
+	FILE = dbpwr                                        <co xml:id="co.makefil.file2"/>
+      </programlisting>
+      <calloutlist>
+	<callout arearefs="co.makefil.file2"><para>Här anges filnamnet utan ändelse för infil (.xml) och utfil (.html, .fo, .pdf)</para></callout>
+      </calloutlist>
+    </para>
+    <para>
+      <programlisting><![CDATA[
+      <qandaset>
+	<qandaentry><question><para>Hur gör man en FAQ-avdelning?</para></question>
+	<answer><para>Med en <tag>&lt;qandaset&gt;</tag></para></answer> </qandaentry>
+	</qandaset>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <qandaset>
+	<qandaentry><question><para>Hur gör man en FAQ-avdelning?</para></question>
+	<answer><para>Med en <tag>&lt;qandaset&gt;</tag></para></answer> </qandaentry>
+      </qandaset>
+    </para>
+  </section>
+
+  <section xml:id="dbpwr_komuppm">
+    <title>Kommandon, filnamn...</title>
+    <para>Detta är lånat från KDE, och är kanske litet övertaggat..:
+    <programlisting><![CDATA[
+    <screen>
+      <prompt>bash$</prompt> <userinput><command>mkdir</command> <parameter><filename>/dev/mqueue</filename></parameter></userinput>
+      <prompt>bash$</prompt> <userinput><command>mount</command> <option>-t</option> <parameter><systemitem role="filesystem">mqueue</systemitem></parameter> <option>none</option> <parameter><filename>/dev/mqueue</filename></parameter></userinput></screen>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <screen>
+	<prompt>bash$</prompt> <userinput><command>mkdir</command> <parameter><filename>/dev/mqueue</filename></parameter></userinput>
+      <prompt>bash$</prompt> <userinput><command>mount</command> <option>-t</option> <parameter><systemitem role="filesystem">mqueue</systemitem></parameter> <option>none</option> <parameter><filename>/dev/mqueue</filename></parameter></userinput></screen>
+    </para>
+    <para>
+      Annan uppmärkning som kan vara värda att använda är: 
+      <programlisting><![CDATA[
+      <menuchoice>
+	<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+	<guimenu>Edit</guimenu>
+	<guimenuitem>Change value</guimenuitem>
+	</menuchoice>]]>
+    </programlisting></para>
+    <para>ger</para>
+    <para>
+      <menuchoice>
+	<shortcut><keycombo><keycap>Ctrl</keycap><keycap>Q</keycap></keycombo></shortcut>
+	<guimenu>Edit</guimenu>
+	<guimenuitem>Change value</guimenuitem>
+      </menuchoice>
+    </para>
+    <para>
+      <tip>
+	<para>Noteringar, tips, viktigt, uppmaning till försiktighet och varningar skapas med taggarna 
+	<tag>&lt;note&gt;</tag>, <tag>&lt;tip&gt;</tag>, <tag>&lt;important&gt;</tag>, <tag>&lt;caution&gt;</tag> och <tag>&lt;warning&gt;</tag>.</para> 
+      </tip>
+      <important>
+	<para>Texten i ex.vis en viktigt måste skrivas inom en <tag>&lt;para&gt;</tag></para>
+      </important>
+      <note>
+	<para>Andra taggar som använts är <systemitem role="user">pwrp</systemitem> 
+	(<tag>&lt;systemitem role="user"&gt;pwrp&lt;/systemitem&gt;</tag>) och <envar>PWR_BUS_ID</envar> 
+	(<tag>&lt;envar&gt;PWR_BUS_ID&lt;/envar&gt;</tag>).</para>
+      </note>
+    </para>
+  </section>
+  <section xml:id="dbpwr_pwruppm">
+    <title>Proview-uppmärkning</title>
+    <para>
+      <itemizedlist>
+	<listitem><para>Klasser: Taggen <tag>&lt;classname&gt;</tag> har använts. Exempel <classname>ProjectReg</classname>. 
+	Den är kanske framför allt avsedd för objektorienterade programmeringsspråk, iofs.</para></listitem>
+	<listitem><para>Attribut: Taggen <tag>&lt;property&gt;</tag> har använts. Exempel <property>ObjectName</property>.</para></listitem>
+	<listitem><para>Miljöer/applikationer: Entiteter har använts för &pwrprojlist;, &pwrvollist;, &pwrdirectory;, &pwrvolume;, &pwrxtt;. 
+	De översätts till <tag>&lt;application role='pwrenv'&gt;VolumeList&lt;/application&gt;</tag> etc. </para></listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+
+</section>
+
+</chapter>
