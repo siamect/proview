@@ -1,6 +1,6 @@
 /** 
- * Proview   $Id: co_dbs.c,v 1.25 2005-12-15 07:41:17 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
+ * Proview   $Id: co_dbs.c,v 1.26 2006-05-21 22:30:49 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -34,6 +34,7 @@
 
 #include "pwr.h"
 #include "co_dbs.h"
+#include "co_time.h"
 #include "co_dbs_msg.h"
 #include "co_errno.h"
 #include "co_platform.h"
@@ -402,7 +403,6 @@ dbs_Reference(pwr_tStatus *sts, const dbs_sVenv *vep, void *adrs)
 {
     long iadrs = (long)adrs;
     long ofs;
-    //long base = ep->sect[]
 
     if (iadrs < (long)vep->base)
         return dbs_cNref;
@@ -423,7 +423,6 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     int tfd;
     int i;
     dbs_sSect *sect;
-    //dbs_sFile file;
     void *base = 0;
     int nVolRef;
     dbs_sVolRef *vrp;
@@ -436,13 +435,11 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
 
     if ((ret = stat(filename, &sb)) != 0) {
         *sts = errno_GetStatus();
-        // perror("stat");
         return NULL;
     }
 
     fd = open(filename, O_RDWR);
     tfd = mkstemp(tfname);
-    //printf("dbs_Map:: %s -> %s\n", filename, tfname);
     
     while (1) {
       int count;
@@ -456,10 +453,6 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     ret = close(fd);
     
     errno = 0;
-
-    //ret = read(fd, &file, sizeof(file));
-    // printf("st_size...: %ld\n", sb.st_size);
-    // printf("size......: %d\n", file.size);
     
     base = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, tfd, 0);
     if (base == NULL) {
@@ -492,7 +485,7 @@ dbs_Map(pwr_tStatus *sts, const char *filename)
     vep->name_bt  = &vep->vp->name_bt;
     vep->oid_bt   = &vep->vp->oid_bt;
     vep->class_bt = &vep->vp->class_bt;
-      
+
     for (i = 0; i < nVolRef; i++) {
       vep = &mep->venv[i + 1];
       
@@ -584,8 +577,6 @@ dbs_Split(pwr_tStatus *sts, dbs_sMenv *mep, char *dirName)
     fclose(fp);
     
     for (j = 0; j < n; j++, vrp++) {
-      //vrp->offset = offset;
-      printf("  %s, size %d, offset %d\n", vrp->name, vrp->size, offset);
       offset += vrp->size;
     }
   }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.35 2006-04-26 04:46:10 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.36 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,8 @@ typedef enum {
   ldh_eVolRep_Wbl,
   ldh_eVolRep_Mem,
   ldh_eVolRep_Ref,
-  ldh_eVolRep_Ext
+  ldh_eVolRep_Ext,
+  ldh_eVolRep_Dbms
 } ldh_eVolRep;
 
 typedef enum {

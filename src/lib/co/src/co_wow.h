@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.9 2006-02-15 14:19:18 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.10 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,11 +103,4 @@ void wow_DisplayLicense( Widget father);
 }
 #endif
 #endif
-
-
-
-
-
-
-
 

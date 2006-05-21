@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.4 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.5 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,14 +39,12 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 
-extern "C" {
 #include "pwr.h"
 #include "co_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_wow.h"
 #include "wb_nav_macros.h"
-}
 #include "rt_pb_gsd.h"
 #include "rt_pb_gsd_attr.h"
 
@@ -61,8 +59,6 @@ extern "C" {
 #include "wb_wnav.h"
 
 using namespace std;
-
-// #include "wb_api.h"
 
 
 /*----------------------------------------------------------------------------*\

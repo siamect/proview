@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.13 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_wnav.h,v 1.14 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@
 //#endif
 
 #ifndef pwr_h
-# include "pwr.h"
+//# include "pwr.h"
 #endif
 
 #ifndef co_regex_h
@@ -35,23 +35,19 @@
 #endif
 
 #ifndef co_nav_help_h
-# include "co_nav_help.h"
+//# include "co_nav_help.h"
 #endif
 
 #ifndef flow_h
-#include "flow.h"
-#endif
-
-#ifndef flow_browctx_h
-#include "flow_browapi.h"
+//#include "flow.h"
 #endif
 
 #ifndef wb_wnav_brow_h
 #include "wb_wnav_brow.h"
 #endif
 
-#ifndef wb_pal_h
-#include "wb_pal.h"
+#ifndef wb_palfile_h
+# include "wb_palfile.h"
 #endif
 
 #ifndef wb_build_opt_h
@@ -59,12 +55,12 @@
 #endif
 
 #ifndef co_wow_h
-#include "co_wow.h"
+# include "co_wow.h"
 #endif
 
-#ifndef co_xhelp_h
-#include "co_xhelp.h"
-#endif
+//#ifndef co_xhelp_h
+//#include "co_xhelp.h"
+//#endif
 
 #ifndef wb_h
 #include "wb.h"

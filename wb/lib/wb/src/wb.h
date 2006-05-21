@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.h,v 1.10 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb.h,v 1.11 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,8 +22,8 @@
 
 /* wb.h -- work bench */
 
-#ifndef pwr_h
-#include "pwr.h"
+#if defined __cplusplus
+extern "C" {
 #endif
 
 #define WB_CLASS_NAME "PWR_DEV"
@@ -47,6 +47,9 @@ typedef enum {
 	wb_eUtility_WNav  		= 1005
 } wb_eUtility;
 
+#if defined __cplusplus
+}
+#endif
 #endif
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.21 2006-04-05 08:41:34 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.22 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,12 +23,12 @@
 /* pwr_class.h -- system classes
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 #include "pwr.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 

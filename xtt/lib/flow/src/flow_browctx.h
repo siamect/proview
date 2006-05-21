@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.h,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_browctx.h,v 1.6 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,11 +20,16 @@
 #ifndef flow_browctx_h
 #define flow_browctx_h
 
-#include <iostream.h>
-#include <fstream.h>
+//#include <iostream.h>
+//#include <fstream.h>
 
+#ifndef flow_h
 #include "flow.h"
+#endif
+
+#ifndef flow_ctx_h
 #include "flow_ctx.h"
+#endif
 
 class BrowCtx : public FlowCtx {
   public:

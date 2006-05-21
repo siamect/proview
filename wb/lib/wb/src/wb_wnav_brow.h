@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_brow.h,v 1.6 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_brow.h,v 1.7 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,12 +20,8 @@
 #ifndef wb_wnav_brow_h
 #define wb_wnav_brow_h
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
-# include "pwr.h"
+//# include "pwr.h"
 #endif
 
 #ifndef flow_h
@@ -33,6 +29,10 @@ extern "C" {
 #endif
 
 #ifndef flow_browctx_h
+#include "flow_browctx.h"
+#endif
+
+#ifndef flow_browapi_h
 #include "flow_browapi.h"
 #endif
 
@@ -110,7 +110,4 @@ class WNavBrow {
     void brow_setup();
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif

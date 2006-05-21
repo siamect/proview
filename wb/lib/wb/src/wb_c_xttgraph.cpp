@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_xttgraph.cpp,v 1.2 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: wb_c_xttgraph.cpp,v 1.3 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,17 +22,7 @@
 using namespace std;
 
 #include <X11/Intrinsic.h>
-#undef Status
-#include "wb_pwrs.h"
-#include "pwr_baseclasses.h"
-#include "wb_ldh_msg.h"
-#include "wb_ldh.h"
-#include "ge.h"
-#include "wb_pwrb_msg.h"
-#include "wb_wsx.h"
-#include "wb_wsx_msg.h"
-#include "co_cdh.h"
-#include "co_dcli.h"
+//#undef Status
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
@@ -41,13 +31,10 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "flow.h"
-#include "flow_browctx.h"
-#include "flow_browapi.h"
-#include "flow_browwidget.h"
-#include "wb_wtt.h"
+#include "ge.h"
+#include "wb_wnav.h"
+#include "wb_pwrb_msg.h"
 #include "wb_build.h"
-#include "co_msgwindow.h"
 
 
 /*----------------------------------------------------------------------------*\

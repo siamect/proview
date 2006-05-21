@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.h,v 1.11 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_session.h,v 1.12 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,19 +23,15 @@
 #define wb_session_h
 
 
+#ifndef pwr_h
 #include "pwr.h"
-//#include "wb_vrep.h"
-#include "wb_object.h"
-#include "wb_attribute.h"
+#endif
+
 #include "wb_ldh.h"
-//#include "wb_ldhi.h"
-//#include "wb_adef.h"
-//#include "wb_bdef.h"
+#include "wb_object.h"
+#include "wb_bdef.h"
 #include "wb_cdef.h"
-#include "wb_name.h"
 #include "wb_destination.h"
-#include "wb_oset.h"
-#include "wb_srep.h"
 #include "wb_volume.h"
 
 class wb_object;

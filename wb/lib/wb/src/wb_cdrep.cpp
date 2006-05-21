@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.30 2006-02-01 07:36:23 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.31 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -581,7 +581,8 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 {
   pwr_tStatus sts;
   wb_cdrep *cdrep_source = merep->cdrep( &sts, cid());
-  if ( EVEN(sts)) throw wb_error(sts);
+  if ( EVEN(sts))
+    throw wb_error(sts);
 
   for ( int i = 0; i < 2; i++) {
     int size_target, size_source;

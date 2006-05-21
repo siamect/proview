@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_object.h,v 1.14 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_object.h,v 1.15 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,6 @@
 #include "wb_orep.h"
 #include "wb_ldh.h"
 #include "wb_destination.h"
-//#include "wb_location.h"
 #include "wb_attribute.h"
 
 class wb_bdef;

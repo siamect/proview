@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.h,v 1.19 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wblnode.h,v 1.20 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -213,12 +213,12 @@ public:
       return ret;
     }
 
-    ref_wblnode wb_wblnode::getFirstChild()
+    ref_wblnode getFirstChild()
     {
       return ref_wblnode(BaseAST::getFirstChild());
     }
 
-    ref_wblnode wb_wblnode::getNextSibling()
+    ref_wblnode getNextSibling()
     {
        return ref_wblnode(BaseAST::getNextSibling());
     }

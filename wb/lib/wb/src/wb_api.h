@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_api.h,v 1.7 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_api.h,v 1.8 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,20 +24,6 @@
 
 #if defined __cplusplus
 extern "C" {
-#endif
-
-#ifndef pwr_h
-# include "pwr.h"
-#endif
-#ifndef wb_ldh_h
-# include "wb_ldh.h"
-#endif
-#ifndef flow_h
-#include "flow.h"
-#endif
-
-#ifndef flow_browctx_h
-#include "flow_browapi.h"
 #endif
 
 #ifndef co_wow_h

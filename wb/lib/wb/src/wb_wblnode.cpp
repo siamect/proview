@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.55 2006-02-16 13:04:40 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.56 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -328,7 +328,7 @@ void wb_wblnode::initialize( antlr::RefToken t )
   
   // Test 
   static int last = 0;
-  if ( (line_number % 1000) == 0 && line_number != last) {
+  if ( /*(line_number % 1000) == 0 &&*/ line_number != last) {
     printf( "-- Processing line: %d\r", line_number); 
     fflush(stdout);
     last = line_number;

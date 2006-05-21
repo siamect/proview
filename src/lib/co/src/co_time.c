@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.9 2006-05-02 07:06:53 claes Exp $
+ * Proview   $Id: co_time.c,v 1.10 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 /* co_time.c -- Utilities for time management.
    NOTE! to convert timespecs to tm's, the threadsafe version of localtime,
          localtime_r must be used, which doesn't exist on DEC.  */
- 
+
 #include "co_time.h"
 #include "co_time_msg.h"
 
@@ -44,7 +44,7 @@
 #if defined OS_LYNX
 # include <sys/times.h>
 #elif defined OS_LINUX
-# include <time.h> 
+# include <time.h>
 #endif
 
 #if defined OS_LYNX
@@ -66,18 +66,18 @@
 
 static const char *monStr[] =
 {
-  "JAN", "FEB", "MAR", "APR", "MAY", "JUN", 
+  "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"
 };
 
-static pwr_tStatus  validateTm		(struct tm *tms);
+static pwr_tStatus  validateTm    (struct tm *tms);
 
 
 /* Validate data in struct tm.  */
 
 static pwr_tStatus
 validateTm (
-  struct tm	*tms
+  struct tm *tms
 )
 {
   int year;
@@ -106,10 +106,10 @@ validateTm (
     year = tms->tm_year + 1900;
     if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
       if (tms->tm_mday > 29)
-	return TIME__RANGE;
+  return TIME__RANGE;
     } else {
       if (tms->tm_mday > 28)
-	return TIME__RANGE;
+  return TIME__RANGE;
     }
     break;
 
@@ -140,7 +140,7 @@ validateTm (
 
 //! Add an absolute time and a delta time.
 /*! Add two timespecs, result = t + d, where:
-   
+
    -  'result' and 't' is an absolute time, and
    -  'd' is a delta time.
 
@@ -151,13 +151,13 @@ validateTm (
 
 pwr_tTime *
 time_Aadd (
-  pwr_tTime		*result,
-  pwr_tTime		*t,
-  pwr_tDeltaTime	*a
+  pwr_tTime   *result,
+  pwr_tTime   *t,
+  pwr_tDeltaTime  *a
 )
 {
-  pwr_tTime		*r = result;
-  int			tv_nsec;
+  pwr_tTime   *r = result;
+  int     tv_nsec;
 
   assertAbs(t);
   assertDelta(a);
@@ -178,12 +178,12 @@ time_Aadd (
    -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
-   be done as if t2 == 0.  
+   be done as if t2 == 0.
 */
 
-int 
+int
 time_Acomp (
-  pwr_tTime *t1, 
+  pwr_tTime *t1,
   pwr_tTime *t2
 )
 {
@@ -207,18 +207,18 @@ time_Acomp (
 //! Subtract a time from a time,
 /*!   r = t - s
 
-   Result is always a delta time.  
+   Result is always a delta time.
 */
 
 pwr_tDeltaTime *
 time_Adiff (
-  pwr_tDeltaTime	*r,
-  pwr_tTime		*t,
-  pwr_tTime		*s
+  pwr_tDeltaTime  *r,
+  pwr_tTime   *t,
+  pwr_tTime   *s
 )
 {
-  int			tv_nsec = t->tv_nsec - s->tv_nsec;
-  int			tv_sec  = t->tv_sec  - s->tv_sec;
+  int     tv_nsec = t->tv_nsec - s->tv_nsec;
+  int     tv_sec  = t->tv_sec  - s->tv_sec;
 
   pwr_Assert(r != NULL);
   assertAbs(t);
@@ -243,19 +243,19 @@ time_Adiff (
 //! Subtract a delta time from a time,
 /*!   r = t - s
 
-   Result is always an abstime.  
+   Result is always an abstime.
 */
 
 pwr_tTime *
 time_Asub (
-  pwr_tTime		*result,
-  pwr_tTime		*t,
-  pwr_tDeltaTime	*s
+  pwr_tTime   *result,
+  pwr_tTime   *t,
+  pwr_tDeltaTime  *s
 )
 {
-  int			tv_nsec = t->tv_nsec - s->tv_nsec;
-  int			tv_sec  = (int)t->tv_sec  - s->tv_sec;
-  pwr_tTime		*r = result;
+  int     tv_nsec = t->tv_nsec - s->tv_nsec;
+  int     tv_sec  = (int)t->tv_sec  - s->tv_sec;
+  pwr_tTime   *r = result;
 
   assertAbs(t);
   assertDelta(s);
@@ -279,26 +279,26 @@ time_Asub (
 }
 
 //! Take the absolute walue of a delta time.
-/*!   
+/*!
    'result' = |'t'|
 
    A NULL address => abs value is written to 't'.
-   Returns the address to the resulting time. 
+   Returns the address to the resulting time.
 */
 
 pwr_tDeltaTime *
 time_Dabs (
-  pwr_tDeltaTime	*result,
-  pwr_tDeltaTime	*t
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t
 )
 {
-  pwr_tDeltaTime	*r = result;
+  pwr_tDeltaTime  *r = result;
 
   assertDelta(t);
 
   if (r == NULL) r = t;
 
-  if (r->tv_sec < 0)  r->tv_sec	 = -r->tv_sec;
+  if (r->tv_sec < 0)  r->tv_sec  = -r->tv_sec;
   if (r->tv_nsec < 0) r->tv_nsec = -r->tv_nsec;
 
   return r;
@@ -307,15 +307,15 @@ time_Dabs (
 //! Add two delta times, the result is also delta.
 /*!   If 'result' is NULL then 'a' will be added to 't'.  */
 
-pwr_tDeltaTime * 
+pwr_tDeltaTime *
 time_Dadd (
-  pwr_tDeltaTime	*result,
-  pwr_tDeltaTime	*t,
-  pwr_tDeltaTime	*a
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t,
+  pwr_tDeltaTime  *a
 )
 {
-  pwr_tDeltaTime	*r = result;
-  int			tv_nsec, tv_sec;
+  pwr_tDeltaTime  *r = result;
+  int     tv_nsec, tv_sec;
 
   assertDelta(t);
   assertDelta(a);
@@ -325,7 +325,7 @@ time_Dadd (
   tv_nsec = t->tv_nsec + a->tv_nsec;
   tv_sec = t->tv_sec + a->tv_sec + (tv_nsec / 1000000000);
   tv_nsec = tv_nsec % 1000000000;
-  
+
   if (tv_nsec < 0 && tv_sec > 0) {
     tv_sec--;
     tv_nsec += 1000000000;
@@ -333,7 +333,7 @@ time_Dadd (
     tv_sec++;
     tv_nsec -= 1000000000;
   }
-  
+
   r->tv_sec = tv_sec;
   r->tv_nsec = tv_nsec;
 
@@ -347,13 +347,13 @@ time_Dadd (
    -1 if t1  < t2 \n
 
    If argument 't2' is NULL the comparison will
-   be done as if t2 == 0.  
+   be done as if t2 == 0.
 */
 
-int 
+int
 time_Dcomp (
-  pwr_tDeltaTime	*t1, 
-  pwr_tDeltaTime	*t2
+  pwr_tDeltaTime  *t1,
+  pwr_tDeltaTime  *t2
 )
 {
   static pwr_tDeltaTime null = {0, 0};
@@ -378,16 +378,16 @@ time_Dcomp (
 
   If 'result' argument is NULL
   then 'd' will be used as resultant.
-  Returns the address to the resulting time.  
+  Returns the address to the resulting time.
 */
 
 pwr_tDeltaTime *
 time_Dneg (
-  pwr_tDeltaTime	*result,
-  pwr_tDeltaTime	*t
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t
 )
 {
-  pwr_tDeltaTime	*r = result;
+  pwr_tDeltaTime  *r = result;
 
   assertDelta(t);
 
@@ -404,14 +404,14 @@ time_Dneg (
 
 pwr_tDeltaTime *
 time_Dsub (
-  pwr_tDeltaTime	*result,
-  pwr_tDeltaTime	*t,
-  pwr_tDeltaTime	*s
+  pwr_tDeltaTime  *result,
+  pwr_tDeltaTime  *t,
+  pwr_tDeltaTime  *s
 )
 {
-  int			tv_nsec = t->tv_nsec - s->tv_nsec;
-  int			tv_sec  = t->tv_sec  - s->tv_sec;
-  pwr_tDeltaTime	*r = result;
+  int     tv_nsec = t->tv_nsec - s->tv_nsec;
+  int     tv_sec  = t->tv_sec  - s->tv_sec;
+  pwr_tDeltaTime  *r = result;
 
   assertDelta(t);
   assertDelta(s);
@@ -437,11 +437,11 @@ time_Dsub (
 //! Convert a delta time to ascii string.
 
 pwr_tStatus
-time_DtoAscii ( 
+time_DtoAscii (
   pwr_tDeltaTime  *dt,
-  int		  hundreds,
-  char		  *buf,
-  int		  bufsize
+  int     hundreds,
+  char      *buf,
+  int     bufsize
 )
 {
   char tmpStr[24];
@@ -474,22 +474,22 @@ time_DtoAscii (
 
 
 //! Convert timespec to ascii
-/*!   
+/*!
    NOTE: Not thread safe.  */
 
 pwr_tStatus
-time_AtoAscii ( 
-  pwr_tTime	*ts,
-  time_eFormat	format,
-  char		*buf,
-  int		bufsize
+time_AtoAscii (
+  pwr_tTime *ts,
+  time_eFormat  format,
+  char    *buf,
+  int   bufsize
 )
 {
-  struct tm	*tmpTm;
-  int		buflen;
-  char		tmpStr[16];
-  pwr_tTime	time;
-  pwr_tTime	*tp;
+  struct tm *tmpTm;
+  int   buflen;
+  char    tmpStr[16];
+  pwr_tTime time;
+  pwr_tTime *tp;
 
 
   if (ts == NULL)
@@ -504,7 +504,7 @@ time_AtoAscii (
   if (EVEN(time_TmToAscii(tmpTm, format, buf, bufsize)))
     return TIME__RANGE;
 
-  
+
   sprintf(tmpStr, ".%02d", (int)(tp->tv_nsec / 10000000));
   buflen = strlen(buf);
   if (strlen(tmpStr) + buflen < (unsigned int) bufsize)
@@ -514,14 +514,14 @@ time_AtoAscii (
 }
 
 //! Convert ascii to timespec.
-pwr_tStatus 
+pwr_tStatus
 time_AsciiToD (
-  char		  *tstr, 
+  char      *tstr,
   pwr_tDeltaTime  *ts
 )
 {
   char *sp,*dp;
-  char buf[64]; 
+  char buf[64];
   int day, hour, min, sec, hun = 0;
   int useday = 1;
 
@@ -532,18 +532,18 @@ time_AsciiToD (
   day = strtoul(sp, &dp, 10);
   if (dp == NULL)
     return TIME__RANGE;
-  
+
   if (*dp == ':') {
-    hour = day;    
+    hour = day;
     day = 0;
     useday = 0;
     if (hour > 23)
       return TIME__RANGE;
-  } 
+  }
   else if (*dp != ' ')
     return TIME__RANGE;
   sp = dp + 1;
-  
+
   if (useday) {
     if (day > 24855)
       return TIME__RANGE;
@@ -561,7 +561,7 @@ time_AsciiToD (
   sec = strtoul(sp, &dp, 10);
   if ((dp && *dp && *dp != ' ' && *dp != '.') || sec > 59)
     return TIME__RANGE;
-  
+
   if (dp && *dp == '.') {
     hun =  strtoul(dp + 1, &dp, 10);
     if ((dp && *dp && *dp != ' ') || hun > (10000000 - 1))
@@ -578,16 +578,16 @@ time_AsciiToD (
 
 //! Convert ascii time to timespec.
 
-pwr_tStatus 
+pwr_tStatus
 time_AsciiToA (
-  char	      *tstr, 
+  char        *tstr,
   pwr_tTime   *ts
 )
 {
   struct tm   tmpTm;
-  int	      tmphs = 0;
-  char	      *dotp;
-  char	      buf[64]; 
+  int       tmphs = 0;
+  char        *dotp;
+  char        buf[64];
   pwr_tStatus sts;
 
   strncpy(buf, tstr, sizeof(buf) - 1);
@@ -602,11 +602,11 @@ time_AsciiToA (
     len = strlen(dotp);
     if (len > 2) /* only hundreds of seconds */
       *(dotp + 2) = 0;
-    
+
     if (*dotp == '0') dotp++; /* remove first zero */
     tmphs = strtoul(dotp, &cp, 0);
     if (*cp)
-      return TIME__RANGE; 
+      return TIME__RANGE;
     if (len == 1)
       tmphs *= 10;
 
@@ -623,15 +623,15 @@ time_AsciiToA (
 
 //! Convert time struct to string.
 
-pwr_tStatus 
+pwr_tStatus
 time_TmToAscii (
-  struct tm	*tmptr,
-  time_eFormat	format,
-  char		*buf,
-  int		bufsize
+  struct tm *tmptr,
+  time_eFormat  format,
+  char    *buf,
+  int   bufsize
 )
 {
-  pwr_tStatus	sts;
+  pwr_tStatus sts;
 
   *buf = '\0';
   if (EVEN(sts = validateTm(tmptr)))
@@ -644,6 +644,8 @@ time_TmToAscii (
       buf[i] = toupper(buf[i]);
   } else if (format == time_eFormat_ComprDateAndTime) {
     strftime(buf, bufsize, "%y-%m-%d %H:%M:%S", tmptr);
+  } else if (format == time_eFormat_NumDateAndTime) {
+    strftime(buf, bufsize, "%Y-%m-%d %H:%M:%S", tmptr);
   } else {
     strftime(buf, bufsize, "%H:%M:%S", tmptr);
   }
@@ -653,17 +655,17 @@ time_TmToAscii (
 
 //! Convert timestring to struct.
 
-pwr_tStatus 
+pwr_tStatus
 time_AsciiToTm (
-  char		*tstr, 
-  struct tm	*tmptr
+  char    *tstr,
+  struct tm *tmptr
 )
 {
-  char		tmpMonStr[4];
-  char		*cp;
-  struct tm	tt;
-  int		i;
-  pwr_tStatus	sts;
+  char    tmpMonStr[4];
+  char    *cp;
+  struct tm tt;
+  int   i;
+  pwr_tStatus sts;
 
   sscanf(tstr, "%02d-%3c-%4d %02d:%02d:%02d", &tt.tm_mday,
          tmpMonStr, &tt.tm_year, &tt.tm_hour, &tt.tm_min, &tt.tm_sec);
@@ -674,7 +676,7 @@ time_AsciiToTm (
 
   /* We don't handle this in current version */
 
-  tt.tm_wday = -1; 
+  tt.tm_wday = -1;
   tt.tm_yday = -1;
   tt.tm_isdst = -1;
 
@@ -682,7 +684,7 @@ time_AsciiToTm (
   /* check month */
   for (cp = tmpMonStr; *cp; cp++)
     *cp = toupper(*cp);
-   
+
   tt.tm_mon = -1;
   for (i=0; i<12; i++) {
     if (strcmp(tmpMonStr, monStr[i]) == 0) {
@@ -703,22 +705,22 @@ time_AsciiToTm (
 
 pwr_tStatus
 time_FormAsciiToA (
-  char		*tstr,
-  short		dissolution,
-  short		formType,
-  pwr_tTime	*ts
+  char    *tstr,
+  short   dissolution,
+  short   formType,
+  pwr_tTime *ts
 )
 {
-  struct tm	tmpTm;
-  int		i;
-  int		year;
-  int		month;
-  int		day;
-  int		tmphs = 0;
-  char		*dotp;
-  char		buf[64]; 
-  pwr_tStatus	sts;
-  char		*cp = tstr;
+  struct tm tmpTm;
+  int   i;
+  int   year;
+  int   month;
+  int   day;
+  int   tmphs = 0;
+  char    *dotp;
+  char    buf[64];
+  pwr_tStatus sts;
+  char    *cp = tstr;
 
   /* Format of the date string should be YYYY-MM-DD HH:MM[:SS.CC] */
   while (*cp && isspace(*cp))
@@ -735,7 +737,7 @@ time_FormAsciiToA (
   if (*cp == '\0' || *cp != '-')
       return TIME__RANGE;
   cp++;
-      
+
 
   /* Get month */
   for (i = 0; i < 2; i++,cp++) {
@@ -750,7 +752,7 @@ time_FormAsciiToA (
   if (*cp == '\0' || *cp != '-')
     return TIME__RANGE;
   cp++;
-       
+
 
   /* Get Day */
   for (i = 0; i < 2; i++,cp++) {
@@ -762,7 +764,7 @@ time_FormAsciiToA (
   day = atoi(buf);
 
   /* Build a new date string on VMS format, dd-mmm-yyyy ...*/
-  sprintf(buf, "%02d-%s-%d%s", day, monStr[month], year, cp);  
+  sprintf(buf, "%02d-%s-%d%s", day, monStr[month], year, cp);
 
   if (dissolution == MINUTE) {
      strcat(buf, ":00");
@@ -776,15 +778,15 @@ time_FormAsciiToA (
       len = strlen(dotp);
       if (len > 2) /* only hundreds of seconds */
         *(dotp + 2) = 0;
-    
+
       if (*dotp == '0') dotp++;
       tmphs = strtoul(dotp, &cp, 0);
       if (*cp)
-        return TIME__RANGE; 
+        return TIME__RANGE;
       if (len == 1)
         tmphs *= 10;
     }
-  }     
+  }
 
   sts = time_AsciiToTm(buf, &tmpTm);
   if (EVEN(sts))
@@ -799,14 +801,14 @@ time_FormAsciiToA (
 
 void
 time_AtoFormAscii (
-  pwr_tTime	*ts,
-  short		dissolution,
-  short		formType,
-  char		buf[],
-  int		bufsize
+  pwr_tTime *ts,
+  short   dissolution,
+  short   formType,
+  char    buf[],
+  int   bufsize
 )
 {
-  int		len;
+  int   len;
   struct tm *tmpTm;
   char   tmphs[16];
   pwr_tTime time, *tp;
@@ -827,7 +829,7 @@ time_AtoFormAscii (
     switch (dissolution) {
     case HUNDRED:
       len = strftime(buf, bufsize, "%Y-%m-%d %H:%M:%S", tmpTm);
-      if (len != 0 && len + 4 <= bufsize) { 
+      if (len != 0 && len + 4 <= bufsize) {
         sprintf(tmphs, ".%02d", (int)(tp->tv_nsec / 10000000));
         strcat(buf, tmphs);
       }
@@ -847,14 +849,14 @@ time_AtoFormAscii (
 
 //! Convert millisec to timespec.
 
-pwr_tDeltaTime * 
+pwr_tDeltaTime *
 time_MsToD (
-  pwr_tDeltaTime	*dt,
-  pwr_tInt32		ms
+  pwr_tDeltaTime  *dt,
+  pwr_tInt32    ms
 )
 {
-  static pwr_tDeltaTime	time;
-  static pwr_tDeltaTime	*t = &time;
+  static pwr_tDeltaTime time;
+  static pwr_tDeltaTime *t = &time;
 
   if (dt != NULL) t = dt;
 
@@ -866,14 +868,14 @@ time_MsToD (
 
 //! Convert float to time.
 
-pwr_tDeltaTime * 
+pwr_tDeltaTime *
 time_FloatToD (
-  pwr_tDeltaTime	*dt,
-  pwr_tFloat32		f
+  pwr_tDeltaTime  *dt,
+  pwr_tFloat32    f
 )
 {
-  static pwr_tDeltaTime	time;
-  static pwr_tDeltaTime	*t = &time;
+  static pwr_tDeltaTime time;
+  static pwr_tDeltaTime *t = &time;
 
   if (dt != NULL) t = dt;
 
@@ -886,13 +888,13 @@ time_FloatToD (
 
 //! Convert time to float.
 
-pwr_tFloat32 
+pwr_tFloat32
 time_DToFloat (
-  pwr_tFloat32		*f,
-  pwr_tDeltaTime	*dt
+  pwr_tFloat32    *f,
+  pwr_tDeltaTime  *dt
 )
 {
-  static pwr_tFloat32	flt;
+  static pwr_tFloat32 flt;
 
   flt =  1e-9 * dt->tv_nsec  + dt->tv_sec;
 
@@ -909,7 +911,7 @@ time_DtoClock (
 {
   pwr_dStatus(sts, status, TIME__SUCCESS);
 
-  return tp->tv_sec * 100 + tp->tv_nsec / 10000000; 
+  return tp->tv_sec * 100 + tp->tv_nsec / 10000000;
 }
 
 pwr_tDeltaTime *
@@ -924,12 +926,12 @@ time_ClockToD (
 
   if (tp == NULL)
     tp = &time;
-  
+
   tp->tv_sec = clock / 100;
   tp->tv_nsec = clock % 100 * 10000000;
 
   return tp;
-}  
+}
 
 pwr_tDeltaTime *
 time_ZeroD (
@@ -943,7 +945,7 @@ time_ZeroD (
 
   memset(tp, 0, sizeof(*tp));
 
-  return tp;  
+  return tp;
 }
 
 void time_Sleep( float time)

@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: wb_merep.h,v 1.21 2005-10-07 05:57:29 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
+ * Proview   $Id: wb_merep.h,v 1.22 2006-05-21 22:30:50 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -31,22 +31,23 @@ using namespace std;
 class wb_vrep;
 class wb_tdrep;
 class wb_adrep;
+class wb_vrepdb;
 
 typedef struct {
-  pwr_tCid		subCid;        	/**< Class Id for class attribute */
-  pwr_tCid              hostCid;       	/**< Class Id for owner class */
-  pwr_tUInt32  		idx;		/**< Index of offset data */
+  pwr_tCid    subCid;         /**< Class Id for class attribute */
+  pwr_tCid              hostCid;        /**< Class Id for owner class */
+  pwr_tUInt32     idx;    /**< Index of offset data */
 } merep_sClassAttrKey;
 
 #define merep_cCattOffsetSize 20
 
 typedef struct {
-  tree_sNode		n;
-  merep_sClassAttrKey	key;
-  int			numOffset;
-  pwr_tUInt32		offset[merep_cCattOffsetSize];
+  tree_sNode    n;
+  merep_sClassAttrKey key;
+  int     numOffset;
+  pwr_tUInt32   offset[merep_cCattOffsetSize];
   pwr_tUInt32		flags[merep_cCattOffsetSize];
-} merep_sClassAttr;  
+} merep_sClassAttr;
 
 class wb_merep {
 
@@ -62,13 +63,17 @@ public:
   wb_merep( wb_erep *erep, wb_vrep *vrep = 0) : 
     m_erep(erep), m_vrep(vrep), m_catt_tt(0) {}
   ~wb_merep();
+  wb_merep(const char *dirname, wb_erep *erep, wb_vrep *vrep = 0);
   wb_merep( const wb_merep& x, wb_vrep *vrep);
   wb_mvrep *volume(pwr_tStatus *sts);
   wb_mvrep *volume(pwr_tStatus *sts, pwr_tVid vid);
   wb_mvrep *volume(pwr_tStatus *sts, const char *name);
 
+  bool compareMeta(const char *dirname, wb_merep *merep);
   void copyFiles(const char *dirname);
-  
+  void copyFiles(const char *dirname, wb_merep *merep);
+  void checkFiles(wb_vrepdb *db, const char *dirname);
+
   wb_orep *object(pwr_tStatus *sts, pwr_tOid oid);
   void addDbs( pwr_tStatus *sts, wb_mvrep *mvrep);
   void removeDbs( pwr_tStatus *sts, wb_mvrep *mvrep);
@@ -81,15 +86,15 @@ public:
   wb_tdrep *tdrep( pwr_tStatus *sts, wb_name name);
 
   int getAttrInfoRec( wb_attrname *attr, pwr_eBix bix, pwr_tCid cid, size_t *size,
-                      size_t *offset, pwr_tTid *tid, int *elements, 
+                      size_t *offset, pwr_tTid *tid, int *elements,
                       pwr_eType *type, int *flags, int level);
 
-  void classDependency( pwr_tStatus *sts, pwr_tCid cid, 
-			pwr_tCid **lst, pwr_sAttrRef **arlst, int *cnt);
+  void classDependency( pwr_tStatus *sts, pwr_tCid cid,
+      pwr_tCid **lst, pwr_sAttrRef **arlst, int *cnt);
   void classVersion( pwr_tStatus *sts, pwr_tCid cid, pwr_tTime *time);
   tree_sTable *buildCatt( pwr_tStatus *sts);
-  void insertCattObject( pwr_tStatus *sts, pwr_tCid cid, 
-			 wb_adrep *adp, int offset);
+  void insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
+       wb_adrep *adp, int offset);
   tree_sTable *catt_tt() { return m_catt_tt;}
   void subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid, pwr_tStatus *sts);
 };

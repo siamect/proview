@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.24 2006-05-18 10:26:10 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.25 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3170,6 +3170,9 @@ pwr_tStatus	utl_show_volumes(
 	  case ldh_eVolRep_Dbs:
 	    u_print( utlctx, " Dbs");
 	    break;
+	  case ldh_eVolRep_Dbms:
+	    u_print( utlctx, " Dbms");
+	    break;
 	  case ldh_eVolRep_Wbl:
 	    u_print( utlctx, " Wbl");
 	    break;
@@ -5486,7 +5489,7 @@ int utl_compile (
 		sts = ldh_GetVidInfo( ldh_SessionToWB( ldhses), vol_id, &volinfo);
 	        if (EVEN(sts)) return sts;
 
-	        if ( volinfo.VolRep == ldh_eVolRep_Db) {
+	        if ( volinfo.VolRep == ldh_eVolRep_Db) { // Todo!!!! Handle dbms
 	          volume_vect[i] = vol_id;
 	          i++;
 	          if ( i > UTL_INPUTLIST_MAX)

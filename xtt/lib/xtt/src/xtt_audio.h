@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_audio.h,v 1.2 2005-11-17 09:01:35 claes Exp $
+ * Proview   $Id: xtt_audio.h,v 1.3 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,7 +71,7 @@ class XttAudio
 
     int Init_ALSA(char *, unsigned int);
     int Init_OSS(char *, int);
-    double XttAudio::envelope( double time, double endtime, double attack, 
+    double envelope( double time, double endtime, double attack, 
 			       double decay, double sustain, double release);
     void MakeSine(short *buffer, int buffersize, double time, double starttime, double endtime,
 		  int tone, double volume_ch1, double volume_ch2, double attack, double decay, 

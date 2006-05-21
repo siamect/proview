@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.h,v 1.9 2006-01-25 14:18:45 claes Exp $
+ * Proview   $Id: xtt_menu.h,v 1.10 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,7 +126,7 @@ typedef struct {
 } xtt_sClassBinding;
 
 /* Base methods */
-#if defined (OS_LYNX)  || defined (OS_LINUX)
+#if 1 //defined (OS_LYNX)  || defined (OS_LINUX)
 # define pwr_BindXttMethods(Class) xtt_sMethodBinding pwr_g ## Class ## _XttMethods[]
 # define pwr_BindXttClasses(Type) xtt_sClassBinding pwr_g ## Type ## _XttClassMethods[]
 # if __GNUC__ < 3 || (__GNUC__ == 3 && __GNUC_MINOR__ < 4)

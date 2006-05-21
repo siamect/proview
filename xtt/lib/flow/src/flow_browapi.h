@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.h,v 1.7 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_browapi.h,v 1.8 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,14 @@
 #ifndef flow_browapi_h
 #define flow_browapi_h
 
+#ifndef flow_h
+#include "flow.h"
+#endif
+
+#ifndef flow_browctx_h
+#include "flow_browctx.h"
+#endif
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -31,8 +39,6 @@ typedef void *FlowCtx;
 #endif
 #endif
 
-#include "flow.h"
-
 typedef struct {
 	double	base_zoom_factor;
 	double	indentation;
@@ -43,7 +49,7 @@ typedef enum {
 	brow_eAttr_base_zoom_factor 	= 1 << 0,
 	brow_eAttr_indentation		= 1 << 1,
 	brow_eAttr_annotation_space	= 1 << 2
-	} brow_eAttribute;
+} brow_eAttribute;
 
 
 typedef BrowCtx *brow_tCtx;

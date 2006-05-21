@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.54 2006-05-11 07:12:19 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.55 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -259,7 +259,7 @@ ldh_CallMenuMethod(ldh_sMenuCall *mcp, int index)
   return sp->callMenuMethod( mcp, index);
 }
 
-pwr_tStatus 
+pwr_tStatus
 ldh_GetMethod( ldh_tSession Session, char *Name, wb_tMethod *method)
 {
   pwr_tStatus sts;
@@ -378,17 +378,17 @@ ldh_CopyObject(ldh_tSession session, pwr_tObjid *oid, char *name, pwr_tObjid src
   wb_session *sp = (wb_session *)session;
 
   try {
-    wb_object s_o = sp->object(srcoid);
-    if ( !s_o) return s_o.sts();
-    wb_object d_o = sp->object(dstoid);
-    if ( !d_o) return d_o.sts();
-    wb_destination d = d_o.destination(dest);
-    wb_object o = sp->copyObject(s_o, d, name);
+  wb_object s_o = sp->object(srcoid);
+  if ( !s_o) return s_o.sts();
+  wb_object d_o = sp->object(dstoid);
+  if ( !d_o) return d_o.sts();
+  wb_destination d = d_o.destination(dest);
+  wb_object o = sp->copyObject(s_o, d, name);
 
-    if (!o) return o.sts();
+  if (!o) return o.sts();
     
-    *oid = o.oid();
-    return o.sts();
+  *oid = o.oid();
+  return o.sts();
   }
   catch (wb_error& e) {
     return e.sts();
@@ -449,8 +449,8 @@ ldh_DeleteObject(ldh_tSession session, pwr_tOid oid)
   if (!o) return o.sts();
     
   try {
-    sp->deleteObject(o);
-    return sp->sts();
+  sp->deleteObject(o);
+  return sp->sts();
   }
   catch ( wb_error& e) {
     return e.sts();
@@ -466,7 +466,7 @@ ldh_DeleteObjectTree(ldh_tSession session, pwr_tOid oid)
   if (!o) return o.sts();
     
   try {
-    return sp->deleteFamily(o);
+  return sp->deleteFamily(o);
   }
   catch ( wb_error& e) {
     return e.sts();
@@ -873,11 +873,11 @@ ldh_GetAttrRefOrigTid(ldh_tSession session, pwr_sAttrRef *arp, pwr_tTid *tid)
   }
 
   try {
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
-    *tid = a.originalTid();
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+  *tid = a.originalTid();
     
-    return a.sts();
+  return a.sts();
   }
   catch ( wb_error& e) {
     return e.sts();
@@ -1307,6 +1307,12 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
 {
   wb_session *sp = (wb_session *)session;
 
+  if (cdh_ObjidIsNull(oid)) {
+    strncpy( buf, cdh_ObjidToString( NULL, oid, 1), maxsize);
+    *size = strlen( buf);
+    return LDH__SUCCESS;
+  }
+  
   switch ( type) {
   case ldh_eName_Object:
   {
@@ -1417,60 +1423,60 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
 {
   static char str[512];
   wb_session *sp = (wb_session *)session;
-
+    
   try {
     
-    switch ( nametype) {
-    case ldh_eName_ArefExport:
-    case ldh_eName_Objid:
-    case ldh_eName_ObjectIx:
-    case ldh_eName_OixString:
-    case ldh_eName_VolumeId:
-    case ldh_eName_VidString: {
-      wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
-      strcpy( str, n.name( nametype));
-      *aname = str;
-      *size = strlen(str);
-      break;
-    }
-    case ldh_eName_Ref: {
-      wb_attribute a = sp->attribute(arp);
-      if (!a) return a.sts();
-      
-      wb_name n = a.longName();
-      strcpy( str, a.name());
-      strcat( str, ".");
-      strcat( str, n.attributesAll());
-      *aname = str;
-      *size = strlen(str);
-      break;
-    }
-    case 0: { // cdh_mNName
-      if ( arp->Objid.vid == sp->vid())
-	nametype = cdh_mName_path | cdh_mName_attribute;
-      else
-	nametype = cdh_mName_volume | cdh_mName_attribute;
-      
-      wb_attribute a = sp->attribute(arp);
-      if (!a) return a.sts();
-      
-      wb_name n = a.longName();
-      strcpy( str, n.name( nametype));
-      *aname = str;
-      *size = strlen(str);
-      break;
-    }
-    default: {
-      wb_attribute a = sp->attribute(arp);
-      if (!a) return a.sts();
-      
-      wb_name n = a.longName();
-      strcpy( str, n.name( nametype));
-      *aname = str;
-      *size = strlen(str);
-      break;
-    }
-    }
+  switch ( nametype) {
+  case ldh_eName_ArefExport:
+  case ldh_eName_Objid:
+  case ldh_eName_ObjectIx:
+  case ldh_eName_OixString:
+  case ldh_eName_VolumeId:
+  case ldh_eName_VidString: {
+    wb_name n = wb_name( cdh_ArefToString( NULL, arp, 1));
+    strcpy( str, n.name( nametype));
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  case ldh_eName_Ref: {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    
+    wb_name n = a.longName();
+    strcpy( str, a.name());
+    strcat( str, ".");
+    strcat( str, n.attributesAll());
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  case 0: { // cdh_mNName
+    if ( arp->Objid.vid == sp->vid())
+      nametype = cdh_mName_path | cdh_mName_attribute;
+    else
+      nametype = cdh_mName_volume | cdh_mName_attribute;
+
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    
+    wb_name n = a.longName();
+    strcpy( str, n.name( nametype));
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  default: {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
+    
+    wb_name n = a.longName();
+    strcpy( str, n.name( nametype));
+    *aname = str;
+    *size = strlen(str);
+    break;
+  }
+  }
   }
   catch (wb_error& e) {
     return e.sts();
@@ -2004,22 +2010,22 @@ pwr_tStatus
 ldh_GetAttrRefInfo(ldh_tSession session, pwr_sAttrRef *arp, ldh_sAttrRefInfo *info)
 {
   wb_session *sp = (wb_session *)session;
-
+    
   try {
-    wb_attribute a = sp->attribute(arp);
-    if (!a) return a.sts();
-
-    info->size = a.size();
-    info->nElement = a.nElement();
-    info->index = a.index();
-    info->flags = a.flags();
-    info->type = a.type();
-    info->tid = a.tid();
+  wb_attribute a = sp->attribute(arp);
+  if (!a) return a.sts();
+    
+  info->size = a.size();
+  info->nElement = a.nElement();
+  info->index = a.index();
+  info->flags = a.flags();
+  info->type = a.type();
+  info->tid = a.tid();
   }
   catch ( wb_error& e) {
     return e.sts();
   }
-   
+
   return LDH__SUCCESS;
 }
 

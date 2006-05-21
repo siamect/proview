@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wbltest.cpp,v 1.10 2005-09-01 14:57:49 claes Exp $
+ * Proview   $Id: wb_wbltest.cpp,v 1.11 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,12 +37,18 @@
 #include "co_dbs.h"
 #include "co_time.h"
 
-#if 0
+#if 1
+#include <stdio.h>
+int main(int argc, char *argv[])
+{
+  printf("Hello world\n");
+}
+#elif 0
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-int main( int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   struct stat sb;
   int ret;
@@ -71,81 +77,20 @@ int main( int argc, char *argv[])
 #elif 0
 int main( int argc, char *argv[])
 {
-  int a;
-  int b;
-  int i;
+  //pwr_tStatus sts;
+  //dbs_sEnv env;
+  //dbs_sEnv *ep;
+  wb_erep *erep = new wb_erep();
+
+  //if (argc <= 2) exit(0);
+  wb_vrepwbl *vwbl = new wb_vrepwbl(erep);
+  vwbl->info();
+  vwbl->load("cvolvhxnu4.wb_load");
+  vwbl->createSnapshot("cvolvhxnu4.dbs");
   
-  int c;
-  
-  for (i = 0; i < 100; i++) {
-    if (i % 3 == 0) {
-      a = rand() % 101;
-      b = rand() % 101;
-      printf("[%d] vad blir     %d + %d = ", i + 1, a, b);
-      scanf("%d", &c);
-  
-      if (c == a + b) {
-        printf("\nKorrekt!\n");
-      } else {
-        printf("Fel\007! Det blir: %d\n", a + b);
-      }
-    }
-    else if (i % 3 == 1) {
-      int tmp;
-      
-      a = rand() % 101;
-      b = rand() % 101;
-      if (a < b) {
-        tmp = b;
-        b = a;
-        a = tmp;
-      }
-      
-      printf("[%d] vad blir     %d - %d = ", i + 1, a, b);
-      scanf("%d", &c);
-  
-      if (c == a - b) {
-        printf("\nKorrekt!\n");
-      } else {
-        printf("Fel\007! Det blir %d\n", a - b);
-      }
-    }
-    else if (i % 3 == 2) {
-      a = rand() % 11;
-      b = rand() % 11;
-      printf("[%d] vad blir     %d * %d = ", i + 1, a, b);
-      scanf("%d", &c);
-  
-      if (c == a * b) {
-        printf("\nKorrekt!\n");
-      } else {
-        printf("Fel\007! Det blir %d\n", a * b);
-      }
-    }
-    
-  }
   
 }
 #elif 0
-int main( int argc, char *argv[])
-{
-  char namn[50];
-  char bnamn[50];
-  int len;
-  
-  printf("Vad heter du? ");
-  scanf("%s", namn);
-  len = strlen(namn);
-  
-  for (int i = 0; i < len; i++) {
-    bnamn[len - i -1] = namn[i];
-  }
-  bnamn[len+1] = '\0';
-  
-  printf("\nDitt namn baklänges är: %s\n", bnamn);
-  
-}
-#elif 1
 int main( int argc, char *argv[])
 {
   //pwr_tStatus sts;

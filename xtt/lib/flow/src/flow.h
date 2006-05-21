@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.9 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow.h,v 1.10 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -535,15 +535,15 @@ typedef enum {
 	} flow_mDisplayLevel;
 
 typedef enum {
-	flow_mSensitivity_MB1Click	= 1 << 0,
+	flow_mSensitivity_MB1Click       = 1 << 0,
 	flow_mSensitivity_MB1DoubleClick = 1 << 1,
-	flow_mSensitivity_MB1Press	= 1 << 2,
-	flow_mSensitivity_MB2Click	= 1 << 3,
+	flow_mSensitivity_MB1Press       = 1 << 2,
+	flow_mSensitivity_MB2Click       = 1 << 3,
 	flow_mSensitivity_MB2DoubleClick = 1 << 4,
-	flow_mSensitivity_MB2Press	= 1 << 5,
-	flow_mSensitivity_MB3Click	= 1 << 6,
+	flow_mSensitivity_MB2Press       = 1 << 5,
+	flow_mSensitivity_MB3Click       = 1 << 6,
 	flow_mSensitivity_MB3DoubleClick = 1 << 7,
-	flow_mSensitivity_MB3Press	= 1 << 8
+	flow_mSensitivity_MB3Press       = 1 << 8
 	} flow_mSensitivity;
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.h,v 1.29 2006-05-11 07:12:19 claes Exp $
+ * Proview   $Id: wb_vrepdb.h,v 1.30 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@
 #include "db_cxx.h"
 #include "co_tree.h"
 
-class wb_vrepdb : public wb_vrep
+class wb_vrepdb : public wb_vrep, public wb_convert_volume
 {
 private:
   bool deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn);
@@ -41,7 +41,7 @@ private:
     pwr_tBitMask m;
 
 #define mOentry_temporary    1
-#define mOentry_exist		     2
+#define mOentry_exist        2
   } mOentry;
 
   typedef struct sOentry
@@ -54,11 +54,11 @@ private:
     struct sOentry *after;
     struct sOentry *first;
     struct sOentry *last;
-  
+
   } sOentry;
 
   sOentry *m_poep;
-  
+
   typedef struct sDestination
   {
     pwr_tOid oid;
@@ -66,12 +66,13 @@ private:
     pwr_tOid foid;
     pwr_tOid loid;
   } sDestination;
-  
+
   sDestination m_destination;
 
 protected:
   wb_erep *m_erep;
   wb_merep *m_merep;
+  wb_merep *m_merepCheck;
 
   unsigned int m_nRef;
 
@@ -81,7 +82,7 @@ public:
 
   wb_db *m_db;
   wb_db_ohead m_ohead;
-  
+
   wb_vrepdb(wb_erep *erep, const char *fileName);
   wb_vrepdb(wb_erep *erep, pwr_tVid, pwr_tCid, const char *volumeName, const char *fileName);
 
@@ -94,7 +95,7 @@ public:
   virtual wb_erep *erep();
 
   virtual wb_merep *merep() const;
- 
+
   virtual wb_vrep *next();
 
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o);
@@ -104,17 +105,17 @@ public:
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tVid vid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOix oix(pwr_tStatus *sts, const wb_orep *o);
-    
+
   virtual pwr_tCid cid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid poid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid foid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid loid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid boid(pwr_tStatus *sts, const wb_orep *o);
   virtual pwr_tOid aoid(pwr_tStatus *sts, const wb_orep *o);
-    
+
   virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o);
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o);
-    
+
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent);
 
   virtual wb_orep *object(pwr_tStatus *sts);
@@ -138,7 +139,7 @@ public:
 
 
   virtual bool commit(pwr_tStatus *sts) {return m_db->commit(sts);}
-  
+
   virtual bool abort(pwr_tStatus *sts) {return m_db->abort(sts);}
 
   virtual bool writeAttribute(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, size_t offset, size_t size, void *p);
@@ -165,6 +166,8 @@ public:
 
   virtual wb_orep *next(pwr_tStatus *sts, const wb_orep *o);
 
+  virtual wb_orep *nextClass(pwr_tStatus *sts, const wb_orep *o);
+
   virtual wb_orep *previous(pwr_tStatus *sts, const wb_orep *o);
 
   virtual wb_srep *newSession();
@@ -179,16 +182,19 @@ public:
 
   void load();
 
+  void checkMeta();
+  void updateMeta();
+
   virtual bool exportVolume(wb_import &e);
-    
+
   virtual bool exportHead(wb_import &e);
 
   virtual bool exportRbody(wb_import &e);
-    
+
   virtual bool exportDbody(wb_import &e);
-    
+
   virtual bool exportDocBlock(wb_import &e);
-    
+
   virtual bool exportMeta(wb_import &e);
 
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
@@ -199,8 +205,8 @@ public:
                                 size_t rbSize, size_t dbSize, void *rbody, void *dbody)
     { return false;}
   virtual bool importPaste();
-  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode, 
-                                 bool keepoid, pwr_tOid oid, 
+  virtual bool importPasteObject(pwr_tOid destination, ldh_eDest destcode,
+                                 bool keepoid, pwr_tOid oid,
                                  pwr_tCid cid, pwr_tOid poid,
                                  pwr_tOid boid, const char *name, pwr_mClassDef flags,
                                  size_t rbSize, size_t dbSize, void *rbody, void *dbody,
@@ -217,6 +223,12 @@ public:
   void delete_wb_orepdb(void *p);
   virtual bool accessSupported( ldh_eAccess access) { return true;}
   virtual const char *fileName() { return m_fileName;}
+
+
+//  virtual void checkClassList(pwr_tOid oid, pwr_tCid cid, bool update);
+
+  virtual void updateObject(pwr_tOid oid, pwr_tCid cid);
+  virtual void checkObject(pwr_tOid oid, pwr_tCid cid);
 };
 
 #endif

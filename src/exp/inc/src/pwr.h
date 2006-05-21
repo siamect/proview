@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.23 2006-04-28 04:59:58 claes Exp $
+ * Proview   $Id: pwr.h,v 1.24 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,10 @@
 */
 /*! \addtogroup Pwr */
 /*@{*/
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 #ifdef VAXC
 # define pwr_dExport globaldef  
@@ -679,6 +683,9 @@ static const pwr_tDeltaTime pwr_cNDeltaTime = {0, 0};	//!< Zero deltatime consta
 
 /*@}*/
 
+#if defined __cplusplus
+}
+#endif
 #endif
 
 

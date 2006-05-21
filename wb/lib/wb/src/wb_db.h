@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: wb_db.h,v 1.19 2005-09-06 10:43:31 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
+ * Proview   $Id: wb_db.h,v 1.20 2006-05-21 22:30:50 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -23,8 +23,11 @@
 #include "pwr.h"
 #include "db_cxx.h"
 #include "wb_import.h"
+#include "wb_convert_volume.h"
 
 class wb_name;
+class wb_convert_volume;
+
 
 typedef struct {
   pwr_tOid        oid;        /**< object identifier */
@@ -37,7 +40,7 @@ typedef struct {
   pwr_tOid        aoid;       /**< object after this object. */
   pwr_tOid        foid;       /**< first child object. */
   pwr_tOid        loid;       /**< last child object. */
-    
+
   pwr_mClassDef   flags;
   struct {
     pwr_tTime      time;
@@ -65,10 +68,10 @@ public:
   Db *m_t_name;
   Db *m_t_info;
 
-  wb_db_txn *m_txn;    
+  wb_db_txn *m_txn;
 
 public:
-    
+
   wb_db();
   wb_db(pwr_tVid vid);
   //~wb_db();
@@ -84,28 +87,28 @@ public:
   void close();
   void open(const char *fileName);
   void openDb(bool useTxn);
-  
+
   void copy(wb_export &e, const char *fileName);
   void create(pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName);
-  
+
   int del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid);
-  
+
   wb_db_txn *begin(wb_db_txn *txn);
 
   bool commit(pwr_tStatus *sts);
-  
+
   bool abort(pwr_tStatus *sts);
-  
+
   //void adopt(wb_db_txn *txn, wb_db_ohead &o, wb_destination &dest);
-  
+
   //void unadopt(wb_db_txn *txn, wb_db_ohead &o);
-  
+
   bool deleteFamily(pwr_tStatus *sts, wb_db_ohead *o);
-  
+
   //bool deleteOset(pwr_tStatus *sts, wb_oset *o);
-  
+
   bool importVolume(wb_export &e);
-  
+
   bool importHead(pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
                   pwr_tOid boid, pwr_tOid aoid, pwr_tOid foid, pwr_tOid loid,
                   const char *name, const char *normname, pwr_mClassDef flags,
@@ -113,20 +116,21 @@ public:
                   size_t rbSize, size_t dbSize);
 
   bool importRbody(pwr_tOid oid, size_t size, void *body);
-  
+
   bool importDbody(pwr_tOid oid, size_t size, void *body);
-  
+
   bool importDocBlock(pwr_tOid oid, size_t size, char *block) { return true;}
-  
+
   bool importMeta(dbs_sMenv *mep);
-  
+
+  void checkClassList(pwr_tOid oid, pwr_tCid cid, bool update);
 
 };
 
 class wb_db_info
 {
 public:
-  struct 
+  struct
   {
     pwr_tVid vid;
     pwr_tCid cid;
@@ -135,26 +139,26 @@ public:
   } m_volume;
 
   wb_db *m_db;
-  
+
   Dbt m_key;
   Dbt m_data;
-        
+
   wb_db_info(wb_db *db);
   //~wb_db_info();
 
   void put(wb_db_txn *txn);
   void get(wb_db_txn *txn);
-        
+
   pwr_tCid cid() { return m_volume.cid;}
   pwr_tVid vid() { return m_volume.vid;}
   pwr_tTime time() { return m_volume.time;}
   char *name() { return m_volume.name;}
-  
+
   void cid(pwr_tCid cid) { m_volume.cid = cid;}
   void vid(pwr_tVid vid) { m_volume.vid = vid;}
   void time(pwr_tTime time) { m_volume.time = time;}
   void name(char const *name) { strcpy(m_volume.name, name);}
-  
+
 };
 
 class wb_db_ohead
@@ -162,7 +166,7 @@ class wb_db_ohead
 public:
   db_sObject m_o;
   pwr_tOid m_oid;
-  
+
   wb_db *m_db;
   Dbt m_key;
   Dbt m_data;
@@ -183,10 +187,10 @@ public:
   wb_db_ohead &get(wb_db_txn *txn, pwr_tOid oid);
 
   void setDb(wb_db *db) { m_db = db;}
-      
+
   int put(wb_db_txn *txn);
   int del(wb_db_txn *txn);
-        
+
   pwr_tOid oid() { return m_o.oid;}
   pwr_tVid vid() { return m_o.oid.vid;}
   pwr_tOix oix() { return m_o.oid.oix;}
@@ -199,7 +203,7 @@ public:
   pwr_tTime ohTime() { return m_o.time;}
 
   const char *name() { return m_o.name;}
-  
+
   const char *normname() {return m_o.normname;}
 
   pwr_mClassDef flags() { return m_o.flags;}
@@ -208,7 +212,7 @@ public:
   size_t dbSize() { return m_o.body[1].size;}
   pwr_tTime rbTime() { return m_o.body[0].time;}
   pwr_tTime dbTime() { return m_o.body[1].time;}
-  
+
   void name(wb_name &name);
   void name(pwr_tOid &oid);
 
@@ -233,7 +237,7 @@ public:
   void iter(void (*print)(pwr_tOid oid, db_sObject *op));
   void iter(wb_import &i);
 };
-    
+
 class wb_db_name
 {
 public:
@@ -249,44 +253,44 @@ public:
     //pwr_tCid      cid;   // saved here to optimize tree traversal
     //pwr_mClassDef flags; // saved here to optimize tree traversal
   } m_d;
-        
+
   wb_db *m_db;
   Dbt m_key;
   Dbt m_data;
   Dbc *m_dbc;
-        
+
   wb_db_name(wb_db *db, wb_db_txn *txn);
   wb_db_name(wb_db *db, wb_db_ohead &o);
   //wb_db_name(wb_db *db, pwr_tOid, char *name);
   wb_db_name(wb_db *db, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, pwr_tOid oid, pwr_tOid poid, const char *name);
   wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name);
-        
+
   int get(wb_db_txn *txn);
   int put(wb_db_txn *txn);
   int del(wb_db_txn *txn);
-        
+
   void name(wb_name &name);
   void iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid));
-        
+
   pwr_tOid oid() { return m_d.oid;}
 };
 
 class wb_db_class
 {
 public:
-  struct 
+  struct
   {
     pwr_tCid cid;
     pwr_tOid oid;
   } m_k;
 
   wb_db *m_db;
-  
+
   Dbt m_key;
   Dbt m_data;
   Dbc *m_dbc;
-        
+
   wb_db_class(wb_db *db);
   wb_db_class(wb_db *db, pwr_tCid cid);
   wb_db_class(wb_db *db, pwr_tCid cid, pwr_tOid oid);
@@ -295,15 +299,16 @@ public:
   ~wb_db_class();
 
   bool succ(pwr_tOid oid);
+  bool succClass(pwr_tCid cid);
   bool pred(pwr_tOid oid);
   int put(wb_db_txn *txn);
   int del(wb_db_txn *txn);
-        
+
   pwr_tCid cid() { return m_k.cid;}
   pwr_tOid oid() { return m_k.oid;}
-        
+
   void iter(void (*print)(pwr_tOid oid, pwr_tCid cid));
-                
+  void iter(wb_convert_volume *cp);
 };
 
 class wb_db_dbody
@@ -314,7 +319,7 @@ public:
   pwr_tOid m_oid;
   size_t m_size;
   void *m_p;
-  
+
   Dbt m_key;
   Dbt m_data;
   Dbc *m_dbc;
@@ -322,9 +327,9 @@ public:
   wb_db_dbody(wb_db *db);
   wb_db_dbody(wb_db *db, pwr_tOid oid);
   wb_db_dbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
-   
+
   void oid(pwr_tOid oid) {m_oid = oid;}
-  
+
   int get(wb_db_txn *txn, size_t offset, size_t size, void *p);
   int put(wb_db_txn *txn);
   int put(wb_db_txn *txn, size_t offset, size_t size, void *p);
@@ -343,7 +348,7 @@ public:
   pwr_tOid m_oid;
   size_t m_size;
   void *m_p;
-  
+
   Dbt m_key;
   Dbt m_data;
   Dbc *m_dbc;
@@ -351,7 +356,7 @@ public:
   wb_db_rbody(wb_db *db);
   wb_db_rbody(wb_db *db, pwr_tOid oid);
   wb_db_rbody(wb_db *db, pwr_tOid oid, size_t size, void *p);
-  
+
   void oid(pwr_tOid oid) {m_oid = oid;}
 
   int get(wb_db_txn *txn, size_t offset, size_t size, void *p);

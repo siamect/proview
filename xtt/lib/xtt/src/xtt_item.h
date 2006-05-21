@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.10 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.11 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -472,7 +472,7 @@ class ItemPlc : public ItemTable {
 
 class ItemEnum : public ItemBaseAttr {
  public:
-  ItemEnum::ItemEnum( 
+  ItemEnum( 
 	XNavBrow *brow,
 	pwr_tObjid item_objid, 
 	brow_tNode dest, flow_eDest dest_code,
@@ -490,7 +490,7 @@ class ItemEnum : public ItemBaseAttr {
 
 class ItemMask : public ItemBaseAttr {
  public:
-  ItemMask::ItemMask( 
+  ItemMask( 
 	XNavBrow *brow,
 	pwr_tObjid item_objid, 
 	brow_tNode dest, flow_eDest dest_code,

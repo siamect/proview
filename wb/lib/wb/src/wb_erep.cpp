@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.44 2006-02-08 13:53:57 claes Exp $
- * Copyright (C) 2005 SSAB Oxel�sund AB.
+ * Proview   $Id: wb_erep.cpp,v 1.45 2006-05-21 22:30:50 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -26,6 +26,7 @@
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
+#include "wb_vrepdbms.h"
 #include "wb_vrepref.h"
 #include "wb_vrepext.h"
 #include "wb_cdrep.h"
@@ -81,7 +82,7 @@ wb_erep *wb_erep::ref()
 // Get first volume
 wb_vrep *wb_erep::volume( pwr_tStatus *sts)
 {
-  vrep_iterator it = m_vrepdb.begin(); 
+  vrep_iterator it = m_vrepdb.begin();
   if ( it == m_vrepdb.end()) {
     it = m_vrepdbs.begin();
     if ( it == m_vrepdbs.end()) {
@@ -95,7 +96,7 @@ wb_vrep *wb_erep::volume( pwr_tStatus *sts)
 
 wb_vrep *wb_erep::volume(pwr_tStatus *sts, pwr_tVid vid)
 {
-  vrep_iterator it = m_vrepdb.find( vid); 
+  vrep_iterator it = m_vrepdb.find( vid);
   if ( it != m_vrepdb.end()) {
     *sts = LDH__SUCCESS;
     return it->second;
@@ -152,7 +153,7 @@ wb_vrep *wb_erep::volume(pwr_tStatus *sts, const char *name)
 
 wb_vrep *wb_erep::externVolume(pwr_tStatus *sts, pwr_tVid vid)
 {
-  vrep_iterator it = m_vrepextern.find( vid); 
+  vrep_iterator it = m_vrepextern.find( vid);
   if ( it == m_vrepextern.end()) {
     *sts = LDH__NOSUCHVOL;
     return 0;
@@ -163,7 +164,7 @@ wb_vrep *wb_erep::externVolume(pwr_tStatus *sts, pwr_tVid vid)
 
 wb_vrep *wb_erep::bufferVolume(pwr_tStatus *sts)
 {
-  buffer_iterator it = m_vrepbuffer.begin(); 
+  buffer_iterator it = m_vrepbuffer.begin();
   if ( it == m_vrepbuffer.end()) {
     *sts = LDH__NOSUCHVOL;
     return 0;
@@ -198,12 +199,12 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
       // Next volume in dbs
       it = m_vrepdbs.begin();
       if ( it != m_vrepdbs.end()) {
-	*sts = LDH__SUCCESS;
-	return it->second;
+        *sts = LDH__SUCCESS;
+        return it->second;
       }
       else {
-	*sts = LDH__NOSUCHVOL;
-	return 0;
+        *sts = LDH__NOSUCHVOL;
+        return 0;
       }
     }
   }
@@ -238,12 +239,12 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
     if ( (*itb)->vid() == vid) {
       itb++;
       if ( itb != m_vrepbuffer.end()) {
-	*sts = LDH__SUCCESS;
-	return *itb;
+        *sts = LDH__SUCCESS;
+        return *itb;
       }
       else {
-	*sts = LDH__NOSUCHVOL;
-	return 0;
+        *sts = LDH__NOSUCHVOL;
+        return 0;
       }
     }
   }
@@ -254,7 +255,7 @@ wb_vrep *wb_erep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
 
 void wb_erep::addDb( pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepdb.find( vrep->vid()); 
+  vrep_iterator it = m_vrepdb.find( vrep->vid());
   if ( it == m_vrepdb.end()) {
     m_vrepdb[vrep->vid()] = vrep;
     vrep->ref();
@@ -266,10 +267,10 @@ void wb_erep::addDb( pwr_tStatus *sts, wb_vrep *vrep)
 
 void wb_erep::addDbs( pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepdbs.find( vrep->vid()); 
+  vrep_iterator it = m_vrepdbs.find( vrep->vid());
   if ( it == m_vrepdbs.end()) {
     m_vrepdbs[vrep->vid()] = vrep;
-    vrep->ref(); 
+    vrep->ref();
     *sts = LDH__SUCCESS;
   }
   else {
@@ -279,12 +280,12 @@ void wb_erep::addDbs( pwr_tStatus *sts, wb_vrep *vrep)
 
   if ( vrep->cid() == pwr_eClass_ClassVolume) {
     m_merep->addDbs( sts, (wb_mvrep *)vrep);
-  }  
+  }
 }
 
 void wb_erep::addExtern( pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepextern.find( vrep->vid()); 
+  vrep_iterator it = m_vrepextern.find( vrep->vid());
   if ( it == m_vrepextern.end()) {
     m_vrepextern[vrep->vid()] = vrep;
     vrep->ref();
@@ -310,7 +311,7 @@ void wb_erep::addBuffer( pwr_tStatus *sts, wb_vrep *vrep)
   wb_vrep *v = findBuffer( vrep->vid());
   if ( !v) {
     // Remove oldest buffer
-    if ( (int) m_vrepbuffer.size() >= m_buffer_max) {      
+    if ( (int) m_vrepbuffer.size() >= m_buffer_max) {
       m_vrepbuffer.erase( m_vrepbuffer.begin());
     }
 
@@ -326,7 +327,7 @@ void wb_erep::addBuffer( pwr_tStatus *sts, wb_vrep *vrep)
 
 void wb_erep::removeDb(pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepdb.find( vrep->vid()); 
+  vrep_iterator it = m_vrepdb.find( vrep->vid());
   if ( it == m_vrepdb.end()) {
     *sts = LDH__NOSUCHVOL;
     return;
@@ -338,7 +339,7 @@ void wb_erep::removeDb(pwr_tStatus *sts, wb_vrep *vrep)
 
 void wb_erep::removeDbs(pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepdbs.find( vrep->vid()); 
+  vrep_iterator it = m_vrepdbs.find( vrep->vid());
   if ( it == m_vrepdbs.end()) {
     *sts = LDH__NOSUCHVOL;
     return;
@@ -350,7 +351,7 @@ void wb_erep::removeDbs(pwr_tStatus *sts, wb_vrep *vrep)
 
 void wb_erep::removeExtern(pwr_tStatus *sts, wb_vrep *vrep)
 {
-  vrep_iterator it = m_vrepextern.find( vrep->vid()); 
+  vrep_iterator it = m_vrepextern.find( vrep->vid());
   if ( it == m_vrepextern.end()) {
     *sts = LDH__NOSUCHVOL;
     return;
@@ -427,7 +428,7 @@ void wb_erep::loadDirList( pwr_tStatus *status)
     *status = LDH__PROJCONFIG;
     return;
   }
-  
+
   while ( fp.getline( line, sizeof(line))) {
     if ( m_dir_cnt > (int) (sizeof(m_dir_list)/sizeof(m_dir_list[0]) - 1))
       break;
@@ -489,13 +490,15 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
       try {
         vrep->load();
         addDbs( &sts, vrep);
-        MsgWindow::message( 'I', "Volume loaded", vname);
+        char buff[256];
+        sprintf(buff, "Global class volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
+        MsgWindow::message( 'I', buff);
       }
       catch ( wb_error& e) {
 	if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	  MsgWindow::message( 'I', "Unable to open volume", vname);
+	  MsgWindow::message( 'I', "Unable to open class volume", vname);
 	else
-	  MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+        MsgWindow::message( 'E', "Unable to open class volume", vname, e.what().c_str());
       }
     }
     fpm.close();
@@ -533,7 +536,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
       vrepdb->name("directory");
       addDb( &sts, vrepdb);
-      MsgWindow::message( 'I', "Database opened", vname);
+      MsgWindow::message( 'I', "Directory database opened", vname);
     }
 
     return;
@@ -591,14 +594,14 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           vrep = new wb_vrepdbs( this, vname);
           vrep->load();
           addDbs( &sts, vrep);
-	  MsgWindow::message( 'I', "Volume loaded", vname);
+          MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
           vol_cnt++;
         }
         catch ( wb_error& e) {
 	  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	    MsgWindow::message( 'I', "Unable to open volume", vname);
+	    MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
 	  else
-	    MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+          MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
         }
       }
       else {
@@ -616,13 +619,13 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
               vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
-	      MsgWindow::message( 'I', "Volume loaded", vname);
+              MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
             }
             catch ( wb_error& e) {
 	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	        MsgWindow::message( 'I', "Unable to open volume", vname);
+	        MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
 	      else
-	        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+              MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
             }
             break;
           }
@@ -637,9 +640,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	cout << "Syntax error in file: " << fname << endl;
 
       if ( db) {
-	// If db is specified, load only specified db, load as dbs instead
-	if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
-	  cdh_ToLower( vol_array[0], vol_array[0]);
+        // If db is specified, load only specified db, load as dbs instead
+        if ( cdh_NoCaseStrcmp( vol_array[0], db) != 0) {
+          cdh_ToLower( vol_array[0], vol_array[0]);
           strcpy( vname, "$pwrp_load/");
           strcat( vname, vol_array[0]);
           strcat( vname, ".dbs");
@@ -652,17 +655,17 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
               vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
-	      MsgWindow::message( 'I', "Volume loaded", vname);
+              MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
             }
             catch ( wb_error& e) {
 	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	        MsgWindow::message( 'I', "Unable to open volume", vname);
+	        MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
 	      else
-	        MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+              MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
             }
           }
-	  continue;
-	}
+          continue;
+        }
       }
       strcpy( vname, "$pwrp_db/");
       strcat( vname, vol_array[0]);
@@ -675,13 +678,13 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       if ( wb_dblock::is_locked(vname, uname)) {
 	Widget w;
 
-	MsgWindow::message( 'E', "Database is locked by user", uname, vname);
+        MsgWindow::message( 'E', "Database is locked by user", uname, vname);
 	MsgWindow::get_parent_widget( &w);
 	if ( w == 0)
 	  exit(0);
 
-	// Try to load dbs-file instead
-	cdh_ToLower( vol_array[0], vol_array[0]);
+        // Try to load dbs-file instead
+        cdh_ToLower( vol_array[0], vol_array[0]);
         strcpy( vname, "$pwrp_load/");
         strcat( vname, vol_array[0]);
         strcat( vname, ".dbs");
@@ -691,26 +694,26 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           vrep = new wb_vrepdbs( this, vname);
           vrep->load();
           addDbs( &sts, vrep);
-	  MsgWindow::message( 'I', "Volume loaded", vname);
+          MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
           vol_cnt++;
         }
         catch ( wb_error& e) {
 	  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	    MsgWindow::message( 'I', "Unable to open volume", vname);
+	    MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
 	  else
-	    MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
+          MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
         }
       }
       else {
-	if ( ODD(sts)) {
+        if ( ODD(sts)) {
 	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	  vrepdb->name(vol_array[0]);
-	  addDb( &sts, vrepdb);
-	  MsgWindow::message( 'I', "Database opened", vname);
-	  vol_cnt++;
-	}
-	else
-	  MsgWindow::message( 'E', "Database not found", vname);
+          vrepdb->name(vol_array[0]);
+          addDb( &sts, vrepdb);
+          MsgWindow::message( 'I', "Database opened", vname);
+          vol_cnt++;
+        }
+        else
+          MsgWindow::message( 'E', "Database not found", vname);
       }
     }
   }
@@ -722,7 +725,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
   for ( itdbs = m_vrepdbs.begin(); itdbs != m_vrepdbs.end(); itdbs++) {
     for ( itdb = m_vrepdb.begin(); itdb != m_vrepdb.end(); itdb++) {
       if ( itdbs->first == itdb->first)
-	itdbs->second->setDuplicateDb( true);
+        itdbs->second->setDuplicateDb( true);
     }
   }
 
@@ -741,13 +744,13 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     else {
       if ( ODD(sts)) {
 	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-	vrepdb->name("directory");
-	addDb( &sts, vrepdb);
-	MsgWindow::message( 'I', "Database opened", vname);
+        vrepdb->name("directory");
+        addDb( &sts, vrepdb);
+        MsgWindow::message( 'I', "Database opened", vname);
       }
       if ( EVEN(sts)) {
-	*status = LDH__PROJCONFIG;
-	return;
+        *status = LDH__PROJCONFIG;
+        return;
       }
     }
   }
@@ -755,6 +758,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
     *status = LDH__PROJCONFIG;
   else
     *status = LDH__SUCCESS;
+
 }
 
 void wb_erep::loadLocalWb( pwr_tStatus *rsts)
@@ -813,7 +817,7 @@ wb_orep *wb_erep::object(pwr_tStatus *sts, pwr_tOid oid)
 wb_orep *wb_erep::object( pwr_tStatus *sts, const char *name)
 {
   wb_name n(name);
-  
+
   if ( n.evenSts()) {
     *sts = n.sts();
     return 0;
@@ -862,7 +866,7 @@ void wb_erep::bindMethods()
       break;
     for (j = 0;; j++) {
       if ((*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	break;
+        break;
       strcpy( str, pwr_gSystem_ClassMethods[i].ClassName);
       strcat( str, "-");
       strcat( str, (*pwr_gSystem_ClassMethods[i].Methods)[j].MethodName);
@@ -877,10 +881,10 @@ void wb_erep::bindMethods()
     wb_cdrep *cdrep = m_merep->cdrep( &sts, cname);
     if ( EVEN(sts))
       continue;
-    
+
     for (j = 0;; j++) {
       if ((*pwr_gBase_ClassMethods[i].Methods)[j].MethodName[0] == '\0')
-	break;
+        break;
       strcpy( str, pwr_gBase_ClassMethods[i].ClassName);
       strcat( str, "-");
       strcat( str, (*pwr_gBase_ClassMethods[i].Methods)[j].MethodName);
@@ -941,7 +945,7 @@ int wb_erep::nextVolatileVid( pwr_tStatus *sts, char *name)
   return vid;
 }
 
-wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid, 
+wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
 			      const char *name, bool add)
 {
   char vname[200];
@@ -949,7 +953,7 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
   sprintf( vname, "$pwrp_db/%s.db", cdh_Low(name));
   dcli_translate_filename( vname, vname);
 
-  vrep_iterator it = m_vrepdb.find( vid); 
+  vrep_iterator it = m_vrepdb.find( vid);
   if ( it != m_vrepdb.end()) {
     *sts = LDH__VOLIDALREXI;
     return 0;
@@ -957,7 +961,7 @@ wb_vrep *wb_erep::createVolume(pwr_tStatus *sts, pwr_tVid vid, pwr_tCid cid,
 
   wb_vrepdb *vrepdb = new wb_vrepdb( this, vid, cid, name, vname);
   if ( add)
-    addDb( sts, vrepdb);
+  addDb( sts, vrepdb);
   MsgWindow::message( 'I', "Database created", vname);
 
   return vrepdb;
@@ -984,7 +988,7 @@ void wb_erep::volumeNameToFilename( pwr_tStatus *sts, char *name, char *filename
     *sts = LDH__PROJCONFIG;
     return;
   }
-  
+
   while ( fp.getline( line, sizeof(line))) {
     if ( dir_cnt > (int) (sizeof(dir_list)/sizeof(dir_list[0]) - 1))
       break;

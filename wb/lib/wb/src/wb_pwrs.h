@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pwrs.h,v 1.6 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_pwrs.h,v 1.7 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,12 +50,13 @@ typedef struct {
   pwr_sMethodBinding (*Methods)[];
 } pwr_sClassBinding;
 
-#if defined __DECC || OS_LINUX
+#if 1 //defined OS_LINUX
 #define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g ## Class ## _Methods[]
 #define pwr_BindClasses(Type) pwr_sClassBinding pwr_g ## Type ## _ClassMethods[]
 #define pwr_BindClass(Class) {#Class, (void *)pwr_g ## Class ## _Methods}
 #define pwr_BindMethod(Method) {#Method, (pwr_tStatus (*)())Method}
 #else
+#error "Wrong OS"
 #define pwr_BindMethods(Class) pwr_sMethodBinding pwr_g/**/Class/**/_Methods[]
 #define pwr_BindClasses(Type) pwr_sClassBinding pwr_g/**/Type/**/_ClassMethods[]
 #define pwr_BindClass(Class) {"Class", pwr_g/**/Class/**/_Methods}

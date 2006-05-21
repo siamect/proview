@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge.h,v 1.4 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,6 +19,10 @@
 
 #ifndef ge_h
 #define ge_h
+
+#ifndef wb_ldh_h
+#include "wb_ldh.h"
+#endif
 
 /* ge.h -- Simple graphic editor */
 

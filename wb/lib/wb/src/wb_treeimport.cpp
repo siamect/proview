@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: wb_treeimport.cpp,v 1.5 2005-10-18 05:12:47 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
+ * Proview   $Id: wb_treeimport.cpp,v 1.6 2006-05-21 22:30:50 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -162,6 +162,7 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
     wb_bdrep *bdrep = cdrep->bdrep( &sts, bix);
     if ( EVEN(sts)) continue;
 
+    int size = bdrep->size();
     
     char *body = (char *)malloc( bdrep->size());
     vrep->readBody( &sts, o, bix, body);
@@ -172,6 +173,9 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
     wb_adrep *adrep = bdrep->adrep( &sts);
     while ( ODD(sts)) {
       int elements = adrep->isArray() ? adrep->nElement() : 1;
+      if (adrep->offset() < 0 || (adrep->offset() + adrep->size() > size))
+        printf("(adrep->offset() < 0 || (adrep->offset() + adrep->size() > size))\n");
+      
       if ( adrep->isClass()) {
 	importUpdateSubClass( adrep, body + adrep->offset(), vrep, &modified);
       }

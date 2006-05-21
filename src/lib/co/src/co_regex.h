@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_regex.h,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_regex.h,v 1.3 2006-05-21 22:30:49 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,10 @@
 
 #include <stddef.h>
 
+#if defined __cplusplus
+extern "C" {
+#endif
+ 
 typedef struct regex {
   char *buffer;
   long allocated;
@@ -97,5 +101,9 @@ int regexec(regex_t *preg, char *string, size_t nmatch,
 void regfree(regex_t *preg);
 
 char *regerror(int errcode);
+
+#if defined __cplusplus
+}
+#endif
 
 # endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.47 2006-05-11 07:12:19 claes Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.48 2006-05-21 22:30:50 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,12 +26,10 @@
 
 void wb_vrepdbs::unref()
 {
-  // printf("wb_vrepdbs::unref\n");
-  
+
   if (--m_nRef == 0) {
     pwr_tStatus sts;
-    printf("wb_vrepdbs::unref::dbs_Unmap\n");
-    
+
     dbs_Unmap(&sts, m_dbsmep);
     delete this;
   }
@@ -43,10 +41,19 @@ wb_vrep *wb_vrepdbs::ref()
   return this;
 }
 
+wb_vrepdbs::wb_vrepdbs(wb_erep *erep, wb_merep *merep, const char *fileName, const char *name, pwr_tVid vid, pwr_tCid cid) : m_erep(erep), m_merep(merep), m_nRef(0), m_duplicate(false)
+{
+  strcpy(m_fileName, fileName);
+  strcpy(m_name, name);
+  m_vid = vid;
+  m_cid = cid;
+  m_isDbsenvLoaded = false;
+}
+
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0), m_duplicate(false)
 {
-  // printf("wb_vrepdbs(erep, fileName):%s\n", fileName);
   strcpy(m_fileName, fileName);
+
   m_isDbsenvLoaded = false;
   if (false && isCommonMeta())
     m_merep = m_erep->merep();
@@ -56,17 +63,15 @@ wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nR
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, wb_merep * merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep) : m_erep(erep), m_merep(merep), m_nRef(0), m_dbsmep(mep), m_dbsvep(vep), m_duplicate(false)
 {
-  // printf("wb_vrepdbs(erep, fileName, mep, vep):%d,%s\n", vep->vp->vid, fileName);
   strcpy(m_fileName, fileName);
   strcpy(m_name, m_dbsvep->vp->name);
   m_vid = m_dbsvep->vp->vid;
   m_cid = m_dbsvep->vp->cid;
-  // printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
   m_isDbsenvLoaded = true;
 }
 
 dbs_sVenv *wb_vrepdbs::dbsenv()
-{ 
+{
   pwr_tStatus sts;
 
   if (!m_isDbsenvLoaded) {
@@ -82,20 +87,14 @@ dbs_sVenv *wb_vrepdbs::dbsenv()
     strcpy(m_name, m_dbsvep->vp->name);
     m_vid = m_dbsvep->vp->vid;
     m_cid = m_dbsvep->vp->cid;
-    // printf("m_name: %s, m_vid: %d, m_cid: %d\n", m_name, m_vid, m_cid);
 
     for (int i = 0; i < dbs_nVolRef(&sts, m_dbsmep); i++) {
       dbs_sVenv *vep = dbs_Vmap(&sts, i + 1, m_dbsmep);
       wb_vrepdbs *vp = new wb_vrepdbs(m_erep, m_merep, m_fileName, m_dbsmep, vep);
-      // printf("before addDbs, i:%d, name: %s, vid: %d\n", i, vep->vp->name, vep->vp->vid);
       m_merep->addDbs(&sts, (wb_mvrep *)vp);
     }
-  } else {
-    if (strstr(m_fileName, "x86")) {
-      //printf("%s::%s\n", m_dbsvep->vp->name, m_fileName);
-    }
   }
- 
+
   return m_dbsvep;
 }
 
@@ -183,7 +182,7 @@ pwr_tTime wb_vrepdbs::dbTime(pwr_tStatus *sts, const wb_orep *o)
 pwr_mClassDef wb_vrepdbs::flags(pwr_tStatus *sts, const wb_orep *o)
 {
   return o->flags();
-}    
+}
 
 wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tOid oid)
 {
@@ -203,29 +202,29 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, wb_name &name)
   *sts = LDH__SUCCESS;
 
   dbs_sObject *op = dbs_VolumeObject(sts, dbsenv());
-    
+
   for (int i = 0; op && name.hasSegment(i); i++) {
     op = dbs_Child(sts, dbsenv(), op, name.normSegment(i));
   }
-    
+
   if (op == 0) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
-  }    
-    
+  }
+
   return new (this) wb_orepdbs(op);
 }
 
 wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name)
 {
   *sts = LDH__SUCCESS;
-    
+
   dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)parent)->o(), name.normName(cdh_mName_object));
   if (op == 0) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
-  }    
-    
+  }
+
   return new (this) wb_orepdbs(op);
 }
 
@@ -305,12 +304,12 @@ void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix
 
   dbs_sObject *op = ((wb_orepdbs *)o)->o();
   void *bp = dbs_Body(sts, dbsenv(), op, bix);
-    
+
   if (bp == 0) {
     *sts = LDH__NOSUCHBODY;
     return 0;
   }
-    
+
   if (p) {
     switch (bix) {
     case pwr_eBix_rt:
@@ -325,22 +324,22 @@ void *wb_vrepdbs::readAttribute(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix
     }
     return p;
   }
-        
+
   return (void *)((char *)bp + offset);
 }
 
 void *wb_vrepdbs::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, void *p)
 {
   *sts = LDH__SUCCESS;
-    
+
   dbs_sObject *op = ((wb_orepdbs *)o)->o();
   void *bp = dbs_Body(sts, dbsenv(), op, bix);
-    
+
   if (bp == 0) {
     *sts = LDH__NOSUCHBODY;
     return 0;
   }
-    
+
   if (p) {
     switch (bix) {
     case pwr_eBix_rt:
@@ -355,7 +354,7 @@ void *wb_vrepdbs::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, voi
     }
     return p;
   }
-        
+
   return bp;
 }
 
@@ -366,12 +365,12 @@ bool wb_vrepdbs::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
 }
 
 wb_orep *wb_vrepdbs::ancestor(pwr_tStatus *sts, const wb_orep *o)
-{    
+{
   *sts = LDH__SUCCESS;
 
   dbs_sObject *op = dbs_Ancestor(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -397,7 +396,7 @@ wb_orep *wb_vrepdbs::after(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_After(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -410,7 +409,7 @@ wb_orep *wb_vrepdbs::before(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_Before(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -423,7 +422,7 @@ wb_orep *wb_vrepdbs::first(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_First(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -436,7 +435,7 @@ wb_orep *wb_vrepdbs::child(pwr_tStatus *sts, const wb_orep *o, wb_name &name)
 
   dbs_sObject *op = dbs_Child(sts, dbsenv(), ((wb_orepdbs *)o)->o(), name.normObject());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -449,7 +448,7 @@ wb_orep *wb_vrepdbs::last(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_Last(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -462,7 +461,7 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts, pwr_tCid cid)
 
   dbs_sObject *op = dbs_ClassToObject(sts, dbsenv(), cid);
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -475,7 +474,7 @@ wb_orep *wb_vrepdbs::next(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_Next(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -488,7 +487,7 @@ wb_orep *wb_vrepdbs::previous(pwr_tStatus *sts, const wb_orep *o)
 
   dbs_sObject *op = dbs_Previous(sts, dbsenv(), ((wb_orepdbs *)o)->o());
   if (op == 0) {
-    *sts = LDH__NOSUCHOBJ;        
+    *sts = LDH__NOSUCHOBJ;
     return 0;
   }
 
@@ -497,8 +496,6 @@ wb_orep *wb_vrepdbs::previous(pwr_tStatus *sts, const wb_orep *o)
 
 wb_srep *wb_vrepdbs::newSession()
 {
-//    *sts = LDH__SUCCESS;
-
   return (wb_srep*)0;
 }
 
@@ -506,7 +503,7 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts)
 {
   *sts = LDH__SUCCESS;
 
-  dbs_sObject *op = dbs_Object(sts, dbsenv());    
+  dbs_sObject *op = dbs_Object(sts, dbsenv());
   if (op == 0) {
     *sts = LDH__NOSUCHOBJ;
     return 0;
@@ -517,7 +514,6 @@ wb_orep *wb_vrepdbs::object(pwr_tStatus *sts)
 
 bool wb_vrepdbs::isLocal(const wb_orep *)
 {
-  //*sts = LDH__NYI;
   return false;
 }
 
@@ -540,7 +536,7 @@ wb_vrep *wb_vrepdbs::next ()
 {
   pwr_tStatus sts;
 
-  return m_erep->nextVolume( &sts, vid());
+  return m_erep->nextVolume(&sts, vid());
 }
 
 wb_merep *wb_vrepdbs::merep() const
@@ -568,7 +564,7 @@ void wb_vrepdbs::delete_wb_orepdbs(void *p)
 void wb_vrepdbs::objectName(const wb_orep *o, char *str)
 {
   pwr_tStatus sts;
-    
+
   *str = 0;
 
   dbs_ObjectToName(&sts, dbsenv(), ((wb_orepdbs *)o)->o(), str);
@@ -583,7 +579,7 @@ bool wb_vrepdbs::exportHead(wb_import &i)
 {
   dbs_sObject *op = 0;
   pwr_tStatus sts;
-  
+
   while ((op = dbs_NextHead(&sts, dbsenv(), op))) {
     i.importHead(op->oid, op->cid, op->poid, op->boid, op->aoid, op->foid, op->loid, op->name, op->normname,
                  op->ohFlags, op->time, op->rbody.time, op->dbody.time, op->rbody.size, op->dbody.size);
@@ -596,7 +592,7 @@ bool wb_vrepdbs::exportRbody(wb_import &i)
 {
   dbs_sBody *bp = 0;
   pwr_tStatus sts;
-  
+
   while ((bp = dbs_NextRbody(&sts, dbsenv(), bp))) {
     i.importRbody(bp->oid, bp->size, (void*)(bp + 1));
   }
@@ -608,7 +604,7 @@ bool wb_vrepdbs::exportDbody(wb_import &i)
 {
   dbs_sBody *bp = 0;
   pwr_tStatus sts;
-  
+
   while ((bp = dbs_NextDbody(&sts, dbsenv(), bp))) {
     i.importDbody(bp->oid, bp->size, (void*)(bp + 1));
   }
@@ -618,7 +614,7 @@ bool wb_vrepdbs::exportDbody(wb_import &i)
 
 bool wb_vrepdbs::exportDocBlock(wb_import &i)
 {
-  
+
   return false;
 }
 
@@ -633,11 +629,11 @@ bool wb_vrepdbs::exportTree(wb_treeimport &i, pwr_tOid oid)
 {
   pwr_tStatus sts;
 
-  dbs_sObject *op = dbs_OidToObject( &sts, dbsenv(), oid);
+  dbs_sObject *op = dbs_OidToObject(&sts, dbsenv(), oid);
   if (op == 0)
     throw wb_error(LDH__NOSUCHOBJ);
 
-  exportTreeObject( i, op, true);
+  exportTreeObject(i, op, true);
   return true;
 }
 
@@ -653,37 +649,32 @@ bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot
   void *rbody = 0;
   void *dbody = 0;
 
-  if ( parent && !isRoot)
+  if (parent && !isRoot)
     parentoid = parent->oid;
-  if ( before && !isRoot)
+  if (before && !isRoot)
     beforeoid = before->oid;
-  if ( op->rbody.size)
+  if (op->rbody.size)
     rbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_rt);
-  if ( op->dbody.size)
+  if (op->dbody.size)
     dbody = dbs_Body(&sts, dbsenv(), op, pwr_eBix_dev);
 
-  i.importTreeObject( m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, op->ohFlags,
-		      op->rbody.size, op->dbody.size, rbody, dbody);
+  i.importTreeObject(m_merep, op->oid, op->cid, parentoid, beforeoid, op->name, op->ohFlags,
+          op->rbody.size, op->dbody.size, rbody, dbody);
 
-  if ( first)
-    exportTreeObject( i, first, false);
+  if (first)
+    exportTreeObject(i, first, false);
 
-  if ( !isRoot && after)
-    exportTreeObject( i, after, false);
+  if (!isRoot && after)
+    exportTreeObject(i, after, false);
 
   return true;
 }
 
-bool wb_vrepdbs::time( pwr_tTime *t)
+bool wb_vrepdbs::time(pwr_tTime *t)
 {
-  if ( m_dbsmep) {
+  if (m_dbsmep) {
     *t = m_dbsmep->venv->vp->time;
     return true;
   }
   return false;
 }
-
-
-
-
-

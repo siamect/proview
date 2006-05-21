@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.20 2006-03-31 14:29:39 claes Exp $
- * Copyright (C) 2005 SSAB Oxelösund AB.
+ * Proview   $Id: wb_session.cpp,v 1.21 2006-05-21 22:30:50 lw Exp $
+ * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -864,12 +864,13 @@ pwr_tStatus wb_session::callMenuMethod( ldh_sMenuCall *mcp, int Index)
 
 bool wb_session::validateDestination( wb_destination d, pwr_tCid cid)
 {
-  wb_object o = object( d.oid());
+
+  wb_object parent;
+  wb_object o = object(d.oid());
 
   // Get parent
-  wb_object parent = wb_object();
-  if ( o) {
-    switch( d.code()) {
+  if (o) {
+    switch(d.code()) {
     case ldh_eDest_After:
     case ldh_eDest_Before:
       parent = o.parent();
@@ -878,17 +879,17 @@ bool wb_session::validateDestination( wb_destination d, pwr_tCid cid)
       parent = o;
     }
   }
-  if ( !parent) {
+  if (!parent) {
     // No parent, check if valid top object (for vrepmem all objects are valid topobjects)
-    wb_cdef c = cdef( cid);
-    if ( !c.flags().b.TopObject && type() != ldh_eVolRep_Mem) {
+    wb_cdef c = cdef(cid);
+    if (!c.flags().b.TopObject && type() != ldh_eVolRep_Mem) {
       m_sts = LDH__NOTOP;
       return false;
     }
   }
   else {
     // Check if adoption is legal
-    if ( parent.flags().b.NoAdopt) {
+    if (parent.flags().b.NoAdopt) {
       m_sts = LDH__NOADOPT;
       return false;
     }
