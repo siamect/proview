@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.44 2006-05-16 11:51:01 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.45 2006-05-22 13:27:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -704,14 +704,24 @@ void *GeDyn::get_p()
   return 0;
 }
 
-void GeDyn::set_p( void *p)
+void GeDyn::set_p( grow_tObject object, void *p)
 {
   for ( GeDynElem *elem = elements; elem; elem = elem->next) {
     if ( elem->dyn_type == ge_mDynType_Value) {
+      glow_sTraceData *data;
+      grow_GetTraceAttr( object, &data);
+      data->p = p;
+      grow_SetTraceAttr( object, data);
+
       ((GeValue *)elem)->p = p;
       break;
     }
-    else if ( elem->dyn_type == ge_mDynType_DigLowColor) {
+    else if ( elem->dyn_type == ge_mDynType_DigLowColor) {      
+      glow_sTraceData *data;
+      grow_GetTraceAttr( object, &data);
+      data->p = p;
+      grow_SetTraceAttr( object, data);
+
       ((GeDigLowColor *)elem)->p = (pwr_tBoolean *)p;
       break;
     }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.28 2006-05-16 11:51:01 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.29 2006-05-22 13:27:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -689,7 +689,7 @@ class GeDyn {
   int *ref_trend_hold();
   double *ref_trend_scantime();
   void *get_p();
-  void set_p( void *p);
+  void set_p( grow_tObject object, void *p);
   void update();
   void export_java( grow_tObject object, ofstream& fp, char *var_name);
   void export_java_object( grow_tObject object, ofstream& fp, char *var_name);

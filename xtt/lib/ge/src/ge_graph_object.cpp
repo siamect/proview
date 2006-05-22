@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.12 2006-05-16 11:51:01 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.13 2006-05-22 13:27:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@ extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
+#include "pwr_basecomponentclasses.h"
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
@@ -84,7 +85,9 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_ChanDi, &graph_object_chanxx},
 	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
+	{ pwr_cClass_CompPID, &graph_object_PID},
 	{ pwr_cClass_mode, &graph_object_Mode},
+	{ pwr_cClass_CompModePID, &graph_object_Mode},
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
@@ -420,7 +423,7 @@ static int graph_object_ax( Graph *graph, pwr_sAttrRef *arp)
   {
     GeDyn *dyn;
     grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( (void *) od->object_name);
+    dyn->set_p( object, (void *) od->object_name);
   }
 
   sts = graph->trend_init( &od->td, arp);
@@ -508,7 +511,7 @@ static int graph_object_ix( Graph *graph, pwr_sAttrRef *arp)
   {
     GeDyn *dyn;
     grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( (void *) od->object_name);
+    dyn->set_p( object, (void *) od->object_name);
   }
 
   sts = graph->trend_init( &od->td, arp);
@@ -595,7 +598,7 @@ static int graph_object_dx( Graph *graph, pwr_sAttrRef *arp)
   {
     GeDyn *dyn;
     grow_GetUserData( object, (void **)&dyn);
-    dyn->set_p( (void *) od->object_name);
+    dyn->set_p( object, (void *) od->object_name);
   }
 
   sts = graph->trend_init( &od->td, arp);
@@ -1301,7 +1304,7 @@ static int graph_object_Mode( Graph *graph, pwr_sAttrRef *arp)
   if ( EVEN(sts)) return sts;
 
   grow_GetUserData( object, (void **)&dyn);
-  dyn->set_p( (void *) &od->man_mode);
+  dyn->set_p( object, (void *) &od->man_mode);
 
   // Register scan function
   graph->graph_object_scan = graph_object_Mode_scan;
