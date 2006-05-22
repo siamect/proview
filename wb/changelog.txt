@@ -24,3 +24,4 @@
                      Object Reference or Attribute Reference was selected.
 060511 cs  wtt       Build Node window is not displayed if there is only one configured 
                      node for the current volume. Submenu on Build removed.
+060522 lw  wb        Update of instance objects when a class is modified (without reload).
