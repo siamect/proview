@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.42 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.43 2006-05-22 09:38:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1606,27 +1606,26 @@ void wb_vrepdb::updateMeta()
     printf("vrepdb: %s\n", e.what());
     return;
   } catch (wb_error &e) {
-    printf("vrepdb: %s\n", e.what());
+    printf("vrepdb: %s\n", e.what().c_str());
     return;
   }
   
-  if (m_classCount == 0)
-    return;
+  if (m_classCount != 0) {
 
-  char buff[256];
-  sprintf(buff, "A total of %d object instances of %d classes were updated",
-	  m_totalInstanceCount, m_classCount);
+    char buff[256];
+    sprintf(buff, "A total of %d object instances of %d classes were updated",
+	    m_totalInstanceCount, m_classCount);
 
-  MsgWindow::message('I', buff);
+    MsgWindow::message('I', buff);
 
-  pwr_tStatus sts = 0;
-  commit(&sts);
+    pwr_tStatus sts = 0;
+    commit(&sts);
 
-  if (sts) {
-    MsgWindow::message(co_error(sts), "Could not save class updates to database");
-    return;
+    if (sts) {
+      MsgWindow::message(co_error(sts), "Could not save class updates to database");
+      return;
+    }
   }
-
   m_merep->copyFiles(m_fileName, m_erep->merep());
   delete m_merep;
   m_merep = new wb_merep(m_fileName, m_erep, this);
@@ -1721,7 +1720,7 @@ void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
           time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
           sprintf(buff, "Class \"%s\" [%s], %d instance%s, does not exist in global scope",
 		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"));
-        } else {
+        } else if ( o_crep != 0) {
           o_time = o_crep->ohTime();
           n_time = n_crep->ohTime();
           time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
@@ -1734,6 +1733,8 @@ void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
       }
 
       o_crep = m_merep->cdrep(&sts, cid);
+      if (o_crep == 0)
+	throw wb_error(sts);
       n_crep = m_merepCheck->cdrep(&sts, cid);
 
       if (n_crep == 0) {
