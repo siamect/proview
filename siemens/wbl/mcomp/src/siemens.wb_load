@@ -623,13 +623,13 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Di32 2149810176 01-JAN-1970 01:00:00.00
-        Body RtBody 04-MAY-2006 16:31:58.95
+        Body RtBody 12-MAY-2006 14:05:10.87
           Attr Super.Specification = "Siemens ET200M 32 Di"
           Attr Super.Process = 1
           Attr Ch00.Representation = 8
           Attr Ch01.Number = 1
           Attr Ch01.Representation = 8
-          Attr Ch02.Number = 1
+          Attr Ch02.Number = 2
           Attr Ch02.Representation = 8
           Attr Ch03.Number = 3
           Attr Ch03.Representation = 8
