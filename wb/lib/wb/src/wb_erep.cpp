@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.45 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.46 2006-05-22 09:39:37 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include "wb_vrepwbl.h"
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
-#include "wb_vrepdbms.h"
+//#include "wb_vrepdbms.h"
 #include "wb_vrepref.h"
 #include "wb_vrepext.h"
 #include "wb_cdrep.h"
