@@ -1,1 +1,5 @@
 060227 cs  -          Changelog created.
+
+060509 cj  -          Added some commentation.
+                      Fixed bug in pb_ai and pb_di. 3-byte input where not properly
+		      aligned when byte swapping.
