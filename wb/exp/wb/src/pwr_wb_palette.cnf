@@ -742,6 +742,8 @@ palette PlcEditorPalette
       class CompModeD2Fo
       class CompModeD2MFo
       class CompModeAMFo
+      class CompModePID_Fo
+      class CompPID_Fo
       class BaseMotorAggrFo
       class BaseMotorIncrDecrAggrFo
       class RunTimeCounterFo
