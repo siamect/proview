@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.41 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.42 2006-05-22 08:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,6 +84,7 @@ extern "C" {
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
 #include "wb_vrepmem.h"
+#include "wb_vrepdb.h"
 #include "wb_pkg.h"
 #include "wb_build.h"
 #include "wb_wtt.h"
@@ -177,6 +178,10 @@ static int	wnav_distribute_func(   void		*client_data,
 static int	wnav_release_func(	void		*client_data,
 					void		*client_flag);
 static int	wnav_build_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_check_func(	void		*client_data,
+					void		*client_flag);
+static int	wnav_update_func(	void		*client_data,
 					void		*client_flag);
 
 dcli_tCmdTable	wnav_command_table[] = {
@@ -427,6 +432,16 @@ dcli_tCmdTable	wnav_command_table[] = {
 			&wnav_build_func,
 			{ "dcli_arg1", "dcli_arg2", "/FORCE", "/DEBUG", "/CROSSREFERENCE", 
 			  "/MANUAL", "/NAME", ""}
+		},
+		{
+			"CHECK",
+			&wnav_check_func,
+			{ "dcli_arg1", ""}
+		},
+		{
+			"UPDATE",
+			&wnav_update_func,
+			{ "dcli_arg1", ""}
 		},
 		{"",}};
 
@@ -4629,6 +4644,70 @@ static int	wnav_build_func(	void		*client_data,
     }
     free( sel_list);
     free( sel_is_attr);
+  }
+  else {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return 1;
+}
+
+static int	wnav_check_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	arg1_str[80];
+  pwr_tStatus sts;
+
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+  if ( EVEN(sts)) return sts;
+
+  sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  if ( EVEN(sts)) {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  if ( strncmp( arg1_str, "CLASSES", strlen( arg1_str)) == 0) {
+    wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
+    wb_vrepdb *vrep = (wb_vrepdb *)((wb_vrep *) *v);
+    vrep->checkMeta();
+  }
+  else {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+  return 1;
+}
+
+static int	wnav_update_func(	void		*client_data,
+					void		*client_flag)
+{
+  WNav *wnav = (WNav *)client_data;
+
+  char	arg1_str[80];
+  pwr_tStatus sts;
+
+  sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
+  if ( EVEN(sts)) return sts;
+
+  sts = dcli_get_qualifier( "dcli_arg1", arg1_str, sizeof(arg1_str));
+  if ( EVEN(sts)) {
+    wnav->message('E', "Syntax error");
+    return WNAV__SYNTAX;
+  }
+
+  if ( strncmp( arg1_str, "CLASSES", strlen( arg1_str)) == 0) {
+    if ( !wnav->editmode) {
+      wnav->message('E', "Not in edit mode");
+      return WNAV__NOEDIT;
+    }
+
+    wb_volume *v = (wb_volume *) ldh_SessionToVol( wnav->ldhses);
+    wb_vrepdb *vrep = (wb_vrepdb *)((wb_vrep *) *v);
+    vrep->updateMeta();
+    wnav->message('E', "Classvolumes updated");
   }
   else {
     wnav->message('E', "Syntax error");

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.cpp,v 1.32 2006-05-11 10:47:24 claes Exp $
+ * Proview   $Id: wb_wtt.cpp,v 1.33 2006-05-22 08:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -265,6 +265,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, sensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -284,6 +285,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, sensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break;
     case wb_eType_Volume:
@@ -305,6 +307,10 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+	if ( ldhses && ldh_VolRepType( ldhses) == ldh_eVolRep_Dbs)
+          XtSetValues( menu_updateclasses_w, nosensitive, 1);
+	else
+          XtSetValues( menu_updateclasses_w, sensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -327,6 +333,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break; 
    case wb_eType_Class:
@@ -348,6 +355,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -367,6 +375,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
 	XtSetValues( menu_edit_w, nosensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break;
    case wb_eType_ClassEditor:
@@ -392,6 +401,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -411,6 +421,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
 	XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break;
     case wb_eType_Buffer:
@@ -432,6 +443,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -451,6 +463,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break; 
     case wb_eType_ExternVolume:
@@ -472,6 +485,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, sensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       else {
         XtSetValues( menu_save_w, nosensitive, 1);
@@ -491,6 +505,7 @@ void Wtt::menu_setup()
         XtSetValues( menu_change_value_w, nosensitive, 1);
         XtSetValues( menu_edit_w, sensitive, 1);
         XtSetValues( menu_classeditor_w, nosensitive, 1);
+        XtSetValues( menu_updateclasses_w, nosensitive, 1);
       }
       break;
     default:
@@ -2501,6 +2516,14 @@ static void wtt_activate_showcrossref( Widget w, Wtt *wtt, XmAnyCallbackStruct *
   wtt->focused_wnav->command( cmd);
 }
 
+static void wtt_activate_updateclasses( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
+{
+  char cmd[80] = "update classes";
+  if ( !wtt->focused_wnav)
+    wtt->set_focus_default();
+  wtt->focused_wnav->command( cmd);
+}
+
 static void wtt_activate_zoom_in( Widget w, Wtt *wtt, XmAnyCallbackStruct *data)
 {
   double zoom_factor;
@@ -2628,6 +2651,7 @@ void wtt_create_menubutton( Widget w, Wtt *wtt)
     case 15: wtt->menu_edit_w = w; break;
     case 16: wtt->menu_classeditor_w = w; break;
     case 17: wtt->menu_copykeep_w = w; break;
+    case 18: wtt->menu_updateclasses_w = w; break;
     default:
       ;
   }
@@ -3537,6 +3561,7 @@ Wtt::Wtt(
 	{"wtt_activate_buildvolume",(caddr_t)wtt_activate_buildvolume },
 	{"wtt_activate_buildnode",(caddr_t)wtt_activate_buildnode },
 	{"wtt_activate_distribute",(caddr_t)wtt_activate_distribute },
+	{"wtt_activate_updateclasses",(caddr_t)wtt_activate_updateclasses },
 	{"wtt_activate_showcrossref",(caddr_t)wtt_activate_showcrossref },
 	{"wtt_activate_change_value",(caddr_t)wtt_activate_change_value },
 	{"wtt_activate_command",(caddr_t)wtt_activate_command },

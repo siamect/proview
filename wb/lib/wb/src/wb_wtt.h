@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.15 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.16 2006-05-22 08:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -228,6 +228,7 @@ class Wtt {
     Widget	menu_change_value_w;
     Widget	menu_edit_w;
     Widget	menu_classeditor_w;
+    Widget	menu_updateclasses_w;
     uted_ctx	utedctx;
     WPkg	*wpkg;
     WNav	*input_wnav;
