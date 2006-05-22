@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.34 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.35 2006-05-22 09:40:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,9 @@ public:
   bool m_duplicate;
     
   wb_vrepdbs(wb_erep *erep, const char *fileName);
-  wb_vrepdbs(wb_erep *erep, wb_merep * merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep);
+  wb_vrepdbs(wb_erep *erep, wb_merep *merep, const char *fileName, const char *name, 
+	     pwr_tVid vid, pwr_tCid cid);
+  wb_vrepdbs(wb_erep *erep, wb_merep *merep, const char *fileName, dbs_sMenv *mep, dbs_sVenv *vep);
 
   dbs_sVenv *dbsenv();
   bool load();
