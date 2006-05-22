@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.1 2006-02-27 06:17:41 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.2 2006-05-22 13:31:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,6 +55,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx) :
   read( "inor");
   read( "klocknermoeller");
   print();
+  print_docbook();
 }
 
 int CnvChangeLog::read( char *module)
@@ -221,6 +222,54 @@ void CnvChangeLog::print()
     printf( "%s %4s %-8s %-8s %s\n", timstr1, entries[i].signature, entries[i].module, 
 	    entries[i].component, entries[i].text);
   }
+}
+
+void CnvChangeLog::print_docbook()
+{
+  char timstr1[40];
+  pwr_tFileName fname = "$pwre_croot/src/doc/man/en_us/changelog.xml";
+  dcli_translate_filename( fname, fname);
+
+  ofstream fp( fname);
+
+  fp <<
+    "<?xml version=\"1.0\" encoding=\"iso-latin-1\"?>" << endl <<
+    "<!DOCTYPE book [" << endl <<
+    "<!ENTITY % isopub PUBLIC" << endl <<
+    "\"ISO 8879:1986//ENTITIES Publishing//EN//XML\"" << endl <<
+    "\"/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent\"> <!-- \"http://www.w3.org/2003/entities/iso8879/isopub.ent\"> -->" << endl <<
+    "%isopub;" << endl <<
+    "]>" << endl <<
+    "<article>" << endl <<
+    "<title>Proview Changelog</title>" << endl <<
+    "<section><title>Changelog entries</title>" << endl;
+#if 0
+    "  <info>" << endl <<
+    "    <subtitle>" << endl <<
+    "    <mediaobject>" << endl <<
+    "    <imageobject>" << endl <<
+    "    <imagedata fileref=\"pwr_logga.gif\" width=\"5in\" depth=\"6in\"/>" << endl <<
+    "    </imageobject>" << endl <<
+    "    </mediaobject>" << endl <<
+    "    </subtitle>" << endl <<
+    "    <subtitle>Changelog</subtitle>" << endl <<
+    "  </info>" << endl;
+#endif
+
+  sort_time();
+  for ( int i = (int) entries.size() - 1; i >= 0; i--) {
+    time_AtoAscii( &entries[i].time, time_eFormat_DateAndTime, timstr1, sizeof(timstr1));
+    timstr1[11] = 0;
+    
+    fp << "<table xml:id=\"changelog_" << i << "\" width=\"2in\" border=\"0\"><tbody>" <<
+      "<tr><td><classname>Module</classname></td><td><classname>   " << entries[i].module << "</classname></td></tr>" << endl <<
+      "<tr><td><classname>Component</classname></td><td>   " << entries[i].component << "</td></tr>" << endl <<
+      "<tr><td><classname>Signature</classname></td><td>   " << entries[i].signature << "</td></tr>" << endl <<
+      "<tr><td><classname>Date</classname></td><td>   " << timstr1 << "</td></tr>" << endl <<
+      "</tbody></table>" << endl <<
+      "<para>" << entries[i].text << "</para>" << endl;
+  }
+  fp << "</section></article>" << endl;
 }
 
 
