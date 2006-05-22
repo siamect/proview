@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_treeimport.cpp,v 1.6 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_treeimport.cpp,v 1.7 2006-05-22 09:39:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,7 +173,7 @@ bool wb_treeimport::importUpdateObject( wb_orep *o, wb_vrep *vrep)
     wb_adrep *adrep = bdrep->adrep( &sts);
     while ( ODD(sts)) {
       int elements = adrep->isArray() ? adrep->nElement() : 1;
-      if (adrep->offset() < 0 || (adrep->offset() + adrep->size() > size))
+      if (adrep->offset() < 0 || ((int)(adrep->offset() + adrep->size()) > size))
         printf("(adrep->offset() < 0 || (adrep->offset() + adrep->size() > size))\n");
       
       if ( adrep->isClass()) {
