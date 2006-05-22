@@ -57,6 +57,7 @@ E 1.1.51 "System"
 E 1.1.52 "Avsluta"
 E 1.1.53 "Stäng"
 E 1.1.54 "värde >"
+E 1.1.56 "Öppna Objekt"
 # Logging entry
 E 1.2.1 "Aktiv"
 E 1.2.2 "LäggIn"
@@ -173,6 +174,8 @@ E 4.2.27 "Övervakning stoppad"
 E 4.2.28 "Nivå"
 E 4.2.29 "Tryck"
 E 4.2.30 "Temperatur"
+E 4.2.31 "Flöde"
+E 4.2.32 "Värde Ai"
 # BaseManValve
 E 4.3.1 "Fördröjning"
 E 4.3.2 "Gränsläge öppen"
@@ -304,5 +307,19 @@ E 5.2.2 "Säkring"
 B 5.2.3 "Effekt/Kontaktor ännu ej redo for omstart, vänta före nytt försök, "
 B 5.2.4 "Effekt/Kontaktor förreglad, "
 B 5.2.5 "Effekt/Kontaktor ej till, "
+# ABB_Sensor_Pb_PA
+B 5.3.1 "Omvandlarfel, värdet kan inte användas, "
+B 5.3.2 "Omvandlarvarning, värdet osäkert, "
+# ABB_TempSensor_TF12Fo
+B 5.4.1 "Avbrott i givare, "
+B 5.4.2 "Kortslutning i givare, "
+B 5.4.3 "Värdet under givarens mätområde, "
+B 5.4.4 "Värdet över givarens mätområde, "
+# ABB_DiffpressureSensor_265dsFo
+B 5.5.1 "Difftryck"
+B 5.5.2 "Statiskt tryck"
+B 5.5.3 "Tryckgivare"
+# ABB_FlowSensor_FXE4000Fo
+B 5.6.1 "Flödesgivare"
 
 

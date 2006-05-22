@@ -58,6 +58,7 @@ E 1.1.52 "Exit"
 E 1.1.53 "Close"
 E 1.1.54 "value >"
 E 1.1.55 "Print"
+E 1.1.56 "Open  Object"
 #
 # Logging entry
 E 1.2.1 "Active"
@@ -175,6 +176,8 @@ E 4.2.27 "Supervision disabled"
 E 4.2.28 "Level"
 E 4.2.29 "Pressure"
 E 4.2.30 "Temperature"
+E 4.2.31 "Flow"
+E 4.2.32 "Value Ai"
 # BaseManValve
 E 4.3.1 "Delay"
 E 4.3.2 "Switch open"
@@ -309,4 +312,19 @@ E 5.2.2 "Fuse"
 B 5.2.3 "Power not yet ready for restart, wait before retry, "
 B 5.2.4 "Power interlocked, "
 B 5.2.5 "Power in not on, "
+# ABB_Sensor_Pb_PA
+B 5.3.1 "Transmitter error, value cannot be used, "
+B 5.3.2 "Transmitter warning, value uncertain, "
+# ABB_TempSensor_TF12Fo
+B 5.4.1 "Sensor break, "
+B 5.4.2 "Sensor short circuit, "
+B 5.4.3 "Value below measuring range, "
+B 5.4.4 "Value exceed measuring range, "
+# ABB_DiffpressureSensor_265dsFo
+B 5.5.1 "Diffpressure"
+B 5.5.2 "Static pressure"
+B 5.5.3 "Pressure sensor"
+# ABB_FlowSensor_FXE4000Fo
+B 5.6.1 "Flow sensor"
+
 
