@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_bcomp.c,v 1.1 2006-01-12 07:38:08 claes Exp $
+ * Proview   $Id: rt_plc_bcomp.c,v 1.2 2006-05-22 13:27:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,7 +114,258 @@ void RunTimeCounterFo_exec( plc_sThread		*tp,
   o->OldReset = *o->ResetP;
 }
 
+/*_*
+  CompModePID_Fo
 
+  @aref compmodepid_fo CompModePID_Fo
+*/
+void CompModePID_Fo_init( pwr_sClass_CompModePID_Fo  *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+}
+
+void CompModePID_Fo_exec( plc_sThread *tp,
+			  pwr_sClass_CompModePID_Fo *o)
+{
+  pwr_sClass_CompModePID *co = (pwr_sClass_CompModePID *) o->PlcConnectP;
+
+  if ( !co)
+    return;
+
+  /* Get indata */
+  co->ProcVal = *o->ProcValP;
+  co->XSetVal = *o->XSetValP;
+  if ( o->XForcValP != &o->XForcVal)
+    co->XForcVal = *o->XForcValP;
+  co->Forc1 = *o->Forc1P;
+  co->Forc2 = *o->Forc2P;
+  co->OutVal = *o->OutValP;
+
+  /* Make appropriate actions, depending on actual mode */
+
+  /* Manual */
+  if (co->OpMod <= 1) {
+    co->Force = TRUE;
+    co->ManMode = TRUE;
+    co->AutMode = FALSE;
+    co->CascMod = FALSE;
+    /* External setpoint ? */
+    if ((co->AccMod & 2) == 0)
+      co->SetVal = co->XSetVal;
+    /* Test if Force in manual mode */
+    if (co->Forc1 )
+      co->ForcVal = co->XForcVal;
+  }
+  else {
+    /* Not Manual Mode */
+    if (co->OpMod == 2) {
+      /* Auto */
+      co->ManMode = FALSE;
+      co->AutMode = TRUE;
+      co->CascMod = FALSE;
+    }
+    else {
+      /* Cascade mode */
+      co->ManMode = FALSE;
+      co->AutMode = FALSE;
+      co->CascMod = TRUE;
+      co->SetVal = o->SetVal = co->XSetVal;
+    }
+    /* Test if force in Auto or Cascade */
+    if ( co->Forc1 || co->Forc2 ) {
+      co->Force = TRUE;
+      co->ForcVal = co->XForcVal;
+    }
+    else {
+      co->Force = FALSE;
+      co->ForcVal = co->OutVal;
+    }
+  }
+  /* Transfer to outputs */
+  o->SetVal = co->SetVal;
+  o->ForcVal = co->ForcVal;
+  o->Force = co->Force;
+  o->AutMode = co->AutMode;
+  o->CascMod = co->CascMod;
+}
+
+/*_*
+  CompPID_Fo
+
+  @aref comppid_fo CompPID_Fo
+*/
+void CompPID_Fo_init( pwr_sClass_CompPID_Fo  *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+}
+
+/* Define Algoritm bitmask */
+#define IALG 1		/* Integral part -> Incremental algorithm */
+#define PALG 2		/* Proportional part exists */
+#define PAVV 4		/* Proportional part working on control difference */
+#define DALG 8		/* Derivative part exists */
+#define DAVV 16		/* Derivative part working on control difference */
+
+void CompPID_Fo_exec( plc_sThread *tp,
+		      pwr_sClass_CompPID_Fo *o)
+{
+
+  float	xold;	/* Local variables */
+  float	eold;
+  float	bfold;
+  float	ddiff;
+  float	derold;
+  float	ut;
+  float	dut;
+  pwr_sClass_CompPID *co = (pwr_sClass_CompPID *) o->PlcConnectP;
+
+  if ( !co)
+    return;
+
+  /* Save old values */
+  xold=co->ProcVal;
+  eold=co->ControlDiff;
+  bfold=co->Bias;
+  derold=co->FiltDer;
+
+  /* Get Input */
+  co->ProcVal = *o->ProcValP;
+  if ( o->SetValP != &o->SetVal)
+    co->SetVal = *o->SetValP;
+  if ( o->ForcValP != &o->ForcVal)
+    co->ForcVal = *o->ForcValP;
+  if ( o->BiasP != &o->Bias)
+    co->Bias = *o->BiasP;
+  if ( o->ForceP != &o->Force)
+    co->Force = *o->ForceP;
+  if ( o->IntOffP != &o->IntOff)
+    co->IntOff = *o->IntOffP;
+  else
+    o->IntOff = co->IntOff;
+
+  /* Calculate Controller Error and Filtered derivate */
+
+  co->ControlDiff = co->ProcVal - co->SetVal;
+  ddiff = ((co->PidAlg & DAVV) != 0) ?
+    (co->ControlDiff - eold) / *o->ScanTime:
+    (co->ProcVal - xold) / *o->ScanTime;
+  if ((co->DerGain < 1.0) ||
+      (co->DerGain * *o->ScanTime >= co->DerTime))
+    co->FiltDer = ddiff * co->DerTime;		/* No Filter */
+  else
+    co->FiltDer += (ddiff - derold) *
+      co->DerGain * *o->ScanTime; /* Filter */
+
+  if ( co->Force ) {
+    /* Force */
+    dut = co->OutVal;
+    co->OutVal = co->ForcVal;
+    co->OutChange = co->OutVal - dut;
+    co->EndMin = FALSE;
+    co->EndMax = FALSE;
+  }
+
+  else {
+    /* Auto mode */
+    if ((co->PidAlg & IALG) != 0) {
+      /* Incremental algorithm */
+      /* Integral-part */
+      if ((*o->IntOffP == FALSE) && (co->IntTime > 0))
+	dut = co->ControlDiff * *o->ScanTime / co->IntTime;
+      else
+	dut = 0;
+      if ((co->PidAlg & PALG) != 0) {
+	/* Not pure I-controller */
+	/* Derivative-part */
+	if ((co->PidAlg & DALG) != 0)
+	  dut += (co->FiltDer-derold);
+	/* P-part */
+	dut += ((co->PidAlg & PAVV) != 0) ?
+	  co->ControlDiff - eold :
+	  co->ProcVal - xold ;
+	dut *= co->Gain;
+      }
+      if (co->Inverse != 0) dut = - dut;
+      /* Bias */
+      dut += co->BiasGain * (co->Bias - bfold);
+      /* Limit output */
+      ut = co->OutVal + dut;
+      if (co->MaxOut > co->MinOut) {
+	if (ut > co->MaxOut) {
+	  ut = co->MaxOut;
+	  co->EndMin = FALSE;
+	  co->EndMax = TRUE;
+	}
+	else if (ut < co->MinOut) {
+	  ut = co->MinOut;
+	  co->EndMin = TRUE;
+	  co->EndMax = FALSE;
+	}
+	else {
+	  if (co->EndMin && (ut >= (co->MinOut + co->EndHys)))
+	    co->EndMin = FALSE;
+	  if (co->EndMax && (ut <= (co->MaxOut - co->EndHys)))
+	    co->EndMax = FALSE;
+	}
+      }
+    }
+    
+    else {
+      /* Nonincremental algorithm */
+      /* P-part */
+      ut = co->ControlDiff;
+      /* Derivative-part */
+      if ((co->PidAlg & DALG) != 0)
+	ut += co->FiltDer;
+      /* Gain */
+      ut *= co->Gain;
+      if (co->Inverse != 0) ut = - ut;
+      /* Bias */
+      ut += co->BiasGain * co->Bias;
+      /* Limit output */
+      if (co->MaxOut > co->MinOut) {
+	if (ut > co->MaxOut) {
+	  ut = co->MaxOut;
+	  co->EndMin = FALSE;
+	  co->EndMax = TRUE;
+	}
+	else if (ut < co->MinOut) {
+	  ut = co->MinOut;
+	  co->EndMin = TRUE;
+	  co->EndMax = FALSE;
+	}
+	else {
+	  if (co->EndMin && (ut >= (co->MinOut + co->EndHys)))
+	    co->EndMin = FALSE;
+	  if (co->EndMax && (ut <= (co->MaxOut - co->EndHys)))
+	    co->EndMax = FALSE;
+	}
+      }
+      dut = ut - co->OutVal;
+    }
+    
+    /* Output Auto */
+    co->OutChange = dut;
+    co->OutVal = ut;
+  }
+
+  /* Transfer outputs */
+  o->OutVal = co->OutVal;
+  o->OutChange = co->OutChange;
+  o->ControlDiff = co->ControlDiff;
+  o->EndMax = co->EndMax;
+  o->EndMin = co->EndMin;
+}
 
 
 
