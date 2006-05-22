@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.51 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.52 2006-05-22 10:30:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1416,7 +1416,7 @@ bool wb_vrepwbl::registerObject( pwr_tOix oix, ref_wblnode node)
 void wb_vrepwbl::registerClass( const char *name, pwr_tCid cid, ref_wblnode node)
 {
   string sname(name);
-	printf("register class: %s, %d\n", name, cid);
+
   m_cid_list[cid] = node;
   m_class_list[sname] = node;
 }
@@ -1424,7 +1424,6 @@ void wb_vrepwbl::registerClass( const char *name, pwr_tCid cid, ref_wblnode node
 void wb_vrepwbl::registerType( const char *name, pwr_tTid tid, ref_wblnode node)
 {
   string sname(name);
-	printf("register type: %s, %d\n", name, tid);
 
   m_tid_list[tid] = node;
   m_type_list[sname] = node;
@@ -1433,7 +1432,6 @@ void wb_vrepwbl::registerType( const char *name, pwr_tTid tid, ref_wblnode node)
 void wb_vrepwbl::registerVolume( const char *name, pwr_tCid cid, pwr_tVid vid, ref_wblnode node)
 {
   m_vid = vid;
-  	printf("register volume: %s, %d\n", name, vid);
 
   strcpy( volume_name, name);
   strcpy( m_name, name);
