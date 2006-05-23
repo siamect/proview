@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.43 2006-05-22 09:38:08 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.44 2006-05-23 10:19:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1655,16 +1655,19 @@ void wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
           time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
           sprintf(buff, "Class \"%s\" [%s], %d instance%s, does not exist in global scope",
 		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"));
+	  MsgWindow::message('W', buff);
         } else {
           o_time = o_crep->ohTime();
           n_time = n_crep->ohTime();
-          time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
-          time_AtoAscii(&n_time, time_eFormat_DateAndTime, n_timbuf, sizeof(n_timbuf));
-          sprintf(buff, "Class \"%s\" [%s], %d instance%s, can be updated to [%s]",
-		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"), n_timbuf);
-          m_totalInstanceCount += m_instanceCount;
+	  if (time_Acomp(&o_time, &n_time) != 0 || m_instanceCount) {
+	    time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
+	    time_AtoAscii(&n_time, time_eFormat_DateAndTime, n_timbuf, sizeof(n_timbuf));
+	    sprintf(buff, "Class \"%s\" [%s], %d instance%s, can be updated to [%s]",
+		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"), n_timbuf);	  
+	    MsgWindow::message('W', buff);
+	    m_totalInstanceCount += m_instanceCount;
+	  }
         }
-        MsgWindow::message('W', buff);
       }
 
       o_crep = m_merep->cdrep(&sts, cid);
