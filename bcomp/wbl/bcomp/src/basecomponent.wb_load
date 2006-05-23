@@ -49237,6 +49237,42 @@ and no Auto/Man button."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Code rt_plc_bcomp.c
+    !  @Group Plc
+    !  @Summary Select control modes or forced control of CompPID objects.
+    !  Used to select control modes (MANUAL / AUTO / CASCADE)
+    !  or forced control of CompPid objects.
+    ! 
+    !  The control modes are:
+    ! 
+    !   - MANUAL -- when the 'operator' sets the output of the
+    !     Pid object
+    !   - AUTO   -- when the 'operator' chooses the set point
+    !     value
+    !   - CASCADE -- the output from a Pid object is used to
+    !     adjust the set point value in a
+    !     secondary Pid object.
+    !  
+    !  Forced control means that the control signal from the
+    !  Pid object is not taken from the PID-algorithm but from
+    !  the XForcVal-attribute in the Mode object. See control
+    !  examples at the CompPid object.
+    ! 
+    ! @b Object graph
+    !  @image orm_mode_og.gif
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object CompModePID_Fo is used.
+    !  @image orm_compmodepid_fo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    ! @b See also
+    !  @classlink CompModePID_Fo basecomponent_compmodepid_fo.html
+    !  @classlink CompPID basecomponent_comppid.html
+    !*/
     Object CompModePID $ClassDef 150 18-MAY-2006 14:31:53.29
       Body SysBody 18-MAY-2006 14:31:46.07
         Attr Editor = 0
@@ -49247,6 +49283,11 @@ and no Auto/Man button."
         Body SysBody 18-MAY-2006 14:32:01.14
           Attr NextAix = "_X30"
         EndBody
+      !/**
+      !  External set point value. This value is used only in
+      !  the control mode CASCADE in such a way that SetVal =
+      !  XSetVal.
+      !*/
         Object XSetVal $Attribute 1 18-MAY-2006 14:33:31.29
           Body SysBody 18-MAY-2006 15:33:56.70
             Attr PgmName = "XSetVal"
@@ -49254,6 +49295,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  Process value. Only used to show the process value in
+      !  the object display of the Mode object.
+      !*/
         Object ProcVal $Attribute 2 18-MAY-2006 14:33:38.80
           Body SysBody 18-MAY-2006 15:34:05.90
             Attr PgmName = "ProcVal"
@@ -49261,6 +49306,11 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  External forced control value. This value is used only
+      !  at forced control (i.e. Force1 or Force2 is set) in
+      !  such a way that ForceVal = XForceVal.
+      !*/
         Object XForcVal $Attribute 3 18-MAY-2006 14:33:46.27
           Body SysBody 18-MAY-2006 15:34:14.21
             Attr PgmName = "XForcVal"
@@ -49268,6 +49318,14 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  Specifies whether to enable or disable unconditional
+      !  forced control; see figure 3-29, p. 3-209. FALSE
+      !  disables the unconditional forced control function;
+      !  TRUE means that ForcVal = XForceVal and Force is set.
+      !  In a usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object.
+      !*/
         Object Forc1 $Attribute 4 18-MAY-2006 14:33:50.91
           Body SysBody 18-MAY-2006 15:34:19.83
             Attr PgmName = "Forc1"
@@ -49275,6 +49333,15 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  Specifies whether to enable or disable forced control
+      !  when OpMod = AUTO or CASCADE.
+      !  FALSE disables the conditional forced control
+      !  function; TRUE means that ForcVal = XForceVal and Force
+      !  is set -- if, and only if, -- OpMod = AUTO or CASCADE.
+      !  In a usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object in this case.
+      !*/
         Object Forc2 $Attribute 5 18-MAY-2006 14:33:54.80
           Body SysBody 18-MAY-2006 15:34:25.44
             Attr PgmName = "Forc2"
@@ -49282,6 +49349,15 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  The value of the last set control signal. Is usually
+      !  fetched by means of an analog feedback connection to
+      !  the OutVal of the Pid object. When the controlled loop
+      !  is switched to MANUAL control, the process will "bump"
+      !  unless ForcVal is aligned with the present process
+      !  value. To avoid this ForcVal is set equal to OutVal at
+      !  the switching to MANUAL control.
+      !*/
         Object OutVal $Attribute 6 18-MAY-2006 14:33:58.60
           Body SysBody 18-MAY-2006 15:34:31.76
             Attr PgmName = "OutVal"
@@ -49289,6 +49365,14 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  Current set point value used in the control modes AUTO
+      !  and CASCADE. The value may be changed in the control
+      !  modes MANUAL and AUTO, e.g. from the object display of
+      !  the Mode object. At CASCADE control SetVal is
+      !  internally assigned the value of XSetVal; i.e. SetVal =
+      !  XSetVal.
+      !*/
         Object SetVal $Attribute 7 18-MAY-2006 14:34:02.85
           Body SysBody 18-MAY-2006 15:34:43.61
             Attr PgmName = "SetVal"
@@ -49296,6 +49380,20 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  In the usual configuration the value of ForcVal is used
+      !  as control signal by the Pid object in the following
+      !  cases:
+      !  
+      !  1  unconditional forced control, i.e. Forc1 is set.
+      !     ForceVal = XForceVal.
+      !  2  conditional forced control when Force2 is set and
+      !     OpMod = AUTO or CASCADE. ForceVal = XForceVal.
+      !  
+      !  3  OpMod = MANUAL. ForcVal is manipulated by the
+      !     operator, e.g. from the object display of the Mode
+      !     object.
+      !*/
         Object ForcVal $Attribute 8 18-MAY-2006 14:34:09.14
           Body SysBody 18-MAY-2006 15:34:49.83
             Attr PgmName = "ForcVal"
@@ -49303,6 +49401,13 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  Specifies, for instance, to a subsequent Pid object,
+      !  whether to use the result of the algorithm or not as a
+      !  control signal. FALSE means AUTO or CASCADE control,
+      !  i.e. the control signal depends on the result of the
+      !  algorithm. TRUE means forced control or MANUAL control.
+      !*/
         Object Force $Attribute 9 18-MAY-2006 14:34:26.46
           Body SysBody 18-MAY-2006 15:34:56.13
             Attr PgmName = "Force"
@@ -49310,6 +49415,14 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  Indicates if the control mode AUTO is selected or not.
+      !  FALSE means that AUTO is not the control mode; TRUE
+      !  means that AUTO is the control mode.
+      !  A subsequent Pid object does not have to make any
+      !  distinction between AUTO or CASCADE, so this attribute
+      !  is often used only as information.
+      !*/
         Object AutMode $Attribute 10 18-MAY-2006 18:06:42.08
           Body SysBody 18-MAY-2006 18:06:44.13
             Attr PgmName = "AutMode"
@@ -49317,6 +49430,14 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  Indicates if the control mode CASCADE is selected or
+      !  not. FALSE means that CASCADE is not the control mode;
+      !  TRUE means that CASCADE is the control mode.
+      !  A subsequent Pid object does not have to make any
+      !  distinction between AUTO or CASCADE, so this attribute
+      !  is often used only as information.
+      !*/
         Object CascMod $Attribute 11 18-MAY-2006 17:48:24.70
           Body SysBody 18-MAY-2006 17:48:27.73
             Attr PgmName = "CascMod"
@@ -49324,6 +49445,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  Indicates if the control mode MANUAL is selected or not.
+      !  FALSE means that MANUAL is not the control mode; TRUE
+      !  means that MANUAL is the control mode.
+      !  This attribute is used only as information.
+      !*/
         Object ManMode $Attribute 29 18-MAY-2006 18:06:49.15
           Body SysBody 18-MAY-2006 18:06:54.31
             Attr PgmName = "ManMode"
@@ -49331,24 +49458,69 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+      !/**
+      !  Specifies the actual control mode. The value is changed
+      !  from the object display of the Mode object.
+      !  
+      !   = 1  MANUAL. The operator selects the control signal
+      !      of the controller. The control signal is forced
+      !      to the value of ForceVal. MinOut and MaxOut define 
+      !      the valid interval of the control signal.
+      !  
+      !   = 2  AUTO. The operator selects and sets the set
+      !      point value, SetVal.
+      !      MinSet and MaxSet define the valid interval of SetVal.
+      !      The controller uses SetVal as set point value and 
+      !      calculates the control signal.
+      !
+      !   = 4  CASCADE. The controller uses XSetVal as set
+      !      point value and calculates the control signal.
+      !  @image orm_en1-122.gif
+      !  Illustrates the Connection between Forced Control and
+      !  Control Modes 
+      !*/
         Object OpMod $Attribute 13 18-MAY-2006 14:35:03.24
           Body SysBody 18-MAY-2006 14:38:30.03
             Attr PgmName = "OpMod"
             Attr TypeRef = "pwrb:Type-PidModeMask"
           EndBody
         EndObject
+      !/**
+      !  The operator's authorities to change OpMod. The
+      !  possible bit map values allow the following modes:
+      !  
+      !   1 -- Only MANUAL       
+      !   2 -- Only AUTO 
+      !   3 -- MANUAL / AUTO 
+      !   4 -- Only CASCADE
+      !   5 -- CASCADE / MANUAL
+      !   6 -- CASCADE / AUTO
+      !   7 -- MANUAL / AUTO / CASCADE
+      !*/
         Object AccMod $Attribute 14 18-MAY-2006 14:35:07.40
           Body SysBody 18-MAY-2006 14:38:49.66
             Attr PgmName = "AccMod"
             Attr TypeRef = "pwrb:Type-PidModeEnum"
           EndBody
         EndObject
+      !/**
+      !  The operator's authorities to change ForcVal.
+      !  
+      !  0   -- Changes not allowed.
+      !  != 0 -- Changes allowed.
+      !*/
         Object AccOut $Attribute 15 18-MAY-2006 14:35:13.38
           Body SysBody 18-MAY-2006 14:39:13.15
             Attr PgmName = "AccOut"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+      !/**
+      !  The choice of the operator of ForcVal is checked
+      !  against the interval { MinOut, MaxOut}. ForcVal may be
+      !  changed in the control mode MANUAL from the display of
+      !  the Mode object.
+      !*/
         Object MinOut $Attribute 16 18-MAY-2006 14:35:17.61
           Body SysBody 18-MAY-2006 14:39:19.57
             Attr PgmName = "MinOut"
@@ -49361,12 +49533,24 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  The operator's authorities to change SetVal.
+      !  
+      !    0   -- Changes not allowed.
+      !    != 0 -- Changes allowed.
+      !*/
         Object AccSet $Attribute 18 18-MAY-2006 14:35:28.87
           Body SysBody 18-MAY-2006 14:39:48.69
             Attr PgmName = "AccSet"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+      !/**
+      !  The choice of the operator of SetVal is checked against
+      !  the interval { MinSet, MaxSet}. The value may be
+      !  changed in the control modes MANUAL and AUTO from the
+      !  display of the Mode object.
+      !*/
         Object MinSet $Attribute 19 18-MAY-2006 14:35:33.96
           Body SysBody 18-MAY-2006 14:39:55.12
             Attr PgmName = "MinSet"
@@ -49379,6 +49563,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graphs
+      !  at presentation of process and set point values in the
+      !  Mode object display. The values may be changed in the
+      !  more info form of the Mode object.
+      !*/
         Object SetMaxShow $Attribute 21 18-MAY-2006 14:35:43.48
           Body SysBody 18-MAY-2006 14:40:01.58
             Attr PgmName = "SetMaxShow"
@@ -49391,6 +49581,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  The lower respectively upper limits in the bar graph at
+      !  presentation of the control signal, OutVal, of the Pid
+      !  object in the Mode display. The values may be changed
+      !  in the more info form of the Mode object.
+      !*/
         Object OutMaxShow $Attribute 23 18-MAY-2006 14:35:53.81
           Body SysBody 18-MAY-2006 14:40:09.36
             Attr PgmName = "OutMaxShow"
@@ -49403,24 +49599,45 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+      !/**
+      !  Specifies the engineering unit of SetMinShow /
+      !  SetMaxShow, e.g. kg. Used in the Mode object display.
+      !  OutEngUnit
+      !*/
         Object SetEngUnit $Attribute 25 18-MAY-2006 14:36:17.79
           Body SysBody 18-MAY-2006 14:40:48.75
             Attr PgmName = "SetEngUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+      !/**
+      !  Specifies the engineering unit of OutMinShow /
+      !  OutMaxShow e.g. %. Used in the Mode object display.
+      !*/
         Object OutEngUnit $Attribute 26 18-MAY-2006 14:36:23.64
           Body SysBody 18-MAY-2006 14:40:51.89
             Attr PgmName = "OutEngUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+      !/**
+      !  Specifies the complete name of the Pid object
+      !  associated to this Mode object. The attribute makes it
+      !  possible to start the object display of the associated
+      !  Pid from a button in the object display of the Mode
+      !*/
         Object PidObjDid $Attribute 27 18-MAY-2006 14:36:32.35
           Body SysBody 18-MAY-2006 14:41:00.15
             Attr PgmName = "PidObjDid"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 28 18-MAY-2006 14:48:02.13
           Body SysBody 18-MAY-2006 14:48:08.41
             Attr PgmName = "PlcConnect"
@@ -49443,6 +49660,19 @@ and no Auto/Man button."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompModePID.
+    !  Plc function object to CompModePID.
+    ! 
+    !  @image orm_compmodepid_fo_fo.gif
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  CompModePID_Fo.
+    ! 
+    !  @b See also
+    !  @classlink CompModePID basecomponent_compmodepid.html
+    !*/
     Object CompModePID_Fo $ClassDef 149 18-MAY-2006 14:25:59.63
       Body SysBody 18-MAY-2006 14:25:40.74
         Attr Editor = 2
@@ -49455,6 +49685,11 @@ and no Auto/Man button."
           Attr StructName = "CompModePID_Fo"
           Attr NextAix = "_X57"
         EndBody
+        !/**
+        !  External set point value. This value is used only in
+        !  the control mode CASCADE in such a way that SetVal =
+        !  XSetVal.
+        !*/
         Object XSetVal $Input 28 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "XSetVal"
@@ -49463,6 +49698,10 @@ and no Auto/Man button."
             Attr GraphName = "XSV"
           EndBody
         EndObject
+        !/**
+        !  Process value. Only used to show the process value in
+        !  the object display of the Mode object.
+        !*/
         Object ProcVal $Input 29 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "ProcVal"
@@ -49471,6 +49710,11 @@ and no Auto/Man button."
             Attr GraphName = "PV"
           EndBody
         EndObject
+        !/**
+        !  External forced control value. This value is used only
+        !  at forced control (i.e. Force1 or Force2 is set) in
+        !  such a way that ForceVal = XForceVal.
+        !*/
         Object XForcVal $Input 30 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "XForcVal"
@@ -49478,6 +49722,14 @@ and no Auto/Man button."
             Attr GraphName = "XFO"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether to enable or disable unconditional
+        !  forced control. 
+        !  FALSE disables the unconditional forced control function;
+        !  TRUE means that ForcVal = XForceVal and Force is set.
+        !  In a usual configuration the value of ForcVal is used
+        !  as control signal by the Pid object.
+        !*/
         Object Forc1 $Input 31 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "Forc1"
@@ -49486,6 +49738,15 @@ and no Auto/Man button."
             Attr GraphName = "fo1"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether to enable or disable forced control
+        !  when OpMod = AUTO or CASCADE.
+        !  FALSE disables the conditional forced control
+        !  function; TRUE means that ForcVal = XForceVal and Force
+        !  is set -- if, and only if, -- OpMod = AUTO or CASCADE.
+        !  In a usual configuration the value of ForcVal is used
+        !  as control signal by the Pid object in this case.
+        !*/
         Object Forc2 $Input 32 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "Forc2"
@@ -49494,6 +49755,15 @@ and no Auto/Man button."
             Attr GraphName = "fo2"
           EndBody
         EndObject
+        !/**
+        !  The value of the last set control signal. Is usually
+        !  fetched by means of an analog feedback connection to
+        !  the OutVal of the Pid object. When the controlled loop
+        !  is switched to MANUAL control, the process will "bump"
+        !  unless ForcVal is aligned with the present process
+        !  value. To avoid this ForcVal is set equal to OutVal at
+        !  the switching to MANUAL control.
+        !*/
         Object OutVal $Input 33 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "OutVal"
@@ -49502,19 +49772,36 @@ and no Auto/Man button."
             Attr GraphName = "OUT"
           EndBody
         EndObject
+        !/**
+        !  @Summary The main object connected to this object.
+        !  The main object of class CompModePID (or a subclass of this class).
+        !  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 55 18-MAY-2006 14:30:38.59
           Body SysBody 18-MAY-2006 14:29:59.89
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Contains a pointer to the connected main object.
+        !*/
         Object PlcConnectP $Intern 56 18-MAY-2006 16:04:48.94
-          Body SysBody 18-MAY-2006 16:04:48.94
+          Body SysBody 23-MAY-2006 15:28:25.29
             Attr PgmName = "PlcConnectP"
-            Attr Flags = 65537
+            Attr Flags = 67585
             Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject
+        !/**
+        !  Current set point value used in the control modes AUTO
+        !  and CASCADE. The value may be changed in the control
+        !  modes MANUAL and AUTO, e.g. from the object display of
+        !  the Mode object. At CASCADE control SetVal is
+        !  internally assigned the value of XSetVal; i.e. SetVal =
+        !  XSetVal.
+        !*/
         Object SetVal $Output 34 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "SetVal"
@@ -49523,6 +49810,20 @@ and no Auto/Man button."
             Attr GraphName = "SV"
           EndBody
         EndObject
+        !/**
+        !  In the usual configuration the value of ForcVal is used
+        !  as control signal by the Pid object in the following
+        !  cases:
+        !  
+        !  1  unconditional forced control, i.e. Forc1 is set.
+        !     ForceVal = XForceVal.
+        !  2  conditional forced control when Force2 is set and
+        !     OpMod = AUTO or CASCADE. ForceVal = XForceVal.
+        !  
+        !  3  OpMod = MANUAL. ForcVal is manipulated by the
+        !     operator, e.g. from the object display of the Mode
+        !     object.
+        !*/
         Object ForcVal $Output 35 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "ForcVal"
@@ -49531,6 +49832,13 @@ and no Auto/Man button."
             Attr GraphName = "FOV"
           EndBody
         EndObject
+        !/**
+        !  Specifies, for instance, to a subsequent Pid object,
+        !  whether to use the result of the algorithm or not as a
+        !  control signal. FALSE means AUTO or CASCADE control,
+        !  i.e. the control signal depends on the result of the
+        !  algorithm. TRUE means forced control or MANUAL control.
+        !*/
         Object Force $Output 36 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "Force"
@@ -49539,6 +49847,14 @@ and no Auto/Man button."
             Attr GraphName = "for"
           EndBody
         EndObject
+        !/**
+        !  Indicates if the control mode AUTO is selected or not.
+        !  FALSE means that AUTO is not the control mode; TRUE
+        !  means that AUTO is the control mode.
+        !  A subsequent Pid object does not have to make any
+        !  distinction between AUTO or CASCADE, so this attribute
+        !  is often used only as information.
+        !*/
         Object AutMode $Output 37 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "AutMode"
@@ -49547,6 +49863,14 @@ and no Auto/Man button."
             Attr GraphName = "aut"
           EndBody
         EndObject
+        !/**
+        !  Indicates if the control mode CASCADE is selected or
+        !  not. FALSE means that CASCADE is not the control mode;
+        !  TRUE means that CASCADE is the control mode.
+        !  A subsequent Pid object does not have to make any
+        !  distinction between AUTO or CASCADE, so this attribute
+        !  is often used only as information.
+        !*/
         Object CascMod $Output 38 18-MAY-2006 14:25:40.74
           Body SysBody 18-MAY-2006 14:25:40.74
             Attr PgmName = "CascMod"
@@ -49568,7 +49892,7 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 8123 18-MAY-2006 14:25:40.74
-        Body SysBody 18-MAY-2006 16:05:23.12
+        Body SysBody 23-MAY-2006 13:52:54.51
           Attr object_type = 11
           Attr parameters[0] = 6
           Attr parameters[1] = 2
@@ -49585,8 +49909,8 @@ and no Auto/Man button."
           Attr traceindex = 0
           Attr connectmethod = 10
           Attr executeordermethod = 2
-          Attr objname = "ModePID"
-          Attr graphname = "ModePID"
+          Attr objname = "CompModePID_Fo"
+          Attr graphname = "CompModePID_Fo"
         EndBody
       EndObject
       Object Template CompModePID_Fo 2186772480 01-JAN-1970 01:00:00.00
@@ -49596,6 +49920,29 @@ and no Auto/Man button."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Code rt_plc_bcomp.c
+    !  @Group Plc
+    !  @Summary PID Controller
+    !  PID Controller.
+    ! 
+    !  The function of this object is similar to pwrb:PID.
+    ! 
+    ! @b Object graph
+    !  @image orm_pid_og.gif
+    ! 
+    !  @b Plc coding
+    !  For plc coding the function object CompPID_Fo is used.
+    !  @image orm_comppid_fo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    ! @b See also
+    !  @classlink pwrb:PID pwrb_pid.html
+    !  @classlink CompPID_Fo basecomponent_comppid_fo.html
+    !  @classlink CompModePID basecomponent_compmodepid.html
+    !*/
     Object CompPID $ClassDef 152 18-MAY-2006 14:49:40.40
       Body SysBody 18-MAY-2006 14:49:01.99
         Attr Editor = 0
@@ -49607,6 +49954,9 @@ and no Auto/Man button."
           Attr StructName = "CompPID"
           Attr NextAix = "_X50"
         EndBody
+        !/**
+        !  Process value.
+        !*/
         Object ProcVal $Attribute 1 18-MAY-2006 15:10:59.46
           Body SysBody 18-MAY-2006 15:29:39.08
             Attr PgmName = "ProcVal"
@@ -49614,13 +49964,19 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the set point value. This input is in general
+        !  connected to the corresponding output of a Mode object.
+        !*/
         Object SetVal $Attribute 2 18-MAY-2006 15:11:12.10
-          Body SysBody 18-MAY-2006 15:30:58.87
+          Body SysBody 23-MAY-2006 15:16:09.90
             Attr PgmName = "SetVal"
-            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the feed forward value. 
+        !*/
         Object Bias $Attribute 3 18-MAY-2006 15:19:12.20
           Body SysBody 18-MAY-2006 15:31:09.68
             Attr PgmName = "Bias"
@@ -49628,27 +49984,51 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies which value is to be used when Force is TRUE.
+        !  When Force is TRUE OutVal is equal to ForcVal. This
+        !  input is in general connected to the corresponding
+        !  output of a Mode object.
+        !*/
         Object ForcVal $Attribute 4 18-MAY-2006 15:11:22.42
-          Body SysBody 18-MAY-2006 15:31:32.58
+          Body SysBody 23-MAY-2006 15:16:28.53
             Attr PgmName = "ForcVal"
-            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether forced or MANUAL control is selected
+        !  or not. FALSE means none; TRUE means that either forced
+        !  or MANUAL control has been selected. This input is in
+        !  general connected to the corresponding output of a Mode
+        !  object.
+        !*/
         Object Force $Attribute 5 18-MAY-2006 15:11:26.18
-          Body SysBody 18-MAY-2006 15:31:38.96
+          Body SysBody 23-MAY-2006 15:17:34.85
             Attr PgmName = "Force"
-            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether to enable or disable the integration.
+        !  FALSE means that the integration is on; TRUE switches
+        !  the integration off.
+        !  
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object IntOff $Attribute 6 18-MAY-2006 15:11:31.38
-          Body SysBody 18-MAY-2006 15:31:47.87
+          Body SysBody 23-MAY-2006 15:19:41.70
             Attr PgmName = "IntOff"
             Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  The controller's control signal. The value is based
+        !  either on the algorithm's current result, a value set
+        !  by the operator in MANUAL mode, or a forced value.
+        !*/
         Object OutVal $Attribute 7 18-MAY-2006 15:11:36.95
           Body SysBody 18-MAY-2006 15:32:58.43
             Attr PgmName = "OutVal"
@@ -49656,6 +50036,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Changes in the control signal between two consecutive
+        !  scans; i.e. OutVal(t)  - OutVal(t-1).
+        !*/
         Object OutChange $Attribute 8 18-MAY-2006 15:11:42.75
           Body SysBody 18-MAY-2006 15:32:25.68
             Attr PgmName = "OutChange"
@@ -49663,6 +50047,9 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Control error (= ProcVal - SetVal).
+        !*/
         Object ControlDiff $Attribute 9 18-MAY-2006 15:11:50.11
           Body SysBody 18-MAY-2006 15:32:34.17
             Attr PgmName = "ControlDiff"
@@ -49670,6 +50057,20 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies if OutVal at this scanning has been limited
+        !  against any of the limit values in the interval {
+        !  MinOut, MaxOut } or not. If a limitation is done
+        !  against
+        !  
+        !  --  MinOut, then EndMin is set TRUE
+        !  --  MaxOut, then EndMax is set TRUE
+        !  else they are FALSE.
+        !  
+        !  EndMin /EndMax can only be set in AUTO or CASCADE
+        !  control mode, i.e. not in MANUAL mode for example. See
+        !  also EndHys below.
+        !*/
         Object EndMax $Attribute 10 18-MAY-2006 15:11:55.36
           Body SysBody 18-MAY-2006 15:33:20.05
             Attr PgmName = "EndMax"
@@ -49684,48 +50085,137 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  @Summary The PID control algorithm
+        !  There are several variations of the PID control
+        !  algorithm. PidAlg specifies the current choice. The
+        !  possible values are as follows:
+        !  
+        !  1   -- I     Integral controller. Gain is not used.
+        ! 
+        !  3   -- I+P   Integral controller with proportional
+        !               control action. The P-term is based on the
+        !               the process value.
+        ! 
+        !  6   -- P     Proportional Controller.
+        ! 
+        !  7   -- PI    Proportional Integral Controller. The
+        !               P-term is based on the control error.
+        !  
+        !  11  -- I+PD Integral controller with proportional
+        !              derivative control action. Both the P- and
+        !              D-term are based on the process value.
+        ! 
+        !  14  -- P+D  Proportional Controller with derivative
+        !              control action. P is based on the control error,
+        !              D on the process value.
+        !  
+        !  15  -- PI+D Proportional Integral Controller with
+        !              derivative control action. P is based on
+        !              the control error, D on the process value.
+        ! 
+        !  30  -- PD   Proportional Derivative Controller. Both
+        !              the P- and D-term are based on the control
+        !              error.
+        !  
+        !  31  -- PID  Proportional Integral Derivative
+        !              Controller. Both the P- and D-term are
+        !              based on the control error.
+        !*/
         Object PidAlg $Attribute 12 18-MAY-2006 15:12:04.04
           Body SysBody 18-MAY-2006 15:20:47.24
             Attr PgmName = "PidAlg"
             Attr TypeRef = "pwrb:Type-PidAlgEnum"
           EndBody
         EndObject
+        !/**
+        !  Specifies the proportional control factor; >= 0.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object Gain $Attribute 13 18-MAY-2006 15:12:08.55
           Body SysBody 18-MAY-2006 15:21:10.58
             Attr PgmName = "Gain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the integral action time in seconds.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object IntTime $Attribute 14 18-MAY-2006 15:12:13.03
           Body SysBody 18-MAY-2006 15:21:13.76
             Attr PgmName = "IntTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the derivative time in seconds; see p. 3-258.
+        !  Normally DerTime is greater than ScanTime and
+        !     1.0 <=  DerGain < DerTime/ScanTime
+        !*/
         Object DerTime $Attribute 15 18-MAY-2006 15:12:17.95
           Body SysBody 18-MAY-2006 15:21:17.22
             Attr PgmName = "DerTime"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Factor to specify the first order lag filter used in
+        !  filtering of the derivative contribution.
+        !     
+        !  1.0 <= DerGain < DerTime/ScanTime, otherwise no filtering
+        !  
+        !  DerGain is normally in the size of 3 to 4.
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object DerGain $Attribute 16 18-MAY-2006 15:12:22.07
           Body SysBody 18-MAY-2006 15:21:21.10
             Attr PgmName = "DerGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether the control action should be inverted
+        !  or not. FALSE means that a spontaneous increasing
+        !  process value, in a control with fixed set point, is
+        !  met by an increasing control signal, i.e. reverse
+        !  control action. TRUE is the normal case, where a
+        !  spontaneous increasing process value is met by a
+        !  decreasing control signal.
+        !*/
         Object Inverse $Attribute 17 18-MAY-2006 15:12:26.34
           Body SysBody 18-MAY-2006 15:21:26.53
             Attr PgmName = "Inverse"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        !/**
+        !  Specifies the feed forward gain; this factor may be
+        !  negative.
+        !  
+        !  The values may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object BiasGain $Attribute 18 18-MAY-2006 15:12:32.75
           Body SysBody 18-MAY-2006 15:22:27.77
             Attr PgmName = "BiasGain"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  At AUTO and CASCADE control the control signal OutVal
+        !  is supposed to be in the interval { MinOut, MaxOut }.
+        !  The EndMin /EndMax flags are used to signal if any
+        !  limitation has occurred.
+        !  If OutVal is greater than MaxOut or less than MinOut,
+        !  OutVal is limited to the value at the end of the
+        !  interval.
+        !  
+        !  If MinOut >= MaxOut no limitation will occur.
+        !*/
         Object MinOut $Attribute 19 18-MAY-2006 15:15:23.71
           Body SysBody 18-MAY-2006 15:22:31.22
             Attr PgmName = "MinOut"
@@ -49738,6 +50228,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The operator's authorities to change Gain respectively
+        !  IntTime.
+        !    0   -- Changes not allowed.
+        !    = 0 -- Changes allowed.
+        !*/
         Object AccGain $Attribute 22 18-MAY-2006 15:15:36.94
           Body SysBody 18-MAY-2006 15:23:23.11
             Attr PgmName = "AccGain"
@@ -49750,12 +50246,22 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  The operator's authorities to change DerTime.
+        !    0   -- Changes not allowed.
+        !    = 0 -- Changes allowed.
+        !*/
         Object AccDer $Attribute 24 18-MAY-2006 15:23:28.36
           Body SysBody 18-MAY-2006 15:23:33.39
             Attr PgmName = "AccDer"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  The operator's authorities to change DerGain.
+        !    0   -- Changes not allowed.
+        !    = 0 -- Changes allowed.
+        !*/
         Object AccDGain $Attribute 25 18-MAY-2006 15:15:53.77
           Body SysBody 18-MAY-2006 15:23:37.88
             Attr PgmName = "AccDGain"
@@ -49774,6 +50280,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of Gain at
+        !  changes made by an operator.
+        !*/
         Object MinGain $Attribute 28 18-MAY-2006 15:16:20.62
           Body SysBody 18-MAY-2006 15:23:55.31
             Attr PgmName = "MinGain"
@@ -49786,6 +50296,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of IntTim at
+        !  changes made by an operator.
+        !*/
         Object MinInt $Attribute 30 18-MAY-2006 15:16:32.69
           Body SysBody 18-MAY-2006 15:24:00.84
             Attr PgmName = "MinInt"
@@ -49798,6 +50312,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of DerTim at
+        !  changes made by an operator.
+        !*/
         Object MinDer $Attribute 32 18-MAY-2006 15:16:45.00
           Body SysBody 18-MAY-2006 15:24:05.83
             Attr PgmName = "MinDer"
@@ -49810,6 +50328,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of DerGain at
+        !  changes made by an operator.
+        !*/
         Object MinDGain $Attribute 34 18-MAY-2006 15:16:54.62
           Body SysBody 18-MAY-2006 15:24:11.29
             Attr PgmName = "MinDGain"
@@ -49822,6 +50344,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of Gain at
+        !  changes made by an operator.
+        !*/
         Object MinBias $Attribute 36 18-MAY-2006 15:17:12.15
           Body SysBody 18-MAY-2006 15:24:16.30
             Attr PgmName = "MinBias"
@@ -49834,6 +50360,10 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The minimum and maximum allowed value of BiasGain at
+        !  changes made by an operator.
+        !*/
         Object MinBGain $Attribute 38 18-MAY-2006 15:17:38.73
           Body SysBody 18-MAY-2006 15:24:21.11
             Attr PgmName = "MinBGain"
@@ -49846,6 +50376,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The lower respectively upper limit in the graph at
+        !  presentation of ProcVal and SetVal in the Pid object
+        !  display. The values may be changed in the more info
+        !  form of the Pid object.
+        !*/
         Object SetMaxShow $Attribute 40 18-MAY-2006 15:17:50.62
           Body SysBody 18-MAY-2006 15:24:32.20
             Attr PgmName = "SetMaxShow"
@@ -49858,6 +50394,12 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  The lower respectively upper limit in the graph at
+        !  presentation of the control signal OutVal in the Pid
+        !  object display. The values may be changed in the more
+        !  info form of the Pid object.
+        !*/
         Object OutMaxShow $Attribute 42 18-MAY-2006 15:18:01.66
           Body SysBody 18-MAY-2006 15:24:41.44
             Attr PgmName = "OutMaxShow"
@@ -49870,36 +50412,66 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Specifies the engineering unit of SetMinShow /
+        !  SetMaxShow, e.g. meter. Used in the Pid object display.
+        !*/
         Object SetEngUnit $Attribute 44 18-MAY-2006 15:18:13.35
           Body SysBody 18-MAY-2006 15:25:29.00
             Attr PgmName = "SetEngUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Specifies the engineering unit of OutMinShow /
+        !  OutMaxShow, e.g., %. Used in the in the Pid object
+        !  display.
+        !*/
         Object OutEngUnit $Attribute 45 18-MAY-2006 15:18:20.75
           Body SysBody 18-MAY-2006 15:25:32.42
             Attr PgmName = "OutEngUnit"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Specifies the complete name of the Mode object
+        !  associated to this Pid object. The attribute makes it
+        !  possible to start the object display of the associated
+        !  Mode object from a button in the object display of the
+        !  Pid object.
+        !*/
         Object ModeObjDid $Attribute 46 18-MAY-2006 15:18:26.58
           Body SysBody 18-MAY-2006 15:25:40.24
             Attr PgmName = "ModeObjDid"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Specifies the hysteresis on MinOut and MaxOut in
+        !  connection with the handling of EndMin/EndMax.
+        !  @image orm_en1-144.gif
+        !*/
         Object EndHys $Attribute 47 18-MAY-2006 15:18:32.65
           Body SysBody 18-MAY-2006 15:25:54.52
             Attr PgmName = "EndHys"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Filtered derivative is saved to the next program cycle.
+        !*/
         Object FiltDer $Attribute 48 18-MAY-2006 15:18:37.56
           Body SysBody 18-MAY-2006 15:25:57.72
             Attr PgmName = "FiltDer"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary The plc function object connected to this object.
+        !  The plc function object connected to this object.
+        !  This attribute is set when the functionobject is connected from
+        !  the plc editor by the connect function.
+        !*/
         Object PlcConnect $Attribute 49 18-MAY-2006 15:27:06.37
           Body SysBody 18-MAY-2006 15:27:13.67
             Attr PgmName = "PlcConnect"
@@ -49936,6 +50508,19 @@ and no Auto/Man button."
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Plc function object to CompPID.
+    !  Plc function object to CompPID.
+    ! 
+    !  @image orm_comppid_fo_fo.gif
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  CompPID_Fo.
+    ! 
+    !  @b See also
+    !  @classlink CompPID basecomponent_comppid.html
+    !*/
     Object CompPID_Fo $ClassDef 151 18-MAY-2006 14:49:24.32
       Body SysBody 18-MAY-2006 14:46:20.16
         Attr Editor = 2
@@ -49948,6 +50533,9 @@ and no Auto/Man button."
           Attr StructName = "CompPID_Fo"
           Attr NextAix = "_X52"
         EndBody
+        !/**
+        !  Specifies the process value.
+        !*/
         Object ProcVal $Input 1 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "ProcVal"
@@ -49956,35 +50544,67 @@ and no Auto/Man button."
             Attr GraphName = "PV"
           EndBody
         EndObject
+        !/**
+        !  Specifies the set point value. This input is in general
+        !  connected to the corresponding output of a Mode object.
+        !*/
         Object SetVal $Input 2 18-MAY-2006 14:46:20.16
-          Body SysBody 18-MAY-2006 14:46:20.16
+          Body SysBody 23-MAY-2006 15:18:35.18
             Attr PgmName = "SetVal"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "SV"
           EndBody
         EndObject
+        !/**
+        !  Specifies the feed forward value. The value may be
+        !  changed in the more info form of the Pid object.
+        !*/
         Object Bias $Input 3 18-MAY-2006 14:46:20.16
-          Body SysBody 18-MAY-2006 14:46:20.16
+          Body SysBody 23-MAY-2006 15:18:45.51
             Attr PgmName = "Bias"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "BIS"
           EndBody
         EndObject
+        !/**
+        !  Specifies which value is to be used when Force is TRUE.
+        !  When Force is TRUE OutVal is equal to ForcVal. This
+        !  input is in general connected to the corresponding
+        !  output of a Mode object.
+        !*/
         Object ForcVal $Input 4 18-MAY-2006 14:46:20.16
-          Body SysBody 18-MAY-2006 14:46:20.16
+          Body SysBody 23-MAY-2006 15:18:52.05
             Attr PgmName = "ForcVal"
+            Attr Flags = 1040
             Attr TypeRef = "pwrs:Type-$Float32"
             Attr GraphName = "FOV"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether forced or MANUAL control is selected
+        !  or not. FALSE means none; TRUE means that either forced
+        !  or MANUAL control has been selected. This input is in
+        !  general connected to the corresponding output of a Mode
+        !  object.
+        !*/
         Object Force $Input 5 18-MAY-2006 14:46:20.16
-          Body SysBody 18-MAY-2006 14:46:20.16
+          Body SysBody 23-MAY-2006 15:19:13.67
             Attr PgmName = "Force"
-            Attr Flags = 8192
+            Attr Flags = 9232
             Attr TypeRef = "pwrs:Type-$Boolean"
             Attr GraphName = "for"
           EndBody
         EndObject
+        !/**
+        !  Specifies whether to enable or disable the integration.
+        !  FALSE means that the integration is on; TRUE switches
+        !  the integration off.
+        !  
+        !  The value may be changed in the more info form of the
+        !  Pid object.
+        !*/
         Object IntOff $Input 6 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "IntOff"
@@ -49993,6 +50613,9 @@ and no Auto/Man button."
             Attr GraphName = "iof"
           EndBody
         EndObject
+        !/**
+        !  Pointer to program cycle.
+        !*/
         Object ScanTime $Intern 51 19-MAY-2006 07:53:59.35
           Body SysBody 19-MAY-2006 07:54:41.72
             Attr PgmName = "ScanTime"
@@ -50000,19 +50623,33 @@ and no Auto/Man button."
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  @Summary The main object connected to this object.
+        !  The main object of class CompPID (or a subclass of this class).
+        !  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 49 18-MAY-2006 14:47:32.09
           Body SysBody 18-MAY-2006 14:47:32.09
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Contains a pointer to the connected main object.
+        !*/
         Object PlcConnectP $Intern 50 18-MAY-2006 16:05:00.77
-          Body SysBody 18-MAY-2006 16:04:54.85
+          Body SysBody 23-MAY-2006 15:28:47.48
             Attr PgmName = "PlcConnectP"
-            Attr Flags = 65537
+            Attr Flags = 67585
             Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject
+        !/**
+        !  The controller's control signal. The value is based
+        !  either on the algorithm's current result, a value set
+        !  by the operator in MANUAL mode, or a forced value.
+        !*/
         Object OutVal $Output 7 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "OutVal"
@@ -50021,6 +50658,10 @@ and no Auto/Man button."
             Attr GraphName = "OUT"
           EndBody
         EndObject
+        !/**
+        !  Changes in the control signal between two consecutive
+        !  scans; i.e. OutVal(t)  - OutVal(t-1).
+        !*/
         Object OutChange $Output 8 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "OutChange"
@@ -50029,6 +50670,9 @@ and no Auto/Man button."
             Attr GraphName = "OC"
           EndBody
         EndObject
+        !/**
+        !  Control error (= ProcVal - SetVal).
+        !*/
         Object ControlDiff $Output 9 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "ControlDiff"
@@ -50037,6 +50681,20 @@ and no Auto/Man button."
             Attr GraphName = "DIF"
           EndBody
         EndObject
+        !/**
+        !  Specifies if OutVal at this scanning has been limited
+        !  against any of the limit values in the interval {
+        !  MinOut, MaxOut } or not. If a limitation is done
+        !  against
+        !  
+        !  --  MinOut, then EndMin is set TRUE
+        !  --  MaxOut, then EndMax is set TRUE
+        !  else they are FALSE.
+        !  
+        !  EndMin /EndMax can only be set in AUTO or CASCADE
+        !  control mode, i.e. not in MANUAL mode for example. See
+        !  also EndHys below.
+        !*/
         Object EndMax $Output 10 18-MAY-2006 14:46:20.16
           Body SysBody 18-MAY-2006 14:46:20.16
             Attr PgmName = "EndMax"
@@ -50066,7 +50724,7 @@ and no Auto/Man button."
         EndObject
       EndObject
       Object GraphPlcNode $GraphPlcNode 8124 18-MAY-2006 14:46:20.16
-        Body SysBody 19-MAY-2006 07:55:20.49
+        Body SysBody 23-MAY-2006 13:52:15.30
           Attr object_type = 11
           Attr parameters[0] = 6
           Attr parameters[1] = 3
@@ -50083,8 +50741,8 @@ and no Auto/Man button."
           Attr traceindex = 0
           Attr connectmethod = 10
           Attr executeordermethod = 2
-          Attr objname = "PID"
-          Attr graphname = "PID"
+          Attr objname = "CompPID_Fo"
+          Attr graphname = "CompPID_Fo"
         EndBody
       EndObject
       Object Template CompPID_Fo 2187296768 01-JAN-1970 01:00:00.00
@@ -90044,9 +90702,9 @@ Safety switch"
           EndBody
         EndObject
         Object PlcConnectP $Intern 7 08-SEP-2005 13:01:47.00
-          Body SysBody 01-JAN-1970 01:00:00.00
+          Body SysBody 23-MAY-2006 15:29:09.44
             Attr PgmName = "PlcConnectP"
-            Attr Flags = 65537
+            Attr Flags = 67585
             Attr TypeRef = "pwrs:Type-$Char"
           EndBody
         EndObject

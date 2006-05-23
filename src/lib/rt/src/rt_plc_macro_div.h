@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_div.h,v 1.4 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_macro_div.h,v 1.5 2006-05-23 13:53:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -155,6 +155,12 @@
 */
 #define BwOr_exec(t, o)\
     o->Status = *o->In1P | *o->In2P;
+
+/*_*
+  @aref getdatap GetDatap
+*/
+#define GetDatap_exec(object, in)\
+    memcpy( &object->Out, &in, 12);
 
 
 

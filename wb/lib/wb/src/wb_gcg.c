@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.32 2006-04-28 05:01:02 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.33 2006-05-23 13:53:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -10984,14 +10984,14 @@ vldh_t_node	node;
 * vldh_t_node	node		I	vldh node.
 *
 * Description:
-*	Compile method for GetIpToA and GetIp
+*	Compile method for GetIpToA, GetIp and GetDatap.
 *	Prints code for declaration and direkt link of a rtdbpointer.
 *	Prints an exec call :
 *	'structname'_exec( 'objpointer');
 *	ex: GetIpToA_exec( Z80000811);
 *
 *	Checks that the referenced object exists and that the referenced
-*	parameter exists in that objekt, and that the type of the parameter
+*	parameter exists in that object, and that the type of the parameter
 *	is correct.
 *	Prints declaration and direct link of pointer to referenced object.
 *
@@ -11094,28 +11094,35 @@ vldh_t_node	node;
 	  //}
 	}
 
-
-	switch ( info.type ) {
-        case pwr_eType_Int32: 
-        case pwr_eType_UInt32: 
-        case pwr_eType_Int16: 
-        case pwr_eType_UInt16: 
-        case pwr_eType_Int8: 
-        case pwr_eType_UInt8: 
-        case pwr_eType_Enum: 
-        case pwr_eType_Mask: 
-        case pwr_eType_Status: 
-        case pwr_eType_NetStatus: 
-	  if ( !(node->ln.cid != pwr_cClass_GetIpToA ||
-		 node->ln.cid != pwr_cClass_GetIp)) {
+	if ( info.flags & PWR_MASK_POINTER) {
+	  if ( node->ln.cid != pwr_cClass_GetDatap) {
 	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
 	    return GSX__NEXTNODE;
 	  }
-          break;
-	default:
-	  /* Not allowed type */
-	  gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
-	  return GSX__NEXTNODE;
+	}
+	else {
+	  switch ( info.type ) {
+	  case pwr_eType_Int32: 
+	  case pwr_eType_UInt32: 
+	  case pwr_eType_Int16: 
+	  case pwr_eType_UInt16: 
+	  case pwr_eType_Int8: 
+	  case pwr_eType_UInt8: 
+	  case pwr_eType_Enum: 
+	  case pwr_eType_Mask: 
+	  case pwr_eType_Status: 
+	  case pwr_eType_NetStatus: 
+	    if ( !(node->ln.cid != pwr_cClass_GetIpToA ||
+		   node->ln.cid != pwr_cClass_GetIp)) {
+	      gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	      return GSX__NEXTNODE;
+	    }
+	    break;
+	  default:
+	    /* Not allowed type */
+	    gcg_error_msg( gcgctx, GSX__REFPARTYPE, node);  
+	    return GSX__NEXTNODE;
+	  }
 	}
 
 	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);

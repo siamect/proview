@@ -630,6 +630,7 @@ palette PlcEditorPalette
       class CStoAttrRefP
       class DataCollect
       class GetData
+      class GetDatap
     }
     menu String
     {
