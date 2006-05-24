@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.3 2006-05-05 11:32:28 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.4 2006-05-24 06:00:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -695,72 +695,73 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   }
 
   /* Check that the configured volumes exist */
-  sts = ldh_GetRootList( ldhses, &envobjid);
-  while ( ODD(sts))
-  {
-    sts = ldh_GetObjectClass( ldhses, envobjid, &cid);
-    if ( EVEN(sts)) return sts;
+  for ( int k = 0; k < 2; k++) {
+    // Check class volumes in the first round, and other volumes after
 
-    if ( cid == pwr_cClass_WbEnvironment)
-    {
-      /* Create directory list file */
-      sts = ldh_ObjidToName( ldhses, envobjid, ldh_eName_Object,
-			name, sizeof(name), &size);
+    for ( sts = ldh_GetRootList( ldhses, &envobjid);
+	  ODD(sts);
+	  sts = ldh_GetNextSibling( ldhses, envobjid, &envobjid)) {
+
+      sts = ldh_GetObjectClass( ldhses, envobjid, &cid);
       if ( EVEN(sts)) return sts;
 
-      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
-			"Path", (char **) &path_ptr, &size);
-      if ( EVEN(sts)) return sts;
+      if ( cid == pwr_cClass_WbEnvironment) {
+	if ( k != 1)
+	  continue;
 
-      dcli_translate_filename( filename, load_cNameFilePath);
+	/* Create directory list file */
+	sts = ldh_ObjidToName( ldhses, envobjid, ldh_eName_Object,
+			       name, sizeof(name), &size);
+	if ( EVEN(sts)) return sts;
+	
+	sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				"Path", (char **) &path_ptr, &size);
+	if ( EVEN(sts)) return sts;
+	
+	dcli_translate_filename( filename, load_cNameFilePath);
 
-      fpath = fopen( filename, "w");
-      if ( !fpath) {
-	printf( "** Unable to open path file %s\n", filename);
-	syntax_error = 1;
-        free( (char *)path_ptr);
-        return LFU__NOFILE;
-      }
+	fpath = fopen( filename, "w");
+	if ( !fpath) {
+	  printf( "** Unable to open path file %s\n", filename);
+	  syntax_error = 1;
+	  free( (char *)path_ptr);
+	  return LFU__NOFILE;
+	}
 
-      path_file_created = 1;
+	path_file_created = 1;
 
-      for ( i = 0; i < 20; i++) {
-        dcli_trim( path, path_ptr[i]);
-	if ( strcmp( path, "") != 0)
-	  fprintf( fpath, "%s\n", path);
-      }
-      fclose( fpath);
-      free( (char *)path_ptr);
+	for ( i = 0; i < 20; i++) {
+	  dcli_trim( path, path_ptr[i]);
+	  if ( strcmp( path, "") != 0)
+	    fprintf( fpath, "%s\n", path);
+	}
+	fclose( fpath);
+	free( (char *)path_ptr);
 
-      // Get xxxVolumeLoad objects
-      sts = ldh_GetChild( ldhses, envobjid, &volobjid);
-      while ( ODD(sts))
-      {
-        sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
-        if ( EVEN(sts)) return sts;
+	// Get xxxVolumeLoad objects
+	sts = ldh_GetChild( ldhses, envobjid, &volobjid);
+	while ( ODD(sts)) {
+	  sts = ldh_GetObjectClass( ldhses, volobjid, &cid);
+	  if ( EVEN(sts)) return sts;
 
-        if ( cid == pwr_cClass_RootVolumeLoad ||
-	     cid == pwr_cClass_SubVolumeLoad ||
-	     cid == pwr_cClass_ClassVolumeLoad ||
-	     cid == pwr_cClass_SharedVolumeLoad )
-        {
-          sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
-			volume_name, sizeof(volume_name), &size);
-          if ( EVEN(sts)) return sts;
-	  utl_toupper( name, volume_name);
+	  if ( cid == pwr_cClass_RootVolumeLoad ||
+	       cid == pwr_cClass_SubVolumeLoad ||
+	       cid == pwr_cClass_ClassVolumeLoad ||
+	       cid == pwr_cClass_SharedVolumeLoad ) {
+	    sts = ldh_ObjidToName( ldhses, volobjid, ldh_eName_Object,
+				   volume_name, sizeof(volume_name), &size);
+	    if ( EVEN(sts)) return sts;
+	    utl_toupper( name, volume_name);
 
-	  /* Check that the name is in the global volume list */
-          found = 0;
-	  volumelist_ptr = volumelist;
-	  for ( i = 0; i < volumecount; i++)
-	  {
-	    utl_toupper( volname, volumelist_ptr->volume_name);
-	    if ( !strcmp( name, volname))
-	    {
-	      found = 1;
+	    /* Check that the name is in the global volume list */
+	    found = 0;
+	    volumelist_ptr = volumelist;
+	    for ( i = 0; i < volumecount; i++) {
+	      utl_toupper( volname, volumelist_ptr->volume_name);
+	      if ( !strcmp( name, volname)) {
+		found = 1;
 	      
-	      switch (cid)
-	      {
+		switch (cid) {
 	        case pwr_cClass_RootVolumeLoad :
 	          strcpy( classname, "RootVolume");
 	          break;
@@ -773,47 +774,51 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	        case pwr_cClass_SharedVolumeLoad :
 	          strcpy( classname, "SharedVolume");
 	          break;
+		}
+
+		fprintf( file, "%s %s %s load\n",
+			 volume_name,
+			 cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+			 classname);
+		break;
 	      }
-
-	      fprintf( file, "%s %s %s load\n",
-		volume_name,
-		cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-		classname);
-	      break;
+	      volumelist_ptr++;
 	    }
-	    volumelist_ptr++;
- 	  }
- 	  if ( !found)
-	  {
-	    char msg[200];
-            sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
+	    if ( !found) {
+	      char msg[200];
+	      sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
  volume list", name);
-	    MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    syntax_error = 1;
+	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      syntax_error = 1;
+	    }
 	  }
-        }
-        sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
+	  sts = ldh_GetNextSibling( ldhses, volobjid, &volobjid);
+	}
       }
-    }
-    else if ( cid == pwr_cClass_RootVolumeConfig ||
-	      cid == pwr_cClass_SubVolumeConfig ||
-	      cid == pwr_cClass_ClassVolumeConfig ||
-	      cid == pwr_cClass_SharedVolumeConfig ||
-	      cid == pwr_cClass_ExternVolumeConfig ) {
-      sts = ldh_ObjidToName( ldhses, envobjid, ldh_eName_Object,
-			volume_name, sizeof(volume_name), &size);
-      if ( EVEN(sts)) return sts;
-      utl_toupper( name, volume_name);
+      else if ( cid == pwr_cClass_RootVolumeConfig ||
+		cid == pwr_cClass_SubVolumeConfig ||
+		cid == pwr_cClass_ClassVolumeConfig ||
+		cid == pwr_cClass_SharedVolumeConfig ||
+		cid == pwr_cClass_ExternVolumeConfig ) {
+	if ( cid != pwr_cClass_ClassVolumeConfig && k == 0)
+	  continue;
+	if ( cid == pwr_cClass_ClassVolumeConfig && k == 1)
+	  continue;
 
-      /* Check that the name is in the global volume list */
-      found = 0;
-      volumelist_ptr = volumelist;
-      for ( i = 0; i < volumecount; i++) {
-	utl_toupper( volname, volumelist_ptr->volume_name);
-	if ( !strcmp( name, volname)) {
-	  found = 1;
+	sts = ldh_ObjidToName( ldhses, envobjid, ldh_eName_Object,
+			       volume_name, sizeof(volume_name), &size);
+	if ( EVEN(sts)) return sts;
+	utl_toupper( name, volume_name);
+
+	/* Check that the name is in the global volume list */
+	found = 0;
+	volumelist_ptr = volumelist;
+	for ( i = 0; i < volumecount; i++) {
+	  utl_toupper( volname, volumelist_ptr->volume_name);
+	  if ( !strcmp( name, volname)) {
+	    found = 1;
 	      
-	  switch (cid) {
+	    switch (cid) {
   	    case pwr_cClass_RootVolumeConfig :
 	      strcpy( classname, "RootVolume");
 	      break;
@@ -829,68 +834,68 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    case pwr_cClass_ExternVolumeConfig :
 	      strcpy( classname, "ExternVolume");
 	      break;
-	  }
+	    }
+	    
+	    switch (cid) {
+	    case pwr_cClass_RootVolumeConfig :
+	    case pwr_cClass_SubVolumeConfig :
+	    case pwr_cClass_ClassVolumeConfig :
+	    case pwr_cClass_SharedVolumeConfig :
+	      fprintf( file, "%s %s %s cnf\n",
+		       volume_name,
+		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       classname);
+	      break;
+	    case pwr_cClass_ExternVolumeConfig : {
+	      char *devprovider;
+	      char *rtprovider;
+	      
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				      "DevProvider", (char **)&devprovider, &size);
+	      if ( EVEN(sts)) return sts;
+	      sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
+				      "RtProvider", (char **)&rtprovider, &size);
+	      if ( EVEN(sts)) return sts;
 
+	      fprintf( file, "%s %s %s cnf %s %s\n",
+		       volume_name,
+		       cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
+		       classname, devprovider, rtprovider);
+	      free( devprovider);
+	      free( rtprovider);
+	      break;
+	    }
+	    }
+	    break;
+	  }
+	  volumelist_ptr++;
+	}
+
+	if ( !found) {
+	  char msg[200];
+	  sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
+ volume list", name);
+	  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	  syntax_error = 1;
+	}
+	else {
 	  switch (cid) {
 	  case pwr_cClass_RootVolumeConfig :
 	  case pwr_cClass_SubVolumeConfig :
-	  case pwr_cClass_ClassVolumeConfig :
-	  case pwr_cClass_SharedVolumeConfig :
-	    fprintf( file, "%s %s %s cnf\n",
-		     volume_name,
-		     cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-		     classname);
-	    break;
-	  case pwr_cClass_ExternVolumeConfig : {
-	    char *devprovider;
-	    char *rtprovider;
-
-	    sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
-				    "DevProvider", (char **)&devprovider, &size);
-	    if ( EVEN(sts)) return sts;
-	    sts = ldh_GetObjectPar( ldhses, envobjid, "RtBody",
-				    "RtProvider", (char **)&rtprovider, &size);
-	    if ( EVEN(sts)) return sts;
-
-	    fprintf( file, "%s %s %s cnf %s %s\n",
-		     volume_name,
-		     cdh_VolumeIdToString( NULL, volumelist_ptr->volume_id, 0, 0),
-		     classname, devprovider, rtprovider);
-	    free( devprovider);
-	    free( rtprovider);
-	    break;
-	  }
-	  }
-	  break;
-	}
-	volumelist_ptr++;
-      }
-
-      if ( !found) {
-	char msg[200];
-	sprintf( msg, "Error in VolumeConfig object,  '%s' is not configured in the global\
- volume list", name);
-	MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	syntax_error = 1;
-      }
-      else {
-	switch (cid) {
-  	case pwr_cClass_RootVolumeConfig :
-	case pwr_cClass_SubVolumeConfig :
-	case pwr_cClass_SharedVolumeConfig : {
-	  /* Check if the databas is created */
-	  sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
-	  cdh_ToLower( filename, filename);
-	  dcli_translate_filename( filename, filename);
-	  sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
-	  dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
-	  if (EVEN(sts)) {
-	    if ( parent_window) {
-	      lfu_sCreaDb *data;
-	      data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
-	      strcpy( data->name, volumelist_ptr->volume_name);
-	      data->vid = volumelist_ptr->volume_id;
-	      switch ( cid) {
+	  case pwr_cClass_SharedVolumeConfig : {
+	    /* Check if the databas is created */
+	    sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
+	    cdh_ToLower( filename, filename);
+	    dcli_translate_filename( filename, filename);
+	    sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
+	    dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+	    if (EVEN(sts)) {
+	      if ( parent_window) {
+		lfu_sCreaDb *data;
+		data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
+		strcpy( data->name, volumelist_ptr->volume_name);
+		data->vid = volumelist_ptr->volume_id;
+		switch ( cid) {
 	      	case pwr_cClass_RootVolumeConfig:
 		  data->cid = pwr_eClass_RootVolume;
 		  break;
@@ -901,54 +906,53 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		  data->cid = pwr_eClass_SharedVolume;
 		  break;
 		default: ;
-	      }
-	      data->ldhses = ldhses;
-
-	      sprintf( text, "   Volume '%s' is not yet created.\n \n\
+		}
+		data->ldhses = ldhses;
+		
+		sprintf( text, "   Volume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
-		       volume_name);
-	      wow_DisplayQuestion( NULL, parent_window,
-				   "Create volume", text,
-				   lfu_creadb_qb_yes, NULL, (void *)data);
+			 volume_name);
+		wow_DisplayQuestion( NULL, parent_window,
+				     "Create volume", text,
+				     lfu_creadb_qb_yes, NULL, (void *)data);
+	      }
+	      else {
+		char msg[200];
+		sprintf( msg, "Error, Volume '%s' is not yet created.", 
+			 volume_name);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+	      }
 	    }
-	    else {
-	      char msg[200];
-	      sprintf( msg, "Error, Volume '%s' is not yet created.", 
-		      volume_name);
-	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	    }
+	    break;
 	  }
-	  break;
-	}
-	case pwr_cClass_ClassVolumeConfig : {
-	  // Check wbload-file...
-	  FILE *wblfile;
-
-	  sprintf( fname, "$pwrp_db/%s.wb_load", volume_name);
-	  cdh_ToLower( fname, fname);
-	  dcli_translate_filename( fname, fname);
-	  wblfile = fopen( fname, "r");
-	  if ( wblfile == 0) {
-	    wblfile = fopen( fname, "w");
+	  case pwr_cClass_ClassVolumeConfig : {
+	    // Check wbload-file...
+	    FILE *wblfile;
+	    
+	    sprintf( fname, "$pwrp_db/%s.wb_load", volume_name);
+	    cdh_ToLower( fname, fname);
+	    dcli_translate_filename( fname, fname);
+	    wblfile = fopen( fname, "r");
 	    if ( wblfile == 0) {
-	      char msg[200];
-	      sprintf( msg, "Error, unable to create file %s, ", fname);
-	      MsgWindow::message( 'E', msg, msgw_ePop_Default);
-	      break;
-	    }	    
-
-	    fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
-		     volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
-	    fclose( wblfile);
+	      wblfile = fopen( fname, "w");
+	      if ( wblfile == 0) {
+		char msg[200];
+		sprintf( msg, "Error, unable to create file %s, ", fname);
+		MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		break;
+	      }	    
+	      
+	      fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
+		       volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+	      fclose( wblfile);
+	    }
+	    break;
 	  }
-	  break;
+	  }
 	}
-      }
       }
     }
-    sts = ldh_GetNextSibling( ldhses, envobjid, &envobjid);
   }
-
   fclose( file);
 #if defined OS_VMS
   system( "purge/nolog " load_cNameVolumeList);
