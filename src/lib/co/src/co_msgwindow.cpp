@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.8 2005-12-15 07:41:17 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.9 2006-05-24 06:59:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,10 +75,12 @@ void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid
 {
 
   if ( default_window) {
+    if ( severity == 'O')
+      severity = 'I';
     default_window->insert( severity, text, oid, is_plc);
   }
   else {
-    if ( hide_info && severity == 'I')
+    if ( (hide_info && severity == 'I') || severity == 'O')
       return;
     if ( severity == 'E' || severity == 'W' || severity == 'F' || severity == 'I')
       printf( "%c %s\n", severity, text);
