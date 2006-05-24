@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.16 2005-12-20 11:56:35 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.17 2006-05-24 15:02:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -396,6 +396,11 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   cdh_uObjid	uid;
   unsigned int idx;
   wb_cdef cdef = v.cdef(o);
+  if ( !cdef) {
+    m_os << "! %WBDUMP-E-Error Failed to get object class" << endl;
+    m_errCnt++;
+    return;
+  }
   const char* cname = cdef.name();
   char *block;
   int size;
