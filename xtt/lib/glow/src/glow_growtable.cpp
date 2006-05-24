@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.9 2005-12-06 09:13:08 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.10 2006-05-24 08:01:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,8 @@ GrowTable::GrowTable( GlowCtx *glow_ctx, char *name, double x, double y,
 		header_text_size(1),
 		header_text_drawtype(glow_eDrawType_TextHelvetica), header_text_color(glow_eDrawType_Line),
 		header_row_height(0.8), row_height(0.6), value_size(0), cell_value(0), selected_cell_row(-1),
-		selected_cell_column(-1), input_focus(0), options(glow_mTableOptions_No)
+		selected_cell_column(-1), select_drawtype( glow_eDrawType_Inherit), 
+		input_focus(0), options(glow_mTableOptions_No)
 {
   for ( int i = 0; i < TABLE_MAX_COL; i++) {
     strcpy( header_text[i], "");
@@ -100,6 +101,7 @@ void GrowTable::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowTable_header_row_height) << FSPACE << header_row_height << endl;
   fp << int(glow_eSave_GrowTable_row_height) << FSPACE << row_height << endl;
   fp << int(glow_eSave_GrowTable_options) << FSPACE << options << endl;
+  fp << int(glow_eSave_GrowTable_select_drawtype) << FSPACE << select_drawtype << endl;
   for ( int i = 0; i < TABLE_MAX_COL; i++) {
     fp << int(glow_eSave_GrowTable_column_width1)+2*i << FSPACE << column_width[i] << endl;
     fp << int(glow_eSave_GrowTable_header_text1)+2*i << FSPACE << header_text[i] << endl;
@@ -146,6 +148,7 @@ void GrowTable::open( ifstream& fp)
       case glow_eSave_GrowTable_header_row_height: fp >> header_row_height; break;
       case glow_eSave_GrowTable_row_height: fp >> row_height; break;
       case glow_eSave_GrowTable_options: fp >> tmp; options = (glow_mTableOptions)tmp; break;
+      case glow_eSave_GrowTable_select_drawtype: fp >> tmp; select_drawtype = (glow_eDrawType)tmp; break;
       case glow_eSave_GrowTable_column_width1: fp >> column_width[0]; break;
       case glow_eSave_GrowTable_header_text1: fp.get(); fp.getline( header_text[0], sizeof(header_text[0])); break;
       case glow_eSave_GrowTable_column_width2: fp >> column_width[1]; break;
@@ -342,8 +345,14 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
 
   glow_eDrawType light_drawtype;
   glow_eDrawType dark_drawtype;
+  glow_eDrawType sel_drawtype;
+
   dark_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fill_drawtype, 2, 0);
   light_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fill_drawtype, -2, 0);
+  if ( select_drawtype == glow_eDrawType_Inherit)
+    sel_drawtype = dark_drawtype;
+  else
+    sel_drawtype = select_drawtype;
 
   ll_x = int( dx1 * ctx->zoom_factor_x) - ctx->offset_x;
   ll_y = int( dy1 * ctx->zoom_factor_y) - ctx->offset_y;
@@ -451,7 +460,7 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
     if ( selected_cell_row >= 0 && selected_cell_column == 0) {
       x = ll_x;
       y = t_ll_y + row_height * ctx->zoom_factor_y * selected_cell_row;
-      glow_draw_fill_rect( ctx, int(x), int(y), header_w, int(row_height * ctx->zoom_factor_y), dark_drawtype);
+      glow_draw_fill_rect( ctx, int(x), int(y), header_w, int(row_height * ctx->zoom_factor_y), sel_drawtype);
     }
 
     if ( shadow) {
@@ -505,7 +514,7 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
       x += column_width[i] * ctx->zoom_factor_x;
     y = t_ll_y + row_height * ctx->zoom_factor_y * selected_cell_row;
     glow_draw_fill_rect( ctx, int(x), int(y), int(column_width[selected_cell_column] * ctx->zoom_factor_x), 
-			 int(row_height * ctx->zoom_factor_y), dark_drawtype);
+			 int(row_height * ctx->zoom_factor_y), sel_drawtype);
   }
 
   if ( shadow) {

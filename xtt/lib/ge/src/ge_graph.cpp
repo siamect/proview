@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.31 2006-05-16 11:51:01 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.32 2006-05-24 08:01:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1259,7 +1259,8 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"HeaderRowHeight", 	"Table.HeaderRowHeight",
 					"HeaderTextSize", 	"Table.HeaderTextSize",
 					"HeaderTextBold", 	"Table.HeaderTextBold",
-					"HeaderTextColor", 	"Table.HeaderTextColor",
+					"HeaderTextBold", 	"Table.HeaderTextBold",
+					"SelectColor", 		"Table.SelectColor",
 					"Options", 		"Table.Options",
 					"VerticalScrollbar",   	"Table.VerticalScrollbar",
 					"HorizontalScrollbar",	"Table.HorizontalScrollbar",

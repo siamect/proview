@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.h,v 1.5 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growtable.h,v 1.6 2006-05-24 08:01:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -169,6 +169,7 @@ class GrowTable : public GrowRect {
   char			*cell_value;		//!< Contains the cell values.
   int			selected_cell_row;	//!< Row of the currently selected cell. -1 of no row is selected.
   int			selected_cell_column;	//!< Column of the currently selected cell. -1 of no row is selected.
+  glow_eDrawType	select_drawtype;	//!< Drawtype for selected cell.
   int			input_focus;		//!< This object has input focus.
   int 			header_text_bold;	//!< Header text is bold.
   glow_mTableOptions	options;		//!< Options bitmask.

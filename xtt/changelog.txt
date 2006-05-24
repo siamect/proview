@@ -13,3 +13,4 @@
                      insensitiv, and Invisible.
 060516 cs  ge        Bit type added in Invisible to check visibility on bits in a bitmap.
 060522 cs  ge        Bugfix for $user attributes. Scan function for dynamics wasn't called. 
+060524 cs  ge        Property for selected cell color in GrowTable.

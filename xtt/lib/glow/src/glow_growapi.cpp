@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.21 2006-05-16 11:50:27 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.22 2006-05-24 08:01:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1889,6 +1889,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->header_text_color;
         attrinfo[i].type = glow_eType_Color;
         attrinfo[i++].size = sizeof( op->header_text_color);
+      }
+      if ( (name = growapi_translate( transtab, "SelectColor"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->select_drawtype;
+        attrinfo[i].type = glow_eType_Color;
+        attrinfo[i++].size = sizeof( op->select_drawtype);
       }
       if ( (name = growapi_translate( transtab, "Options"))) {
         strcpy( attrinfo[i].name, name);

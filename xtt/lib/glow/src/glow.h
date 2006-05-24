@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.13 2006-05-16 11:50:27 claes Exp $
+ * Proview   $Id: glow.h,v 1.14 2006-05-24 08:01:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1580,7 +1580,8 @@ typedef enum {
 	glow_eSave_GrowTable_column_width11    	= 4260,
 	glow_eSave_GrowTable_header_text11    	= 4261,
 	glow_eSave_GrowTable_column_width12    	= 4262,
-	glow_eSave_GrowTable_header_text12    	= 4263
+	glow_eSave_GrowTable_header_text12    	= 4263,
+	glow_eSave_GrowTable_select_drawtype   	= 4264
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation
