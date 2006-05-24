@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.h,v 1.36 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_vrepwbl.h,v 1.37 2006-05-24 15:00:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -165,7 +165,7 @@ public:
   bool deleteFamily(pwr_tStatus *sts, wb_orep *orep) {return false;}
   bool deleteOset(pwr_tStatus *sts, wb_oset *oset) {return false;}
 
-  bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name) { return false;}
+  bool renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name);
 
 
   bool commit(pwr_tStatus *sts) {return false;}

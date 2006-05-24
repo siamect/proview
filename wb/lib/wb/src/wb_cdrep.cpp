@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.31 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.32 2006-05-24 15:00:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -793,4 +793,8 @@ ldh_eVolRep wb_cdrep::vtype() const
   return m_orep->vtype();
 }
 
+bool wb_cdrep::renameClass( pwr_tStatus *sts, wb_name &name)
+{
+  return m_orep->vrep()->renameObject( sts, m_orep, name);
+}
 

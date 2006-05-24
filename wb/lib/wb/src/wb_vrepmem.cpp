@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.22 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.23 2006-05-24 15:00:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 #include "wb_volume.h"
 #include "wb_palfile.h"
 #include "pwr_baseclasses.h"
+#include "co_msgwindow.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -1168,6 +1169,16 @@ bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
     return LDH__NAMALREXI;
   }
 
+  if ( m_classeditor && memo->m_cid == pwr_eClass_ClassDef) {
+    pwr_tCid cid = cdh_ClassObjidToId( memo->m_oid);
+
+    wb_cdrep *cdrep = m_merep->cdrep( sts, cid);
+    if ( cdrep) {
+      cdrep->renameClass( sts, name);
+      printf( "cdrep: %s\n", cdrep->name());
+    }
+  }
+
   memo->m_ohtime = time;
 
   *sts = LDH__SUCCESS;
@@ -1884,6 +1895,12 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
 
     wb_print_wbl wprint( fp);
     wprint.printVolume( vol);
+    if ( wprint.getErrCnt() != 0) {
+      char str[400];
+      sprintf( str, "Errors when saving volume: %d error%s found", wprint.getErrCnt(),
+	       (wprint.getErrCnt() == 1) ? "" : "s");
+      MsgWindow::message( 'E', str);
+    }
   }
   catch ( wb_error& e) {
     *sts = e.sts();
@@ -2297,3 +2314,4 @@ void wb_vrepmem::printPaletteFile()
 
   PalFile::config_tree_print( pal_cLocalPaletteFile, menu, &psts);
 }
+

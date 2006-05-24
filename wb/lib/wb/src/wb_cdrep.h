@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.h,v 1.21 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_cdrep.h,v 1.22 2006-05-24 15:00:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,6 +89,7 @@ public:
   void updateTemplate( pwr_eBix bix, void *b, pwr_tOid oid, pwr_tOid toid);
   pwr_tStatus sts() { return m_sts;}
   ldh_eVolRep vtype() const;
+  bool renameClass( pwr_tStatus *sts, wb_name &name);
 };
 
 #endif

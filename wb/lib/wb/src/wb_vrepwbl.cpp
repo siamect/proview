@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.52 2006-05-22 10:30:00 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.53 2006-05-24 15:00:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -315,7 +315,8 @@ int wb_vrepwbl::load( const char *fname)
 
   if ( error_cnt || wblparser_error_cnt) {
     char str[80];
-    sprintf( str, "Errors when loading volume: %d errors found", error_cnt + wblparser_error_cnt);
+    sprintf( str, "Errors when loading volume: %d error%s found", 
+	     error_cnt + wblparser_error_cnt, (error_cnt + wblparser_error_cnt == 1) ? "" : "s");
     MsgWindow::message( 'F', str);
   }
   else
@@ -1698,4 +1699,15 @@ void *wb_vrepwbl::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, voi
     *sts = LDH__NOSUCHBODY;
     return 0;
   }
+}
+
+bool wb_vrepwbl::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
+{
+  *sts = LDH__SUCCESS;
+    
+  wb_wblnode *n = ((wb_orepwbl *) orep)->wblNode();
+
+  string sname( name.object());
+  n->setText( sname);
+  return true;
 }
