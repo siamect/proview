@@ -27,3 +27,6 @@
 060519 lw  wb        Update of instance objects when a class is modified (without reload).
 060522 cs  wtt       Update Class added in menu, and new commands: 'update classes' and
                      'check classes'.
+060524 cs  wb        StructName in ObjBodyDef inserted in PostCreate method.
+060524 cs  wtt       Bugfix in classeditor. Change of classname caused unidentified class of
+                     the template object of the class.
