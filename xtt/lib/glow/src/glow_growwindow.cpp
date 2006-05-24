@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.8 2006-05-16 11:50:27 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.9 2006-05-24 11:57:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -695,7 +695,7 @@ void GrowWindow::set_input_focus( int focus)
 void GrowWindow::update_attributes()
 {
   if ( strcmp( input_file_name, file_name) != 0 ||
-       strcmp( window_ctx->owner, owner) != 0) {
+       (window_ctx && strcmp( window_ctx->owner, owner) != 0)) {
     // New graph, create new context
 #if 0
     int ur_x = int( (x_right - vertical_scrollbar * scrollbar_width) * ctx->zoom_factor_x) - ctx->offset_x;
@@ -703,7 +703,8 @@ void GrowWindow::update_attributes()
     int	ur_y = int( (y_high - horizontal_scrollbar * scrollbar_width) * ctx->zoom_factor_y) - ctx->offset_y;
     int ll_y = int( (y_low + y_low_offs) * ctx->zoom_factor_y) - ctx->offset_y;
 
-    window_ctx->draw_buffer_only = ctx->draw_buffer_only;
+    if ( window_ctx)
+      window_ctx->draw_buffer_only = ctx->draw_buffer_only;
     glow_draw_set_clip_rectangle( ctx, ll_x, ll_y, ur_x, ur_y);
 #endif
     int ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
