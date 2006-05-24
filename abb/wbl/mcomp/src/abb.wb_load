@@ -34977,14 +34977,14 @@ ABB ACS800 Aggregate
     !  @Group Profibus
     !  @Summary Profibus slave ABB ACS800
     !  Profibus slave object for frequency converter ABB ACS800. 
-    !
+    ! 
     !  The slave object is configured below a Profibus master object in
     !  the node hierarchy. 
     !  
     !  @b Configuration
     !  Use the 'Configure Slave' method in the popup menu of the object
     !  to configure the slave.
-    !
+    ! 
     !  @b See also
     !  @classlink Pb_DP_Slave profibus_pb_dp_slave.html
     !*/
@@ -36115,8 +36115,9 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_Sensor_Pb_PA 2151907328 01-JAN-1970 01:00:00.00
-        Body RtBody 03-APR-2006 09:05:25.44
+        Body RtBody 23-MAY-2006 18:21:42.81
           Attr Value1.Super.Specification = "Sensor"
+          Attr Value1.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi1"
           Attr Value1.Value.PresMaxLimit = 1.000000e+02
           Attr Value1.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
           Attr Value1.LimitHH.Limit = 9.500000e+01
@@ -36127,14 +36128,16 @@ ABB ACS800 Aggregate
           Attr Value1.LimitLL.AlarmText = "Below LowLow limit, sensor, "
           Attr Value1.LimitLL.Limit = 5.000000e+00
           Attr Value1.Trend.Multiple = 1
-          Attr Value1.Trend.DataName = "_O0.0.0.0:0"
+          Attr Value1.Trend.DataName = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value1.Value.ActualValue"
           Attr Value1.Trend.StorageTime = 239
           Attr Value1.Trend.BufferStatus[0] = 1
           Attr Value1.Trend.BufferStatus[1] = 1
           Attr Value1.Trend.NoOfBuffers = 2
           Attr Value1.Trend.NoOfBufElement = 239
-          Attr Value1.DefTrend = "_O0.0.0.0:0"
+          Attr Value1.DefTrend = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value1.Trend"
+          Attr Status1.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChSts1"
           Attr Value2.Super.Specification = "Sensor"
+          Attr Value2.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi2"
           Attr Value2.Value.PresMaxLimit = 1.000000e+02
           Attr Value2.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
           Attr Value2.LimitHH.Limit = 9.500000e+01
@@ -36145,14 +36148,16 @@ ABB ACS800 Aggregate
           Attr Value2.LimitLL.AlarmText = "Below LowLow limit, sensor, "
           Attr Value2.LimitLL.Limit = 5.000000e+00
           Attr Value2.Trend.Multiple = 1
-          Attr Value2.Trend.DataName = "_O0.0.0.0:0"
+          Attr Value2.Trend.DataName = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value2.Value.ActualValue"
           Attr Value2.Trend.StorageTime = 239
           Attr Value2.Trend.BufferStatus[0] = 1
           Attr Value2.Trend.BufferStatus[1] = 1
           Attr Value2.Trend.NoOfBuffers = 2
           Attr Value2.Trend.NoOfBufElement = 239
-          Attr Value2.DefTrend = "_O0.0.0.0:0"
+          Attr Value2.DefTrend = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value2.Trend"
+          Attr Status2.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChSts2"
           Attr Value3.Super.Specification = "Sensor"
+          Attr Value3.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi3"
           Attr Value3.Value.PresMaxLimit = 1.000000e+02
           Attr Value3.LimitHH.AlarmText = "HighHigh limit exceeded, sensor, "
           Attr Value3.LimitHH.Limit = 9.500000e+01
@@ -36163,13 +36168,14 @@ ABB ACS800 Aggregate
           Attr Value3.LimitLL.AlarmText = "Below LowLow limit, sensor, "
           Attr Value3.LimitLL.Limit = 5.000000e+00
           Attr Value3.Trend.Multiple = 1
-          Attr Value3.Trend.DataName = "_O0.0.0.0:0"
+          Attr Value3.Trend.DataName = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value3.Value.ActualValue"
           Attr Value3.Trend.StorageTime = 239
           Attr Value3.Trend.BufferStatus[0] = 1
           Attr Value3.Trend.BufferStatus[1] = 1
           Attr Value3.Trend.NoOfBuffers = 2
           Attr Value3.Trend.NoOfBufElement = 239
-          Attr Value3.DefTrend = "_O0.0.0.0:0"
+          Attr Value3.DefTrend = "ABB:Class-ABB_Sensor_Pb_PA-Template.Value3.Trend"
+          Attr Status3.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChSts3"
           Attr AlarmTextTransmError = "Transmitter error, value cannot be used, "
           Attr AlarmTextTransmWarning = "Transmitter warning, value uncertain, "
         EndBody
@@ -40553,7 +40559,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_TempSensor_TF12 2152693760 01-JAN-1970 01:00:00.00
-        Body RtBody 04-APR-2006 11:25:08.97
+        Body RtBody 23-MAY-2006 18:19:52.84
           Attr Super.Super.Specification = "ABB Omvandlare TF12"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_tempsensor_tf12.pdf"
           Attr Super.GraphConfiguration = 1
@@ -46076,7 +46082,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_PressureSensor_265GS 2155315200 01-JAN-1970 01:00:00.00
-        Body RtBody 04-APR-2006 11:27:04.84
+        Body RtBody 23-MAY-2006 18:15:53.66
           Attr Super.Super.Specification = "ABB Tryckmätare 265GS"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_pressuresensor_265gs.pdf"
           Attr Super.CastValue1 = "BaseComponent:Class-BasePressureSensor"
@@ -46085,13 +46091,13 @@ ABB ACS800 Aggregate
           Attr Super.Value1.Value.NoOfDecimals = 1
           Attr Super.Value1.Value.PresMaxLimit = 1.000000e+01
           Attr Super.Value1.LimitHH.AlarmText = "HighHigh limit exceeded, pressuresensor, "
-          Attr Super.Value1.LimitHH.Limit = 9.500000e+01
+          Attr Super.Value1.LimitHH.Limit = 9.500000e+00
           Attr Super.Value1.LimitH.AlarmText = "High limit exceeded, pressuresensor, "
-          Attr Super.Value1.LimitH.Limit = 9.000000e+01
+          Attr Super.Value1.LimitH.Limit = 9.000000e+00
           Attr Super.Value1.LimitL.AlarmText = "Below Low limit, pressuresensor, "
-          Attr Super.Value1.LimitL.Limit = 1.000000e+01
+          Attr Super.Value1.LimitL.Limit = 1.000000e+00
           Attr Super.Value1.LimitLL.AlarmText = "Below LowLow limit, pressuresensor, "
-          Attr Super.Value1.LimitLL.Limit = 5.000000e+00
+          Attr Super.Value1.LimitLL.Limit = 5.000000e-01
           Attr Super.Value1.Trend.Multiple = 1
           Attr Super.Value1.Trend.DataName = "ABB:Class-ABB_PressureSensor_265GS-Template.Super.Value1.Value.ActualValue"
           Attr Super.Value1.Trend.StorageTime = 239
@@ -47546,7 +47552,7 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_DiffPressureSensor_265DS 2154790912 01-JAN-1970 01:00:00.00
-        Body RtBody 04-APR-2006 11:27:26.68
+        Body RtBody 23-MAY-2006 18:16:49.37
           Attr Super.Super.Specification = "ABB Differanstryckmätare 265DS"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_diffpressuresensor_265ds.pdf"
           Attr Super.GraphConfiguration = 1
@@ -49021,12 +49027,14 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_FlowSensor_FXE4000 2156363776 01-JAN-1970 01:00:00.00
-        Body RtBody 05-APR-2006 10:00:43.06
+        Body RtBody 23-MAY-2006 18:17:37.70
           Attr Super.Super.Specification = "ABB Flödesmätare FXE4000"
           Attr Super.Super.DataSheet = "$pwr_lang/dsh/abb_flowsensor_fxe4000.pdf"
           Attr Super.CastValue1 = "BaseComponent:Class-BaseFlowSensor"
+          Attr Super.Value1.Super.Specification = "FlowSensor"
           Attr Super.Value1.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi1"
           Attr Super.Value1.Value.Unit = "m³/h"
+          Attr Super.Value1.Value.NoOfDecimals = 1
           Attr Super.Value1.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Value1.LimitHH.AlarmText = "HighHigh limit exceeded, flowsensor, "
           Attr Super.Value1.LimitHH.Limit = 9.500000e+01
@@ -49048,6 +49056,9 @@ ABB ACS800 Aggregate
           Attr Super.CastValue2 = "BaseComponent:Class-BaseFlowSensor"
           Attr Super.DisableValue2 = 1
           Attr Super.Value2.Super.Specification = "FlowSensor"
+          Attr Super.Value2.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi2"
+          Attr Super.Value2.Value.Unit = "m³/h"
+          Attr Super.Value2.Value.NoOfDecimals = 1
           Attr Super.Value2.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Value2.LimitHH.AlarmText = "HighHigh limit exceeded, flowsensor, "
           Attr Super.Value2.LimitHH.Limit = 9.500000e+01
@@ -49058,7 +49069,7 @@ ABB ACS800 Aggregate
           Attr Super.Value2.LimitLL.AlarmText = "Below LowLow limit, flowsensor, "
           Attr Super.Value2.LimitLL.Limit = 5.000000e+00
           Attr Super.Value2.Trend.Multiple = 1
-          Attr Super.Value2.Trend.DataName = "ABB:Class-ABB_FlowSensor_FXE4000-Template.Super.Value2.Value"
+          Attr Super.Value2.Trend.DataName = "ABB:Class-ABB_FlowSensor_FXE4000-Template.Super.Value2.Value.ActualValue"
           Attr Super.Value2.Trend.StorageTime = 239
           Attr Super.Value2.Trend.BufferStatus[0] = 1
           Attr Super.Value2.Trend.BufferStatus[1] = 1
@@ -49070,6 +49081,9 @@ ABB ACS800 Aggregate
           Attr Super.CastValue3 = "BaseComponent:Class-BaseFlowSensor"
           Attr Super.DisableValue3 = 1
           Attr Super.Value3.Super.Specification = "FlowSensor"
+          Attr Super.Value3.Value.SigChanCon = "$IoConnect:ABB-Class-ABB_Pb_PA_Module.ChAi3"
+          Attr Super.Value3.Value.Unit = "m³/h"
+          Attr Super.Value3.Value.NoOfDecimals = 1
           Attr Super.Value3.Value.PresMaxLimit = 1.000000e+02
           Attr Super.Value3.LimitHH.AlarmText = "HighHigh limit exceeded, flowsensor, "
           Attr Super.Value3.LimitHH.Limit = 9.500000e+01
@@ -49080,7 +49094,7 @@ ABB ACS800 Aggregate
           Attr Super.Value3.LimitLL.AlarmText = "Below LowLow limit, flowsensor, "
           Attr Super.Value3.LimitLL.Limit = 5.000000e+00
           Attr Super.Value3.Trend.Multiple = 1
-          Attr Super.Value3.Trend.DataName = "ABB:Class-ABB_FlowSensor_FXE4000-Template.Super.Value3.Value"
+          Attr Super.Value3.Trend.DataName = "ABB:Class-ABB_FlowSensor_FXE4000-Template.Super.Value3.Value.ActualValue"
           Attr Super.Value3.Trend.StorageTime = 239
           Attr Super.Value3.Trend.BufferStatus[0] = 1
           Attr Super.Value3.Trend.BufferStatus[1] = 1
