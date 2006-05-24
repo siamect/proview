@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.33 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.34 2006-05-24 06:59:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,7 +95,7 @@ wb_merep::wb_merep(const char *dirName, wb_erep *erep, wb_vrep *vrep) :
               addDbs(&sts, (wb_mvrep *)vrep);
               char buff[256];
               sprintf(buff, "Local class volume \"%s\" loaded from \"%s\", in data base %s", vp->name, fileName, dirName);
-              MsgWindow::message( 'I', buff);
+              MsgWindow::message( 'O', buff);
             }
             catch (wb_error& e) {
               MsgWindow::message( 'E', "Unable to open local class volume", fileName, e.what().c_str());

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.46 2006-05-22 09:39:37 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.47 2006-05-24 06:59:10 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -491,8 +491,11 @@ void wb_erep::loadCommonMeta( pwr_tStatus *status)
         vrep->load();
         addDbs( &sts, vrep);
         char buff[256];
-        sprintf(buff, "Global class volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
-        MsgWindow::message( 'I', buff);
+	if ( vrep->cid() == pwr_eClass_ClassVolume)
+	  sprintf(buff, "Global class volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
+	else
+	  sprintf(buff, "Volume \"%s\" loaded from \"%s\"", vrep->dbsenv()->vp->name, vname);
+        MsgWindow::message( 'O', buff);
       }
       catch ( wb_error& e) {
 	if ( m_options & ldh_mWbOption_IgnoreDLoadError)
@@ -567,7 +570,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       try {
 	wb_vrepext *vrepext = new wb_vrepext( this, vid, vol_array[0], vol_array[4]);
 	addExtern( &sts, vrepext);
-	MsgWindow::message( 'I', "Volume loaded", vname);
+	MsgWindow::message( 'O', "Volume loaded", vname);
 	vol_cnt++;
       }
       catch ( wb_error& e) {
@@ -594,7 +597,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           vrep = new wb_vrepdbs( this, vname);
           vrep->load();
           addDbs( &sts, vrep);
-          MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
+          MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
           vol_cnt++;
         }
         catch ( wb_error& e) {
@@ -619,7 +622,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
               vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
-              MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
+              MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
             }
             catch ( wb_error& e) {
 	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
@@ -655,7 +658,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
               vrep->load();
               // vrep->name( vol_array[0]);
               addDbs( &sts, vrep);
-              MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
+              MsgWindow::message( 'O', "Volume loaded from snapshot file", vname);
             }
             catch ( wb_error& e) {
 	      if ( m_options & ldh_mWbOption_IgnoreDLoadError)
