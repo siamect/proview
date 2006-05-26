@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrep.h,v 1.25 2006-05-11 07:12:19 claes Exp $
+ * Proview   $Id: wb_vrep.h,v 1.26 2006-05-26 06:59:01 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,17 +54,17 @@ protected:
 public:
 
   virtual ~wb_vrep() {};
-    
+
   wb_vrep() : m_vid(pwr_cNVid), m_cid(pwr_cNCid) {}
   wb_vrep(pwr_tVid vid) : m_vid(vid), m_cid(pwr_cNCid) {}
   wb_vrep(pwr_tVid vid, pwr_tCid cid) : m_vid(vid), m_cid(cid) {}
-  
+
   virtual void unref() = 0;
   virtual wb_vrep *ref() = 0;
 
   virtual ldh_eVolRep type() const = 0;
   virtual wb_erep *erep() = 0;
-    
+
   virtual wb_vrep *next() = 0;
 
   virtual pwr_tOid oid(pwr_tStatus *sts, const wb_orep *o) = 0;
@@ -77,14 +77,14 @@ public:
   virtual pwr_tOid loid(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tOid boid(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tOid aoid(pwr_tStatus *sts, const wb_orep *o) = 0;
-    
+
   virtual const char * objectName(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual wb_name longName(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tTime ohTime(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tTime rbTime(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_tTime dbTime(pwr_tStatus *sts, const wb_orep *o) = 0;
   virtual pwr_mClassDef flags(pwr_tStatus *sts, const wb_orep *o) = 0;
-    
+
   virtual bool isOffspringOf(pwr_tStatus *sts, const wb_orep *child, const wb_orep *parent) = 0;
 
   virtual wb_orep *object(pwr_tStatus *sts) = 0;
@@ -134,6 +134,8 @@ public:
 
   virtual wb_orep *next(pwr_tStatus *sts, const wb_orep *o) = 0;
 
+  //virtual wb_orep *nextClass(pwr_tStatus *sts, const wb_orep *o) = 0;
+
   virtual wb_orep *previous(pwr_tStatus *sts, const wb_orep *o) = 0;
 
   virtual wb_srep *newSession() = 0;
@@ -143,7 +145,7 @@ public:
   pwr_tCid cid() const { return m_cid;}
   void vid(pwr_tVid vid) { m_vid = vid;}
   void cid(pwr_tCid cid) { m_cid = cid;}
-  
+
   virtual void name( const char *n) { strcpy( m_name, n);}
   virtual const char *name() { return m_name;}
   virtual wb_merep *merep() const = 0;
