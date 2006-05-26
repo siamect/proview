@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.h,v 1.30 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_vrepdb.h,v 1.31 2006-05-26 11:57:28 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,8 +182,8 @@ public:
 
   void load();
 
-  void checkMeta();
-  void updateMeta();
+  pwr_tStatus checkMeta();
+  pwr_tStatus updateMeta();
 
   virtual bool exportVolume(wb_import &e);
 
@@ -227,8 +227,8 @@ public:
 
 //  virtual void checkClassList(pwr_tOid oid, pwr_tCid cid, bool update);
 
-  virtual void updateObject(pwr_tOid oid, pwr_tCid cid);
-  virtual void checkObject(pwr_tOid oid, pwr_tCid cid);
+  virtual pwr_tStatus updateObject(pwr_tOid oid, pwr_tCid cid);
+  virtual pwr_tStatus checkObject(pwr_tOid oid, pwr_tCid cid);
 };
 
 #endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.44 2006-05-23 10:19:51 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.45 2006-05-26 11:57:28 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -642,6 +642,8 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, siz
     int rc = 0;
     m_ohead.get(m_db->m_txn, orp->oid());
     *sts = LDH__SUCCESS;
+    pwr_tTime time;
+    clock_gettime(CLOCK_REALTIME, &time);
 
     switch (bix) {
     case pwr_eBix_rt:
@@ -649,6 +651,8 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, siz
 
       wb_db_rbody rb(m_db, m_ohead.oid());
       rc = rb.put(m_db->m_txn, offset, size, p);
+      m_ohead.rbTime(time);
+      m_ohead.put(m_db->m_txn);
       if (rc)
         printf("wb_vrepdb::writeAttribute rb.put rc %d\n", rc);
       break;
@@ -658,6 +662,8 @@ bool wb_vrepdb::writeAttribute(pwr_tStatus *sts, wb_orep *orp, pwr_eBix bix, siz
 
       wb_db_dbody db(m_db, m_ohead.oid());
       rc = db.put(m_db->m_txn, offset, size, p);
+      m_ohead.dbTime(time);
+      m_ohead.put(m_db->m_txn);
       if (rc)
         printf("wb_vrepdb::writeAttribute db.put rc %d\n", rc);
       break;
@@ -747,6 +753,8 @@ bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
     int rc = 0;
     m_ohead.get(m_db->m_txn, o->oid());
     *sts = LDH__SUCCESS;
+    pwr_tTime time;
+    clock_gettime(CLOCK_REALTIME, &time);
 
     switch (bix) {
     case pwr_eBix_rt:
@@ -756,6 +764,8 @@ bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
       rc = rb.put(m_db->m_txn, 0, m_ohead.rbSize(), p);
       if (rc)
         printf("wb_vrepdb::writeBody rb.put rc %d\n", rc);
+      m_ohead.rbTime(time);
+      m_ohead.put(m_db->m_txn);
       break;
     }
     case pwr_eBix_dev:
@@ -765,6 +775,8 @@ bool wb_vrepdb::writeBody(pwr_tStatus *sts, wb_orep *o, pwr_eBix bix, void *p)
       rc = db.put(m_db->m_txn, 0, m_ohead.dbSize(), p);
       if (rc)
         printf("wb_vrepdb::writeBody db.put rc %d\n", rc);
+      m_ohead.dbTime(time);
+      m_ohead.put(m_db->m_txn);
       break;
     }
     default:
@@ -1567,7 +1579,7 @@ bool wb_vrepdb::importPaste()
 }
 
 
-void wb_vrepdb::checkMeta()
+pwr_tStatus wb_vrepdb::checkMeta()
 {
   wb_db_class c(m_db);
 
@@ -1581,15 +1593,17 @@ void wb_vrepdb::checkMeta()
   c.iter(this);
 
   if (m_classCount == 0)
-    return;
+    return LDH__SUCCESS;
     
   char buff[256];
   sprintf(buff, "A total of %d object instances of %d classes can to be updated", m_totalInstanceCount, m_classCount);
 
   MsgWindow::message('W', buff);
+  
+  return LDH__SUCCESS;
 }
 
-void wb_vrepdb::updateMeta()
+pwr_tStatus wb_vrepdb::updateMeta()
 {
   wb_db_class c(m_db);
 
@@ -1604,10 +1618,10 @@ void wb_vrepdb::updateMeta()
     c.iter(this);
   } catch (DbException &e) {
     printf("vrepdb: %s\n", e.what());
-    return;
+    return LDH__DBERROR;
   } catch (wb_error &e) {
     printf("vrepdb: %s\n", e.what().c_str());
-    return;
+    return LDH__DBERROR;
   }
   
   if (m_classCount != 0) {
@@ -1623,15 +1637,17 @@ void wb_vrepdb::updateMeta()
 
     if (sts) {
       MsgWindow::message(co_error(sts), "Could not save class updates to database");
-      return;
+      return LDH__DBERROR;
     }
   }
   m_merep->copyFiles(m_fileName, m_erep->merep());
   delete m_merep;
   m_merep = new wb_merep(m_fileName, m_erep, this);
+  
+  return LDH__SUCCESS;
 }
 
-void wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
+pwr_tStatus wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
 {
   static wb_cdrep *o_crep = 0;
   static wb_cdrep *n_crep = 0;
@@ -1693,18 +1709,18 @@ void wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
   }
   
   if (skip)
-    return;
+    return LDH__SUCCESS;
     
   m_instanceCount++;
-
+  
+  return LDH__SUCCESS;
 }
 
-void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
+pwr_tStatus wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
 {
   static wb_cdrep *o_crep = 0;
   static wb_cdrep *n_crep = 0;
   static bool skip = false;
-  
   pwr_tTime o_time = {0, 0};
   pwr_tTime n_time = {0, 0};
 
@@ -1760,7 +1776,7 @@ void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
   }
 
   if (skip) {
-    return;
+    return LDH__SUCCESS;
   }
   
   m_instanceCount++;
@@ -1768,7 +1784,7 @@ void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
   m_ohead.get(m_db->m_txn, oid);
 
   if (time_Acomp(&o_time, &n_time) == 0)
-    return;
+    return LDH__SUCCESS;
 
   wb_db_rbody rb(m_db, m_ohead.oid());
   void *rp = calloc(1, m_ohead.rbSize());
@@ -1793,18 +1809,30 @@ void wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
   free(rp);
   free(dp);
   
+  pwr_tTime time;
+  clock_gettime(CLOCK_REALTIME, &time);
+
   if (rbody) {
-    rc = rb.put(m_db->m_txn, 0, m_ohead.rbSize(), rbody);
+    rc = rb.put(m_db->m_txn, 0, rsize, rbody);
     if (rc)
       printf("wb_vrepdb::writeBody rb.put rc %d\n", rc);
     rc = 0;
     free(rbody);
+    m_ohead.rbSize(rsize);
+    m_ohead.rbTime(time);
+
   }
   if (dbody) {
-    rc = db.put(m_db->m_txn, 0, m_ohead.dbSize(), dbody);
+    rc = db.put(m_db->m_txn, 0, dsize, dbody);
     if (rc)
       printf("wb_vrepdb::writeBody db.put rc %d\n", rc);
     free(dbody);
+    m_ohead.dbSize(dsize);
+    m_ohead.dbTime(time);
   }
-}
 
+  m_ohead.ohTime(time);
+  m_ohead.put(m_db->m_txn);
+  
+  return LDH__SUCCESS;
+}

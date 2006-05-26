@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.35 2006-05-22 09:40:39 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.36 2006-05-26 11:57:28 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -159,7 +159,7 @@ public:
   virtual bool exportDocBlock(wb_import &e);
   virtual bool exportMeta(wb_import &e);
   virtual bool exportTree(wb_treeimport &i, pwr_tOid oid);
-  bool wb_vrepdbs::exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot);
+  bool exportTreeObject(wb_treeimport &i, dbs_sObject *op, bool isRoot);
   virtual bool importTree(bool keepref) { return false;}
   virtual bool importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, pwr_tOid poid,
 				pwr_tOid boid, const char *name, pwr_mClassDef flags,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_convert_volume.h,v 1.1 2006-05-21 22:36:22 lw Exp $
+ * Proview   $Id: wb_convert_volume.h,v 1.2 2006-05-26 11:57:28 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,8 +36,8 @@ public:
   virtual ~wb_convert_volume() {}
 
   void setUpdate(bool update) { m_update = update;}
-  virtual void updateObject(pwr_tOid oid, pwr_tCid cid) = 0;  
-  virtual void checkObject(pwr_tOid oid, pwr_tCid cid) = 0;  
+  virtual pwr_tStatus updateObject(pwr_tOid oid, pwr_tCid cid) = 0;  
+  virtual pwr_tStatus checkObject(pwr_tOid oid, pwr_tCid cid) = 0;  
 };
 
 #endif
