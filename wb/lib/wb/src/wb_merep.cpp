@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.34 2006-05-24 06:59:10 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.35 2006-05-29 10:04:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -211,6 +211,7 @@ void wb_merep::copyFiles(const char *dirName, wb_merep *merep)
 bool wb_merep::compareMeta(const char *dbName, wb_merep *merep)
 {
   mvrep_iterator it;
+  int need_update = 0;
 
   for (it = m_mvrepdbs.begin(); it != m_mvrepdbs.end(); it++) {
     wb_vrepdbs *i_dp = (wb_vrepdbs *)it->second;
@@ -238,8 +239,8 @@ bool wb_merep::compareMeta(const char *dbName, wb_merep *merep)
 
     sprintf(buff, "Local class volume \"%s\" [%s] (%s), in data base \"%s\", can be updated [%s]",
             i_dp->dbsenv()->vp->name, i_timbuf, i_dp->fileName(), dbName, e_timbuf);
-    MsgWindow::message('W', buff);
-
+    MsgWindow::message('W', buff, msgw_ePop_No);
+    need_update++;
   }
   
   for (it = merep->m_mvrepdbs.begin(); it != merep->m_mvrepdbs.end(); it++) {
@@ -254,6 +255,8 @@ bool wb_merep::compareMeta(const char *dbName, wb_merep *merep)
       MsgWindow::message('W', buff);
     }
   }
+  if ( need_update)
+    MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
   
   return true;
 }

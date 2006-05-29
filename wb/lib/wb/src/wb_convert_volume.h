@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_convert_volume.h,v 1.2 2006-05-26 11:57:28 lw Exp $
+ * Proview   $Id: wb_convert_volume.h,v 1.3 2006-05-29 10:04:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,9 +30,10 @@ public:
   int m_instanceCount;
   int m_totalInstanceCount;
   bool m_update;  
+  int m_needUpdateCount;
   
   wb_convert_volume() : m_cidChecked(pwr_cNCid), m_classCount(0), m_instanceCount(0), m_update(false) {};
-  wb_convert_volume(bool update) : m_cidChecked(pwr_cNCid), m_classCount(0), m_instanceCount(0), m_update(update) {};
+  wb_convert_volume(bool update) : m_cidChecked(pwr_cNCid), m_classCount(0), m_instanceCount(0), m_update(update), m_needUpdateCount(0) {};
   virtual ~wb_convert_volume() {}
 
   void setUpdate(bool update) { m_update = update;}

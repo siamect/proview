@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.45 2006-05-26 11:57:28 lw Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.46 2006-05-29 10:04:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1582,23 +1582,27 @@ bool wb_vrepdb::importPaste()
 pwr_tStatus wb_vrepdb::checkMeta()
 {
   wb_db_class c(m_db);
+  char buff[256];
 
   m_merepCheck = m_erep->merep();
   m_classCount = 0;
   m_cidChecked = pwr_cNCid;
   m_totalInstanceCount = 0;
+  m_needUpdateCount = 0;
   
   setUpdate(false);  
 
   c.iter(this);
 
-  if (m_classCount == 0)
+  if (m_classCount == 0) {
+    MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
     return LDH__SUCCESS;
-    
-  char buff[256];
+  }
+
   sprintf(buff, "A total of %d object instances of %d classes can to be updated", m_totalInstanceCount, m_classCount);
 
-  MsgWindow::message('W', buff);
+  MsgWindow::message('W', buff, msgw_ePop_No);
+  MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
   
   return LDH__SUCCESS;
 }
@@ -1680,8 +1684,9 @@ pwr_tStatus wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
 	    time_AtoAscii(&n_time, time_eFormat_DateAndTime, n_timbuf, sizeof(n_timbuf));
 	    sprintf(buff, "Class \"%s\" [%s], %d instance%s, can be updated to [%s]",
 		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"), n_timbuf);	  
-	    MsgWindow::message('W', buff);
+	    MsgWindow::message('W', buff, msgw_ePop_No);
 	    m_totalInstanceCount += m_instanceCount;
+	    m_needUpdateCount++;
 	  }
         }
       }
