@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_classdef.wb_load,v 1.6 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_classdef.wb_load,v 1.7 2006-05-31 08:09:07 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -193,35 +193,73 @@ SObject pwrs:Class
     EndObject
     Object ConfiguratorPosnn $Menu
       Object Pointed $Menu
-	Object ConfigFo $MenuButton
+	Object Configure $MenuCascade
 	  Body SysBody
-	    Attr ButtonName = "ConfigFo"
-	    Attr MethodName = "$ClassDef-ConfigFc"
+	    Attr ButtonName = "Configure"
 	  EndBody
-	EndObject
-	Object ConfigConnectedFo $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "ConfigConnectedFo"
-	    Attr MethodName = "$ClassDef-ConfigFc"
-	    Attr MethodArguments[0] = "PlcConnect"
-	  EndBody
+          Object Fo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Fo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	    EndBody
+	  EndObject
+	  Object ConnectedFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "ConnectedFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "PlcConnect"
+	    EndBody
+	  EndObject
+	  Object CCodeFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "CCodeFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "CCode"
+	    EndBody
+	  EndObject
+	  Object ConnectedCCodeFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "ConnectedCCodeFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "PlcConnectCCode"
+	    EndBody
+	  EndObject
 	EndObject
       EndObject
     EndObject
     Object ConfiguratorPosos $Menu
       Object Pointed $Menu
-	Object ConfigFo $MenuButton
+	Object Configure $MenuCascade
 	  Body SysBody
-	    Attr ButtonName = "ConfigFo"
-	    Attr MethodName = "$ClassDef-ConfigFc"
+	    Attr ButtonName = "Configure"
 	  EndBody
-	EndObject
-	Object ConfigConnectedFo $MenuButton
-	  Body SysBody
-	    Attr ButtonName = "ConfigConnectedFo"
-	    Attr MethodName = "$ClassDef-ConfigFc"
-	    Attr MethodArguments[0] = "PlcConnect"
-	  EndBody
+          Object Fo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "Fo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	    EndBody
+	  EndObject
+	  Object ConnectedFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "ConnectedFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "PlcConnect"
+	    EndBody
+	  EndObject
+	  Object CCodeFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "CCodeFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "CCode"
+	    EndBody
+	  EndObject
+	  Object ConnectedCCodeFo $MenuButton
+	    Body SysBody
+	      Attr ButtonName = "ConnectedCCodeFo"
+	      Attr MethodName = "$ClassDef-ConfigFc"
+	      Attr MethodArguments[0] = "PlcConnectCCode"
+	    EndBody
+	  EndObject
 	EndObject
       EndObject
     EndObject

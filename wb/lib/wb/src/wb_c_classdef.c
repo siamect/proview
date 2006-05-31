@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_classdef.c,v 1.5 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_c_classdef.c,v 1.6 2006-05-31 08:10:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,9 +75,12 @@ static pwr_tStatus ConfigFc (
   int		size;
   pwr_tCid	cid;
   pwr_tTid	tid;
+  unsigned int  flags;
   pwr_tInt32	int_val;
   pwr_tObjid	oid;
+  pwr_tObjid	coid;
   int plcconnect = 0;
+  int plctemplate = 0;
   char 		str[80];
   pwr_sMenuButton   mb;
   
@@ -95,9 +98,22 @@ static pwr_tStatus ConfigFc (
 			   ip->ItemList[ip->ChosenItem].MenuObject,
 			   "SysBody", &mb, sizeof(pwr_sMenuButton));
 
-  if ( strcmp(mb.MethodArguments[0], "PlcConnect") == 0)
+  if ( strcmp(mb.MethodArguments[0], "PlcConnect") == 0) {
     plcconnect = 1;
-
+    plctemplate = 1;
+  }
+  else if ( strcmp(mb.MethodArguments[0], "CCode") == 0) {
+    plcconnect = 0;
+    plctemplate = 0;
+  }
+  else if ( strcmp(mb.MethodArguments[0], "PlcConnectCCode") == 0) {
+    plcconnect = 1;
+    plctemplate = 0;
+  }
+  else {
+    plcconnect = 0;
+    plctemplate = 1;
+  }
 
   sts = ldh_ObjidToName( ip->PointedSession, ip->Pointed.Objid, ldh_eName_Hierarchy, 
 			 pname, sizeof(pname), &size);
@@ -111,20 +127,39 @@ static pwr_tStatus ConfigFc (
 			    ip->Pointed.Objid, ldh_eDest_IntoFirst);
 
   if ( plcconnect) {
+    // Create PlcConnect attribute
     strcpy( name, pname);
     strcat( name, "-");
     strcat( name, "RtBody");
     sts = ldh_NameToObjid( ip->PointedSession, &oid, name);
     if ( EVEN(sts)) return sts;
 
-    sts = ldh_CreateObject( ip->PointedSession, &oid, "PlcConnect", pwr_eClass_Intern,
+    sts = ldh_CreateObject( ip->PointedSession, &coid, "PlcConnect", pwr_eClass_Intern,
 			    oid, ldh_eDest_IntoLast);
     if ( ODD(sts)) {
       tid = pwr_eType_AttrRef;
 
-      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "TypeRef", (char *)&tid,
+      sts = ldh_SetObjectPar(ip->PointedSession, coid, "SysBody", "TypeRef", (char *)&tid,
 			     sizeof(tid));
       if ( EVEN(sts)) return sts;
+    }
+    if ( !plctemplate) {
+      // Create PlcConnectP attribute
+      sts = ldh_CreateObject( ip->PointedSession, &coid, "PlcConnectP", pwr_eClass_Intern,
+			    oid, ldh_eDest_IntoLast);
+      if ( ODD(sts)) {
+	tid = pwr_eType_Char;
+
+	sts = ldh_SetObjectPar(ip->PointedSession, coid, "SysBody", "TypeRef", (char *)&tid,
+			       sizeof(tid));
+	if ( EVEN(sts)) return sts;
+
+	flags = PWR_MASK_INVISIBLE | PWR_MASK_POINTER | PWR_MASK_PRIVATE;
+
+	sts = ldh_SetObjectPar(ip->PointedSession, coid, "SysBody", "Flags", (char *)&flags,
+			       sizeof(flags));
+	if ( EVEN(sts)) return sts;
+      }
     }
   }
 
@@ -154,23 +189,31 @@ static pwr_tStatus ConfigFc (
 			  pwr_eClass_GraphPlcNode,
 			  ip->Pointed.Objid, ldh_eDest_IntoLast);
   if ( ODD(sts)) {
-    cid = pwr_cClass_windowplc;
-    int_val = 1;
+    if ( plctemplate) {
+      cid = pwr_cClass_windowplc;
+      int_val = 1;
 
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindows", 
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindows", 
 			   (char *)&int_val, sizeof(int_val));
-    if ( EVEN(sts)) return sts;
+      if ( EVEN(sts)) return sts;
 
-    sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindow_class[0]", 
-			   (char *)&cid, sizeof(cid));
-    if ( EVEN(sts)) return sts;
+      sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindow_class[0]", 
+			     (char *)&cid, sizeof(cid));
+      if ( EVEN(sts)) return sts;
+    }
 
     int_val = 1;
     sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "segname_annotation",
 			   (char *)&int_val, sizeof(int_val));
     if ( EVEN(sts)) return sts;
 
-    int_val = 58;
+    if ( plctemplate)
+      int_val = 58;
+    else if ( plcconnect)
+      int_val = 35;
+    else
+      int_val = 4;
+
     sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "compmethod",
 			   (char *)&int_val, sizeof(int_val));
     if ( EVEN(sts)) return sts;
@@ -222,9 +265,11 @@ static pwr_tStatus ConfigFc (
     }
   }
 
-  sts = ldh_CreateObject( ip->PointedSession, &oid, "Code",
-			  pwr_cClass_PlcTemplate,
-			  ip->Pointed.Objid, ldh_eDest_IntoLast);
+  if ( plctemplate) {
+    sts = ldh_CreateObject( ip->PointedSession, &oid, "Code",
+			    pwr_cClass_PlcTemplate,
+			    ip->Pointed.Objid, ldh_eDest_IntoLast);
+  }
   return PWRS__SUCCESS;
 }
 
