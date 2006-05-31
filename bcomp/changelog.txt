@@ -3,3 +3,4 @@
                       the limit supervision in BaseSensor without alarm.
 060522 cs  bcomp      New classes CompPID and CompModePID: PID controller divided in main object
                       and function object.
+060530 cs  bcomp      Local mode added to CompModeDM and BaseMValve.
