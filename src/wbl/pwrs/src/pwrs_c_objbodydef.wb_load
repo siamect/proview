@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_objbodydef.wb_load,v 1.5 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_objbodydef.wb_load,v 1.6 2006-05-31 08:08:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -97,6 +97,11 @@ SObject pwrs:Class
     Object AnteCreate $DbCallBack
       Body SysBody
         Attr MethodName = "$ObjBodyDef-AnteCreate"
+      EndBody
+    EndObject
+    Object PostCreate $DbCallBack
+      Body SysBody
+        Attr MethodName = "$ObjBodyDef-PostCreate"
       EndBody
     EndObject
     Object AnteMove $DbCallBack
