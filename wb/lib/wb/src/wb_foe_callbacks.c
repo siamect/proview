@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_callbacks.c,v 1.13 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: wb_foe_callbacks.c,v 1.14 2006-05-31 08:11:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1010,6 +1010,7 @@ XmAnyCallbackStruct	*data;
 	{
 	  foe_message( foectx, "Select one text object");
 	  BEEP;
+	  return;
 	}
 
         switch ( nodelist[0]->ln.cid) {
