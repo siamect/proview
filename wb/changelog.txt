@@ -30,3 +30,5 @@
 060524 cs  wb        StructName in ObjBodyDef inserted in PostCreate method.
 060524 cs  wtt       Bugfix in classeditor. Change of classname caused unidentified class of
                      the template object of the class.
+060530 cs  wb        UpdateClasses also converts the input and output masks in function objects.
+060530 cs  wtt       Bugfix: change text without selecting any text object caused segfault.
