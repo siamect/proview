@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.32 2006-05-24 15:00:41 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.33 2006-05-31 08:12:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -518,7 +518,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
     bool found = false;
     wb_adrep *adrep_target = bdrep_target->adrep( &sts);
     while ( ODD(sts)) {
-      if ( adrep_source->index() == adrep_target->index()) {
+      if ( adrep_source->aix() == adrep_target->aix()) {
 	found = true;
 	break;
       }
@@ -528,8 +528,12 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
     }
     if ( found) {	      
       if ( adrep_source->isClass()) {
-	if ( adrep_source->subClass() != adrep_target->subClass())
-	  return;
+	if ( adrep_source->subClass() != adrep_target->subClass()) {
+	  wb_adrep *prev = adrep_source;
+	  adrep_source = adrep_source->next( &sts);
+	  delete prev;
+	  continue;
+	}
 
 	// Convert subclass
 	convertSubClass( adrep_target->subClass(), merep, 
@@ -548,7 +552,7 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
 	  if (cidx == conv_eIdx_invalid)
 	    cidx = conv_eIdx_zero; /* Zero the attribute */
 
-	  int size;
+	  int size = adrep_target->size() / adrep_target->nElement();
 	  pwr_mAdef flags;
 	  flags.m = adrep_target->flags();
 
@@ -580,6 +584,13 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 			      void **cnv_rbody, void **cnv_dbody)
 {
   pwr_tStatus sts;
+  int source_input_cnt = 0;
+  int source_output_cnt = 0;
+  int target_input_cnt;
+  int target_output_cnt;
+  int input_idx[40], output_idx[40];
+  int update_input_mask = 0;
+  int update_output_mask = 0;
   wb_cdrep *cdrep_source = merep->cdrep( &sts, cid());
   if ( EVEN(sts))
     throw wb_error(sts);
@@ -613,9 +624,37 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 
 	// Indentify attribute with the same aix
 	while ( ODD(sts)) {
+	  if ( bix == pwr_eBix_rt) {
+	    // Count inputs and outputs in source
+	    switch ( adrep_source->cid()) {
+	    case pwr_eClass_Input:
+	      source_input_cnt++;
+	      break;
+	    case pwr_eClass_Output:
+	      source_output_cnt++;
+	      break;
+	    default: ;
+	    }
+	  }
+
 	  bool found = false;
 	  wb_adrep *adrep_target = bdrep_target->adrep( &sts);
+	  target_input_cnt = 0;
+	  target_output_cnt = 0;
 	  while ( ODD(sts)) {
+	    if ( bix == pwr_eBix_rt) {
+	      // Count inputs and outputs in target
+	      switch ( adrep_target->cid()) {
+	      case pwr_eClass_Input:
+		target_input_cnt++;
+		break;
+	      case pwr_eClass_Output:
+		target_output_cnt++;
+		break;
+	      default: ;
+	      }
+	    }
+
 	    if ( adrep_source->aix() == adrep_target->aix()) {
 	      found = true;
 	      break;
@@ -624,7 +663,37 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 	    adrep_target = adrep_target->next( &sts);
 	    delete prev;
 	  }
-	  if ( found) {	      
+
+	  if ( bix == pwr_eBix_rt) {
+	    // Check if input or output mask has to be modified
+	    switch( adrep_source->cid()) {
+	    case pwr_eClass_Input:
+	      if ( found) {
+		input_idx[source_input_cnt - 1] = target_input_cnt - 1;
+		if ( source_input_cnt != target_input_cnt)
+		  update_input_mask = 1;
+	      }
+	      else {
+		input_idx[source_input_cnt - 1] = - 1;
+		update_input_mask = 1;
+	      }
+	      break;
+	    case pwr_eClass_Output:
+	      if ( found) {
+		output_idx[source_output_cnt - 1] = target_output_cnt - 1;
+		if ( source_output_cnt != target_output_cnt)
+		  update_output_mask = 1;
+	      }
+	      else {
+		output_idx[source_output_cnt - 1] = - 1;
+		update_output_mask = 1;
+	      }
+	      break;
+	    default: ;
+	    }
+	  }
+
+	  if ( found) {	      	     
 	    if ( adrep_source->isClass()) {
 	      if ( adrep_source->subClass() != adrep_target->subClass()) {
 		wb_adrep *prev = adrep_source;
@@ -636,6 +705,45 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 	      convertSubClass( adrep_target->subClass(), merep, 
 			(char *)body_source + adrep_source->offset(),
 			(char *)body_target + adrep_target->offset());
+
+	      // Convert input and output mask
+	      if ( bix == pwr_eBix_dev &&
+		   adrep_source->cid() == pwr_eClass_Buffer &&
+		   adrep_source->type() == (pwr_eType) pwr_eClass_PlcNode) {
+		if ( update_input_mask) {
+		  unsigned int source_mask = 
+		    ((pwr_sPlcNode *)((char *)body_source + adrep_source->offset()))->mask[0];
+		  unsigned int source_inv_mask = 
+		    ((pwr_sPlcNode *)((char *)body_source + adrep_source->offset()))->mask[2];
+		  unsigned int target_mask = 0;
+		  unsigned int target_inv_mask = 0;
+		  
+		  for ( int j = 0; j < source_input_cnt; j++) {
+		    if ( source_mask & (1 << j) && input_idx[j] != -1)
+		      target_mask |= (1 << input_idx[j]);
+		    if ( source_inv_mask & (1 << j) && input_idx[j] != -1)
+		      target_inv_mask |= (1 << input_idx[j]);
+		  }
+		   
+		  ((pwr_sPlcNode *)((char *)body_target + adrep_target->offset()))->mask[0] = 
+		    target_mask;
+		  ((pwr_sPlcNode *)((char *)body_target + adrep_target->offset()))->mask[2] = 
+		    target_inv_mask;		    
+		}
+		if ( update_output_mask) {
+		  unsigned int source_mask = 
+		    ((pwr_sPlcNode *)((char *)body_source + adrep_source->offset()))->mask[1];
+		  unsigned int target_mask = 0;
+		  
+		  for ( int j = 0; j < source_output_cnt; j++) {
+		    if ( source_mask & (1 << j) && output_idx[j] != -1)
+		      target_mask |= (1 << output_idx[j]);
+		  }
+		  
+		  ((pwr_sPlcNode *)((char *)body_target + adrep_target->offset()))->mask[1] = 
+		    target_mask;
+		}
+	      }
 	    }
 	    else {
 	      // Convert attribute
