@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_menu.wb_load,v 1.4 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_menu.wb_load,v 1.5 2006-05-31 08:09:33 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -22,6 +22,37 @@ SObject pwrs:Class
 !/**
 !  @Group ClassDefinition
 !  Root of a menu description tree.
+!  Positioned in a classvolume under a $ClassDef object. The object
+!  can have $MenuButton, $MenuCascade and $MenuSeparator objects as
+!  children.
+!
+!  A $Menu object defines a popup menu in the development environment.
+!  The name of the object specifies the function. The first part
+!  states the utility of the menu, e.g Navigator, Configurator, the 
+!  last five characters states the combination of the currently pointed 
+!  and selected objects, for which the menu is valid:
+!  1. 'Px' states what kind of item the cursur is pointing at, where x
+!     can be: 'o' an object, 'a' an attribute or 'c' a class in a
+!     palette.
+!  2. 'sx' states what kind of item is currently selected, where x can
+!     be: 'o' an object, 'a' an attribute, 'c' a class, 'm' many objects
+!     or 'n' no selected object.
+!  3. the last character states if the pointed and the selected object is
+!     the same object 's', or not 'n'.
+!
+!  @b Example
+!  NavigatorPosos: Popup menu in the navigator, when the cursor points at
+!  an object that is selected.
+!
+!  ConfiguratorPoson: Popup menu in the configurator, when the cursor
+!  points at an object, and another object is selected.
+!
+!  The menu items are configured with $MenuButton objects.
+!
+!  @b See also
+!   @classlink $MenuButton pwrs_menubutton.html
+!   @classlink $MenuCascade pwrs_menucascade.html
+!   @classlink $MenuSeparator pwrs_menucascade.html
 !*/
 !
   Object $Menu $ClassDef pwr_eCix_Menu
