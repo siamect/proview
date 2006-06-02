@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.9 2006-05-24 11:57:17 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.10 2006-06-02 08:21:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -110,7 +110,7 @@ void GrowWindow::open( ifstream& fp)
       case glow_eSave_GrowWindow_vertical_scrollbar: fp >> vertical_scrollbar; break;
       case glow_eSave_GrowWindow_horizontal_scrollbar: fp >> horizontal_scrollbar; break;
       case glow_eSave_GrowWindow_window_scale: fp >> window_scale; break;
-      case glow_eSave_GrowWindow_owner: fp >> owner; break;
+      case glow_eSave_GrowWindow_owner:
         fp.getline( owner, sizeof(owner)); break;
       case glow_eSave_GrowWindow_rect_part: 
         GrowRect::open( fp);
