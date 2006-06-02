@@ -186,7 +186,8 @@ palette NavigatorPalette
     classvolume pwrb
     classvolume NMps NMps
     classvolume TLog TLog
-    classvolume ssab ssab
+    classvolume Profibus Profibus
+    classvolume Remote Remote
     classvolume BaseComponent BaseComponent
     classvolume Inor Inor
     classvolume OtherManufacturer OtherManufacturer
@@ -255,7 +256,8 @@ palette ClassNavigatorPalette
     classvolume pwrb
     classvolume NMps NMps
     classvolume TLog TLog
-    classvolume ssab ssab
+    classvolume Profibus Profibus
+    classvolume Remote Remote
     classvolume BaseComponent BaseComponent
     classvolume OtherManufacturer OtherManufacturer
     classvolume ABB ABB
