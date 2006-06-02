@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.13 2006-05-22 13:27:00 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.14 2006-06-02 06:26:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
-#include "pwr_basecomponentclasses.h"
+// #include "pwr_basecomponentclasses.h"
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
@@ -85,9 +85,9 @@ static graph_sObjectFunction graph_object_functions[] = {
 	{ pwr_cClass_ChanDi, &graph_object_chanxx},
 	{ pwr_cClass_ChanDo, &graph_object_chanxx},
 	{ pwr_cClass_pid, &graph_object_PID},
-	{ pwr_cClass_CompPID, &graph_object_PID},
+	{ /* pwr_cClass_CompPID */ 656576UL, &graph_object_PID},
 	{ pwr_cClass_mode, &graph_object_Mode},
-	{ pwr_cClass_CompModePID, &graph_object_Mode},
+	{ /* pwr_cClass_CompModePID */ 656560UL, &graph_object_Mode},
 	{ pwr_cClass_PlcThread, &graph_object_PlcThread},
 	{ 0, 0}};
 
