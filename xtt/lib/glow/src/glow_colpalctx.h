@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalctx.h,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_colpalctx.h,v 1.5 2006-06-02 11:09:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@ class ColPalCtx : public GrowCtx {
   ColPalCtx( char *ctx_name, double zoom_fact = 100) :
     	GrowCtx( ctx_name, zoom_fact), columns(30), 
 	current_fill( glow_eDrawType_LineGray), current_border( glow_eDrawType_Line),
-	entry_width(0.3), entry_height(1), display_entry_width(3)
+	current_text(glow_eDrawType_Line), entry_width(0.3), entry_height(1), display_entry_width(3)
 	{ ctx_type = glow_eCtxType_ColPal; grid_on = 0; };
 
   //! Destructor
