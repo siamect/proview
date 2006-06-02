@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.3 2006-04-12 12:14:38 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.4 2006-06-02 07:14:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -65,21 +65,23 @@ static pwr_tStatus IoRackInit (
     return IO__ERRINIDEVICE;
   }
   
-  /* Set local port same as remote port and bind the created socket */
+  /* Bind local port if explicitly numbered ( != 0 ) */
   
-  local->my_addr.sin_family = AF_INET;
-  local->my_addr.sin_port = htons(op->Port);
-  sts = bind(local->s, (struct sockaddr *) &local->my_addr, sizeof(local->my_addr));
-  if (sts != 0) { 
-    errh_Error( "Error binding local socket for IO remote rack %s, %d", rp->Name, sts);
-    op->Status = IO__INITFAIL;
-    return IO__ERRINIDEVICE;
+  if (op->LocalPort != 0) {
+    local->my_addr.sin_family = AF_INET;
+    local->my_addr.sin_port = htons(op->LocalPort);
+    sts = bind(local->s, (struct sockaddr *) &local->my_addr, sizeof(local->my_addr));
+    if (sts != 0) { 
+      errh_Error( "Error binding local socket for IO remote rack %s, %d", rp->Name, sts);
+      op->Status = IO__INITFAIL;
+      return IO__ERRINIDEVICE;
+    }
   }
   
   /* Initialize remote address structure */
 
   local->rem_addr.sin_family = AF_INET;
-  local->rem_addr.sin_port = htons(op->Port);
+  local->rem_addr.sin_port = htons(op->RemotePort);
   local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
   
   /* Connect to remote address */
@@ -91,17 +93,16 @@ static pwr_tStatus IoRackInit (
     return IO__ERRINIDEVICE;
   }
   
-  local->in_items = 0;
-  local->out_items = 0;
+  local->next_read_req_item = 0;
+  local->next_write_req_item = 0;
   
   op->RX_packets = 0;
   op->TX_packets = 0;
     
   /* Log initialization */
   
-  errh_Info( "Init of IO remote rack %s, %d/%s:%d",
-  	     rp->Name, ntohs(local->my_addr.sin_port), 
-	     inet_ntoa(local->rem_addr.sin_addr), ntohs(local->rem_addr.sin_port));
+  errh_Info( "Init of IO remote rack %s/%s:%d",
+  	     rp->Name, inet_ntoa(local->rem_addr.sin_addr), ntohs(local->rem_addr.sin_port));
   op->Status = IO__NORMAL;
   return IO__SUCCESS;
 }
@@ -127,6 +128,11 @@ static pwr_tStatus IoRackRead (
   struct timeval tv;
   io_sRackLocal *local = (io_sRackLocal *) rp->Local;
   pwr_sClass_Ssab_RemoteRack *op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+  struct bfb_buf rbuf;
+  int size;
+
+  bzero(&local->read_area, sizeof(local->read_area));
+  bzero(&local->write_area, sizeof(local->write_area));
 
   sts = 1;
   while (sts > 0) {
@@ -136,7 +142,15 @@ static pwr_tStatus IoRackRead (
     tv.tv_usec = 0;
     sts = select(32, &fds, NULL, NULL, &tv);
     if (sts > 0) {
-      recv(local->s, &local->in, sizeof(local->in), 0);
+      size = recv(local->s, &rbuf, sizeof(rbuf), 0);
+      if (rbuf.service == BFB_SERVICE_READ) {
+        bzero(&local->read_area, sizeof(local->read_area));
+        memcpy(&local->read_area, &rbuf, size);
+      }
+      else if (rbuf.service == BFB_SERVICE_WRITE) {
+        bzero(&local->write_area, sizeof(local->write_area));
+        memcpy(&local->write_area, &rbuf, size);
+      }
       op->RX_packets++;
     }
   } 
@@ -154,17 +168,20 @@ static pwr_tStatus IoRackWrite (
   io_sRackLocal *local = (io_sRackLocal *) rp->Local;
   pwr_sClass_Ssab_RemoteRack *op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
 
-  // Send write request
-  local->out.service = BFB_SERVICE_WRITE;  
-  local->out.length = local->out_items*4 + 4;
-  sts = send(local->s, &local->out, local->out.length, 0);
+  // Calc length and send write request
+  local->write_req.service = BFB_SERVICE_WRITE;  
+  local->write_req.length = local->next_write_req_item*4 + 4;
+  sts = send(local->s, &local->write_req, local->write_req.length, 0);
   op->TX_packets++;
   
-  // Send read request
-  local->in.service = BFB_SERVICE_READ;  
-  local->in.length = local->in_items*4 + 4;
-  sts = send(local->s, &local->in, local->in.length, 0);
+  // Calc length and send read request
+  local->read_req.service = BFB_SERVICE_READ;  
+  local->read_req.length = local->next_read_req_item*4 + 4;
+  sts = send(local->s, &local->read_req, local->read_req.length, 0);
   op->TX_packets++;
+  
+  local->next_read_req_item = 0;
+  local->next_write_req_item = 0;
 
   return IO__SUCCESS;
 }
