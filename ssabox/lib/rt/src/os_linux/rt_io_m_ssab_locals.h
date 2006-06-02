@@ -9,16 +9,20 @@ struct bfb_item {
 struct bfb_buf {
 	pwr_tUInt16	service;
 	pwr_tUInt16	length;
-	struct bfb_item	item[256];
+	struct bfb_item	item[350];
 };
 
 typedef struct {
+	/* Elements for Qbus local I/O */
 	int 		Qbus_fp;	/* File pointer for local qbus device */
 	int		s;		/* Socket for remote qbus node */
-	struct sockaddr_in my_addr;
-	struct sockaddr_in rem_addr;
-	struct bfb_buf	in;		/* Data area for remote qbus node */
-	struct bfb_buf	out;		/* -"- */
-	int		in_items;
-	int		out_items;
+	/* Elements for Qbus ethernet I/O */
+	struct sockaddr_in my_addr;	/* My socket */
+	struct sockaddr_in rem_addr;	/* Remote socket */
+	struct bfb_buf	read_area;	/* Data area for the last inputs read (i.e. ack of read request) */
+	struct bfb_buf	write_area;	/* Data area for the last outputs read (i.e. ack of write request) */
+	struct bfb_buf	read_req;	/* Data area for the read request */
+	struct bfb_buf	write_req;	/* Data area for the write request */
+	int		next_read_req_item;	/* Index for next position in read request area */
+	int		next_write_req_item;	/* Index for next position in write request area */
 } io_sRackLocal;

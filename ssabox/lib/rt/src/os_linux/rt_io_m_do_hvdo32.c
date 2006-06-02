@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.3 2006-04-12 12:14:38 claes Exp $
+ * Proview   $Id: rt_io_m_do_hvdo32.c,v 1.4 2006-06-02 07:57:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@
 #include "rt_io_card_write.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -51,7 +52,6 @@
 typedef struct {
 	unsigned int	Address[2];
 	int		Qbus_fp;
-	unsigned int	bfb_item;
 	struct {
 	  pwr_sClass_Po *sop[16];
 	  void	*Data[16];
@@ -81,16 +81,17 @@ static pwr_tStatus IoCardInit (
   local->Address[1] = op->RegAddress + 2;
   local->Qbus_fp = r_local->Qbus_fp;
 
-  /* Get item offset from rack's local and increment it */
+  /* Get item offset from rack's local and increment it
   local->bfb_item = r_local->out_items;
   r_local->out_items += 2;
 
-  /* Set card address in rack´s local out-area and initialize data */
+   Set card address in rack´s local out-area and initialize data
   r_local->out.item[local->bfb_item].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
   r_local->out.item[local->bfb_item+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
   r_local->out.item[local->bfb_item].data = 0;
   r_local->out.item[local->bfb_item+1].data = 0;
     
+    */
   /* Init filter for Po signals */
   for ( i = 0; i < 2; i++)
   {
@@ -212,8 +213,8 @@ static pwr_tStatus IoCardWrite (
       sts = write( local->Qbus_fp, &wb, sizeof(wb));
     }
     else {
-      /* Write to remote Q-bus, I/O-area stored in rack's local */
-      r_local->out.item[local->bfb_item+i].data = data;
+      /* Ethernet I/O, Request a write to current address */
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) local->Address[i], data);
       sts = 1;      
     }
 

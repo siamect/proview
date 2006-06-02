@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.3 2006-06-02 07:57:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,6 +56,7 @@
 typedef struct {
 	unsigned int	Address;
 	int		Qbus_fp;
+	unsigned int	bfb_item;
 	int	ScanCount[IO_MAXCHAN];
 } io_sLocal;
 
@@ -73,6 +74,7 @@ static pwr_tStatus AiRangeToCoef(
   if ( cop)
   {
     cop->CalculateNewCoef = 0;
+
 
     /* Coef for RawValue to SignalValue conversion */
     cop->SigValPolyCoef0 = 0;
@@ -115,15 +117,27 @@ static pwr_tStatus IoCardInit (
   io_sLocal 		*local;
   int			i;
   io_sChannel		*chanp;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Ai_AI32uP *) cp->op;
   local = calloc( 1, sizeof(*local));
   cp->Local = local;
   local->Address = op->RegAddress;
-  local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->Qbus_fp = r_local->Qbus_fp;
 
+
+  /* Get item offset from rack's local and increment it, used by remote rack only
+  local->bfb_item = r_local->in_items;
+  r_local->in_items += op->MaxNoOfChannels;
+  
+  /* Set card address in rack´s local in- and out-area, used by remote rack only
+  for (i=0; i<op->MaxNoOfChannels; i++) {
+    r_local->in.item[local->bfb_item+i].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
+    r_local->in.item[local->bfb_item+i].data = 0;
+  }
+  */
   errh_Info( "Init of ai card '%s'", cp->Name);
-
+  
   /* Caluclate polycoeff */
   chanp = cp->chanlist;
   for  ( i = 0; i < cp->ChanListSize; i++)
@@ -167,6 +181,7 @@ static pwr_tStatus IoCardRead (
 ) 
 {
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tInt16		data = 0;
   pwr_sClass_Ai_AI32uP	*op;
   int			i;
@@ -202,9 +217,17 @@ static pwr_tStatus IoCardRead (
 #if defined(OS_ELN)
         vaxc$establish(machfailread);
 #endif
-        rb.Address = local->Address + 2*i;
-        sts = read( local->Qbus_fp, &rb, sizeof(rb));
-        data = (unsigned short) rb.Data;
+        if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+          rb.Address = local->Address + 2*i;
+          sts = read( local->Qbus_fp, &rb, sizeof(rb));
+          data = (unsigned short) rb.Data;
+	}
+        else {
+          /* Read from remote Q-bus, I/O-area stored in rack's local
+          data = r_local->in.item[local->bfb_item+i].data;*/
+          sts = 1;
+        }
+	
         if ( sts == -1)
         {
 #if 0

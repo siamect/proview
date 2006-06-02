@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.3 2006-06-02 07:57:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@
 typedef struct {
 	unsigned int	Address;
 	int		Qbus_fp;
+	unsigned int	bfb_item;
 	pwr_tFloat32	OldValue[IO_MAXCHAN];
 	pwr_tBoolean	OldTestOn[IO_MAXCHAN];
 	int		WriteFirst;
@@ -121,14 +122,25 @@ static pwr_tStatus IoCardInit (
   io_sChannel		*chanp;
   int			i;
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Ssab_BaseACard *) cp->op;
   local = calloc( 1, sizeof(*local));
   local->Address = op->RegAddress;
-  local->Qbus_fp = ((io_sRackLocal *)(rp->Local))->Qbus_fp;
+  local->Qbus_fp = r_local->Qbus_fp;
 
   errh_Info( "Init of ao card '%s'", cp->Name);
-
+  
+  /* Get item offset from rack's local and increment it, used by remote rack only
+  local->bfb_item = r_local->out_items;
+  r_local->out_items += op->MaxNoOfChannels;
+  
+  /* Set card address in rack´s local in- and out-area, used by remote rack only
+  for (i=0; i<op->MaxNoOfChannels; i++) {
+    r_local->out.item[local->bfb_item+i].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
+    r_local->out.item[local->bfb_item+i].data = 0;
+  }
+  */
   /* Write the first 50 loops */
   local->WriteFirst = 50;
   cp->Local = local;
@@ -179,6 +191,7 @@ static pwr_tStatus IoCardWrite (
 ) 
 {
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_sClass_Ssab_BaseACard	*op;
   int			i;
   io_sChannel		*chanp;
@@ -240,9 +253,17 @@ static pwr_tStatus IoCardWrite (
 #if defined(OS_ELN)
       vaxc$establish(machfailwrite);
 #endif
-      wb.Data = data;
-      wb.Address = local->Address + 2*i;
-      sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+        wb.Data = data;
+        wb.Address = local->Address + 2*i;
+        sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      }
+      else {
+        /* Write to remote Q-bus, I/O-area stored in rack's local 
+        r_local->out.item[local->bfb_item+i].data = data; */
+        sts = 1;
+      }
+      
       if ( sts == -1)
       {
         /* Exceptionhandler was called */
