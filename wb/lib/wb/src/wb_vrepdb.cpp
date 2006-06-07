@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.46 2006-05-29 10:04:56 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.47 2006-06-07 07:37:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,7 +87,7 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volu
   m_cid = m_db->cid();
 
   m_merep = m_erep->merep();
-  m_merep->copyFiles(m_fileName, erep->merep());
+  m_merep->copyFiles(m_fileName);
 }
 
 wb_erep *wb_vrepdb::erep()
