@@ -120,9 +120,9 @@ sub add ()
   $label = $_[0];
   $varstr = $envdb{$label};
   if ($varstr ne "") {
-    printf("++ Envrinoment %s already exists\n", $_[0]);
+    printf("++ Environment %s already exists\n", $_[0]);
   } else {
-    get_vars();  
+    get_vars(@_);  
     update_db();
   }
   untie(%envdb)|| die "++ can't untie $dbname!";
@@ -215,9 +215,9 @@ sub build_all_modules ()
   merge();
   _module("tlog");
   build_all();
-#  merge();
-#  _module("remote");
-#  build_all();
+  merge();
+  _module("remote");
+  build_all();
   merge();
   _module("bcomp");
   build_all();
@@ -559,7 +559,6 @@ sub build_all ()
     }
   }
   else {
-      printf( "Copy: %d Lib: %d Exe: %d\n", $copy, $lib, $exe);
     if ( $copy == 1) {
       _build("wbl", "*", "copy");
       _build("lib", "*", "init copy");
@@ -993,14 +992,38 @@ sub create_dir()
 
 sub get_vars ()
 {
-
-  $sroot = 	get_var(" Source root [%s]? ", $sroot);
+    printf( "Arg: %s\n", $_[1]);
+  if ($_[1] eq "") {
+    $sroot = 	get_var(" Source root [%s]? ", $sroot);
+  } else {
+    $sroot = $_[1];
+  }
 # $vmsinc = 	get_var(" pwr_inc on VMS  [%s]? ", $vmsinc);
-  $broot = 	get_var(" Build root  [%s]? ", $broot);
-  $btype = 	get_var(" Build type  [%s]? ", $btype);
-  $os =    	get_var(" OS          [%s]? ", $os);
-  $hw =    	get_var(" Hardware    [%s]? ", $hw);
-  $desc =  	get_var(" Description [%s]? ", $desc);
+  if ($_[2] eq "") {
+    $broot = 	get_var(" Build root  [%s]? ", $broot);
+  } else {
+    $broot = $_[2];
+  }
+  if ($_[3] eq "") {
+    $btype = 	get_var(" Build type  [%s]? ", $btype);
+  } else {
+    $btype = $_[3];
+  }
+  if ($_[4] eq "") {
+    $os =    	get_var(" OS          [%s]? ", $os);
+  } else {
+    $os = $_[4];
+  }
+  if ($_[5] eq "") {
+    $hw =    	get_var(" Hardware    [%s]? ", $hw);
+  } else {
+    $hw = $_[5];
+  }
+  if ($_[6] eq "") {
+    $desc =  	get_var(" Description [%s]? ", $desc);
+  } else {
+    $desc = $_[6];
+  }
 
   $varstr = join(":", ($sroot, $vmsinc, $broot, $btype, $os, $hw, $desc));
 
