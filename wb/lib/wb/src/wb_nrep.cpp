@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nrep.cpp,v 1.13 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_nrep.cpp,v 1.14 2006-06-07 15:12:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -394,7 +394,7 @@ void wb_nrep::parse () throw (wb_error)
         } else if ( *s == '.') {
           if ( s != oname) {
             seg[0].offs = 0;
-            seg[0].offs = nameDiff( s, oname);
+            seg[0].len = nameDiff( s, oname);
             num_seg++;
           }
           attr[0].offs = nameDiff( s+1, oname);
