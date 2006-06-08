@@ -11,7 +11,7 @@
 // Subgroups in PRM
 ////////////////////
 
-/*! \defgroup Pwr Pwr Proview Data definitions.
+/*! \defgroup Pwr Pwr Proview Data definitions
   \ingroup PRM
   This module contains Proview basic data definitions.
 */
@@ -42,9 +42,15 @@
   This module contains functions for class definitions.
 */
 
+/*! \defgroup NMps NMps Material Planning System
+  \ingroup PRM
+  This module contains interface functions for application access to an MPS.
+*/
 
-
-
+/*! \defgroup rt rt_appl Base class for applications
+  \ingroup PRM
+  This module contains the base class for applications, and example subclasses.
+*/
 
 
 

@@ -14,7 +14,7 @@ HIGHLIGHT_COLOR = '#FF9900'
 HIGHLIGHT_BG = '#000066'
 
 
-foldersTree = gFld("<b>Object Reference Manual</b>", "orm_intro.html")
+foldersTree = gFld("<b>Object Reference Manual</b>", "../orm_intro.html")
 
   aux1 = insFld(foldersTree, gFld("<b>pwrs</b>", "pwrs_index.html"))
   pwrs(aux1)

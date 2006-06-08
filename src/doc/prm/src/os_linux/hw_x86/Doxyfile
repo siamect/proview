@@ -368,11 +368,17 @@ INPUT                  = $(pwre_sroot)/doc/prm/src/doxygen.dx \
                          $(pwre_sroot)/lib/rt/src/rt_gdh.h \
                          $(pwre_sroot)/lib/rt/src/rt_mh_appl.h \
                          $(pwre_sroot)/lib/rt/src/rt_qcom.h \
+			 $(pwre_croot)/nmps/lib/nmps/src/nmps_appl.h \
+                         $(pwre_sroot)/lib/rt/src/rt_appl.h \
                          $(pwre_sroot)/lib/co/src/co_time.c \
                          $(pwre_sroot)/lib/co/src/co_cdh.c \
                          $(pwre_sroot)/lib/rt/src/rt_gdh.c \
                          $(pwre_sroot)/lib/rt/src/rt_mh_appl.c \
-                         $(pwre_sroot)/lib/rt/src/rt_qcom.c
+                         $(pwre_sroot)/lib/rt/src/rt_qcom.c \
+                         $(pwre_croot)/nmps/lib/nmps/src/nmps_appl.c \
+			 $(pwre_sroot)/doc/prm/src/ra_appl.cpp 
+
+
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
