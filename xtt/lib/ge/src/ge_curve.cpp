@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.13 2006-04-11 08:13:35 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.14 2006-06-08 13:06:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1740,7 +1740,7 @@ void GeCurveData::scale( int axis_type, int value_type,
   }
   *max_value_axis = maxval;
   *min_value_axis = minval;
-  *trend_lines = max_lines + min_lines + 1;
+  *trend_lines = abs(max_lines + min_lines) + 1;
   *axis_lines = (*trend_lines - 1) * trendlinequot + 1;
   *axis_linelongq = axlinequot;
   *axis_valueq = axvaluequot;
