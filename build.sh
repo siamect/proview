@@ -61,6 +61,9 @@ pwre init $ename
 pwre create_all_modules
 pwre build_all_modules
 
+# Create a package version html file
+$root/src/tools/pkg/deb/pwrrt/build.sh -v 
+co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
 
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo ""
