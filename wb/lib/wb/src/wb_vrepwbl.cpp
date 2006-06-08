@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.53 2006-05-24 15:00:41 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.54 2006-06-08 13:38:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -297,9 +297,7 @@ int wb_vrepwbl::load( const char *fname)
 
   cout << "\n-- Building volume " << volume_name << endl;
   if ( root_object) {
-    cout << "\n-- Root object " << volume_name << endl;
     root_object->build( 1);
-    cout << "\n-- post build volume " << volume_name << endl;
     root_object->postBuild();
   }
   // info();

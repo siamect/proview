@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.47 2006-06-07 07:37:35 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.48 2006-06-08 13:38:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1126,7 +1126,6 @@ wb_orep *wb_vrepdb::next(pwr_tStatus *sts, const wb_orep *orp)
         return new (this) wb_orepdb(&m_ohead.m_o);
       }
     }
-    printf("vrepdb::next : c.cid %d, o.cid %d\n", c.cid(), m_ohead.cid());
     *sts = LDH__NOSUCHOBJ;
     return 0;
   }
