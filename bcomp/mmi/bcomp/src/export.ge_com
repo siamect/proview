@@ -1,0 +1,179 @@
+#
+#  Script to export all classgraphs to java
+#
+#
+#
+
+function int process( string graph)
+  open 'graph'
+  printf( "Exporting %s...\n", graph);
+  export java
+endfunction
+
+main()
+
+  set javapath "$pwre_croot/java/jpwr/bcomp/src"
+  set javapackage "bcomp"
+
+  process( "pwr_c_baseactuatora1");
+  process( "pwr_c_baseactuatora2");
+  process( "pwr_c_baseactuatora3");
+  process( "pwr_c_baseactuatora4");
+  process( "pwr_c_baseactuatora5");
+  process( "pwr_c_baseactuatora6");
+  process( "pwr_c_baseactuatora7");
+  process( "pwr_c_baseactuatora");
+  process( "pwr_c_basecircuitbreaker");
+  process( "pwr_c_basecircuitbreakersim");
+  process( "pwr_c_basecontactor1");
+  process( "pwr_c_basecontactor");
+  process( "pwr_c_basecontactorsim");
+  process( "pwr_c_basecvalve1");
+  process( "pwr_c_basecvalve2");
+  process( "pwr_c_basecvalve3");
+  process( "pwr_c_basecvalve4");
+  process( "pwr_c_basecvalve5");
+  process( "pwr_c_basecvalve6");
+  process( "pwr_c_basecvalve7");
+  process( "pwr_c_basecvalve");
+  process( "pwr_c_basecvalvesim");
+  process( "pwr_c_basedirvalve1");
+  process( "pwr_c_basedirvalve2");
+  process( "pwr_c_basedirvalve3");
+  process( "pwr_c_basedirvalve");
+  process( "pwr_c_basefanaggr10");
+  process( "pwr_c_basefanaggr11");
+  process( "pwr_c_basefanaggr1");
+  process( "pwr_c_basefanaggr2");
+  process( "pwr_c_basefanaggr3");
+  process( "pwr_c_basefanaggr4");
+  process( "pwr_c_basefanaggr5");
+  process( "pwr_c_basefanaggr6");
+  process( "pwr_c_basefanaggr7");
+  process( "pwr_c_basefanaggr8");
+  process( "pwr_c_basefanaggr9");
+  process( "pwr_c_basefanaggr");
+  process( "pwr_c_basefan");
+  process( "pwr_c_baseflowsensor");
+  process( "pwr_c_baselevelsensor");
+  process( "pwr_c_baselevelswitch");
+  process( "pwr_c_basemanvalve1");
+  process( "pwr_c_basemanvalve2");
+  process( "pwr_c_basemanvalve3");
+  process( "pwr_c_basemanvalve");
+  process( "pwr_c_basemanvalvesim");
+  process( "pwr_c_basemotor1");
+  process( "pwr_c_basemotor2");
+  process( "pwr_c_basemotoraggr10");
+  process( "pwr_c_basemotoraggr11");
+  process( "pwr_c_basemotoraggr1");
+  process( "pwr_c_basemotoraggr2");
+  process( "pwr_c_basemotoraggr3");
+  process( "pwr_c_basemotoraggr4");
+  process( "pwr_c_basemotoraggr5");
+  process( "pwr_c_basemotoraggr6");
+  process( "pwr_c_basemotoraggr7");
+  process( "pwr_c_basemotoraggr8");
+  process( "pwr_c_basemotoraggr9");
+  process( "pwr_c_basemotoraggr");
+  process( "pwr_c_basemotoraggrsim");
+  process( "pwr_c_basemotorincrdecraggr10");
+  process( "pwr_c_basemotorincrdecraggr11");
+  process( "pwr_c_basemotorincrdecraggr12");
+  process( "pwr_c_basemotorincrdecraggr13");
+  process( "pwr_c_basemotorincrdecraggr14");
+  process( "pwr_c_basemotorincrdecraggr15");
+  process( "pwr_c_basemotorincrdecraggr16");
+  process( "pwr_c_basemotorincrdecraggr17");
+  process( "pwr_c_basemotorincrdecraggr18");
+  process( "pwr_c_basemotorincrdecraggr19");
+  process( "pwr_c_basemotorincrdecraggr1");
+  process( "pwr_c_basemotorincrdecraggr20");
+  process( "pwr_c_basemotorincrdecraggr21");
+  process( "pwr_c_basemotorincrdecraggr22");
+  process( "pwr_c_basemotorincrdecraggr23");
+  process( "pwr_c_basemotorincrdecraggr24");
+  process( "pwr_c_basemotorincrdecraggr25");
+  process( "pwr_c_basemotorincrdecraggr26");
+  process( "pwr_c_basemotorincrdecraggr27");
+  process( "pwr_c_basemotorincrdecraggr28");
+  process( "pwr_c_basemotorincrdecraggr29");
+  process( "pwr_c_basemotorincrdecraggr2");
+  process( "pwr_c_basemotorincrdecraggr30");
+  process( "pwr_c_basemotorincrdecraggr31");
+  process( "pwr_c_basemotorincrdecraggr32");
+  process( "pwr_c_basemotorincrdecraggr33");
+  process( "pwr_c_basemotorincrdecraggr34");
+  process( "pwr_c_basemotorincrdecraggr35");
+  process( "pwr_c_basemotorincrdecraggr36");
+  process( "pwr_c_basemotorincrdecraggr37");
+  process( "pwr_c_basemotorincrdecraggr38");
+  process( "pwr_c_basemotorincrdecraggr39");
+  process( "pwr_c_basemotorincrdecraggr3");
+  process( "pwr_c_basemotorincrdecraggr40");
+  process( "pwr_c_basemotorincrdecraggr41");
+  process( "pwr_c_basemotorincrdecraggr42");
+  process( "pwr_c_basemotorincrdecraggr43");
+  process( "pwr_c_basemotorincrdecraggr44");
+  process( "pwr_c_basemotorincrdecraggr45");
+  process( "pwr_c_basemotorincrdecraggr46");
+  process( "pwr_c_basemotorincrdecraggr47");
+  process( "pwr_c_basemotorincrdecraggr4");
+  process( "pwr_c_basemotorincrdecraggr5");
+  process( "pwr_c_basemotorincrdecraggr6");
+  process( "pwr_c_basemotorincrdecraggr7");
+  process( "pwr_c_basemotorincrdecraggr8");
+  process( "pwr_c_basemotorincrdecraggr9");
+  process( "pwr_c_basemotorincrdecraggr");
+  process( "pwr_c_basemotorincrdecraggrsim");
+  process( "pwr_c_basemotor");
+  process( "pwr_c_basemotorsim");
+  process( "pwr_c_basemvalve1");
+  process( "pwr_c_basemvalve2");
+  process( "pwr_c_basemvalve3");
+  process( "pwr_c_basemvalve");
+  process( "pwr_c_basemvalvesim");
+  process( "pwr_c_baseoverloadrelay");
+  process( "pwr_c_baseoverloadrelaysim");
+  process( "pwr_c_basepositsensor");
+  process( "pwr_c_basepressuresensor");
+  process( "pwr_c_basepressureswitch");
+  process( "pwr_c_basepropvalve");
+  process( "pwr_c_basepumpaggr10");
+  process( "pwr_c_basepumpaggr11");
+  process( "pwr_c_basepumpaggr1");
+  process( "pwr_c_basepumpaggr2");
+  process( "pwr_c_basepumpaggr3");
+  process( "pwr_c_basepumpaggr4");
+  process( "pwr_c_basepumpaggr5");
+  process( "pwr_c_basepumpaggr6");
+  process( "pwr_c_basepumpaggr7");
+  process( "pwr_c_basepumpaggr8");
+  process( "pwr_c_basepumpaggr9");
+  process( "pwr_c_basepumpaggr");
+  process( "pwr_c_basepump");
+  process( "pwr_c_basesafetyswitch");
+  process( "pwr_c_basesafetyswitchsim");
+  process( "pwr_c_basesensor");
+  process( "pwr_c_basesensorsim");
+  process( "pwr_c_basesupswitch");
+  process( "pwr_c_basesupswitchsim");
+  process( "pwr_c_basetempsensor");
+  process( "pwr_c_basetempswitch");
+  process( "pwr_c_basevalve");
+  process( "pwr_c_circuitbreaker");
+  process( "pwr_c_compmodeam");
+  process( "pwr_c_compmodea");
+  process( "pwr_c_compmoded2m");
+  process( "pwr_c_compmoded2");
+  process( "pwr_c_compmodedm");
+  process( "pwr_c_compmoded");
+  process( "pwr_c_contactor");
+  process( "pwr_c_directvalve2or");
+  process( "pwr_c_runtimecounter");
+
+endmain
+
+
+
+
