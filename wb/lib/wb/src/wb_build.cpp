@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.2 2006-05-17 06:04:29 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.3 2006-06-08 13:40:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,6 +29,7 @@
 #include "wb_build.h"
 #include "wb_name.h"
 #include "wb_lfu.h"
+#include "wb_merep.h"
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
@@ -221,8 +222,21 @@ void wb_build::rootvolume( pwr_tVid vid)
   dcli_translate_filename( fname, fname);
   m_sts = dcli_file_time( fname, &dbs_time);
 
+  // Get time for classvolumes
+  wb_merep *merep = ((wb_vrep *)m_session)->merep();
+  pwr_tTime mtime = pwr_cNTime;
+  pwr_tTime t;
+  pwr_tStatus sts;
+  for ( wb_mvrep *mvrep = merep->volume( &sts);
+	ODD(sts);
+	mvrep = merep->nextVolume( &sts, mvrep->vid())) {
+    mvrep->time( &t);
+    if ( time_Acomp( &t, &mtime) == 1)
+      mtime = t;
+  }
+
   if ( opt.force || opt.manual || evenSts() || time_Acomp( &modtime, &dbs_time) == 1 ||
-       plcsts != PWRB__NOBUILT) {
+       time_Acomp( &mtime, &dbs_time) == 1 || plcsts != PWRB__NOBUILT) {
     m_sts = lfu_create_loadfile( (ldh_tSession *) &m_session);
     if ( evenSts()) return;
     m_sts = ldh_CreateLoadFile( (ldh_tSession *) &m_session);
@@ -290,8 +304,31 @@ void wb_build::classvolume( pwr_tVid vid)
   dcli_translate_filename( fname, fname);
   fsts = dcli_file_time( fname, &dbs_time);
 
+  // Get time for classvolumes
+  wb_merep *merep = ((wb_erep *)m_session.env())->merep();
+  pwr_tTime mtime = pwr_cNTime;
+  pwr_tTime t;
+  pwr_tStatus sts;
+  for ( wb_mvrep *mvrep = merep->volume( &sts);
+	ODD(sts);
+	mvrep = merep->nextVolume( &sts, mvrep->vid())) {
+    if ( m_session.vid() == mvrep->vid())
+      continue;
+    // Check only system class and manufact class volumes
+    if ( mvrep->vid() > cdh_cSystemClassVolMax &&
+	 (mvrep->vid() < cdh_cManufactClassVolMin ||
+	  mvrep->vid() > cdh_cManufactClassVolMax))
+      continue;
+
+    mvrep->time( &t);
+    if ( time_Acomp( &t, &mtime) == 1)
+      mtime = t;
+  }
+
+
   // Create new loadfile
-  if ( EVEN(fsts) || wbl_time.tv_sec > dbs_time.tv_sec) {
+  if ( opt.force || EVEN(fsts) || wbl_time.tv_sec > dbs_time.tv_sec ||
+       mtime.tv_sec > dbs_time.tv_sec) {
     sprintf( cmd, "create snapshot/file=\"$pwrp_db/%s.wb_load\"", name);
     m_sts = m_wnav->command( cmd);
   }
@@ -304,7 +341,7 @@ void wb_build::classvolume( pwr_tVid vid)
   fsts = dcli_file_time( fname, &h_time);
 
   // Create new struct file
-  if ( EVEN(fsts) || wbl_time.tv_sec > h_time.tv_sec) {
+  if ( opt.force || EVEN(fsts) || wbl_time.tv_sec > h_time.tv_sec) {
     sprintf( cmd, "create struct/file=\"$pwrp_db/%s.wb_load\"", name);
     m_sts = m_wnav->command( cmd);
   }
@@ -515,7 +552,6 @@ void wb_build::xttgraph( pwr_tOid oid)
 void wb_build::webhandler( pwr_tOid oid)
 {
   pwr_tTime	modtime;
-  char 		timestr[40];
   pwr_tString80 file_name, name;
   pwr_tFileName fname;
   pwr_tTime 	ftime;
@@ -530,9 +566,6 @@ void wb_build::webhandler( pwr_tOid oid)
   }
 
   modtime = o.modTime();
-
-  time_AtoAscii( &modtime, time_eFormat_DateAndTime, timestr, sizeof(timestr));
-  printf( "WebHandler time: %s\n", timestr);
 
   wb_attribute a = m_session.attribute( oid, "RtBody", "FileName");
   if ( !a) {
