@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_appl.h,v 1.1 2006-01-12 05:57:43 claes Exp $
+ * Proview   $Id: nmps_appl.h,v 1.2 2006-06-08 04:28:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,14 @@
 /* ra_nmps_appl.h -- <short description>
    NMps API.  */
 
+/*! \file nmps_appl.h
+    \brief Type definitions for NMps.
+   This include file contains the Proview NMps type definitions.
+*/
+
+/** @addtogroup NMps */
+/*@{*/
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -37,6 +45,13 @@ extern "C" {
 #define nmpsappl_mOption_NamePath	(1 << 1)
 #define nmpsappl_mOption_ReverseOrder	(1 << 2)
 
+
+/** @defgroup NMPS_DS Data Structures
+ *  @ingroup NMps
+ *  @{
+ */
+
+
 typedef struct nmpsappl_s_cellist {
 	pwr_tString80		name;
 	pwr_tObjid		objid;
@@ -50,15 +65,15 @@ typedef struct nmpsappl_s_cellist {
 	} nmpsappl_t_cellist;
 
 typedef struct {
-	pwr_tObjid		objid;
-	pwr_tString80		name;
-	pwr_tAddress		object_ptr;
-	pwr_tBoolean		select;
-	pwr_tBoolean		front;
-	pwr_tBoolean		back;
-	pwr_tBoolean		newdata;
-	pwr_tBoolean		removed;
-	unsigned long		cell_mask;
+	pwr_tObjid		objid; /**< Dataobjektets objid */
+	pwr_tString80		name; /**< Dataobjektet namn (sista namnledet) */
+	pwr_tAddress		object_ptr;  /**< Pekare till dataobjektet */ 
+	pwr_tBoolean		select; /**< Select-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts select om objektet är utvalt i minst en av cellerna. */
+	pwr_tBoolean		front; /**< Front-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts front om front-flaggen är satt i en av cellerna. */ 
+	pwr_tBoolean		back; /**< Back-attributet för dataobjektet i cell-objektet. Om ett dataobjekt ligger i flera celler, sätts back om back-flaggen är satt i en av cellerna. */ 
+	pwr_tBoolean		newdata; /**< Markerar att ett dataobjekt är nytt sedan senaste speglingen.*/
+	pwr_tBoolean		removed;  /**< Markerar att dataobjektet har försvunnit sedan senaste speglingen. Kräver att nmpsappl_mOption_Remove har angetts i options. */
+	unsigned long		cell_mask; /**< Anger vilken eller vilka celler dataobjektet befinner sig i. cell_mask är en bitmask där första biten anger första cellen (dvs den som angivits först i listan till nmpsappl_mirror_init), osv. */
 	} nmpsappl_t_datainfo;
 
 typedef struct nmpsappl_s_ctx {
@@ -72,6 +87,13 @@ typedef struct nmpsappl_s_ctx {
 	nmpsappl_t_datainfo	*datainfo;
 	struct nmpsappl_s_ctx	*next;
 	} *nmpsappl_t_ctx;
+
+/** @} */
+/** 
+ * @defgroup NMPS_FC Function Calls
+ * @ingroup NMps
+ * @{
+ */
 
 pwr_tStatus nmpsappl_MirrorInit(	pwr_tString80	*cell_array,
 					unsigned long	options,
@@ -108,3 +130,6 @@ pwr_tStatus	nmpsappl_RemoveAndKeepData(
 }
 #endif
 #endif
+
+/** @} */
+/** @} */

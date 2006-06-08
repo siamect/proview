@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_appl.h,v 1.4 2005-12-13 15:14:27 claes Exp $
+ * Proview   $Id: rt_appl.h,v 1.5 2006-06-08 04:28:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,6 @@
 /*! rt_appl is a baseclass for applications, where the subclasses should
   implement the virtual functions open(), close() and scan().
 */
-
 class rt_appl {
  public:
   rt_appl( char *name, errh_eAnix anix, 
@@ -63,3 +62,4 @@ class rt_appl {
 
 #endif
 
+/** @} */
