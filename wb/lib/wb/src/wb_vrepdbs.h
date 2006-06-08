@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.36 2006-05-26 11:57:28 lw Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.37 2006-06-08 13:39:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -138,7 +138,7 @@ public:
 
   wb_orepdbs *new_wb_orepdbs(size_t size);
   void delete_wb_orepdbs(void *p);
-  bool time( pwr_tTime *t);
+  virtual bool time( pwr_tTime *t);
 
 
   virtual wb_vrep *next ();
@@ -178,6 +178,7 @@ public:
   virtual bool duplicateDb() const { return m_duplicate;}
   virtual void setDuplicateDb( bool duplicate) { m_duplicate = duplicate;}
   virtual const char *fileName() { return m_fileName;}
+  virtual const pwr_tTime time() { return pwr_cNTime;}
 };
 
 

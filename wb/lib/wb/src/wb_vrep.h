@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrep.h,v 1.26 2006-05-26 06:59:01 lw Exp $
+ * Proview   $Id: wb_vrep.h,v 1.27 2006-06-08 13:39:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -165,6 +165,7 @@ public:
   wb_srep *nextSrep( pwr_tStatus *sts, wb_srep* srep);
 
   virtual const char *fileName() = 0;
+  virtual bool time( pwr_tTime *t) { return false;}
 };
 
 #endif
