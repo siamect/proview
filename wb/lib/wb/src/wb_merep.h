@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.h,v 1.22 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_merep.h,v 1.23 2006-06-08 13:08:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,6 +97,7 @@ public:
        wb_adrep *adp, int offset);
   tree_sTable *catt_tt() { return m_catt_tt;}
   void subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubcid, pwr_tStatus *sts);
+  wb_mvrep *nextVolume(pwr_tStatus *sts, pwr_tVid vid);
 };
 
 #endif

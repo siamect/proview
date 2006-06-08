@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.35 2006-05-29 10:04:56 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.36 2006-06-08 13:08:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,6 +92,7 @@ wb_merep::wb_merep(const char *dirName, wb_erep *erep, wb_vrep *vrep) :
           if (strcmp(dp->d_name, vname) == 0) {
             try {
               wb_vrepdbs *vrep = new wb_vrepdbs(erep, this, fileName, vp->name, vp->vid, vp->cid);
+	      vrep->load();
               addDbs(&sts, (wb_mvrep *)vrep);
               char buff[256];
               sprintf(buff, "Local class volume \"%s\" loaded from \"%s\", in data base %s", vp->name, fileName, dirName);
@@ -801,4 +802,20 @@ void wb_merep::subClass( pwr_tCid supercid, pwr_tCid subcid, pwr_tCid *nextsubci
     }
   }
   *sts = LDH__NONEXTCLASS;
+}
+
+wb_mvrep *wb_merep::nextVolume(pwr_tStatus *sts, pwr_tVid vid)
+{
+  // Search in dbs
+  mvrep_iterator it = m_mvrepdbs.find(vid);
+  if ( it != m_mvrepdbs.end()) {
+    it++;
+    if ( it != m_mvrepdbs.end()) {
+      *sts = LDH__SUCCESS;
+      return it->second;
+    }
+  }
+
+  *sts = LDH__NOSUCHVOL;
+  return 0;
 }
