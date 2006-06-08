@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_ccm.c,v 1.5 2006-02-23 14:34:59 claes Exp $
+ * Proview   $Id: co_ccm.c,v 1.6 2006-06-08 06:10:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3572,7 +3572,7 @@ static int	ccm_read_file(
   {
     row++;
     ccm_remove_blank( str, str);
-    if ( str[0] == '!' || str[0] == '#')
+    if ( str[0] == '!' || (str[0] == '#' && strncmp( str, "#include", 8) != 0))
       continue;
     /* If last char i backslash, concatenate next line */
     while( str[strlen(str)-1] == '\\')
