@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.42 2006-05-22 08:20:36 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.43 2006-06-09 05:22:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4637,6 +4637,7 @@ static int	wnav_build_func(	void		*client_data,
       menucall.WindowContext = wnav->parent_wid;  // This is zero for wb_cmd
 
       sts = (method)( &menucall);
+      wnav->gbl.build = stored_opt;
       if ( EVEN(sts)) {
 	wnav->message(' ', wnav_get_message(sts));
 	return sts;
