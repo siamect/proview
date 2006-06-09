@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldlist.cpp,v 1.1 2006-05-11 07:11:22 claes Exp $
+ * Proview   $Id: wb_ldlist.cpp,v 1.2 2006-06-09 13:26:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,12 +27,33 @@
 
 #include "pwr.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "wb_erep.h"
 #include "wb_vrepdbs.h"
 
 static void usage( char *txt)
 {
   cout << txt << endl;
+}
+
+void ldlist_print( const char *text, pwr_tVid vid, const char *name, pwr_tTime *time) 
+{
+  char timestr[40];
+
+  time_AtoAscii( time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
+
+  cout << text;
+  for ( int i = 0; i < (int)(10 - strlen(text)); i++)
+    cout << " ";
+  cout << " ";
+
+  cout << name;
+  for ( int i = 0; i < (int)(15 - strlen(name)); i++)
+    cout << " ";
+  cout << " ";
+
+  cout << timestr  << " (" << time->tv_sec << "," << time->tv_nsec <<  ") ";
+  cout << vid << endl;
 }
 
 int main (
@@ -44,7 +65,7 @@ int main (
   int			oflag = 0;
   char			c;
   pwr_tTime		time;
-  char			timestr[40];
+  pwr_tFileName		fname;
   
   while (--argc > 0 && (*++argv)[0] == '-') {
     while ((c = *++argv[0])) {
@@ -65,14 +86,19 @@ int main (
   if (argc < 1) usage("No load file given!\n");
 
   wb_erep *erep = new wb_erep();
-  wb_vrepdbs *vrep = new wb_vrepdbs( erep, *argv);
+  dcli_translate_filename( fname, *argv);
+
+  wb_vrepdbs *vrep = new wb_vrepdbs( erep, fname);
 
   vrep->load();
   vrep->time( &time);
-  time_AtoAscii( &time, time_eFormat_DateAndTime, timestr, sizeof(timestr));
 
-  cout << "Name : " << vrep->name() << endl <<  
-    "Time : " << timestr << " (" << time.tv_sec << "," << time.tv_nsec <<  ")" << endl;
-  // lf = fopen(*argv, "rb");
+  ldlist_print( "Volume", vrep->vid(), vrep->name(), &time);
+
+  for ( int i = 0; i < (int) vrep->m_dbsmep->nVolRef+1; i++) {
+    time = vrep->m_dbsmep->venv[i].vp->time;
+    ldlist_print( "VolRef", vrep->m_dbsmep->venv[i].vp->vid, vrep->m_dbsmep->venv[i].vp->name, 
+		  &time);
+  }
 }
 
