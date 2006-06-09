@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.cpp,v 1.48 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_vrepdbs.cpp,v 1.49 2006-06-09 13:16:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,6 +48,10 @@ wb_vrepdbs::wb_vrepdbs(wb_erep *erep, wb_merep *merep, const char *fileName, con
   m_vid = vid;
   m_cid = cid;
   m_isDbsenvLoaded = false;
+  if (false && isCommonMeta())
+    m_merep = m_erep->merep();
+  else
+    m_merep = new wb_merep(m_erep, (wb_mvrep *)this);
 }
 
 wb_vrepdbs::wb_vrepdbs(wb_erep *erep, const char *fileName) : m_erep(erep), m_nRef(0), m_duplicate(false)
