@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopConfirmDialog.java,v 1.4 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: JopConfirmDialog.java,v 1.5 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,8 +74,8 @@ public class JopConfirmDialog {
       panel.add( buttonCancel);
       dia.getContentPane().add( panel, BorderLayout.SOUTH);
       dia.setLocationRelativeTo( par);
-//      dia.setVisible( true);
-      dia.show();
+      dia.setVisible( true);
+//      dia.show();
     }
     else {
       dia.setLocationRelativeTo( par);

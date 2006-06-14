@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeTextField.java,v 1.8 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: GeTextField.java,v 1.9 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@ import javax.swing.Timer;
 public class GeTextField extends JTextField implements GeComponentIfc, 
 			       JopDynamic, JopConfirm, ActionListener
 {
-  public boolean isFocusTraversable() { return root != null;}
+  public boolean isFocusable() { return root != null;}
 
   Dimension size;
   Object root;

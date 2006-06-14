@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_hist.cpp,v 1.4 2005-12-14 12:40:50 claes Exp $
+ * Proview   $Id: jpwr_rt_hist.cpp,v 1.5 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,7 +182,13 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
     printf(" Fel vid skapande av databashandtag avslutar\n");
     goto err;
   }
-  if((ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0)) != 0)
+#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR > 0
+  ret = dataBaseP->open(dataBaseP, NULL, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#else
+  ret = dataBaseP->open(dataBaseP, dbName, NULL, DATABASETYPE, DB_RDONLY, 0);
+#endif
+
+  if(ret != 0)
   {
     /*error opening/creating db send the mess to errh, then exit*/
     printf("error db_open: %s\n", db_strerror(ret));

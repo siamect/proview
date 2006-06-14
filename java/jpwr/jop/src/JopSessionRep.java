@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.7 2005-11-04 11:45:17 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.8 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@ public class JopSessionRep implements JopSessionIfc {
   XttTree navigator;
   MhFrame alarmList;
   JopLoginFrame login;
-  Vector frames = new Vector();
+  Vector<Object> frames = new Vector<Object>();
 
   public JopSessionRep() {
   }
@@ -286,7 +286,7 @@ public class JopSessionRep implements JopSessionIfc {
     public void openSearch(String object){
 	HistSearch HSWindow = new HistSearch(object,session );
         HSWindow.pack();        
-        HSWindow.show();
+        HSWindow.setVisible(true);
     }
 }
 

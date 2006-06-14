@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowVector.java,v 1.2 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: FlowVector.java,v 1.3 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ public class FlowVector {
   public FlowVector() {
   }
 
-  public static void open( BufferedReader reader, FlowCmn cmn, Vector a) {
+  public static void open( BufferedReader reader, FlowCmn cmn, Vector<Object> a) {
     String line;
     StringTokenizer token;
     boolean end = false;
@@ -44,12 +44,12 @@ public class FlowVector {
 	case Flow.eSave_NodeClass:
 	  FlowNodeClass nc = new FlowNodeClass( cmn);
 	  nc.open( reader);
-	  a.add( nc);
+	  a.add( (Object) nc);
 	  break;
 	case Flow.eSave_ConClass:
 	  FlowConClass cc = new FlowConClass( cmn);
 	  cc.open( reader);
-	  a.add( cc);
+	  a.add( (Object) cc);
 	  break;
 	case Flow.eSave_Node:
 	  FlowNode n = new FlowNode( cmn);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopEngine.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopEngine.java,v 1.4 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ import jpwr.rt.*;
 public class JopEngine implements ActionListener {
   int scanTime;
   int animationScanTime;
-  Vector updateVector;
+  Vector<Object> updateVector;
   Timer timer;
   public Gdh gdh;
   public LocalDb ldb = null;
@@ -52,7 +52,7 @@ public class JopEngine implements ActionListener {
   public JopEngine( int scantime, Object root) {
     scanTime = scantime;
     animationScanTime = scantime;
-    updateVector = new Vector( 50, 50);
+    updateVector = new Vector<Object>( 50, 50);
     timer = new Timer( scantime, this); 
     timer.start();
     gdh = new Gdh( root);

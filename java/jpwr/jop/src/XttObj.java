@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttObj.java,v 1.3 2005-12-06 11:17:01 claes Exp $
+ * Proview   $Id: XttObj.java,v 1.4 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,7 +174,7 @@ public class XttObj extends DynamicObj implements JopDynamic
     XttObjAttr obj;
     String suffix;
     GdhrRefObjectInfo ret;
-    Vector refVec = new Vector();
+    Vector<String> refVec = new Vector<String>();
     for(int i = 0; i < attrVector.size(); i++)
     {
       obj = ((XttObjAttr)attrVector.get(i));
@@ -297,10 +297,10 @@ public class XttObj extends DynamicObj implements JopDynamic
       if( ((obj.flags & Pwr.mAdef_array) > 0) &&
           ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
-        Enumeration enum = obj.treeNode.children();
-        while(enum.hasMoreElements())
+        Enumeration enm = obj.treeNode.children();
+        while(enm.hasMoreElements())
         {
-          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enm.nextElement();
           XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
           if(arrayObj.elements == obj.elements)
           {
@@ -312,10 +312,10 @@ public class XttObj extends DynamicObj implements JopDynamic
       else if((obj.flags & Pwr.mAdef_class) > 0)
       {
 	  /*
-        Enumeration enum = obj.treeNode.children();
-        while(enum.hasMoreElements())
+        Enumeration enm = obj.treeNode.children();
+        while(enm.hasMoreElements())
         {
-          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enm.nextElement();
           XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
           if(arrayObj.elements == obj.elements)
           {
@@ -361,17 +361,17 @@ public class XttObj extends DynamicObj implements JopDynamic
   public void localDynamicClose()
   {
     Logg.logg("XttObj: localDynamic close_vector", 6);
-    Vector unref_vec = new Vector();
+    Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
     for(int i = 0; i < attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)attrVector.get(i);
       if( ((obj.flags & Pwr.mAdef_array) > 0) &&
           ((obj.flags & Pwr.mAdef_class) <= 0) )
       {
-        Enumeration enum = obj.treeNode.children();
-        while(enum.hasMoreElements())
+        Enumeration enm = obj.treeNode.children();
+        while(enm.hasMoreElements())
         {
-          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enm.nextElement();
           XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
           if(arrayObj.elements == obj.elements)
           {
@@ -382,10 +382,10 @@ public class XttObj extends DynamicObj implements JopDynamic
       else if((obj.flags & Pwr.mAdef_class) > 0)
       {
 	  /*
-        Enumeration enum = obj.treeNode.children();
-        while(enum.hasMoreElements())
+        Enumeration enm = obj.treeNode.children();
+        while(enm.hasMoreElements())
         {
-          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+          DefaultMutableTreeNode child = (DefaultMutableTreeNode)enm.nextElement();
           XttArrayAttr arrayObj = (XttArrayAttr)child.getUserObject();
           if(arrayObj.elements == obj.elements)
           {

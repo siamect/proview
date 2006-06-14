@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: ge_javac.sh,v 1.4 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: ge_javac.sh,v 1.5 2006-06-14 10:42:48 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@ systemname=$3
 if [ $function == "java_web" ]; then
   jarfile="$pwrp_web/pwrp_"$systemname"_web.jar"
 
-  if javac -d $pwrp_web -classpath $pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar:$jarfile $pwrp_pop/$src_file
+  if javac -d $pwrp_web -classpath $pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar:$pwr_lib/pwr_jopc.jar:$jarfile $pwrp_pop/$src_file
   then
     echo "-- $src_file compiled"
     if [ ! -e $jarfile ]; then
@@ -63,7 +63,7 @@ if [ $function == "java" ]; then
   jarfile="$pwrp_lib/pwrp_"$systemname".jar"
   jarfileweb="$pwrp_web/pwrp_"$systemname"_web.jar"
 
-  if javac -d $pwrp_web -classpath $pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar:$jarfile $pwrp_pop/$src_file
+  if javac -d $pwrp_web -classpath $pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar:$pwr_lib/pwr_jopc.jar:$jarfile $pwrp_pop/$src_file
   then
     echo "-- $src_file compiled"
     if [ ! -e $jarfile ]; then

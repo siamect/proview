@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.9 2005-12-06 11:17:01 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.10 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,7 @@ public class Gdh
   Socket gdhSocket;
   ObjectOutputStream out;
   ObjectInputStream in;
-  Vector subscriptions = new Vector();
+  Vector<Sub> subscriptions = new Vector<Sub>();
   int subscriptionCount = 0;
   boolean listSent = false;
   int subLate = 0;
@@ -560,7 +560,7 @@ public class Gdh
       out.writeObject(vec);
       out.flush();
 
-      Vector retVec = (Vector)in.readObject();
+      Vector<GdhrRefObjectInfo> retVec = (Vector<GdhrRefObjectInfo>)in.readObject();
       if(retVec == null)
       {
         locked = false;
@@ -590,7 +590,7 @@ public class Gdh
       System.out.println("REF_OBJECT_INFO_VECTOR: IO_Exception");
       locked = false;
       notify();
-      Vector retVec = new Vector();
+      Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
       retVec.add(new GdhrRefObjectInfo(null, 0, __IO_EXCEPTION, 0));
       return retVec;
     }
@@ -861,7 +861,7 @@ public class Gdh
         out.writeInt(refid.nid);
       }
       out.flush();
-      Vector ret_vec = new Vector();
+      Vector<PwrtStatus> ret_vec = new Vector<PwrtStatus>();
       //System.out.println("unrefObjectInfo_VEctor i: " + i);
       while(i > 0)
       {

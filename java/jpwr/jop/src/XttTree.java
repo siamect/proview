@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttTree.java,v 1.9 2005-12-06 11:17:01 claes Exp $
+ * Proview   $Id: XttTree.java,v 1.10 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -377,9 +377,9 @@ public class XttTree extends JPanel
       return;
     }
     //används utifall användaren angett debug
-    Vector ref_vec = new Vector();
+    Vector<String> ref_vec = new Vector<String>();
     //används utifall användaren angett debug
-    Vector o_vec = new Vector();
+    Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
 
     //loopa igenom resultat-vektorn
     for(int i = 0; i < v.size(); i++)
@@ -513,7 +513,7 @@ public class XttTree extends JPanel
         Logg.logg("XttTree: Vector == null efter getAllClassAttributes", 4);
         return;
       }
-      Vector xttObjAttrVec = new Vector();
+      Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
       for(int i = 0; i < v.size(); i++)
       {
 	
@@ -822,7 +822,7 @@ public class XttTree extends JPanel
     //what we are looking for
     TreePath selectedPath = this.tree.getSelectionPath();
     
-    Vector pathVec = createPathVec(objectName);
+    Vector<String> pathVec = createPathVec(objectName);
     int ret = 1;
     DefaultMutableTreeNode tn = this.rootNode;
     TreePath tp;
@@ -839,9 +839,9 @@ public class XttTree extends JPanel
     }      
   }
 
-  public Vector createPathVec(String name)
+  public Vector<String> createPathVec(String name)
   {
-    Vector pathVec = new Vector();
+    Vector<String> pathVec = new Vector<String>();
     int strIndex;
     int i = 0;
     strIndex = name.indexOf('-');
@@ -956,12 +956,12 @@ public class XttTree extends JPanel
         XttObj obj = ((XttObj)tn.getUserObject());
         if(obj.debug)
         {
-          Vector unref_vec = new Vector();
+          Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
           obj.debug = false;
-          Enumeration enum = tn.children();
-          while(enum.hasMoreElements())
+          Enumeration enm = tn.children();
+          while(enm.hasMoreElements())
           {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode)enum.nextElement();
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode)enm.nextElement();
             XttObj childObj = (XttObj)child.getUserObject();
             if(childObj.refObj != null)
             {
@@ -1693,9 +1693,9 @@ public class XttTree extends JPanel
         tn.remove(tc);
         GdhrRefObjectInfo ret;
         XttObjAttr obj = (XttObjAttr)tn.getUserObject();
-        Vector ref_vec = new Vector();
+        Vector<String> ref_vec = new Vector<String>();
         Vector ret_vec;
-        Vector attr_vec = new Vector();
+        Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
         //qqq borde läggas i egen tråd???
         for(int j = 0; j < obj.elements; j++)
         {

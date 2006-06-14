@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistTable.java,v 1.3 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: HistTable.java,v 1.4 2006-06-14 10:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -180,7 +180,7 @@ public class HistTable extends JScrollPane{
         panel.setLayout(new FlowLayout());
         panel.add(statistics);
         frame.pack();
-        frame.show();
+        frame.setVisible(true);
 
     }
 
