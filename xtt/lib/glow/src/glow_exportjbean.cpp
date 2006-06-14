@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.14 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.15 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1944,7 +1944,7 @@ void GlowExportJBean::axis( double x1, double y1, double x2, double y2,
 
 void GlowExportJBean::window( double x1, double y1, double x2, double y2,
 	char *filename,
-        int vertical_scrollbar, int horizontal_scrollbar,
+	int vertical_scrollbar, int horizontal_scrollbar, char *owner,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -1959,7 +1959,17 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
   sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
 
   // Convert filename to java class
-  strcpy( class_fname, filename);
+  if ( (s = strrchr( filename, '/')) != 0)
+    strcpy( class_fname, s+1);
+  else
+    strcpy( class_fname, filename);
+  if ( strncmp( class_fname, "pwr_c_", 6) == 0) {
+    char str[80];
+    strcpy( str, "Jopc");
+    strcat( str, &class_fname[6]);
+    str[4] = _toupper( str[4]);
+    strcpy( class_fname, str);
+  }
   if ( (s = strchr( class_fname, '.')))
     *s = 0;
   sprintf( var_fname, "%s%d", class_fname, node_cnt);
@@ -1979,8 +1989,15 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
     {
       ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
 
+      if ( strcmp( owner, "") == 0)
+	fp <<
+"    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, null, false);" << endl;
+      else
+	fp <<
+"    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, \"" << 
+	  owner << "\", false);" << endl;
+
       fp <<
-"    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, null, false);" << endl <<
 "    " << var_name << " = new " << class_name << "(" << var_fname << ".localPanel);" << endl <<
 "    " << var_name << ".setBounds(new Rectangle(" << 
 	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
@@ -1999,8 +2016,8 @@ void GlowExportJBean::window( double x1, double y1, double x2, double y2,
 
 void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
 	int folders,
-	char *folder_file_names, char *folder_text, 
-	int *folder_v_scrollbar, int *folder_h_scrollbar,
+	char *folder_file_names, char *folder_text,
+	int *folder_v_scrollbar, int *folder_h_scrollbar, char *owner,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
@@ -2009,6 +2026,7 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
   char class_fname[80];
   char var_fname[80];
   char *s;
+  char *own;
 
   strcpy( var_name, class_name);
   var_name[0] = _tolower(var_name[0]);
@@ -2034,14 +2052,32 @@ void GlowExportJBean::folder( double x1, double y1, double x2, double y2,
       char *fname_p = folder_file_names;
       char *text_p = folder_text;
       for ( int i = 0; i < folders; i++) {
-	strcpy( class_fname, fname_p);
+
+	// Convert filename to java class
+	if ( (s = strrchr( fname_p, '/')) != 0)
+	  strcpy( class_fname, s+1);
+	else
+	  strcpy( class_fname, fname_p);
+	if ( strncmp( class_fname, "pwr_c_", 6) == 0) {
+	  char str[80];
+	  strcpy( str, "Jopc");
+	  strcat( str, &class_fname[6]);
+	  str[4] = _toupper( str[4]);
+	  strcpy( class_fname, str);
+	}
 	if ( (s = strchr( class_fname, '.')))
 	  *s = 0;
 	sprintf( var_fname, "%s%d_%d", class_fname, node_cnt, i);
 	class_fname[0] = _toupper( class_fname[0]);
 
-	fp <<
+	own = owner + i * 256;
+	if ( strcmp( own, "") == 0)
+	  fp <<
 "    " << class_fname << " " << var_fname << " = new " << class_fname << "(session, null, false);" << endl;
+	else
+	  fp <<
+"    " << class_fname << " " << var_fname << " = new " << class_fname << 
+	    "(session, \"" << owner << "\" , false);" << endl;
 	if ( folder_v_scrollbar[i] || folder_h_scrollbar[i])
 	  fp <<
 "    " << var_name << ".addTab(\"" << text_p << "\", new JScrollPane(" << var_fname << ".localPanel));" << endl;

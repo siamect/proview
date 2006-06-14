@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.10 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.11 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1394,13 +1394,16 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
   pages = grow_GetNodeClassPages( nodeclass);
 
   if ( dyn_action_type & ge_mActionType_ValueInput) {
+    glow_eDrawType annot_background = (glow_eDrawType) 31;
+    grow_GetNodeClassAnnotBackground( nodeclass, &annot_background);
+
     fp <<
 "protected class " << bean_name << " extends GeTextField {" << endl <<
 "  public " << bean_name << "( JopSession session)" << endl <<
 "  {" << endl <<
 "    super( session);" << endl <<
 "    setFont( annotFont);" << endl <<
-"    setFillColor( annotBackground);" << endl <<
+"    setFillColor( " << annot_background << ");" << endl <<
 "  }" << endl;
         fp <<
 
@@ -1559,7 +1562,7 @@ int Graph::export_javaframe( char *filename, char *bean_name, int applet,
       fp <<
 "  JPanel contentPane;" << endl <<
 "  BorderLayout borderLayout1 = new BorderLayout();" << endl <<
-"  LocalPanel localPanel = new LocalPanel();" << endl <<
+"  public LocalPanel localPanel = new LocalPanel();" << endl <<
 "  Dimension size;" << endl;
 
      // Declarations of components
@@ -1765,6 +1768,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     fp << 
 "import jpwr.rt.*;" << endl <<
 "import jpwr.jop.*;" << endl <<
+"import jpwr.jopc.*;" << endl <<
 "import java.awt.*;" << endl <<
 "import java.awt.geom.*;" << endl <<
 "import java.awt.image.*;" << endl <<
@@ -1780,7 +1784,7 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     fp <<
 "  JPanel contentPane;" << endl <<
 "  BorderLayout borderLayout1 = new BorderLayout();" << endl <<
-"  LocalPanel localPanel = new LocalPanel();" << endl <<
+"  public LocalPanel localPanel = new LocalPanel();" << endl <<
 "  boolean scrollbar = false;" << endl <<
 "  Dimension size;" << endl;
 

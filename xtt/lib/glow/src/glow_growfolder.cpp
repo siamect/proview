@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.5 2006-05-16 11:50:27 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.6 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -192,29 +192,29 @@ void GrowFolder::open( ifstream& fp)
       case glow_eSave_GrowFolder_folder_scale12: fp >> folder_scale[11]; break;
       case glow_eSave_GrowFolder_folder_v_scrollbar12: fp >> folder_v_scrollbar[11]; break;
       case glow_eSave_GrowFolder_folder_h_scrollbar12: fp >> folder_h_scrollbar[11]; break;
-      case glow_eSave_GrowFolder_folder_owner1:
+      case glow_eSave_GrowFolder_folder_owner1: fp.get();
         fp.getline( folder_owner[0], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner2:
+      case glow_eSave_GrowFolder_folder_owner2: fp.get();
         fp.getline( folder_owner[1], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner3:
+      case glow_eSave_GrowFolder_folder_owner3: fp.get();
         fp.getline( folder_owner[2], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner4:
+      case glow_eSave_GrowFolder_folder_owner4: fp.get();
         fp.getline( folder_owner[3], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner5:
+      case glow_eSave_GrowFolder_folder_owner5: fp.get();
         fp.getline( folder_owner[4], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner6:
+      case glow_eSave_GrowFolder_folder_owner6: fp.get();
         fp.getline( folder_owner[5], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner7:
+      case glow_eSave_GrowFolder_folder_owner7: fp.get();
         fp.getline( folder_owner[6], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner8:
+      case glow_eSave_GrowFolder_folder_owner8: fp.get();
         fp.getline( folder_owner[7], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner9:
+      case glow_eSave_GrowFolder_folder_owner9: fp.get();
         fp.getline( folder_owner[8], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner10:
+      case glow_eSave_GrowFolder_folder_owner10: fp.get();
         fp.getline( folder_owner[9], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner11:
+      case glow_eSave_GrowFolder_folder_owner11: fp.get();
         fp.getline( folder_owner[10], sizeof(folder_owner[0])); break;
-      case glow_eSave_GrowFolder_folder_owner12:
+      case glow_eSave_GrowFolder_folder_owner12: fp.get();
         fp.getline( folder_owner[11], sizeof(folder_owner[0])); break;
       case glow_eSave_GrowFolder_window_part: 
         GrowWindow::open( fp);
@@ -598,7 +598,7 @@ void GrowFolder::export_javabean( GlowTransform *t, void *node,
   ((GrowCtx *)ctx)->export_jbean->folder( ll_x, ll_y, ur_x, ur_y, folders,
 					  (char *)folder_file_names, (char *)folder_text, 
 					  (int *)folder_v_scrollbar, (int *)folder_h_scrollbar,
-					  pass, shape_cnt, node_cnt, fp);
+					  owner, pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowFolder::convert( glow_eConvert version) 

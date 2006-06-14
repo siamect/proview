@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwindow.cpp,v 1.10 2006-06-02 08:21:31 claes Exp $
+ * Proview   $Id: glow_growwindow.cpp,v 1.11 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,6 +111,7 @@ void GrowWindow::open( ifstream& fp)
       case glow_eSave_GrowWindow_horizontal_scrollbar: fp >> horizontal_scrollbar; break;
       case glow_eSave_GrowWindow_window_scale: fp >> window_scale; break;
       case glow_eSave_GrowWindow_owner:
+        fp.get();
         fp.getline( owner, sizeof(owner)); break;
       case glow_eSave_GrowWindow_rect_part: 
         GrowRect::open( fp);
@@ -567,6 +568,7 @@ void GrowWindow::export_javabean( GlowTransform *t, void *node,
 
   ((GrowCtx *)ctx)->export_jbean->window( ll_x, ll_y, ur_x, ur_y,
 				       file_name, vertical_scrollbar, horizontal_scrollbar,
+				       owner,
 				       pass, shape_cnt, node_cnt, fp);
 }
 

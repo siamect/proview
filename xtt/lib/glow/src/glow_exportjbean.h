@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.7 2005-12-13 15:14:16 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.8 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,11 +145,12 @@ class GlowExportJBean {
 	char *filename,
         int vertical_scrollbar, 
 	int horizontal_scrollbar,
+	char *owner,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void folder( double x1, double y1, double x2, double y2,
 	int folders,
-	char *folder_file_names, char *folder_text, 
-	int *folder_v_scrollbar, int *folder_h_scrollbar,
+	char *folder_file_names, char *folder_text,
+	int *folder_v_scrollbar, int *folder_h_scrollbar, char *folder,
         glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void table( double x1, double y1, double x2, double y2,
     	glow_eDrawType	fill_drawtype, int fill,

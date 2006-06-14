@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.22 2006-05-24 08:01:51 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.23 2006-06-14 05:04:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4416,6 +4416,11 @@ void grow_SetOwner( grow_tCtx ctx, char *owner)
 {
   
   ((GrowCtx *)ctx)->set_owner( owner);
+}
+
+int grow_GetNodeClassAnnotBackground( grow_tNodeClass nodeclass, glow_eDrawType *background)
+{
+  return ((GlowNodeClass *)nodeclass)->get_annot_background( 0, 0, background);
 }
 
 
