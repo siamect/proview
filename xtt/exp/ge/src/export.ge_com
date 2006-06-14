@@ -37,6 +37,7 @@ main()
   process( "pwr_c_iv");
   process( "pwr_c_messagehandler");
   process( "pwr_c_mode");
+  process( "pwr_c_mode_sub");
   process( "pwr_c_nmpscell");
   process( "pwr_c_node");
   process( "pwr_c_pid");
