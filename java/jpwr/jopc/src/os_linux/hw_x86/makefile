@@ -36,6 +36,7 @@ local_java_sources := \
 	JopcIo.java, \
 	JopcModeGen.java, \
 	JopcMode.java, \
+	JopcMode_sub.java, \
 	JopcPidGen.java, \
 	JopcPid.java, \
 	JopcPlcthreadGen.java, \
