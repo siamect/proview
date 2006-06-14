@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynSlider.java,v 1.6 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: GeDynSlider.java,v 1.7 2006-06-14 05:09:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,7 @@ public class GeDynSlider extends GeDynElem {
   String minValueAttr;
   String maxValueAttr;
   String insensitiveAttr;
+  boolean insensitiveLocalDb = false;
 
   boolean attrFound;
   PwrtRefId subid;
@@ -52,6 +53,7 @@ public class GeDynSlider extends GeDynElem {
   PwrtRefId minValueSubid;
   PwrtRefId maxValueSubid;
   PwrtRefId insensitiveSubid;
+  boolean insensitiveInverted;
 
   public GeDynSlider( GeDyn dyn, String attribute, double minValue, double maxValue,
 		      int direction, double minPos, double maxPos, String minValueAttr, 
@@ -104,7 +106,7 @@ public class GeDynSlider extends GeDynElem {
       if ( attrName.compareTo("") != 0) {
 	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
 	if ( ret.evenSts())
-	  System.out.println( "FillLevel: " + attrName);
+	  System.out.println( "Slider: " + attrName);
 	else {
 	  minValueP = ret.id;
 	  minValueSubid = ret.refid;
@@ -117,7 +119,7 @@ public class GeDynSlider extends GeDynElem {
       if ( attrName.compareTo("") != 0) {
 	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
 	if ( ret.evenSts())
-	  System.out.println( "FillLevel: " + attrName);
+	  System.out.println( "Slider: " + attrName);
 	else {
 	  maxValueP = ret.id;
 	  maxValueSubid = ret.refid;
@@ -128,12 +130,18 @@ public class GeDynSlider extends GeDynElem {
     if ( insensitiveAttr != null) {
       attrName = dyn.getAttrName( insensitiveAttr);
       if ( attrName.compareTo("") != 0) {
-	GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
+	GdhrRefObjectInfo ret;
+	insensitiveLocalDb = dyn.isLocalDb( attrName);
+	if ( !insensitiveLocalDb)
+	  ret = dyn.en.gdh.refObjectInfo( attrName);
+	else
+	  ret = dyn.en.ldb.refObjectInfo( dyn.comp.dynamicGetRoot(), attrName);
 	if ( ret.evenSts())
-	  System.out.println( "FillLevel: " + attrName);
+	  System.out.println( "Slider: " + attrName);
 	else {
 	  insensitiveP = ret.id;
 	  insensitiveSubid = ret.refid;
+	  insensitiveInverted = GeDyndata.getAttrInverted( insensitiveAttr);
 	}
       }
     }
@@ -145,7 +153,7 @@ public class GeDynSlider extends GeDynElem {
       dyn.en.gdh.unrefObjectInfo( minValueSubid);
     if ( maxValueP != 0)
       dyn.en.gdh.unrefObjectInfo( maxValueSubid);
-    if ( insensitiveP != 0)
+    if ( insensitiveP != 0 && !insensitiveLocalDb)
       dyn.en.gdh.unrefObjectInfo( insensitiveSubid);
   }
   public void scan() {
@@ -256,9 +264,13 @@ public class GeDynSlider extends GeDynElem {
       // dyn.repaintNow = true;
       break;
     case GeDyn.eEvent_SliderMoved:
-      if ( insensitiveP != 0) {
-	boolean insensitive = dyn.en.gdh.getObjectRefInfoBoolean( insensitiveP);
-	if ( insensitive)
+      if ( insensitiveP != 0) {	  
+	boolean insensitive;
+	if ( !insensitiveLocalDb)
+	  insensitive = dyn.en.gdh.getObjectRefInfoBoolean( insensitiveP);
+	else
+	  insensitive = dyn.en.ldb.getObjectRefInfoBoolean( insensitiveP);
+      if ( (insensitiveInverted && !insensitive) || (!insensitiveInverted && insensitive))
 	  return;
       }
       float value;
