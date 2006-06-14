@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.12 2005-12-13 15:11:11 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.13 2006-06-14 05:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,11 @@
 #include "co_msg.h"
 #include "co_cdh_msg.h"
 #include "rt_gdh_msg.h"
+
+// Defined in ge_graph.h...
+typedef enum {
+  graph_eType_Bit = (1 << 15) + 1 //!< Type for a bit in a bitmask
+} graph_eType;
 
 typedef struct {
   char		TypeStr[32];
@@ -444,6 +449,11 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_refObjectInfo
   /* Extract the type and size from the suffix */
   if ( gdh_ExtractNameSuffix( cstr, &suffix_p)) {
     gdh_TranslateSuffixToClassData( suffix_p, &typeid, &size, &elements);
+    if ( typeid == graph_eType_Bit) {
+      char *s = strrchr( cstr, '[');
+      if ( s)
+	*s = 0;
+    }
   }
   else
   {
@@ -1489,7 +1499,8 @@ static void  gdh_TranslateSuffixToClassData (
     {"DELTATIME" ,pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
     {"ATTRREF" ,pwr_eType_AttrRef, sizeof(pwr_sAttrRef)},
     {"STATUS" ,pwr_eType_Status, sizeof(pwr_tStatus)},
-    {"NETSTATUS" ,pwr_eType_NetStatus, sizeof(pwr_tNetStatus)}
+    {"NETSTATUS" ,pwr_eType_NetStatus, sizeof(pwr_tNetStatus)},
+    {"BIT" ,graph_eType_Bit, sizeof(pwr_tBit)}
   };
 
   static const int    XlationTblLen = sizeof(XlationTbl)/sizeof(XlationTbl[0]);

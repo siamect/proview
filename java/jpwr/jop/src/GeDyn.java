@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDyn.java,v 1.8 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDyn.java,v 1.9 2006-06-14 05:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,7 @@ public class GeDyn {
     public static final int eEvent_ValueChanged		= 5;
     public static final int eEvent_FocusLost		= 6;
 
+    public static final int eType_Bit 			= (1 << 15) + 1;
 
     public int 		dynType;
     public int		actionType;
@@ -296,6 +297,8 @@ public class GeDyn {
 	     return Pwr.eType_DeltaTime;
 	else if ( suffix.equalsIgnoreCase("AttrRef"))
 	     return Pwr.eType_AttrRef;
+	else if ( suffix.equalsIgnoreCase("Bit"))
+	     return GeDyn.eType_Bit;
 	return -1;
     }
 

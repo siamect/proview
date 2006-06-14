@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynInvisible.java,v 1.3 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynInvisible.java,v 1.4 2006-06-14 05:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,10 +30,12 @@ public class GeDynInvisible extends GeDynElem {
   int p;
   boolean inverted;
   boolean oldValueB;
+  int oldValueI;
   String oldValueS;
   boolean firstScan = true;
   boolean cmd = false;
   boolean valueCmd = false;
+  int bitNum;
 
   public GeDynInvisible( GeDyn dyn, String attribute, int dimmed) {
     super( dyn, GeDyn.mDynType_Invisible, GeDyn.mActionType_No);
@@ -57,6 +59,21 @@ public class GeDynInvisible extends GeDynElem {
 	  subid = ret.refid;
 	  typeId = ret.typeId;
 	  inverted = GeDyndata.getAttrInverted( attribute);
+	  if ( typeId == GeDyn.eType_Bit) {
+	    // Get bit number from name
+	    int i1, i2;
+	    i1 = attrName.lastIndexOf('[');
+	    i2 = attrName.lastIndexOf(']');
+	    if ( i1 != -1 && i2 != -1 && i2 > i1) {
+	      try {
+	        bitNum = Integer.valueOf( attrName.substring( i1+1, i2));
+	      }
+	      catch ( NumberFormatException e) {
+		System.out.println( "DigInvisible: " + attrName);
+		attrFound = false;
+	      }
+	    }
+	  }
         }
       }
     }
@@ -119,6 +136,28 @@ public class GeDynInvisible extends GeDynElem {
 	}
         dyn.repaintNow = true;
 	oldValueS = value0;
+	if ( firstScan)
+	  firstScan = false;
+      }
+      break;
+    }
+    case GeDyn.eType_Bit: {
+      int value0;
+      value0 = dyn.en.gdh.getObjectRefInfoInt( p);
+
+      if ( firstScan || value0 != oldValueI) {
+	boolean bitval = (value0 & (1 << bitNum)) != 0;
+        if ( ( !inverted && bitval) || ( inverted && !bitval)) {
+          if ( dimmed == 0)
+            dyn.comp.setVisibility( Ge.VISIBILITY_INVISIBLE);
+          else
+            dyn.comp.setVisibility( Ge.VISIBILITY_DIMMED);
+        }
+        else {
+          dyn.comp.setVisibility( Ge.VISIBILITY_VISIBLE);
+	}
+        dyn.repaintNow = true;
+	oldValueI = value0;
 	if ( firstScan)
 	  firstScan = false;
       }
