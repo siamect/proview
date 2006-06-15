@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.c,v 1.18 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: wb_gre.c,v 1.19 2006-06-15 12:16:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -843,95 +843,98 @@ int	gre_node_annot_message(
 
 	*message = '\0';
 	annotcount = 0;
-	for ( i = 0; i < rows; i++)
-    {
-      strcpy( annot_str, "");
-      annotnr = 0;
-      switch ( bodydef[i].ParClass )
-        {
-        case pwr_eClass_Input:
-        {
-          annotnr = bodydef[i].Par->Input.Graph.NiNaAnnot;
-          type = bodydef[i].Par->Input.Info.Type;
-          parname = bodydef[i].ParName;
-          break;
-        }
-        case pwr_eClass_Intern:
-        {
-          annotnr = bodydef[i].Par->Intern.Graph.NiNaAnnot;
-          type = bodydef[i].Par->Intern.Info.Type;
-          parname = bodydef[i].ParName;
-          break;
-        }
-        case pwr_eClass_Output:
-        {
-          annotnr = bodydef[i].Par->Output.Graph.NiNaAnnot;
-          type = bodydef[i].Par->Output.Info.Type;
-          parname = bodydef[i].ParName;
-          break;
-        }
-        default:
-          ;
-        }
-      if( annotnr != 0 )
-        {
-          /* Get the parameter value */
-          sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,  
-                                  node->ln.oid, 
-                                  "DevBody",
-                                  bodydef[i].ParName,
-                                  (char **)&parvalue, &size); 
-          if ( EVEN(sts)) return sts;
+	for ( i = 0; i < rows; i++) {
+	  strcpy( annot_str, "");
+	  annotnr = 0;
+	  switch ( bodydef[i].ParClass ) {
+	  case pwr_eClass_Input: {
+	    annotnr = bodydef[i].Par->Input.Graph.NiNaAnnot;
+	    type = bodydef[i].Par->Input.Info.Type;
+	    parname = bodydef[i].ParName;
+	    break;
+	  }
+	  case pwr_eClass_Intern: {
+	    annotnr = bodydef[i].Par->Intern.Graph.NiNaAnnot;
+	    type = bodydef[i].Par->Intern.Info.Type;
+	    parname = bodydef[i].ParName;
+	    break;
+	  }
+	  case pwr_eClass_Output: {
+	    annotnr = bodydef[i].Par->Output.Graph.NiNaAnnot;
+	    type = bodydef[i].Par->Output.Info.Type;
+	    parname = bodydef[i].ParName;
+	    break;
+	  }
+	  default:
+	    ;
+	  }
+	  if( annotnr != 0) {
+	    /* Get the parameter value */
+	    sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses,  
+				    node->ln.oid, 
+				    "DevBody",
+				    bodydef[i].ParName,
+				    (char **)&parvalue, &size); 
+	    if ( EVEN(sts)) return sts;
 
-          switch ( type )
-            {
-            case pwr_eType_Float32:
-            {
+	    switch ( type ) {
+            case pwr_eType_Float32: {
               parfloat = (pwr_tFloat32 *)parvalue;
               sprintf( annot_str,"%f", *parfloat);
               break;
             }
             case pwr_eType_String:
-            case pwr_eType_Text:
-            {
+            case pwr_eType_Text: {
               strncpy( annot_str, parvalue, 
                        co_min( sizeof(annot_str), annot_max_size));
               annot_str[co_min( sizeof(annot_str), annot_max_size)-1] = 0;
               break;
             }
-            case pwr_eType_Char:
-            {
+            case pwr_eType_Char: {
               annot_str[0] = *parvalue;
               annot_str[1] = '\0';		
               break;
             }
-            case pwr_eType_ObjDId:
-            {
+            case pwr_eType_Objid: {
               /* Get the object name from ldh */
               parobjdid = (pwr_tObjid *)parvalue;
               if ( cdh_ObjidIsNull(*parobjdid))
                 annot_str[0] = '\0';
-              else
-                {
-                  sts = ldh_ObjidToName( (node->hn.wind)->hw.ldhses, 
-                                         *parobjdid, ldh_eName_Object,
-                                         annot_str, sizeof( annot_str), &size);
-                  if ( EVEN(sts)) annot_str[0] = '\0';
-                }
+              else {
+		sts = ldh_ObjidToName( (node->hn.wind)->hw.ldhses, 
+				       *parobjdid, ldh_eName_Object,
+				       annot_str, sizeof( annot_str), &size);
+		if ( EVEN(sts)) annot_str[0] = '\0';
+	      }
+              break;
+            }
+            case pwr_eType_AttrRef: {
+              /* Get the object name from ldh */
+              pwr_tAttrRef *arp = (pwr_tAttrRef *)parvalue;
+	      char *name;
+
+              if ( cdh_ObjidIsNull(arp->Objid))
+                annot_str[0] = '\0';
+              else {
+		sts = ldh_AttrRefToName( (node->hn.wind)->hw.ldhses,
+				       arp, ldh_eName_ArefObject,
+				       &name, &size);
+		if ( EVEN(sts)) annot_str[0] = '\0';
+		strcpy( annot_str, name);
+	      }
               break;
             }
             }
-          if ( strcmp( annot_str, "") != 0)
-            {
+	    if ( strcmp( annot_str, "") != 0) {
               if (annotcount != 0)
                 strncat( message, ", ", msg_size-strlen(message));
               strncat( message, annot_str, msg_size-strlen(message));
               annotcount++;
             }
-          free((char *) parvalue);	
-          if ( annotcount >= 3 ) break;
-        }
-    }
+	    free((char *) parvalue);	
+	    if ( annotcount >= 3 ) break;
+	  }
+	}
 	free((char *) bodydef);
 
 	message[msg_size-1] = 0;
