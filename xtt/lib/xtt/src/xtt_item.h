@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.11 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: xtt_item.h,v 1.12 2006-06-15 12:17:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -419,7 +419,7 @@ class ItemChannel : public ItemTable {
 	tab_change_value_idx, tab_min_limit, tab_max_limit, 
 	relative_pos, dest, dest_code)
 	{ type = xnav_eItemType_Channel;};
-    pwr_tObjid		signal_objid;
+    pwr_tAttrRef       	signal_aref;
     int			open_children( XNavBrow *brow, double x, double y);
     int     		open_crossref( XNavBrow *brow, double x, double y);
 };

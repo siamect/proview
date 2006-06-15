@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.17 2006-04-12 12:19:08 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.18 2006-06-15 12:17:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -440,7 +440,7 @@ class XNav {
     int show_subcli();
     int show_device();
     int show_channels( pwr_tObjid card_objid);
-    int show_object( pwr_tObjid objid, brow_tNode node);
+    int show_object( pwr_tAttrRef *oarp, brow_tNode node);
     int show_remnode();
     int show_remtrans( pwr_tObjid remnode_objid);
     int show_plcpgm();

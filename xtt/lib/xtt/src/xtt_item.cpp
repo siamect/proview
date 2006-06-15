@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.15 2005-12-06 10:52:08 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.16 2006-06-15 12:17:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1836,10 +1836,10 @@ int ItemChannel::open_children( XNavBrow *brow, double x, double y)
 
   XNav *xnav = (XNav *) brow->userdata;
 
-  if ( cdh_ObjidIsNull( objid))
+  if ( cdh_ObjidIsNull( objid) || cdh_ObjidIsNull( signal_aref.Objid))
     return 1;
 
-  return xnav->show_object( signal_objid, node);
+  return xnav->show_object( &signal_aref, node);
 }
 
 int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
@@ -1855,7 +1855,7 @@ int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
   else
     xnav = 0;
 
-  if ( cdh_ObjidIsNull( signal_objid))
+  if ( cdh_ObjidIsNull( signal_aref.Objid))
     return 1;
 
   if ( !is_root)
@@ -1882,7 +1882,7 @@ int ItemChannel::open_crossref( XNavBrow *brow, double x, double y)
     crossref_exist = 0;
     brow_SetNodraw( brow->ctx);
 
-    sts = gdh_ObjidToName( signal_objid, signal_name, sizeof(signal_name), 
+    sts = gdh_AttrrefToName( &signal_aref, signal_name, sizeof(signal_name), 
 		cdh_mNName);
 
     sts = xnav_crr_signal( brow, NULL, signal_name, node);

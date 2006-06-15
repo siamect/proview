@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.11 2006-01-13 06:38:27 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.12 2006-06-15 12:17:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -922,13 +922,14 @@ int XNav::show_channels( pwr_tObjid card_objid)
   int			sts;
   pwr_tObjid		chan_objid;
   pwr_sAttrRef		attrref;
-  pwr_tObjid		signal_objid;
+  pwr_sAttrRef		signal_aref;
   char			descr[80];
   char			namebuf[80];
   void			*attr_ptr;
   ItemChannel		*item;
   pwr_tClassId		chan_classid;
   pwr_tAName   		signal_name;
+  int			child_found = 0;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -946,8 +947,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
 
   // Get all children
   sts = gdh_GetChild( card_objid, &chan_objid);
-  while( ODD(sts))
-  {
+  while( ODD(sts)) {
+    child_found = 1;
 
     sts = gdh_ObjidToName ( chan_objid, object_name,
 			sizeof(object_name), cdh_mName_volumeStrict);
@@ -960,19 +961,17 @@ int XNav::show_channels( pwr_tObjid card_objid)
     strcpy( attr_name, object_name);
     strcat( attr_name, ".SigChanCon");
     sts = gdh_GetObjectInfo( attr_name,
-		(void *) &signal_objid, sizeof(signal_objid));
-    if ( ODD(sts))
-    {
-      sts = gdh_ObjidToName ( signal_objid, signal_name,
+		(void *) &signal_aref, sizeof(signal_aref));
+    if ( ODD(sts)) {
+      sts = gdh_AttrrefToName ( &signal_aref, signal_name,
 			sizeof(signal_name), cdh_mNName);
-      if ( EVEN(sts))
-      {
-        signal_objid = pwr_cNObjid;
+      if ( EVEN(sts)) {
+        signal_aref.Objid = pwr_cNObjid;
         strcpy( signal_name, "-");
       }
     }
     else
-      signal_objid = pwr_cNObjid;
+      signal_aref.Objid = pwr_cNObjid;
 
     t.elem_cnt = 0;
     ts.subid_cnt = 0;
@@ -984,7 +983,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
     t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
     // Value
-    if ( cdh_ObjidIsNotNull( signal_objid))
+    if ( cdh_ObjidIsNotNull( signal_aref.Objid))
     {
       strcpy( attr_name, signal_name);
       switch( chan_classid)
@@ -993,6 +992,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
         case pwr_cClass_ChanDo:
         case pwr_cClass_ChanAi:
         case pwr_cClass_ChanAo:
+        case pwr_cClass_ChanIi:
+        case pwr_cClass_ChanIo:
           strcat( attr_name, ".ActualValue");
           break;
         case pwr_cClass_ChanCo:
@@ -1017,6 +1018,8 @@ int XNav::show_channels( pwr_tObjid card_objid)
       {
         case pwr_cClass_ChanDi:
         case pwr_cClass_ChanDo:
+        case pwr_cClass_ChanIi:
+        case pwr_cClass_ChanIo:
         case pwr_cClass_ChanCo:
           strcpy( t.elem[t.elem_cnt++].format, "%8d");
           break;
@@ -1034,7 +1037,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
     t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
 
     // Signal
-    if ( cdh_ObjidIsNotNull( signal_objid))
+    if ( cdh_ObjidIsNotNull( signal_aref.Objid))
     {
       strcpy( t.elem[t.elem_cnt].fix_str, signal_name);
     }
@@ -1048,7 +1051,7 @@ int XNav::show_channels( pwr_tObjid card_objid)
     t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
     t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
 
-    if ( cdh_ObjidIsNotNull( signal_objid))
+    if ( cdh_ObjidIsNotNull( signal_aref.Objid))
       strcpy( attr_name, signal_name);
     else
       strcpy( attr_name, object_name);
@@ -1062,11 +1065,172 @@ int XNav::show_channels( pwr_tObjid card_objid)
 
     item = new ItemChannel( brow, this, chan_objid, &t, &ts, -1, 0, 0, 1, 
 		NULL, flow_eDest_IntoLast);
-    item->signal_objid = signal_objid;
+    item->signal_aref = signal_aref;
 
     sts = gdh_GetNextSibling ( chan_objid, &chan_objid);
   }
 
+  // Get all intern channels
+  if ( !child_found) {
+    gdh_sAttrDef *bd;
+    int rows;
+    int i;
+    int elem;
+    pwr_tCid cid;
+    pwr_tAttrRef aref;
+    int offset;
+
+    sts = gdh_GetObjectClass ( card_objid, &cid);
+    if ( EVEN(sts)) return sts;
+
+    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNObjid);
+    if ( EVEN(sts)) return sts;
+
+    for ( i = 0; i < rows; i++) {
+      switch ( bd[i].attr->Param.TypeRef) {
+      case pwr_cClass_ChanAi:
+      case pwr_cClass_ChanAit:
+      case pwr_cClass_ChanAo:
+      case pwr_cClass_ChanDi:
+      case pwr_cClass_ChanDo:
+      case pwr_cClass_ChanIi:
+      case pwr_cClass_ChanIo:
+      case pwr_cClass_ChanCo:
+	break;
+      default:
+	continue;
+      }
+
+      chan_classid = bd[i].attr->Param.TypeRef;
+
+      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+	elem = bd[i].attr->Param.Info.Elements;
+      else
+	elem = 1;
+
+      for ( int j = 0; j < elem; j++) {
+	offset = bd[i].attr->Param.Info.Offset;
+	memset( &aref, 0, sizeof(aref));
+	aref.Objid = card_objid;
+	aref.Size = bd[i].attr->Param.Info.Size / elem;
+	aref.Offset = bd[i].attr->Param.Info.Offset + j * aref.Size;
+	aref.Flags.b.ObjectAttr = 1;
+      
+	sts = gdh_AttrrefToName ( &aref, object_name,
+			sizeof(object_name), cdh_mName_volumeStrict);
+	if ( EVEN(sts)) return sts;
+
+	// Get connected signal
+	strcpy( attr_name, object_name);
+	strcat( attr_name, ".SigChanCon");
+	sts = gdh_GetObjectInfo( attr_name,
+				 (void *) &signal_aref, sizeof(signal_aref));
+	if ( ODD(sts)) {
+	  sts = gdh_AttrrefToName ( &signal_aref, signal_name,
+				    sizeof(signal_name), cdh_mNName);
+	  if ( EVEN(sts)) {
+	    signal_aref.Objid = pwr_cNObjid;
+	    strcpy( signal_name, "-");
+	  }
+	}
+	else
+	  signal_aref.Objid = pwr_cNObjid;
+
+	t.elem_cnt = 0;
+	ts.subid_cnt = 0;
+
+	// Object name
+	xnav_cut_segments( namebuf, object_name, 2);
+
+	strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
+	t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+	// Value
+	if ( cdh_ObjidIsNotNull( signal_aref.Objid)) {
+	  strcpy( attr_name, signal_name);
+	  switch( chan_classid) {
+	  case pwr_cClass_ChanDi:
+	  case pwr_cClass_ChanDo:
+	  case pwr_cClass_ChanAi:
+	  case pwr_cClass_ChanAo:
+	  case pwr_cClass_ChanIi:
+	  case pwr_cClass_ChanIo:
+	    strcat( attr_name, ".ActualValue");
+	    break;
+	  case pwr_cClass_ChanCo:
+	    strcat( attr_name, ".RawValue");
+	    break;
+	  }
+	  sts = gdh_GetAttributeCharacteristics ( attr_name,
+		 &attrtype, &attrsize, &attroffs, &attrelem);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_NameToAttrref( pwr_cNObjid, attr_name, &attrref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_DLRefObjectInfoAttrref ( &attrref, &attr_ptr, &subid);
+	  if ( EVEN(sts)) return sts;
+
+	  t.elem[t.elem_cnt].value_p = attr_ptr;
+	  t.elem[t.elem_cnt].type_id = attrtype;
+	  t.elem[t.elem_cnt].size = attrsize;
+
+	  switch( chan_classid) {
+	  case pwr_cClass_ChanDi:
+	  case pwr_cClass_ChanDo:
+	  case pwr_cClass_ChanIi:
+	  case pwr_cClass_ChanIo:
+	  case pwr_cClass_ChanCo:
+	    strcpy( t.elem[t.elem_cnt++].format, "%8d");
+	    break;
+	  case pwr_cClass_ChanAi:
+	  case pwr_cClass_ChanAo:
+	    strcpy( t.elem[t.elem_cnt++].format, "%f");
+	    break;
+	  }
+	  ts.subid[ts.subid_cnt++] = subid;
+	}
+	else
+	  t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+
+	// Flags
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+
+	// Signal
+	if ( cdh_ObjidIsNotNull( signal_aref.Objid)) {
+	strcpy( t.elem[t.elem_cnt].fix_str, signal_name);
+	}
+	else
+	  strcpy( t.elem[t.elem_cnt].fix_str, "-");
+	t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+
+	// Description in signal
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+	t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+	
+	if ( cdh_ObjidIsNotNull( signal_aref.Objid))
+	  strcpy( attr_name, signal_name);
+	else
+	  strcpy( attr_name, object_name);
+	strcat( attr_name, ".Description");
+	sts = gdh_GetObjectInfo( attr_name,
+				 (void *) &descr, sizeof(descr));
+	if ( EVEN(sts)) return sts;
+
+	strcpy( t.elem[t.elem_cnt].fix_str, descr);
+	t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+	item = new ItemChannel( brow, this, card_objid, &t, &ts, -1, 0, 0, 1, 
+				NULL, flow_eDest_IntoLast);
+	item->signal_aref = signal_aref;
+	
+      }
+    }
+    free( (char *)bd);
+  }
+	  
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
   force_trace_scan();
@@ -1076,11 +1240,11 @@ int XNav::show_channels( pwr_tObjid card_objid)
 
 
 
-int XNav::show_object( pwr_tObjid objid, brow_tNode node)
+int XNav::show_object( pwr_tAttrRef *oarp, brow_tNode node)
 {
   double	node_x, node_y;
 
-  if ( cdh_ObjidIsNull( objid))
+  if ( cdh_ObjidIsNull( oarp->Objid))
     return 1;
 
   brow_GetNodePosition( node, &node_x, &node_y);
@@ -1098,17 +1262,12 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
   else 
   {
     int			sts;
-    pwr_tClassId	classid;
-    unsigned long	elements;
-    gdh_sAttrDef *bd;
-    int 	rows;
-    Item 	*item;
-    int		attr_exist;
-    int		i;
+    Item 		*item;
+    pwr_tTypeId		atype;
+    unsigned int	asize, aoffset, adim, aflags;
 
     if ( brow_IsOpen( node) & xnav_mOpen_Children ||
-	 brow_IsOpen( node) & xnav_mOpen_Crossref)
-    {
+	 brow_IsOpen( node) & xnav_mOpen_Crossref) {
       // Close children first
       brow_SetNodraw( brow->ctx);
       brow_CloseNode( brow->ctx, node);
@@ -1119,55 +1278,32 @@ int XNav::show_object( pwr_tObjid objid, brow_tNode node)
       brow_Redraw( brow->ctx, node_y);
     }
 
-    // Create some attributes
-    brow_SetNodraw( brow->ctx);
+    sts = gdh_GetAttributeCharAttrref( oarp, &atype, &asize, &aoffset, &adim);
 
-    sts = gdh_GetObjectClass ( objid, &classid);
-    if ( EVEN(sts)) return sts;
-
-    // Get attributes for this class
-    sts = gdh_GetObjectBodyDef( classid, &bd, &rows, objid);
-    if ( EVEN(sts)) return sts;
-
-    for ( i = 0; i < rows; i++) {
-
-      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
-	   bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
-	continue;
-
-      elements = 1;
-      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
-          attr_exist = 1;
-          item = (Item *) new ItemAttrArray( brow, objid, node, 
-					     flow_eDest_IntoLast,
-					     bd[i].attrName,
-					     bd[i].attr->Param.Info.Elements, 
-					     bd[i].attr->Param.Info.Type, 
-					     bd[i].attr->Param.TypeRef, 
-					     bd[i].attr->Param.Info.Size,
-					     bd[i].attr->Param.Info.Flags, 0);
-      }
-      else {
-	attr_exist = 1;
-	item = (Item *) new ItemAttr( brow, objid, node, 
-				      flow_eDest_IntoLast,
-				      bd[i].attrName,
-				      bd[i].attr->Param.Info.Type, 
-				      bd[i].attr->Param.TypeRef, 
-				      bd[i].attr->Param.Info.Size,
-				      bd[i].attr->Param.Info.Flags, 0, 
-				      item_eDisplayType_Attr);
-      } 
+    if ( oarp->Flags.b.Object) {
+      item = (Item *)new ItemObject( brow, oarp->Objid, node, flow_eDest_IntoLast, 0);
     }
-    free( (char *)bd);
+    else {
+      pwr_tAName aname;
+      pwr_tOName attrname;
+      char *s;
 
-    if ( attr_exist) {
-      brow_SetOpen( node, xnav_mOpen_Attributes);
-      brow_SetAnnotPixmap( node, 1, brow->pixmap_openattr);
+      sts = gdh_AttrrefToName ( oarp, aname, sizeof(aname), cdh_mNName);
+      if ( EVEN(sts)) return sts;
+
+      if ( (s = strchr( aname, '.')))
+	strcpy( attrname, s+1);
+
+      aflags = PWR_MASK_CLASS;
+
+      item = (Item *) new ItemAttrObject( brow, oarp->Objid, node, 
+					  flow_eDest_IntoLast,
+					  attrname, atype, asize, aflags, 0, 0);
     }
-    brow_ResetNodraw( brow->ctx);
-    if ( attr_exist)
-      brow_Redraw( brow->ctx, node_y);
+    brow_SetOpen( node, xnav_mOpen_Attributes);
+    brow_SetAnnotPixmap( node, 1, brow->pixmap_openattr);
+
+    item->open_attributes( brow, node_x, node_y);
   }
   return 1;
 }
