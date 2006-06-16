@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttObj.java,v 1.5 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: XttObj.java,v 1.6 2006-06-16 05:18:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -362,7 +362,8 @@ public class XttObj extends DynamicObj implements JopDynamic
   public void localDynamicClose()
   {
     Logg.logg("XttObj: localDynamic close_vector", 6);
-    Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+    //Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+    Vector unref_vec = new Vector();
     for(int i = 0; i < attrVector.size(); i++)
     {
       XttObjAttr obj = (XttObjAttr)attrVector.get(i);

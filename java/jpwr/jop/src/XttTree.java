@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttTree.java,v 1.11 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: XttTree.java,v 1.12 2006-06-16 05:19:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -843,8 +843,8 @@ public class XttTree extends JPanel
     }      
   }
 
-  //public Vector createPathVec(String name)
-  public Vector<String> createPathVec(String name)
+  //public Vector<String> createPathVec(String name)
+  public Vector createPathVec(String name)
   {
     //Vector<String> pathVec = new Vector<String>();
     Vector pathVec = new Vector();
