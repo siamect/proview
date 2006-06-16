@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: LocalDb.java,v 1.3 2006-06-14 05:07:48 claes Exp $
+ * Proview   $Id: LocalDb.java,v 1.4 2006-06-16 05:11:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,8 @@ public class LocalDb {
     }
   }
 
-  Vector<LocalSub> subscriptions = new Vector<LocalSub>();
+  //Vector<LocalSub> subscriptions = new Vector<LocalSub>();
+  Vector subscriptions = new Vector();
   int subscriptionCount = 1;
 
   public LocalDb() {

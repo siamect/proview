@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: MhData.java,v 1.4 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: MhData.java,v 1.5 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,16 +31,20 @@ public class MhData
 
   public int maxNrOfAlarms;
   public int maxNrOfEvents;
-  public Vector<MhrEvent> alarmVec;
-  public Vector<MhrEvent> eventVec;
+  //public Vector<MhrEvent> alarmVec;
+  public Vector alarmVec;
+  //public Vector<MhrEvent> eventVec;
+  public Vector eventVec;
 
 
   public MhData(int maxNrOfAlarms, int maxNrOfEvents)
   {
     this.maxNrOfAlarms = maxNrOfAlarms;
     this.maxNrOfEvents = maxNrOfEvents;
-    this.alarmVec = new Vector<MhrEvent>(maxNrOfAlarms);
-    this.eventVec = new Vector<MhrEvent>(maxNrOfEvents);
+    //this.alarmVec = new Vector<MhrEvent>(maxNrOfAlarms);
+    this.alarmVec = new Vector(maxNrOfAlarms);
+    //this.eventVec = new Vector<MhrEvent>(maxNrOfEvents);
+    this.eventVec = new Vector(maxNrOfEvents);
   }
   public int getNrOfAlarms()
   {
@@ -58,9 +62,11 @@ public class MhData
   {
     return (MhrEvent)eventVec.get(i);
   }
-  public void addMessToVectorInSortedOrder(Vector<MhrEvent> v, MhrEvent ev)
+  //public void addMessToVectorInSortedOrder(Vector<MhrEvent> v, MhrEvent ev)
+  public void addMessToVectorInSortedOrder(Vector v, MhrEvent ev)
   {
-    ListIterator<MhrEvent> iter = v.listIterator();
+    //ListIterator<MhrEvent> iter = v.listIterator();
+    ListIterator iter = v.listIterator();
     MhrEvent vEv;
     while(iter.hasNext())
     {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.8 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.9 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,8 @@ public class JopSessionRep implements JopSessionIfc {
   XttTree navigator;
   MhFrame alarmList;
   JopLoginFrame login;
-  Vector<Object> frames = new Vector<Object>();
+  //Vector<Object> frames = new Vector<Object>();
+  Vector frames = new Vector();
 
   public JopSessionRep() {
   }

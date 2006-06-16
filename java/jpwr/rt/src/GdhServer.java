@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.14 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.15 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,8 @@ public class GdhServer
   public final static int __IO_EXCEPTION = 2000;
   public final static int __UNREFED = 0;
 
-  static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
+  //static ArrayList<SubElement> subscriptions = new ArrayList<SubElement>();
+  static ArrayList subscriptions = new ArrayList();
 
   static int subscriptionCount = 0;
 
@@ -331,7 +332,8 @@ public class GdhServer
   private class GdhThread extends Thread
   {
     Socket clientSocket;
-    public Vector<Sub> thSub = new Vector<Sub>();
+    //public Vector<Sub> thSub = new Vector<Sub>();
+    public Vector thSub = new Vector();
     int maxConnections;
     int threadNumber;
 
@@ -634,7 +636,8 @@ public class GdhServer
                   break;
                 }
 		String attrName;
-		Vector<Sub> gdhRet = new Vector<Sub>(vec.size());
+		//Vector<Sub> gdhRet = new Vector<Sub>(vec.size());
+		Vector gdhRet = new Vector(vec.size());
 		for(int j = 0; j < vec.size(); j++)
                 {
                   attrName = (String)vec.get(j);
@@ -1497,7 +1500,8 @@ public class GdhServer
               try
               {
                 String name = in.readUTF();
-                Vector<CdhrObjAttr> v = gdh.getAllClassAttributes(name);
+                //Vector<CdhrObjAttr> v = gdh.getAllClassAttributes(name);
+                Vector v = gdh.getAllClassAttributes(name);
                 out.writeObject(v);
                 out.flush();
               }
@@ -1511,7 +1515,8 @@ public class GdhServer
               {
                 PwrtObjid objid = (PwrtObjid)in.readObject();
                 CdhrObjid sibling = (CdhrObjid)gdh.getNextSibling(objid);
-                Vector<CdhrObjid> v = new Vector<CdhrObjid>();
+                //Vector<CdhrObjid> v = new Vector<CdhrObjid>();
+                Vector v = new Vector();
                 while(sibling.oddSts())
                 {
                   v.add(sibling);
@@ -1542,7 +1547,8 @@ public class GdhServer
                 CdhrClassId cdhrClassId;
                 int sts = 2;
                 boolean hasChildren = false;
-                Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                //Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                Vector v = new Vector();
                 CdhrObjid classObj;
 
                 cdhrObjId = (CdhrObjid)gdh.getNextSibling(objid);
@@ -1610,7 +1616,8 @@ public class GdhServer
                 CdhrClassId cdhrClassId;
                 int sts = 2;
                 boolean hasChildren = false;
-                Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                //Vector<GdhrGetXttObj> v = new Vector<GdhrGetXttObj>();
+                Vector v = new Vector();
 
                 CdhrObjid classObj;
 

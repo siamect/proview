@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowCmn.java,v 1.3 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: FlowCmn.java,v 1.4 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,9 +39,12 @@ public class FlowCmn {
   double y_high;
   double y_low;
 
-  Vector<Object> a = new Vector<Object>();
-  Vector<Object> a_nc = new Vector<Object>();
-  Vector<Object> a_cc = new Vector<Object>();
+  //Vector<Object> a = new Vector<Object>();
+  Vector a = new Vector();
+  //Vector<Object> a_nc = new Vector<Object>();
+  Vector a_nc = new Vector();
+  //Vector<Object> a_cc = new Vector<Object>();
+  Vector a_cc = new Vector();
 
   public FlowCmn( Object ctx, Gdh gdh, JopSession session) {
     this.ctx = ctx;

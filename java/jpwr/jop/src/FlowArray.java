@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: FlowArray.java,v 1.3 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: FlowArray.java,v 1.4 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,8 @@ import javax.swing.*;
 
 
 public class FlowArray {
-  Vector<Object> a = new Vector<Object>();
+  //Vector<Object> a = new Vector<Object>();
+  Vector a = new Vector();
   FlowCmn cmn;
 
   public FlowArray( FlowCmn cmn) {

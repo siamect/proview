@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttTree.java,v 1.10 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: XttTree.java,v 1.11 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -377,9 +377,11 @@ public class XttTree extends JPanel
       return;
     }
     //används utifall användaren angett debug
-    Vector<String> ref_vec = new Vector<String>();
+    //Vector<String> ref_vec = new Vector<String>();
+    Vector ref_vec = new Vector();
     //används utifall användaren angett debug
-    Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
+    //Vector<XttRefObj> o_vec = new Vector<XttRefObj>();
+    Vector o_vec = new Vector();
 
     //loopa igenom resultat-vektorn
     for(int i = 0; i < v.size(); i++)
@@ -513,7 +515,8 @@ public class XttTree extends JPanel
         Logg.logg("XttTree: Vector == null efter getAllClassAttributes", 4);
         return;
       }
-      Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
+      //Vector<XttObjAttr> xttObjAttrVec = new Vector<XttObjAttr>();
+      Vector xttObjAttrVec = new Vector();
       for(int i = 0; i < v.size(); i++)
       {
 	
@@ -822,7 +825,8 @@ public class XttTree extends JPanel
     //what we are looking for
     TreePath selectedPath = this.tree.getSelectionPath();
     
-    Vector<String> pathVec = createPathVec(objectName);
+    //Vector<String> pathVec = createPathVec(objectName);
+    Vector pathVec = createPathVec(objectName);
     int ret = 1;
     DefaultMutableTreeNode tn = this.rootNode;
     TreePath tp;
@@ -839,9 +843,11 @@ public class XttTree extends JPanel
     }      
   }
 
+  //public Vector createPathVec(String name)
   public Vector<String> createPathVec(String name)
   {
-    Vector<String> pathVec = new Vector<String>();
+    //Vector<String> pathVec = new Vector<String>();
+    Vector pathVec = new Vector();
     int strIndex;
     int i = 0;
     strIndex = name.indexOf('-');
@@ -956,7 +962,8 @@ public class XttTree extends JPanel
         XttObj obj = ((XttObj)tn.getUserObject());
         if(obj.debug)
         {
-          Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+	  //Vector<PwrtRefId> unref_vec = new Vector<PwrtRefId>();
+          Vector unref_vec = new Vector();
           obj.debug = false;
           Enumeration enm = tn.children();
           while(enm.hasMoreElements())
@@ -1693,9 +1700,11 @@ public class XttTree extends JPanel
         tn.remove(tc);
         GdhrRefObjectInfo ret;
         XttObjAttr obj = (XttObjAttr)tn.getUserObject();
-        Vector<String> ref_vec = new Vector<String>();
+        //Vector<String> ref_vec = new Vector<String>();
+        Vector ref_vec = new Vector();
         Vector ret_vec;
-        Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
+        //Vector<XttArrayAttr> attr_vec = new Vector<XttArrayAttr>();
+        Vector attr_vec = new Vector();
         //qqq borde läggas i egen tråd???
         for(int j = 0; j < obj.elements; j++)
         {

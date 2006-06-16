@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistStatModel2.java,v 1.4 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: HistStatModel2.java,v 1.5 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,8 @@ import jpwr.rt.*;
 
 public class HistStatModel2 extends AbstractTableModel{
     // The List holding the statistics
-    List<MhrEvent> result;  
+    //List<MhrEvent> result;  
+    List result;  
     private String[][] names={{"Object", "Duration time" },{"Objekt", "Varaktighet"}};
     int lang;
     
@@ -42,7 +43,8 @@ public class HistStatModel2 extends AbstractTableModel{
     }
     
     public void clearData(){
-	result = new ArrayList<MhrEvent>();
+	//result = new ArrayList<MhrEvent>();
+	result = new ArrayList();
     }
 
     public void setData(MhData m){
@@ -158,10 +160,14 @@ public class HistStatModel2 extends AbstractTableModel{
     //eventFlags).Longest duration on top.)    
     public void sortData(){
     
-    Collections.sort(result, new Comparator<MhrEvent>(){
-         public int compare(MhrEvent o1, MhrEvent o2){
-            if (o1.eventFlags < o2.eventFlags) return 1;
-            else if (o1.eventFlags > o2.eventFlags) return -1;
+    //Collections.sort(result, new Comparator<MhrEvent>(){
+    //      public int compare(MhrEvent o1, MhrEvent o2){
+    //         if (o1.eventFlags < o2.eventFlags) return 1;
+    //         else if (o1.eventFlags > o2.eventFlags) return -1;
+    Collections.sort(result, new Comparator(){
+         public int compare(Object o1, Object o2){
+            if (((MhrEvent)o1).eventFlags < ((MhrEvent)o2).eventFlags) return 1;
+            else if (((MhrEvent)o1).eventFlags > ((MhrEvent)o2).eventFlags) return -1;
             else return 0;
         }
     }); 

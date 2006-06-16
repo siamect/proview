@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttObj.java,v 1.4 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: XttObj.java,v 1.5 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,7 +174,8 @@ public class XttObj extends DynamicObj implements JopDynamic
     XttObjAttr obj;
     String suffix;
     GdhrRefObjectInfo ret;
-    Vector<String> refVec = new Vector<String>();
+    //Vector<String> refVec = new Vector<String>();
+    Vector refVec = new Vector();
     for(int i = 0; i < attrVector.size(); i++)
     {
       obj = ((XttObjAttr)attrVector.get(i));

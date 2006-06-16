@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: RatioLayout.java,v 1.4 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: RatioLayout.java,v 1.5 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,10 +40,12 @@ import java.beans.Beans;
 public class RatioLayout implements LayoutManager2 {
     
     // track the ratios for each object of form "xratio,yratio;wratio,hratio"
-    Vector<Proportion> ratios = new Vector<Proportion>(1);
+    //Vector<Proportion> ratios = new Vector<Proportion>(1);
+    Vector ratios = new Vector(1);
     // track the components also so we can remove associated modifier
     // if necessary.
-    Vector<Component> components = new Vector<Component>(1);
+    //Vector<Component> components = new Vector<Component>(1);
+    Vector components = new Vector(1);
     
     public void addLayoutComponent(String r, Component comp) {
     }
@@ -72,8 +74,10 @@ public class RatioLayout implements LayoutManager2 {
     }
     //Reset the Layout
     public void invalidateLayout(Container target){
-	 ratios = new Vector<Proportion>(1);
-	 components = new Vector<Component>(1);
+	 //ratios = new Vector<Proportion>(1);
+	 //components = new Vector<Component>(1);
+	 ratios = new Vector(1);
+	 components = new Vector(1);
     }
 
     

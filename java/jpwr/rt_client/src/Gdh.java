@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.10 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.11 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,8 @@ public class Gdh
   Socket gdhSocket;
   ObjectOutputStream out;
   ObjectInputStream in;
-  Vector<Sub> subscriptions = new Vector<Sub>();
+  //Vector<Sub> subscriptions = new Vector<Sub>();
+  Vector subscriptions = new Vector();
   int subscriptionCount = 0;
   boolean listSent = false;
   int subLate = 0;
@@ -560,7 +561,8 @@ public class Gdh
       out.writeObject(vec);
       out.flush();
 
-      Vector<GdhrRefObjectInfo> retVec = (Vector<GdhrRefObjectInfo>)in.readObject();
+      //Vector<GdhrRefObjectInfo> retVec = (Vector<GdhrRefObjectInfo>)in.readObject();
+      Vector retVec = (Vector)in.readObject();
       if(retVec == null)
       {
         locked = false;
@@ -590,7 +592,8 @@ public class Gdh
       System.out.println("REF_OBJECT_INFO_VECTOR: IO_Exception");
       locked = false;
       notify();
-      Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
+      //Vector<GdhrRefObjectInfo> retVec = new Vector<GdhrRefObjectInfo>();
+      Vector retVec = new Vector();
       retVec.add(new GdhrRefObjectInfo(null, 0, __IO_EXCEPTION, 0));
       return retVec;
     }
@@ -861,7 +864,8 @@ public class Gdh
         out.writeInt(refid.nid);
       }
       out.flush();
-      Vector<PwrtStatus> ret_vec = new Vector<PwrtStatus>();
+      //Vector<PwrtStatus> ret_vec = new Vector<PwrtStatus>();
+      Vector ret_vec = new Vector();
       //System.out.println("unrefObjectInfo_VEctor i: " + i);
       while(i > 0)
       {

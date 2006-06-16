@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: MhTable.java,v 1.4 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: MhTable.java,v 1.5 2006-06-16 05:09:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -931,13 +931,15 @@ public class MhTable extends JPanel
 	  int nrOfAlarms = in.readInt();
 	  if(nrOfAlarms > 0)
 	  {
-	    mhData.alarmVec = (Vector<MhrEvent>)in.readObject();
+	    //mhData.alarmVec = (Vector<MhrEvent>)in.readObject();
+	    mhData.alarmVec = (Vector)in.readObject();
             ((AlarmTableModel)alarmTable.getModel()).updateTable();
 	  }
 	  int nrOfEvents = in.readInt();
 	  if(nrOfEvents > 0)
 	  {
-	    mhData.eventVec = (Vector<MhrEvent>)in.readObject();
+	    //mhData.eventVec = (Vector<MhrEvent>)in.readObject();
+	    mhData.eventVec = (Vector)in.readObject();
 	    ((EventTableModel)eventTable.getModel()).updateTable();
 	  }
 	}
