@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_foe.uil,v 1.6 2006-03-31 14:29:39 claes Exp $
+!  Proview   $Id: wb_foe.uil,v 1.7 2006-06-16 10:08:40 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -731,8 +731,8 @@ object search_entry : XmCascadeButton {
 	  arguments {
 	    XmNlabelString = compound_string("Next");
 	    XmNmnemonic = keysym('N');
-	    XmNaccelerator = "Alt<Key>Next:";
-	    XmNacceleratorText = compound_string('Alt+Next');
+	    XmNaccelerator = "Ctrl<Key>G";
+	    XmNacceleratorText = compound_string('Ctrl+G');
 	    XmNfontList	    = menu_font;
 	  };
 	  callbacks {
