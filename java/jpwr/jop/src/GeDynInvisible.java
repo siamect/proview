@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynInvisible.java,v 1.4 2006-06-14 05:06:05 claes Exp $
+ * Proview   $Id: GeDynInvisible.java,v 1.5 2006-06-16 05:17:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,7 +66,7 @@ public class GeDynInvisible extends GeDynElem {
 	    i2 = attrName.lastIndexOf(']');
 	    if ( i1 != -1 && i2 != -1 && i2 > i1) {
 	      try {
-	        bitNum = Integer.valueOf( attrName.substring( i1+1, i2));
+	        bitNum = Integer.valueOf( attrName.substring( i1+1, i2)).intValue();
 	      }
 	      catch ( NumberFormatException e) {
 		System.out.println( "DigInvisible: " + attrName);
