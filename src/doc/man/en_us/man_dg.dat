@@ -191,7 +191,7 @@ this values in the input signals.
 The configuration and programming of the system is then a process, where you altertately
 configure/program and test. The result i carefully debugged programs and a fast and efficiant
 commissioning of the plant. It also result in better programs, and more thoroughly workt
-through functions, beacause the feeback is greater in the create process that the construction
+through functions, beacause the feedback is greater in the create process that the construction
 of a process control system implies.
 
 At the simulation and commissioning it is of greate importance to have access to tools that
@@ -2368,7 +2368,7 @@ Besides transfering a signal value, the connections also determine the execute o
 different function blocks. If two objects are connected trough an output and an input, 
 normally the output-object is to be executed before the input-object. But sometimes a feedback
 is needed in the net, and then you face a execute order loop. To determine the execute order
-you have to specify the feeback with a connections of type ConFeebackDigtal or 
+you have to specify the feedback with a connections of type ConFeedbackDigital or 
 ConFeedbackAnalog. These are selected in the connection palette, viewed by activating 
 'View/Palette/Connection' in the menu. Under the folder 'ConPlc' you can find the feedback
 connections. They are drawn with dashed lines.
