@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.c,v 1.16 2006-04-28 05:01:02 claes Exp $
+ * Proview   $Id: wb_gobj.c,v 1.17 2006-06-21 17:07:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1564,7 +1564,7 @@ unsigned long	index;
 
 	sts = gobj_get_select( foectx, &attrref, &is_attr);
 	if ( EVEN(sts)) { 
-	  foe_message( foectx,"Select an digital signal or attribute in the navigator");
+	  foe_message( foectx,"Select a digital signal or attribute in the navigator");
 	  BEEP;
 	  return sts;
 	}
@@ -1599,7 +1599,7 @@ unsigned long	index;
 	  create_classid = pwr_cClass_GetDv;
 	  break;
 	default:
-	  foe_message( foectx,"Select an digital signal or attribute in the navigator");
+	  foe_message( foectx,"Select a digital signal or attribute in the navigator");
 	  BEEP;
 	  return 0;
 	}
@@ -1698,7 +1698,7 @@ unsigned long	index;
 
 	sts = gobj_get_select( foectx, &attrref, &is_attr);
 	if ( EVEN(sts)) { 
-	  foe_message( foectx,"Select an digital signal or attribute in the navigator");
+	  foe_message( foectx,"Select a digital signal or attribute in the navigator");
 	  BEEP;
 	  return sts;
 	}
@@ -1743,7 +1743,7 @@ unsigned long	index;
 	  create_classid = pwr_cClass_stoav;
 	  break;
 	default:
-	  foe_message( foectx,"Select an digital signal or attribute in the navigator");
+	  foe_message( foectx,"Select a digital signal or attribute in the navigator");
 	  BEEP;
 	  return 0;
 	}
@@ -1844,7 +1844,7 @@ unsigned long	index;
 
 	sts = gobj_get_select( foectx, &attrref, &is_attr);
 	if ( EVEN(sts)) { 
-	  foe_message( foectx,"Select an digital signal in the navigator");
+	  foe_message( foectx,"Select a digital signal in the navigator");
 	  BEEP;
 	  return sts;
 	}
@@ -1879,7 +1879,7 @@ unsigned long	index;
 	  create_classid = pwr_cClass_stodv;
 	  break;
 	default:
-	  foe_message( foectx,"Select an digital signal in the navigator");
+	  foe_message( foectx,"Select a digital signal in the navigator");
 	  BEEP;
 	  return 0;
 	}
