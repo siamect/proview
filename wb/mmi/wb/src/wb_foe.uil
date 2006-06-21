@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb_foe.uil,v 1.7 2006-06-16 10:08:40 claes Exp $
+!  Proview   $Id: wb_foe.uil,v 1.8 2006-06-21 15:40:53 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -672,7 +672,7 @@ object push_expand : XmPushButton {
 };
 object push_compress : XmPushButton {
   arguments {
-    XmNlabelString = compound_string("Compess Object");
+    XmNlabelString = compound_string("Compress Object");
     XmNmnemonic = keysym('m');
     XmNaccelerator = "Ctrl<Key>Left";
     XmNacceleratorText = compound_string('Ctrl+Left');
