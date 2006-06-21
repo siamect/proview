@@ -577,7 +577,7 @@ palette PlcEditorPalette
       class StoAtoIp
       class StoAv
     }
-    menu Digtal
+    menu Digital
     {
       class DpCollect
       class DpDistribute
