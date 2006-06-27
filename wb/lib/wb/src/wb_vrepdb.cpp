@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.48 2006-06-08 13:38:21 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.49 2006-06-27 05:52:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1786,6 +1786,9 @@ pwr_tStatus wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
   m_instanceCount++;
 
   m_ohead.get(m_db->m_txn, oid);
+
+  o_time = o_crep->ohTime();
+  n_time = n_crep->ohTime();
 
   if (time_Acomp(&o_time, &n_time) == 0)
     return LDH__SUCCESS;
