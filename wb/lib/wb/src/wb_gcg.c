@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.33 2006-05-23 13:53:47 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.34 2006-06-29 10:52:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -8376,7 +8376,7 @@ vldh_t_node	node;
 		  node->ln.cid == pwr_cClass_CStoAtoIp ||
 		  node->ln.cid == pwr_cClass_StoIp ||
 		  node->ln.cid == pwr_cClass_CStoIp) {
-	  nocondef[0].bo = *(float *) nocondef_ptr;
+	  nocondef[0].bo = *(int *) nocondef_ptr;
 	  nocontype[0] = GCG_INT32;
 	}    
 	else if ( node->ln.cid == pwr_cClass_stosp ||
