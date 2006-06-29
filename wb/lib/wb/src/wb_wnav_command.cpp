@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.43 2006-06-09 05:22:08 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.44 2006-06-29 11:53:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4381,6 +4381,9 @@ static int	wnav_crossref_func(	void		*client_data,
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
         sts = wnav->crr_signal( NULL, name_str, NULL);
         break;
       default:
