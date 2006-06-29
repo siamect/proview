@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.14 2006-05-24 08:01:51 claes Exp $
+ * Proview   $Id: glow.h,v 1.15 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,7 +72,8 @@ typedef enum {
   glow_eType_MB3Action,  	//!< Type is glow_eMB3Action
   glow_eType_Relief,  		//!< Type is glow_eRelief
   glow_eType_InputFocusMark,  	//!< Type is glow_eInputFocusMark
-  glow_eType_TextSize	  	//!< Type is a text size, glow_eTextSize
+  glow_eType_TextSize,	  	//!< Type is a text size, glow_eTextSize
+  glow_eType_Adjustment	  	//!< Type is glow_eAdjustment
 } glow_eType;
 
 //! Type of Ctx class
@@ -193,6 +194,13 @@ typedef enum {
   glow_eDirection_Up,  		//!< Direction Up
   glow_eDirection_Down  	//!< Direction down
 } glow_eDirection;
+
+//! Adjustment of annotations
+typedef enum {
+  glow_eAdjustment_Center,  	//!< Adjustment center
+  glow_eAdjustment_Right,  	//!< Adjustment right
+  glow_eAdjustment_Left  	//!< Adjustment left
+} glow_eAdjustment;
 
 //! Type of mirror
 typedef enum {
@@ -1242,6 +1250,7 @@ typedef enum {
 	glow_eSave_GrowSubAnnot_rect		= 2306,
 	glow_eSave_GrowSubAnnot_annot_part	= 2307,
 	glow_eSave_GrowSubAnnot_trf		= 2308,
+	glow_eSave_GrowSubAnnot_adjustment     	= 2309,
 	glow_eSave_GrowArc_x_right		= 2400,
 	glow_eSave_GrowArc_x_left		= 2401,
 	glow_eSave_GrowArc_y_high		= 2402,
@@ -1318,6 +1327,7 @@ typedef enum {
 	glow_eSave_Transform_a22		= 2804,
 	glow_eSave_Transform_a23		= 2805,
 	glow_eSave_Transform_rotation		= 2806,
+	glow_eSave_GrowAnnot_adjustment		= 2901,
 	glow_eSave_GrowAnnot_annot_part		= 2907,
 	glow_eSave_GrowAnnot_trf		= 2908,
 	glow_eSave_GrowText_x_right		= 3000,
@@ -1581,7 +1591,19 @@ typedef enum {
 	glow_eSave_GrowTable_header_text11    	= 4261,
 	glow_eSave_GrowTable_column_width12    	= 4262,
 	glow_eSave_GrowTable_header_text12    	= 4263,
-	glow_eSave_GrowTable_select_drawtype   	= 4264
+	glow_eSave_GrowTable_select_drawtype   	= 4264,
+	glow_eSave_GrowTable_column_adjustment1 = 4265,
+	glow_eSave_GrowTable_column_adjustment2 = 4266,
+	glow_eSave_GrowTable_column_adjustment3 = 4267,
+	glow_eSave_GrowTable_column_adjustment4 = 4268,
+	glow_eSave_GrowTable_column_adjustment5 = 4269,
+	glow_eSave_GrowTable_column_adjustment6 = 4270,
+	glow_eSave_GrowTable_column_adjustment7 = 4271,
+	glow_eSave_GrowTable_column_adjustment8 = 4272,
+	glow_eSave_GrowTable_column_adjustment9 = 4273,
+	glow_eSave_GrowTable_column_adjustment10 = 4274,
+	glow_eSave_GrowTable_column_adjustment11 = 4275,
+	glow_eSave_GrowTable_column_adjustment12 = 4276
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation

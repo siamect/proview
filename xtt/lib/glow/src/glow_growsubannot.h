@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growsubannot.h,v 1.4 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -85,6 +85,7 @@ class GrowSubAnnot : public GlowAnnot {
     GlowRect	rect;
     void *user_data;
     GlowTransform trf;
+    glow_eAdjustment adjustment;
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
     void *get_ctx() { return this->ctx;};

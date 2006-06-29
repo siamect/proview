@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growannot.h,v 1.4 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@ class GrowAnnot : public GlowAnnot {
 	int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 	int nodraw =0):
 	GlowAnnot(glow_ctx,x,y,annot_num,d_type,color_d_type,t_size,a_type,
-	rel_pos,display_lev), temporary_scale(0) {};
+	rel_pos,display_lev), temporary_scale(0), adjustment(glow_eAdjustment_Left) {};
 
   //! Save the content of the object to file.
   /*!
@@ -86,6 +86,7 @@ class GrowAnnot : public GlowAnnot {
 
   GlowTransform trf;		//!< Transformation matrix of object.
   int		temporary_scale; //!< Not used.
+  glow_eAdjustment adjustment;	//!< Text adjustment.
 
   //! Draw the object.
   /*!

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.23 2006-06-14 05:04:10 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.24 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1516,6 +1516,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Int;
       attrinfo[i++].size = sizeof( op->number);
       
+      strcpy( attrinfo[i].name, "Adjustment");
+      attrinfo[i].value_p = &op->adjustment;
+      attrinfo[i].type = glow_eType_Adjustment;
+      attrinfo[i++].size = sizeof( op->adjustment);
+      
       break;
     }
     case glow_eObjectType_GrowText:
@@ -1938,6 +1943,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment1"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[0];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText1"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[0];
@@ -1949,6 +1960,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[1];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment2"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[1];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText2"))) {
         strcpy( attrinfo[i].name, name);
@@ -1962,6 +1979,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment3"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[2];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText3"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[2];
@@ -1973,6 +1996,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[3];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment4"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[3];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText4"))) {
         strcpy( attrinfo[i].name, name);
@@ -1986,6 +2015,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment5"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[4];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText5"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[4];
@@ -1997,6 +2032,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[5];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment6"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[5];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText6"))) {
         strcpy( attrinfo[i].name, name);
@@ -2010,6 +2051,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment7"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[6];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText7"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[6];
@@ -2021,6 +2068,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[7];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment8"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[7];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText8"))) {
         strcpy( attrinfo[i].name, name);
@@ -2034,6 +2087,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment9"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[8];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText9"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[8];
@@ -2045,6 +2104,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[9];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment10"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[9];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText10"))) {
         strcpy( attrinfo[i].name, name);
@@ -2058,6 +2123,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
       }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment11"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[10];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
+      }
       if ( (name = growapi_translate( transtab, "HeaderText11"))) {
         strcpy( attrinfo[i].name, name);
         attrinfo[i].value_p = op->header_text[10];
@@ -2069,6 +2140,12 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
         attrinfo[i].value_p = &op->column_width[11];
         attrinfo[i].type = glow_eType_Double;
         attrinfo[i++].size = sizeof( op->column_width[0]);
+      }
+      if ( (name = growapi_translate( transtab, "ColumnAdjustment12"))) {
+        strcpy( attrinfo[i].name, name);
+        attrinfo[i].value_p = &op->column_adjustment[11];
+        attrinfo[i].type = glow_eType_Adjustment;
+        attrinfo[i++].size = sizeof( op->column_adjustment[0]);
       }
       if ( (name = growapi_translate( transtab, "HeaderText12"))) {
         strcpy( attrinfo[i].name, name);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.10 2006-05-24 08:01:51 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.11 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,7 @@ GrowTable::GrowTable( GlowCtx *glow_ctx, char *name, double x, double y,
     strcpy( header_text[i], "");
     column_width[i] = 4;
     column_size[i] = 12;
+    column_adjustment[i] = glow_eAdjustment_Left;
   }
 
   configure();
@@ -105,6 +106,7 @@ void GrowTable::save( ofstream& fp, glow_eSaveMode mode)
   for ( int i = 0; i < TABLE_MAX_COL; i++) {
     fp << int(glow_eSave_GrowTable_column_width1)+2*i << FSPACE << column_width[i] << endl;
     fp << int(glow_eSave_GrowTable_header_text1)+2*i << FSPACE << header_text[i] << endl;
+    fp << int(glow_eSave_GrowTable_column_adjustment1)+i << FSPACE << int(column_adjustment[i]) << endl;
   }
   fp << int(glow_eSave_GrowTable_rect_part) << endl;
   GrowRect::save( fp, mode);
@@ -173,6 +175,18 @@ void GrowTable::open( ifstream& fp)
       case glow_eSave_GrowTable_header_text11: fp.get(); fp.getline( header_text[10], sizeof(header_text[0])); break;
       case glow_eSave_GrowTable_column_width12: fp >> column_width[11]; break;
       case glow_eSave_GrowTable_header_text12: fp.get(); fp.getline( header_text[11], sizeof(header_text[0])); break;
+      case glow_eSave_GrowTable_column_adjustment1: fp >> tmp; column_adjustment[0] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment2: fp >> tmp; column_adjustment[1] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment3: fp >> tmp; column_adjustment[2] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment4: fp >> tmp; column_adjustment[3] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment5: fp >> tmp; column_adjustment[4] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment6: fp >> tmp; column_adjustment[5] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment7: fp >> tmp; column_adjustment[6] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment8: fp >> tmp; column_adjustment[7] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment9: fp >> tmp; column_adjustment[8] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment10: fp >> tmp; column_adjustment[9] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment11: fp >> tmp; column_adjustment[10] = (glow_eAdjustment)tmp; break;
+      case glow_eSave_GrowTable_column_adjustment12: fp >> tmp; column_adjustment[11] = (glow_eAdjustment)tmp; break;
       case glow_eSave_GrowTable_rect_part: 
         GrowRect::open( fp);
         break;
@@ -417,10 +431,11 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
     y = ll_y;
 
     for ( int i = header_column; i < columns; i++) {
-      if ( header_text_idx >= 0 && strcmp( header_text[i], "") != 0)
+      if ( header_text_idx >= 0 && strcmp( header_text[i], "") != 0) {
 	glow_draw_text( ctx, int(x + text_offs), int(y + header_h - 4),
 		    header_text[i], strlen(header_text[i]), header_text_drawtype, header_text_color,
 		    header_text_idx, highlight, 0);
+      }
       x += column_width[i] * ctx->zoom_factor_x;
       if ( x > ur_x)
 	break;
@@ -491,10 +506,31 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
 	glow_draw_line( ctx, ll_x, int(y), ll_x + header_w, int(y), drawtype, idx, 0);
 
 	offs = column_size[0] * i;
-	if ( text_idx >= 0 && strcmp( cell_value + offs, "") != 0)
-	  glow_draw_text( ctx, int(x + text_offs), int(y - 2),
+	if ( text_idx >= 0 && strcmp( cell_value + offs, "") != 0) {
+	  int text_x = int(x) + text_offs;
+
+	  if ( column_adjustment[0] == glow_eAdjustment_Right ||
+	       column_adjustment[0] == glow_eAdjustment_Center) {
+	    int width, height, descent;
+	    draw_get_text_extent( ctx, cell_value + offs, strlen(cell_value + offs),
+				  text_drawtype, text_idx,
+				  &width, &height, &descent);
+
+	    switch ( column_adjustment[0]) {
+	    case glow_eAdjustment_Left:
+	      break;
+	    case glow_eAdjustment_Right:
+	      text_x = int(x) + header_w - text_offs - width;
+	      break;
+	    case glow_eAdjustment_Center:
+	      text_x = int(x + (header_w - width)/2);
+	      break;
+	    }
+	  }
+	  glow_draw_text( ctx, text_x, int(y - 2),
 		    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
 		    text_idx, highlight, 0);
+	}
       }
     }
     glow_draw_reset_clip_rectangle( ctx);
@@ -596,10 +632,32 @@ void GrowTable::draw( GlowTransform *t, int highlight, int hot, void *node, void
 
 	if ( y > ll_y) {
 	  offs = column_offs + column_size[i] * j;
-	  if ( text_idx >= 0 && strcmp( cell_value + offs, "") != 0)
-	    glow_draw_text( ctx, int(x + text_offs), int(y - 2),
+	  if ( text_idx >= 0 && strcmp( cell_value + offs, "") != 0) {
+	    int text_x = int(x) + text_offs;
+
+	    if ( column_adjustment[i] == glow_eAdjustment_Right ||
+		 column_adjustment[i] == glow_eAdjustment_Center) {
+	      int width, height, descent;
+	      draw_get_text_extent( ctx, cell_value + offs, strlen(cell_value + offs),
+				    text_drawtype, text_idx,
+				    &width, &height, &descent);
+
+	      switch ( column_adjustment[i]) {
+	      case glow_eAdjustment_Left:
+		break;
+	      case glow_eAdjustment_Right:
+		text_x = int(x + column_width[i] * ctx->zoom_factor_x) - text_offs - width;
+		break;
+	      case glow_eAdjustment_Center:
+		text_x = int(x + (column_width[i] * ctx->zoom_factor_x - width)/2);
+		break;
+	      }
+	    }
+
+	    glow_draw_text( ctx, text_x, int(y - 2),
 			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
 			    text_idx, highlight, 0);
+	  }
 	}
       }
     }

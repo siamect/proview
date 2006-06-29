@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.cpp,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growsubannot.cpp,v 1.4 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@ GrowSubAnnot::GrowSubAnnot( GlowCtx *glow_ctx, char *name, double x, double y,
 	text( ctx, "", x, y, d_type, color_d_type, t_size),
 	rect( ctx, x, y - ctx->draw_delta, ctx->draw_delta, ctx->draw_delta,
 	glow_eDrawType_LineGray),
-	user_data(NULL)
+	user_data(NULL), adjustment(glow_eAdjustment_Left)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -251,6 +251,7 @@ void GrowSubAnnot::save( ofstream& fp, glow_eSaveMode mode)
     GlowAnnot::save( fp, mode);
     fp << int(glow_eSave_GrowAnnot_trf) << endl;
     trf.save( fp, mode);
+    fp << int(glow_eSave_GrowAnnot_adjustment) << FSPACE << int(adjustment) << endl;
     fp << int(glow_eSave_End) << endl;
   }
   else
@@ -269,6 +270,7 @@ void GrowSubAnnot::save( ofstream& fp, glow_eSaveMode mode)
     GlowAnnot::save( fp, mode);
     fp << int(glow_eSave_GrowSubAnnot_trf) << endl;
     trf.save( fp, mode);
+    fp << int(glow_eSave_GrowSubAnnot_adjustment) << FSPACE << int(adjustment) << endl;
     fp << int(glow_eSave_End) << endl;
   }
 }
@@ -278,6 +280,7 @@ void GrowSubAnnot::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -298,6 +301,7 @@ void GrowSubAnnot::open( ifstream& fp)
         GlowAnnot::open( fp);
         break;
       case glow_eSave_GrowSubAnnot_trf: trf.open( fp); break;
+      case glow_eSave_GrowSubAnnot_adjustment: fp >> tmp; adjustment = (glow_eAdjustment)tmp; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowSubAnnot:open syntax error" << endl;

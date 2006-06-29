@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.cpp,v 1.6 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growannot.cpp,v 1.7 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,6 +43,7 @@ void GrowAnnot::save( ofstream& fp, glow_eSaveMode mode)
     GlowAnnot::save( fp, mode);
     fp << int(glow_eSave_GrowAnnot_trf) << endl;
     trf.save( fp, mode);
+    fp << int(glow_eSave_GrowAnnot_adjustment) << FSPACE << int(adjustment) << endl;
     fp << int(glow_eSave_End) << endl;
   }
 }
@@ -52,6 +53,7 @@ void GrowAnnot::open( ifstream& fp)
   int		type;
   int 		end_found = 0;
   char		dummy[40];
+  int		tmp;
 
   for (;;)
   {
@@ -62,6 +64,7 @@ void GrowAnnot::open( ifstream& fp)
         GlowAnnot::open( fp);
         break;
       case glow_eSave_GrowAnnot_trf: trf.open( fp); break;
+      case glow_eSave_GrowAnnot_adjustment: fp >> tmp; adjustment = (glow_eAdjustment)tmp; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowAnnot:open syntax error" << endl;
@@ -112,25 +115,39 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
     color = ((GrowCtx *)ctx)->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 					    highlight, (GrowNode *)colornode, 2);
 
+    
+    if ( ((rot < 45 || rot >= 315) &&
+	  ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	    ((GrowNode *) node)->input_selected)) ||
+	 ( !(rot < 45 || rot >= 315)) ||
+	 adjustment == glow_eAdjustment_Right ||
+	 adjustment == glow_eAdjustment_Center)
+      draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
+			    strlen(((GlowNode *) node)->annotv[number]),
+			    draw_type, idx,
+			    &width, &height, &descent);
+
+    switch ( adjustment) {
+    case glow_eAdjustment_Left:
+      break;
+    case glow_eAdjustment_Right:
+      x1 -= width;
+      break;
+    case glow_eAdjustment_Center:
+      x1 -= width /2;
+      break;
+    }
+	 
 
     if ( rot < 45 || rot >= 315) {
       if ( ((GlowNode *) node)->annotv_inputmode[number] &&
 	   ((GrowNode *) node)->input_selected) {
-	draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
-			      strlen(((GlowNode *) node)->annotv[number]),
-			      draw_type, idx,
-			      &width, &height, &descent);
 	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, 
 			     glow_eDrawType_MediumGray);
       }
     }
     else {
       // Text is rotated, adjust the coordinates
-      draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
-			  strlen(((GlowNode *) node)->annotv[number]),
-			  draw_type, idx,
-			  &width, &height, &descent);
-
       if ( 45 <= rot && rot < 135) {
 	y1 += height - descent;
       }
@@ -142,6 +159,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
 	x1 -= width;
       }
     } 
+
     glow_draw_text( ctx, x1, y1,
 		    ((GlowNode *) node)->annotv[number], 
 		    strlen(((GlowNode *) node)->annotv[number]), draw_type, color, idx, 
@@ -180,7 +198,7 @@ void GrowAnnot::draw( GlowTransform *t, int highlight, int hot, void *node,
 	line = s+1;
 	line_cnt++;
       }
-      else
+     else
 	len++;
     }
     if ( len)
@@ -219,13 +237,29 @@ void GrowAnnot::erase( GlowTransform *t, int hot, void *node)
   switch ( annot_type) {
     case glow_eAnnotType_OneLine:
     {
-      if ( ((GlowNode *) node)->annotv_inputmode[number] &&
-	   ((GrowNode *) node)->input_selected) {
-	int width, height, descent;
+      int width, height, descent;
+
+      if ( ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	     ((GrowNode *) node)->input_selected) ||
+	   adjustment == glow_eAdjustment_Right ||
+	   adjustment == glow_eAdjustment_Center)
 	draw_get_text_extent( ctx, ((GlowNode *) node)->annotv[number],
 			      strlen(((GlowNode *) node)->annotv[number]),
 			      draw_type, idx,
 			      &width, &height, &descent);
+
+      switch ( adjustment) {
+      case glow_eAdjustment_Left:
+	break;
+      case glow_eAdjustment_Right:
+	x1 -= width;
+	break;
+      case glow_eAdjustment_Center:
+	x1 -= width /2;
+	break;
+      }
+      if ( ((GlowNode *) node)->annotv_inputmode[number] &&
+	   ((GrowNode *) node)->input_selected) {
 	glow_draw_fill_rect( ctx, x1, y1 - height + descent, width, height, glow_eDrawType_LineErase);
       }
       glow_draw_text_erase( ctx, x1, y1,

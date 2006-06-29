@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.h,v 1.6 2006-05-24 08:01:51 claes Exp $
+ * Proview   $Id: glow_growtable.h,v 1.7 2006-06-29 10:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -165,6 +165,7 @@ class GrowTable : public GrowRect {
   double		column_width[TABLE_MAX_COL]; //!< Width of each column.
   char			header_text[TABLE_MAX_COL][40]; //!< Header text for each column.
   int			column_size[TABLE_MAX_COL]; //!< Max length of text in column.
+  glow_eAdjustment	column_adjustment[TABLE_MAX_COL]; //!< Text adjustment in column.
   int			value_size;		//!< Total size of cell_value.
   char			*cell_value;		//!< Contains the cell values.
   int			selected_cell_row;	//!< Row of the currently selected cell. -1 of no row is selected.
