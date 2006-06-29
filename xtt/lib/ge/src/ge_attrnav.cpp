@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.12 2005-11-14 16:19:14 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.13 2006-06-29 10:50:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -829,6 +829,12 @@ static attrnav_sEnumElement elem_direction[] = {
 	{ (int) glow_eDirection_Down, 	"Up"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_adjustment[] = {
+	{ (int) glow_eAdjustment_Center, "Center"},
+	{ (int) glow_eAdjustment_Right, "Right"},
+	{ (int) glow_eAdjustment_Left, 	"Left"},
+	{ 0, ""}};
+
 static attrnav_sEnumElement elem_access[] = {
 	{ (unsigned int) pwr_mPrv_RtRead, 	"RtRead"},
 	{ (unsigned int) pwr_mPrv_RtWrite, 	"RtWrite"},
@@ -917,6 +923,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_TextSize, 	(attrnav_sEnumElement *) &elem_text_size},
 	{ (int) glow_eType_InputFocusMark, (attrnav_sEnumElement *) &elem_input_focus_mark},
 	{ (int) ge_eAttrType_ScaleType, (attrnav_sEnumElement *) &elem_scale_type},
+	{ (int) glow_eType_Adjustment, 	(attrnav_sEnumElement *) &elem_adjustment},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -970,6 +977,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     }
     case glow_eType_Int:
     case glow_eType_Direction:
+    case glow_eType_Adjustment:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
@@ -1050,6 +1058,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
       break;
     }
     case glow_eType_Direction:
+    case glow_eType_Adjustment:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
@@ -2113,6 +2122,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
   switch( type_id)
   {
     case glow_eType_Direction:
+    case glow_eType_Adjustment:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:

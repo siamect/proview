@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.32 2006-05-24 08:01:51 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.33 2006-06-29 10:50:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1268,28 +1268,40 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"ScrollbarColor", 	"Table.ScrollbarColor",
 					"ScrollbarBgColor", 	"Table.ScrollbarBgColor",
 					"ColumnWidth1",        	"Column1.Width",
+					"ColumnAdjustment1",    "Column1.Adjustment",
 					"HeaderText1", 		"Column1.HeaderText",
 					"ColumnWidth2",        	"Column2.Width",
+					"ColumnAdjustment2",    "Column2.Adjustment",
 					"HeaderText2", 		"Column2.HeaderText",
 					"ColumnWidth3",        	"Column3.Width",
+					"ColumnAdjustment3",    "Column3.Adjustment",
 					"HeaderText3", 		"Column3.HeaderText",
 					"ColumnWidth4",        	"Column4.Width",
+					"ColumnAdjustment4",    "Column4.Adjustment",
 					"HeaderText4", 		"Column4.HeaderText",
 					"ColumnWidth5",        	"Column5.Width",
+					"ColumnAdjustment5",    "Column5.Adjustment",
 					"HeaderText5", 		"Column5.HeaderText",
 					"ColumnWidth6",        	"Column6.Width",
+					"ColumnAdjustment6",    "Column6.Adjustment",
 					"HeaderText6", 		"Column6.HeaderText",
 					"ColumnWidth7",        	"Column7.Width",
+					"ColumnAdjustment7",    "Column7.Adjustment",
 					"HeaderText7", 		"Column7.HeaderText",
 					"ColumnWidth8",        	"Column8.Width",
+					"ColumnAdjustment8",    "Column8.Adjustment",
 					"HeaderText8", 		"Column8.HeaderText",
 					"ColumnWidth9",        	"Column9.Width",
+					"ColumnAdjustment9",    "Column9.Adjustment",
 					"HeaderText9", 		"Column9.HeaderText",
 					"ColumnWidth10",       	"Column10.Width",
+					"ColumnAdjustment10",   "Column10.Adjustment",
 					"HeaderText10",        	"Column10.HeaderText",
 					"ColumnWidth11",       	"Column11.Width",
+					"ColumnAdjustment11",   "Column11.Adjustment",
 					"HeaderText11",        	"Column11.HeaderText",
 					"ColumnWidth12",       	"Column12.Width",
+					"ColumnAdjustment12",   "Column12.Adjustment",
 					"HeaderText12",        	"Column12.HeaderText",
 					""};
     GeDyn *dyn;

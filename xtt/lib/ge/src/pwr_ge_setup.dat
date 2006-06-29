@@ -91,11 +91,23 @@ menu Indicators
 menu Values
 {
   subgraph 	ValueSmall	 pwr_exe:pwr_valuesmall.pwsg 		50
+  subgraph 	ValueSmallRight	 pwr_exe:pwr_valuesmallright.pwsg 	50
+  subgraph 	ValueSmallCenter pwr_exe:pwr_valuesmallcenter.pwsg 	50
   subgraph 	ValueMedium	 pwr_exe:pwr_valuemedium.pwsg 		51
+  subgraph 	ValueMediumRight pwr_exe:pwr_valuemediumright.pwsg 	51
+  subgraph 	ValueMediumCenter pwr_exe:pwr_valuemediumcenter.pwsg 	51
   subgraph 	ValueLarge	 pwr_exe:pwr_valuelarge.pwsg 		52
+  subgraph 	ValueLargeRight	 pwr_exe:pwr_valuelargeright.pwsg 	52
+  subgraph 	ValueLargeCenter pwr_exe:pwr_valuelargecenter.pwsg 	52
   subgraph 	ValueInputSmall	pwr_exe:pwr_valueinputsmall.pwsg 	50
+  subgraph 	ValueInputSmallRight	pwr_exe:pwr_valueinputsmallright.pwsg 	50
+  subgraph 	ValueInputSmallCenter	pwr_exe:pwr_valueinputsmallcenter.pwsg 	50
   subgraph 	ValueInputMedium pwr_exe:pwr_valueinputmedium.pwsg 	51
+  subgraph 	ValueInputMediumRight pwr_exe:pwr_valueinputmediumright.pwsg 	51
+  subgraph 	ValueInputMediumCenter pwr_exe:pwr_valueinputmediumcenter.pwsg 	51
   subgraph 	ValueInputLarge	pwr_exe:pwr_valueinputlarge.pwsg 	52
+  subgraph 	ValueInputLargeRight	pwr_exe:pwr_valueinputlargeright.pwsg 	52
+  subgraph 	ValueInputLargeCenter	pwr_exe:pwr_valueinputlargecenter.pwsg 	52
   subgraph 	ValueInputSmallRd pwr_exe:pwr_valueinputsmallrd.pwsg 	50
   subgraph 	ValueInputMediumRd pwr_exe:pwr_valueinputmediumrd.pwsg 	51
   subgraph 	ValueInputLargeRd pwr_exe:pwr_valueinputlargerd.pwsg 	52
@@ -108,9 +120,13 @@ menu Values
 menu Pushbuttons
 {
   subgraph 	ButtonSet 	pwr_exe:pwr_buttonset.pwsg		7
+  subgraph 	ButtonSetCenter	pwr_exe:pwr_buttonsetcenter.pwsg	7
   subgraph 	ButtonReset 	pwr_exe:pwr_buttonreset.pwsg		7
+  subgraph 	ButtonResetCenter pwr_exe:pwr_buttonresetcenter.pwsg	7
   subgraph 	ButtonToggle 	pwr_exe:pwr_buttontoggle.pwsg 		7
+  subgraph 	ButtonToggleCenter pwr_exe:pwr_buttontogglecenter.pwsg 	7
   subgraph 	ButtonCommand 	pwr_exe:pwr_buttoncommand.pwsg 		7
+  subgraph 	ButtonCommandCenter pwr_exe:pwr_buttoncommandcenter.pwsg 7
   subgraph 	ButtonSetConfirm pwr_exe:pwr_buttonsetconfirm.pwsg 	7
   subgraph 	ButtonResetConfirm pwr_exe:pwr_buttonresetconfirm.pwsg 	7
   subgraph 	ButtonToggleConfirm pwr_exe:pwr_buttontoggleconfirm.pwsg 7
@@ -122,6 +138,7 @@ menu Pushbuttons
   subgraph 	RoundButton 	pwr_exe:pwr_roundbutton.pwsg		92
   subgraph 	SoapButton 	pwr_exe:pwr_soapbutton.pwsg		21
   subgraph 	SmallButton 	pwr_exe:pwr_smallbutton.pwsg		95
+  subgraph 	SmallButtonCenter pwr_exe:pwr_smallbuttoncenter.pwsg	95
   subgraph 	LargeButton 	pwr_exe:pwr_largebutton.pwsg		7
   subgraph 	ButtonInfo 	pwr_exe:pwr_buttoninfo.pwsg		93
   subgraph 	ButtonHelp 	pwr_exe:pwr_buttonhelp.pwsg		94
