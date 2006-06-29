@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.19 2006-04-24 10:03:49 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.20 2006-06-29 10:57:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1709,6 +1709,7 @@ static pwr_tStatus io_init_card(
 		}
 	      }
 	    }
+	    free( (char *)bd);
 	  }
 	  
 	}
