@@ -34,3 +34,4 @@
 060530 cs  wtt       Bugfix: change text without selecting any text object caused segfault.
 060607 cs  wb        Bugfix in wb_name, segment(0) returned invalid name for root objects.
 060615 cs  plc       Search string didn't search in AttrRef attributes.
+060629 cs  plc       Bugfix: CStoIp, StoIp, StoAToIp and CStoAToIp with In-input not connected, did not fetch the supplied value.

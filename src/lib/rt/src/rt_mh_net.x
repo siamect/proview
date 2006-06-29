@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_mh_net.x,v 1.3 2005-11-14 16:29:25 claes Exp $
+% * Proview   $Id: rt_mh_net.x,v 1.4 2006-06-29 10:58:02 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -225,7 +225,7 @@ struct mh_sASupInfo {
 %/**
 % * @ingroup MSGH_DS
 % *
-% * @brief Data describing supervision of an digital value 
+% * @brief Data describing supervision of a digital value 
 % *
 % * @param ActualValue The value of the supervised attribute at the time 
 % *                    when the message was generated.

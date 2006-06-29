@@ -24541,7 +24541,7 @@ Class  pwrb:StoDi
 <B>Flags	<T>RTVIRTUAL | DEVBODYREF
 
 <B>Description
-  The input is connected to an digital quantity or left
+  The input is connected to a digital quantity or left
   open. In the latter case In is default FALSE and not
   adjustable in the run time system. The In attribute
   specifies which value should be assigned to the

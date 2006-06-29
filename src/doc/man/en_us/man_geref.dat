@@ -1001,7 +1001,7 @@ Some types of dynamic, e.g. animations, presume that you hava a subgraph with se
 When building an animation you create several pages that slightly differs from each other, 
 and the pages are run through, it gives an illusion of movement. The dynamic types DigShift
 and AnalogShift also uses different pages, and shifts between pages depending on the value of
-an digital or analog signal.
+a digital or analog signal.
 
 When to draw a sugraph with several pages, you draw the first page in the usual way. When
 you have saved it as a subgraph, you activate 'File/Page/Create next page' (Shift+Ctrl/N).
@@ -1334,6 +1334,7 @@ Note that some types of dynamics (Value, SetDig etc) requires specific numbers o
 <b>Attribute     <t>Description
 TextSize     <t>Text size 0-7
 Number       <t>Numbering of annotations within the subgraph.
+Adjustment   <t>Text adjustment, left, right or center.
 Dynamic      <t>Not implemented.
 </topic>
 

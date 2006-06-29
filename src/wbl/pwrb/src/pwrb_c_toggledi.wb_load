@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_toggledi.wb_load,v 1.1 2005-10-18 05:06:22 claes Exp $
+!  Proview   $Id: pwrb_c_toggledi.wb_load,v 1.2 2006-06-29 10:55:06 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ SObject pwrb:Class
         Attr StructName = "toggledi"
       EndBody
       !/**
-      !  The input is connected to an digital quantity or left
+      !  The input is connected to a digital quantity or left
       !  open. In the latter case In is default FALSE and not
       !  adjustable in the run time system. The In attribute
       !  specifies which value should be assigned to the

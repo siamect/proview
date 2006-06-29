@@ -15,3 +15,5 @@
 060522 cs  ge        Bugfix for $user attributes. Scan function for dynamics wasn't called. 
 060524 cs  ge        Property for selected cell color in GrowTable.
 060615 cs  xtt       Object attributes channels and signals displayed in Device table.
+060628 cs  glow      Adjustment property (Left/Right/Center) added to annotations and table object.
+060628 cs  ge        New Value, ValueInput and Button subgraphs with Right and Center adjustment.

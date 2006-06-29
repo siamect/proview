@@ -1323,12 +1323,14 @@ annotation.
 
 <h2>Egenskaper
 - Normal, fet
-- Text färg
+- Textfärg
+- Justering
 
 <h2>Attribut
 <b>Attribut     <t>Beskrivning
 TextSize     <t>Textstorlek 0-7
 Number       <t>Numrering av annotations inom en subgraf.
+Adjustment   <t>Justering av texten, vänster, höger eller center.
 Dynamic      <t>Ej implementerat
 </topic>
 
