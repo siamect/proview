@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_data.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_data.h,v 1.3 2006-06-29 10:53:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -16,8 +16,11 @@
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef rt_plc_data_h
+#define rt_plc_data_h 
 
 
 typedef pwr_tBoolean pwr_sDpDistribute[24];
 typedef pwr_tFloat32 pwr_sApDistribute[24];
 
+#endif
