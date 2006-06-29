@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.20 2006-05-16 11:51:59 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.21 2006-06-29 12:38:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -605,6 +605,9 @@ int WItemBaseObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
         sts = wnav->crr_signal( NULL, name, node);
         break;
       default:
@@ -2541,6 +2544,9 @@ int WItemAttrObject::open_crossref( WNav *wnav, double x, double y)
       case pwr_cClass_Av:
       case pwr_cClass_Ai:
       case pwr_cClass_Ao:
+      case pwr_cClass_Iv:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
         sts = wnav->crr_signal( NULL, aname, node);
         break;
       default:
