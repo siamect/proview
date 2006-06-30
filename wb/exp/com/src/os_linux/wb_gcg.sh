@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: wb_gcg.sh,v 1.2 2006-01-26 06:59:59 claes Exp $
+# Proview   $Id: wb_gcg.sh,v 1.3 2006-06-30 12:21:26 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -177,7 +177,7 @@ CompileRtNode()
     $Libs \
     $ld_opt \
     $pwr_obj/pwr_msg_rt.o $pwr_obj/pwr_msg_co.o \
-    -lrt -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
+    -lrt -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
   then
     echo "-- Plc program linked for $OsStr $say_linkdebug node $FileName" 
     gcg_status=$gcg__success
