@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro.h,v 1.4 2006-04-28 04:59:58 claes Exp $
+ * Proview   $Id: rt_plc_macro.h,v 1.5 2006-06-30 12:18:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,5 +40,11 @@
 #include "rt_plc_macro_mps.h"
 #include "rt_plc_macro_string.h"
 #include "rt_plc_macro_time.h"
+#include "pwr_nmpsclasses.h"
+#include "nmps_plc_macro.h"
+#include "pwr_profibusclasses.h"
+#include "pwr_remoteclasses.h"
+#include "remote_plc_macro.h"
+#include "pwr_basecomponentclasses.h"
 #include "ra_plc_user.h"
 
