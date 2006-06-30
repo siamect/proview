@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.25 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_utl.c,v 1.26 2006-06-30 12:22:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -915,6 +915,44 @@ static int utl_list_sort (
 		ldh_eName_Object, &np, &nsize);
 	      if ( EVEN(sts)) return sts;
 	      strncpy( name2, np, sizeof(name2));
+	    }
+	    else if ( type == 4) {
+	      pwr_sAttrRef	*conobj_ptr;
+
+	      /* Compare SigChanCon */
+	      sts = ldh_GetAttrObjectPar( ldhses, &list_ptr->o, "RtBody", 
+					  "SigChanCon", (char **)&conobj_ptr, &nsize);
+	      if ( ODD(sts)) {
+		if ( cdh_ObjidIsNull( conobj_ptr->Objid)) {
+		  strcpy( name1, "-");
+		  free((char *) conobj_ptr);
+		}
+		else {
+		  sts = ldh_AttrRefToName( ldhses, conobj_ptr, 
+					   ldh_eName_Hierarchy, &np, &nsize);
+		  if ( ODD(sts))
+		    strcpy( name1, np);
+		  else
+		    strcpy( name1, "-");
+		}
+	      }
+
+	      sts = ldh_GetAttrObjectPar( ldhses, &next_ptr->o, "RtBody", 
+					  "SigChanCon", (char **)&conobj_ptr, &nsize);
+	      if ( ODD(sts)) {
+		if ( cdh_ObjidIsNull( conobj_ptr->Objid)) {
+		  strcpy( name2, "-");
+		  free((char *) conobj_ptr);
+		}
+		else {
+		  sts = ldh_AttrRefToName( ldhses, conobj_ptr, 
+					   ldh_eName_Hierarchy, &np, &nsize);
+		  if ( ODD(sts))
+		    strcpy( name2, np);
+		  else
+		    strcpy( name2, "-");
+		}
+	      }
 	    }
 
 	    if ( cdh_NoCaseStrcmp( name1, name2) > 0) {
@@ -5649,7 +5687,11 @@ int utl_compile (
 
 	    /* Get the rootwindow to this plcpgm */
 	    sts = trv_get_plc_window( ldhses, plcobjdid, &window);
-	    if ( EVEN(sts)) return sts;
+	    if ( EVEN(sts)) {
+	      // No window, skip this plc
+	      status = GSX__SUCCESS;
+	      goto error_return;
+	    }
 	
 	    /* Compile the windows */
 	    sts = gcg_wind_comp_all( ldhwb, ldhses, window, 1, modified, debug);
@@ -8310,7 +8352,10 @@ static int utl_list_print_par (
 	    /* Print the name of the object */
 	    sts = ldh_AttrRefToName( utlctx->ldhses, o, 
 				     ldh_eName_Aref, &np, &size);
-	    strcpy( hier_name, np);
+	    if ( EVEN(sts))
+	      strcpy( hier_name, "-");
+	    else
+	      strcpy( hier_name, np);
 	    if ( list_pardesc->PrintParName)
 	      strcat( text, "Object Name = ");
 	    if ( list_pardesc->Segments != 0)
@@ -8323,8 +8368,11 @@ static int utl_list_print_par (
 	{
 	  /* Print the name of the object */
 	  sts = ldh_GetAttrRefTid( utlctx->ldhses, o,  &class);
-	  sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid( class),
+	  if ( ODD(sts))
+	    sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid( class),
 		ldh_eName_Object, hier_name, sizeof( hier_name), &size);
+	  if ( EVEN(sts))
+	    strcpy( hier_name, "-");
 	  if ( list_pardesc->PrintParName)
 	    strcat( text, "Class = ");
 	  strcat( text, hier_name);
@@ -8427,7 +8475,8 @@ static int utl_list_print_par (
 	{
 	  /* Print the name of the object */
 	  sts = ldh_GetAttrRefTid( utlctx->ldhses, refo,  &class);
-	  sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid( class), 
+	  if ( ODD(sts))
+	    sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid( class), 
 		ldh_eName_Object, hier_name, sizeof( hier_name), &size);
 	  if ( EVEN(sts))
 	    strcpy( hier_name, "-");
@@ -8468,8 +8517,11 @@ static int utl_list_print_par (
 	  {
 	    /* Just print the class */
 	    sts = ldh_GetAttrRefTid( utlctx->ldhses, o,  &class);
-	    sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid(class), 
-		ldh_eName_Object, hier_name, sizeof( hier_name), &size);
+	    if ( ODD(sts))
+	      sts = ldh_ObjidToName( utlctx->ldhses, cdh_ClassIdToObjid(class), 
+		  ldh_eName_Object, hier_name, sizeof( hier_name), &size);
+	    if ( EVEN(sts))
+	      strcpy( hier_name, "-");
 	    if ( list_pardesc->PrintParName)
 	      strcat( text, "Class = ");
 	    strcat( text, hier_name);
