@@ -17,3 +17,4 @@
 060615 cs  xtt       Object attributes channels and signals displayed in Device table.
 060628 cs  glow      Adjustment property (Left/Right/Center) added to annotations and table object.
 060628 cs  ge        New Value, ValueInput and Button subgraphs with Right and Center adjustment.
+060629 cs  ge        Format for Time and DeltaTime in table added.
