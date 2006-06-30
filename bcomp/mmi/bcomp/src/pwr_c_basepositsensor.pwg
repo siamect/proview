@@ -9624,7 +9624,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitL.Hysteres##Float32
+1200 $object.LimitH.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
@@ -10208,7 +10208,7 @@ pwr_exe:
 903 1
 99
 12
-1200 $object.LimitHH.Hysteres##Float32
+1200 $object.LimitL.Hysteres##Float32
 1201 %5.1f
 1202 1
 1203 1
