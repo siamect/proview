@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.7 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.8 2006-06-30 12:17:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ typedef struct io_sCtx *io_tCtx;
 #define NULL (void *) 0
 #endif
 
-#define IO_CHANLIST_SIZE 32
+#define IO_CHANLIST_SIZE 50
 
 #define FIXOUT 2
 #define IO_REBOOT       1       /* Reboot the machine */

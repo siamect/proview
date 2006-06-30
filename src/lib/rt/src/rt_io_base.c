@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.20 2006-06-29 10:57:16 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.21 2006-06-30 12:17:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1314,6 +1314,10 @@ static pwr_tStatus io_init_card(
   pwr_tObjid	thread;
   int		ok;
   int		child_found = 0;
+  int		fix_channels = 1;
+  int		chan_cnt = 0;
+  int 		sig_found;
+  int		idx;
   
   sts = gdh_GetObjectClass( objid, &class);
   if ( EVEN(sts)) return sts;
@@ -1357,8 +1361,10 @@ static pwr_tStatus io_init_card(
 	    strcpy( attrname, cname);
 	    strcat( attrname, ".MaxNoOfCounters");
 	    sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
-	    if ( EVEN(sts))
+	    if ( EVEN(sts)) {
 	      maxchan = IO_CHANLIST_SIZE;
+	      fix_channels = 0;
+	    }
 	  }
 
 	  cp = calloc( 1, sizeof(io_sCard));
@@ -1451,96 +1457,113 @@ static pwr_tStatus io_init_card(
 	    }
 	    
 	    child_found = 1;
-	    if ( (int) number > maxchan-1) {
+	    chan_cnt++;
+	    if ( !fix_channels && chan_cnt > maxchan) {
+	      errh_Error( "IO init error: max number of channels exceeded %s, chan nr %d", 
+			 cp->Name, chan_cnt);
+	      sts = gdh_DLUnrefObjectInfo( chandlid);
+	      break;
+	    }
+
+	    if ( fix_channels && (int) number > maxchan-1) {
 	      /* Number out of range */
-	      errh_Error( 
-			 "IO init error: number out of range %s, chan nr %d", 
-			 cp->Name, number);
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_GetNextSibling( chan, &chan);
-	      continue;
-	    }
-	    /* Find signal */
-	    if ( cdh_ObjidIsNull( sigchancon.Objid)) {
-	      /* Not connected */
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_GetNextSibling( chan, &chan);
-	      continue;
-	    }
-	    
-	    sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
-	    if ( EVEN(sts)) {
+	      errh_Error( "IO init error: number out of range %s, chan nr %d", 
+			  cp->Name, number);
 	      sts = gdh_DLUnrefObjectInfo( chandlid);
 	      sts = gdh_GetNextSibling( chan, &chan);
 	      continue;
 	    }
 
-	    sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
-	    if ( EVEN(sts)) {
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_GetNextSibling( chan, &chan);
-	      continue;
+	    /* Find signal */
+	    sig_found = 1;
+	    if ( cdh_ObjidIsNull( sigchancon.Objid)) {
+	      /* Not connected */
+	      sig_found = 0;
+	    }
+	    
+	    if ( sig_found) {
+	      sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+	      if ( EVEN(sts))
+		sig_found = 0;
+	    }
+
+	    if ( sig_found) {
+	      sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+	      if ( EVEN(sts))
+		sig_found = 0;
 	    }
 	  
+	    if ( fix_channels && !sig_found) {
+		sts = gdh_DLUnrefObjectInfo( chandlid);
+		sts = gdh_GetNextSibling( chan, &chan);
+		continue;
+	    }
+
+	    if ( fix_channels)
+	      idx = number;
+	    else
+	      idx = chan_cnt - 1;
+
 	    /* Insert */
-	    chanp = &cp->chanlist[number];
+	    chanp = &cp->chanlist[idx];
 	    chanp->cop = chan_op;
 	    chanp->ChanDlid = chandlid;
 	    chanp->ChanAref = cdh_ObjidToAref(chan);
-	    chanp->sop = sig_op;
-	    chanp->SigDlid = sigdlid;
-	    chanp->SigAref = sigchancon;
 	    chanp->ChanClass = class;
-	    chanp->SigClass = sigclass;
-	    switch( sigclass) {
-	    case pwr_cClass_Di:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Do:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Po:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Ai:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Ao:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Ii:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Io:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
-	      break;
-	    case pwr_cClass_Co:
-	      chanp->vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
-	      chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		(pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
-	      break;
-	    default:
-	      errh_Error( 
-		"IO init error: unknown signal class card  %, chan nr %d", 
-		cp->Name, number);
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_DLUnrefObjectInfo( sigdlid);
-	      memset( chanp, 0, sizeof(*chanp));
+	    if ( sig_found) {
+	      chanp->sop = sig_op;
+	      chanp->SigDlid = sigdlid;
+	      chanp->SigAref = sigchancon;
+	      chanp->SigClass = sigclass;
+	      switch( sigclass) {
+	      case pwr_cClass_Di:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		 (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Do:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Po:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Ai:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Ao:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Ii:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Io:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		break;
+	      case pwr_cClass_Co:
+		chanp->vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		  (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		break;
+	      default:
+		errh_Error( 
+		  "IO init error: unknown signal class card  %, chan nr %d", 
+		  cp->Name, number);
+		sts = gdh_DLUnrefObjectInfo( chandlid);
+		sts = gdh_DLUnrefObjectInfo( sigdlid);
+		memset( chanp, 0, sizeof(*chanp));
+	      }
+
+	      /* If the signal has a Sup-object as a child, this will be inserted
+		 in the suplist */
+	      /* if ( process != io_mProcess_Plc) */
+	      io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon.Objid, sig_op);
 	    }
-
-	    /* If the signal has a Sup-object as a child, this will be inserted
-	       in the suplist */
-	    /* if ( process != io_mProcess_Plc) */
-	    io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon.Objid, sig_op);
-
 	    sts = gdh_GetNextSibling( chan, &chan);
 	  }
 
@@ -1549,10 +1572,8 @@ static pwr_tStatus io_init_card(
 	    gdh_sAttrDef *bd;
 	    int rows;
 	    int csize;
-	    int chan_cnt = 0;
 	    int i, j;
 	    int elem;
-	    int sig_found;
 
 	    sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
 	    if ( EVEN(sts)) return sts;
@@ -1645,6 +1666,7 @@ static pwr_tStatus io_init_card(
 		if ( !sig_found) {
 		  sig_op = 0;
 		  sigdlid = pwr_cNDlid;
+		  sigclass = 0;
 		}
 		/* Insert */
 		if ( elem > 1)
