@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.45 2006-05-22 13:27:00 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.46 2006-06-30 12:23:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -6472,6 +6472,56 @@ int GeTable::scan( grow_tObject object)
 	  len = sprintf( buf, "%s", name);
 	  break;
 	}
+	case pwr_eType_Time: {
+	  int sts;
+	  char timstr[40];
+
+	  switch ( format[i][1]) {
+	  case '1': 
+	    // Format %1t, only time, no hundredth
+	    sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_Time, 
+				 timstr, sizeof(timstr));
+	    timstr[8] = 0;
+	    break;
+	  case '2': 
+	    // Format %2t, only time, with hundredth
+	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_Time,
+				 timstr, sizeof(timstr));
+	    break;
+	  case '3': 
+	    // Format %3t, compressed date and time, no hundredth
+	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime,
+				 timstr, sizeof(timstr));
+	    timstr[17] = 0;
+	    break;
+	  default:
+	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
+			   timstr, sizeof(timstr));
+	  }
+	  if ( EVEN(sts))
+	    strcpy( timstr, "-");
+	  len = sprintf( buf, "%s", timstr);
+	  break;
+	}
+	case pwr_eType_DeltaTime: {
+	  int sts;
+	  char timstr[40];
+	  
+	  switch ( format[i][1]) {
+	  case '1':
+	    // Format %1t, only time, no hundredth
+	    sts = time_DtoAscii( (pwr_tDeltaTime *) headerref_p[i][j], 0, 
+				 timstr, sizeof(timstr));
+	    break;
+	  default:
+	    sts = time_DtoAscii( (pwr_tDeltaTime *) headerref_p[i][j], 1, 
+				 timstr, sizeof(timstr));
+	  }
+	  if ( EVEN(sts))
+	    strcpy( timstr, "-");
+	  len = sprintf( buf, "%s", timstr);
+	  break;
+	}
 	default: {
 	  int sts;
 	  sts = cdh_AttrValueToString( (pwr_eType) type_id[i], 
@@ -10264,6 +10314,7 @@ int GeSlider::action( grow_tObject object, glow_tEvent event)
       switch ( attr_type) {
       case pwr_eType_Float32:
 	sts = gdh_SetObjectInfo( parsed_name, &value, sizeof(value));
+	old_value = value;
 	break;
       default: {
 	pwr_tInt32 ivalue = (pwr_tInt32) (value > 0 ? value + 0.5 : value - 0.5);
