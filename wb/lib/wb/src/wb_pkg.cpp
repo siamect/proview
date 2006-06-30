@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.14 2006-05-05 11:32:28 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.15 2006-06-30 12:22:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -468,6 +468,15 @@ void pkg_node::fetchFiles( bool distribute)
     "  sudo chown root $pwrp_exe/plc_$nname_*" << endl <<
     "  sudo chmod g+w $pwrp_exe/plc_$nname_*" << endl <<
     "  sudo chmod u+s $pwrp_exe/plc_$nname_*" << endl <<
+    "fi" << endl;
+
+  // Group should not have write access to .rhosts file
+  ofu <<
+    "if [ \"$tst\" != \"\" ]; then" << endl <<
+    "  if [ -e /home/pwrp/.rhosts ]; then" << endl <<
+    "    sudo chown pwrp /home/pwrp/.rhosts" << endl <<
+    "    sudo chmod g-w /home/pwrp/.rhosts" << endl <<
+    "  fi" << endl <<
     "fi" << endl;
   
   ofu.close();
