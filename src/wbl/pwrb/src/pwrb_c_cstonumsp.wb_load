@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_cstonumsp.wb_load,v 1.3 2006-04-24 13:15:06 claes Exp $
+!  Proview   $Id: pwrb_c_cstonumsp.wb_load,v 1.4 2006-06-30 12:19:27 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -95,23 +95,10 @@ SObject pwrb:Class
       Object Object $Intern 1 
         Body SysBody
           Attr PgmName = "Object"
-          Attr TypeRef = "pwrs:Type-$Objid"
+          Attr TypeRef = "pwrs:Type-$AttrRef"
           Attr GraphName = "sts"
           Attr NiNaAnnot = 1
           Attr NiNaSegments = 1
-        EndBody
-      EndObject
-      !/**
-      !  Specifies, in an object specified by Object, the name
-      !  of the attribute where to store the value.
-      !*/
-      Object Parameter $Intern 2 
-        Body SysBody
-          Attr PgmName = "Parameter"
-          Attr TypeRef = "pwrs:Type-$String80"
-          Attr GraphName = "par"
-          Attr NiNaAnnot = 2
-          Attr ConPointNr = 0
         EndBody
       EndObject
       !/**
