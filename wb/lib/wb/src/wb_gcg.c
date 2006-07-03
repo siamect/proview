@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.c,v 1.34 2006-06-29 10:52:10 claes Exp $
+ * Proview   $Id: wb_gcg.c,v 1.35 2006-07-03 11:26:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3588,7 +3588,7 @@ static int	gcg_get_outputstring_spec(
      *  GetSp, GetATP, GetDTp
      ***********************************************************/	
 
-    char aname[32];
+    pwr_tAName aname;
 
     switch ( output_node->ln.cid) {
     case pwr_cClass_GetSp: strcpy( aname, "SpObject"); break;
