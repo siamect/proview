@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.11 2006-02-27 06:18:13 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.12 2006-07-03 05:09:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,7 @@ static void usage()
   printf( "      -n:  Create postscript from xtthelp-file\n");
   printf( "      -f:  Create pdf from xtthelp-file\n");
   printf( "      -q:  Create postscript from wb_load-files\n");
+  printf( "      -e:  Merge changlog files to docbook file\n");
   printf( "      -d:  Output directory\n");
   printf( "      -g:  Setup file\n");
   printf( "      -h:  Help\n\n");
