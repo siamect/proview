@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_ai.c,v 1.2 2006-01-16 13:56:52 claes Exp $
+ * Proview   $Id: rt_io_m_pb_ai.c,v 1.3 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -271,7 +271,7 @@ static pwr_tStatus IoCardRead (
 	
           if (op->BytesPerChannel == 4) {
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 4*i, 4);
-	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
 	    data32 = (pwr_tInt32) udata32;
 	    sop->RawValue = 0;		
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
@@ -290,7 +290,10 @@ static pwr_tStatus IoCardRead (
           else if (op->BytesPerChannel == 3) {
 	    udata32 = 0;
 	    memcpy(&udata32, local->input_area + op->OffsetInputs + 3*i, 3);
-	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata32 = swap32(udata32);
+	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+	      udata32 = swap32(udata32);
+	      udata32 = udata32 >> 8;
+	    }
 	    data32 = (pwr_tInt32) udata32;
 	    sop->RawValue = 0;		
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)
@@ -308,7 +311,7 @@ static pwr_tStatus IoCardRead (
           }
           else if (op->BytesPerChannel == 2) {
 	    memcpy(&udata16, local->input_area + op->OffsetInputs + 2*i, 2);
-	    if (slave->ByteOrdering == PB_BYTEORDERING_BE) udata16 = swap16(udata16);
+	    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
 	    data16 = (pwr_tInt16) udata16;
 	    sop->RawValue = udata16;
             if (op->NumberRepresentation == PB_NUMREP_UNSIGNEDINT)

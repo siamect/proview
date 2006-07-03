@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_di.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_di.c,v 1.3 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@
 #include "rt_io_card_read.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -133,6 +134,7 @@ static pwr_tStatus IoCardRead (
 ) 
 {
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Ssab_BaseDiCard	*op;
   pwr_tUInt16		invmask;
@@ -161,9 +163,20 @@ static pwr_tStatus IoCardRead (
         break;
     }
 
-    rb.Address = local->Address[i];
-    sts = read( local->Qbus_fp, &rb, sizeof(rb));
-    data = (unsigned short) rb.Data;
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Read from local Q-bus */
+      rb.Address = local->Address[i];
+      sts = read( local->Qbus_fp, &rb, sizeof(rb));
+      data = (unsigned short) rb.Data;
+    }
+    else {
+      /* Ethernet I/O, Get data from current address */
+      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i]);
+      sts = 1;
+      /* Yes, we want to read this address the next time aswell */
+      bfbeth_set_read_req(r_local, (pwr_tUInt16) local->Address[i]);
+    }
+    
     if ( sts == -1)
     {
       /* Increase error count and check error limits */

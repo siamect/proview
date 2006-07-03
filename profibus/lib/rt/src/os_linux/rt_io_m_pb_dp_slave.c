@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.3 2006-04-12 12:16:59 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.4 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,10 @@ pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
     case pwr_eDataRepEnum_Float32:
       return 4;
       break;
+    case pwr_eDataRepEnum_Int24:
+    case pwr_eDataRepEnum_UInt24:
+      return 3;
+      break;
     case pwr_eDataRepEnum_Bit16:
     case pwr_eDataRepEnum_Int16:
     case pwr_eDataRepEnum_UInt16:
@@ -107,7 +111,7 @@ static pwr_tStatus IoRackInit (
   pwr_sClass_ChanIo *chan_io;
 
   sts = gdh_ObjidToName(rp->Objid, (char *) &name, sizeof(name), cdh_mNName);
-  errh_Info( "Init of Profibus DP Slave and modules %s", name);
+  errh_Info( "Init of Profibus DP Slave and Modules %s", name);
 
   op = (pwr_sClass_Pb_DP_Slave *) rp->op;
   
@@ -118,17 +122,25 @@ static pwr_tStatus IoRackInit (
   output_counter = 0;
   op->NumberModules = 0;
 
+  latent_input_count = 0;
+  latent_output_count = 0;
+
   while(cardp) {
     local_card = calloc(1, sizeof(*local_card));
     cardp->Local = local_card;
     local_card->input_area = (void *) &(op->Inputs);
     local_card->output_area = (void *) &(op->Outputs);
 
+    /* From v4.1.3 we can have subclasses, find the super class */
+    
     cid = cardp->Class;
     while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
 
     switch (cid) {
 
+      /* Old style configuring with Pb_xx objects. Still here for combatibility reasons. 
+         New systems (from v4.1.3) should be build with Pb_Module objects or subclasses */
+	 
       case pwr_cClass_Pb_Di:
         dip = (pwr_sClass_Pb_Di *) cardp->op;
         dip->OffsetInputs = input_counter;
@@ -177,13 +189,13 @@ static pwr_tStatus IoRackInit (
         iop->Status = PB_MODULE_STATE_OPERATE;
         break;
 
+      /* New style configuring (from v4.1.3) with Pb_Module objects or subclass. Loop all channels
+        in the module and set channel size and offset. */	 
+
       case pwr_cClass_Pb_Module:
         mp = (pwr_sClass_Pb_Module *) cardp->op;
-        mp->Status = PB__NOTINIT;
+        mp->Status = PB__INITFAIL;
 	cardp->offset = 0;
-
-        latent_input_count = 0;
-        latent_output_count = 0;
         for (i=0; i<cardp->ChanListSize; i++) {
           chanp = &cardp->chanlist[i];
       
@@ -207,6 +219,10 @@ static pwr_tStatus IoRackInit (
 	      }
               chanp->offset = input_counter;
 	      chanp->mask = 1<<chan_di->Number;
+	      if (chan_di->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrdering_BigEndian) 
+	        chanp->mask = swap16(chanp->mask);
+	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
+	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_di->Number == 0) latent_input_count = GetChanSize(chan_di->Representation);
 	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
 	      break;
@@ -239,6 +255,7 @@ static pwr_tStatus IoRackInit (
               chanp->size = chan_size;
 	      chanp->mask = 0;
 	      input_counter += chan_size;
+	      printf("Ii channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ii->Number, chanp->offset);
 	      break;
 	  
             case pwr_cClass_ChanDo:
@@ -250,6 +267,10 @@ static pwr_tStatus IoRackInit (
               chanp->offset = output_counter;
 	      chan_size = GetChanSize(chan_do->Representation);
 	      chanp->mask = 1<<chan_do->Number;
+	      if (chan_do->Representation == pwr_eDataRepEnum_Bit16 && op->ByteOrdering == pwr_eByteOrdering_BigEndian) 
+	        chanp->mask = swap16(chanp->mask);
+	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
+	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_do->Number == 0) latent_output_count = GetChanSize(chan_do->Representation);
 	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
 	      break;
@@ -272,6 +293,7 @@ static pwr_tStatus IoRackInit (
               chanp->size = chan_size;
 	      chanp->mask = 0;
 	      output_counter += chan_size;
+	      printf("Io channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_io->Number, chanp->offset);
 	      break;
           }
         }
@@ -315,12 +337,10 @@ static pwr_tStatus IoRackRead (
     if ((sts != PB_OK) || (diag & 1)) {
       sp->Status = PB__NOCONN;
       sp->ErrorCount++;
-      if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= PB_STALLACTION_RESET) {
-        memset(&sp->Inputs, 0, sp->BytesOfInput);
-      }
     }
     else {
       sp->Status = PB__NORMAL;
+      sp->ErrorCount = 0;
     }
 
     if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && sp->BytesOfInput > 0) {
@@ -333,11 +353,17 @@ static pwr_tStatus IoRackRead (
 
       if (sts != PB_OK) 
         sp->ErrorCount++;
-      else
-        sp->ErrorCount = 0;
+//      else
+//        sp->ErrorCount = 0;
     }
 
-    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= PB_STALLACTION_BREAK)
+    // Stall handling
+
+    if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= pwr_ePbStallAction_ResetInputs) {
+      memset(&sp->Inputs, 0, sp->BytesOfInput);
+    }
+
+    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak)
       ctx->Node->EmergBreakTrue = 1;
   }
   

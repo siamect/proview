@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.3 2006-06-02 07:57:23 claes Exp $
+ * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.4 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,7 +130,7 @@ static pwr_tStatus IoCardInit (
   local->bfb_item = r_local->in_items;
   r_local->in_items += op->MaxNoOfChannels;
   
-  /* Set card address in rack´s local in- and out-area, used by remote rack only
+  * Set card address in rack´s local in- and out-area, used by remote rack only
   for (i=0; i<op->MaxNoOfChannels; i++) {
     r_local->in.item[local->bfb_item+i].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
     r_local->in.item[local->bfb_item+i].data = 0;

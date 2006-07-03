@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_do.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_do.c,v 1.3 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,8 +42,10 @@
 #include "rt_io_card_write.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 
+
 /*----------------------------------------------------------------------------*\
   
 \*----------------------------------------------------------------------------*/
@@ -135,6 +137,7 @@ static pwr_tStatus IoCardWrite (
 ) 
 {
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Ssab_BaseDoCard *op;
   pwr_tUInt16		invmask;
@@ -193,9 +196,19 @@ static pwr_tStatus IoCardWrite (
       data = (data & ~ testmask) | (testmask & testvalue);
     }
 
-    wb.Data = data;
-    wb.Address = local->Address[i];
-    sts = write( local->Qbus_fp, &wb, sizeof(wb));
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Write to local Q-bus */
+      wb.Data = data;
+      wb.Address = local->Address[i];
+      sts = write( local->Qbus_fp, &wb, sizeof(wb));
+    }
+    else {
+      /* Ethernet I/O, Request a write to current address */
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) local->Address[i], data);
+      sts = 1;      
+    }
+    
+    
     if ( sts == -1)
     {
 #if 0

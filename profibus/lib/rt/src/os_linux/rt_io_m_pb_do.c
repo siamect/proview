@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_do.c,v 1.2 2006-01-16 13:56:52 claes Exp $
+ * Proview   $Id: rt_io_m_pb_do.c,v 1.3 2006-07-03 06:20:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,7 +97,7 @@ static pwr_tStatus IoCardWrite (
     io_DoPackWord(cp, &data[0], 0);
     if (op->NumberOfChannels > 16) io_DoPackWord(cp, &data[1], 1);
 
-    if (slave->ByteOrdering == PB_BYTEORDERING_BE) {
+    if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
       if (op->Orientation == PB_ORIENTATION_WORD) {
         data[0] = swap16(data[0]);
         data[1] = swap16(data[1]);
