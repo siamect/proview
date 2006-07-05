@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.8 2006-01-25 10:46:23 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.9 2006-07-05 11:30:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,7 +186,15 @@ void GrowMenu::draw( GlowTransform *t, int highlight, int hot, void *node, void 
   if ( ur_x - ll_x < int(min_width * ctx->zoom_factor_x))
     ur_x = ll_x + int(min_width * ctx->zoom_factor_x);
   ur_y = ll_y + int(tot_z_height);
-  ur.posit_z( ur_x + ctx->offset_x, ur_y + ctx->offset_y);
+
+  if ( ur_y > ctx->y_high * ctx->zoom_factor_y) {
+    // Outside window border
+    ur_y = int(ctx->y_high * ctx->zoom_factor_y);
+    ll_y = ur_y - int(tot_z_height);
+    ll.posit( ll.x, ll_y / ctx->zoom_factor_y);
+  }
+  ur.posit_z( ur.z_x, ur_y + ctx->offset_y);
+  ll_y = int( ll.y * ctx->zoom_factor_y) - ctx->offset_y;
   get_node_borders();
 
   if ( fill) {
