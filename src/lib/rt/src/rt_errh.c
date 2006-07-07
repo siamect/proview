@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.8 2005-12-15 07:40:16 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.9 2006-07-07 07:06:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@
 # include "rt_errl.h"
 # if defined(OS_LINUX)
 #   include <time.h>
-#   include "rt_mq.h"
+#   include <mqueue.h>
 # elif defined(OS_LYNX)
 #   include <mqueue.h>
 # endif
@@ -120,7 +120,6 @@ typedef struct {
   typedef pid_t sPid;
 
   static mqd_t mqid = (mqd_t)-1;
-  static const unsigned int prio = PWR_MQ_PRIO_MAX - 1;
 
 #endif
 
@@ -534,16 +533,21 @@ openLog ()
 #if defined OS_LYNX || defined OS_LINUX
   if (mqid == (mqd_t)-1) {
     char name[64];
+    struct mq_attr attr;
     char *busid = getenv(pwr_dEnvBusId);
 
     sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
-    mqid = mq_open(name, O_WRONLY | O_NONBLOCK, 0, NULL);
+    attr.mq_maxmsg = 2048;
+    attr.mq_msgsize = sizeof(errh_sMsg);
+    attr.mq_flags = O_NONBLOCK;
+    mqid = mq_open(name, O_WRONLY | O_NONBLOCK, 0, &attr);
     if (mqid == (mqd_t)-1) {
       char string[256];
       char *s;
 
       s = errh_Message(string, 'E', "Open messageQ, mq_open(%s)\n%s", name, strerror(errno));
       printf("%s\n", s);
+      return;
     }
   }
 #endif
@@ -1089,6 +1093,7 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
       len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str);
       break;
     }
+    unsigned int prio = sysconf(_SC_MQ_PRIO_MAX) - 1;
     if (mq_send(mqid, (char *)&msg, MIN(len, LOG_MAX_MSG_SIZE - 1), prio) == -1) {
 /*
       perror("mq_send");
