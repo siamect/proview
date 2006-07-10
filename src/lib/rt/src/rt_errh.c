@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.9 2006-07-07 07:06:55 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.10 2006-07-10 10:55:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,7 +120,8 @@ typedef struct {
   typedef pid_t sPid;
 
   static mqd_t mqid = (mqd_t)-1;
-
+  static unsigned int prio = 0;
+  static int mq_send_errno = 0;
 #endif
 
 static const char *indentStr = "  ";
@@ -1093,11 +1094,13 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
       len = sizeof(msg) - sizeof(msg.message_type) - sizeof(msg.str);
       break;
     }
-    unsigned int prio = sysconf(_SC_MQ_PRIO_MAX) - 1;
+    if ( prio == 0)
+      prio = sysconf(_SC_MQ_PRIO_MAX) - 1;
     if (mq_send(mqid, (char *)&msg, MIN(len, LOG_MAX_MSG_SIZE - 1), prio) == -1) {
-/*
-      perror("mq_send");
-*/
+      if ( mq_send_errno != errno) {
+	mq_send_errno = errno;
+	perror("mq_send");
+      }
     }
   } else {
     puts(s);
