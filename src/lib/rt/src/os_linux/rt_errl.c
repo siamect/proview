@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errl.c,v 1.7 2006-01-31 08:31:01 claes Exp $
+ * Proview   $Id: rt_errl.c,v 1.8 2006-07-20 10:23:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,11 +28,13 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#if defined _POSIX_MESSAGE_PASSING
+//#if defined _POSIX_MESSAGE_PASSING
 # include <mqueue.h>
-#else
-# include "rt_mq.h"
-#endif
+//#else
+//# include "rt_mq.h"
+//#endif
+
+#include <mqueue.h>
 #include <limits.h>
 #include <pthread.h>
 #include <sys/time.h>
@@ -40,11 +42,8 @@
 #include "rt_errl.h"
 #include "rt_errh.h"
 
-#if defined _POSIX_MESSAGE_PASSING
-# define MAX_NO_MSG 10;
-#else
-# define MAX_NO_MSG 100;
-#endif
+#define MAX_NO_MSG 100;
+#define DEF_MAX_NO_MSG 10;
 
 static pthread_mutex_t fileMutex;
 static pthread_mutex_t termMutex;
@@ -106,15 +105,24 @@ errl_Init (
 
   mqattr.mq_msgsize = LOG_MAX_MSG_SIZE;  /* max mess size */
   mqattr.mq_maxmsg = MAX_NO_MSG;     /* max no of msg in this queue */
-  mqattr.mq_flags = 0;               /* not used entry */
+  mqattr.mq_flags = 0; // O_NONBLOCK;
   oflags = O_CREAT | O_RDWR;
   mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 
   sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
   mqid = mq_open(name, oflags, mode, &mqattr);
   if (mqid == (mqd_t)-1) {
-    perror("rt_logmod: mq_open ");
-    return;
+    if (errno == EINVAL) {
+      mqattr.mq_maxmsg = DEF_MAX_NO_MSG;     /* Try with smaller queue */
+      mqid = mq_open(name, oflags, mode, &mqattr);
+      if (mqid == (mqd_t)-1) {
+        perror("rt_logmod: mq_open ");
+        return;
+      }
+    } else {
+      perror("rt_logmod: mq_open ");
+      return;
+    }
   }
 
   pthread_attr_init(&pthreadattr);
