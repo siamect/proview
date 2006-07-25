@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.3 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.4 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "pwr_baseclasses.h"
 #include "rt_pb_msg.h"
 #include "rt_pb_gsd.h"
 #include "co_dcli.h"
@@ -313,11 +314,11 @@ static void *t_malloc( int a1) {
 
 pb_gsd::pb_gsd() :
   dptype(0), modular_station(0), max_module(0),
-  user_prm_data_len(0), max_user_prm_data_len(0), status(0), address(0), datalist(0), 
-  modulelist(0), prm_textlist(0), extuserprmdatalist(0), extuserprmdatareflist(0),
-  current_module(0), current_area(0), current_prm_text(0), current_extuserprmdata(0),
-  extuserprmdataconst(0), prm_dataitems(0), module_conf(0), module_conf_cnt(0),
-  module_classlist(0), copy_buff(0), modified(0)
+  user_prm_data_len(0), max_user_prm_data_len(0), status(0), address(0),
+  datalist(0), modulelist(0), prm_textlist(0), extuserprmdatalist(0), 
+  extuserprmdatareflist(0), current_module(0), current_area(0), current_prm_text(0), 
+  current_extuserprmdata(0), extuserprmdataconst(0), prm_dataitems(0), module_conf(0), 
+  module_conf_cnt(0), module_classlist(0), copy_buff(0), modified(0), byte_order(0)
 {
   datalist = (gsd_sData *) calloc( sizeof(keywordlist)/sizeof(keywordlist[0]), sizeof(gsd_sData));
 }
@@ -1140,12 +1141,23 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       unsigned short v = (unsigned short) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[2];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[1];
+	data[item[i].ref->Reference_Offset+1] = b[0];
+      }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      unsigned char b[2];
-      memcpy( b, &v, sizeof(b));
-      data[item[i].ref->Reference_Offset] = b[1];
-      data[item[i].ref->Reference_Offset+1] = b[0];
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[2];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[1];
+	data[item[i].ref->Reference_Offset+1] = b[0];
+      }
 #endif
       break;
     }
@@ -1157,12 +1169,23 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
 
       short v = (short) item[i].value;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[2];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[1];
+	data[item[i].ref->Reference_Offset+1] = b[0];
+      }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      unsigned char b[2];
-      memcpy( b, &v, sizeof(b));
-      data[item[i].ref->Reference_Offset] = b[1];
-      data[item[i].ref->Reference_Offset+1] = b[0];
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[2];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[1];
+	data[item[i].ref->Reference_Offset+1] = b[0];
+      }
 #endif
       break;
     }
@@ -1173,7 +1196,29 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
       }
 
       unsigned int v = (unsigned int) item[i].value;
-      memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+      if ( byte_order == pwr_eByteOrdering_LittleEndian) 
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[4];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[3];
+	data[item[i].ref->Reference_Offset+1] = b[2];
+	data[item[i].ref->Reference_Offset+2] = b[1];
+	data[item[i].ref->Reference_Offset+3] = b[0];
+      }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+      if ( byte_order == pwr_eByteOrdering_BigEndian) 
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[4];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[3];
+	data[item[i].ref->Reference_Offset+1] = b[2];
+	data[item[i].ref->Reference_Offset+2] = b[1];
+	data[item[i].ref->Reference_Offset+3] = b[0];
+      }
+#endif
       break;
     }
     case gsd_Signed32: {
@@ -1183,7 +1228,29 @@ int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size,
       }
 
       int v = (int) item[i].value;
-      memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+      if ( byte_order == pwr_eByteOrdering_LittleEndian) 
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[4];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[3];
+	data[item[i].ref->Reference_Offset+1] = b[2];
+	data[item[i].ref->Reference_Offset+2] = b[1];
+	data[item[i].ref->Reference_Offset+3] = b[0];
+      }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+      if ( byte_order == pwr_eByteOrdering_BigEndian) 
+	memcpy( &data[item[i].ref->Reference_Offset], &v, sizeof(v));
+      else {
+	unsigned char b[4];
+	memcpy( b, &v, sizeof(b));
+	data[item[i].ref->Reference_Offset] = b[3];
+	data[item[i].ref->Reference_Offset+1] = b[2];
+	data[item[i].ref->Reference_Offset+2] = b[1];
+	data[item[i].ref->Reference_Offset+3] = b[0];
+      }
+#endif
       break;
     }
     default: 
@@ -1242,12 +1309,23 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Unsigned16: {
       unsigned short v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[2];
+	b[1] = data[item[i].ref->Reference_Offset];
+	b[0] = data[item[i].ref->Reference_Offset+1];
+	memcpy( &v, b, sizeof(v));
+      }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      unsigned char b[2];
-      b[1] = data[item[i].ref->Reference_Offset];
-      b[0] = data[item[i].ref->Reference_Offset+1];
-      memcpy( &v, b, sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[2];
+	b[1] = data[item[i].ref->Reference_Offset];
+	b[0] = data[item[i].ref->Reference_Offset+1];
+	memcpy( &v, b, sizeof(v));
+      }
 #endif
       item[i].value = v;
       break;
@@ -1255,25 +1333,80 @@ int pb_gsd::prm_data_to_items( gsd_sPrmDataItem *item, int item_size,
     case gsd_Signed16: {
       short v;
 #if (pwr_dHost_byteOrder == pwr_dLittleEndian)
-      memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[2];
+	b[1] = data[item[i].ref->Reference_Offset];
+	b[0] = data[item[i].ref->Reference_Offset+1];
+	memcpy( &v, b, sizeof(v));
+      }
 #elif (pwr_dHost_byteOrder == pwr_dBigEndian)
-      unsigned char b[2];
-      b[1] = data[item[i].ref->Reference_Offset];
-      b[0] = data[item[i].ref->Reference_Offset+1];
-      memcpy( &v, b, sizeof(v));
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[2];
+	b[1] = data[item[i].ref->Reference_Offset];
+	b[0] = data[item[i].ref->Reference_Offset+1];
+	memcpy( &v, b, sizeof(v));
+      }
 #endif
       item[i].value = v;
       break;
     }
     case gsd_Unsigned32: {
       unsigned int v;
-      memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[4];
+	b[3] = data[item[i].ref->Reference_Offset];
+	b[2] = data[item[i].ref->Reference_Offset+1];
+	b[1] = data[item[i].ref->Reference_Offset+2];
+	b[0] = data[item[i].ref->Reference_Offset+3];
+	memcpy( &v, b, sizeof(v));
+      }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[4];
+	b[3] = data[item[i].ref->Reference_Offset];
+	b[2] = data[item[i].ref->Reference_Offset+1];
+	b[1] = data[item[i].ref->Reference_Offset+2];
+	b[0] = data[item[i].ref->Reference_Offset+3];
+	memcpy( &v, b, sizeof(v));
+      }
+#endif
       item[i].value = v;
       break;
     }
     case gsd_Signed32: {
       int v;
-      memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+#if (pwr_dHost_byteOrder == pwr_dLittleEndian)
+      if ( byte_order == pwr_eByteOrdering_LittleEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[4];
+	b[3] = data[item[i].ref->Reference_Offset];
+	b[2] = data[item[i].ref->Reference_Offset+1];
+	b[1] = data[item[i].ref->Reference_Offset+2];
+	b[0] = data[item[i].ref->Reference_Offset+3];
+	memcpy( &v, b, sizeof(v));
+      }
+#elif (pwr_dHost_byteOrder == pwr_dBigEndian)
+      if ( byte_order == pwr_eByteOrdering_BigEndian)
+	memcpy( &v, &data[item[i].ref->Reference_Offset], sizeof(v));
+      else {
+	unsigned char b[4];
+	b[3] = data[item[i].ref->Reference_Offset];
+	b[2] = data[item[i].ref->Reference_Offset+1];
+	b[1] = data[item[i].ref->Reference_Offset+2];
+	b[0] = data[item[i].ref->Reference_Offset+3];
+	memcpy( &v, b, sizeof(v));
+      }
+#endif
       item[i].value = v;
       break;
     }

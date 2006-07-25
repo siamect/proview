@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.2 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.3 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,6 +127,17 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
   if ( EVEN(sts)) return sts;
 
   ctx->gsd->address = address;
+
+  // Set byte order
+  pwr_tByteOrderingEnum byte_order;
+  
+  sts = gdh_ArefANameToAref( &ctx->aref, "ByteOrdering", &aaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetObjectInfoAttrref( &aaref, &byte_order, sizeof(byte_order));
+  if ( EVEN(sts)) return sts;
+
+  ctx->gsd->byte_order = byte_order;
 
   // Set Ext_User_Prm_Data
   pwr_tUInt8 prm_user_data[256];

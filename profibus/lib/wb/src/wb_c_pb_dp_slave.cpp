@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.5 2006-05-21 22:30:49 lw Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.6 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,6 +129,14 @@ static int attr_save_cb( void *sctx)
   if ( EVEN(sts)) return sts;
   
   sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &address, sizeof(address));
+  if ( EVEN(sts)) return sts;
+
+  // ByteOrdering
+  pwr_tByteOrderingEnum byte_order = ctx->gsd->byte_order;
+  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "ByteOrdering", &aaref);
+  if ( EVEN(sts)) return sts;
+  
+  sts = ldh_WriteAttribute( ctx->ldhses, &aaref, &byte_order, sizeof(byte_order));
   if ( EVEN(sts)) return sts;
 
   // VendorName
@@ -429,6 +437,17 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
   if ( EVEN(sts)) return sts;
 
   ctx->gsd->address = address;
+
+  // Set byte order
+  pwr_tByteOrderingEnum byte_order;
+
+  sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "ByteOrdering", &aaref);
+  if ( EVEN(sts)) return sts;
+
+  sts = ldh_ReadAttribute( ctx->ldhses, &aaref, &byte_order, sizeof(byte_order));
+  if ( EVEN(sts)) return sts;
+
+  ctx->gsd->byte_order = byte_order;
 
   // Set Ext_User_Prm_Data
   pwr_tUInt8 prm_user_data[256];

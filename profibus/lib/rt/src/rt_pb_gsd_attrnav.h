@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.2 2006-04-24 13:22:23 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.3 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,7 +63,8 @@ typedef enum {
 	attrnav_eItemType_PbModuleData,
 	attrnav_eItemType_PbModuleClass,
 	attrnav_eItemType_PbPrmData,
-	attrnav_eItemType_PbMoreData
+	attrnav_eItemType_PbMoreData,
+	attrnav_eItemType_PbEnumByteOrder
 	} attrnav_eItemType;
 
 typedef enum {
@@ -282,6 +283,21 @@ class ItemPbMoreData : public ItemPb {
 		  brow_tNode dest, flow_eDest dest_code);
   virtual ~ItemPbMoreData() {}
   virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y);
+};
+
+//! Item for slave byte order.
+class ItemPbEnumByteOrder : public ItemPbBase {
+   public:
+    ItemPbEnumByteOrder( GsdAttrNav *attrnav, char *item_name, char *attr, 
+	int attr_type, int attr_size, double attr_min_limit, 
+	double attr_max_limit, void *attr_value_p,
+	int attr_noedit,
+	brow_tNode dest, flow_eDest dest_code);
+  virtual ~ItemPbEnumByteOrder() {}
+
+    int 	    old_value;
+
+    virtual int	       	open_children( GsdAttrNav *attrnav, double x, double y);
 };
 
 /*@}*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.h,v 1.3 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: rt_pb_gsd.h,v 1.4 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -206,6 +206,7 @@ class pb_gsd {
   gsd_sModuleClass *module_classlist;
   gsd_sModuleConf *copy_buff;
   int modified;
+  int byte_order;
 
   static gsd_sKeyword keywordlist[];
 

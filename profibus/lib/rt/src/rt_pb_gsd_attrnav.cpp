@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.2 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.3 2006-07-25 11:01:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -823,6 +823,9 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
           else if ( !((ItemPbBase *)item)->parent && attrnav->change_value_cb)
 	    (attrnav->change_value_cb) ( attrnav->parent_ctx);
           break;
+        case attrnav_eItemType_PbEnumByteOrder:
+	  item->open_children( attrnav, 0, 0);
+          break;
         case attrnav_eItemType_PbEnumValue: {
           int value;
 	  if ( !attrnav->edit_mode) {
@@ -967,6 +970,30 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
       brow_GetCtxUserData( brow_GetCtx( object), (void **) &attrnav);
 
       attrnav->gsd->prm_text_val_to_str( item->enumtext, *(int *)p, buf);
+      brow_SetAnnotation( object, 1, buf, strlen(buf));
+      item->old_value = *(int *)p;
+      break;
+    }
+    case attrnav_eItemType_PbEnumByteOrder: {
+      ItemPbEnumByteOrder	*item;
+
+      item = (ItemPbEnumByteOrder *)base_item;
+
+      if ( !item->first_scan) {
+        if ( item->old_value == *(int *)p)
+          // No change since last time
+          return 1;
+      }
+      else
+        item->first_scan = 0;
+
+      brow_GetCtxUserData( brow_GetCtx( object), (void **) &attrnav);
+
+      if ( *(int *)p == 0)
+	strcpy( buf, "LittleEndian");
+      else
+	strcpy( buf, "BigEndian");
+      
       brow_SetAnnotation( object, 1, buf, strlen(buf));
       item->old_value = *(int *)p;
       break;
@@ -1122,7 +1149,8 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
   brow_GetUserData( object, (void **)&base_item);
   switch( base_item->type) {
     case attrnav_eItemType_PbBase:
-    case attrnav_eItemType_PbEnum: {
+    case attrnav_eItemType_PbEnum:
+    case attrnav_eItemType_PbEnumByteOrder: {
       ItemPbBase	*item = (ItemPbBase *) base_item;
       if (item->size == 0)
 	break;
@@ -1388,6 +1416,12 @@ int	GsdAttrNav::object_attr()
 		  pwr_eType_Int32, sizeof(pwr_tInt32), 0, 0,
 		  p, 0, 0,
 		  NULL, flow_eDest_IntoLast);
+
+  p = (void *) &gsd->byte_order;
+  new ItemPbEnumByteOrder( this, "ByteOrdering", "LocalGsdAttr", 
+		       pwr_eType_Int32, sizeof(pwr_tInt32), 0, 0,
+		       p, 0,
+		       NULL, flow_eDest_IntoLast);
 
   new ItemPbMoreData( this, "SlaveGsdData", NULL, flow_eDest_IntoLast);
   new ItemPbPrmData( this, "UserPrmData", NULL, flow_eDest_IntoLast);
@@ -2053,6 +2087,54 @@ int ItemPbMoreData::open_children( GsdAttrNav *attrnav, double x, double y)
 			  node, flow_eDest_IntoLast);
       }    
     }      
+    brow_SetOpen( node, attrnav_mOpen_Children);
+    brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  return 1;
+}
+
+ItemPbEnumByteOrder::ItemPbEnumByteOrder( GsdAttrNav *attrnav, char *item_name, char *attr, 
+	int attr_type, int attr_size, double attr_min_limit, 
+	double attr_max_limit, void *attr_value_p,
+	int attr_noedit,
+	brow_tNode dest, flow_eDest dest_code) :
+  ItemPbBase( attrnav, item_name, attr, attr_type, attr_size, attr_min_limit,
+	      attr_max_limit, attr_value_p, attr_noedit,
+	      0, dest, dest_code)
+{
+  type = attrnav_eItemType_PbEnumByteOrder;
+  brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+}
+
+int ItemPbEnumByteOrder::open_children( GsdAttrNav *attrnav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node)) {
+    // Close
+    brow_SetNodraw( attrnav->brow->ctx);
+    brow_CloseNode( attrnav->brow->ctx, node);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Attributes)
+      brow_RemoveAnnotPixmap( node, 1);
+    if ( brow_IsOpen( node) & attrnav_mOpen_Children)
+      brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrenum);
+    brow_ResetOpen( node, attrnav_mOpen_All);
+    brow_ResetNodraw( attrnav->brow->ctx);
+    brow_Redraw( attrnav->brow->ctx, node_y);
+  }
+  else if ( !noedit) {
+    int				found;
+
+    found = 0;
+    brow_SetNodraw( attrnav->brow->ctx);
+    new ItemPbEnumValue( attrnav, "LittleEndian", 0, pwr_eType_UInt32, 
+		this->value_p, node, flow_eDest_IntoLast);
+    new ItemPbEnumValue( attrnav, "BigEndian", 1, pwr_eType_UInt32, 
+		this->value_p, node, flow_eDest_IntoLast);
     brow_SetOpen( node, attrnav_mOpen_Children);
     brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_openmap);
     brow_ResetNodraw( attrnav->brow->ctx);
