@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.4 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.5 2006-07-25 11:00:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -216,35 +216,41 @@ static pwr_tStatus IoCardRead (
               case pwr_eDataRepEnum_Int8:
 	        memcpy(&data8, local->input_area + cp->offset + chanp->offset, 1);
 		f_raw = (float) data8;
+	        sig_ai->RawValue = data8;
 	        break;
 
               case pwr_eDataRepEnum_UInt8:
 	        memcpy(&udata8, local->input_area + cp->offset + chanp->offset, 1);
 		f_raw = (float) udata8;
+	        sig_ai->RawValue = udata8;
 	        break;
 		
               case pwr_eDataRepEnum_Int16:
 	        memcpy(&data16, local->input_area + cp->offset + chanp->offset, 2);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
 		f_raw = (float) data16;
+	        sig_ai->RawValue = data16;
 	        break;
 		
               case pwr_eDataRepEnum_UInt16:
 	        memcpy(&udata16, local->input_area + cp->offset + chanp->offset, 2);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(udata16);
 		f_raw = (float) udata16;
+	        sig_ai->RawValue = udata16;
 	        break;
 
               case pwr_eDataRepEnum_Int32:
 	        memcpy(&data32, local->input_area + cp->offset + chanp->offset, 4);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
 		f_raw = (float) data32;
+	        sig_ai->RawValue = data32;
 	        break;
 		
               case pwr_eDataRepEnum_UInt32:
 	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 4);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
 		f_raw = (float) udata32;
+	        sig_ai->RawValue = udata32;
 	        break;
 		
               case pwr_eDataRepEnum_Float32:
@@ -252,11 +258,12 @@ static pwr_tStatus IoCardRead (
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian ||
 		    slave->FloatRepresentation == pwr_ePbNumberRep_FloatIEEE) udata32 = swap32(udata32);
 	        memcpy(&f_raw, &udata32, 4);
+	        sig_ai->RawValue = udata32;
 	        break;
 		
             }
 	    
-	    sig_ai->RawValue = 0;
+//	    sig_ai->RawValue = 0;
 	    PbConvertAi(ctx, f_raw, chan_ai, sig_ai, chanp);
 
 	  }
@@ -462,7 +469,7 @@ static pwr_tStatus IoCardWrite (
             else
               rawvalue = rawvalue - 0.5;
 
-            sig_ao->RawValue = 0;
+//            sig_ao->RawValue = 0;
 
             sig_ao->SigValue = chan_ao->SigValPolyCoef1 * value + chan_ao->SigValPolyCoef0;
 	    
@@ -471,39 +478,46 @@ static pwr_tStatus IoCardWrite (
               case pwr_eDataRepEnum_Int8:
 	        data8 = (pwr_tInt8) rawvalue;
 	        memcpy(local->output_area + cp->offset + chanp->offset, &data8, 1);
+                sig_ao->RawValue = data8;
 	        break;
 
               case pwr_eDataRepEnum_UInt8:
 	        udata8 = (pwr_tUInt8) rawvalue;
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata8, 1);
+                sig_ao->RawValue = udata8;
 	        break;
 		
               case pwr_eDataRepEnum_Int16:
 	        data16 = (pwr_tInt16) rawvalue;
+                sig_ao->RawValue = data16;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &data16, 2);
 	        break;
 		
               case pwr_eDataRepEnum_UInt16:
 	        udata16 = (pwr_tUInt16) rawvalue;
+                sig_ao->RawValue = udata16;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata16, 2);
 	        break;
 
               case pwr_eDataRepEnum_Int32:
 	        data32 = (pwr_tInt32) rawvalue;
+                sig_ao->RawValue = data32;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &data32, 4);
 	        break;
 		
               case pwr_eDataRepEnum_UInt32:
 	        udata32 = (pwr_tUInt32) rawvalue;
+                sig_ao->RawValue = udata32;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 4);
 	        break;
 		
               case pwr_eDataRepEnum_Float32:
 	        memcpy(&udata32, &rawvalue, 4);
+                sig_ao->RawValue = udata32;
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian ||
 		    slave->FloatRepresentation == pwr_ePbNumberRep_FloatIEEE) udata32 = swap32(udata32);
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 4);

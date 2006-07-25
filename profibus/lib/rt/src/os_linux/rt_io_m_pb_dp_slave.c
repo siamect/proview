@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.4 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.5 2006-07-25 11:00:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -224,7 +224,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_di->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_di->Number == 0) latent_input_count = GetChanSize(chan_di->Representation);
-	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
+//	      printf("Di channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_di->Number, chanp->offset);
 	      break;
 	  
             case pwr_cClass_ChanAi:
@@ -235,7 +235,7 @@ static pwr_tStatus IoRackInit (
 	      chanp->mask = 0;
 	      input_counter += chan_size;
               io_AiRangeToCoef(chanp);
-	      printf("Ai channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ai->Number, chanp->offset);
+//	      printf("Ai channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ai->Number, chanp->offset);
 	      break;
 	  
             case pwr_cClass_ChanAit:
@@ -255,7 +255,7 @@ static pwr_tStatus IoRackInit (
               chanp->size = chan_size;
 	      chanp->mask = 0;
 	      input_counter += chan_size;
-	      printf("Ii channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ii->Number, chanp->offset);
+//	      printf("Ii channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ii->Number, chanp->offset);
 	      break;
 	  
             case pwr_cClass_ChanDo:
@@ -272,7 +272,7 @@ static pwr_tStatus IoRackInit (
 	      if (chan_do->Representation == pwr_eDataRepEnum_Bit32 && op->ByteOrdering == pwr_eByteOrdering_BigEndian)
 	        chanp->mask = swap32((unsigned short) chanp->mask);
 	      if (chan_do->Number == 0) latent_output_count = GetChanSize(chan_do->Representation);
-	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
+//	      printf("Do channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_do->Number, chanp->offset);
 	      break;
 	  
 	    case pwr_cClass_ChanAo:
@@ -283,7 +283,7 @@ static pwr_tStatus IoRackInit (
 	      chanp->mask = 0;
 	      output_counter += chan_size;
               io_AoRangeToCoef(chanp);
-	      printf("Ao channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ao->Number, chanp->offset);
+//	      printf("Ao channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_ao->Number, chanp->offset);
 	      break;
 	  
             case pwr_cClass_ChanIo:
@@ -293,7 +293,7 @@ static pwr_tStatus IoRackInit (
               chanp->size = chan_size;
 	      chanp->mask = 0;
 	      output_counter += chan_size;
-	      printf("Io channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_io->Number, chanp->offset);
+//	      printf("Io channel found in %s, Number %d, Offset %d\n", cardp->Name, chan_io->Number, chanp->offset);
 	      break;
           }
         }
