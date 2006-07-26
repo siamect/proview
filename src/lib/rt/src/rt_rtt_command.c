@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_command.c,v 1.8 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_rtt_command.c,v 1.9 2006-07-26 10:54:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -10205,9 +10205,23 @@ static int	rtt_print_item_upd(
 
 	      objid = *(pwr_tObjid *)value_ptr;
 	      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
-	      if (EVEN(sts)) break;
+	      if (EVEN(sts))
+		fprintf( outfile, "-\n");
+	      else
+		fprintf( outfile,  "%s\n", hiername);
+	      break;
+	    }
+	    case pwr_eType_AttrRef:
+	    {
+	      pwr_tAName     	hiername;
+	      pwr_tAttrRef	aref;
 
-	      fprintf( outfile,  "%s\n", hiername);
+	      aref = *(pwr_tAttrRef *)value_ptr;
+	      sts = gdh_AttrrefToName( &aref, hiername, sizeof(hiername), cdh_mNName);
+	      if (EVEN(sts))
+		fprintf( outfile, "-\n");
+	      else
+		fprintf( outfile,  "%s\n", hiername);
 	      break;
 	    }
 	    default:
