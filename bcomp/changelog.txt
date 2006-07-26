@@ -4,3 +4,4 @@
 060522 cs  bcomp      New classes CompPID and CompModePID: PID controller divided in main object
                       and function object.
 060530 cs  bcomp      Local mode added to CompModeDM and BaseMValve.
+060627 cs  bcomp      Hysteresis in object graph for BaseSensor and subclasses displayed wrong value.
