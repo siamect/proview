@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.12 2006-06-15 12:17:40 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.13 2006-07-27 10:18:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1332,7 +1332,7 @@ int XNav::show_remnode()
   strcpy( th.title[th.table_cnt++], "Description");
   new ItemTableHeader( brow, this, "Title", &th,  NULL, flow_eDest_IntoLast);
 
-  for ( int i = 0; i < 6; i++) {
+  for ( int i = 0; i < 7; i++) {
     switch ( i) {
     case 0: cid = pwr_cClass_RemnodeUDP; break;
     case 1: cid = pwr_cClass_RemnodeTCP; break;
@@ -1340,6 +1340,7 @@ int XNav::show_remnode()
     case 3: cid = pwr_cClass_RemnodeALCM; break;
     case 4: cid = pwr_cClass_RemnodeSerial; break;
     case 5: cid = pwr_cClass_RemnodeModbus; break;
+    case 6: cid = pwr_cClass_RemnodeMQ; break;
     }
 
     sts = gdh_GetClassList( cid, &objid);
@@ -1380,6 +1381,11 @@ int XNav::show_remnode()
       case 5: 
 	strncpy( id, ((pwr_sClass_RemnodeModbus *)object_ptr)->Id, sizeof(id));
 	strncpy( description, ((pwr_sClass_RemnodeModbus *)object_ptr)->Description, 
+		 sizeof(description));
+	break;
+      case 6: 
+	strncpy( id, ((pwr_sClass_RemnodeMQ *)object_ptr)->Id, sizeof(id));
+	strncpy( description, ((pwr_sClass_RemnodeMQ *)object_ptr)->Description, 
 		 sizeof(description));
 	break;
       }
