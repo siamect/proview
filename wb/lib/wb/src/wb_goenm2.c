@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm2.c,v 1.9 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: wb_goenm2.c,v 1.10 2006-07-27 10:14:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -363,6 +363,16 @@ int goen_create_nodetype_m2(
 	2, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
 	flow_eAnnotType_OneLine, flow_mDisplayLevel_1);
   }
+
+  /* Add execute order display */
+  flow_AddFilledRect( nc_pid, f_width - GOEN_DISPLAYNODEWIDTH, -f_yoffs, 
+		GOEN_DISPLAYNODEWIDTH, GOEN_DISPLAYNODEHEIGHT, 
+		flow_eDrawType_LineGray, flow_mDisplayLevel_2);
+  flow_AddAnnot( nc_pid, 
+	f_width - GOEN_DISPLAYNODEWIDTH + f_strlength,
+	(GOEN_DISPLAYNODEHEIGHT + f_strheight)/2.0 - f_yoffs,
+	 GOEN_DISPLAYNODE_ANNOT, flow_eDrawType_TextHelveticaBold, GOEN_F_TEXTSIZE, 
+	flow_eAnnotType_OneLine, flow_mDisplayLevel_2);
 
   free( (char *)bodydef);
   *node_class = nc_pid;
