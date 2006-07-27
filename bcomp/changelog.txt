@@ -5,3 +5,4 @@
                       and function object.
 060530 cs  bcomp      Local mode added to CompModeDM and BaseMValve.
 060627 cs  bcomp      Hysteresis in object graph for BaseSensor and subclasses displayed wrong value.
+060727 cs  bcomp      Defaultvalue for BasePressureSensor.Trend.DataName corrected.

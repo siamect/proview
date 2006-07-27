@@ -13,3 +13,6 @@
 060516 cs  wbl       Attribute ManMode added to Mode class, to avoid code in object graph.
 060523 cs  pwrb      New class GetDatap added, to fetch datainputs in template plc.
 060630 cs  wbl       Listdescriptor for channellist adapted to V4.x.
+060713 rk  rt        Bugfix in classcache for large classes.
+060713 rk  init      Volume versioncheck for volref removed if volume is not yet loaded.
+060720 rk  init      Try with smaller posix message queue if system does not support big queues.
