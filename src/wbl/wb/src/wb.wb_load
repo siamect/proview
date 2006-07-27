@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: wb.wb_load,v 1.7 2006-06-30 12:19:58 claes Exp $
+!  Proview   $Id: wb.wb_load,v 1.8 2006-07-27 10:51:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -601,7 +601,7 @@ SObject wb:
          Attr Title = "RTT OBJECT LIST"
          Attr PageHeader = "RTT OBJECT LIST"
          Attr Deep = 1
-         Attr AlphaOrder = 1
+         Attr AlphaOrder = 0
          Attr Externreference = 4
          Attr NoPrintIfNoList = 1
          Attr Landscape = 1
