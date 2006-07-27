@@ -301,6 +301,7 @@ B 5.1.11 "Frekvensomvandlare utlöst, återställning krävs, "
 B 5.1.12 "Underhåll av omformare: kylfläkt ska bytas, "
 B 5.1.13 "Frekvensomvandlare varning, "
 B 5.1.14 "Frekvensomvandlare fel, "
+E 5.1.15 "Lokal kontroll"
 # ACS800PumpAggr
 E 5.2.1 "Effekt/Kontaktor"
 E 5.2.2 "Säkring"

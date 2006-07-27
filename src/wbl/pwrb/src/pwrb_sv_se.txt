@@ -10112,7 +10112,7 @@ av orderlistan med inaktiv order. Därför blir Av1=51. Av2 lagras endast då
 ORD0 är aktiv, varför Av2=30.
 
 För att utnyttja fördröjningen i en D-order används OrderAct som i fallet
-ORD0 eller ordens tillståns i ORD1. Vi konstaterar också att så länge steget
+ORD0 eller ordens tillstånd i ORD1. Vi konstaterar också att så länge steget
 är aktivt exekveras orderlistan oberoende av ordens tillstånd.
 
 <attr>Step 

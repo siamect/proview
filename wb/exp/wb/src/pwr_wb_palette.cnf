@@ -755,6 +755,11 @@ palette PlcEditorPalette
     {
       class ABB_ACS800_1Fo
       class ABB_ACS800MotorAggrFo
+      class ABB_Sensor_Pb_PA_Fo
+      class ABB_TempSensor_TF12Fo
+      class ABB_PressureSensor_265GSFo
+      class ABB_DiffPressureSensor_265DSFo
+      class ABB_FlowSensor_FXE4000Fo
     }
     menu Simulate
     {
