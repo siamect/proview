@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.10 2006-07-10 10:55:23 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.11 2006-07-27 10:24:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -534,14 +534,10 @@ openLog ()
 #if defined OS_LYNX || defined OS_LINUX
   if (mqid == (mqd_t)-1) {
     char name[64];
-    struct mq_attr attr;
     char *busid = getenv(pwr_dEnvBusId);
 
     sprintf(name, "%s_%s", LOG_QUEUE_NAME, busid ? busid : "");  
-    attr.mq_maxmsg = 2048;
-    attr.mq_msgsize = sizeof(errh_sMsg);
-    attr.mq_flags = O_NONBLOCK;
-    mqid = mq_open(name, O_WRONLY | O_NONBLOCK, 0, &attr);
+    mqid = mq_open(name, O_WRONLY | O_NONBLOCK, 0, 0);
     if (mqid == (mqd_t)-1) {
       char string[256];
       char *s;
