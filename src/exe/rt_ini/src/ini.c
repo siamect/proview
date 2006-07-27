@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.24 2006-05-05 11:31:08 claes Exp $
+ * Proview   $Id: ini.c,v 1.25 2006-07-27 10:35:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -286,6 +286,20 @@ readSectFile (
   if ( !cp->node.rtVersion.tv_sec)
     cp->node.rtVersion = cp->dbs.file.time;
 
+  if ( vp->time.tv_sec != 0) {
+    // Time inserted from volref
+    if (time_Acomp(&vp->time, &cp->dbs.file.time) != 0) {
+      char timbuf1[32];
+      char timbuf2[32];
+
+      time_AtoAscii(&vp->time, time_eFormat_DateAndTime, timbuf1, sizeof(timbuf1));
+      time_AtoAscii(&cp->dbs.file.time, time_eFormat_DateAndTime, timbuf2, sizeof(timbuf2));
+
+      errh_LogWarning(&cp->log, "Version missmatch for volume: %s, %s != %s\n",
+		      vp->name, timbuf1, timbuf2);
+      cp->warnings++;
+    }
+  }
   vp->time = cp->dbs.file.time;
 
 #if 0
@@ -358,7 +372,7 @@ readSectVolRef (
 
       np->cacheSize += VolRef.CacheMaxCount;
 #endif
-    } else {
+    } else if ( vp->time.tv_sec != 0) {
       /* Do some checks.  */
       if (time_Acomp(&vp->time, &volRef.time) != 0) {
         char timbuf1[32];
