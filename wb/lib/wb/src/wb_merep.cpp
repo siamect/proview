@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.36 2006-06-08 13:08:33 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.37 2006-07-27 10:14:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -706,6 +706,7 @@ tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
     }
   }
 
+#if 0
   merep_sClassAttrKey key;
   key.subCid = 0;
   key.hostCid = 0;
@@ -724,6 +725,7 @@ tree_sTable *wb_merep::buildCatt( pwr_tStatus *sts)
     delete cd1;
     delete cd2;
   }
+#endif
 
   *sts = LDH__SUCCESS;
   return m_catt_tt;
