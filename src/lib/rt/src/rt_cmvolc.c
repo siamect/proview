@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cmvolc.c,v 1.10 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_cmvolc.c,v 1.11 2006-07-27 10:27:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -344,7 +344,7 @@ cmvolc_GetNonExistingClass (
 {
 
 #define MAX_ATTR (((net_cSizeLarge - sizeof(*rmp)) / sizeof(rmp->attr[0])) + 1)
-#define MAX_MSG ((MAX_ATTR + 4094)/4095)
+#define MAX_MSG 50
 
 
   qcom_sQid		tgt;
