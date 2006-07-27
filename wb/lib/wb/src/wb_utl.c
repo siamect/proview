@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.c,v 1.26 2006-06-30 12:22:51 claes Exp $
+ * Proview   $Id: wb_utl.c,v 1.27 2006-07-27 10:53:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -11424,6 +11424,20 @@ static int	cross_crosslist_object_insert(
 	      /* Check if object exists */
 	      sts = ldh_GetAttrRefTid( ldhses, &aref, &refobjid_class);
 	      if ( ODD(sts)) {
+
+		/* If attribute, get object or attrobject */
+		if ( !cdh_tidIsCid( refobjid_class)) {
+		  char *np, *s;
+		  int nsize;
+
+		  sts = ldh_AttrRefToName( ldhses, &aref, 
+					   ldh_eName_Hierarchy, &np, &nsize);
+		  if ( EVEN(sts)) return FOE__SUCCESS;
+		  if ((s = strrchr( np, '.')))
+		    *s = 0;
+		  sts = ldh_NameToAttrRef( ldhses, np, &aref);
+		  if ( EVEN(sts)) return FOE__SUCCESS;
+		}
 	        if ( searchlist_ptr->write == CRR_GETFROMOBJECT) {
 	          sts = ldh_GetObjectPar( ldhses, arp->Objid, "DevBody", 
 			"Write", (char **)&write_ptr, &size);
