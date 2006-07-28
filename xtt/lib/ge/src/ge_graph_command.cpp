@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.9 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.10 2006-07-28 09:56:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2712,6 +2712,7 @@ static int graph_ccm_deffilename_func( char *outfile, char *infile, void *client
 {
 
   dcli_get_defaultfilename( infile, outfile, ".ge_com");
+  dcli_translate_filename( outfile, outfile);
   return 1;
 }
 
