@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Proview   $Id: pwr_pkg.sh,v 1.5 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: pwr_pkg.sh,v 1.6 2006-07-28 09:57:08 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -219,6 +219,7 @@ pkg_brief_func ()
             fi
           done
         } < $datfile
+	rm $datfile	
       fi
       cd $dir
     done
