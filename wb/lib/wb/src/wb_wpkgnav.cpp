@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.cpp,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wpkgnav.cpp,v 1.6 2006-08-22 07:49:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -546,50 +546,37 @@ WItemPkgNode::WItemPkgNode( WNavBrow *brow, char *item_name,
 
 int WItemPkgNode::open_children( WNavBrow *brow, double x, double y, int display_mode)
 {
-  char cmd[200];
-  char tmpfile[200] = "$pwrp_tmp/wpkg.tmp";
-  char line[200];
-  char line_item[6][80];
-  int num;
-  char timestr[32];
   pwr_tTime time;
   int pkg_cnt = 0;
   WItemPkgPackage    *item;
   int inserted = 0;
   brow_tObject child;
   int sts;
+  pwr_tFileName file_spec, found_file;
+  char dev[80], dir[80], file[80], type[80];
+  int version;
 
   if ( brow_IsOpen( node)) {
     close( brow, 0, 0);
     return 1;
   }
 
-  sprintf( cmd, "pwr_pkg.sh -lp $pwrp_load/pwrp_pkg_%s_*.tgz > %s", nodename, tmpfile);
-  system( cmd);
-  dcli_translate_filename( tmpfile, tmpfile);
-  
-  ifstream is( tmpfile);
+
+  sprintf( file_spec, "$pwrp_load/pwrp_pkg_%s_*.tgz", nodename);
+  sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_INIT);
 
   brow_SetNodraw( brow->ctx);
-  while ( is.getline( line, sizeof(line))) {
-    dcli_trim( line, line);
-    if ( line[0] == '#' || line[0] == '!')
-      continue;
+  while ( ODD(sts)) {
 
-    num = dcli_parse( line, " 	", "", (char *)line_item,
-		     sizeof(line_item)/sizeof(line_item[0]),
-		     sizeof(line_item[0]), 0);
-    if ( num != 6)
-      continue;
-
-    sprintf( timestr, "%s %s", line_item[4], line_item[5]);
-    time_AsciiToA( timestr, &time);
+    dcli_file_time( found_file, &time);
+    dcli_parse_filename( found_file, dev, dir, file, type, &version);
+    strcat( file, type);
 
     sts = brow_GetChild( brow->ctx, node, &child);
     while ( ODD(sts)) {
       brow_GetUserData( child, (void **)&item);
       if ( item->time.tv_sec < time.tv_sec) {
-	new WItemPkgPackage( brow, line_item[0], line_item[0], time, child,
+	new WItemPkgPackage( brow, file, file, time, child,
 			     flow_eDest_Before);
 	inserted = 1;
 	break;
@@ -597,13 +584,14 @@ int WItemPkgNode::open_children( WNavBrow *brow, double x, double y, int display
       sts = brow_GetNextSibling( brow->ctx, child, &child);
     }
     if ( !inserted)
-      new WItemPkgPackage( brow, line_item[0], line_item[0], time, node,
+      new WItemPkgPackage( brow, file, file, time, node,
 			 flow_eDest_IntoLast);
 
     pkg_cnt++;
-  }
 
-  is.close();
+    sts = dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_NEXT);
+  }
+  dcli_search_file( file_spec, found_file, DCLI_DIR_SEARCH_END);
 
   if ( pkg_cnt) {
     brow_SetOpen( node, wnav_mOpen_Children);
