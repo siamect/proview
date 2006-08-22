@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Proview   $Id: pwr_pkg.sh,v 1.6 2006-07-28 09:57:08 claes Exp $
+# Proview   $Id: pwr_pkg.sh,v 1.7 2006-08-22 07:44:25 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -251,10 +251,10 @@ pkg_dir_func()
 
 pkg_dirbrief_func()
 {
-  if [ -z $1 ]; then
+  if [ -z "$1" ]; then
     allpkg=`ls /home/pwrp/pwrp_pkg_*.tgz`
   else
-    if [ $1 == ${1##*/} ]; then
+    if [ "$1" == "${1##*/}" ]; then
       # Add path
       pattern="/home/pwrp/*$1*"
     elif [ ${1:0:1} == "/" ]; then
@@ -267,7 +267,10 @@ pkg_dirbrief_func()
 
   for pkg in $allpkg ; do
     if [ -z ${pkg##*pwrp_pkg_*.tgz} ]; then
-      basename $pkg
+      fname=`eval basename $pkg`
+      ftime=`eval stat $pkg --print=%z | cut -b -19`
+#      echo $fname $ftime
+      echo $fname
     fi
   done
 }
@@ -347,7 +350,7 @@ while [ -n "$(echo $1 | grep '-')" ]; do
 
     -ld ) pkg_dir_func $OPTARG ;;
 
-    -l ) pkg_dirbrief_func $OPTARG;;
+    -l ) pkg_dirbrief_func "$OPTARG";;
 
     * ) cat <<EOF 
     usage: pwr_pkg [-i pkg] [-l [pkg]] [-b [pkg]] [-r]

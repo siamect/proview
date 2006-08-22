@@ -38,3 +38,4 @@
 060703 cs  plc       Bugfix in GetSp: short string could cause compile problems. 
 060711 cs  utl       Bugfix in rtt crossreference list. Individual attributes were listed in RttObjectList.
 060727 cs  plc       Execute order was not displayed on aarithm objects and other objects with                     graphmethod 2.
+060822 cs  wb        Performance improved when opening a node, and displaying the packages in the distributor.
