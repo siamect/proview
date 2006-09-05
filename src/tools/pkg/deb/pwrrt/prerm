@@ -26,6 +26,11 @@ if [ "$remove_all" = "y" ]; then
     user_found=1
     userstr=$userstr" b55"
   fi
+  checkuser=`eval echo $currentusers | grep "\bb66\b"`
+  if [ "$checkuser" != "" ]; then
+    user_found=1
+    userstr=$userstr" b66"
+  fi
   checkuser=`eval echo $currentusers | grep "\bpwrp\b"`
   if [ "$checkuser" != "" ]; then
     user_found=1
@@ -52,6 +57,14 @@ if [ "$remove_all" = "y" ]; then
     rm -r /home/b55
   fi
 
+  echo "-- Remove user b66"
+  if grep -q "\bb66:" /etc/passwd; then
+    userdel b66
+  fi
+  if [ -e /home/b66 ]; then
+    rm -r /home/b66
+  fi
+
   echo "-- Remove user pwrp"
   if grep -q "\bpwrp:" /etc/passwd; then
     userdel pwrp
@@ -70,6 +83,10 @@ if [ "$remove_all" = "y" ]; then
 
   if grep -q "\bb55:" /etc/group; then
     groupdel b55
+  fi
+
+  if grep -q "\bb66:" /etc/group; then
+    groupdel b66
   fi
 
   if grep -q "\bpwrp:" /etc/group; then
