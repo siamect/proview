@@ -26,13 +26,15 @@ void bfbeth_set_write_req(io_sRackLocal *r, pwr_tUInt16 address, pwr_tUInt16 dat
   return;
 }
 
-pwr_tUInt16 bfbeth_get_data(io_sRackLocal *r, pwr_tUInt16 address) {
+pwr_tUInt16 bfbeth_get_data(io_sRackLocal *r, pwr_tUInt16 address, int *sts) {
   int i;
   
+  *sts = -1;
   for (i=0; i<350; i++) {
-    if (r->read_area.item[i].address == address)
+    if (r->read_area.item[i].address == address) {
+      *sts = 1;
       return (r->read_area.item[i].data);
+    }
   }
-  
   return 0;
 }
