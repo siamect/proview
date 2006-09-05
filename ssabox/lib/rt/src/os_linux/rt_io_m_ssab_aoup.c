@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.3 2006-06-02 07:57:23 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.4 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@
 #include "rt_io_card_write.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -131,16 +132,6 @@ static pwr_tStatus IoCardInit (
 
   errh_Info( "Init of ao card '%s'", cp->Name);
   
-  /* Get item offset from rack's local and increment it, used by remote rack only
-  local->bfb_item = r_local->out_items;
-  r_local->out_items += op->MaxNoOfChannels;
-  
-  /* Set card address in rack´s local in- and out-area, used by remote rack only
-  for (i=0; i<op->MaxNoOfChannels; i++) {
-    r_local->out.item[local->bfb_item+i].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
-    r_local->out.item[local->bfb_item+i].data = 0;
-  }
-  */
   /* Write the first 50 loops */
   local->WriteFirst = 50;
   cp->Local = local;
@@ -259,9 +250,9 @@ static pwr_tStatus IoCardWrite (
         sts = write( local->Qbus_fp, &wb, sizeof(wb));
       }
       else {
-        /* Write to remote Q-bus, I/O-area stored in rack's local 
-        r_local->out.item[local->bfb_item+i].data = data; */
-        sts = 1;
+      	/* Ethernet I/O, Request a write to current address */
+      	bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 2*i), data);
+      	sts = 1;      
       }
       
       if ( sts == -1)

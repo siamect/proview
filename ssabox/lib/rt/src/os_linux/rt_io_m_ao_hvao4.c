@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ao_hvao4.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ao_hvao4.c,v 1.3 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@
 #include "rt_io_card_write.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -180,6 +181,7 @@ static pwr_tStatus IoCardWrite (
 ) 
 {
   io_sLocal 		*local;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_sClass_Ao_HVAO4	*op;
   int			i;
   io_sChannel		*chanp;
@@ -241,9 +243,17 @@ static pwr_tStatus IoCardWrite (
 #if defined(OS_ELN)
       vaxc$establish(machfailwrite);
 #endif
-      wb.Data = data;
-      wb.Address = local->Address + 2*i;
-      sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+        wb.Data = data;
+        wb.Address = local->Address + 2*i;
+        sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      }
+      else {
+      	/* Ethernet I/O, Request a write to current address */
+      	bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 2*i), data);
+      	sts = 1;      
+      }
+      
       if ( sts == -1)
       {
         /* Exceptionhandler was called */

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_di_dix2.c,v 1.4 2006-06-02 07:57:23 claes Exp $
+ * Proview   $Id: rt_io_m_di_dix2.c,v 1.5 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,19 +82,7 @@ static pwr_tStatus IoCardInit (
   local->Address[0] = op->RegAddress;
   local->Address[1] = op->RegAddress + 2;
   local->Qbus_fp = r_local->Qbus_fp;
-  
-  /* Get item offset from rack's local and increment it
-  local->bfb_item = r_local->in_items;
-  r_local->in_items += 2;
-  
-   Set card address in rack´s local in- and out-area
-  r_local->in.item[local->bfb_item].address = (pwr_tUInt16) (op->RegAddress & 0xFFFF);
-  r_local->in.item[local->bfb_item+1].address = (pwr_tUInt16) ((op->RegAddress+2) & 0xFFFF);
-  r_local->in.item[local->bfb_item].data = 0;
-  r_local->in.item[local->bfb_item+1].data = 0;
-  
-  */
-  
+   
   /* Init filter */
   for ( i = 0; i < 2; i++)
   {
@@ -152,11 +140,13 @@ static pwr_tStatus IoCardRead (
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Di_DIX2	*op;
+  pwr_sClass_Ssab_RemoteRack	*rrp;
   pwr_tUInt16		invmask;
   pwr_tUInt16		convmask;
   int			i;
   int			sts;
   qbus_io_read 		rb;
+  int			bfb_error = 0;
 
   op = (pwr_sClass_Di_DIX2 *) cp->op;
 
@@ -185,10 +175,36 @@ static pwr_tStatus IoCardRead (
     }
     else {
       /* Ethernet I/O, Get data from current address */
-      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i]);
-      sts = 1;
+      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i], &sts);
       /* Yes, we want to read this address the next time aswell */
       bfbeth_set_read_req(r_local, (pwr_tUInt16) local->Address[i]);
+
+      if (sts == -1) {
+	/* Error handling for ethernet Qbus-I/O */
+  	rrp = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+	if (bfb_error == 0) {
+          op->ErrorCount++;
+	  bfb_error = 1;
+          if ( op->ErrorCount == op->ErrorSoftLimit)
+            errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+          if ( op->ErrorCount == op->ErrorHardLimit)
+            errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs )
+	  {
+	    data = 0;
+	    sts = 1;
+          }
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak )
+	  {
+            ctx->Node->EmergBreakTrue = 1;
+            return IO__ERRDEVICE;
+          }
+	}
+	if (sts == -1) continue;
+      }
+      else {
+	op->ErrorCount = 0;
+      }
     }
     
     if ( sts <= 0)

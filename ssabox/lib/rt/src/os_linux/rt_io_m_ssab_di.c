@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_di.c,v 1.3 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_di.c,v 1.4 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -137,11 +137,13 @@ static pwr_tStatus IoCardRead (
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tUInt16		data = 0;
   pwr_sClass_Ssab_BaseDiCard	*op;
+  pwr_sClass_Ssab_RemoteRack	*rrp;
   pwr_tUInt16		invmask;
   pwr_tUInt16		convmask;
   int			i;
   int			sts;
   qbus_io_read 		rb;
+  int			bfb_error = 0;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_BaseDiCard *) cp->op;
@@ -171,13 +173,40 @@ static pwr_tStatus IoCardRead (
     }
     else {
       /* Ethernet I/O, Get data from current address */
-      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i]);
-      sts = 1;
+      data = bfbeth_get_data(r_local, (pwr_tUInt16) local->Address[i], &sts);
       /* Yes, we want to read this address the next time aswell */
       bfbeth_set_read_req(r_local, (pwr_tUInt16) local->Address[i]);
+
+      if (sts == -1) {
+	/* Error handling for ethernet Qbus-I/O */
+  	rrp = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+	if (bfb_error == 0) {
+          op->ErrorCount++;
+	  bfb_error = 1;
+          if ( op->ErrorCount == op->ErrorSoftLimit)
+            errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+          if ( op->ErrorCount == op->ErrorHardLimit)
+            errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs )
+	  {
+	    data = 0;
+	    sts = 1;
+          }
+          if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak )
+	  {
+            ctx->Node->EmergBreakTrue = 1;
+            return IO__ERRDEVICE;
+          }
+	}
+	if (sts == -1) continue;
+      }
+      else {
+	op->ErrorCount = 0;
+      }
     }
     
     if ( sts == -1)
+    /* Error handling for local Qbus-I/O */
     {
       /* Increase error count and check error limits */
       op->ErrorCount++;

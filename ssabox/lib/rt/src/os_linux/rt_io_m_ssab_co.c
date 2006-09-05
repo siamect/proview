@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_co.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_co.c,v 1.3 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@
 #include "rt_io_card_read.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 #define IO_MAXCHAN 	4
 #define	MIN16          -32767
@@ -74,6 +75,7 @@ static pwr_tStatus IoCardInit (
   pwr_tUInt16		wr_data[2];
   pwr_tUInt32		*wr_data_p;
   qbus_io_write		wb;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   op = (pwr_sClass_Ssab_CO4uP *) cp->op;
 
@@ -112,15 +114,24 @@ static pwr_tStatus IoCardInit (
     if ( op->LoadWrReg[i] == 1)
       wr_data[1] |= (1 << 15);
  
-    wb.Address = local->Address + 4*i;
-    wb.Data = wr_data[0];
-    sts = write( local->Qbus_fp, &wb, sizeof(wb));
-    if ( sts != -1)
-    {
-      wb.Address += 2;
-      wb.Data = wr_data[1];
+    if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+      /* Write to local Q-bus */
+      wb.Address = local->Address + 4*i;
+      wb.Data = wr_data[0];
       sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      if ( sts != -1) {
+        wb.Address += 2;
+        wb.Data = wr_data[1];
+        sts = write( local->Qbus_fp, &wb, sizeof(wb));
+      }
     }
+    else {
+      /* Ethernet I/O, Request a write to current address */
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i), wr_data[0]);
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), wr_data[1]);
+      sts = 1;      
+    }
+
     if ( sts == -1)
     {
       errh_Error( "IO init, Fatal write error, card '%s', IO i stopped", cp->Name);
@@ -188,6 +199,7 @@ static pwr_tStatus IoCardRead (
   int			sts, sts1, sts2;
   qbus_io_read 		rb;
   qbus_io_write		wb;
+  io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_CO4uP *) cp->op;
@@ -224,14 +236,23 @@ static pwr_tStatus IoCardRead (
         if ( op->LoadWrReg[i] == 1)
           wr_data[1] |= (1 << 15);
  
-        wb.Address = local->Address + 4*i;
-        wb.Data = wr_data[0];
-        sts = write( local->Qbus_fp, &wb, sizeof(wb));
-        if ( sts != -1)
-        {
-          wb.Address += 2;
-          wb.Data = wr_data[1];
+        if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+          /* Write to local Q-bus */
+          wb.Address = local->Address + 4*i;
+          wb.Data = wr_data[0];
           sts = write( local->Qbus_fp, &wb, sizeof(wb));
+          if ( sts != -1)
+          {
+            wb.Address += 2;
+            wb.Data = wr_data[1];
+            sts = write( local->Qbus_fp, &wb, sizeof(wb));
+          }
+        }
+        else {
+      	  /* Ethernet I/O, Request a write to current address */
+      	  bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i), wr_data[0]);
+      	  bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), wr_data[1]);
+      	  sts = 1;      
         }
 
         if ( sts == -1)
@@ -247,20 +268,38 @@ static pwr_tStatus IoCardRead (
         numofword = 1;			/* 16 bitscounter */
 
       re_data_p = (pwr_tUInt32 *) &re_data;
-#if defined(OS_ELN)
-      vaxc$establish(machfailread_co);
-#endif
-      rb.Address = local->Address + 4*i;
-      sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
-      re_data[0] = (unsigned short) rb.Data;
+      if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+        /* Read from local Q-bus */
+        rb.Address = local->Address + 4*i;
+        sts1 = read( local->Qbus_fp, &rb, sizeof(rb));
+        re_data[0] = (unsigned short) rb.Data;
+      }
+      else {
+        /* Ethernet I/O, Get data from current address */
+        re_data[0] = bfbeth_get_data(r_local, (pwr_tUInt16) (local->Address + 4*i), &sts1);
+        /* Yes, we want to read this address the next time aswell */
+        bfbeth_set_read_req(r_local, (pwr_tUInt16) (local->Address + 4*i));	 
+      }
+      
       if ( numofword == 2)
       {
-        rb.Address += 2;
-        sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
-        re_data[1] = (unsigned short) rb.Data;
+        if (r_local->Qbus_fp != 0 && r_local->s == 0) {
+          /* Read from local Q-bus */
+          rb.Address += 2;
+          sts2 = read( local->Qbus_fp, &rb, sizeof(rb));
+          re_data[1] = (unsigned short) rb.Data;
+	}
+	else {
+          /* Ethernet I/O, Get data from current address */
+          re_data[1] = bfbeth_get_data(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), &sts2);
+          /* Yes, we want to read this address the next time aswell */
+          bfbeth_set_read_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2));	 
+	}
       }
+
       else
 	sts2 = 0;
+	
       if ( sts1 == -1 || sts2 == -1)
       {
 #if 0

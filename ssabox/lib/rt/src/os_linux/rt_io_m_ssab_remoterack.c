@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.4 2006-06-02 07:14:29 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.5 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,33 @@ static pwr_tStatus IoRackInit (
   op->RX_packets = 0;
   op->TX_packets = 0;
     
+/*
+  cardp = rp->cardlist;
+  
+  while(cardp) {
+    cid = cardp->Class;
+    while ( ODD( gdh_GetSuperClass( cid, &cid, cardp->Objid))) ;
+    
+    switch (cid) {
+      case pwr_cClass_Ssab_BaseAiCard:
+        base_ai_card = (pwr_sClass_Ssab_BaseAiCard *) cardp->op;
+        break;
+    
+    cardp = cardp->next;
+  }
+
+  local->next_read_req_item = 0;
+  local->next_write_req_item = 0;
+*/
+  
+  // Calc length and send read request
+  local->read_req.service = BFB_SERVICE_READ;  
+  local->read_req.length = local->next_read_req_item*4 + 4;
+  sts = send(local->s, &local->read_req, local->read_req.length, 0);
+  op->TX_packets++;
+  local->next_read_req_item = 0;
+  bzero(&local->read_area, sizeof(local->read_area));
+
   /* Log initialization */
   
   errh_Info( "Init of IO remote rack %s/%s:%d",
@@ -131,9 +158,14 @@ static pwr_tStatus IoRackRead (
   struct bfb_buf rbuf;
   int size;
 
-  bzero(&local->read_area, sizeof(local->read_area));
+  // Calc length and send write request
+  local->write_req.service = BFB_SERVICE_WRITE;  
+  local->write_req.length = local->next_write_req_item*4 + 4;
+  sts = send(local->s, &local->write_req, local->write_req.length, 0);
+  op->TX_packets++;
+  local->next_write_req_item = 0;
   bzero(&local->write_area, sizeof(local->write_area));
-
+  
   sts = 1;
   while (sts > 0) {
     FD_ZERO(&fds);
@@ -168,20 +200,13 @@ static pwr_tStatus IoRackWrite (
   io_sRackLocal *local = (io_sRackLocal *) rp->Local;
   pwr_sClass_Ssab_RemoteRack *op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
 
-  // Calc length and send write request
-  local->write_req.service = BFB_SERVICE_WRITE;  
-  local->write_req.length = local->next_write_req_item*4 + 4;
-  sts = send(local->s, &local->write_req, local->write_req.length, 0);
-  op->TX_packets++;
-  
   // Calc length and send read request
   local->read_req.service = BFB_SERVICE_READ;  
   local->read_req.length = local->next_read_req_item*4 + 4;
   sts = send(local->s, &local->read_req, local->read_req.length, 0);
   op->TX_packets++;
-  
   local->next_read_req_item = 0;
-  local->next_write_req_item = 0;
+  bzero(&local->read_area, sizeof(local->read_area));
 
   return IO__SUCCESS;
 }

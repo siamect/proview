@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.4 2006-06-02 07:57:23 claes Exp $
+ * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.5 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,7 @@
 #include "rt_io_card_read.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
+#include "rt_io_bfbeth.h"
 
 #define IO_MAXCHAN 	4
 #define	MIN16          -32767
@@ -58,8 +59,7 @@
 typedef struct {
 	unsigned int	Address;
 	int		Qbus_fp;
-	unsigned int	bfb_read_item;
-	unsigned int	bfb_write_item;
+	unsigned int	bfb_item;
 	pwr_tInt32	OldValue[IO_MAXCHAN];
 	int		FirstScan[IO_MAXCHAN];
 } io_sLocal;
@@ -92,21 +92,6 @@ static pwr_tStatus IoCardInit (
 
   errh_Info( "Init of co card '%s'", cp->Name);
 
-  /* Get item offset from rack's local and increment it
-  /* This is a CO-card which means that we have both read and write possibilities
-  local->bfb_read_item = r_local->in_items;
-  r_local->in_items += op->MaxNoOfCounters*2;
-  local->bfb_write_item = r_local->out_items;
-  r_local->out_items += op->MaxNoOfCounters*2;
-  
-  /* Set card address in rack´s local in- and out-area
-  for (i=0; i<op->MaxNoOfCounters; i++) {
-    r_local->in.item[local->bfb_read_item+i*2].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
-    r_local->in.item[local->bfb_read_item+i*2+1].address = (pwr_tUInt16) ((op->RegAddress+i*2+2) & 0xFFFF);
-    r_local->out.item[local->bfb_write_item+i*2].address =  (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);	// We don´t normally write
-    r_local->out.item[local->bfb_write_item+i*2+1].address = (pwr_tUInt16) ((op->RegAddress+i*2+2) & 0xFFFF);	// We don´t normally write
-  }
-  */
   /* Configure card */
   for ( i = 0; i < op->MaxNoOfCounters; i++)
   {
@@ -144,8 +129,10 @@ static pwr_tStatus IoCardInit (
       }
     }
     else {
-      /* Write to remote Q-bus, I/O-area stored in rack's local */
-      sts = 1;
+      /* Ethernet I/O, Request a write to current address */
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i), wr_data[0]);
+      bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), wr_data[1]);
+      sts = 1;      
     }
     
     if ( sts == -1)
@@ -265,8 +252,10 @@ static pwr_tStatus IoCardRead (
           }
         }
         else {
-          /* Write to remote Q-bus, I/O-area stored in rack's local */
-          sts = 1;
+      	  /* Ethernet I/O, Request a write to current address */
+      	  bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i), wr_data[0]);
+      	  bfbeth_set_write_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), wr_data[1]);
+      	  sts = 1;      
         }
 	
         if ( sts == -1)
@@ -290,9 +279,10 @@ static pwr_tStatus IoCardRead (
         re_data[0] = (unsigned short) rb.Data;
       }
       else {
-        /* Read from remote Q-bus, I/O-area stored in rack's local
-        re_data[0] = r_local->in.item[local->bfb_read_item+2*i].data; */
-	sts1 = 1;
+        /* Ethernet I/O, Get data from current address */
+        re_data[0] = bfbeth_get_data(r_local, (pwr_tUInt16) (local->Address + 4*i), &sts1);
+        /* Yes, we want to read this address the next time aswell */
+        bfbeth_set_read_req(r_local, (pwr_tUInt16) (local->Address + 4*i));	 
       }
       
       if ( numofword == 2)
@@ -304,9 +294,10 @@ static pwr_tStatus IoCardRead (
           re_data[1] = (unsigned short) rb.Data;
 	}
 	else {
-          /* Read from remote Q-bus, I/O-area stored in rack's local 
-          re_data[1] = r_local->in.item[local->bfb_read_item+2*i+1].data; */
-	  sts2 = 1;
+          /* Ethernet I/O, Get data from current address */
+          re_data[1] = bfbeth_get_data(r_local, (pwr_tUInt16) (local->Address + 4*i + 2), &sts2);
+          /* Yes, we want to read this address the next time aswell */
+          bfbeth_set_read_req(r_local, (pwr_tUInt16) (local->Address + 4*i + 2));	 
 	}
       }
       else

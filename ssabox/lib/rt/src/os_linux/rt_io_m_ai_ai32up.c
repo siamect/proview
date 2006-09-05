@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.4 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.5 2006-09-05 12:03:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@
 #include "rt_io_card_read.h"
 #include "qbus_io.h"
 #include "rt_io_m_ssab_locals.h"
-
+#include "rt_io_bfbeth.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -126,16 +126,6 @@ static pwr_tStatus IoCardInit (
   local->Qbus_fp = r_local->Qbus_fp;
 
 
-  /* Get item offset from rack's local and increment it, used by remote rack only
-  local->bfb_item = r_local->in_items;
-  r_local->in_items += op->MaxNoOfChannels;
-  
-  * Set card address in rack´s local in- and out-area, used by remote rack only
-  for (i=0; i<op->MaxNoOfChannels; i++) {
-    r_local->in.item[local->bfb_item+i].address = (pwr_tUInt16) ((op->RegAddress+i*2) & 0xFFFF);
-    r_local->in.item[local->bfb_item+i].data = 0;
-  }
-  */
   errh_Info( "Init of ai card '%s'", cp->Name);
   
   /* Caluclate polycoeff */
@@ -184,6 +174,7 @@ static pwr_tStatus IoCardRead (
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
   pwr_tInt16		data = 0;
   pwr_sClass_Ai_AI32uP	*op;
+  pwr_sClass_Ssab_RemoteRack	*rrp;
   int			i;
   pwr_tFloat32		actvalue;
   io_sChannel		*chanp;
@@ -191,6 +182,7 @@ static pwr_tStatus IoCardRead (
   pwr_sClass_Ai		*sop;
   int			sts;
   qbus_io_read 		rb;
+  int			bfb_error = 0;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ai_AI32uP *) cp->op;
@@ -223,9 +215,40 @@ static pwr_tStatus IoCardRead (
           data = (unsigned short) rb.Data;
 	}
         else {
-          /* Read from remote Q-bus, I/O-area stored in rack's local
-          data = r_local->in.item[local->bfb_item+i].data;*/
-          sts = 1;
+          /* Ethernet I/O, Get data from current address */
+          data = bfbeth_get_data(r_local, (pwr_tUInt16) (local->Address + 2*i), &sts);
+          /* Yes, we want to read this address the next time aswell */
+          bfbeth_set_read_req(r_local, (pwr_tUInt16) (local->Address + 2*i));	 
+
+          if (sts == -1) {
+	    /* Error handling for ethernet Qbus-I/O */
+  	    rrp = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+	    if (bfb_error == 0) {
+              op->ErrorCount++;
+	      bfb_error = 1;
+              if ( op->ErrorCount == op->ErrorSoftLimit)
+                errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
+              if ( op->ErrorCount == op->ErrorHardLimit)
+                errh_Error( "IO Error hard limit reached on card '%s', stall action %d", cp->Name, rrp->StallAction);
+              if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_ResetInputs )
+	      {
+	        data = 0;
+	        sts = 1;
+              }
+              if ( op->ErrorCount >= op->ErrorHardLimit && rrp->StallAction == pwr_eSsabStallAction_EmergencyBreak )
+	      {
+                ctx->Node->EmergBreakTrue = 1;
+                return IO__ERRDEVICE;
+              }
+	    }
+	    if (sts == -1) {
+	      chanp++;
+	      continue;
+	    }
+          }
+          else {
+	    op->ErrorCount = 0;
+          }
         }
 	
         if ( sts == -1)
