@@ -25,6 +25,10 @@ if ! grep -q "\bb55:" /etc/group; then
   echo "-- Add group b55"
   groupadd b55
 fi
+if ! grep -q "\bb66:" /etc/group; then
+  echo "-- Add group b66"
+  groupadd b66
+fi
 if ! grep -q "\bskiftel:" /etc/group; then
   echo "-- Add group skiftel"
   groupadd skiftel
@@ -33,7 +37,7 @@ fi
 if ! grep -q "\bpwrp:" /etc/passwd; then
   echo "-- Add user pwrp"
   new_user=1
-  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,skiftel -d /home/pwrp pwrp
+  useradd -s /bin/bash -p aaupl/kQs1p3U -g pwrp -G b55,b66,skiftel -d /home/pwrp pwrp
   if [ ! -e /home/pwrp ]; then
     mkdir /home/pwrp
   fi
@@ -48,13 +52,18 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
 
   chown -R pwrp /home/pwrp
   chgrp -R pwrp /home/pwrp
+
+  # Add to group dialout
+  if grep -q "\bdialout:" /etc/group; then
+    usermod -a -G dialout pwrp
+  fi
 fi
 
 if ! grep -q "\bskiftel:" /etc/passwd; then
   echo "-- Add user skiftel"
   new_user=1
   useradd -s /bin/bash -p aa6NzxS/aBgP6 -g skiftel -G pwrp -d /home/skiftel skiftel
-  if [ ! -e /home/pwrp ]; then
+  if [ ! -e /home/skiftel ]; then
     mkdir /home/skiftel
     cp /usr/pwrrt/cnf/user/.bashrc /home/skiftel
     cp /usr/pwrrt/cnf/user/.bash_profile /home/skiftel
@@ -95,6 +104,34 @@ if ! grep -q "\bb55:" /etc/passwd; then
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
     chmod a+rwx /home/b55
+  fi
+fi
+
+if ! grep -q "\bb66:" /etc/passwd; then
+  echo "-- Add user b66"
+  new_user=1
+
+  # Check if group audio exist
+  if grep -q "\baudio:" /etc/group; then
+    audio="-G audio"
+  else
+    audio=""
+  fi
+  useradd -s /bin/bash -p aae.nHgHbfUpw -g b66 -G pwrp -d /home/b66 $audio b66
+  if [ ! -e /home/b66 ]; then
+    mkdir /home/b66
+    cp /usr/pwrrt/cnf/op/.bashrc /home/b66
+    cp /usr/pwrrt/cnf/op/.bash_profile /home/b66
+    cp /usr/pwrrt/cnf/op/.mwmrc /home/b66
+    cp /usr/pwrrt/cnf/op/.rtt_start /home/b66
+    chmod a+x /home/b66/.rtt_start
+    cp /usr/pwrrt/cnf/op/.xtt_start /home/b66
+    chmod a+x /home/b66/.xtt_start
+    cp /usr/pwrrt/cnf/op/.xsession /home/b66
+
+    chown -R b66 /home/b66
+    chgrp -R pwrp /home/b66
+    chmod a+rwx /home/b66
   fi
 fi
 
@@ -156,6 +193,7 @@ if [ ! -e $proot ]; then
   mkdir $proot/common/inc
   mkdir $proot/common/load
   mkdir $proot/common/log
+  mkdir $proot/common/loghist
   mkdir $proot/common/db
   mkdir $proot/common/web
   mkdir $proot/x86_linux
@@ -166,6 +204,7 @@ if [ ! -e $proot ]; then
 
   chown -R pwrp $proot
   chgrp -R pwrp $proot
+  
 fi
 
 if [ ! -e $aroot/db ]; then
@@ -228,6 +267,20 @@ EOF
 EOF
   fi
 fi
+
+#
+# Set owner on preinstalled I/O systems
+#
+if [ -e /lib/udev/devices/qbus ]; then
+  chown pwrp:pwrp /lib/udev/devices/qbus
+fi
+if [ -e /lib/udev/devices/pbus1 ]; then
+  chown pwrp:pwrp /lib/udev/devices/pbus1
+fi
+if [ -e /lib/udev/devices/pbus2 ]; then
+  chown pwrp:pwrp /lib/udev/devices/pbus2
+fi
+
 
 changes=0
 if [ $new_user -eq 1 ]; then
