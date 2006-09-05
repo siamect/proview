@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_mvol.c,v 1.15 2006-01-30 09:03:51 claes Exp $
+ * Proview   $Id: rt_mvol.c,v 1.16 2006-09-05 11:54:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -460,7 +460,7 @@ mvol_ArefToAttribute (
     /* If this is the first attribute, then match whole object
        otherwise say the attribute is ok!  */
 
-    if (param->Info.ParamIndex == 0 /* && offset == 0 */) {
+    if (param->Info.ParamIndex == 0 && acp == cp /* && offset == 0 */) {
       ap->aop = NULL;
       ap->adef = NULL;
     }
