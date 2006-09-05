@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_thread.c,v 1.10 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_thread.c,v 1.11 2006-09-05 12:17:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -94,6 +94,10 @@ plc_thread (
     			(int) (tp->PlcThread->ScanTime * 1000), tp->prio);
   }
   
+  que_Put(&sts, &tp->q_out, &tp->event, (void *)1);
+  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
+  pwr_Assert(phase == 2);
+
   /* Once thread's has set it's priority don't run as root */
 
 #if defined(OS_LINUX)
@@ -110,10 +114,6 @@ plc_thread (
   else 
     setreuid(ruid, ruid);
 #endif
-
-  que_Put(&sts, &tp->q_out, &tp->event, (void *)1);
-  phase = (int)que_Get(&sts, &tp->q_in, NULL, NULL);
-  pwr_Assert(phase == 2);
 
   /* Phase 2.  */
 
