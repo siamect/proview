@@ -16,3 +16,4 @@
 060713 rk  rt        Bugfix in classcache for large classes.
 060713 rk  init      Volume versioncheck for volref removed if volume is not yet loaded.
 060720 rk  init      Try with smaller posix message queue if system does not support big queues.
+060830 cs  conv      Attribute changed from enum to mask or v.v. was not converted.
