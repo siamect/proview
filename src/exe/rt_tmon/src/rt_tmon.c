@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_tmon.c,v 1.6 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: rt_tmon.c,v 1.7 2006-09-05 12:13:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,7 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <string.h>
+# include <mcheck.h>
 #endif
 
 #ifdef OS_VMS
@@ -197,6 +198,22 @@ static void
 toggleWrapped (
 );
 
+static void
+memCheck (
+  enum mcheck_status sts
+);
+
+static void
+memCheck (
+  enum mcheck_status sts
+)
+{
+  static int i_sts = 0;
+  if (i_sts != sts) {
+    printf("rt_tmon: malloc inconsistency detected %d \n", sts );
+    i_sts = sts;
+  }
+}
 
 #if 0
 time_tClock
@@ -233,6 +250,8 @@ main (
   qcom_sGet	        get;
   int                   tmo_ms = 0;
 
+  mcheck(memCheck);
+  
   init();
 
   if (!qcom_CreateQ(&sts, &my_q, NULL, "events")) {
