@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_ii.c,v 1.3 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_pb_ii.c,v 1.4 2006-09-05 11:14:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,7 +103,7 @@ static pwr_tStatus IoCardRead (
     for (i=0; i<cp->ChanListSize; i++) {
 
       chanp = &cp->chanlist[i];
-      if (!chanp->cop) continue;
+      if (!chanp->cop || !chanp->sop) continue;
 
       cop = (pwr_sClass_ChanIi *) chanp->cop;
       sop = (pwr_sClass_Ii *) chanp->sop;

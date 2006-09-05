@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_di.c,v 1.3 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_pb_di.c,v 1.4 2006-09-05 11:14:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,6 +41,129 @@
 #include "rt_io_msg.h"
 #include "rt_errh.h"
 #include "rt_io_profiboard.h"
+
+#define IO_CONVMASK_ALL         0xFFFF
+
+/*----------------------------------------------------------------------------*\
+  Move di data word to valuebase.
+\*----------------------------------------------------------------------------*/
+void pbio_DiUnpackWord( 
+  io_sCard	*cp,
+  pwr_tUInt16	data,
+  pwr_tUInt16	mask,
+  int		index)
+{
+  io_sChannel 	*chanp;
+
+  if ( index == 0)
+    chanp = &cp->chanlist[0];
+  else
+    chanp = &cp->chanlist[16];
+
+  if ( mask == IO_CONVMASK_ALL)
+  {
+    /* No conversion test */
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
+    chanp++;
+  }
+  else
+  {
+    if ( chanp->cop && chanp->sop && mask & 1)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 2)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 4)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 8)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 16)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 32)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 64)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 64) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 128)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 128) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 256)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 256) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 512)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 512) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 1024)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 1024) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 2048)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 2048) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 4096)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 4096) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 8192)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 8192) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 16384)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 16384) != 0);
+    chanp++;
+    if ( chanp->cop && chanp->sop && mask & 32768)
+      * (pwr_tUInt16 *) (chanp->vbp) = ((data & 32768) != 0);
+    chanp++;
+  }
+}
 
 
 /*----------------------------------------------------------------------------*\
@@ -86,6 +209,11 @@ static pwr_tStatus IoCardRead (
   io_sCardLocal *local;
   pwr_sClass_Pb_Di *op;
   pwr_sClass_Pb_DP_Slave *slave;
+  int i;
+  io_sChannel *chanp;
+  pwr_sClass_ChanDi *chan_di;
+  pwr_sClass_Di *sig_di;
+  pwr_tUInt32 mask = 0;
 
   pwr_tUInt16 data[2] = {0, 0};
   pwr_tUInt32 *data32;
@@ -97,6 +225,7 @@ static pwr_tStatus IoCardRead (
   if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
     memcpy(&data, local->input_area + op->OffsetInputs, op->BytesOfInput);
+    data32 = (pwr_tUInt32 *) &data;
 
     if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
       if (op->Orientation == PB_ORIENTATION_WORD) {
@@ -104,20 +233,33 @@ static pwr_tStatus IoCardRead (
         data[1] = swap16(data[1]);
       }
       else if (op->Orientation == PB_ORIENTATION_DWORD) {
-      	data32 = (pwr_tUInt32 *) &data;
 	*data32 = swap32(*data32);
       }
     }
 
-    // Packa upp
-    
+    // Mask?
     data[0] = data[0] ^ op->InvMask1;
-    io_DiUnpackWord(cp, data[0], op->ConvMask1, 0);
+    data[1] = data[1] ^ op->InvMask2;
+
+    // Packa upp
+    for (i=0; i<cp->ChanListSize; i++) {
+      chanp = &cp->chanlist[i];
+      chan_di = (pwr_sClass_ChanDi *) chanp->cop;
+      sig_di = (pwr_sClass_Di *) chanp->sop;
+      if (chan_di && sig_di) {
+	mask = 1<<chan_di->Number;
+        * (pwr_tUInt16 *) (chanp->vbp) = ((*data32 & mask) != 0);
+      }
+    }
+/*    
+    data[0] = data[0] ^ op->InvMask1;
+    pbio_DiUnpackWord(cp, data[0], op->ConvMask1, 0);
 
     if (op->NumberOfChannels > 16) {
       data[1] = data[1] ^ op->InvMask2;
-      io_DiUnpackWord(cp, data[1], op->ConvMask2, 1);
+      pbio_DiUnpackWord(cp, data[1], op->ConvMask2, 1);
     }
+*/
 
   }
   return IO__SUCCESS;

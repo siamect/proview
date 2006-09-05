@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_do.c,v 1.3 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_m_pb_do.c,v 1.4 2006-09-05 11:14:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,6 +84,12 @@ static pwr_tStatus IoCardWrite (
   io_sCardLocal *local;
   pwr_sClass_Pb_Do *op;
   pwr_sClass_Pb_DP_Slave *slave;
+  int i;
+  io_sChannel *chanp;
+  pwr_sClass_ChanDo *chan_do;
+  pwr_sClass_Do *sig_do;
+  pwr_tUInt32 mask = 0;
+  pwr_tInt32 do_actval;
 
   pwr_tUInt16 data[2] = {0, 0};
   pwr_tUInt32 *data32;
@@ -94,16 +100,32 @@ static pwr_tStatus IoCardWrite (
 
   if (op->Status >= PB_MODULE_STATE_OPERATE && slave->DisableSlave != 1) {
 
+    data32 = (pwr_tUInt32 *) &data;
+
+    // Packa ner
+    for (i=0; i<cp->ChanListSize; i++) {
+      chanp = &cp->chanlist[i];
+      chan_do = (pwr_sClass_ChanDo *) chanp->cop;
+      sig_do = (pwr_sClass_Do *) chanp->sop;
+      if (chan_do && sig_do) {
+        mask = 1<<chan_do->Number;
+        do_actval = *(pwr_tInt32 *) chanp->vbp;
+	  if (do_actval != 0)
+	    *data32 |= mask;
+	  else
+	    *data32 &= ~mask;
+      }
+    }
+/*
     io_DoPackWord(cp, &data[0], 0);
     if (op->NumberOfChannels > 16) io_DoPackWord(cp, &data[1], 1);
-
+*/
     if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
       if (op->Orientation == PB_ORIENTATION_WORD) {
         data[0] = swap16(data[0]);
         data[1] = swap16(data[1]);
       }
       else if (op->Orientation == PB_ORIENTATION_DWORD) {
-      	data32 = (pwr_tUInt32 *) &data;
 	*data32 = swap32(*data32);
       }
     }    
