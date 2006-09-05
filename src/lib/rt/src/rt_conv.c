@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_conv.c,v 1.3 2006-05-12 10:44:57 claes Exp $
+ * Proview   $Id: rt_conv.c,v 1.4 2006-09-05 11:55:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -486,6 +486,8 @@ conv_GetIdx(pwr_eType src, pwr_eType trg)
         switch (trg) {
         case pwr_eType_Int32:
         case pwr_eType_UInt32:
+        case pwr_eType_Enum:
+        case pwr_eType_Mask:
             return conv_eIdx_copy;
         default:
             break;
