@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qmon.c,v 1.10 2006-03-29 12:21:43 claes Exp $
+ * Proview   $Id: rt_qmon.c,v 1.11 2006-09-05 12:11:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -338,9 +338,21 @@ main (int argc, char *argv[])
   qcom_sQid	qid = qdb_cQexport;
   qcom_sQid	neth_qid;
   qcom_sQid	my_q = qcom_cNQid;
+  pid_t         pid;
+  int           count = 0;
 
   /* Vänta en stund ... */
 //  sleep(5);
+
+  /* Wait for scheduler to be set */
+  
+  pid = getpid();
+
+  while ((sched_getscheduler(pid) == SCHED_OTHER) &&
+         (count < 5)) {
+    sleep(1);
+    count++;
+  }
   
   errh_Init("pwr_qmon", errh_eAnix_qmon);
   errh_SetStatus( PWR__SRVSTARTUP);
