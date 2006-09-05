@@ -1,12 +1,12 @@
 !!
-!! Root Menu Description
+!! Root Menu Description for operator
 !!
 
 Menu DefaultRootMenu
 {
-        "Root Menu"             f.title
-        "XTT OP-bilder"        f.exec          "~/.xtt_start &"
-!        "XTT"         		f.exec          "~/.xtt_start"
+        "Operator Menu"         f.title
+        "XTT OP-bilder"         f.exec          "~/.xtt_start &"
+!        "XTT"         		f.exec          "~/.xtt_start &"
 !        "RTT"         		f.exec          "/usr/bin/X11/xterm -T RTT -e ~/.rtt_start &"
 
         "Xterm"                 f.exec          "/usr/bin/X11/xterm -T XTerm -sb -right &"
