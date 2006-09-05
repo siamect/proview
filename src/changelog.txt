@@ -17,3 +17,6 @@
 060713 rk  init      Volume versioncheck for volref removed if volume is not yet loaded.
 060720 rk  init      Try with smaller posix message queue if system does not support big queues.
 060830 cs  conv      Attribute changed from enum to mask or v.v. was not converted.
+060905 rk  rt_qmon   Wait a while for correct scheduler to be set before starting threads.
+060905 rk  rt_tmon   Established new callback function for glibc malloc memory checks.
+060905 rk  plc       Wait for all threads to set its priority before changing real and effective user id.
