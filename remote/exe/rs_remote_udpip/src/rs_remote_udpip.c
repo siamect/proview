@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_udpip.c,v 1.3 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: rs_remote_udpip.c,v 1.4 2006-09-05 11:16:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,8 +75,8 @@ fd_set fds;				/* For select call */
 typedef struct
 {
   unsigned char protocol_id[2];
-  short int msg_size;
-  short int msg_id[2];
+  unsigned short int msg_size;
+  unsigned short int msg_id[2];
 } remote_udp_header;
 
 remnode_item rn;
@@ -117,7 +117,7 @@ void RemoteSleep(float time)
 **************************************************************************
 **************************************************************************/
 
-void SendAck(short int id0, short int id1)
+void SendAck(unsigned short int id0, unsigned short int id1)
 
 {
   int status;
