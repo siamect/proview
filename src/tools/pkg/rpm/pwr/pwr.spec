@@ -8,11 +8,11 @@
 #
 
 
-Name:		pwr41
+Name:		pwr42
 Summary: 	Proview/R development and runtime environment
-Version:        4.1.3
-Release: 	2
-Copyright:	(c) 2005 SSAB Oxelösund AB, Sweden
+Version:        4.2.0
+Release: 	7
+Copyright:	(c) 2006 SSAB Oxelösund AB, Sweden
 #License:        GPL
 BuildArch:      i386
 Packager: 	robert.karlsson@ssabox.com
@@ -178,6 +178,20 @@ fi
 #%postun
 
 %changelog
+* Tue Sep 96 2006 Claes Sjöfors <claes.sjofors@ssabox.com> 4.2.0-7
+- Xtt: System-Device table works for attribute object signals and channels.
+- Profibus: Bugfix in area offset.
+- Ge: Adjustment property added for text in value and table objects.
+- Ge: Format for Time and DeltaTime in table.
+- Plc: bugfix for StoIp and CStoIp, supplied value was not fetched for not connected objects.
+- User b66 added to operator station.
+- BaseSensorFo: inputs Error and Warning added.
+- Local mq replaced.
+- ABB_ACS800_Slave: IORack bit was missing.
+- Bugfix in classcache for large classes.
+- Volume volref version check for not yet loaded volume removed.
+- Problems with mq quota fixed.
+- Profibus: problems with user PRM data for bigendian slaves fixed.
 * Tue Feb 14 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-2
 - Template values in Profibus objects added.
 - Template IoConnections for ABB_ACS800PumpAggr added.

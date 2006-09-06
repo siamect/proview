@@ -8,11 +8,11 @@
 #
 
 
-Name:		pwrdemo41
+Name:		pwrdemo42
 Summary: 	Proview/R demo project
-Version:        4.1.3
-Release: 	2
-Copyright:	(c) 2005 SSAB Oxelound AB, Sweden
+Version:        4.2.0
+Release: 	7
+Copyright:	(c) 2006 SSAB Oxelound AB, Sweden
 #License:        GPL
 BuildArch:      i386
 Packager: 	robert.karlsson@ssabox.com
