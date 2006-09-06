@@ -178,7 +178,7 @@ fi
 #%postun
 
 %changelog
-* Tue Sep 96 2006 Claes Sjöfors <claes.sjofors@ssabox.com> 4.2.0-7
+* Tue Sep 06 2006 Claes Sjofors <claes.sjofors@ssabox.com> 4.2.0-7
 - Xtt: System-Device table works for attribute object signals and channels.
 - Profibus: Bugfix in area offset.
 - Ge: Adjustment property added for text in value and table objects.
