@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.26 2006-04-06 04:54:53 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.27 2006-09-06 12:36:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -933,7 +933,8 @@ gdh_GetAttrRefTid (
     *tid = arp->Body & ~7;
     return GDH__SUCCESS;
   }
-  if ( arp->Body == 0 && arp->Offset == 0)
+  if ( (arp->Body == 0 && arp->Offset == 0) || 
+       (arp->Offset == 0 && arp->Size == 0))
     return gdh_GetObjectClass( arp->Objid, tid);
 
   gdh_ScopeLock {
