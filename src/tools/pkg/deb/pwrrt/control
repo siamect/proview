@@ -1,11 +1,35 @@
 Package: pwrrt
-Version: 4.2.0-1
+Version: 4.2.0-8
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.2.4-4), imlib1 (>= 1.9.14-14), libmotif (>= 2.1.30-5), libasound2 (>= 0.9.8-2), libdb4.0 (>=4.0.14-1.3)
+Depends: libc6 (>= 2.3.6), imlib11 (>= 1.9.14), libmotif3 (>= 2.2.3), libasound2 (>= 1.0.11), libdb4.3 (>=4.3.29)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42
 Maintainer: Proview <postmaster@proview.se>
 Description:
  Proview runtime environment
  4.2.0-1 Base release
+ 4.2.0-2
+  - Xtt: System-Device table works for attribute object signals and channels.
+ 4.2.0-3
+  - Profibus: Bugfix in area offset.
+  - Ge: Adjustment property added for text in value and table objects.
+  - Ge: Format for Time and DeltaTime in table.
+  - Plc: bugfix for StoIp and CStoIp, supplied value was not fetched for not connected objects.
+ 4.2.0-4
+  - User b66 added to operator station.
+  - BaseSensorFo: inputs Error and Warning added.
+ 4.2.0-5
+  - Local mq replaced.
+  - ABB_ACS800_Slave: IORack bit was missing.
+ 4.2.0-6
+  - Bugfix in classcache for large classes.
+  - Volume volref version check for not yet loaded volume removed.
+ 4.2.0-7
+  - Problems with mq quota fixed.
+  - Profibus: problems with user PRM data for bigendian slaves fixed.
+ 4.2.0-8
+  - rt_qmon: Fixed setting of priorities for threads.
+  - rt_tmon: Fixed problem with memory allocation.
+  - Plc: Fixed setting of priorities for threads.
+
