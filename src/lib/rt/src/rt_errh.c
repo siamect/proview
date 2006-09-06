@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.c,v 1.11 2006-07-27 10:24:45 claes Exp $
+ * Proview   $Id: rt_errh.c,v 1.12 2006-09-06 13:52:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1098,7 +1098,7 @@ errh_send (char *s, char severity, pwr_tStatus sts, errh_eMsgType message_type)
 	perror("mq_send");
       }
     }
-  } else {
+  } else if (s) {
     puts(s);
     return;
   }
