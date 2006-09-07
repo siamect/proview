@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.10 2006-05-11 07:14:45 claes Exp $
+# Proview   $Id: upgrade.sh,v 1.11 2006-09-07 14:14:07 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -158,8 +158,8 @@ reload_cnvclassvolume()
 
   for dmpfile in $dmpfiles; do
 
-    source $pwr_exe/upgrade_cnvdmp.sh $dmpfile $pwrp_tmp/t.wb_dmp
     reload_save_file $dmpfile
+    source $pwr_exe/upgrade_cnvdmp.sh $dmpfile.1 $pwrp_tmp/t.wb_dmp
     mv $pwrp_tmp/t.wb_dmp $dmpfile
   done
 }
