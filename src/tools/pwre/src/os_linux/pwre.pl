@@ -163,6 +163,7 @@ sub build () # args: branch, subbranch, phase
   printf("-- Args............: ");
   foreach (@_) {
     printf("%s ", $_);
+    $ENV{"PWRE_ARGS"} = $_;
   }
   printf("\n--\n");
   
@@ -221,9 +222,9 @@ sub build_all_modules ()
   merge();
   _module("bcomp");
   build_all();
-#  merge();
-#  _module("java");
-#  build_all();
+  merge();
+  _module("java");
+  build_all();
   merge();
   _module("profibus");
   build_all();

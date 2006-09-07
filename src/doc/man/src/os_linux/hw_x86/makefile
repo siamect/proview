@@ -193,7 +193,6 @@ all : init copy lib exe
 init :
 
 copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
-       $(export_html) $(export_html_en_us) $(export_html_sv_se) \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
        $(exe_dir)/en_us/man_dg.dat $(exe_dir)/sv_se/man_dg.dat \
@@ -204,10 +203,14 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_geref_index.html $(doc_dir)/sv_se/man_geref_index.html \
        $(doc_dir)/en_us/man_geref.pdf $(doc_dir)/sv_se/man_geref.pdf \
        $(doc_dir)/en_us/man_geref.ps $(doc_dir)/sv_se/man_geref.ps \
-       $(mediatargets) $(csstargets)
+       $(mediatargets) $(csstargets) \
+       $(export_html) $(export_html_en_us) $(export_html_sv_se)
+
 lib :
 
 exe :
+
+docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) $(en_us_xml_nopdf_targets) 
 
 clean :
 
@@ -215,8 +218,8 @@ realclean : clean $(clean_pdf) $(clean_c)
 
 # added by jonas_h 2006-04-nn
 
-docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) $(en_us_xml_nopdf_targets)
 
+ 
 # end of
 
 $(clean_pdf) : clean_%.pdf : %.pdf
@@ -306,8 +309,11 @@ $(pwre_sroot)/doc/man/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/s
 	$(fop) $(source) -pdf $(target)
 	rm -f $(source)
 
-$(pwre_sroot)/doc/man/%_single.html :: $(pwre_sroot)/doc/man/%.xml 
-	$(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source)
+$(pwre_sroot)/doc/man/%_single.html : $(pwre_sroot)/doc/man/%.xml 
+	@ if [ "$(PWRE_ARGS)" = "docbook" ]; then \
+	    echo "xsltproc $(source)"; \
+	    $(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source); \
+	  fi
 
 $(doc_dir)/en_us/%_index.html :: $(pwre_sroot)/doc/man/en_us/%.xml
 	$(xsltproc) $(xsltproc_args) $(chunk_args_en_us) $(chunk_xsl) $(source)
@@ -316,11 +322,13 @@ $(doc_dir)/sv_se/%_index.html :: $(pwre_sroot)/doc/man/sv_se/%.xml
 	$(xsltproc) $(xsltproc_args) $(chunk_args_sv_se) $(chunk_xsl) $(source)
 
 $(doc_dir)/sv_se/%.css $(doc_dir)/en_us/%.css :: $(pwre_sroot)/doc/man/src/%.css
-	cp $(source) $(target)
+	@ echo "copy $(source)"
+	@ cp $(source) $(target)
 
 # all-purpose rule for graphics/media
 $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
-	cp -u $(source) $(target)
+	@ echo "copy $(source)"	
+	@ cp -u $(source) $(target)
 
 # Rule for creating titlepage xsl templates
 $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
@@ -331,3 +339,7 @@ $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitl
 	touch $(target)
 
 #end of
+
+
+
+
