@@ -43,8 +43,11 @@
     <itemizedlist>
       <listitem><para>Xsltproc. Standardkomponent i de flesta linuxdistributioner.</para></listitem>
       <listitem><para>DocBook-xsl-stylesheets. Går att hämta med apt-get, eller från sourceforge. 
-      Finns på pwr42 i <filename class="directory">/usr/local/share/xml/docbook/stylesheet/snapshot/</filename>. 
-      Om man byter stylesheets, eller har dem någon annanstans måste man (tyvärr) ändra i inställningslagren (se nedan).</para></listitem>
+      Den senaste versionen finns på pwr42 i 
+      <filename class="directory">/usr/local/share/xml/docbook/stylesheet/docbook-xsl-1.70.1/</filename>. 
+      När man uppdaterar till en ny release av dessa måste man köra installationsscriptet <filename>install.sh</filename> 
+      i distributionen. 
+      Detta uppdaterar användarens <envar>XML_CATALOG_FILES</envar> att länka till den nya distributionen.</para></listitem>
       <listitem><para>Fop. Version 0.92b av Apaches fo-processor är installerad på pwr42 i 
       <filename class="directory">/usr/local/fop-0.92beta/</filename>. 
       En symlänk finns i <filename class="directory">/usr/local/bin</filename>.</para></listitem>
@@ -71,7 +74,7 @@
       <varlistentry><term><filename>pwrxsl-html.xsl</filename></term>
       <listitem>
 	<orderedlist>
-	  <listitem><para>Importerar <filename>...stylesheet/snapshot/html/docbook.xsl</filename> 
+	  <listitem><para>Importerar <filename>/docbook-xsl-n.nn.n/html/docbook.xsl</filename> 
 	  som är grundmallen för html-processning - en utfil.</para></listitem>
 	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
 	  <listitem><para>Hämtar från <filename>pwrxsl-html-common.xsl</filename></para></listitem>
@@ -80,7 +83,7 @@
       <varlistentry><term><filename>pwrxsl-chunk.xsl</filename></term>
       <listitem> 
 	<orderedlist>
-	  <listitem><para>Importerar <filename>...stylesheet/snapshot/html/chunk.xsl</filename> 
+	  <listitem><para>Importerar <filename>/docbook-xsl-n.nn.n/html/chunk.xsl</filename> 
 	  som är grundmallen för html-processning - flera utfiler.</para></listitem>
 	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
 	  <listitem><para>Hämtar från <filename>pwrxsl-html-common.xsl</filename></para></listitem>
@@ -89,7 +92,7 @@
       <varlistentry><term><filename>pwrxsl-fo.xsl</filename></term>
       <listitem>
 	<orderedlist>
-	  <listitem><para>Importerar <filename>...stylesheet/snapshot/fo/docbook.xsl</filename> som är grundmallen för fo-processning.</para></listitem>
+	  <listitem><para>Importerar <filename>/docbook-xsl-n.nn.n/fo/docbook.xsl</filename> som är grundmallen för fo-processning.</para></listitem>
 	  <listitem><para>Hämtar från <filename>pwrxsl-common.xsl</filename></para></listitem>
 	  <listitem><para>Sätter parametrar och templates specifika för fo.</para></listitem>
       </orderedlist></listitem></varlistentry>

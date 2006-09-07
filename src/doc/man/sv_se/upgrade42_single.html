@@ -1,0 +1,572 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Uppgradering till V4.2.0</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="sv"><div class="titlepage"><div><div><h1 class="title"><a name="id3375733"></a>Uppgradering till V4.2.0</h1></div><div><h2 class="subtitle">Vägledning</h2></div><div><div class="authorgroup">
+      <div class="author"><h3 class="author"><span class="firstname">Claes</span> <span class="surname">Sjöfors</span></h3><div class="affiliation">
+	  <span class="orgname">SSAB Oxelösund AB<br></span>
+	</div><code class="email">&lt;<a href="mailto:postmaster@proview.se">postmaster@proview.se</a>&gt;</code></div>
+    </div></div><div><p class="copyright">Copyright © 2006 SSAB Oxelösund AB</p></div><div><div class="legalnotice"><a name="id3376133"></a>
+      <p>Permission is granted to copy, distribute and/or modify this document 
+      under the terms of the GNU Free Documentation License, Version 1.2
+      or any later version published by the Free Software Foundation;
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.</p>
+    </div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revisionshistorik</b></th></tr>
+      <tr><td align="left">Revision 0.1</td><td align="left">2006-04-01</td><td align="left">cs</td></tr><tr><td align="left" colspan="3">v0.1</td></tr>
+    </table></div></div></div><hr></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="chapter"><a href="#upgradev42_chaintro">1. Introduktion</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_intro">1.1. Uppgradering till Proview 4.2.0</a></span></dt></dl></dd><dt><span class="chapter"><a href="#upgradev42_chanewfunc">2. Nya funktioner</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_profibus">2.1. Profibus konfigurator</a></span></dt><dt><span class="section"><a href="#upgradev42_buildmeth">2.2. Bygg metoder</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Byggmetoder för objekt</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Byggmetod för volymer</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Byggmetod för noder</a></span></dt></dl></dd><dt><span class="section"><a href="#upgradev42_remrack">2.3. PSS9000 Remote rack</a></span></dt><dt><span class="section"><a href="#upgradev42_ld_node">2.4. ld_node_xxx.dat</a></span></dt><dt><span class="section"><a href="#upgradev42_sub">2.5. Buffring av prenumerationer borttagen</a></span></dt><dt><span class="section"><a href="#upgradev42_wiz">2.6. Wizard för konfigurering av projektvolymen</a></span></dt><dt><span class="section"><a href="#upgradev42_cupdate">2.7. Uppdatering av klasser</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objekt för tidshantering</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Updatering av klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Ändrade typer</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Ändrade klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. Nya klasser</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#upgradev42_chascript">3. Uppgraderings procedur</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_upgr">3.1. Procedur för uppgradering</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Ta en kopia av projektet</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></dd></dl></dd></dl></div>
+
+  
+
+  <div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chaintro"></a>Kapitel 1. Introduktion</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#upgradev42_intro">1.1. Uppgradering till Proview 4.2.0</a></span></dt></dl></div>
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_intro"></a>1.1. Uppgradering till Proview 4.2.0</h2></div></div></div>
+  <p>Detta dokument beskriver nya funktioner i Proview V4.2.0, samt hur man
+  uppgraderar från V4.1.3 till V4.2.0.</p>
+  </div>
+  </div>
+
+  <div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chanewfunc"></a>Kapitel 2. Nya funktioner</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#upgradev42_profibus">2.1. Profibus konfigurator</a></span></dt><dt><span class="section"><a href="#upgradev42_buildmeth">2.2. Bygg metoder</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Byggmetoder för objekt</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Byggmetod för volymer</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Byggmetod för noder</a></span></dt></dl></dd><dt><span class="section"><a href="#upgradev42_remrack">2.3. PSS9000 Remote rack</a></span></dt><dt><span class="section"><a href="#upgradev42_ld_node">2.4. ld_node_xxx.dat</a></span></dt><dt><span class="section"><a href="#upgradev42_sub">2.5. Buffring av prenumerationer borttagen</a></span></dt><dt><span class="section"><a href="#upgradev42_wiz">2.6. Wizard för konfigurering av projektvolymen</a></span></dt><dt><span class="section"><a href="#upgradev42_cupdate">2.7. Uppdatering av klasser</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objekt för tidshantering</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Updatering av klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Ändrade typer</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Ändrade klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. Nya klasser</a></span></dt></dl></dd></dl></div>
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_profibus"></a>2.1. Profibus konfigurator</h2></div></div></div>
+  <p>Konfigureringen av profibus är förändrad i V4.2.0, både när det gäller 
+  tillvägagångsätt och de objekt som används vid konfigureringen. </p>
+
+  <p>Man börjar genom att skapa ett masterobjekt i nodehierarkin, för Softing profiboard
+  används <span class="classname">Pb_Profiboard</span>. Under detta läggs de slavar som finns på profibusslingan med
+  <span class="classname">Pb_DP_Slave</span> objekt, eller objekt som är en subklass av 
+  <span class="classname">Pb_DP_Slave</span>. Använder man
+  <span class="classname">Pb_DP_Slave</span> objektet lägger man in namn på gsd-fil, byteordning och ev 
+  flyttalsrepresentation. För vissa slavar finns specifika subclasser, t ex 
+  <span class="classname">Siemens_ET200S_IM151</span>, <span class="classname">Siemens_ET200M_IM153</span> 
+  och <span class="classname">ABB_ACS_Pb_Slave</span>. Här är gsd-filen redan
+  specificerad i objektet, och följer även med proview-releasen. </p>
+
+  <p>Nästa steg är att öppna profibus-konfiguratören för varje slav, genom att aktivera
+  <span class="guimenu">Configure Slave</span> i popupmenyn för slaven. Profibus konfiguratören läser gsd-filen och
+  presenterar data och konfigurations alternativ för slaven. Under mappen <code class="sgmltag-element">SlaveGsdData</code> visas 
+  diverse uppgifter om slaven, och under mappen <code class="sgmltag-element">UserPrmData</code> konfigurationsdata för slaven.</p>
+
+  <p>
+  </p><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="450"><tr style="height: 540px"><td><img src="../upgrade42_pbconf.gif" width="450"></td></tr></table><p>
+  </p>
+
+  <p>På slaven finns plats för ett visst antal moduler, och för varje tänkbar modul finns
+  ett modul-entry i konfiguratören. Genom att öppna ett modul-entry kan man ange typ,
+  konfigureringsdata, objektsnamn och objektsklass för modulen.
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_type"></a>Typ</h4></div></div></div>
+  <p>Under Type listas alla möjliga typer finns för den aktuella slaven. Välj ut den
+  önskade typen genom att klicka i checkboxen för typen.</p>
+  </div><p>
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_confdata"></a>Konfigurationsdata</h4></div></div></div>
+  <p>Under UserPrmData visas konfigurerings alternativen för den valda modulen. Här 
+  anger man data och väljer mellan olika alternativ för att konfigurera modulen. 
+  Se databladet för modulen för närmare information om vad alternativen innebär.
+  </p>
+  </div><p>
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_objname"></a>Objektnamn</h4></div></div></div>
+  <p>Vid konfigureringen skapar profibus konfiguratorn ett modulobjekt under 
+  slavobjektet. I ObjectName anger man ett namn på detta modulobjekt. Namnet måste
+  vara unikt inom slaven.
+  </p></div><p>
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_mclass"></a>Modulklass</h4></div></div></div>
+  <p>Under ModuleClass listas möljliga klasser på det modul konfigurations-objekt
+  som skapas under slavobjektet. Den klass som man väljer är beroende av hur
+  dataarean som transporteras på profibussen ser ut. Det finns ett antal specifika
+  klasser t ex <span class="classname">Siemens_ET200S_Ai2, Siemens_ET200SDi2, ABB_ACS_PPO4.</span>
+  Dessa innehåller en förspecificerad dataarea i form av interna kanalobjekt. Om inte
+  något specifikt modulklass passar, väljer man <span class="classname">Pb_Module</span> och 
+  specifierar senare dataarean genom att lägga kanal-objekt under modulobjektet.
+  </p>
+  </div><p>
+  När alla moduler är konfigurerade klickar man på apply, och de olika modul-objekten
+  skapas. Nu lagras även PrmUserData konfigureringen för slaven och modulerna i 
+  attributet PrmUserData i slavobjektet, tillsammans med diverse andra data.</p>
+
+  <p>Nu återstår att ange Process och PlcThread för alla konfigurations objekt, samt
+  konfiguerar eventuella kanalobjekt under Pb_Module objekten.
+  </p>
+  </div>  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_buildmeth"></a>2.2. Bygg metoder</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Byggmetoder för objekt</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Byggmetod för volymer</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Byggmetod för noder</a></span></dt></dl></div>
+  <p>Kompilering av PlcPgm, skapande av laddatafiler och skapande av bootfil utförs
+  numera av Build funktionen. Build funktionen utgörs av bygg-metoder för noder, volymer
+  och objekt.
+  </p>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_obj"></a>2.2.1. Byggmetoder för objekt</h3></div></div></div>
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_plc"></a>PlgPgm</h4></div></div></div>
+  <p>Byggmetoden för ett PlcPgm kontrollerar om plc-koden är ändrad sedan senaste
+  kompileringen. Om det är ändrad kompileras plcprogrammet med alla underfönster.
+  </p></div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_xtt"></a>XttGraph</h4></div></div></div>
+  <p>Byggmetoden för ett XttGraph kopierar .pwg filen från $pwrp_pop till $pwrp_exe
+  om filen på $pwrp_pop är nyare än den på $pwrp_exe. Om grafen är en java-applet
+  eller java-application exporteras den som java och kompileras.
+  </p></div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_web"></a>WebHandler</h4></div></div></div>
+  
+  <p>Byggmetoden för ett WebHandler objekt skapar en hemsida för en nod (anropar
+  Generate Web).
+  </p></div>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_vol"></a>2.2.2. Byggmetod för volymer</h3></div></div></div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_rootvol"></a>Rotvolym</h4></div></div></div>
+  
+  <p>Rotvolymens byggmetod anropar byggmetoden för samtliga PlcPgm, XttGraph och 
+  WebHandler objekt i volymen. Om volymen är ändrad sedan laddatafiler senast skapades
+  för volymen, skapas nya laddatafiler. Även nya korsreferensfiler skapas om detta är 
+  angett i Options.
+  </p></div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_classvol"></a>Klassvolym</h4></div></div></div>
+  
+  <p>Om klassvolymen är ändrad sedan laddatafiler senast skapades
+  för volymen, skapas nya laddatafiler, och nya structfiler för volymen.
+  </p></div>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_node"></a>2.2.3. Byggmetod för noder</h3></div></div></div>
+  
+  <p>Nodens byggmetod anropar byggmetoden för öppnad volym och skapar därefter ny
+  bootfil för noden.
+  </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Notera]" src="../note.png"></td><th align="left">Notera</th></tr><tr><td align="left" valign="top">Observera att endast volymer som är öppnade byggs om. Om noden innehåller flera
+  volymer måste andra volymer byggas separat, innan noden byggs.
+  </td></tr></table></div><p>
+  </p>
+  </div>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_remrack"></a>2.3. PSS9000 Remote rack</h2></div></div></div>
+  
+
+  <p>Ett proview system kan nu hämta data från en PSS9000 rack via ethernet. Racken konfigureras
+  med ett Ssab_RemoteRack objekt i nodhierarkin, och därunder konfigureras korten i vanlig
+  ordning.
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_ld_node"></a>2.4. ld_node_xxx.dat</h2></div></div></div>
+  
+
+  <p>ld_node filen innehåller de noder en nod tar kontakt med via QCOM vid
+  uppstart av proview. Filen genereras utifrån data i NodeConfig och 
+  FriendNodeConfig objekt i projektvolymen. </p>
+  <p>Tidigare har ld_node filen varit gemensam för alla noder i ett projekt 
+  på samma QCOM bus, men nu har varje nod fått en separat ld_node fil. Detta
+  gör det möjligt att styra vilka externa noder en node tar kontakt med individuellt.</p>
+  <p>Liksom tidigare styrs detta genom att FriendNodeConfig objekt läggs in i 
+  projektvolymen. Dessa har tidigare lagts som syskon till NodeConfig objekten 
+  i en QCOM bus, och medför då att samtliga noder tar kontakt med denna externa nod.
+  Nu kan FriendNodeConfig även läggas som barn till ett NodeConfig objekt, vilket
+  medför att endast denna nod tar kontakt med den externa noden.
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_sub"></a>2.5. Buffring av prenumerationer borttagen</h2></div></div></div>
+  
+
+  <p>Buffringen av prenumerationer, vilken kunde ge upphov till ikappkörnings
+  fenomen vid dålig kommunikation, är nu borttagen.
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_wiz"></a>2.6. Wizard för konfigurering av projektvolymen</h2></div></div></div>
+  
+
+  <p>Konfigureringen av projektvolymen görs nu enkelt mha av en wizard som startar
+  automatisk om man öppnar en tom projektvolym. Wizarden hämtar upp de volymer som är
+  konfigurerade för projektet i den globala volymslistan, och skapar volym- och 
+  nod-konfigurerings objekt för dessa.
+  </p>
+
+  <p>
+  </p><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="450"><tr style="height: 540px"><td><img src="../upgrade42_pvconfig.gif" width="450"></td></tr></table><p>
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_cupdate"></a>2.7. Uppdatering av klasser</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objekt för tidshantering</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Updatering av klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Ändrade typer</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Ändrade klasser</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. Nya klasser</a></span></dt></dl></div>
+  
+  <p>Om man gjort en ändring i en klassvolym var man tidigare tvungen att dumpa ut 
+  databasen på en textfil och återladda denna för att uppdatera instanser av 
+  ändrade klasser. Nu finns det en funktion som uppdaterar instanser utan dumpning/laddning.</p>
+
+  <p>Varje databas lagrar alla laddatafiler för klassvolymer lokalt i filkatalogen för databasen. Det är alltså
+  inte dbs-filerna på $pwr_load eller $pwrp_load som används när man öppnar arbetsbänken, utan
+  de lokala dbs-filerna. Det här gör att man är oberoende av hur de globala dbs-filerna förändras.
+  Vid uppstart av arbetsbänken jämförs versionerna på lokala dbs-filer med globala dbs-filer, och
+  om någon global dbs-fil finns i en ny version får man ett varnings-meddelande om detta. Man kan 
+  då med kommandot 'check classes' se vilka klasser ändringen omfattar och om man har några 
+  instanser av dessa klasser. Man bör sedan aktivera Functions-&gt;Update Classes i menyn för att 
+  uppdatera klasserna och de lokala dbs-filerna.</p>
+
+  <p>Vid ändring av in- och utgångar i funktionsobjektsklasser har man tidigare varit tvungen
+  att dra om kopplingarna till alla instanser. Det här har förbättrats något. Lägger man till nya
+  ingångar eller utgångar anpassa funktionsobjektet automatisk till detta. Tar man bort in eller
+  utgångar bör man se till att de in och utgångar som tas bort inte är synliga in någon instans, 
+  annars bör man dra om alla kopplingar. Flyttar man en in eller utgång bör man dra om kopplingarna.
+  </p>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_otime"></a>2.7.1. Objekt för tidshantering</h3></div></div></div>
+  
+
+  <p>Ett antal nya objekt för att hantera tider har tillkommit i V4.2.0. Här finns
+  objekt för att lagra, addera, subtrahera tider mm.
+
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h5 class="title"><a name="upgradev42_otime_sig"></a>Signaler</h5></div></div></div>
+  <p>Signal objekten ATv (AboluteTimeValue) och DTv (DeltaTimeValue) lagrar tidsvärden 
+  i form av absoluttid (av typen pwr_tTime, dvs ett datum), resp en deltattid (av typen 
+  pwr_tDeltaTime, dvs ett tidsintervall). </p>
+  <p>Objekten återfinns under signal-mappen i paletten. Någon IO-kopiering av objekten 
+  sker ej.</p>
+  </div><p>
+  
+  </p><div class="section" lang="sv"><div class="titlepage"><div><div><h5 class="title"><a name="upgradev42_otime_plc"></a>Plc objekt</h5></div></div></div>
+  
+  <p>Addition och subtraktion av tider sker i plc-programmet mha objekten <span class="classname">AtAdd,
+  DtAdd, AtSub, DtSub</span> och <span class="classname">AtDtSub</span>. </p>
+  <p>För att hämta upp en ATv eller DTv används objekten <span class="classname">GetATv</span> resp
+  <span class="classname">GetDTv</span>. För att
+  hämta ett attribut av typen pwr_tTime och pwr_tDeltaTime i ett objekt, används objekten
+  <span class="classname">GetATp</span> resp <span class="classname">GetDTp</span></p>
+  <p>För att lagra ett tidsvärde i en <span class="classname">ATv</span> eller 
+  <span class="classname">DTv</span> används <span class="classname">StoATv</span> resp 
+  <span class="classname">StoDTv</span>, eller <span class="classname">CStoATv</span> resp 
+  <span class="classname">CStoDTv</span> för villkorlig lagring. För att lagra ett tidsvärde i 
+  ett attribut av typen pwr_tTime eller pwr_tDeltaTime används objekten 
+  <span class="classname">StoATp</span> resp <span class="classname">StoDTp</span>, eller 
+  <span class="classname">CStoATp</span> resp <span class="classname">CStoDTp</span> för villkorlig
+  lagring.</p>
+  <p>För att konvertera en deltatid till flyttal används DtToA, och vice versa AToDt.</p>
+  <p>Samtliga objekten återfinns under mappen Signals-&gt;Time i plceditorns palett.</p>
+  </div><p>
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_updatecls"></a>2.7.2. Updatering av klasser</h3></div></div></div>
+  
+  <p>Om man gjorde en ändring i en klass var man tidigare tvungen att dumpa 
+  databasen till en textfil
+  och sedan ladda in den igen. Nu finns en funktion som konverterar objekten i en databas till
+  den nya klassbeskrivningen utan omladdning. När man startar arbetsbänken undersöks
+  om det finns någon ny version av klassvolymernas dbs-filer. Om så är fallet får man
+  en varning i meddelandefönstret. Man kan då välja att fortsätta med den gamla
+  klassbeskrivningen, eller att uppdatera objekten. Uppdateringen görs med
+  <span class="guimenu">Function-&gt;Update Classes</span> i menyn. Vill 
+  man först se vilka objekt som kommer att påverkas, kan man exekvera kommandot
+  <code class="prompt">wtt&gt; </code><strong class="userinput"><code><span><strong class="command">check classes</strong></span></code></strong>
+  som ger en list på de klasser som är ändrade och antalet instanser som finns av
+  respektive klass.</p>
+  <p>Man bör naturligtvis se till att den finns en backup av databasen
+  innan man utför en klass uppdatering.
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_ge"></a>2.7.3. Ge</h3></div></div></div>
+  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_gefolder"></a>Object graph in Window and Folder</h4></div></div></div>
+  
+  <p>It is now possible to display an object graph in a window or folder object. 
+  The instance object of the object graph is inserted in the properties Window.Object and
+  Folderx.Object.
+  </p>
+  </div>  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_getable"></a>Utvalsfärg i Table</h4></div></div></div>
+  
+  <p>En egenskap för att ändra färgen på utvalda celler tabeller har adderats
+  till Table objektet. Sätt den önskade färgen i Table.SelectColor.
+  </p>
+  </div>  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_invbit"></a>Bit typ i Invisible</h4></div></div></div>
+  
+  <p>Eftersom behörighet ofta beskrivs av bitar i en bitmask, kan man nu påverka
+  känslighet och synlighet hos objekt med bitar. Typen för attributet markeras med
+  ##Bit#32[7] vilket innebär en 32-bitars bitmask, bit nummer 7 (första biten är bit 0).
+  </p>
+  </div>  
+  </div>
+ 
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_types"></a>2.7.4. Ändrade typer</h3></div></div></div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_types_repenum"></a>pwrb:DataRepEnum</h4></div></div></div>
+  <p>Värdena Int32 och UInt24 har adderats.</p>
+  </div>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_changed_classes"></a>2.7.5. Ändrade klasser</h3></div></div></div>
+  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_pb"></a>Profibus:Pb_Module</h4></div></div></div>
+  
+  <p>Attributet ModuleName har adderats.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_complimit"></a>BaseComponent:CompLimit</h4></div></div></div>
+  
+  <p>Attributet DisableAlarm har adderats, vilket gör det möjligt att använda
+  gränsvärdesövervakningen i BaseSensor utan larm.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_compmodedm"></a>BaseComponent:CompModeDM, CompModeDMFo</h4></div></div></div>
+  
+  <p>Funktionalitet för körning i lokal mode har adderats.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_basemvalve"></a>BaseComponent:BaseMValveFo</h4></div></div></div>
+  
+  <p>Funktionalitet för körning i lokal mode har adderats.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_volumes"></a>RootVolume, SubVolume, SharedVolume</h4></div></div></div>
+  
+  <p>Attributet Modified har adderats. Här lagras tiden när man senast sparade volymen
+  i utvecklingsmiljön.</p>
+  </div>
+
+  </div>
+
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_new_classes"></a>2.7.6. Nya klasser</h3></div></div></div>
+  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_comppid"></a>CompPID, CompPID_Fo</h4></div></div></div>
+  <p>Pid regulatorn uppdelad i ett huvudobjekt och ett funktionsobjekt. Regulatorn
+  kan då läggas som en komponent i ett annat objekt.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_compmode"></a>CompModePID, CompModePID_Fo</h4></div></div></div>
+  <p>Mode objektet till ovanstående Pid regulator.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getdatap"></a>GetDatap</h4></div></div></div>
+  <p>Plc objekt för att hämta upp referensen till ett data objekt, t ex en data utgång i
+  DataArithm. Främst avsedd för att kunna skapa dataingångar i funktionsobjekt med template plckod.
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atv"></a>pwrb:ATv</h4></div></div></div>
+  <p>Absolute Time Value, lagring av en absoluttid, pwr_tTime.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtv"></a>pwrb:DTv</h4></div></div></div>
+  <p>Delta Time Value, lagring av en deltatid, pwr_tDeltaTime.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atadd"></a>pwrb:AtAdd</h4></div></div></div>
+  <p>Addition av en absoluttid och en deltatid.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtadd"></a>pwrb:DtAdd</h4></div></div></div>
+  <p>Addition av två deltatider.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atsub"></a>pwrb:AtSub</h4></div></div></div>
+  <p>Subtraktion av en absoluttid från en absoluttid.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtsub"></a>pwrb:DtSub</h4></div></div></div>
+  <p>Subtraktion av en deltatid frän en deltatid.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atdtsub"></a>pwrb:AtDtSub</h4></div></div></div>
+  <p>Subtraktion av en deltatid frän en absoluttid.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_ateq"></a>pwrb:AtEqual, pwrb:AtGreaterThan, pwrb:AtLessThan</h4></div></div></div>
+  <p>Jämförelse av två absoluttider.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dteq"></a>pwrb:DtEqual, pwrb:DtGreaterThan, pwrb:DtLessThan</h4></div></div></div>
+  <p>Jämförelse av två deltatider.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_currenttime"></a>pwrb:CurrentTime</h4></div></div></div>
+  <p>Hämtar systemtiden.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dttoa"></a>pwrb:DtToA, pwrb:AToDt</h4></div></div></div>
+  <p>Konverterar från detatid till flyttal och vice versa.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getatv"></a>pwrb:GetATv</h4></div></div></div>
+  <p>Hämta värdet på en ATv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getdtv"></a>pwrb:GetDTv</h4></div></div></div>
+  <p>Hämta värdet på en DTv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stoatv"></a>pwrb:StoATv</h4></div></div></div>
+  <p>Lagra ett värde i en ATv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstoatv"></a>pwrb:CStoATv</h4></div></div></div>
+  <p>Villkorlig lagring av ett värde i en ATv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stodtv"></a>pwrb:StoDTv</h4></div></div></div>
+  <p>Lagra ett värde i en DTv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstodtv"></a>pwrb:CStoDTv</h4></div></div></div>
+  <p>Villkorlig lagring av ett värde i en DTv.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stoatp"></a>pwrb:StoATp</h4></div></div></div>
+  <p>Lagra ett värde i ett absoluttids attribut.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstoatp"></a>pwrb:CStoATp</h4></div></div></div>
+  <p>Villkorlig lagring av ett värde i ett absoluttids attribut.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stodtp"></a>pwrb:StoDTp</h4></div></div></div>
+  <p>Lagra ett värde i ett deltatids attribut.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstodtp"></a>pwrb:CStoDTv</h4></div></div></div>
+  <p>Villkorlig lagring av ett värde i ett deltatids attribut.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_remoterack"></a>ssabox:Ssab_RemoteRack</h4></div></div></div>
+  <p>Konfigurering av PSS9000 remote rack.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_acc"></a>ABB_ACC800, ABB_ACC800Fo, ABB_ACC800Sim</h4></div></div></div>
+  <p>Styrning av motoraggregat som använder kran macrot i ASC800.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_accppo5"></a>ABB_ACC_PPO5</h4></div></div></div>
+  <p>Profibus modul till ABB_ACC800.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_acsslave"></a>ABB_ACS_Pb_Slave</h4></div></div></div>
+  <p>Profibus slav till ABB_ACS800.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_abbpbbase"></a>ABB_Sensor_Pb_PA, ABB_Sensor_Pb_PA_Fo</h4></div></div></div>
+  <p>Basklass för ABB Profibus PA givare.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_abbpb"></a>ABB_TempSensor_TF12, ABB_DiffPressure_265G, ABB_FlowSensor_FXE4000</h4></div></div></div>
+  <p>Diverse ABB Profibus PA givare.</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200"></a>Siemens_ET200S_IM151, Siemens_ET200M_IM153</h4></div></div></div>
+  <p>Profibus slav objekt för ET200S IM151 resp ET200M IM153</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mdi"></a>Siemens_ET200M_Di32, Siemens_ET200M_Di16, Siemens_ET200S_Di8</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200M digitala ingångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mdo"></a>Siemens_ET200M_Do32, Siemens_ET200M_Do16, Siemens_ET200S_Do8</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200M digitala utgångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mai"></a>Siemens_ET200M_Ai8, Siemens_ET200M_Ai4, Siemens_ET200S_Ai2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200M analoga ingångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mao"></a>Siemens_ET200M_Ao8, Siemens_ET200M_Ao4, Siemens_ET200S_Ao2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200M analoga utgångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sdi"></a>Siemens_ET200S_Di4, Siemens_ET200S_Di2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200S digitala ingångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sdo"></a>Siemens_ET200S_Do4, Siemens_ET200S_Do2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200S digitala utgångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sai"></a>Siemens_ET200S_Ai2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200S analoga ingångsmoduler</p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sao"></a>Siemens_ET200S_Ao2</h4></div></div></div>
+  <p>Profibus modulobjekt för ET200S analoga utgångsmoduler</p>
+  </div>
+
+  </div>
+  </div>
+  </div>
+
+  <div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chascript"></a>Kapitel 3. Uppgraderings procedur</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#upgradev42_upgr">3.1. Procedur för uppgradering</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Ta en kopia av projektet</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></dd></dl></div>
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_upgr"></a>3.1. Procedur för uppgradering</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Ta en kopia av projektet</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></div>
+  <p>Uppgraderingen måste göras från V4.1.3. Om projektet ligger på en tidigare version måste
+  uppgraderingen ske stegvis enligt följande schema 
+  <span class="classname">V2.1 -&gt; V2.7b -&gt; V3.0 -&gt; V3.3 -&gt; V3.4b -&gt; V4.0.0 -&gt; V4.1.3 -&gt; V4.2.0</span></p>
+
+  <p>Uppgraderingen görs i två steg: 
+  </p><div class="itemizedlist"><ul type="disc"><li><p>Ta en kopia av projektet</p></li><li><p>Exekvera upgrade.sh</p></li></ul></div><p>
+  </p>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_copyproj"></a>3.1.1. Ta en kopia av projektet</h3></div></div></div>
+  <p>Gör <code class="sgmltag-element">sdf</code> till projektet och starta administratören.</p>
+  <code class="prompt">&gt; </code><strong class="userinput"><code><span><strong class="command">pwra</strong></span></code></strong>
+
+  <p>Nu öppnas projektlistan. Gå in i editmode, logga in som adminstratör om du saknar behörighet.
+  Leta upp aktuellt projekt, välj <code class="sgmltag-element">Copy Project</code> från 
+  ProjectReg objektets popupmeny. Öppna kopian och ange ett lämpligt projektnamn och 
+  path. Ändra versionen till V4.2.0. Spara därefter och gå ur administratören.
+  </p>
+  <p>Gör sdf till projectet.</p>  
+
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_up_"></a>3.1.2. upgrade.sh</h3></div></div></div>
+  <p>upgrade.sh är ett skript som är uppdelat på ett antal olika pass. Efter varje pass får
+  man ange att man vill fortsätta med nästa pass.</p>
+
+  <p>Starta scriptet med </p>
+  <code class="prompt">&gt; </code><strong class="userinput"><code><code class="filename">upgrade.sh</code></code></strong>
+  <p>och kör igenom de olika passen.</p>  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_dumpdb"></a>dumpdb</h4></div></div></div>
+  <p>Går igenom alla databaser och dumpar varje volym i en egen dumpfil. 
+  Dumpfilen för respektive volyme läggs i <code class="filename">$pwrp_db/'volumename'.wb_dmp</code>
+  </p>
+  </div>
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_classvolumes"></a>classvolumes</h4></div></div></div>
+  <p>Skapar laddatafiler och structfiler för klassvolymerna.</p>
+  </div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_renamedb"></a>renamedb</h4></div></div></div>
+  <p>Sparar undan de gamla databaserna med namnet <code class="filename">$pwrp_db/'volumename'.db.1</code>.</p>
+  </div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_dirvolume"></a>dirvolume</h4></div></div></div>
+  <p>Skapar en directory databas och laddar in dumpfilen för projektvolymen i denna.</p>
+  </div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_loaddb"></a>loaddb</h4></div></div></div>
+  <p>Skapar databaser och laddar in dumpfilerna i dem.</p>
+  </div>
+  
+
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_compile"></a>compile</h4></div></div></div>
+  <p>Kompilerar om samtliga plcprogram.</p>
+  </div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_createload"></a>createload</h4></div></div></div>
+  <p>Skapar laddatafiler för rotvolymer.</p>
+  </div>
+  
+  <div class="section" lang="sv"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_createboot"></a>createboot</h4></div></div></div>
+  <p>Skapar bootfiler för alla noder i projektet.</p>
+  </div>
+  
+  <p>Nu återstår att bygga eventuella applikationer. Detta får man göra för hand.</p>
+
+  <p>Rensa bort filer från uppgraderingen:</p>
+  <p><code class="filename">$pwrp_db/*.wb_dmp.*</code></p>
+  <p><code class="filename">$pwrp_db/*.db.1</code> (V4.1 databaser, filkataloger vars innehåll även tas bort)</p>
+  
+  
+  </div>
+
+  </div>
+  </div>
+</div></body></html>

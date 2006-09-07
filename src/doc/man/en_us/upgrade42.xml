@@ -55,15 +55,19 @@
     </mediaobject>
   </info>
 
-  <chapter xml:id="upgradev42_chaintro"><title>Introduction</title>
-  <section xml:id="upgradev42_intro"><title>Upgrading to Proview 4.2.0</title>
+  <chapter xml:id="upgradev42_chaintro">
+  <title>Introduction</title>
+  <section xml:id="upgradev42_intro">
+  <title>Upgrading to Proview 4.2.0</title>
   <para>This document describes new functions i Proview V4.2.0, and how to upgrade a project
   from V4.1.3 to V4.2.0.</para>
   </section>
   </chapter>
 
-  <chapter xml:id="upgradev42_chanewfunc"><title>New functions</title>
-  <section xml:id="upgradev42_profibus"><title>Profibus configurator</title>
+  <chapter xml:id="upgradev42_chanewfunc">
+  <title>New functions</title>
+  <section xml:id="upgradev42_profibus">
+  <title>Profibus configurator</title>
   <para>The configuration of profibus is changed in V4.2.0, both the configuration procedure and
   the objects used for the configuration.</para>
 
@@ -91,23 +95,27 @@
   <para>The slave can keep a specific number of modues, and for each possible module
   there is a module entry in the configurator. By opening a module entry you can specify
   type, configuration data, objectname and object class for the module.
-  <section xml:id="upgradev42_pb_type"><title>Type</title>
+  <section xml:id="upgradev42_pb_type">
+  <title>Type</title>
   <para>Under Type all possible types are displayed for the actual slave. Select the
   desired type by clicking in the checkbox for the type.</para>
   </section>
-  <section xml:id="upgradev42_pb_confdata"><title>Configuration data</title>
+  <section xml:id="upgradev42_pb_confdata">
+  <title>Configuration data</title>
   <para>Under UserPrmData the configuration alternatives of the selected module
   are displayed.You can specifiy data and choose between different alternatives to
   configure the module. See the datasheet for the module for more information about
   the alternatives.
   </para>
   </section>
-  <section xml:id="upgradev42_pb_objname"><title>Objekt name</title>
+  <section xml:id="upgradev42_pb_objname">
+  <title>Objekt name</title>
   <para>When configurinn, the Profibus configuration creates a module object under the 
   slave object. In ObjectName you specify a name of the module object. The name should be
   unic for the slave.
   </para></section>
-  <section xml:id="upgradev42_pb_mclass"><title>Modul class</title>
+  <section xml:id="upgradev42_pb_mclass">
+  <title>Modul class</title>
   <para>Under ModuleClass the possible classes of the module object, that is created under
   the slave object, are displayed. The class you choose is dependent on the layout of
   the dataarea tranfered on the profibus circuit. There are a number of specific classes,
@@ -126,44 +134,53 @@
   </para>
   </section>  
 
-  <section xml:id="upgradev42_buildmeth"><title>Build methods</title>
+  <section xml:id="upgradev42_buildmeth">
+  <title>Build methods</title>
   <para>Compiling PlcPgm, creation of loadfiles and bootfiles are now preformed by the
   Build function. The build function consists of build methods for node, volumes and objects.
   </para>
 
-  <section xml:id="upgradev42_build_obj"><title>Build methods for objects</title>
-  <section xml:id="upgradev42_build_plc"><title>PlgPgm</title>
+  <section xml:id="upgradev42_build_obj">
+  <title>Build methods for objects</title>
+  <section xml:id="upgradev42_build_plc">
+  <title>PlgPgm</title>
   <para>The build method for a PlcPgm checks if the plc-kode is modified since the last
   compilation. If it is changed, the program with all subwindows are  compiled.
   </para></section>
 
-  <section xml:id="upgradev42_build_xtt"><title>XttGraph</title>
+  <section xml:id="upgradev42_build_xtt">
+  <title>XttGraph</title>
   <para>The build method for a XttGraph copies the .pwg file from $pwrp_pop to $pwrp_exe
   if the file on $pwrp_pop is more recent than the file on $pwrp_exe. If the graph is
   a java applet or java application, it is exported as java and compiled.
   </para></section>
 
-  <section xml:id="upgradev42_build_web"><title>WebHandler</title>
+  <section xml:id="upgradev42_build_web">
+  <title>WebHandler</title>
   <para>The build method for a WebHandler object creates a home sita for a node (calls
   Generate Web).
   </para></section>
   </section>
 
-  <section xml:id="upgradev42_build_vol"><title>Build methods for volumes</title>
-  <section xml:id="upgradev42_build_rootvol"><title>Rootvolume</title>
+  <section xml:id="upgradev42_build_vol">
+  <title>Build methods for volumes</title>
+  <section xml:id="upgradev42_build_rootvol">
+  <title>Rootvolume</title>
   <para>The build medhod of the rootvolume calls the build method of all PlcPgm,
   XttGraph and WebHandler objects in the volume. If the volume is modified since the
   last loadfile creation, new loadfiles are created. Also new crossreference files are
   created if this is specified in Options.
   </para></section>
 
-  <section xml:id="upgradev42_build_classvol"><title>Classvolume</title>
+  <section xml:id="upgradev42_build_classvol">
+  <title>Classvolume</title>
   <para>If the class volume is modified since the last creation of loadfiles for
   the volume, new loadfiles and structfiles are created for the volume.
   </para></section>
   </section>
 
-  <section xml:id="upgradev42_build_node"><title>Build methods for nodes</title>
+  <section xml:id="upgradev42_build_node">
+  <title>Build methods for nodes</title>
   <para>The build method of a node calls the build method of the opened volume, and
   thereafter creates a new bootfile for the node.
   <note>Only the volumes that are opened is built. If the node contatins several volumes
@@ -173,7 +190,8 @@
   </section>
   </section>
 
-  <section xml:id="upgradev42_remrack"><title>PSS9000 Remote rack</title>
+  <section xml:id="upgradev42_remrack">
+  <title>PSS9000 Remote rack</title>
 
   <para>A Proview system can now fetch data from a PSS9000 rack via ethernet. The
   rack is configured by a Ssab_RemoteRack object in the node hierarchy. Under the
@@ -181,7 +199,8 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_ld_node"><title>ld_node_xxx.dat</title>
+  <section xml:id="upgradev42_ld_node">
+  <title>ld_node_xxx.dat</title>
 
   <para>ld_node file contains the nodes a node connects to via QCOM at proview startup.
   The files is generated from data in NodeConfig and FriendNodeConfig objects in the 
@@ -196,14 +215,16 @@
   connects to the external node.  </para>
   </section>
 
-  <section xml:id="upgradev42_sub"><title>Buffering of subscriptions removed</title>
+  <section xml:id="upgradev42_sub">
+  <title>Buffering of subscriptions removed</title>
 
   <para>The buffering of subscriptions, which could lead to catch up fenomena at bad
   communicaion, is now removed.
   </para>
   </section>
 
-  <section xml:id="upgradev42_wiz"><title>Project configuration Wizard</title>
+  <section xml:id="upgradev42_wiz">
+  <title>Project configuration Wizard</title>
 
   <para>The configuration of the project volume is now simplified by using a wizard
   that is automaticaly started when an empty project volumes is opened. The wizard
@@ -216,11 +237,34 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_otime"><title>Objects for time handling</title>
+  <section xml:id="upgradev42_cupdate">
+  <title>Update of classes</title>
+  <para>If a class in a classvolyme was modified, you previously had to dump the database
+  to a textfile and the reload this, to update the instances of the modified class.
+  Now there is a function that updates instances without dump and reload.</para>
+
+  <para>Every database stores loadfiles for classvolymes locally in the database directory.
+  It is these local files, and not the global dbs-files in $pwr_load or $pwrp_load that is used 
+  when the workbench is opened. This makes you independent of changes in the global dbs-files.
+  When the workbench is started, the versions of local and global dbs-files are compared, and
+  if a new version in a global dbs-file is found, you get a warning message about this. The
+  command 'check classes' displayes which classes are modified, and if there are any instances
+  of the classes in the database. You should then activate Functions->Update Classes in the 
+  menu to update the instances and the local dbs-files.</para>
+
+  <para>For function object classes there are some restrictions. In some cases the connections
+  to the function object has to be reconnected. If an input or output is removed, the input or
+  output pin should not be visible in any instance, otherwise the connections should be redrawn.
+  Also if an input or output is moved, the connections should be redrawn.
+  </para>
+
+  <section xml:id="upgradev42_otime">
+  <title>Objects for time handling</title>
   <para>A number of new objects to handle times is added in V4.2.0. There are objects
   to store, add, subtract times etc.
 
-  <section xml:id="upgradev42_otime_sig"><title>Signals</title>
+  <section xml:id="upgradev42_otime_sig">
+  <title>Signals</title>
   <para>The signal objects ATv (AboluteTimeValue) and DTv (DeltaTimeValue) store time
   values in the shape of an absolute time (of type pwr_tTime) or a delta time (of type
   pwr_tDeltaTime, i.e. a time intervall). </para>
@@ -228,7 +272,8 @@
   is not performed.</para>
   </section>
   
-  <section xml:id="upgradev42_otime_plc"><title>Plc objects</title>
+  <section xml:id="upgradev42_otime_plc">
+  <title>Plc objects</title>
   <para>Addition and subtraction of times is perfomed in the plc program by the objects
    <classname>AtAdd, DtAdd, AtSub, DtSub</classname> and <classname>AtDtSub</classname>. </para>
   <para>To fetch an ATv or DTv the objects <classname>GetATv</classname> and
@@ -247,27 +292,109 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_types"><title>Modified types</title>
-  <section xml:id="upgradev42_types_repenum"><title>pwrb:DataRepEnum</title>
+  <section xml:id="upgradev42_updatecls">
+  <title>Update Classes</title>
+  <para>Previously, if you made a change in a class, you had to reload the database, i.e. dump
+  the database to a textfile, and then load the textfile into the database again. Now
+  there is a funcion that converts the objects in a database to the now class description
+  without a reload. When the workbench is started, any new version of a dbs-file for a
+  classvolume is detected. If a new version i found, an error message is displayed in 
+  the message window. You can then either continue with the old class description, or
+  update the objects to the new. The update is performed from
+  <menuchoice><guimenu>Function->Update Classes</guimenu></menuchoice> in the menu.
+  The objects that are influenced by the new class description can first be displayed
+  by the command
+  <prompt>wtt> </prompt><userinput><command>check classes</command></userinput>
+  that lists the modified classes and the number of instances found for each class.
+  </para>
+  <para>Before executing a class update, be sure to have a backup of the database.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_ge">
+  <title>Ge</title>
+
+  <section xml:id="upgradev42_gefolder">
+  <title>Object graph in Window and Folder</title>
+  <para>It is now possible to display an object graph in a window or folder object. 
+  The instance object of the object graph is inserted in the properties Window.Object and
+  Folderx.Object.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_getable">
+  <title>Select color in Table</title>
+  <para>A property to modify the color of selected cells in tables is added to the Table object.
+  Set the desired color in Table.SelectColor.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_invbit">
+  <title>Bit type in Invisible</title>
+  <para>Access is often stored as bits in a bitmask, and it is now possible to influence the
+  sensitivity and visibility for an object from a bit in a bitmask. The type for the attribute
+  is written ##Bit#32[7] which means a 32-bit bitmask, bit number 7 (the first bit is bit 0).
+  </para>
+  </section>
+  </section>
+
+  <section xml:id="upgradev42_types">
+  <title>Modified types</title>
+  <section xml:id="upgradev42_types_repenum">
+  <title>pwrb:DataRepEnum</title>
   <para>The values Int32 and UInt24 is added.</para>
   </section>
   </section>
 
-  <section xml:id="upgradev42_changed_classes"><title>Modified classes</title>
+  <section xml:id="upgradev42_changed_classes">
+  <title>Modified classes</title>
 
-  <section xml:id="upgradev42_ch_pb"><title>Profibus:Pb_Module</title>
+  <section xml:id="upgradev42_ch_pb">
+  <title>Profibus:Pb_Module</title>
   <para>The attribute ModuleName is added.</para>
   </section>
 
-  <section xml:id="upgradev42_ch_complimit"><title>BaseComponent:CompLimit</title>
+  <section xml:id="upgradev42_ch_complimit">
+  <title>BaseComponent:CompLimit</title>
   <para>The attribute DisableAlarm is added, which makes it possible to use the
   limitvalue supervision in a BaseSensor without alarm.</para>
   </section>
 
+  <section xml:id="upgradev42_ch_compmodedm">
+  <title>BaseComponent:CompModeDM, CompModeDMFo</title>
+  <para>Funktionality for local mode added.</para>
+  </section>
+
+  <section xml:id="upgradev42_ch_basemvalve">
+  <title>BaseComponent:BaseMValveFo</title>
+  <para>Funktionality for local mode added.</para>
+  </section>
+
+  <section xml:id="upgradev42_ch_volumes">
+  <title>RootVolume, SubVolume, SharedVolume</title>
+  <para>The attribute Modified is added, where the time of the latest save is stored.</para>
+  </section>
+
   </section>
 
 
-  <section xml:id="upgradev42_new_classes"><title>New classes</title>
+  <section xml:id="upgradev42_new_classes">
+  <title>New classes</title>
+
+  <section xml:id="upgradev42_new_comppid"><title>CompPID, CompPID_Fo</title>
+  <para>The Pid controller divided into a main object and a function object. The controller 
+  can be a component of another object.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_compmode"><title>CompModePID, CompModePID_Fo</title>
+  <para>The mode object to the PID controller.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_getdatap"><title>GetDatap</title>
+  <para>Plc object to fetch the reference to a data object, e.g. a data output in a DataArithm.
+  Can also be used to attach data inputs in function objects with template plc code.
+  </para>
+  </section>
 
   <section xml:id="upgradev42_new_atv"><title>pwrb:ATv</title>
   <para>Absolute Time Value, storage of an absolut time, pwr_tTime.</para>
@@ -414,6 +541,7 @@
   </section>
 
   </section>
+  </section>
   </chapter>
 
   <chapter xml:id="upgradev42_chascript"><title>Upgrade procedure</title>
@@ -421,6 +549,13 @@
   <para>The upgrading has to be done from V4.1.3. If the project as a lower version, the 
   upgrade has to be performed stepwise following the scheme 
   <classname>V2.1 -> V2.7b -> V3.0 -> V3.3 -> V3.4b -> V4.0.0 -> V4.1.3 -> V4.2.0</classname></para>
+
+  <para><note>Upgradeing a Debian project from V4.1.3 requires that a new debian release is 
+  installed.
+  Dump the project with the reload.sh script before installing the new debian release,
+  and while the project is still pointing at V4.1.3. Execute the only the dumpdb pass.
+  Intall the new debian release, and when executing the upgrade.sh script, skip the dumpdb
+  pass. </note></para>
 
   <para>The upgrading is made in two steps:
   <itemizedlist>

@@ -114,7 +114,7 @@
   specifierar senare dataarean genom att lägga kanal-objekt under modulobjektet.
   </para>
   </section>
-  När alla moduler är konfigurerarde klickar man på apply, och de olika modul-objekten
+  När alla moduler är konfigurerade klickar man på apply, och de olika modul-objekten
   skapas. Nu lagras även PrmUserData konfigureringen för slaven och modulerna i 
   attributet PrmUserData i slavobjektet, tillsammans med diverse andra data.</para>
 
@@ -141,27 +141,32 @@
   eller java-application exporteras den som java och kompileras.
   </para></section>
 
-  <section xml:id="upgradev42_build_web"><title>WebHandler</title>
+  <section xml:id="upgradev42_build_web">
+  <title>WebHandler</title>
   <para>Byggmetoden för ett WebHandler objekt skapar en hemsida för en nod (anropar
   Generate Web).
   </para></section>
   </section>
 
-  <section xml:id="upgradev42_build_vol"><title>Byggmetod för volymer</title>
-  <section xml:id="upgradev42_build_rootvol"><title>Rotvolym</title>
+  <section xml:id="upgradev42_build_vol">
+  <title>Byggmetod för volymer</title>
+  <section xml:id="upgradev42_build_rootvol">
+  <title>Rotvolym</title>
   <para>Rotvolymens byggmetod anropar byggmetoden för samtliga PlcPgm, XttGraph och 
   WebHandler objekt i volymen. Om volymen är ändrad sedan laddatafiler senast skapades
   för volymen, skapas nya laddatafiler. Även nya korsreferensfiler skapas om detta är 
   angett i Options.
   </para></section>
 
-  <section xml:id="upgradev42_build_classvol"><title>Klassvolym</title>
+  <section xml:id="upgradev42_build_classvol">
+  <title>Klassvolym</title>
   <para>Om klassvolymen är ändrad sedan laddatafiler senast skapades
   för volymen, skapas nya laddatafiler, och nya structfiler för volymen.
   </para></section>
   </section>
 
-  <section xml:id="upgradev42_build_node"><title>Byggmetod för noder</title>
+  <section xml:id="upgradev42_build_node">
+  <title>Byggmetod för noder</title>
   <para>Nodens byggmetod anropar byggmetoden för öppnad volym och skapar därefter ny
   bootfil för noden.
   <note>Observera att endast volymer som är öppnade byggs om. Om noden innehåller flera
@@ -171,15 +176,17 @@
   </section>
   </section>
 
-  <section xml:id="upgradev42_remrack"><title>PSS9000 Remote rack</title>
+  <section xml:id="upgradev42_remrack">
+  <title>PSS9000 Remote rack</title>
 
   <para>Ett proview system kan nu hämta data från en PSS9000 rack via ethernet. Racken konfigureras
-  med ett Ssab_RemoteRack objekt i nodhierarkin, och därunder konfiguraras korten i vanlig
+  med ett Ssab_RemoteRack objekt i nodhierarkin, och därunder konfigureras korten i vanlig
   ordning.
   </para>
   </section>
 
-  <section xml:id="upgradev42_ld_node"><title>ld_node_xxx.dat</title>
+  <section xml:id="upgradev42_ld_node">
+  <title>ld_node_xxx.dat</title>
 
   <para>ld_node filen innehåller de noder en nod tar kontakt med via QCOM vid
   uppstart av proview. Filen genereras utifrån data i NodeConfig och 
@@ -195,14 +202,16 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_sub"><title>Buffring av prenumerationer borttagen</title>
+  <section xml:id="upgradev42_sub">
+  <title>Buffring av prenumerationer borttagen</title>
 
   <para>Buffringen av prenumerationer, vilken kunde ge upphov till ikappkörnings
   fenomen vid dålig kommunikation, är nu borttagen.
   </para>
   </section>
 
-  <section xml:id="upgradev42_wiz"><title>Wizard för konfigurering av projektvolymen</title>
+  <section xml:id="upgradev42_wiz">
+  <title>Wizard för konfigurering av projektvolymen</title>
 
   <para>Konfigureringen av projektvolymen görs nu enkelt mha av en wizard som startar
   automatisk om man öppnar en tom projektvolym. Wizarden hämtar upp de volymer som är
@@ -215,7 +224,31 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_otime"><title>Objekt för tidshantering</title>
+  <section xml:id="upgradev42_cupdate">
+  <title>Uppdatering av klasser</title>
+  <para>Om man gjort en ändring i en klassvolym var man tidigare tvungen att dumpa ut 
+  databasen på en textfil och återladda denna för att uppdatera instanser av 
+  ändrade klasser. Nu finns det en funktion som uppdaterar instanser utan dumpning/laddning.</para>
+
+  <para>Varje databas lagrar alla laddatafiler för klassvolymer lokalt i filkatalogen för databasen. Det är alltså
+  inte dbs-filerna på $pwr_load eller $pwrp_load som används när man öppnar arbetsbänken, utan
+  de lokala dbs-filerna. Det här gör att man är oberoende av hur de globala dbs-filerna förändras.
+  Vid uppstart av arbetsbänken jämförs versionerna på lokala dbs-filer med globala dbs-filer, och
+  om någon global dbs-fil finns i en ny version får man ett varnings-meddelande om detta. Man kan 
+  då med kommandot 'check classes' se vilka klasser ändringen omfattar och om man har några 
+  instanser av dessa klasser. Man bör sedan aktivera Functions->Update Classes i menyn för att 
+  uppdatera klasserna och de lokala dbs-filerna.</para>
+
+  <para>Vid ändring av in- och utgångar i funktionsobjektsklasser har man tidigare varit tvungen
+  att dra om kopplingarna till alla instanser. Det här har förbättrats något. Lägger man till nya
+  ingångar eller utgångar anpassa funktionsobjektet automatisk till detta. Tar man bort in eller
+  utgångar bör man se till att de in och utgångar som tas bort inte är synliga in någon instans, 
+  annars bör man dra om alla kopplingar. Flyttar man en in eller utgång bör man dra om kopplingarna.
+  </para>
+
+  <section xml:id="upgradev42_otime">
+  <title>Objekt för tidshantering</title>
+
   <para>Ett antal nya objekt för att hantera tider har tillkommit i V4.2.0. Här finns
   objekt för att lagra, addera, subtrahera tider mm.
 
@@ -227,7 +260,8 @@
   sker ej.</para>
   </section>
   
-  <section xml:id="upgradev42_otime_plc"><title>Plc objekt</title>
+  <section xml:id="upgradev42_otime_plc">
+  <title>Plc objekt</title>
   <para>Addition och subtraktion av tider sker i plc-programmet mha objekten <classname>AtAdd,
   DtAdd, AtSub, DtSub</classname> och <classname>AtDtSub</classname>. </para>
   <para>För att hämta upp en ATv eller DTv används objekten <classname>GetATv</classname> resp
@@ -248,27 +282,109 @@
   </para>
   </section>
 
-  <section xml:id="upgradev42_types"><title>Ändrade typer</title>
+  <section xml:id="upgradev42_updatecls">
+  <title>Updatering av klasser</title>
+  <para>Om man gjorde en ändring i en klass var man tidigare tvungen att dumpa 
+  databasen till en textfil
+  och sedan ladda in den igen. Nu finns en funktion som konverterar objekten i en databas till
+  den nya klassbeskrivningen utan omladdning. När man startar arbetsbänken undersöks
+  om det finns någon ny version av klassvolymernas dbs-filer. Om så är fallet får man
+  en varning i meddelandefönstret. Man kan då välja att fortsätta med den gamla
+  klassbeskrivningen, eller att uppdatera objekten. Uppdateringen görs med
+  <menuchoice><guimenu>Function->Update Classes</guimenu></menuchoice> i menyn. Vill 
+  man först se vilka objekt som kommer att påverkas, kan man exekvera kommandot
+  <prompt>wtt> </prompt><userinput><command>check classes</command></userinput>
+  som ger en list på de klasser som är ändrade och antalet instanser som finns av
+  respektive klass.</para>
+  <para>Man bör naturligtvis se till att den finns en backup av databasen
+  innan man utför en klass uppdatering.
+  </para>
+  </section>
+
+  <section xml:id="upgradev42_ge">
+  <title>Ge</title>
+
+  <section xml:id="upgradev42_gefolder">
+  <title>Object graph in Window and Folder</title>
+  <para>It is now possible to display an object graph in a window or folder object. 
+  The instance object of the object graph is inserted in the properties Window.Object and
+  Folderx.Object.
+  </para>
+  </section>  
+
+  <section xml:id="upgradev42_getable">
+  <title>Utvalsfärg i Table</title>
+  <para>En egenskap för att ändra färgen på utvalda celler tabeller har adderats
+  till Table objektet. Sätt den önskade färgen i Table.SelectColor.
+  </para>
+  </section>  
+
+  <section xml:id="upgradev42_invbit">
+  <title>Bit typ i Invisible</title>
+  <para>Eftersom behörighet ofta beskrivs av bitar i en bitmask, kan man nu påverka
+  känslighet och synlighet hos objekt med bitar. Typen för attributet markeras med
+  ##Bit#32[7] vilket innebär en 32-bitars bitmask, bit nummer 7 (första biten är bit 0).
+  </para>
+  </section>  
+  </section>
+ 
+  <section xml:id="upgradev42_types">
+  <title>Ändrade typer</title>
   <section xml:id="upgradev42_types_repenum"><title>pwrb:DataRepEnum</title>
   <para>Värdena Int32 och UInt24 har adderats.</para>
   </section>
   </section>
 
-  <section xml:id="upgradev42_changed_classes"><title>Ändrade klasser</title>
+  <section xml:id="upgradev42_changed_classes">
+  <title>Ändrade klasser</title>
 
-  <section xml:id="upgradev42_ch_pb"><title>Profibus:Pb_Module</title>
+  <section xml:id="upgradev42_ch_pb">
+  <title>Profibus:Pb_Module</title>
   <para>Attributet ModuleName har adderats.</para>
   </section>
 
-  <section xml:id="upgradev42_ch_complimit"><title>BaseComponent:CompLimit</title>
+  <section xml:id="upgradev42_ch_complimit">
+  <title>BaseComponent:CompLimit</title>
   <para>Attributet DisableAlarm har adderats, vilket gör det möjligt att använda
   gränsvärdesövervakningen i BaseSensor utan larm.</para>
   </section>
 
+  <section xml:id="upgradev42_ch_compmodedm">
+  <title>BaseComponent:CompModeDM, CompModeDMFo</title>
+  <para>Funktionalitet för körning i lokal mode har adderats.</para>
+  </section>
+
+  <section xml:id="upgradev42_ch_basemvalve">
+  <title>BaseComponent:BaseMValveFo</title>
+  <para>Funktionalitet för körning i lokal mode har adderats.</para>
+  </section>
+
+  <section xml:id="upgradev42_ch_volumes">
+  <title>RootVolume, SubVolume, SharedVolume</title>
+  <para>Attributet Modified har adderats. Här lagras tiden när man senast sparade volymen
+  i utvecklingsmiljön.</para>
+  </section>
+
   </section>
 
 
-  <section xml:id="upgradev42_new_classes"><title>Nya klasser</title>
+  <section xml:id="upgradev42_new_classes">
+  <title>Nya klasser</title>
+
+  <section xml:id="upgradev42_new_comppid"><title>CompPID, CompPID_Fo</title>
+  <para>Pid regulatorn uppdelad i ett huvudobjekt och ett funktionsobjekt. Regulatorn
+  kan då läggas som en komponent i ett annat objekt.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_compmode"><title>CompModePID, CompModePID_Fo</title>
+  <para>Mode objektet till ovanstående Pid regulator.</para>
+  </section>
+
+  <section xml:id="upgradev42_new_getdatap"><title>GetDatap</title>
+  <para>Plc objekt för att hämta upp referensen till ett data objekt, t ex en data utgång i
+  DataArithm. Främst avsedd för att kunna skapa dataingångar i funktionsobjekt med template plckod.
+  </para>
+  </section>
 
   <section xml:id="upgradev42_new_atv"><title>pwrb:ATv</title>
   <para>Absolute Time Value, lagring av en absoluttid, pwr_tTime.</para>
@@ -414,6 +530,7 @@
   <para>Profibus modulobjekt för ET200S analoga utgångsmoduler</para>
   </section>
 
+  </section>
   </section>
   </chapter>
 

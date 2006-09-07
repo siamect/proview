@@ -4,8 +4,11 @@
     xmlns:fo="http://www.w3.org/1999/XSL/Format"
     version="1.0">
 
-<!-- Import basic fo stylesheet-->
-<xsl:import href="/usr/local/share/xml/docbook/stylesheet/snapshot/fo/docbook.xsl"/>
+<!-- Import basic fo stylesheet. 
+     This URI is not a web location, but is directed to the local stylesheet directory 
+     (e.g /usr/local/share/xml/docbook/stylesheet/docbook-xsl-1.70.1)
+     by means of the catalog.xml defined in the user's XML_CATALOG_FILES environment variable. -->
+<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/fo/docbook.xsl"/>
 
 <!-- Import customized titlepage stylesheet-->
 <xsl:include href="pwrtitlepages.xsl"/>

@@ -46,6 +46,33 @@ sv_se_sources := $(sort \
              ) \
            )
 
+htmlsources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.html) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+htmlen_us_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(pwre_sroot)/doc/man/en_us, \
+                 $(wildcard $(dir)/*.html) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
+htmlsv_se_sources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(pwre_sroot)/doc/man/sv_se, \
+                 $(wildcard $(dir)/*.html) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 gsources := $(sort \
              $(foreach file, \
                $(foreach dir, \
@@ -58,11 +85,17 @@ gsources := $(sort \
 pdf_sources := $(filter %.pdf,$(sources))
 pdf_sv_se_sources := $(filter %.pdf,$(sv_se_sources)) 
 pdf_en_us_sources := $(filter %.pdf,$(en_us_sources)) 
+html_sources := $(filter %.html,$(htmlsources))
+html_sv_se_sources := $(filter %.html,$(htmlsv_se_sources)) 
+html_en_us_sources := $(filter %.html,$(htmlen_us_sources)) 
 gif_sources := $(filter %.gif,$(gsources))
 
 export_pdf := $(patsubst %.pdf,$(doc_dir)/%.pdf,$(pdf_sources))
 export_pdf_sv_se := $(patsubst %.pdf,$(doc_dir)/sv_se/%.pdf,$(pdf_sv_se_sources))
 export_pdf_en_us := $(patsubst %.pdf,$(doc_dir)/en_us/%.pdf,$(pdf_en_us_sources))
+export_html := $(patsubst %.html,$(doc_dir)/%.html,$(html_sources))
+export_html_sv_se := $(patsubst %.html,$(doc_dir)/sv_se/%.html,$(html_sv_se_sources))
+export_html_en_us := $(patsubst %.html,$(doc_dir)/en_us/%.html,$(html_en_us_sources))
 export_gif_sv_se := $(patsubst %.gif,$(doc_dir)/sv_se/%.gif,$(gif_sources))
 export_gif_en_us := $(patsubst %.gif,$(doc_dir)/en_us/%.gif,$(gif_sources))
 export_gif_exe := $(patsubst %.gif,$(exe_dir)/%.gif,$(gif_sources))
@@ -71,17 +104,22 @@ clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 
 #docbook-related, added by jonas_h 2006-04-nn
 
-targetsuffixes := _single.html _index.html .pdf
+#targetsuffixes := _single.html _index.html .pdf
+targetsuffixes := _single.html .pdf
 
 sv_se_xmlsources := dbpwr.xml upgrade42.xml
 en_us_xmlsources := pwrgsg.xml upgrade42.xml changelog.xml
 
-sv_se_xmltargets := $(addprefix $(doc_dir)/sv_se/, \
+#add on the following line master files that include their parts / chapters by means of xinclude
+#also add an explicit rule for each master file below
+xi_dependents := $(pwre_sroot)/doc/man/sv_se/dbpwr.xml
+
+sv_se_xmltargets := $(addprefix $(pwre_sroot)/doc/man/sv_se/, \
 	$(foreach targetsuffix, $(targetsuffixes), \
 	$(foreach basefile, $(basename $(sv_se_xmlsources)), \
 	$(addsuffix $(targetsuffix), $(basefile)))))
 
-en_us_xmltargets := $(addprefix $(doc_dir)/en_us/, \
+en_us_xmltargets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
 	$(foreach targetsuffix, $(targetsuffixes), \
 	$(foreach basefile, $(basename $(en_us_xmlsources)), \
 	$(addsuffix $(targetsuffix), $(basefile)))))
@@ -116,6 +154,18 @@ $(doc_dir)/en_us/%.pdf : $(pwre_sroot)/doc/man/en_us/%.pdf
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(doc_dir)/%.html : ../../%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/sv_se/%.html : $(pwre_sroot)/doc/man/sv_se/%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/en_us/%.html : $(pwre_sroot)/doc/man/en_us/%.html
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(exe_dir)/%.gif : ../../%.gif
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
@@ -136,6 +186,7 @@ all : init copy lib exe
 init :
 
 copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
+       $(export_html) $(export_html_en_us) $(export_html_sv_se) \
        $(export_gif_exe) $(export_gif_en_us) $(export_gif_sv_se) \
        $(exe_dir)/en_us/wtt_help.dat $(exe_dir)/sv_se/wtt_help.dat \
        $(exe_dir)/en_us/man_dg.dat $(exe_dir)/sv_se/man_dg.dat \
@@ -145,8 +196,8 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(exe_dir)/en_us/man_geref.dat $(exe_dir)/sv_se/man_geref.dat \
        $(doc_dir)/en_us/man_geref_index.html $(doc_dir)/sv_se/man_geref_index.html \
        $(doc_dir)/en_us/man_geref.pdf $(doc_dir)/sv_se/man_geref.pdf \
-       $(doc_dir)/en_us/man_geref.ps $(doc_dir)/sv_se/man_geref.ps
-
+       $(doc_dir)/en_us/man_geref.ps $(doc_dir)/sv_se/man_geref.ps \
+       $(mediatargets) $(csstargets)
 lib :
 
 exe :
@@ -157,7 +208,7 @@ realclean : clean $(clean_pdf) $(clean_c)
 
 # added by jonas_h 2006-04-nn
 
-docbook : $(sv_se_xmltargets) $(en_us_xmltargets) $(mediatargets) $(csstargets)
+docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) 
 
 # end of
 
@@ -244,11 +295,11 @@ $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 %.fo :: %.xml
 	$(xsltproc) $(xsltproc_args) $(fo_xsl) $(source) > $(target)
 
-$(doc_dir)/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl
+$(pwre_sroot)/doc/man/%.pdf : $(pwre_sroot)/doc/man/%.fo $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl
 	$(fop) $(source) -pdf $(target)
 	rm -f $(source)
 
-$(doc_dir)/%_single.html :: $(pwre_sroot)/doc/man/%.xml 
+$(pwre_sroot)/doc/man/%_single.html :: $(pwre_sroot)/doc/man/%.xml 
 	$(xsltproc) $(xsltproc_args) -o $(target) $(html_xsl) $(source)
 
 $(doc_dir)/en_us/%_index.html :: $(pwre_sroot)/doc/man/en_us/%.xml
@@ -267,5 +318,9 @@ $(doc_dir)/% :: $(pwre_sroot)/doc/man/src/%
 # Rule for creating titlepage xsl templates
 $(pwre_sroot)/doc/man/src/pwrtitlepages.xsl :: $(pwre_sroot)/doc/man/src/pwrtitlepage.spec.xml
 	$(xsltproc) -o $(target) $(docbook_stylesheetdir)/template/titlepage.xsl $(source)
+
+# explicit rules updating dependent master files if their includes have been changed.
+%/dbpwr.xml :: %/dbpwr_intro.xml %/dbpwr_editering.xml %/dbpwr_exempel.xml %/dbpwr_utdata.xml %/dbpwr_omdocbook.xml 
+	touch $(target)
 
 #end of

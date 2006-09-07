@@ -1,0 +1,403 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Proview 4.1 Getting Started Guide</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id3374775"></a><span class="application">Proview 4.1</span> Getting Started Guide</h1></div><div><h3 class="subtitle"><i>A step-by-step guide to set up a minimal <span class="application">Proview</span> system</i></h3></div><div><div class="author"><h3 class="author"><span class="firstname">Jonas</span> <span class="surname">Haulin</span></h3><div class="affiliation">
+        <span class="orgname">Proview/R<br></span>
+        <div class="address"><p> <code class="email">&lt;<a href="mailto:info@proview.se">info@proview.se</a>&gt;</code> </p></div>
+      </div></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#pwrgsg_about">1. About this guide</a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_conventions">1.1. Conventions used in this document</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_pwra">2. Open the administrator environment</a></span></dt><dt><span class="section"><a href="#pwrgsg_createproj">3. Create a project in the <span class="pwrenv">ProjectList</span></a></span></dt><dt><span class="section"><a href="#pwrgsg_createvol">4. Create a volume in the <span class="pwrenv">VolumeList</span></a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_volconf">4.1. Configuring the volume</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_plantnode">5. Setting up plant and node hierarchies in the <span class="pwrenv">Volume</span> Navigator</a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_plantplc">5.1. Plant Hierarchy and Plc Programs</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_gui">6. Process graphics and User Interfaces</a></span></dt><dt><span class="section"><a href="#pwrgsg_runtime">7. Runtime</a></span></dt></dl></div>
+  
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_about"></a>1. About this guide</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#pwrgsg_conventions">1.1. Conventions used in this document</a></span></dt></dl></div>
+    
+
+    <p>This guide will take you through the steps of configuring,
+    developing, simulating and running a small <span class="application">Proview</span> project, on a
+    single-computer system. The guide does not intend to be comprehensive. 
+    For detailed documentation, please consult the <em class="citetitle">Designer's Guide</em>
+    or the <em class="citetitle">GE (graphical editor) Manual</em>. 
+    These documents are available at the <a href="http://www.proview.se" target="_top">Proview</a> site.
+    </p>
+    
+    <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="pwrgsg_conventions"></a>1.1. Conventions used in this document</h3></div></div></div>
+      
+      <p>
+	This document follows general conventions for content formatting, <abbr class="abbrev">e.g.</abbr>
+	</p><div class="itemizedlist"><ul type="bullet"><li style="list-style-type: disc">
+	    <p>System items: <code class="filename">filename</code>, <code class="systemitem">user</code>, 
+	    <code class="envar">ENVIRON_VARIABLE</code></p>
+	  </li><li style="list-style-type: disc">
+	    <p>
+	    Commands: To use the <span><strong class="command">pwrs</strong></span> command, type <strong class="userinput"><code><span><strong class="command">pwrs</strong></span></code></strong> at the terminal.
+	    </p>
+	  </li><li style="list-style-type: disc">
+	    <p>
+	      Screen listing
+	    </p><pre class="screen">
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">cd</strong></span> <em class="parameter"><code><code class="filename">src</code></code></em></code></strong>
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">ls</strong></span> <code class="option">-al</code></code></strong></pre>
+	  </li><li style="list-style-type: disc">
+	    <p>
+	      Menu choices:
+	      <span class="guimenu">Edit</span> &#8594; <span class="guimenuitem">Change value</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">Q</strong></span></strong></span>).
+	    </p>
+	  </li></ul></div><p>
+      </p>
+      <p>
+	In addition, the following Proview add-ons are used:
+	</p><div class="itemizedlist"><ul type="bullet"><li style="list-style-type: disc">
+	    <p>Proview Environments are currently displayed in small caps or sans serif 
+	    (<acronym class="acronym">PDF</acronym> version), 
+	    <abbr class="abbrev">e.g.</abbr> <span class="pwrenv">ProjectList</span>.</p>
+	  </li><li style="list-style-type: disc">
+	    <p>Proview Classes are currently displayed in boldface, <abbr class="abbrev">e.g.</abbr>
+	    <span class="classname">ProjectReg</span>.</p> 
+	  </li><li style="list-style-type: disc">
+	    <p>Attributes of Proview Classes are currently displayed in italics, <abbr class="abbrev">e.g.</abbr>
+	    <span class="property">ObjectName</span>.</p>
+	  </li><li style="list-style-type: disc">
+	    <p>Values of attributes are currently displayed in monospace, <abbr class="abbrev">e.g.</abbr>
+	    <code class="literal">56.4</code> in the case of numbers, or as &#8220;<span class="quote">Demoprojects</span>&#8221; in the case of strings.</p>
+	  </li></ul></div><p>
+      </p>
+    </div>
+
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_pwra"></a>2. Open the administrator environment</h2></div></div></div>
+    
+
+    <p>During installation, the user <code class="systemitem">pwrp</code> 
+    with password &#8220;<span class="quote">pwrp</span>&#8221; is added to the system. 
+    Log in as <code class="systemitem">pwrp</code> and use <span><strong class="command">pwra</strong></span>
+    at the prompt to start the Project Administrator. 
+    To start <span class="application">Proview</span> as another user, 
+    just add the contents of the <code class="filename">.bashrc</code> file in the <code class="systemitem">pwrp</code>
+    <code class="filename">home/</code> directory to that of your user.</p>
+
+    <p>The <span class="pwrenv">ProjectList</span> administrator environment will open up in a new window. 
+    Switch to and from Edit mode with
+    <span class="guimenu">Edit</span> &#8594; <span class="guimenuitem">Edit mode</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">E</strong></span></strong></span>).
+    Make sure <span><strong class="keycap">NumLock</strong></span> is not set on the keyboard, 
+    as Ctrl commands with NumLock enabled are not yet
+    supported in <span class="application">Proview</span>.</p>
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_createproj"></a>3. Create a project in the <span class="pwrenv">ProjectList</span></h2></div></div></div>
+    
+
+    <p>Once in Edit mode, an object palette will appear to the left in the
+    window. The <span class="pwrenv">ProjectList</span> at first only contains the &#8220;<span class="quote">Bases</span>&#8221;
+    hierarchy. To create a hierarchy for the projects, select <span class="classname">Hier</span> 
+    in the palette, move the cursor to the &#8220;<span class="quote">Bases</span>&#8221; hierarchy 
+    and <span class="mousebutton">middle</span> click. 
+    A new, empty <span class="classname">Hier</span> object is inserted below the existing one.</p>
+
+    <p>The hierarchy object is a container for arbitrary objects and it has two attributes: 
+     an <span class="property">ObjectName</span> and a <span class="property">Description</span>. 
+     To expand the object and expose the attributes, select the object and use the <span><strong class="keycap">right arrow</strong></span> key. 
+     Now, to edit an attribute, select the attribute and use 
+     <span class="guimenu">Edit</span> &#8594; <span class="guimenuitem">Change value</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">Q</strong></span></strong></span>).
+     </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip: Use set adv"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Tip]" src="../tip.png"></td><th align="left">Use <span><strong class="command">set adv</strong></span></th></tr><tr><td align="left" valign="top">
+       <p>
+	 A more convenient way to edit an attribute is to give the command 
+	 <span><strong class="command">set adv</strong></span> in the Navigator 
+	 (use <span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">B</strong></span>, to get a command line). 
+	 Then object attributes may be open for editing with the <span><strong class="keycap">right arrow</strong></span> key. 
+	 In the case of an object with children, <span><strong class="keycap">right arrow</strong></span> opens
+	 the next level of the hierarchy, and <span><strong class="keycap">Shift</strong></span>-<span><strong class="keycap">right arrow</strong></span>
+       opens the object itself for editing.</p>
+     </td></tr></table></div><p>
+    </p>
+    
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screenprojectlist"></a><img src="../screen_projectlist.png" align="middle"><div class="caption"><p>The project list navigator.</p></div></div>
+    </div>
+
+    <p>We choose the name &#8220;<span class="quote">Demoprojects</span>&#8221; for our hierarchy. 
+    We then add a <span class="classname">ProjectReg</span> object to the 
+    &#8220;<span class="quote">Demoprojects</span>&#8221; hierarchy and name it &#8220;<span class="quote">Demo</span>&#8221;. 
+    We want to add the <span class="classname">ProjectReg</span> as a child and not as a sibling. 
+    To do this, middle click directly on the desired parent leaf, which is 
+    our &#8220;<span class="quote">Demoprojects</span>&#8221; hierarchy in this case. 
+    An object can be moved or copied in the hierarchy by selecting it and 
+    <span class="mousebutton">Right-clicking</span> at the desired location. 
+    We need to define the <span class="property">project</span> and 
+    <span class="property">path</span> attributes.  
+    The project name is written in lower case. We use the name &#8220;<span class="quote">demo</span>&#8221;.
+    The <span class="property">path</span> attribute should just reflect the chosen project name.
+    Save the changes to the <span class="pwrenv">ProjectList</span> and exit Edit mode.</p>
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_createvol"></a>4. Create a volume in the <span class="pwrenv">VolumeList</span></h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#pwrgsg_volconf">4.1. Configuring the volume</a></span></dt></dl></div>
+    
+
+    <p>In the <span class="pwrenv">VolumeList</span>, select
+    <span class="guimenu">File</span> &#8594; <span class="guisubmenu">Open..</span> &#8594; <span class="guimenuitem">GlobalVolumeList</span>
+    to open the <span class="pwrenv">VolumeList</span>. 
+    Request Edit mode. 
+    In the &#8220;<span class="quote">ProjectVolumes</span>&#8221; hierarchy, add a <span class="classname">VolumeReg</span> object. 
+    We name our <span class="classname">VolumeReg</span> object &#8220;<span class="quote">VolDEMO</span>&#8221; 
+    and assign it to the right project by writing demo in its project attribute. 
+    A project may have several volumes assigned to it, but not the other way around. 
+    A unique <span class="property">VolumeId</span> must be given. 
+    We choose <code class="literal">0.1.1.1</code>, 
+    see the <em class="citetitle">Designer's Guide</em> for a specification of the numbers.
+
+ Save the changes to the
+    volume list and go out of edit mode.</p>
+
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screenvolumelist"></a><img src="../screen_volumelist.png" align="middle"><div class="caption"><p>The volume list navigator.</p></div></div>
+    </div>
+
+    <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="pwrgsg_volconf"></a>4.1. Configuring the volume</h3></div></div></div>
+      
+
+      <p>When a volume is created, open the <span class="pwrenv">Directory</span> 
+      Navigator by <span class="mousebutton">right</span> clicking the <span class="classname">ProjectReg</span> 
+      object in the <span class="pwrenv">ProjectList</span>, and choosing 
+      <span class="guimenu">Popup menu</span> &#8594; <span class="guimenuitem">Open Project...</span>
+      An alternative way is to type
+      </p><pre class="screen"><code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">sdf</strong></span> <em class="parameter"><code>demo</code></em></code></strong></pre><p>      
+      The <span><strong class="command">sdf</strong></span> command sets up environment variables for the project with default values. 
+      The <span class="pwrenv">Directory</span> Navigator is then started with 
+      <span><strong class="command">pwrs</strong></span>. 
+      In the Navigator, request Edit mode as before (<span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">E</strong></span>), 
+      and a two-window view (<span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">W</strong></span>). 
+      The upper window corresponds to Volume configuration, and
+      the lower window to Node configuration. In the Volume window, 
+      we add a <span class="classname">RootVolumeConfig</span> object and name it &#8220;<span class="quote">VolDEMO</span>&#8221;. 
+      In the Node window we add a <span class="classname">System</span> and two 
+      <span class="classname">BusConfig</span> objects.</p>
+
+      <p>In the <span class="classname">System</span> object, 
+      the <span class="property">SystemName</span> attribute is the same as the
+      project name, i e &#8220;<span class="quote">demo</span>&#8221;. 
+      The <span class="property">SystemGroup</span> attribute should be set to
+      &#8220;<span class="quote">Common</span>&#8221;, which gives us authorization to edit the project later.</p>
+
+      <p>The two <span class="classname">BusConfig</span>
+      objects are for production and simulation, respectively. 
+      We name the objects after their bus numbers, choosing
+      <code class="literal">507</code> for production, and <code class="literal">999</code> for simulation. 
+      These values must be set in the <span class="property">BusNumber</span> attributes of the objects. 
+      To each of the <span class="classname">BusConfig</span> objects, 
+      we add a <span class="classname">NodeConfig</span> object. 
+      The <span class="classname">NodeConfig</span> attributes to be set
+      are <span class="property">ObjectName</span>, <span class="property">NodeName</span> 
+      and <span class="property">BootNode</span>, which are set to the name of the
+      runtime machine in question. 
+      We only use the development machine
+      <code class="systemitem">susetest</code>, 
+      and it is not possible to have separate buses for simulation and production. 
+      Therefore, we set up a dummy node on the production
+      bus and put <code class="systemitem">susetest</code> on the simulation bus. 
+      Finally, the <span class="property">OperatingSystem</span> (normally &#8220;<span class="quote">Linux on x86</span>&#8221;) 
+      and <span class="property">Address</span> (IP-address) of the node need to be specified.</p>
+
+      <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screendirvol1"></a><img src="../screen_directoryvolume1.png" align="middle"><div class="caption"><p>The directory volume navigator.</p></div></div>
+      </div>
+      
+      <div class="screenshot">
+	<div class="mediaobject" align="center"><a name="screendirvol2"></a><img src="../screen_directoryvolume2.png" align="middle"><div class="caption"><p>The directory volume navigator (again).</p></div></div>
+      </div>
+      
+      <p>With each of the <span class="classname">NodeConfig</span> objects follows two children, 
+      a <span class="classname">RootVolumeLoad</span> object and a 
+      <span class="classname">Distribute</span> object. 
+      The <span class="property">ObjectName</span> 
+      of the <span class="classname">RootVolumeLoad</span> object needs to be set. 
+      It is the same as the corresponding volume, &#8220;<span class="quote">VolDEMO</span>&#8221; in this case.</p>
+
+      <p>Save the changes and exit edit mode.
+      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Tip]" src="../tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top">
+	<p>
+	  The process of configuring project and volumes can be automatated in a script, 
+	  called from the command line in the Navigator. 
+	  See the <em class="citetitle">Designer's Guide</em>, at the  
+	  <a href="http://www.proview.se/" target="_top">Proview</a> site.
+	</p>
+      </td></tr></table></div><p>
+      </p>
+    </div>
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_plantnode"></a>5. Setting up plant and node hierarchies in the <span class="pwrenv">Volume</span> Navigator</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#pwrgsg_plantplc">5.1. Plant Hierarchy and Plc Programs</a></span></dt></dl></div>
+    
+    <p>
+    Open the <span class="pwrenv">Directory</span> Navigator with <span><strong class="command">pwrs</strong></span> from a terminal window 
+    (you may have to type <strong class="userinput"><code><span><strong class="command">sdf</strong></span> <em class="parameter"><code>demo</code></em></code></strong> at the terminal first). 
+    <span class="mousebutton">Right</span> click on the 
+    <span class="classname">RootVolumeConfig</span> object and choose 
+    <span class="guimenu">Popup menu</span> &#8594; <span class="guimenuitem">Open volume..</span>
+    to open the <span class="pwrenv">Volume</span> Navigator.
+    It is also possible to open the volume directly from the terminal, by passing
+    the volume name as an argument to <span><strong class="command">pwrs</strong></span>, <abbr class="abbrev">i.e.</abbr>
+    </p><pre class="screen"><code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">pwrs</strong></span> <em class="parameter"><code>VolDEMO</code></em></code></strong></pre><p>
+    Enter Edit mode and choose a two-window view. 
+    Make sure that the <span class="property">OperatingSystem</span> attribute is set correctly in 
+    <span class="guimenu">File</span> &#8594; <span class="guimenuitem">Volume attributes...</span>
+    </p>
+
+    <p>Now, add a <span class="classname">PlantHier</span> object to the top window, 
+    and a <span class="classname">NodeHier</span> object to the bottom window. 
+    To the <span class="classname">NodeHier</span>, we add a <span class="classname">Node</span> object, 
+    and name it &#8220;<span class="quote">SUSETEST</span>&#8221;. 
+    The plant hierarchy is a logical representation of the physical system to be controlled. 
+    It will contain the various signals and parameters needed, 
+    as well as the plc programs that perform the control operations. 
+    The node hierarchy is a representation of the hardware, with I/O-channels and system-level configurations. 
+    Proview currently supports the <span class="productname">Profibus/DP</span> fieldbus standard, 
+    as well as a number of less widespread <span class="hardware">QBUS</span> I/O cards. 
+    To keep this demonstration example general, we will leave out I/O configuration, and use internal signals only.
+    </p>
+    
+    <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="pwrgsg_plantplc"></a>5.1. Plant Hierarchy and Plc Programs</h3></div></div></div>
+      
+      
+      <p> We will now set up the plant hierarchy, which is a logical model of our physical system, 
+      and create the plc programs that will perform the control operations. 
+      We start by adding some analog and digital signals 
+      (<span class="classname">Av</span> and <span class="classname">Dv</span>)
+      to the plant hierarchy from the palette on the left-hand side. 
+      The palette is visible in Edit mode, only. 
+      Then we add a <span class="classname">PlcPgm</span> to the hierarchy (this is the plc program object). 
+      We need to connect it to the right <span class="classname">PlcThread</span> in the node hierarchy. 
+      Select the default &#8220;<span class="quote">100ms</span>&#8221; <span class="classname">PlcThread</span> 
+      under the <span class="classname">PlcProcess</span> object in the node hierarchy. 
+      Then connect it to the <span class="property">ThreadObject</span> attribute of the newly
+      created <span class="classname">PlcPgm</span> in the plant hierarchy. 
+      To do this, select the <span class="classname">PlcThread</span> and 
+      <span><strong class="keycap">Ctrl</strong></span>-<span class="mousebutton">Double click</span> 
+      on the <span class="property">ThreadObject</span> attribute.
+      Connections between other objects, e.g. I/O channels and signals, are created with 
+      <span><strong class="keycap">Ctrl</strong></span>-<span class="mousebutton">Double click</span> 
+      in a similar way.</p>
+      
+      <p>We need to set the thread priority of the <span class="classname">PlcThread</span>, 
+      as the default priority of <code class="literal">0</code> will give poor real time performance. 
+      This is done in the <span class="property">Prio</span> attribute of the 
+      <span class="classname">PlcThread</span>. 
+      A priority of <code class="literal">20</code> is suitable.
+      Save the changes made to the volume, and exit Edit mode.</p>
+
+      <div class="screenshot">
+	<div class="mediaobject" align="center"><a name="screennavigator"></a><img src="../screen_navigator.png" align="middle"><div class="caption"><p>The volume navigator.</p></div></div>
+      </div>  
+      
+      <p>To edit the plc program, make sure the <span class="pwrenv">Volume</span> 
+      Navigator is not in edit mode. 
+      Then select the <span class="classname">PlcPgm</span> and choose 
+      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Open program</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">L</strong></span></strong></span>).
+      The plc editor opens in a new window. 
+      Enter Edit mode. 
+      Now, add objects to the program by choosing from the left-hand side palette and middle clicking in the program area. 
+      We build a small example program consisting of a <span class="classname">Ramp</span> object, 
+      with analog input and output signals. 
+      Save the program and exit the editor.</p>
+
+      <div class="screenshot">
+	<div class="mediaobject" align="center"><a name="screenplceditor"></a><img src="../screen_plceditor.png" align="middle"><div class="caption"><p>The plc editor.</p></div></div>
+      </div>       
+      
+      <p>We now need to compile the program and create a load file and a boot file. 
+      This is done in the <span class="pwrenv">Volume</span> Navigator.
+      Select the whole plant hierarchy and choose 
+      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Compile</span>.
+      Then to create load and boot files, use
+      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Create Loadfile</span> and
+      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Create boot file</span>.
+      Check the outcome of the commands in the terminal window where you started the Navigator.
+      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Tip]" src="../tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top">
+	<p>
+	  The process of compiling plc programs and creating load and boot files can be automated in a wtt script. 
+	  See the <em class="citetitle">Designer's Guide</em>, at the  
+	  <a href="http://www.proview.se/" target="_top">Proview</a> site.
+	</p>
+      </td></tr></table></div><p>
+      </p>
+      
+    </div>
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_gui"></a>6. Process graphics and User Interfaces</h2></div></div></div>
+    
+
+    <p>To make a small GUI, open the Graphical Editor (GE) with 
+    <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Open graphical editor</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">K</strong></span></strong></span>)
+    To control the example system, add a slider with background and a trendcurve for the analog input and output.
+    Open the object attribute windows, 
+    and connect the relevant attributes to the corresponding signals in the plant hierarchy. 
+    This is done by selecting the signal, and 
+    <span><strong class="keycap">Ctrl</strong></span>-<span class="mousebutton">Double click</span> 
+    the attribute.
+    </p>
+    
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screenge"></a><img src="../screen_ge.png" align="middle"><div class="caption"><p>The Graphical Editor (GE).</p></div></div>
+    </div>    
+
+    <p>
+      We need to set the size of the image in 
+      <span class="guimenu">File</span> &#8594; <span class="guimenuitem">Graph attributes...</span>.
+    Place the cursor in the lower right corner of the image to read off suitable values for the x1 and y1 coordinates.
+    </p>
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screengraphattr"></a><img src="../screen_graphattributes.png" align="middle"><div class="caption"><p>The graph attributes window.</p></div></div>
+    </div>
+<p>    
+    Save the process image file as <code class="filename">demo.pwg</code>. 
+    To use it in runtime we need to copy it from the default location in 
+    <code class="filename">$pwrp_pop/</code> to <code class="filename">$pwrp_exe/</code>.
+    <sup>[<a name="id3377124" href="#ftn.id3377124">1</a>]</sup>
+    When we have a lot of process graphics for a project the easiest way is to type 
+</p><pre class="screen">
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">cp</strong></span> <em class="parameter"><code><code class="filename">$pwrp_pop/*.pwg</code></code></em> <em class="parameter"><code><code class="filename">$pwrp_exe</code></code></em></code></strong></pre><p>
+    </p>
+  </div>
+
+  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pwrgsg_runtime"></a>7. Runtime</h2></div></div></div>
+    
+
+    <p>Now our program is compiled, and we have created a load file and a boot file for the volume. 
+    To start the runtime system on the development machine, type 
+    </p><pre class="screen">
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">rt_ini</strong></span> &amp;</code></strong></pre><p>
+    To stop the runtime processes, type <strong class="userinput"><code><span><strong class="command">rt_ini</strong></span> <code class="option">-s</code></code></strong>, 
+    or <strong class="userinput"><code><span><strong class="command">. pwr_stop.sh</strong></span></code></strong> (while this holds for a development machine,  
+    the commands differ slightly on a runtime-only node, with a pwrrt package installed - see separate documentation). 
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Note]" src="../note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">
+      <p>For the runtime system to work correctly, you may have to mount an <code class="systemitem">mqueue</code>
+      on your system. 
+      This can be done by
+      </p><pre class="screen">
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">su</strong></span></code></strong>
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">mkdir</strong></span> <em class="parameter"><code><code class="filename">/dev/mqueue</code></code></em></code></strong>
+<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">mount</strong></span> <code class="option">-t</code> <em class="parameter"><code><code class="systemitem">mqueue</code></code></em> <code class="option">none</code> <em class="parameter"><code><code class="filename">/dev/mqueue</code></code></em></code></strong></pre><p>
+      The <code class="systemitem">mqueue</code> thus mounted will disappear after reboot. 
+      For a permanent mount, edit the <code class="filename">/etc/fstab</code> file.
+      </p>
+      <p>
+	You may also want to control that the <code class="envar">$PWR_BUS_ID</code> 
+	environment variable is set up correctly 
+	(it should match the chosen bus number, which is <code class="literal">999</code> in this case).
+      </p>
+    </td></tr></table></div><p>
+    If everything goes well, we can now open the <span class="pwrenv">Xtt</span> 
+    Runtime Navigator from the terminal with <span><strong class="command">rt_xtt</strong></span>.
+    </p>
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screenxtt"></a><img src="../screen_xtt.png" align="middle"><div class="caption"><p>The Xtt navigator.</p></div></div>
+    </div>
+<p>
+    To open the process image in <span class="pwrenv">Xtt</span>, 
+    use <span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">B</strong></span> to get a command line in the
+    navigator, and then type <strong class="userinput"><code><span><strong class="command">open graph</strong></span> <em class="parameter"><code><code class="filename">demo</code></code></em></code></strong>.</p>
+    <div class="screenshot">
+      <div class="mediaobject" align="center"><a name="screengert"></a><img src="../screen_gert.png" align="middle"><div class="caption"><p>The graph in the runtime environment.</p></div></div>
+    </div>
+  </div>
+<div class="footnotes"><br><hr width="100" align="left"><div class="footnote">
+    <p><sup>[<a name="ftn.id3377124" href="#id3377124">1</a>] </sup>The initial <span><strong class="command">sdf</strong></span> sets <code class="filename">$pwrp_pop/</code> 
+    and <code class="filename">$pwrp_exe/</code> to point to certain directories in the project tree. 
+    These are <em class="replaceable"><code>projectpath</code></em><code class="filename">/common/src/pop/</code>
+    and <em class="replaceable"><code>projectpath</code></em><code class="filename">/x86_linux/exe/</code>, respectively.</p>
+    </div></div></div></body></html>
