@@ -1,4 +1,4 @@
-060227 cs  -          Changelog created.
+#060227 cs  -          Changelog created.
 060509 cs  bcomp      Attribute DisableAlarm added to CompLimit to make it possible to use
                       the limit supervision in BaseSensor without alarm.
 060522 cs  bcomp      New classes CompPID and CompModePID: PID controller divided in main object

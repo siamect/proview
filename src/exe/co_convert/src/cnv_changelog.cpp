@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.2 2006-05-22 13:31:41 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.3 2006-09-07 14:03:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,8 @@ int CnvChangeLog::read( char *module)
     sts = CnvCtx::read_line( orig_line, sizeof(orig_line), fp);
     if ( !sts)
       break;
+    else if ( orig_line[0] == '#')
+      continue;
     else {
       if ( isdigit(orig_line[0])) {
 	LogEntry p;
@@ -257,19 +259,25 @@ void CnvChangeLog::print_docbook()
 #endif
 
   sort_time();
+
+  fp << "<table xml:id=\"changelog_\" border=\"1\"><tbody>" << endl <<
+    "<tr><td><classname>Date________</classname></td>" << endl <<
+    "<td><classname>Module_____</classname></td>" << endl <<
+    "<td><classname>Change</classname></td></tr>" << endl;
+
   for ( int i = (int) entries.size() - 1; i >= 0; i--) {
     time_AtoAscii( &entries[i].time, time_eFormat_DateAndTime, timstr1, sizeof(timstr1));
     timstr1[11] = 0;
     
-    fp << "<table xml:id=\"changelog_" << i << "\" width=\"2in\" border=\"0\"><tbody>" <<
-      "<tr><td><classname>Module</classname></td><td><classname>   " << entries[i].module << "</classname></td></tr>" << endl <<
-      "<tr><td><classname>Component</classname></td><td>   " << entries[i].component << "</td></tr>" << endl <<
-      "<tr><td><classname>Signature</classname></td><td>   " << entries[i].signature << "</td></tr>" << endl <<
-      "<tr><td><classname>Date</classname></td><td>   " << timstr1 << "</td></tr>" << endl <<
-      "</tbody></table>" << endl <<
-      "<para>" << entries[i].text << "</para>" << endl;
+
+
+
+
+    fp << "<tr><td>" << timstr1 << "</td><td>" << entries[i].module << "/" << entries[i].component << "</td>" << endl <<
+      "<td>" << entries[i].text << " /" << entries[i].signature << "</td></tr>" << endl;
+
   }
-  fp << "</section></article>" << endl;
+  fp << "</tbody></table></section></article>" << endl;
 }
 
 

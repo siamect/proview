@@ -13,7 +13,7 @@
          xmlns:xhtml="http://www.w3.org/1999/xhtml"
          xmlns:xlink="http://www.w3.org/1999/xlink">
   <info>
-    <title><application>Proview 4.1</application> Getting Started Guide</title>
+    <title><application>Proview 4.2</application> Getting Started Guide</title>
 
     <subtitle>A step-by-step guide to set up a minimal <application>Proview</application> system</subtitle>
 
@@ -418,6 +418,13 @@
 
       Check the outcome of the command in the terminal window where you started the Navigator.
       </para>
+
+      <note>
+      <para>A lock-file is created when opening Navigator to prevent other users from opening the same database.
+      After an uncontrolled termination of the Navigator, the lock might remain, and has to be removed manually.
+      <screen><prompt>bash$</prompt> <userinput><command>rm</command> <parameter>$pwrp_db/*.db.lock</parameter></userinput></screen>
+      </para>
+    </note>
       
     </section>
   </section>

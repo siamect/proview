@@ -106,9 +106,11 @@ clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 
 #targetsuffixes := _single.html _index.html .pdf
 targetsuffixes := _single.html .pdf
+nopdf_targetsuffixes := _single.html
 
 sv_se_xmlsources := dbpwr.xml upgrade42.xml
-en_us_xmlsources := pwrgsg.xml upgrade42.xml changelog.xml
+en_us_xmlsources := pwrgsg.xml upgrade42.xml
+en_us_xml_nopdf_sources := changelog.xml
 
 #add on the following line master files that include their parts / chapters by means of xinclude
 #also add an explicit rule for each master file below
@@ -122,6 +124,11 @@ sv_se_xmltargets := $(addprefix $(pwre_sroot)/doc/man/sv_se/, \
 en_us_xmltargets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
 	$(foreach targetsuffix, $(targetsuffixes), \
 	$(foreach basefile, $(basename $(en_us_xmlsources)), \
+	$(addsuffix $(targetsuffix), $(basefile)))))
+
+en_us_xml_nopdf_targets := $(addprefix $(pwre_sroot)/doc/man/en_us/, \
+	$(foreach targetsuffix, $(nopdf_targetsuffixes), \
+	$(foreach basefile, $(basename $(en_us_xml_nopdf_sources)), \
 	$(addsuffix $(targetsuffix), $(basefile)))))
 
 
@@ -208,7 +215,7 @@ realclean : clean $(clean_pdf) $(clean_c)
 
 # added by jonas_h 2006-04-nn
 
-docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) 
+docbook : $(xi_dependents) $(sv_se_xmltargets) $(en_us_xmltargets) $(en_us_xml_nopdf_targets)
 
 # end of
 

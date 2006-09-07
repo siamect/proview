@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Proview 4.1 Getting Started Guide</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id3374775"></a><span class="application">Proview 4.1</span> Getting Started Guide</h1></div><div><h3 class="subtitle"><i>A step-by-step guide to set up a minimal <span class="application">Proview</span> system</i></h3></div><div><div class="author"><h3 class="author"><span class="firstname">Jonas</span> <span class="surname">Haulin</span></h3><div class="affiliation">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Proview 4.2 Getting Started Guide</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id3374751"></a><span class="application">Proview 4.2</span> Getting Started Guide</h1></div><div><h3 class="subtitle"><i>A step-by-step guide to set up a minimal <span class="application">Proview</span> system</i></h3></div><div><div class="author"><h3 class="author"><span class="firstname">Jonas</span> <span class="surname">Haulin</span></h3><div class="affiliation">
         <span class="orgname">Proview/R<br></span>
         <div class="address"><p> <code class="email">&lt;<a href="mailto:info@proview.se">info@proview.se</a>&gt;</code> </p></div>
       </div></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#pwrgsg_about">1. About this guide</a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_conventions">1.1. Conventions used in this document</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_pwra">2. Open the administrator environment</a></span></dt><dt><span class="section"><a href="#pwrgsg_createproj">3. Create a project in the <span class="pwrenv">ProjectList</span></a></span></dt><dt><span class="section"><a href="#pwrgsg_createvol">4. Create a volume in the <span class="pwrenv">VolumeList</span></a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_volconf">4.1. Configuring the volume</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_plantnode">5. Setting up plant and node hierarchies in the <span class="pwrenv">Volume</span> Navigator</a></span></dt><dd><dl><dt><span class="section"><a href="#pwrgsg_plantplc">5.1. Plant Hierarchy and Plc Programs</a></span></dt></dl></dd><dt><span class="section"><a href="#pwrgsg_gui">6. Process graphics and User Interfaces</a></span></dt><dt><span class="section"><a href="#pwrgsg_runtime">7. Runtime</a></span></dt></dl></div>
@@ -300,20 +300,18 @@
       
       <p>We now need to compile the program and create a load file and a boot file. 
       This is done in the <span class="pwrenv">Volume</span> Navigator.
-      Select the whole plant hierarchy and choose 
-      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Compile</span>.
-      Then to create load and boot files, use
-      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Create Loadfile</span> and
-      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Create boot file</span>.
-      Check the outcome of the commands in the terminal window where you started the Navigator.
-      </p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Tip]" src="../tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top">
-	<p>
-	  The process of compiling plc programs and creating load and boot files can be automated in a wtt script. 
-	  See the <em class="citetitle">Designer's Guide</em>, at the  
-	  <a href="http://www.proview.se/" target="_top">Proview</a> site.
-	</p>
-      </td></tr></table></div><p>
+      Choose 
+      <span class="guimenu">Functions</span> &#8594; <span class="guimenuitem">Build Node</span> in the menu.
+
+      Check the outcome of the command in the terminal window where you started the Navigator.
       </p>
+
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Note]" src="../note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">
+      <p>A lock-file is created when opening Navigator to prevent other users from opening the same database.
+      After an uncontrolled termination of the Navigator, the lock might remain, and has to be removed manually.
+      </p><pre class="screen"><code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">rm</strong></span> <em class="parameter"><code>$pwrp_db/*.db.lock</code></em></code></strong></pre><p>
+      </p>
+    </td></tr></table></div>
       
     </div>
   </div>
@@ -347,7 +345,7 @@
     Save the process image file as <code class="filename">demo.pwg</code>. 
     To use it in runtime we need to copy it from the default location in 
     <code class="filename">$pwrp_pop/</code> to <code class="filename">$pwrp_exe/</code>.
-    <sup>[<a name="id3377124" href="#ftn.id3377124">1</a>]</sup>
+    <sup>[<a name="id3377078" href="#ftn.id3377078">1</a>]</sup>
     When we have a lot of process graphics for a project the easiest way is to type 
 </p><pre class="screen">
 <code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">cp</strong></span> <em class="parameter"><code><code class="filename">$pwrp_pop/*.pwg</code></code></em> <em class="parameter"><code><code class="filename">$pwrp_exe</code></code></em></code></strong></pre><p>
@@ -396,7 +394,7 @@
     </div>
   </div>
 <div class="footnotes"><br><hr width="100" align="left"><div class="footnote">
-    <p><sup>[<a name="ftn.id3377124" href="#id3377124">1</a>] </sup>The initial <span><strong class="command">sdf</strong></span> sets <code class="filename">$pwrp_pop/</code> 
+    <p><sup>[<a name="ftn.id3377078" href="#id3377078">1</a>] </sup>The initial <span><strong class="command">sdf</strong></span> sets <code class="filename">$pwrp_pop/</code> 
     and <code class="filename">$pwrp_exe/</code> to point to certain directories in the project tree. 
     These are <em class="replaceable"><code>projectpath</code></em><code class="filename">/common/src/pop/</code>
     and <em class="replaceable"><code>projectpath</code></em><code class="filename">/x86_linux/exe/</code>, respectively.</p>
