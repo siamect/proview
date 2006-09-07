@@ -1639,7 +1639,7 @@ plcprogrammets volym ska exekvera på. Öppna volymsattribut-editorn från konfigur
 operativsystem kan väljas. Volymen kan samtidigt köras i produktions-systemet, på ett
 simulerings-system och i ett utbildnings-system, och alla kan ha olika plattform.
 
-Nu kompileras plcprogrammet genom att välja 'File/Compile' i plceditorns meny. Eventuella
+Nu kompileras plcprogrammet genom att välja 'File/Build' i plceditorns meny. Eventuella
 fel och varningar visas i meddelandefönstret.
 </topic>
 </chapter>
@@ -1767,12 +1767,12 @@ Det görs från menyn i konfiguratören, 'File/Syntax'.
 <h2>Skapa laddatafiler
 Innan runtimemiljön kan startas för systemet, måste man skapa laddatafiler, en för varje
 rotvolym, subvolym och klassvolym. Laddatafiler skapas från menyn i konfiguratören, 
-'Function/Create Load Files'.
+'Function/Build Volume'.
 
 <h2>Skapa bootfil
 För varje nod i projektet ska man skapa en bootfil. Bootfilen innehåller huvudsakligen vilken
 rotvolym som ska laddas in när noden startas. Bootfilen skapas från menyn i konfiguratören,
-'Functions/Create Boot File'. Detta kommando bygger även ihop ett plcprogram för noden.
+'Functions/Build Node'. Detta kommando bygger även ihop ett plcprogram för noden.
 
 <b>Val av nod vid skapande av bootfil
 <image> dg_fig66.gif
@@ -2419,7 +2419,7 @@ finns objekt med egendefinierad c-kod, t ex CArithm eller DataArithm, kan c-komp
 hitta fel som skrivs ut i terminalfönstret. Kontrollera alltid i terminalfönstret att 
 kompileringen gick bra.
 
-Kompileringen utförs genom att 'File/Compile' aktiveras i menyn.
+Kompileringen utförs genom att 'File/Build' aktiveras i menyn.
 
 Om man vill kontrollera syntaxen utan att generera kod, aktiverar man 'File/Syntax'. Här
 körs inte c-kompilatorn, så eventuella c-kods fel upptäcks inte.

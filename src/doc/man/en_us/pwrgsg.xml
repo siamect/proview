@@ -410,28 +410,13 @@
       
       <para>We now need to compile the program and create a load file and a boot file. 
       This is done in the &pwrvolume; Navigator.
-      Select the whole plant hierarchy and choose 
+      Choose 
       <menuchoice>
 	<guimenu>Functions</guimenu>
-	<guimenuitem>Compile</guimenuitem>
-      </menuchoice>.
-      Then to create load and boot files, use
-      <menuchoice>
-	<guimenu>Functions</guimenu>
-	<guimenuitem>Create Loadfile</guimenuitem>
-      </menuchoice> and
-      <menuchoice>
-	<guimenu>Functions</guimenu>
-	<guimenuitem>Create boot file</guimenuitem>
-      </menuchoice>.
-      Check the outcome of the commands in the terminal window where you started the Navigator.
-      <tip>
-	<para>
-	  The process of compiling plc programs and creating load and boot files can be automated in a wtt script. 
-	  See the <citetitle pubwork="book">Designer's Guide</citetitle>, at the  
-	  <link xlink:href="http://www.proview.se/">Proview</link> site.
-	</para>
-      </tip>
+	<guimenuitem>Build Node</guimenuitem>
+      </menuchoice> in the menu.
+
+      Check the outcome of the command in the terminal window where you started the Navigator.
       </para>
       
     </section>

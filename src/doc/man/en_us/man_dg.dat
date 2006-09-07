@@ -1686,7 +1686,7 @@ the plc should run. Open the volume attributes editor from the navigator menu:
 system can be choosen. The volume can at the same time be run in the production system, in a 
 simulation system and in a educational system, and the systems can have different platforms.
 
-Now, the plcgpm is compiled, by choosing 'File/Compile' in the plc editor. Any waring or error 
+Now, the plcgpm is compiled, by choosing 'File/Build' in the plc editor. Any waring or error 
 messages will be displayed in the message window.
 </topic>
 </chapter>
@@ -1817,14 +1817,14 @@ menu in the navigator, 'File/Syntax'.
 <h2>Creating Load Files 
 Before starting the runtime environment you have to create a number of load files, one for each
 volume in your system. You create the load files from the Navigator of each volume,
-'Function/Create Load Files'.
+'Function/Build Volume'.
 
 <h2>Creating Boot Files
 For every node in the project you have to create a boot file. The bootfile contains mainly the 
 root volume to load for the node. The bootfile is created from the configurator menu, 
-'Functions/Create Boot File'. This command will also build the plcprogram for the node.
+'Functions/Build Node'. This command will also build the plcprogram for the node.
 
-<b>Selct node when creating a bootfile
+<b>Select node when creating a bootfile
 <image> dg_fig66.gif
 
 At this point, everything in the development environment is configured and generated, and its 
@@ -2475,7 +2475,7 @@ with user defined c-code, e.g CArithm or DataArithm, the c compiler can find err
 is written in the terminal window. Always look in the terminal window to check that the
 compilation succeeded.
 
-The compile is executed from 'File/Compile' in the menu.
+The compile is executed from 'File/Build' in the menu.
 
 If you want to check the syntax witout generating any code, you activate 'File/Syntax'. The
 c compiler is not activated, thus possible c code errors are not detected.
@@ -2545,7 +2545,7 @@ File/Print/Documents <t><t>Print all documents.
 File/Print/Overview  <t><t>Print an overview.
 File/Print/Selected documents <t><t>Print selected documents.
 File/Syntax  <t><t>Perform a syntax check of the code.
-File/Compile <t><t>Compile the program.
+File/Build <t><t>Compile the program.
 File/Plc Attributes <t><t>Open the Object editor for the PlcPgm object.
 File/Delete Window  <t><t>Delete the plc window.
 File/Save Trace <t><t>Save trace objects.
