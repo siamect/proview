@@ -8,16 +8,16 @@
 #
 
 
-Name:		pwr42
-Summary: 	Proview/R development and runtime environment
-Version:        4.2.0
-Release: 	7
-Copyright:	(c) 2006 SSAB Oxelösund AB, Sweden
-#License:        GPL
-BuildArch:      i386
-Packager: 	robert.karlsson@ssabox.com
-Group: 		Development/Tools/Other
-Url:            http://www.proview.se
+Name: pwr42
+Summary: Proview/R development and runtime environment
+Version: 4.2.0
+Release: 7
+Copyright: (c) 2006 SSAB Oxelösund AB, Sweden
+#License: GPL
+BuildArch: i386
+Packager: robert.karlsson@ssabox.com
+Group: Development/Tools/Other
+Url: http://www.proview.se
 
 %description
 For more information please see www.proview.se.
@@ -192,12 +192,4 @@ fi
 - Volume volref version check for not yet loaded volume removed.
 - Problems with mq quota fixed.
 - Profibus: problems with user PRM data for bigendian slaves fixed.
-* Tue Feb 14 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-2
-- Template values in Profibus objects added.
-- Template IoConnections for ABB_ACS800PumpAggr added.
-- Bugfix in BaseMotorIncrDecrAggr. LimitSwitchIncr/LimitSwitchDecr was switched.
-- Bugfix in volume creation. Flags in volume object was not initialized.
-- Bugfix in gdh_DisableAttr. Didn't work on remote objects.
-- Bugfix in classcache. Large classes wasn't loaded correctly.
-* Tue Jan 31 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
 - Base release 

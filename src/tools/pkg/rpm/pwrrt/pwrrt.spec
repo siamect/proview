@@ -8,16 +8,16 @@
 #
 
 
-Name:		pwrrt
-Summary: 	Proview/R runtime environment
-Version:        4.2.0
-Release: 	8
-Copyright:	(c) 2006 SSAB Oxelösund AB, Sweden
-#License:        GPL
-BuildArch:      i386
-Packager: 	robert.karlsson@ssabox.com
-Group: 		Applications/System
-Url:            http://www.proview.se
+Name: pwrrt
+Summary: Proview/R runtime environment
+Version: 4.2.0
+Release: 8
+Copyright: (c) 2006 SSAB Oxelösund AB, Sweden
+#License: GPL
+BuildArch: i386
+Packager: robert.karlsson@ssabox.com
+Group: Applications/System
+Url: http://www.proview.se
 
 %description
 For more information please see www.proview.se.
@@ -475,12 +475,4 @@ fi
 - rt_qmon: Fixed setting of priorities for threads.
 - rt_tmon: Fixed problem with memory allocation.
 - Plc: Fixed setting of priorities for threads.
-* Tue Feb 14 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-2
-- Template values in Profibus objects added.
-- Template IoConnections for ABB_ACS800PumpAggr added.
-- Bugfix in BaseMotorIncrDecrAggr. LimitSwitchIncr/LimitSwitchDecr was switched.
-- Bugfix in volume creation. Flags in volume object was not initialized.
-- Bugfix in gdh_DisableAttr. Didn't work on remote objects.
-- Bugfix in classcache. Large classes weren't loaded correctly.
-* Tue Jan 31 2006 Robert Karlsson <robert.karlsson@ssabox.com> 4.1.3-1
 - Base release 

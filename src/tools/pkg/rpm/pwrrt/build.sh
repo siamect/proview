@@ -12,6 +12,90 @@ if [ -e $pwr_inc/pwr_version.h ]; then
 fi
 
 
+# Generate version help file
+{
+  if [ ! -e $pwre_sroot/tools/pkg/rpm/pwrrt/pwrrt.spec ]; then
+    echo "Controlfile not found"
+    exit 1
+  fi
+  datfile=$pwre_sroot/tools/pkg/rpm/pwrrt/pwrrt.spec
+
+  echo "<topic> version"
+  d=`eval date +\"%F %X\"`
+
+  {
+    let printout=0
+    while read line; do
+      if [ "${line:0:6}" = "Name: " ]; then 
+        package=${line#Name: }
+      fi
+      if [ "${line:0:9}" = "Version: " ]; then
+        version=${line#Version: }
+      fi
+      if [ "${line:0:9}" = "Release: " ]; then
+        release=${line#Release: }
+      fi
+      if [ "${line:0:11}" = "BuildArch: " ]; then
+        arch=${line#BuildArch: }
+      fi
+      if [ "${line:0:9}" = "Summary: " ]; then
+        summary=${line#Summary: }
+      fi
+
+      if [ "${line:0:10}" = "%changelog" ]; then
+        echo ""
+        echo "<image> pwr_logga.gif"
+	echo ""
+	echo ""
+	echo ""
+        echo "<b>Proview V${version:0:3}"
+	echo "Version V$version"
+        echo ""
+        echo "Copyright © 2004-${d:0:4} SSAB Oxelösund AB"
+        echo ""
+        echo "This program is free software; you can redistribute it and/or"
+        echo "modify it under the terms of the GNU General Public License as" 
+        echo "published by the Free Software Foundation, either version 2 of"
+        echo "the License, or (at your option) any later version."
+        echo ""
+        echo "This program is distributed in the hope that it will be useful" 
+        echo "but WITHOUT ANY WARRANTY; without even the implied warranty of" 
+        echo "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+        echo "For more details, see the"
+        echo "GNU General Public License. <weblink> http://www.proview.se/gpllicense.html"
+        echo ""
+        echo "E-mail postmaster@proview.se <weblink> mailto:postmaster@proview.se"
+        echo "Internet www.proview.se <weblink> http://www.proview.se"
+	echo ""
+	echo ""
+	echo "<b>Package"
+	echo "Package $package""-""$version""-""$release"".""$arch"
+	echo "Build date $d"
+	echo "Package description:"
+	echo "$summary"
+	echo ""
+
+        printout=1
+      else
+        if [ $printout -eq 1 ]; then
+	  if [ "${line:0:1}" = "-" ]; then
+            echo $line
+	  else
+            echo ${line:2}
+          fi
+        fi
+      fi
+    done
+  } < $datfile
+  echo "</topic>"
+} > $pwr_eexe/xtt_version_help.dat
+
+# Convert to html
+co_convert -t -d $pwr_doc $pwr_eexe/xtt_version_help.dat
+
+# Print rt version file
+echo "Version: $version" > $pwr_eexe/rt_version.dat
+
 if [ "$1" == "-v" ]; then
   exit
 fi
