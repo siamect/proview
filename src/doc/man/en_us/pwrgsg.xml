@@ -117,7 +117,14 @@
     </menuchoice>.
     Make sure <keycap>NumLock</keycap> is not set on the keyboard, 
     as Ctrl commands with NumLock enabled are not yet
-    supported in <application>Proview</application>.</para>
+    supported in <application>Proview</application>.
+    <tip>
+      <para>In some cases, you have to gain the Administrator privilege
+      to enter edit mode. Login as administrator with the command 
+      <command>login /administrator</command>.
+      (use <keycombo><keycap>Ctrl</keycap><keycap>B</keycap></keycombo>, to get a command line).</para>
+    </tip>
+    </para>
   </section>
 
   <section xml:id="pwrgsg_createproj">

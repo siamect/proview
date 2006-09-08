@@ -11,7 +11,7 @@
 Name: pwr42
 Summary: Proview/R development and runtime environment
 Version: 4.2.0
-Release: 7
+Release: 8
 Copyright: (c) 2006 SSAB Oxelösund AB, Sweden
 #License: GPL
 BuildArch: i386

@@ -11,7 +11,7 @@
 Name:		pwrdemo42
 Summary: 	Proview/R demo project
 Version:        4.2.0
-Release: 	7
+Release: 	8
 Copyright:	(c) 2005 SSAB Oxelound AB, Sweden
 #License:        GPL
 BuildArch:      i386
