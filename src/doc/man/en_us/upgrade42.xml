@@ -553,8 +553,8 @@
   <para><note>Upgradeing a Debian project from V4.1.3 requires that a new debian release is 
   installed.
   Dump the project with the reload.sh script before installing the new debian release,
-  and while the project is still pointing at V4.1.3. Execute the only the dumpdb pass.
-  Intall the new debian release, and when executing the upgrade.sh script, skip the dumpdb
+  and while the project is still pointing at V4.1.3. Execute only the dumpdb pass.
+  Install the new debian release, and when executing the upgrade.sh script, skip the dumpdb
   pass. </note></para>
 
   <para>The upgrading is made in two steps:
