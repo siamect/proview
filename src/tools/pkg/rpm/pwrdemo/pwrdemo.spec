@@ -12,7 +12,7 @@ Name:		pwrdemo42
 Summary: 	Proview/R demo project
 Version:        4.2.0
 Release: 	7
-Copyright:	(c) 2006 SSAB Oxelound AB, Sweden
+Copyright:	(c) 2005 SSAB Oxelound AB, Sweden
 #License:        GPL
 BuildArch:      i386
 Packager: 	robert.karlsson@ssabox.com
@@ -68,6 +68,7 @@ fi
 
 # Insert nodename in DirectoryVolume and create bootfile
 nodename=`eval uname -n`
+nodename=${nodename%%.*}
 initsh=/tmp/pwrdemo_init.sh
 initpwrc=/tmp/pwrdemo_init.pwr_com
 
