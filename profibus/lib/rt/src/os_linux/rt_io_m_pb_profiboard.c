@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.3 2006-04-12 12:16:59 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.4 2006-09-14 10:28:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -268,7 +268,8 @@ static short act_param_loc(int fp,
 \*----------------------------------------------------------------------------*/
 static pwr_tStatus init_dp_slave (
   io_sAgent	*ap,
-  pwr_tObjid	oid
+  pwr_tObjid	oid,
+  int restart
 )
 {
   
@@ -291,7 +292,11 @@ static pwr_tStatus init_dp_slave (
  
   // Try to initialize slave, make three attempts before we give up
 
+  sts = PB_OK;
+  
   for(i=0; i<3; i++) {
+if (!restart) {
+
     if (op->AutoConfigure == 1) {
       sts = pb_get_slave_cfg(local_agent->Pb_fp,
 		       op->SlaveAddress,
@@ -314,6 +319,7 @@ static pwr_tStatus init_dp_slave (
 		      op->ConfigDataLen,
 		      &op->ConfigData);
     }
+}
     if (sts == PB_OK) {
       sts = pb_get_slave_info(local_agent->Pb_fp, 
 			op->SlaveAddress, 
@@ -393,6 +399,12 @@ static pwr_tStatus IoAgentInit (
     return IO__SUCCESS;
   }
   
+  if (ctx->Node->Restarts > 0) {
+    errh_Info( "Warm restart - Skipping config of Profibus DP Master %s", ap->Name);
+    op->Status = PB__NORMAL;
+//    return IO__SUCCESS;
+  }
+  
   errh_Info( "Config of Profibus DP Master %s", ap->Name);
       
   if (op->DisableBus != 1) {
@@ -401,6 +413,7 @@ static pwr_tStatus IoAgentInit (
     
     while (!ok) {
     
+if (ctx->Node->Restarts == 0) {
       op->Status = PB__NOTINIT;
       
       /* Initialize CMI */
@@ -456,7 +469,7 @@ static pwr_tStatus IoAgentInit (
       }
 
       op->Status = PB__STOPPED;
-
+}
       /* Loop through all slaves (traverse agent's children) and initialize them */
 
       op->NumberSlaves = 0;
@@ -465,12 +478,13 @@ static pwr_tStatus IoAgentInit (
       while (ODD(status)) {
         status = gdh_GetObjectClass(slave_objid, &slave_class);
 //	printf("Found slave, class %d\n", slave_class);
-        status = init_dp_slave(ap, slave_objid);
+        status = init_dp_slave(ap, slave_objid, ctx->Node->Restarts);
         op->NumberSlaves++;
         status = gdh_GetNextSibling(slave_objid, &slave_objid);
       }
 
       /* Move to CLEAR and OPERATE mode */
+if (ctx->Node->Restarts == 0) {
   
       sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_CLEAR);
       if (sts == PB_OK) {
@@ -503,6 +517,7 @@ static pwr_tStatus IoAgentInit (
           nanosleep(&rqtp, &rmtp);
 	}
       }
+}
     
     }
     
