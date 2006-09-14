@@ -1,5 +1,5 @@
 Package: pwrdemo42
-Version: 4.2.0-1
+Version: 4.2.0-8
 Section: base
 Priority: optional
 Architecture: i386
@@ -13,4 +13,4 @@ Description: Proview Demo Project package
    - Demo graphs for BaseComponents added.
    - Demo graph for level control added.
  4.2.0-1 Upgraded to Proview V4.2
- 4.2.0-7 Upgraded to Proview V4.2.0-7
+ 4.2.0-8 Upgraded to Proview V4.2.0-8
