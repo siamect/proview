@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolcm.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvolcm.c,v 1.3 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -253,7 +253,7 @@ cvolcm_FlushNode (
   pwr_tStatus		lsts;
 
   gdb_AssumeLocked;
-  pwr_Assert(np != gdbroot->my_node && np != gdbroot->no_node);
+  pwr_Assert( np != gdbroot->my_node && np != gdbroot->no_node);
 
   for (
     vl = pool_Qsucc(NULL, gdbroot->pool, &np->own_lh);
@@ -454,5 +454,49 @@ cvolcm_TrimOld (
     op = pool_Qitem(ol, gdb_sObject, u.c.cache_ll);
     vp = pool_Address(NULL, gdbroot->pool, op->l.vr);
     cvol_FreeObject(NULL, vp, op, vol_mLink_cacheTrim);
+  }
+}
+
+void
+cvolcm_ExternVolumeFlush( 
+  gdb_sNode *np
+) 
+{
+
+  pool_sQlink		*vl;
+  gdb_sVolume		*vp;
+  pool_sQlink		*ol;
+  gdb_sObject		*op;
+  gdb_sMountServer	*msp;
+  pwr_tStatus 		sts;
+
+  // Flush local node
+  gdb_AssumeLocked;
+
+  for (
+       vl = pool_Qsucc(NULL, gdbroot->pool, &np->own_lh);
+       vl != &np->own_lh;
+       vl = pool_Qsucc(NULL, gdbroot->pool, vl)
+       ) {
+    vp = pool_Qitem(vl, gdb_sVolume, l.own_ll);
+    pwr_Assert(vp->l.flags.b.isCached);
+    if (vp->l.flags.b.isCached) {
+
+      for (
+	   ol = pool_Qsucc(NULL, gdbroot->pool, &vp->l.obj_lh);
+	   ol != &vp->l.obj_lh;
+	   ol = pool_Qsucc(NULL, gdbroot->pool, &vp->l.obj_lh)
+	   ) {
+	op = pool_Qitem(ol, gdb_sObject, l.obj_ll);
+	if (op->l.flags.b.isMountServer) {
+	  msp = (gdb_sMountServer *) hash_Search(&sts, gdbroot->ms_ht, &op->g.oid);
+	  if (msp == NULL) errh_Bugcheck(sts, "mount server inconsitency");
+	  msp->msor = pool_cNRef;
+	  pool_Qremove(NULL, gdbroot->pool, &msp->nodms_ll);
+	  /* Todo !!! Clear alarm and blocklevel in all mount clients. */
+	}
+	cvol_FlushObject(op);
+      }
+    }
   }
 }

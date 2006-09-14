@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolcm.h,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cvolcm.h,v 1.3 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,4 +82,8 @@ void
 cvolcm_TrimOld (
 );
 
+void
+cvolcm_ExternVolumeFlush( 
+  gdb_sNode *np
+);
 #endif

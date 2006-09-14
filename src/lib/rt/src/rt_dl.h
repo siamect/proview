@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_dl.h,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_dl.h,v 1.3 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,7 @@ typedef struct {
 					   pwr_tSubid in subscription clients and servers */
   pool_sQlink		subc_htl;	/* Subscription client hash table link.  */
   pool_sQlink		dl_ll;		/* Link to next/previous.  */
-  pool_tRef		or;		/* Pool reference to object.  */
+  pool_tRef		opr;		/* Pool reference to object.  */
   pid_t			user;		/* Who requested the direct link.  */
   pwr_sAttrRef		aref;		/* Object data referred.  */
 } dl_sLink;

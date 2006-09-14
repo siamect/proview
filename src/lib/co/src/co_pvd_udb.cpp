@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_udb.cpp,v 1.2 2005-11-22 12:25:40 claes Exp $
+ * Proview   $Id: co_pvd_udb.cpp,v 1.1 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "wb_vext.h"
-#include "wb_pvd_udb.h"
+#include "co_pvd_udb.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
 
@@ -35,12 +35,12 @@ extern "C" {
 #include "co_dcli.h"
 }
 
-void wb_pvd_udb::save( pwr_tStatus *sts)
+void co_pvd_udb::save( pwr_tStatus *sts)
 {
   gu->clear();
 
   for ( int i = 1; i < (int)m_list.size(); i++) {
-    if ( m_list[i].flags & pitem_mFlags_Deleted)
+    if ( m_list[i].flags & procom_obj_mFlags_Deleted)
       continue;
 
     switch ( m_list[i].cid) {
@@ -71,7 +71,7 @@ void wb_pvd_udb::save( pwr_tStatus *sts)
   *sts = gu->save();
 }
 
-char *wb_pvd_udb::groupname( char *name)
+char *co_pvd_udb::groupname( char *name)
 {
   static char str[200];
   char *s, *t;
@@ -86,7 +86,7 @@ char *wb_pvd_udb::groupname( char *name)
   return str;
 }
 
-void wb_pvd_udb::load( pwr_tStatus *rsts)
+void co_pvd_udb::load( pwr_tStatus *rsts)
 {
   char		filename[256];
   int		sts;
@@ -99,10 +99,20 @@ void wb_pvd_udb::load( pwr_tStatus *rsts)
   gu->load( filename);
  
   // Create Root object
-  pitem rootitem;
-  strcpy( rootitem.name, "UserDatabase");
-  rootitem.cid = pwr_eClass_PlantHier;
-  rootitem.oix = 0; 
+
+  procom_obj rootitem;
+  if ( m_env == pvd_eEnv_Wb) {
+    strcpy( rootitem.name, "UserDatabase");
+    rootitem.cid = pwr_eClass_PlantHier;
+    rootitem.oix = 0; 
+  }
+  else {
+    strcpy( rootitem.name, "VolUserDatabase");
+    rootitem.cid = pwr_eClass_ExternVolume;
+    rootitem.oix = 0; 
+    rootitem.body_size = sizeof(pwr_sExternVolume);
+    rootitem.body = calloc( 1, rootitem.body_size);
+  }
   m_list.push_back(rootitem);
   menu_stack[menu_cnt] = rootitem.oix;
   menu_cnt++;
@@ -113,11 +123,22 @@ void wb_pvd_udb::load( pwr_tStatus *rsts)
 
     systemgroup = systemgroup->next_system();
   }
+
+  if ( m_env == pvd_eEnv_Rt) {
+    // Convert to Rt style
+    for ( int i = 1; i < (int)m_list.size(); i++) {
+      if ( m_list[i].bwsoix == 0)
+	m_list[i].bwsoix = m_list[m_list[i].fthoix].lchoix;
+      if ( m_list[i].fwsoix == 0)
+	m_list[i].fwsoix = m_list[m_list[i].fthoix].fchoix;
+    }  
+  }
+  
 }
 
-void wb_pvd_udb::load_systemgroup( SystemList *systemgroup)
+void co_pvd_udb::load_systemgroup( SystemList *systemgroup)
 {
-  pitem item;
+  procom_obj item;
   pwr_sClass_SystemGroupReg *body;
   char sname[120];
   char *s;
@@ -161,9 +182,9 @@ void wb_pvd_udb::load_systemgroup( SystemList *systemgroup)
   menu_cnt--;
 }
 
-void wb_pvd_udb::load_user( UserList *user, SystemList *sg)
+void co_pvd_udb::load_user( UserList *user, SystemList *sg)
 {
-  pitem item;
+  procom_obj item;
   pwr_sClass_UserReg *body;
 
   item.oix = next_oix++;

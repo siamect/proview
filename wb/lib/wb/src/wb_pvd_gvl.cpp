@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.cpp,v 1.3 2005-11-22 12:24:50 claes Exp $
+ * Proview   $Id: wb_pvd_gvl.cpp,v 1.4 2006-09-14 14:16:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,7 +97,7 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
   *rsts = LDH__SUCCESS;
 
   // Create Root object
-  pitem rootitem;
+  procom_obj rootitem;
   strcpy( rootitem.name, "GlobalVolumeList");
   rootitem.cid = pwr_eClass_Hier;
   rootitem.oix = 0; 
@@ -133,7 +133,7 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
 	  continue;
 	}
 
-	pitem plantitem;
+	procom_obj plantitem;
 	strcpy( plantitem.name, line_item[1]);
 	plantitem.cid = pwr_eClass_Hier;
 	plantitem.oix = next_oix++;
@@ -175,7 +175,7 @@ void wb_pvd_gvl::load( pwr_tStatus *rsts)
       continue;
     }
 
-    pitem volitem;
+    procom_obj volitem;
     strcpy( volitem.name, line_item[0]);
     
     volitem.body_size = sizeof(pwr_sClass_VolumeReg);

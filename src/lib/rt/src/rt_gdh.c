@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.27 2006-09-06 12:36:35 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.28 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -283,6 +283,43 @@ gdh_ClassAttrToAttrref (
 
   return sts;
 }
+
+/** 
+ * @brief Get the attribute name from a class and attrref.
+ *
+ * The objid of the attrref is not used.
+ * @return Status of the operation.
+ */
+
+pwr_tStatus
+gdh_ClassAttrrefToAttr (
+  pwr_tClassId		cid,    /**< The class identity whose attribute we want to examin */
+  pwr_sAttrRef		*arp,   /**< Attribute description. */
+  char			*name,  /**< The returned name of the attribute */
+  int			size  /**< Max size of the returned name */
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  mvol_sAttribute	Attribute;
+  mvol_sAttribute	*ap;
+
+  if (arp  == NULL) return GDH__BADARG;
+  if (name == NULL) return GDH__BADARG;
+
+  memset(&Attribute, 0, sizeof(Attribute));
+
+  gdh_ScopeLock {
+
+    ap = mvol_ArefToAttribute( &sts, &Attribute, arp, cid);
+
+  } gdh_ScopeUnlock;
+
+  if (ap != NULL)
+    strncpy( name, ap->name, size);
+
+  return sts;
+}
+
 
 /** 
  * @brief Get the class identity corresponding to a class

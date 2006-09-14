@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_net.c,v 1.8 2006-03-20 07:01:56 claes Exp $
+ * Proview   $Id: rt_net.c,v 1.9 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -193,7 +193,8 @@ static tFuncXdr func_xdr[net_eMsg_] = {
   (tFuncXdr)xdr_net_sGetCclass,
   (tFuncXdr)xdr_net_sGetCclassR,
   (tFuncXdr)xdr_net_sGetGclass,
-  (tFuncXdr)xdr_net_sGetGclassR
+  (tFuncXdr)xdr_net_sGetGclassR,
+  (tFuncXdr)xdr_net_sId			/* Sever connect */
 
 };
 
@@ -238,10 +239,13 @@ ConvertPut (
   XDR			xdrs;
   qdb_sNode		*np;
   tFuncXdr              fXdr;
+  pwr_tNid		nid;
 
   if (put->type.b != net_cMsgClass)
     pwr_Return(FALSE, sts, NET__XDRFAILED);
-  np = hash_Search(&lsts, &qdb->nid_ht, &qid->nid);
+  // Remove sid
+  nid = qid->nid & 0xffffff;
+  np = hash_Search(&lsts, &qdb->nid_ht, &nid);
   if (np == NULL) pwr_Return(FALSE, sts, lsts);
 
   /* This is a simple way to fix the net_sGvolume difference between 
@@ -605,14 +609,15 @@ pwr_tBoolean
 net_Reply (
   pwr_tStatus		*status,
   qcom_sGet		*get,
-  qcom_sPut		*put
+  qcom_sPut		*put,
+  pwr_tSid		sid
 )
 {
   pwr_tBoolean		ok;
   pwr_dStatus		(sts, status, NET__SUCCESS);
 
   ((net_sMessage *)put->data)->msn = ((net_sMessage *)get->data)->msn;
-  ((net_sMessage *)put->data)->nid = gdbroot->db->nid;
+  ((net_sMessage *)put->data)->nid = gdb_Snid(gdbroot->db->nid, sid);
 
   NET_LOCK;
   ok = Reply(sts, get, put);
@@ -628,14 +633,15 @@ net_Put (
   void			*mp,
   net_eMsg		type,
   unsigned int          id,
-  int			size
+  int			size,
+  pwr_tSid		sid
 )
 {
   pwr_tBoolean		ok;
   pwr_dStatus		(sts, status, NET__SUCCESS);
 
   ((net_sMessage *)mp)->msn = 0;
-  ((net_sMessage *)mp)->nid = gdbroot->db->nid;
+  ((net_sMessage *)mp)->nid = gdb_Snid( gdbroot->db->nid, sid);
 
   NET_LOCK;
   ok = Put(sts, tgt, mp, type, id, size);
@@ -670,7 +676,8 @@ net_Request (
   qcom_sPut		*put,
   qcom_sGet		*get,
   net_eMsg		gtype,
-  pwr_tBitMask          flags
+  pwr_tBitMask          flags,
+  pwr_tSid		sid
 )
 {
   void			*p;
@@ -679,7 +686,7 @@ net_Request (
   gdb_AssumeUnlocked;
 
   ((net_sMessage *)put->data)->msn = gdbroot->db->rqgen++;
-  ((net_sMessage *)put->data)->nid = gdbroot->db->nid;
+  ((net_sMessage *)put->data)->nid = gdb_Snid( gdbroot->db->nid, sid);
 
   NET_LOCK;
   p = Request(sts, tgt, put, get, gtype, flags);

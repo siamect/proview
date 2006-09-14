@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_sancm.c,v 1.3 2006-03-20 07:17:55 claes Exp $
+ * Proview   $Id: rt_sancm.c,v 1.4 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,7 +89,7 @@ sancm_Add (
     if (i >= count) {
       ap->count = count;
       gdb_Unlock;
-	net_Put(NULL, &tgt, ap, net_eMsg_sanAdd, 0, pwr_Offset(ap, sane[i]));
+	net_Put(NULL, &tgt, ap, net_eMsg_sanAdd, 0, pwr_Offset(ap, sane[i]), 0);
       gdb_Lock;
       i = 0;
     }
@@ -102,7 +102,7 @@ sancm_Add (
   if (i > 0) {
     ap->count = i;
     gdb_Unlock;
-      net_Put(NULL, &tgt, ap, net_eMsg_sanAdd, 0, pwr_Offset(ap, sane[i]));
+      net_Put(NULL, &tgt, ap, net_eMsg_sanAdd, 0, pwr_Offset(ap, sane[i]), 0);
     gdb_Lock;
   }
 
@@ -260,7 +260,7 @@ sancm_Remove (
     if (i >= count) {
       rp->count = count;
       gdb_Unlock;
-	net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, pwr_Offset(rp, sid[i]));
+	net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, pwr_Offset(rp, sid[i]), 0);
       gdb_Lock;
       i = 0;
     }
@@ -273,7 +273,7 @@ sancm_Remove (
   if (i > 0) {
     rp->count = count;
     gdb_Unlock;
-      net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, pwr_Offset(rp, sid[i]));
+      net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, pwr_Offset(rp, sid[i]), 0);
     gdb_Lock;
   }
 
@@ -328,7 +328,7 @@ sancm_Update (
         }
         gdb_Unlock;
 	errh_Info("sancm_Update, sent removed count %d", rp->count); 
-  	net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, size);
+  	net_Put(NULL, &tgt, rp, net_eMsg_sanRemove, 0, size, 0);
         gdb_Lock;
         free(rp);
       }

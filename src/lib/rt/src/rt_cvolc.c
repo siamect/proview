@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolc.c,v 1.7 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_cvolc.c,v 1.8 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,12 +70,11 @@ fetch (
   np = hash_Search(sts, gdbroot->nid_ht, &vp->g.nid);
   if (np == NULL) return NULL;
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
   gdb_Unlock;
 
-    rsp = net_Request(&lsts, &tgt, put, &get, net_eMsg_objectR, 0);
+    rsp = net_Request(&lsts, &tgt, put, &get, net_eMsg_objectR, 0, 0);
 
   gdb_Lock;
 
@@ -142,11 +141,10 @@ cvolc_GetObjectInfo (
   smp = net_Alloc(sts, &put, sizeof(*smp), net_eMsg_getObjectInfo);
   if (smp == NULL) return sts;
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
   smp->aref = *rarp;
 
-  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getObjectInfoR, 0);
+  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getObjectInfoR, 0, 0);
 
   if (rmp == NULL) {
     return NULL;
@@ -236,11 +234,10 @@ cvolc_GetObjectInfo (
   smp = net_Alloc(sts, &put, sizeof(*smp), net_eMsg_getObjectInfo);
   if (smp == NULL) return sts;
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
   smp->aref = *arp;
 
-  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getObjectInfoR, 0);
+  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_getObjectInfoR, 0, 0);
 
   if (rmp == NULL) {
     return NULL;
@@ -404,8 +401,7 @@ cvolc_SetObjectInfo (
     cmvolc_AssumeLocked(ccp);
   }
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
   size = MIN(arp->Size, size);
 
@@ -441,7 +437,7 @@ cvolc_SetObjectInfo (
     }
   }
 
-  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_setObjectInfoR, 0);
+  rmp = net_Request(sts, &tgt, &put, NULL, net_eMsg_setObjectInfoR, 0, 0);
 
   if (rmp == NULL) {
     return NO;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_file.cpp,v 1.3 2005-11-22 12:23:30 claes Exp $
+ * Proview   $Id: co_pvd_file.cpp,v 1.1 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,9 +26,10 @@
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
 #include "wb_vext.h"
-#include "wb_pvd_file.h"
+#include "co_pvd_file.h"
 #include "wb_ldh.h"
 #include "wb_ldh_msg.h"
+#include "rt_gdh_msg.h"
 
 extern "C" {
 #include "co_cdh.h"
@@ -37,7 +38,8 @@ extern "C" {
 
 #define START_OIX 1000
 
-void wb_pvd_file::object( wb_procom *pcom)
+// Wb only
+void co_pvd_file::object( co_procom *pcom)
 {
   if ( m_list.size() <= 1 || m_list[0].fchoix == 0) {
     pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
@@ -46,33 +48,46 @@ void wb_pvd_file::object( wb_procom *pcom)
   objectOid( pcom, m_list[0].fchoix);
 }
 
-void wb_pvd_file::objectOid( wb_procom *pcom, pwr_tOix oix)
+void co_pvd_file::objectOid( co_procom *pcom, pwr_tOix oix)
 {
-  if ( oix >= m_list.size() || oix <= 0) {
-    pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
-    return;
+  if ( m_env == pvd_eEnv_Wb) {
+    if ( oix >= m_list.size() || oix <= 0) {
+      pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
+      return;
+    }
+    pcom->provideObject( 1, oix, m_list[oix].fthoix, m_list[oix].bwsoix,
+			 m_list[oix].fwsoix, m_list[oix].fchoix, m_list[oix].lchoix,
+			 m_list[oix].cid, m_list[oix].name, longname(oix));
   }
-
-  pcom->provideObject( 1, oix, m_list[oix].fthoix, m_list[oix].bwsoix,
-		       m_list[oix].fwsoix, m_list[oix].fchoix, m_list[oix].lchoix,
-		       m_list[oix].cid, m_list[oix].name, longname(oix));
+  else {
+    if ( oix >= m_list.size() || oix < 0) {
+      pcom->provideStatus( GDH__NOSUCHOBJ);
+      return;
+    }
+    pcom->provideObjects( GDH__SUCCESS, m_list);
+  }
 }
 
-void wb_pvd_file::objectName( wb_procom *pcom, char *name)
+void co_pvd_file::objectName( co_procom *pcom, char *name)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & pitem_mFlags_Deleted) {
+    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
       if ( cdh_NoCaseStrcmp( name, longname(m_list[i].oix)) == 0) {
 	objectOid( pcom, i);
 	return;
       }
     }
   }
-  pcom->provideObject( 0,0,0,0,0,0,0,0,"","");
+  if ( m_env == pvd_eEnv_Wb)
+    pcom->provideObject( 0,0,0,0,0,0,0,0,"","");
+  else
+    pcom->provideStatus( GDH__NOSUCHOBJ);
+
 }
 
-void wb_pvd_file::objectBody( wb_procom *pcom, pwr_tOix oix)
+// Wb only
+void co_pvd_file::objectBody( co_procom *pcom, pwr_tOix oix)
 {
   if ( oix >= m_list.size() || oix <= 0) {
     pcom->provideBody( 0,0,0,0);
@@ -85,10 +100,11 @@ void wb_pvd_file::objectBody( wb_procom *pcom, pwr_tOix oix)
     pcom->provideBody( 0, 0, 0, 0);
 }
 
-void wb_pvd_file::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
+// Wb only
+void co_pvd_file::createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 		     pwr_tCid cid, char *name)
 {
-  pitem item;
+  procom_obj item;
 
   if ( destoix >= m_list.size()) {
     pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
@@ -200,14 +216,15 @@ void wb_pvd_file::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
     sprintf( item.name, "O%d", item.oix);
   else
     strcpy( item.name, name);
-  item.flags |= pitem_mFlags_Created;
+  item.flags |= procom_obj_mFlags_Created;
   m_list.push_back(item);
 
   pcom->provideObject( 1, item.oix, item.fthoix, item.bwsoix, item.fwsoix,
 		       item.fchoix, item.lchoix, item.cid, item.name, longname(item.oix));
 }
 
-void wb_pvd_file::moveObject( wb_procom *pcom, pwr_tOix oix, pwr_tOix destoix, 
+// Wb only
+void co_pvd_file::moveObject( co_procom *pcom, pwr_tOix oix, pwr_tOix destoix, 
 				 int desttype)
 {
   if ( destoix >= m_list.size() || destoix <= 0) {
@@ -277,13 +294,14 @@ void wb_pvd_file::moveObject( wb_procom *pcom, pwr_tOix oix, pwr_tOix destoix,
   pcom->provideStatus( 1);
 }
 
-void wb_pvd_file::deleteObject( wb_procom *pcom, pwr_tOix oix)
+// Wb only
+void co_pvd_file::deleteObject( co_procom *pcom, pwr_tOix oix)
 {
   if ( oix >= m_list.size() || oix <= 0) {
     pcom->provideStatus( 0);
     return;
   }
-  m_list[oix].flags |= pitem_mFlags_Deleted;
+  m_list[oix].flags |= procom_obj_mFlags_Deleted;
 
   // Remove from current position
   if ( m_list[oix].fthoix && m_list[m_list[oix].fthoix].fchoix == oix)
@@ -298,7 +316,8 @@ void wb_pvd_file::deleteObject( wb_procom *pcom, pwr_tOix oix)
   pcom->provideStatus( 1);
 }
 
-void wb_pvd_file::copyObject( wb_procom *pcom, pwr_tOix oix, pwr_tOix destoix, int desttype,
+// Wb only
+void co_pvd_file::copyObject( co_procom *pcom, pwr_tOix oix, pwr_tOix destoix, int desttype,
 				 char *name)
 {
 
@@ -306,7 +325,7 @@ void wb_pvd_file::copyObject( wb_procom *pcom, pwr_tOix oix, pwr_tOix destoix, i
     pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
     return;
   }
-  pitem item = m_list[oix];
+  procom_obj item = m_list[oix];
   item.oix = next_oix++;
 
   if ( strcmp( name, "") == 0)
@@ -364,7 +383,8 @@ void wb_pvd_file::copyObject( wb_procom *pcom, pwr_tOix oix, pwr_tOix destoix, i
 		       item.fchoix, item.lchoix, item.cid, item.name, longname(item.oix));
 }
 
-void wb_pvd_file::deleteFamily( wb_procom *pcom, pwr_tOix oix)
+// Wb only
+void co_pvd_file::deleteFamily( co_procom *pcom, pwr_tOix oix)
 {
   if ( oix >= m_list.size() || oix <= 0) {
     pcom->provideStatus( 0);
@@ -385,7 +405,8 @@ void wb_pvd_file::deleteFamily( wb_procom *pcom, pwr_tOix oix)
   pcom->provideStatus( 1);
 }
 
-void wb_pvd_file::renameObject( wb_procom *pcom, pwr_tOix oix, char *name)
+// Wb only
+void co_pvd_file::renameObject( co_procom *pcom, pwr_tOix oix, char *name)
 {
   if ( oix >= m_list.size() || oix <= 0) {
     pcom->provideStatus( 0);
@@ -396,7 +417,7 @@ void wb_pvd_file::renameObject( wb_procom *pcom, pwr_tOix oix, char *name)
   pcom->provideStatus( 1);
 }
 
-void wb_pvd_file::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offset,
+void co_pvd_file::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
 		       unsigned int size, char *buffer)
 {
   if ( oix >= m_list.size() || oix <= 0) {
@@ -413,7 +434,36 @@ void wb_pvd_file::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int of
   pcom->provideStatus( 1);
 }
 
-void wb_pvd_file::commit( wb_procom *pcom)
+// Rt only
+void co_pvd_file::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
+		       unsigned int size)
+{
+  if ( oix >= m_list.size() || oix <= 0) {
+    pcom->provideStatus( GDH__NOSUCHOBJ);
+    return;
+  }
+
+  if ( offset + size > m_list[oix].body_size) {
+    pcom->provideStatus( GDH__NOSUCHOBJ);
+    return;
+  }
+
+  void *p = (void *)((unsigned long)m_list[oix].body + (unsigned long)offset);
+  pcom->provideAttr( GDH__SUCCESS, oix, size, p);
+}
+
+// Rt only
+void co_pvd_file::subAssociateBuffer( co_procom *pcom, void **buff, int oix, int offset, 
+				      int size, pwr_tSubid sid) 
+{
+  if ( oix < (int)m_list.size())
+    *buff = (char *)m_list[oix].body + offset;
+  else 
+    *buff = 0;
+}
+
+// Wb only
+void co_pvd_file::commit( co_procom *pcom)
 {
   pwr_tStatus sts;
 
@@ -421,7 +471,8 @@ void wb_pvd_file::commit( wb_procom *pcom)
   pcom->provideStatus( sts);
 }
 
-void wb_pvd_file::abort( wb_procom *pcom)
+// Wb only
+void co_pvd_file::abort( co_procom *pcom)
 {
   pwr_tStatus sts;
 
@@ -431,9 +482,9 @@ void wb_pvd_file::abort( wb_procom *pcom)
   pcom->provideStatus( sts);
 }
 
-void wb_pvd_file::delete_tree( pwr_tOix oix)
+void co_pvd_file::delete_tree( pwr_tOix oix)
 {
-  m_list[oix].flags = pitem_mFlags_Deleted;
+  m_list[oix].flags = procom_obj_mFlags_Deleted;
 
   for ( pwr_tOix ix = m_list[oix].fchoix;
 	ix;
@@ -441,7 +492,7 @@ void wb_pvd_file::delete_tree( pwr_tOix oix)
     delete_tree( ix);
 }
 
-char *wb_pvd_file::longname( pwr_tOix oix)
+char *co_pvd_file::longname( pwr_tOix oix)
 {
   if ( m_list[oix].fthoix == 0)
     strcpy( m_list[oix].lname, m_list[oix].name);
@@ -453,11 +504,11 @@ char *wb_pvd_file::longname( pwr_tOix oix)
   return m_list[oix].lname;
 }
 
-bool wb_pvd_file::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
+bool co_pvd_file::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & pitem_mFlags_Deleted) {
+    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
       if ( m_list[i].fthoix == fthoix && 
 	   cdh_NoCaseStrcmp( name, m_list[i].name) == 0) {
 	*oix = m_list[i].oix;

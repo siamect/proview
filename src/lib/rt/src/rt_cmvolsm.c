@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cmvolsm.c,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_cmvolsm.c,v 1.4 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,7 +141,7 @@ cmvolsm_GetCclass (
   else 
     rmp->sts = 1;
 
-  net_Reply(&lsts, get, &put);  
+  net_Reply(&lsts, get, &put, 0);  
 }
 
 
@@ -269,6 +269,6 @@ cmvolsm_GetGclass (
   else 
     rmp->sts = 1;
 
-  net_Reply(&lsts, get, &put);  
+  net_Reply(&lsts, get, &put, 0);  
 }
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.5 2005-11-22 12:25:12 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.6 2006-09-14 14:16:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,7 +79,7 @@ static char *pwrp_status_to_string( int value)
   return str;
 }
 
-void wb_pvd_pl::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offset,
+void wb_pvd_pl::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
 		       unsigned int size, char *buffer)
 {
   if ( oix >= m_list.size() || oix <= 0) {
@@ -103,15 +103,15 @@ void wb_pvd_pl::writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offs
   default: ;
   }
 
-  wb_pvd_file::writeAttribute( pcom, oix, offset, size, buffer);
+  co_pvd_file::writeAttribute( pcom, oix, offset, size, buffer);
 }
 
-void wb_pvd_pl::createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
+void wb_pvd_pl::createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 		     pwr_tCid cid, char *name)
 {
   pwr_tOix oix = next_oix;
 
-  wb_pvd_file::createObject( pcom, destoix, desttype, cid, name);
+  co_pvd_file::createObject( pcom, destoix, desttype, cid, name);
 
   switch ( cid) {
   case pwr_cClass_ProjectReg: {
@@ -188,10 +188,10 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
       oid.oix = m_list[i].oix;
       oid.vid = ldh_cProjectListVolume;
 
-      if ( m_list[i].flags & pitem_mFlags_Deleted &&
-	   !(m_list[i].flags & pitem_mFlags_Created)) {
+      if ( m_list[i].flags & procom_obj_mFlags_Deleted &&
+	   !(m_list[i].flags & procom_obj_mFlags_Created)) {
       }
-      else if ( !(m_list[i].flags & pitem_mFlags_Deleted)) {
+      else if ( !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
 
 	if ( strcmp( body->Path, "") == 0) {
 	  sprintf( msg, "Path is missing, in object %s", longname(m_list[i].oix));
@@ -217,15 +217,15 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
       oid.oix = m_list[i].oix;
       oid.vid = ldh_cProjectListVolume;
 
-      if ( m_list[i].flags & pitem_mFlags_Deleted &&
-	   !(m_list[i].flags & pitem_mFlags_Created)) {
+      if ( m_list[i].flags & procom_obj_mFlags_Deleted &&
+	   !(m_list[i].flags & procom_obj_mFlags_Created)) {
 	// Project deleted
 	sprintf( msg, "delete project %s with file tree and databases\n", body->Project);
 	if ( strlen(text) + strlen(msg) < sizeof(text))
 	  strcat( text, msg);
 	actions_found++;
       }
-      else if ( !(m_list[i].flags & pitem_mFlags_Deleted)) {
+      else if ( !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
 
 	if ( strcmp( body->Project, "") == 0) {
 	  sprintf( msg, "Project is missing, in object %s", longname(m_list[i].oix));
@@ -246,7 +246,7 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
 	    MsgWindow::message('E', msg, msgw_ePop_No, oid);
 	    error_cnt++;
 	  }
-	  if ( m_list[i].flags & pitem_mFlags_Created) {
+	  if ( m_list[i].flags & procom_obj_mFlags_Created) {
 	    if ( strcmp( body->CopyFrom, "") == 0) {
 	      // Create project 
 	      // Check destination path
@@ -346,8 +346,8 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
     case pwr_cClass_ProjectReg: {
       pwr_sClass_ProjectReg *body = (pwr_sClass_ProjectReg *)m_list[i].body;
 
-      if ( m_list[i].flags & pitem_mFlags_Deleted &&
-	   !(m_list[i].flags & pitem_mFlags_Created)) {
+      if ( m_list[i].flags & procom_obj_mFlags_Deleted &&
+	   !(m_list[i].flags & procom_obj_mFlags_Created)) {
 	printf( "Project deleted %s\n", longname(i));
 
 	sprintf( cmd, "pwrp_env.sh delete project %s noconfirm",
@@ -360,8 +360,8 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 	  return;
 	}
       }
-      else if ( m_list[i].flags & pitem_mFlags_Created &&
-	   !(m_list[i].flags & pitem_mFlags_Deleted)) {
+      else if ( m_list[i].flags & procom_obj_mFlags_Created &&
+	   !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
 	if ( strcmp( body->CopyFrom, "") == 0) {
 	  printf( "Project created %s\n", longname(i));
 
@@ -389,7 +389,7 @@ void wb_pvd_pl::process_list( pwr_tStatus *sts)
 	  }
 	}
       }
-      else if ( !(m_list[i].flags & pitem_mFlags_Deleted)) {
+      else if ( !(m_list[i].flags & procom_obj_mFlags_Deleted)) {
 	pwr_sClass_ProjectReg *body = (pwr_sClass_ProjectReg *)m_list[i].body;
 	pwr_sClass_ProjectReg *origbody = (pwr_sClass_ProjectReg *)m_list[i].userdata;
 
@@ -439,14 +439,14 @@ void wb_pvd_pl::save_list( pwr_tStatus *sts)
 
   // Disable deletet objects
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if ( m_list[i].flags & pitem_mFlags_Deleted)
+    if ( m_list[i].flags & procom_obj_mFlags_Deleted)
       m_list[i].flags |= pl_mFlags_Disabled;
   }
 }
 
 void wb_pvd_pl::save_item( pwr_tOix oix, ofstream& of)
 {
-  if ( m_list[oix].flags & pitem_mFlags_Deleted)
+  if ( m_list[oix].flags & procom_obj_mFlags_Deleted)
     return;
 
   m_list[oix].flags = 0;
@@ -507,7 +507,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
 
 
   // Create Root object
-  pitem rootitem;
+  procom_obj rootitem;
   strcpy( rootitem.name, "ProjectList");
   rootitem.cid = pwr_eClass_Hier;
   rootitem.oix = 0; 
@@ -516,7 +516,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
   menu_cnt++;
 
   // Create Root for BaseReg objects
-  pitem brootitem;
+  procom_obj brootitem;
   strcpy( brootitem.name, "Bases");
   brootitem.cid = pwr_eClass_Hier;
   brootitem.oix = next_oix++; 
@@ -553,7 +553,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
 	  continue;
 	}
 
-	pitem hieritem;
+	procom_obj hieritem;
 	strcpy( hieritem.name, line_item[1]);
 	hieritem.cid = pwr_eClass_Hier;
 	hieritem.oix = next_oix++;
@@ -597,7 +597,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
 	continue;
       }
 
-      pitem baseitem;
+      procom_obj baseitem;
       strcpy( baseitem.name, basename(line_item[1]));
       baseitem.cid = pwr_cClass_BaseReg;
       baseitem.oix = next_oix++;
@@ -638,7 +638,7 @@ void wb_pvd_pl::load( pwr_tStatus *rsts)
       menu_stack[menu_cnt++] = hieroix;
     }
 
-    pitem projitem;
+    procom_obj projitem;
     if ( (s = strrchr( line_item[3], '-')))
       strcpy( projitem.name, s + 1);
     else
@@ -698,7 +698,7 @@ bool wb_pvd_pl::create_hier( char *hier, pwr_tOix *oix)
     // Check if name exist
     if ( !find( fthoix, segment_name[i], &ix)) {
       // Create this hierarchy object
-      pitem hieritem;
+      procom_obj hieritem;
       strcpy( hieritem.name, segment_name[i]);
       hieritem.cid = pwr_eClass_Hier;
       hieritem.oix = next_oix++;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_dl.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_dl.c,v 1.3 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,7 +70,7 @@ dl_Cancel (
   pool_Qremove(NULL, gdbroot->pool, &dp->dl_ll);
   gdbroot->db->dl_lc--;
 
-  op = pool_Address(NULL, gdbroot->pool, dp->or);
+  op = pool_Address(NULL, gdbroot->pool, dp->opr);
   if (op == NULL) errh_Bugcheck(GDH__WEIRD, "direct link inconsitency");
 
   gdb_UnlockObject(sts, op);
@@ -138,7 +138,7 @@ dl_Create (
 
   dp->user = gdbroot->my_pid;
   dp->aref = *arp;
-  dp->or   = pool_ItemReference(NULL, gdbroot->pool, ap->op);
+  dp->opr   = pool_ItemReference(NULL, gdbroot->pool, ap->op);
 
 
   /* Lock the object */

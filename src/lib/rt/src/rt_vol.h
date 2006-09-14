@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_vol.h,v 1.4 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: rt_vol.h,v 1.5 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -210,7 +210,7 @@ typedef union {
 typedef union {
   pwr_tBitMask m;
   pwr_32Bits (
-    pwr_Bits( private		, 1),
+    pwr_Bits( privat		, 1),
     pwr_Bits( native		, 1),
     pwr_Bits( fileCached	, 1),
     pwr_Bits( netCached		, 1),

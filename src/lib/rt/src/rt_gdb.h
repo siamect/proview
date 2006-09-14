@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdb.h,v 1.12 2006-03-20 06:57:20 claes Exp $
+ * Proview   $Id: rt_gdb.h,v 1.13 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -153,6 +153,9 @@
 #define gdb_cMin_pool_isize	600000
 #define gdb_cMin_rtdb_isize	600000
 
+#define gdb_Snid( nid, sid) (nid | (sid << 24))
+#define gdb_SnidToQnid( snid) (snid & 0xffffff)
+#define gdb_SnidToSid( snid) (snid >> 24)
 
 /* General database lock to keep consistency.
  
@@ -961,6 +964,7 @@ typedef struct {
 
   pwr_tUInt32	txmsg[net_eMsg_];
 
+  qcom_sQid	handler; 	/**< Nethandler que */
 
 } gdb_sNode;
 

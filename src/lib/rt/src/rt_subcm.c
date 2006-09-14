@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subcm.c,v 1.6 2006-03-20 07:21:22 claes Exp $
+ * Proview   $Id: rt_subcm.c,v 1.7 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -259,10 +259,12 @@ subcm_Data (
       gdbroot->db->subm_lc--;
       pool_Free(NULL, gdbroot->pool, mp);
     }
+
   } gdb_ScopeUnlock;
 
-  if (rp != NULL) {
-    net_Put(NULL, &tgt, rp, net_eMsg_subRemove, 0, pwr_Offset(rp, sid[rp->count]));
+  if (rp != NULL) { 
+    tgt = np->handler;
+    net_Put(NULL, &tgt, rp, net_eMsg_subRemove, 0, pwr_Offset(rp, sid[rp->count]), 0);
 #if 0
     errh_Info("Removed %d subscriptions", rp->count - 1);
 #endif

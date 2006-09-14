@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.24 2006-05-21 22:30:49 lw Exp $
+ * Proview   $Id: pwr.h,v 1.25 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -238,6 +238,7 @@ typedef unsigned int    pwr_tDbId;
 typedef pwr_tVolumeId	pwr_tNid;	//!< Node identity type.
 typedef pwr_tNid        pwr_tNodeId;	//!< Node identity type.
 typedef pwr_tNid        pwr_tNodeIndex;	//!< Node index type.
+typedef unsigned int	pwr_tSid;	//!< Server identity type.
 
 /*_*
   @aref refid RefId

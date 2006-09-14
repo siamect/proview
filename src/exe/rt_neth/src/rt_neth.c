@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_neth.c,v 1.13 2006-03-20 06:42:21 claes Exp $
+ * Proview   $Id: rt_neth.c,v 1.14 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,6 +81,7 @@ static void		sendVolumesR	(gdb_sNode*, net_sVolumes*, unsigned int);
 static void		volumes		(qcom_sGet*);
 static void		volumesR	(qcom_sGet*);
 static void		volumes7	(qcom_sGet*);
+static void		serverConnect	(qcom_sGet*);
 #if 0
   static void		linkEvent	(pwr_tUInt32, net_eEvent);
   static void		sendIdAck	(gdb_sNode*);
@@ -121,6 +122,7 @@ static char *cMsg[net_eMsg_end] = {
   "getCclassR",
   "getGclass",
   "getGclassR",
+  "serverConnect",
   "net_eMsg_",
   "volumes7"
 };
@@ -155,6 +157,7 @@ static void (*fromApplication[net_eMsg_end])(qcom_sGet *) = {
   bugError,                     /* net_eMsg_GetCclassR will never reach neth */
   cmvolsm_GetGclass,
   bugError,                     /* net_eMsg_GetGclassR will never reach neth */
+  serverConnect,                /* net_eMsg_serverConnect */
   bugError,                     /* net_eMsg_ */
   volumes7
 };
@@ -454,7 +457,7 @@ id (
       cMsg[get->type.s],  cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0));
   }
 
-  if (get->sender.nid == gdbroot->my_qid.nid ) {
+  if (get->sender.nid == gdbroot->my_qid.nid && mp->hdr.nid == gdbroot->db->nid) {
     errh_Error("New node using nid %s, conflicts with local node, '%s' ignored",
       cdh_NodeIdToString(NULL, mp->hdr.nid, 0, 0),
       cMsg[get->type.s]);
@@ -513,6 +516,7 @@ id (
     np->nod_oid = mp->node.nod_oid;
     np->netver = mp->node.netver;
     np->cclassSupport = cclassSupport;
+    np->handler = mp->node.handler;
 
   } gdb_ScopeUnlock;
 
@@ -653,6 +657,24 @@ linkDisconnect (
 
     np->flags.b.connected = 0;
     np->flags.b.active = 0;
+  }
+
+
+  gdb_sNode		*snp;
+  pool_sQlink		*nl;
+
+  // Disconnect any server on this node
+  for ( nl = pool_Qsucc(NULL, gdbroot->pool, &gdbroot->db->nod_lh);
+	nl != &gdbroot->db->nod_lh;
+	nl = pool_Qsucc(NULL, gdbroot->pool, nl)) {
+    snp = pool_Qitem(nl, gdb_sNode, nod_ll);
+
+    if ( snp != np && np->nid == gdb_SnidToQnid( snp->nid)) {
+      flushNode(snp);
+
+      snp->flags.b.connected = 0;
+      snp->flags.b.active = 0;
+    }
   }
 
 }
@@ -834,8 +856,7 @@ sendFlush (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
   size = sizeof(msg);
 
@@ -845,7 +866,7 @@ sendFlush (
   msg.node.nod_oid  = gdbroot->my_node->nod_oid;
   msg.node.vol_oid  = gdbroot->my_node->vol_oid;
 
-  net_Put(&sts, &tgt, &msg, net_eMsg_flush, 0, size);
+  net_Put(&sts, &tgt, &msg, net_eMsg_flush, 0, size, 0);
   if (EVEN(sts))
     errh_Error("Sending 'flush' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
@@ -869,8 +890,12 @@ sendId (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
 
-  tgt.nid = np->nid;
-  tgt.qix = net_cProcHandler;
+  if ( np->handler.nid)
+    tgt = np->handler;
+  else {
+    tgt.nid = np->nid;
+    tgt.qix = net_cProcHandler;
+  }
 
   size = sizeof(msg);
 
@@ -880,7 +905,7 @@ sendId (
   msg.node.nod_oid  = gdbroot->my_node->nod_oid;
   msg.node.vol_oid  = gdbroot->my_node->vol_oid;
 
-  net_Put(&sts, &tgt, &msg, net_eMsg_id, 0, size);
+  net_Put(&sts, &tgt, &msg, net_eMsg_id, 0, size, 0);
   if (EVEN(sts))
     errh_Error("Sending 'id' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
@@ -983,15 +1008,14 @@ sendVolumes (
     return;
   }
 
-  tgt.nid  = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
   if (!cclassSupport)
     msgtype = net_eMsg_volumes7;
   else
     msgtype = net_eMsg_volumes;
   
-  if (!net_Put(&sts, &tgt, mp, msgtype, 0, size))
+  if (!net_Put(&sts, &tgt, mp, msgtype, 0, size, 0))
     errh_Error("Sending 'volumes' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
@@ -1036,10 +1060,9 @@ sendVolumesR (
   mp->count = j;
   mp->ctx = vmp->ctx;
 
-  tgt.nid  = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
-  if (!net_Put(&sts, &tgt, mp, net_eMsg_volumesR, 0, size)) {
+  if (!net_Put(&sts, &tgt, mp, net_eMsg_volumesR, 0, size, 0)) {
     errh_Error("Sending 'volumesR' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, (pwr_tNodeId)np->nid, 0, 0), sts);
   }
@@ -1062,6 +1085,9 @@ volumes (
   gdb_sNode		*np;
   pwr_tUInt32		nid = get->sender.nid;
 
+  if ( vmp->count)
+    nid = vmp->g[0].nid;
+    
   gdb_ScopeLock {
 
     np = hash_Search(&sts, gdbroot->nid_ht, &nid);
@@ -1353,8 +1379,7 @@ sendIdAck (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
 
-  tgt.nid  = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt np->handler;
 
   gdb_ScopeLock {
 
@@ -1366,7 +1391,7 @@ sendIdAck (
 
   } gdb_ScopeUnlock;
 
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck, 0, sizeof(msg)))
+  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck, 0, sizeof(msg), 0))
     errh_Error("Sending 'idAck' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
@@ -1388,12 +1413,65 @@ sendIdAck2 (
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0));
   }
 
-  tgt.nid  = np->nid;
-  tgt.qix = net_cProcHandler;
+  tgt = np->handler;
 
-  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck2, 0, sizeof(msg)))
+  if (!net_Put(&sts, &tgt, &msg, net_eMsg_idAck2, 0, sizeof(msg), 0))
     errh_Error("Sending 'idAck2' to %s (%s)\n%m",
       np->name, cdh_NodeIdToString(NULL, np->nid, 0, 0), sts);
 
 }
 #endif
+
+static void
+serverConnect (
+  qcom_sGet	*get
+)
+{
+  net_sId	*mp = get->data;
+  gdb_sNode	*np;
+  pwr_tStatus 	sts;
+  int 		new_server;
+  int		remote;
+
+  gdb_ScopeLock {
+    np = hash_Search(&sts, gdbroot->nid_ht, &mp->hdr.nid);
+
+    if (np == NULL) {
+      // New server
+      qcom_sNode	node;
+      pwr_tNodeId	nid;
+
+      new_server = 1;
+      for (nid = qcom_cNNid; qcom_NextNode(&sts, &node, nid); nid = node.nid) {
+	if ( node.nid == get->sender.nid) {
+	  np = gdb_AddNode(&sts, mp->hdr.nid, gdb_mAdd__);
+
+	  sprintf(np->name, "%s_s%d", node.name, gdb_SnidToSid(mp->hdr.nid));
+	  np->os = node.os;
+	  np->hw = node.hw;
+	  co_SetFormat(&np->fm, node.bo, node.ft);
+	  np->handler = get->reply;
+	  np->flags.b.connected = 1;
+	  // np->flags.b.active = 1;
+	  break;
+	}
+      }
+    }
+    else {
+      new_server = 0;
+      np->flags.b.connected = 1;
+      // np->flags.b.active = 1;
+    }
+  } gdb_ScopeUnlock;
+
+  if (np == NULL)
+    return;
+
+  remote = (gdb_SnidToQnid( np->nid) != gdbroot->db->nid);
+
+  sendId(np);
+
+  if ( remote && !new_server) {
+    // nodeUp( np);
+  }
+}

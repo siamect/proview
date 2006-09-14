@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_udb.h,v 1.1 2005-09-20 13:14:28 claes Exp $
+ * Proview   $Id: rt_pvd_udb.cpp,v 1.1 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -15,33 +15,28 @@
  * You should have received a copy of the GNU General Public License 
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- **/
+ */
 
-// Provider for user database
+#include "pwr.h"
+#include "pwr_class.h"
+#include "rt_procom.h"
+#include "co_provider.h"
+#include "rt_gdh_msg.h"
+#include "co_pvd_udb.h"
+#include "wb_ldh.h"
 
-#ifndef wb_pvd_udb_h
-#define wb_pvd_udb_h
+int main()
+{
+  co_pvd_udb provider( pvd_eEnv_Rt);
+  rt_procom procom( &provider,
+		    errh_eAnix_appl20, 	// Application index
+		    "rt_pvd_udb",     	// Process name
+		    200,	       	// Sid
+		    ldh_cUserDatabaseVolume, // Vid _V254.254.254.246
+		    "VolUserDatabase",  // Volume name
+		    0);			// Global
+  
 
-#include "wb_pvd_file.h"
-#include "co_user.h"
-
-class wb_pvd_udb : public wb_pvd_file {
-public:
-  wb_pvd_udb() : gu(0), menu_cnt(0)
-  { 
-    pwr_tStatus sts;
-    load( &sts); 
-  }
-  void load( pwr_tStatus *sts);
-  void load_systemgroup( SystemList *systemgroup);
-  void load_user( UserList *user, SystemList *sg);
-  void save( pwr_tStatus *sts);
-  char *groupname( char *name);
-
-  GeUser *gu;
-  int menu_stack[100];
-  int menu_cnt;
-};
-
-#endif
-
+  procom.init();
+  procom.mainLoop();
+}

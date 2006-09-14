@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subc.c,v 1.5 2006-03-20 07:22:35 claes Exp $
+ * Proview   $Id: rt_subc.c,v 1.6 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -448,10 +448,6 @@ subc_ActivateList (
   sAdd			*aep;
   
 
-  gdb_AssumeLocked;
-
-  tgt.qix = net_cProcHandler;
-
   /* Test each client. If existing object, fill in nid field
      and move the client to the appropriate nodes's subc_lh list. Turn
      on timeouts. Put request in subadd message buffer.
@@ -536,12 +532,12 @@ subc_ActivateList (
 
 	  /* The message buffer is full and must be sent.  */
 
-	  tgt.nid = aep->nid;
+	  tgt = np->handler;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
 
 	  gdb_Unlock;
 
-	    net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]));
+	    net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]), 0);
 
 	  gdb_Lock;
 
@@ -586,7 +582,7 @@ subc_ActivateList (
 
 	    gdb_Unlock;
 
-	      net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	      net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
 
 	    gdb_Lock;
 
@@ -611,7 +607,7 @@ subc_ActivateList (
 	if (rep->msg->count > 0) {
 	  tgt.nid = rep->nid;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
 	}
 	free(rep->msg);
       }
@@ -622,7 +618,7 @@ subc_ActivateList (
 	if (aep->msg->count > 0) {
 	  tgt.nid = aep->nid;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
-	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]));
+	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]), 0);
 	}
 	free(aep->msg);
       }
@@ -700,7 +696,7 @@ subc_CancelList (
 
 	gdb_Unlock;
 
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
 
 	gdb_Lock;
 
@@ -720,7 +716,7 @@ subc_CancelList (
       if (rep->msg != NULL) {
 	if (rep->msg->count > 0) {
 	  tgt.nid = rep->nid;
-	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]));
+	  net_Put(NULL, &tgt, rep->msg, net_eMsg_subRemove, 0, pwr_Offset(rep->msg, sid[rep->msg->count]), 0);
 	}
 	free(rep->msg);
       }

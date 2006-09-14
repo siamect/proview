@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_cvolsm.c,v 1.4 2005-12-13 15:14:27 claes Exp $
+ * Proview   $Id: rt_cvolsm.c,v 1.5 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,7 +73,7 @@ respondError (
   rsp->oid    = oid;
   rsp->count  = 0;
 
-  if (!net_Reply(&sts, get, &put))
+  if (!net_Reply(&sts, get, &put, 0))
     errh_Bugcheck(sts, "net_Reply");
 }
  
@@ -166,7 +166,7 @@ respondObject (
   rsp->oid    = op->g.oid;
   rsp->count  = count + 1;
 
-  if (!net_Reply(&sts, get, &put))
+  if (!net_Reply(&sts, get, &put, 0))
     errh_Bugcheck(sts, "net_Reply");
 }
 
@@ -276,7 +276,7 @@ cvolsm_GetObjectInfo (
   rmp->sts  = sts;
   rmp->size = mp->aref.Size;
 
-  net_Reply(&sts, get, &put);
+  net_Reply(&sts, get, &put, 0);
 }
 
 /* Handle a NameToObject message.  */
@@ -404,5 +404,5 @@ cvolsm_SetObjectInfo (
   rmp->aref = mp->aref;
   rmp->sts  = sts;
 
-  net_Reply(&sts, get, &put);
+  net_Reply(&sts, get, &put, 0);
 }

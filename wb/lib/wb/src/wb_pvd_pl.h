@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.h,v 1.2 2005-10-25 12:04:25 claes Exp $
+ * Proview   $Id: wb_pvd_pl.h,v 1.3 2006-09-14 14:16:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef wb_pvd_pl_h
 #define wb_pvd_pl_h
 
-#include "wb_pvd_file.h"
+#include "co_pvd_file.h"
 
 typedef enum {
   pl_mFlags_ProjectModified 	= 1 << 16,
@@ -28,16 +28,16 @@ typedef enum {
   pl_mFlags_Disabled 		= 1 << 18
 } pl_mFlags;
 
-class wb_pvd_pl : public wb_pvd_file {
+class wb_pvd_pl : public co_pvd_file {
 public:
   wb_pvd_pl()
   { 
     pwr_tStatus sts;
     load( &sts); 
   }
-  void writeAttribute( wb_procom *pcom, pwr_tOix oix, unsigned int offset,
+  void writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offset,
 		       unsigned int size, char *buffer);
-  void createObject( wb_procom *pcom, pwr_tOix destoix, int desttype,
+  void createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 		     pwr_tCid cid, char *name);
   void load( pwr_tStatus *sts);
   void save( pwr_tStatus *sts);

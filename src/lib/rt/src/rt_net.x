@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_net.x,v 1.10 2006-03-20 07:01:56 claes Exp $
+% * Proview   $Id: rt_net.x,v 1.11 2006-09-14 14:16:07 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -100,6 +100,8 @@ enum net_eMsg {
 
   net_eMsg_getGclass,		/* The whole class */
   net_eMsg_getGclassR,
+
+  net_eMsg_serverConnect,       /* New server */
 
   net_eMsg_,			/* Not a valid message */
   
@@ -1279,7 +1281,8 @@ struct net_sGetCclass {
 %net_Reply (
 %  pwr_tStatus	*sts,
 %  qcom_sGet	*get,
-%  qcom_sPut	*put
+%  qcom_sPut	*put,
+%  pwr_tSid	sid
 %);
 %
 %pwr_tBoolean
@@ -1289,7 +1292,8 @@ struct net_sGetCclass {
 %  void		*mp,
 %  net_eMsg	type,
 %  unsigned int	id,
-%  int		size
+%  int		size,
+%  pwr_tSid	sid
 %);
 %
 %void *
@@ -1306,7 +1310,8 @@ struct net_sGetCclass {
 %  qcom_sPut	 *put,
 %  qcom_sGet	 *get,
 %  net_eMsg	 gtype,
-%  pwr_tBitMask  flags
+%  pwr_tBitMask  flags,
+%  pwr_tSid	sid
 %);
 %
 %pwr_tBoolean

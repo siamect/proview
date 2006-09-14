@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.h,v 1.8 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_vrepext.h,v 1.9 2006-09-14 14:16:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,8 @@
 #include "co_dbs.h"
 #include "wb_import.h"
 #include "wb_vext.h"
-#include "wb_provider.h"
+#include "co_provider.h"
+#include "wb_procom.h"
 #include "wb_cdef.h"
 
 class wb_vrepext;
@@ -145,7 +146,7 @@ class wb_vrepext : public wb_vrep
   int m_msgrcvid;
   ext_object m_cashe;
   wb_procom *m_procom;
-  wb_provider *m_provider;
+  co_provider *m_provider;
   procom_eType m_ptype;
 
 public:

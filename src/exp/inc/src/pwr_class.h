@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.22 2006-05-21 22:30:49 lw Exp $
+ * Proview   $Id: pwr_class.h,v 1.23 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1025,10 +1025,11 @@ struct pwr_s_GraphPlcConnection
 struct pwr_s_PlantHier
     {
     pwr_tString80	Description;
-    pwr_tObjid          DefGraph;
-    pwr_tObjid          DefTrend;
+    pwr_tAttrRef        DefGraph;
+    pwr_tAttrRef        DefTrend;
     pwr_tString40       HelpTopic;
     pwr_tURL            DataSheet;
+    pwr_tURL            CircuitDiagram;
     pwr_tURL            Photo;
     };
 

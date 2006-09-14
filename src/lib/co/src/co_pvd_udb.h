@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_gvl.h,v 1.2 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: co_pvd_udb.h,v 1.1 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,21 +17,30 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef wb_pvd_gvl_h
-#define wb_pvd_gvl_h
+// Provider for user database
+
+#ifndef co_pvd_udb_h
+#define co_pvd_udb_h
 
 #include "co_pvd_file.h"
+#include "co_user.h"
 
-class wb_pvd_gvl : public co_pvd_file {
+class co_pvd_udb : public co_pvd_file {
 public:
-  wb_pvd_gvl()
+  co_pvd_udb( pvd_eEnv env = pvd_eEnv_Wb) : co_pvd_file(env), gu(0), menu_cnt(0)
   { 
     pwr_tStatus sts;
     load( &sts); 
   }
-  void load( pwr_tStatus *sts);
+  void load( pwr_tStatus *rsts);
+  void load_systemgroup( SystemList *systemgroup);
+  void load_user( UserList *user, SystemList *sg);
   void save( pwr_tStatus *sts);
-  void save_item( pwr_tOix oix, ofstream &of);
+  char *groupname( char *name);
+
+  GeUser *gu;
+  int menu_stack[100];
+  int menu_cnt;
 };
 
 #endif

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_externvolume.wb_load,v 1.2 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_c_externvolume.wb_load,v 1.3 2006-09-14 14:16:07 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -26,7 +26,6 @@ SObject pwrs:Class
   Object $ExternVolume $ClassDef pwr_eCix_ExternVolume
     Body SysBody
       Attr Flags |= pwr_mClassDef_System
-      Attr Flags |= pwr_mClassDef_DevOnly
       Attr Flags |= pwr_mClassDef_TopObject
     EndBody
     Object SysBody $ObjBodyDef 1

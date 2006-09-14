@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.cpp,v 1.6 2005-11-22 12:28:18 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.7 2006-09-14 14:16:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@
 #include "wb_volume.h"
 #include "pwr_baseclasses.h"
 #include "wb_pvd_gvl.h"
-#include "wb_pvd_udb.h"
+#include "co_pvd_udb.h"
 #include "wb_pvd_pl.h"
 extern "C" {
 #include "co_dcli.h"
@@ -84,7 +84,7 @@ wb_vrepext::wb_vrepext( wb_erep *erep, pwr_tVid vid, char *name, char *provider)
   }
   else if ( cdh_NoCaseStrcmp( provider, "UserDatabase") == 0) {
     m_ptype = procom_eType_Local;
-    m_provider = new wb_pvd_udb();
+    m_provider = new co_pvd_udb();
     m_procom = new wb_procom( provider, m_provider, procom_eType_Local);
   }
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subsm.c,v 1.7 2006-03-20 07:26:51 claes Exp $
+ * Proview   $Id: rt_subsm.c,v 1.8 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -410,7 +410,7 @@ subsm_SendBuffer (
 
     gdb_Unlock;
   
-      net_Put(&sts, &tgt, mp, net_eMsg_subData, bp->buf_id, size);
+      net_Put(&sts, &tgt, mp, net_eMsg_subData, bp->buf_id, size, 0);
 
     gdb_Lock;
 

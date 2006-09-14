@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.14 2006-01-13 16:32:39 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.15 2006-09-14 14:16:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -598,6 +598,14 @@ gdh_ClassAttrToAttrref (
   pwr_tClassId		classid,
   char			*attributeName,
   pwr_sAttrRef		*attributeReference
+);
+
+pwr_tStatus
+gdh_ClassAttrrefToAttr (
+  pwr_tClassId		classid,
+  pwr_sAttrRef		*attributeReference,
+  char			*nameBuffer,
+  int			sizeOfNameBuffer
 );
 
 pwr_tStatus

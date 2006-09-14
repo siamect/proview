@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rs_remote_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rs_remote_msg.msg,v 1.3 2006-09-14 14:16:07 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -62,3 +62,5 @@ udplinkdown     <Remote UDP/IP link down '%s'>                     /info
 udplinkup       <Remote UDP/IP link up '%s'>                     /info
 udpunknown      <UDP message from unknown ip-address '%s' received>      /info
 udpweirdheader  <UDP message with illegal header received>      /info
+disorder	<Message disorder>				/error
+disabled	<Transport disabled>				/error
