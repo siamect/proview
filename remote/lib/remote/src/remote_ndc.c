@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_ndc.c,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_ndc.c,v 1.2 2006-09-15 10:04:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -243,6 +243,7 @@ float AXP_Float32(int *axp)
 
 /* .  */
 
+#if 0
 static pwr_tBoolean
 decode_aref (
   int	count,
@@ -282,9 +283,9 @@ decode_aref (
 
   return TRUE;
 }    
-
-/* .  */
+#endif
 
+#if 0
 static pwr_tBoolean
 decode_bool (
   int	count,
@@ -304,9 +305,7 @@ decode_bool (
 
   return TRUE;
 }    
-
-
-/* .  */
+#endif
 
 static pwr_tBoolean
 decode_copy (
@@ -364,6 +363,7 @@ encode_vms_sfloat (
   return TRUE;
 }    
 
+#if 0
 static pwr_tBoolean
 encode_intel_sfloat (
   int	count,
@@ -383,6 +383,7 @@ encode_intel_sfloat (
 
   return TRUE;
 }
+#endif
 
 static pwr_tBoolean
 decode_vms_sfloat (
@@ -407,6 +408,7 @@ decode_vms_sfloat (
   return TRUE;
 }    
 
+#if 0
 static pwr_tBoolean
 decode_intel_sfloat(
   int	count,
@@ -425,7 +427,9 @@ decode_intel_sfloat(
 
   return TRUE;
 }
+#endif
 
+#if 0
 static pwr_tBoolean
 decode_int (
   int	count,
@@ -445,7 +449,9 @@ decode_int (
 
   return TRUE;
 }    
+#endif
 
+#if 0
 static pwr_tBoolean
 decode_2_int (
   int	count,
@@ -465,12 +471,14 @@ decode_2_int (
 
   return TRUE;
 }    
+#endif
 
 /* Convert a short integer.
 
   NOTA BENE   A short occupies 4 bytes in the Proview rtdb
               and thus this routine is not currently used.  */
 
+#if 0
 static pwr_tBoolean
 decode_short (
   int	count,
@@ -490,12 +498,14 @@ decode_short (
 
   return TRUE;
 }    
+#endif
 
 /* Convert a tiny integer (8 bits).
 
   NOTA BENE   A tiny occupies 4 bytes in the Proview rtdb
               and thus this routine is not currently used.  */
 
+#if 0
 static pwr_tBoolean
 decode_tiny (
   int	count,
@@ -513,6 +523,7 @@ decode_tiny (
 
   return TRUE;
 }    
+#endif
 
 #if 0
 static pwr_tBoolean (*decode[pwr_eTix_])() = {
