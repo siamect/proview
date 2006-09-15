@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.6 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.7 2006-09-15 09:33:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,7 +103,7 @@ void wb_pvd_pl::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int offs
   default: ;
   }
 
-  co_pvd_file::writeAttribute( pcom, oix, offset, size, buffer);
+  rt_pvd_file::writeAttribute( pcom, oix, offset, size, buffer);
 }
 
 void wb_pvd_pl::createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
@@ -111,7 +111,7 @@ void wb_pvd_pl::createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 {
   pwr_tOix oix = next_oix;
 
-  co_pvd_file::createObject( pcom, destoix, desttype, cid, name);
+  rt_pvd_file::createObject( pcom, destoix, desttype, cid, name);
 
   switch ( cid) {
   case pwr_cClass_ProjectReg: {

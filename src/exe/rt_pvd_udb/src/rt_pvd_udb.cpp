@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_udb.cpp,v 1.1 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_pvd_udb.cpp,v 1.2 2006-09-15 09:33:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,12 +22,12 @@
 #include "rt_procom.h"
 #include "co_provider.h"
 #include "rt_gdh_msg.h"
-#include "co_pvd_udb.h"
+#include "rt_pvd_udb.h"
 #include "wb_ldh.h"
 
 int main()
 {
-  co_pvd_udb provider( pvd_eEnv_Rt);
+  rt_pvd_udb provider( pvd_eEnv_Rt);
   rt_procom procom( &provider,
 		    errh_eAnix_appl20, 	// Application index
 		    "rt_pvd_udb",     	// Process name

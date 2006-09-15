@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.h,v 1.3 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: wb_pvd_pl.h,v 1.4 2006-09-15 09:33:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,7 @@
 #ifndef wb_pvd_pl_h
 #define wb_pvd_pl_h
 
-#include "co_pvd_file.h"
+#include "rt_pvd_file.h"
 
 typedef enum {
   pl_mFlags_ProjectModified 	= 1 << 16,
@@ -28,7 +28,7 @@ typedef enum {
   pl_mFlags_Disabled 		= 1 << 18
 } pl_mFlags;
 
-class wb_pvd_pl : public co_pvd_file {
+class wb_pvd_pl : public rt_pvd_file {
 public:
   wb_pvd_pl()
   { 

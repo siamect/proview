@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_provider.cpp,v 1.6 2006-01-31 09:11:25 claes Exp $
+ * Proview   $Id: wb_provider.cpp,v 1.7 2006-09-15 09:33:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,8 @@ extern "C" {
 }
 
 #include "wb_vext.h"
-#include "wb_provider.h"
+#include "wb_procom.h"
+#include "co_provider.h"
 
 void wb_procom::put( vext_sAMsg *msg, int size, pwr_tStatus *sts)
 {
