@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.55 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.56 2006-10-10 07:40:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1267,14 +1267,19 @@ ldh_ArefANameToAref(ldh_tSession session, pwr_sAttrRef *arp, char *aname, pwr_sA
 {
   wb_session *sp = (wb_session *)session;
 
-  wb_attribute a = sp->attribute(arp);
-  if (!a) return a.sts();
+  try {
+    wb_attribute a = sp->attribute(arp);
+    if (!a) return a.sts();
 
-  wb_attribute oa( a, 0, aname);
+    wb_attribute oa( a, 0, aname);
 
-  oa.aref(oarp);
-
-  return oa.sts();
+    oa.aref(oarp);
+    
+    return oa.sts();
+  }
+  catch ( wb_error& e) {
+    return e.sts();
+  }
 }
 
 
