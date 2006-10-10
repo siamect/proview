@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.6 2006-07-25 11:01:19 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.7 2006-10-10 07:41:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -215,9 +215,7 @@ static int attr_save_cb( void *sctx)
   if ( EVEN(sts)) return sts;
 
   // PrmUserDataLen
-  pwr_tUInt16 user_prm_data_len = ctx->gsd->user_prm_data_len;
-  if ( user_prm_data_len == 0)
-    user_prm_data_len = len;
+  pwr_tUInt16 user_prm_data_len = len;
 
   sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "PrmUserDataLen", &aaref);
   if ( EVEN(sts)) return sts;
