@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_bdrep.h,v 1.14 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_bdrep.h,v 1.15 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,8 @@ public:
   void unref();
   wb_bdrep *ref();
 
-  pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
+  //pwr_sAttrRef aref() { pwr_sAttrRef a; return a;} // Fix
+  pwr_sAttrRef aref();
   size_t size();
   int nAttribute();
   pwr_eBix bix();

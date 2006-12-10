@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.49 2006-06-27 05:52:54 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.50 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,8 @@
 #include "wb_vrepdb.h"
 #include "wb_orepdb.h"
 #include "wb_cdrep.h"
+#include "wb_bdrep.h"
+#include "wb_adrep.h"
 #include "wb_erep.h"
 #include "wb_dbs.h"
 #include "db_cxx.h"
@@ -35,6 +37,52 @@
 #include "wb_dblock.h"
 #include "co_msgwindow.h"
 #include "wb_vrepwbl.h"
+
+typedef struct sArefKey
+{
+  pwr_tCid   cid;
+  pwr_eBix   bix;
+  int        offset;
+} sArefKey;
+
+typedef struct sAref 
+{
+  tree_sNode node;
+  sArefKey   key;
+} sAref;
+
+typedef struct sAttributeInfo {
+  pwr_tAttrRef aref;
+  pwr_tAix     aix;
+  pwr_tUInt32  nElement;
+} sAttributeInfo;
+
+typedef struct sAttributeKey {
+  pwr_tCid         cid;
+  pwr_eBix         bix;
+  pwr_tUInt32      oStart;
+  pwr_tUInt32      oEnd;
+} sAttributeKey;
+
+typedef struct sAttribute {
+  tree_sNode     node;
+  sAttributeKey  key;
+  sAttributeInfo o;
+  sAttributeInfo n;
+} sAttribute;
+
+typedef struct sClass
+{
+  tree_sNode   node;
+  pwr_tCid     cid;
+  pwr_tObjName name;
+  pwr_tTime    o_time;
+  pwr_tTime    n_time;
+  pwr_tUInt32  count;
+} sClass;
+
+static int comp_attribute(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
+static int comp_aref(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 
 void wb_vrepdb::unref()
 {
@@ -49,7 +97,6 @@ wb_vrep *wb_vrepdb::ref()
   m_nRef++;
   return this;
 }
-
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
   m_erep(erep), m_nRef(0), m_ohead(), m_oid_th(0)
@@ -66,11 +113,6 @@ wb_vrepdb::wb_vrepdb(wb_erep *erep, const char *fileName) :
 
   m_merep = new wb_merep(m_fileName, erep, this);
   m_merep->compareMeta(m_name, erep->merep());
-
-#if 0
-  checkMeta();
-  updateMeta();
-#endif
 }
 
 wb_vrepdb::wb_vrepdb(wb_erep *erep, pwr_tVid vid, pwr_tCid cid, const char *volumeName, const char *fileName) :
@@ -248,20 +290,18 @@ wb_orep* wb_vrepdb::object(pwr_tStatus *sts, pwr_tOid oid)
 
 wb_orep* wb_vrepdb::object(pwr_tStatus *sts, wb_name &name)
 {
-  *sts = LDH__SUCCESS;
-  //*sts = LDH__NYI;
-  // return 0;
   pwr_tOid poid;
   poid.vid = m_db->m_vid;
   poid.oix = pwr_cNOix;
+  *sts = LDH__SUCCESS;
 
   try {
     for (int i = 0; name.hasSegment(i); i++) {
       wb_db_name n(m_db, poid, name.normSegment(i));
       int rc = n.get(m_db->m_txn);
       if (rc) {
-  *sts = LDH__NOSUCHOBJ;
-  return 0;
+        *sts = LDH__NOSUCHOBJ;
+        return 0;
       }
       poid = n.oid();
 
@@ -1144,8 +1184,8 @@ wb_orep *wb_vrepdb::nextClass(pwr_tStatus *sts, const wb_orep *orp)
     wb_db_class c(m_db, m_db->m_txn, m_ohead.cid());
     if (c.succClass(m_ohead.cid())) {
       if ( c.cid() == m_ohead.cid()) {
-  m_ohead.get(m_db->m_txn, c.oid());
-  return new (this) wb_orepdb(&m_ohead.m_o);
+        m_ohead.get(m_db->m_txn, c.oid());
+        return new (this) wb_orepdb(&m_ohead.m_o);
       }
     }
     *sts = LDH__NOSUCHOBJ;
@@ -1577,222 +1617,435 @@ bool wb_vrepdb::importPaste()
   return true;
 }
 
-
 pwr_tStatus wb_vrepdb::checkMeta()
 {
-  wb_db_class c(m_db);
-  char buff[256];
-
-  m_merepCheck = m_erep->merep();
-  m_classCount = 0;
-  m_cidChecked = pwr_cNCid;
-  m_totalInstanceCount = 0;
-  m_needUpdateCount = 0;
+  pwr_tStatus sts = LDH__SUCCESS;
+  pwr_tStatus db_sts = LDH__SUCCESS;
+  int totalObjectCount = 0;
+  int nAref = 0;
+  int nClass = 0;
   
-  setUpdate(false);  
+  m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClass, cid), sizeof(sClass), 1000, tree_Comp_cid);
+  m_aref_th = tree_CreateTable(&sts, sizeof(sArefKey), offsetof(sAref, key), sizeof(sAref), 1000, comp_aref);
+  m_attribute_th = tree_CreateTable(&sts, sizeof(sAttributeKey), offsetof(sAttribute, key), sizeof(sAttribute), 1000, comp_attribute);
+  
+  try {
+    wb_db_class_iterator ip(m_db);
+  
+    for (ip.first(); !ip.atEnd(); ip.succClass()) {
+      nClass += checkClass(ip.cid());
+      checkAttributes(ip.cid());
+    }
+    for (ip.first(); !ip.atEnd(); ip.succObject()) {
+      pwr_tCid cid = ip.cid();
+      sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
 
-  c.iter(this);
+      if (!cp)
+        continue;
+      
+      cp->count++;      
+      
+      if (time_IsNull(&cp->n_time))
+        continue;
+    }
 
-  if (m_classCount == 0) {
-    MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
-    return LDH__SUCCESS;
+  } catch (DbException &e) {
+    printf("***DbException vrepdb: %s\n", e.what());
+    db_sts = LDH__DBERROR;
+  } catch (wb_error &e) {
+    printf("***wb_error vrepdb: %s\n", e.what().c_str());
+    db_sts = LDH__DBERROR;
   }
 
-  sprintf(buff, "A total of %d object instances of %d classes can to be updated", m_totalInstanceCount, m_classCount);
 
-  MsgWindow::message('W', buff, msgw_ePop_No);
-  MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
+  for (
+    sClass *cp = (sClass *)tree_Minimum(&sts, m_class_th);
+    cp != NULL;
+    cp = (sClass *)tree_Successor(&sts, m_class_th, cp)
+    ) {
+    char o_timbuf[32];
+    char n_timbuf[32];
+    
+    if (cp->count > 0) {
+      char buff[256];
+      
+      if (time_IsNull(&cp->n_time)) {
+
+        time_AtoAscii(&cp->o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
+        sprintf(buff, "Class \"%s\" [%s], %d object%s, does not exist in global scope",
+                cp->name, o_timbuf, cp->count, (cp->count == 1 ? "" : "s"));
+        MsgWindow::message('W', buff);
+
+      } else {
+        
+        time_AtoAscii(&cp->o_time, time_eFormat_NumDateAndTime, o_timbuf, sizeof(o_timbuf));
+        time_AtoAscii(&cp->n_time, time_eFormat_NumDateAndTime, n_timbuf, sizeof(n_timbuf));
+
+        sprintf(buff, "Class \"%s\" [%s], %d object%s, can be updated to [%s]",
+                cp->name, o_timbuf, cp->count, (cp->count == 1 ? "" : "s"), n_timbuf);
+        MsgWindow::message('W', buff, msgw_ePop_No);
+        totalObjectCount += cp->count;
+      }
+    }
+  }
+  if (ODD(db_sts) && tree_Cardinality(&sts, m_class_th) != 0) {
+    char buff[256];
+
+    sprintf(buff, "A total of %d object%s of %d class%s, and  %d attribute reference%s can be updated",
+            totalObjectCount, (totalObjectCount == 1 ? "" : "s"),
+            tree_Cardinality(&sts, m_class_th), (tree_Cardinality(&sts, m_class_th) == 1 ? "" : "es"),
+            nAref, (nAref == 1 ? "" : "s"));
+
+    MsgWindow::message('W', buff, msgw_ePop_No);
+    MsgWindow::message( 'W', "Classvolumes need update, execute 'Function->UpdateClasses'");
+  }  
+
+  tree_DeleteTable(&sts, m_attribute_th);
+  tree_DeleteTable(&sts, m_aref_th);
+  tree_DeleteTable(&sts, m_class_th);
+
+  return sts;
+}
+
+
+
+static int
+comp_attribute(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sAttribute *xp = (sAttribute *) x; 
+  sAttribute *yp = (sAttribute *) y;
   
-  return LDH__SUCCESS;
+  if (xp->key.cid > yp->key.cid)
+    return 1;
+
+  if (xp->key.cid < yp->key.cid)
+    return -1;
+
+  if (xp->key.bix > yp->key.bix)
+    return 1;
+
+  if (xp->key.bix < yp->key.bix)
+    return -1;
+
+  if (xp->key.oStart > yp->key.oEnd)
+    return 1;
+
+  if (xp->key.oEnd < yp->key.oStart)
+    return -1;
+
+  return 0;
+}
+
+static int
+comp_aref(tree_sTable *tp, tree_sNode *x, tree_sNode *y)
+{
+  sAref *xp = (sAref *) x; 
+  sAref *yp = (sAref *) y;
+
+  if (xp->key.cid > yp->key.cid)
+    return 1;
+
+  if (xp->key.cid < yp->key.cid)
+    return -1;
+
+  if (xp->key.bix > yp->key.bix)
+    return 1;
+
+  if (xp->key.bix < yp->key.bix)
+    return -1;
+
+  if (xp->key.offset > yp->key.offset)
+    return 1;
+
+  if (xp->key.offset < yp->key.offset)
+    return -1;
+
+  return 0;
+}
+
+int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
+{
+  pwr_tStatus sts;
+  sArefKey ak;
+  int nAref[2] = {0, 0};
+  int rbSize = 0;
+  int dbSize = 0;
+  int rrc = 0;
+  int drc = 0;
+  
+  ak.cid = cid;
+  ak.bix = pwr_eBix__;
+  ak.offset = 0;
+  char *rp = 0;
+  char *dp = 0;
+  
+  sAref *ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ak);
+
+  if (ap == 0 || ap->key.cid != cid)
+    return 0;
+
+  try {
+    wb_db_ohead ohead(m_db, m_db->m_txn, oid);
+    rbSize = ohead.rbSize();
+    dbSize = ohead.dbSize();
+    wb_db_rbody rb(m_db, ohead.oid());
+    wb_db_dbody db(m_db, ohead.oid());
+    
+    if (rbSize) {      
+      rp = (char *)calloc(1, rbSize);
+      rrc = rb.get(m_db->m_txn, 0, rbSize, rp);
+    }
+    if (dbSize) {
+      dp = (char *)calloc(1, dbSize);
+      drc = db.get(m_db->m_txn, 0, dbSize, dp);
+    }
+  } catch (DbException &e) {
+    ap = 0;
+  } catch (wb_error &e) {
+    ap = 0;
+  }
+
+
+  while (ap != 0 && ap->key.cid == cid) {
+    char *p = 0;
+    
+    if (ap->key.bix == pwr_eBix_rt)
+      p = rp;
+    else if (ap->key.bix == pwr_eBix_dev)
+      p = dp;
+    else
+      p = 0;
+    
+    if (p != 0) {
+        
+      try {
+          
+        pwr_sAttrRef *arp = (pwr_sAttrRef *)(p + ap->key.offset);        
+        wb_db_ohead aohead(m_db, m_db->m_txn, arp->Objid);
+        wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, aohead.cid());
+        if (EVEN(sts)) printf("n_cdrep sts %d", sts);
+        
+        wb_bdrep *n_bdrep = n_cdrep->bdrep(&sts, ap->key.bix);
+        if (EVEN(sts)) printf("n_bdrep sts %d", sts);
+
+        sAttributeKey k;
+        k.cid = aohead.cid();
+        k.bix = ap->key.bix;
+        k.oStart = arp->Offset;
+        k.oEnd = arp->Offset + arp->Size - 1;
+        
+        sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
+        if (cap != 0) {
+          nAref[ap->key.bix - 1]++;
+          if (arp->Size > cap->o.aref.Size) {
+            arp->Offset = 0;
+            arp->Size = n_bdrep->size();
+          } else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
+            arp->Offset = cap->n.aref.Offset;
+            arp->Size = cap->n.aref.Size;
+          } else if (cap->o.aref.Flags.b.Array) {
+            pwr_tUInt32 oElementSize = cap->o.aref.Size / cap->o.nElement;
+            pwr_tUInt32 oOffset = arp->Offset - cap->o.aref.Offset;
+            pwr_tUInt32 index = oOffset / oElementSize;
+            pwr_tUInt32 nElementSize = cap->n.aref.Size / cap->n.nElement;
+
+            if (index >= cap->n.nElement) {
+              index = cap->n.nElement - 1;
+            }
+            arp->Offset = cap->n.aref.Offset + (index * nElementSize);
+            arp->Size = nElementSize;
+          }          
+        }
+        
+      } catch (DbException &e) {
+        //printf("DbException vrepdb updateArefs 2: %s, oid: %d.%d, cid: %d \n", e.what(), oid.vid, oid.oix, cid);
+      } catch (wb_error &e) {
+        //printf("wb_error vrepdb updateArefs 2: oid: %d.%d, cid: %d %s\n", oid.vid, oid.oix, cid, e.what().c_str());
+      }
+    }
+      
+      
+    ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
+  }
+
+  try {
+    wb_db_ohead ohead(m_db, m_db->m_txn, oid);
+    wb_db_rbody rb(m_db, ohead.oid());
+    wb_db_dbody db(m_db, ohead.oid());
+
+    if (rbSize && nAref[0]) {
+      rb.put(m_db->m_txn, 0, rbSize, rp);
+    }
+    if (dbSize && nAref[1]) {
+      db.put(m_db->m_txn, 0, dbSize, dp);
+    }
+  } catch (DbException &e) {
+    //printf("DbException vrepdb updateArefs body.put: oid: %d.%d, cid: %d %s\n", oid.vid, oid.oix, cid, e.what());
+  } catch (wb_error &e) {
+    //printf("wb_error vrepdb updateArefs body.put: oid: %d.%d, cid: %d %s\n", oid.vid, oid.oix, cid, e.what().c_str());
+  }
+    
+  if (rp)
+    free(rp);
+  if (dp)
+    free(dp);
+
+  return nAref[0] + nAref[1];
 }
 
 pwr_tStatus wb_vrepdb::updateMeta()
 {
-  wb_db_class c(m_db);
-
-  m_merepCheck = m_erep->merep();
-  m_classCount = 0;
-  m_cidChecked = pwr_cNCid;
-  m_totalInstanceCount = 0;
-
-  setUpdate(true);
+  int rc = 0;
+  pwr_tStatus sts = LDH__SUCCESS;
+  pwr_tStatus db_sts = LDH__SUCCESS;
+  int nAref = 0;
+  int nObject = 0;
+  int nClass = 0;
+  int totalObjectCount = 0;
+  
+  m_aref_th = tree_CreateTable(&sts, sizeof(sArefKey), offsetof(sAref, key), sizeof(sAref), 1000, comp_aref);
+  m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClass, cid), sizeof(sClass), 1000, tree_Comp_cid);
+  m_attribute_th = tree_CreateTable(&sts, sizeof(sAttributeKey), offsetof(sAttribute, key), sizeof(sAttribute), 1000, comp_attribute);
+  
 
   try {
-    c.iter(this);
+    wb_db_class_iterator ip(m_db);
+  
+    for (ip.first(); !ip.atEnd(); ip.succClass()) {
+      nClass += checkClass(ip.cid());
+      checkAttributes(ip.cid());
+    }
+    for (ip.first(); !ip.atEnd(); ip.succObject()) {
+      pwr_tCid cid = ip.cid();
+      sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
+
+      if (!cp)
+        continue;
+      
+      cp->count++;      
+      
+      if (time_IsNull(&cp->n_time))
+        continue;
+
+      nAref   += updateArefs(ip.oid(), ip.cid());
+      nObject += updateObject(ip.oid(), ip.cid());
+    }
   } catch (DbException &e) {
-    printf("vrepdb: %s\n", e.what());
-    return LDH__DBERROR;
+    printf("vrepdb::updateMeta: %s\n", e.what());
+    db_sts = LDH__DBERROR;
   } catch (wb_error &e) {
-    printf("vrepdb: %s\n", e.what().c_str());
-    return LDH__DBERROR;
+    printf("vrepdb::updateMeta: %s\n", e.what().c_str());
+    db_sts = LDH__DBERROR;
   }
   
-  if (m_classCount != 0) {
+  for (
+    sClass *cp = (sClass *)tree_Minimum(&sts, m_class_th);
+    cp != NULL;
+    cp = (sClass *)tree_Successor(&sts, m_class_th, cp)
+    ) {
+    char o_timbuf[32];
+    char n_timbuf[32];
+    
+    if (cp->count > 0) {
+      char buff[256];
+      
+      if (time_IsNull(&cp->n_time)) {
 
+        time_AtoAscii(&cp->o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
+        sprintf(buff, "Class \"%s\" [%s], %d object%s, does not exist in global scope",
+                cp->name, o_timbuf, cp->count, (cp->count == 1 ? "" : "s"));
+        MsgWindow::message('W', buff);
+
+      } else {
+        
+        time_AtoAscii(&cp->o_time, time_eFormat_NumDateAndTime, o_timbuf, sizeof(o_timbuf));
+        time_AtoAscii(&cp->n_time, time_eFormat_NumDateAndTime, n_timbuf, sizeof(n_timbuf));
+
+        sprintf(buff, "Class \"%s\" [%s], %d object%s, %s updated to [%s]",
+                cp->name, o_timbuf, cp->count, (cp->count == 1 ? "" : "s"),
+                (cp->count == 1 ? "was" : "were"), n_timbuf);	  
+        MsgWindow::message('I', buff, msgw_ePop_No);
+        totalObjectCount += cp->count;
+      }
+    }
+  }
+  if (ODD(db_sts) && tree_Cardinality(&sts, m_class_th) != 0 && totalObjectCount > 0) {
     char buff[256];
-    sprintf(buff, "A total of %d object instances of %d classes were updated",
-	    m_totalInstanceCount, m_classCount);
 
-    MsgWindow::message('I', buff);
+    commit(&rc);
 
-    pwr_tStatus sts = 0;
-    commit(&sts);
+    if (rc) {
+      sprintf(buff, "A total of %d object%s of %d classe%s %s updated, but could not be saved to database.",
+              nObject, (nObject == 1 ? "" : "s"), tree_Cardinality(&sts, m_class_th), 
+              (tree_Cardinality(&sts, m_class_th) == 1 ? "" : "s"), 
+              (nObject == 1 ? "was" : "were"));
+      MsgWindow::message(co_error(rc), buff);
+      db_sts = LDH__DBERROR;
+    } else {
+      m_merep->copyFiles(m_fileName, m_erep->merep());
+      delete m_merep;
+      m_merep = new wb_merep(m_fileName, m_erep, this);
 
-    if (sts) {
-      MsgWindow::message(co_error(sts), "Could not save class updates to database");
-      return LDH__DBERROR;
+      sprintf(buff, "A total of %d object%s of %d class%s, and  %d attribute reference%s, %s updated",
+              totalObjectCount, (totalObjectCount == 1 ? "" : "s"),
+              tree_Cardinality(&sts, m_class_th), (tree_Cardinality(&sts, m_class_th) == 1 ? "" : "es"),
+              nAref, (nAref == 1 ? "" : "s"), (nAref == 1 ? "was" : "were"));
+
+      MsgWindow::message('I', buff);
     }
   }
-  m_merep->copyFiles(m_fileName, m_erep->merep());
-  delete m_merep;
-  m_merep = new wb_merep(m_fileName, m_erep, this);
   
-  return LDH__SUCCESS;
+  tree_DeleteTable(&sts, m_attribute_th);
+  tree_DeleteTable(&sts, m_aref_th);
+  tree_DeleteTable(&sts, m_class_th);
+
+  return sts;
 }
 
-pwr_tStatus wb_vrepdb::checkObject(pwr_tOid oid, pwr_tCid cid)
+/* Check if class is changed, return 1 if it is.  */
+int
+wb_vrepdb::checkClass(pwr_tCid cid)
 {
   static wb_cdrep *o_crep = 0;
   static wb_cdrep *n_crep = 0;
-  static bool skip = false;
-  
   pwr_tTime o_time = {0, 0};
   pwr_tTime n_time = {0, 0};
-
-  if (m_cidChecked != cid) {
-    skip = false;
-    
-    while (cid != 0) {
-      pwr_tStatus sts;
-      char buff[256];
-      char o_timbuf[32];
-      char n_timbuf[32];
-
-      if (m_cidChecked != pwr_cNCid) {
-        if (n_crep == 0) {
-          o_time = o_crep->ohTime();
-          time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
-          sprintf(buff, "Class \"%s\" [%s], %d instance%s, does not exist in global scope",
-		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"));
-	  MsgWindow::message('W', buff);
-        } else {
-          o_time = o_crep->ohTime();
-          n_time = n_crep->ohTime();
-	  if (time_Acomp(&o_time, &n_time) != 0 || m_instanceCount) {
-	    time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
-	    time_AtoAscii(&n_time, time_eFormat_DateAndTime, n_timbuf, sizeof(n_timbuf));
-	    sprintf(buff, "Class \"%s\" [%s], %d instance%s, can be updated to [%s]",
-		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"), n_timbuf);	  
-	    MsgWindow::message('W', buff, msgw_ePop_No);
-	    m_totalInstanceCount += m_instanceCount;
-	    m_needUpdateCount++;
-	  }
-        }
-      }
-
-      o_crep = m_merep->cdrep(&sts, cid);
-      n_crep = m_merepCheck->cdrep(&sts, cid);
-
-      if (n_crep == 0) {
-      	break;
-      }
-      	
-      o_time = o_crep->ohTime();
-      n_time = n_crep->ohTime();
-
-      if (time_Acomp(&o_time, &n_time) == 0) {
-      	skip = true;
-        break;
-      }
-
-      m_classCount++;
-      break;
-    }
-    m_cidChecked = cid;
-    m_instanceCount = 0;
+  pwr_tStatus sts;
+  
+  o_crep = m_merep->cdrep(&sts, cid);
+  if (o_crep == 0) {
+    // Class does not exist
+    return 0;    
   }
   
-  if (skip)
-    return LDH__SUCCESS;
-    
-  m_instanceCount++;
-  
-  return LDH__SUCCESS;
-}
-
-pwr_tStatus wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
-{
-  static wb_cdrep *o_crep = 0;
-  static wb_cdrep *n_crep = 0;
-  static bool skip = false;
-  pwr_tTime o_time = {0, 0};
-  pwr_tTime n_time = {0, 0};
-
-  if (m_cidChecked != cid) {
-    skip = false;
-    
-    while (cid != 0) {
-      pwr_tStatus sts;
-      char buff[256];
-      char o_timbuf[32];
-      char n_timbuf[32];
-
-      if (m_cidChecked != pwr_cNCid) {
-        if (n_crep == 0) {
-          o_time = o_crep->ohTime();
-          time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
-          sprintf(buff, "Class \"%s\" [%s], %d instance%s, does not exist in global scope",
-		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"));
-        } else if ( o_crep != 0) {
-          o_time = o_crep->ohTime();
-          n_time = n_crep->ohTime();
-          time_AtoAscii(&o_time, time_eFormat_DateAndTime, o_timbuf, sizeof(o_timbuf));
-          time_AtoAscii(&n_time, time_eFormat_DateAndTime, n_timbuf, sizeof(n_timbuf));
-          sprintf(buff, "Class \"%s\" [%s], %d instance%s, %s updated to [%s]",
-		  o_crep->name(), o_timbuf, m_instanceCount, (m_instanceCount == 1 ? "" : "s"), (m_instanceCount == 1 ? "was" : "were"), n_timbuf);
-          m_totalInstanceCount += m_instanceCount;
-        }
-        MsgWindow::message('I', buff);
-      }
-
-      o_crep = m_merep->cdrep(&sts, cid);
-      if (o_crep == 0)
-	throw wb_error(sts);
-      n_crep = m_merepCheck->cdrep(&sts, cid);
-
-      if (n_crep == 0) {
-      	break;
-      }
-      	
-      o_time = o_crep->ohTime();
-      n_time = n_crep->ohTime();
-
-      if (time_Acomp(&o_time, &n_time) == 0) {
-	  skip = true;
-        break;
-      }
-
-      m_classCount++;
-      break;
-    }
-    m_cidChecked = cid;
-    m_instanceCount = 0;
-  }
-
-  if (skip) {
-    return LDH__SUCCESS;
-  }
-  
-  m_instanceCount++;
-
-  m_ohead.get(m_db->m_txn, oid);
-
   o_time = o_crep->ohTime();
-  n_time = n_crep->ohTime();
 
-  if (time_Acomp(&o_time, &n_time) == 0)
-    return LDH__SUCCESS;
+  n_crep = m_erep->merep()->cdrep(&sts, cid);      	
+  if (n_crep != 0)
+    n_time = n_crep->ohTime();
 
+  if (time_Acomp(&o_time, &n_time) != 0) {
+    sClass *ccp = (sClass *)tree_Insert(&sts, m_class_th, &cid);
+    ccp->o_time = o_time;
+    ccp->n_time = n_time;
+    strcpy(ccp->name, o_crep->name());
+
+    return 1;
+  }
+  return 0;
+}
+
+int
+wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
+{
+  pwr_tStatus sts;
+  wb_cdrep *n_crep = m_erep->merep()->cdrep(&sts, cid);
+
+  if (n_crep == 0) {
+    return 0;
+  }
+  
+  m_ohead.get(m_db->m_txn, oid);
   wb_db_rbody rb(m_db, m_ohead.oid());
   void *rp = calloc(1, m_ohead.rbSize());
 
@@ -1806,15 +2059,17 @@ pwr_tStatus wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
     db.get(m_db->m_txn, 0, m_ohead.dbSize(), dp);
 
   void *rbody = 0;
-  void *dbody = 0;  
+  void *dbody = 0;
   pwr_tUInt32 rsize;
   pwr_tUInt32 dsize;
   int rc = 0;
   
   n_crep->convertObject(m_merep, rp, dp, &rsize, &dsize, &rbody, &dbody);
   
-  free(rp);
-  free(dp);
+  if (rp)
+    free(rp);
+  if (dp)
+    free(dp);
   
   pwr_tTime time;
   clock_gettime(CLOCK_REALTIME, &time);
@@ -1841,5 +2096,170 @@ pwr_tStatus wb_vrepdb::updateObject(pwr_tOid oid, pwr_tCid cid)
   m_ohead.ohTime(time);
   m_ohead.put(m_db->m_txn);
   
-  return LDH__SUCCESS;
+  return 1;
+}
+
+void wb_vrepdb::checkAttributes(pwr_tCid cid)
+{
+  pwr_tStatus sts;
+  wb_cdrep *o_cdrep = m_merep->cdrep(&sts, cid);
+  if (EVEN(sts)) {
+    // This is really weird, should not happen.
+    printf("This is weird, class does not exist in old meta data, cid: %d, sts: %d\n", cid, sts);
+    return;
+  }
+  
+  wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, cid);
+  if (EVEN(sts)) {
+    // The class does not exist in the new version of meta data
+    return;
+  }
+
+  for (int i = 0; i < 2; i++) {
+    pwr_eBix bix = i ? pwr_eBix_dev: pwr_eBix_rt;
+
+    wb_bdrep *n_bdrep = n_cdrep->bdrep(&sts, bix);
+    if (ODD(sts)) {
+      wb_bdrep *o_bdrep = o_cdrep->bdrep(&sts, bix);
+      if (ODD(sts)) {
+        wb_adrep *o_adrep = o_bdrep->adrep(&sts);
+
+        while (ODD(sts)) {
+
+          if (o_adrep->type() == pwr_eType_AttrRef) {
+            sArefKey a;
+
+            a.cid = cid;
+            a.bix = bix;
+            a.offset = o_adrep->offset();
+            tree_Insert(&sts, m_aref_th, &a); 
+          }
+
+          // Indentify attribute with the same aix
+          bool found = false;
+          wb_adrep *n_adrep = n_bdrep->adrep( &sts);
+          while (ODD(sts)) {
+            if (o_adrep->aix() == n_adrep->aix()) {
+              found = true;
+              break;
+            }
+            wb_adrep *prev = n_adrep;
+            n_adrep = n_adrep->next(&sts);
+            delete prev;
+          }
+          if (found) {
+            if (
+              (o_adrep->offset()   != n_adrep->offset())   ||
+              (o_adrep->size()     != n_adrep->size())     ||
+              (o_adrep->type()     != n_adrep->type())     ||
+              //(o_adrep->tid()      != n_adrep->tid())      ||
+              (o_adrep->nElement() != n_adrep->nElement()) ||
+              (o_adrep->index()    != n_adrep->index())
+              )
+              {
+                sAttributeKey ak;
+                sAttribute *ap;
+                  
+                ak.cid = cid;
+                ak.bix = bix;
+                ak.oStart = o_adrep->offset();
+                ak.oEnd = o_adrep->offset() + o_adrep->size() - 1;                
+                ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+                ap->o.aref = o_adrep->aref();
+                ap->n.aref = n_adrep->aref();
+                ap->o.aix = o_adrep->aix();
+                ap->n.aix = n_adrep->aix();
+                ap->o.nElement = o_adrep->nElement();
+                ap->n.nElement = n_adrep->nElement();
+              }
+            if (o_adrep->isClass() && n_adrep->subClass() == o_adrep->subClass()) {
+              checkSubClass(o_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
+            }
+            delete n_adrep;
+          }
+          wb_adrep *prev = o_adrep;
+          o_adrep = o_adrep->next(&sts);
+          delete prev;
+        }
+        if (o_adrep) delete o_adrep;
+      }
+      if (o_bdrep) delete o_bdrep;
+    }
+    if (n_bdrep) delete n_bdrep;
+  }
+}
+
+void wb_vrepdb::checkSubClass(pwr_tCid cid, unsigned int o_offset, unsigned int n_offset)
+{
+  pwr_tStatus sts;
+  wb_cdrep *o_cdrep = m_merep->cdrep(&sts, cid);
+  if (EVEN(sts)) throw wb_error(sts);
+  wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, cid);
+  if (EVEN(sts)) return;
+
+  pwr_eBix bix = pwr_eBix_rt;
+
+  wb_bdrep *n_bdrep = n_cdrep->bdrep(&sts, bix);
+  if (EVEN(sts)) return;
+  wb_bdrep *o_bdrep = o_cdrep->bdrep(&sts, bix);
+  if (EVEN(sts)) return;
+
+  wb_adrep *o_adrep = o_bdrep->adrep(&sts);
+
+  while (ODD(sts)) {
+    bool found = false;
+    wb_adrep *n_adrep = n_bdrep->adrep(&sts);
+    while (ODD(sts)) {
+      if (o_adrep->aix() == n_adrep->aix()) {
+        found = true;
+        break;
+      }
+      wb_adrep *prev = n_adrep;
+      n_adrep = n_adrep->next(&sts);
+      delete prev;
+    }
+    if (found) {
+      if (
+        (o_adrep->offset()   != n_adrep->offset())   ||
+        (o_adrep->size()     != n_adrep->size())     ||
+        (o_adrep->type()     != n_adrep->type())     ||
+        //(o_adrep->tid()      != n_adrep->tid())      ||
+        (o_adrep->nElement() != n_adrep->nElement()) ||
+        (o_adrep->index()    != n_adrep->index())) {
+
+        sAttributeKey ak;
+        sAttribute *ap;
+                  
+        ak.cid = cid;
+        ak.bix = bix;
+        ak.oStart = o_adrep->offset() + o_offset;
+        ak.oEnd = ak.oStart + o_adrep->size() - 1;                 
+        ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+        
+        ap->o.aref = o_adrep->aref();
+        ap->n.aref = n_adrep->aref();
+        ap->o.aix = o_adrep->aix();
+        ap->n.aix = n_adrep->aix();
+        ap->o.nElement = o_adrep->nElement();
+        ap->n.nElement = n_adrep->nElement();
+      }
+      if (o_adrep->isClass() && o_adrep->subClass() == n_adrep->subClass()) {
+        checkSubClass(n_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
+      } else if (o_adrep->type() == pwr_eType_AttrRef) {
+        sArefKey a;
+
+        a.cid = cid;
+        a.bix = bix;
+        a.offset = o_adrep->offset();
+        tree_Insert(&sts, m_aref_th, &a);        
+      }
+      
+      if (n_adrep) delete n_adrep;
+    }
+    wb_adrep *prev = o_adrep;
+    o_adrep = o_adrep->next(&sts);
+    delete prev;
+  }
+  if (o_cdrep) delete o_cdrep;
+  if (n_cdrep) delete n_cdrep;
 }

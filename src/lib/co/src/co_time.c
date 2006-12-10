@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.c,v 1.10 2006-05-21 22:30:49 lw Exp $
+ * Proview   $Id: co_time.c,v 1.11 2006-12-10 14:33:34 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -137,6 +137,26 @@ validateTm (
   }
   return TIME__SUCCESS;
 }
+//! Compare two timespecs.
+/*!   Returns \n
+    1 if t1  > t2 \n
+    0 if t1 == t2 \n
+   -1 if t1  < t2 \n
+
+   If argument 't2' is NULL the comparison will
+   be done as if t2 == 0.
+*/
+
+int
+time_IsNull (
+  pwr_tTime *t1
+)
+{
+
+  assertAbs(t1);
+
+  return (t1->tv_sec == pwr_cNTime.tv_sec) && (t1->tv_nsec == pwr_cNTime.tv_nsec);
+}
 
 //! Add an absolute time and a delta time.
 /*! Add two timespecs, result = t + d, where:
@@ -170,7 +190,7 @@ time_Aadd (
 
   return r;
 }
-
+
 //! Compare two timespecs.
 /*!   Returns \n
     1 if t1  > t2 \n

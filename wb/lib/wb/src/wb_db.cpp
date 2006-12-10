@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.35 2006-05-26 11:57:28 lw Exp $
+ * Proview   $Id: wb_db.cpp,v 1.36 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,13 +45,6 @@ void wb_db_info::get(wb_db_txn *txn)
 {
   int index = 1;
   int ret;
-#if 0
-  m_key.set_data(&index);
-  m_key.set_size(sizeof(index));
-  m_data.set_data(&m_volume);
-  m_data.set_ulen(sizeof(m_volume));
-  m_data.set_flags(DB_DBT_USERMEM);
-#endif
   Dbt key(&index, sizeof(index));
   Dbt data(&m_volume, sizeof(m_volume));
   data.set_ulen(sizeof(m_volume));
@@ -61,7 +54,7 @@ void wb_db_info::get(wb_db_txn *txn)
     ret = m_db->m_t_info->get(txn, &key, &data, 0);
     printf("info get: %d\n", ret);
   } catch (DbException &e) {
-    printf("Fel, %d\n", ret);
+    printf("info get Error, %d\n", ret);
     m_db->m_t_info->err(ret, "m_db->m_t_info->get(txn, &key, &data, 0)");
     cout << e.what();
   }
@@ -122,8 +115,6 @@ bool wb_db_class::succ(pwr_tOid oid)
     memcpy( &m_k, *data, sizeof(m_k));
   }
   return ret == 0;
-
-  // return false;
 }
 
 bool wb_db_class::succClass(pwr_tCid cid)
@@ -168,10 +159,10 @@ int wb_db_class::del(wb_db_txn *txn)
   return m_db->m_t_class->del(txn, &m_key, 0);
 }
 
-void wb_db_class::iter(void (*print)(pwr_tOid oid, pwr_tCid cid))
+void wb_db_class::iter(void (*func)(pwr_tOid oid, pwr_tCid cid))
 {
   int rc = 0;
-
+  
   m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
 
   /* Initialize the key/data pair so the flags aren't set. */
@@ -181,35 +172,10 @@ void wb_db_class::iter(void (*print)(pwr_tOid oid, pwr_tCid cid))
   m_key.set_ulen(sizeof(m_k));
   m_key.set_flags(DB_DBT_USERMEM);
 
-  /* Walk through the database and print out the key/data pairs. */
+  /* Walk through the database. */
 
   while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
-    print(m_k.oid, m_k.cid);
-  }
-
-  m_dbc->close();
-}
-
-void wb_db_class::iter(wb_convert_volume *cp)
-{
-  int rc = 0;
-
-  m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
-
-  /* Initialize the key/data pair so the flags aren't set. */
-  memset(&m_k, 0, sizeof(m_k));
-
-  m_key.set_data(&m_k);
-  m_key.set_ulen(sizeof(m_k));
-  m_key.set_flags(DB_DBT_USERMEM);
-
-  /* Walk through the database and print out the key/data pairs. */
-
-  while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
-    if (cp->m_update)
-      cp->updateObject(m_k.oid, m_k.cid);
-    else
-      cp->checkObject(m_k.oid, m_k.cid);
+    func(m_k.oid, m_k.cid);
   }
 
   m_dbc->close();
@@ -217,9 +183,110 @@ void wb_db_class::iter(wb_convert_volume *cp)
 }
 
 wb_db_class::~wb_db_class()
+{  
+  if (m_dbc)
+    m_dbc->close();
+}
+
+wb_db_class_iterator::wb_db_class_iterator(wb_db *db) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0), m_atEnd(false), m_rc(0)
+{
+  m_rc = m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
+
+  /* Initialize the key/data pair so the flags aren't set. */
+  memset(&m_k, 0, sizeof(m_k));
+
+  m_key.set_data(&m_k);
+  m_key.set_ulen(sizeof(m_k));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_atEnd = (m_rc != 0);  
+}
+
+wb_db_class_iterator::wb_db_class_iterator(wb_db *db, pwr_tCid cid) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0), m_atEnd(false), m_rc(0)
+{
+  m_rc = m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
+
+  /* Initialize the key/data pair so the flags aren't set. */
+  memset(&m_k, 0, sizeof(m_k));
+
+  m_key.set_data(&m_k);
+  m_key.set_ulen(sizeof(m_k));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_atEnd = (m_rc != 0);  
+  m_k.oid = pwr_cNOid;
+  m_k.cid = cid;
+}
+
+wb_db_class_iterator::wb_db_class_iterator(wb_db *db, pwr_tCid cid, pwr_tOid oid) :
+  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(0, 0), m_dbc(0), m_atEnd(false), m_rc(0)
+{
+
+  m_rc = m_db->m_t_class->cursor(m_db->m_txn, &m_dbc, 0);
+
+  /* Initialize the key/data pair so the flags aren't set. */
+  memset(&m_k, 0, sizeof(m_k));
+
+  m_key.set_data(&m_k);
+  m_key.set_ulen(sizeof(m_k));
+  m_key.set_flags(DB_DBT_USERMEM);
+
+  m_atEnd = (m_rc != 0);  
+  m_k.oid = oid;
+  m_k.cid = cid;
+}
+
+bool wb_db_class_iterator::first()
+{
+  m_k.oid = pwr_cNOid;
+  m_k.cid = pwr_cNCid;
+
+  //m_rc = m_dbc->get(&m_key, 0, DB_FIRST);
+  m_rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
+  m_atEnd = (m_rc != 0);
+
+  return !m_atEnd;
+}
+
+bool wb_db_class_iterator::succObject()
+{
+  if (!m_atEnd) {
+    m_rc = m_dbc->get(&m_key, &m_data, DB_NEXT);
+    m_atEnd = (m_rc != 0);
+  }
+
+  return !m_atEnd;
+}
+
+bool wb_db_class_iterator::succClass()
+{
+  m_k.oid = pwr_cNOid;
+  m_k.cid++;
+
+  m_rc = m_dbc->get(&m_key, &m_data, DB_SET_RANGE);
+  m_atEnd = (m_rc != 0);
+
+  return !m_atEnd;
+}
+
+bool wb_db_class_iterator::succClass(pwr_tCid cid)
+{
+  m_k.oid = pwr_cNOid;
+  m_k.cid = cid + 1;
+
+  m_rc = m_dbc->get(&m_key, &m_data, DB_SET_RANGE);
+  m_atEnd = (m_rc != 0);
+
+  return !m_atEnd;
+}
+
+wb_db_class_iterator::~wb_db_class_iterator()
 {
   if (m_dbc)
     m_dbc->close();
+  m_dbc = 0;
 }
 
 wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn) :
@@ -259,11 +326,6 @@ wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name &name) 
   m_d.oid = pwr_cNOid;
 }
 
-//wb_db_name::wb_db_name(wb_db *db, pwr_tOid, char *name) :
-//  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
-//{
-//}
-
 wb_db_name::wb_db_name(wb_db *db, pwr_tOid poid, const char *name) :
   m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
 {
@@ -273,12 +335,6 @@ wb_db_name::wb_db_name(wb_db *db, pwr_tOid poid, const char *name) :
   m_k.poid = poid;
   strcpy(m_k.normname, name);
 }
-
-//wb_db_name::wb_db_name(wb_db *db, wb_db_txn *txn, pwr_tOid poid, wb_name name) :
-//  m_db(db), m_key(&m_k, sizeof(m_k)), m_data(&m_d, sizeof(m_d))
-//{
-//}
-
 
 int wb_db_name::get(wb_db_txn *txn)
 {
@@ -304,7 +360,7 @@ void wb_db_name::name(wb_name &name)
   strcpy(m_k.normname, name.normName(cdh_mName_object));
 }
 
-void wb_db_name::iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid))
+void wb_db_name::iter(void (*func)(pwr_tOid poid, pwr_tObjName name, pwr_tOid oid))
 {
   int rc = 0;
 
@@ -313,9 +369,6 @@ void wb_db_name::iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid o
   /* Initialize the key/data pair so the flags aren't set. */
   memset(&m_k, 0, sizeof(m_k));
   memset(&m_d, 0, sizeof(m_d));
-
-  //printf("sizeof(m_k): %d\n", sizeof(m_k));
-  //printf("sizeof(m_d): %d\n", sizeof(m_d));
 
   m_key.set_data(&m_k);
   m_key.set_ulen(sizeof(m_k));
@@ -327,15 +380,9 @@ void wb_db_name::iter(void (*print)(pwr_tOid poid, pwr_tObjName name, pwr_tOid o
 
 
   /* Walk through the database and print out the key/data pairs. */
-  //int rc = m_dbc->get(&m_key, &m_data, DB_FIRST);
 
   while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
-    //printf("k: %d, d: %d\n", (int)m_key.get_size(), (int)m_data.get_size());
-    //volatile int a = m_key.get_size();
-    //a = m_data.get_size();
-
-    print(m_k.poid, m_k.normname, m_d.oid);
-
+    func(m_k.poid, m_k.normname, m_d.oid);
   }
 
   m_dbc->close();
@@ -459,7 +506,7 @@ void wb_db_ohead::clear()
   memset(&m_o, 0, sizeof(m_o));
 }
 
-void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
+void wb_db_ohead::iter(void (*func)(pwr_tOid oid, db_sObject *op))
 {
   int rc = 0;
 
@@ -481,7 +528,7 @@ void wb_db_ohead::iter(void (*print)(pwr_tOid oid, db_sObject *op))
   /* Walk through the database and print out the key/data pairs. */
 
   while ((rc = m_dbc->get(&m_key, &m_data, DB_NEXT)) == 0) {
-    print(m_oid, &m_o);
+    func(m_oid, &m_o);
   }
 
   m_dbc->close();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.h,v 1.20 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_db.h,v 1.21 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,11 +23,8 @@
 #include "pwr.h"
 #include "db_cxx.h"
 #include "wb_import.h"
-#include "wb_convert_volume.h"
 
 class wb_name;
-class wb_convert_volume;
-
 
 typedef struct {
   pwr_tOid        oid;        /**< object identifier */
@@ -234,7 +231,7 @@ public:
 
   void clear();
 
-  void iter(void (*print)(pwr_tOid oid, db_sObject *op));
+  void iter(void (*func)(pwr_tOid oid, db_sObject *op));
   void iter(wb_import &i);
 };
 
@@ -307,8 +304,42 @@ public:
   pwr_tCid cid() { return m_k.cid;}
   pwr_tOid oid() { return m_k.oid;}
 
-  void iter(void (*print)(pwr_tOid oid, pwr_tCid cid));
-  void iter(wb_convert_volume *cp);
+  void iter(void (*func)(pwr_tOid oid, pwr_tCid cid));
+};
+
+class wb_db_class_iterator
+{
+  struct
+  {
+    pwr_tCid cid;
+    pwr_tOid oid;
+  } m_k;
+
+  wb_db *m_db;
+  Dbt m_key;
+  Dbt m_data;
+  Dbc *m_dbc;
+  bool m_atEnd;
+  int m_rc;
+
+
+public:
+  wb_db_class_iterator(wb_db *db);
+  wb_db_class_iterator(wb_db *db, pwr_tCid cid);
+  wb_db_class_iterator(wb_db *db, pwr_tCid cid, pwr_tOid oid);
+  ~wb_db_class_iterator();
+
+    
+  bool atEnd() {return m_atEnd;}
+  bool first();
+  bool succObject();
+  bool succClass();
+  bool succClass(pwr_tCid cid);
+
+  pwr_tOid oid() {return m_k.oid;}
+  pwr_tCid cid() {return m_k.cid;}
+  void oid(pwr_tOid oid) {m_k.oid = oid;}
+  void cid(pwr_tCid cid) {m_k.cid = cid;} 
 };
 
 class wb_db_dbody

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.h,v 1.31 2006-05-26 11:57:28 lw Exp $
+ * Proview   $Id: wb_vrepdb.h,v 1.32 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@
 #include "db_cxx.h"
 #include "co_tree.h"
 
-class wb_vrepdb : public wb_vrep, public wb_convert_volume
+class wb_vrepdb : public wb_vrep
 {
 private:
   bool deleteFamilyMember(pwr_tOid oid, wb_db_txn *txn);
@@ -67,19 +67,24 @@ private:
     pwr_tOid loid;
   } sDestination;
 
-  sDestination m_destination;
-
+  sDestination m_destination;  
+    
 protected:
   wb_erep *m_erep;
   wb_merep *m_merep;
-  wb_merep *m_merepCheck;
+  //wb_merep *m_merepCheck;
 
   unsigned int m_nRef;
 
   char m_fileName[512];
 
-public:
+  char guard[500];
+  
+  tree_sTable *m_attribute_th;
+  tree_sTable *m_aref_th;
+  tree_sTable *m_class_th;
 
+public:
   wb_db *m_db;
   wb_db_ohead m_ohead;
 
@@ -184,6 +189,12 @@ public:
 
   pwr_tStatus checkMeta();
   pwr_tStatus updateMeta();
+  int         updateArefs(pwr_tOid oid, pwr_tCid cid);
+  int         checkClass(pwr_tCid cid);
+  void        checkAttributes(pwr_tCid cid);
+  void        checkSubClass(pwr_tCid cid, unsigned int o_offset, unsigned int n_offset);
+  //bool        classIsChanged(pwr_tCid cid);
+
 
   virtual bool exportVolume(wb_import &e);
 
@@ -227,8 +238,8 @@ public:
 
 //  virtual void checkClassList(pwr_tOid oid, pwr_tCid cid, bool update);
 
-  virtual pwr_tStatus updateObject(pwr_tOid oid, pwr_tCid cid);
-  virtual pwr_tStatus checkObject(pwr_tOid oid, pwr_tCid cid);
+  int updateObject(pwr_tOid oid, pwr_tCid cid);
+  //pwr_tStatus checkObject(pwr_tOid oid, pwr_tCid cid);
 };
 
 #endif

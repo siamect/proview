@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_tree.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_tree.h,v 1.4 2006-12-10 14:33:34 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,6 +81,9 @@ struct tree_s_Table {
 /*
   Function prototypes to exported functions.
 */
+
+int
+tree_Cardinality(pwr_tStatus *sts, tree_sTable *tp);
 
 tree_sTable *
 tree_CloneTable(pwr_tStatus *sts, tree_sTable *tp);

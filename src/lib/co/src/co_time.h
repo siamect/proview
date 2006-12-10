@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_time.h,v 1.7 2006-05-21 22:30:49 lw Exp $
+ * Proview   $Id: co_time.h,v 1.8 2006-12-10 14:33:34 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,6 +92,7 @@ typedef enum {
   );
 #endif
 
+int time_IsNull (pwr_tTime *t1);
 pwr_tTime *   time_Aabs (pwr_tTime*, pwr_tTime*);
 pwr_tTime *   time_Aadd (pwr_tTime*, pwr_tTime*, pwr_tDeltaTime*);
 int     time_Acomp  (pwr_tTime*, pwr_tTime*);

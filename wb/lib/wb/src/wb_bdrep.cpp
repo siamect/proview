@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_bdrep.cpp,v 1.17 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_bdrep.cpp,v 1.18 2006-12-10 14:34:13 lw Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -247,6 +247,25 @@ size_t wb_bdrep::size()
   if ( EVEN(sts)) throw wb_error(sts);
 
   return body.Size;
+}
+
+pwr_sAttrRef wb_bdrep::aref()
+{
+  pwr_tStatus sts;
+  pwr_sObjBodyDef body;
+
+  m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+  if ( EVEN(sts)) throw wb_error(sts);
+
+  pwr_sAttrRef aref;
+  
+  aref.Objid = pwr_cNOid;
+  aref.Body = cdh_oixToBix( m_orep->oid().oix);
+  aref.Offset = 0;
+  aref.Size = body.Size;
+  aref.Flags.m = 0;  // ?? Is this right?
+
+  return aref;
 }
 
 int wb_bdrep::nAttribute()
