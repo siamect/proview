@@ -1,0 +1,1115 @@
+! 
+!  Proview   $Id: xtt_hist.uil,v 1.1 2007-01-04 08:36:28 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module rt_xtt_hist
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+identifier
+	hist_ctx;
+procedure
+	hist_activate_exit(integer);
+	hist_activate_print(integer);
+	hist_activate_zoom_in(integer);
+	hist_activate_zoom_out(integer);
+	hist_activate_zoom_reset(integer);
+	hist_activate_open_plc(integer);
+	hist_activate_display_in_xnav(integer);
+	hist_activate_disp_hundredth(integer);
+	hist_activate_hide_object(integer);
+	hist_activate_hide_text(integer);
+	hist_activate_help(integer);
+	hist_activate_helpevent(integer);
+	hist_create_form(integer);
+
+! Callbacks from the search dialog widgets
+        hist_ok_btn(any);
+
+!	hist_start_time_help_label_cr(any);
+        hist_start_time_entry_cr(any);
+	hist_start_time_entry_lf(any);
+
+        hist_stop_time_entry_cr(any);
+	hist_stop_time_entry_lf(any);
+	
+        hist_today_cb(any);
+        hist_yesterday_cb(any);
+        hist_thisw_cb(any);
+        hist_lastw_cb(any);
+        hist_thism_cb(any);
+        hist_lastm_cb(any);
+        hist_all_cb(any);
+        hist_time_cb(any);
+
+
+        hist_alarm_toggle_cr(any);
+        hist_info_toggle_cr(any);
+        hist_ack_toggle_cr(any);
+        hist_ret_toggle_cr(any);
+
+        hist_prioA_toggle_cr(any);
+        hist_prioB_toggle_cr(any);
+        hist_prioC_toggle_cr(any);
+        hist_prioD_toggle_cr(any);
+
+        hist_event_text_entry_cr(any);
+	hist_event_text_entry_lf(any);
+
+        hist_event_name_entry_cr(any);
+	hist_event_name_entry_lf(any);
+        hist_nrofevents_string_label_cr(any);
+        hist_search_string_label_cr(any);
+        hist_search_string2_label_cr(any);
+        hist_search_string3_label_cr(any);
+        hist_search_string4_label_cr(any);
+
+
+
+
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+	bold_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+	
+	
+! CONSTANTS, Defining the geometry of the application.
+
+    ButtonWidth 		: 70;
+    SearchBtn_PosX		: 400;
+    SearchBtn_PosY		: 145;!150;
+
+    
+    startTime_lbl_PosX		: 8;
+    startTime_lbl_PosY		: 20;!25;!10;
+
+    startTime_field_PosX	: 100;
+    startTime_field_PosY	: 15;!20;!5;
+    
+    stopTime_lbl_PosX		: 280;
+    stopTime_lbl_PosY		: 20;!25;!10;
+
+    stopTime_field_PosX		: 350;
+    stopTime_field_PosY		: 15;!20;!5;
+    
+    TimeBtn_PosX		: 520;
+    TimeBtn_PosY		: 13;!18;
+    
+    eventType_lbl_PosX		: 8;
+    eventType_lbl_PosY		: 50;!55;!40;
+
+    eventTypeAlarm_btn_PosX	: 100;
+    eventTypeAlarm_btn_PosY	: 45;!50;!35;
+
+    eventTypeInfo_btn_PosX	: 170;
+    eventTypeInfo_btn_PosY	: 45;!50;!35;
+
+    eventTypeRet_btn_PosX	: 240;
+    eventTypeRet_btn_PosY	: 45;!50;!35;
+
+    eventTypeAck_btn_PosX	: 310;
+    eventTypeAck_btn_PosY	: 45;!50;!35;
+
+
+
+    eventPrio_lbl_PosX		: 8;
+    eventPrio_lbl_PosY		: 74;!79;!70;
+
+    eventPrioA_btn_PosX		: 100;
+    eventPrioA_btn_PosY		: 69;!74;!65;
+
+    eventPrioB_btn_PosX		: 170;
+    eventPrioB_btn_PosY		: 69;!74;!65;
+
+    eventPrioC_btn_PosX		: 240;
+    eventPrioC_btn_PosY		: 69;!74;!65;
+
+    eventPrioD_btn_PosX		: 310;
+    eventPrioD_btn_PosY		: 69;!74;!65;
+
+
+
+    eventText_lbl_PosX		: 8;
+    eventText_lbl_PosY		: 130;!135;!105;
+
+    eventText_field_PosX	: 100;
+    eventText_field_PosY	: 125;!130;!100;
+
+
+    eventName_lbl_PosX		: 8;
+    eventName_lbl_PosY		: 100;!105;!135;
+
+    eventName_field_PosX	: 100;
+    eventName_field_PosY	: 95;!100;!130;
+
+    nrofevents_lbl_PosX		: 10;
+    nrofevents_lbl_PosY		: 145;!150;
+
+    searchstring_lbl_PosX	: 100;
+    searchstring_lbl_PosY	: 165;!170;
+
+    
+	hformtitle		: compound_string(histformtitle);
+        OKlabel			: compound_string(Search);
+
+	starttimelabel		: compound_string(starttime);
+ 	stoptimelabel		: compound_string(stoptime);
+	
+        todaylabel              : compound_string(today);
+        yesterdaylabel          : compound_string(yesterday);
+        thisweeklabel           : compound_string(thisweek);
+        lastweeklabel           : compound_string(lastweek);
+        thismonthlabel          : compound_string(thismonth);
+        lastmonthlabel          : compound_string(lastmonth);
+	alllabel		: compound_string(all);
+        timelabel		: compound_string(time);
+	
+	eventtypelabel		: compound_string(eventtype);
+	alarmlabel		: compound_string(active);
+	msglabel		: compound_string(message);
+	retlabel		: compound_string(return);
+	acklabel		: compound_string(acknowledge);
+
+	eventPriolabel		: compound_string(priority);
+	eventPrioAlabel		: compound_string(a_alarm);
+	eventPrioBlabel		: compound_string(b_alarm);
+	eventPrioClabel		: compound_string(c_alarm);
+	eventPrioDlabel		: compound_string(d_alarm);
+        
+	nrOfEventsLabel		: compound_string(nrOfEvents);
+
+	eventTextlabel		: compound_string(eventtext);
+	eventNamelabel		: compound_string(eventname);
+        searchConditionLabel    : compound_string(searchcondition);
+        file_mnemonic           : keysym(mnemonic_FILE);	
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  hist_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	hist_menu;
+     XmForm     hist_form;
+  };
+};
+
+
+object hist_form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow hist_pane;
+  };
+};
+
+object hist_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton hist_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton hist_file_entry;
+    XmCascadeButton hist_functions_entry;
+    XmCascadeButton hist_view_entry;
+    XmCascadeButton hist_help_entry;
+  };
+};
+
+object hist_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNmnemonic = file_mnemonic;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_print(hist_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_exit(hist_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object hist_functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_Functions;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('l');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_open_plc(hist_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+	    XmNaccelerator = "Ctrl<Key>D";
+	    XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_display_in_xnav(hist_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Search;
+            XmNmnemonic = keysym('S');
+	    XmNaccelerator = "Ctrl<Key>S";
+	    XmNacceleratorText = compound_string('Ctrl+S');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_ok_btn(hist_ctx);
+          };
+	};
+
+      };
+    };
+  };
+};
+
+
+object hist_view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_zoom_in(hist_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_zoom_out(hist_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Zoom_reset;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_zoom_reset(hist_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_hundredth;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure hist_activate_disp_hundredth(hist_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_name;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure hist_activate_hide_object(hist_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Hide_event_text;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure hist_activate_hide_text(hist_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object hist_help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = c_Help;
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Histlist;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_help(hist_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Help_on_selected_event;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure hist_activate_helpevent(hist_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+object hist_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     !XmNtraversalOn		= false;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure hist_create_form( hist_ctx);
+   };
+};
+
+
+!*************************************************************
+!
+! This is the search dialog for the mainwindow. Where we define
+! the search clause for events to show.
+!
+!*************************************************************
+object
+!_
+    histSearchDialog: XmForm
+        {
+        arguments
+            {
+            };
+        controls
+            {
+            XmLabel hl_startTimeLabel;
+!	    XmLabel hl_startTimeHelpLabel;
+            XmTextField hl_startTimeText;
+            XmLabel hl_stopTimeLabel;
+            XmTextField hl_stopTimeText;
+            XmOptionMenu hl_timeInterval;
+
+            XmLabel hl_eventTypeLabel;            	    
+            XmToggleButton hl_alarmToggle;
+            XmToggleButton hl_infoToggle;
+            XmToggleButton hl_retToggle;
+            XmToggleButton hl_ackToggle;
+
+            XmLabel hl_eventPrioLabel;
+	    XmToggleButton hl_prioAToggle;
+            XmToggleButton hl_prioBToggle;
+            XmToggleButton hl_prioCToggle;
+            XmToggleButton hl_prioDToggle;
+
+            XmLabel hl_eventTextLabel;
+            XmTextField hl_eventTextText;
+
+            XmLabel hl_eventNameLabel;
+            XmTextField hl_eventNameText;
+	    XmLabel hl_nrofeventsStringLabelLabel;
+            XmLabel hl_nrofeventsStringLabel;
+	    XmLabel hl_searchStringLabelLabel;
+            XmLabel hl_searchStringLabel;
+            XmLabel hl_searchStringLabel2;
+            XmLabel hl_searchStringLabel3;
+            XmLabel hl_searchStringLabel4;
+	    
+            XmFrame 
+                {
+                arguments
+                    {
+		    XmNshadowThickness = 0;
+                    XmNleftAttachment = XmATTACH_FORM;
+                    XmNleftOffset = 0;
+                    XmNrightAttachment = XmATTACH_FORM;
+                    XmNrightOffset = 0;
+                    XmNbottomAttachment = XmATTACH_FORM;
+                    XmNbottomOffset = 0;
+                    XmNtopAttachment = XmATTACH_WIDGET;
+                    XmNtopOffset = 15;
+		    };
+                controls
+                    {
+                    XmForm 
+                        {
+                        arguments
+                            {
+                            XmNheight = 50;
+			    XmNwidth = 100;
+                            XmNresizePolicy = XmRESIZE_NONE;
+                            };
+                        controls
+                            {
+                            XmPushButton 
+                                {
+                                arguments
+                                    {
+                                    XmNlabelString = OKlabel;
+                                    XmNx = SearchBtn_PosX;
+				    XmNy = SearchBtn_PosY;
+				    XmNwidth = ButtonWidth;
+				    XmNmnemonic = keysym('S');
+	                            XmNaccelerator = "Ctrl<Key>S";
+                                    XmNfontList	    = menu_font;
+
+				    };
+				callbacks
+				    {
+					XmNactivateCallback = procedure hist_ok_btn(hist_ctx);
+				    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+
+
+!*************************************************************
+!
+! This is the widgets int the search dialog for the mainwindow. 
+!
+!*************************************************************
+    hl_startTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = starttimelabel;
+            XmNx = startTime_lbl_PosX;
+	    XmNy = startTime_lbl_PosY; 
+            };
+        };
+!    hl_startTimeHelpLabel: XmLabel 
+!        {
+!        arguments
+!            {
+!            XmNx = startTime_field_PosX + 5;
+!	    XmNy = 1; 
+!            };
+!	callbacks
+!	    {
+!	    MrmNcreateCallback = procedure hist_start_time_help_label_cr(hist_ctx);
+!	    };
+!        };
+    hl_startTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 19;
+	    XmNmaxLength = 19;
+            XmNx = startTime_field_PosX;
+	    XmNy = startTime_field_PosY;
+	    XmNfontList	    = bold_font;
+ 
+             };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_start_time_entry_cr(hist_ctx);
+	    XmNlosingFocusCallback = procedure hist_start_time_entry_lf(hist_ctx);
+            };
+         };
+    hl_stopTimeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = stoptimelabel;
+            XmNx = stopTime_lbl_PosX;
+	    XmNy = stopTime_lbl_PosY; 
+            };
+        };
+    hl_stopTimeText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 19;
+	    XmNmaxLength = 19;
+            XmNx = stopTime_field_PosX;
+	    XmNy = stopTime_field_PosY;
+	    XmNfontList	    = bold_font;
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_stop_time_entry_cr(hist_ctx);
+	    XmNlosingFocusCallback = procedure hist_stop_time_entry_lf(hist_ctx);
+            };
+         };
+
+
+
+    hl_timeInterval: XmOptionMenu 
+        {
+        arguments
+            {
+            XmNx = TimeBtn_PosX;
+	    XmNy = TimeBtn_PosY; 
+            XmNwidth = ButtonWidth;
+            };
+        controls
+            {
+            XmPulldownMenu 
+                {
+                arguments
+                    {
+                    XmNborderWidth = 1;
+                    };
+                controls
+                    {
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = alllabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_all_cb(hist_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = todaylabel;
+                            };
+                            callbacks
+                            {
+		            XmNactivateCallback = procedure hist_today_cb(hist_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = yesterdaylabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_yesterday_cb(hist_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thisweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_thisw_cb(hist_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastweeklabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_lastw_cb(hist_ctx);
+                            };
+                         };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = thismonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_thism_cb(hist_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = lastmonthlabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_lastm_cb(hist_ctx);
+                            };
+                        };
+                    XmPushButton 
+                        {
+                        arguments
+                            {
+                            XmNlabelString = timelabel;
+                            };
+                            callbacks
+                            {
+			    XmNactivateCallback = procedure hist_time_cb(hist_ctx);
+                            };
+                         };
+                    };
+                };
+            };
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+    hl_eventTypeLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventtypelabel;
+            XmNx = eventType_lbl_PosX;
+	    XmNy = eventType_lbl_PosY; 
+
+            };
+        };
+
+    hl_alarmToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = alarmlabel;
+            XmNx = eventTypeAlarm_btn_PosX;
+	    XmNy = eventTypeAlarm_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_alarm_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_infoToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = msglabel;
+            XmNx = eventTypeInfo_btn_PosX;
+	    XmNy = eventTypeInfo_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_info_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_ackToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = acklabel;
+            XmNx = eventTypeAck_btn_PosX;
+	    XmNy = eventTypeAck_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_ack_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_retToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = retlabel;
+            XmNx = eventTypeRet_btn_PosX;
+	    XmNy = eventTypeRet_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_ret_toggle_cr(hist_ctx);
+            };
+        };
+
+
+
+
+
+
+    hl_eventPrioLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventPriolabel;
+            XmNx = eventPrio_lbl_PosX;
+	    XmNy = eventPrio_lbl_PosY; 
+
+            };
+        };
+
+    hl_prioAToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = eventPrioAlabel;
+            XmNx = eventPrioA_btn_PosX;
+	    XmNy = eventPrioA_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_prioA_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_prioBToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = eventPrioBlabel;
+            XmNx = eventPrioB_btn_PosX;
+	    XmNy = eventPrioB_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_prioB_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_prioCToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = eventPrioClabel;
+            XmNx = eventPrioC_btn_PosX;
+	    XmNy = eventPrioC_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_prioC_toggle_cr(hist_ctx);
+            };
+        };
+
+    hl_prioDToggle: XmToggleButton 
+        {
+        arguments
+            {
+            XmNlabelString = eventPrioDlabel;
+            XmNx = eventPrioD_btn_PosX;
+	    XmNy = eventPrioD_btn_PosY; 
+            
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_prioD_toggle_cr(hist_ctx);
+            };
+        };
+
+
+    hl_eventTextLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventTextlabel;
+            XmNx = eventText_lbl_PosX;
+	    XmNy = eventText_lbl_PosY; 
+            };
+        };
+    hl_eventTextText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 90;
+	    XmNmaxLength = 90;
+            XmNx = eventText_field_PosX;
+	    XmNy = eventText_field_PosY; 
+            XmNfontList	    = bold_font;
+             };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_event_text_entry_cr(hist_ctx);
+	    XmNlosingFocusCallback = procedure hist_event_text_entry_lf(hist_ctx);
+            };
+         };
+
+    hl_eventNameLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNlabelString = eventNamelabel;
+            XmNx = eventName_lbl_PosX;
+	    XmNy = eventName_lbl_PosY; 
+            };
+        };
+    hl_eventNameText: XmTextField 
+        {
+        arguments
+            {
+            XmNcolumns = 90;
+	    XmNmaxLength = 90;
+            XmNx = eventName_field_PosX;
+	    XmNy = eventName_field_PosY;
+	    XmNfontList	    = bold_font; 
+             };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_event_name_entry_cr(hist_ctx);
+	    XmNlosingFocusCallback = procedure hist_event_name_entry_lf(hist_ctx);
+            };
+         };
+    hl_nrofeventsStringLabelLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 170; 
+	    XmNlabelString = nrOfEventsLabel;
+            };
+        callbacks
+            {
+            !MrmNcreateCallback = procedure hist_nrofevents_string_label_cr(hist_ctx);
+            };
+        };
+    hl_nrofeventsStringLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 100;
+	    XmNy = 170; 
+	    XmNfontList	    = bold_font;
+	    XmNlabelString = "               ";
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_nrofevents_string_label_cr(hist_ctx);
+            };
+        };
+
+    hl_searchStringLabelLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 190; 
+	    XmNlabelString = searchConditionLabel;
+            };
+        callbacks
+            {
+            !MrmNcreateCallback = procedure hist_search_string_label_cr(hist_ctx);
+            };
+        };
+    hl_searchStringLabel: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 210; 
+	    XmNalignment = XmALIGNMENT_BEGINNING;
+	    !XmNfontList	    = bold_font;
+	    XmNlabelString = compound_string("                                                                                        ");
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_search_string_label_cr(hist_ctx);
+            };
+        };
+    hl_searchStringLabel2: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 230; 
+	    XmNalignment = XmALIGNMENT_BEGINNING;
+	    !XmNfontList	    = bold_font;
+	    XmNlabelString = compound_string("                                                                                        ");
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_search_string2_label_cr(hist_ctx);
+            };
+        };
+    hl_searchStringLabel3: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 250; 
+	    XmNalignment = XmALIGNMENT_BEGINNING;
+	    !XmNfontList	    = bold_font;
+	    XmNlabelString = compound_string("                                                                                        ");
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_search_string3_label_cr(hist_ctx);
+            };
+        };
+    hl_searchStringLabel4: XmLabel 
+        {
+        arguments
+            {
+            XmNx = 10;
+	    XmNy = 270; 
+	    XmNalignment = XmALIGNMENT_BEGINNING;
+	    !XmNfontList	    = bold_font;
+	    XmNlabelString = compound_string("                                                                                        ");
+            };
+        callbacks
+            {
+            MrmNcreateCallback = procedure hist_search_string4_label_cr(hist_ctx);
+            };
+        };
+
+
+end module;

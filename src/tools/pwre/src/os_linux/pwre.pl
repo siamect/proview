@@ -133,7 +133,7 @@ sub add ()
 #
 # build()
 #
-sub build () # args: branch, subbranch, phase
+sub build () # args: branch, subbranch, flavour, phase
 {
 
   if (!defined($ENV{"pwre_env"})) {
@@ -156,52 +156,63 @@ sub build () # args: branch, subbranch, phase
   shift(@_);
   shift(@_);
 
+  if ( $_[0] eq "") {
+    $flavour = "src";
+  }
+  else {
+    $flavour = $_[0];
+    shift(@_);
+  }
+
   printf("--\n");
   printf("-- Build\n");
-  printf("-- Branch..........: %s\n", $branch);
-  printf("-- Sub branch......: %s\n", $subbranch);
-  printf("-- Args............: ");
+  printf("-- Branch.............: %s\n", $branch);
+  printf("-- Sub branch.........: %s\n", $subbranch);
+  printf("-- Sub branch flavour.: %s\n", $flavour);
+  printf("-- Args...............: ");
   foreach (@_) {
     printf("%s ", $_);
     $ENV{"PWRE_ARGS"} = $_;
   }
   printf("\n--\n");
   
-  _build($branch, $subbranch, @_);
+  _build($branch, $subbranch, $flavour, @_);
 
 }
 
 #
 # build_kernel()
 #
-sub build_kernel ()
+sub build_kernel # args: flavour
 {
+  my $flavour = $_[0];
+
   _module("xtt");
-  build_all("copy");
+  build_all("copy", $flavour);
   merge();
   _module("rt");
-  build_all("copy");
+  build_all("copy", $flavour);
   merge();
   _module("wb");
-  build_all("copy");
+  build_all("copy", $flavour);
   merge();
   _module("rt");
-  build_all("lib");
+  build_all("lib", $flavour);
   merge();
   _module("xtt");
-  build_all("lib");
+  build_all("lib", $flavour);
   merge();
   _module("wb");
-  build_all("lib");
+  build_all("lib", $flavour);
   merge();
   _module("xtt");
-  build_all("exe");
+  build_all("exe", $flavour);
   merge();
   _module("wb");
-  build_all("exe");
+  build_all("exe", $flavour);
   merge();
   _module("rt");
-  build_all("exe");
+  build_all("exe", $flavour);
   merge();
 }
 
@@ -210,48 +221,50 @@ sub build_kernel ()
 #
 sub build_all_modules ()
 {
-  build_kernel();
+  my $flavour = $_[0];
+
+  build_kernel( $flavour);
   _module("nmps");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("tlog");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("remote");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("bcomp");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("java");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("profibus");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("ssabox");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("othermanu");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("abb");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("siemens");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("inor");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("klocknermoeller");
-  build_all();
+  build_all( $flavour);
   merge();
   _module("telemecanique");
-  build_all();
+  build_all( $flavour);
   merge();
 
-  method_build();
+  method_build( $flavour);
 }  
 
 #
@@ -260,19 +273,19 @@ sub build_all_modules ()
 sub clean_exe_all ()
 {
   _module("xtt");
-  _build("exe","*","clean_exe");
+  _build("exe","*","src","clean_exe");
   _module("rt");
-  _build("exe","rt*","clean_exe");
-  _build("exe","co*","clean_exe");
-  _build("exe","wb*","clean_exe");
+  _build("exe","rt*","src","clean_exe");
+  _build("exe","co*","src","clean_exe");
+  _build("exe","wb*","src","clean_exe");
   _module("wb");
-  _build("exe","*","clean_exe");
+  _build("exe","*","src","clean_exe");
   _module("nmps");
-  _build("exe","*","clean_exe");
+  _build("exe","*","src","clean_exe");
   _module("tlog");
-  _build("exe","*","clean_exe");
+  _build("exe","*","src","clean_exe");
   _module("remote");
-  _build("exe","*","clean_exe");
+  _build("exe","*","src","clean_exe");
   _module("rt");
 
 }  
@@ -286,99 +299,111 @@ sub build_all_wbl ()
   _module("rt");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "pwrs", "lib");
-  _build("wbl", "pwrb", "lib");
-  _build("wbl", "wb", "lib");
-  _build("wbl", "rt", "lib");
+  _build("wbl", "pwrs", "src", "lib");
+  _build("wbl", "pwrb", "src", "lib");
+  _build("wbl", "wb", "src", "lib");
+  _build("wbl", "rt", "src", "lib");
   merge();
   _module("nmps");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "nmps", "lib");
+  _build("wbl", "nmps", "src", "lib");
   merge();
   _module("tlog");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "tlog", "lib");
+  _build("wbl", "tlog", "src", "lib");
   merge();
   _module("profibus");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("remote");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "remote", "lib");
+  _build("wbl", "remote", "src", "lib");
   merge();
   _module("bcomp");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "bcomp", "lib");
+  _build("wbl", "bcomp", "src", "lib");
   merge();
   _module("ssabox");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("abb");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("siemens");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("telemecanique");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("inor");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("klocknermoeller");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("othermanu");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
-  _build("wbl", "mcomp", "lib");
+  _build("wbl", "mcomp", "src", "lib");
   merge();
   _module("rt");
 }  
 
 sub method_build ()
 {
-  my($program) = $_[0];
+  my $flavour;
+  my $program;
+  if ( $_[0] eq "motif" || $_[0] eq "gtk") {
+    $flavour = $_[0];
+  }
+  else {
+    $program = $_[0];
+    $flavour = $_[1];
+  }
   if (!defined($program)) {
-    printf("-- Relink method dependent programs");
+    printf("-- Relink method dependent programs $flavour");
     _module("rt");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
     system("rm $exe_dir/rt_io_comm");
-    _build("exe", "rt_io_comm", "all");
+    _build("exe", "rt_io_comm", "src", "all");
 #   system("rm $exe_dir/rt_ini");
-#   _build("exe", "rt_ini", "all");
+#   _build("exe", "rt_ini", $flavour, "all");
     merge();
   
-    _module("wb");
-    my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/wb");
-    _build("exe", "wb", "all");
-    merge();
+    method_build( "wb", $flavour);
+#    _module("wb");
+#    my($exe_dir) = $ENV{"pwr_exe"};
+#    system("rm $exe_dir/wb");
+#    _build("exe", "wb", "src", "all");
+#    _build("exe", "wb", $flavour, "all");
+#    merge();
   
-    _module("xtt");
-    my($exe_dir) = $ENV{"pwr_exe"};
-    system("rm $exe_dir/rt_xtt");
-    _build("exe", "rt_xtt", "all");
-    merge();
+    method_build( "rt_xtt", $flavour);
+#    _module("xtt");
+#    my($exe_dir) = $ENV{"pwr_exe"};
+#    system("rm $exe_dir/rt_xtt");
+#    _build("exe", "rt_xtt", "src", "all");
+#    _build("exe", "rt_xtt", $flavour, "all");
+#    merge();
   }  
   if ( $_[0] eq "rt_io_comm" ) {
     printf("-- Method build $program");
@@ -386,25 +411,29 @@ sub method_build ()
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
     system("rm $exe_dir/rt_io_comm");
-    _build("exe", "rt_io_comm", "all");
+    _build("exe", "rt_io_comm", "src", "all");
     merge();
   }
   if ( $_[0] eq "wb" ) {
-    printf("-- Method build $program");
+    printf("-- Method build $program $flavour");
+
     _module("wb");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
     system("rm $exe_dir/wb");
-    _build("exe", "wb", "all");
+    _build("exe", "wb", $flavour, "all");
+    _build("exe", "wb", "src", "all");
     merge();
-  }  
+  }
   if ( $_[0] eq "rt_xtt" ) {
-    printf("-- Method build $program");
+    printf("-- Method build $program $flavour");
+
     _module("xtt");
     $ENV{"export_type"} = "exp";
     my($exe_dir) = $ENV{"pwr_exe"};
     system("rm $exe_dir/rt_xtt");
-    _build("exe", "rt_xtt", "all");
+    _build("exe", "rt_xtt", $flavour, "all");
+    _build("exe", "rt_xtt", "src", "all");
     merge();
   }  
 }
@@ -463,10 +492,16 @@ sub build_all ()
   if ( $_[0] eq "exe" || $_[1] eq "exe" || $_[2] eq "exe") {
     $exe = 1;
   }
-  if ( $_[0] eq "") {
+  if ( $copy == 0 && $lib == 0 && $exe == 0) {
     $copy = 1;
     $lib = 1;
     $exe = 1;
+  }
+  if ( $_[0] eq "motif" || $_[1] eq "motif" || $_[2] eq "motif" || $_[3] eq "motif") {
+    $flavour = "motif";
+  }
+  else {
+    $flavour = "gtk";
   }
 
   if (!defined($ENV{"pwre_env"})) {
@@ -494,89 +529,98 @@ sub build_all ()
   
   if ( $module eq "rt") {
     if ( $copy == 1) {
-      _build("exp", "inc", "all");
-      _build("exp", "com", "all");
-      _build("tools/exe", "*", "all");
+      _build("exp", "inc", "src", "all");
+      _build("exp", "com", "src", "all");
+      _build("tools/exe", "*", "src", "all");
       merge("exe/tools_cmsg2c");
       merge("exe/tools_msg2cmsg");
       merge("exe/tools_pdrgen");
-      _build("msg", "*", "all");
-      _build("lib", "rt", "init copy");
-      _build("lib", "co", "init copy");
-      _build("lib", "dtt", "init copy");
-      _build("lib", "co", "all");
-      _build("exe", "co*", "all");
-      _build("wbl", "pwrs", "copy");
-      _build("wbl", "pwrb", "copy");
-      _build("exe", "*", "copy");
+      _build("msg", "*", "src", "all");
+      _build("lib", "rt", "src", "init copy");
+      _build("lib", "rt", $flavour, "copy");
+      _build("lib", "co", "src", "init copy");
+      _build("lib", "co", $flavour, "copy");
+      _build("lib", "dtt", "src", "init copy");
+      _build("lib", "co", "src", "all");
+      _build("lib", "co", $flavour, "all");
+      _build("exe", "co*", "src", "all");
+      _build("wbl", "pwrs", "src", "copy");
+      _build("wbl", "pwrb", "src", "copy");
+      _build("exe", "*", "src", "copy");
     }
 
     if ( $lib == 1) {
       _build("lib", "ge", "all");
       if ( ! -e $nmpsclasses ) {
         _module("nmps");
-        _build("wbl", "nmps", "init copy");
+        _build("wbl", "nmps", "src", "init copy");
         merge("inc/pwr_nmpsclasses.h");
       }
       if ( ! -e $remoteclasses ) {
         _module("remote");
-        _build("wbl", "remote", "init copy");
+        _build("wbl", "remote", "src", "init copy");
         merge("inc/pwr_remoteclasses.h");
       }
       _module("rt");
-      _build("lib", "rt", "all");
-      _build("exp", "rt", "all");
-      _build("lib", "msg_dummy", "all");
-      _build("exe", "wb_rtt", "all");
-      _build("lib", "dtt", "all");
-      _build("exp", "rt", "all");
+      _build("lib", "rt", "src", "all");
+      _build("lib", "rt", $flavour, "all");
+      _build("exp", "rt", "src", "all");
+      _build("lib", "msg_dummy", "src", "all");
+      _build("exe", "wb_rtt", "src", "all");
+      _build("lib", "dtt", "src", "all");
+      _build("exp", "rt", "src", "all");
     }
     if ( $exe == 1) {
-      _build("exe", "rt*", "all");
-      _build("exe", "pwr_user", "all");
-      _build("exp", "ge", "all");
-      _build("mmi", "*", "copy");
-      _build("wbl", "pwrs", "lib");
-      _build("wbl", "pwrb", "lib");
-      _build("wbl", "wb", "lib");
-      _build("wbl", "rt", "lib");
-      _build("doc", "web", "all");
-      _build("doc", "dweb", "all");
-      _build("doc", "orm", "all");
-      _build("doc", "prm", "all");
-      _build("doc", "man", "all");
-      _build("doc", "dox", "all");
-      _build("wbl", "pwrs", "exe");
-      _build("wbl", "pwrb", "exe");
+      _build("exe", "rt*", "src", "all");
+      _build("exe", "pwr_user", "src", "all");
+      _build("exp", "ge", "src", "all");
+      _build("mmi", "*", "src", "copy");
+      _build("mmi", "*", $flavour, "copy");
+      _build("wbl", "pwrs", "src", "lib");
+      _build("wbl", "pwrb", "src", "lib");
+      _build("wbl", "wb", "src", "lib");
+      _build("wbl", "rt", "src", "lib");
+      _build("doc", "web", "src", "all");
+      _build("doc", "dweb", "src", "all");
+      _build("doc", "orm", "src", "all");
+      _build("doc", "prm", "src", "all");
+      _build("doc", "man", "src", "all");
+      _build("doc", "dox", "src", "all");
+      _build("wbl", "pwrs", "src", "exe");
+      _build("wbl", "pwrb", "src", "exe");
     }
   }
   elsif ( $module eq "java") {
     if ( $lib == 1) {
-      _build("jpwr", "rt", "all");
-      _build("jpwr", "jop", "all");
-      _build("jpwr", "jopc", "all");
-      _build("jpwr", "beans", "all");
-      _build("jpwr", "rt_client", "all");
+      _build("jpwr", "rt", "src", "all");
+      _build("jpwr", "jop", "src", "all");
+      _build("jpwr", "jopc", "src", "all");
+      _build("jpwr", "beans", "src", "all");
+      _build("jpwr", "rt_client", "src", "all");
     }
   }
   else {
     if ( $copy == 1) {
-      _build("wbl", "*", "copy");
-      _build("lib", "*", "init copy");
-      _build("exp", "*", "init copy");
-      _build("mmi", "*", "copy");
-      _build("exe", "*", "copy");
+      _build("wbl", "*", "src", "copy");
+      _build("lib", "*", "src", "init copy");
+      _build("lib", "*", $flavour, "copy");
+      _build("exp", "*", "src", "init copy");
+      _build("mmi", "*", "src", "copy");
+      _build("mmi", "*", $flavour, "copy");
+      _build("exe", "*", "src", "copy");
     }
     if ( $lib == 1) {
-      _build("lib", "*", "lib");
-      _build("exp", "*", "lib");
+      _build("lib", "*", "src", "lib");
+      _build("lib", "*", $flavour, "lib");
+      _build("exp", "*", "src", "lib");
     }
     if ( $exe == 1) {
-      _build("wbl", "*", "lib");
-      _build("wbl", "*", "exe");
-      _build("exe", "*", "all");
-      _build("doc", "dsh", "copy");
-      _build("doc", "orm", "copy");
+      _build("wbl", "*", "src", "lib");
+      _build("wbl", "*", "src", "exe");
+      _build("exe", "*", "src", "all");
+      _build("exe", "*", $flavour, "all");
+      _build("doc", "dsh", "src", "copy");
+      _build("doc", "orm", "src", "copy");
     }
   }
 }
@@ -793,7 +837,7 @@ sub tags ()
 #
 # _build()
 #
-sub _build () # args: branch, subbranch, phase
+sub _build () # args: branch, subbranch, flavour, phase
 {
 
 
@@ -808,6 +852,8 @@ sub _build () # args: branch, subbranch, phase
     usage_build();
     exit 1;
   }
+  my($flavour) = $_[2];
+  shift(@_);
   shift(@_);
   shift(@_);
 
@@ -821,7 +867,7 @@ sub _build () # args: branch, subbranch, phase
   my(@mfiles);
 
   foreach $dir1 (@dirs1) {
-    $globstr = "$dir1" . "/$subbranch/src/os_$os/hw_$hw"; 
+    $globstr = "$dir1" . "/$subbranch/$flavour/os_$os/hw_$hw"; 
     @dirs2 = glob($globstr);
     foreach $dir2 (@dirs2) {
       if (-d $dir2) {
@@ -1081,7 +1127,7 @@ sub usage_add ()
 sub usage_build ()
 {
   printf("++\n");
-  printf("++ build 'branch' 'subbranch' ['phase']: Build, eg. pwre build exe rt* all\n");
+  printf("++ build 'branch' 'subbranch' ['flavour']['phase']: Build, eg. pwre build exe rt* src all\n");
 }
 
 sub usage_build_all ()

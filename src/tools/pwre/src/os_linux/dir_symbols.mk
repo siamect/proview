@@ -40,9 +40,9 @@ prev	:= pred_ $(word)
 pred	:= $(subst $(space),$(empty),$(prev))
 word	:= $($(pred))
 src_name	:= $(word $(word), $(cwd_dirs))
-ifneq ($(src_name),src)
-include ___error___no_source_subdirectory
-endif
+#ifneq ($(src_name),src)
+#include ___error___no_source_subdirectory
+#endif
 
 prev	:= pred_ $(word) 
 pred	:= $(subst $(space),$(empty),$(prev))
@@ -58,9 +58,9 @@ prev	:= pred_ $(word)
 pred	:= $(subst $(space),$(empty),$(prev))
 word	:= $($(pred))
 root_name	:= $(word $(word), $(cwd_dirs))
-ifneq ($(src_name),src)
-include ___error___incorrect_source_root1
-endif
+#ifneq ($(src_name),src)
+#include ___error___incorrect_source_root1
+#endif
 
 #rest = /$(type_name)/$(comp_name)/src/$(os_name)/$(hw_name)/
 #test_source_root := $(subst $(rest),$(empty),$(PWD))

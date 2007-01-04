@@ -94,8 +94,8 @@ wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/p
 
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -DHW_X86=1 -DHW=x86
-cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux
-
+cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
+-I /usr/include/libgnome-2.0 -I /usr/include/libgnome-2.0/libgnome -I /usr/include/glib-2.0 -I /usr/lib/glib-2.0/include -I /usr/include/libbonobo-2.0 -I /usr/include/libgnomeui-2.0 -I /usr/include/gtk-2.0 -I /usr/include/pango-1.0 -I /usr/lib/gtk-2.0/include -I /usr/include/atk-1.0 -I /usr/include/libgnomecanvas-2.0 -I /usr/include/libart-2.0 -I /usr/include/libbonoboui-2.0 -I /usr/include/gnome-vfs-2.0 -I /usr/include/cairo -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" 
 rm		:= rm
 cp		:= cp
 cpflags		:= 

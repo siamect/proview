@@ -221,6 +221,10 @@ $(exe_dir)/%.pwg : %.pwg
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
+$(exe_dir)/%.png : %.png
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
 $(exe_dir)/%.html : ../../%.html
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)

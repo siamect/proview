@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.7 2006-10-10 07:41:15 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.8 2007-01-04 08:44:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,12 +26,9 @@
 #include <vector>
 #include <map>
 
-#include <Xm/Xm.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "pwr.h"
+#include "pwr_baseclasses.h"
+#include "pwr_profibusclasses.h"
 #include "wb_env.h"
 #include "flow.h"
 #include "flow_ctx.h"
@@ -39,19 +36,16 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 
-#include "pwr.h"
 #include "co_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_wow.h"
-#include "wb_nav_macros.h"
+#include "co_xhelp.h"
 #include "rt_pb_gsd.h"
 #include "rt_pb_gsd_attr.h"
-
+#include "wb_c_pb_dp_slave.h"
 
 #include "wb_pwrs.h"
-#include "pwr_baseclasses.h"
-#include "pwr_profibusclasses.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
 #include "wb_pwrb_msg.h"
@@ -65,15 +59,6 @@ using namespace std;
   Configure the slave from gsd file.
 \*----------------------------------------------------------------------------*/
 
-typedef struct {
-  pb_gsd *gsd;
-  GsdAttr *attr;
-  ldh_tSession ldhses;
-  pwr_tAttrRef aref;
-  gsd_sModuleClass *mc;
-  void *editor_ctx;
-} slave_sCtx;
-  
 
 static void get_subcid( ldh_tSession ldhses, pwr_tCid cid, vector<pwr_tCid>& v)
 {
@@ -88,7 +73,7 @@ static void get_subcid( ldh_tSession ldhses, pwr_tCid cid, vector<pwr_tCid>& v)
   }
 }
 
-static int attr_help_cb( void *sctx, char *text)
+int pb_dp_slave_help_cb( void *sctx, char *text)
 {
   pwr_tCmd cmd;
   slave_sCtx *ctx = (slave_sCtx *)sctx;
@@ -98,7 +83,7 @@ static int attr_help_cb( void *sctx, char *text)
   return ((WNav *)ctx->editor_ctx)->command( cmd);
 }
 
-static void attr_close_cb( void *sctx)
+void pb_dp_slave_close_cb( void *sctx)
 {
   slave_sCtx *ctx = (slave_sCtx *)sctx;
   delete ctx->attr;
@@ -106,7 +91,7 @@ static void attr_close_cb( void *sctx)
   free( (char *)ctx);
 }
 
-static int attr_save_cb( void *sctx)
+int pb_dp_slave_save_cb( void *sctx)
 {
   slave_sCtx *ctx = (slave_sCtx *)sctx;
   pwr_tStatus sts;
@@ -472,30 +457,26 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
   return 1;
 }
 
-static pwr_tStatus Configure (
-  ldh_sMenuCall *ip
-)
+pwr_tStatus pb_dp_slave_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref, 
+				    void *editor_ctx, slave_sCtx **ctxp)
 {
   pwr_tOName name;
   char *gsdfile;
   int size;
   int sts;
   int lsts;
-  int edit_mode;
   pwr_tFileName fname;
   ldh_sSessInfo Info;
   vector<pwr_tCid> mcv;
 
-  sts = ldh_GetSessionInfo (ip->PointedSession, &Info);
-  edit_mode = (ODD(sts) && Info.Access == ldh_eAccess_ReadWrite) &&
-    ldh_LocalObject( ip->PointedSession, ip->Pointed.Objid);
+  sts = ldh_GetSessionInfo( ldhses, &Info);
 
 
-  sts = ldh_ObjidToName(ip->PointedSession, ip->Pointed.Objid, 
-			ldh_eName_Hierarchy, name, sizeof(name), &size);
+  sts = ldh_ObjidToName( ldhses, aref.Objid, 
+			 ldh_eName_Hierarchy, name, sizeof(name), &size);
   if ( EVEN(sts)) return sts;
 
-  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
+  sts = ldh_GetObjectPar( ldhses, aref.Objid, "RtBody",
 			  "GSDfile", &gsdfile, &size);
   if ( EVEN(sts)) return sts;
   if ( strcmp( gsdfile, "") == 0) {
@@ -504,9 +485,11 @@ static pwr_tStatus Configure (
   }
 
   slave_sCtx *ctx = (slave_sCtx *) calloc( 1, sizeof(slave_sCtx));
-  ctx->ldhses = ip->PointedSession;
-  ctx->aref = ip->Pointed;
-  ctx->editor_ctx = ip->EditorContext;
+  ctx->ldhses = ldhses;
+  ctx->aref = aref;
+  ctx->editor_ctx = editor_ctx;
+  ctx->edit_mode = (ODD(sts) && Info.Access == ldh_eAccess_ReadWrite) &&
+    ldh_LocalObject( ldhses, aref.Objid);
 
   get_subcid( ctx->ldhses, pwr_cClass_Pb_Module, mcv);
   ctx->mc = (gsd_sModuleClass *) calloc( mcv.size() + 2, sizeof(gsd_sModuleClass));
@@ -529,6 +512,7 @@ static pwr_tStatus Configure (
   }
   else
     strcpy( fname, gsdfile);
+  free( gsdfile);
     
   ctx->gsd = new pb_gsd();
   sts = ctx->gsd->read( fname);
@@ -540,52 +524,9 @@ static pwr_tStatus Configure (
   lsts = load_modules( ctx);
   if ( lsts != PB__USERPRMDATALEN && EVEN(lsts)) return lsts;
 
-  ctx->attr = new GsdAttr( (Widget) ip->WindowContext, ctx, 0, ctx->gsd, edit_mode);
-  ctx->attr->close_cb = attr_close_cb;
-  ctx->attr->save_cb = attr_save_cb;
-  ctx->attr->help_cb = attr_help_cb;
-
-  if ( EVEN(lsts)) {
-    wow_DisplayError( ctx->attr->toplevel, "Configuration load error", 
-		      "Configuration load error\nCheck configuration data");
-  }
-
-  free( gsdfile);
-
+  *ctxp = ctx;
   return 1;
 }
-
-static pwr_tStatus ConfigureFilter (
-  ldh_sMenuCall *ip
-)
-{
-#if 0
-  char *gsd;
-  int size;
-  int sts;
-
-  sts = ldh_GetObjectPar( ip->PointedSession, ip->Pointed.Objid, "RtBody",
-			  "GSDfile", &gsd, &size);
-  if ( EVEN(sts)) return sts;
-  if ( strcmp( gsd, "") == 0) {
-    free( gsd);  
-    return 0;
-  }
-  free( gsd);  
-#endif
-  return 1;
-}
-
-
-/*----------------------------------------------------------------------------*\
-  Every method to be exported to the workbench should be registred here.
-\*----------------------------------------------------------------------------*/
-
-pwr_dExport pwr_BindMethods(Pb_DP_Slave) = {
-  pwr_BindMethod(Configure),
-  pwr_BindMethod(ConfigureFilter),
-  pwr_NullMethod
-};
 
 
 

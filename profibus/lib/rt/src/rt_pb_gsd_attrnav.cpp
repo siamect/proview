@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.3 2006-07-25 11:01:19 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.4 2007-01-04 08:42:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,29 +24,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "co_wow.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "flow_msg.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 
 #include "rt_pb_gsd.h"
@@ -111,18 +99,12 @@ extern "C" {
 
 static char null_str[] = "";
 
-static void attrnav_trace_scan( GsdAttrNav *attrnav);
-static int attrnav_trace_scan_bc( brow_tObject object, void *p);
-static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, /* flow_eDrawType color, */ void **p);
-static int attrnav_trace_disconnect_bc( brow_tObject object);
-static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data);
 
 //
 // Convert attribute string to value
 //
-static int  attrnav_attr_string_to_value( int type_id, char *value_str, 
-	void *buffer_ptr, int buff_size, int attr_size)
+int GsdAttrNav::attr_string_to_value( int type_id, char *value_str, 
+				      void *buffer_ptr, int buff_size, int attr_size)
 {
 
   switch ( type_id ) {
@@ -164,8 +146,8 @@ static int  attrnav_attr_string_to_value( int type_id, char *value_str,
 //
 // Convert attribute value to string
 //
-static void  attrnav_attrvalue_to_string( int type_id, void *value_ptr, 
-	char *str, int size, int *len, char *format)
+void GsdAttrNav::attrvalue_to_string( int type_id, void *value_ptr, 
+				      char *str, int size, int *len, char *format)
 {
 
   if ( value_ptr == 0)  {
@@ -430,24 +412,15 @@ void GsdAttrNavBrow::allocate_pixmaps()
 //
 GsdAttrNav::GsdAttrNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	pb_gsd  *xn_gsd,
 	int xn_edit_mode,
-	Widget *w,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
-        gsd(xn_gsd), edit_mode(xn_edit_mode), trace_started(0),
-	message_cb(0), change_value_cb(0)
+  parent_ctx(xn_parent_ctx),
+  gsd(xn_gsd), edit_mode(xn_edit_mode), trace_started(0),
+  message_cb(0), change_value_cb(0)
 {
   strcpy( name, xn_name);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	attrnav_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  // Create the root item
-  *w = form_widget;
 
   *status = 1;
 }
@@ -457,21 +430,11 @@ GsdAttrNav::GsdAttrNav(
 //
 GsdAttrNav::~GsdAttrNav()
 {
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 GsdAttrNavBrow::~GsdAttrNavBrow()
 {
   free_pixmaps();
-}
-
-void GsdAttrNav::set_inputfocus()
-{
-  XtCallAcceptFocus( brow_widget, CurrentTime);
 }
 
 //
@@ -539,8 +502,8 @@ int GsdAttrNav::set_attr_value( char *value_str)
     case attrnav_eItemType_PbBase: {
       ItemPbBase	*item = (ItemPbBase *)base_item;
 
-      sts = attrnav_attr_string_to_value( item->type_id, value_str, 
-					  buffer, sizeof(buffer), item->size);
+      sts = attr_string_to_value( item->type_id, value_str, 
+				  buffer, sizeof(buffer), item->size);
       if ( EVEN(sts)) return sts;
 
       if ( item->max_limit != 0 || item->min_limit != 0) {
@@ -592,8 +555,8 @@ int GsdAttrNav::check_attr_value( char **value)
         *value = 0;
         return PB__ATTRNOEDIT;
       }
-      attrnav_attrvalue_to_string( item->type_id, item->value_p, buf, 
-				   sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, item->value_p, buf, 
+			   sizeof(buf), &len, NULL);
       *value = buf;
       return PB__SUCCESS;
     }
@@ -608,7 +571,7 @@ int GsdAttrNav::check_attr_value( char **value)
 //
 // Callbacks from brow
 //
-static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int GsdAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   GsdAttrNav		*attrnav;
   ItemPb 		*item;
@@ -703,7 +666,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = attrnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -899,16 +862,15 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-static void attrnav_trace_scan( GsdAttrNav *attrnav)
+void GsdAttrNav::trace_scan( void *data)
 {
+  GsdAttrNav *attrnav = (GsdAttrNav *)data;
   int time = 200;
 
   if ( attrnav->trace_started) {
     brow_TraceScan( attrnav->brow->ctx);
 
-    attrnav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(attrnav->brow_widget) , time,
-	(XtTimerCallbackProc)attrnav_trace_scan, attrnav);
+    attrnav->trace_timerid->add( time, trace_scan, attrnav);
   }
 }
 
@@ -918,7 +880,7 @@ void GsdAttrNav::force_trace_scan()
     brow_TraceScan( brow->ctx);
 }
 
-static int attrnav_trace_scan_bc( brow_tObject object, void *p)
+int GsdAttrNav::trace_scan_bc( brow_tObject object, void *p)
 {
   ItemPb       	*base_item;
   char		buf[200];
@@ -949,7 +911,7 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      attrnav_attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -1136,8 +1098,8 @@ static int attrnav_trace_scan_bc( brow_tObject object, void *p)
   return 1;
 }
 
-static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, /* flow_eDrawType color, */ void **p)
+int GsdAttrNav::trace_connect_bc( brow_tObject object, char *name, char *attr, 
+				  flow_eTraceType type, void **p)
 {
   ItemPb 		*base_item;
 
@@ -1188,7 +1150,7 @@ static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr
   return 1;
 }
 
-static int attrnav_trace_disconnect_bc( brow_tObject object)
+int GsdAttrNav::trace_disconnect_bc( brow_tObject object)
 {
   ItemPb 		*base_item;
 
@@ -1450,40 +1412,40 @@ void GsdAttrNavBrow::brow_setup()
   brow_SetCtxUserData( ctx, attrnav);
 
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB2Click, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
-	attrnav_brow_cb);
+	GsdAttrNav::brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data)
+int GsdAttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   GsdAttrNav *attrnav = (GsdAttrNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -1497,11 +1459,11 @@ static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data)
   // Create the root item
   attrnav->object_attr();
 
-  sts = brow_TraceInit( ctx, attrnav_trace_connect_bc, 
-		attrnav_trace_disconnect_bc, attrnav_trace_scan_bc);
+  sts = brow_TraceInit( ctx, trace_connect_bc, 
+			trace_disconnect_bc, trace_scan_bc);
   attrnav->trace_started = 1;
 
-  attrnav_trace_scan( attrnav);
+  trace_scan( attrnav);
 
   return 1;
 }

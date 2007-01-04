@@ -1,0 +1,559 @@
+! 
+!  Proview   $Id: xtt_trace.uil,v 1.1 2007-01-04 08:36:28 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module wb_foe
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+!              XmLabel = gadget ;
+!              XmPushButton = gadget ;
+!              XmToggleButton = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+identifier
+	tra_ctx;
+procedure
+	tra_activate_close(integer);
+	tra_activate_print(integer);
+	tra_activate_printselect(integer);
+	tra_activate_savetrace(integer);
+	tra_activate_restoretrace(integer);
+	tra_activate_cleartrace(integer);
+	tra_activate_display_object(integer);
+	tra_activate_open_object(integer);
+	tra_activate_show_cross(integer);
+	tra_activate_open_classgraph(integer);
+	tra_activate_collect_insert(integer);
+	tra_activate_trace(integer);
+	tra_activate_view(integer);
+	tra_activate_simulate(integer);
+	tra_activate_zoomin(integer);
+	tra_activate_zoomout(integer);
+	tra_activate_zoomreset(integer);
+	tra_activate_scantime1(integer);
+	tra_activate_scantime2(integer);
+	tra_activate_scantime3(integer);
+	tra_activate_scantime4(integer);
+	tra_activate_scantime5(integer);
+	tra_activate_help(integer);
+	tra_activate_helpplc(integer);
+	tra_create_form(integer);
+	tra_create_menu(integer);
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  trace_window : XmMainWindow
+{
+
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 200;
+    XmNheight = 200;
+  };
+
+  controls
+  {
+     XmMenuBar        foe_menu;
+     XmForm        trace_form;
+  };
+
+};
+
+object trace_form : XmForm
+{
+   arguments
+   {
+!    XmNwidth = 500;
+!    XmNheight = 500;
+!     XmNresizePolicy = XmRESIZE_NONE;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure tra_create_form( tra_ctx) ;
+   };
+};
+
+object foe_menu : XmMenuBar
+{
+   arguments
+   {
+!      XmNheight			= 40;
+!      XmNtopAttachment    	= XmATTACH_FORM;
+!      XmNrightAttachment    	= XmATTACH_FORM;
+!      XmNleftAttachment    	= XmATTACH_FORM;
+      XmNorientation 		= XmHORIZONTAL;
+      XmNspacing  		= 15;
+      XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+   };
+
+   controls
+   {
+      XmCascadeButton file_entry;
+      XmCascadeButton functions_entry;
+      XmCascadeButton view_entry;
+      XmCascadeButton mode_entry;
+      XmCascadeButton help_entry;
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure tra_create_menu( tra_ctx) ;
+   };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Print;
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_print(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_PrintSelect;
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_printselect(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_SaveTrace;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_savetrace(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_RestoreTrace;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_restoretrace(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_ClearTrace;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_cleartrace(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_close(tra_ctx);
+          };
+        };
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_Functions;
+    XmNfontList     = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Object;
+            XmNmnemonic = keysym('O');
+            XmNaccelerator = "Ctrl<Key>A";
+            XmNacceleratorText = compound_string('Ctrl+A');
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_open_object(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+            XmNaccelerator = "Ctrl<Key>D";
+            XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_display_object(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Show_Crossreferences;
+            XmNmnemonic = keysym('S');
+            XmNaccelerator = "Ctrl<Key>R";
+            XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_show_cross(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Open_ClassGraph;
+            XmNmnemonic = keysym('G');
+            XmNaccelerator = "Ctrl<Key>G";
+            XmNacceleratorText = compound_string('Ctrl+G');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_open_classgraph(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Collect_insert;
+            XmNmnemonic = keysym('C');
+            XmNaccelerator = "Ctrl<Key>V";
+            XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_collect_insert(tra_ctx);
+          };
+        };
+      };
+    };
+  };
+};
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_View;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Zoom_in;
+            XmNmnemonic = keysym('I');
+            XmNaccelerator = "Ctrl<Key>I";
+            XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_zoomin(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Zoom_out;
+            XmNmnemonic = keysym('O');
+            XmNaccelerator = "Ctrl<Key>O";
+            XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_zoomout(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Zoom_reset;
+            XmNmnemonic = keysym('R');
+            XmNaccelerator = "Ctrl<Key>R";
+            XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_zoomreset(tra_ctx);
+          };
+        };
+        XmCascadeButton      
+	{
+   	  arguments
+   	  {
+            XmNlabelString = compound_string("ScanTime");
+	    XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.50");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime1(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.20");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime2(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.10");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime3(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.05");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime4(tra_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.02");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure tra_activate_scantime5(tra_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
+      };
+    };
+  };
+};
+
+object mode_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Mode;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_View;
+            XmNmnemonic = keysym('V');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_view(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Trace;
+            XmNmnemonic = keysym('T');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_trace(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Simulate;
+            XmNmnemonic = keysym('S');
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_simulate(tra_ctx);
+          };
+        };
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = c_Help;
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Trace;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_help(tra_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = c_Plc;
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure tra_activate_helpplc(tra_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+end module;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_elog.h,v 1.5 2005-12-14 13:05:12 claes Exp $
+ * Proview   $Id: rt_elog.h,v 1.6 2007-01-04 08:47:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,10 @@
 #include "rt_mh_def.h"
 #include "rt_mh_outunit.h"
 #include "co_dcli.h"
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 #define DUMPFILE "rt_eventlog.dump"
 #define DATABASE "$pwrp_db/rt_eventlog.db"
@@ -79,4 +83,9 @@ typedef struct s_HelCB {
   pwr_tNodeId Nid;
   pwr_tInt64 StoreIdx;
 }sHelCB;
+
+#if defined __cplusplus
+}
+#endif
+
 #endif

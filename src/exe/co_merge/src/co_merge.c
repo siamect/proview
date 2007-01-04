@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_merge.c,v 1.6 2006-04-05 08:40:56 claes Exp $
+ * Proview   $Id: co_merge.c,v 1.7 2007-01-04 08:47:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -123,7 +123,7 @@ int main(  int argc, char *argv[])
     break;
   }
   case merge_eMtype_WbBase: {
-    strcpy( cfile, "/tmp/wb_i_base_methods.c");
+    strcpy( cfile, "/tmp/wb_i_base_methods.cpp");
     strcpy( ofile, "/tmp/wb_i_base_methods.o");
 
     outfp = fopen( cfile, "w");
@@ -171,7 +171,13 @@ int main(  int argc, char *argv[])
   }
 
   dcli_translate_filename( incdir, "$pwr_einc");
-  sprintf( cmd, "gcc -c -I%s -DOS_LINUX -o %s %s", incdir, ofile, cfile);
+  switch ( mtype) {
+  case merge_eMtype_WbBase:
+    sprintf( cmd, "g++ -c -I%s -DOS_LINUX -o %s %s", incdir, ofile, cfile);
+    break;
+  default:
+    sprintf( cmd, "gcc -c -I%s -DOS_LINUX -o %s %s", incdir, ofile, cfile);
+  }
   // printf( "co_merge: %s\n", cmd);
   system( cmd);
   sprintf( cmd, "ar r %s %s", outfile, ofile);

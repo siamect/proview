@@ -1,0 +1,458 @@
+! 
+!  Proview   $Id: xtt_xatt.uil,v 1.1 2007-01-04 08:36:28 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module wb_xatt
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+identifier
+	xatt_ctx;
+procedure
+	xatt_activate_exit(integer);
+	xatt_activate_display_object(integer);
+	xatt_activate_show_cross(integer);
+	xatt_activate_open_classgraph(integer);
+	xatt_activate_open_plc(integer);
+	xatt_activate_change_value(integer);
+	xatt_activate_close_changeval(integer);
+	xatt_activate_help(integer);
+	xatt_create_msg_label(integer);
+	xatt_create_cmd_prompt(integer);
+	xatt_create_cmd_input(integer);
+	xatt_create_cmd_scrolledinput(integer);
+	xatt_create_cmd_scrolled_ok(integer);
+	xatt_create_cmd_scrolled_ca(integer);
+	xatt_create_xattnav_form(integer);
+	xatt_activate_cmd_scrolledinput(integer); 
+	xatt_activate_cmd_scrolled_ok(integer); 
+	xatt_activate_cmd_scrolled_ca(integer); 
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  xatt_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 450;
+    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	xatt_menu;
+     XmPanedWindow  main_pane;
+  };
+};
+
+
+object main_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNtraversalOn = false;
+   };
+   controls
+   {
+     XmPanedWindow xattnav_form;
+     XmForm form;
+   };
+};
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 500;
+     XmNheight = 50;
+     XmNpaneMinimum = 50;
+     XmNpaneMaximum = 50;
+!     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPushButton	cmd_scrolled_ok;
+     XmPushButton	cmd_scrolled_cancel;
+     XmLabel	msg_label;
+     XmText	cmd_input;
+     XmScrolledText	cmd_scrolledinput;
+     XmLabel	cmd_prompt;
+  };
+};
+
+object xatt_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_exit(xatt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Functions;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Change_Value;
+            XmNmnemonic = keysym('H');
+	    XmNaccelerator = "Ctrl<Key>Q";
+	    XmNacceleratorText = compound_string('Ctrl+Q');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_change_value(xatt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close_change_value;
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>W";
+	    XmNacceleratorText = compound_string('Ctrl+W');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_close_changeval(xatt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_Plc;
+            XmNmnemonic = keysym('L');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_open_plc(xatt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Open_ClassGraph;
+            XmNmnemonic = keysym('p');
+	    XmNaccelerator = "Ctrl<Key>G";
+	    XmNacceleratorText = compound_string('Ctrl+G');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_open_classgraph(xatt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Show_Crossreferences;
+            XmNmnemonic = keysym('R');
+	    XmNaccelerator = "Ctrl<Key>R";
+	    XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_show_cross(xatt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Display_object_in_navigator;
+            XmNmnemonic = keysym('D');
+            XmNaccelerator = "Ctrl<Key>D";
+            XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  }; 
+          callbacks
+          {
+            XmNactivateCallback = procedure xatt_activate_display_object(xatt_ctx);
+          };
+        };
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = c_Help;
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Help;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure xatt_activate_help(xatt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object xattnav_form : XmPanedWindow
+{
+   arguments
+   {
+!     XmNleftAttachment 	= 	XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+!     XmNbottomAttachment    	= XmATTACH_FORM;
+!     XmNbottomOffset        	= 150;
+!     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNheight = 300;
+!     XmNpaneMaximum = 700;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xatt_create_xattnav_form( xatt_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xatt_create_msg_label( xatt_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow xattnav_form;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNwidth			= 50;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xatt_create_cmd_prompt ( xatt_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow xattnav_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xatt_create_cmd_input( xatt_ctx);
+   };
+};
+
+object cmd_scrolledinput : XmScrolledText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow xattnav_form;
+      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 5;
+!      XmNborderWidth		= 0;
+!      XmNshadowThickness	= 0;
+!      XmNheight			= 130;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure xatt_create_cmd_scrolledinput( xatt_ctx);
+     XmNactivateCallback = procedure xatt_activate_cmd_scrolledinput( xatt_ctx);
+   };
+};
+
+object cmd_scrolled_ok : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString 		= c_Ok;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 50;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNbottomOffset        	= 1;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 50;
+    XmNheight			= 20;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure xatt_create_cmd_scrolled_ok( xatt_ctx);
+    XmNactivateCallback = procedure xatt_activate_cmd_scrolled_ok(xatt_ctx);
+  };
+};
+object cmd_scrolled_cancel : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString 		= c_Cancel;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 150;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNbottomOffset        	= 1;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 50;
+    XmNheight			= 20;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure xatt_create_cmd_scrolled_ca( xatt_ctx);
+    XmNactivateCallback = procedure xatt_activate_cmd_scrolled_ca(xatt_ctx);
+  };
+};
+end module;
+

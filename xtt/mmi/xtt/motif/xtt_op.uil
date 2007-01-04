@@ -1,0 +1,948 @@
+! 
+!  Proview   $Id: xtt_op.uil,v 1.1 2007-01-04 08:36:28 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module rt_xtt_eve
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+include file 'inc_xtt.uil';
+
+value
+    bitmap_colors : color_table ( background color = ' ', 
+	foreground color = '*',
+	color ('red') = '.',
+	color ('green') = '=',
+	color ('blue') = 'x',
+	color ('grey50') = 'd',
+	color ('gray') = 'g');
+
+    ack_icon : icon ( color_table=bitmap_colors,
+'            ',
+'         *  ',
+'   *    *   ',
+'   **  *    ',
+'    * *     ',
+'     *      ',
+'            ');
+
+    active_icon : icon ( color_table=bitmap_colors,
+'     **     ',
+'     **     ',
+'    *  *    ',
+'    ****    ',
+'   * ** *   ',
+'   * ** *   ',
+'  *  **  *  ',
+'  *      *  ',
+' *   **   * ',
+' *** ** *** ');
+
+    down_icon : icon ( color_table=bitmap_colors,
+'ddddddddddddd',
+' dgggggggggg ',
+'  dgggggggg  ',
+'   dgggggg   ',
+'    dgggg    ',
+'     dgg     ',
+'      d      ');
+
+    up_icon : icon ( color_table=bitmap_colors,
+'      d      ',
+'     dgg     ',
+'    dgggg    ',
+'   dgggggg   ',
+'  dgggggggg  ',
+' dgggggggggg ',
+'dgggggggggggg');
+
+identifier
+	op_ctx;
+procedure
+	op_activate_exit(integer);
+	op_activate_aalarm_ack(integer);
+	op_activate_aalarm_incr(integer);
+	op_activate_aalarm_decr(integer);
+	op_create_alarmcnt_label(integer);
+	op_create_aalarm_label1(integer);
+	op_create_aalarm_label2(integer);
+	op_create_aalarm_label3(integer);
+	op_create_aalarm_label4(integer);
+	op_create_aalarm_label5(integer);
+	op_create_aalarm_active1(integer);
+	op_create_aalarm_active2(integer);
+	op_create_aalarm_active3(integer);
+	op_create_aalarm_active4(integer);
+	op_create_aalarm_active5(integer);
+	op_activate_balarm_ack(integer);
+	op_create_balarm_label(integer);
+	op_create_balarm_mark(integer);
+	op_create_balarm_active(integer);
+	op_create_appl_form(integer);
+	op_activate_alarmlist(integer);
+	op_activate_eventlist(integer);
+	op_activate_eventlog(integer);
+	op_activate_navigator(integer);
+	op_activate_help(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  op_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+!     XmMenuBar	op_menu;
+     XmForm     op_form;
+  };
+};
+
+object op_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+!    XmNmenuHelpWidget 	= XmCascadeButton eve_help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton eve_file_entry;
+!    XmCascadeButton eve_functions_entry;
+!    XmCascadeButton eve_view_entry;
+!    XmCascadeButton eve_help_entry;
+  };
+};
+
+object eve_file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = c_File;
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = c_Close;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+!            XmNactivateCallback = procedure ev_eve_activate_exit(ev_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object op_form : XmForm
+{
+  controls
+  {
+     XmForm balarm_form;
+     XmForm aalarm_form;
+     XmForm base_form;
+     XmForm appl_form;
+  };
+};
+
+object balarm_form : XmForm
+{
+  arguments
+  {
+      XmNborderWidth 		= 1;
+      XmNwidth			= 660;
+      XmNheight			= 25;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNrightAttachment    	= XmATTACH_WIDGET;
+!      XmNrightWidget 		= XmForm base_form;
+      XmNresizePolicy 		= XmRESIZE_GROW;
+  };
+  controls
+  {
+     XmPushButton 	balarm_ack;
+     XmLabel 		balarm_mark;
+     XmLabel 		balarm_active;
+     XmLabel 		balarm_text;
+  };
+};
+
+object balarm_ack : XmPushButton
+{
+  arguments
+  {
+    XmNlabelType	 	= XmPIXMAP;
+    XmNlabelPixmap 		= ack_icon;
+    XmNwidth			= 30;
+    XmNheight			= 25;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 5;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNtopOffset        	= 1;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_balarm_ack(op_ctx);
+  };
+};
+
+object balarm_mark : XmLabel
+{
+  arguments
+  {
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmPushButton balarm_ack;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 4;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "  ";
+     XmNheight			= 25;
+     XmNwidth			= 15;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_balarm_mark( op_ctx);
+  };
+};
+
+object balarm_active : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel balarm_mark;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 25;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_balarm_active( op_ctx);
+  };
+};
+
+object balarm_text : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 15;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_balarm_label( op_ctx);
+  };
+};
+
+object aalarm_form : XmForm
+{
+  arguments
+  {
+      XmNborderWidth 		= 1;
+      XmNwidth			= 660;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNtopAttachment    	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_WIDGET;
+      XmNbottomWidget		= XmForm balarm_form;
+      XmNresizePolicy 		= XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPushButton 	aalarm_ack;
+     XmPushButton 	aalarm_incr;
+     XmPushButton 	aalarm_decr;
+     XmLabel 		aalarm_mark;
+     XmLabel 		alarmcnt_text;
+     XmLabel 		aalarm_active1;
+     XmLabel 		aalarm_active2;
+     XmLabel 		aalarm_active3;
+     XmLabel 		aalarm_active4;
+     XmLabel 		aalarm_active5;
+     XmLabel 		aalarm_text1;
+     XmLabel 		aalarm_text2;
+     XmLabel 		aalarm_text3;
+     XmLabel 		aalarm_text4;
+     XmLabel 		aalarm_text5;
+  };
+};
+
+object aalarm_ack : XmPushButton
+{
+  arguments
+  {
+    XmNlabelType	 	= XmPIXMAP;
+    XmNlabelPixmap 		= ack_icon;
+    XmNwidth			= 30;
+    XmNheight			= 25;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 5;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNtopOffset        	= 1;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_aalarm_ack(op_ctx);
+  };
+};
+
+object aalarm_incr : XmPushButton
+{
+  arguments
+  {
+    XmNlabelType	 	= XmPIXMAP;
+    XmNlabelPixmap 		= down_icon;
+    XmNwidth			= 30;
+    XmNheight			= 20;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 5;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNtopOffset        	= 30;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_aalarm_incr(op_ctx);
+  };
+};
+
+object aalarm_decr : XmPushButton
+{
+  arguments
+  {
+    XmNlabelType	 	= XmPIXMAP;
+    XmNlabelPixmap 		= up_icon;
+    XmNwidth			= 30;
+    XmNheight			= 20;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 5;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNtopOffset        	= 50;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_aalarm_decr(op_ctx);
+  };
+};
+
+object aalarm_mark : XmLabel
+{
+  arguments
+  {
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmPushButton aalarm_ack;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 4;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "A";
+     XmNheight			= 25;
+     XmNwidth			= 15;
+     XmNfontList	   	= menu_font;
+  };
+};
+
+object alarmcnt_text : XmLabel
+{
+  arguments
+  {
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmPushButton aalarm_incr;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNtopOffset        	= 30;
+     XmNleftOffset        	= 1;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 25;
+     XmNwidth			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_alarmcnt_label( op_ctx);
+  };
+};
+
+object aalarm_active1 : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel aalarm_mark;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 27;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_active1( op_ctx);
+  };
+};
+
+object aalarm_text1 : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_label1( op_ctx);
+  };
+};
+
+object aalarm_active2 : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel aalarm_mark;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget 	   	= XmLabel aalarm_active1;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 27;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_active2( op_ctx);
+  };
+};
+
+object aalarm_text2 : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget		= XmLabel aalarm_text1;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_label2( op_ctx);
+  };
+};
+
+object aalarm_active3 : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel aalarm_mark;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget 	   	= XmLabel aalarm_active2;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 27;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_active3( op_ctx);
+  };
+};
+
+object aalarm_text3 : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget		= XmLabel aalarm_text2;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_label3( op_ctx);
+  };
+};
+
+object aalarm_active4 : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel aalarm_mark;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget 	   	= XmLabel aalarm_active3;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 27;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_active4( op_ctx);
+  };
+};
+
+object aalarm_text4 : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget		= XmLabel aalarm_text3;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_label4( op_ctx);
+  };
+};
+
+object aalarm_active5 : XmLabel
+{
+  arguments
+  {
+     XmNlabelType	 	= XmPIXMAP;
+     XmNlabelPixmap 		= active_icon;
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmLabel aalarm_mark;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget 	   	= XmLabel aalarm_active4;
+     XmNleftOffset        	= 7;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNheight			= 27;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_active5( op_ctx);
+  };
+};
+
+object aalarm_text5 : XmLabel
+{
+  arguments
+  {
+!     XmNborderWidth 		= 1;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_WIDGET;
+     XmNtopWidget		= XmLabel aalarm_text4;
+     XmNleftOffset        	= 78;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 25;
+     XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_aalarm_label5( op_ctx);
+  };
+};
+
+
+object base_form : XmForm
+{
+  arguments
+  {
+      XmNborderWidth 		= 1;
+      XmNwidth			= 120;
+      XmNheight			= 25;
+      XmNleftAttachment 	= XmATTACH_WIDGET;
+      XmNleftWidget 		= XmForm aalarm_form;
+      XmNtopAttachment    	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+  };
+  controls
+  {
+     XmPushButton 	alarm_list;
+     XmPushButton 	event_list;
+     XmPushButton 	event_log;
+     XmPushButton 	navigator;
+     XmPushButton 	help;
+  };
+};
+
+object alarm_list : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString		= c_Alarmlist;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNrightAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_alarmlist(op_ctx);
+  };
+};
+
+object event_list : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString		= c_Eventlist;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton alarm_list;
+    XmNrightAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_eventlist(op_ctx);
+  };
+};
+
+object navigator : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString 		= c_Navigator;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton event_list;
+    XmNrightAttachment    	= XmATTACH_FORM;
+!    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_navigator(op_ctx);
+  };
+};
+
+object event_log : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString		= c_Eventlog;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton navigator;
+    XmNrightAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_eventlog(op_ctx);
+  };
+};
+
+object help : XmPushButton
+{
+  arguments
+  {
+    XmNlabelString 		= c_Help;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton event_log;
+    XmNrightAttachment    	= XmATTACH_FORM;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+!    XmNheight			= 25;
+    XmNfontList	   	= menu_font;
+  };
+  callbacks
+  {
+    XmNactivateCallback = procedure op_activate_help(op_ctx);
+  };
+};
+
+object appl_form : XmForm
+{
+  arguments
+  {
+      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_WIDGET;
+      XmNleftWidget 		= XmForm base_form;
+      XmNtopAttachment    	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNrightAttachment    	= XmATTACH_FORM;
+  };
+  controls
+  {
+!     XmPushButton 	appl1;
+!     XmPushButton 	appl2;
+!     XmPushButton 	appl3;
+!     XmPushButton 	appl4;
+!     XmPushButton 	appl5;
+!     XmPushButton 	appl6;
+!     XmPushButton 	appl7;
+!     XmPushButton 	appl8;
+!     XmPushButton 	appl9;
+!     XmPushButton 	appl10;
+!     XmPushButton 	appl11;
+!     XmPushButton 	appl12;
+!     XmPushButton 	appl13;
+!     XmPushButton 	appl14;
+!     XmPushButton 	appl15;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure op_create_appl_form( op_ctx);
+  };
+};
+
+object appl1 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl1");
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNtopAttachment    	= XmATTACH_FORM;
+    XmNheight			= 25;
+  };
+};
+
+object appl2 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl2");
+    XmNtopAttachment 		= XmATTACH_FORM;
+    XmNleftAttachment    	= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl1;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl3 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl3");
+    XmNtopAttachment 		= XmATTACH_FORM;
+    XmNleftAttachment    	= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl2;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl4 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl4");
+    XmNtopAttachment 		= XmATTACH_FORM;
+    XmNleftAttachment    	= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl3;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl5 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl5");
+    XmNtopAttachment 		= XmATTACH_FORM;
+    XmNleftAttachment    	= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl4;
+    XmNrightAttachment 		= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl6 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl6");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl1;
+    XmNleftAttachment 		= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl7 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl7");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl1;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl6;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl8 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl8");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl1;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl7;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl9 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl9");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl1;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl8;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl10 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl10");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl1;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl9;
+    XmNrightAttachment 		= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl11 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl11");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl6;
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNbottomAttachment 	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl12 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl12");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl6;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl11;
+    XmNbottomAttachment 	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl13 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl13");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl6;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl12;
+    XmNbottomAttachment 	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl14 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl14");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl6;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl13;
+    XmNbottomAttachment 	= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+object appl15 : XmPushButton {
+  arguments {
+    XmNlabelString = compound_string("Appl15");
+    XmNtopAttachment    	= XmATTACH_WIDGET;
+    XmNtopWidget    		= XmPushButton appl6;
+    XmNleftAttachment 		= XmATTACH_WIDGET;
+    XmNleftWidget    		= XmPushButton appl14;
+    XmNbottomAttachment 	= XmATTACH_FORM;
+    XmNrightAttachment 		= XmATTACH_FORM;
+!    XmNwidth			= 50;
+    XmNheight			= 25;
+  };
+};
+
+end module;
+

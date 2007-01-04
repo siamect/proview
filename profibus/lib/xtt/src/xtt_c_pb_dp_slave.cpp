@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.3 2006-07-25 11:01:19 claes Exp $
+ * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.4 2007-01-04 08:44:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,14 +23,7 @@
 #include "pwr_profibusclasses.h"
 #include "flow_std.h"
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "co_cdh.h"
 #include "xtt_menu.h"
 #include "xtt_xnav.h"
 #include "rt_xnav_msg.h"
@@ -38,39 +31,32 @@
 
 #include "rt_pb_gsd.h"
 #include "rt_pb_gsd_attr.h"
+#include "xtt_c_pb_dp_slave.h"
 
-typedef struct {
-  pb_gsd *gsd;
-  GsdAttr *attr;
-  pwr_tAttrRef aref;
-  gsd_sModuleClass *mc;
-  void *editor_ctx;
-} slave_sCtx;
-
-static int attr_help_cb( void *sctx, char *text)
+int xtt_pb_dp_slave_help_cb( void *sctx, char *text)
 {
   pwr_tCmd cmd;
-  slave_sCtx *ctx = (slave_sCtx *)sctx;
+  xtt_slave_sCtx *ctx = (xtt_slave_sCtx *)sctx;
 
   strcpy( cmd, "help ");
   strcat( cmd, text);
   return ((XNav *)ctx->editor_ctx)->command( cmd);
 }
 
-static void attr_close_cb( void *sctx)
+void xtt_pb_dp_slave_close_cb( void *sctx)
 {
-  slave_sCtx *ctx = (slave_sCtx *)sctx;
+  xtt_slave_sCtx *ctx = (xtt_slave_sCtx *)sctx;
   delete ctx->attr;
   delete ctx->gsd;
   free( (char *)ctx);
 }
 
-static int attr_save_cb( void *sctx)
+int xtt_pb_dp_slave_save_cb( void *sctx)
 {
   return 1;
 }
 
-static pwr_tStatus load_modules( slave_sCtx *ctx)
+static pwr_tStatus xtt_pb_dp_slave_load_modules( xtt_slave_sCtx *ctx)
 {
   pwr_tOid oid;
   pwr_tCid cid;
@@ -164,13 +150,13 @@ static pwr_tStatus load_modules( slave_sCtx *ctx)
   return 1;
 }
 
-// Show Configuration
-static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
+
+pwr_tStatus xtt_pb_dp_slave_create_ctx( pwr_tAttrRef aref, void *editor_ctx, 
+					xtt_slave_sCtx **ctxp)
 {
   pwr_tAName name;
   pwr_tString80 gsdfile;
   int sts;
-  int edit_mode = 0;
   pwr_tFileName fname;
   pwr_tCid cid;
   pwr_tOid oid;
@@ -179,11 +165,11 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
   int module_cnt;
   pwr_tAttrRef aaref;
 
-  sts = gdh_ObjidToName( ip->Pointed.Objid, 
+  sts = gdh_ObjidToName( aref.Objid, 
 			name, sizeof(name), cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
-  sts = gdh_ArefANameToAref( &ip->Pointed, "GSDFile", &aaref);
+  sts = gdh_ArefANameToAref( &aref, "GSDFile", &aaref);
   if ( EVEN(sts)) return sts;
 
   sts = gdh_GetObjectInfoAttrref( &aaref, gsdfile, sizeof(gsdfile));
@@ -192,12 +178,12 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
     return 1;
   }
 
-  slave_sCtx *ctx = (slave_sCtx *) calloc( 1, sizeof(slave_sCtx));
-  ctx->aref = ip->Pointed;
+  xtt_slave_sCtx *ctx = (xtt_slave_sCtx *) calloc( 1, sizeof(xtt_slave_sCtx));
+  ctx->aref = aref;
 
   // Count modules
   module_cnt = 0;
-  for ( sts = gdh_GetChild( ip->Pointed.Objid, &oid);
+  for ( sts = gdh_GetChild( aref.Objid, &oid);
 	ODD(sts);
 	sts = gdh_GetNextSibling( oid, &oid)) {
     module_cnt++;
@@ -205,7 +191,7 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
 
   ctx->mc = (gsd_sModuleClass *) calloc( module_cnt + 2, sizeof(gsd_sModuleClass));
   mc_cnt = 0;
-  ctx->editor_ctx = ip->EditorContext;
+  ctx->editor_ctx = editor_ctx;
   
   ctx->mc[0].cid = pwr_cClass_Pb_Module;
   sts = gdh_ObjidToName( cdh_ClassIdToObjid(ctx->mc[0].cid),  
@@ -213,7 +199,7 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
   if ( EVEN(sts)) return sts;
   mc_cnt++;
 
-  for ( sts = gdh_GetChild( ip->Pointed.Objid, &oid);
+  for ( sts = gdh_GetChild( aref.Objid, &oid);
 	ODD(sts);
 	sts = gdh_GetNextSibling( oid, &oid)) {
     sts = gdh_GetObjectClass( oid, &cid);
@@ -250,28 +236,12 @@ static pwr_tStatus ShowConfiguration( xmenu_sMenuCall *ip)
     
   ctx->gsd->set_classes( ctx->mc);
 
-  sts = load_modules( ctx);
+  sts = xtt_pb_dp_slave_load_modules( ctx);
   if ( EVEN(sts)) return sts;
 
-  ctx->attr = new GsdAttr( (Widget) ip->WindowContext, ctx, 0, ctx->gsd, edit_mode);
-  ctx->attr->close_cb = attr_close_cb;
-  ctx->attr->save_cb = attr_save_cb;
-  ctx->attr->help_cb = attr_help_cb;
-
+  *ctxp = ctx;
   return 1;
 }
-
-
-
-
-/*----------------------------------------------------------------------------*\
-  Every method to be exported to xtt should be registred here.
-\*----------------------------------------------------------------------------*/
-
-pwr_dExport pwr_BindXttMethods(Pb_DP_Slave) = {
-  pwr_BindXttMethod(ShowConfiguration),
-  pwr_NullMethod
-};
 
 
 

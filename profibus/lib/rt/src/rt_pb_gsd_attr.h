@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr.h,v 1.3 2006-04-12 12:17:45 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr.h,v 1.4 2007-01-04 08:42:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,10 +24,6 @@
 
 #include "rt_pb_gsd.h"
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 typedef struct {
 	void	*value;
 	char	name[80];
@@ -41,58 +37,55 @@ typedef struct {
 } attr_sItem;
 
 class GsdAttrNav;
+class CoWow;
 
 class GsdAttr {
-  public:
-    GsdAttr(
-      Widget                    a_parent_wid,
-      void			*a_parent_ctx,
-      void 			*a_object,
-      // void			(*close_cb) (attr_tCtx),
-      // void			(*redraw_cb) (attr_tCtx),
-      pb_gsd			*a_gsd,
-      int			a_edit_mode);
-    void 	*parent_ctx;
-    Widget	parent_wid;
-    char 	name[80];
-    pb_gsd	*gsd;
-    int		edit_mode;
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
-    GsdAttrNav	*attrnav;
-    Widget	msg_label;
-    Widget	cmd_prompt;
-    Widget	cmd_input;
-    Widget	attrnav_form;
-    Widget	cmd_ok;
-    Widget	cmd_cancel;
-    Widget	menubutton_copy;
-    Widget	menubutton_cut;
-    Widget	menubutton_paste;
-    Widget	menubutton_changevalue;
-    int		input_open;
-    void 	*object;
-    void       	(*close_cb) (void *);
-    int		(*save_cb) (void *);
-    int		(*help_cb) (void *, char *);
-    void	*client_data;
-    int         recall_idx;
-    static char	value_recall[30][160];
-    int		value_current_recall;
+ public:
+  void 		*parent_ctx;
+  char 		name[80];
+  pb_gsd	*gsd;
+  int		edit_mode;
+  GsdAttrNav	*attrnav;
+  int		input_open;
+  void 		*object;
+  void       	(*close_cb) (void *);
+  int		(*save_cb) (void *);
+  int		(*help_cb) (void *, char *);
+  void		*client_data;
+  int         	recall_idx;
+  static char	value_recall[30][160];
+  int		value_current_recall;
+  CoWow		*wow;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
-    void change_value();
+  GsdAttr( void *a_parent_ctx,
+	   void *a_object,
+	   pb_gsd *a_gsd,
+	   int a_edit_mode);
+  virtual ~GsdAttr();
+
+  virtual void message( char severity, char *message) {}
+  virtual void set_prompt( char *prompt) {}
+  virtual void change_value() {}
+
+  void activate_exit();
+  void activate_help();
+  void activate_copy();
+  void activate_cut();
+  void activate_paste();
+  void activate_print();
+  void activate_zoom_in();
+  void activate_zoom_out();
+  void activate_zoom_reset();
+  void activate_cmd_ok();
+  void activate_cmd_ca();
     
-    ~GsdAttr();
+  static void gsdattr_message( void *attr, char severity, char *message);
+  static void gsdattr_change_value_cb( void *attr_ctx);
+  static void cmd_close_apply_cb( void *ctx, void *data);
+  static void cmd_close_no_cb( void *ctx, void *data);
+
 };
 
-
-/*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

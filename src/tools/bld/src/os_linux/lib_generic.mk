@@ -133,6 +133,9 @@ clean_hpp_includes := $(patsubst %.hpp,clean_%.hpp, $(hpp_includes))
 
 
 lib_name   := libpwr_$(comp_name)
+ifneq ($(src_name),src)
+  lib_name := libpwr_$(comp_name)_$(src_name)
+endif
 export_lib := $(lib_dir)/$(lib_name)$(lib_ext)
 
 java_classes := $(addsuffix .class, $(basename $(java_sources)))
@@ -205,11 +208,12 @@ $(clean_pwsg) : clean_%.pwsg : %.pwsg
 	@ $(rm) $(rmflags) $(exe_dir)/$*.pwsg  
 
 $(export_lib) : $(objects)
-	@ if [ -e $(export_lib) ]; then \
-		$(rm) $(export_lib); \
-	fi
 	@ echo "Building archive $(notdir $(export_lib))"
 	@ $(ar) -cr $(export_lib) $(objects)
+
+#	@ if [ -e $(export_lib) ]; then \
+#		$(rm) $(export_lib); \
+#	fi
 
 -include $(source_dependencies)
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.3 2006-07-25 11:01:19 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.h,v 1.4 2007-01-04 08:42:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,42 +103,40 @@ class GsdAttrNavBrow {
     void brow_setup();
 };
 
+class CoWow;
+class CoWowTimer;
 
 //! The navigation area of the attribute editor.
 class GsdAttrNav {
   public:
-    GsdAttrNav(
-	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
-	char *xn_name,
-	pb_gsd  *xn_gsd,
-	int	xn_edit_mode,
-	Widget *w,
-	pwr_tStatus *status);
-    ~GsdAttrNav();
-
     void 		*parent_ctx;
-    Widget		parent_wid;
     pb_gsd		*gsd;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     GsdAttrNavBrow	*brow;
     attr_sItem  	*itemlist;
     int			item_cnt;
     int 		edit_mode;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*change_value_cb)( void *);
+    CoWow		*wow;
+    CoWowTimer		*trace_timerid;
+
+    GsdAttrNav(
+	void *xn_parent_ctx,
+	char *xn_name,
+	pb_gsd  *xn_gsd,
+	int	xn_edit_mode,
+	pwr_tStatus *status);
+    virtual ~GsdAttrNav();
+
+    virtual void set_inputfocus() {}
     
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( char *value_str);
     int check_attr_value( char **value);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void message( char sev, char *text);
-    void set_inputfocus();
     void force_trace_scan();
     int object_attr();
     void print( char *filename);
@@ -147,6 +145,17 @@ class GsdAttrNav {
     void unzoom();
     void get_zoom( double *zoom_factor);
 
+    static void trace_scan( void *data);
+    static int trace_scan_bc( brow_tObject object, void *p);
+    static int trace_connect_bc( brow_tObject object, char *name, char *attr, 
+				 flow_eTraceType type, void **p);
+    static int trace_disconnect_bc( brow_tObject object);
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int attr_string_to_value( int type_id, char *value_str, 
+				     void *buffer_ptr, int buff_size, int attr_size);
+    static void attrvalue_to_string( int type_id, void *value_ptr, 
+				     char *str, int size, int *len, char *format);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
 };
 
 class ItemPb {

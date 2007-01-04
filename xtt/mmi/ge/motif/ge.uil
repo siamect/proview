@@ -1,0 +1,2990 @@
+! 
+!  Proview   $Id: ge.uil,v 1.1 2007-01-04 08:39:37 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module rt_ge
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+value
+    bitmap_colors : color_table ( background color = ' ', 
+	foreground color = '*',
+	color ('red') = '.',
+	color ('green') = '=',
+	color ('blue') = 'x');
+
+    rect_icon : icon ( color_table=bitmap_colors,
+' ***************** ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' ***************** ');
+
+    rectrounded_icon : icon ( color_table=bitmap_colors,
+'   *************   ',
+'  *             *  ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+'  *             *  ',
+'   *************   ');
+
+    line_icon : icon ( color_table=bitmap_colors,
+'                *  ',
+'               *   ',
+'              *    ',
+'             *     ',
+'            *      ',
+'           *       ',
+'          *        ',
+'         *         ',
+'        *          ',
+'       *           ',
+'      *            ',
+'     *             ',
+'    *              ',
+'   *               ',
+'  *                ',
+' *                 ');
+
+    arc_icon : icon ( color_table=bitmap_colors,
+'       *****       ',
+'     **     **     ',
+'   **         **   ',
+'   *           *   ',
+'  *             *  ',
+'  *             *  ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+' *               * ',
+'  *             *  ',
+'  *             *  ',
+'   *           *   ',
+'   **         **   ',
+'     **     **     ',
+'       *****       ');
+
+    polyline_icon : icon ( color_table=bitmap_colors,
+'                   *',
+'                  **',
+'                 ** ',
+'                * * ',
+' *             *  * ',
+' **           *  *  ',
+' * *         *   *  ',
+'  * *       *    *  ',
+'  *  *     *    *   ',
+'  *   *   *     *   ',
+'  *    * *     *    ',
+'   *    *      *    ',
+'   *           *    ',
+'   *          *     ',
+'   *          *     ',
+'    *         *     ',
+'    *        *      ',
+'    **********      ');
+
+    conpoint_icon : icon ( color_table=bitmap_colors,
+'                    ',
+'    ***             ',
+'    ********* ** ** ',
+'    ***             ',
+'                    ');
+
+    scale_icon : icon ( color_table=bitmap_colors,
+'********************',
+'*                  *',
+'*                  *',
+'*                  *',
+'****************   *',
+'*              *   *',
+'*              *   *',
+'*              *   *',
+'************   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'*          *   *   *',
+'********************');
+
+    rotate_icon : icon ( color_table=bitmap_colors,
+'*                 **',
+'*         **   ** **',
+'*        *  * *  *  ',
+'*        *  * *  *  ',
+'*         *** *  *  ',
+'*   *       * *  *  ',
+'* ***       * *  *  ',
+'******     *   **   ',
+'* *** **            ',
+'*   *   *           ',
+'*        *          ',
+'*         *         ',
+'*         *         ',
+'*          *        ',
+'*          *        ',
+'*           *       ',
+'*           *       ',
+'*           *       ',
+'*****************   ');
+
+    flip_horiz_icon : icon ( color_table=bitmap_colors,
+'*                   ',
+'**                  ',
+'* *                 ',
+'*  *                ',
+'*   *               ',
+'*    *    *****     ',
+'*     *        **   ',
+'*      *         *  ',
+'*********         * ',
+'                  * ',
+'**************    * ',
+'                  * ',
+'*********         * ',
+'*      *    *    *  ',
+'*     *   ***  **   ',
+'*    *  *******     ',
+'*   *     ***       ',
+'*  *        *       ',
+'* *                 ',
+'**                  ',
+'*                   ');
+
+    flip_vert_icon : icon ( color_table=bitmap_colors,
+'       *****        ',
+'      *     *       ',
+'     *       *      ',
+'     *       *      ',
+'    *    *    *     ',
+'    *    *    *     ',
+'    *    *  *****   ',
+'    *    *   ***    ',
+'       * * *  *     ',
+'      ** * **       ',
+'     * * * * *      ',
+'    *  * * *  *     ',
+'   *   * * *   *    ',
+'  *    * * *    *   ',
+' *     * * *     *  ',
+'******** * ******** ',
+'                    ');
+
+    brightness_icon : icon ( color_table=bitmap_colors,
+'         *         ',
+'         *         ',
+'   *           *   ',
+'    *  *****  *    ',
+'      *     *      ',
+'     *       *     ',
+'    *         *    ',
+'    *         *    ',
+' ** *         * ** ',
+'    *         *    ',
+'    *         *    ',
+'     *       *     ',
+'      *     *      ',
+'    *  *****  *    ',
+'   *           *   ',
+'         *         ',
+'         *         ');
+
+    intensity_icon : icon ( color_table=bitmap_colors,
+' ***     *** ',
+'*...*   *===*',
+'*...*   *===*',
+'*...*   *===*',
+' ***     *** ',
+'             ',
+'     ***     ',
+'    *xxx*    ',
+'    *xxx*    ',
+'    *xxx*    ',
+'     ***     ');
+
+    shiftcolor_icon : icon ( color_table=bitmap_colors,
+'      *******        ',
+'    **       **      ',
+'   *                 ',
+'  *                  ',
+' *  ***     ***      ',
+' * *...*   *===*     ',
+'*  *...*   *===*     ',
+'*  *...*   *===*     ',
+'*   ***     ***      ',
+'*                    ',
+'*       ***         *',
+'*      *xxx*      ** ',
+' *     *xxx*    **** ',
+' *     *xxx*  *****  ',
+'  *     ***    ****  ',
+'   *           ***   ',
+'    **       **  *   ',
+'      *******        ');
+
+    arrow_left_icon : icon ( color_table=bitmap_colors,
+'          *',
+'        ***',
+'      *****',
+'    *******',
+'  *********',
+'***********',
+'  *********',
+'    *******',
+'      *****',
+'        ***',
+'          *');
+
+    arrow_right_icon : icon ( color_table=bitmap_colors,
+'*          ',
+'***        ',
+'*****      ',
+'*******    ',
+'*********  ',
+'***********',
+'*********  ',
+'*******    ',
+'*****      ',
+'***        ',
+'*          ');
+
+    linewidth1_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'   *                                     ',
+'  **                                     ',
+'   *                                     ',
+'   *       ******************************',
+'   *                                     ',
+'   *                                     ',
+'   *                                     ',
+'                                         ',
+'                                         ');
+    linewidth2_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'  ****                                   ',
+' *    *                                  ',
+'      *                                  ',
+'     *     ******************************',
+'   *       ******************************',
+'  *                                      ',
+' ******                                  ',
+'                                         ',
+'                                         ');
+    linewidth3_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'  ****                                   ',
+' *    *                                  ',
+'     *     ******************************',
+'      *    ******************************',
+'      *    ******************************',
+' *    *                                  ',
+'  ****                                   ',
+'                                         ',
+'                                         ');
+    linewidth4_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'     *                                   ',
+'    **                                   ',
+'   * *     ******************************',
+'  *  *     ******************************',
+' ******    ******************************',
+'     *     ******************************',
+'     *                                   ',
+'                                         ',
+'                                         ');
+    linewidth5_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+' *****                                   ',
+' *         ******************************',
+' *****     ******************************',
+'      *    ******************************',
+'      *    ******************************',
+' *    *    ******************************',
+'  ****                                   ',
+'                                         ',
+'                                         ');
+    linewidth6_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'  ****                                   ',
+' *         ******************************',
+' *         ******************************',
+' *****     ******************************',
+' *    *    ******************************',
+' *    *    ******************************',
+'  ****     ******************************',
+'                                         ',
+'                                         ');
+    linewidth7_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+' *****     ******************************',
+'     *     ******************************',
+'     *     ******************************',
+'    *      ******************************',
+'   *       ******************************',
+'   *       ******************************',
+'   *       ******************************',
+'                                         ',
+'                                         ');
+    linewidth8_icon : icon ( color_table=bitmap_colors,
+'                                         ',
+'  ****     ******************************',
+' *    *    ******************************',
+' *    *    ******************************',
+'  ****     ******************************',
+' *    *    ******************************',
+' *    *    ******************************',
+'  ****     ******************************',
+'           ******************************',
+'                                         ');
+    linetype1_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'******************************',
+'******************************',
+'                              ');
+    linetype2_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'**  **  **  **  **  **  **  **',
+'**  **  **  **  **  **  **  **',
+'                              ');
+    linetype3_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'****    ****    ****    ****  ',
+'****    ****    ****    ****  ',
+'                              ');
+    linetype4_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*****      ******      ****** ',
+'*****      ******      ****** ',
+'                              ');
+    linetype5_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'**     **     **      **      ',
+'**     **     **      **      ',
+'                              ');
+    linetype6_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*****  **  ******  **  ****** ',
+'*****  **  ******  **  ****** ',
+'                              ');
+    linetype7_icon : icon ( color_table=bitmap_colors,
+'                              ',
+'*********  **  **********  ** ',
+'*********  **  **********  ** ',
+'                              ');
+
+identifier
+	ge_ctx;
+procedure
+	ge_activate_exit(integer);
+	ge_activate_print(integer);
+	ge_activate_new(integer);
+	ge_activate_save(integer);
+	ge_activate_save_as(integer);
+	ge_activate_graph_attr(integer);
+	ge_activate_open(integer);
+	ge_activate_subgraphs(integer);
+	ge_activate_export_java(integer);
+	ge_activate_export_java_as(integer);
+	ge_activate_generate_web(integer);
+	ge_activate_creanextpage(integer);
+	ge_activate_nextpage(integer);
+	ge_activate_prevpage(integer);
+	ge_activate_pop(integer);
+	ge_activate_push(integer);
+	ge_activate_edit_polyline(integer);
+	ge_activate_scale_equal(integer);
+	ge_activate_move_vertical(integer);
+	ge_activate_move_horizontal(integer);
+	ge_activate_move_reset(integer);
+	ge_activate_align_vert_left(integer);
+	ge_activate_align_vert_right(integer);
+	ge_activate_align_vert_center(integer);
+	ge_activate_align_horiz_up(integer);
+	ge_activate_align_horiz_down(integer);
+	ge_activate_align_horiz_center(integer);
+	ge_activate_equid_horiz_left(integer);
+	ge_activate_equid_horiz_right(integer);
+	ge_activate_equid_horiz_center(integer);
+	ge_activate_equid_vert_up(integer);
+	ge_activate_equid_vert_down(integer);
+	ge_activate_equid_vert_center(integer);
+	ge_activate_select_cons(integer);
+	ge_activate_select_objects(integer);
+	ge_activate_group(integer);
+	ge_activate_ungroup(integer);
+	ge_activate_connect(integer);
+	ge_activate_connectsecond(integer);
+	ge_activate_objectattributes(integer);
+	ge_activate_show_grid(integer);
+	ge_activate_cut(integer);
+	ge_activate_copy(integer);
+	ge_activate_paste(integer);
+	ge_activate_rotate(integer);
+	ge_activate_rotate90(integer);
+	ge_activate_flip_vert(integer);
+	ge_activate_flip_horiz(integer);
+	ge_activate_change_text(integer);
+	ge_activate_change_name(integer);
+	ge_activate_command(integer);
+	ge_activate_rect(integer);
+	ge_activate_rectrounded(integer);
+	ge_activate_line(integer);
+	ge_activate_polyline(integer);
+	ge_activate_circle(integer);
+	ge_activate_text(integer);
+	ge_activate_annot(integer);
+	ge_activate_conpoint(integer);
+	ge_activate_fill(integer);
+	ge_activate_border(integer);
+	ge_activate_shadow(integer);
+	ge_activate_incr_lightness(integer);
+	ge_activate_decr_lightness(integer);
+	ge_activate_incr_intensity(integer);
+	ge_activate_decr_intensity(integer);
+	ge_activate_incr_shift(integer);
+	ge_activate_decr_shift(integer);
+	ge_activate_scale(integer);
+	ge_activate_grid(integer);
+	ge_activate_linewidth_1(integer);
+	ge_activate_linewidth_2(integer);
+	ge_activate_linewidth_3(integer);
+	ge_activate_linewidth_4(integer);
+	ge_activate_linewidth_5(integer);
+	ge_activate_linewidth_6(integer);
+	ge_activate_linewidth_7(integer);
+	ge_activate_linewidth_8(integer);
+	ge_activate_linetype1(integer);
+	ge_activate_linetype2(integer);
+	ge_activate_linetype3(integer);
+	ge_activate_linetype4(integer);		
+	ge_activate_linetype5(integer);
+	ge_activate_linetype6(integer);
+	ge_activate_linetype7(integer);
+	ge_activate_textsize_0(integer);
+	ge_activate_textsize_1(integer);
+	ge_activate_textsize_2(integer);
+	ge_activate_textsize_3(integer);
+	ge_activate_textsize_4(integer);
+	ge_activate_textsize_5(integer);
+	ge_activate_textbold(integer);
+	ge_activate_gridsize_1(integer);
+	ge_activate_gridsize_2(integer);
+	ge_activate_gridsize_3(integer);
+	ge_activate_gridsize_4(integer);
+	ge_activate_preview_start(integer);
+	ge_activate_preview_stop(integer);
+	ge_activate_zoom_in(integer);
+	ge_activate_zoom_out(integer);
+	ge_activate_zoom_reset(integer);
+	ge_activate_help(integer);
+	ge_create_cursor_position(integer);
+	ge_create_msg_label(integer);
+	ge_create_cmd_prompt(integer);
+	ge_create_cmd_input(integer);
+	ge_create_graph_form(integer);
+	ge_create_main_pane(integer);
+	ge_create_palette_pane(integer);
+	ge_create_widget_cb(integer);
+	ge_activate_concorner_right(integer); 
+	ge_activate_concorner_rounded(integer); 
+	ge_activate_round_amount_1(integer); 
+	ge_activate_round_amount_2(integer); 
+	ge_activate_round_amount_3(integer); 
+	ge_activate_round_amount_4(integer); 
+	ge_activate_round_amount_5(integer); 
+	ge_activate_contype_straight(integer); 
+	ge_activate_contype_routed(integer); 
+	ge_activate_contype_stronearr(integer); 
+	ge_activate_contype_stepdiv(integer); 
+	ge_activate_contype_stepconv(integer); 
+	ge_activate_contype_transdiv(integer); 
+	ge_activate_contype_transconv(integer); 
+	ge_activate_condir_center(integer); 
+	ge_activate_condir_left(integer); 
+	ge_activate_condir_right(integer); 
+	ge_activate_condir_up(integer); 
+	ge_activate_condir_down(integer); 
+	ge_activate_background_color(integer); 
+	ge_create_india_label(integer); 
+	ge_create_india_text(integer); 
+	ge_activate_india_ok(integer); 
+	ge_activate_india_cancel(integer); 
+	ge_activate_confirm_ok(integer); 
+	ge_activate_confirm_cancel(integer); 
+	ge_activate_yesnodia_yes(integer); 
+	ge_activate_yesnodia_no(integer); 
+	ge_activate_yesnodia_cancel(integer); 
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  ge_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	ge_menu;
+     XmPanedWindow     main_pane;
+  };
+};
+
+
+object main_pane : XmPanedWindow
+{
+  arguments
+  {
+!    XmNtraversalOn		= false;
+  };
+  controls
+  {
+     XmRowColumn palette_row;
+     XmForm     form;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure ge_create_main_pane( ge_ctx);
+  };
+};
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+!     XmNresizePolicy = XmRESIZE_ANY;
+!     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow palette_pane;
+     XmPanedWindow graph_form;
+     XmLabel	msg_label;
+     XmLabel	cursor_position;
+     XmText	cmd_input;
+     XmLabel	cmd_prompt;
+  };
+};
+
+object ge_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry;
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton edit_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton connection_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("New");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_new(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Open...");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_open(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Save");
+            XmNmnemonic = keysym('S');
+	    XmNaccelerator = "Ctrl<Key>S";
+	    XmNacceleratorText = compound_string('Ctrl+S');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_save(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Save as...");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_save_as(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Graph attributes...");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_graph_attr(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Loaded SubGraphs");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_subgraphs(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Export Java");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_export_java(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Export Java as...");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_export_java_as(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Generate Web");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_generate_web(ge_ctx);
+          };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("Page");
+             XmNfontList	    = menu_font;
+             XmNmnemonic = keysym('D');
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+              controls
+              {  
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("Next page");
+                    XmNfontList	   = menu_font;
+                    XmNmnemonic = keysym('N');
+	            XmNaccelerator = "Ctrl<Key>N";
+	            XmNacceleratorText = compound_string('Ctrl+N');
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure ge_activate_nextpage(ge_ctx);
+                  };
+                };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("Previous page");
+                    XmNmnemonic = keysym('r');
+	            XmNaccelerator = "Ctrl<Key>J";
+	            XmNacceleratorText = compound_string('Ctrl+J');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure ge_activate_prevpage(ge_ctx);
+                  };
+                };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("Create next page");
+                    XmNfontList	   = menu_font;
+	            XmNaccelerator = "Shift Ctrl<Key>N";
+	            XmNacceleratorText = compound_string('Shift+Ctrl+N');
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure ge_activate_creanextpage(ge_ctx);
+                  };
+                };
+              };
+            };
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Print");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_print(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_exit(ge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object edit_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Edit");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Cut");
+            XmNmnemonic = keysym('a');
+	    XmNaccelerator = "Ctrl<Key>X";
+	    XmNacceleratorText = compound_string('Ctrl+X');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_cut(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy");
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>C";
+	    XmNacceleratorText = compound_string('Ctrl+C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_copy(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Paste");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_paste(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Rotate...");
+            XmNmnemonic = keysym('R');
+	    XmNaccelerator = "Ctrl<Key>R";
+	    XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_rotate(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Edit polyline");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_edit_polyline(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Change text");
+            XmNmnemonic = keysym('H');
+	    XmNaccelerator = "Ctrl<Key>T";
+	    XmNacceleratorText = compound_string('Ctrl+T');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_change_text(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Change name");
+            XmNmnemonic = keysym('a');
+!	    XmNaccelerator = "Ctrl<Key>T";
+!	    XmNacceleratorText = compound_string('Ctrl+T');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_change_name(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Command");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>B";
+	    XmNacceleratorText = compound_string('Ctrl+B');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_command(ge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Set background color");
+            XmNmnemonic = keysym('g');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_background_color(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Pop");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_pop(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Push");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_push(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("ScaleEqual");
+            XmNmnemonic = keysym('E');
+	    XmNaccelerator = "Ctrl<Key>E";
+	    XmNacceleratorText = compound_string('Ctrl+E');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_scale_equal(ge_ctx);
+          };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("MoveRestrictions");
+             XmNfontList	    = menu_font;
+             XmNmnemonic = keysym('D');
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+              controls
+              {  
+	  	XmPushButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Horizontal");
+                    XmNmnemonic = keysym('H');
+	            XmNaccelerator = "Ctrl<Key>H";
+	            XmNacceleratorText = compound_string('Ctrl+H');
+                    XmNfontList	    = menu_font;
+	          };
+	          callbacks
+	          {
+		    XmNactivateCallback = procedure ge_activate_move_horizontal(ge_ctx);
+	          };
+	        }; 
+	  	XmPushButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Vertical");
+                    XmNmnemonic = keysym('V');
+	            XmNaccelerator = "Ctrl<Key>G";
+	            XmNacceleratorText = compound_string('Ctrl+G');
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNactivateCallback = procedure ge_activate_move_vertical(ge_ctx);
+	          };
+	        }; 
+	  	XmPushButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("No");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNactivateCallback = procedure ge_activate_move_reset(ge_ctx);
+	          };
+	        }; 
+	      }; 
+	    }; 
+	  }; 
+	}; 
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("Align");
+             XmNmnemonic = keysym('D');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+              controls
+              {  
+      	        XmCascadeButton
+     	        {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("Vertical");
+                    XmNmnemonic = keysym('D');
+                    XmNfontList	    = menu_font;
+                  };
+                  controls
+                  {
+                    XmPulldownMenu
+                    {
+                      controls
+                      {  
+	  	        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Left");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_vert_left(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+	  	        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Right");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_vert_right(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+	  	        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Center");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_vert_center(ge_ctx);
+	                  };
+	                }; 
+	              }; 
+	            }; 
+	          };
+	        };
+      	        XmCascadeButton
+     	        {
+                  arguments
+                  {
+                     XmNlabelString = compound_string("Horizontal");
+                     XmNmnemonic = keysym('D');
+                     XmNfontList	    = menu_font;
+                  };
+                  controls
+                  {
+                    XmPulldownMenu
+                    {
+                      controls
+                      {
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Top");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_horiz_up(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Bottom");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_horiz_down(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Center");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_align_horiz_center(ge_ctx);
+	                  };
+	                }; 
+	              };
+                    };
+	          };
+	        };
+	      };
+	    };
+	  };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("EquiDistance");
+             XmNmnemonic = keysym('D');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+              controls
+              {  
+      	        XmCascadeButton
+     	        {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("Horizontal");
+                    XmNmnemonic = keysym('D');
+                    XmNfontList	    = menu_font;
+                  };
+                  controls
+                  {
+                    XmPulldownMenu
+                    {
+                      controls
+                      {
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Left");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_horiz_left(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Right");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_horiz_right(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Center");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_horiz_center(ge_ctx);
+	                  };
+	                }; 
+	              };
+                    };
+	          };
+                };
+      	        XmCascadeButton
+     	        {
+                  arguments
+                  {
+                     XmNlabelString = compound_string("Vertical");
+                     XmNmnemonic = keysym('D');
+                     XmNfontList	    = menu_font;
+                  };
+                  controls
+                  {
+                    XmPulldownMenu
+                    {
+                      controls
+                      {
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Top");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_vert_up(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Bottom");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_vert_down(ge_ctx);
+	                  };
+	                }; 
+		        XmPushButton
+		        {
+	                  arguments
+	                  {
+	                    XmNlabelString = compound_string("Center");
+                            XmNfontList	    = menu_font;
+		          };
+	                  callbacks
+	                  {
+		            XmNactivateCallback = procedure ge_activate_equid_vert_center(ge_ctx);
+	                  };
+	                }; 
+	              }; 
+	            }; 
+	          };
+	        };
+	      };
+            };
+	  };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Select all connections");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_select_cons(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Select all objects");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_select_objects(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Group");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_group(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Ungroup");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_ungroup(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Connect");
+            XmNfontList	   = menu_font;
+            XmNaccelerator = "Ctrl<Key>Q";
+            XmNacceleratorText = compound_string('Ctrl+Q');
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_connect(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Connect second");
+            XmNfontList	   = menu_font;
+            XmNaccelerator = "Ctrl<Key>W";
+            XmNacceleratorText = compound_string('Ctrl+W');
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_connectsecond(ge_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Object attributes");
+            XmNfontList	   = menu_font;
+            XmNaccelerator = "Ctrl<Key>A";
+            XmNacceleratorText = compound_string('Ctrl+A');
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_objectattributes(ge_ctx);
+          };
+        };
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Show grid");
+
+            XmNmnemonic = keysym('h');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 7;
+            XmNaccelerator = "Ctrl<Key>D";
+            XmNacceleratorText = compound_string('Ctrl+D');
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_show_grid(ge_ctx);
+            MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+          };
+        };
+       };
+    };
+  };
+};
+
+object connection_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Connections");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("ConPoint direction");
+             XmNmnemonic = keysym('D');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+	      arguments 
+	      { 
+	        XmNradioBehavior = true; 
+	        XmNradioAlwaysOne = true;
+              };
+              controls
+              {
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Center");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_condir_center(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Left");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_condir_left(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Right");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_condir_right(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Up");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_condir_up(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Down");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_condir_down(ge_ctx);
+	          };
+	        }; 
+	      };
+            };
+	  };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("Corners");
+             XmNmnemonic = keysym('D');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+	      arguments 
+	      { 
+	        XmNradioBehavior = true; 
+	        XmNradioAlwaysOne = true;
+              };
+              controls
+              {
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Right");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_concorner_right(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Rounded");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_concorner_rounded(ge_ctx);
+	          };
+	        }; 
+	      };
+            };
+	  };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("CornerRoundAmount");
+             XmNmnemonic = keysym('D');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+	      arguments 
+	      { 
+	        XmNradioBehavior = true; 
+	        XmNradioAlwaysOne = true;
+              };
+              controls
+              {
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("0.2");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_round_amount_1(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("0.5");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_round_amount_2(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("1.0");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_round_amount_3(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("2.0");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_round_amount_4(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("4.0");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_round_amount_5(ge_ctx);
+	          };
+	        }; 
+	      };
+            };
+	  };
+        };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("Type");
+             XmNmnemonic = keysym('o');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+	      arguments 
+	      { 
+	        XmNradioBehavior = true; 
+	        XmNradioAlwaysOne = true;
+              };
+              controls
+              {
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Straight");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_straight(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Routed");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_routed(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("StraightOneArrow");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_stronearr(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("StepDiverge");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_stepdiv(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("StepConverge");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_stepconv(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("TransDiverge");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_transdiv(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("TransConverge");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_contype_transconv(ge_ctx);
+	          };
+	        }; 
+	      };
+            };
+	  };
+        };
+      };
+    };
+  };
+};
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("View");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Preview");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_preview_start(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Preview close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_preview_stop(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom in");
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_zoom_in(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom out");
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_zoom_out(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom reset");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_zoom_reset(ge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure ge_activate_help(ge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object palette_row : XmRowColumn
+{
+   arguments
+   {
+     XmNtraversalOn		= false;
+     XmNorientation		= XmHORIZONTAL;
+     XmNpacking			= XmPACK_TIGHT;
+     XmNnumColumns		= 2;
+!     XmNheight			= 10;
+!     XmNleftAttachment 		= XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+!     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = rect_icon;
+            XmNmnemonic = keysym('L');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_rect(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = rectrounded_icon;
+            XmNmnemonic = keysym('L');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_rectrounded(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = line_icon;
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_line(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = polyline_icon;
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_polyline(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arc_icon;
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_circle(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Text");
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_text(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("An");
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_annot(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+!  	    XmNlabelString = compound_string("Connection point");
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = conpoint_icon;
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_conpoint(ge_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Fill");
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_fill(ge_ctx);
+          };
+        };
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Border");
+            XmNmnemonic = keysym('s');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_border(ge_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("3D");
+            XmNmnemonic = keysym('s');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_shadow(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_left_icon;
+!  	    XmNlabelString = compound_string("L-");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_decr_lightness(ge_ctx);
+          };
+	};
+        XmLabel
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = brightness_icon;
+!	    XmNmarginWidth = 5;
+	  };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_right_icon;
+!  	    XmNlabelString = compound_string("L+");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_incr_lightness(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_left_icon;
+!  	    XmNlabelString = compound_string("I-");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_decr_intensity(ge_ctx);
+          };
+	};
+        XmLabel
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = intensity_icon;
+!	    XmNmarginWidth = 5;
+	  };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_right_icon;
+!  	    XmNlabelString = compound_string("I+");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_incr_intensity(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+ 	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_left_icon;
+! 	    XmNlabelString = compound_string("C-");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_decr_shift(ge_ctx);
+          };
+	};
+        XmLabel
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = shiftcolor_icon;
+!	    XmNmarginWidth = 5;
+	  };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = arrow_right_icon;
+!  	    XmNlabelString = compound_string("C+");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_incr_shift(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = scale_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_scale(ge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = rotate_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_rotate90(ge_ctx);
+          };
+	};
+
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = flip_vert_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_flip_vert(ge_ctx);
+          };
+	};
+
+        XmPushButton
+        {
+          arguments
+          {
+	    XmNlabelType = XmPIXMAP;
+	    XmNlabelPixmap = flip_horiz_icon;
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure ge_activate_flip_horiz(ge_ctx);
+          };
+	};
+
+        XmOptionMenu      
+	{
+   	  arguments
+   	  {
+            XmNlabelString = compound_string("Line");
+!            XmNmenuHistory = XmPushButton current_session;
+!            XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+!	        XmPushButton	current_session;
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth1_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_1(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth2_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_2(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth3_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_3(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth4_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_4(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth5_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_5(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth6_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_6(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth7_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_7(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linewidth8_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linewidth_8(ge_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
+        XmOptionMenu      
+	{
+   	  arguments
+   	  {
+!            XmNlabelString = compound_string("LineType");
+!            XmNmenuHistory = XmPushButton current_session;
+!            XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+!	        XmPushButton	current_session;
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype1_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype1(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype2_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype2(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype3_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype3(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype4_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype4(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype5_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype5(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype6_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype6(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+	            XmNlabelType = XmPIXMAP;
+	            XmNlabelPixmap = linetype7_icon;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_linetype7(ge_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
+        XmOptionMenu      
+	{
+   	  arguments
+   	  {
+            XmNlabelString = compound_string("Grid");
+!            XmNmenuHistory = XmPushButton current_session;
+!            XmNfontList	    = menu_font;
+	    XmNuserData = 2;
+	  };  
+  	  callbacks
+   	  {
+   	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+!	        XmPushButton	current_session;
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("1.0");
+                    XmNfontList	    = menu_font;
+		    XmNuserData = 3;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_gridsize_4(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.5");
+                    XmNfontList	    = menu_font;
+		    XmNuserData = 4;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_gridsize_3(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.2");
+                    XmNfontList	    = menu_font;
+		    XmNuserData = 5;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_gridsize_2(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("0.1");
+                    XmNfontList	    = menu_font;
+		    XmNuserData = 6;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_gridsize_1(ge_ctx);
+        	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Snap");
+            XmNfontList	   = menu_font;
+	    XmNuserData    = 1;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_grid(ge_ctx);
+   	    MrmNcreateCallback = procedure ge_create_widget_cb(ge_ctx);
+          };
+	};
+        XmOptionMenu      
+	{
+   	  arguments
+   	  {
+            XmNlabelString = compound_string("TextSize");
+!            XmNmenuHistory = XmPushButton current_session;
+!            XmNfontList	    = menu_font;
+	  };  
+  	  callbacks
+   	  {
+!   	    MrmNcreateCallback = procedure ute_create_batchoptmenu( ute_ctx) ;
+   	  };
+   	  controls
+   	  {
+       	    XmPulldownMenu
+            {
+              controls
+              {
+!	        XmPushButton	current_session;
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("8");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_0(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("10");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_1(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("12");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_2(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("14");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_3(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("18");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_4(ge_ctx);
+		  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+                    XmNlabelString = compound_string("24");
+                    XmNfontList	    = menu_font;
+	          };
+		  callbacks
+		  {
+                    XmNactivateCallback = procedure ge_activate_textsize_5(ge_ctx);
+		  };
+	        };
+	      };
+	    };
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Bold");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure ge_activate_textbold(ge_ctx);
+          };
+	};
+   };
+};
+
+object palette_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNwidth			= 200;
+     XmNleftAttachment 		= XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNtopWidget		= XmRowColumn palette_row;
+     XmNtraversalOn		= false;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_palette_pane( ge_ctx);
+   };
+};
+
+object graph_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_WIDGET;
+     XmNleftWidget		= XmPanedWindow palette_pane;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNtopWidget		= XmRowColumn palette_row;
+     XmNtraversalOn		= false;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_graph_form( ge_ctx);
+   };
+};
+
+object cursor_position : XmLabel
+{
+   arguments
+   {
+     XmNwidth 			= 280;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNrightOffset		= 30;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_cursor_position( ge_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_WIDGET;
+     XmNrightWidget		= XmLabel cursor_position;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_msg_label( ge_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow graph_form;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNwidth			= 150;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_cmd_prompt ( ge_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 80;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow graph_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure ge_create_cmd_input( ge_ctx);
+   };
+};
+
+
+!
+!-----------------------------------------------------------------
+! 
+! Input Dialog box
+!
+!________________________________________________________________
+object   input_dialog : XmFormDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+     XmNwidth = 400;
+     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Graph name";
+     XmNdefaultButton = india_ok;
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+     XmNtextFontList	   	= menu_font;
+  };
+  controls
+  {
+     XmLabel	    india_label;
+     XmTextField    india_text;
+     XmPushButton   india_ok;
+     XmPushButton   india_cancel;
+  };
+}; 
+
+object india_label : XmLabel
+{
+  arguments
+  {
+     XmNx = 10;
+     XmNy = 10;
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure ge_create_india_label( ge_ctx); 
+  };
+};
+
+object india_text : XmTextField
+{
+  arguments
+  {
+     XmNx = 150;
+     XmNy = 10;
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure ge_create_india_text( ge_ctx); 
+  };
+};
+
+object india_ok : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 20;
+     XmNy = 100;
+     XmNlabelString = "OK";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure ge_activate_india_ok( ge_ctx); 
+  };
+};
+
+object india_cancel : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 280;
+     XmNy = 100;
+     XmNlabelString = "Cancel";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure ge_activate_india_cancel( ge_ctx); 
+  };
+};
+
+
+!
+! Confirm dialog
+object   confirm_dialog : XmQuestionDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+!     XmNwidth = 400;
+!     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Confirm";
+     XmNokLabelString = "Yes";
+     XmNcancelLabelString = "No";
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+  };
+  callbacks
+  { 
+     XmNokCallback = procedure ge_activate_confirm_ok( ge_ctx); 
+     XmNcancelCallback = procedure ge_activate_confirm_cancel( ge_ctx); 
+  };
+}; 
+
+!
+! YesNo dialog
+!
+! Confirm dialog
+object   yesno_dialog : XmQuestionDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+!     XmNwidth = 400;
+!     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Confirm";
+     XmNokLabelString = "Yes";
+     XmNcancelLabelString = "No";
+     XmNhelpLabelString = "Cancel";
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+  };
+  callbacks
+  { 
+     XmNokCallback = procedure ge_activate_yesnodia_yes( ge_ctx); 
+     XmNcancelCallback = procedure ge_activate_yesnodia_no( ge_ctx); 
+     XmNhelpCallback = procedure ge_activate_yesnodia_cancel( ge_ctx);
+  };
+}; 
+
+
+end module;
