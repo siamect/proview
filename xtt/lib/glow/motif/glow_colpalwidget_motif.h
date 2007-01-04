@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget.h,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_colpalwidget_motif.h,v 1.1 2007-01-04 08:08:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,8 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef curve_widget_h
-#define curve_widget_h
+#ifndef colpal_widget_h
+#define colpal_widget_h
 
 #if defined __cplusplus
   extern "C" {
@@ -37,35 +37,36 @@
 typedef struct {
 	XmOffsetPtr	*offset;
 	int		reserved;
-	} curveClassPart;
+	} colpalClassPart;
 
 typedef struct {
 	CoreClassPart	core_class;
 	CompositeClassPart composite_class;
-	curveClassPart	curve_class;
-	} CurveClassRec, *CurveWidgetClass;
+	colpalClassPart	colpal_class;
+	} ColPalClassRec, *ColPalWidgetClass;
 
 typedef struct {
-	void		*curve_ctx;
+	void		*colpal_ctx;
+	void		*draw_ctx;
         int		(*init_proc)(GlowCtx *ctx, void *clien_data);
 	int		is_navigator;
 	void		*client_data;
-	Widget		main_curve_widget;
+	Widget		main_colpal_widget;
 	Widget		scroll_h;
 	Widget		scroll_v;
 	Widget		form;
-	} CurvePart;
+	} ColPalPart;
 
 typedef struct {
 	CorePart	core;
 	CompositePart	composite;
-	CurvePart	curve;
-	} CurveRec, *CurveWidget;
+	ColPalPart	colpal;
+	} ColPalRec, *ColPalWidget;
 
 
 
 
-Widget CurveCreate( 
+Widget ColPalCreate( 
 	Widget parent, 
 	char *name, 
 	ArgList args, 
@@ -74,20 +75,20 @@ Widget CurveCreate(
 	void *client_data
 	);
 
-Widget CurveCreateNav( Widget parent, char *name, ArgList args, int argCount, 
-	Widget main_curve);
+Widget ColPalCreateNav( Widget parent, char *name, ArgList args, int argCount, 
+	Widget main_colpal);
 
-Widget ScrolledCurveCreate( 
+Widget ScrolledColPalCreate( 
 	Widget parent, 
 	char *name, 
 	ArgList args, 
 	int argCount,
         int (*init_proc)(GlowCtx *ctx, void *client_data),
 	void *client_data, 
-	Widget *curve_w
+	Widget *colpal_w
 );	
 
-void CurveCtxFromWidget( Widget w, void **ctx);
+void ColPalCtxFromWidget( Widget w, void **ctx);
 
 #if defined OS_VMS
 #pragma member_alignment restore

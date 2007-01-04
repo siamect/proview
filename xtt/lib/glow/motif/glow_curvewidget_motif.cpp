@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget.cpp,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_curvewidget_motif.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,8 +39,8 @@
 
 #include "glow.h"
 #include "glow_curvectx.h"
-#include "glow_draw.h"
-#include "glow_curvewidget.h"
+#include "glow_draw_xlib.h"
+#include "glow_curvewidget_motif.h"
 
 typedef struct {
 	Widget  curve;
@@ -349,13 +349,12 @@ static void Initialize( Widget rec, Widget new_widget, ArgList arg, int *args)
 static void Redisplay( Widget w, XEvent *event, Region region)
 {
 
-  draw_event_handler( (CurveCtx *)((CurveWidget)w)->curve.curve_ctx, *event);
+  ((GlowDrawXLib *)((CurveCtx *)((CurveWidget)w)->curve.curve_ctx)->gdraw)->event_handler( *event);
 }
 
 static void Notify( Widget w, XEvent *event)
 {
-  
-  draw_event_handler( (CurveCtx *)((CurveWidget)w)->curve.curve_ctx, *event);
+  ((GlowDrawXLib *)((CurveCtx *)((CurveWidget)w)->curve.curve_ctx)->gdraw)->event_handler( *event);
 }
 
 static Boolean SetValues( Widget old, Widget request, Widget new_widget)
@@ -367,7 +366,7 @@ static void Destroy( Widget w)
 {
   if ( ((CurveWidget) w)->curve.is_navigator)
     return;
-  glow_draw_delete( (GlowCtx *)((CurveWidget)w)->curve.curve_ctx);
+  delete (GlowDraw *)((CurveWidget)w)->curve.draw_ctx;
 }
 
 static void Realize( Widget w, unsigned long *mask, XSetWindowAttributes *swa)
@@ -383,14 +382,16 @@ static void Realize( Widget w, unsigned long *mask, XSetWindowAttributes *swa)
       CurveWidget main_curve = (CurveWidget) ((CurveWidget) w)->curve.main_curve_widget;
 
       ((CurveWidget) w)->curve.curve_ctx = main_curve->curve.curve_ctx;
-      glow_draw_init_nav( w, main_curve->curve.curve_ctx);
+      ((CurveWidget) w)->curve.draw_ctx = main_curve->curve.draw_ctx;
+      ((GlowDrawXLib *)((CurveWidget) w)->curve.draw_ctx)->init_nav( w);
     }
   }
   else
   {
     if ( !((CurveWidget) w)->curve.curve_ctx)
     {
-      glow_draw_init( w, &((CurveWidget) w)->curve.curve_ctx, 
+      ((CurveWidget) w)->curve.draw_ctx = new GlowDrawXLib( w, 
+	        &((CurveWidget) w)->curve.curve_ctx, 
 		curve_init_proc, 
 		((CurveWidget) w)->curve.client_data,
 		glow_eCtxType_Curve);
