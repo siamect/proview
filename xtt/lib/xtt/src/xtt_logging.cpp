@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.5 2005-11-22 12:16:50 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.6 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,7 +48,6 @@
 # include <time.h>
 #endif
 
-extern "C" {
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -57,21 +56,9 @@ extern "C" {
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_dcli.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-#include "rt_xtt.h"
 #include "xtt_xnav.h"
 #include "xtt_logging.h"
 #include "rt_xnav_msg.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.6 2005-12-06 10:46:44 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.7 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,31 +23,16 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
-
 #include "ge_attr.h"
 #include "ge_subpalette.h"
 
@@ -159,8 +144,6 @@ extern "C" {
 #define SUBPALETTE__SUCCESS 1
 
 static char null_str[] = "";
-
-static int subpalette_init_brow_cb( FlowCtx *fctx, void *client_data);
 
 //
 // Convert attribute string to value
@@ -331,24 +314,14 @@ void SubPaletteBrow::allocate_pixmaps()
 //
 SubPalette::SubPalette(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	parent_ctx(xn_parent_ctx),
 	trace_started(0),
 	message_cb(NULL), traverse_focus_cb(NULL), set_focus_cb(NULL),
 	menu_tree(NULL), path_cnt(0), displayed(0)
 {
   strcpy( name, xn_name);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	subpalette_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  // Create the root item
-  *w = form_widget;
-
   *status = 1;
 }
 
@@ -357,39 +330,11 @@ SubPalette::SubPalette(
 //
 SubPalette::~SubPalette()
 {
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 SubPaletteBrow::~SubPaletteBrow()
 {
   free_pixmaps();
-}
-
-void SubPalette::set_inputfocus( int focus)
-{
-//  brow_SetInputFocus( brow->ctx);
-  Arg 		args[2];
-  Pixel 	bg, fg;
-
-  if ( !displayed)
-    return;
-
-  XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
-  if ( !focus)
-  {
-    XtSetArg(args[0], XmNborderColor, bg);
-    XtSetValues( form_widget, args, 1);
-  }
-  else
-  {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-    XtSetArg(args[0], XmNborderColor, fg);
-    XtSetValues( form_widget, args, 1);
-  }
 }
 
 //
@@ -444,6 +389,22 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
   subpalette->message( ' ', null_str);
   switch ( event->event)
   {
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( subpalette->brow->ctx, 0.9);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( subpalette->brow->ctx, -0.9);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( subpalette->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( subpalette->brow->ctx, -0.1);
+      break;
+    }
     case flow_eEvent_Key_Up:
     {
       brow_tNode	*node_list;
@@ -589,13 +550,27 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       brow_tNode	*node_list;
       int		node_count;
+      brow_tObject	object;
 
       brow_GetSelectedNodes( subpalette->brow->ctx, &node_list, &node_count);
       if ( !node_count)
         break;
       if ( !node_count)
         break;
-      brow_GetUserData( node_list[0], (void **)&item);
+
+      if ( brow_IsOpen( node_list[0]))
+        // Close this node
+        object = node_list[0];
+      else {
+        // Close parent
+        sts = brow_GetParent( subpalette->brow->ctx, node_list[0], &object);
+        if ( EVEN(sts)) {
+          free( node_list);
+          return 1;
+        }
+      }
+
+      brow_GetUserData( object, (void **)&item);
       switch( item->type)
       {
         case subpalette_eItemType_LocalSubGraphs: 
@@ -608,10 +583,10 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
           ;
       }
       brow_SelectClear( subpalette->brow->ctx);
-      brow_SetInverse( node_list[0], 1);
-      brow_SelectInsert( subpalette->brow->ctx, node_list[0]);
-      if ( !brow_IsVisible( subpalette->brow->ctx, node_list[0], flow_eVisible_Full))
-        brow_CenterObject( subpalette->brow->ctx, node_list[0], 0.25);
+      brow_SetInverse( object, 1);
+      brow_SelectInsert( subpalette->brow->ctx, object);
+      if ( !brow_IsVisible( subpalette->brow->ctx, object, flow_eVisible_Full))
+        brow_CenterObject( subpalette->brow->ctx, object, 0.25);
       free( node_list);
       break;
     }
@@ -1013,6 +988,14 @@ void SubPaletteBrow::brow_setup()
 	subpalette_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
 	subpalette_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	subpalette_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	subpalette_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	subpalette_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	subpalette_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
 	subpalette_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, 
@@ -1025,7 +1008,7 @@ void SubPaletteBrow::brow_setup()
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int subpalette_init_brow_cb( FlowCtx *fctx, void *client_data)
+int SubPalette::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   SubPalette *subpalette = (SubPalette *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;

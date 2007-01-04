@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.12 2006-06-15 12:17:40 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.13 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,10 +20,6 @@
 #ifndef xtt_item_h
 #define xtt_item_h
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -33,10 +29,6 @@ extern "C" {
 
 #ifndef flow_browctx_h
 #include "flow_browapi.h"
-#endif
-
-#ifndef rt_trace_h
-#include "rt_trace.h"
 #endif
 
 #include "rt_xnav_msg.h"
@@ -507,7 +499,4 @@ class ItemMask : public ItemBaseAttr {
   int element;
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif

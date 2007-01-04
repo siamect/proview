@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.cpp,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_subgraphs.cpp,v 1.5 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,31 +24,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-extern "C" {
-#include "flow_x.h"
-}
 
 #include "ge_attr.h"
 #include "ge_subgraphs.h"
@@ -67,61 +52,12 @@ extern "C" {
 
 static char null_str[] = "";
 
-static int subgraphs_init_brow_cb( FlowCtx *fctx, void *client_data);
 static void subgraphs_attr_close_cb( Attr *attrctx);
 static void subgraphs_attr_redraw_cb( Attr *attrctx);
-static void subgraphs_trace_scan( SubGraphs *subgraphs);
 static int subgraphs_trace_scan_bc( brow_tObject object, void *p);
 static int subgraphs_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, /* flow_eDrawType color, */ void **p);
 static int subgraphs_trace_disconnect_bc( brow_tObject object);
-
-static void subgraphs_create_sg_form( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-  subgraphs->subgraphs_form = w;
-}
-
-static void subgraphs_activate_exit( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-  if ( subgraphs->close_cb)
-    (subgraphs->close_cb)( subgraphs);
-  else
-    delete subgraphs;
-}
-
-static void subgraphs_activate_attr( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-  ItemSubGraph 		*item;
-  int			sts;
-
-  sts = subgraphs->get_select( (void **) &item);
-  if ( ODD(sts))
-    subgraphs->edit_attributes( item->nodeclass);
-}
-
-static void subgraphs_activate_set_extern( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-  ItemSubGraph 		*item;
-  int			sts;
-
-  sts = subgraphs->get_select( (void **) &item);
-  if ( ODD(sts))
-    item->set_extern( 1);
-}
-
-static void subgraphs_activate_set_intern( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-  ItemSubGraph 		*item;
-  int			sts;
-
-  sts = subgraphs->get_select( (void **) &item);
-  if ( ODD(sts))
-    item->set_extern( 0);
-}
-
-static void subgraphs_activate_help( Widget w, SubGraphs *subgraphs, XmAnyCallbackStruct *data)
-{
-}
 
 //
 // Convert attribute string to value
@@ -194,98 +130,14 @@ void SubGraphsBrow::allocate_pixmaps()
 //
 SubGraphs::SubGraphs(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	void *xn_growctx,
-	Widget *w,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	parent_ctx(xn_parent_ctx),
 	trace_started(0), message_cb(NULL), close_cb(NULL), 
 	grow_ctx(xn_growctx), attrlist(NULL)
 {
-  char		uid_filename[120] = {"pwr_exe:ge_subgraphs.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  char 		title[80];
-  int		i;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  char		name[] = "Proview/R Navigator";
-
-  static MrmRegisterArg	reglist[] = {
-        { "subgraphs_ctx", 0 },
-	{"subgraphs_activate_exit",(caddr_t)subgraphs_activate_exit },
-	{"subgraphs_activate_attr",(caddr_t)subgraphs_activate_attr },
-	{"subgraphs_activate_set_extern",(caddr_t)subgraphs_activate_set_extern },
-	{"subgraphs_activate_set_intern",(caddr_t)subgraphs_activate_set_intern },
-	{"subgraphs_activate_help",(caddr_t)subgraphs_activate_help },
-	{"subgraphs_create_sg_form",(caddr_t)subgraphs_create_sg_form }
-	};
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
-#if !defined OS_VMS
-  {
-    char *s;
-
-    if ( (s = getenv( "pwr_exe")) == NULL)
-    {
-      printf( "** pwr_exe is not defined\n");
-      exit(0);
-    }
-    sprintf( uid_filename, "%s/ge_subgraphs.uid", s);
-  }
-#endif
-
-  // Create object context
-  reglist[0].value = (caddr_t) this;
-
-  // Motif
-  MrmInitialize();
-
-  strcpy( title, "Loaded SubGraphs");
-
-  // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
-
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  parent_wid = XtCreatePopupShell(title, 
-		topLevelShellWidgetClass, parent_wid, args, 0);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "subgraphs_window", parent_wid,
-			name, args, 1, &toplevel, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  MrmCloseHierarchy(s_DRMh);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,500);i++;
-  XtSetArg(args[i],XmNheight,1200);i++;
-  XtSetValues( toplevel ,args,i);
-    
-  XtManageChild( toplevel);
-
   strcpy( name, xn_name);
-
-  form_widget = ScrolledBrowCreate( subgraphs_form,
-	name, NULL, 0, 
-	subgraphs_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-
-  XtPopup( parent_wid, XtGrabNone);
-
-  // Create the root item
-  *w = toplevel;
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( parent_wid, 
-	(XtCallbackProc)subgraphs_activate_exit, this);
-
   *status = 1;
 }
 
@@ -294,24 +146,6 @@ SubGraphs::SubGraphs(
 //
 SubGraphs::~SubGraphs()
 {
-  subgraphs_tAttr attrlist_p, next_p;
-
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-
-  // Delete all attr-widgets in attrlist
-  attrlist_p = attrlist;
-  next_p = NULL;
-  while( attrlist_p)
-  {
-    next_p = attrlist_p->next;
-    delete attrlist_p->attrctx;
-    free( (char *) attrlist_p);
-    attrlist_p = next_p;
-  }
-
-  delete brow;
-  XtDestroyWidget( parent_wid);
 }
 
 SubGraphsBrow::~SubGraphsBrow()
@@ -745,7 +579,7 @@ void SubGraphsBrow::brow_setup()
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int subgraphs_init_brow_cb( FlowCtx *fctx, void *client_data)
+int SubGraphs::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   SubGraphs *subgraphs = (SubGraphs *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -763,7 +597,7 @@ static int subgraphs_init_brow_cb( FlowCtx *fctx, void *client_data)
 		subgraphs_trace_disconnect_bc, subgraphs_trace_scan_bc);
   subgraphs->trace_started = 1;
 
-  subgraphs_trace_scan( subgraphs);
+  subgraphs->trace_start();
 
   return 1;
 }
@@ -838,7 +672,7 @@ int SubGraphs::edit_attributes( void *object)
     grow_info_p++;
   }
 
-  attr = new Attr( parent_wid, this, object, (attr_sItem *)&items, i);
+  attr = new_attr( object, items, i);
   attr->client_data = (void *)grow_info;
   attr->close_cb = subgraphs_attr_close_cb;
   attr->redraw_cb = subgraphs_attr_redraw_cb;
@@ -888,26 +722,6 @@ static void subgraphs_attr_redraw_cb( Attr *attrctx)
   printf( "Here in attr redraw\n");
 }
 
-
-static void subgraphs_trace_scan( SubGraphs *subgraphs)
-{
-  int time = 200;
-
-  if ( subgraphs->trace_started)
-  {
-    brow_TraceScan( subgraphs->brow->ctx);
-
-    subgraphs->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(subgraphs->brow_widget) , time,
-	(XtTimerCallbackProc)subgraphs_trace_scan, subgraphs);
-  }
-}
-
-//void SubGraphs::force_trace_scan()
-//{
-//  if ( trace_started)
-//    brow_TraceScan( brow->ctx);
-//}
 
 static int subgraphs_trace_scan_bc( brow_tObject object, void *p)
 {

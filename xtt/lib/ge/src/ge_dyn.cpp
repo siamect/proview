@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.46 2006-06-30 12:23:37 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.47 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,6 @@
 #include <float.h>
 #include <math.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_msg.h"
@@ -36,29 +35,15 @@ extern "C" {
 #include "glow_msg.h"
 #include "rt_pwr_msg.h"
 #include "pwr_baseclasses.h"
-}
- 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "ge_attr.h"
 #include "ge_dyn.h"
 #include "ge_msg.h"
-
-extern "C" {
-#include "co_mrm_util.h"
-}
 
 #include "co_lng.h"
 
@@ -6735,7 +6720,7 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
     int			attr_type, attr_size;
     pwr_sAttrRef    	attrref;
     char            	name[80];
-    Widget          	popup;
+    int			x, y;
 
     if ( event->any.type != glow_eEventType_Table)
       break;
@@ -6756,15 +6741,10 @@ int GeTable::action( grow_tObject object, glow_tEvent event)
 	// Display popup menu
 	grow_GetName( dyn->graph->grow->ctx, name);
 
+	dyn->graph->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
 	(dyn->graph->popup_menu_cb)( dyn->graph->parent_ctx, attrref, 
 				     xmenu_eItemType_Object,
-				     xmenu_mUtility_Ge, name, &popup);
-	if ( !popup)
-	  break;
-
-	mrm_PositionPopup( popup, dyn->graph->grow_widget, 
-			   event->any.x_pixel + 8, event->any.y_pixel);
-	XtManageChild(popup);
+				     xmenu_mUtility_Ge, name, x, y);
       }
     }
     break;
@@ -7717,7 +7697,7 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
     int			attr_type, attr_size;
     pwr_sAttrRef    	attrref;
     char            	name[80];
-    Widget          	popup;
+    int			x, y;
     int			reference = 0;
 
     if ( ref_object[0] == '&') {
@@ -7751,15 +7731,10 @@ int GePopupMenu::action( grow_tObject object, glow_tEvent event)
       // Display popup menu
       grow_GetName( dyn->graph->grow->ctx, name);
 
+      dyn->graph->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
       (dyn->graph->popup_menu_cb)( dyn->graph->parent_ctx, attrref, 
 			      xmenu_eItemType_Object,
-			      xmenu_mUtility_Ge, name, &popup);
-      if ( !popup)
-	break;
-
-      mrm_PositionPopup( popup, dyn->graph->grow_widget, 
-			 event->any.x_pixel + 8, event->any.y_pixel);
-      XtManageChild(popup);
+			      xmenu_mUtility_Ge, name, x, y);
     }
     break;
   }

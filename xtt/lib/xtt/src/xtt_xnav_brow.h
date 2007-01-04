@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_brow.h,v 1.8 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xnav_brow.h,v 1.9 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef xtt_xnav_brow_h
 #define xtt_xnav_brow_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 typedef enum {
   brow_eUserType_XNav,
@@ -90,7 +86,4 @@ class XNavBrow {
     void set_push_command( char *cmd) { strcpy(push_command, cmd);};
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif

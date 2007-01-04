@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.cpp,v 1.16 2006-06-15 12:17:40 claes Exp $
+ * Proview   $Id: xtt_item.cpp,v 1.17 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,28 +22,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-#include "rt_xtt.h"
 #include "xtt_xnav.h"
 #include "xtt_xnav_crr.h"
 #include "xtt_item.h"

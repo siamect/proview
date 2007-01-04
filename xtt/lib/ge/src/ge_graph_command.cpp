@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.10 2006-07-28 09:56:20 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.11 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,28 +29,16 @@
 # include <stdlib.h>
 # include <ctype.h>
 
-extern "C" {
 #include "pwr_class.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_dcli.h"
 #include "co_ccm_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Xm/MessageB.h>
-#include <Xm/SelectioB.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
+//#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "co_dcli_msg.h"
@@ -60,10 +48,10 @@ extern "C" {
 
 extern "C" {
 #include "flow_x.h"
+}
 #if LDH
 # include "wb_wccm.h"
 #endif
-}
 
 static Graph *current_graph;
 
@@ -287,7 +275,8 @@ static int	graph_save_func(void		*client_data,
   else
     graph->get_name( name);
 
-  ge_save( graph->parent_ctx, name);
+  // Assume that parent is Ge
+  ((Ge *)graph->parent_ctx)->save( name);
   return GE__SUCCESS;
 }
 
@@ -296,7 +285,8 @@ static int	graph_quit_func(void		*client_data,
 {
   Graph *graph = (Graph *)client_data;
 
-  ge_del( graph->parent_ctx);
+  // Assume that parent is Ge
+  delete (Ge *) graph->parent_ctx;
   return GE__SUCCESS;
 }
 
@@ -313,8 +303,9 @@ static int	graph_exit_func(void		*client_data,
     return GE__NONAME;
   }
 
-  ge_save( graph->parent_ctx, name);
-  ge_del( graph->parent_ctx);
+  // Assume that parent is Ge
+  ((Ge *)graph->parent_ctx)->save( name);
+  delete (Ge *) graph->parent_ctx;
   return GE__SUCCESS;
 }
 
@@ -350,7 +341,8 @@ static int	graph_open_func(void		*client_data,
     return GE__SYNTAX;
   }
 
-  ge_open( graph->parent_ctx, name);
+  // Assume that parent is Ge
+  ((Ge *)graph->parent_ctx)->open( name);
   return GE__SUCCESS;
 }
 
@@ -359,7 +351,8 @@ static int	graph_new_func(	void		*client_data,
 {
   Graph *graph = (Graph *)client_data;
 
-  ge_clear( graph->parent_ctx);
+  // Assume that parent is Ge
+  ((Ge *)graph->parent_ctx)->clear();
   return GE__SUCCESS;
 }
 

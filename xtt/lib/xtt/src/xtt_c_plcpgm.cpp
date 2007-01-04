@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_plcpgm.cpp,v 1.3 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: xtt_c_plcpgm.cpp,v 1.4 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,15 +21,7 @@
 
 #include "pwr_baseclasses.h"
 #include "flow_std.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "co_cdh.h"
 #include "xtt_menu.h"
 #include "xtt_xnav.h"
 #include "rt_xnav_msg.h"

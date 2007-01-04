@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.13 2006-07-27 10:18:20 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.14 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "rt_net.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
@@ -31,24 +30,10 @@ extern "C" {
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
 #include "rt_xnav_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-
-extern "C" {
 #include "rt_trace.h"
-}
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 

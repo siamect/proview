@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.13 2006-06-29 10:50:40 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.14 2007-01-04 08:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,30 +24,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "flow_msg.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
-
 
 #include "ge_attr.h"
 #include "ge_attrnav.h"
@@ -939,12 +925,10 @@ static attrnav_sEnum mask_types[] = {
 
 static char null_str[] = "";
 
-static void attrnav_trace_scan( AttrNav *attrnav);
 static int attrnav_trace_scan_bc( brow_tObject object, void *p);
 static int attrnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
 	flow_eTraceType type, /* flow_eDrawType color, */ void **p);
 static int attrnav_trace_disconnect_bc( brow_tObject object);
-static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data);
 static char *attrnav_mask_to_string( int type_id, int value);
 
 //
@@ -1208,26 +1192,16 @@ void AttrNavBrow::allocate_pixmaps()
 //
 AttrNav::AttrNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
-	Widget *w,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	parent_ctx(xn_parent_ctx),
 	itemlist(xn_itemlist),item_cnt(xn_item_cnt),
 	trace_started(0),
 	message_cb(NULL)
 {
   strcpy( name, xn_name);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	attrnav_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  // Create the root item
-  *w = form_widget;
-
   *status = 1;
 }
 
@@ -1236,22 +1210,11 @@ AttrNav::AttrNav(
 //
 AttrNav::~AttrNav()
 {
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 AttrNavBrow::~AttrNavBrow()
 {
   free_pixmaps();
-}
-
-void AttrNav::set_inputfocus()
-{
-//  brow_SetInputFocus( brow->ctx);
-  XtCallAcceptFocus( brow_widget, CurrentTime);
 }
 
 //
@@ -1690,20 +1653,6 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-static void attrnav_trace_scan( AttrNav *attrnav)
-{
-  int time = 200;
-
-  if ( attrnav->trace_started)
-  {
-    brow_TraceScan( attrnav->brow->ctx);
-
-    attrnav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(attrnav->brow_widget) , time,
-	(XtTimerCallbackProc)attrnav_trace_scan, attrnav);
-  }
-}
-
 void AttrNav::force_trace_scan()
 {
   if ( trace_started)
@@ -2072,7 +2021,7 @@ void AttrNavBrow::brow_setup()
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data)
+int AttrNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   AttrNav *attrnav = (AttrNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -2090,10 +2039,11 @@ static int attrnav_init_brow_cb( FlowCtx *fctx, void *client_data)
 		attrnav_trace_disconnect_bc, attrnav_trace_scan_bc);
   attrnav->trace_started = 1;
 
-  attrnav_trace_scan( attrnav);
+  attrnav->trace_start();
 
   return 1;
 }
+
 
 ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr, 
 	int attr_type, int attr_size, double attr_min_limit, 

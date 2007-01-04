@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.13 2005-11-17 09:01:35 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.14 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,37 +24,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
-#include "co_cdh.h"
-#include "co_time.h"
+#include "pwr.h"
 #include "pwr_baseclasses.h"
-#include "rt_gdh.h"
-#include "rt_mh.h"
-#include "rt_mh_outunit.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-// Status is defined as int i xlib...
-#ifdef Status
-# undef Status
-#endif
-
-extern "C" {
-#include "flow_x.h"
-#include "co_mrm_util.h"
-}
+#include "co_wow.h"
 #include "co_lng.h"
+#include "co_time.h"
+#include "rt_gdh.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "xtt_evlist.h"
 #include "xtt_menu.h"
 
@@ -80,8 +58,6 @@ union alau_Event
     mh_sReturn  Return;
 };
 
-static int evlist_init_brow_cb( FlowCtx *fctx, void *client_data);
-static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event);
 
 //
 //  Free pixmaps
@@ -106,116 +82,104 @@ void EvListBrow::free_pixmaps()
 //
 void EvListBrow::allocate_pixmaps()
 {
-	flow_sPixmapData pixmap_data;
-	int i;
+  flow_sPixmapData pixmap_data;
+  int i;
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_leaf12_width;
-	    pixmap_data[i].height =xnav_bitmap_leaf12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_leaf12_width;
+    pixmap_data[i].height =xnav_bitmap_leaf12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_map12_width;
-	    pixmap_data[i].height =xnav_bitmap_map12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_map12_width;
+    pixmap_data[i].height =xnav_bitmap_map12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_openmap12_width;
-	    pixmap_data[i].height =xnav_bitmap_openmap12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_openmap12_width;
+    pixmap_data[i].height =xnav_bitmap_openmap12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_attr12_width;
-	    pixmap_data[i].height =xnav_bitmap_attr12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_attr12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_attr12_width;
+    pixmap_data[i].height =xnav_bitmap_attr12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_attr12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attr);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_attrarra12_width;
-	    pixmap_data[i].height =xnav_bitmap_attrarra12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_attrarra12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_attrarra12_width;
+    pixmap_data[i].height =xnav_bitmap_attrarra12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_attrarra12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_attrarray);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_alarm12_width;
-	    pixmap_data[i].height =xnav_bitmap_alarm12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_alarm12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_alarm12_width;
+    pixmap_data[i].height =xnav_bitmap_alarm12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_alarm12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_alarm);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_alarm);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_ack12_width;
-	    pixmap_data[i].height =xnav_bitmap_ack12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_ack12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_ack12_width;
+    pixmap_data[i].height =xnav_bitmap_ack12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_ack12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_ack);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_ack);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_eventalarm12_width;
-	    pixmap_data[i].height =xnav_bitmap_eventalarm12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_eventalarm12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_eventalarm12_width;
+    pixmap_data[i].height =xnav_bitmap_eventalarm12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_eventalarm12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventalarm);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventalarm);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_eventacked12_width;
-	    pixmap_data[i].height =xnav_bitmap_eventacked12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_eventacked12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_eventacked12_width;
+    pixmap_data[i].height =xnav_bitmap_eventacked12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_eventacked12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventacked);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventacked);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_eventreturn12_width;
-	    pixmap_data[i].height =xnav_bitmap_eventreturn12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_eventreturn12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_eventreturn12_width;
+    pixmap_data[i].height =xnav_bitmap_eventreturn12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_eventreturn12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventreturn);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_eventreturn);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_blockr_12_width;
-	    pixmap_data[i].height =xnav_bitmap_blockr_12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_blockr_12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_blockr_12_width;
+    pixmap_data[i].height =xnav_bitmap_blockr_12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_blockr_12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_blockr);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_blockr);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_blockl_12_width;
-	    pixmap_data[i].height =xnav_bitmap_blockl_12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_blockl_12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_blockl_12_width;
+    pixmap_data[i].height =xnav_bitmap_blockl_12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_blockl_12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_blockl);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_blockl);
 }
 
 //
@@ -320,36 +284,44 @@ void EvListBrow::brow_setup()
   brow_SetCtxUserData( ctx, evlist);
 
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	evlist_brow_cb);
+	EvList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	EvList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	EvList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	EvList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	EvList::brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int evlist_init_brow_cb( FlowCtx *fctx, void *client_data)
+int EvList::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   EvList *evlist = (EvList *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -364,16 +336,14 @@ static int evlist_init_brow_cb( FlowCtx *fctx, void *client_data)
 
 EvList::EvList(
 	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
 	ev_eType ev_type, 
-	int ev_size,
-	Widget *w) :
-	parent_ctx(ev_parent_ctx), parent_wid(ev_parent_wid),
-	type(ev_type), size(0), max_size(ev_size), display_hundredth(0),
-	hide_object(0), hide_text(0),
-	start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
-	sound_cb(0), acc_beep_time(0),
-	beep_interval(4)
+	int ev_size) :
+  parent_ctx(ev_parent_ctx),
+  type(ev_type), size(0), max_size(ev_size), display_hundredth(0),
+  hide_object(0), hide_text(0),
+  start_trace_cb(0), display_in_xnav_cb(0), name_to_alias_cb(0), 
+  sound_cb(0), acc_beep_time(0),
+  beep_interval(4)
 {
   if ( max_size <= 0) {
     switch ( type) {
@@ -387,9 +357,6 @@ EvList::EvList(
       max_size = 500;
     }
   }
-  form_widget = ScrolledBrowCreate( parent_wid, "EvList", NULL, 0, 
-	evlist_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
 
   if ( type == ev_eType_AlarmList) {
     // Fetch sound objects
@@ -415,8 +382,6 @@ EvList::EvList(
     if ( EVEN(sts))
       info_sound = pwr_cNAttrRef;
   }
-
-  *w = form_widget;
 }
 
 
@@ -425,8 +390,6 @@ EvList::EvList(
 //
 EvList::~EvList()
 {
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 EvListBrow::~EvListBrow()
@@ -447,22 +410,18 @@ void EvList::event_info( mh_sMessage *msg)
           msg->Status & mh_mEventStatus_NotRet))
     return;
 
-  if ( type != ev_eType_HistList )
-  {
+  if ( type != ev_eType_HistList ) {
     sts = get_destination( event->Info.EventTime, (void **)&dest);
-    if ( EVEN(sts))
-    {
+    if ( EVEN(sts)) {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    else
-    {
+    else {
       dest_code = flow_eDest_Before;
       dest_node = dest->node;
     }
   }
-  else
-  {
+  else {
     dest_code = flow_eDest_IntoLast;
     dest_node = NULL;
   }
@@ -489,22 +448,18 @@ void EvList::event_alarm( mh_sMessage *msg)
           msg->Status & mh_mEventStatus_NotRet))
     return;
 
-  if ( type != ev_eType_HistList )
-  {
+  if ( type != ev_eType_HistList ) {
     sts = get_destination( event->Info.EventTime, (void **)&dest);
-    if ( EVEN(sts))
-    {
+    if ( EVEN(sts)) {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
-    else
-    {
+    else {
       dest_code = flow_eDest_Before;
       dest_node = dest->node;
     }
   }
-  else
-  {
+  else {
     dest_code = flow_eDest_IntoLast;
     dest_node = NULL;
   }
@@ -682,24 +637,19 @@ void EvList::event_ack( mh_sAck *msg)
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
-  if ( type == ev_eType_EventList || type == ev_eType_HistList)
-  {
-    if(type == ev_eType_EventList)
-    {
+  if ( type == ev_eType_EventList || type == ev_eType_HistList) {
+    if(type == ev_eType_EventList) {
       sts = get_destination( event->Info.EventTime, (void **)&dest);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
         dest_node = NULL;
       }
-      else
-      {
+      else {
         dest_code = flow_eDest_Before;
         dest_node = dest->node;
       }
     }
-    else
-    {   
+    else {   
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
@@ -712,31 +662,26 @@ void EvList::event_ack( mh_sAck *msg)
     size++;
   }
   
-  else
-  {
+  else {
     // Alarmlist
     ItemAlarm 	*item;
 
     if ( !id_to_item( &msg->TargetId, (void **)&item))
       return;
 
-    switch( item->event_type)
-    {
+    switch( item->event_type) {
       case evlist_eEventType_Alarm:
-        if ( item->status & mh_mEventStatus_NotRet)
-        {
+        if ( item->status & mh_mEventStatus_NotRet) {
           item->status &= ~mh_mEventStatus_NotAck;
           item->update_text();
         }
-        else
-        {
+        else {
           brow_DeleteNode( brow->ctx, item->node);
           size--;
         }
         break;
       case evlist_eEventType_Info:
-        if ( item->eventflags & mh_mEventFlags_InfoWindow)
-        {
+        if ( item->eventflags & mh_mEventFlags_InfoWindow) {
           brow_DeleteNode( brow->ctx, item->node);
           size--;
         }
@@ -755,24 +700,19 @@ void EvList::event_return( mh_sReturn *msg)
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
-  if ( type == ev_eType_EventList || type == ev_eType_HistList)
-  {
-    if(type == ev_eType_EventList)
-    {
+  if ( type == ev_eType_EventList || type == ev_eType_HistList) {
+    if(type == ev_eType_EventList) {
       sts = get_destination( event->Info.EventTime, (void **)&dest);
-      if ( EVEN(sts))
-      {
+      if ( EVEN(sts)) {
         dest_code = flow_eDest_IntoLast;
         dest_node = NULL;
       }
-      else
-      {
+      else {
         dest_code = flow_eDest_Before;
         dest_node = dest->node;
       }
     }
-    else
-    {
+    else {
       dest_code = flow_eDest_IntoLast;
       dest_node = NULL;
     }
@@ -785,21 +725,18 @@ void EvList::event_return( mh_sReturn *msg)
     size++;
   }
 
-  else
-  {
+  else {
     // Alarmlist
     ItemAlarm 	*item;
 
     if ( !id_to_item( &msg->TargetId, (void **)&item))
       return;
 
-    if ( item->status & mh_mEventStatus_NotAck)
-    {
+    if ( item->status & mh_mEventStatus_NotAck) {
       item->status &= ~mh_mEventStatus_NotRet;
       item->update_text();
     }
-    else
-    {
+    else {
       brow_DeleteNode( brow->ctx, item->node);
       size--;
     }
@@ -827,26 +764,18 @@ void EvList::event_clear_alarmlist( pwr_tNodeIndex nix)
   memcpy( stored_object_list, object_list, object_cnt * sizeof(brow_tObject));
 
   // Remove all items with the present node index
-  for ( i = 0; i < object_cnt; i++)
-  {
+  for ( i = 0; i < object_cnt; i++) {
     brow_GetUserData( stored_object_list[i], (void **)&object_item);
-    switch( object_item->type)
-    {
-      case evlist_eItemType_Alarm:
-        if ( object_item->eventid.Nix == nix)
-          brow_DeleteNode( brow->ctx, object_item->node);
-        break;
-      default:
-        ;
+    switch( object_item->type) {
+    case evlist_eItemType_Alarm:
+      if ( object_item->eventid.Nix == nix)
+	brow_DeleteNode( brow->ctx, object_item->node);
+      break;
+    default:
+      ;
     }
   }
   free( (char *)stored_object_list);
-}
-
-void EvList::set_input_focus()
-{
-  if ( flow_IsViewable( brow_widget))
-    XtCallAcceptFocus( brow_widget, CurrentTime);
 }
 
 //
@@ -912,7 +841,7 @@ void EvList::beep( double scantime)
       }
       if ( EVEN(sts))
 	// Sound is not loaded
-	flow_Bell( form_widget);
+	bell();
     }
     acc_beep_time += scantime;
   }
@@ -1009,7 +938,7 @@ void EvList::display_in_xnav()
 //
 // Callbacks from brow
 //
-static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   EvList		*evlist;
   ItemAlarm 		*item;
@@ -1128,7 +1057,7 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB3Press:
     {            
       // Popup menu
-      Widget popup;
+      int x, y;
 
       switch ( event->object.object_type)
       {
@@ -1137,21 +1066,32 @@ static int evlist_brow_cb( FlowCtx *ctx, flow_tEvent event)
             brow_GetUserData( event->object.object, (void **)&item);
             if ( cdh_ObjidIsNotNull( item->object)) {
               pwr_sAttrRef attrref = cdh_ObjidToAref( item->object);
+	      evlist->popup_position( event->any.x_pixel + 8, event->any.y_pixel, &x, &y);
               (evlist->popup_menu_cb)( evlist->parent_ctx, attrref,
 		     (unsigned long)xmenu_eItemType_Object, 
-		     (unsigned long)xmenu_mUtility_EventList, NULL, &popup);
-              if ( !popup)
-                break;
-
-              mrm_PositionPopup( popup, evlist->brow_widget, 
-			       event->any.x_pixel + 8, event->any.y_pixel);
-              XtManageChild(popup);
+		     (unsigned long)xmenu_mUtility_EventList, NULL, x, y);
             }
           }
           break;
         default:
           ;
       }
+      break;
+    }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( evlist->brow->ctx, 0.9);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( evlist->brow->ctx, -0.9);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( evlist->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( evlist->brow->ctx, -0.1);
       break;
     }
     case flow_eEvent_Key_Left:

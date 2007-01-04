@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ev.h,v 1.7 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_ev.h,v 1.8 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,24 +22,12 @@
 
 /* xtt_ev.h -- Alarm and event windows in xtt */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
-#if defined __cplusplus
-}
-#endif
-
 #ifndef xtt_evlist
 # include "xtt_evlist.h"
-#endif
-
-#ifndef xtt_focustimer_h
-# include "xtt_focustimer.h"
 #endif
 
 typedef struct {
@@ -51,7 +39,6 @@ class Ev {
   public:
     Ev(
 	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
 	char *eve_name,
 	char *ala_name,
 	char *blk_name,
@@ -63,23 +50,10 @@ class Ev {
 	int display_ack,
 	int ev_beep,
 	pwr_tStatus *status);
-    ~Ev();
+    virtual ~Ev();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
-    Widget		parent_wid_eve;
-    Widget		parent_wid_ala;
-    Widget		parent_wid_blk;
     char 		name[80];
-    Widget		toplevel_ala;
-    Widget		toplevel_eve;
-    Widget		toplevel_blk;
-    Widget		form_ala;
-    Widget		form_eve;
-    Widget		form_blk;
-    Widget		eve_widget;
-    Widget		ala_widget;
-    Widget		blk_widget;
     pwr_tObjid		user;
     int			eve_display_ack;
     int			eve_display_return;
@@ -88,7 +62,7 @@ class Ev {
     void 		(*update_info_cb)( void *);
     void 		(*help_cb)( void *, char *);
     void 		(*popup_menu_cb)( void *, pwr_tAttrRef, unsigned long,
-					  unsigned long, char *, Widget * );
+					  unsigned long, char *, int x, int y);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     EvList		*eve;
     EvList		*ala;
@@ -101,19 +75,18 @@ class Ev {
     int			eve_size;
     int			ala_size;
     int			blk_size;
-    FocusTimer		eve_focustimer;
-    FocusTimer		ala_focustimer;
-    FocusTimer		blk_focustimer;
     ev_sAlias		alias_list[20];
+    static Ev		*ev;
+
+    virtual void map_eve() {}
+    virtual void map_ala() {}
+    virtual void map_blk() {}
+    virtual void unmap_eve() {}
+    virtual void unmap_ala() {}
+    virtual void unmap_blk() {}
 
     int		outunit_connect( pwr_tObjid	user);
     void	update( double scantime);
-    void	map_eve();
-    void	map_ala();
-    void	map_blk();
-    void	unmap_eve();
-    void	unmap_ala();
-    void	unmap_blk();
     int         is_mapped_eve() { return eve_displayed;};
     int         is_mapped_ala() { return ala_displayed;};
     int         is_mapped_blk() { return blk_displayed;};
@@ -123,6 +96,37 @@ class Ev {
 			unsigned long prio);
     void	create_aliaslist( void *up);
     char	*name_to_alias( char *name);
+
+    void eve_activate_print();
+    void ala_activate_print();
+    void blk_activate_print();
+    void eve_activate_ack_last();
+    void eve_activate_help();
+    void eve_activate_helpevent();
+    void ala_activate_help();
+    void ala_activate_helpevent();
+    void blk_activate_help();
+
+    static void eve_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
+    static void ala_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
+    static void blk_display_in_xnav_cb( void *ctx, pwr_tAttrRef *arp);
+    static char *ev_name_to_alias_cb( void *ctx, char *name);
+    static void eve_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
+    static void ala_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
+    static void blk_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
+    static void ev_popup_menu_cb( void *ctx, pwr_tAttrRef attrref,
+				  unsigned long item_type, unsigned long utility,
+				  char *arg, int x, int y);
+    static int ev_sound_cb( void *ctx, pwr_tAttrRef *attrref);
+    static pwr_tStatus mh_ack_bc( mh_sAck *MsgP);
+    static pwr_tStatus mh_return_bc( mh_sReturn *MsgP);
+    static pwr_tStatus mh_alarm_bc( mh_sMessage *MsgP);
+    static pwr_tStatus mh_block_bc( mh_sBlock *MsgP);
+    static pwr_tStatus mh_cancel_bc( mh_sReturn *MsgP);
+    static pwr_tStatus mh_info_bc( mh_sMessage *MsgP);
+    static pwr_tStatus mh_clear_alarmlist_bc( pwr_tNodeIndex nix);
+    static pwr_tStatus mh_clear_blocklist_bc( pwr_tNodeIndex nix);
+
 };
 
 #endif

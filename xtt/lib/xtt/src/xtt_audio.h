@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_audio.h,v 1.3 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: xtt_audio.h,v 1.4 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,12 +41,14 @@
 
 #define AUDIO_QUESIZE 20
 
+class CoWow;
+class CoWowTimer;
 
 class XttAudio
 {
   public:
     static int audio_ok;
-    XttAudio( Widget w = 0, char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
+    XttAudio( CoWow *a_wow, char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
     ~XttAudio();
     int init(char *OSS_device="/dev/dsp", char *ALSA_device="plughw:0,0");
     int beep( pwr_tAttrRef *arp);
@@ -59,12 +61,12 @@ class XttAudio
     static snd_pcm_uframes_t frames;
     static snd_pcm_hw_params_t *hw_params;
     static int srate;
-    static Widget parent_wid;
+    static CoWow *wow;
     double freq[100];
     short *write_buffer;
     int write_buffer_size;
     int write_buffer_idx;
-    XtIntervalId  timerid;
+    CoWowTimer *timerid;
     pwr_tAttrRef queue[AUDIO_QUESIZE];
     int queue_prio[AUDIO_QUESIZE];
     int queue_cnt;
@@ -79,7 +81,7 @@ class XttAudio
     void MakeSquare(short *buffer, int buffersize, double time, double starttime, double endtime,
 		    int tone, double volume_ch1, double volume_ch2, double attack, double decay, 
 		    double sustain, double release, double tremolo);
-    static void audio_write( XttAudio *);
+    static void audio_write( void *data);
 };
 
 #endif

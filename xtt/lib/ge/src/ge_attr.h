@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_attr.h,v 1.4 2007-01-04 08:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,11 +20,9 @@
 #ifndef ge_attr_h
 #define ge_attr_h
 
-/* ge_attr.h -- Ge attribute editor */
+#include "glow.h"
 
-#if defined __cplusplus
-extern "C" {
-#endif
+/* ge_attr.h -- Ge attribute editor */
 
 /*! \file ge_attr.h
     \brief Contains the Attr class. */
@@ -45,32 +43,20 @@ typedef struct {
     	int	mask;
 } attr_sItem;
 
+class AttrNav;
+
 //! Attribute editor.
 /*! Displays grow attributes and dynamic attributes for an object or graph. */
 class Attr {
   public:
     Attr(
-      Widget                    a_parent_wid,
       void			*a_parent_ctx,
       void 			*a_object,
-      // void			(*close_cb) (attr_tCtx),
-      // void			(*redraw_cb) (attr_tCtx),
       attr_sItem  		*itemlist,
       int			item_cnt);
     void 	*parent_ctx;
-    Widget	parent_wid;
     char 	name[80];
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
-    void	*attrnav;
-    Widget	msg_label;
-    Widget	cmd_prompt;
-    Widget	cmd_input;
-    Widget	cmd_scrolledinput;
-    Widget	cmd_scrolled_ok;
-    Widget	cmd_scrolled_ca;
-    Widget	attrnav_form;
+    AttrNav	*attrnav;
     int		input_open;
     void 	*object;
     void	(*close_cb) (Attr *);
@@ -90,21 +76,30 @@ class Attr {
     void	*client_data;
     int         recall_idx;
     GeDyn 	*original_data;
-    static char	value_recall[30][160];
-    int		value_current_recall;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
-    void change_value();
-    
-    ~Attr();
+    virtual void message( char severity, char *message) {}
+    virtual void set_prompt( char *prompt) {}
+    virtual void change_value() {}
+    virtual int reconfigure_attr() {return 1;}
+    virtual void store();
+    virtual void recall_next();
+    virtual void recall_prev();
+    static int get_plant_select_c( void *attr_ctx, char *value);
+    static int get_current_colors_c( void *attr_ctx, glow_eDrawType *fill_color, 
+				      glow_eDrawType *border_color, 
+				      glow_eDrawType *text_color);    
+    static int get_subgraph_info_c( void *attr_ctx, char *name, 
+				     attr_sItem **itemlist, int *item_cnt);
+    static int get_dyn_info_c( void *attr_ctx, GeDyn *dyn, 
+				attr_sItem **itemlist, int *item_cnt);
+    static void change_value_c( void *attr);
+    static int reconfigure_attr_c( void *attr);
+    static void message( void *attr, char severity, char *message);
+    virtual ~Attr();
 };
 
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

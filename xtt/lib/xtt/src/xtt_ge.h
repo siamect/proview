@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge.h,v 1.10 2006-01-23 08:47:03 claes Exp $
+ * Proview   $Id: xtt_ge.h,v 1.11 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,29 +17,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef rt_ge_h
-#define rt_ge_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
+#ifndef xtt_ge_h
+#define xtt_ge_h
 
 #ifndef pwr_h
 # include "pwr.h"
 #endif
+#include "glow.h"
 
-typedef struct ge_sCtx {
+class Graph;
+
+class XttGe {
+ public:
   void 		*parent_ctx;
-  Widget	parent_wid;
   pwr_tAName   	name;
-  Widget	grow_widget;
-  Widget	form_widget;
-  Widget	toplevel;
-  Widget	nav_shell;
-  Widget	nav_widget;
-  Widget	menu_widget;
-  void		*graph;
-  Widget	graph_form;
+  Graph		*graph;
   pwr_tFileName	filename;
   int		scrollbar;
   int		navigator;
@@ -48,60 +40,56 @@ typedef struct ge_sCtx {
   void		*current_confirm_object;
   int		value_input_open;
   int		confirm_open;
-  Widget	value_input;
-  Widget	value_dialog;
-  Widget	confirm_widget;
-  Widget	message_dia_widget;
-  int		(*command_cb)(struct ge_sCtx *, char *);
-  void		(*close_cb)(struct ge_sCtx *);
-  void		(*help_cb)(struct ge_sCtx *, char *key);
+  int		(*command_cb)(XttGe *, char *);
+  void		(*close_cb)(XttGe *);
+  void		(*help_cb)(XttGe *, char *key);
   void		(*display_in_xnav_cb)(void *, pwr_sAttrRef *);
   int		(*is_authorized_cb)(void *, unsigned int);
   void          (*popup_menu_cb)(void *, pwr_sAttrRef, unsigned long,
-					 unsigned long, char *, Widget *); 
+					 unsigned long, char *, int x, int y); 
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
   int           (*get_current_objects_cb)(void *, pwr_sAttrRef **, int **);
   int           (*sound_cb)(void *, pwr_tAttrRef *);
   int		width;
   int		height;
-  int		set_focus_disabled;
-  XtIntervalId 	focus_timerid;
-} *ge_tCtx;
 
-void ge_pop( ge_tCtx gectx);
-void ge_print( ge_tCtx gectx);
-int ge_set_object_focus( ge_tCtx gectx, char *name, int empty);
-int ge_set_folder_index( ge_tCtx gectx, char *name, int idx);
-int ge_set_subwindow_source( ge_tCtx gectx, char *name, char *source);
-void ge_swap( ge_tCtx gectx, int mode);
+  XttGe( void *parent_ctx, char *name, char *filename,
+	 int scrollbar, int menu, int navigator, int width, int height,
+	 int x, int y, double scan_time, char *object_name, int use_default_access,
+	 unsigned int access,
+	 int (*xg_command_cb) (XttGe *, char *),
+	 int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+	 int (*xg_is_authorized_cb) (void *, unsigned int));
+  virtual ~XttGe();
 
-extern "C" ge_tCtx ge_new( Widget parent_wid,
-  void			*parent_ctx,
-  char 			*name,
-  char 			*filename,
-  int			scrollbar,
-  int			menu,
-  int			navigator,
-  int			width,
-  int			height,
-  int			x,
-  int			y,
-  double		scan_time,
-  char			*object_name,
-  int                   use_default_access,
-  unsigned int          access,
-  void			(*close_cb) (ge_tCtx),
-  void			(*help_cb) (ge_tCtx, char *),
-  int                   (*command_cb) (ge_tCtx, char *),
-  int                   (*get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
-  int                   (*is_authorized_cb) (void *, unsigned int)
-);
-extern "C" void ge_delete( ge_tCtx gectx);
+  virtual void pop() {}
+  virtual void set_size( int width, int height) {}
 
-#if defined __cplusplus
-}
-#endif
+  void message( char severity, char *msg);
+  void print();
+  int set_object_focus( char *name, int empty);
+  int set_folder_index( char *name, int idx);
+  int set_subwindow_source( char *name, char *source);
+  void swap( int mode);
+
+  static void graph_init_cb( void *client_data);
+  static void graph_close_cb( void *client_data);
+  static int ge_command_cb( void *ge_ctx, char *command);
+  static int ge_sound_cb( void *ge_ctx, pwr_tAttrRef *aref);
+  static void ge_display_in_xnav_cb( void *ge_ctx, pwr_sAttrRef *arp);
+  static void ge_popup_menu_cb( void *ge_ctx, pwr_sAttrRef attrref,
+			     unsigned long item_type, unsigned long utility, 
+			     char *arg, int x, int y);
+  static int ge_call_method_cb( void *ge_ctx, char *method, char *filter,
+			     pwr_sAttrRef attrref, unsigned long item_type, 
+			     unsigned long utility, char *arg);
+  static int ge_is_authorized_cb( void *ge_ctx, unsigned int access);
+  static int ge_get_current_objects_cb( void *ge_ctx, pwr_sAttrRef **alist,
+				     int **is_alist);
+  static void message_cb( void *ctx, char severity, char *msg);
+};
+
 #endif
 
 

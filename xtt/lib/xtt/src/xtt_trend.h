@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.h,v 1.4 2005-11-17 09:03:20 claes Exp $
+ * Proview   $Id: xtt_trend.h,v 1.5 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,10 +22,6 @@
 
 /* xtt_trend.h -- DsTrend curves */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -36,40 +32,44 @@ extern "C" {
 
 #define XTT_TREND_MAX 20
 
+class CoWow;
+class CoWowTimer;
+
 class XttTrend {
-  public:
-    XttTrend(
-	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
-	char *xn_name,
-	Widget *w,
-        pwr_sAttrRef *objid,
-        pwr_sAttrRef *plotgroup,
-        int *sts);
-    void       *xnav;
-    Widget     parent_widget;
-    int        trend_cnt;
-    GeCurveData *gcd;
-    GeCurve    *curve;
-    pwr_tRefId subid[XTT_TREND_MAX];
-    pwr_sClass_DsTrend *trend_p[XTT_TREND_MAX];
-    int        element_size[XTT_TREND_MAX];
-    int        interval[XTT_TREND_MAX];
-    int        max_time;
-    int        min_interval;
-    int        min_interval_idx;
-    int        max_points;
-    XtIntervalId  timerid;
-    int        last_buffer[XTT_TREND_MAX];
-    int        last_next_index[XTT_TREND_MAX];
-    void       (*close_cb)( void *, XttTrend *);
-    void       (*help_cb)( void *, char *);
-    void pop();
-    ~XttTrend();
+ public:
+  void       *xnav;
+  int        trend_cnt;
+  GeCurveData *gcd;
+  GeCurve    *curve;
+  pwr_tRefId subid[XTT_TREND_MAX];
+  pwr_sClass_DsTrend *trend_p[XTT_TREND_MAX];
+  int        element_size[XTT_TREND_MAX];
+  int        interval[XTT_TREND_MAX];
+  int        max_time;
+  int        min_interval;
+  int        min_interval_idx;
+  int        max_points;
+  CoWowTimer *timerid;
+  int        last_buffer[XTT_TREND_MAX];
+  int        last_next_index[XTT_TREND_MAX];
+  void       (*close_cb)( void *, XttTrend *);
+  void       (*help_cb)( void *, char *);
+  CoWow	     *wow;
+
+  XttTrend( void *xn_parent_ctx,
+	    char *xn_name,
+	    pwr_sAttrRef *objid,
+	    pwr_sAttrRef *plotgroup,
+	    int *sts);
+  virtual ~XttTrend();
+  void pop();
+
+  static void trend_close_cb( void *ctx);
+  static void trend_help_cb( void *ctx);
+  static void trend_scan( void *data);
+
 };
-#if defined __cplusplus
-}
-#endif
+
 #endif
 
 

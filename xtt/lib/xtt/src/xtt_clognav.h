@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.h,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_clognav.h,v 1.4 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,24 +28,12 @@
 #include <vector>
 using namespace std;
 
-#ifdef Status
-# undef Status
-#endif
-
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
 #ifndef rt_errh_h
 # include "rt_errh.h"
-#endif
-
-#if defined __cplusplus
-}
 #endif
 
 #ifndef flow_h
@@ -136,42 +124,39 @@ class CLogFile {
 };
 
 class CLogNav {
-  public:
-    CLogNav(
-	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
-	Widget *w);
-    ~CLogNav();
+ public:
+  CLogNav( void *ev_parent_ctx);
+  virtual ~CLogNav();
 
-    void 		*parent_ctx;
-    Widget		parent_wid;
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
-    CLogNavBrow		*brow;
-    CLogNavFilter	filter;
-    int			clog_size;
-    int			max_size;
-    vector<CLogMsg>    	msg_list;		
-    vector<CLogFile>    file_list;		
-    int			current_pos_high;
-    int			current_pos_low;
+  void 			*parent_ctx;
+  CLogNavBrow		*brow;
+  CLogNavFilter		filter;
+  int			clog_size;
+  int			max_size;
+  vector<CLogMsg>    	msg_list;		
+  vector<CLogFile>    	file_list;		
+  int			current_pos_high;
+  int			current_pos_low;
 
-    void set_input_focus();
-    void zoom( double zoom_factor);
-    void unzoom();
-    void set_nodraw();
-    void reset_nodraw();
-    void read( int *idx_list, int idx_cnt);
-    void set_filter( bool success, bool info, bool warning, bool error, bool fatal,
-		 bool text, char *str);
-    void get_filter( bool *success, bool *info, bool *warning, bool *error, bool *fatal,
-		 bool *text);
-    void draw();
-    void get_files();
-    int next_file();
-    int prev_file();
-    int update();
+  virtual void set_input_focus() {}
+
+  void zoom( double zoom_factor);
+  void unzoom();
+  void set_nodraw();
+  void reset_nodraw();
+  void read( int *idx_list, int idx_cnt);
+  void set_filter( bool success, bool info, bool warning, bool error, bool fatal,
+		   bool text, char *str);
+  void get_filter( bool *success, bool *info, bool *warning, bool *error, bool *fatal,
+		   bool *text);
+  void draw();
+  void get_files();
+  int next_file();
+  int prev_file();
+  int update();
+
+  static int init_brow_cb( FlowCtx *fctx, void *client_data);
+  static int brow_cb( FlowCtx *ctx, flow_tEvent event);
 };
 
 class ItemMsgBase {

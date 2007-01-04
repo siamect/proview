@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.11 2006-04-05 08:38:37 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.12 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,41 +21,20 @@
 #include "flow_std.h"
 
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
-#include "flow_x.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <Xm/CascadeBG.h>
-#include <Xm/MessageB.h>
-#include <Xm/PushBG.h>
-#include <Xm/RowColumn.h>
-#include <Xm/SelectioB.h>
-#include <Xm/SeparatoG.h>
-#include <Xm/ToggleB.h>
-#include <Xm/ToggleBG.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "co_lng.h"
 #include "co_dcli_msg.h"
@@ -64,164 +43,18 @@ extern "C" {
 #include "xtt_menu.h"
 #include "co_api.h"
 
-#define MENU_BAR      1
-#define MENU_PULLDOWN 2
-#define MENU_POPUP    3
-#define MENU_OPTION   4
-
 pwr_dImport pwr_BindXttClasses(Base);
 
-typedef struct MENU_ITEM {
-    char		*Label;
-    WidgetClass		*Class;
-    char		*Mnemonic;
-    char		*Accelerator;
-    char		*AccelText;
-    int			UserData;
-    void		(*Callback)();
-    XtPointer		CallbackData;
-    struct MENU_ITEM	*SubItems;
-    Boolean		Sensitive;
-} MenuItem;
-
-// MenuCall struct. Used by the popup menu
-static xmenu_sMenuCall *mcp = NULL;
+xmenu_sMenuCall *XNav::mcp = 0;
 static xmenu_sMenuItem xmenu_lMenuItem[100];
 
-static void xnav_popup_button_cb (Widget w, XNav *xnav);
-static void xnav_popup_unmap_cb(Widget w, xmenu_sMenuCall *ip);
-static int xnav_GetMenu( xmenu_sMenuCall *ip);
-static int getAllMenuItems (
-  xmenu_sMenuCall	*ip,
-  xmenu_sMenuItem	**Item,
-  pwr_tObjid		objid,
-  pwr_tUInt32		Level,
-  int			*nItems,
-  int			AddSeparator,
-  pwr_sAttrRef		*CurrentObject);
-static int xnav_GetMethod( char *name, 
-			   pwr_tStatus (**method)( xmenu_sMenuCall *));
-static int xnav_GetObjectMenu(
-  xmenu_sMenuCall	*ip,
-  pwr_tCid		classid,
-  xmenu_sMenuItem	**Item,
-  pwr_tUInt32		Level,
-  int			*nItems,
-  int			AddSeparator,
-  pwr_sAttrRef		*CurrentObject);
-static int xnav_CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx);
-
-static Widget xnav_build_menu(
-	Widget Parent,
-	int   MenuType,
-	char *MenuTitle,
-	void *MenuUserData,
-	void (*Callback)( Widget, XNav *),
-	void *CallbackData,
-	xmenu_sMenuItem *Items,
-	int *idx
-	)
-{
-  Widget Menu, Cascade, W;
-  int i;
-  unsigned int Level;
-  XmString Str;
-  WidgetClass Class;
-  Arg ArgList[5]; 
-  XmFontList fontlist;
-  XFontStruct *font;
-  XmFontListEntry fontentry;
-
-  // Set default fontlist
-  font = XLoadQueryFont( flow_Display(Parent),
-  	      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1");
-  fontentry = XmFontListEntryCreate( "tag1", XmFONT_IS_FONT, font);
-  fontlist = XmFontListAppendEntry( NULL, fontentry);
-  XtFree( (char *)fontentry);
-
-  i = 0;
-  XtSetArg(ArgList[i], XmNuserData, MenuUserData); i++;
-  XtSetArg(ArgList[i], XmNbuttonFontList, fontlist); i++;
-  XtSetArg(ArgList[i], XmNlabelFontList, fontlist); i++;
-  if (MenuType == MENU_PULLDOWN || MenuType == MENU_OPTION)
-    Menu = XmCreatePulldownMenu(Parent, "_pulldown", ArgList, i);
-  else if (MenuType == MENU_POPUP)
-    Menu = XmCreatePopupMenu(Parent, "_popup", ArgList, i);  
-  else 
-  {
-    XtWarning("Invalid menu type passed to BuildMenu().");
-    return NULL;
-  }
-
-  if (MenuType == MENU_PULLDOWN) 
-  {
-    Str = XmStringCreateSimple(MenuTitle);	
-    Cascade = XtVaCreateManagedWidget(MenuTitle,
-	    xmCascadeButtonGadgetClass, Parent,
-	    XmNsubMenuId,   Menu,
-	    XmNlabelString, Str,
-	    NULL);
-    XmStringFree(Str);
-  } 
-  else if (MenuType == MENU_OPTION) 
-  {
-    Str = XmStringCreateSimple(MenuTitle);
-    XtSetArg(ArgList[0], XmNsubMenuId, Menu);
-    XtSetArg(ArgList[1], XmNlabelString, Str);
-    Cascade = XmCreateOptionMenu(Parent, MenuTitle, ArgList, 2);
-    XmStringFree(Str);
-  }
-
-  XmFontListFree( fontlist);
-
-  Level = Items[*idx].Level;
-
-  for (; Items[*idx].Level != 0 && Items[*idx].Level >= Level; (*idx)++) {
-    if (Items[*idx].Item == xmenu_eMenuItem_Cascade ||
-      Items[*idx].Item == xmenu_eMenuItem_Ref) {
-      if (MenuType == MENU_OPTION) {
-        XtWarning("You can't have submenus from option menu items.");
-        return NULL;
-      } 
-      else {
-        i = *idx;
-        (*idx)++;	
-        xnav_build_menu(Menu, MENU_PULLDOWN, 
-		  Lng::translate( Items[i].Name), MenuUserData, 
-		  Callback, CallbackData, Items, idx);
-        (*idx)--;
-      }
-    }
-    else {
-      if (Items[*idx].Item == xmenu_eMenuItem_Separator)
-        Class = xmSeparatorGadgetClass;
-      else
-        Class = xmPushButtonGadgetClass;
- 
-      W = XtVaCreateManagedWidget(Lng::translate( Items[*idx].Name), 
-		    Class, Menu,
-		    XmNuserData, *idx,
-		    XmNsensitive, (Boolean)(Items[*idx].Flags.f.Sensitive == 1),
-		    NULL);
-
-      if (Callback && Class == xmPushButtonGadgetClass)
-        XtAddCallback(W, XmNactivateCallback, (XtCallbackProc) Callback, 
-		  (XtPointer) CallbackData);
-    }
-  }
-
-  return MenuType == MENU_POPUP ? Menu : Cascade;
-}
-
-static int getAllMenuItems (
-  xmenu_sMenuCall	*ip,
-  xmenu_sMenuItem	**Item,
-  pwr_tObjid		objid,
-  pwr_tUInt32		Level,
-  int			*nItems,
-  int			AddSeparator,
-  pwr_sAttrRef		*CurrentObject
-)
+int XNav::getAllMenuItems( xmenu_sMenuCall	*ip,
+			   xmenu_sMenuItem	**Item,
+			   pwr_tObjid		objid,
+			   pwr_tUInt32		Level,
+			   int			*nItems,
+			   int			AddSeparator,
+			   pwr_sAttrRef		*CurrentObject)
 {
   int                   sts;
   pwr_tCid	        classid;
@@ -262,7 +95,7 @@ static int getAllMenuItems (
       (*Item)->CurrentObject = *CurrentObject;
       sensitive = 1;
       if ( strcmp( mbp->FilterName, "") != 0) {
-        sts = xnav_GetMethod( mbp->FilterName, &filter);
+        sts = GetMethod( mbp->FilterName, &filter);
         if ( ODD(sts)) {
           sts = (filter) ( ip);
 	  if ( sts == XNAV__INSENSITIVE) 
@@ -305,7 +138,7 @@ static int getAllMenuItems (
       // Call any filter method
       (*Item)->CurrentObject = *CurrentObject;
       if ( strcmp( mcp->FilterName, "") != 0) {
-        sts = xnav_GetMethod( mcp->FilterName, &filter);
+        sts = GetMethod( mcp->FilterName, &filter);
         if ( ODD(sts)) {
           sts = (filter) ( ip);
         }
@@ -344,7 +177,7 @@ static int getAllMenuItems (
       // Call any filter method
       (*Item)->CurrentObject = *CurrentObject;
       if ( strcmp( mrp->FilterName, "") != 0) {
-        sts = xnav_GetMethod( mrp->FilterName, &filter);
+        sts = GetMethod( mrp->FilterName, &filter);
         if ( ODD(sts)) {
           sts = (filter) ( ip);
         }
@@ -406,7 +239,7 @@ static int getAllMenuItems (
 	  sts = gdh_GetAttrRefTid( &currentar, &current_cid);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = xnav_GetObjectMenu(ip, current_cid, Item, Level, nItems, 0, &currentar);
+	  sts = GetObjectMenu(ip, current_cid, Item, Level, nItems, 0, &currentar);
 	  if ( EVEN(sts)) return sts;
         }
       }
@@ -416,7 +249,7 @@ static int getAllMenuItems (
 }
 
 
-static int xnav_GetMenu( xmenu_sMenuCall *ip)
+int XNav::GetMenu( xmenu_sMenuCall *ip)
 {
   xmenu_sMenuItem	*Item = (xmenu_sMenuItem *) &xmenu_lMenuItem;
   int			nItems = 0;
@@ -428,7 +261,7 @@ static int xnav_GetMenu( xmenu_sMenuCall *ip)
     sts = gdh_GetAttrRefTid ( &ip->Selected[0], &classid);
     if ( EVEN(sts)) return sts;
 
-    xnav_GetObjectMenu( ip, classid, &Item, 0, &nItems, 0, &current);
+    GetObjectMenu( ip, classid, &Item, 0, &nItems, 0, &current);
   }
   Item->Level = 0;
   ip->ItemCount = nItems - 1;
@@ -436,14 +269,13 @@ static int xnav_GetMenu( xmenu_sMenuCall *ip)
   return XNAV__SUCCESS;
 }
 
-static int xnav_GetObjectMenu(
-  xmenu_sMenuCall	*ip,
-  pwr_tCid		classid,
-  xmenu_sMenuItem	**Item,
-  pwr_tUInt32		Level,
-  int			*nItems,
-  int			AddSeparator,
-  pwr_sAttrRef		*CurrentObject)
+int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
+			 pwr_tCid		classid,
+			 xmenu_sMenuItem	**Item,
+			 pwr_tUInt32		Level,
+			 int			*nItems,
+			 int			AddSeparator,
+			 pwr_sAttrRef		*CurrentObject)
 {
   int                   sts;
   pwr_tObjid            child;
@@ -570,8 +402,8 @@ static int xnav_GetObjectMenu(
   return XNAV__SUCCESS;
 }
 
-static int xnav_GetMethod( char *name, 
-			   pwr_tStatus (**method)( xmenu_sMenuCall *))
+int XNav::GetMethod( char *name, 
+		     pwr_tStatus (**method)( xmenu_sMenuCall *))
 {
   int i, j;
   char cname[80];
@@ -586,14 +418,10 @@ static int xnav_GetMethod( char *name,
   else
     strcpy( mname, "");
 
-  for ( i = 0;; i++)
-  {
-    if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0') break;
-    {
-      if ( strcmp(pwr_gBase_XttClassMethods[i].ClassName, cname) == 0)
-      {
-        for (j = 0;; j++) 
-        {
+  for ( i = 0;; i++) {
+    if (pwr_gBase_XttClassMethods[i].ClassName[0] == '\0') break; {
+      if ( strcmp(pwr_gBase_XttClassMethods[i].ClassName, cname) == 0) {
+        for (j = 0;; j++) {
           if ((*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName[0] == '\0')
 	    break;
           if ( strcmp( (*pwr_gBase_XttClassMethods[i].Methods)[j].MethodName,
@@ -609,24 +437,24 @@ static int xnav_GetMethod( char *name,
   return XNAV__NOMETHOD;
 }
 
-static int xnav_CallMenuMethod( xmenu_sMenuCall *ip, int idx)
+int XNav::CallMenuMethod( xmenu_sMenuCall *ip, int idx)
 {
   pwr_tStatus sts;
   pwr_tStatus (*method)( xmenu_sMenuCall *);
 
-  sts = xnav_GetMethod( ip->ItemList[idx].Method, &method);
+  sts = GetMethod( ip->ItemList[idx].Method, &method);
   if ( ODD(sts))
     sts = (method) ( ip);
 
   return sts;
 }
 
-static int xnav_CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx)
+int XNav::CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx)
 {
   pwr_tStatus sts;
   pwr_tStatus (*filter)( xmenu_sMenuCall *);
 
-  sts = xnav_GetMethod( ip->ItemList[idx].Filter, &filter);
+  sts = GetMethod( ip->ItemList[idx].Filter, &filter);
   if ( ODD(sts))
     sts = (filter) ( ip);
 
@@ -634,61 +462,11 @@ static int xnav_CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx)
 }
 
 
-Widget xnav_create_popup_menu( XNav *xnav, pwr_sAttrRef attrref, 
-			       xmenu_eItemType item_type, 
-			       xmenu_mUtility caller, 
-			       unsigned int priv, char *arg)
-{
-  pwr_tStatus 	sts;
-  int 		i;
-  Widget 	popup;
-  int		sel_cnt;
-
-  if (mcp == NULL)
-    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
-
-  mcp->ItemList = xmenu_lMenuItem;
-  mcp->EditorContext = (void *)xnav;
-  mcp->WindowContext = (void *)xnav->parent_wid;
-  mcp->PointedSet = xmenu_eMenuSet_Object;
-
-  mcp->Pointed = attrref;
-  mcp->Caller = caller;
-  mcp->ItemType = item_type;
-  mcp->Priv = priv;
-  mcp->SelectedSet = xmenu_eMenuSet_None;
-  mcp->SelectedSet = xmenu_eMenuSet_Object;
-  if ( arg)
-    strcpy( mcp->Arg, arg);
-
-  sel_cnt = 1;
-  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
-  mcp->Selected[0] = attrref;
-  mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
-  mcp->SelectCount = sel_cnt;
-
-  sts = xnav_GetMenu( mcp);  
-  if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
-    return NULL;
-  }
-
-  i = 0;
-  popup = xnav_build_menu( xnav->parent_wid, MENU_POPUP, "", mcp, 
-	xnav_popup_button_cb, (void *) xnav, 
-	(xmenu_sMenuItem *) mcp->ItemList, &i); 
-  if (popup != NULL) 
-    XtAddCallback (popup, XmNunmapCallback, 
-				(XtCallbackProc)xnav_popup_unmap_cb, mcp);
-
-  return popup;
-
-}/* hied_fun_popup_bc */ 
-
-int xnav_call_method( XNav *xnav, char *method, char *filter,
-			 pwr_sAttrRef attrref, 
-			 xmenu_eItemType item_type, 
-			 xmenu_mUtility caller,
-			 unsigned int priv, char *arg)
+int XNav::call_method( char *method, char *filter,
+		       pwr_sAttrRef attrref, 
+		       xmenu_eItemType item_type, 
+		       xmenu_mUtility caller,
+		       unsigned int priv, char *arg)
 {
   pwr_tStatus 	sts;
   int		sel_cnt;
@@ -696,10 +474,9 @@ int xnav_call_method( XNav *xnav, char *method, char *filter,
   pwr_tStatus (*filter_func)( xmenu_sMenuCall *);
 
   if (mcp == NULL)
-    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
+    mcp = (xmenu_sMenuCall *)calloc(1, sizeof(xmenu_sMenuCall));
 
-  mcp->EditorContext = (void *)xnav;
-  mcp->WindowContext = (void *)xnav->parent_wid;
+  mcp->EditorContext = (void *)this;
   mcp->PointedSet = xmenu_eMenuSet_Object;
 
   mcp->Pointed = attrref;
@@ -712,20 +489,20 @@ int xnav_call_method( XNav *xnav, char *method, char *filter,
     strcpy( mcp->Arg, arg);
 
   sel_cnt = 1;
-  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel_cnt;
 
   if ( filter && strcmp( filter, "") != 0) {
-    sts = xnav_GetMethod( filter, &filter_func);
+    sts = GetMethod( filter, &filter_func);
     if ( EVEN(sts)) return sts;
 
     sts = (filter_func) ( mcp);
     if ( EVEN(sts)) return sts;
   }
 
-  sts = xnav_GetMethod( method, &method_func);
+  sts = GetMethod( method, &method_func);
   if ( EVEN(sts)) return sts;
 
   sts = (method_func) ( mcp);
@@ -734,42 +511,10 @@ int xnav_call_method( XNav *xnav, char *method, char *filter,
   return XNAV__SUCCESS;
 }
 
-static void xnav_popup_unmap_cb(Widget w, xmenu_sMenuCall *ip)
-{
-  // XtFree( (char *)ip);
-  XtDestroyWidget(w);
-}
-
-static void xnav_popup_button_cb (Widget w, XNav *xnav)
-{
-  Widget menu;
-  int idx;
-  pwr_tStatus sts;
-
-  // Find the menu widget
-  menu = XtParent(w);
-  while (1) {
-    if (strcmp(XtName(menu), "_popup") == 0 || 
-	  strcmp(XtName(menu), "_pulldown") == 0)
-      break;
-    menu = XtParent(menu);
-  }
-
-  XtVaGetValues (w, XmNuserData, &idx, NULL);
-
-  mcp->ChosenItem = idx;
-  // xnav->set_clock_cursor();
-  sts = xnav_CallMenuMethod( mcp, mcp->ChosenItem);
-  if (EVEN(sts))
-    xnav->message( 'E', XNav::get_message(sts));
-  // xnav->reset_cursor();
-
-}
-
-int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref, 
-			       xmenu_eItemType item_type, 
-			       xmenu_mUtility caller, 
-			       unsigned int priv, char *method_name)
+int XNav::call_object_method( pwr_sAttrRef attrref, 
+			      xmenu_eItemType item_type, 
+			      xmenu_mUtility caller, 
+			      unsigned int priv, char *method_name)
 {
   pwr_tStatus 	sts;
   int 		i;
@@ -777,11 +522,10 @@ int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref,
   int		idx;
 
   if (mcp == NULL)
-    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
+    mcp = (xmenu_sMenuCall *)calloc(1, sizeof(xmenu_sMenuCall));
 
   mcp->ItemList = xmenu_lMenuItem;
-  mcp->EditorContext = (void *)xnav;
-  mcp->WindowContext = (void *)xnav->parent_wid;
+  mcp->EditorContext = (void *)this;
   mcp->PointedSet = xmenu_eMenuSet_Object;
 
   mcp->Pointed = attrref;
@@ -792,12 +536,12 @@ int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref,
   mcp->SelectedSet = xmenu_eMenuSet_Object;
 
   sel_cnt = 1;
-  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel_cnt;
 
-  sts = xnav_GetMenu( mcp);  
+  sts = GetMenu( mcp);  
   if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
     return 0;
   }
@@ -816,14 +560,14 @@ int xnav_call_object_method( XNav *xnav, pwr_sAttrRef attrref,
     return 0;
 
   mcp->ChosenItem = idx;
-  sts = xnav_CallMenuMethod( mcp, mcp->ChosenItem);
+  sts = CallMenuMethod( mcp, mcp->ChosenItem);
   return sts;
 }
 
-int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref, 
-			       xmenu_eItemType item_type, 
-			       xmenu_mUtility caller, 
-			       unsigned int priv, char *method_name)
+int XNav::check_object_methodfilter( pwr_sAttrRef attrref, 
+				     xmenu_eItemType item_type, 
+				     xmenu_mUtility caller, 
+				     unsigned int priv, char *method_name)
 {
   pwr_tStatus 	sts;
   int 		i;
@@ -831,11 +575,10 @@ int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref,
   int		idx;
 
   if (mcp == NULL)
-    mcp = (xmenu_sMenuCall *)XtCalloc(1, sizeof(xmenu_sMenuCall));
+    mcp = (xmenu_sMenuCall *)calloc(1, sizeof(xmenu_sMenuCall));
 
   mcp->ItemList = xmenu_lMenuItem;
-  mcp->EditorContext = (void *)xnav;
-  mcp->WindowContext = (void *)xnav->parent_wid;
+  mcp->EditorContext = (void *)this;
   mcp->PointedSet = xmenu_eMenuSet_Object;
 
   mcp->Pointed = attrref;
@@ -846,12 +589,12 @@ int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref,
   mcp->SelectedSet = xmenu_eMenuSet_Object;
 
   sel_cnt = 1;
-  mcp->Selected = (pwr_sAttrRef *) XtCalloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
   mcp->SelectCount = sel_cnt;
 
-  sts = xnav_GetMenu( mcp);  
+  sts = GetMenu( mcp);  
   if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
     return 0;
   }
@@ -870,8 +613,44 @@ int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref,
     return 0;
 
   mcp->ChosenItem = idx;
-  sts = xnav_CheckMenuMethodFilter( mcp, mcp->ChosenItem);
+  sts = CheckMenuMethodFilter( mcp, mcp->ChosenItem);
   return sts;
+}
+
+void XNav::get_popup_menu_items( pwr_sAttrRef attrref,
+				 xmenu_eItemType item_type, 
+				 xmenu_mUtility caller, 
+				 unsigned int priv, char *arg)
+{
+  pwr_tStatus 	sts;
+  int		sel_cnt;
+
+  if (mcp == NULL)
+    mcp = (xmenu_sMenuCall *)calloc(1, sizeof(xmenu_sMenuCall));
+
+  mcp->ItemList = xmenu_lMenuItem;
+  mcp->EditorContext = (void *)this;
+  mcp->PointedSet = xmenu_eMenuSet_Object;
+
+  mcp->Pointed = attrref;
+  mcp->Caller = caller;
+  mcp->ItemType = item_type;
+  mcp->Priv = priv;
+  mcp->SelectedSet = xmenu_eMenuSet_None;
+  mcp->SelectedSet = xmenu_eMenuSet_Object;
+  if ( arg)
+    strcpy( mcp->Arg, arg);
+
+  sel_cnt = 1;
+  mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
+  mcp->Selected[0] = attrref;
+  mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
+  mcp->SelectCount = sel_cnt;
+
+  sts = GetMenu( mcp);  
+  if (EVEN(sts) || mcp->ItemList[0].Level == 0) {
+    return;
+  }
 }
 
 

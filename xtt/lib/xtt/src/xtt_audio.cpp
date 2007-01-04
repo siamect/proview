@@ -12,15 +12,7 @@
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "co_wow.h"
 #include "xtt_audio.h"
 
 #define OSS_BUFFER_SIZE 65536
@@ -53,13 +45,13 @@ int XttAudio::OSS_audio_ok=0;
 int XttAudio::ALSA_audio_ok=0;
 int XttAudio::OSS_handle=0;
 int XttAudio::srate=0; 
-Widget XttAudio::parent_wid = 0;
+CoWow *XttAudio::wow = 0;
 snd_pcm_t *XttAudio::ALSA_handle=NULL;
 snd_pcm_uframes_t XttAudio::frames=AUDIO_BUFFER_SIZE/4;
 snd_pcm_hw_params_t *XttAudio::hw_params=NULL;
 static long unsigned int period_size = 65536;
 
-XttAudio::XttAudio( Widget w, char *OSS_device, char * ALSA_device) :
+XttAudio::XttAudio( CoWow *a_wow, char *OSS_device, char * ALSA_device) :
   write_buffer(0), timerid(0), queue_cnt(0)
 {
   /*constructor*/
@@ -83,7 +75,8 @@ XttAudio::XttAudio( Widget w, char *OSS_device, char * ALSA_device) :
     else
       errh_Info("No audio device found, using only Bell");
   }
-  parent_wid = w;
+  wow = a_wow;
+  timerid = wow->timer_new();
 
   // Calculate frequences for tones from ground tone C2
   for ( int i = 0; i < 100; i++)
@@ -94,8 +87,7 @@ XttAudio::~XttAudio()
 {
   /*destructor*/
 
-  if ( timerid)
-    XtRemoveTimeOut( timerid);
+  timerid->remove();
     
   number_of--;
 
@@ -423,8 +415,9 @@ int XttAudio::beep( pwr_tAttrRef *arp)
   return XNAV__SUCCESS;
 }
 
-void XttAudio::audio_write( XttAudio *audio)
+void XttAudio::audio_write( void *data)
 {
+  XttAudio *audio = (XttAudio *)data;
   int rc; 
 
   audio->timerid = 0;
@@ -455,9 +448,7 @@ void XttAudio::audio_write( XttAudio *audio)
     }    
     else {
       int time = 1000 * size/2 / srate + 10;
-      audio->timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(parent_wid), time,
-	(XtTimerCallbackProc)XttAudio::audio_write, audio);
+      audio->timerid->add( time, audio_write, audio);
     }
   }
 
@@ -475,9 +466,7 @@ void XttAudio::audio_write( XttAudio *audio)
       // EPIPE means underrun
       fprintf(stderr, "ALSA audio underrun occurred\n");
       int time = 20;
-      audio->timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(parent_wid), time,
-	(XtTimerCallbackProc)XttAudio::audio_write, audio);
+      audio->timerid->add( time, audio_write, audio);
       return;
       // snd_pcm_prepare( audio->ALSA_handle);
     }
@@ -495,9 +484,7 @@ void XttAudio::audio_write( XttAudio *audio)
     if ( audio->write_buffer_idx < audio->write_buffer_size) {
       // Submit next write
       int time = 1000 * size/2 / srate;
-      audio->timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(parent_wid), time,
-	(XtTimerCallbackProc)XttAudio::audio_write, audio);
+      audio->timerid->add( time, audio_write, audio);
     }    
     else {
       // Free buffer

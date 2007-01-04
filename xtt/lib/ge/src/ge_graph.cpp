@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.33 2006-06-29 10:50:40 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.34 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,26 +23,15 @@
 #include <stdlib.h>
 #include <float.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
-}
- 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "ge_attr.h"
@@ -50,12 +39,8 @@ extern "C" {
 #include "ge_msg.h"
 #include "glow_msg.h"
 
-extern "C" {
-#include "co_mrm_util.h"
 #include "co_msg.h"
 #include "co_ccm.h"
-#include "flow_x.h"
-}
 #include "co_lng.h"
 
 #if defined OS_VMS
@@ -95,8 +80,7 @@ static const    graph_sTypeStr	graph_type_table[] = {
 static char null_str[] = "";
 
 static void graph_remove_space( char *out_str, char *in_str);
-static int graph_init_grow_cb( GrowCtx *ctx, void *client_data);
-static int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data);
+// static int graph_init_grow_cb( GrowCtx *ctx, void *client_data);
 static void graph_attr_redraw_cb( Attr *attrctx);
 static void graph_attr_close_cb( Attr *attrctx);
 static void graph_attr_store_cb( void *g, grow_tObject object);
@@ -110,7 +94,6 @@ static int graph_trace_disconnect_bc( grow_tObject object);
 static int graph_trace_scan_bc( grow_tObject object, void *p);
 static int graph_trace_connect_bc( grow_tObject object, 
 	glow_sTraceData *trace_data);
-static void graph_trace_scan( Graph *graph);
 static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event);
 static int graph_get_subgraph_info_cb( void *g, char *name, 
 	attr_sItem **itemlist, int *itemlist_cnt);
@@ -135,7 +118,8 @@ void Graph::message( pwr_tStatus sts)
 
 void Graph::message( char sev, char *text)
 {
-  (message_cb)( parent_ctx, sev, text);
+  if ( message_cb)
+    (message_cb)( parent_ctx, sev, text);
 
   if ( scriptmode && strcmp( text, "") != 0)
     printf( "GE-%c-Message, %s\n", sev, text);
@@ -146,20 +130,16 @@ void Graph::message( char sev, char *text)
 //
 Graph::Graph(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
-	pwr_tStatus *status,
 	char *xn_default_path,
 	graph_eMode graph_mode,
-	int scrollbar,
 	int xn_gdh_init_done,
 	char *xn_object_name,
 	int xn_use_default_access,
 	unsigned int xn_default_access) :
 	attr_list( 0, NULL),
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
-	grow_cnt(0), ldhses(0),
+	parent_ctx(xn_parent_ctx),
+	grow(0), grow_cnt(0), ldhses(0),
 	message_cb(NULL), get_current_subgraph_cb(NULL), close_cb(NULL),
 	get_current_colors_cb(NULL), set_current_colors_cb(NULL),
 	init_cb(NULL), cursor_motion_cb(NULL), change_text_cb(NULL),
@@ -194,59 +174,17 @@ Graph::Graph(
     strcpy( object_name, "");
   strcpy( filename, "");
 
-  if ( scrollbar)
-    form_widget = ScrolledGrowCreate( parent_wid, name, NULL, 0, 
-	graph_init_grow_base_cb, this, (Widget *)&grow_widget);
-  else
-    grow_widget = form_widget = GrowCreate( parent_wid, name, NULL, 0, 
-	graph_init_grow_base_cb, this);
-  XtManageChild( form_widget);
-
-  // Create the root item
-  *w = form_widget;
-
-  gbl.load_config( this);
-
-  *status = 1;
 }
 
 //
-//  Delete a nav context
+//  Destructor
 //
 Graph::~Graph()
 {
-  Attr		*attrctx;
-  int		sts;
-
-  closing_down = 1;
-
-  if ( trace_started)
-    close_trace( 0);
-
-  sts = attr_list.get_first( (void **) &attrctx);
-  while ( sts)
-  {
-    delete attrctx;
-    attr_list.remove( (void *) attrctx);
-    sts = attr_list.get_first( (void **) &attrctx);
-  }
-
-  localdb_free();
-
-  for ( int i = 0; i < grow_cnt; i++) {
-    grow_SetCtxUserData( grow_stack[i]->ctx, 0);
-    delete grow_stack[i];
-  }
-  grow_SetCtxUserData( grow->ctx, 0);
-  delete grow;
-  XtDestroyWidget( form_widget);
 }
 
 GraphGrow::~GraphGrow()
 {
-  if ( this != ((Graph *)graph)->grow_stack[0] &&
-       this != ((Graph *)graph)->grow)
-    grow_DeleteSecondaryCtx( ctx);
 }
 //
 //  Print
@@ -254,23 +192,6 @@ GraphGrow::~GraphGrow()
 void Graph::print( char *filename)
 {
   grow_Print( grow->ctx, filename, 0, 0, 1);
-}
-
-int Graph::create_navigator( Widget parent)
-{
-  Arg 		args[20];
-  int		i;
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  XtSetArg(args[i],XmNpaneMinimum,75);i++;
-  XtSetArg(args[i],XmNpaneMaximum,800);i++;
-  nav_widget = GrowCreateNav( parent, "navigator",
-        args, i, grow_widget);
-  XtManageChild( nav_widget);
-
-  return 1;
 }
 
 //
@@ -698,30 +619,6 @@ int Graph::ungroup_select( int force)
   return grow_UngroupSelect( grow->ctx);
 }
 
-void Graph::set_inputfocus( int focus)
-{
-  // Arg 		args[2];
-  Pixel 	bg, fg;
-
-  // if ( !displayed)
-  //  return;
-
-  XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
-  if ( !focus)
-  {
-    // XtSetArg(args[0], XmNborderColor, bg);
-    // XtSetValues( form_widget, args, 1);
-  }
-  else
-  {
-    if ( flow_IsViewable( grow_widget)) {
-      XtCallAcceptFocus( grow_widget, CurrentTime);
-      // XtSetArg(args[0], XmNborderColor, fg);
-      // XtSetValues( form_widget, args, 1);
-    }
-  }
-}
-
 void Graph::set_gridsize( double gridsize)
 {
   grow_sAttributes grow_attr;
@@ -1032,8 +929,10 @@ void Graph::set_background_color()
 {
   glow_eDrawType fill_color, border_color, text_color;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
-  grow_SetBackgroundColor( grow->ctx, fill_color);
+  if ( get_current_colors_cb) {
+    (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
+    grow_SetBackgroundColor( grow->ctx, fill_color);
+  }
 }
 
 void Graph::set_nav_background_color()
@@ -1056,27 +955,30 @@ int Graph::get_show_grid()
 
 glow_eDrawType Graph::get_border_drawtype()
 {
-  glow_eDrawType fill_color, border_color, text_color;
+  glow_eDrawType fill_color, text_color, border_color = glow_eDrawType_Line;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
+  if ( get_current_colors_cb)
+    (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
 
   return border_color;
 }
 
 glow_eDrawType Graph::get_fill_drawtype()
 {
-  glow_eDrawType fill_color, border_color, text_color;
+  glow_eDrawType border_color, text_color, fill_color = glow_eDrawType_LightGray;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
+  if ( get_current_colors_cb)
+    (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
 
   return fill_color;
 }
 
 glow_eDrawType Graph::get_text_drawtype()
 {
-  glow_eDrawType fill_color, border_color, text_color;
+  glow_eDrawType fill_color, border_color, text_color = glow_eDrawType_Line;
 
-  (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
+  if ( get_current_colors_cb)
+    (get_current_colors_cb)( parent_ctx, &fill_color, &border_color, &text_color);
 
   return text_color;
 }
@@ -1548,7 +1450,7 @@ int Graph::edit_attributes( grow_tObject object)
 
   get_attr_items( object, &itemlist, &item_cnt, &client_data);
 
-  attr = new Attr( parent_wid, this, object, itemlist, item_cnt);
+  attr = attr_new( this, object, itemlist, item_cnt);
   attr->client_data = client_data;
   attr->close_cb = graph_attr_close_cb;
   attr->redraw_cb = graph_attr_redraw_cb;
@@ -1622,7 +1524,8 @@ static void graph_attr_store_cb( void *g, grow_tObject object)
   GeDyn *dyn;
 
   grow_GetUserData( object, (void **)&dyn);
-  graph->recall.insert( dyn, "", object);
+  if ( dyn)
+    graph->recall.insert( dyn, "", object);
 }
 
 static int graph_attr_recall_cb( void *g, grow_tObject object, int idx, 
@@ -1819,7 +1722,7 @@ int Graph::edit_subgraph_attributes()
   Attr   		*attr;
 
   get_subgraph_attr_items( &items, &item_cnt, &client_data);
-  attr = new Attr( parent_wid, this, NULL, items, item_cnt);
+  attr = attr_new( this, NULL, items, item_cnt);
 
   attr->client_data = client_data;
   attr->close_cb = graph_graphattr_close_cb;
@@ -1875,7 +1778,7 @@ int Graph::edit_graph_attributes()
   Attr   		*attr;
 
   get_graph_attr_items( &items, &item_cnt, &client_data);
-  attr = new Attr( parent_wid, this, NULL, items, item_cnt);
+  attr = attr_new( this, NULL, items, item_cnt);
   attr->client_data = client_data;
   attr->close_cb = graph_graphattr_close_cb;
   attr->redraw_cb = graph_graphattr_redraw_cb;
@@ -2572,30 +2475,11 @@ int	GraphGbl::load_config( void *graph)
 
 int Graph::grow_pop()
 {
-  GrowCtx *secondary_ctx;
-
-  if ( grow_cnt >= GRAPH_GROW_MAX)
-    return 0;
-  grow_CreateSecondaryCtx( grow->ctx, &secondary_ctx,
-        graph_init_grow_cb, (void *)this, glow_eCtxType_Grow);
-
-  grow_ChangeCtx( grow_widget, grow->ctx, grow_stack[grow_cnt]->ctx);
-  *grow = *grow_stack[grow_cnt];
-  grow_cnt++;
   return 1;
 }
 
 int Graph::grow_push()
 {
-
-  if ( grow_cnt == 1)
-     return 0;
-
-  grow_cnt--;
-  grow_ChangeCtx( grow_widget, grow_stack[grow_cnt]->ctx, 
-		grow_stack[grow_cnt-1]->ctx);
-  *grow = *grow_stack[grow_cnt-1];
-  delete grow_stack[grow_cnt];
   return 1;
 }
 
@@ -2808,11 +2692,11 @@ void GraphGrow::grow_trace_setup()
 // Backcall routine called at creation of the grow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data)
+int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data)
 {
   Graph *graph = (Graph *) client_data;
   GrowCtx *ctx = (GrowCtx *)fctx;
-  GrowCtx *secondary_ctx;
+  // GrowCtx *secondary_ctx;
 
   graph->grow = new GraphGrow( ctx, (void *)graph);
   graph->grow_stack[0] = new GraphGrow( ctx, (void *)graph);
@@ -2822,15 +2706,15 @@ static int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data)
 
   memcpy( graph->grow_stack[0], graph->grow, sizeof( *graph->grow));
 
-  grow_CreateSecondaryCtx( graph->grow_stack[0]->ctx, &secondary_ctx,
-        graph_init_grow_cb, (void *)graph, glow_eCtxType_Grow);
+  // grow_CreateSecondaryCtx( graph->grow_stack[0]->ctx, &secondary_ctx,
+  //      graph_init_grow_cb, (void *)graph, glow_eCtxType_Grow);
 
   if ( graph->init_cb)
     (graph->init_cb) (graph->parent_ctx);
   return 1;
 }
 
-
+#if 0
 static int graph_init_grow_cb( GrowCtx *ctx, void *client_data)
 {
   Graph *graph = (Graph *) client_data;
@@ -2841,6 +2725,7 @@ static int graph_init_grow_cb( GrowCtx *ctx, void *client_data)
 
   return 1;
 }
+#endif
 
 static void graph_attr_redraw_cb( Attr *attrctx)
 {
@@ -2953,7 +2838,7 @@ int Graph::init_trace()
     trace_started = 1;
     current_mb1_down = 0;
 
-    graph_trace_scan( this);
+    trace_scan( this);
     grow_InputFocusInitEvent( grow->ctx);
   }
   return 1;
@@ -2965,7 +2850,7 @@ void Graph::close_trace( int reload)
 
   if ( trace_started)
   {
-    XtRemoveTimeOut( trace_timerid);
+    trace_timer_remove();
 
     grow_TraceClose( grow->ctx);
 
@@ -2989,7 +2874,7 @@ void Graph::close_trace( int reload)
   }
 }
 
-static void graph_trace_scan( Graph *graph)
+void Graph::trace_scan( Graph *graph)
 {
   int time = int( graph->animation_scan_time * 1000);
 
@@ -3010,9 +2895,7 @@ static void graph_trace_scan( Graph *graph)
 	 int(graph->fast_scan_time / graph->animation_scan_time + 0.5))
       graph->fast_scan_cnt = 0;
 
-    graph->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(graph->grow_widget), time,
-	(XtTimerCallbackProc)graph_trace_scan, graph);
+    graph->trace_timer_add( time);
   }
 }
 
@@ -4265,7 +4148,7 @@ void Graph::swap( int mode)
   if ( mode == 0) {
     // Swap starting
     if ( trace_started) {
-      XtRemoveTimeOut( trace_timerid);
+      trace_timer_remove();
       grow_TraceClose( grow->ctx);
       trace_started = 0;
     }
@@ -4276,7 +4159,7 @@ void Graph::swap( int mode)
       grow_TraceInit( grow->ctx, graph_trace_connect_bc, 
 			    graph_trace_disconnect_bc, graph_trace_scan_bc);
       trace_started = 1;
-      graph_trace_scan( this);
+      trace_scan( this);
     }
   }
 }

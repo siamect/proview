@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.11 2006-06-14 05:04:10 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.12 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,27 +25,16 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_ccm_msg.h"
 #include "co_dcli.h"
 #include "co_cnf.h"
 #include "rt_gdh.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 #include "ge_msg.h"
 
 #include "ge_graph.h"

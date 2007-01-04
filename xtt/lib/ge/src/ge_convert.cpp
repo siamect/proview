@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_convert.cpp,v 1.4 2005-12-13 15:14:02 claes Exp $
+ * Proview   $Id: ge_convert.cpp,v 1.5 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,6 @@ extern "C" {
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "co_dcli_msg.h"

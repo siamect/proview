@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.8 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.9 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,57 +22,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_wow.h"
 #include "rt_xnav_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "glow_growctx.h"
-#undef min
-#undef max
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 #include "glow_curvectx.h"
 #include "glow_curveapi.h"
-#include "glow_curvewidget.h"
 
 #include "xtt_xnav.h"
 #include "xtt_trend.h"
 
-extern "C" {
-#include "flow_x.h"
-}
+#include "ge_curve.h"
 
-static void trend_close_cb( void *ctx);
-static void trend_help_cb( void *ctx);
-static void trend_scan( XttTrend *trend);
-
-XttTrend::XttTrend(
-	void *parent_ctx,
-	Widget	parent_wid,
-	char *name,
-	Widget *w,
-        pwr_sAttrRef *trend_list,
-        pwr_sAttrRef *plotgroup,
-        int *sts) :
-  xnav(parent_ctx), parent_widget(parent_wid), trend_cnt(0), close_cb(0), help_cb(0)
+XttTrend::XttTrend( void *parent_ctx,
+		    char *name,
+		    pwr_sAttrRef *trend_list,
+		    pwr_sAttrRef *plotgroup,
+		    int *sts) :
+  xnav(parent_ctx), trend_cnt(0), close_cb(0), help_cb(0)
 {
   pwr_sAttrRef *aref_list;
   pwr_sAttrRef *aref_p;
@@ -268,24 +245,10 @@ XttTrend::XttTrend(
           &gcd->axis_width[i+1], 1, 1);
     }
   }
-
-  curve = new GeCurve( this, parent_widget, name, NULL, gcd, 1);
-  curve->close_cb = trend_close_cb;
-  curve->help_cb = trend_help_cb;
-
-  timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(parent_widget), 1000,
-	(XtTimerCallbackProc)trend_scan, this);
 }
 
 XttTrend::~XttTrend()
 {
-  XtRemoveTimeOut( timerid);
-
-  for ( int i = 0; i < trend_cnt; i++) {
-    gdh_UnrefObjectInfo( subid[i]);
-  }
-  delete curve;
 }
 
 void XttTrend::pop()
@@ -293,7 +256,7 @@ void XttTrend::pop()
   curve->pop();
 }
 
-static void trend_close_cb( void *ctx)
+void XttTrend::trend_close_cb( void *ctx)
 {
   XttTrend *trend = (XttTrend *) ctx;
 
@@ -303,7 +266,7 @@ static void trend_close_cb( void *ctx)
     delete trend;
 }
 
-static void trend_help_cb( void *ctx)
+void XttTrend::trend_help_cb( void *ctx)
 {
   XttTrend *trend = (XttTrend *) ctx;
 
@@ -311,8 +274,9 @@ static void trend_help_cb( void *ctx)
     (trend->help_cb)( trend->xnav, "trendwindow");
 }
 
-static void trend_scan( XttTrend *trend)
+void XttTrend::trend_scan( void *data)
 {
+  XttTrend *trend = (XttTrend *)data;
   int i, j, k;
   int write_buffer;
   int idx;
@@ -353,10 +317,7 @@ static void trend_scan( XttTrend *trend)
     }
   }
 
-  trend->timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(trend->parent_widget), 
-        1000,
-	(XtTimerCallbackProc)trend_scan, trend);
+  trend->timerid->add( 1000, trend_scan, trend);
 }
 
 

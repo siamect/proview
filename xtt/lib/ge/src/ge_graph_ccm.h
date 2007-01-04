@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_ccm.h,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_ccm.h,v 1.3 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,11 @@
 #define ge_graph_ccm_h
 
 /* graph_gccm.h -- script interpreter */
+
+#if defined __cplusplus
+extern "C" {
+#endif
+
 
 #define CCM_DECL_STRING	1
 #define CCM_DECL_INT	2
@@ -128,4 +133,8 @@ int	gccm_create_pwr_args(
 
 void	gccm_free_pwr_args(
 		gccm_s_arglist	*arglist);
+
+#if defined __cplusplus
+}
+#endif
 #endif

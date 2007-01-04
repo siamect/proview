@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_dynamic.cpp,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_dynamic.cpp,v 1.3 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,31 +24,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_ccm_msg.h"
 #include "rt_gdh.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
-
 #include "ge_graph.h"
-extern "C" {
 #include "ge_graph_ccm.h"
 #include "co_dcli.h"
-}
 
 static int			graph_gccm_func_registred = 0;
 static int			graph_verify = 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.h,v 1.10 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: xtt_menu.h,v 1.11 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,10 +28,10 @@
 #include "pwr_class.h"
 #endif
 
-#ifndef PWR_BASECLASSES_H
-#include "pwr_baseclasses.h"
-#endif
-
+#define MENU_BAR      1
+#define MENU_PULLDOWN 2
+#define MENU_POPUP    3
+#define MENU_OPTION   4
 
 typedef struct xmenu_s_MenuItem	xmenu_sMenuItem;
 typedef struct xmenu_s_MenuCall	xmenu_sMenuCall;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.5 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.6 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/* xtt_evlist.cpp -- Console message window. */
+/* xtt_clognav.cpp -- Console message window. */
 
 #include "glow_std.h"
 
@@ -25,45 +25,22 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_syi.h"
-}
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-// Status is defined as int i xlib...
-#ifdef Status
-# undef Status
-#endif
-
-extern "C" {
-#include "flow_x.h"
-#include "co_mrm_util.h"
-}
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "xtt_clognav.h"
-#include "xtt_menu.h"
 
 #include "xnav_bitmap_leaf12.h"
 #include "xnav_bitmap_map12.h"
 #include "xnav_bitmap_openmap12.h"
 
-static int clognav_init_brow_cb( FlowCtx *fctx, void *client_data);
-static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event);
 
 //
 //  Free pixmaps
@@ -80,35 +57,32 @@ void CLogNavBrow::free_pixmaps()
 //
 void CLogNavBrow::allocate_pixmaps()
 {
-	flow_sPixmapData pixmap_data;
-	int i;
+  flow_sPixmapData pixmap_data;
+  int i;
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_leaf12_width;
-	    pixmap_data[i].height =xnav_bitmap_leaf12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_leaf12_width;
+    pixmap_data[i].height =xnav_bitmap_leaf12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_leaf12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_leaf);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_map12_width;
-	    pixmap_data[i].height =xnav_bitmap_map12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_map12_width;
+    pixmap_data[i].height =xnav_bitmap_map12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_map12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_map);
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_openmap12_width;
-	    pixmap_data[i].height =xnav_bitmap_openmap12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_openmap12_width;
+    pixmap_data[i].height =xnav_bitmap_openmap12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_openmap12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_openmap);
 
 }
 
@@ -263,40 +237,44 @@ void CLogNavBrow::brow_setup()
   brow_SetCtxUserData( ctx, clognav);
 
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	CLogNav::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	clognav_brow_cb);
+	CLogNav::brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int clognav_init_brow_cb( FlowCtx *fctx, void *client_data)
+int CLogNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   int start_idx = 1;
 
@@ -313,19 +291,11 @@ static int clognav_init_brow_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-CLogNav::CLogNav(
-	void *clog_parent_ctx,
-	Widget	clog_parent_wid,
-	Widget *w) :
-	parent_ctx(clog_parent_ctx), parent_wid(clog_parent_wid),
-	clog_size(0), max_size(10000), current_pos_high(0),
-	current_pos_low(0)
+CLogNav::CLogNav( void *clog_parent_ctx) :
+  parent_ctx(clog_parent_ctx),
+  clog_size(0), max_size(10000), current_pos_high(0),
+  current_pos_low(0)
 {
-  form_widget = ScrolledBrowCreate( parent_wid, "CLogNav", NULL, 0, 
-	clognav_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  *w = form_widget;
 }
 
 
@@ -334,8 +304,6 @@ CLogNav::CLogNav(
 //
 CLogNav::~CLogNav()
 {
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 CLogNavBrow::~CLogNavBrow()
@@ -606,12 +574,6 @@ void CLogNav::draw()
 
 }
 
-void CLogNav::set_input_focus()
-{
-  if ( flow_IsViewable( brow_widget))
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-}
-
 //
 //  Zoom
 //
@@ -642,7 +604,7 @@ void CLogNav::reset_nodraw()
 //
 // Callbacks from brow
 //
-static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int CLogNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   CLogNav		*clognav;
   ItemMsg 		*item;
@@ -735,6 +697,14 @@ static int clognav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_Key_PageUp: {
       brow_Page( clognav->brow->ctx, -0.9);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( clognav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( clognav->brow->ctx, -0.1);
       break;
     }
     case flow_eEvent_SelectClear:

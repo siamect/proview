@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.8 2006-03-31 14:34:12 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.9 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,28 +37,19 @@ extern "C" {
 }
 
 #include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "ge_util.h"
 #include "ge_msg.h"
 
-extern "C" {
 #if LDH
 #include "wb_ldh.h"
 #include "wb_trv.h"
 #endif
-}
 
 typedef enum {
       graph_eWebTarget_RightFrame      = 0,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.h,v 1.4 2005-11-17 09:03:20 claes Exp $
+ * Proview   $Id: xtt_fast.h,v 1.5 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,10 +22,6 @@
 
 /* xtt_fast.h -- Fast curves */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -45,6 +41,9 @@ extern "C" {
 
 #define XTT_FAST_MAX 20
 
+class CoWow;
+class CoWowTimer;
+
 //! Window that displays fast curve in a DsFastCurve object.
 /*!
   A DsFastCurve references a data array for the time axis, and up to 10 data arrays
@@ -57,18 +56,8 @@ extern "C" {
 class XttFast {
  public:
   
-  //! Constructor
-  XttFast(
-	  void *xn_parent_ctx,
-	  Widget	xn_parent_wid,
-	  char *xn_name,
-	  Widget *w,
-	  pwr_sAttrRef *fast_arp,
-	  int *sts);
-
   void       	*xnav;			//!< Pointer to parent XNav.
-  Widget     	parent_widget;		//!< Parent widget.
-  int        	fast_cnt;			//!< Number of fast curves.
+  int        	fast_cnt;	       	//!< Number of fast curves.
   GeCurveData 	*gcd;			//!< Curve data for GeCurve object.
   GeCurve    	*curve;			//!< Curve window.
   pwr_tRefId 	new_subid;			//!< Subid of New attribute in DsFastCurve.
@@ -80,7 +69,7 @@ class XttFast {
   int	       	curve_idx[XTT_FAST_MAX]; //!< Conversion from GeCurveData index to DsFastCurve index.
   int        	element_size[XTT_FAST_MAX]; //!< Size of data element in curves.
   int        	max_points;		//!< Max number of points in curves.
-  XtIntervalId  timerid;		//!< Time id for scan.
+  CoWowTimer    *timerid;		//!< Time id for scan.
   void       	(*close_cb)( void *, XttFast *); //!< Close callback to parent.
   void       	(*help_cb)( void *, char *); //!< Open help window.
   pwr_tBoolean 	old_new;		//!< Old value of new. Used to detect edge of New.
@@ -91,18 +80,28 @@ class XttFast {
   pwr_sAttrRef 	first_index_attr;	//!< Attrref to FirstIndex attribute in DsFastCurve object.
   pwr_sAttrRef 	last_index_attr;	//!< Attrref to LastIndex attribute in DsFastCurve object.
   pwr_sAttrRef 	trigg_time_attr;	//!< Attrref to TriggTime attribute in DsFastCurve object.
+  char		title[250];			//!< Window title
+  CoWow		*wow;
+
+  //! Constructor
+  XttFast( void *xn_parent_ctx,
+	   char *xn_name,
+	   pwr_sAttrRef *fast_arp,
+	   int *sts);
+
+  //! Destructor
+  virtual ~XttFast();
 
   //! Pop fast window.
   void pop();
 
-  //! Destructor
-  ~XttFast();
+  static void fast_close_cb( void *ctx);
+  static void fast_help_cb( void *ctx);
+  static void fast_scan( void *data);
+
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

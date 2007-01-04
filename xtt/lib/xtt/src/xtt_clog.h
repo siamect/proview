@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog.h,v 1.2 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_clog.h,v 1.3 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,59 +22,40 @@
 
 /* xtt_clog.h -- Alarm and event windows in xtt */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
-#endif
-
-#if defined __cplusplus
-}
 #endif
 
 #ifndef xtt_clognav
 # include "xtt_clognav.h"
 #endif
 
+class CoWow;
+
 class CLog {
   public:
-    CLog(
-	void *clog_parent_ctx,
-	Widget	clog_parent_wid,
-	char *clog_name,
-	pwr_tStatus *status);
-    ~CLog();
+    CLog( void *clog_parent_ctx,
+	  char *clog_name,
+	  pwr_tStatus *status);
+    virtual ~CLog();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
-    Widget		parent_wid_clog;
     char 		name[80];
-    Widget		toplevel;
-    Widget		form_clog;
-    Widget		clognav_widget;
-    Widget		filter_form;
-    Widget		show_success_w;
-    Widget		show_info_w;
-    Widget		show_warning_w;
-    Widget		show_error_w;
-    Widget		show_fatal_w;
-    Widget		show_text_w;
-    Widget		filter_string_w;
-    Widget		filesel_form;
-    Widget		filesel_list_w;
     CLogNav		*clognav;
     int			clog_displayed;
     void 		(*help_cb)( void *, char *);
     void 		(*close_cb)( void *);
     bool		filesel_loaded;
-    int			clock_cursor;
+    CoWow		*wow;
 
-    void	pop();
-    void	set_clock_cursor();
-    void	reset_cursor();
-    void	free_cursor();
+    virtual void pop() {}
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
+    virtual void free_cursor() {}
+
+    void activate_next_file();
+    void activate_prev_file();
+    void activate_help();
 };
 
 #endif

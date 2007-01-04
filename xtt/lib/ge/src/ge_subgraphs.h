@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subgraphs.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_subgraphs.h,v 1.4 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef ge_subgraphs_h
 #define ge_subgraphs_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -91,21 +87,13 @@ class SubGraphs {
   public:
     SubGraphs(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	void *grow_ctx,
-	Widget *w,
 	pwr_tStatus *status);
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		subgraphs_form;
-    Widget		toplevel;
-    Widget		brow_widget;
-    Widget		form_widget;
     SubGraphsBrow	*brow;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*close_cb)( SubGraphs *);
@@ -118,8 +106,12 @@ class SubGraphs {
     int object_attr();
     int get_select( void **subgraph_item);
     int edit_attributes( void *object);
+    virtual void trace_start() {}
+    virtual Attr *new_attr( void *object, attr_sItem *items, int num) { return 0;}
 
-    ~SubGraphs();
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+
+    virtual ~SubGraphs();
 };
 
 //! Base item class.
@@ -147,7 +139,4 @@ class ItemSubGraph : public SubGraphBaseItem {
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif

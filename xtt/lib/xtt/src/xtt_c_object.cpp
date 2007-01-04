@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_object.cpp,v 1.15 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: xtt_c_object.cpp,v 1.16 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,23 +22,14 @@
 #include "pwr_baseclasses.h"
 #include "flow_std.h"
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "xtt_menu.h"
 #include "xtt_xnav.h"
 #include "xtt_url.h"
 #include "rt_xnav_msg.h"
-extern "C" {
+#include "rt_gdh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_wow.h"
-}
 #include "co_lng.h"
 
 
@@ -774,7 +765,7 @@ static pwr_tStatus Collect( xmenu_sMenuCall *ip)
   aref = *objar;
   sts = ((XNav *)ip->EditorContext)->collect_insert( &aref);
   if ( EVEN(sts)) {
-    wow_DisplayError( (Widget) ip->WindowContext, "Collect error", 
+    ((XNav *)ip->EditorContext)->wow->DisplayError( "Collect error", 
 		      XNav::get_message(sts));
   }
 
@@ -798,7 +789,7 @@ static pwr_tStatus CollectFilter( xmenu_sMenuCall *ip)
        ip->ItemType == xmenu_eItemType_AttrObject) {
     aref = *objar;
     // Note, get_trace_attr replaces the value in aref for channels
-    sts = xnav_get_trace_attr( &aref, attr);
+    sts = XNav::get_trace_attr( &aref, attr);
     if ( EVEN(sts))
       return XNAV__INVISIBLE;
   }

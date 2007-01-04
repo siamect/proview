@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.28 2006-03-31 14:40:51 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.29 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,8 +25,6 @@
 #include <stdlib.h>
 
 #include "co_nav_help.h"
-
-extern "C" {
 #include "pwr_privilege.h"
 #include "rt_gdh.h"
 #include "rt_gdb.h"
@@ -38,63 +36,33 @@ extern "C" {
 #include "co_msg.h"
 #include "pwr_baseclasses.h"
 #include "rt_xnav_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-
-extern "C" {
-#include "flow_x.h"
-#include "rt_trace.h"
-#include "co_mrm_util.h"
-}
 #include "co_lng.h"
 #include "co_error.h"
 #include "co_xhelp.h"
+#include "co_wow.h"
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_menu.h"
 #include "xtt_xatt.h"
 #include "xtt_xcrr.h"
 #include "xtt_ge.h"
+#include "xtt_ev.h"
+#include "xtt_op.h"
+#include "xtt_audio.h"
+#include "rt_trace.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static char null_str[] = "";
 
-static void xnav_trace_close_cb( tra_tCtx tractx);
-static void xnav_trace_help_cb(tra_tCtx tractx, char *key);
-static void xnav_trace_subwindow_cb( void *ctx, pwr_tObjid objid);
-static void xnav_trace_display_object_cb( void *ctx, pwr_tObjid objid);
-static int xnav_is_authorized_cb( void *xnav, unsigned int access);
-static void xnav_trace_collect_insert_cb( void *ctx, pwr_tObjid objid);
-static void xnav_xatt_close_cb( void *xnav, void *xatt);
-static void xnav_xcrr_close_cb( void *xnav, void *xcrr);
-static void xnav_trace_scan( XNav *xnav);
-static int xnav_trace_scan_bc( brow_tObject object, void *p);
-// static void  xnav_type_id_to_name( int type_id, char *type_id_name);
-static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, void **p);
-static int xnav_trace_disconnect_bc( brow_tObject object);
-static int xnav_init_brow_cb( BrowCtx *ctx, void *client_data);
-static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data);
-static int xnav_init_brow_collect_cb( BrowCtx *ctx, void *client_data);
-
 //
 //  Get trace attribute
 //
-int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
+int XNav::get_trace_attr( pwr_sAttrRef *arp, char *attr)
 {
   int sts;
   pwr_tClassId classid;
@@ -103,150 +71,149 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
   sts = gdh_GetAttrRefTid( arp, &classid);
   if ( EVEN(sts)) return sts;
 
-  switch ( classid)
-  {
-    case pwr_cClass_Di:
-    case pwr_cClass_Dv:
-    case pwr_cClass_Do:
-    case pwr_cClass_Po:
-    case pwr_cClass_Av:
-    case pwr_cClass_Ai:
-    case pwr_cClass_Ao:
-    case pwr_cClass_Ii:
-    case pwr_cClass_Io:
-    case pwr_cClass_Iv:
-    case pwr_cClass_Sv:
-      strcpy( attr, "ActualValue");	
-      break;   
-    case pwr_cClass_ChanDi:
-    case pwr_cClass_ChanDo:
-    case pwr_cClass_ChanAi:
-    case pwr_cClass_ChanAo:
-    case pwr_cClass_ChanIi:
-    case pwr_cClass_ChanIo:
-      sts = gdh_AttrrefToName( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-      strcat( objname, ".SigChanCon");
-      sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
-      if (EVEN(sts)) return sts;
-      strcpy( attr, "ActualValue");
-      break;
-    case pwr_cClass_ChanCo:
-      sts = gdh_AttrrefToName ( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-      strcat( objname, ".SigChanCon");
-      sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
-      if (EVEN(sts)) return sts;
-      strcpy( attr, "AbsValue");	
-      break;
-    case pwr_cClass_trans :
-      strcpy( attr, "Cond");
-      break;   
-    case pwr_cClass_order :
-    case pwr_cClass_dorder :
-    case pwr_cClass_porder :
-    case pwr_cClass_lorder :
-    case pwr_cClass_sorder :
-      strcpy( attr, "Status[0]"); /* Status[0] */
-      break;   
-    case pwr_cClass_ssbegin :
-    case pwr_cClass_ssend :
-    case pwr_cClass_step :
-    case pwr_cClass_initstep :
-    case pwr_cClass_substep :
-      strcpy( attr, "Order[0]"); /* Order[0] */
-      break;   
-    case pwr_cClass_cstoao :
-    case pwr_cClass_cstoav :
-    case pwr_cClass_cstoap :
-      strcpy( attr, "Cond");
-      break;   
-    case pwr_cClass_and :
-    case pwr_cClass_or :
-    case pwr_cClass_xor :
-    case pwr_cClass_edge :
-    case pwr_cClass_sr_s :
-    case pwr_cClass_sr_r :
-    case pwr_cClass_pulse :
-    case pwr_cClass_wait :
-    case pwr_cClass_timer :
-    case pwr_cClass_inv :
-    case pwr_cClass_waith :
-    case pwr_cClass_darithm :
-    case pwr_cClass_Even :
-    case pwr_cClass_Odd :
-    case pwr_cClass_Equal :
-    case pwr_cClass_GreaterEqual :
-    case pwr_cClass_GreaterThan :
-    case pwr_cClass_LessEqual :
-    case pwr_cClass_LessThan :
-      strcpy( attr, "Status");
-      break;   
-    case pwr_cClass_DSup :
-    case pwr_cClass_ASup :
-      strcpy( attr, "Action");
-      break;   
-    case pwr_cClass_csub :
-      strcpy( attr, "in");
-      break;   
-    case pwr_cClass_sum :
-    case pwr_cClass_limit :
-    case pwr_cClass_select :
-    case pwr_cClass_ramp :
-    case pwr_cClass_filter :
-    case pwr_cClass_speed :
-    case pwr_cClass_curve :
-    case pwr_cClass_adelay :
-    case pwr_cClass_aarithm :
-    case pwr_cClass_timint :
-    case pwr_cClass_IAbs :
-    case pwr_cClass_IAdd :
-    case pwr_cClass_IDiv :
-    case pwr_cClass_ILimit :
-    case pwr_cClass_IMax :
-    case pwr_cClass_IMin :
-    case pwr_cClass_IMul :
-    case pwr_cClass_ISel :
-    case pwr_cClass_ISub :
-    case pwr_cClass_IMux :
-    case pwr_cClass_Add :
-    case pwr_cClass_Div :
-    case pwr_cClass_Mul :
-    case pwr_cClass_Max :
-    case pwr_cClass_Min :
-    case pwr_cClass_Mux :
-    case pwr_cClass_Sub :
-    case pwr_cClass_Sin :
-    case pwr_cClass_Cos :
-    case pwr_cClass_Tan :
-    case pwr_cClass_ASin :
-    case pwr_cClass_ACos :
-    case pwr_cClass_ATan :
-    case pwr_cClass_Exp :
-    case pwr_cClass_Log :
-    case pwr_cClass_Ln :
-    case pwr_cClass_Sqrt :
-    case pwr_cClass_Abs :
-    case pwr_cClass_Mod :
-      strcpy( attr, "ActVal");
-      break;   
-    case pwr_cClass_maxmin :
-      strcpy( attr, "MaxVal");
-      break;   
-    case pwr_cClass_comph :
-      strcpy( attr, "High");
-      break;   
-    case pwr_cClass_compl :
-      strcpy( attr, "Low");
-      break;   
-    case pwr_cClass_pid :
-      strcpy( attr, "OutVal");
-      break;   
-    case pwr_cClass_mode :
-      strcpy( attr, "OutVal");
-      break;   
-    default:
-      return XNAV__NOTRACEATTR;
+  switch ( classid) {
+  case pwr_cClass_Di:
+  case pwr_cClass_Dv:
+  case pwr_cClass_Do:
+  case pwr_cClass_Po:
+  case pwr_cClass_Av:
+  case pwr_cClass_Ai:
+  case pwr_cClass_Ao:
+  case pwr_cClass_Ii:
+  case pwr_cClass_Io:
+  case pwr_cClass_Iv:
+  case pwr_cClass_Sv:
+    strcpy( attr, "ActualValue");	
+    break;   
+  case pwr_cClass_ChanDi:
+  case pwr_cClass_ChanDo:
+  case pwr_cClass_ChanAi:
+  case pwr_cClass_ChanAo:
+  case pwr_cClass_ChanIi:
+  case pwr_cClass_ChanIo:
+    sts = gdh_AttrrefToName( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+    strcat( objname, ".SigChanCon");
+    sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
+    if (EVEN(sts)) return sts;
+    strcpy( attr, "ActualValue");
+    break;
+  case pwr_cClass_ChanCo:
+    sts = gdh_AttrrefToName ( arp, objname, sizeof(objname), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+    strcat( objname, ".SigChanCon");
+    sts = gdh_GetObjectInfo ( objname, arp, sizeof( *arp));
+    if (EVEN(sts)) return sts;
+    strcpy( attr, "AbsValue");	
+    break;
+  case pwr_cClass_trans :
+    strcpy( attr, "Cond");
+    break;   
+  case pwr_cClass_order :
+  case pwr_cClass_dorder :
+  case pwr_cClass_porder :
+  case pwr_cClass_lorder :
+  case pwr_cClass_sorder :
+    strcpy( attr, "Status[0]"); /* Status[0] */
+    break;   
+  case pwr_cClass_ssbegin :
+  case pwr_cClass_ssend :
+  case pwr_cClass_step :
+  case pwr_cClass_initstep :
+  case pwr_cClass_substep :
+    strcpy( attr, "Order[0]"); /* Order[0] */
+    break;   
+  case pwr_cClass_cstoao :
+  case pwr_cClass_cstoav :
+  case pwr_cClass_cstoap :
+    strcpy( attr, "Cond");
+    break;   
+  case pwr_cClass_and :
+  case pwr_cClass_or :
+  case pwr_cClass_xor :
+  case pwr_cClass_edge :
+  case pwr_cClass_sr_s :
+  case pwr_cClass_sr_r :
+  case pwr_cClass_pulse :
+  case pwr_cClass_wait :
+  case pwr_cClass_timer :
+  case pwr_cClass_inv :
+  case pwr_cClass_waith :
+  case pwr_cClass_darithm :
+  case pwr_cClass_Even :
+  case pwr_cClass_Odd :
+  case pwr_cClass_Equal :
+  case pwr_cClass_GreaterEqual :
+  case pwr_cClass_GreaterThan :
+  case pwr_cClass_LessEqual :
+  case pwr_cClass_LessThan :
+    strcpy( attr, "Status");
+    break;   
+  case pwr_cClass_DSup :
+  case pwr_cClass_ASup :
+    strcpy( attr, "Action");
+    break;   
+  case pwr_cClass_csub :
+    strcpy( attr, "in");
+    break;   
+  case pwr_cClass_sum :
+  case pwr_cClass_limit :
+  case pwr_cClass_select :
+  case pwr_cClass_ramp :
+  case pwr_cClass_filter :
+  case pwr_cClass_speed :
+  case pwr_cClass_curve :
+  case pwr_cClass_adelay :
+  case pwr_cClass_aarithm :
+  case pwr_cClass_timint :
+  case pwr_cClass_IAbs :
+  case pwr_cClass_IAdd :
+  case pwr_cClass_IDiv :
+  case pwr_cClass_ILimit :
+  case pwr_cClass_IMax :
+  case pwr_cClass_IMin :
+  case pwr_cClass_IMul :
+  case pwr_cClass_ISel :
+  case pwr_cClass_ISub :
+  case pwr_cClass_IMux :
+  case pwr_cClass_Add :
+  case pwr_cClass_Div :
+  case pwr_cClass_Mul :
+  case pwr_cClass_Max :
+  case pwr_cClass_Min :
+  case pwr_cClass_Mux :
+  case pwr_cClass_Sub :
+  case pwr_cClass_Sin :
+  case pwr_cClass_Cos :
+  case pwr_cClass_Tan :
+  case pwr_cClass_ASin :
+  case pwr_cClass_ACos :
+  case pwr_cClass_ATan :
+  case pwr_cClass_Exp :
+  case pwr_cClass_Log :
+  case pwr_cClass_Ln :
+  case pwr_cClass_Sqrt :
+  case pwr_cClass_Abs :
+  case pwr_cClass_Mod :
+    strcpy( attr, "ActVal");
+    break;   
+  case pwr_cClass_maxmin :
+    strcpy( attr, "MaxVal");
+    break;   
+  case pwr_cClass_comph :
+    strcpy( attr, "High");
+    break;   
+  case pwr_cClass_compl :
+    strcpy( attr, "Low");
+    break;   
+  case pwr_cClass_pid :
+    strcpy( attr, "OutVal");
+    break;   
+  case pwr_cClass_mode :
+    strcpy( attr, "OutVal");
+    break;   
+  default:
+    return XNAV__NOTRACEATTR;
   }
   return 1;
 }
@@ -254,204 +221,182 @@ int xnav_get_trace_attr( pwr_sAttrRef *arp, char *attr)
 //
 // Convert attribute string to value
 //
-int  xnav_attr_string_to_value( int type_id, char *value_str, 
-	void *buffer_ptr, int buff_size, int attr_size)
+int XNav::attr_string_to_value( int type_id, char *value_str, 
+				void *buffer_ptr, int buff_size, int attr_size)
 {
   int		sts;
 
-  switch ( type_id )
-  {
-    case pwr_eType_Boolean:
-    {
-      if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      if ( *(pwr_tBoolean *)buffer_ptr > 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Float32:
-    {
-      if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Float64:
-    {
-      pwr_tFloat32 f;
-      pwr_tFloat64 d;
-      if ( sscanf( value_str, "%f", &f) != 1)
-        return XNAV__INPUT_SYNTAX;
-      d = f;
-      memcpy( buffer_ptr, (char *) &d, sizeof(d));
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    if ( *(pwr_tBoolean *)buffer_ptr > 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Float32: {
+    if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Float64: {
+    pwr_tFloat32 f;
+    pwr_tFloat64 d;
+    if ( sscanf( value_str, "%f", &f) != 1)
+      return XNAV__INPUT_SYNTAX;
+    d = f;
+    memcpy( buffer_ptr, (char *) &d, sizeof(d));
 
-      break;
-    }
-    case pwr_eType_Char:
-    {
-      if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Int8:
-    {
-      pwr_tInt8 	i8;
-      pwr_tInt16	i16;
-      if ( sscanf( value_str, "%hd", &i16) != 1)
-        return XNAV__INPUT_SYNTAX;
-      i8 = i16;
-      memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
-      break;
-    }
-    case pwr_eType_Int16:
-    {
-      if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Int32:
-    case pwr_eType_Status:
-    case pwr_eType_NetStatus:
-    {
-      if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_UInt8:
-    {
-      pwr_tUInt8 	i8;
-      pwr_tUInt16	i16;
-      if ( sscanf( value_str, "%hu", &i16) != 1)
-        return XNAV__INPUT_SYNTAX;
-      i8 = i16;
-      memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
-      break;
-    }
-    case pwr_eType_UInt16:
-    {
-      if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_UInt32:
-    case pwr_eType_Mask:
-    case pwr_eType_Enum:
-    case pwr_eType_DisableAttr:
-    {
-      if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
-        return XNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_String:
-    {
-      if ( (int) strlen( value_str) >= attr_size)
-        return XNAV__STRINGTOLONG;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
-      break;
-    }
-    case pwr_eType_Objid:
-    {
-      pwr_tObjid	objid;
+    break;
+  }
+  case pwr_eType_Char: {
+    if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Int8: {
+    pwr_tInt8 	i8;
+    pwr_tInt16	i16;
+    if ( sscanf( value_str, "%hd", &i16) != 1)
+      return XNAV__INPUT_SYNTAX;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_Int16: {
+    if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Int32:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus: {
+    if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt8: {
+    pwr_tUInt8 	i8;
+    pwr_tUInt16	i16;
+    if ( sscanf( value_str, "%hu", &i16) != 1)
+      return XNAV__INPUT_SYNTAX;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_UInt16: {
+    if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_Mask:
+  case pwr_eType_Enum:
+  case pwr_eType_DisableAttr: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_String: {
+    if ( (int) strlen( value_str) >= attr_size)
+      return XNAV__STRINGTOLONG;
+    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    break;
+  }
+  case pwr_eType_Objid: {
+    pwr_tObjid	objid;
 
-      if ( strcmp( value_str, "0") == 0)
-	objid = pwr_cNObjid;
-      else {
-	sts = gdh_NameToObjid ( value_str, &objid);
-	if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-      }
-      memcpy( buffer_ptr, &objid, sizeof(objid));
-      break;
-    }
-    case pwr_eType_ClassId:
-    {
-      pwr_tClassId	classid;
-      pwr_tObjid	objid;
-
+    if ( strcmp( value_str, "0") == 0)
+      objid = pwr_cNObjid;
+    else {
       sts = gdh_NameToObjid ( value_str, &objid);
       if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	classid = cdh_ClassObjidToId( objid);
-      memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
-      break;
     }
-    case pwr_eType_TypeId:
-    case pwr_eType_CastId:
-    {
-      pwr_tTypeId	val_typeid;
-      pwr_tObjid	objid;
+    memcpy( buffer_ptr, &objid, sizeof(objid));
+    break;
+  }
+  case pwr_eType_ClassId: {
+    pwr_tClassId	classid;
+    pwr_tObjid	objid;
 
-      sts = gdh_NameToObjid ( value_str, &objid);
+    sts = gdh_NameToObjid ( value_str, &objid);
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    classid = cdh_ClassObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    pwr_tTypeId	val_typeid;
+    pwr_tObjid	objid;
+
+    sts = gdh_NameToObjid ( value_str, &objid);
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    val_typeid = cdh_TypeObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    pwr_tObjectIx	objectix;
+
+    sts = cdh_StringToObjectIx( value_str, &objectix); 
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &objectix, sizeof(objectix));
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    pwr_tVolumeId	volumeid;
+
+    sts = cdh_StringToVolumeId( value_str, &volumeid); 
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &volumeid, sizeof(volumeid));
+    break;
+  }
+  case pwr_eType_RefId: {
+    pwr_tRefId	subid;
+
+    sts = cdh_StringToSubid( value_str, &subid);
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &subid, sizeof(subid));
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_sAttrRef	attrref;
+
+    if ( strcmp( value_str, "0") == 0)
+      attrref = pwr_cNAttrRef;
+    else {
+      sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
       if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	val_typeid = cdh_TypeObjidToId( objid);
-      memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
-      break;
     }
-    case pwr_eType_ObjectIx:
-    {
-      pwr_tObjectIx	objectix;
+    memcpy( buffer_ptr, &attrref, sizeof(attrref));
+    break;
+  }
+  case pwr_eType_DataRef: {
+    pwr_tDataRef	dataref;
 
-      sts = cdh_StringToObjectIx( value_str, &objectix); 
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &objectix, sizeof(objectix));
-      break;
-    }
-    case pwr_eType_VolumeId:
-    {
-      pwr_tVolumeId	volumeid;
+    sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &dataref.Aref);
+    if (EVEN(sts)) return XNAV__OBJNOTFOUND;
+    dataref.Ptr = 0;
+    memcpy( buffer_ptr, &dataref, sizeof(dataref));
+    break;
+  }
+  case pwr_eType_Time: {
+    pwr_tTime	time;
 
-      sts = cdh_StringToVolumeId( value_str, &volumeid); 
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &volumeid, sizeof(volumeid));
-      break;
-    }
-    case pwr_eType_RefId:
-    {
-      pwr_tRefId	subid;
+    sts = time_AsciiToA( value_str, &time);
+    if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
+    memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    pwr_tDeltaTime deltatime;
 
-      sts = cdh_StringToSubid( value_str, &subid);
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &subid, sizeof(subid));
-      break;
-    }
-    case pwr_eType_AttrRef:
-    {
-      pwr_sAttrRef	attrref;
-
-      if ( strcmp( value_str, "0") == 0)
-	attrref = pwr_cNAttrRef;
-      else {
-	sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &attrref);
-	if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-      }
-      memcpy( buffer_ptr, &attrref, sizeof(attrref));
-      break;
-    }
-    case pwr_eType_DataRef:
-    {
-      pwr_tDataRef	dataref;
-
-      sts = gdh_NameToAttrref ( pwr_cNObjid, value_str, &dataref.Aref);
-      if (EVEN(sts)) return XNAV__OBJNOTFOUND;
-      dataref.Ptr = 0;
-      memcpy( buffer_ptr, &dataref, sizeof(dataref));
-      break;
-    }
-    case pwr_eType_Time:
-    {
-      pwr_tTime	time;
-
-      sts = time_AsciiToA( value_str, &time);
-      if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
-  	memcpy( buffer_ptr, (char *) &time, sizeof(time));
-      break;
-    }
-    case pwr_eType_DeltaTime:
-    {
-      pwr_tDeltaTime deltatime;
-
-      sts = time_AsciiToD( value_str, &deltatime);
-      if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
-  	memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
-      break;
-    }
+    sts = time_AsciiToD( value_str, &deltatime);
+    if (EVEN(sts)) return XNAV__INPUT_SYNTAX;
+    memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    break;
+  }
   }
   return 1;
 }
@@ -459,287 +404,256 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
 //
 // Convert attribute value to string
 //
-void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
-	char *str, int size, int *len, char *format)
+void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
+				char *str, int size, int *len, char *format)
 {
   pwr_tObjid		objid;
   pwr_sAttrRef		*attrref;
   int			sts;
   char			timstr[64];
 
-  if ( value_ptr == 0)
-  {
+  if ( value_ptr == 0) {
     strcpy( str, "UNDEFINED");
     return;
   }
 
-  switch ( type_id )
-  {
-    case pwr_eType_Boolean:
-    {
-      if ( !format)
-        *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
-      else
-        *len = sprintf( str, format, *(pwr_tBoolean *)value_ptr);
-      break;
-    }
-    case pwr_eType_Float32:
-    {
-      if ( !format)
-        *len = sprintf( str, "%f", *(float *)value_ptr);
-      else
-        *len = sprintf( str, format, *(float *)value_ptr);
-      break;
-    }
-    case pwr_eType_Float64:
-    {
-      if ( !format)
-        *len = sprintf( str, "%f", *(double *)value_ptr);
-      else
-        *len = sprintf( str, format, *(double *)value_ptr);
-      break;
-    }
-    case pwr_eType_Char:
-    {
-      if ( !format)
-        *len = sprintf( str, "%c", *(char *)value_ptr);
-      else
-        *len = sprintf( str, format, *(char *)value_ptr);
-      break;
-    }
-    case pwr_eType_Int8:
-    {
-      if ( !format)
-        *len = sprintf( str, "%d", *(char *)value_ptr);
-      else
-        *len = sprintf( str, format, *(char *)value_ptr);
-      break;
-    }
-    case pwr_eType_Int16:
-    {
-      if ( !format)
-        *len = sprintf( str, "%hd", *(short *)value_ptr);
-      else
-        *len = sprintf( str, format, *(short *)value_ptr);
-      break;
-    }
-    case pwr_eType_Int32:
-    {
-      if ( !format)
-        *len = sprintf( str, "%d", *(int *)value_ptr);
-      else
-        *len = sprintf( str, format, *(int *)value_ptr);
-      break;
-    }
-    case pwr_eType_UInt8:
-    {
-      if ( !format)
-        *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
-      else
-        *len = sprintf( str, format, *(unsigned char *)value_ptr);
-      break;
-    }
-    case pwr_eType_UInt16:
-    {
-      if ( !format)
-        *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
-      else
-        *len = sprintf( str, format, *(unsigned short *)value_ptr);
-      break;
-    }
-    case pwr_eType_UInt32:
-    case pwr_eType_Mask:
-    case pwr_eType_DisableAttr:
-    {
-      if ( !format)
-        *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
-      else
-        *len = sprintf( str, format, *(unsigned int *)value_ptr);
-      break;
-    }
-    case pwr_eType_Enum:
-    {
-      gdh_sValueDef *valuedef;
-      int 		rows;
-      bool		converted = false;
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    if ( !format)
+      *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tBoolean *)value_ptr);
+    break;
+  }
+  case pwr_eType_Float32: {
+    if ( !format)
+      *len = sprintf( str, "%f", *(float *)value_ptr);
+    else
+      *len = sprintf( str, format, *(float *)value_ptr);
+    break;
+  }
+  case pwr_eType_Float64: {
+    if ( !format)
+      *len = sprintf( str, "%f", *(double *)value_ptr);
+    else
+      *len = sprintf( str, format, *(double *)value_ptr);
+    break;
+  }
+  case pwr_eType_Char: {
+    if ( !format)
+      *len = sprintf( str, "%c", *(char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(char *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int8: {
+    if ( !format)
+      *len = sprintf( str, "%d", *(char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(char *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int16: {
+    if ( !format)
+      *len = sprintf( str, "%hd", *(short *)value_ptr);
+    else
+      *len = sprintf( str, format, *(short *)value_ptr);
+    break;
+  }
+  case pwr_eType_Int32: {
+    if ( !format)
+      *len = sprintf( str, "%d", *(int *)value_ptr);
+    else
+      *len = sprintf( str, format, *(int *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt8: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned char *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt16: {
+    if ( !format)
+      *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned short *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_Mask:
+  case pwr_eType_DisableAttr: {
+    if ( !format)
+      *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    else
+      *len = sprintf( str, format, *(unsigned int *)value_ptr);
+    break;
+  }
+  case pwr_eType_Enum: {
+    gdh_sValueDef *valuedef;
+    int 		rows;
+    bool		converted = false;
 
-      sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
-      if ( ODD(sts)) {
+    sts = gdh_GetEnumValueDef( tid, &valuedef, &rows);
+    if ( ODD(sts)) {
 
-	for ( int i = 0; i < rows; i++) {
-	  if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
-	    strcpy( str, valuedef[i].Value->Text);
-	    *len = strlen(str);
-	    converted = true;
-	    break;
-	  }
+      for ( int i = 0; i < rows; i++) {
+	if ( valuedef[i].Value->Value == *(pwr_tInt32 *)value_ptr) {
+	  strcpy( str, valuedef[i].Value->Text);
+	  *len = strlen(str);
+	  converted = true;
+	  break;
 	}
-	free( (char *)valuedef);
       }
-      if ( !converted) {
-	if ( !format)
-	  *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
-	else
-	  *len = sprintf( str, format, *(unsigned int *)value_ptr);
-	break;
-      }
-      break;
+      free( (char *)valuedef);
     }
-    case pwr_eType_String:
-    {
-      strncpy( str, (char *)value_ptr, size);
-      str[size-1] = 0;
-      *len = strlen(str);
-      break;
-    }
-    case pwr_eType_Objid:
-    {
-      pwr_tOName hiername;
-
-      objid = *(pwr_tObjid *)value_ptr;
-      if ( !objid.oix)
-        sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
-			 cdh_mName_volumeStrict);
+    if ( !converted) {
+      if ( !format)
+	*len = sprintf( str, "%d", *(unsigned int *)value_ptr);
       else
-        sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
-		cdh_mNName);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-        break;
-      }
-      *len = sprintf( str, "%s", hiername);
+	*len = sprintf( str, format, *(unsigned int *)value_ptr);
       break;
     }
-    case pwr_eType_AttrRef:
-    {
-      pwr_tAName hiername;
+    break;
+  }
+  case pwr_eType_String: {
+    strncpy( str, (char *)value_ptr, size);
+    str[size-1] = 0;
+    *len = strlen(str);
+    break;
+  }
+  case pwr_eType_Objid: {
+    pwr_tOName hiername;
 
-      attrref = (pwr_sAttrRef *) value_ptr;
-      sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
-      if (EVEN(sts))
+    objid = *(pwr_tObjid *)value_ptr;
+    if ( !objid.oix)
+      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
+			      cdh_mName_volumeStrict);
+    else
+      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), 
+			      cdh_mNName);
+    if (EVEN(sts))
       {
         strcpy( str, "");
         *len = 0;
         break;
       }
-      *len = sprintf( str, "%s", hiername);
-      break;
-    }
-    case pwr_eType_DataRef:
-    {
-      pwr_tAName hiername;
-      pwr_tDataRef *dataref;
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_tAName hiername;
 
-      dataref = (pwr_tDataRef *) value_ptr;
-      sts = gdh_AttrrefToName( &dataref->Aref, hiername, sizeof(hiername), cdh_mNName);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-        break;
-      }
-      *len = sprintf( str, "%s", hiername);
+    attrref = (pwr_sAttrRef *) value_ptr;
+    sts = gdh_AttrrefToName( attrref, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
       break;
     }
-    case pwr_eType_Time:
-    {
-      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
-		timstr, sizeof(timstr));
-      if ( EVEN(sts))
-        strcpy( timstr, "-");
-      *len = sprintf( str, "%s", timstr);
-      break;
-    }
-    case pwr_eType_DeltaTime:
-    {
-      sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
-		timstr, sizeof(timstr));
-      if ( EVEN(sts))
-        strcpy( timstr, "Undefined time");
-      *len = sprintf( str, "%s", timstr);
-      break;
-    }
-    case pwr_eType_ObjectIx:
-    {
-      *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-		*(pwr_tObjectIx *) value_ptr, 1));
-      break;
-    }
-    case pwr_eType_ClassId:
-    {
-      pwr_tOName hiername;
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_DataRef: {
+    pwr_tAName hiername;
+    pwr_tDataRef *dataref;
 
-      objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
-      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-        break;
-      }
-      *len = sprintf( str, "%s", hiername);
+    dataref = (pwr_tDataRef *) value_ptr;
+    sts = gdh_AttrrefToName( &dataref->Aref, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
       break;
     }
-    case pwr_eType_TypeId:
-    case pwr_eType_CastId:
-    {
-      pwr_tOName hiername;
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_Time: {
+    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "-");
+    *len = sprintf( str, "%s", timstr);
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "Undefined time");
+    *len = sprintf( str, "%s", timstr);
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
+						     *(pwr_tObjectIx *) value_ptr, 1));
+    break;
+  }
+  case pwr_eType_ClassId: {
+    pwr_tOName hiername;
 
-      objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
-      sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-        break;
-      }
-      *len = sprintf( str, "%s", hiername);
+    objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
+    sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
       break;
     }
-    case pwr_eType_VolumeId:
-    {
-      *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
-		*(pwr_tVolumeId *) value_ptr, 1, 0));
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    pwr_tOName hiername;
+
+    objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
+    sts = gdh_ObjidToName ( objid, hiername, sizeof(hiername), cdh_mNName);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
       break;
     }
-    case pwr_eType_RefId:
-    {
-      *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
-		*(pwr_tSubid *) value_ptr, 1));
-      break;
-    }
-    case pwr_eType_NetStatus:
-    case pwr_eType_Status:
-    {
-      msg_GetMsg( *(pwr_tStatus *)value_ptr, str, size);
-      *len = strlen( str);
-      break;
-    }
+    *len = sprintf( str, "%s", hiername);
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
+						     *(pwr_tVolumeId *) value_ptr, 1, 0));
+    break;
+  }
+  case pwr_eType_RefId: {
+    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
+						  *(pwr_tSubid *) value_ptr, 1));
+    break;
+  }
+  case pwr_eType_NetStatus:
+  case pwr_eType_Status: {
+    msg_GetMsg( *(pwr_tStatus *)value_ptr, str, size);
+    *len = strlen( str);
+    break;
+  }
 
     // XNav specials
-    case xnav_eType_ShortTime:
-    {
-      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_Time, 
-		timstr, sizeof(timstr));
-      if ( EVEN(sts))
-        strcpy( timstr, "Undefined time");
-      *len = sprintf( str, "%s", timstr);
-      break;
-    }
-    case xnav_eType_GdbNodeFlags:
-    {
-      if ( ((gdb_mNode *)value_ptr)->b.up)
-        *len = sprintf( str, "Up");
-      else if ( ((gdb_mNode *)value_ptr)->b.active)
-        *len = sprintf( str, "Active");
-      else if ( ((gdb_mNode *)value_ptr)->b.connected)
-        *len = sprintf( str, "Connected");
-      else
-        *len = sprintf( str, "Down");
-      break;
-    }
+  case xnav_eType_ShortTime: {
+    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_Time, 
+			 timstr, sizeof(timstr));
+    if ( EVEN(sts))
+      strcpy( timstr, "Undefined time");
+    *len = sprintf( str, "%s", timstr);
+    break;
+  }
+  case xnav_eType_GdbNodeFlags: {
+    if ( ((gdb_mNode *)value_ptr)->b.up)
+      *len = sprintf( str, "Up");
+    else if ( ((gdb_mNode *)value_ptr)->b.active)
+      *len = sprintf( str, "Active");
+    else if ( ((gdb_mNode *)value_ptr)->b.connected)
+      *len = sprintf( str, "Connected");
+    else
+      *len = sprintf( str, "Down");
+    break;
+  }
   }
 }
 
@@ -780,7 +694,7 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
     if ( EVEN(sts)) return sts;
   }
   else {
-    sts = xnav_get_trace_attr( arp, attr);
+    sts = get_trace_attr( arp, attr);
     if ( EVEN(sts)) return sts;
     strcpy( obj_name, name);
     strcat( obj_name, ".");
@@ -806,17 +720,15 @@ int XNav::collect_insert( pwr_sAttrRef *arp)
 
 int XNav::collect_show()
 {
-  if ( brow->ctx == collect_brow->ctx)
-  {
+  if ( brow->ctx == collect_brow->ctx) {
     // Hide
-    brow_ChangeCtx( brow_widget, collect_brow->ctx, 
+    brow_ChangeCtx( collect_brow->ctx, 
 		brow_stack[brow_cnt-1]->ctx);
     *brow = *brow_stack[brow_cnt-1];
   }
-  else
-  {
+  else {
     // Show
-    brow_ChangeCtx( brow_widget, brow_stack[brow_cnt-1]->ctx, collect_brow->ctx);
+    brow_ChangeCtx( brow_stack[brow_cnt-1]->ctx, collect_brow->ctx);
     *brow = *collect_brow;
   }
   return 1;
@@ -855,36 +767,6 @@ void XNav::clear()
 
 
 //
-//  Pop xnav window
-//
-static Boolean set_displayed( void *xnav)
-{
-  ((XNav *)xnav)->displayed = 1;
-  return True;
-}
-
-void XNav::pop()
-{
-  Widget parent, top;
-
-  parent = XtParent( parent_wid);
-  while( parent)
-  {
-    top = parent;
-    if ( flow_IsShell( top))
-      break;
-    parent = XtParent( parent);
-  }
-  displayed = 0;
-  flow_UnmapWidget( top);
-  flow_MapWidget( top);
-
-  // A fix to avoid a krash in setinputfocus
-  XtAppAddWorkProc( XtWidgetToApplicationContext(top),
-			(XtWorkProc)set_displayed, (XtPointer)this);
-}
-
-//
 //  Show crossreferences
 //
 void XNav::show_crossref()
@@ -894,8 +776,7 @@ void XNav::show_crossref()
   Item		*item;
 
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
-  if ( !node_count)
-  {
+  if ( !node_count) {
     message( 'E', "Select an object");
     return;
   }
@@ -936,8 +817,7 @@ void XNav::start_trace_selected()
   Item		*item;
 
   brow_GetSelectedNodes( brow->ctx, &node_list, &node_count);
-  if ( !node_count)
-  {
+  if ( !node_count) {
     message( 'E', "Select an object");
     return;
   }
@@ -965,17 +845,16 @@ void XNav::start_trace_selected()
 
 void XNav::start_trace( pwr_tObjid objid, char *object_str)
 {
-    tra_tCtx 	tractx;
+    RtTrace 	*tractx;
     pwr_tOName  name;
     char   	title[220];
-    int		sts;
+    pwr_tStatus	sts;
     pwr_tClassId classid;
     pwr_tObjid	window_objid;
 
     sts = gdh_GetObjectClass( objid, &classid);
     if ( EVEN(sts)) return;
-    if ( classid == pwr_cClass_plc)
-    {
+    if ( classid == pwr_cClass_plc) {
       // Take the first child
       sts = gdh_GetChild( objid, &window_objid);
       if ( EVEN(sts)) return;
@@ -983,34 +862,36 @@ void XNav::start_trace( pwr_tObjid objid, char *object_str)
     else
       window_objid = objid;
 
-    if ( appl.find( applist_eType_Trace, window_objid, (void **) &tractx))
-    {
-      trace_pop( tractx);
+    if ( appl.find( applist_eType_Trace, window_objid, (void **) &tractx)) {
+      tractx->pop();
       if ( object_str)
-        sts = trace_search_object( tractx, object_str);
+        sts = tractx->search_object( object_str);
     }
-    else
-    {
+    else {
       // New trace window
       sts = gdh_ObjidToName( window_objid, name, sizeof(name), cdh_mNName); 
       strcpy( title, "Trace ");
       strcat( title, name);
 
-      tractx = trace_new( this, form_widget, window_objid, xnav_trace_close_cb,
-		xnav_trace_help_cb,
-		xnav_trace_subwindow_cb, xnav_trace_display_object_cb,
-		xnav_trace_collect_insert_cb, xnav_is_authorized_cb);
-      if (tractx)
-      {
+      tractx = plctrace_new( window_objid, &sts);
+      if ( ODD(sts)) {
+	tractx->help_cb = trace_help_cb;
+	tractx->close_cb = trace_close_cb;
+	tractx->subwindow_cb = trace_subwindow_cb;
+	tractx->display_object_cb = trace_display_object_cb;
+	tractx->collect_insert_cb = trace_collect_insert_cb;
+	tractx->is_authorized_cb = is_authorized_cb;
         tractx->popup_menu_cb = xnav_popup_menu_cb;
         tractx->call_method_cb = xnav_call_method_cb;
         appl.insert( applist_eType_Trace, (void *)tractx, window_objid, "", NULL);
 
         if ( object_str)
-          sts = trace_search_object( tractx, object_str);
+          sts = tractx->search_object( object_str);
       }    
-      else
+      else {
+	delete tractx;
         message('E', "Unable to start trace for this object");
+      }
     }
 
 }
@@ -1041,12 +922,12 @@ int XNav::open_object( pwr_sAttrRef *arp)
     xatt->pop();
   }
   else {
-    xatt = new XAtt( form_widget, this, arp, gbl.advanced_user, &sts);
+    xatt = xatt_new( arp, gbl.advanced_user, &sts);
     if ( ODD(sts))
-      xatt->close_cb = xnav_xatt_close_cb;
+      xatt->close_cb = xatt_close_cb;
       xatt->popup_menu_cb = xnav_popup_menu_cb;
       xatt->call_method_cb = xnav_call_method_cb;
-      xatt->is_authorized_cb = xnav_is_authorized_cb;
+      xatt->is_authorized_cb = is_authorized_cb;
       appl.insert( applist_eType_Attr, (void *)xatt, arp, "", NULL);
   }
   return XNAV__SUCCESS;
@@ -1061,9 +942,9 @@ int XNav::open_crossref( pwr_sAttrRef *arp)
     xcrr->pop();
   }
   else {
-    xcrr = new XCrr( form_widget, this, arp, gbl.advanced_user, &sts);
+    xcrr = xcrr_new( arp, gbl.advanced_user, &sts);
     if ( ODD(sts))
-      xcrr->close_cb = xnav_xcrr_close_cb;
+      xcrr->close_cb = xcrr_close_cb;
       xcrr->popup_menu_cb = xnav_popup_menu_cb;
       xcrr->start_trace_cb = xnav_start_trace_cb;
       appl.insert( applist_eType_Crossref, (void *)xcrr, arp, "", NULL);
@@ -1099,13 +980,11 @@ int XNav::create_object_item( pwr_tObjid objid,
 //
 XNav::XNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	parent_ctx(xn_parent_ctx),
 	brow_cnt(0), TraceList(NULL), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
 	set_dimension_cb(NULL), ccm_func_registred(0), verify(0),
@@ -1118,21 +997,6 @@ XNav::XNav(
   strcpy( opplace_name, xn_opplace_name);
   strcpy( base_user, "");
   strcpy( user, "");
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	xnav_init_brow_base_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-  displayed = 1;
-
-  // Create the root item
-  *w = form_widget;
-
-  menu_tree_build( root_menu);
-  gbl.load_config( this);
-
-  for ( int i = 0; i < XNAV_LOGG_MAX; i++)
-    logg[i].init( i, (void *)this);
-
   *status = 1;
 }
 
@@ -1141,21 +1005,6 @@ XNav::XNav(
 //
 XNav::~XNav()
 {
-  closing_down = 1;
-
-  menu_tree_free();
-  for ( int i = 0; i < brow_cnt; i++) {
-    brow_DeleteSecondaryCtx( brow_stack[i]->ctx);
-    brow_stack[i]->free_pixmaps();
-    delete brow_stack[i];
-  }
-  brow_DeleteSecondaryCtx( collect_brow->ctx);
-  collect_brow->free_pixmaps();
-  delete collect_brow;
-  delete brow;
-  if ( op)
-    delete op;
-  XtDestroyWidget( form_widget);
 }
 
 //
@@ -1190,14 +1039,6 @@ void XNav::unzoom()
   brow_UnZoom( brow->ctx);
 }
 
-void XNav::set_inputfocus()
-{
-  // printf( "%d XNav inputfocus %d\n", displayed, (int) brow_widget);
-  if ( displayed) {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-  }
-//  brow_SetInputFocus( brow->ctx);
-}
 
 //
 // Set attribute value
@@ -1213,8 +1054,7 @@ int XNav::set_attr_value( char *value_str)
   
   // Check authorization
   if ( !((priv & pwr_mPrv_RtWrite) ||
-         (priv & pwr_mPrv_System)))
-  {
+         (priv & pwr_mPrv_System))) {
     message('E', "Not authorized for this operation");
     return 0;
   }
@@ -1225,105 +1065,100 @@ int XNav::set_attr_value( char *value_str)
   brow_GetUserData( node_list[0], (void **)&base_item);
   free( node_list);
 
-  switch( base_item->type)
-  {
-    case xnav_eItemType_Attr:
-    case xnav_eItemType_Collect:
-    case xnav_eItemType_AttrArrayElem:
-    {
-      ItemAttr	*item;
+  switch( base_item->type) {
+  case xnav_eItemType_Attr:
+  case xnav_eItemType_Collect:
+  case xnav_eItemType_AttrArrayElem: {
+    ItemAttr	*item;
 
-      item = (ItemAttr *)base_item;
-      sts = gdh_ObjidToName( item->objid, 
-	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
-      if ( EVEN(sts)) return sts;
-      strcat( attr_str, ".");
-      strcat( attr_str, item->attr);
+    item = (ItemAttr *)base_item;
+    sts = gdh_ObjidToName( item->objid, 
+			   attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+    strcat( attr_str, ".");
+    strcat( attr_str, item->attr);
 
-      sts = xnav_attr_string_to_value( item->type_id, value_str, 
-		buffer, sizeof(buffer), item->size);
-      if ( EVEN(sts)) return sts;
+    sts = attr_string_to_value( item->type_id, value_str, 
+				buffer, sizeof(buffer), item->size);
+    if ( EVEN(sts)) return sts;
 
-      sts = gdh_SetObjectInfo( attr_str, buffer, item->size);
-      if ( EVEN(sts)) return sts;
-      break;
-    }
-    case xnav_eItemType_Local:
-    {
-      ItemLocal	*item;
-      int out_of_range = 0;
+    sts = gdh_SetObjectInfo( attr_str, buffer, item->size);
+    if ( EVEN(sts)) return sts;
+    break;
+  }
+  case xnav_eItemType_Local: {
+    ItemLocal	*item;
+    int out_of_range = 0;
 
-      item = (ItemLocal *)base_item;
+    item = (ItemLocal *)base_item;
 
-      sts = xnav_attr_string_to_value( item->type_id, value_str, 
-		buffer, sizeof(buffer), item->size);
-      if ( EVEN(sts)) return sts;
+    sts = attr_string_to_value( item->type_id, value_str, 
+				buffer, sizeof(buffer), item->size);
+    if ( EVEN(sts)) return sts;
 
-      if ( !(item->max_limit == 0 && item->min_limit == 0)) {
-        switch( item->type_id) {
-	  case pwr_eType_UInt32:
-            if ( *(pwr_tUInt32 *)buffer < item->min_limit ||
-                 *(pwr_tUInt32 *)buffer > item->max_limit)
-              out_of_range = 1;
-	    break;
-	  case pwr_eType_Int32:
-            if ( *(pwr_tInt32 *)buffer < item->min_limit ||
-                 *(pwr_tInt32 *)buffer > item->max_limit)
-              out_of_range = 1;
-	    break;
-	  case pwr_eType_Float32:
-            if ( *(pwr_tFloat32 *)buffer < item->min_limit ||
-                 *(pwr_tFloat32 *)buffer > item->max_limit)
-              out_of_range = 1;
-	    break;
-	  case pwr_eType_Float64:
-            if ( *(pwr_tFloat64 *)buffer < item->min_limit ||
-                 *(pwr_tFloat64 *)buffer > item->max_limit)
-              out_of_range = 1;
-	    break;
-	  default:
-	    ;
-	}
-        if ( out_of_range) {
-          message( 'E', "Value is out of range");
-          return 0;
-        }
+    if ( !(item->max_limit == 0 && item->min_limit == 0)) {
+      switch( item->type_id) {
+      case pwr_eType_UInt32:
+	if ( *(pwr_tUInt32 *)buffer < item->min_limit ||
+	     *(pwr_tUInt32 *)buffer > item->max_limit)
+	  out_of_range = 1;
+	break;
+      case pwr_eType_Int32:
+	if ( *(pwr_tInt32 *)buffer < item->min_limit ||
+	     *(pwr_tInt32 *)buffer > item->max_limit)
+	  out_of_range = 1;
+	break;
+      case pwr_eType_Float32:
+	if ( *(pwr_tFloat32 *)buffer < item->min_limit ||
+	     *(pwr_tFloat32 *)buffer > item->max_limit)
+	  out_of_range = 1;
+	break;
+      case pwr_eType_Float64:
+	if ( *(pwr_tFloat64 *)buffer < item->min_limit ||
+	     *(pwr_tFloat64 *)buffer > item->max_limit)
+	  out_of_range = 1;
+	break;
+      default:
+	;
       }
-      memcpy( item->value_p, buffer, item->size);
-      break;
+      if ( out_of_range) {
+	message( 'E', "Value is out of range");
+	return 0;
+      }
     }
-    case xnav_eItemType_ObjectStruct:
-    {
-      ItemObjectStruct	*item;
+    memcpy( item->value_p, buffer, item->size);
+    break;
+  }
+  case xnav_eItemType_ObjectStruct: {
+    ItemObjectStruct	*item;
 
-      item = (ItemObjectStruct *)base_item;
+    item = (ItemObjectStruct *)base_item;
 
-      sts = xnav_attr_string_to_value( item->type_id, value_str,
-		buffer, sizeof(buffer), item->size);
-      if ( EVEN(sts)) return sts;
+    sts = attr_string_to_value( item->type_id, value_str,
+				buffer, sizeof(buffer), item->size);
+    if ( EVEN(sts)) return sts;
 
-      memcpy( item->value_p, buffer, item->size);
-      break;
-    }
-    case xnav_eItemType_Table:
-    case xnav_eItemType_Device:
-    case xnav_eItemType_Channel:
-    case xnav_eItemType_RemNode:
-    case xnav_eItemType_RemTrans:
-    case xnav_eItemType_Plc:
-    {
-      ItemTable	*item = (ItemTable *)base_item;
-      int idx = item->change_value_idx;
+    memcpy( item->value_p, buffer, item->size);
+    break;
+  }
+  case xnav_eItemType_Table:
+  case xnav_eItemType_Device:
+  case xnav_eItemType_Channel:
+  case xnav_eItemType_RemNode:
+  case xnav_eItemType_RemTrans:
+  case xnav_eItemType_Plc: {
+    ItemTable	*item = (ItemTable *)base_item;
+    int idx = item->change_value_idx;
 
-      sts = xnav_attr_string_to_value( item->col.elem[idx].type_id, value_str, 
-		buffer, sizeof(buffer), item->col.elem[idx].size);
-      if ( EVEN(sts)) return sts;
+    sts = attr_string_to_value( item->col.elem[idx].type_id, value_str, 
+				buffer, sizeof(buffer), item->col.elem[idx].size);
+    if ( EVEN(sts)) return sts;
 
-      memcpy( item->col.elem[idx].value_p, buffer, item->col.elem[idx].size);
-      break;
-    }
-    default:
-      ;
+    memcpy( item->col.elem[idx].value_p, buffer, item->col.elem[idx].size);
+    break;
+  }
+  default:
+    ;
   }
   return 1;
 }
@@ -1344,43 +1179,40 @@ int XNav::check_attr_value()
   brow_GetUserData( node_list[0], (void **)&base_item);
   free( node_list);
 
-  switch( base_item->type)
-  {
-    case xnav_eItemType_Attr:
-    case xnav_eItemType_AttrArrayElem:
-    case xnav_eItemType_Collect:
-      return 1;
-    case xnav_eItemType_Local:
-    {
-      ItemLocal	*item;
+  switch( base_item->type) {
+  case xnav_eItemType_Attr:
+  case xnav_eItemType_AttrArrayElem:
+  case xnav_eItemType_Collect:
+    return 1;
+  case xnav_eItemType_Local: {
+    ItemLocal	*item;
 
-      item = (ItemLocal *)base_item;
+    item = (ItemLocal *)base_item;
 
-      if ( item->nochange) {
-        message('E', "Attribute can't be changed");
-        return XNAV__NOCHANGE;
-      }
-      return 1;
-    }
-    case xnav_eItemType_ObjectStruct:
-    {
-      ItemObjectStruct	*item;
-      pwr_tBoolean is_local;
-      int sts;
-
-      item = (ItemObjectStruct *)base_item;
-
-      if ( item->nochange) {
-        message('E', "Attribute can't be changed");
-        return XNAV__NOCHANGE;
-      }
-      sts = gdh_GetObjectLocation( item->objid, &is_local);
-      if ( EVEN(sts) || !is_local)
-        return XNAV__NOCHANGE;
-      return 1;
-    }
-    default:
+    if ( item->nochange) {
+      message('E', "Attribute can't be changed");
       return XNAV__NOCHANGE;
+    }
+    return 1;
+  }
+  case xnav_eItemType_ObjectStruct: {
+    ItemObjectStruct	*item;
+    pwr_tBoolean is_local;
+    int sts;
+
+    item = (ItemObjectStruct *)base_item;
+
+    if ( item->nochange) {
+      message('E', "Attribute can't be changed");
+      return XNAV__NOCHANGE;
+    }
+    sts = gdh_GetObjectLocation( item->objid, &is_local);
+    if ( EVEN(sts) || !is_local)
+      return XNAV__NOCHANGE;
+    return 1;
+  }
+  default:
+    return XNAV__NOCHANGE;
   }
 }
 
@@ -1404,31 +1236,30 @@ int XNav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   free( node_list);
 
   sts = gdh_ObjidToName( item->objid, 
-	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+			 attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
   if ( EVEN(sts)) return sts;
 
   memset( attrref, 0, sizeof(*attrref));
-  switch( item->type)
-  {
-    case xnav_eItemType_Attr:
-    case xnav_eItemType_AttrArray:
-    case xnav_eItemType_AttrObject:
-    case xnav_eItemType_AttrArrayElem:
-      strcat( attr_str, ".");
-      strcat( attr_str, item->name);
-      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, attrref);
-      if ( EVEN(sts)) return sts;
-      *is_attr = 1;
-      break;
-    case xnav_eItemType_Collect:
-      sts = gdh_NameToAttrref( pwr_cNObjid, item->name, attrref);
-      if ( EVEN(sts)) return sts;
-      *is_attr = 1;
-      break;
-    default:
-      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, attrref);
-      *is_attr = 0;
-      if ( EVEN(sts)) return sts;
+  switch( item->type) {
+  case xnav_eItemType_Attr:
+  case xnav_eItemType_AttrArray:
+  case xnav_eItemType_AttrObject:
+  case xnav_eItemType_AttrArrayElem:
+    strcat( attr_str, ".");
+    strcat( attr_str, item->name);
+    sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, attrref);
+    if ( EVEN(sts)) return sts;
+    *is_attr = 1;
+    break;
+  case xnav_eItemType_Collect:
+    sts = gdh_NameToAttrref( pwr_cNObjid, item->name, attrref);
+    if ( EVEN(sts)) return sts;
+    *is_attr = 1;
+    break;
+  default:
+    sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, attrref);
+    *is_attr = 0;
+    if ( EVEN(sts)) return sts;
   }
   return 1;
 }
@@ -1453,35 +1284,33 @@ int XNav::get_select_all( pwr_sAttrRef **attrref, int **is_attr)
 
   *attrref = ap;
   *is_attr = ip;
-  for ( i = 0; i < node_count; i++)
-  {
+  for ( i = 0; i < node_count; i++) {
     brow_GetUserData( node_list[i], (void **)&item);
 
     sts = gdh_ObjidToName( item->objid, 
-	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+			   attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
-    switch( item->type)
-    {
-      case xnav_eItemType_Attr:
-      case xnav_eItemType_AttrArray:
-      case xnav_eItemType_AttrObject:
-      case xnav_eItemType_AttrArrayElem:
-        strcat( attr_str, ".");
-        strcat( attr_str, item->name);
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      case xnav_eItemType_Collect:
-        sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      default:
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        *ip = 0;
-        if ( EVEN(sts)) return sts;
+    switch( item->type) {
+    case xnav_eItemType_Attr:
+    case xnav_eItemType_AttrArray:
+    case xnav_eItemType_AttrObject:
+    case xnav_eItemType_AttrArrayElem:
+      strcat( attr_str, ".");
+      strcat( attr_str, item->name);
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    case xnav_eItemType_Collect:
+      sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    default:
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      *ip = 0;
+      if ( EVEN(sts)) return sts;
     }
     ap++;
     ip++;
@@ -1510,35 +1339,33 @@ int XNav::get_all_objects( pwr_sAttrRef **attrref, int **is_attr)
 
   *attrref = ap;
   *is_attr = ip;
-  for ( i = 0; i < node_count; i++)
-  {
+  for ( i = 0; i < node_count; i++) {
     brow_GetUserData( node_list[i], (void **)&item);
 
     sts = gdh_ObjidToName( item->objid, 
-	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+			   attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
-    switch( item->type)
-    {
-      case xnav_eItemType_Attr:
-      case xnav_eItemType_AttrArray:
-      case xnav_eItemType_AttrObject:
-      case xnav_eItemType_AttrArrayElem:
-        strcat( attr_str, ".");
-        strcat( attr_str, item->name);
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      case xnav_eItemType_Collect:
-        sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      default:
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        *ip = 0;
-        if ( EVEN(sts)) return sts;
+    switch( item->type) {
+    case xnav_eItemType_Attr:
+    case xnav_eItemType_AttrArray:
+    case xnav_eItemType_AttrObject:
+    case xnav_eItemType_AttrArrayElem:
+      strcat( attr_str, ".");
+      strcat( attr_str, item->name);
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    case xnav_eItemType_Collect:
+      sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    default:
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      *ip = 0;
+      if ( EVEN(sts)) return sts;
     }
     ap++;
     ip++;
@@ -1566,35 +1393,33 @@ int XNav::get_all_collect_objects( pwr_sAttrRef **attrref, int **is_attr)
 
   *attrref = ap;
   *is_attr = ip;
-  for ( i = 0; i < node_count; i++)
-  {
+  for ( i = 0; i < node_count; i++) {
     brow_GetUserData( node_list[i], (void **)&item);
 
     sts = gdh_ObjidToName( item->objid, 
-	    	attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
+			   attr_str, sizeof(attr_str), cdh_mName_volumeStrict);
     if ( EVEN(sts)) return sts;
 
-    switch( item->type)
-    {
-      case xnav_eItemType_Attr:
-      case xnav_eItemType_AttrArray:
-      case xnav_eItemType_AttrObject:
-      case xnav_eItemType_AttrArrayElem:
-        strcat( attr_str, ".");
-        strcat( attr_str, item->name);
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      case xnav_eItemType_Collect:
-        sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
-        if ( EVEN(sts)) return sts;
-          *ip = 1;
-        break;
-      default:
-        sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
-        *ip = 0;
-        if ( EVEN(sts)) return sts;
+    switch( item->type) {
+    case xnav_eItemType_Attr:
+    case xnav_eItemType_AttrArray:
+    case xnav_eItemType_AttrObject:
+    case xnav_eItemType_AttrArrayElem:
+      strcat( attr_str, ".");
+      strcat( attr_str, item->name);
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    case xnav_eItemType_Collect:
+      sts = gdh_NameToAttrref( pwr_cNObjid, item->name, ap);
+      if ( EVEN(sts)) return sts;
+      *ip = 1;
+      break;
+    default:
+      sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, ap);
+      *ip = 0;
+      if ( EVEN(sts)) return sts;
     }
     ap++;
     ip++;
@@ -1648,14 +1473,14 @@ static void  xnav_type_id_to_name( int type_id, char *type_id_name)
 }
 #endif
 
-static void xnav_trace_subwindow_cb( void *ctx, pwr_tObjid objid)
+void XNav::trace_subwindow_cb( void *ctx, pwr_tObjid objid)
 {
   XNav *xnav = (XNav *) ctx;
 
   xnav->start_trace( objid, NULL);
 }
 
-static void xnav_trace_display_object_cb( void *ctx, pwr_tObjid objid)
+void XNav::trace_display_object_cb( void *ctx, pwr_tObjid objid)
 {
   XNav *xnav = (XNav *) ctx;
   pwr_sAttrRef aref = cdh_ObjidToAref( objid);
@@ -1664,12 +1489,12 @@ static void xnav_trace_display_object_cb( void *ctx, pwr_tObjid objid)
   xnav->pop();
 }
 
-static int xnav_is_authorized_cb( void *xnav, unsigned int access)
+int XNav::is_authorized_cb( void *xnav, unsigned int access)
 {
   return (((XNav *)xnav)->priv & access) != 0;
 }
 
-static void xnav_trace_collect_insert_cb( void *ctx, pwr_tObjid objid)
+void XNav::trace_collect_insert_cb( void *ctx, pwr_tObjid objid)
 {
   XNav 		*xnav = (XNav *) ctx;
   pwr_sAttrRef 	attrref;
@@ -1686,15 +1511,15 @@ static void xnav_trace_collect_insert_cb( void *ctx, pwr_tObjid objid)
   xnav->collect_insert( &attrref);
 }
 
-static void xnav_trace_close_cb(tra_tCtx tractx)
+void XNav::trace_close_cb( RtTrace *tractx)
 {
-  ((XNav *)tractx->cp.parent_ctx)->appl.remove( (void *)tractx);
-  trace_del( tractx);
+  ((XNav *)tractx->parent_ctx)->appl.remove( (void *)tractx);
+  delete tractx;
 }
 
-static void xnav_trace_help_cb(tra_tCtx tractx, char *key)
+void XNav::trace_help_cb( RtTrace *tractx, char *key)
 {
-  XNav *xnav = (XNav *) tractx->cp.parent_ctx;
+  XNav *xnav = (XNav *) tractx->parent_ctx;
   int sts;
 
   xnav->brow_push_all();
@@ -1719,13 +1544,13 @@ static void xnav_trace_help_cb(tra_tCtx tractx, char *key)
   // xnav->pop();
 }
 
-static void xnav_xatt_close_cb( void *xnav, void *xatt)
+void XNav::xatt_close_cb( void *xnav, void *xatt)
 {
   ((XNav *)xnav)->appl.remove( xatt);
   delete (XAtt *)xatt;
 }
 
-static void xnav_xcrr_close_cb( void *xnav, void *xcrr)
+void XNav::xcrr_close_cb( void *xnav, void *xcrr)
 {
   ((XNav *)xnav)->appl.remove( xcrr);
   delete (XCrr *)xcrr;
@@ -1734,7 +1559,7 @@ static void xnav_xcrr_close_cb( void *xnav, void *xcrr)
 //
 // Callbacks from brow
 //
-static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   XNav		*xnav;
   Item 		*item;
@@ -1824,6 +1649,14 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_Key_PageUp: {
       brow_Page( xnav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( xnav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( xnav->brow->ctx, -0.1);
       break;
     }
     case flow_eEvent_Key_PF1:
@@ -2005,7 +1838,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClickShift;
-            sts = xnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -2055,7 +1888,7 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = xnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -2101,7 +1934,6 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_MB3Press:
     {            
       // Popup menu
-      Widget popup;
       pwr_sAttrRef attrref;
 
       switch ( event->object.object_type)
@@ -2127,9 +1959,10 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, &attrref);
               if ( EVEN(sts)) return sts;
 
-              popup = xnav_create_popup_menu( xnav, attrref, 
-				   xmenu_eItemType_Attribute,
-				   xmenu_mUtility_XNav, xnav->priv, NULL);
+              xnav->create_popup_menu( attrref, 
+				 xmenu_eItemType_Attribute,
+				 xmenu_mUtility_XNav, xnav->priv, NULL,
+				 event->any.x_pixel, event->any.y_pixel);
               break;
             }
             case xnav_eItemType_AttrObject:
@@ -2146,9 +1979,10 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               sts = gdh_NameToAttrref( pwr_cNObjid, attr_str, &attrref);
               if ( EVEN(sts)) return sts;
 
-              popup = xnav_create_popup_menu( xnav, attrref, 
-				   xmenu_eItemType_AttrObject,
-				   xmenu_mUtility_XNav, xnav->priv, NULL);
+              xnav->create_popup_menu( attrref, 
+				 xmenu_eItemType_AttrObject,
+				 xmenu_mUtility_XNav, xnav->priv, NULL,
+				 event->any.x_pixel, event->any.y_pixel);
               break;
             }
             case xnav_eItemType_Collect:
@@ -2165,9 +1999,10 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               sts = gdh_NameToAttrref( pwr_cNObjid, item->name, &attrref);
               if ( EVEN(sts)) return sts;
 
-              popup = xnav_create_popup_menu( xnav, attrref, 
-				   xmenu_eItemType_Attribute,
-				   xmenu_mUtility_XNav, xnav->priv, NULL);
+              xnav->create_popup_menu( attrref, 
+				 xmenu_eItemType_Attribute,
+				 xmenu_mUtility_XNav, xnav->priv, NULL,
+				 event->any.x_pixel, event->any.y_pixel);
               break;
             }
             case xnav_eItemType_Crossref:
@@ -2175,25 +2010,20 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
               ItemCrossref *itemc = (ItemCrossref *)item;
               attrref = cdh_ObjidToAref( itemc->objid);
 
-              popup = xnav_create_popup_menu( xnav, attrref, 
-			     xmenu_eItemType_Crossref,
-			     xmenu_mUtility_XNav, xnav->priv, itemc->ref_name);
+              xnav->create_popup_menu( attrref, 
+				 xmenu_eItemType_Crossref,
+				 xmenu_mUtility_XNav, xnav->priv, itemc->ref_name,
+				 event->any.x_pixel, event->any.y_pixel);
               break;
             }
 	    default:
               attrref = cdh_ObjidToAref( item->objid);
-              popup = xnav_create_popup_menu( xnav, attrref, 
-				   xmenu_eItemType_Object,
-				   xmenu_mUtility_XNav, xnav->priv, NULL);
+              xnav->create_popup_menu( attrref, 
+				 xmenu_eItemType_Object,
+				 xmenu_mUtility_XNav, xnav->priv, NULL,
+				 event->any.x_pixel, event->any.y_pixel);
 
           }
-          if ( !popup) 
-            break;
-
-          mrm_PositionPopup( popup, xnav->brow_widget, 
-			       event->any.x_pixel + 8, event->any.y_pixel);
-          XtManageChild(popup);
-
           break;
         default:
           ;
@@ -2215,17 +2045,16 @@ static int xnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-static void xnav_trace_scan( XNav *xnav)
+void XNav::trace_scan( void *data)
 {
+  XNav *xnav = (XNav *)data;
   int time = int( xnav->gbl.scantime * 1000);
 
   if ( xnav->trace_started)
   {
     flow_TraceScan( xnav->brow->ctx);
 
-    xnav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(xnav->brow_widget) , time,
-	(XtTimerCallbackProc)xnav_trace_scan, xnav);
+    xnav->trace_timerid->add( time, trace_scan, xnav);
   }
   xnav->update_alarminfo();
 
@@ -2241,7 +2070,7 @@ void XNav::force_trace_scan()
     flow_TraceScan( brow->ctx);
 }
 
-static int xnav_trace_scan_bc( brow_tObject object, void *p)
+int XNav::trace_scan_bc( brow_tObject object, void *p)
 {
   Item		*base_item;
   char		buf[400];
@@ -2272,7 +2101,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, item->tid, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2335,7 +2164,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2360,7 +2189,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
       else
         item->first_scan = 0;
 
-      xnav_attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
+      attrvalue_to_string( item->type_id, 0, p, buf, sizeof(buf), &len, NULL);
       brow_SetAnnotation( object, 1, buf, len);
       memcpy( item->old_value, p, min(item->size, (int) sizeof(item->old_value)));
       break;
@@ -2424,7 +2253,7 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
 
           if ( !nochange)
           {
-            xnav_attrvalue_to_string( item->col.elem[i].type_id, 0,
+            attrvalue_to_string( item->col.elem[i].type_id, 0,
 		item->col.elem[i].value_p, buf, sizeof(buf), &len,
 		item->col.elem[i].format);
             brow_SetAnnotation( object, i, buf, len);
@@ -2443,8 +2272,8 @@ static int xnav_trace_scan_bc( brow_tObject object, void *p)
   return 1;
 }
 
-static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, void **p)
+int XNav::trace_connect_bc( brow_tObject object, char *name, char *attr, 
+			    flow_eTraceType type, void **p)
 {
   pwr_tAName   	attr_str;
   int		sts;
@@ -2503,7 +2332,7 @@ static int xnav_trace_connect_bc( brow_tObject object, char *name, char *attr,
   return 1;
 }
 
-static int xnav_trace_disconnect_bc( brow_tObject object)
+int XNav::trace_disconnect_bc( brow_tObject object)
 {
   Item 		*base_item;
 
@@ -3074,9 +2903,9 @@ int XNav::brow_pop()
   if ( brow_cnt >= XNAV_BROW_MAX)
     return 0;
   brow_CreateSecondaryCtx( brow->ctx, &secondary_ctx,
-        xnav_init_brow_cb, (void *)this, flow_eCtxType_Brow);
+			   init_brow_cb, (void *)this, flow_eCtxType_Brow);
 
-  brow_ChangeCtx( brow_widget, brow->ctx, brow_stack[brow_cnt]->ctx);
+  brow_ChangeCtx( brow->ctx, brow_stack[brow_cnt]->ctx);
   *brow = *brow_stack[brow_cnt];
   brow_cnt++;
   return 1;
@@ -3098,7 +2927,7 @@ int XNav::brow_push()
   strcpy( push_cmd, brow->push_command);
 
   brow_cnt--;
-  brow_ChangeCtx( brow_widget, brow_stack[brow_cnt]->ctx, 
+  brow_ChangeCtx( brow_stack[brow_cnt]->ctx, 
 		brow_stack[brow_cnt-1]->ctx);
   *brow = *brow_stack[brow_cnt-1];
   delete brow_stack[brow_cnt];
@@ -3424,58 +3253,62 @@ int XNav::menu_tree_search_children( char *name, xnav_sMenu *child_list,
 void  XNav::enable_events( XNavBrow *brow)
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickShift, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickShiftCtrl, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1ClickShift, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF1, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF2, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF4, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Return, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftRight, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Resized, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	xnav_brow_cb);
+	brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
+int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 {
   XNav *xnav = (XNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -3499,13 +3332,13 @@ static int xnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   // Open the root item
   ((ItemMenu *)xnav->root_item)->open_children( xnav->brow, 0, 0);
 
-  sts = brow_TraceInit( ctx, xnav_trace_connect_bc, 
-		xnav_trace_disconnect_bc, xnav_trace_scan_bc);
+  sts = brow_TraceInit( ctx, trace_connect_bc, 
+		trace_disconnect_bc, trace_scan_bc);
   xnav->trace_started = 1;
-  xnav_trace_scan( xnav);
+  trace_scan( xnav);
 
   brow_CreateSecondaryCtx( xnav->brow_stack[0]->ctx, &secondary_ctx,
-        xnav_init_brow_collect_cb, (void *)xnav, flow_eCtxType_Brow);
+			   init_brow_collect_cb, (void *)xnav, flow_eCtxType_Brow);
 
   // Execute the symbolfile
   xnav->gbl.symbolfile_exec( xnav);
@@ -3591,7 +3424,7 @@ int XNav::login_from_opplace()
   return XNAV__SUCCESS;
 }
 
-static int xnav_init_brow_collect_cb( BrowCtx *ctx, void *client_data)
+int XNav::init_brow_collect_cb( BrowCtx *ctx, void *client_data)
 {
   XNav *xnav = (XNav *) client_data;
 
@@ -3604,7 +3437,7 @@ static int xnav_init_brow_collect_cb( BrowCtx *ctx, void *client_data)
   return 1;
 }
 
-static int xnav_init_brow_cb( BrowCtx *ctx, void *client_data)
+int XNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 {
   XNav *xnav = (XNav *) client_data;
 
@@ -3721,10 +3554,10 @@ void ApplList::swap( int mode)
   for ( elem = root; elem; elem = elem->next) {
     switch( elem->type) {
     case applist_eType_Graph:
-      ge_swap( (ge_tCtx)elem->ctx, mode);
+      ((XttGe *)elem->ctx)->swap( mode);
       break;
     case applist_eType_Trace:
-      trace_swap( (tra_tCtx)elem->ctx, mode);
+      ((RtTrace *)elem->ctx)->swap( mode);
       break;
     case applist_eType_Attr:
       ((XAtt *)elem->ctx)->swap( mode);
@@ -3828,14 +3661,14 @@ void XNav::swap( int mode)
   if ( mode == 0) {
     if ( trace_started) {
       brow_TraceClose( brow->ctx);
-      XtRemoveTimeOut( trace_timerid);
+      trace_timerid->remove();
     }
   }
   else if ( mode == 1) {
     if ( trace_started) {
-      brow_TraceInit( brow->ctx, xnav_trace_connect_bc, 
-			    xnav_trace_disconnect_bc, xnav_trace_scan_bc);
-      xnav_trace_scan( this);
+      brow_TraceInit( brow->ctx, trace_connect_bc, 
+			    trace_disconnect_bc, trace_scan_bc);
+      trace_scan( this);
     }
   }
 }
@@ -3846,7 +3679,7 @@ int XNav::sound( pwr_tAttrRef *sound)
     return 0;
 
   if ( !audio)
-    audio = new XttAudio( brow_widget);
+    audio = new XttAudio( wow);
 
   if ( audio->audio_ok) {
     audio->beep( sound);
@@ -3861,7 +3694,7 @@ int XNav::sound_attached()
     return 0;
 
   if ( !audio)
-    audio = new XttAudio( brow_widget);
+    audio = new XttAudio( wow);
 
   if ( audio->audio_ok)
     return 1;

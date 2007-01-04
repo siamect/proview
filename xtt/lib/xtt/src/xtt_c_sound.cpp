@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_sound.cpp,v 1.1 2005-11-14 16:17:13 claes Exp $
+ * Proview   $Id: xtt_c_sound.cpp,v 1.2 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,15 +21,6 @@
 
 #include "pwr_baseclasses.h"
 #include "flow_std.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "xtt_menu.h"
 #include "xtt_xnav.h"
 #include "rt_xnav_msg.h"

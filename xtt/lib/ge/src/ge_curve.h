@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.8 2005-12-06 10:45:12 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.9 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define ge_curve_h
 
 /* ge_curve.h -- Curve widget */
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef glow_growapi_h
 #include "glow_growapi.h"
@@ -87,31 +83,13 @@ class GeCurveData {
     ~GeCurveData();
 };
 
+class CoWow;
+
 //! A curve window used for trends and logging curves.
 class GeCurve {
-  private:
-    void	write_title( char *str);
-
   public:
-    GeCurve( void *gc_parent_ctx, Widget parent_widget, char *curve_name,
-         char *filename, GeCurveData *curve_data, int pos_right);
     void 	*parent_ctx;
-    Widget	parent_wid;
     char 	name[80];
-    Widget	grow_widget;
-    Widget	curve_widget;
-    Widget	axisform_widget;
-    Widget	nameform_widget;
-    Widget	curveform_widget;
-    Widget	pane_widget;
-    Widget	toplevel;
-    Widget      growcurve_main_widget;
-    Widget      growaxis_main_widget;
-    Widget      grownames_main_widget;
-    Widget      nav_widget;
-    Widget      minmax_widget;
-    Widget      minmax_textmin_widget;
-    Widget      minmax_textmax_widget;
     CurveCtx    *growcurve_ctx;
     GrowCtx     *growaxis_ctx;
     GrowCtx     *grownames_ctx;
@@ -146,22 +124,42 @@ class GeCurve {
     char	 title[300];
     double  	 last_cursor_x;
     double  	 last_mark_x;
+    int		 deferred_configure_axes;
+    CoWow	 *wow;
+
+    GeCurve( void *gc_parent_ctx, char *curve_name,
+         char *filename, GeCurveData *curve_data, int pos_right);
+    virtual ~GeCurve();
+    virtual void write_title( char *str) {}
+    virtual void pop() {}
+    virtual void resize() {}
+    virtual void open_minmax( int idx) {}
+    virtual void axis_set_width( int width) {}  
 
     int read_file( char *filename);
     int configure_curves();
     int configure_axes();
     void points_added();
-    void pop();
     void set_title( char *str);
     void set_time( pwr_tTime time);
     void print( char *filename);
-    ~GeCurve();
+    void activate_exit();
+    void activate_configure();
+    void activate_print();
+    void activate_background();
+    void activate_filledcurves( int set);
+    void activate_help();
+    void activate_minmax_ok( double min_value, double max_value);
+
+    static int growcurve_cb( GlowCtx *ctx, glow_tEvent event);
+    static int init_growcurve_cb( GlowCtx *fctx, void *client_data);
+    static int growaxis_cb( GlowCtx *ctx, glow_tEvent event);
+    static int grownames_cb( GlowCtx *ctx, glow_tEvent event);
+    static int init_growaxis_cb( GlowCtx *fctx, void *client_data);
+    static int init_grownames_cb( GlowCtx *fctx, void *client_data);
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.h,v 1.4 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xattnav.h,v 1.5 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,14 +17,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef wb_xattnav_h
-#define wb_xattnav_h
+#ifndef xtt_xattnav_h
+#define xtt_xattnav_h
 
-/* wb_xattnav.h -- Simple navigator */
-
-#if defined __cplusplus
-extern "C" {
-#endif
+/* xtt_xattnav.h -- */
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -50,40 +46,41 @@ typedef enum {
   xattnav_eType_CrossRef
 } xattnav_eType;
 
+class CoWow;
+class CoWowTimer;
+
 class XAttNav {
   public:
     XAttNav(
 	void 		*xa_parent_ctx,
-	Widget		xa_parent_wid,
         xattnav_eType   xa_type,
 	char 		*xa_name,
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
-	Widget 		*w,
 	pwr_tStatus 	*status);
-    ~XAttNav();
+    virtual ~XAttNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     xattnav_eType       type;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     XNavBrow		*brow;
     pwr_sAttrRef       	objar;
     int			advanced_user;
     int			bypass;
-    XtIntervalId	trace_timerid;
+    CoWowTimer		*trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*close_cb)( void *);
     void 		(*change_value_cb)( void *);
     void 		(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
-					  unsigned long, char *, Widget *);
+					  unsigned long, char *, int x, int y);
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
     int		        (*is_authorized_cb)(void *, unsigned int);
     int			displayed;
+    CoWow		*wow;
+
+    virtual void popup_position( int x_event, int y_event, int *x, int *y) {}
+    virtual void set_inputfocus() {}
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( brow_tObject node, char *name, char *value_str);
@@ -91,7 +88,6 @@ class XAttNav {
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void message( char sev, char *text);
-    void set_inputfocus();
     void force_trace_scan();
     int object_attr();
     int crossref();
@@ -101,10 +97,15 @@ class XAttNav {
     int select_by_name( char *name);
     void start_trace();
     void swap( int mode);
+
+    static void trace_scan( void *data);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int trace_connect_bc( brow_tObject object, char *name, 
+				 char *attr, flow_eTraceType type, void **p);
+    static int trace_disconnect_bc( brow_tObject object);
+    static int trace_scan_bc( brow_tObject object, void *p);
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif

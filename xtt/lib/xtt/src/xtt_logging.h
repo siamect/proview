@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.h,v 1.4 2005-11-22 12:16:50 claes Exp $
+ * Proview   $Id: xtt_logging.h,v 1.5 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define xtt_logging_h
 
 /* xtt_logging.h -- Logging in xtt */
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef rt_gdh_h
 #include "rt_gdh.h"
@@ -121,9 +117,6 @@ class XttLogging {
     void message( char severity, char *msg);
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

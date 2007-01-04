@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.6 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.7 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef ge_subpalette_h
 #define ge_subpalette_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -95,20 +91,13 @@ class SubPalette {
   public:
     SubPalette(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
 	pwr_tStatus *status);
-    ~SubPalette();
+    virtual ~SubPalette();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
-    SubPaletteBrow		*brow;
-    XtIntervalId	trace_timerid;
+    SubPaletteBrow	*brow;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     int 		(*traverse_focus_cb)( void *, void *);
@@ -119,8 +108,10 @@ class SubPalette {
     int			path_cnt;
     int			displayed;
 
-    int get_select( pwr_sAttrRef *attrref, int *is_attr);
+    virtual void set_inputfocus( int focus) {}
+
     void message( char sev, char *text);
+    int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void set_inputfocus();
     int object_attr();
     int get_select( char *text, char *filename);
@@ -131,7 +122,7 @@ class SubPalette {
     void menu_tree_free_children( subpalette_sMenu *first_child);
     void get_path( int *path_count, char **path_vect) 
 		{ *path_count = path_cnt; *path_vect = (char *)path;}; 
-    void set_inputfocus( int focus);
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
 };
 
 class Item {
@@ -179,9 +170,6 @@ class ItemMenu : public Item {
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.18 2006-06-15 12:17:40 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.19 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,8 +42,12 @@ extern "C" {
 }
 #endif
 
-#ifndef flow_h
-#include "flow.h"
+#ifndef flow_ctx_h
+#include "flow_ctx.h"
+#endif
+
+#ifndef flow_api_h
+#include "flow_api.h"
 #endif
 
 #ifndef flow_browctx_h
@@ -54,57 +58,44 @@ extern "C" {
 #include "flow_browapi.h"
 #endif
 
-#ifndef flow_browwidget_h
-#include "flow_browwidget.h"
-#endif
-
 #ifndef xtt_xnav_brow_h
 #include "xtt_xnav_brow.h"
 #endif
 
-extern "C" {
-
-#ifndef rt_trace_h
-#include "rt_trace.h"
-#endif
-
-}
-
 #ifndef xtt_xnav_localdb_h
 #include "xtt_localdb.h"
-#endif
-
-#ifndef xtt_ev_h
-#include "xtt_ev.h"
-#endif
-
-#ifndef xtt_hist_h
-#include "xtt_hist.h"
-#endif
-
-#ifndef xtt_op_h
-#include "xtt_op.h"
-#endif
-
-#ifndef xtt_logging_h
-#include "xtt_logging.h"
 #endif
 
 #ifndef xtt_menu_h
 #include "xtt_menu.h"
 #endif
 
-#ifndef xtt_clog_h
-#include "xtt_clog.h"
-#endif
-
-#ifndef xtt_audio_h
-#include "xtt_audio.h"
+#ifndef xtt_logging_h
+#include "xtt_logging.h"
 #endif
 
 #define xnav_cVersion	"X3.0b"
 #define XNAV_BROW_MAX	25
 #define XNAV_LOGG_MAX   10
+
+class CoWowTimer;
+class XAtt;
+class XCrr;
+class Block;
+class XttTrend;
+class XttFast;
+class XAttOne;
+class GeCurve;
+class GeCurveData;
+class XCrr;
+class CoWow;
+class XttAudio;
+class Ev;
+class Op;
+class Hist;
+class CLog;
+class XttGe;
+class RtTrace;
 
 typedef enum {
 	xnav_mOpen_All		= ~0,
@@ -162,7 +153,7 @@ typedef struct s_trace_node t_trace_node;
 
 struct s_trace_node {
   t_trace_node  *Next;
-  tra_tCtx      tractx;
+  RtTrace      *tractx;
   pwr_tObjid    Objid;
 };
 
@@ -258,29 +249,22 @@ class XNavGbl {
     int			symbolfile_exec( void *xnav);
 };
 
-
 class XNav {
   public:
     XNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
 	pwr_tStatus *status);
-    ~XNav();
+    virtual ~XNav();
 
     XNavGbl		gbl;
     XNavLdb		ldb;
     ApplList		appl;
     XttLogging          logg[XNAV_LOGG_MAX];
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     XNavBrow		*brow;
     XNavBrow		*collect_brow;
     XNavBrow		*brow_stack[XNAV_BROW_MAX];
@@ -288,7 +272,7 @@ class XNav {
     pwr_tObjid		root_objid;
     void		*root_item;
     t_trace_node	*TraceList;
-    XtIntervalId	trace_timerid;
+    CoWowTimer		*trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*close_cb)( void *, int);
@@ -318,6 +302,42 @@ class XNav {
     int                 init_help;
     int			attach_audio;
     XttAudio		*audio;
+    CoWow		*wow;
+    static xmenu_sMenuCall *mcp;
+
+    virtual void set_inputfocus() {}
+    virtual void pop() {}
+    virtual void create_popup_menu( pwr_sAttrRef attrref,
+				    xmenu_eItemType item_type,
+				    xmenu_mUtility caller, unsigned int priv,
+				    char *arg, int x, int y) {}
+    virtual RtTrace *plctrace_new( pwr_tOid oid, pwr_tStatus *sts) {return 0;}
+    virtual XAtt *xatt_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
+    virtual XCrr *xcrr_new( pwr_tAttrRef *arp, int advanced_user, pwr_tStatus *sts) {return 0;}
+    virtual Ev *ev_new( char *eve_name, char *ala_name, char *blk_name,
+			pwr_tObjid ev_user, int display_ala, int display_eve,
+			int display_blk, int display_return, int display_ack,
+			int ev_beep, pwr_tStatus *status) { return 0;}
+    virtual Hist *hist_new( char *title, pwr_tOid oid, pwr_tStatus *sts) {return 0;}
+    virtual Block *block_new( pwr_tAttrRef *arp, char *name, unsigned int priv,
+		      pwr_tStatus *sts) {return 0;}
+    virtual Op *op_new( char *opplace, pwr_tStatus *sts) {return 0;}
+    virtual XttTrend *xtttrend_new( char *name, pwr_tAttrRef *objar, pwr_tAttrRef *plotgroup,
+			    pwr_tStatus *sts) {return 0;}
+    virtual XttFast *xttfast_new( char *name, pwr_tAttrRef *objar, pwr_tStatus *sts) {return 0;}
+    virtual XAttOne *xattone_new( pwr_tAttrRef *objar, char *title, unsigned int priv,
+			  pwr_tStatus *sts) {return 0;}
+    virtual CLog *clog_new( char *name, pwr_tStatus *sts) {return 0;}
+    virtual XttGe *xnav_ge_new( char *name, char *filename, int scrollbar, int menu, 
+				int navigator, int width, int height, int x, int y, 
+				double scan_time, char *object_name, 
+				int use_default_access, unsigned int access,
+				int (*xg_command_cb) (XttGe *, char *),
+				int (*xg_get_current_objects_cb) (void *, pwr_sAttrRef **, int **),
+				int (*xg_is_authorized_cb) (void *, unsigned int)) {return 0;}
+    virtual GeCurve *gecurve_new( char *name, char *filename, GeCurveData *data,
+				  int pos_right) {return 0;}
+    virtual void bell( int time) {}
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     void start_trace_selected();
@@ -349,7 +369,6 @@ class XNav {
     int find( pwr_tObjid objid, char *attr, void **item);
     int display_object( pwr_sAttrRef *arp, int open);
     int display_object( pwr_tObjid objid, int open);
-    void set_inputfocus();
     int setup();
     int	show_logging( int entry);
     void force_trace_scan();
@@ -364,7 +383,6 @@ class XNav {
     int menu_tree_insert( char *title, int item_type, char *command, menu_ePixmap pixmap,
 		char *destination, int dest_code, xnav_sMenu **menu_item);
     int menu_tree_delete( char *name);
-    void pop();
     int load_ev_from_opplace();
     int login_from_opplace();
     static char *get_message( int sts);
@@ -379,7 +397,30 @@ class XNav {
     int update_alarminfo();
     int sound( pwr_tAttrRef *arp);
     int sound_attached();
-
+    
+    
+    static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
+    static int get_trace_attr( pwr_sAttrRef *arp, char *attr);
+    static int attr_string_to_value( int type_id, char *value_str, 
+				     void *buffer_ptr, int buff_size, int attr_size);
+    static void attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
+					   char *str, int size, int *len, char *format);
+    static void trace_subwindow_cb( void *ctx, pwr_tObjid objid);
+    static void trace_display_object_cb( void *ctx, pwr_tObjid objid);
+    static int is_authorized_cb( void *xnav, unsigned int access);
+    static void trace_collect_insert_cb( void *ctx, pwr_tObjid objid);
+    static void trace_close_cb( RtTrace *tractx);
+    static void trace_help_cb( RtTrace *tractx, char *key);
+    static void xatt_close_cb( void *xnav, void *xatt);
+    static void xcrr_close_cb( void *xnav, void *xcrr);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static void trace_scan( void *data);
+    static int trace_scan_bc( brow_tObject object, void *p);
+    static int trace_connect_bc( brow_tObject object, char *name, char *attr, 
+				 flow_eTraceType type, void **p);
+    static int trace_disconnect_bc( brow_tObject object);
+    static int init_brow_collect_cb( BrowCtx *ctx, void *client_data);
+    static int init_brow_cb( BrowCtx *ctx, void *client_data);
 
     // Command module member functions
     int command( char *cmd);
@@ -449,6 +490,49 @@ class XNav {
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, int pop);
     int	help_index( navh_eHelpFile file_type, char *file_name, int pop);
+
+    // Methods and Popup menu functions
+    virtual void get_popup_menu( pwr_sAttrRef attrref,
+				 xmenu_eItemType item_type, 
+				 xmenu_mUtility caller, 
+				 unsigned int priv, char *arg, int x, int y) {}
+    void get_popup_menu_items( pwr_sAttrRef attrref,
+			       xmenu_eItemType item_type, 
+			       xmenu_mUtility caller, 
+			       unsigned int priv, char *arg);
+    static int CallMenuMethod( xmenu_sMenuCall *ip, int idx);
+    static int CheckMenuMethodFilter( xmenu_sMenuCall *ip, int idx);
+    int call_method( char *method, char *filter,
+		     pwr_sAttrRef attrref, 
+		     xmenu_eItemType item_type, 
+		     xmenu_mUtility caller,
+		     unsigned int priv, char *arg);
+    int call_object_method( pwr_sAttrRef attrref, 
+			    xmenu_eItemType item_type, 
+			    xmenu_mUtility caller, 
+			    unsigned int priv, char *method_name);
+    int check_object_methodfilter( pwr_sAttrRef attrref, 
+				   xmenu_eItemType item_type, 
+				   xmenu_mUtility caller, 
+				   unsigned int priv, char *method_name);
+    static int GetObjectMenu( xmenu_sMenuCall *ip,
+			      pwr_tCid classid,
+			      xmenu_sMenuItem **Item,
+			      pwr_tUInt32 Level,
+			      int *nItems,
+			      int AddSeparator,
+			      pwr_sAttrRef *CurrentObject);
+    static int GetMethod( char *name, 
+			  pwr_tStatus (**method)( xmenu_sMenuCall *));
+    static int getAllMenuItems( xmenu_sMenuCall *ip,
+				xmenu_sMenuItem	**Item,
+				pwr_tObjid objid,
+				pwr_tUInt32 Level,
+				int *nItems,
+				int AddSeparator,
+				pwr_sAttrRef *CurrentObject);
+    static int GetMenu( xmenu_sMenuCall *ip);
+
 };
 
 int xnav_cut_segments (
@@ -461,10 +545,10 @@ int  xnav_attr_string_to_value( int type_id, char *value_str,
 void  xnav_attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr, 
 	char *str, int size, int *len, char *format);
 
-Widget xnav_create_popup_menu( XNav *xnav, pwr_sAttrRef attrref,
-			       xmenu_eItemType item_type,
-			       xmenu_mUtility caller, unsigned int priv,
-			       char *arg);
+void xnav_create_popup_menu( XNav *xnav, pwr_sAttrRef attrref,
+			     xmenu_eItemType item_type,
+			     xmenu_mUtility caller, unsigned int priv,
+			     char *arg, int x, int y);
 int xnav_call_method( XNav *xnav, char *method, char *filter,
 		      pwr_sAttrRef attrref, 
 		      xmenu_eItemType item_type, 
@@ -481,7 +565,7 @@ int xnav_check_object_methodfilter( XNav *xnav, pwr_sAttrRef attrref,
 
 void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref, 
 			 unsigned long item_type,
-			 unsigned long utility, char *arg, Widget *popup);
+			 unsigned long utility, char *arg, int x, int y);
 int xnav_call_method_cb( void *xnav, char *method, char *filter,
 			 pwr_sAttrRef attrref,
 			 unsigned long item_type,

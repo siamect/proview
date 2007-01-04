@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.28 2006-04-12 12:19:08 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.29 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,8 +31,6 @@
 # include <ctype.h>
 
 #include "co_nav_help.h"
-
-extern "C" {
 #include "rt_gdh.h"
 #include "pwr_privilege.h"
 #include "rt_gdh_msg.h"
@@ -44,28 +42,13 @@ extern "C" {
 #include "pwr_nmpsclasses.h"
 #include "co_ccm_msg.h"
 #include "co_api.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-
-extern "C" {
-#include "flow_x.h"
 #include "rt_trace.h"
-#include "co_wow.h"
-}
 #include "co_lng.h"
 #include "co_error.h"
+#include "co_wow.h"
 #include "xtt_xnav.h"
 #include "xtt_ge.h"
 #include "xtt_item.h"
@@ -76,7 +59,6 @@ extern "C" {
 #include "co_xhelp.h"
 
 #include "glow_curvectx.h"
-#include "glow_curvewidget.h"
 #include "ge_curve.h"
 #include "xtt_trend.h"
 #include "xtt_fast.h"
@@ -84,6 +66,12 @@ extern "C" {
 #include "xtt_menu.h"
 #include "xtt_url.h"
 #include "xtt_block.h"
+#include "xtt_ge.h"
+#include "xtt_ev.h"
+#include "xtt_op.h"
+#include "xtt_audio.h"
+#include "xtt_clog.h"
+#include "xtt_hist.h"
 
 #define IF_NOGDH_RETURN \
 if ( !xnav->gbl.gdh_started)\
@@ -115,8 +103,8 @@ static int xnav_attribute_func (
   float		*return_float,
   int		*return_int,
   char		*return_string);
-static int xnav_ge_command_cb( ge_tCtx gectx, char *command);
-static void xnav_ge_close_cb( ge_tCtx gectx);
+static int xnav_ge_command_cb( XttGe *gectx, char *command);
+static void xnav_ge_close_cb( XttGe *gectx);
 //new code by Jonas Nylund 030131
 static void xnav_hist_close_cb( void *ctx);
 //end new code by Jonas Nylund 030131
@@ -665,7 +653,7 @@ static int	xnav_set_func(	void		*client_data,
   else if ( strncmp( arg1_str, "FOLDER", strlen( arg1_str)) == 0)
   {    
     // Command is "SET FOLDER"
-    ge_tCtx gectx;
+    XttGe *gectx;
     char graph_str[80];
     char object_str[80];
     char idx_str[20];
@@ -696,12 +684,12 @@ static int	xnav_set_func(	void		*client_data,
       xnav->message('E', "Graph is not open");
       return XNAV__HOLDCOMMAND; 	
     }
-    ge_set_folder_index( gectx, object_str, idx);
+    gectx->set_folder_index( object_str, idx);
   }
   else if ( strncmp( arg1_str, "SUBWINDOW", strlen( arg1_str)) == 0)
   {    
     // Command is "SET SUBWINDOW"
-    ge_tCtx gectx;
+    XttGe *gectx;
     char graph_str[80];
     char object_str[80];
     char source_str[80];
@@ -726,7 +714,7 @@ static int	xnav_set_func(	void		*client_data,
       xnav->message('E', "Graph is not open");
       return XNAV__HOLDCOMMAND; 	
     }
-    ge_set_subwindow_source( gectx, object_str, source_str);
+    gectx->set_subwindow_source( object_str, source_str);
   }
   else if ( strncmp( arg1_str, "LANGUAGE", strlen( arg1_str)) == 0)
   {    
@@ -774,7 +762,7 @@ static int	xnav_show_func(	void		*client_data,
   else if ( strncmp( arg1_str, "LICENSE", strlen( arg1_str)) == 0)
   {
     // Command is "SHOW LICENSE"
-    wow_DisplayLicense( xnav->parent_wid);
+    xnav->wow->DisplayLicense();
     return 1;
   }
   else if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
@@ -1595,10 +1583,9 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( alarm_title, Lng::translate( "Alarm List"));
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, 
-			 event_title, alarm_title, block_title, 
-			 xnav->gbl.UserObject, 0, 1, 0, xnav->gbl.AlarmReturn,
-			 xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      xnav->ev = xnav->ev_new(  event_title, alarm_title, block_title, 
+				xnav->gbl.UserObject, 0, 1, 0, xnav->gbl.AlarmReturn,
+				xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1635,7 +1622,7 @@ static int	xnav_show_func(	void		*client_data,
 
     strcpy( hist_title, Lng::translate( "Hist list"));
     Hist *hist;
-    hist = new Hist( xnav, xnav->parent_wid, hist_title, objid, &sts);
+    hist = xnav->hist_new( hist_title, objid, &sts);
     if ( EVEN(sts))
     {
       delete hist;
@@ -1662,10 +1649,9 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( alarm_title, Lng::translate( "Alarm List"));
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, 
-			 event_title, alarm_title, block_title,
-		xnav->gbl.UserObject, 1, 0, 0, xnav->gbl.AlarmReturn,
-		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
+			       xnav->gbl.UserObject, 1, 0, 0, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1693,10 +1679,9 @@ static int	xnav_show_func(	void		*client_data,
       strcpy( alarm_title, Lng::translate( "Alarm List"));
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, 
-			 event_title, alarm_title, block_title,
-		xnav->gbl.UserObject, 0, 0, 1, xnav->gbl.AlarmReturn,
-		xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
+			       xnav->gbl.UserObject, 0, 0, 1, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -1883,10 +1868,9 @@ static int	xnav_eventlist_func(	void		*client_data,
       strcpy( alarm_title, Lng::translate( "Alarm List"));
       strcpy( event_title, Lng::translate( "Event List"));
       strcpy( block_title, Lng::translate( "Blocked Alarms"));
-      xnav->ev = new Ev( xnav, xnav->parent_wid, 
-			 event_title, alarm_title, block_title,
-			 xnav->gbl.UserObject, 0, 0, 0, xnav->gbl.AlarmReturn,
-			 xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
+      xnav->ev = xnav->ev_new( event_title, alarm_title, block_title,
+			       xnav->gbl.UserObject, 0, 0, 0, xnav->gbl.AlarmReturn,
+			       xnav->gbl.AlarmAck, xnav->gbl.AlarmBeep, &sts);
       if ( EVEN(sts))
       {
         delete xnav->ev;
@@ -2021,8 +2005,8 @@ static int	xnav_eventlist_func(	void		*client_data,
     else {
       pwr_sAttrRef oar = cdh_ObjidToAref( objid);
 
-      new Block( xnav, xnav->parent_wid, &oar, 
-		 Lng::translate( "Alarm Blocking"), xnav->priv, &sts);
+      xnav->block_new( &oar, Lng::translate( "Alarm Blocking"), 
+		       xnav->priv, &sts);
       xnav->message('E', "Enter priority");
       return XNAV__HOLDCOMMAND;
     }
@@ -2602,8 +2586,7 @@ static int	xnav_open_func(	void		*client_data,
         return XNAV__HOLDCOMMAND;
       }
 
-      xnav->op = new Op( xnav, xnav->parent_wid, 
-		opplace_str, &sts);
+      xnav->op = xnav->op_new( opplace_str, &sts);
       if ( EVEN(sts))
       {
         delete xnav->op;
@@ -2688,7 +2671,6 @@ static int	xnav_open_func(	void		*client_data,
     char *name_ptr;
     pwr_tAName title_str;
     pwr_sAttrRef aref_vect[11];
-    Widget w;
     int sts;
     pwr_tAName name_array[10];
     int i, names;
@@ -2791,8 +2773,7 @@ static int	xnav_open_func(	void		*client_data,
         trend->pop();
       }
       else {
-        trend = new XttTrend( xnav, xnav->parent_wid, title_str, &w, NULL, 
-		  &plotgroup, &sts);
+        trend = xnav->xtttrend_new( title_str, NULL, &plotgroup, &sts);
         if ( EVEN(sts))
           xnav->message('E',"Error in trend configuration");
         else {
@@ -2804,8 +2785,7 @@ static int	xnav_open_func(	void		*client_data,
       }
     }
     else {
-      trend = new XttTrend( xnav, xnav->parent_wid, title_str, &w, aref_vect, 
-		  0, &sts);
+      trend = xnav->xtttrend_new( title_str, aref_vect, 0, &sts);
       if ( ODD(sts)) 
 	trend->help_cb = xnav_trend_help_cb;
     }
@@ -2816,7 +2796,6 @@ static int	xnav_open_func(	void		*client_data,
     char *name_ptr;
     pwr_tAName title_str;
     pwr_sAttrRef aref;
-    Widget w;
     int sts;
     pwr_tClassId classid;
 
@@ -2877,8 +2856,7 @@ static int	xnav_open_func(	void		*client_data,
       fast->pop();
     }
     else {
-      fast = new XttFast( xnav, xnav->parent_wid, title_str, &w, &aref, 
-			  &sts);
+      fast = xnav->xttfast_new( title_str, &aref, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Error in fast configuration");
       else {
@@ -2950,8 +2928,8 @@ static int	xnav_open_func(	void		*client_data,
       xao->pop();
     }
     else {
-      xao = new XAttOne( xnav->parent_wid, xnav, &aref, title_str, 
-			 bypass ? pwr_mPrv_RtWrite : xnav->priv, &sts);
+      xao = xnav->xattone_new( &aref, title_str, 
+			       bypass ? pwr_mPrv_RtWrite : xnav->priv, &sts);
       if ( EVEN(sts))
 	xnav->message('E',"Unable to open attribute");
       else {
@@ -2983,7 +2961,7 @@ static int	xnav_open_func(	void		*client_data,
     if ( xnav->clog)
       xnav->clog->pop();
     else {
-      xnav->clog = new CLog( xnav, xnav->parent_wid, "Console log", &sts);
+      xnav->clog = xnav->clog_new( "Console log", &sts);
       if ( EVEN(sts)) {
         delete xnav->clog;
         xnav->op = 0;
@@ -3316,7 +3294,7 @@ static int	xnav_close_func(	void		*client_data,
   return XNAV__SUCCESS;	
 }
 
-static void xnav_ge_help_cb( ge_tCtx gectx, char *key)
+static void xnav_ge_help_cb( XttGe *gectx, char *key)
 {
   XNav *xnav = (XNav *)gectx->parent_ctx;
   int sts;
@@ -3330,13 +3308,13 @@ static void xnav_ge_help_cb( ge_tCtx gectx, char *key)
     xnav->message( ' ', null_str);
 }
 
-static int xnav_ge_command_cb( ge_tCtx gectx, char *command)
+static int xnav_ge_command_cb( XttGe *gectx, char *command)
 {
   ((XNav *)gectx->parent_ctx)->command( command);
   return ((XNav *)gectx->parent_ctx)->get_command_sts();
 }
 
-static void xnav_ge_close_cb( ge_tCtx gectx)
+static void xnav_ge_close_cb( XttGe *gectx)
 {
   ((XNav *)gectx->parent_ctx)->appl.remove( (void *)gectx);
 }
@@ -3808,8 +3786,7 @@ static int	xnav_crossref_func(	void		*client_data,
 
     window = ODD( dcli_get_qualifier( "/WINDOW", 0, 0));
     if ( window) {
-      XCrr *xcrr = new XCrr( xnav->form_widget, xnav, &objar, 
-		       xnav->gbl.advanced_user, &sts);
+      XCrr *xcrr = xnav->xcrr_new( &objar, xnav->gbl.advanced_user, &sts);
       if ( EVEN(sts))
         xnav->message(' ', XNav::get_message(sts));
       else {
@@ -3919,7 +3896,7 @@ static int	xnav_test_func(		void		*client_data,
   if ( strncmp( arg1_str, "BELL", strlen( arg1_str)) == 0)
   {
     // Command is "TEST BELL"
-    XBell( flow_Display(xnav->brow_widget), 100);
+    xnav->bell( 100);
   }
   else if ( strncmp( arg1_str, "BEEP", strlen( arg1_str)) == 0)
   {
@@ -4347,8 +4324,8 @@ static int	xnav_call_func(	void		*client_data,
     else
       menu_type = xmenu_eItemType_Attribute;
 
-    sts = xnav_call_object_method( xnav, aref, menu_type, xmenu_mUtility_XNav,
-				   xnav->priv, method_str);
+    sts = xnav->call_object_method( aref, menu_type, xmenu_mUtility_XNav,
+				    xnav->priv, method_str);
     if ( EVEN(sts)) {
       xnav->message('E',"Unable to call method");	
       return XNAV__HOLDCOMMAND;
@@ -4401,8 +4378,8 @@ static int	xnav_check_func( void		*client_data,
     else
       menu_type = xmenu_eItemType_Attribute;
 
-    sts = xnav_check_object_methodfilter( xnav, aref, menu_type, xmenu_mUtility_XNav,
-					 xnav->priv, method_str);
+    sts = xnav->check_object_methodfilter( aref, menu_type, xmenu_mUtility_XNav,
+					   xnav->priv, method_str);
     return sts;
   }
   else
@@ -4425,7 +4402,7 @@ static int	xnav_print_func(void		*client_data,
   {
     pwr_tFileName file_str;
     pwr_tAName instance_str;
-    ge_tCtx gectx;
+    XttGe *gectx;
     pwr_tFileName fname;
     int classgraph;
     char *instance_p;
@@ -4523,7 +4500,7 @@ static int	xnav_print_func(void		*client_data,
 
     if ( xnav->appl.find( applist_eType_Graph, file_str, instance_p, 
 		  (void **) &gectx))
-      ge_print( gectx);
+      gectx->print();
     else {
       xnav->message('E', "Graph not found");
       return XNAV__HOLDCOMMAND;
@@ -5943,12 +5920,12 @@ int XNav::show_symbols()
 
 void xnav_popup_menu_cb( void *xnav, pwr_sAttrRef attrref,
 			 unsigned long item_type,
-			 unsigned long utility, char *arg,  Widget *popup)
+			 unsigned long utility, char *arg, int x, int y)
 {
-  *popup = xnav_create_popup_menu( (XNav *)xnav, attrref, 
-				   (xmenu_eItemType) item_type,
-				   (xmenu_mUtility) utility,
-				   ((XNav *)xnav)->priv, arg);
+  ((XNav *)xnav)->get_popup_menu( attrref, 
+				  (xmenu_eItemType) item_type,
+				  (xmenu_mUtility) utility,
+				  ((XNav *)xnav)->priv, arg, x, y);
 }
 
 int xnav_call_method_cb( void *xnav, char *method, char *filter,
@@ -5956,10 +5933,10 @@ int xnav_call_method_cb( void *xnav, char *method, char *filter,
 			 unsigned long item_type,
 			 unsigned long utility, char *arg)
 {
-  return xnav_call_method( (XNav *)xnav, method, filter, attrref, 
-				   (xmenu_eItemType) item_type,
-				   (xmenu_mUtility) utility,
-				   ((XNav *)xnav)->priv, arg);
+  return ((XNav *)xnav)->call_method( method, filter, attrref, 
+				      (xmenu_eItemType) item_type,
+				      (xmenu_mUtility) utility,
+				      ((XNav *)xnav)->priv, arg);
 }
 
 void xnav_start_trace_cb( void *xnav, pwr_tObjid objid, char *name)
@@ -6050,21 +6027,23 @@ void XNav::open_graph( char *name, char *filename, int scrollbar, int menu,
 	char *object_name, char *focus_name, int input_focus_empty,
 	int use_default_access, unsigned int access)
 {
-  ge_tCtx gectx;
+  XttGe *gectx;
 
   if ( appl.find( applist_eType_Graph, filename, object_name, 
 		  (void **) &gectx)) {
-    ge_pop( gectx);
+    gectx->pop();
     if ( focus_name)
-      ge_set_object_focus( gectx, focus_name, input_focus_empty);
+      gectx->set_object_focus( focus_name, input_focus_empty);
   }
   else
   {
-    gectx = ge_new( parent_wid, (void *)this, name, filename, 
-	scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
-	object_name, use_default_access, access,
-	&xnav_ge_close_cb, &xnav_ge_help_cb, &xnav_ge_command_cb,
-	&xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
+    gectx = xnav_ge_new( name, filename, 
+			 scrollbar, menu, navigator, width, height, x, y, gbl.scantime,
+			 object_name, use_default_access, access,
+			 &xnav_ge_command_cb,
+			 &xnav_ge_get_current_objects_cb, &xnav_ge_is_authorized_cb);
+    gectx->close_cb = xnav_ge_close_cb;
+    gectx->help_cb = xnav_ge_help_cb;
     gectx->display_in_xnav_cb = xnav_ge_display_in_xnav_cb;
     gectx->popup_menu_cb = xnav_popup_menu_cb;
     gectx->call_method_cb = xnav_call_method_cb;
@@ -6073,18 +6052,18 @@ void XNav::open_graph( char *name, char *filename, int scrollbar, int menu,
     appl.insert( applist_eType_Graph, (void *)gectx, pwr_cNObjid, filename,
 		   object_name);
     if ( focus_name)
-      ge_set_object_focus( gectx, focus_name, input_focus_empty);
+      gectx->set_object_focus( focus_name, input_focus_empty);
 
   }
 }
 
 void XNav::close_graph( char *filename, char *object_name)
 {
-  ge_tCtx gectx;
+  XttGe *gectx;
 
   if ( appl.find( applist_eType_Graph, filename, object_name,
 		  (void **) &gectx)) {
-    ge_delete( gectx);
+    delete gectx;
   }
 }
 
@@ -6224,8 +6203,8 @@ int XNav::set_parameter( char *name_str, char *value_str, int bypass)
 	&attr_offset, &attr_dim);
   if ( EVEN(sts)) return sts;
 
-  sts = xnav_attr_string_to_value( attr_type, value_str, 
-		buffer, sizeof(buffer), attr_size);
+  sts = attr_string_to_value( attr_type, value_str, 
+			      buffer, sizeof(buffer), attr_size);
   if ( EVEN(sts)) return sts;
 
   sts = gdh_SetObjectInfo( name_str, buffer, attr_size);
@@ -6236,7 +6215,7 @@ int XNav::set_parameter( char *name_str, char *value_str, int bypass)
 
 void XNav::open_rttlog( char *name, char *filename)
 {
-  new GeCurve( this, parent_wid, name, filename, NULL, 0);
+  gecurve_new( name, filename, NULL, 0);
 }
 
 

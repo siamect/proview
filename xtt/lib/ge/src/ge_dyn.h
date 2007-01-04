@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.29 2006-05-22 13:27:00 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.30 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define ge_dyn_h
 
 /* ge_dyn.h -- Ge predefined dynamics and actions */
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -2277,9 +2273,6 @@ class GeAnalogText : public GeOptionMenu {
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

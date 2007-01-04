@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xcrr.h,v 1.3 2005-09-01 14:57:48 claes Exp $
+ * Proview   $Id: xtt_xcrr.h,v 1.4 2007-01-04 08:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,60 +17,51 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef wb_xcrr_h
-#define wb_xcrr_h
+#ifndef xtt_xcrr_h
+#define xtt_xcrr_h
 
-/* wb_xcrr.h -- Object crossreferences */
-
-#if defined __cplusplus
-extern "C" {
-#endif
+/* xtt_xcrr.h -- Object crossreferences */
 
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
+class XAttNav;
 
 class XCrr {
   public:
     XCrr( 
-	Widget 		xa_parent_wid, 
 	void 		*xa_parent_ctx, 
 	pwr_sAttrRef 	*xa_objar,
 	int 		xa_advanced_user,
 	int             *xa_sts);
-    ~XCrr();
-    Widget	parent_wid;
+    virtual ~XCrr();
     void 	*parent_ctx;
     pwr_sAttrRef objar;
     char 	name[80];
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
-    void	*xcrrnav;
+    XAttNav	*xcrrnav;
     void	*root_item;
-    Widget	xcrrnav_form;
     int		input_open;
     int         input_multiline;
     void 	*object;
     void	(*close_cb) ( void *, void *);
     void	(*redraw_cb) (void *);
     void 	(*popup_menu_cb)( void *, pwr_sAttrRef, unsigned long,
-				  unsigned long, char *, Widget * );
+				  unsigned long, char *, int x, int y);
     void 	(*start_trace_cb)( void *, pwr_tObjid, char *);
     void	*client_data;
     brow_tObject input_node;
     char	input_name[80];
-    int		set_focus_disabled;
-    XtIntervalId focus_timerid;
 
-    void pop();
+    virtual void pop() {}
+
+    static void xcrr_popup_menu_cb( void *ctx, pwr_sAttrRef attrref,
+				    unsigned long item_type, unsigned long utility, 
+				    char *arg, int x, int y);
+    static void xcrr_start_trace_cb( void *ctx, pwr_tObjid objid, char *name);
+    static void xcrr_close_cb( void *ctx);
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

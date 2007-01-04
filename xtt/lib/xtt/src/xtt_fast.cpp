@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.7 2005-12-13 15:11:27 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.8 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,58 +21,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector.h>
 
-extern "C" {
 #include "pwr.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_wow.h"
 #include "rt_xnav_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "glow_growctx.h"
-#undef min
-#undef max
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 #include "glow_curvectx.h"
 #include "glow_curveapi.h"
-#include "glow_curvewidget.h"
 
 #include "xtt_xnav.h"
 #include "rt_fast.h"
 #include "xtt_fast.h"
+#include "ge_curve.h"
 
-extern "C" {
-#include "flow_x.h"
-}
 
-static void fast_close_cb( void *ctx);
-static void fast_help_cb( void *ctx);
-static void fast_scan( XttFast *fast);
-
-XttFast::XttFast(
-	void *parent_ctx,
-	Widget	parent_wid,
-	char *name,
-	Widget *w,
-        pwr_sAttrRef *fast_arp,
-        int *sts) :
-  xnav(parent_ctx), parent_widget(parent_wid), fast_cnt(0), close_cb(0), help_cb(0), first_scan(1),
+XttFast::XttFast( void *parent_ctx,
+		  char *name,
+		  pwr_sAttrRef *fast_arp,
+		  int *sts) :
+  xnav(parent_ctx), fast_cnt(0), timerid(0), close_cb(0), help_cb(0), first_scan(1),
   axis_configured(false)
 {
   pwr_sAttrRef aref = pwr_cNAttrRef;
@@ -80,7 +58,6 @@ XttFast::XttFast(
   pwr_tAName attr_name;
   pwr_sClass_DsFastCurve fp;
   int i, j;
-  char title[250];
     
   *sts = XNAV__SUCCESS;
 
@@ -202,9 +179,6 @@ XttFast::XttFast(
     strcpy( title, fp.Title);
   else
     cdh_StrncpyCutOff( title, name, sizeof(title), 1);
-  curve = new GeCurve( this, parent_widget, title, NULL, gcd, 0);
-  curve->close_cb = fast_close_cb;
-  curve->help_cb = fast_help_cb;
 
   // timerid = XtAppAddTimeOut(
   //	XtWidgetToApplicationContext(parent_widget), 1000,
@@ -213,12 +187,6 @@ XttFast::XttFast(
 
 XttFast::~XttFast()
 {
-  XtRemoveTimeOut( timerid);
-
-  for ( int i = 0; i < fast_cnt; i++) {
-    gdh_UnrefObjectInfo( new_subid);
-  }
-  delete curve;
 }
 
 void XttFast::pop()
@@ -226,7 +194,7 @@ void XttFast::pop()
   curve->pop();
 }
 
-static void fast_close_cb( void *ctx)
+void XttFast::fast_close_cb( void *ctx)
 {
   XttFast *fast = (XttFast *) ctx;
 
@@ -236,7 +204,7 @@ static void fast_close_cb( void *ctx)
     delete fast;
 }
 
-static void fast_help_cb( void *ctx)
+void XttFast::fast_help_cb( void *ctx)
 {
   XttFast *fast = (XttFast *) ctx;
 
@@ -244,8 +212,9 @@ static void fast_help_cb( void *ctx)
     (fast->help_cb)( fast->xnav, "fastwindow");
 }
 
-void fast_scan( XttFast *fast)
+void XttFast::fast_scan( void *data)
 {
+  XttFast *fast = (XttFast *)data;
   int i, j, k;
   pwr_tStatus sts;
   int trigg_index, first_index, last_index;
@@ -449,10 +418,8 @@ void fast_scan( XttFast *fast)
   fast->old_new = *fast->new_p;
 
 
-  fast->timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(fast->parent_widget), 
-        1000,
-	(XtTimerCallbackProc)fast_scan, fast);
+  if ( fast->timerid)
+    fast->timerid->add( 1000, fast_scan, fast);
 }
 
 

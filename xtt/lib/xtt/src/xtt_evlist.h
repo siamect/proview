@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.h,v 1.10 2005-11-17 09:01:35 claes Exp $
+ * Proview   $Id: xtt_evlist.h,v 1.11 2007-01-04 08:22:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,10 +28,6 @@
 # undef Status
 #endif
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -40,10 +36,6 @@ extern "C" {
 #endif
 #ifndef rt_mh_outunit_h
 # include "rt_mh_outunit.h"
-#endif
-
-#if defined __cplusplus
-}
 #endif
 
 #ifndef flow_h
@@ -140,20 +132,13 @@ class EvListBrow {
 
 class EvList {
   public:
-    EvList(
-	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
-	ev_eType ev_type,
-	int ev_size,
-	Widget *w);
-    ~EvList();
+    EvList( void *ev_parent_ctx,
+	    ev_eType ev_type,
+	    int ev_size);
+    virtual ~EvList();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     ev_eType		type;
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     EvListBrow		*brow;
     int			size;
     int			max_size;
@@ -163,7 +148,7 @@ class EvList {
     void 		(*start_trace_cb)( void *, pwr_tObjid, char *);
     void 		(*display_in_xnav_cb)( void *, pwr_tAttrRef *);
     void 		(*popup_menu_cb)( void *, pwr_tAttrRef, unsigned long,
-					  unsigned long, char *, Widget *);
+					  unsigned long, char *, int x, int y);
     char		*(*name_to_alias_cb)( void *, char *);
     int			(*sound_cb)( void *, pwr_tAttrRef *);
     double		acc_beep_time;
@@ -173,6 +158,10 @@ class EvList {
     pwr_tAttrRef	calarm_sound;
     pwr_tAttrRef	dalarm_sound;
     pwr_tAttrRef	info_sound;
+
+    virtual void set_input_focus() {}
+    virtual void bell() {}
+    virtual void popup_position( int x_event, int y_event, int *x, int *y) {}
 
     void event_info( mh_sMessage *msg);
     void event_alarm( mh_sMessage *msg);
@@ -186,7 +175,6 @@ class EvList {
     int id_to_item( mh_sEventId *id, void **item);
     int oid_to_item( pwr_tOid oid, void **item);
     void ack( mh_sEventId *id);
-    void set_input_focus();
     void zoom( double zoom_factor);
     void unzoom();
     void beep( double scantime);
@@ -204,6 +192,10 @@ class EvList {
     int get_destination( pwr_tTime time, void **dest);
     void block_remove();
     void print( char *filename);
+
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+
 };
 
 class ItemAlarm {

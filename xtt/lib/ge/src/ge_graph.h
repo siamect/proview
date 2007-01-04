@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.23 2006-05-16 11:51:01 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.24 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define ge_graph_h
 
 /* ge_graph.h -- Simple graphic editor */
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -383,29 +379,27 @@ class Graph {
   */
   Graph(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
-	Widget *w,
-	pwr_tStatus *status,
 	char *xn_default_path,
 	graph_eMode graph_mode = graph_eMode_Development,
-	int scrollbar = 1,
 	int xn_gdh_init_done = 0,
 	char *xn_object_name = 0,
 	int xn_use_default_access = 0,
 	unsigned int xn_default_access = 0);
 
+  virtual void trace_timer_remove() {}
+  virtual void trace_timer_add( int time) {}
+  virtual Attr *attr_new( void *parent_ctx, void *object, attr_sItem *itemlist, int item_cnt) 
+    { return 0;}
+  virtual void popup_position( int event_x, int event_y, int *x, int *y) {}
+  static void trace_scan( Graph *graph);
+
   GraphGbl		gbl;
   GraphApplList		attr_list;		//! List of opened applications, i.e. Attr windows.
   GraphRecallBuff     	recall;			//! Recall buffer for dynamics.
   void 			*parent_ctx;		//! Parent context.
-  Widget		parent_wid;		//! Parent widget.
   char 			name[300];		//! Name.
   pwr_tAName 	       	object_name;		//! Name of object for class graphs.
-  Widget		grow_widget;		//! Grow widget.
-  Widget		form_widget;		//! Pane widget.
-  Widget		toplevel;		//! Toplevel widget.
-  Widget		nav_widget;		//! Navigation window widget.
   GraphGrow		*grow;			//! GraphGrow
   GraphGrow		*grow_stack[GRAPH_GROW_MAX]; //! Grow stack. Not used.
   int			grow_cnt;		//! Number of grow in stack. Not used.
@@ -433,7 +427,7 @@ class Graph {
   int	       	(*get_ldhses_cb)( void *, ldh_tSesContext *, int);
   int	       	(*get_current_objects_cb)( void *, pwr_sAttrRef **, int **);
   void     	(*popup_menu_cb)(void *, pwr_sAttrRef, unsigned long,
-				 unsigned long, char *, Widget *); 
+				 unsigned long, char *, int x, int y); 
   int         	(*call_method_cb)(void *, char *, char *, pwr_sAttrRef,
 				  unsigned long, unsigned long, char *);
   int         	(*sound_cb)(void *, pwr_tAttrRef *);
@@ -454,7 +448,6 @@ class Graph {
   glow_eDirection	conpoint_direction;	//!< Default conpoint direction.
   grow_tObject		current_polyline;	//!< Currently created polyline.
   grow_tObject		current_slider;		//!< Currnetly moved slider.
-  XtIntervalId		trace_timerid;		//!< Timer id for runtime scan.
   int			trace_started;		//!< Trace is started.
   int			gdh_init_done;		//!< Gdh is initialized.
   gccm_s_arglist	arglist_stack[20]; 
@@ -489,10 +482,6 @@ class Graph {
   char			java_path[80];		//!< Path for generated java code for baseclasses
   char			java_package[80];      	//!< Package for generated java code for baseclasses
   
-  //! Create navigator window.
-  /*! \param parent	Paren widget. */
-  int create_navigator( Widget parent);
-
   //! Print to postscript file.
   /*! \param filename	Name of postscript file. */
   void print( char *filename);
@@ -540,7 +529,7 @@ class Graph {
   /*!
     \param focus	1 set focus, 0 focus is removed.
   */
-  void set_inputfocus( int focus);
+  virtual void set_inputfocus( int focus) {}
 
   int setup();
 
@@ -1347,8 +1336,10 @@ class Graph {
  /*! Stop trace (if started), delete open attribute editors, free local database, delete grow and
    destroy the widget.
  */
- ~Graph();
+ virtual ~Graph();
 };
+
+int graph_init_grow_base_cb( GlowCtx *fctx, void *client_data);
 
 //! Convert a string to a value
 /*!
@@ -1362,7 +1353,4 @@ int  graph_attr_string_to_value( int type_id, char *value_str,
 	void *buffer_ptr, int buff_size, int attr_size);
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif

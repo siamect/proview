@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.h,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: ge_attrnav.h,v 1.4 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define ge_attrnav_h
 
 /* xtt_attrnav.h -- Simple navigator */
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -126,24 +122,17 @@ class AttrNav {
   public:
     AttrNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	attr_sItem  *xn_itemlist,
 	int xn_item_cnt,
-	Widget *w,
 	pwr_tStatus *status);
-    ~AttrNav();
+    virtual ~AttrNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     AttrNavBrow		*brow;
     attr_sItem  	*itemlist;
     int			item_cnt;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*change_value_cb)( void *);
@@ -154,15 +143,14 @@ class AttrNav {
     int 		(*get_current_colors_cb)( void *, glow_eDrawType *, glow_eDrawType *,
 						  glow_eDrawType *);
 
-    void start_trace( pwr_tObjid Objid, char *object_str);
-    int set_attr_value( char *value_str);
-    int check_attr_value( int *multiline, char **value);
-    int get_select( pwr_sAttrRef *attrref, int *is_attr);
-    void message( char sev, char *text);
-    void set_inputfocus();
-    void force_trace_scan();
-    int object_attr();
-
+    virtual int set_attr_value( char *value_str);
+    virtual int check_attr_value( int *multiline, char **value);
+    virtual void message( char sev, char *text);
+    virtual void set_inputfocus() {}
+    virtual void force_trace_scan();
+    virtual int object_attr();
+    virtual void trace_start() {}
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
 };
 
 //! Item for a normal attribute.
@@ -226,7 +214,4 @@ class ItemMask {
 };
 
 /*@}*/
-#if defined __cplusplus
-}
-#endif
 #endif

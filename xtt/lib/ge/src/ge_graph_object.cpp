@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.14 2006-06-02 06:26:02 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.15 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <float.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
@@ -31,21 +30,9 @@ extern "C" {
 #include "rt_gdh.h"
 #include "co_dcli.h"
 #include "ge_msg.h"
-}
- 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
-
 #include "ge_graph.h"
 #include "ge_attr.h"
 #include "ge_dyn.h"

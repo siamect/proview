@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.14 2006-06-08 13:06:35 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.15 2007-01-04 08:18:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,46 +19,27 @@
 
 #include "glow_std.h"
 
-#if defined OS_VMS || defined OS_LINUX
-#define LDH 1
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
 #include <float.h>
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "rt_load.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "glow.h"
 #include "glow_curvectx.h"
-#include "glow_curvewidget.h"
 #include "glow_growctx.h"
-#include "glow_growwidget.h"
 #include "glow_curveapi.h"
 #include "glow_msg.h"
-
-extern "C" {
 #include "rt_gdh.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "flow_x.h"
-#include "co_mrm_util.h"
 #include "co_wow.h"
-}
 #include "co_lng.h"
 
 #include "glow_growctx.h"
@@ -68,165 +49,85 @@ extern "C" {
 
 #define MARK_WIDTH 2.0
 
-static void gec_activate_exit( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+void GeCurve::activate_exit()
 {
-  if ( curve->close_cb)
-    (curve->close_cb)( curve->parent_ctx);
+  if ( close_cb)
+    (close_cb)( parent_ctx);
   else
-    delete curve;
+    delete this;
 }
 
-static void gec_activate_configure( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+void GeCurve::activate_configure()
 {
-  curve->configure_curves();
-  curve->configure_axes();
+  configure_curves();
+  configure_axes();
 }
 
-static void gec_activate_print( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+void GeCurve::activate_print()
 {
   pwr_tFileName fname;
   pwr_tCmd cmd;
 
   dcli_translate_filename( fname, "$pwrp_tmp/curve.ps");
-  curve->print( fname);
+  print( fname);
 
   sprintf( cmd, "$pwr_exe/rt_print.sh %s 1", fname);
   system(cmd);
 }
 
-static void gec_activate_zoomin( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve_Zoom( curve->growcurve_ctx, 2.0);
-}
-
-static void gec_activate_zoomout( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve_Zoom( curve->growcurve_ctx, 0.5);
-}
-
-static void gec_activate_zoomreset( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-}
-
-static void gec_activate_background( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+void GeCurve::activate_background()
 {
 
-  if ( curve->curve_color == curve->background_dark) {
-    curve->curve_color = curve->background_bright;
-    curve->curve_border = curve->border_bright;
+  if ( curve_color == background_dark) {
+    curve_color = background_bright;
+    curve_border = border_bright;
   }
   else {
-    curve->curve_color = curve->background_dark;
-    curve->curve_border = curve->border_dark;
+    curve_color = background_dark;
+    curve_border = border_dark;
   }
-  grow_SetObjectFillColor( curve->curve_object, curve->curve_color);
-  grow_SetObjectBorderColor( curve->curve_object, curve->curve_border);
-  curve->cd->select_color( curve->curve_color == curve->background_dark);
-  curve->configure_curves();
+  grow_SetObjectFillColor( curve_object, curve_color);
+  grow_SetObjectBorderColor( curve_object, curve_border);
+  cd->select_color( curve_color == background_dark);
+  configure_curves();
 }
 
-static void gec_activate_showname( Widget w, GeCurve *curve, 
-   XmToggleButtonCallbackStruct *data)
-{
-}
-
-static void gec_activate_filledcurves( Widget w, GeCurve *curve, 
-   XmToggleButtonCallbackStruct *data)
+void GeCurve::activate_filledcurves( int set)
 {
 
-  if ( data->set) {
-    grow_SetTrendFillCurve( curve->curve_object, 1);
-    curve->configure_curves();
+  if ( set) {
+    grow_SetTrendFillCurve( curve_object, 1);
+    configure_curves();
   }
   else {
-    grow_SetTrendFillCurve( curve->curve_object, 0);
-    curve->configure_curves();
+    grow_SetTrendFillCurve( curve_object, 0);
+    configure_curves();
   }
 }
 
-static void gec_activate_xlimits( Widget w, GeCurve *curve, 
-   XmAnyCallbackStruct *data)
+void GeCurve::activate_help()
 {
-  char value_str[80];
-
-  sprintf( value_str, "%f",  curve->cd->min_value_axis[0]);
-  XmTextSetString( curve->minmax_textmin_widget, value_str);
-
-  sprintf( value_str, "%f", curve->cd->max_value_axis[0]);
-  XmTextSetString( curve->minmax_textmax_widget, value_str);
-
-  curve->minmax_idx = 0;
-  XtManageChild( curve->minmax_widget);
+  if ( help_cb)
+    (help_cb)( parent_ctx);
 }
 
-static void gec_activate_help( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
+void GeCurve::activate_minmax_ok( double min_value, double max_value)
 {
-  if ( curve->help_cb)
-    (curve->help_cb)( curve->parent_ctx);
-}
 
-static void gec_create_pane( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->pane_widget = w;
-}
-
-static void gec_create_growform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->axisform_widget = w;
-}
-
-static void gec_create_nameform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->nameform_widget = w;
-}
-
-static void gec_create_curveform( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->curveform_widget = w;
-}
-
-static void gec_create_minmax_textmin( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->minmax_textmin_widget = w;
-}
-
-static void gec_create_minmax_textmax( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  curve->minmax_textmax_widget = w;
-}
-
-static void gec_activate_minmax_ok( Widget w, GeCurve *curve, XmAnyCallbackStruct *data)
-{
-  char *value;
-  double min_value, max_value;
-  int nr;
-
-  printf("Here in minmax Ok\n");
-
-  value = XmTextGetString( curve->minmax_textmin_widget);
-  nr = sscanf( value, "%lf", &min_value);
-  if ( nr != 1)
-    return;
-
-  value = XmTextGetString( curve->minmax_textmax_widget);
-  nr = sscanf( value, "%lf", &max_value);
-  if ( nr != 1)
-    return;
-
-  int i = curve->minmax_idx;
-  curve->cd->scale( curve->cd->axis_type[i], curve->cd->value_type[i], 
+  int i = minmax_idx;
+  cd->scale( cd->axis_type[i], cd->value_type[i], 
        min_value,  max_value, 
-       &curve->cd->min_value_axis[i], &curve->cd->max_value_axis[i], 
-       &curve->cd->trend_lines[i], &curve->cd->axis_lines[i], &curve->cd->axis_linelongq[i],
-       &curve->cd->axis_valueq[i], curve->cd->format[i], 
-       &curve->cd->axis_width[i], 1, 1);
+       &cd->min_value_axis[i], &cd->max_value_axis[i], 
+       &cd->trend_lines[i], &cd->axis_lines[i], &cd->axis_linelongq[i],
+       &cd->axis_valueq[i], cd->format[i], 
+       &cd->axis_width[i], 1, 1);
 
 
-  // curve->cd->min_value_axis[curve->minmax_idx] = min_value;
-  // curve->cd->max_value_axis[curve->minmax_idx] = max_value;
+  // cd->min_value_axis[minmax_idx] = min_value;
+  // cd->max_value_axis[minmax_idx] = max_value;
 
-  curve->configure_curves();
-  curve->configure_axes();
+  configure_curves();
+  configure_axes();
 
 }
 
@@ -234,7 +135,7 @@ static void gec_activate_minmax_ok( Widget w, GeCurve *curve, XmAnyCallbackStruc
 //
 // Callbacks from growcurve
 //
-static int ge_growcurve_cb( GlowCtx *ctx, glow_tEvent event)
+int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
 {
   GeCurve	*curve;
 
@@ -395,7 +296,7 @@ static int ge_growcurve_cb( GlowCtx *ctx, glow_tEvent event)
   return 1;
 }
 
-static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
+int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
 {
   grow_sAttributes grow_attr;
   unsigned long mask;
@@ -421,15 +322,15 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
   grow_SetMoveRestrictions( curve->growcurve_ctx, glow_eMoveRestriction_Disable, 0, 0, NULL);
 
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_MB1Click,
-  	glow_eEventType_CallBack, ge_growcurve_cb);
+  	glow_eEventType_CallBack, growcurve_cb);
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_CursorMotion, 
-	glow_eEventType_CallBack, ge_growcurve_cb);
+	glow_eEventType_CallBack, growcurve_cb);
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_SliderMoved, 
-	glow_eEventType_CallBack, ge_growcurve_cb);
+	glow_eEventType_CallBack, growcurve_cb);
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_SliderMoveStart, 
-	glow_eEventType_CallBack, ge_growcurve_cb);
+	glow_eEventType_CallBack, growcurve_cb);
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_MB1Press, 
-        glow_eEventType_MoveNode, ge_growcurve_cb);
+        glow_eEventType_MoveNode, growcurve_cb);
 
   grow_CreateGrowCurve( curve->growcurve_ctx, "curve", NULL, 0, 0, 200, 30,
 			curve->curve_border, 2, glow_mDisplayLevel_1, 1, 1,
@@ -457,14 +358,15 @@ static int ge_init_growcurve_cb( GlowCtx *fctx, void *client_data)
   // grow_SetMode( curve->growcurve_ctx, grow_eMode_Edit);
 
   curve->configure_curves();
-
+  if ( curve->deferred_configure_axes)
+    curve->configure_axes();
   return 1;
 }
 
 //
 // Callbacks from growaxis
 //
-static int ge_growaxis_cb( GlowCtx *ctx, glow_tEvent event)
+int GeCurve::growaxis_cb( GlowCtx *ctx, glow_tEvent event)
 {
   GeCurve	*curve;
 
@@ -494,22 +396,10 @@ static int ge_growaxis_cb( GlowCtx *ctx, glow_tEvent event)
     }
     case glow_eEvent_MB1DoubleClick:
     {
-      char value_str[80];
-      printf( "GrowAxis callback MB1 doubleclick\n");
-
       if ( event->object.object_type != glow_eObjectType_NoObject) {
         for ( int i = 0; i < curve->cd->cols; i++) {
           if ( event->object.object == curve->axis_object[i]) {
-            sprintf( value_str, "%f", 
-                   curve->cd->min_value_axis[i]);
-            XmTextSetString( curve->minmax_textmin_widget, value_str);
-
-            sprintf( value_str, "%f", 
-                   curve->cd->max_value_axis[i]);
-            XmTextSetString( curve->minmax_textmax_widget, value_str);
-
-            curve->minmax_idx = i;
-            XtManageChild( curve->minmax_widget);
+	    curve->open_minmax( i);
             break;
           }
         }
@@ -518,24 +408,8 @@ static int ge_growaxis_cb( GlowCtx *ctx, glow_tEvent event)
     }
     case glow_eEvent_Resized:
     {
-      Arg args[2];
-      short height, width;
-      double zoom_y;
-
-      printf( "GrowAxis callback Resized\n");
-
-      if ( curve->axis_displayed) {
-        XtSetArg(args[0],XmNheight, &height);
-        XtGetValues( curve->growaxis_main_widget, args, 1);
-
-        curve_GetPreferedZoomY( curve->growcurve_ctx, height, &zoom_y);
-        grow_ZoomY( curve->growaxis_ctx, zoom_y);
-        grow_ZoomX( curve->growaxis_ctx, zoom_y);
-
-        width = short( zoom_y * curve->axis_window_width);
-        XtSetArg(args[0],XmNwidth,width+4);
-        XtSetValues( curve->axisform_widget, args, 1);
-      }
+      if ( curve->axis_displayed)
+	curve->resize();
       break;
     }
     default:
@@ -548,7 +422,7 @@ static int ge_growaxis_cb( GlowCtx *ctx, glow_tEvent event)
 // Callbacks from grownames
 //
 
-static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
+int GeCurve::grownames_cb( GlowCtx *ctx, glow_tEvent event)
 {
   GeCurve	*curve;
 
@@ -573,8 +447,8 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
                   num++;
               }
               if ( num >= TREND_MAX_CURVES - 1) {
-	        wow_DisplayError( curve->toplevel, "Error",
-		"         Max number of curves exceeded        ");
+	        curve->wow->DisplayError( "Error",
+					  "         Max number of curves exceeded        ");
                 break;
               }
             }
@@ -593,18 +467,7 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
             break;
           }
           if ( event->object.object == curve->scale_rect[i] ) {
-	    char value_str[40];
-
-            sprintf( value_str, "%f", 
-                   curve->cd->min_value_axis[i]);
-            XmTextSetString( curve->minmax_textmin_widget, value_str);
-
-            sprintf( value_str, "%f", 
-                   curve->cd->max_value_axis[i]);
-            XmTextSetString( curve->minmax_textmax_widget, value_str);
-
-            curve->minmax_idx = i;
-            XtManageChild( curve->minmax_widget);
+	    curve->open_minmax( i);
 	    break;
 	  }
         }
@@ -632,7 +495,7 @@ static int ge_grownames_cb( GlowCtx *ctx, glow_tEvent event)
   return 1;
 }
 
-static int ge_init_growaxis_cb( GlowCtx *fctx, void *client_data)
+int GeCurve::init_growaxis_cb( GlowCtx *fctx, void *client_data)
 {
   grow_sAttributes grow_attr;
   unsigned long mask;
@@ -653,17 +516,20 @@ static int ge_init_growaxis_cb( GlowCtx *fctx, void *client_data)
   grow_SetCtxUserData( curve->growaxis_ctx, curve);
 
   grow_EnableEvent( (GrowCtx *)curve->growaxis_ctx, glow_eEvent_MB1Click,
-  	glow_eEventType_CallBack, ge_growaxis_cb);
+  	glow_eEventType_CallBack, growaxis_cb);
   grow_EnableEvent( (GrowCtx *)curve->growaxis_ctx, glow_eEvent_MB1DoubleClick,
-  	glow_eEventType_CallBack, ge_growaxis_cb);
+  	glow_eEventType_CallBack, growaxis_cb);
   grow_EnableEvent( (GrowCtx *)curve->growaxis_ctx, glow_eEvent_Resized,
-  	glow_eEventType_CallBack, ge_growaxis_cb);
+  	glow_eEventType_CallBack, growaxis_cb);
 
-  curve->configure_axes();
+  if ( curve->growcurve_ctx)
+    curve->configure_axes();
+  else
+    curve->deferred_configure_axes = 1;
   return 1;
 }
 
-static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
+int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 {
   grow_tObject t1;
   grow_sAttributes grow_attr;
@@ -686,11 +552,11 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_SetCtxUserData( curve->grownames_ctx, curve);
 
   grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_MB1Click,
-  	glow_eEventType_CallBack, ge_grownames_cb);
+  	glow_eEventType_CallBack, grownames_cb);
   grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_Resized,
-  	glow_eEventType_CallBack, ge_grownames_cb);
+  	glow_eEventType_CallBack, grownames_cb);
   grow_EnableEvent( (GrowCtx *)curve->grownames_ctx, glow_eEvent_HotRequest, 
-	glow_eEventType_CallBack, ge_grownames_cb);
+	glow_eEventType_CallBack, grownames_cb);
 
   // Create nodeclass for mark values
   grow_tNodeClass nc;
@@ -709,22 +575,22 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_CreateGrowRect( curve->grownames_ctx, "", 0, 0, 60, 0.8,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 0, 0, 1,
 			 glow_eDrawType_Color32, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "View",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("View"),
 		       0.8, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "Cursor",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Cursor"),
 		       3, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "Mark",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Mark"),
 		       5.7, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "Unit",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Unit"),
 		       9.0, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "Scale",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Scale"),
 		       11, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
-  grow_CreateGrowText( curve->grownames_ctx, "", "Attribute",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Attribute"),
 		       14, 0.6, glow_eDrawType_TextHelvetica, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
   
@@ -791,7 +657,7 @@ static int ge_init_grownames_cb( GlowCtx *fctx, void *client_data)
 		       glow_eDrawType_Color33, NULL, &curve->scale_rect[0]);
   grow_SetObjectShadowWidth( curve->scale_rect[0], 20);
   // Draw attribute name
-  grow_CreateGrowText( curve->grownames_ctx, "", "Time axis",
+  grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Time axis"),
 		       14.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
 		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
   grow_SetAnnotation( curve->cursor_annot[0], 0, "0", 1);
@@ -887,17 +753,15 @@ int GeCurve::configure_axes()
   axis_window_width = max( x, 1);
 
   double zoom_x, zoom_y;
-  short width;
-  Arg args[2];
+  int width;
 
   curve_GetZoom( growcurve_ctx, &zoom_x, &zoom_y);
   grow_ZoomY( growaxis_ctx, zoom_y);
   grow_ZoomX( growaxis_ctx, zoom_y);
 
   if ( axis_displayed) {
-    width = short( zoom_y * axis_window_width);
-    XtSetArg(args[0],XmNwidth,width+4);
-    XtSetValues( axisform_widget, args, 1);
+    width = int( zoom_y * axis_window_width);
+    axis_set_width( width);
   }
   return 1;
 }
@@ -1026,10 +890,10 @@ void GeCurve::points_added()
   glow_sEvent e;
   e.any.event = glow_eEvent_CursorMotion;
   e.any.x = last_cursor_x;
-  ge_growcurve_cb( growcurve_ctx, &e);
+  growcurve_cb( growcurve_ctx, &e);
   e.any.event = glow_eEvent_SliderMoved;
   e.any.x = last_mark_x;
-  ge_growcurve_cb( growcurve_ctx, &e);
+  growcurve_cb( growcurve_ctx, &e);
 
 }
 
@@ -1119,12 +983,6 @@ int GeCurve::read_file( char *filename)
   return 1;
 }
 
-void GeCurve::pop()
-{
-  flow_UnmapWidget( toplevel);
-  flow_MapWidget( toplevel);
-}
-
 void GeCurve::set_time( pwr_tTime time)
 {
   char time_str[40];
@@ -1142,68 +1000,24 @@ void GeCurve::set_title( char *str)
   write_title( str);
 }
 
-void GeCurve::write_title( char *str)
-{
-  Arg args[1];
-
-  XtSetArg(args[0],XmNtitle, str);
-  XtSetValues( toplevel, args, 1);
-}
-
 GeCurve::~GeCurve()
 {
-  XtDestroyWidget( toplevel);
 }
 
 GeCurve::GeCurve( void 	*gc_parent_ctx, 
-		Widget 	parent_widget,
 		  char	*curve_name,
 		  char  *filename,
                   GeCurveData *curve_data,
                   int   pos_right) :
-  parent_ctx(gc_parent_ctx), background_dark(glow_eDrawType_Color29),
+  parent_ctx(gc_parent_ctx), growcurve_ctx(0), background_dark(glow_eDrawType_Color29),
   background_bright(glow_eDrawType_Color21),
   border_dark(glow_eDrawType_Color28),
   border_bright(glow_eDrawType_Color22),
   cd(0), axis_window_width(0), auto_refresh(1), axis_displayed(1),
   minmax_idx(0), close_cb(0), help_cb(0), initial_right_position(pos_right),
-  last_cursor_x(0), last_mark_x(0)
+  last_cursor_x(0), last_mark_x(0), deferred_configure_axes(0)
 {
-  char		uid_filename[120] = {"xtt_curve.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  int		i;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  Widget	ge_curve_widget;
-  char		name[] = "PwR GeCurve";
-
-  static MrmRegisterArg	reglist[] = {
-        { "gec_ctx", 0 },
-	{"gec_activate_exit",(caddr_t)gec_activate_exit },
-	{"gec_activate_configure",(caddr_t)gec_activate_configure },
-	{"gec_activate_print",(caddr_t)gec_activate_print },
-	{"gec_activate_zoomin",(caddr_t)gec_activate_zoomin },
-	{"gec_activate_zoomout",(caddr_t)gec_activate_zoomout },
-	{"gec_activate_zoomreset",(caddr_t)gec_activate_zoomreset },
-	{"gec_activate_background",(caddr_t)gec_activate_background },
-	{"gec_activate_showname",(caddr_t)gec_activate_showname },
-	{"gec_activate_filledcurves",(caddr_t)gec_activate_filledcurves },
-	{"gec_activate_xlimits",(caddr_t)gec_activate_xlimits },
-	{"gec_activate_help",(caddr_t)gec_activate_help },
-	{"gec_create_pane",(caddr_t)gec_create_pane },
-	{"gec_create_growform",(caddr_t)gec_create_growform },
-	{"gec_create_nameform",(caddr_t)gec_create_nameform },
-	{"gec_create_curveform",(caddr_t)gec_create_curveform },
-	{"gec_create_minmax_textmin",(caddr_t)gec_create_minmax_textmin },
-	{"gec_create_minmax_textmax",(caddr_t)gec_create_minmax_textmax },
-	{"gec_activate_minmax_ok",(caddr_t)gec_activate_minmax_ok }
-	};
-
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
-  Lng::get_uid( uid_filename, uid_filename);
+  pwr_tStatus sts;
 
   memset( hide, 0, sizeof(hide));
   memset( name_rect, 0, sizeof(name_rect));
@@ -1215,7 +1029,7 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
   memset( mark_annot, 0, sizeof(mark_annot));
   curve_color = background_dark;
   curve_border = border_dark;
-  for ( i = TREND_MAX_CURVES; i < CURVE_MAX_COLS; i++)
+  for ( int i = TREND_MAX_CURVES; i < CURVE_MAX_COLS; i++)
     hide[i] = 1;
 
   if ( filename) {
@@ -1230,83 +1044,6 @@ GeCurve::GeCurve( void 	*gc_parent_ctx,
     cd = curve_data;
     cd->select_color( curve_color == background_dark);
   }
-
-  // Motif
-  MrmInitialize();
-
-  cdh_StrncpyCutOff( title, curve_name, sizeof(title), 1);
-
-  reglist[0].value = (caddr_t) this;
-
-  toplevel = XtCreatePopupShell(title, 
-		topLevelShellWidgetClass, parent_widget, args, 0);
-
-  // Save the context structure in the widget
-  XtSetArg (args[0], XmNuserData, (unsigned int) this);
-
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "ge_curve_window", toplevel,
-			name, NULL, 0, &ge_curve_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  sts = MrmFetchWidget(s_DRMh, "minmax_dialog", toplevel,
-		&minmax_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
-
-  MrmCloseHierarchy(s_DRMh);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,800);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
-  XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
-  XtSetValues( toplevel ,args,i);
-      
-  XtManageChild( ge_curve_widget);
-
-  Widget w;
-  grownames_main_widget = ScrolledGrowCreate( nameform_widget, 
-		"GeCurveNames", NULL,
-		0, ge_init_grownames_cb, this, &w);
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetValues( grownames_main_widget, args,i);
-
-  XtManageChild( grownames_main_widget);
-
-  growaxis_main_widget = GrowCreate( axisform_widget, 
-		"GeCurveAxis", NULL,
-		0, ge_init_growaxis_cb, this);
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetValues( growaxis_main_widget, args,i);
-
-  XtManageChild( growaxis_main_widget);
-
-  growcurve_main_widget = CurveCreate( curveform_widget, 
-		"GeCurve", NULL,
-		0, ge_init_growcurve_cb, this);
-  XtManageChild( growcurve_main_widget);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,200);i++;
-  XtSetArg(args[i],XmNheight,200);i++;
-  XtSetArg(args[i],XmNpaneMinimum,75);i++;
-  XtSetArg(args[i],XmNpaneMaximum,100);i++;
-  nav_widget = CurveCreateNav( pane_widget, "navigator",
-        args, i, growcurve_main_widget);
-  XtManageChild( nav_widget);
-
-  XtPopup( toplevel, XtGrabNone);
-  XtRealizeWidget( toplevel);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( toplevel, 
-	(XtCallbackProc)gec_activate_exit, this);
-
 }
 
 GeCurveData::GeCurveData( curve_eDataType datatype) :
