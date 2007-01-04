@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.50 2006-12-10 14:34:13 lw Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.51 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1993,6 +1993,12 @@ pwr_tStatus wb_vrepdb::updateMeta()
 
       MsgWindow::message('I', buff);
     }
+  }
+  else if ( ODD(db_sts)) {
+    // No changes, update file only
+    m_merep->copyFiles(m_fileName, m_erep->merep());
+    delete m_merep;
+    m_merep = new wb_merep(m_fileName, m_erep, this);
   }
   
   tree_DeleteTable(&sts, m_attribute_th);

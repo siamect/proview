@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.h,v 1.12 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_wnav_item.h,v 1.13 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -256,7 +256,7 @@ class WItemBaseAttr : public WItem {
     pwr_tClassId classid;
 
     virtual pwr_sAttrRef aref();
-    int get_value( char **value);	// The value should be freed with XtFree
+    int get_value( char **value);	// The value should be freed with free
     int update() { return 1;};
 };
 

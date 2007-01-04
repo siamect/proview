@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.44 2006-06-29 11:53:39 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.45 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,6 @@
 # include <stdlib.h>
 # include <ctype.h>
 
-extern "C" {
 #include "pwr_class.h"
 #include "pwr_version.h"
 #include "co_cdh.h"
@@ -39,47 +38,30 @@ extern "C" {
 #include "pwr_baseclasses.h"
 #include "co_ccm_msg.h"
 #include "co_regex.h"
+#include "rt_load.h"
 #include "wb_ldh.h"
 #include "wb_ldhload.h"
 #include "wb_login.h"
-#include "wb_utl.h"
+#include "wb_utl_api.h"
 #include "wb_genstruct.h"
 #include "wb_lfu.h"
 #include "wb_dir.h"
 #include "wb_trv.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Xm/MessageB.h>
-#include <Xm/SelectioB.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
 #include "co_dcli_msg.h"
 #include "wb_wnav_msg.h"
 #include "wb_foe_msg.h"
-#include "ge.h"
 #include "wb_wda.h"
 #include "wb_wge.h"
 #include "co_xhelp.h"
-
-extern "C" {
 #include "wb_wccm.h"
-#include "flow_x.h"
 #include "co_api.h"
-}
-
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_vrepwbl.h"
@@ -88,6 +70,8 @@ extern "C" {
 #include "wb_pkg.h"
 #include "wb_build.h"
 #include "wb_wtt.h"
+#include "ge.h"
+#include "wb_utl.h"
 
 #define	WNAV_MENU_CREATE	0
 #define	WNAV_MENU_ADD		1
@@ -99,7 +83,6 @@ static int wnav_cnt = 0;
 static int wnav_wccm_get_ldhsession_cb( void *ctx, ldh_tWBContext *wbctx);
 static int wnav_wccm_get_wbctx_cb( void *ctx, ldh_tSesContext *ldhses);
 static char	*wnav_VolumeIdToStr( pwr_tVolumeId volumeid);
-static char *wnav_dialog_convert_text( char *text);
 
 static int	wnav_help_func(		void		*client_data,
 					void		*client_flag);
@@ -699,9 +682,8 @@ static int	wnav_display_func(	void		*client_data,
       wnav->message('E', "Enter attribute");
       return WNAV__QUAL;
     }
-    new Wda( wnav->parent_wid, wnav, wnav->ldhses,
-	     hier_objid, classid, attributestr, wnav->editmode, 
-	     wnav->gbl.advanced_user, 1);
+    wnav->wda_new( hier_objid, classid, attributestr, wnav->editmode, 
+		   wnav->gbl.advanced_user, 1);
     
   }
   else if ( strncmp( arg1_str, "OBJECTS", strlen( arg1_str)) == 0) {
@@ -1344,8 +1326,8 @@ static int	wnav_set_func(	void		*client_data,
   }
   else if ( strncmp( arg1_str, "WINDOW", strlen( arg1_str)) == 0)
   {
-    short width = 0;
-    short height = 0;
+    int width = 0;
+    int height = 0;
     int	nr;
 
     if ( wnav->window_type == wnav_eWindowType_No)
@@ -1353,7 +1335,7 @@ static int	wnav_set_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/WIDTH", arg2_str, sizeof(arg2_str))))
     {
-      nr = sscanf( arg2_str, "%hd", &width);
+      nr = sscanf( arg2_str, "%d", &width);
       if ( nr != 1)
       {
         wnav->message('E',"Syntax error");
@@ -1363,7 +1345,7 @@ static int	wnav_set_func(	void		*client_data,
 
     if ( ODD( dcli_get_qualifier( "/HEIGHT", arg2_str, sizeof(arg2_str))))
     {
-      nr = sscanf( arg2_str, "%hd", &height);
+      nr = sscanf( arg2_str, "%d", &height);
       if ( nr != 1)
       {
         wnav->message('E',"Syntax error");
@@ -1618,17 +1600,7 @@ static int	wnav_set_func(	void		*client_data,
     if ( wnav->appl.find( applist_eType_Graph, filenamestr, (void **) &wge)) {
       wge->set_subwindow_source( objectstr, sourcestr, modal);
       if ( modal) {
-	XEvent 	Event;
-
-	for (;;) {
-	  XtAppNextEvent( XtWidgetToApplicationContext( wnav->parent_wid), &Event);
-	  XtDispatchEvent( &Event);
-	  
-	  if ( wge->subwindow_release) {
-	    wge->subwindow_release = 0;
-	    break;
-	  }
-	}
+	wnav->wge_subwindow_loop( wge);
       }
     }
     else {
@@ -1670,7 +1642,7 @@ static int	wnav_show_func(	void		*client_data,
     if ( wnav->window_type == wnav_eWindowType_No)
       system( "cat $pwr_exe/en_us/license.txt");
     else
-      wow_DisplayLicense( wnav->parent_wid);
+      wnav->wow->DisplayLicense();
     return WNAV__SUCCESS;
   }
   else if ( strncmp( arg1_str, "SYMBOL", strlen( arg1_str)) == 0)
@@ -2252,15 +2224,15 @@ static int	wnav_print_func(	void		*client_data,
   sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
   if ( EVEN(sts)) return sts;
 
-  if ( ODD( dcli_get_qualifier( "/PLCPGM", plcpgm_str, sizeof(plcpgm_str))))
-  {
-    if ( wnav->parent_wid == 0)
-      utl_create_mainwindow( 0, NULL, &wnav->parent_wid);
+  if ( ODD( dcli_get_qualifier( "/PLCPGM", plcpgm_str, sizeof(plcpgm_str)))) {
+    wb_utl *utl = wnav->utl_new();
+    if ( !wnav->has_window())
+      utl->create_mainwindow( 0, NULL);
 
-    sts = utl_print_plc( wnav->parent_wid, wnav->ldhses,
-		ldh_SessionToWB(wnav->ldhses), plcpgm_str, document, overview);
-    if ( EVEN(sts))
-    {
+    sts = utl->print_plc( wnav->ldhses, ldh_SessionToWB(wnav->ldhses), 
+			  plcpgm_str, document, overview);
+    delete utl;
+    if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
@@ -2272,12 +2244,14 @@ static int	wnav_print_func(	void		*client_data,
     else
       fromstr_ptr = NULL;
    
-    if ( wnav->parent_wid == 0)
-      utl_create_mainwindow( 0, NULL, &wnav->parent_wid);
+    wb_utl *utl = wnav->utl_new();
+    if ( !wnav->has_window())
+      utl->create_mainwindow( 0, NULL);
 
-    sts = utl_print_plc_hier( wnav->parent_wid, wnav->ldhses, 
+    sts = utl->print_plc_hier( wnav->ldhses, 
 	ldh_SessionToWB(wnav->ldhses), hier_str, fromstr_ptr, document, 
 	overview, all);
+    delete utl;
     if ( EVEN(sts))
     {
       wnav->message(' ', wnav_get_message(sts));
@@ -2313,13 +2287,14 @@ static int	wnav_print_func(	void		*client_data,
 		ldh_eName_Hierarchy, plcpgm_str, sizeof(plcpgm_str), &size);
         if ( EVEN(sts)) return sts;
 
-        if ( wnav->parent_wid == 0)
-          utl_create_mainwindow( 0, NULL, &wnav->parent_wid);
+	wb_utl *utl = wnav->utl_new();
+	if ( !wnav->has_window())
+	  utl->create_mainwindow( 0, NULL);
 
-        sts = utl_print_plc( wnav->parent_wid, wnav->ldhses,
+        sts = utl->print_plc( wnav->ldhses,
 		ldh_SessionToWB(wnav->ldhses), plcpgm_str, document, overview);
-        if ( EVEN(sts))
-        {
+	delete utl;
+        if ( EVEN(sts)) {
           wnav->message(' ', wnav_get_message(sts));
           free( sel_list);
           return sts;
@@ -2361,13 +2336,14 @@ static int	wnav_redraw_func(	void		*client_data,
     else
       fromstr_ptr = NULL;
    
-    if ( wnav->parent_wid == 0)
-      utl_create_mainwindow( 0, NULL, &wnav->parent_wid);
+    wb_utl *utl = wnav->utl_new();
+    if ( !wnav->has_window())
+      utl->create_mainwindow( 0, NULL);
 
-    sts = utl_redraw_plc_hier( wnav->parent_wid, wnav->ldhses, 
+    sts = utl->redraw_plc_hier( wnav->ldhses, 
 	ldh_SessionToWB(wnav->ldhses), NULL, fromstr_ptr, 1);
-    if ( EVEN(sts))
-    {
+    delete utl;
+    if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
@@ -2377,13 +2353,13 @@ static int	wnav_redraw_func(	void		*client_data,
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
-    if ( wnav->parent_wid == 0)
-      utl_create_mainwindow( 0, NULL, &wnav->parent_wid);
+    wb_utl *utl = wnav->utl_new();
+    if ( !wnav->has_window())
+      utl->create_mainwindow( 0, NULL);
 
-    sts = utl_redraw_plc( wnav->parent_wid, wnav->ldhses,
+    sts = utl->redraw_plc( wnav->ldhses,
 		ldh_SessionToWB(wnav->ldhses), plcpgm_str);
-    if ( EVEN(sts))
-    {
+    if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
@@ -2399,10 +2375,11 @@ static int	wnav_redraw_func(	void		*client_data,
     else
       fromstr_ptr = NULL;
    
-    sts = utl_redraw_plc_hier( wnav->parent_wid, wnav->ldhses, 
+    wb_utl *utl = wnav->utl_new();
+    sts = utl->redraw_plc_hier( wnav->ldhses, 
 	ldh_SessionToWB(wnav->ldhses), hier_str, fromstr_ptr, 0);
-    if ( EVEN(sts))
-    {
+    delete utl;
+    if ( EVEN(sts)) {
       wnav->message(' ', wnav_get_message(sts));
       return sts;
     }
@@ -2436,10 +2413,11 @@ static int	wnav_redraw_func(	void		*client_data,
 		ldh_eName_Hierarchy, plcpgm_str, sizeof(plcpgm_str), &size);
         if ( EVEN(sts)) return sts;
 
-        sts = utl_redraw_plc( wnav->parent_wid, wnav->ldhses,
+	wb_utl *utl = wnav->utl_new();
+        sts = utl->redraw_plc( wnav->ldhses,
 		ldh_SessionToWB(wnav->ldhses), plcpgm_str);
-        if ( EVEN(sts))
-        {
+	delete utl;
+        if ( EVEN(sts)) {
           wnav->message(' ', wnav_get_message(sts));
           free( sel_list);
           return sts;
@@ -2472,7 +2450,7 @@ static int	wnav_generate_func(	void		*client_data,
     sts = wnav_wccm_get_ldhsession_cb( wnav, &wnav->ldhses);
     if ( EVEN(sts)) return sts;
 
-    sts = ge_generate_web( wnav->ldhses);
+    sts = Ge::generate_web( wnav->ldhses);
     if ( EVEN(sts))
     {
       wnav->message(' ', wnav_get_message(sts));
@@ -3471,31 +3449,14 @@ static int	wnav_open_func(	void		*client_data,
     if ( (s = strchr( applname, '.')))
       *s = 0;
 
-    wge = new WGe( wnav->parent_wid, wnav, "Name", filenamestr, 0,0,0,0,0,0,0, instance_p,
-		   modal);
+    wge = wnav->wge_new( "Name", filenamestr, instance_p, modal);
+    wge->command_cb = wnav_wge_command_cb;
+    wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
     if ( modal) {
-      XEvent 	Event;
-
-      wge->command_cb = wnav_wge_command_cb;
-
-	   
-      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
-
-      for (;;) {
-	XtAppNextEvent( XtWidgetToApplicationContext( wnav->parent_wid), &Event);
-	XtDispatchEvent( &Event);
-
-	if ( wge->terminated) {
-	  wnav->appl.remove( (void *)wge);
-	  delete wge;
-	  break;      
-	}
-      }
+      wnav->wge_modal_loop( wge);
     }
     else {
       wge->close_cb = wnav_wge_close_cb;
-      wge->command_cb = wnav_wge_command_cb;
-      wnav->appl.insert( applist_eType_Graph, (void *)wge, pwr_cNObjid, applname);
     }
   }
   else
@@ -4521,7 +4482,7 @@ static int	wnav_build_func(	void		*client_data,
       return sts;
     }
 
-    wb_build build( *(wb_session *)wnav->ldhses, wnav, wnav->parent_wid);
+    wb_build build( *(wb_session *)wnav->ldhses, wnav);
     build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
     build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
     build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
@@ -4530,7 +4491,7 @@ static int	wnav_build_func(	void		*client_data,
     build.node( namestr, volumelist, volumecount);
     wnav->message(' ', wnav_get_message(build.sts()));
 
-    XtFree( (char *) volumelist);
+    free( (char *) volumelist);
   }
   else if ( strncmp( arg1_str, "VOLUME", strlen( arg1_str)) == 0) {
     // Build current volume
@@ -4545,7 +4506,7 @@ static int	wnav_build_func(	void		*client_data,
       return WNAV__SYNTAX;
     }
 
-    wb_build build( *(wb_session *)wnav->ldhses, wnav, wnav->parent_wid);
+    wb_build build( *(wb_session *)wnav->ldhses, wnav);
     build.opt.force = ODD( dcli_get_qualifier( "/FORCE", 0, 0));
     build.opt.debug = ODD( dcli_get_qualifier( "/DEBUG", 0, 0));
     build.opt.crossref = ODD( dcli_get_qualifier( "/CROSSREFERENCE", 0, 0));
@@ -4636,8 +4597,7 @@ static int	wnav_build_func(	void		*client_data,
       memset( &menucall, 0, sizeof(menucall));
       menucall.PointedSession = wnav->ldhses;
       menucall.Pointed = sel_list[i];
-      menucall.EditorContext = wnav;
-      menucall.WindowContext = wnav->parent_wid;  // This is zero for wb_cmd
+      menucall.wnav = wnav;
 
       sts = (method)( &menucall);
       wnav->gbl.build = stored_opt;
@@ -6014,294 +5974,6 @@ char	*wnav_VolumeIdToStr( pwr_tVolumeId volumeid)
 	return str;
 }
 
-void wnav_message_dialog_ok( Widget w, XtPointer wnav, XtPointer data)
-{
-  ((WNav *)wnav)->dialog_ok = 1;
-}
-
-void wnav_message_dialog_cancel( Widget w, XtPointer wnav, XtPointer data)
-{
-  ((WNav *)wnav)->dialog_cancel = 1;
-}
-
-void wnav_message_dialog_help( Widget w, XtPointer wnav, XtPointer data)
-{
-  ((WNav *)wnav)->dialog_help = 1;
-}
-
-void wnav_message_dialog_read( Widget w, XtPointer client_data, XtPointer data)
-{
-  WNav *wnav = (WNav *)client_data;
-  char *value;
-
-  XmSelectionBoxCallbackStruct *cbs = (XmSelectionBoxCallbackStruct *)data;
-  wnav->dialog_ok = 1;
-  XmStringGetLtoR( cbs->value, XmSTRING_DEFAULT_CHARSET, &value);
-  strncpy( wnav->dialog_value, value, sizeof(wnav->dialog_value));
-  XtFree( value);
-}
-
-void WNav::message_dialog( char *title, char *text)
-{
-  Widget 	dialog;
-  XmString	text_str;
-  XmString	title_str;
-  Arg		args[9];
-  int		i;
-  XEvent 	Event;
-
-  text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
-  title_str = XmStringCreateLocalized( title);
-  i = 0;
-  XtSetArg( args[i], XmNmessageString, text_str); i++;
-  XtSetArg( args[i], XmNdialogTitle, title_str); i++;
-  XtSetArg( args[i], XmNdialogType, XmDIALOG_MESSAGE); i++;
-  if ( dialog_width && dialog_height)
-  {
-    XtSetArg( args[i], XmNwidth, dialog_width); i++;
-    XtSetArg( args[i], XmNheight, dialog_height); i++;
-    XtSetArg( args[i], XmNx, dialog_x); i++;
-    XtSetArg( args[i], XmNy, dialog_y); i++;
-  }
-
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
-  XmStringFree( text_str);
-  XmStringFree( title_str);
-
-  XtUnmanageChild( XmMessageBoxGetChild( dialog, XmDIALOG_HELP_BUTTON));
-  XtUnmanageChild( XmMessageBoxGetChild( dialog, XmDIALOG_CANCEL_BUTTON));
-
-  XtAddCallback( dialog, XmNokCallback, wnav_message_dialog_ok, this);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( XtParent(dialog),
-	(XtCallbackProc)wnav_message_dialog_ok, this);
-
-  XtManageChild( dialog);
-  XtPopup( XtParent(dialog), XtGrabNone);
-
-  dialog_ok = 0;
-
-  for (;;)
-  {
-    XtAppNextEvent( XtWidgetToApplicationContext( dialog), &Event);
-    XtDispatchEvent( &Event);
-    if ( dialog_ok)
-      return;
-  }
-}
-
-int WNav::confirm_dialog( char *title, char *text, int display_cancel,
-		int *cancel)
-{
-  Widget 	dialog;
-  XmString	text_str;
-  XmString	title_str;
-  XmString	no_str;
-  XmString	yes_str;
-  XmString	cancel_str;
-  Arg		args[14];
-  int		i;
-  XEvent 	Event;
-
-  text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
-  title_str = XmStringCreateLocalized( title);
-  no_str = XmStringCreateLocalized( "No");
-  yes_str = XmStringCreateLocalized( "Yes");
-  cancel_str = XmStringCreateLocalized( "Cancel");
-  i = 0;
-  XtSetArg( args[i], XmNmessageString, text_str); i++;
-  XtSetArg( args[i], XmNdialogTitle, title_str); i++;
-  XtSetArg( args[i], XmNcancelLabelString, no_str); i++;
-  XtSetArg( args[i], XmNokLabelString, yes_str); i++;
-  XtSetArg( args[i], XmNhelpLabelString, cancel_str); i++;
-  XtSetArg( args[i], XmNdialogType, XmDIALOG_WARNING); i++;
-  if ( dialog_width && dialog_height)
-  {
-    XtSetArg( args[i], XmNwidth, dialog_width); i++;
-    XtSetArg( args[i], XmNheight, dialog_height); i++;
-    XtSetArg( args[i], XmNx, dialog_x); i++;
-    XtSetArg( args[i], XmNy, dialog_y); i++;
-  }
-
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
-  XmStringFree( text_str);
-  XmStringFree( title_str);
-  XmStringFree( no_str);
-  XmStringFree( yes_str);
-  XmStringFree( cancel_str);
-
-  if ( !display_cancel)
-    XtUnmanageChild( XmMessageBoxGetChild( dialog, XmDIALOG_HELP_BUTTON));
-
-  XtAddCallback( dialog, XmNokCallback, wnav_message_dialog_ok, this);
-  XtAddCallback( dialog, XmNcancelCallback, wnav_message_dialog_cancel, this);
-  XtAddCallback( dialog, XmNhelpCallback, wnav_message_dialog_help, this);
-
-  // Connect the window manager close-button to exit
-  if ( !display_cancel)
-    flow_AddCloseVMProtocolCb( XtParent(dialog),
-	(XtCallbackProc)wnav_message_dialog_cancel, this);
-  else
-    flow_AddCloseVMProtocolCb( XtParent(dialog),
-	(XtCallbackProc)wnav_message_dialog_help, this);
-
-  XtManageChild( dialog);
-  XtPopup( XtParent(dialog), XtGrabNone);
-
-  dialog_ok = 0;
-  dialog_cancel = 0;
-  dialog_help = 0;
-
-  for (;;)
-  {
-    XtAppNextEvent( XtWidgetToApplicationContext( dialog), &Event);
-    XtDispatchEvent( &Event);
-    if ( dialog_ok)
-    {
-      if ( display_cancel)
-        *cancel = 0;
-      return 1;
-    }
-    if ( dialog_cancel)
-    {
-      if ( display_cancel)
-        *cancel = 0;
-      return 0;
-    }
-    if ( dialog_help)
-    {
-      *cancel = 1;
-      XtDestroyWidget( dialog);
-      return 0;
-    }
-  }
-}
-
-int WNav::continue_dialog( char *title, char *text)
-{
-  Widget 	dialog;
-  XmString	text_str;
-  XmString	title_str;
-  XmString	continue_str;
-  XmString	quit_str;
-  Arg		args[10];
-  int		i;
-  XEvent 	Event;
-
-  text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
-  title_str = XmStringCreateLocalized( title);
-  continue_str = XmStringCreateLocalized( "Continue");
-  quit_str = XmStringCreateLocalized( "Quit");
-  i = 0;
-  XtSetArg( args[i], XmNmessageString, text_str); i++;
-  XtSetArg( args[i], XmNdialogTitle, title_str); i++;
-  XtSetArg( args[i], XmNcancelLabelString, quit_str); i++;
-  XtSetArg( args[i], XmNokLabelString, continue_str); i++;
-  XtSetArg( args[i], XmNdialogType, XmDIALOG_WARNING); i++;
-  if ( dialog_width && dialog_height)
-  {
-    XtSetArg( args[i], XmNwidth, dialog_width); i++;
-    XtSetArg( args[i], XmNheight, dialog_height); i++;
-    XtSetArg( args[i], XmNx, dialog_x); i++;
-    XtSetArg( args[i], XmNy, dialog_y); i++;
-  }
-
-  dialog = XmCreateInformationDialog( parent_wid, "Info", args, i);
-  XmStringFree( text_str);
-  XmStringFree( title_str);
-  XmStringFree( quit_str);
-  XmStringFree( continue_str);
-
-  XtUnmanageChild( XmMessageBoxGetChild( dialog, XmDIALOG_HELP_BUTTON));
-
-  XtAddCallback( dialog, XmNokCallback, wnav_message_dialog_ok, this);
-  XtAddCallback( dialog, XmNcancelCallback, wnav_message_dialog_cancel, this);
-
-  flow_AddCloseVMProtocolCb( XtParent(dialog),
-	(XtCallbackProc)wnav_message_dialog_cancel, this);
-
-  XtManageChild( dialog);
-  XtPopup( XtParent(dialog), XtGrabNone);
-
-  dialog_ok = 0;
-  dialog_cancel = 0;
-  dialog_help = 0;
-
-  for (;;)
-  {
-    XtAppNextEvent( XtWidgetToApplicationContext( dialog), &Event);
-    XtDispatchEvent( &Event);
-    if ( dialog_ok)
-      return 1;
-    if ( dialog_cancel)
-      return 0;
-  }
-}
-
-int WNav::prompt_dialog( char *title, char *text, char **value)
-{
-  Widget 	dialog;
-  XmString	text_str;
-  XmString	title_str;
-  Arg		args[10];
-  int		i;
-  XEvent 	Event;
-
-  text_str = XmStringCreateLocalized( wnav_dialog_convert_text(text));
-  title_str = XmStringCreateLocalized( title);
-  i = 0;
-  XtSetArg( args[i], XmNselectionLabelString, text_str); i++;
-  XtSetArg( args[i], XmNdialogTitle, title_str); i++;
-  if ( dialog_width && dialog_height)
-  {
-    XtSetArg( args[i], XmNwidth, dialog_width); i++;
-    XtSetArg( args[i], XmNheight, dialog_height); i++;
-    XtSetArg( args[i], XmNx, dialog_x); i++;
-    XtSetArg( args[i], XmNy, dialog_y); i++;
-  }
-//  XtSetArg( args[i], XmNautoUnmanage, False); i++;
-
-  dialog = XmCreatePromptDialog( parent_wid, "Info", args, i);
-  XmStringFree( text_str);
-  XmStringFree( title_str);
-
-  XtUnmanageChild( XmSelectionBoxGetChild( dialog, XmDIALOG_HELP_BUTTON));
-
-  XtAddCallback( dialog, XmNokCallback, wnav_message_dialog_read, this);
-  XtAddCallback( dialog, XmNcancelCallback, wnav_message_dialog_cancel, this);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( XtParent(dialog),
-	(XtCallbackProc)wnav_message_dialog_cancel, this);
-
-  XtManageChild( dialog);
-  XtPopup( XtParent(dialog), XtGrabNone);
-
-  dialog_ok = 0;
-  dialog_cancel = 0;
-  dialog_help = 0;
-
-  for (;;)
-  {
-    XtAppNextEvent( XtWidgetToApplicationContext( dialog), &Event);
-    XtDispatchEvent( &Event);
-    if ( dialog_ok)
-    {
-      *value = dialog_value;
-      XtDestroyWidget( dialog);
-      return 1;
-    }
-    if ( dialog_cancel)
-    {
-      strcpy( dialog_value, "");
-      *value = dialog_value;
-      XtDestroyWidget( dialog);
-      return 0;
-    }
-  }
-}
-
 //
 // Displays all files with matching a wilcard specification.
 //
@@ -6389,27 +6061,6 @@ int	WNav::show_file(
     brow_Redraw( brow->ctx, 0);
   }
   return WNAV__SUCCESS;
-}
-
-static char *wnav_dialog_convert_text( char *text)
-{
-  char *s, *t;
-  static char new_text[200];
-
-  for ( s = text, t = new_text; *s; s++, t++)
-  {
-    if ( *s == '\\' && *(s+1) == 'n')
-    {
-      *t = 10;
-      s++;
-    }
-    else
-     *t = *s;
-    if ( t > &new_text[sizeof(new_text)-1])
-      break;
-  }
-  *t = *s;
-  return new_text;
 }
 
 static int wnav_display_objects_cb( pwr_sAttrRef *arp, void *a1, void *a2, 

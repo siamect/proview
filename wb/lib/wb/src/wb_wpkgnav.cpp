@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.cpp,v 1.6 2006-08-22 07:49:13 claes Exp $
+ * Proview   $Id: wb_wpkgnav.cpp,v 1.7 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,40 +17,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#if defined OS_VMS && defined __ALPHA
-# pragma message disable (NOSIMPINT,EXTROUENCUNNOBJ)
-#endif
-
-#if defined OS_VMS && !defined __ALPHA
-# pragma message disable (LONGEXTERN)
-#endif
-
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "rt_load.h"
 #include "wb_pkg_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
-
 #include "wb_wpkg.h"
 #include "wb_wpkgnav.h"
 #include "wb_wnav.h"
@@ -58,14 +38,35 @@ extern "C" {
 #include "wb_wnav_item.h"
 #include "wb_error.h"
 
-static char null_str[] = "";
-
-static int wpkgnav_init_brow_cb( FlowCtx *fctx, void *client_data);
 
 void WPkgNav::message( char sev, char *text)
 {
   (message_cb)( parent_ctx, sev, text);
 }
+//
+//  Get current zoom factor
+//
+void WPkgNav::get_zoom( double *zoom_factor)
+{
+  brow_GetZoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Zoom
+//
+void WPkgNav::zoom( double zoom_factor)
+{
+  brow_Zoom( brow->ctx, zoom_factor);
+}
+
+//
+//  Return to base zoom factor
+//
+void WPkgNav::unzoom()
+{
+  brow_UnZoom( brow->ctx);
+}
+
 
 
 //
@@ -73,23 +74,15 @@ void WPkgNav::message( char sev, char *text)
 //
 WPkgNav::WPkgNav(
 	void 		*wa_parent_ctx,
-	Widget		wa_parent_wid,
 	char 		*wa_name,
 	wb_eUtility	wa_utility,
-	Widget 		*w,
 	pwr_tStatus 	*status) :
-	parent_ctx(wa_parent_ctx), parent_wid(wa_parent_wid),
+	parent_ctx(wa_parent_ctx),
 	message_cb(0), set_clock_cursor_cb(0), reset_cursor_cb(0), 
 	utility(wa_utility), displayed(0),
 	display_mode(wpkg_mDisplayMode__)
 {
   strcpy( name, wa_name);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	wpkgnav_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  *w = form_widget;
   *status = 1;
 }
 
@@ -98,23 +91,12 @@ WPkgNav::WPkgNav(
 //
 WPkgNav::~WPkgNav()
 {
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
-
-void WPkgNav::set_inputfocus()
-{
-  if ( !displayed)
-    return;
-
-  XtCallAcceptFocus( brow_widget, CurrentTime);
-}
-
 
 //
 // Callbacks from brow
 //
-static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int WPkgNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   WPkgNav		*wpkgnav;
   WItemPkg	       	*item;
@@ -127,7 +109,7 @@ static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   }
 
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &wpkgnav);
-  wpkgnav->message( ' ', null_str);
+  wpkgnav->message( ' ', "");
   switch ( event->event)
   {
     case flow_eEvent_Key_Up:
@@ -224,7 +206,7 @@ static int wpkgnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = wpkgnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -376,7 +358,7 @@ int	WPkgNav::root_objects()
       int bus;
       int dstatus;
 
-      if ( num != 5)
+      if ( !(num == 5 || num == 6))
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
@@ -410,36 +392,36 @@ int	WPkgNav::root_objects()
 void WPkgNav::enable_events()
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Press, flow_eEventType_RegionSelect, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1PressShift, flow_eEventType_RegionAddSelect, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1ClickShift, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
-	wpkgnav_brow_cb);
+	brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int wpkgnav_init_brow_cb( FlowCtx *fctx, void *client_data)
+int WPkgNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   WPkgNav *wpkgnav = (WPkgNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;

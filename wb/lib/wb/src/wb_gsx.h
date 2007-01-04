@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gsx.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gsx.h,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,7 +21,7 @@
 #define wb_gsx_h
 
 int	gsx_check_connection( 
-	foe_ctx		foectx,
+	WFoe		*foe,
 	vldh_t_node	sourceobject,
 	unsigned long	sourcepoint,
 	vldh_t_node	destobject,
@@ -37,7 +37,7 @@ int gsx_check_subwindow(
 );
 
 int gsx_auto_create( 
-	foe_ctx		foectx,
+	WFoe		*foe,
 	double 		x,
 	double		y,
 	vldh_t_node	source,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goen.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goen.h,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,10 +24,7 @@
    This includefile contains values that describe the grapics
    drawn by the different methods in goen.  */
 
-#ifndef _Xm_h
-#include <Xm/Xm.h>
-#endif
-
+class WGre;
 
 /* Input connectionpoint inverted or not */
 #define GOEN_NOT_INVERTED       0
@@ -62,12 +59,6 @@
 #define GOEN_GGC_SMALLTEXT      11      /* ggc for text                 */
 #define GOEN_GGC_MEDIUMTEXT     12      /* ggc for text                 */
 #define GOEN_GGC_BIGTEXT        13      /* ggc for text                 */
-
-/* Cursors used in gredit */
-#define GOEN_CURSOR_MAX         5
-#define GOEN_CURSOR_CLOCK       0
-#define GOEN_CURSOR_HAND        1
-#define GOEN_CURSOR_CROSS       2
 
 /* Geometrical values */
 #define GOEN_F_LINEWIDTH        0.005   /* linewidth for drawing        */
@@ -143,9 +134,6 @@
 
 #define GOEN_DISPLAYNODE_ANNOT      9     /* Annot nr for display node */
 
-/* Array for the cursors loaded by goen */
-typedef int             goen_t_cursors[GOEN_CURSOR_MAX];
-
 /* Struct for connectionpoint geometric info returned by goen_get_point_info */
 typedef struct  {
         unsigned long   type;
@@ -166,22 +154,6 @@ typedef struct  {
 #endif
 
 
-
-void goen_create_cursors( 
-	Widget		widget,
-	goen_t_cursors	*cursors
-);
-
-#if 0
-void goen_create_ggcs(
-	Widget		widget,
-	goe_t_colors	*colors,
-	goe_t_fonts	*fonts,
-	goen_t_cursors	*cursors,
-	goen_t_ggcs	*ggcs
-);
-#endif
-
 int goen_create_contype( 
     flow_tCtx	        ctx,
     pwr_tClassId	conclass,
@@ -201,7 +173,7 @@ int goen_create_nodetype(
 );
 
 int	goen_get_parinfo( 
-    gre_ctx			grectx,
+    WGre 			*grectx,
     pwr_tClassId		classid,
     ldh_tSesContext		ldhses,
     unsigned int		*mask,
@@ -215,7 +187,7 @@ int	goen_get_parinfo(
 );
 
 int	goen_get_pointinfo( 
-    gre_ctx		 	grectx,
+    WGre		 	*grectx,
     pwr_tClassId		classid,
     ldh_tSesContext		ldhses,
     unsigned int		*mask,
@@ -236,7 +208,7 @@ int	goen_get_parameter(
 );
 
 int	goen_get_location_point( 
-    gre_ctx		 	grectx,
+    WGre		 	*grectx,
     pwr_tClassId		classid,
     ldh_tSesContext		ldhses,
     unsigned int		*mask,
@@ -244,21 +216,5 @@ int	goen_get_location_point(
     goen_point_type		*location_point,
     vldh_t_node			node
 );
-
-int	goen_get_text_width( 
-	char		*text,
-	XmFontList	fontlist,
-	float		*width,
-	float		*height,
-	int		*text_rows
-);
-
-
-
-
-
-
-
-
 
 #endif

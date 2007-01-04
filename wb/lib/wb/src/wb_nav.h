@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.h,v 1.4 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_nav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,10 +22,6 @@
 
 /* wb_nav.h -- Simple navigator */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -46,21 +42,15 @@ class Nav {
  public:
   Nav(
 	void *parent_ctx,
-	Widget	parent_wid,
 	char *name,
 	ldh_tSesContext ldhses,
 	char *root_name,
-	Widget *w,
 	pwr_tStatus *status
 	);
-  ~Nav();
+  virtual ~Nav();
 
   void 		*parent_ctx;
-  Widget	parent_wid;
   char 		name[80];
-  Widget	brow_widget;
-  Widget	form_widget;
-  Widget	toplevel;
   BrowCtx	*brow_ctx;
   ldh_tWBContext wbctx;
   ldh_tSesContext ldhses;
@@ -82,41 +72,26 @@ class Nav {
   int 		(*traverse_focus_cb)( void *, void *);
   int		displayed;
   PalFileMenu   *menu;
+  int	       	selection_owner;
+
+  virtual void set_inputfocus( int focus) {}
+  virtual void set_selection_owner() {}
 
   void zoom( double zoom_factor);
   void unzoom();
   int get_select( pwr_sAttrRef *attrref, int *is_attr);
-  void set_inputfocus( int focus);
   void type_id_to_name( int type_id, char *type_id_name);
-  void set_selection_owner();
   int object_exist( brow_tObject object);
   void create_nodeclasses();
   void free_pixmaps();
   void allocate_pixmaps();
   int open_top();
+
+  static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+  static int init_brow_cb( FlowCtx *fctx, void *client_data);
 };
 
 
-#if 0
-nav_tCtx nav_new(
-	void *parent_ctx,
-	Widget	parent_wid,
-	char *name,
-	ldh_tSesContext ldhses,
-	char *root_name,
-	Widget *w,
-	pwr_tStatus *status
-	);
-void nav_del( nav_tCtx navctx);
-void nav_zoom( nav_tCtx navctx, double zoom_factor);
-void nav_unzoom( nav_tCtx navctx);
-int nav_get_select( nav_tCtx navctx, pwr_sAttrRef *attrref, int *is_attr);
-void nav_set_inputfocus( nav_tCtx navctx, int focus);
-#endif
-
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

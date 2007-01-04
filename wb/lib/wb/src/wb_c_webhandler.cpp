@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_webhandler.cpp,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_c_webhandler.cpp,v 1.2 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,46 +19,34 @@
 
 /* wb_c_webhandler.cpp -- work bench methods of the WebHandler class. */
 
-#include <X11/Intrinsic.h>
-#undef Status
 #include "wb_pwrs.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "ge.h"
 #include "wb_pwrb_msg.h"
 #include "wb_wsx.h"
 #include "wb_wsx_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "wb_wnav.h"
 #include "wb_build.h"
 #include "co_msgwindow.h"
+#include "ge.h"
 
 static pwr_tStatus Build (
   ldh_sMenuCall *ip
 )
 {
-  WNav *wnav = (WNav *)ip->EditorContext;
-  wb_build build( *(wb_session *)ip->PointedSession);
+  wb_build build( *(wb_session *)ip->PointedSession, ip->wnav);
 
-  build.opt = wnav->gbl.build;
+  build.opt = ip->wnav->gbl.build;
   build.webhandler( ip->Pointed.Objid);
 
   if ( build.sts() == PWRB__NOBUILT)
-    wnav->message( 'I', "Nothing to build");
+    ip->wnav->message( 'I', "Nothing to build");
   return build.sts();
 }
 

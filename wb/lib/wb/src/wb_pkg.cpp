@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pkg.cpp,v 1.15 2006-06-30 12:22:19 claes Exp $
+ * Proview   $Id: wb_pkg.cpp,v 1.16 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include "co_msgwindow.h"
 #include "rt_load.h"
 
-wb_pkg::wb_pkg( char *nodelist, bool distribute)
+wb_pkg::wb_pkg( char *nodelist, bool distribute, bool config_only)
 {
   if ( nodelist) {
     char node_str[32][20];
@@ -52,6 +52,8 @@ wb_pkg::wb_pkg( char *nodelist, bool distribute)
     m_allnodes = true;
 
   readConfig();
+  if ( config_only)
+    return;
 
   fetchFiles( distribute);
 }
@@ -82,8 +84,9 @@ void wb_pkg::readConfig()
       pwr_mOpSys opsys;
       int bus;
       lfu_eDistrSts dstatus;
+      char bootnode[80];
 
-      if ( num != 5)
+      if ( !(num == 5 || num == 6))
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
       sts = sscanf( line_item[2], "%d", (int *)&opsys);
@@ -98,8 +101,13 @@ void wb_pkg::readConfig()
       if ( sts != 1)
 	throw wb_error_str("File corrupt " load_cNameDistribute);
 
+      if ( num == 6)
+	strcpy( bootnode, line_item[5]);
+      else
+	strcpy( bootnode, "-");
+	
       if ( m_allnodes) {
-	pkg_node node( line_item[1], opsys, bus, dstatus);
+	pkg_node node( line_item[1], opsys, bus, dstatus, bootnode);
 	m_nodelist.push_back( node);
       }
       else {
@@ -110,6 +118,7 @@ void wb_pkg::readConfig()
 	    m_nodelist[i].setOpsys( opsys);
 	    m_nodelist[i].setBus( bus);
 	    m_nodelist[i].setDStatus( dstatus);
+	    m_nodelist[i].setBootnode( bootnode);
 	    m_nodelist[i].setValid();
 	    break;
 	  }
@@ -427,6 +436,7 @@ void pkg_node::fetchFiles( bool distribute)
     "cd $pwrp_tmp" << endl <<
     "tar -czf $pwrp_load/" << pkg_name << " pwr_pkg.dat pkg_unpack.sh pkg_build" << endl;
 
+#if 0
   if ( distribute)
     of <<
       "cd $pwrp_load" << endl <<
@@ -437,7 +447,7 @@ void pkg_node::fetchFiles( bool distribute)
       "quit" << endl <<
       "EOF" << endl <<
       "rsh -l pwrp " << m_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
-  
+#endif  
   of.close();
 
   // Create a script that unpackes the archive and moves files to the target directories
@@ -521,15 +531,58 @@ void pkg_node::fetchFiles( bool distribute)
   sprintf( cmd, "source %s", pack_fname);
   system( cmd);
 
+  if ( distribute) {
+    // Copy the package
+    copyPackage( pkg_name);
+  }
+
   char msg[200];
-  sprintf( msg, "Distribute to node %s", m_name);
+  sprintf( msg, "Distribute package for node %s", m_name);
   MsgWindow::message( 'I', msg, msgw_ePop_No);
 
 }
 
-void wb_pkg::copyPackage( char *pkg_name)
+void pkg_node::copyPackage( char *pkg_name)
 {
   char pack_fname[200];
+  char bootnodes[10][80];
+  int bootnode_cnt;
+
+  if ( strcmp( m_bootnode, "-") != 0) {
+    bootnode_cnt = dcli_parse( m_bootnode, ",", "", (char *)bootnodes,
+		     sizeof(bootnodes)/sizeof(bootnodes[0]),
+		     sizeof(bootnodes[0]), 0);
+  }    
+  else {
+    // No bootnodes, copy to the node itself
+    strcpy( bootnodes[0], m_name);
+    bootnode_cnt = 1;
+  }
+
+  for ( int i = 0; i < bootnode_cnt; i++) {
+    dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
+    ofstream of( pack_fname);
+    of <<
+      "cd $pwrp_load" << endl <<
+      "ftp -vin " << bootnodes[i] << " << EOF &>$pwrp_tmp/ftp_" << bootnodes[i] << ".log" << endl <<
+      "user pwrp pwrp" << endl <<
+      "binary" << endl <<
+      "put " << pkg_name << endl <<
+      "quit" << endl <<
+      "EOF" << endl <<
+      "rsh -l pwrp " << bootnodes[i] << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
+    
+    of.close();
+
+    // Execute the pack file
+    char cmd[200];
+    sprintf( cmd, "source %s", pack_fname);
+    system( cmd);
+  }
+}
+
+void wb_pkg::copyPackage( char *pkg_name)
+{
   char node_name[80];
   char *s;
 
@@ -538,24 +591,10 @@ void wb_pkg::copyPackage( char *pkg_name)
   if ( (s = strrchr( node_name, '_')))
     *s = 0;
 
-  dcli_translate_filename( pack_fname, "$pwrp_tmp/pkg_pack.sh");
-  ofstream of( pack_fname);
-  of <<
-    "cd $pwrp_load" << endl <<
-    "ftp -vin " << node_name << " << EOF &>$pwrp_tmp/ftp_" << node_name << ".log" << endl <<
-    "user pwrp pwrp" << endl <<
-    "binary" << endl <<
-    "put " << pkg_name << endl <<
-    "quit" << endl <<
-    "EOF" << endl <<
-    "rsh -l pwrp " << node_name << " \\$pwr_exe/pwr_pkg.sh -i " << pkg_name << endl;
-    
-  of.close();
-
-  // Execute the pack file
-  char cmd[200];
-  sprintf( cmd, "source %s", pack_fname);
-  system( cmd);
+  // Find the node and get the bootnode(s)
+  wb_pkg pkg(node_name, false, true);
+  pkg_node n = pkg.getNode( node_name);
+  n.copyPackage( pkg_name);
 }
 
 void pkg_pattern::fetchFiles()

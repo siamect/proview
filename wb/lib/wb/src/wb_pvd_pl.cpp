@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pvd_pl.cpp,v 1.7 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: wb_pvd_pl.cpp,v 1.8 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -318,11 +318,10 @@ bool wb_pvd_pl::check_list( pwr_tStatus *sts)
     return false;
   }
   if ( actions_found) {
-    Widget toplevel;
+    CoWow *wow = MsgWindow::get_wow();
 
-    MsgWindow::get_parent_widget( &toplevel);
-    if ( toplevel) 
-      wow_DisplayQuestion( (void *)this, toplevel, "Confirm Actions", text,
+    if ( wow) 
+      wow->DisplayQuestion( (void *)this, "Confirm Actions", text,
 			   confirm_actions_ok, 0, 0);
     *sts = LDH__CONFIRM;
     return false;

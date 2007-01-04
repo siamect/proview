@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.36 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_ldh.h,v 1.37 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -325,10 +325,12 @@ struct ldh_s_MenuItem {
   pwr_tObjid		MenuObject;
 };
 
+class Wtt;
+class WNav;
+
 struct ldh_s_MenuCall {
-  void			*EditorContext;
-  void			*EditorContext2;
-  void			*WindowContext;
+  Wtt			*wtt;
+  WNav			*wnav;
   ldh_eMenuSet		PointedSet;
   ldh_tSession		PointedSession;
   pwr_tAttrRef		Pointed;

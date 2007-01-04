@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wpkg.h,v 1.4 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,16 +22,12 @@
 
 /* wb_wpkg.h -- Package window */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
-#ifndef wb_h
-# include "wb.h"
+#ifndef wb_utility_h
+# include "wb_utility.h"
 #endif
 
 #ifndef wb_ldh_h
@@ -39,39 +35,43 @@ extern "C" {
 #endif
 
 class WPkgNav;
+class CoWow;
 
 class WPkg {
   public:
     WPkg( 
-	Widget 		wa_parent_wid, 
 	void 		*wa_parent_ctx);
-    ~WPkg();
-    Widget	parent_wid;
+    virtual ~WPkg();
     void 	*parent_ctx;
     char 	name[80];
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
     WPkgNav	*wpkgnav;
-    Widget	msg_label;
-    Widget	wpkgnav_form;
     void	(*close_cb) ( void *);
     wb_eUtility	utility;
-    int		set_focus_disabled;
-    XtIntervalId focus_timerid;
     int		display_mode;
-    int		clock_cursor;
+    CoWow	*wow;
 
-    void message( char severity, char *message);
-    void pop();
-    void set_clock_cursor();
-    void reset_cursor();
+    void activate_distribute();
+    void activate_createpkg();
+    void activate_deletepkg();
+    void activate_dmode_filediff( int set);
+    void activate_dmode_filetime( int set);
+    void activate_dmode_filepath( int set);
+    void activate_zoom_in();
+    void activate_zoom_out();
+    void activate_zoom_reset();
+
+    virtual void message( char severity, char *message) {}
+    virtual void pop() {}
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
+    virtual void flush() {}
+
+    static void message_cb( void *wpkg, char severity, char *message);
+    static void set_clock_cursor_cb( void *wpkg);
+    static void reset_cursor_cb( void *wpkg);
+    static void deletepkg_ok( void *ctx, void *data);
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

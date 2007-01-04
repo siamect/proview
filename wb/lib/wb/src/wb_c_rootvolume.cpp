@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_rootvolume.cpp,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_c_rootvolume.cpp,v 1.2 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,8 +20,6 @@
 /* wb_c_rootvolume.c -- work bench methods of the RootVolume class. */
 
 #include <string.h>
-#include <X11/Intrinsic.h>
-#undef Status
 #include "wb_pwrs.h"
 #include "wb_pwrs_msg.h"
 #include "wb_pwrb_msg.h"
@@ -30,21 +28,12 @@
 #include "wb_wsx.h"
 #include "pwr_baseclasses.h"
 #include "co_dcli.h"
-#include "wb_lfu.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "wb_wtt.h"
 #include "co_msgwindow.h"
+#include "wb_lfu.h"
 
 
 /*----------------------------------------------------------------------------*\

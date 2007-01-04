@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.h,v 1.6 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_lfu.h,v 1.7 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,10 @@
 
 #ifndef wb_ldh_h
 #include "wb_ldh.h"
+#endif
+
+#ifndef co_wow_h
+#include "co_wow.h"
 #endif
 
 #ifdef __cplusplus
@@ -109,7 +113,7 @@ pwr_tStatus lfu_IncrementAndGetVersion(
 
 pwr_tStatus lfu_SaveDirectoryVolume(
   ldh_tSesContext 	ldhses,
-  Widget		parent_window
+  CoWow			*wow
 );
 
 int lfu_create_bootfiles (

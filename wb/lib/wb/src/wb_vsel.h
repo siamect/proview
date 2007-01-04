@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.h,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_vsel.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,37 +26,21 @@
 #include "pwr.h"
 #endif
 
-#ifndef wb_nav_macros_h
-#include "wb_nav_macros.h"
-#endif
-
 #ifndef wb_h
 #include "wb.h"
 #endif
 
+#ifndef co_wow_h
+#include "co_wow.h"
+#endif
+
 #define VSEL_MAX_VOLUMES 200
-
-struct vsel_widgets 
-{                                             
-  Widget	toplevel;
-  Widget	vsel_window;
-  Widget	label;
-  Widget        adb;
-  Widget        volumelist;
-  Widget        creavolume_dia;
-  Widget        volumeid;
-  Widget        volumename;
-  Widget        volumeclass;
-  Widget        creavolume;
-};
-
 
 class WVsel {
  public:
   WVsel (
 	 pwr_tStatus   *status,
 	 void		*wv_parent_ctx,
-	 Widget	wv_parent_wid,
 	 char		*wv_name,
 	 ldh_tWBContext wv_wbctx,
 	 char		*volumename,
@@ -65,14 +49,10 @@ class WVsel {
 	 int		(*bc_time_to_exit)( void *),
 	 int		show_volumes,
 	 wb_eType       wv_wb_type);
-  void message( char *new_label);
-  pwr_tStatus load_volumelist();
-  pwr_tStatus check_volumelist( int quiet, int *display_window);
+  virtual ~WVsel();
 
   void                  *parent_ctx;
-  Widget                parent_wid;
   char                  name[40];
-  struct vsel_widgets	widgets;
   ldh_tWBContext 	wbctx;
   int			(*vsel_bc_success)(void *, pwr_tVolumeId *, int);
   void			(*vsel_bc_cancel)();
@@ -82,19 +62,14 @@ class WVsel {
   int			all;
   int			write_priv;
   wb_eType              wb_type;
+  CoWow			*wow;
 
-  // Backcall functions from uil
-  static void vsel_activate_showall( Widget w, WVsel *vsel, XmToggleButtonCallbackStruct *data);
-  static void vsel_activate_ok( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_activate_cancel( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_activate_close( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_create_label( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_create_adb( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_destroy_adb( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_create_volumelist( Widget w, WVsel *vsel, XmAnyCallbackStruct *data);
-  static void vsel_action_volumelist( Widget w, WVsel *vsel, XmListCallbackStruct *data);
+  virtual void list_add_item( char *str) {}
+  virtual void list_clear() {}
 
-  ~WVsel();
+  pwr_tStatus load_volumelist();
+  pwr_tStatus check_volumelist( int quiet, int *display_window);
+
 };
 
 #endif

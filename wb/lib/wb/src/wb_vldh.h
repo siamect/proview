@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vldh.h,v 1.7 2005-11-22 12:27:26 claes Exp $
+ * Proview   $Id: wb_vldh.h,v 1.8 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,10 +21,6 @@
 #define wb_vldh_h
 
 /* wb_vldh.h -- very local datahandler */
-
-#ifndef _XtIntrinsic_h
-#include <X11/Intrinsic.h>
-#endif
 
 #ifndef wb_ldh_h
 #include "wb_ldh.h"
@@ -75,41 +71,28 @@ extern "C" {
 
 /* struct for koordinates */
 typedef struct {
-	float	x;
-	float	y;
-	} vldh_point;
+  float	x;
+  float	y;
+} vldh_point;
 
 /* vldh window object */
-typedef	struct	{
-  struct 	{
-    int			status; 	/* deleted , created, loaded etc */
+typedef	struct {
+  struct {
+    int			status; 		/* deleted , created, loaded etc */
     char		object_name[32];	/* ldh segment name */
     char		full_name[80];		/* ldh hierarchy name */
-    Widget		widget_id;		/* ? */
     struct nodetag   	*node_list_pointer;	/* pointer to nodelist */
     struct contag 	*con_list_pointer;	/* pointer to connection list*/
     struct nodetag  	*parent_node_pointer;	/* zero if parent is a plc obj*/
     struct plc_objtag   *plc;			/* always defined */
-    void		*foectx;
+    void		*foe;
     ldh_tSesContext	ldhses;
   } hw;
-/*  struct	{
-    pwr_tObjid		objdid;
-    unsigned long	object_type;
-    pwr_tClassId	class;
-    float		x;	* widget coord not yet implemented *
-    float		y;	* widget coord not yet implemented *
-    float		width;	* widget geom.. not yet implemented *
-    float		height; * widget geom.. not yet implemented * 
-    pwr_tObjid	 	parent_node_did;
-    unsigned int	subwindowindex;		* not used for a plcsubwind * 
-  } lw;
-*/
   pwr_sPlcWindow	lw;
-}	vldh_t_windobject, *vldh_t_wind;
+} vldh_t_windobject, *vldh_t_wind;
 
 typedef	struct	plc_objtag { 
-  struct 	{
+  struct {
     int			status;			/* deleted , created, loaded etc */
     struct plc_objtag	*next;			/* link to next plcobject in vldh */
     vldh_t_windobject 	*wind;			/* if zero wind not loaded */
@@ -121,8 +104,8 @@ typedef	struct	plc_objtag {
   pwr_sPlcProgram	lp;
 }	vldh_t_plcobject, *vldh_t_plc;
 
-typedef	struct nodetag	{ 
-  struct	{ 
+typedef	struct nodetag { 
+  struct { 
     unsigned int	vldhtype;		/* node or con, first position!*/
     char		name[32];		/* segment name */
     flow_tNode		node_id;		/* flow node id */
@@ -139,66 +122,32 @@ typedef	struct nodetag	{
     struct nodetag	*comp_manager;
     pwr_tSubid		trace_subid;
   } hn;
-/*  struct	{ 
-    unsigned long	object_type;
-    pwr_tClassId	class;
-    pwr_tObjid		object_did;
-    float		x;
-    float		y;
-    float		width;
-    float		height;
-    pwr_tObjid	window_did;
-    pwr_tObjid	subwind_objdid[2];
-    char		subwindow;
-    char		graphtype;
-    unsigned long	mask[3];
-    unsigned long	compdirection;
-    int			nodewidth;
-  } ln;
-*/
   pwr_sPlcNode		ln;
   struct	{ 
     char		annot[3][80]; 	/* not in use */
   } an;
 }	vldh_t_nodeobject, *vldh_t_node;
 
-typedef	struct contag	{ 
-	struct	{ 
-    	  int		vldhtype;		/* node or con, first position!*/
-	  int		status;
-	  vldh_t_node	source_node;
-	  vldh_t_windobject *wind; 		/* vldh */
-	  char		name[32];		/* segment name */
-	  flow_tCon	con_id;			/* flow */
-	  vldh_t_node	dest_node;		/* vldh */
-	  struct contag	*next;			/* next connection obj vldh */
-	  int		redrawn;		/* flag for redrawing refcons */
-	  pwr_tSubid	trace_subid;
-		} hc;
-/*	struct	{ 
-			pwr_tObjid	objdid;
-			unsigned long	object_type;
-			pwr_tClassId	class;
-			unsigned long	curvature;
-			unsigned long	drawtype;
-			unsigned long	attributes;
-			unsigned long	refnr;
-			unsigned long	source_point;
-			pwr_tObjid	source_node_did;
-			unsigned long	dest_point;
-			pwr_tObjid	dest_node_did;
-			unsigned long	point_count;
-			vldh_point	point[10];
-			pwr_tObjid	window_did;
-		} lc;
-*/
+typedef	struct contag { 
+  struct { 
+    int			vldhtype;		/* node or con, first position!*/
+    int			status;
+    vldh_t_node		source_node;
+    vldh_t_windobject 	*wind; 		/* vldh */
+    char		name[32];		/* segment name */
+    flow_tCon		con_id;			/* flow */
+    vldh_t_node		dest_node;		/* vldh */
+    struct contag	*next;			/* next connection obj vldh */
+    int			redrawn;		/* flag for redrawing refcons */
+    pwr_tSubid		trace_subid;
+  } hc;
   pwr_sPlcConnection	lc;
-		}	vldh_t_conobject, *vldh_t_con;
+} vldh_t_conobject, *vldh_t_con;
 
-typedef	struct	{
-		vldh_t_node	node;
-		unsigned long	conpoint;
-		} 	vldh_t_conpoint; 
+typedef	struct {
+  vldh_t_node	node;
+  unsigned long	conpoint;
+} vldh_t_conpoint; 
 
 
 
@@ -312,9 +261,8 @@ int vldh_wind_load_all (
 int vldh_wind_create ( 
   vldh_t_plc	plc,
   vldh_t_node	parentnode,
-  void	*foectx,
+  void	*foe,
   pwr_tClassId	classid,
-  Widget	widget_id,
   unsigned long	subwindowindex,
   vldh_t_wind	*wind,
   ldh_eAccess	access
@@ -324,8 +272,7 @@ int vldh_wind_load (
   vldh_t_plc	plc,
   vldh_t_node	parentnode,
   pwr_tObjid 	objdid,
-  void		*foectx,
-  Widget	widget_id,
+  void		*foe,
   vldh_t_wind	*wind,
   ldh_eAccess	access
 );

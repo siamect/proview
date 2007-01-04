@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wcast.h,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wcast.h,v 1.4 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,10 +24,6 @@
 
 #include <vector>
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
@@ -48,18 +44,17 @@ class WCast {
   public:
     WCast( 
 	void	*wc_parent_ctx,
-	Widget 	wc_parent_wid,
 	char 	*wc_name,
 	ldh_tSesContext wc_ldhses,
 	pwr_sAttrRef wc_aref,
 	pwr_tStatus *status);
 
     void 	*parent_ctx;
-    Widget	parent_wid;
     char 	name[80];
     ldh_tSesContext ldhses;
     pwr_sAttrRef aref;
     vector<pwr_tCid> cidlist;
+    CoWow	*wow;
 
     pwr_tStatus open_castlist();
     void get_subcid( pwr_tCid cid);
@@ -69,10 +64,6 @@ class WCast {
     static void selected_cb( void *ctx, char *text);
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

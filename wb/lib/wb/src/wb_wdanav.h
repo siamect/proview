@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.h,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wdanav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,6 @@ class WdaNav {
   public:
     WdaNav(
 	void 		*wa_parent_ctx,
-	Widget		wa_parent_wid,
 	char 		*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
@@ -61,16 +60,11 @@ class WdaNav {
 	int 		wa_advanced_user,
 	int		wa_display_objectname,
 	wb_eUtility	wa_utility,
-	Widget 		*w,
 	pwr_tStatus 	*status);
-    ~WdaNav();
+    virtual ~WdaNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     WNavBrow		*brow;
     ldh_tSesContext	ldhses;
     pwr_tObjid		objid;
@@ -80,7 +74,6 @@ class WdaNav {
     int			advanced_user;
     int			display_objectname;
     int			bypass;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*change_value_cb)( void *);
@@ -88,13 +81,14 @@ class WdaNav {
     int			displayed;
     int			attrobjects;
 
+    virtual void set_inputfocus() {}
+
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( brow_tObject node, char *name, char *value_str);
     int check_attr( int *multiline, brow_tObject *node, char *name,
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void message( char sev, char *text);
-    void set_inputfocus();
     void force_trace_scan();
     int get_attr();
     int object_exist( brow_tObject object);
@@ -107,6 +101,10 @@ class WdaNav {
 		char *new_attribute, int new_attrobjects);
     int find_by_objid( pwr_tObjid oi, brow_tObject *object);
     int print( char *filename);
+
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+
 };
 
 

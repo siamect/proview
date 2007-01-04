@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt.h,v 1.4 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_watt.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,12 +22,12 @@
 
 /* wb_watt.h -- Object attribute editor */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
+#endif
+
+#ifndef wb_utility_h
+# include "wb_utility.h"
 #endif
 
 #ifndef wb_h
@@ -38,36 +38,25 @@ extern "C" {
 # include "wb_ldh.h"
 #endif
 
+class WAttNav;
 
 class WAtt {
   public:
     WAtt( 
-	Widget 		wa_parent_wid, 
 	void 		*wa_parent_ctx, 
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
 	int 		wa_editmode,
 	int 		wa_advanced_user,
 	int		wa_display_objectname);
-    ~WAtt();
-    Widget	parent_wid;
+    virtual ~WAtt();
     void 	*parent_ctx;
     ldh_tSesContext ldhses;
     pwr_sAttrRef aref;
     int		editmode;
     char 	name[80];
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
-    void	*wattnav;
+    WAttNav	*wattnav;
     void	*root_item;
-    Widget	msg_label;
-    Widget	cmd_prompt;
-    Widget	cmd_input;
-    Widget	cmd_scrolledinput;
-    Widget	cmd_scrolled_ok;
-    Widget	cmd_scrolled_ca;
-    Widget	wattnav_form;
     int		input_open;
     int         input_multiline;
     void 	*object;
@@ -77,24 +66,20 @@ class WAtt {
     brow_tObject input_node;
     char	input_name[80];
     wb_eUtility	utility;
-    int		set_focus_disabled;
-    XtIntervalId focus_timerid;
-    static char	value_recall[30][160];
-    int	value_current_recall;
 
-    void message( char severity, char *message);
-    void set_prompt( char *prompt);
-    void change_value( int set_focus);
+    virtual void message( char severity, char *message) {}
+    virtual void set_prompt( char *prompt) {}
+    virtual void change_value( int set_focus) {}
+    virtual void change_value_close() {}
+    virtual void pop() {}
+
     void set_editmode( int editmode, ldh_tSesContext ldhses);
     int open_changevalue( char *name);
-    void change_value_close();
-    void pop();
+    static void message_cb( void *watt, char severity, char *message);
+    static void change_value_cb( void *watt);
+
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

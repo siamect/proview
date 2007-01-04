@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nrep.cpp,v 1.14 2006-06-07 15:12:06 claes Exp $
+ * Proview   $Id: wb_nrep.cpp,v 1.15 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -808,9 +808,11 @@ char *wb_nrep::nameName(const char *n, int ntype, char *res)
   strcpy( res, "");
 
   if ( ntype & cdh_mName_idString) {
+#if 0
     if ( ntype & cdh_mName_volume) printf( "wname: volume\n");
     if ( ntype & cdh_mName_object) printf( "wname: object\n");
     if ( ntype & cdh_mName_attribute) printf( "wname: attribute\n");
+#endif
     if ( !(ntype & cdh_mName_attribute)) {
       if ( ntype & cdh_mName_volume && !(ntype & cdh_mName_object))
         strcat( res, "_V");

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.56 2006-10-10 07:40:10 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.57 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@
 #endif
 #include <stdarg.h>
 #include "pwr.h"
-#include "wb_ldhi.h"
+//#include "wb_ldhi.h"
 #include "pwr_class.h"
 #include "wb_ldh_msg.h"
 #include "co_cdh.h"
@@ -690,7 +690,7 @@ ldh_GetNextSibling(ldh_tSession session, pwr_tOid oid, pwr_tOid *noid)
 /* Gets a named body of an object. Buffer space to keep the body is
    allocated by the routine and a pointer to the buffer is returned
    in the body parameter. It is the responsibility of the caller to free
-   this space when no longer needed. Use XtFree().  */
+   this space when no longer needed. Use free().  */
 
 pwr_tStatus
 ldh_GetObjectBody(ldh_tSession session, pwr_tOid oid, char *bname, void **buff, int *size)

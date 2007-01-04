@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.h,v 1.5 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wattnav.h,v 1.6 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef wb_wattnav_h
 #define wb_wattnav_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -51,7 +47,6 @@ class WAttNav {
   public:
     WAttNav(
 	void 		*wa_parent_ctx,
-	Widget		wa_parent_wid,
 	char 		*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_sAttrRef 	wa_aref,
@@ -59,16 +54,11 @@ class WAttNav {
 	int 		wa_advanced_user,
 	int		wa_display_objectname,
 	wb_eUtility	wa_utility,
-	Widget 		*w,
 	pwr_tStatus 	*status);
-    ~WAttNav();
+    virtual ~WAttNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     WNavBrow		*brow;
     ldh_tSesContext	ldhses;
     pwr_sAttrRef       	aref;
@@ -76,13 +66,14 @@ class WAttNav {
     int			advanced_user;
     int			display_objectname;
     int			bypass;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*change_value_cb)( void *);
     wb_eUtility		utility;
     int			displayed;
-    Atom		objid_atom;
+    
+    virtual void set_inputfocus() {}
+    virtual pwr_tStatus get_selection( char *str, int size) { return 0;}
 
     void start_trace( pwr_tObjid Objid, char *object_str);
     int set_attr_value( brow_tObject node, char *name, char *value_str);
@@ -90,7 +81,6 @@ class WAttNav {
 		char **init_value, int *size);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
     void message( char sev, char *text);
-    void set_inputfocus();
     void force_trace_scan();
     int object_attr();
     int object_exist( brow_tObject object);
@@ -99,10 +89,10 @@ class WAttNav {
     void set_editmode( int editmode, ldh_tSesContext ldhses)
 	{ this->editmode = editmode; this->ldhses = ldhses;};
     int select_by_name( char *name);
+
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+
 };
 
-
-#if defined __cplusplus
-}
-#endif
 #endif

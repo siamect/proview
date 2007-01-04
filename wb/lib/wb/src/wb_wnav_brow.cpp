@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_brow.cpp,v 1.8 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_brow.cpp,v 1.9 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,6 @@
 #include <descrip.h>
 #endif
 
-extern "C" {
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -35,30 +34,13 @@ extern "C" {
 #include "wb_wnav_msg.h"
 #include "wb_ldh.h"
 #include "wb_login.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "wb_wnav_brow.h"
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
-
-extern "C" {
-#include "flow_x.h"
-#include "wb_wtt_api.h"
-#include "co_api.h"
-}
 
 
 #include "xnav_bitmap_leaf8.h"

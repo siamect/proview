@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dir.c,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_dir.c,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,11 +20,12 @@
 /* wb_dir.c -- Directory information
    This module returns information about directory and files.  */
 
-#ifdef OS_VMS
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <string.h>
+
+#ifdef OS_VMS
 #include <starlet.h>
 #include <rms.h>
 #include <descrip.h>
@@ -40,7 +41,6 @@
 #include "pwr.h"
 #include "co_time.h"
 #include "co_dcli.h"
-#include "wb_foe_macros.h"
 #include "wb_dir.h"
 
 /* Global functions_____________________________________________________*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.9 2006-04-28 05:01:02 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.10 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,37 +30,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "wb_ldh.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
-}
-
-#include <Xm/Xm.h>
-#include <Mrm/MrmPublic.h>
-#ifndef _XtIntrinsic_h
-#include <X11/Intrinsic.h>
-#endif
-#include <X11/IntrinsicP.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/Xmu/Atoms.h>
-#include <X11/Xmu/StdSel.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "wb_pal.h"
 
 #include "glow.h"
 #include "glow_growctx.h"
-
-extern "C" {
-#include "flow_x.h"
-}
 
 #include "xnav_bitmap_leaf8.h"
 #include "xnav_bitmap_leaf10.h"
@@ -137,93 +118,6 @@ extern "C" {
 #include "xnav_bitmap_stepdiv12.h"
 #include "xnav_bitmap_transconv12.h"
 #include "xnav_bitmap_transdiv12.h"
-
-static void pal_sel_lose_cb( Widget w, Atom *selection);
-static Boolean pal_sel_convert_cb(
-    Widget  w,
-    Atom    *selection,
-    Atom    *target,
-    Atom    *type_return,
-    XtPointer	*value_return,
-    unsigned long   *length_return,
-    int	    *format_return);
-static void  pal_set_avoid_deadlock( Pal *pal, int time);
-
-//
-// Definition of item classes
-// The following classes are defined:
-//    PalItem		superclass.
-//    PalItemObject	Object that is not of class Group, GroupRef or 
-//			$ClassHier. Doesn't display it's children.
-//    PalItemClass		Group or $ClassHier objects. Displays it's children.
-//    PalItemClassVolume	GroupRef objects. Display's one of the following
-//			- the children of a Group with the same name.
-//			- the children of a root object with the same name,
-//			- a classvolume width the same name,
-//			- it's own children.
-//
-typedef enum {
-	pal_mOpen_All	        = ~0,
-	pal_mOpen_Children	= 1 << 0
-	} pal_mOpen;
-
-typedef enum {
-	pal_ePalItemType_Object,
-	pal_ePalItemType_Class,
-	pal_ePalItemType_ClassVolume,
-	pal_ePalItemType_Menu
-	} pal_ePalItemType;
-
-class PalItem {
-  public:
-    PalItem( pwr_tObjid item_objid, int item_is_root) :
-        type( pal_ePalItemType_Object), objid(item_objid), 
-	is_root(item_is_root), node(NULL)
-	{};
-    pal_ePalItemType	type;
-    pwr_tObjid		objid;
-    int			is_root;
-    brow_tNode		node;
-    int			open( Pal *pal, double x, double y) 
-				{ return 1;};
-};
-
-
-class PalItemClassVolume : public PalItem {
-  public:
-    PalItemClassVolume( Pal *pal, char *item_name, 
-	brow_tNode dest, flow_eDest dest_code, int item_is_root);
-    int			open( Pal *pal, double x, double y);
-    char	 	name[120];
-};
-
-class PalItemClass : public PalItem {
-  public:
-    PalItemClass( Pal *pal, char *item_name, 
-	brow_tNode dest, flow_eDest dest_code, int item_is_root);
-    int			open( Pal *pal, double x, double y);
-    char	 	name[120];
-};
-
-class PalItemObject : public PalItem {
-  public:
-    PalItemObject( Pal *pal, pwr_tObjid item_objid, 
-	brow_tNode dest, flow_eDest dest_code, int item_is_root);
-};
-
-class PalItemMenu : public PalItem {
-  public:
-    PalItemMenu( Pal *pal, char *item_name, 
-	brow_tNode dest, flow_eDest dest_code, PalFileMenu **item_child_list,
-	int item_is_root);
-    char	 	name[120];
-    PalFileMenu	        **child_list;
-    int			open( Pal *pal, double x, double y);
-    int     		close( Pal *pal, double x, double y);
-};
-
-
-// Static variables
 
 //
 // Member functions for PalItem classes
@@ -1141,7 +1035,7 @@ void Pal::allocate_pixmaps()
 //
 // Callbacks from brow
 //
-static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   Pal		*pal;
   PalItem 	*item;
@@ -1149,6 +1043,22 @@ static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
   brow_GetCtxUserData( (BrowCtx *)ctx, (void **) &pal);
   switch ( event->event)
   {
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( pal->brow_ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( pal->brow_ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( pal->brow_ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( pal->brow_ctx, -0.1);
+      break;
+    }
     case flow_eEvent_Key_Up:
     {
       brow_tNode	*node_list;
@@ -1369,7 +1279,7 @@ static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = pal_brow_cb( ctx, doubleclick_event);
+            sts = Pal::brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -1399,8 +1309,6 @@ static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       // Popup menu
       pwr_tCid cid = pwr_cNCid;
-      Arg arg[4];
-      short x, y;
 
       if ( !pal->create_popup_menu_cb)
 	break;
@@ -1436,18 +1344,8 @@ static int pal_brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       if ( cid == pwr_cNCid)
 	break;
-      if ( pal->avoid_deadlock)
-        break;
 
-
-      XtSetArg( arg[0], XmNx, &x);
-      XtSetArg( arg[1], XmNy, &y);
-      XtGetValues( XtParent(pal->brow_widget), arg, 2);
-
-      (pal->create_popup_menu_cb)( pal->parent_ctx, cid,
-		event->any.x_pixel + x, event->any.y_pixel + y);
-      pal_set_avoid_deadlock( pal, 2000);
-
+      pal->create_popup_menu( cid, event->any.x_pixel, event->any.y_pixel);
       break;
     }
     default:
@@ -1479,7 +1377,7 @@ void Pal::create_nodeclasses()
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int pal_init_brow_cb( FlowCtx *fctx, void *client_data)
+int Pal::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   Pal *pal = (Pal *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -1500,27 +1398,35 @@ static int pal_init_brow_cb( FlowCtx *fctx, void *client_data)
   brow_SetCtxUserData( pal->brow_ctx, pal);
 
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Return, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
-	pal_brow_cb);
+	Pal::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	Pal::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	Pal::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	Pal::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	Pal::brow_cb);
 
   pal->create_nodeclasses();
 
@@ -1594,35 +1500,17 @@ int Pal::create_item( pwr_tObjid objid,
 //
 Pal::Pal(
 	void *pal_parent_ctx,
-	Widget	pal_parent_wid,
 	char *pal_name,
 	ldh_tSesContext pal_ldhses,
 	char *pal_root_name,
-	Widget *w,
 	pwr_tStatus *status) : 
-
-	parent_ctx(pal_parent_ctx), parent_wid(pal_parent_wid), 
-	wbctx(0), ldhses(pal_ldhses), root_objid(pwr_cNObjid), root_item(0),
-	last_selected(0), selection_owner(0), set_focus_cb(0),
-	traverse_focus_cb(0), create_popup_menu_cb(0), displayed(0), menu(0), 
-	avoid_deadlock(0)
+  parent_ctx(pal_parent_ctx),
+  wbctx(0), ldhses(pal_ldhses), root_objid(pwr_cNObjid), root_item(0),
+  last_selected(0), selection_owner(0), set_focus_cb(0),
+  traverse_focus_cb(0), create_popup_menu_cb(0), displayed(0), menu(0)
 {
-  int i;
-  Arg 		args[5];
-
   strcpy( name, pal_name);
   strcpy( root_name, pal_root_name);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	pal_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  i = 0;
-  XtSetArg(args[i], XmNborderWidth, 1);i++;
-  XtSetValues( form_widget, args,i);
-  set_inputfocus(0);
-
-  *w = form_widget;
   *status = 1;
 }
 
@@ -1631,35 +1519,6 @@ Pal::Pal(
 //
 Pal::~Pal()
 {
-  if ( avoid_deadlock)
-    XtRemoveTimeOut( deadlock_timerid);
-
-  PalFile::config_tree_free( menu);
-  free_pixmaps();
-  XtDestroyWidget( form_widget);
-}
-
-void Pal::set_inputfocus( int focus)
-{
-  Arg 		args[2];
-  Pixel 	bg, fg;
-
-  if ( !displayed)
-    return;
-
-  XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
-  if ( focus)
-  {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-    XtSetArg(args[0], XmNborderColor, fg);
-    XtSetValues( form_widget, args, 1);
-  }
-  else
-  {
-    XtSetArg(args[0], XmNborderColor, bg);
-    XtSetValues( form_widget, args, 1);
-  }
-//  brow_SetInputFocus( brow->ctx);
 }
 
 int Pal::object_exist( brow_tObject object)
@@ -1675,105 +1534,6 @@ int Pal::object_exist( brow_tObject object)
       return 1;
   }
   return 0;
-}
-
-void Pal::set_selection_owner()
-{
-  int sts;
-
-  sts = XtOwnSelection( brow_widget, XA_PRIMARY, 
-	XtLastTimestampProcessed(flow_Display(brow_widget)),  
-	pal_sel_convert_cb, pal_sel_lose_cb , NULL);
-  if ( !sts)
-  {
-     brow_SelectClear( brow_ctx);
-     return;
-  }	
-  selection_owner = 1;
-}
-
-static Boolean pal_sel_convert_cb(
-    Widget  w,
-    Atom    *selection,
-    Atom    *target,
-    Atom    *type_return,
-    XtPointer	*value_return,
-    unsigned long   *length_return,
-    int	    *format_return)
-{
-  Pal		*pal;
-  brow_tCtx	browctx;
-  char		name[200];
-  PalItem	*item;
-
-  BrowCtxFromWidget( w, (void **) &browctx);
-  brow_GetCtxUserData( browctx, (void **) &pal);
-
-  if (*target == XA_TARGETS(flow_Display(pal->brow_widget))) {
-    Atom *targetP;
-    Atom *std_targets;
-    unsigned long std_length;
-    XSelectionRequestEvent *req = XtGetSelectionRequest( w, *selection, 
-       (XtRequestId)NULL);
-
-    XmuConvertStandardSelection( w, req->time, selection, target, type_return,
-		(caddr_t *)&std_targets, &std_length, format_return);
-
-    *value_return = XtMalloc( sizeof(Atom) * (std_length + 2));
-    targetP = *(Atom **) value_return;
-    *targetP++ = XA_STRING;
-    *targetP++ = XA_TEXT(flow_Display(pal->brow_widget));
-    *length_return = std_length + (targetP - (*(Atom **) value_return));
-    bcopy((char *)std_targets, (char *)targetP, sizeof(Atom) * std_length);
-    XtFree( (char *)std_targets);
-    *type_return = XA_ATOM;
-    *format_return = 32;
-    return True;
-  }
-
-  if (*target == XA_STRING ||
-      *target == XA_TEXT(flow_Display(pal->brow_widget)) ||
-      *target == XA_COMPOUND_TEXT(flow_Display(pal->brow_widget)))
-  {
-    brow_tNode	*node_list;
-    int		node_count;
-  
-    brow_GetSelectedNodes( pal->brow_ctx, &node_list, &node_count);
-    if ( !node_count)
-      return FALSE;
-
-    brow_GetUserData( node_list[0], (void **)&item);
-
-    switch( item->type)
-    {
-      case pal_ePalItemType_ClassVolume: 
-      case pal_ePalItemType_Class: 
-      case pal_ePalItemType_Object: 
-      default:
-        brow_GetAnnotation( node_list[0], 0, name, sizeof(name));
-        *value_return = XtNewString(name);      
-        *length_return = strlen(name) + 1;
-    }
-    free( node_list);
-
-    *type_return = XA_STRING;
-    *format_return = 8;
-
-    return TRUE;
-  }
-  return FALSE;
-}
-
-static void pal_sel_lose_cb( Widget w, Atom *selection)
-{
-  Pal		*pal;
-  brow_tCtx	browctx;
-
-  BrowCtxFromWidget( w, (void **) &browctx);
-  brow_GetCtxUserData( browctx, (void **) &pal);
-
-  brow_SelectClear( pal->brow_ctx);
-  pal->selection_owner = 0;
 }
 
 //
@@ -1832,21 +1592,6 @@ int Pal::get_select( pwr_tClassId *classid)
       return 0;
   }
   return 1;
-}
-
-
-
-static void  pal_reset_avoid_deadlock( Pal *pal)
-{
-  pal->avoid_deadlock = 0;
-}
-
-static void  pal_set_avoid_deadlock( Pal *pal, int time)
-{
-  pal->avoid_deadlock = 1;
-  pal->deadlock_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext( pal->brow_widget), time,
-	(XtTimerCallbackProc)pal_reset_avoid_deadlock, pal);
 }
 
 

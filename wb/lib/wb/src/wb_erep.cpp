@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.47 2006-05-24 06:59:10 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.48 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -679,11 +679,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
       if ( wb_dblock::is_locked(vname, uname)) {
-	Widget w;
 
         MsgWindow::message( 'E', "Database is locked by user", uname, vname);
-	MsgWindow::get_parent_widget( &w);
-	if ( w == 0)
+	if ( MsgWindow::has_window())
 	  exit(0);
 
         // Try to load dbs-file instead

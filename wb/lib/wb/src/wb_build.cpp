@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.3 2006-06-08 13:40:18 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.4 2007-01-04 07:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,26 +23,18 @@
 #include "co_msgwindow.h"
 #include "co_dcli.h"
 #include "co_time.h"
+#include "rt_load.h"
 #include "wb_foe_msg.h"
 #include "wb_pwrb_msg.h"
-#include "wb_utl.h"
+#include "wb_utl_api.h"
 #include "wb_build.h"
 #include "wb_name.h"
 #include "wb_lfu.h"
 #include "wb_merep.h"
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
-#include "glow_growwidget.h"
 
 #include "ge_graph.h"
 #include "ge.h"
@@ -530,15 +522,15 @@ void wb_build::xttgraph( pwr_tOid oid)
 	jexport = 1;
     }
     if ( jexport) {
-      if ( !m_window) {
+      if ( !m_wnav) {
 	sprintf( cmd, "Build:    XttGraph  Unable to export java in this environment %s", action);
 	MsgWindow::message('W', cmd, msgw_ePop_No, oid);
       }
       else {
-	void *gectx = ge_new( NULL, (Widget)m_window, (ldh_tSession *)&m_session, 0, action);
+	Ge *gectx = m_wnav->ge_new( action);
 	strcpy( cmd, "export java");
-	ge_command( gectx, cmd);
-	ge_del( gectx);
+	gectx->command( cmd);
+	delete gectx;
 
 	sprintf( cmd, "Build:    XttGraph  Export java %s", action);
 	MsgWindow::message('I', cmd, msgw_ePop_No, oid);

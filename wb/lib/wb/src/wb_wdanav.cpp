@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wdanav.cpp,v 1.7 2005-12-30 15:36:36 claes Exp $
+ * Proview   $Id: wb_wdanav.cpp,v 1.8 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,27 +30,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "wb_wda_msg.h"
 #include "rt_mh_net.h"
 #include "wb_trv.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "wb_wda.h"
 #include "wb_wdanav.h"
@@ -60,7 +49,6 @@ extern "C" {
 
 static char null_str[] = "";
 
-static int wdanav_init_brow_cb( FlowCtx *fctx, void *client_data);
 static int wdanav_attr_found_cb( pwr_sAttrRef *aref, void *a1, void *a2,
 				 void *a3, void *a4, void *a5);
 
@@ -80,7 +68,6 @@ int WdaNav::print( char *filename)
 //
 WdaNav::WdaNav(
 	void 		*wa_parent_ctx,
-	Widget		wa_parent_wid,
 	char 		*wa_name,
 	ldh_tSesContext wa_ldhses,
 	pwr_tObjid 	wa_objid,
@@ -90,26 +77,17 @@ WdaNav::WdaNav(
 	int 		wa_advanced_user,
 	int		wa_display_objectname,
 	wb_eUtility	wa_utility,
-	Widget 		*w,
 	pwr_tStatus 	*status) :
-	parent_ctx(wa_parent_ctx), parent_wid(wa_parent_wid),
-	ldhses(wa_ldhses), objid(wa_objid), classid(wa_classid),
-	editmode(wa_editmode), 
-	advanced_user(wa_advanced_user), 
-	display_objectname(wa_display_objectname), bypass(0),
-	trace_started(0), message_cb(NULL), utility(wa_utility), 
-	displayed(0), attrobjects(0)
+  parent_ctx(wa_parent_ctx),
+  ldhses(wa_ldhses), objid(wa_objid), classid(wa_classid),
+  editmode(wa_editmode), 
+  advanced_user(wa_advanced_user), 
+  display_objectname(wa_display_objectname), bypass(0),
+  trace_started(0), message_cb(NULL), utility(wa_utility), 
+  displayed(0), attrobjects(0)
 {
   strcpy( name, wa_name);
   strcpy( attribute, wa_attribute);
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	wdanav_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  // Create the root item
-  *w = form_widget;
-
   *status = 1;
 }
 
@@ -118,21 +96,6 @@ WdaNav::WdaNav(
 //
 WdaNav::~WdaNav()
 {
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-
-  delete brow;
-  XtDestroyWidget( form_widget);
-}
-
-void WdaNav::set_inputfocus()
-{
-//  brow_SetInputFocus( brow->ctx);
-
-  if ( !displayed)
-    return;
-
-  XtCallAcceptFocus( brow_widget, CurrentTime);
 }
 
 //
@@ -215,7 +178,7 @@ int WdaNav::check_attr( int *multiline, brow_tObject *node,
 //
 // Callbacks from brow
 //
-static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int WdaNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   WdaNav		*wdanav;
   WItem	 		*item;
@@ -325,7 +288,7 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = wdanav_brow_cb( ctx, doubleclick_event);
+            sts = wdanav->brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -344,6 +307,22 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         default:
           brow_SelectClear( wdanav->brow->ctx);
       }
+      break;
+    }
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( wdanav->brow->ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( wdanav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( wdanav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( wdanav->brow->ctx, -0.1);
       break;
     }
     case flow_eEvent_Key_Left:
@@ -657,20 +636,6 @@ static int wdanav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-static void wdanav_trace_scan( WdaNav *wdanav)
-{
-  int time = 200;
-
-  if ( wdanav->trace_started)
-  {
-    brow_TraceScan( wdanav->brow->ctx);
-
-    wdanav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(wdanav->brow_widget) , time,
-	(XtTimerCallbackProc)wdanav_trace_scan, wdanav);
-  }
-}
-
 int	WdaNav::get_attr()
 {
   int	i, j;
@@ -802,40 +767,48 @@ static int wdanav_attr_found_cb( pwr_sAttrRef *aref, void *a1, void *a2,
 void WdaNav::enable_events()
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftRight, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftLeft, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Resized, flow_eEventType_CallBack, 
-	wdanav_brow_cb);
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int wdanav_init_brow_cb( FlowCtx *fctx, void *client_data)
+int WdaNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   WdaNav *wdanav = (WdaNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;

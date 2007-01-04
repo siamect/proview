@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.h,v 1.6 2005-11-22 12:26:24 claes Exp $
+ * Proview   $Id: wb_trv.h,v 1.7 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,25 +24,26 @@
 #include "wb_ldh.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum {
   trv_eDepth_Deep,
   trv_eDepth_Children,
   trv_eDepth_Self
 } trv_eDepth;
   
+#ifdef __cplusplus
 typedef int (*trv_tBcFunc)( pwr_sAttrRef *, void *, void *, void *, void *, void*);
+#else
+typedef int (*trv_tBcFunc)();
+#endif
 
 typedef struct {
-	  ldh_tSesContext	ldhses;
-	  pwr_tObjid		hierobjid;
-	  pwr_tClassId		*classid;
-	  char			*name;
-	  pwr_tVolumeId		*volume;
-	} *trv_ctx;
+  ldh_tSesContext	ldhses;
+  pwr_tObjid		hierobjid;
+  pwr_tClassId		*classid;
+  char			*name;
+  pwr_tVolumeId		*volume;
+} trv_sCtx;
+typedef trv_sCtx *trv_tCtx;
 
 int trv_get_rtnodes (
   ldh_tSesContext ldhses,
@@ -95,7 +96,7 @@ int trv_get_objects_hier_class_name (
   pwr_tObjid	hierobjdid,
   pwr_tClassId	*classid,
   char		*name,
-  int		(*backcall)(),
+  trv_tBcFunc	backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -120,7 +121,7 @@ int trv_get_objects_hcn (
 int trv_get_objects_class (
   ldh_tSesContext ldhses,
   pwr_tClassId	classid,
-  int		(*backcall)(),
+  trv_tBcFunc  	backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -133,7 +134,7 @@ int trv_get_children_class_name (
   pwr_tObjid	parentobjdid,
   pwr_tClassId	*classid,
   char		*name,
-  int		(*backcall)(),
+  trv_tBcFunc  	backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -146,7 +147,7 @@ int trv_get_class_hier (
   pwr_tObjid	hierobjdid,
   char		*name,
   pwr_tClassId	*classid,
-  int		(*backcall)(),
+  trv_tBcFunc   backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -158,7 +159,7 @@ int trv_get_class_hier (
 int trv_get_docobjects ( 
   ldh_tSesContext ldhses,
   pwr_tObjid	hierobjdid,
-  int		(*backcall)(),
+  trv_tBcFunc   backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -167,12 +168,8 @@ int trv_get_docobjects (
 );
 
 int trv_object_search(
-  trv_ctx	trvctx,
-#ifdef __cplusplus
-  int		(*backcall)( pwr_sAttrRef *, void *, void *, void *, void *, void*),
-#else
-  int		(*backcall)(),
-#endif
+  trv_tCtx	trvctx,
+  trv_tBcFunc	backcall,
   void		*arg1,
   void		*arg2,
   void		*arg3,
@@ -181,7 +178,7 @@ int trv_object_search(
 );
 
 int	trv_create_ctx( 
-  trv_ctx		*trvctx,
+  trv_tCtx		*trvctx,
   ldh_tSesContext	ldhses,
   pwr_tObjid		hierobjid,
   pwr_tClassId		*classid,
@@ -190,7 +187,7 @@ int	trv_create_ctx(
 );
 
 int	trv_delete_ctx( 
-  trv_ctx		trvctx
+  trv_tCtx		trvctx
 );
 
 int trv_get_attrobjects (
@@ -206,10 +203,6 @@ int trv_get_attrobjects (
   void		*arg4,
   void		*arg5
 );
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
 

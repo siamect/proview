@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_xttgraph.cpp,v 1.3 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_c_xttgraph.cpp,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,20 +21,10 @@
 
 using namespace std;
 
-#include <X11/Intrinsic.h>
-//#undef Status
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-#include "ge.h"
 #include "wb_wnav.h"
 #include "wb_pwrb_msg.h"
 #include "wb_build.h"
+#include "wb_wtt.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -57,7 +47,7 @@ static pwr_tStatus OpenGraph (
   cdh_ToLower( graph_name, action);
   free( (char *)action);
   if ( strstr( graph_name, ".pwg")) {
-    ge_new( NULL, (Widget)ip->WindowContext, ip->PointedSession, 0, graph_name);
+    ip->wtt->ge_new( graph_name);
     return 1;
   }
   return PWRB__GRAPHACTION;
@@ -67,14 +57,13 @@ static pwr_tStatus Build (
   ldh_sMenuCall *ip
 )
 {
-  WNav *wnav = (WNav *)ip->EditorContext;
-  wb_build build( *(wb_session *)ip->PointedSession, wnav, ip->WindowContext);
+  wb_build build( *(wb_session *)ip->PointedSession, ip->wnav);
 
-  build.opt = wnav->gbl.build;
+  build.opt = ip->wnav->gbl.build;
   build.xttgraph( ip->Pointed.Objid);
 
   if ( build.sts() == PWRB__NOBUILT)
-    wnav->message( 'I', "Nothing to build");
+    ip->wnav->message( 'I', "Nothing to build");
   return build.sts();
 }
 

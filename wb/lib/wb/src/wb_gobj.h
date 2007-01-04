@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_gobj.h,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,12 +25,12 @@
 #endif
 
 int     gobj_get_object(
-        foe_ctx         foectx,
+        WFoe            *foe,
         vldh_t_node     node,
         unsigned long   index
 );
 
-int	gobj_expand(	foe_ctx		foectx,
+int	gobj_expand(	WFoe		*foe,
 			vldh_t_node	node,
 			int		compress);
 #endif

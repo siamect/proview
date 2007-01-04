@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.4 2006-05-24 06:00:59 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.5 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,38 +39,28 @@
 #include "flow.h"
 #include "flow_ctx.h"
 #include "rt_load.h"
+#include "co_wow.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "co_time.h"
 #include "co_regex.h"
 #include "wb_ldh.h"
-#include "wb_nav_macros.h"
-#undef min
-#undef max
-#include "wb_lfu.h"
-#include "wb_utl.h"
+#include "wb_utl_api.h"
 #include "wb_dir.h"
 #include "wb_lfu_msg.h"
 #include "wb_foe_msg.h"
 #include "wb.h"
 #include "wb_gcg.h"
-#include "co_wow.h"
 #include "wb_trv.h"
 #include "co_dbs.h"
 #include "co_msgwindow.h"
+#include "wb_lfu.h"
 
 #include "wb_env.h"
 #include "wb_erep.h"
 #include "wb_session.h"
 #include "wb_object.h"
 #include "wb_vrepdb.h"
-
-#include <Xm/Xm.h>
-#include <Xm/ToggleB.h>
-#include <Xm/List.h>
-#include <X11/cursorfont.h>
-#include <Xm/Protocols.h>
-#include <X11/Xatom.h>
 
 
 #define LFU_MAX_NODE_VOLUMES  	100
@@ -609,7 +599,7 @@ pwr_tStatus lfu_WriteSysObjectFile(
 *************************************************************************/
 pwr_tStatus lfu_SaveDirectoryVolume(
   ldh_tSesContext 	ldhses,
-  Widget		parent_window
+  CoWow			*wow
 )
 {
   pwr_tStatus 	sts;
@@ -661,7 +651,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   utl_t_objidlist *obj_ptr;
   utl_t_objidlist *objlist;
   int		objcount;
-  trv_ctx	trvctx;
+  trv_tCtx	trvctx;
   pwr_tObjid	distrobjid;
   pwr_tVolumeId	volume_id;
   lfu_eDistrSts	distr_status;
@@ -890,7 +880,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
 	    dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
 	    if (EVEN(sts)) {
-	      if ( parent_window) {
+	      if ( wow) {
 		lfu_sCreaDb *data;
 		data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
 		strcpy( data->name, volumelist_ptr->volume_name);
@@ -912,7 +902,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 		sprintf( text, "   Volume '%s' is not yet created.\n \n\
    Do you want to create this volume.\n",
 			 volume_name);
-		wow_DisplayQuestion( NULL, parent_window,
+		wow->DisplayQuestion( NULL,
 				     "Create volume", text,
 				     lfu_creadb_qb_yes, NULL, (void *)data);
 	      }
@@ -1960,7 +1950,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 
 
   if ( volumecount > 0)
-    XtFree( (char *)volumelist);
+    free( (char *)volumelist);
 
   if ( syntax_error)
     return LFU__SYNTAX;
@@ -1985,36 +1975,6 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 *************************************************************************/
 static void lfu_creadb_qb_yes( void *ctx, void *d)
 {
-#if 0
-  char *id = (char *) data;
-  pwr_tStatus sts;
-  static char	cmd[100];
-  $DESCRIPTOR(cmd_desc,cmd);
-  unsigned long cli_flag = CLI$M_NOWAIT;
-
-  sprintf( cmd, "@pwr_exe:wb_create_db \"%s\"", id);
-  sts = lib$spawn (&cmd_desc , 0 , 0 , &cli_flag );
-  if (EVEN(sts)) {
-    printf("** Error creating subprocess.\n");
-  }
-
-  XtFree( (char *) data);
-#endif
-#if 0
-  lfu_sCreaDb *data = (lfu_sCreaDb *)d;
-  pwr_tStatus sts;
-  ldh_tSession ses;
-
-  sts = ldh_CreateVolume( ldh_SessionToWB( data->ldhses), &ses, data->vid,
-			  data->name, data->cid);
-  if ( EVEN(sts)) {
-    MsgWindow::message( 'E', "Unable to create volume", msgw_ePop_Default);
-  }
-
-  ldh_CloseSession( ses);
-
-  free( (char *) data);
-#endif
   lfu_sCreaDb *data = (lfu_sCreaDb *)d;
   wb_session *sp = (wb_session *)data->ldhses;
     
@@ -2189,9 +2149,9 @@ pwr_tStatus lfu_ReadBootFile(
 
 	*volcount = 0;
 	*vollist = 
-	   (pwr_tVolumeId *) XtCalloc( LFU_MAX_NODE_VOLUMES, sizeof(**vollist));
+	   (pwr_tVolumeId *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**vollist));
 	*volnamelist = 
-	   (pwr_tString40 *) XtCalloc( LFU_MAX_NODE_VOLUMES, sizeof(**volnamelist));
+	   (pwr_tString40 *) calloc( LFU_MAX_NODE_VOLUMES, sizeof(**volnamelist));
 	plc_found = 0;
 	while ( fscanf( file, "%s %s", vol_name, vol_str) == 2) {
 	  sts = cdh_StringToVolumeId( vol_str, &volid);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.16 2006-05-22 08:20:36 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.17 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,14 +22,13 @@
 
 /* wb_wtt.h -- Simple navigator */
 
-//#if defined __cplusplus
-//extern "C" {
-//#endif
-
 #ifndef pwr_h
 # include "pwr.h"
 #endif
 
+#ifndef wb_utility_h
+# include "wb_utility.h"
+#endif
 
 #ifndef flow_std_h
 #include "flow_std.h"
@@ -89,6 +88,9 @@ typedef enum {
 	} wtt_eInputMode;
 
 
+class wb_build;
+class wb_session;
+
 class WttApplListElem {
   public:
     WttApplListElem( wb_eUtility al_type, void *al_ctx, pwr_tObjid al_objid,
@@ -115,11 +117,10 @@ class WttApplList {
     void set_editmode( int editmode, ldh_tSesContext ldhses);
 };
 
-class Wtt {
+class Wtt : public WUtility {
   public:
     Wtt( 
 	void	*wt_parent_ctx,
-	Widget 	wt_parent_wid,
 	char 	*wt_name,
 	char	*iconname,
 	ldh_tWBContext wt_wbctx,
@@ -127,29 +128,17 @@ class Wtt {
 	ldh_tVolume wt_volctx,
 	wnav_sStartMenu *root_menu,
 	pwr_tStatus *status);
-    Wtt() {};
+    Wtt() : WUtility(wb_eUtility_Wtt) {};
 
-    wb_eUtility	ctx_type;
     void 	*parent_ctx;
-    Widget	parent_wid;
     char 	name[80];
     wb_eType	wb_type;
     WttApplList	appl;
-    Widget	wnav_brow_widget;
-    Widget	wnavnode_brow_widget;
-    Widget	form_widget;
-    Widget	palette_widget;
-    Widget	toplevel;
     WNav	*wnav;
     WNav	*wnavnode;
     WNav	*focused_wnav;
     Pal		*palette;
     void	*root_item;
-    Widget	msg_label;
-    Widget	cmd_prompt;
-    Widget	cmd_input;
-    Widget	wnav_form;
-    Widget	palette_form;
     int		input_open;
     int		command_open;
     ldh_tWBContext wbctx;
@@ -158,46 +147,16 @@ class Wtt {
     ldh_tSesContext ldhses;
     int		editmode;
     int		twowindows;
-    Widget	india_widget;
-    Widget	india_label;
-    Widget	india_text;
-    Widget	confirm_widget;
     int		confirm_open;
     void		(*india_ok_cb)( Wtt *, char *);
     void		(*confirm_ok_cb)( Wtt *);
     void		(*confirm_no_cb)( Wtt *);
-    struct {
-      Widget	dia;
-      Widget	list;
-      void	*volumelist;
-      int	volumecount;
-    } boot; 
-    struct {
-      Widget	normal_syntax;
-      Widget	gms_syntax;
-      Widget	extern_syntax;
-      Widget	add_attribute;
-      Widget	add_type;
-      Widget	add_volume;
-    } copy_mode;
+    void	*boot_volumelist;
+    int		boot_volumecount;
     int		select_syntax;
     int		select_volume;
     int		select_attr;
     int		select_type;
-    Widget	options_form;
-    Widget	show_plant_w;
-    Widget	show_node_w;
-    Widget	show_class_w;
-    Widget	show_alias_w;
-    Widget	show_descrip_w;
-    Widget	show_objref_w;
-    Widget	show_objxref_w;
-    Widget	show_attrref_w;
-    Widget	show_attrxref_w;
-    Widget	build_force_w;
-    Widget	build_debug_w;
-    Widget	build_crossref_w;
-    Widget	build_manual_w;
     int		show_class;
     int		show_alias;
     int		show_descrip;
@@ -211,25 +170,7 @@ class Wtt {
     int		build_manual;
     int		wnav_mapped;
     int		wnavnode_mapped;
-    Widget	menu_save_w;
-    Widget	menu_revert_w;
-    Widget	menu_cut_w;
-    Widget	menu_copy_w;
-    Widget	menu_copykeep_w;
-    Widget	menu_paste_w;
-    Widget	menu_pasteinto_w;
-    Widget	menu_rename_w;
-    Widget	menu_utilities_w;
-    Widget	menu_openplc_w;
-    Widget	menu_buildobject_w;
-    Widget	menu_buildvolume_w;
-    Widget	menu_buildnode_w;
-    Widget	menu_distribute_w;
-    Widget	menu_change_value_w;
-    Widget	menu_edit_w;
-    Widget	menu_classeditor_w;
-    Widget	menu_updateclasses_w;
-    uted_ctx	utedctx;
+    WUted	*utedctx;
     WPkg	*wpkg;
     WNav	*input_wnav;
     brow_tObject input_node;
@@ -239,52 +180,152 @@ class Wtt {
     void	(*open_volume_cb)(void *ctx, wb_eType, char *, wow_eFileSelType);
     void	(*open_project_volume_cb)(void *ctx);
     int		(*time_to_exit_cb)(void *ctx);
-    int		set_focus_disabled;
-    XtIntervalId disfocus_timerid;
-    XtIntervalId selection_timerid;
-    int		avoid_deadlock;
-    XtIntervalId deadlock_timerid;
-    int		clock_cursor;
-    char	cmd_recall[30][160];
-    int		cmd_current_recall;
-    char	value_recall[30][160];
-    int		value_current_recall;
+    ldh_sMenuCall *mcp;
 
-    void menu_setup();
     int restore_settings();
     int save_settings();
     void set_editmode( int edit);
     int set_edit();
     int set_noedit( wtt_eNoEditMode save, wtt_eNoEditVolMode detach);
-    void set_twowindows( int two, int display_wnav, int display_wnavnode);
-    void set_prompt( char *prompt);
-    void open_change_value();
-    void close_change_value();
-    void open_change_name();
-    void update_options_form();
-    void set_options();
-    void message( char severity, char *message);
     int set_focus( void *component);
     int is_saved();
     int detach_volume();
-    void set_clock_cursor();
-    void reset_cursor();
-    void free_cursor();
     int get_select_first( pwr_sAttrRef *attrref, int *is_attr);
     void register_utility( void *ctx, wb_eUtility utility);
     void set_focus_default();
-    void pop();
     int find( pwr_tOid oid);
     int find_plc( pwr_tOid oid);
     char *script_filename();
+    int get_popup_menu_items( pwr_sAttrRef aref, pwr_tCid cid);
 
-    ~Wtt();
+    void activate_print();
+    void activate_collapse();
+    void activate_save();
+    void activate_revert();
+    void activate_syntax();
+    void activate_find();
+    void activate_findregex();
+    void activate_findnext();
+    void activate_copy();
+    void activate_cut();
+    void activate_paste();
+    void activate_pasteinto();
+    void activate_copykeep();
+    void activate_configure();
+    void activate_utilities();
+    void activate_openobject();
+    void activate_openvolobject();
+    void activate_openplc();
+    void activate_buildobject();
+    void activate_openvolume();
+    void activate_openbuffer();
+    void activate_confproject();
+    void activate_openpl();
+    void activate_opengvl();
+    void activate_openudb();
+    void activate_spreadsheet();
+    void activate_openge();
+    void activate_openclasseditor();
+    void activate_buildvolume();
+    void activate_buildnode();
+    void activate_distribute();
+    void activate_showcrossref();
+    void activate_updateclasses();
+    void activate_zoom_in();
+    void activate_zoom_out();
+    void activate_zoom_reset();
+    void activate_twowindows();
+    void activate_messages();
+    void activate_scriptproj();
+    void activate_scriptbase();
+    void activate_help();
+    void activate_help_project();
+    void activate_help_proview();
+
+    virtual void set_clock_cursor() {}
+    virtual void reset_cursor() {}
+    virtual void free_cursor() {}
+    virtual void set_window_char( int width, int height) {}
+    virtual void get_window_char( int *width, int *height) {}
+    virtual void menu_setup() {}
+    virtual void set_selection_owner() {}
+    virtual void set_palette_selection_owner() {}
+    virtual int create_popup_menu( pwr_tAttrRef attrref, int x, int y) {return 0;}
+    virtual int create_pal_popup_menu( pwr_tCid cid, int x, int y) {return 0;}
+    virtual void set_noedit_show() {}
+    virtual void set_edit_show() {}
+    virtual void set_twowindows( int two, int display_wnav, int display_wnavnode) {}
+    virtual void message( char severity, char *message) {}
+    virtual void set_prompt( char *prompt) {}
+    virtual void open_change_value() {}
+    virtual void close_change_value() {}
+    virtual void open_change_name() {}
+    virtual void watt_new( pwr_tAttrRef aref) {}
+    virtual void wda_new( pwr_tOid oid) {}
+    virtual void ge_new( char *graphname) {}
+    virtual void wcast_new( pwr_tAttrRef aref, pwr_tStatus *sts) {}
+    virtual wb_build *build_new() { return NULL;}
+    virtual void wpkg_new() {}
+    virtual int ute_new( char *title) {return 0;}
+    virtual void open_input_dialog( char *text, char *title,
+				    char *init_text,
+				    void (*ok_cb)( Wtt *, char *)) {}
+    virtual void open_confirm( char *text, char *title, 
+			       void (*ok_cb)( Wtt *), void (*no_cb)( Wtt *)) {}
+    virtual void open_boot_window() {}
+    virtual void update_options_form() {}
+    virtual void set_options() {}
+    virtual void pop() {}
+
+
+    static int format_selection( void *ctx, pwr_sAttrRef attrref, 
+				 char **value_return, int is_class, int is_attr,
+				 wnav_eSelectionFormat format);
+    static int start_wizard( Wtt *wtt);
+    static void set_twowindows_cb( void *wtt, int two, int display_w1,
+				   int display_w2);
+    static pwr_tStatus ldh_this_session_cb( void *ctx, ldh_sEvent *event);
+    static pwr_tStatus ldh_other_session_cb( void *ctx, ldh_sEvent *event);
+    static void open_vsel_cb( void *ctx, wb_eType type, char *filename, 
+			      wow_eFileSelType file_type);
+    static void set_window_char_cb( void *ctx, int width, int height);
+    static char *script_filename_cb( void *ctx);
+    static int traverse_focus( void *ctx, void *component);
+    static int get_global_select_cb( void *ctx, pwr_sAttrRef **sel_list,
+				     int **sel_is_attr, int *sel_cnt);
+    static int global_unselect_objid_cb( void *ctx, pwr_tObjid objid);
+    static int set_focus_cb( void *ctx, void *comp);
+    static void create_popup_menu_cb( void *wtt, pwr_tAttrRef aref,
+				      int x, int y);
+    static void create_pal_popup_menu_cb( void *wtt, pwr_tCid cid,
+				      int x, int y);
+    static void gbl_command_cb( void *ctx, char *cmd);
+    static void configure_cb( void *ctx, int edit);
+    static void findregex_ok( Wtt *wtt, char *search_str);
+    static void find_ok( Wtt *wtt, char *search_str);
+    static void file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
+    static void save_cb( void *ctx);
+    static void revert_ok( Wtt *wtt);
+    static void revert_cb( void *ctx, int confirm);
+    static int attach_volume_cb( void *ctx, pwr_tVolumeId volid, int pop);
+    static void detach_save_ok( Wtt *wtt);
+    static void detach_save_no( Wtt *wtt);
+    static void save_ok( Wtt *wtt);
+    static void save_no( Wtt *wtt);
+    static void close_ok( Wtt *wtt);
+    static void close_no( Wtt *wtt);
+    static void close_now_ok( Wtt *wtt);
+    static int detach_volume_cb( void *ctx);
+    static int get_palette_select_cb( void *ctx, pwr_tCid *classid);
+    static void message_cb( void *ctx, char severity, char *msg);
+    static void close( void *ctx);
+    static void change_value( void *ctx);
+    static int get_wbctx( void *ctx, ldh_tWBContext *wbctx);
+    static void wpkg_quit_cb( void *ctx);
+    static void uted_quit_cb( void *ctx);
+
+
+    virtual ~Wtt();
 };
 
-Widget wtt_create_popup_menu( Wtt *wtt, pwr_sAttrRef aref, pwr_tCid cid,
-			      void (*message_cb)(void *, char, char *));
-
-//#if defined __cplusplus
-//}
-//#endif
 #endif

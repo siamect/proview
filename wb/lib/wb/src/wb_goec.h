@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goec.h,v 1.3 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_goec.h,v 1.4 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,7 +27,7 @@
 
 int
 goec_con_draw(
-  gre_ctx       grectx,
+  WGre          *gre,
   vldh_t_con    con_object,
   int           create_flag,
   vldh_t_node   node
@@ -35,33 +35,33 @@ goec_con_draw(
 
 int
 goec_con_delete( 
-  gre_ctx      grectx,
+  WGre         *gre,
   vldh_t_con   con_object
 );
 
 int
 goec_con_delete_noredraw( 
-  gre_ctx      grectx,
+  WGre          *gre,
   vldh_t_con   con_object
 );
 
 int
 goec_con_sethighlight(
-  gre_ctx         grectx,
+  WGre            *gre,
   vldh_t_con      con_object,
   unsigned long   highlight_flag
 );
 
 int
 goec_con_gethighlight(
-  gre_ctx          grectx,
+  WGre             *gre,
   vldh_t_con       con_object,
   unsigned long   *highlight_flag
 );
 
 int
 goec_con_draw_ref( 
-  gre_ctx       grectx,
+  WGre          *gre,
   vldh_t_con    con_object,
   int           create_flag,
   vldh_t_node   node
@@ -69,31 +69,31 @@ goec_con_draw_ref(
 
 int
 goec_get_refnodetypeid(
-  gre_ctx          grectx,
+  WGre             *gre,
   unsigned long   *refnode_type_id
 );
 
 int
 goec_con_delete_ref( 
-  gre_ctx      grectx,
+  WGre         *gre,
   vldh_t_con   con_object
 );
 
 int
 goec_con_delete_ref_noredraw(
-  gre_ctx      grectx,
+  WGre         *gre,
   vldh_t_con   con_object
 );
 
 int
 goec_con_redraw_ref(
-  gre_ctx       grectx,
+  WGre          *gre,
   vldh_t_node   node
 );
 
 int
 goec_con_reconfig_ref(
-  gre_ctx       grectx,
+  WGre          *gre,
   vldh_t_node   node
 );
 

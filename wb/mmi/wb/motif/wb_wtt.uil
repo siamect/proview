@@ -1,0 +1,1888 @@
+! 
+!  Proview   $Id: wb_wtt.uil,v 1.1 2007-01-04 07:29:04 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module wb_wtt
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+value
+	k_palette_width		: 200;
+
+identifier
+	wtt_ctx;
+procedure
+	wtt_activate_exit(integer);
+	wtt_activate_collapse(integer);
+	wtt_activate_save(integer);
+	wtt_activate_revert(integer);
+	wtt_activate_syntax(integer);
+	wtt_activate_print(integer);
+	wtt_activate_find(integer);
+	wtt_activate_findregex(integer);
+	wtt_activate_findnext(integer);
+	wtt_activate_cut(integer);
+	wtt_activate_copy(integer);
+	wtt_activate_paste(integer);
+	wtt_activate_pasteinto(integer);
+	wtt_activate_copykeep(integer);
+	wtt_activate_rename(integer);
+	wtt_activate_configure(integer);
+	wtt_activate_utilities(integer);
+	wtt_activate_openobject(integer);
+	wtt_activate_openvolobject(integer);
+	wtt_activate_openvolume(integer);
+	wtt_activate_openbuffer(integer);
+	wtt_activate_openfile_dbs(integer);
+	wtt_activate_openfile_wbl(integer);
+	wtt_activate_openpl(integer);
+	wtt_activate_opengvl(integer);
+	wtt_activate_openudb(integer);
+	wtt_activate_spreadsheet(integer);
+	wtt_activate_openge(integer);
+	wtt_activate_openclasseditor(integer);
+	wtt_activate_buildobject(integer);
+	wtt_activate_buildvolume(integer);
+	wtt_activate_buildnode(integer);
+	wtt_activate_distribute(integer);
+	wtt_activate_twowindows(integer);
+	wtt_activate_messages(integer);
+	wtt_activate_openplc(integer);
+	wtt_activate_showcrossref(integer);
+	wtt_activate_updateclasses(integer);
+	wtt_activate_change_value(integer);
+	wtt_activate_command(integer);
+	wtt_activate_zoom_in(integer);
+	wtt_activate_zoom_out(integer);
+	wtt_activate_zoom_reset(integer);
+	wtt_activate_view(integer);
+	wtt_activate_savesettings(integer);
+	wtt_activate_restoresettings(integer);
+	wtt_activate_scriptproj(integer);
+	wtt_activate_scriptbase(integer);
+	wtt_activate_help(integer);
+	wtt_activate_help_project(integer);
+	wtt_activate_help_proview(integer);
+	wtt_create_menubutton(integer);
+	wtt_create_msg_label(integer);
+	wtt_create_cmd_prompt(integer);
+	wtt_create_cmd_input(integer);
+	wtt_create_palette_form(integer);
+	wtt_create_wnav_form(integer);
+	wtt_create_india_label(integer); 
+	wtt_create_india_text(integer); 
+	wtt_activate_india_ok(integer); 
+	wtt_activate_india_cancel(integer); 
+	wtt_activate_confirm_ok(integer); 
+	wtt_activate_confirm_no(integer); 
+	wtt_activate_confirm_cancel(integer); 
+	wtt_activate_selmode(integer);
+	wtt_create_selmode(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  wtt_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	wtt_menu;
+     XmForm     form;
+  };
+};
+
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow wnav_form;
+     XmPanedWindow palette_form;
+     XmLabel	msg_label;
+     XmText	cmd_input;
+     XmLabel	cmd_prompt;
+  };
+};
+
+object wtt_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton edit_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton options_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open Volume");
+            XmNmnemonic = keysym('O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openvolume(wtt_ctx);
+          };
+	};
+        XmCascadeButton 
+        {
+          arguments 
+          {
+	    XmNlabelString = compound_string("Open");
+	    XmNmnemonic         = keysym("F");
+            XmNfontList	   = menu_font;
+          };
+          controls 
+          {
+	    XmPulldownMenu 
+            {
+	      arguments 
+              {
+	      };
+	      controls 
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Dbs File...");
+                    XmNmnemonic = keysym('D');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openfile_dbs(wtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Wbl File...");
+                    XmNmnemonic = keysym('W');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openfile_wbl(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Buffer...");
+                    XmNmnemonic = keysym('b');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openbuffer(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("ProjectList");
+                    XmNmnemonic = keysym('g');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openpl(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("GlobalVolumeList");
+                    XmNmnemonic = keysym('r');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_opengvl(wtt_ctx);
+                  };
+	        };
+     	        XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("UserDatabase");
+                    XmNmnemonic = keysym('u');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_openudb(wtt_ctx);
+                  };
+	        };
+	      };
+	    };
+	  };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Volume Attributes...");
+            XmNmnemonic = keysym('V');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openvolobject(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Print");
+            XmNmnemonic = keysym('P');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_print(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Save");
+            XmNmnemonic         = keysym('S');
+	    XmNaccelerator = "Ctrl<Key>S";
+	    XmNacceleratorText = compound_string('Ctrl+S');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 1;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_save(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Revert");
+            XmNmnemonic = keysym('R');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 2;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_revert(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Syntax");
+            XmNmnemonic = keysym('y');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_syntax(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_exit(wtt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object edit_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("Edit");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Edit mode");
+            XmNmnemonic = keysym('E');
+	    XmNaccelerator = "Ctrl<Key>E";
+	    XmNacceleratorText = compound_string('Ctrl+E');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 15;
+	  };
+	  callbacks
+          {
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+            XmNactivateCallback = procedure wtt_activate_configure(wtt_ctx);
+          };
+	};
+        XmCascadeButton 
+        {
+          arguments 
+          {
+	    XmNlabelString = compound_string("Search");
+	    XmNmnemonic         = keysym("S");
+            XmNfontList	   = menu_font;
+          };
+          controls 
+          {
+	    XmPulldownMenu 
+            {
+	      arguments 
+              {
+	      };
+	      controls 
+              {
+	        XmPushButton 
+                {
+	          arguments 
+                  {
+		    XmNlabelString = compound_string("Find Object");
+		    XmNmnemonic         = keysym("F");
+	            XmNaccelerator = "Ctrl<Key>F";
+	            XmNacceleratorText = compound_string('Ctrl+F');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNactivateCallback = procedure wtt_activate_find(wtt_ctx);
+	          };
+	        };
+	        XmPushButton 
+                {
+	          arguments 
+                  {
+		    XmNlabelString = compound_string("Find Regular expression");
+		    XmNmnemonic         = keysym("i");
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNactivateCallback = procedure wtt_activate_findregex(wtt_ctx);
+	          };
+	        };
+	        XmPushButton 
+                {
+	          arguments 
+                  {
+		    XmNlabelString = compound_string("Find Next");
+		    XmNmnemonic         = keysym("N");
+	            XmNaccelerator = "Shift Ctrl<Key>F";
+	            XmNacceleratorText = compound_string('Ctrl+Shift+F');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNactivateCallback = procedure wtt_activate_findnext(wtt_ctx);
+	          };
+	        };
+	      };
+	    };
+          };
+        };
+        XmCascadeButton 
+        {
+          arguments 
+          { 
+	    XmNlabelString = compound_string("CopyMode");	
+            XmNmnemonic         = keysym("C");
+            XmNfontList	   = menu_font;
+          };
+          controls 
+          {    
+            XmPulldownMenu 
+            {
+	      arguments 
+              {    
+	        XmNorientation = XmVERTICAL;	
+!	        XmNradioBehavior = true;
+!	        XmNradioAlwaysOne = true;
+	      };
+	      controls 
+              {
+	        normalSyntax : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("Normal Syntax"); 
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  {	
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx);
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	        gmsSyntax : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("GMS Syntax"); 
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx); 
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	        externSyntax : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("Extern Syntax"); 
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx); 
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	        XmSeparator
+	        {
+	        };
+	        addVolume : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("Add Volume"); 
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx);
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	        addAttribute : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("Add Attribute"); 
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx); 
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	        addType : XmToggleButton 
+                {
+	          arguments 
+                  { 
+		    XmNlabelString = compound_string("Add Type");
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks 
+                  { 
+		    XmNvalueChangedCallback = procedure wtt_activate_selmode(wtt_ctx); 
+		    MrmNcreateCallback = procedure wtt_create_selmode(wtt_ctx);
+	          };
+	        };
+	      };
+	    };
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = compound_string("Collapse");
+            XmNmnemonic = keysym('l');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_collapse(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Cut");
+            XmNmnemonic = keysym('u');
+	    XmNaccelerator = "Ctrl<Key>X";
+	    XmNacceleratorText = compound_string('Ctrl+X');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 3;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_cut(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>C";
+	    XmNacceleratorText = compound_string('Ctrl+C');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 11;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_copy(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy KeepReferences");
+            XmNmnemonic = keysym('K');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 17;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_copykeep(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Paste");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 12;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_paste(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Paste Into");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Shift Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+Shift+V');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 14;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_pasteinto(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Rename");
+            XmNmnemonic = keysym('R');
+	    XmNaccelerator = "Ctrl<Key>N";
+	    XmNacceleratorText = compound_string('Ctrl+N');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 4;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_rename(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Build Node");
+            XmNmnemonic = keysym('N');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 8;
+	    XmNaccelerator = "Shift Ctrl<Key>B";
+	    XmNacceleratorText = compound_string('Ctrl+Shift+B');
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildnode(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+        };
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Build Volume");
+            XmNmnemonic = keysym('u');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 7;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildvolume(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+	XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Build Object");
+            XmNmnemonic = keysym('b');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 13;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_buildobject(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Utilities...");
+            XmNmnemonic = keysym('U');
+	    XmNaccelerator = "Ctrl<Key>U";
+	    XmNacceleratorText = compound_string('Ctrl+U');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 5;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_utilities(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Spreadsheet...");
+            XmNmnemonic = keysym('S');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_spreadsheet(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Distribute...");
+            XmNmnemonic = keysym('D');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 9;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_distribute(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open Object...");
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>A";
+	    XmNacceleratorText = compound_string('Ctrl+A');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openobject(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open Program");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>L";
+	    XmNacceleratorText = compound_string('Ctrl+L');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 6;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openplc(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open Ge...");
+            XmNmnemonic = keysym('G');
+	    XmNaccelerator = "Ctrl<Key>K";
+	    XmNacceleratorText = compound_string('Ctrl+K');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openge(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Open ClassEditor...");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 16;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_openclasseditor(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Update Classes");
+            XmNmnemonic = keysym('p');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 18;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_updateclasses(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Show Crossreferences");
+            XmNmnemonic = keysym('R');
+	    XmNaccelerator = "Ctrl<Key>R";
+	    XmNacceleratorText = compound_string('Ctrl+R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_showcrossref(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Change value");
+            XmNmnemonic = keysym('H');
+	    XmNaccelerator = "Ctrl<Key>Q";
+	    XmNacceleratorText = compound_string('Ctrl+Q');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 10;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_change_value(wtt_ctx);
+	    MrmNcreateCallback = procedure wtt_create_menubutton(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Command");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>B";
+	    XmNacceleratorText = compound_string('Ctrl+B');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_command(wtt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("View");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom in");
+            XmNmnemonic = keysym('i');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_zoom_in(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom out");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_zoom_out(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom reset");
+            XmNmnemonic = keysym('r');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_zoom_reset(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Two windows");
+            XmNmnemonic = keysym('w');
+	    XmNaccelerator = "Ctrl<Key>W";
+	    XmNacceleratorText = compound_string('Ctrl+W');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_twowindows(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Messages");
+            XmNmnemonic = keysym('M');
+	    !XmNaccelerator = "Ctrl<Key>W";
+	    !XmNacceleratorText = compound_string('Ctrl+W');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_messages(wtt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object options_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Options");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Settings...");
+            XmNmnemonic = keysym('S');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_view(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Save Settings");
+            XmNmnemonic = keysym('a');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_savesettings(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Restore Settings");
+            XmNmnemonic = keysym('R');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wtt_activate_restoresettings(wtt_ctx);
+          };
+	};
+        XmCascadeButton 
+        {
+          arguments 
+          { 
+	    XmNlabelString = compound_string("Script");	
+            XmNmnemonic         = keysym("c");
+            XmNfontList	   = menu_font;
+          };
+          controls 
+          {    
+            XmPulldownMenu 
+            {
+	      arguments 
+              {    
+	        XmNorientation = XmVERTICAL;	
+	      };
+	      controls 
+              {
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Project...");
+                    XmNmnemonic = keysym('P');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_scriptproj(wtt_ctx);
+                  };
+	        };
+                XmPushButton
+                {
+                  arguments
+                  {
+  	            XmNlabelString = compound_string("Base...");
+                    XmNmnemonic = keysym('P');
+                    XmNfontList	   = menu_font;
+	          };
+	          callbacks
+                  {
+                    XmNactivateCallback = procedure wtt_activate_scriptbase(wtt_ctx);
+                  };
+	        };
+	      };
+	    };
+          };
+        };
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Overview");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wtt_activate_help(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Project");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wtt_activate_help_project(wtt_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("About Proview");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wtt_activate_help_proview(wtt_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object palette_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNwidth 			= k_palette_width;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wtt_create_palette_form( wtt_ctx);
+   };
+};
+
+object wnav_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNleftWidget        	= XmPanedWindow palette_form;
+!     XmNwidth			= 300;
+     XmNtraversalOn		= false;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wtt_create_wnav_form( wtt_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString 		= "";
+     XmNheight			= 20;
+     XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wtt_create_msg_label( wtt_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow wnav_form;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString 		= "";
+      XmNwidth			= 50;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wtt_create_cmd_prompt ( wtt_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNbottomAttachment    	= XmATTACH_FORM;
+      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow wnav_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wtt_create_cmd_input( wtt_ctx);
+   };
+};
+
+!
+!-----------------------------------------------------------------
+! 
+! Input Dialog box
+!
+!________________________________________________________________
+object   input_dialog : XmFormDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+     XmNwidth = 400;
+     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Find";
+     XmNdefaultButton = india_ok;
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+     XmNtextFontList	   	= menu_font;
+  };
+  controls
+  {
+     XmLabel	    india_label;
+     XmTextField    india_text;
+     XmPushButton   india_ok;
+     XmPushButton   india_cancel;
+  };
+}; 
+
+object india_label : XmLabel
+{
+  arguments
+  {
+     XmNx = 10;
+     XmNy = 10;
+     XmNlabelString = "";
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure wtt_create_india_label( wtt_ctx); 
+  };
+};
+
+object india_text : XmTextField
+{
+  arguments
+  {
+     XmNx = 150;
+     XmNy = 10;
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure wtt_create_india_text( wtt_ctx); 
+  };
+};
+
+object india_ok : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 20;
+     XmNy = 100;
+     XmNlabelString = "OK";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure wtt_activate_india_ok( wtt_ctx); 
+  };
+};
+
+object india_cancel : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 280;
+     XmNy = 100;
+     XmNlabelString = "Cancel";
+  };
+  callbacks
+  { 
+     XmNactivateCallback = procedure wtt_activate_india_cancel( wtt_ctx); 
+  };
+};
+
+
+!
+! Confirm dialog
+object   confirm_dialog : XmQuestionDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+!     XmNwidth = 400;
+!     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Confirm";
+     XmNokLabelString = "Yes";
+     XmNcancelLabelString = "No";
+     XmNhelpLabelString = "Cancel";
+     XmNbuttonFontList	   	= menu_font;
+     XmNlabelFontList	   	= menu_font;
+  };
+  callbacks
+  { 
+     XmNokCallback = procedure wtt_activate_confirm_ok( wtt_ctx); 
+     XmNcancelCallback = procedure wtt_activate_confirm_no( wtt_ctx); 
+     XmNhelpCallback = procedure wtt_activate_confirm_cancel( wtt_ctx);
+  };
+}; 
+
+
+!
+!  Options Dialog
+!
+
+value
+	buttonWidth :		70; 
+	buttonBottomOffset :	15;      
+	buttonLeftOffset :	30;      
+	cancelLeftPosition :	45; 
+	titleTopOffset :	20;	
+	titleLeftOffset :	30;	
+	titleTitleLeftOffset : 250;	
+	titleToggleTopOffset :  15;  
+	toggleToggleTopOffset :	 2;
+
+
+procedure
+    wtt_options_form_cr(any);
+    wtt_options_entry_tog_cr(any);
+    wtt_options_hier_tog_cr(any);
+
+    wtt_options_act_but_cb(any);
+
+
+
+object optionsForm : XmFormDialog {
+    arguments {
+	XmNdialogTitle = 'View Options';
+        XmNwidth = 850;
+        XmNheight = 385;
+        XmNautoUnmanage = false;
+	XmNnoResize = true;
+        XmNbuttonFontList	= menu_font;
+        XmNlabelFontList	= menu_font;
+        XmNtextFontList	   	= menu_font;
+    };
+    controls {
+        XmLabel		hierarchyTitle;
+        XmToggleButton  plantConf;
+        XmToggleButton  nodeConf;
+
+        XmLabel		entryTitle;
+        XmToggleButton  class;
+        XmToggleButton  alias;
+        XmToggleButton  description;
+        XmToggleButton  objref;
+        XmToggleButton  objxref;
+        XmToggleButton  attrref;
+        XmToggleButton  attrxref;
+
+        XmLabel		buildTitle;
+        XmToggleButton  buildForce;
+        XmToggleButton  buildDebug;
+        XmToggleButton  buildCrossref;
+        XmToggleButton  buildManual;
+
+        XmPushButton	okPb;
+        XmPushButton	applyPb;
+        XmPushButton	cancelPb;
+    };
+    callbacks {
+     MrmNcreateCallback = procedure wtt_options_form_cr(wtt_ctx) ;
+    };
+};
+
+
+
+
+object hierarchyTitle : XmLabel {
+    arguments {
+	XmNtopAttachment = XmATTACH_FORM;
+	XmNtopOffset = titleTopOffset;
+        XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = titleLeftOffset;
+        XmNlabelString = 'Hierarchy';
+    };
+    controls {
+    };
+    callbacks {
+    };
+};
+
+
+object plantConf : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Plant Configuration';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmLabel hierarchyTitle;
+	XmNtopOffset = titleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel hierarchyTitle;
+	XmNuserData = 1;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_hier_tog_cr(wtt_ctx);
+    };
+};
+
+object nodeConf : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Node Configuration';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton plantConf;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel hierarchyTitle;
+	XmNuserData = 2;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_hier_tog_cr(wtt_ctx);
+    };
+};
+
+
+object entryTitle : XmLabel {
+    arguments {
+        XmNlabelString = 'Entry';
+	XmNtopAttachment = XmATTACH_FORM;
+	XmNtopOffset = titleTopOffset;
+        XmNleftAttachment = XmATTACH_WIDGET;
+	XmNleftWidget = XmLabel hierarchyTitle;
+	XmNleftOffset = titleTitleLeftOffset;
+    };
+    controls {
+    };
+    callbacks {
+    };
+};
+
+
+object class : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Class';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmLabel entryTitle;
+	XmNtopOffset = titleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 1;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+
+object alias : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Alias';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton class;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 2;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+
+object description : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Description';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton alias;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 3;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+
+object objref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Object Reference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton description;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 4;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object objxref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Object Cross Reference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton objref;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 5;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object attrref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Attribute Reference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton objxref;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 6;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object attrxref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Attribute Cross Reference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton attrref;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNuserData = 7;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildTitle : XmLabel {
+    arguments {
+        XmNlabelString = 'Build';
+	XmNtopAttachment = XmATTACH_FORM;
+	XmNtopOffset = titleTopOffset;
+        XmNleftAttachment = XmATTACH_WIDGET;
+	XmNleftWidget = XmLabel entryTitle;
+	XmNleftOffset = titleTitleLeftOffset;
+    };
+    controls {
+    };
+    callbacks {
+    };
+};
+
+
+object buildForce : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Force';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmLabel buildTitle;
+	XmNtopOffset = titleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 8;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildDebug : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Debug';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildForce;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 9;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildCrossref : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Crossreference';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildDebug;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 10;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+object buildManual : XmToggleButton {
+    arguments {
+        XmNlabelString = 'Manual';
+	XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmToggleButton buildCrossref;
+	XmNtopOffset = toggleToggleTopOffset;
+        XmNleftAttachment = XmATTACH_OPPOSITE_WIDGET;
+	XmNleftWidget = XmLabel buildTitle;
+	XmNuserData = 11;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_options_entry_tog_cr(wtt_ctx);
+    };
+};
+
+
+!----------------------------
+object	okPb : XmPushButton {
+	
+    arguments {	
+	XmNlabelString = 'OK';
+	XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = buttonLeftOffset; 
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = buttonBottomOffset;
+	XmNwidth = buttonWidth;
+	XmNuserData = 1;
+	};
+    callbacks {
+	XmNactivateCallback = procedure wtt_options_act_but_cb(wtt_ctx); 
+	};
+};
+
+
+object	applyPb  : XmPushButton {
+	
+    arguments {
+	XmNlabelString = 'Apply';
+	XmNleftAttachment = XmATTACH_POSITION;
+	XmNleftPosition = cancelLeftPosition;
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = buttonBottomOffset;
+	XmNwidth = buttonWidth;
+	XmNuserData = 2;
+	};
+    callbacks {
+	XmNactivateCallback = procedure wtt_options_act_but_cb(wtt_ctx); 
+	};
+};
+
+object	cancelPb   : XmPushButton {
+	
+    arguments {
+	XmNlabelString = 'Cancel';
+	XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = buttonLeftOffset;
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = buttonBottomOffset;
+	XmNwidth = buttonWidth;
+	XmNuserData = 3;
+	};
+    callbacks {
+	XmNactivateCallback = procedure wtt_options_act_but_cb(wtt_ctx); 
+	};
+};
+
+!-----------------------------------------------------------------
+! 
+! Create Boot Files window
+!
+!________________________________________________________________
+procedure
+    wtt_boot_ok_cb(any);
+    wtt_boot_cancel_cb(any);
+    wtt_boot_destroy_cb(any);
+    wtt_boot_list_cr(any);
+
+
+
+
+object bootFilesWindow : XmFormDialog {
+    arguments {
+	XmNwidth = 230;
+	XmNheight = 260;
+        XmNdialogTitle = 'Build Node';
+        XmNdefaultButton = XmPushButton bootOk;
+        XmNcancelButton = XmPushButton bootCancel;
+        XmNbuttonFontList	   	= menu_font;
+        XmNlabelFontList	   	= menu_font;
+        XmNtextFontList	   	= menu_font;
+    };
+    controls {
+	XmPushButton bootOk;
+        XmPushButton bootCancel;
+        XmScrolledList bootNodeList;
+    };
+    callbacks {
+	XmNdestroyCallback = procedure wtt_boot_destroy_cb(wtt_ctx);
+    };
+};
+
+
+
+object bootOk : XmPushButton {
+    arguments {
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = 20;
+        XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 20;
+	XmNwidth = 80;
+        XmNlabelString = 'OK';
+    };
+    controls {
+    };
+    callbacks {
+	XmNactivateCallback = procedure wtt_boot_ok_cb(wtt_ctx); 
+    };
+};
+
+
+object bootCancel : XmPushButton {
+    arguments {
+	XmNwidth = 80;
+        XmNlabelString = 'Cancel';
+	XmNbottomAttachment = XmATTACH_FORM;
+	XmNbottomOffset = 20;
+        XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 20;
+    };
+    callbacks {
+	XmNactivateCallback = procedure wtt_boot_cancel_cb(wtt_ctx); 
+    };
+};
+
+object bootNodeList : XmScrolledList {
+    arguments {
+	XmNbottomAttachment = XmATTACH_WIDGET;
+	XmNbottomWidget = XmPushButton bootOk;
+	XmNbottomOffset = 15;
+        XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 5;
+        XmNtopAttachment = XmATTACH_FORM;
+	XmNtopOffset = 5;
+        XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 5;
+	XmNselectionPolicy = XmEXTENDED_SELECT;
+        XmNfontList	   	= menu_font;
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure wtt_boot_list_cr(wtt_ctx);	
+    };
+};
+
+
+end module;
+

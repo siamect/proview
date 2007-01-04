@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_attrref.cpp,v 1.4 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_c_attrref.cpp,v 1.5 2007-01-04 07:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,12 +24,12 @@
 #include "wb_pwrs.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_dutl.h"
 #include "wb_pwrs_msg.h"
 #include "co_dcli.h"
 #include "co_cdh.h"
 #include "co_msg.h"
 #include "wb_session.h"
+#include "wb_wtt.h"
 
 
 /*----------------------------------------------------------------------------*\
@@ -161,27 +161,26 @@ static pwr_tStatus Connect (
 			     sizeof(aref));
     }
   }
-  if ( ip->message_cb) {
-    char msg[500];
-    
-    if ( ODD(sts)) {
-      pwr_tAName name;
-      char *name_p;
-      int len;
 
-      sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
+    
+  char msg[500];
+  if ( ODD(sts)) {
+    pwr_tAName name;
+    char *name_p;
+    int len;
+
+    sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
 			     &name_p, &len);
-      if ( EVEN(sts))
-	cdh_ObjidToString( name, aref.Objid, 1);
-      else
-	strcpy( name, name_p);
-      sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
-      (ip->message_cb)( ip->EditorContext, 'I', msg);
-    }
-    else {
-      msg_GetMsg( sts, msg, sizeof(msg));
-      (ip->message_cb)( ip->EditorContext, 'E', msg);
-    }
+    if ( EVEN(sts))
+      cdh_ObjidToString( name, aref.Objid, 1);
+    else
+      strcpy( name, name_p);
+    sprintf( msg, "%s connected to:   %s", mb.MethodArguments[0], name);
+    ip->wtt->message( 'I', msg);
+  }
+  else {
+    msg_GetMsg( sts, msg, sizeof(msg));
+    ip->wtt->message( 'E', msg);
   }
   return PWRS__SUCCESS;
 }
@@ -342,27 +341,25 @@ static pwr_tStatus IoConnect (
 			       sizeof(aref));
   }
 
-  if ( ip->message_cb) {
-    char msg[500];
     
-    if ( ODD(sts)) {
-      pwr_tAName name;
-      char *name_p;
-      int len;
+  char msg[500];
+  if ( ODD(sts)) {
+    pwr_tAName name;
+    char *name_p;
+    int len;
 
-      sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
+    sts = ldh_AttrRefToName( ip->PointedSession, &aref, ldh_eName_Hierarchy, 
 			     &name_p, &len);
-      if ( EVEN(sts))
-	cdh_ObjidToString( name, aref.Objid, 1);
-      else
-	strcpy( name, name_p);
-      sprintf( msg, "Io connected to:   %s", name);
-      (ip->message_cb)( ip->EditorContext, 'I', msg);
-    }
-    else {
-      msg_GetMsg( sts, msg, sizeof(msg));
-      (ip->message_cb)( ip->EditorContext, 'E', msg);
-    }
+    if ( EVEN(sts))
+      cdh_ObjidToString( name, aref.Objid, 1);
+    else
+      strcpy( name, name_p);
+    sprintf( msg, "Io connected to:   %s", name);
+    ip->wtt->message( 'I', msg);
+  }
+  else {
+    msg_GetMsg( sts, msg, sizeof(msg));
+    ip->wtt->message( 'E', msg);
   }
   return PWRS__SUCCESS;
 }

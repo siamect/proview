@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.h,v 1.14 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_wnav.h,v 1.15 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,12 +22,12 @@
 
 /* wtt_wnav.h -- Simple navigator */
 
-//#if defined __cplusplus
-//extern "C" {
-//#endif
-
 #ifndef pwr_h
 //# include "pwr.h"
+#endif
+
+#ifndef wb_utility_h
+# include "wb_utility.h"
 #endif
 
 #ifndef co_regex_h
@@ -65,6 +65,7 @@
 #ifndef wb_h
 #include "wb.h"
 #endif
+
 
 #define wnav_cVersion	"X3.3a"
 #define wnav_cScriptDescKey	"!** Description"
@@ -136,6 +137,10 @@ typedef enum {
 	applist_eType_Attr
 } applist_eType;
 
+class Ge;
+class WGe;
+class wb_utl;
+
 class ApplListElem {
   public:
     ApplListElem( applist_eType al_type, void *al_ctx, pwr_tObjid al_objid,
@@ -199,39 +204,31 @@ class WNavGbl {
     int			symbolfile_exec( void *wnav);
 };
 
-class WNav {
+class WNav : public WUtility{
   public:
     WNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	char *xn_layout,
-	Widget *w,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
 	wnav_eWindowType xn_type,
 	pwr_tStatus *status);
-    ~WNav();
+    virtual ~WNav();
 
-    wb_eUtility		ctx_type;
     WNavGbl		gbl;
     ApplList		appl;
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
     wnav_eWindowType	window_type;
     ldh_tSesContext	ldhses;
     ldh_tWBContext	wbctx;
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     WNavBrow		*brow;
     WNavBrow		*collect_brow;
     WNavBrow		*brow_stack[WNAV_BROW_MAX];
     int			brow_cnt;
     pwr_tObjid		root_objid;
     void		*root_item;
-    XtIntervalId	trace_timerid;
     int			trace_started;
     void 		(*message_cb)( void *, char, char *);
     void 		(*close_cb)( void *);
@@ -250,12 +247,12 @@ class WNav {
     void 		(*save_cb)( void *);
     void 		(*revert_cb)( void *, int confirm);
     char 		*(*script_filename_cb)( void *);
-    pwr_tBoolean 	(*format_selection_cb)( void *, pwr_sAttrRef, XtPointer *,
-			   unsigned long *, pwr_tBoolean, pwr_tBoolean, wnav_eSelectionFormat);
+    int 		(*format_selection_cb)( void *, pwr_sAttrRef, char **,
+						int, int, wnav_eSelectionFormat);
     int 		(*get_global_select_cb)( void *, pwr_sAttrRef **, 
 						 int **, int *);
     int 		(*global_unselect_objid_cb)( void *, pwr_tObjid objid);
-    void 		(*set_window_char_cb)( void *, short, short);
+    void 		(*set_window_char_cb)( void *, int, int);
     void                (*open_vsel_cb)( void *, wb_eType, char *, wow_eFileSelType);
     int			ccm_func_registred;
     wnav_sMenu 		*menu_tree;
@@ -287,11 +284,38 @@ class WNav {
     int			dialog_y;
     PalFileMenu         *menu;
     int                 init_help;
-    int		        avoid_deadlock;
-    XtIntervalId        deadlock_timerid;
-    Atom		graph_atom;
-    Atom		objid_atom;
-    Atom		attrref_atom;
+    CoWow		*wow;
+
+    virtual void pop() {}
+    virtual void set_inputfocus( int focus) {}
+    virtual void trace_start() {}
+    virtual void set_selection_owner() {}
+    virtual Ge *ge_new( char *graph_name) { return 0;}
+    virtual WGe *wge_new( char *name, char *filename, char *object_name,
+			  int modal) { return 0;}
+    virtual void create_popup_menu( pwr_tAttrRef aref, int x, int y) {}
+    virtual int get_selection( char *str, int len) {return 0;}
+    virtual int open_foe( char *name, pwr_tOid plcpgm, void **foectx, int map_window,
+			  ldh_eAccess access, pwr_tOid oid) {return 0;}
+    virtual void wda_new( pwr_tOid oid, pwr_tCid cid, char *attribute,
+			  int edit_mode, int advuser, int display_objectname) {}
+    virtual void message_dialog( char *title, char *text) {}
+    virtual int confirm_dialog( char *title, char *text, int display_cancel,
+				 int *cancel) {return 0;}
+    virtual int continue_dialog( char *title, char *text) {return 0;}
+    virtual int prompt_dialog( char *title, char *text, char **value) {return 0;}
+    virtual void wge_subwindow_loop( WGe *wge) {}
+    virtual void wge_modal_loop( WGe *wge) {}
+    virtual bool has_window() {return false;}
+    virtual wb_utl *utl_new() {return 0;}
+
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
+    static int init_brow_cb( BrowCtx *ctx, void *client_data);
+    static int trace_connect_bc( brow_tObject object, char *name, char *attr, 
+				 flow_eTraceType type, void **p);
+    static int trace_disconnect_bc( brow_tObject object);
+    static int trace_scan_bc( brow_tObject object, void *p);
 
     int create_object_item( pwr_tObjid objid, 
 		brow_tNode dest, flow_eDest dest_code, void **item,
@@ -317,7 +341,6 @@ class WNav {
     int is_empty();
     int find( pwr_tObjid objid, void **item);
     int display_object( pwr_tObjid objid);
-    void set_inputfocus( int focus);
     int setup();
     void force_trace_scan();
     void menu_tree_build( wnav_sStartMenu *root);
@@ -331,7 +354,6 @@ class WNav {
     int menu_tree_insert( char *title, int item_type, char *command,
 		char *destination, int dest_code, wnav_sMenu **menu_item);
     int menu_tree_delete( char *name);
-    void pop();
     int open_plc();
     int open_plc( pwr_tOid oid);
     int is_editmode() { return editmode;};
@@ -342,7 +364,6 @@ class WNav {
     void ldh_refresh( pwr_tObjid new_open);
     void refresh();
     void collapse();
-    void set_selection_owner();
     void set_options( int sh_class, int sh_alias, int sh_descrip, 
 	int sh_objref, int sh_objxref, int sh_attrref, int sh_attrxref,
         int bu_force, int bu_debug, int bu_crossref, int bu_manual);
@@ -374,11 +395,6 @@ class WNav {
     int search_object( pwr_tObjid objid, char *search_str, 
 	pwr_tObjid *found_objid, int next);
     int search_next();
-    void message_dialog( char *title, char *text);
-    int confirm_dialog( char *title, char *text, int display_cancel,
-		int *cancel);
-    int continue_dialog( char *title, char *text);
-    int prompt_dialog( char *title, char *text, char **value);
     int show_file( char	*filename, char *intitle, int hide_dir);
     void select_object( brow_tObject object);
 
@@ -402,7 +418,4 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id,
 	void *value_ptr, char **buff, int *len);
 char *wnav_get_message( int sts);
 
-//#if defined __cplusplus
-//}
-//#endif
 #endif

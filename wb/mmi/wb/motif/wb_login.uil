@@ -1,0 +1,202 @@
+! 
+!  Proview   $Id: wb_login.uil,v 1.1 2007-01-04 07:29:04 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module login
+	version = 'v1.0'
+	names = case_sensitive
+ 
+identifier
+	login_ctx;
+
+procedure
+        login_create_adb( integer);
+	login_create_label( integer);
+	login_create_usernamevalue( integer);
+	login_create_passwordvalue( integer);
+	login_valchanged_usernamevalue( integer);
+	login_valchanged_passwordvalue( integer);
+	login_activate_ok( integer);
+	login_activate_cancel( integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+object login_window : XmMainWindow
+{  
+   arguments
+   {
+     XmNwidth = 0;
+     XmNheight = 0;
+   };  
+   controls
+   {
+     XmForm  login_adb;
+
+   }; !Controls
+
+   callbacks
+   {
+   };
+};
+
+object login_adb : XmForm
+{
+  arguments
+  {
+    XmNwidth = 400;
+    XmNheight = 250;
+    XmNresizePolicy = XmRESIZE_NONE;
+    XmNinitialFocus = XmText usernamevalue;
+  };
+   controls
+   {
+     XmLabel	     	usernamelabel;
+     XmLabel	     	passwordlabel;
+     XmLabel	     	login_label;
+     XmText		usernamevalue;
+     XmText		passwordvalue;
+     XmPushButton	ok;
+     XmPushButton	cancel;
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure login_create_adb ( login_ctx) ;
+   };
+};
+
+object login_label : XmLabel 
+{
+   arguments
+   {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNmarginLeft	        = 10;
+      XmNalignment	 		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure login_create_label ( login_ctx) ;
+   };
+};
+
+object ok : XmPushButton
+{
+	arguments
+	{
+		XmNx = 80;
+		XmNy = 150;
+	        XmNwidth = 65;
+		XmNheight = 30;
+		XmNlabelString = compound_string("OK");
+	        XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  XmNactivateCallback = procedure login_activate_ok ( login_ctx) ;
+	};
+};
+object cancel : XmPushButton
+{
+	arguments
+	{
+		XmNx = 240;
+		XmNy = 150;
+	        XmNwidth = 65;
+		XmNheight = 30;
+		XmNlabelString = compound_string("Cancel");
+	        XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  XmNactivateCallback = procedure login_activate_cancel ( login_ctx) ;
+	};
+};
+
+object usernamevalue : XmText
+{
+	arguments
+	{
+		XmNresizeHeight 	= false;
+		XmNresizeWidth  	= false;
+		XmNmarginHeight 	= 1;
+		XmNx 			= 170;
+		XmNy 			= 60;
+		XmNrows 		= 1;
+		XmNcolumns 		= 15;
+		XmNeditMode		= XmMULTI_LINE_EDIT;
+	        XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  MrmNcreateCallback 	= procedure login_create_usernamevalue(login_ctx);
+     	  XmNvalueChangedCallback = procedure login_valchanged_usernamevalue( login_ctx); 
+	};
+};
+
+object passwordvalue : XmText
+{
+	arguments
+	{
+		XmNresizeHeight 	= false;
+		XmNresizeWidth  	= false;
+		XmNmarginHeight 	= 1;
+		XmNx 			= 170;
+		XmNy 			= 90;
+		XmNrows 		= 1;
+		XmNcolumns 		= 15;
+		XmNeditMode		= XmMULTI_LINE_EDIT;
+	        XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  MrmNcreateCallback 	= procedure login_create_passwordvalue(login_ctx);
+     	  XmNvalueChangedCallback = procedure login_valchanged_passwordvalue( login_ctx); 
+	};
+};
+
+object usernamelabel : XmLabel  
+{
+   arguments
+   {
+	XmNx 		= 80;
+	XmNy 		= 60;
+        XmNlabelString	= "Username:";
+	XmNfontList	    = menu_font;
+
+   };
+};
+
+object passwordlabel : XmLabel  
+{
+   arguments
+   {
+	XmNx 		= 80;
+	XmNy 		= 90;
+        XmNlabelString	= "Password:";
+        XmNfontList	    = menu_font;
+
+   };
+};
+
+end module;

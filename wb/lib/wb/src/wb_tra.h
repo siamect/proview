@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.h,v 1.4 2005-10-21 16:11:23 claes Exp $
+ * Proview   $Id: wb_tra.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,41 +28,35 @@
 #include "wb_vldh.h"
 #endif
 
-#ifndef _XtIntrinsic_h 
-#include <X11/Intrinsic.h>
-#endif
-
-#ifndef wb_foe_h
-#include "wb_foe.h"
-#endif
-
 #ifndef wb_gre_h
 #include "wb_gre.h"
 #endif
 
-int trace_get_attributes( 	gre_ctx		grectx, 
+class WFoe;
+
+int trace_get_attributes( 	WGre		*grectx, 
 				vldh_t_node	node, 
 				char		*object_str, 
 				char		*attr_str,
 				flow_eTraceType	*trace_type,
 				int		*inverted);
-pwr_tStatus trace_get_attr_con( 	gre_ctx		grectx, 
+pwr_tStatus trace_get_attr_con( 	WGre		*grectx, 
 					vldh_t_con	con,
 					char		*debug_par,
 					char		*object_str, 
 					char		*attr_str,
 					flow_eTraceType	*trace_type);
 
-pwr_tStatus trace_simsetup( foe_ctx foectx);
-pwr_tStatus trace_trasetup( foe_ctx foectx);
-pwr_tStatus trace_start( foe_ctx foectx);
-pwr_tStatus trace_stop( foe_ctx foectx);
+pwr_tStatus trace_simsetup( WFoe *foectx);
+pwr_tStatus trace_trasetup( WFoe *foectx);
+pwr_tStatus trace_start( WFoe *foectx);
+pwr_tStatus trace_stop( WFoe *foectx);
 
-int trace_create_analyse( 	gre_ctx grectx, 
+int trace_create_analyse( 	WGre *grectx, 
 				double x, 
 				double y, 
 				vldh_t_node source, 
 				int source_conpoint);
-int	trace_save( gre_ctx grectx);
-int	trace_restore( gre_ctx grectx);
+int	trace_save( WGre *grectx);
+int	trace_restore( WGre *grectx);
 #endif

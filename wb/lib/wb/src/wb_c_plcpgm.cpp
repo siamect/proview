@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_plcpgm.cpp,v 1.2 2006-04-26 04:45:46 claes Exp $
+ * Proview   $Id: wb_c_plcpgm.cpp,v 1.3 2007-01-04 07:29:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,30 +19,20 @@
 
 /* wb_c_plcpgm.c -- work bench methods of the PlcPgm class. */
 
-#include <X11/Intrinsic.h>
-#undef Status
+#include "flow_ctx.h"
 #include "wb_pwrs.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh_msg.h"
 #include "wb_ldh.h"
-#include "wb_foe_api.h"
+#include "wb_foe.h"
 #include "wb_pwrb_msg.h"
 #include "wb_foe_msg.h"
 #include "wb_wsx.h"
 #include "wb_wsx_msg.h"
-#include "wb_utl.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
+#include "wb_utl_api.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "wb_wnav.h"
 #include "wb_build.h"
 
@@ -55,9 +45,11 @@ static pwr_tStatus OpenProgram (
   ldh_sMenuCall *ip
 )
 {
-  foe_Open (ip->EditorContext2, ip->WindowContext, ip->PointedSession,
-    ip->Pointed.Objid);
+  pwr_tStatus sts;
+  void *foe;
 
+  sts = ip->wnav->open_foe( "PlcPgm", ip->Pointed.Objid, &foe, 1,
+			    ldh_eAccess_ReadOnly, pwr_cNOid);
   return 1;
 }
 
@@ -69,14 +61,13 @@ static pwr_tStatus Build (
   ldh_sMenuCall *ip
 )
 {
-  WNav *wnav = (WNav *)ip->EditorContext;
-  wb_build build( *(wb_session *)ip->PointedSession, wnav, ip->WindowContext);
+  wb_build build( *(wb_session *)ip->PointedSession, ip->wnav);
 
-  build.opt = wnav->gbl.build;
+  build.opt = ip->wnav->gbl.build;
   build.plcpgm( ip->Pointed.Objid);
 
   if ( build.sts() == PWRB__NOBUILT)
-    wnav->message( 'I', "Nothing to build");
+    ip->wnav->message( 'I', "Nothing to build");
   return build.sts();
 }
 

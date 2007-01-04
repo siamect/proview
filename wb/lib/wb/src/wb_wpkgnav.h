@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav.h,v 1.4 2005-12-13 15:15:53 claes Exp $
+ * Proview   $Id: wb_wpkgnav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef wb_wpkgnav_h
 #define wb_wpkgnav_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -61,19 +57,13 @@ class WPkgNav {
   public:
     WPkgNav(
 	void 		*wa_parent_ctx,
-	Widget		wa_parent_wid,
 	char 		*wa_name,
 	wb_eUtility	wa_utility,
-	Widget 		*w,
 	pwr_tStatus 	*status);
     virtual ~WPkgNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     WNavBrow		*brow;
     void 		(*message_cb)( void *, char, char *);
     void 		(*set_clock_cursor_cb)( void *);
@@ -83,8 +73,9 @@ class WPkgNav {
     int			displayed;
     int			display_mode;
 
+    virtual void set_inputfocus() {}
+
     void message( char sev, char *text);
-    void set_inputfocus();
     int root_objects();
     void redraw();
     void enable_events();
@@ -94,6 +85,13 @@ class WPkgNav {
     WItemPkg *get_parent( WItemPkg *item);
     void delete_package( WItemPkg *item);
     void delete_package( WItemPkgPackage *item);
+    void get_zoom( double *zoom_factor);
+    void zoom( double zoom_factor);
+    void unzoom();
+
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+
 };
 
 class WItemPkg {
@@ -136,9 +134,6 @@ class WItemPkgFile : public WItemPkg {
     pwr_tTime time;
 };
 
-#if defined __cplusplus
-}
-#endif
 #endif
 
 

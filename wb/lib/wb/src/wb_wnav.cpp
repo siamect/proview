@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.31 2006-03-31 14:29:39 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.32 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,11 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#if defined(OS_VMS)
-#include <descrip.h>
-#endif
 
-extern "C" {
 #include "pwr_privilege.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
@@ -39,56 +35,18 @@ extern "C" {
 #include "wb_ldh.h"
 #include "wb_login.h"
 #include "wb_wccm.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/Xmu/Atoms.h>
-#include <X11/Xmu/StdSel.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
-
-extern "C" {
-#include "flow_x.h"
-#include "wb_wtt_api.h"
-#include "co_api.h"
-}
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
 static char null_str[] = "";
-
-static void wnav_trace_scan( WNav *wnav);
-static int wnav_trace_scan_bc( brow_tObject object, void *p);
-static int wnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, void **p);
-static int wnav_trace_disconnect_bc( brow_tObject object);
-static int wnav_init_brow_cb( BrowCtx *ctx, void *client_data);
-static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data);
-static void wnav_sel_lose_cb( Widget w, Atom *selection);
-static Boolean wnav_sel_convert_cb(
-    Widget  w,
-    Atom    *selection,
-    Atom    *target,
-    Atom    *type_return,
-    XtPointer	*value_return,
-    unsigned long   *length_return,
-    int	    *format_return);
-static void wnav_reset_avoid_deadlock( WNav *wnav);
-static void wnav_set_avoid_deadlock( WNav *wnav, int time);
 
 
 //
@@ -99,222 +57,197 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
 {
   int		sts;
 
-  switch ( type_id )
-  {
-    case pwr_eType_Boolean:
-    {
-      if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      if ( *(pwr_tBoolean *)buffer_ptr > 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    if ( sscanf( value_str, "%d", (pwr_tBoolean *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    if ( *(pwr_tBoolean *)buffer_ptr > 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Float32: {
+    if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Float64: {
+    pwr_tFloat32 f;
+    pwr_tFloat64 d;
+    if ( sscanf( value_str, "%f", &f) != 1)
+      return WNAV__INPUT_SYNTAX;
+    d = f;
+    memcpy( buffer_ptr, (char *) &d, sizeof(d));
+    
+    break;
+  }
+  case pwr_eType_Char: {
+    pwr_tChar c;
+    if ( strcmp( value_str, "") == 0) {
+      c = '\0';
+      memcpy( buffer_ptr, &c, sizeof(c));
     }
-    case pwr_eType_Float32:
-    {
-      if ( sscanf( value_str, "%f", (float *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Float64:
-    {
-      pwr_tFloat32 f;
-      pwr_tFloat64 d;
-      if ( sscanf( value_str, "%f", &f) != 1)
-        return WNAV__INPUT_SYNTAX;
-      d = f;
-      memcpy( buffer_ptr, (char *) &d, sizeof(d));
-
-      break;
-    }
-    case pwr_eType_Char:
-    {
-      pwr_tChar c;
-      if ( strcmp( value_str, "") == 0) {
-        c = '\0';
-	memcpy( buffer_ptr, &c, sizeof(c));
-      }
-      else if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Int8:
-    {
-      pwr_tInt8 	i8;
-      pwr_tInt16	i16;
-      if ( sscanf( value_str, "%hd", &i16) != 1)
-        return WNAV__INPUT_SYNTAX;
-      i8 = i16;
-      memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
-      break;
-    }
-    case pwr_eType_Int16:
-    {
-      if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Int32:
-    {
-      if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_UInt8:
-    {
-      pwr_tUInt8 	i8;
-      pwr_tUInt16	i16;
-      if ( sscanf( value_str, "%hu", &i16) != 1)
-        return WNAV__INPUT_SYNTAX;
-      i8 = i16;
-      memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
-      break;
-    }
-    case pwr_eType_UInt16:
-    {
-      if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_UInt32:
-    case pwr_eType_DisableAttr:
-    {
-      if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Enum:
-    {
-      if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Mask:
-    {
-      if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
-        return WNAV__INPUT_SYNTAX;
-      break;
-    }
-    case pwr_eType_Text:
-    case pwr_eType_String:
-    {
-      if ( (int) strlen( value_str) >= attr_size)
-        return WNAV__STRINGTOLONG;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
-      break;
-    }
-    case pwr_eType_ProString:
-    {
-      if ( strchr( value_str, '*') != 0)
-	return WNAV__INPUT_SYNTAX;
-      if ( (int) strlen( value_str) >= attr_size)
-        return WNAV__STRINGTOLONG;
-      strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
-      break;
-    }
-    case pwr_eType_Objid:
-    {
-      pwr_tObjid	objid;
-
-      if ( strcmp( value_str, "0") == 0 || strcmp( value_str, "") == 0)
-	objid = pwr_cNObjid;
-      else {
-	sts = ldh_NameToObjid ( ldhses, &objid, value_str);
-	if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-      }
-      memcpy( buffer_ptr, &objid, sizeof(objid));
-      break;
-    }
-    case pwr_eType_ClassId:
-    {
-      pwr_tClassId	classid;
-      pwr_tObjid	objid;
-
-      sts = ldh_NameToObjid( ldhses, &objid, value_str);
+    else if ( sscanf( value_str, "%c", (char *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Int8: {
+    pwr_tInt8 	i8;
+    pwr_tInt16	i16;
+    if ( sscanf( value_str, "%hd", &i16) != 1)
+      return WNAV__INPUT_SYNTAX;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_Int16: {
+    if ( sscanf( value_str, "%hd", (short *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Int32: {
+    if ( sscanf( value_str, "%d", (int *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt8: {
+    pwr_tUInt8 	i8;
+    pwr_tUInt16	i16;
+    if ( sscanf( value_str, "%hu", &i16) != 1)
+      return WNAV__INPUT_SYNTAX;
+    i8 = i16;
+    memcpy( buffer_ptr, (char *)&i8, sizeof(i8));
+    break;
+  }
+  case pwr_eType_UInt16: {
+    if ( sscanf( value_str, "%hu", (unsigned short *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_DisableAttr: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Enum: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Mask: {
+    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_Text:
+  case pwr_eType_String: {
+    if ( (int) strlen( value_str) >= attr_size)
+      return WNAV__STRINGTOLONG;
+    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    break;
+  }
+  case pwr_eType_ProString: {
+    if ( strchr( value_str, '*') != 0)
+      return WNAV__INPUT_SYNTAX;
+    if ( (int) strlen( value_str) >= attr_size)
+      return WNAV__STRINGTOLONG;
+    strncpy( (char *)buffer_ptr, value_str, min(attr_size, buff_size));
+    break;
+  }
+  case pwr_eType_Objid: {
+    pwr_tObjid	objid;
+    
+    if ( strcmp( value_str, "0") == 0 || strcmp( value_str, "") == 0)
+      objid = pwr_cNObjid;
+    else {
+      sts = ldh_NameToObjid ( ldhses, &objid, value_str);
       if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	classid = cdh_ClassObjidToId( objid);
-      memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
-      break;
     }
-    case pwr_eType_TypeId:
-    case pwr_eType_CastId:
-    {
-      pwr_tTypeId	val_typeid;
-      pwr_tObjid	objid;
-
-      sts = ldh_NameToObjid( ldhses, &objid, value_str);
+    memcpy( buffer_ptr, &objid, sizeof(objid));
+    break;
+  }
+  case pwr_eType_ClassId: {
+    pwr_tClassId	classid;
+    pwr_tObjid	objid;
+    
+    sts = ldh_NameToObjid( ldhses, &objid, value_str);
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    classid = cdh_ClassObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &classid, sizeof(classid));
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    pwr_tTypeId	val_typeid;
+    pwr_tObjid	objid;
+    
+    sts = ldh_NameToObjid( ldhses, &objid, value_str);
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    val_typeid = cdh_TypeObjidToId( objid);
+    memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    pwr_tObjectIx	objectix;
+    
+    sts = cdh_StringToObjectIx( value_str, &objectix); 
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &objectix, sizeof(objectix));
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    pwr_tVolumeId	volumeid;
+    
+    sts = cdh_StringToVolumeId( value_str, &volumeid); 
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &volumeid, sizeof(volumeid));
+    break;
+  }
+  case pwr_eType_RefId: {
+    pwr_tRefId	subid;
+    
+    sts = cdh_StringToSubid( value_str, &subid);
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, (char *) &subid, sizeof(subid));
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    pwr_sAttrRef	attrref;
+    
+    if ( strcmp( value_str, "0") == 0)
+      attrref = pwr_cNAttrRef;
+    else {
+      sts = ldh_NameToAttrRef( ldhses, value_str, &attrref);
       if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	val_typeid = cdh_TypeObjidToId( objid);
-      memcpy( buffer_ptr, (char *) &val_typeid, sizeof(val_typeid));
-      break;
     }
-    case pwr_eType_ObjectIx:
-    {
-      pwr_tObjectIx	objectix;
-
-      sts = cdh_StringToObjectIx( value_str, &objectix); 
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &objectix, sizeof(objectix));
-      break;
-    }
-    case pwr_eType_VolumeId:
-    {
-      pwr_tVolumeId	volumeid;
-
-      sts = cdh_StringToVolumeId( value_str, &volumeid); 
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &volumeid, sizeof(volumeid));
-      break;
-    }
-    case pwr_eType_RefId:
-    {
-      pwr_tRefId	subid;
-
-      sts = cdh_StringToSubid( value_str, &subid);
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, (char *) &subid, sizeof(subid));
-      break;
-    }
-    case pwr_eType_AttrRef:
-    {
-      pwr_sAttrRef	attrref;
-
-      if ( strcmp( value_str, "0") == 0)
-	attrref = pwr_cNAttrRef;
-      else {
-	sts = ldh_NameToAttrRef( ldhses, value_str, &attrref);
-	if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-      }
-      memcpy( buffer_ptr, &attrref, sizeof(attrref));
-      break;
-    }
-    case pwr_eType_DataRef:
-    {
-      pwr_tDataRef	dataref;
-
-      dataref.Ptr = 0;
-      sts = ldh_NameToAttrRef( ldhses, value_str, &dataref.Aref);
-      if (EVEN(sts)) return WNAV__OBJNOTFOUND;
-  	memcpy( buffer_ptr, &dataref, sizeof(dataref));
-      break;
-    }
-    case pwr_eType_Time:
-    {
-      pwr_tTime	time;
-
-      sts = time_AsciiToA( value_str, &time);
-      if (EVEN(sts)) return WNAV__INPUT_SYNTAX;
-  	memcpy( buffer_ptr, (char *) &time, sizeof(time));
-      break;
-    }
-    case pwr_eType_DeltaTime:
-    {
-      pwr_tDeltaTime deltatime;
-
-      sts = time_AsciiToD( value_str, &deltatime);
-      if (EVEN(sts)) return WNAV__INPUT_SYNTAX;
-  	memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
-      break;
-    }
+    memcpy( buffer_ptr, &attrref, sizeof(attrref));
+    break;
+  }
+  case pwr_eType_DataRef: {
+    pwr_tDataRef	dataref;
+    
+    dataref.Ptr = 0;
+    sts = ldh_NameToAttrRef( ldhses, value_str, &dataref.Aref);
+    if (EVEN(sts)) return WNAV__OBJNOTFOUND;
+    memcpy( buffer_ptr, &dataref, sizeof(dataref));
+    break;
+  }
+  case pwr_eType_Time: {
+    pwr_tTime	time;
+    
+    sts = time_AsciiToA( value_str, &time);
+    if (EVEN(sts)) return WNAV__INPUT_SYNTAX;
+    memcpy( buffer_ptr, (char *) &time, sizeof(time));
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    pwr_tDeltaTime deltatime;
+    
+    sts = time_AsciiToD( value_str, &deltatime);
+    if (EVEN(sts)) return WNAV__INPUT_SYNTAX;
+    memcpy( buffer_ptr, (char *) &deltatime, sizeof(deltatime));
+    break;
+  }
   }
   return 1;
 }
@@ -330,243 +263,214 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
   int			sts;
   static char		str[2048];
 
-  switch ( type_id )
-  {
-    case pwr_eType_Boolean:
-    {
-      *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Float32:
-    {
-      *len = sprintf( str, "%f", *(float *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Float64:
-    {
-      *len = sprintf( str, "%f", *(double *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Char:
-    {
-      *len = sprintf( str, "%c", *(char *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Int8:
-    {
-      *len = sprintf( str, "%d", *(char *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Int16:
-    {
-      *len = sprintf( str, "%hd", *(short *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Int32:
-    {
-      *len = sprintf( str, "%d", *(int *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_UInt8:
-    {
-      *len = sprintf( str, "%d", *(unsigned char *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_UInt16:
-    {
-      *len = sprintf( str, "%hd", *(unsigned short *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_UInt32:
-    case pwr_eType_DisableAttr:
-    {
-      *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Enum:
-    {
-      *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Mask:
-    {
-      *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_String:
-    case pwr_eType_Text:
-    {
-      *len = strlen((char *) value_ptr);
-      strcpy( str, (char *) value_ptr);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_ProString:
-    {
-      *len = strlen((char *) value_ptr);
+  switch ( type_id ) {
+  case pwr_eType_Boolean: {
+    *len = sprintf( str, "%d", *(pwr_tBoolean *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Float32: {
+    *len = sprintf( str, "%f", *(float *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Float64: {
+    *len = sprintf( str, "%f", *(double *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Char: {
+    *len = sprintf( str, "%c", *(char *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Int8: {
+    *len = sprintf( str, "%d", *(char *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Int16: {
+    *len = sprintf( str, "%hd", *(short *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Int32: {
+    *len = sprintf( str, "%d", *(int *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_UInt8: {
+    *len = sprintf( str, "%d", *(unsigned char *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_UInt16: {
+    *len = sprintf( str, "%hd", *(unsigned short *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_UInt32:
+  case pwr_eType_DisableAttr: {
+    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Enum: {
+    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Mask: {
+    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_String:
+  case pwr_eType_Text: {
+    *len = strlen((char *) value_ptr);
+    strcpy( str, (char *) value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_ProString: {
+    *len = strlen((char *) value_ptr);
+    strcpy( str, "");
+    for ( int i = 0; i < *len; i++)
+      strcat( str, "*");
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Objid: {
+    ldh_sVolumeInfo info;
+    ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+    
+    objid = *(pwr_tObjid *)value_ptr;
+    if ( objid.vid == info.Volume)
+      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, 
+			     str, sizeof(str), len);
+    else
+      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath, 
+			     str, sizeof(str), len);
+    if (EVEN(sts)) {
       strcpy( str, "");
-      for ( int i = 0; i < *len; i++)
-	strcat( str, "*");
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Objid:
-    {
-      ldh_sVolumeInfo info;
-      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
-
-      objid = *(pwr_tObjid *)value_ptr;
-      if ( objid.vid == info.Volume)
-	sts = ldh_ObjidToName( ldhses, objid, ldh_eName_Hierarchy, 
-			       str, sizeof(str), len);
-      else
-	sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath, 
-			       str, sizeof(str), len);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-      }
-      *buff = str;
-      break;
-    }
-    case pwr_eType_AttrRef:
-    {
-      char *name_p;
-      ldh_sVolumeInfo info;
-      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
-
-      attrref = (pwr_sAttrRef *) value_ptr;
-      if ( attrref->Objid.vid == info.Volume)
-	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, &name_p, len);
-      else
-	sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, &name_p, len);
-
-      if (EVEN(sts)) {
-	if ( cdh_ObjidIsNull( attrref->Objid)) {
-	  strcpy( str, "");
-	  *len = 0;
-	}
-	else {
-	  strcpy( str, "");
-	  cdh_ArefToString( str, attrref, 1);
-	  *len = strlen(str);
-	}
-	*buff = str;
-        break;
-      }
-      strcpy( str, name_p);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_DataRef:
-    {
-      char *name_p;
-      pwr_tDataRef *dataref;
-      ldh_sVolumeInfo info;
-      ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
-
-      dataref = (pwr_tDataRef *) value_ptr;
-      if ( dataref->Aref.Objid.vid == info.Volume)
-	sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_Aref, &name_p, len);
-      else
-	sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_ArefVol, &name_p, len);
-
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-	*buff = str;
-        break;
-      }
-      strcpy( str, name_p);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_Time:
-    {
-      sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
-		str, sizeof(str));
-      if ( EVEN(sts))
-        strcpy( str, "-");
-      *len = strlen(str);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_DeltaTime:
-    {
-      sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
-		str, sizeof(str));
-      if ( EVEN(sts))
-        strcpy( str, "Undefined time");
-      *len = strlen( str);
-      *buff = str;
-      break;
-    }
-    case pwr_eType_ObjectIx:
-    {
-      *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
-		*(pwr_tObjectIx *) value_ptr, 1));
-      *buff = str;
-      break;
-    }
-    case pwr_eType_ClassId:
-    {
-      objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
-      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
-		str, sizeof(str), len);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-      }
-      *buff = str;
-      break;
-    }
-    case pwr_eType_TypeId:
-    case pwr_eType_CastId:
-    {
-      objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
-      sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
-		str, sizeof(str), len);
-      if (EVEN(sts))
-      {
-        strcpy( str, "");
-        *len = 0;
-      }
-      *buff = str;
-      break;
-    }
-    case pwr_eType_VolumeId:
-    {
-      *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
-		*(pwr_tVolumeId *) value_ptr, 1, 0));
-      *buff = str;
-      break;
-    }
-    case pwr_eType_RefId:
-    {
-      *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
-		*(pwr_tSubid *) value_ptr, 1));
-      *buff = str;
-      break;
-    }
-    default:
-      strcpy( str, "");
-      *buff = str;
       *len = 0;
+    }
+    *buff = str;
+    break;
+  }
+  case pwr_eType_AttrRef: {
+    char *name_p;
+    ldh_sVolumeInfo info;
+    ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+    
+    attrref = (pwr_sAttrRef *) value_ptr;
+    if ( attrref->Objid.vid == info.Volume)
+      sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_Aref, &name_p, len);
+    else
+      sts = ldh_AttrRefToName( ldhses, attrref, ldh_eName_ArefVol, &name_p, len);
+    
+    if (EVEN(sts)) {
+      if ( cdh_ObjidIsNull( attrref->Objid)) {
+	strcpy( str, "");
+	*len = 0;
+      }
+      else {
+	strcpy( str, "");
+	cdh_ArefToString( str, attrref, 1);
+	*len = strlen(str);
+      }
+      *buff = str;
+      break;
+    }
+    strcpy( str, name_p);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_DataRef: {
+    char *name_p;
+    pwr_tDataRef *dataref;
+    ldh_sVolumeInfo info;
+    ldh_GetVolumeInfo( ldh_SessionToVol( ldhses), &info);
+    
+    dataref = (pwr_tDataRef *) value_ptr;
+    if ( dataref->Aref.Objid.vid == info.Volume)
+      sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_Aref, &name_p, len);
+    else
+      sts = ldh_AttrRefToName( ldhses, &dataref->Aref, ldh_eName_ArefVol, &name_p, len);
+    
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+      *buff = str;
+      break;
+    }
+    strcpy( str, name_p);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_Time: {
+    sts = time_AtoAscii( (pwr_tTime *) value_ptr, time_eFormat_DateAndTime, 
+			 str, sizeof(str));
+    if ( EVEN(sts))
+      strcpy( str, "-");
+    *len = strlen(str);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_DeltaTime: {
+    sts = time_DtoAscii( (pwr_tDeltaTime *) value_ptr, 1, 
+			 str, sizeof(str));
+    if ( EVEN(sts))
+      strcpy( str, "Undefined time");
+    *len = strlen( str);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_ObjectIx: {
+    *len = sprintf( str, "%s", cdh_ObjectIxToString( NULL, 
+				   *(pwr_tObjectIx *) value_ptr, 1));
+    *buff = str;
+    break;
+  }
+  case pwr_eType_ClassId: {
+    objid = cdh_ClassIdToObjid( *(pwr_tClassId *) value_ptr);
+    sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
+			   str, sizeof(str), len);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+    }
+    *buff = str;
+    break;
+  }
+  case pwr_eType_TypeId:
+  case pwr_eType_CastId: {
+    objid = cdh_TypeIdToObjid( *(pwr_tTypeId *) value_ptr);
+    sts = ldh_ObjidToName( ldhses, objid, ldh_eName_VolPath,
+			   str, sizeof(str), len);
+    if (EVEN(sts)) {
+      strcpy( str, "");
+      *len = 0;
+    }
+    *buff = str;
+    break;
+  }
+  case pwr_eType_VolumeId: {
+    *len = sprintf( str, "%s", cdh_VolumeIdToString( NULL, 
+			       *(pwr_tVolumeId *) value_ptr, 1, 0));
+    *buff = str;
+    break;
+  }
+  case pwr_eType_RefId: {
+    *len = sprintf( str, "%s", cdh_SubidToString( NULL, 
+			 *(pwr_tSubid *) value_ptr, 1));
+    *buff = str;
+    break;
+  }
+  default:
+    strcpy( str, "");
+    *buff = str;
+    *len = 0;
   }
 }
 
@@ -587,24 +491,6 @@ void WNav::message( char sev, char *text)
 
 
 //
-//  Pop wnav window
-//
-
-void WNav::pop()
-{
-  Widget parent, top;
-
-  parent = XtParent( parent_wid);
-  while( parent)
-  {
-    top = parent;
-    parent = XtParent( parent);
-  }
-  flow_UnmapWidget( top);
-  flow_MapWidget( top);
-}
-
-//
 //  Show crossreferences
 //
 
@@ -622,8 +508,7 @@ int WNav::create_object_item( pwr_tObjid objid,
   sts = ldh_GetObjectClass( ldhses, objid, &classid);
   if ( EVEN(sts)) return sts;
 
-  switch( classid)
-  {
+  switch( classid) {
     default:
       *item = (void *) new WItemObject( this, objid, dest, dest_code, is_root);
       break;
@@ -636,16 +521,14 @@ int WNav::create_object_item( pwr_tObjid objid,
 //
 WNav::WNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	char *xn_layout,
-	Widget *w,
         ldh_tSesContext	xn_ldhses,
 	wnav_sStartMenu *root_menu,
 	wnav_eWindowType xn_type,
 	pwr_tStatus *status) :
 
-	ctx_type(wb_eUtility_WNav), parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	WUtility(wb_eUtility_WNav), parent_ctx(xn_parent_ctx),
 	window_type(xn_type), ldhses(xn_ldhses), wbctx(0),
 	brow(0), brow_cnt(0), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
@@ -655,11 +538,8 @@ WNav::WNav(
 	layout_objid(pwr_cNObjid), search_last(pwr_cNObjid), search_compiled(0),
 	search_type(wnav_eSearchType_No), selection_owner(0), last_selected(0),
 	displayed(0), scriptmode(0), dialog_width(0), dialog_height(0),
-	dialog_x(0), dialog_y(0), menu(0), avoid_deadlock(0)
+	dialog_x(0), dialog_y(0), menu(0)
 {
-  Arg 		args[5];
-  int		i;
-
   strcpy( name, xn_name);
 
   strcpy( user, login_prv.username);
@@ -667,8 +547,7 @@ WNav::WNav(
   priv = login_prv.priv;
   base_priv = priv;
 
-  if ( window_type == wnav_eWindowType_No)
-  {
+  if ( window_type == wnav_eWindowType_No) {
     editmode = 1;
     return;
   }
@@ -678,23 +557,6 @@ WNav::WNav(
   else
     strcpy( layout, "");
 
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	wnav_init_brow_base_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  i = 0;
-  XtSetArg(args[i], XmNborderWidth, 1);i++;
-  XtSetValues( form_widget, args,i);
-
-  // Create the root item
-  *w = form_widget;
-
-  wow_GetAtoms( form_widget, &graph_atom, &objid_atom, &attrref_atom);
-  gbl.load_config( this);
-
-  if ( root_menu && !ldhses)
-    menu_tree_build( root_menu);
-
   *status = 1;
 }
 
@@ -703,23 +565,6 @@ WNav::WNav(
 //
 WNav::~WNav()
 {
-  closing_down = 1;
-
-  if ( trace_started)
-    XtRemoveTimeOut( trace_timerid);
-  if ( avoid_deadlock)
-    XtRemoveTimeOut( deadlock_timerid);
-
-  menu_tree_free();
-  PalFile::config_tree_free( menu);
-  for ( int i = 1; i < brow_cnt; i++)
-  {
-    brow_DeleteSecondaryCtx( brow_stack[brow_cnt]->ctx);
-    brow_stack[brow_cnt]->free_pixmaps();
-    delete brow_stack[i];
-  }
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 //
@@ -754,29 +599,6 @@ void WNav::unzoom()
   brow_UnZoom( brow->ctx);
 }
 
-void WNav::set_inputfocus( int focus)
-{
-  Arg 		args[2];
-  Pixel 	bg, fg;
-
-  if ( !displayed)
-    return;
-
-  XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
-  if ( !focus)
-  {
-    XtSetArg(args[0], XmNborderColor, bg);
-    XtSetValues( form_widget, args, 1);
-  }
-  else
-  {
-    if ( flow_IsViewable( brow_widget)) {
-      XtCallAcceptFocus( brow_widget, CurrentTime);
-      XtSetArg(args[0], XmNborderColor, fg);
-      XtSetValues( form_widget, args, 1);
-    }
-  }
-}
 
 //
 // Set attribute value
@@ -1162,9 +984,8 @@ int WNav::open_plc()
       if ( EVEN(sts)) return sts;
 
       if ( classid == pwr_cClass_plc)
-        sts = wnav_foe_new( (void *)parent_ctx, parent_wid, "PlcProgram1",
-		item->objid, wbctx, ldhses,
-		&foectx, 1, ldh_eAccess_ReadOnly, pwr_cNOid);
+        sts = open_foe( "PlcProgram1", item->objid, &foectx, 1, 
+			ldh_eAccess_ReadOnly, pwr_cNOid);
       break;
     default:
      sts = 0;
@@ -1197,59 +1018,15 @@ int WNav::open_plc( pwr_tOid oid)
   if ( !found)
     return WNAV__NOPLC;
 
-  sts = wnav_foe_new( (void *)parent_ctx, parent_wid, "PlcProgram1",
-		      plc, wbctx, ldhses,
-		      &foectx, 1, ldh_eAccess_ReadOnly, oid);
+  sts = open_foe( "PlcProgram1", plc, &foectx, 1, ldh_eAccess_ReadOnly, oid);
   return sts;
 }
 
 
 //
-// Convert type_id to name
-//
-#if 0
-static void  wnav_type_id_to_name( int type_id, char *type_id_name)
-{
-  switch( type_id)
-  {
-    case pwr_eType_Boolean: strcpy( type_id_name, "Boolean"); break;
-    case pwr_eType_Float32: strcpy( type_id_name, "Float32"); break;
-    case pwr_eType_Float64: strcpy( type_id_name, "Float64"); break;
-    case pwr_eType_Char: strcpy( type_id_name, "Char"); break;
-    case pwr_eType_Int8: strcpy( type_id_name, "Int8"); break;
-    case pwr_eType_Int16: strcpy( type_id_name, "Int16"); break;
-    case pwr_eType_Int32: strcpy( type_id_name, "Int32"); break;
-    case pwr_eType_UInt8: strcpy( type_id_name, "UInt8"); break;
-    case pwr_eType_UInt16: strcpy( type_id_name, "UInt16"); break;
-    case pwr_eType_UInt32: strcpy( type_id_name, "UInt32"); break;
-    case pwr_eType_Objid: strcpy( type_id_name, "Objid"); break;
-    case pwr_eType_Buffer: strcpy( type_id_name, "Buffer"); break;
-    case pwr_eType_String: strcpy( type_id_name, "String"); break;
-    case pwr_eType_Enum: strcpy( type_id_name, "Enum"); break;
-    case pwr_eType_Struct: strcpy( type_id_name, "Struct"); break;
-    case pwr_eType_Mask: strcpy( type_id_name, "Mask"); break;
-    case pwr_eType_Array: strcpy( type_id_name, "Array"); break;
-    case pwr_eType_Time: strcpy( type_id_name, "Time"); break;
-    case pwr_eType_Text: strcpy( type_id_name, "Text"); break;
-    case pwr_eType_AttrRef: strcpy( type_id_name, "AttrRef"); break;
-    case pwr_eType_UInt64: strcpy( type_id_name, "UInt64"); break;
-    case pwr_eType_Int64: strcpy( type_id_name, "Int64"); break;
-    case pwr_eType_ClassId: strcpy( type_id_name, "ClassId"); break;
-    case pwr_eType_TypeId: strcpy( type_id_name, "TypeId"); break;
-    case pwr_eType_VolumeId: strcpy( type_id_name, "VolumeId"); break;
-    case pwr_eType_ObjectIx: strcpy( type_id_name, "ObjectIx"); break;
-    case pwr_eType_RefId: strcpy( type_id_name, "RefId"); break;
-    case pwr_eType_DeltaTime: strcpy( type_id_name, "DeltaTime"); break;
-    case pwr_eType_DataRef: strcpy( type_id_name, "DataRef"); break;
-    default: strcpy( type_id_name, "");
-  }
-}
-#endif
-
-//
 // Callbacks from brow
 //
-static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   WNav		*wnav;
   WItem 		*item;
@@ -1425,6 +1202,14 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_Key_PageUp: {
       brow_Page( wnav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( wnav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( wnav->brow->ctx, -0.1);
       break;
     }
     case flow_eEvent_Key_PF1:
@@ -1755,9 +1540,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
 		if ( EVEN(sts)) return sts;
 	      }
 	      else {
-		sts = wow_GetSelection( wnav->form_widget, str, sizeof(str), wnav->objid_atom);
-		if ( EVEN(sts))
-		  sts = wow_GetSelection( wnav->form_widget, str, sizeof(str), XA_STRING);
+		sts = wnav->get_selection( str, sizeof(str));
 	      }
 	      if ( ODD(sts))
 		wnav->set_attr_value( item_attr->node, item_attr->objid, str);
@@ -1796,7 +1579,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = wnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -1841,7 +1624,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClickShift;
-            sts = wnav_brow_cb( ctx, doubleclick_event);
+            sts = brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -1889,11 +1672,6 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     {
       // Popup menu
       pwr_sAttrRef aref;
-      Arg arg[4];
-      short x, y;
-
-      if ( wnav->avoid_deadlock)
-        break;
 
       switch ( event->object.object_type)
       {
@@ -1904,15 +1682,7 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
         default:
           aref = pwr_cNAttrRef;
       }
-
-      XtSetArg( arg[0], XmNx, &x);
-      XtSetArg( arg[1], XmNy, &y);
-      XtGetValues( XtParent(wnav->brow_widget), arg, 2);
-
-      (wnav->create_popup_menu_cb)( wnav->parent_ctx, aref,
-		event->any.x_pixel + x, event->any.y_pixel + y);
-      wnav_set_avoid_deadlock( wnav, 2000);
-
+      wnav->create_popup_menu( aref, event->any.x_pixel, event->any.y_pixel);
       break;
     }
     case flow_eEvent_MB2Click:
@@ -2057,27 +1827,13 @@ static int wnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   return 1;
 }
 
-static void wnav_trace_scan( WNav *wnav)
-{
-  int time = 1000;
-
-  if ( wnav->trace_started)
-  {
-    brow_TraceScan( wnav->brow->ctx);
-
-    wnav->trace_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext(wnav->brow_widget) , time,
-	(XtTimerCallbackProc)wnav_trace_scan, wnav);
-  }
-}
-
 void WNav::force_trace_scan()
 {
   if ( trace_started)
     brow_TraceScan( brow->ctx);
 }
 
-static int wnav_trace_scan_bc( brow_tObject object, void *p)
+int WNav::trace_scan_bc( brow_tObject object, void *p)
 {
   WItem		*base_item;
   char		*buf;
@@ -2121,8 +1877,8 @@ static int wnav_trace_scan_bc( brow_tObject object, void *p)
   return 1;
 }
 
-static int wnav_trace_connect_bc( brow_tObject object, char *name, char *attr, 
-	flow_eTraceType type, void **p)
+int WNav::trace_connect_bc( brow_tObject object, char *name, char *attr, 
+			    flow_eTraceType type, void **p)
 {
   WItem 		*base_item;
 
@@ -2146,7 +1902,7 @@ static int wnav_trace_connect_bc( brow_tObject object, char *name, char *attr,
   return 1;
 }
 
-static int wnav_trace_disconnect_bc( brow_tObject object)
+int WNav::trace_disconnect_bc( brow_tObject object)
 {
   return 1;
 }
@@ -2499,9 +2255,9 @@ int WNav::brow_pop( wnav_eBrowType type)
   if ( brow_cnt >= WNAV_BROW_MAX)
     return 0;
   brow_CreateSecondaryCtx( brow->ctx, &secondary_ctx,
-        wnav_init_brow_cb, (void *)this, flow_eCtxType_Brow);
+        WNav::init_brow_cb, (void *)this, flow_eCtxType_Brow);
 
-  brow_ChangeCtx( brow_widget, brow->ctx, brow_stack[brow_cnt]->ctx);
+  brow_ChangeCtx( brow->ctx, brow_stack[brow_cnt]->ctx);
   brow_stack[brow_cnt]->type = type;
   *brow = *brow_stack[brow_cnt];
   brow_cnt++;
@@ -2544,7 +2300,7 @@ int WNav::brow_push()
   }
 
   brow_cnt--;
-  brow_ChangeCtx( brow_widget, brow_stack[brow_cnt]->ctx, 
+  brow_ChangeCtx( brow_stack[brow_cnt]->ctx, 
 		brow_stack[brow_cnt-1]->ctx);
   *brow = *brow_stack[brow_cnt-1];
   brow_DeleteSecondaryCtx( brow_stack[brow_cnt]->ctx);
@@ -2568,7 +2324,7 @@ int WNav::brow_push_volume()
      return 0;
 
   brow_cnt--;
-  brow_ChangeCtx( brow_widget, brow_stack[brow_cnt]->ctx, 
+  brow_ChangeCtx( brow_stack[brow_cnt]->ctx, 
 		brow_stack[brow_cnt-1]->ctx);
   *brow = *brow_stack[brow_cnt-1];
 
@@ -3263,79 +3019,67 @@ void WNav::collapse()
 void WNav::enable_events( WNavBrow *brow)
 {
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickShift, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1DoubleClickCtrl, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+        WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1ClickShift, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB2Click, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftUp, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftDown, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF1, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF2, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PF4, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Return, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_ShiftRight, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Key_Tab, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1Press, flow_eEventType_RegionSelect, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB1PressShift, flow_eEventType_RegionAddSelect, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
-	wnav_brow_cb);
+	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
-	wnav_brow_cb);
-}
-
-void WNav::set_selection_owner()
-{
-  int sts;
-
-  sts = XtOwnSelection( brow_widget, XA_PRIMARY, 
-	XtLastTimestampProcessed(flow_Display(brow_widget)),  
-	wnav_sel_convert_cb, wnav_sel_lose_cb , NULL);
-  if ( !sts)
-  {
-     message('E', "Failed attempting to become primary selection owner");
-     brow_SelectClear( brow->ctx);
-     return;
-  }	
-  selection_owner = 1;
+	WNav::brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	WNav::brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	WNav::brow_cb);
 }
 
 void WNav::set_editmode( int value) 
@@ -3345,163 +3089,11 @@ void WNav::set_editmode( int value)
     ldh_refresh(pwr_cNObjid);
 }
 
-static void  wnav_reset_avoid_deadlock( WNav *wnav)
-{
-  wnav->avoid_deadlock = 0;
-}
-
-static void  wnav_set_avoid_deadlock( WNav *wnav, int time)
-{
-  wnav->avoid_deadlock = 1;
-  wnav->deadlock_timerid = XtAppAddTimeOut(
-	XtWidgetToApplicationContext( wnav->brow_widget), time,
-	(XtTimerCallbackProc)wnav_reset_avoid_deadlock, wnav);
-}
-
-static Boolean wnav_sel_convert_cb(
-    Widget  w,
-    Atom    *selection,
-    Atom    *target,
-    Atom    *type_return,
-    XtPointer	*value_return,
-    unsigned long   *length_return,
-    int	    *format_return)
-{
-  WNav		*wnav;
-  brow_tCtx	browctx;
-  int 		sts;
-  int		size;
-  WItem		*item;
-  pwr_tAName   	attr_str;
-  pwr_sAttrRef attrref;
-  char          name[200];
-
-  BrowCtxFromWidget( w, (void **) &browctx);
-  brow_GetCtxUserData( browctx, (void **) &wnav);
-
-  if (*target == XA_TARGETS(flow_Display(wnav->brow_widget))) {
-    Atom *targetP;
-    Atom *std_targets;
-    unsigned long std_length;
-    XSelectionRequestEvent *req = XtGetSelectionRequest( w, *selection, 
-       (XtRequestId)NULL);
-
-    XmuConvertStandardSelection( w, req->time, selection, target, type_return,
-		(caddr_t *)&std_targets, &std_length, format_return);
-
-    *value_return = XtMalloc( sizeof(Atom) * (std_length + 2));
-    targetP = *(Atom **) value_return;
-    *targetP++ = XA_STRING;
-    *targetP++ = XA_TEXT(flow_Display(wnav->brow_widget));
-    *length_return = std_length + (targetP - (*(Atom **) value_return));
-    bcopy((char *)std_targets, (char *)targetP, sizeof(Atom) * std_length);
-    XtFree( (char *)std_targets);
-    *type_return = XA_ATOM;
-    *format_return = 32;
-    return True;
-  }
-
-  if (*target == XA_STRING ||
-      *target == XA_TEXT(flow_Display(wnav->brow_widget)) ||
-      *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)) ||
-      *target == wnav->graph_atom ||
-      *target == wnav->objid_atom ||
-      *target == wnav->attrref_atom)
-  {
-    brow_tNode	*node_list;
-    int		node_count;
-    wnav_eSelectionFormat format;
-  
-    if ( *target == wnav->graph_atom)
-      format = wnav_eSelectionFormat_Graph;
-    else if ( *target == wnav->objid_atom)
-      format = wnav_eSelectionFormat_Objid;
-    else if ( *target == wnav->attrref_atom)
-      format = wnav_eSelectionFormat_Attrref;
-    else
-      format = wnav_eSelectionFormat_User;
-	
-
-    brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
-    if ( !node_count)
-      return FALSE;
-
-    brow_GetUserData( node_list[0], (void **)&item);
-
-    switch( item->type) {
-    case wnav_eItemType_Attr:
-    case wnav_eItemType_AttrInput:
-    case wnav_eItemType_AttrInputInv:
-    case wnav_eItemType_AttrInputF:
-    case wnav_eItemType_AttrOutput:
-    case wnav_eItemType_AttrArray:
-    case wnav_eItemType_AttrArrayOutput:
-    case wnav_eItemType_AttrArrayElem:
-    case wnav_eItemType_AttrObject: {
-      WItemBaseAttr *aitem = (WItemBaseAttr *)item;
-
-      sts = ldh_ObjidToName( wnav->ldhses, item->objid, ldh_eName_Hierarchy,
-	    	attr_str, sizeof(attr_str), &size);
-      if ( EVEN(sts)) return FALSE;
-
-      strcat( attr_str, ".");
-      strcat( attr_str, aitem->name);
-      sts = ldh_NameToAttrRef( wnav->ldhses, attr_str, &attrref);
-      if ( EVEN(sts)) return FALSE;
-      sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-					 value_return, length_return, 0, 1, format);
-      if ( !sts) return FALSE;
-//        sts = ldh_AttrRefToName( wnav->ldhses, &attrref, ldh_eName_Aref, 
-//		&name_p, &size);
-//        if ( EVEN(sts)) return FALSE;
-//        strcpy( name, name_p);
-      break;
-    }
-    case wnav_eItemType_Object:
-      memset( &attrref, 0, sizeof(attrref));
-      attrref.Objid = item->objid;
-      sts = (wnav->format_selection_cb)( wnav->parent_ctx, attrref, 
-					 value_return, length_return, 0, 0, format);
-      if ( !sts) return FALSE;
-        break;
-    default:
-      brow_GetAnnotation( node_list[0], 0, name, sizeof(name));
-      *value_return = XtNewString(name);      
-      *length_return = strlen(name) + 1;
-    }
-    free( node_list);
-
-    if ( *target == XA_COMPOUND_TEXT(flow_Display(wnav->brow_widget)) ||
- 	 *target == wnav->graph_atom ||
- 	 *target == wnav->objid_atom ||
-	 *target == wnav->attrref_atom)
-      *type_return = *target;
-    else
-      *type_return = XA_STRING;
-    *format_return = 8;
-
-    return TRUE;
-  }
-  return FALSE;
-}
-
-static void wnav_sel_lose_cb( Widget w, Atom *selection)
-{
-  WNav		*wnav;
-  brow_tCtx	browctx;
-
-  BrowCtxFromWidget( w, (void **) &browctx);
-  brow_GetCtxUserData( browctx, (void **) &wnav);
-
-  brow_SelectClear( wnav->brow->ctx);
-  wnav->selection_owner = 0;
-}
-
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
+int WNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 {
   WNav *wnav = (WNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -3529,10 +3121,10 @@ static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
     // Open the root item
     ((WItemMenu *)wnav->root_item)->open_children( wnav, 0, 0);
   }
-  sts = brow_TraceInit( ctx, wnav_trace_connect_bc, 
-		wnav_trace_disconnect_bc, wnav_trace_scan_bc);
+  sts = brow_TraceInit( ctx, WNav::trace_connect_bc, 
+		WNav::trace_disconnect_bc, WNav::trace_scan_bc);
   wnav->trace_started = 1;
-  wnav_trace_scan( wnav);
+  wnav->trace_start();
 
   // Execute the init file
   if ( wnav->script_filename_cb) {
@@ -3547,7 +3139,7 @@ static int wnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-static int wnav_init_brow_cb( BrowCtx *ctx, void *client_data)
+int WNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 {
   WNav *wnav = (WNav *) client_data;
 

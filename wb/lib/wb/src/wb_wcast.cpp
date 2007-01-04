@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wcast.cpp,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wcast.cpp,v 1.4 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,32 +24,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
 #include "pwr_baseclasses.h"
 #include "wb_ldh.h"
-#include "flow_x.h"
 #include "co_wow.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <Xm/ToggleB.h>
-#include <Xm/List.h>
-#include <X11/cursorfont.h>
-#define XK_MISCELLANY
-#include <X11/keysymdef.h>
-
-extern "C" {
-#include "co_mrm_util.h"
-}
 #include "wb_erep.h"
 #include "wb_session.h"
 #include "wb_attribute.h"
@@ -59,18 +39,15 @@ extern "C" {
 
 WCast::WCast( 
 	void	*wc_parent_ctx,
-	Widget 	wc_parent_wid,
 	char 	*wc_name,
 	ldh_tSesContext wc_ldhses,
 	pwr_sAttrRef wc_aref,
 	pwr_tStatus *status
 	) :
-	parent_ctx(wc_parent_ctx), parent_wid( wc_parent_wid),
-	ldhses(wc_ldhses), aref(wc_aref)
+	parent_ctx(wc_parent_ctx), ldhses(wc_ldhses), aref(wc_aref)
 {
   strcpy( name, wc_name);
 
-  open_castlist();
   *status = 1;
 }
 
@@ -114,9 +91,7 @@ pwr_tStatus WCast::open_castlist()
   }
   strcpy( class_vect[class_cnt], "");
 
-
-  wow_CreateList( parent_wid, name, (char *)class_vect,
-		  selected_cb, (void *)this);
+  wow->CreateList( name, (char *)class_vect, selected_cb, (void *)this);
 
   return 1;
 }
@@ -145,7 +120,7 @@ void WCast::selected_cb( void *ctx, char *text)
     char msg[256];
 
     msg_GetMsg( sts, msg, sizeof(msg));
-    wow_DisplayError( wcast->parent_wid, "Cast Error", msg);
+    wcast->wow->DisplayError( "Cast Error", msg);
   }
 
   sts = ldh_CastAttribute( wcast->ldhses, &wcast->aref, cid);
@@ -153,7 +128,7 @@ void WCast::selected_cb( void *ctx, char *text)
     char msg[256];
 
     msg_GetMsg( sts, msg, sizeof(msg));
-    wow_DisplayError( wcast->parent_wid, "Cast Error", msg);
+    wcast->wow->DisplayError( "Cast Error", msg);
   }
 }
 

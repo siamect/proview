@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_crr.cpp,v 1.3 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_wnav_crr.cpp,v 1.4 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,28 +29,15 @@
 #include <string.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "wb_ldh.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
-extern "C" {
-#include "flow_utils.h"
-}
+//#include "flow_utils.h"
 #include "wb_wnav.h"
 #include "wb_wnav_item.h"
 #include "co_nav_crr.h"

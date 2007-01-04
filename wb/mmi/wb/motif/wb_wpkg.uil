@@ -1,0 +1,320 @@
+! 
+!  Proview   $Id: wb_wpkg.uil,v 1.1 2007-01-04 07:29:04 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module wb_wpkg
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+identifier
+	wpkg_ctx;
+procedure
+	wpkg_activate_exit(integer);
+	wpkg_activate_distribute(integer);
+	wpkg_activate_createpkg(integer);
+	wpkg_activate_deletepkg(integer);
+	wpkg_activate_dmode_filediff(integer);
+	wpkg_activate_dmode_filetime(integer);
+	wpkg_activate_dmode_filepath(integer);
+	wpkg_activate_help(integer);
+	wpkg_create_msg_label(integer);
+	wpkg_create_wpkgnav_form(integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  wpkg_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 450;
+    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	wpkg_menu;
+     XmForm  form;
+  };
+};
+
+
+object form : XmForm
+{
+   arguments
+   {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+   };
+   controls
+   {
+     XmPanedWindow wpkgnav_form;
+     XmLabel	msg_label;
+   };
+};
+
+object wpkg_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wpkg_activate_exit(wpkg_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Distribute");
+            XmNmnemonic = keysym('D');
+	    XmNaccelerator = "Ctrl<Key>D";
+	    XmNacceleratorText = compound_string('Ctrl+D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wpkg_activate_distribute(wpkg_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Create Package");
+            XmNmnemonic = keysym('C');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wpkg_activate_createpkg(wpkg_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Delete Package");
+            XmNmnemonic = keysym('P');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wpkg_activate_deletepkg(wpkg_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("View");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Display File Differences");
+            XmNmnemonic = keysym('D');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure wpkg_activate_dmode_filediff(wpkg_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Display Files In Time Order");
+            XmNmnemonic = keysym('T');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure wpkg_activate_dmode_filetime(wpkg_ctx);
+          };
+	};
+        XmToggleButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Display File Path");
+            XmNmnemonic = keysym('P');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNvalueChangedCallback = procedure wpkg_activate_dmode_filepath(wpkg_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure wpkg_activate_help(wpkg_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object wpkgnav_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 	= 	XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wpkg_create_wpkgnav_form( wpkg_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wpkg_create_msg_label( wpkg_ctx);
+   };
+};
+
+end module;
+
+
+
+
+

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_srep.h,v 1.6 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_srep.h,v 1.7 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include "pwr.h"
 #include "wb_vrep.h"
 #include "wb_ldh.h"
-#include "wb_ldhi.h"
+//#include "wb_ldhi.h"
 
 
 class wb_vrep;

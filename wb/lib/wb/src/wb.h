@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb.h,v 1.11 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb.h,v 1.12 2007-01-04 07:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,15 +37,6 @@ typedef enum {
 	wb_eType_ExternVolume
 } wb_eType;
 
-typedef enum {
-	wb_eUtility_Wtt 		= 999,
-	wb_eUtility_PlcEditor 		= 1000,
-	wb_eUtility_AttributeEditor	= 1001,
-	wb_eUtility_Distributor		= 1002,
-	wb_eUtility_SpreadsheetEditor  	= 1003,
-	wb_eUtility_Cmd  		= 1004,
-	wb_eUtility_WNav  		= 1005
-} wb_eUtility;
 
 #if defined __cplusplus
 }

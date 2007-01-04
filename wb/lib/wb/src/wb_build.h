@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.h,v 1.1 2006-03-31 14:24:34 claes Exp $
+ * Proview   $Id: wb_build.h,v 1.2 2007-01-04 07:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,8 +31,8 @@ class Wtt;
 class wb_build : public wb_status
 {
  public:
-  wb_build( wb_session ses, WNav *wnav = 0, void *window = 0):
-    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid), m_window(window) {};
+  wb_build( wb_session ses, WNav *wnav = 0):
+    m_session(ses), m_wnav(wnav), m_hierarchy(pwr_cNOid) {};
 
   void classlist( pwr_tCid cid);
   void node( char *nodename, void *volumelist, int volumecnt);
@@ -49,7 +49,6 @@ class wb_build : public wb_status
   wb_session m_session;
   WNav *m_wnav;
   pwr_tOid m_hierarchy;
-  void *m_window;
 };
 
 #endif

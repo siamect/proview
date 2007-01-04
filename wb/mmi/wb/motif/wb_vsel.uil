@@ -1,0 +1,263 @@
+! 
+!  Proview   $Id: wb_vsel.uil,v 1.1 2007-01-04 07:29:04 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module vsel
+	version = 'v1.0'
+	names = case_sensitive
+ 
+identifier
+	vsel_ctx;
+	vsel_write_priv;
+
+procedure
+        vsel_create_adb( integer);
+        vsel_destroy_adb( integer);
+	vsel_create_label( integer);
+	vsel_activate_ok( integer);
+	vsel_activate_cancel( integer);
+	vsel_activate_close( integer);
+	vsel_activate_showall( integer);
+	vsel_create_volumelist( integer);
+        vsel_action_volumelist( integer);
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+object vsel_window : XmMainWindow
+{  
+   arguments
+   {
+     XmNwidth = 0;
+     XmNheight = 0;
+   };  
+   controls
+   {
+     XmForm  vsel_adb;
+
+   }; !Controls
+
+   callbacks
+   {
+   };
+};
+
+object vsel_adb : XmForm
+{
+  arguments
+  {
+    XmNwidth = 400;
+    XmNheight = 260;
+    XmNresizePolicy = XmRESIZE_NONE;
+    XmNdefaultButton = XmPushButton ok;
+    XmNcancelButton = XmPushButton cancel;
+  };
+   controls
+   {
+     XmMenuBar		menuBar;
+     XmLabel	     	vsel_label;
+     XmPushButton	ok;
+     XmPushButton	cancel;
+     XmScrolledList 	volumeList;
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure vsel_create_adb ( vsel_ctx) ;
+     XmNdestroyCallback = procedure vsel_destroy_adb( vsel_ctx);
+   };
+};
+
+object menuBar : XmMenuBar
+{
+  arguments {
+    XmNorientation = XmHORIZONTAL;
+    XmNspacing     = 15;                   ! Pixels between XmNlistItems in menu
+    XmNtopAttachment    = XmATTACH_FORM;
+    XmNleftAttachment   = XmATTACH_FORM;
+    XmNrightAttachment    = XmATTACH_FORM;
+  };
+  controls {                              
+    XmCascadeButton filePulldown;
+    XmCascadeButton functionsPulldown;
+  };
+  callbacks {
+  };
+};
+
+object filePulldown : XmCascadeButton
+{
+  arguments{    XmNlabelString = compound_string("File");	
+            	XmNmnemonic         = keysym("F");
+		XmNfontList	    = menu_font;
+  };
+  controls{    XmPulldownMenu filePulldownMenu;	};
+};
+
+
+object filePulldownMenu : XmPulldownMenu
+{
+  arguments{    XmNorientation = XmVERTICAL;	};
+  controls
+  {
+    XmPushButton
+    {
+      arguments { 
+	XmNlabelString = compound_string("Close"); 
+        XmNmnemonic         = keysym("C");
+	XmNaccelerator = "Ctrl<Key>C";
+	XmNacceleratorText = compound_string('Ctrl+C');
+	XmNfontList	    = menu_font;
+      };
+      callbacks { 
+	XmNactivateCallback = procedure vsel_activate_close( vsel_ctx); 
+      };
+    };
+  }; ! Close Pulldown controls
+}; ! Close Pulldown
+
+object functionsPulldown : XmCascadeButton
+{
+  arguments{    XmNlabelString = compound_string("Functions");	
+            	XmNmnemonic         = keysym("F");
+		XmNfontList	    = menu_font;
+  };
+  controls{    XmPulldownMenu functionsPulldownMenu;	};
+};
+
+object functionsPulldownMenu : XmPulldownMenu
+{
+  arguments{    XmNorientation = XmVERTICAL;	};
+  controls
+  {
+    XmPushButton
+    {
+      arguments { 
+	XmNlabelString = compound_string("Configure project"); 
+        XmNmnemonic         = keysym("C");
+	XmNsensitive = vsel_write_priv;
+	XmNfontList	    = menu_font;
+      };
+      callbacks { 
+	! XmNactivateCallback = procedure vsel_activate_create( vsel_ctx); 
+      };
+    };
+    XmToggleButton
+    {
+      arguments
+      {
+        XmNlabelString = compound_string("Show All Volumes");
+	XmNmnemonic = keysym('A');
+	XmNaccelerator = "Ctrl<Key>A";
+	XmNacceleratorText = compound_string('Ctrl+A');
+	XmNfontList	    = menu_font;
+      };
+      callbacks
+      {
+        XmNvalueChangedCallback = procedure vsel_activate_showall(vsel_ctx);
+      };
+    }; 
+  }; ! Functions Pulldown controls
+}; ! Functions Pulldown
+
+
+object vsel_label : XmLabel 
+{
+   arguments
+   {
+      XmNbottomAttachment 	= XmATTACH_FORM;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNmarginLeft	        = 10;
+      XmNalignment	 		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNfontList	    = menu_font;
+
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure vsel_create_label ( vsel_ctx) ;
+   };
+};
+
+object ok : XmPushButton
+{
+	arguments
+	{
+	  XmNbottomAttachment = XmATTACH_FORM;
+	  XmNbottomOffset = 20;
+          XmNleftAttachment = XmATTACH_FORM;
+	  XmNleftOffset = 20;
+	  XmNwidth = 80;
+          XmNlabelString = 'OK';
+	  XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  XmNactivateCallback = procedure vsel_activate_ok ( vsel_ctx) ;
+	};
+};
+object cancel : XmPushButton
+{
+	arguments
+	{
+	  XmNwidth = 80;
+          XmNlabelString = 'Cancel';
+	  XmNbottomAttachment = XmATTACH_FORM;
+	  XmNbottomOffset = 20;
+          XmNrightAttachment = XmATTACH_FORM;
+	  XmNrightOffset = 20;
+	  XmNfontList	    = menu_font;
+	};
+	callbacks
+	{
+	  XmNactivateCallback = procedure vsel_activate_cancel ( vsel_ctx) ;
+	};
+};
+
+object volumeList : XmScrolledList {
+    arguments {
+	XmNbottomAttachment = XmATTACH_WIDGET;
+	XmNbottomWidget = XmPushButton ok;
+	XmNbottomOffset = 15;
+        XmNrightAttachment = XmATTACH_FORM;
+	XmNrightOffset = 5;
+        XmNtopAttachment = XmATTACH_WIDGET;
+	XmNtopWidget = XmMenuBar menuBar;
+	XmNtopOffset = 5;
+        XmNleftAttachment = XmATTACH_FORM;
+	XmNleftOffset = 5;
+	XmNselectionPolicy = XmEXTENDED_SELECT;
+!	XmNfontList	    = menu_font;
+ 	XmNfontList= font('*courier-bold-r-normal--*-140-75-75-m-*-*-*');
+    };
+    controls {
+    };
+    callbacks {
+	MrmNcreateCallback = procedure vsel_create_volumelist( vsel_ctx);
+        XmNdefaultActionCallback = procedure vsel_action_volumelist( vsel_ctx);
+    };
+};
+
+
+
+end module;
+
+
+

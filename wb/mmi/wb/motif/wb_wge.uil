@@ -1,0 +1,363 @@
+! 
+!  Proview   $Id: wb_wge.uil,v 1.1 2007-01-04 07:29:04 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module wb_wge
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+
+identifier
+	wge_ctx;
+procedure
+	wge_activate_exit(integer);
+	wge_create_graph_form(integer);
+	wge_create_menu(integer);
+	wge_activate_zoom_in(integer);
+	wge_activate_zoom_out(integer);
+	wge_activate_zoom_reset(integer);
+	wge_activate_help(integer);
+        wge_create_value_input(integer); 
+        wge_activate_value_input(integer); 
+        wge_activate_confirm_ok(integer); 
+        wge_activate_confirm_cancel(integer); 
+        wge_create_message_dia(integer); 
+
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+	menu_font2 : font ('-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  wge_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+  };
+  controls
+  {
+     XmMenuBar	wge_menu;
+     XmForm     form;
+  };
+};
+
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 200;
+     XmNheight = 200;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmPanedWindow graph_form;
+  };
+};
+
+object wge_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure wge_create_menu( wge_ctx);
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = "File";
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = "Close";
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wge_activate_exit(wge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = "View";
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = "Zoom in";
+            XmNmnemonic = keysym('I');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wge_activate_zoom_in(wge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = "Zoom out";
+            XmNmnemonic = keysym('O');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wge_activate_zoom_out(wge_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = "Zoom reset";
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure wge_activate_zoom_reset(wge_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+      XmNlabelString = "Help";
+      XmNfontList    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+            XmNlabelString = "Help";
+            XmNfontList	   = menu_font;
+          };
+          callbacks
+          {
+            XmNactivateCallback = procedure wge_activate_help(wge_ctx);
+          };
+        };
+      }; !Controls
+    }; !Pulldown_menu
+  }; !Controls
+}; ! help_entry
+
+object graph_form : XmPanedWindow
+{
+   arguments
+   {
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNtopAttachment    	= XmATTACH_FORM;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure wge_create_graph_form( wge_ctx);
+   };
+};
+
+!
+!-----------------------------------------------------------------
+! 
+! Input Dialog box
+!
+!________________________________________________________________
+object   input_dialog : XmFormDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+     XmNwidth = 400;
+     XmNheight = 80;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Value input";
+!     XmNdefaultButton = india_ok;
+  };
+  controls
+  {
+     XmLabel	     india_label;
+     XmText          india_text;
+!     XmPushButton   india_ok;
+!     XmPushButton   india_cancel;
+  };
+}; 
+
+object india_label : XmLabel
+{
+  arguments
+  {
+     XmNx = 30;
+     XmNy = 28;
+     XmNlabelString = "Enter Value";
+     XmNfontList    = menu_font;
+  };
+};
+
+object india_text : XmText
+{
+  arguments
+  {
+     XmNx = 120;
+     XmNy = 21;
+     XmNfontList    = menu_font2;
+  };
+  callbacks
+  {
+     MrmNcreateCallback = procedure wge_create_value_input( wge_ctx); 
+     XmNactivateCallback = procedure wge_activate_value_input( wge_ctx);
+  };
+};
+
+object india_ok : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 20;
+     XmNy = 100;
+     XmNlabelString = "Ok";
+  };
+  callbacks
+  { 
+!     XmNactivateCallback = procedure wge_activate_india_ok( wge_ctx); 
+  };
+};
+
+object india_cancel : XmPushButton
+{
+  arguments
+  {
+     XmNwidth = 80;
+     XmNx = 280;
+     XmNy = 100;
+     XmNlabelString = "Cancel";
+  };
+  callbacks
+  { 
+!     XmNactivateCallback = procedure wge_activate_india_cancel( wge_ctx); 
+  };
+};
+
+!
+! Confirm dialog
+object   confirm_dialog : XmQuestionDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+!     XmNwidth = 400;
+!     XmNheight = 150;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = false;
+     XmNdialogTitle = "Confirm";
+     XmNokLabelString = "Yes";
+     XmNcancelLabelString = "No";
+     XmNhelpLabelString = "Help";
+  };
+  callbacks
+  { 
+     XmNokCallback = procedure wge_activate_confirm_ok( wge_ctx); 
+     XmNcancelCallback = procedure wge_activate_confirm_cancel( wge_ctx); 
+  };
+}; 
+
+!
+! Message dialog
+object   message_dialog : XmErrorDialog
+{
+  arguments
+  {
+     XmNnoResize = true;
+     XmNdefaultPosition = true;
+     XmNautoUnmanage     = true;
+     XmNdialogTitle = "Message";
+     XmNcancelLabelString = "Ok";
+  };
+  callbacks
+  { 
+     MrmNcreateCallback = procedure wge_create_message_dia( wge_ctx); 
+  };
+}; 
+
+
+end module;

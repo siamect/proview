@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.h,v 1.5 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_pal.h,v 1.6 2007-01-04 07:29:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef wb_pal_h
 #define wb_pal_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 #ifndef pwr_h
 # include "pwr.h"
@@ -44,22 +40,16 @@ class Pal {
   public:
     Pal(
 	void *parent_ctx,
-	Widget	parent_wid,
 	char *name,
 	ldh_tSesContext ldhses,
 	char *root_name,
-	Widget *w,
 	pwr_tStatus *status
 	);
-    ~Pal();
+    virtual ~Pal();
 
     void 	*parent_ctx;
-    Widget	parent_wid;
     char 	name[80];
     char 	root_name[80];
-    Widget	brow_widget;
-    Widget	form_widget;
-    Widget	toplevel;
     BrowCtx	*brow_ctx;
     ldh_tWBContext wbctx;
     ldh_tSesContext ldhses;
@@ -72,8 +62,6 @@ class Pal {
     void       	(*create_popup_menu_cb)( void *, pwr_tCid, int, int);
     int		displayed;
     PalFileMenu *menu;
-    int	        avoid_deadlock;
-    XtIntervalId deadlock_timerid;
 
     brow_tNodeClass nc;
     flow_sAnnotPixmap *pixmap_leaf;
@@ -117,6 +105,9 @@ class Pal {
     flow_sAnnotPixmap *pixmap_frame;
     flow_sAnnotPixmap *pixmap_wait;
 
+    virtual void set_inputfocus( int focus) {}
+    virtual void set_selection_owner() {}
+    virtual void create_popup_menu( pwr_tCid cid, int x, int y) {}
 
     void zoom( double zoom_factor);
     void unzoom();
@@ -127,16 +118,89 @@ class Pal {
     int create_item( pwr_tObjid objid, 
 	brow_tNode dest, flow_eDest dest_code, void **item,
 	int is_root);
-    void set_inputfocus( int focus);
     int object_exist( brow_tObject object);
-    void set_selection_owner();
     int session_opened( ldh_tSesContext pal_ldhses, char *pal_root_name);
     int session_closed();
+
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
+
 };
 
-#if defined __cplusplus
-}
-#endif
+//
+// Definition of item classes
+// The following classes are defined:
+//    PalItem		superclass.
+//    PalItemObject	Object that is not of class Group, GroupRef or 
+//			$ClassHier. Doesn't display it's children.
+//    PalItemClass		Group or $ClassHier objects. Displays it's children.
+//    PalItemClassVolume	GroupRef objects. Display's one of the following
+//			- the children of a Group with the same name.
+//			- the children of a root object with the same name,
+//			- a classvolume width the same name,
+//			- it's own children.
+//
+
+typedef enum {
+	pal_mOpen_All	        = ~0,
+	pal_mOpen_Children	= 1 << 0
+	} pal_mOpen;
+
+typedef enum {
+	pal_ePalItemType_Object,
+	pal_ePalItemType_Class,
+	pal_ePalItemType_ClassVolume,
+	pal_ePalItemType_Menu
+	} pal_ePalItemType;
+
+class PalItem {
+  public:
+    PalItem( pwr_tObjid item_objid, int item_is_root) :
+        type( pal_ePalItemType_Object), objid(item_objid), 
+	is_root(item_is_root), node(NULL)
+	{};
+    pal_ePalItemType	type;
+    pwr_tObjid		objid;
+    int			is_root;
+    brow_tNode		node;
+    int			open( Pal *pal, double x, double y) 
+				{ return 1;};
+};
+
+
+class PalItemClassVolume : public PalItem {
+  public:
+    PalItemClassVolume( Pal *pal, char *item_name, 
+	brow_tNode dest, flow_eDest dest_code, int item_is_root);
+    int			open( Pal *pal, double x, double y);
+    char	 	name[120];
+};
+
+class PalItemClass : public PalItem {
+  public:
+    PalItemClass( Pal *pal, char *item_name, 
+	brow_tNode dest, flow_eDest dest_code, int item_is_root);
+    int			open( Pal *pal, double x, double y);
+    char	 	name[120];
+};
+
+class PalItemObject : public PalItem {
+  public:
+    PalItemObject( Pal *pal, pwr_tObjid item_objid, 
+	brow_tNode dest, flow_eDest dest_code, int item_is_root);
+};
+
+class PalItemMenu : public PalItem {
+  public:
+    PalItemMenu( Pal *pal, char *item_name, 
+	brow_tNode dest, flow_eDest dest_code, PalFileMenu **item_child_list,
+	int item_is_root);
+    char	 	name[120];
+    PalFileMenu	        **child_list;
+    int			open( Pal *pal, double x, double y);
+    int     		close( Pal *pal, double x, double y);
+};
+
 #endif
 
 
