@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_line.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_line.h,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <iostream.h>
 #include <fstream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 
@@ -55,7 +55,7 @@ class GlowLine : public GlowArrayElem {
     \param line_w	Linewidth.
     \param fix_line_w	Linewidth independent of scale.
   */
-  GlowLine( GlowCtx *glow_ctx, double x1 = 0, double y1 = 0, double x2 = 0, 
+  GlowLine( GrowCtx *glow_ctx, double x1 = 0, double y1 = 0, double x2 = 0, 
 		double y2 = 0, glow_eDrawType d_type = glow_eDrawType_Line, 
 		int line_w = 1, int fix_line_w = 0) : 
 	ctx(glow_ctx), p1(glow_ctx,x1,y1), p2(glow_ctx,x2,y2),
@@ -84,14 +84,11 @@ class GlowLine : public GlowArrayElem {
 
     Detects if the object is hit by the event.
   */
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+  int	event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
 
   //! Not implemented
   void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-
-  //! Print postscript. Not used.
-  void print( void *pos, void *node);
 
   //! Save the content of the object to file.
   /*!
@@ -115,7 +112,7 @@ class GlowLine : public GlowArrayElem {
 
     Draw the object, without borders or shadow.
   */
-  void draw( void *pos, int highlight, int hot, void *node);
+  void draw( GlowWind *w, void *pos, int highlight, int hot, void *node);
 
   void draw_border( void *pos, int highlight, int hot, void *node);
 
@@ -129,21 +126,7 @@ class GlowLine : public GlowArrayElem {
     Draw border and shadow of the object. The border always has color black and linewidth 1 pixel.
     The shadow also always has linewith 1 pixel.
   */
-  void draw_shadow( int border, int shadow, int highlight, int hot);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-
-    Draw the object, without borders or shadow.
-  */
-  void nav_draw( void *pos, int highlight, void *node);
-
-  //! Not used
-  void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
+  void draw_shadow( GlowWind *w, int border, int shadow, int highlight, int hot);
 
   //! Erase the object.
   /*!
@@ -151,14 +134,7 @@ class GlowLine : public GlowArrayElem {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( void *pos, int hot, void *node);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( void *pos, void *node);
+  void erase( GlowWind *w, void *pos, int hot, void *node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -278,7 +254,7 @@ class GlowLine : public GlowArrayElem {
   */
   void convert( glow_eConvert version);
 
-  GlowCtx *ctx;    	//!< Glow context.
+  GrowCtx *ctx;    	//!< Glow context.
   GlowPoint p1;		//!< First endpoint of line.
   GlowPoint p2;		//!< Second endpoint of line.
   glow_eDrawType draw_type; //!< Line color.

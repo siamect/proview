@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growline.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,7 +50,7 @@ class GrowLine : public GlowLine {
 
     Create a line from the point (x1,y1) to the point (x2,y2).
   */
-  GrowLine( GlowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0, 
+  GrowLine( GrowCtx *glow_ctx, char *name, double x1 = 0, double y1 = 0, 
 		double x2 = 0, double y2 = 0, 
 		glow_eDrawType d_type = glow_eDrawType_Line, 
 		int line_w = 1, int fix_line_w = 0, int nodraw = 0);
@@ -70,7 +70,7 @@ class GrowLine : public GlowLine {
     action: changes the cursor, draws the object hot, and registers the object as
     current callback object.
   */
-  int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+  int	event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Detects if the object is hit by an event in transformed coordinates
   /*!
@@ -82,7 +82,7 @@ class GrowLine : public GlowLine {
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler( glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
 
   //! Detects if the object is hit by an event in local coordinates
   /*!
@@ -131,9 +131,6 @@ class GrowLine : public GlowLine {
 	{ x_left = y_low = 1e37; x_right = y_high = -1e37;
 	  get_borders( (GlowTransform *) NULL, &x_right, &x_left, &y_high, &y_low);};
 
-  //! Not implemented
-  void print( double ll_x, double ll_y, double ur_x, double ur_y) {};
-
   //! Save the content of the object to file.
   /*!
     \param fp	Ouput file.
@@ -154,7 +151,7 @@ class GrowLine : public GlowLine {
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
   /*!
@@ -166,24 +163,11 @@ class GrowLine : public GlowLine {
     If some part of object is inside the drawing area, and also outside the drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
-  //! Not implemented
-  void draw_inverse() {};
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
 
   //! Erase the object
-  void erase()
-	{ erase( (GlowTransform *)NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( (GlowTransform *)NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
   //! Move the object.
   /*!
@@ -212,12 +196,6 @@ class GrowLine : public GlowLine {
     \return Return 1 if object is highlighted, else 0.
   */
   int get_highlight() {return highlight;};
-
-  //! Not implemented.
-  void set_inverse( int on) {};
-
-  //! Not implemented.
-  int get_inverse() {return inverse;};
 
   //! Not used.
   void set_hot( int on) {};
@@ -372,7 +350,7 @@ class GrowLine : public GlowLine {
     The object is drawn with border color. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -380,26 +358,10 @@ class GrowLine : public GlowLine {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Redraw the area inside the objects border.
   void draw();
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
 
   //! Add a transform to the current transform.
   /*!

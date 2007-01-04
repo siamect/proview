@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growarc.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growarc.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowArc::GrowArc( GlowCtx *glow_ctx, char *name, double x1, double y1, 
+GrowArc::GrowArc( GrowCtx *glow_ctx, char *name, double x1, double y1, 
 		  double x2, double y2, int ang1, int ang2,
 		  glow_eDrawType border_d_type, int line_w, 
 		  int fill_arc, int display_border, int display_shadow,
@@ -56,7 +56,7 @@ GrowArc::GrowArc( GlowCtx *glow_ctx, char *name, double x1, double y1,
     ur.posit( x_grid, y_grid);
   }
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   get_node_borders();
 }
 
@@ -65,38 +65,38 @@ GrowArc::~GrowArc()
   ctx->object_deleted( this);
   if ( ctx->nodraw) return;
 
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw(  &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   if ( hot)
-    draw_set_cursor( ctx, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
 }
 
 void GrowArc::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
 
   if ( grid)
   {
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    erase();
-    nav_erase();
-    ctx->find_grid( x_left + delta_x / ctx->zoom_factor_x,
-	y_low + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    ctx->find_grid( x_left + delta_x / ctx->mw.zoom_factor_x,
+	y_low + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -104,25 +104,25 @@ void GrowArc::move( double delta_x, double delta_y, int grid)
   {
     double dx, dy;
 
-    erase();
-    nav_erase();
-    dx = delta_x / ctx->zoom_factor_x;
-    dy = delta_y / ctx->zoom_factor_y;
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    dx = delta_x / ctx->mw.zoom_factor_x;
+    dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   ctx->redraw_defered();
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
 
 }
 
@@ -133,8 +133,8 @@ void GrowArc::move_noerase( int delta_x, int delta_y, int grid)
     double x_grid, y_grid;
 
     /* Move to closest grid point */
-    ctx->find_grid( x_left + double( delta_x) / ctx->zoom_factor_x,
-	y_low + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x_left + double( delta_x) / ctx->mw.zoom_factor_x,
+	y_low + double( delta_y) / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
@@ -142,22 +142,22 @@ void GrowArc::move_noerase( int delta_x, int delta_y, int grid)
   {
     double dx, dy;
 
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = double( delta_x) / ctx->mw.zoom_factor_x;
+    dy = double( delta_y) / ctx->mw.zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 
 }
 
@@ -172,15 +172,12 @@ int GrowArc::local_event_handler( glow_eEvent event, double x, double y)
 
   if ( ll_x <= x && x <= ur_x &&
        ll_y <= y && y <= ur_y)
-  {
-//    cout << "Event handler: Hit in rect" << endl;
     return 1;
-  }  
   else
     return 0;
 }
 
-int GrowArc::event_handler( glow_eEvent event, double fx, double fy)
+int GrowArc::event_handler( GlowWind *w, glow_eEvent event, double fx, double fy)
 {
   double x, y;
 
@@ -188,7 +185,7 @@ int GrowArc::event_handler( glow_eEvent event, double fx, double fy)
   return local_event_handler( event, x, y);
 }
 
-int GrowArc::event_handler( glow_eEvent event, int x, int y, double fx,
+int GrowArc::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
 	double fy)
 {
   int sts;
@@ -199,8 +196,7 @@ int GrowArc::event_handler( glow_eEvent event, int x, int y, double fx,
   trf.reverse( fx, fy, &rx, &ry);
 
   sts = 0;
-  if ( event == ctx->event_move_node)
-  {
+  if ( event == ctx->event_move_node) {
     sts = local_event_handler( event, rx, ry);
     if ( sts)
     {
@@ -209,47 +205,37 @@ int GrowArc::event_handler( glow_eEvent event, int x, int y, double fx,
     }
     return sts;
   }
-  switch ( event)
-  {
-    case glow_eEvent_CursorMotion:
-    {
+  switch ( event) {
+    case glow_eEvent_CursorMotion: {
       int redraw = 0;
 
       if ( ctx->hot_mode == glow_eHotMode_TraceAction)
         sts = 0;
       else if ( ctx->hot_found)
         sts = 0;
-      else
-      {
+      else {
         sts = local_event_handler( event, rx, ry);
         if ( sts)
           ctx->hot_found = 1;
       }
       if ( sts && !hot  &&
-	   !(ctx->node_movement_active || ctx->node_movement_paste_active))
-      {
-        draw_set_cursor( ctx, glow_eDrawCursor_CrossHair);
+	   !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
+        ctx->gdraw->set_cursor( w, glow_eDrawCursor_CrossHair);
         hot = 1;
         redraw = 1;
       }
-      if ( !sts && hot)
-      {
+      if ( !sts && hot) {
         if ( !ctx->hot_found)
-          draw_set_cursor( ctx, glow_eDrawCursor_Normal);
-        erase();
+          ctx->gdraw->set_cursor( w, glow_eDrawCursor_Normal);
+        erase( w);
         hot = 0;
         redraw = 1;
       }
-      if ( redraw)
-      {
-        if ( !inverse)
-          ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-//          ((GlowArc *)this)->draw( (void *)&pzero, highlight, hot, NULL);
-        else
-          draw_inverse();
+      if ( redraw) {
+        ctx->draw( w, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
       }
       break;
     }
@@ -375,55 +361,47 @@ void GrowArc::open( ifstream& fp)
   }
 }
 
-void GrowArc::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GrowArc::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
 
-  if ( ll_x > ur_x)
-  {
+  if ( ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
     ll_x = ur_x;
     ur_x = tmp;
   }
-  if ( ll_y > ur_y)
-  {
+  if ( ll_y > ur_y) {
     /* Shift */
     tmp = ll_y;
     ll_y = ur_y;
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
-      	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
-       	y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+  if ( x_right * w->zoom_factor_x - w->offset_x >= ll_x &&
+       x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       y_high * w->zoom_factor_y - w->offset_y >= ll_y &&
+       y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   }
 }
 
-void GrowArc::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GrowArc::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
-  if ( *ll_x > *ur_x)
-  {
+  if ( *ll_x > *ur_x) {
     /* Shift */
     tmp = *ll_x;
     *ll_x = *ur_x;
     *ur_x = tmp;
   }
-  if ( *ll_y > *ur_y)
-  {
+  if ( *ll_y > *ur_y) {
     /* Shift */
     tmp = *ll_y;
     *ll_y = *ur_y;
@@ -433,12 +411,8 @@ void GrowArc::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   if (  obj_ur_x >= *ll_x &&
       	obj_ll_x <= *ur_x &&
        	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+       	obj_ll_y <= *ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
     // Increase the redraw area
     if ( obj_ur_x > *ur_x)
@@ -449,48 +423,6 @@ void GrowArc::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
       *ll_x = obj_ll_x;
     if ( obj_ll_y < *ll_y)
       *ll_y = obj_ll_y;
-  }
-}
-
-void GrowArc::nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
-{ 
-  int 	obj_ur_x = int( x_right * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ll_x = int( x_left * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ur_y = int( y_high * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  int   obj_ll_y = int( y_low * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-
-  if (  obj_ur_x >= *ll_x &&
-      	obj_ll_x <= *ur_x &&
-       	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
-
-    // Increase the redraw area
-    if ( obj_ur_x > *ur_x)
-      *ur_x = obj_ur_x;
-    if ( obj_ur_y > *ur_y)
-      *ur_y = obj_ur_y;
-    if ( obj_ll_x < *ll_x)
-      *ll_x = obj_ll_x;
-    if ( obj_ll_y < *ll_y)
-      *ll_y = obj_ll_y;
-  }
-}
-
-void GrowArc::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int x_right_pix = int( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int x_left_pix = int( x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int y_high_pix = int( y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-  int y_low_pix = int( y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-
-  if ( x_right_pix >= ll_x &&
-       x_left_pix <= ur_x &&
-       y_high_pix >= ll_y &&
-       y_low_pix <= ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
   }
 }
 
@@ -534,7 +466,7 @@ void GrowArc::set_dynamic( char *code, int size)
 void GrowArc::exec_dynamic()
 {
   if ( dynamicsize && strcmp( dynamic, "") != 0)
-    ((GrowCtx *)ctx)->dynamic_cb( this, dynamic, glow_eDynamicType_Object);
+    ctx->dynamic_cb( this, dynamic, glow_eDynamicType_Object);
 }
 
 void GrowArc::set_position( double x, double y)
@@ -547,22 +479,22 @@ void GrowArc::set_position( double x, double y)
   old_x_right = x_right;
   old_y_low = y_low;
   old_y_high = y_high;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   trf.posit( x, y);
   get_node_borders();
-  ((GrowCtx *)ctx)->draw( old_x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     old_y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     old_x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     old_y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 
 }
 
@@ -608,8 +540,8 @@ void GrowArc::set_scale( double scale_x, double scale_y,
   old_x_right = x_right;
   old_y_low = y_low;
   old_y_high = y_high;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   trf.scale_from_stored( scale_x, scale_y, x0, y0);
   get_node_borders();
 
@@ -640,18 +572,18 @@ void GrowArc::set_scale( double scale_x, double scale_y,
     default:
       ;
   }
-  ((GrowCtx *)ctx)->draw( old_x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     old_y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     old_x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     old_y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowArc::set_rotation( double angel, 
@@ -662,8 +594,7 @@ void GrowArc::set_rotation( double angel,
   if ( fabs( angel - trf.rotation + trf.s_rotation) < FLT_EPSILON)
     return;
 
-  switch( type)
-  {
+  switch( type) {
     case glow_eRotationPoint_LowerLeft:
       x0 = x_left;
       y0 = y_low;
@@ -692,52 +623,57 @@ void GrowArc::set_rotation( double angel,
   old_x_right = x_right;
   old_y_low = y_low;
   old_y_high = y_high;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   trf.rotate_from_stored( angel, x0, y0);
   get_node_borders();
-  ((GrowCtx *)ctx)->draw( old_x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     old_y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     old_x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     old_y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, old_x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     old_y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     old_x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     old_y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
-void GrowArc::draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode)
+void GrowArc::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode)
 {
   glow_eDrawType drawtype;
   int idx;
+
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
+
   if ( node && ((GrowNode *)node)->line_width)
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
   else
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
     rot = int( trf.rot());
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
     rot = int( trf.rot( t));
   }
 
@@ -749,11 +685,11 @@ void GrowArc::draw( GlowTransform *t, int highlight, int hot, void *node, void *
   if ( fill)
   {
     int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
-    glow_eDrawType fillcolor = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+    glow_eDrawType fillcolor = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
     
     if ( !display_shadow || shadow_width == 0 || angel2 != 360) {
-      glow_draw_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			  angel1 - rot, angel2, fillcolor, 0);
     }
     else {
@@ -764,44 +700,51 @@ void GrowArc::draw( GlowTransform *t, int highlight, int hot, void *node, void *
 	drawtype_incr = -shadow_contrast;
 
       // Draw light shadow
-      drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
+      drawtype = ctx->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
       
-      glow_draw_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			  35, 140, drawtype, 0);
 
       // Draw dark shadow
-      drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
+      drawtype = ctx->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
       
-      glow_draw_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			  215, 140, drawtype, 0);
 
       // Draw medium shadow and body
-      glow_draw_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			  -5, 40, fillcolor, 0);
-      glow_draw_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+      ctx->gdraw->fill_arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 			  175, 40, fillcolor, 0);
 
-      glow_draw_fill_arc( ctx,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
+      ctx->gdraw->fill_arc( w,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
 			  angel1 - rot, angel2, fillcolor, 0);
     }
   }
   if ( border || !fill)
   {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
+    drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
-    glow_draw_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
+    ctx->gdraw->arc( w,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, 
 	angel1 - rot, angel2, drawtype, idx, 0);
   }
 }
 
-void GrowArc::erase( GlowTransform *t, int hot, void *node)
+void GrowArc::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   int idx;
+
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
+
   if ( node && ((GrowNode *)node)->line_width)
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
   else
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
@@ -809,18 +752,18 @@ void GrowArc::erase( GlowTransform *t, int hot, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
     rot = int( trf.rot());
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x + 0.5) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y + 0.5) - ctx->offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y + 0.5) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x + 0.5) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y + 0.5) - w->offset_y;
     rot = int( trf.rot( t));
   }
   ll_x = min( x1, x2);
@@ -828,152 +771,26 @@ void GrowArc::erase( GlowTransform *t, int hot, void *node)
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ctx->set_draw_buffer_only();
+  w->set_draw_buffer_only();
   if ( border || !fill)
-    glow_draw_arc_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+    ctx->gdraw->arc_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	angel1 - rot, angel2, idx);
   if ( fill)
-    glow_draw_fill_arc( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+    ctx->gdraw->fill_arc( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	angel1 - rot, angel2, glow_eDrawType_LineErase, 0);
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowArc::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  glow_eDrawType drawtype;
-  int idx;
-
-  if ( node && ((GrowNode *)node)->line_width)
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-  else
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    rot = int( trf.rot());
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    rot = int( trf.rot( t));
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  if ( fill)
-  {
-    int display_shadow = ((node && ((GrowNode *)node)->shadow) || shadow) && !disable_shadow;
-
-    if ( !display_shadow || shadow_width == 0 || angel2 != 360) {
-      drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 0, (GrowNode *)colornode, 1);
-      glow_draw_nav_fill_arc( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			      angel1- rot, angel2, drawtype);
-    }
-    else {
-      int ish = int( shadow_width / 100 * min(ur_x - ll_x, ur_y - ll_y) + 0.5);
-      glow_eDrawType fillcolor = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 highlight, (GrowNode *)colornode, 1);
-
-      int drawtype_incr = shadow_contrast;
-      if ( relief == glow_eRelief_Down)
-	drawtype_incr = -shadow_contrast;
-
-      // Draw light shadow
-      drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, -drawtype_incr, (GrowNode *)colornode);
-      
-      glow_draw_nav_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  35, 140, drawtype);
-
-      // Draw dark shadow
-      drawtype = ((GrowCtx *)ctx)->shift_drawtype( fillcolor, drawtype_incr, (GrowNode *)colornode);
-      
-      glow_draw_nav_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  215, 140, drawtype);
-
-      // Draw medium shadow and body
-      glow_draw_nav_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  -5, 40, fillcolor);
-      glow_draw_nav_fill_arc( ctx,  ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			  175, 40, fillcolor);
-
-      glow_draw_nav_fill_arc( ctx,  ll_x + ish, ll_y + ish, ur_x - ll_x - 2*ish, ur_y - ll_y - 2*ish,
-			  angel1 - rot, angel2, fillcolor);
-    }
-  }
-  if ( border || !fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 0, (GrowNode *)colornode, 0);
-    glow_draw_nav_arc( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, drawtype, idx, 0);
-  }
-}
-
-void GrowArc::nav_erase( GlowTransform *t, void *node)
-{
-  int idx;
-  if ( node && ((GrowNode *)node)->line_width)
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-  else
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y, rot;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    rot = int( trf.rot());
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x + 0.5) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y + 0.5) - ctx->nav_offset_y;
-    rot = int( trf.rot( t));
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  if ( border || !fill)
-    glow_draw_nav_arc_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, idx);
-  if ( fill)
-    glow_draw_nav_fill_arc( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	angel1 - rot, angel2, glow_eDrawType_LineErase);
+  w->reset_draw_buffer_only();
 }
 
 void GrowArc::draw()
 {
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowArc::get_borders( GlowTransform *t, double *x_right, 
@@ -1019,24 +836,24 @@ void GrowArc::set_transform( GlowTransform *t)
 
 void GrowArc::set_linewidth( int linewidth)
 {
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   GlowArc::set_linewidth( linewidth);
   draw();
 }
 
 void GrowArc::set_fill( int fillval)
 {
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   GlowArc::set_fill( fillval);
   draw();
 }
 
 void GrowArc::set_border( int borderval)
 {
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   border = borderval;
   draw();
 }
@@ -1045,8 +862,10 @@ void GrowArc::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
 
-    erase();
-    nav_erase();
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    ctx->set_defered_redraw();
+    draw();
     switch ( direction)
     {
       case glow_eAlignDirection_CenterVert:
@@ -1085,6 +904,7 @@ void GrowArc::align( double x, double y, glow_eAlignDirection direction)
     y_low += dy;
 
     draw();
+    ctx->redraw_defered();
 }
 
 void GrowArc::export_javabean( GlowTransform *t, void *node,
@@ -1092,10 +912,10 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
 {
   int idx;
   if ( node && ((GrowNode *)node)->line_width)
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+    idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
   else
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+    idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * line_width - 1);
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
@@ -1103,18 +923,18 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
 
   if (!t)
   {
-    x1 = trf.x( ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     rot = trf.rot();
   }
   else
   {
-    x1 = trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     rot = trf.rot( t);
   }
 
@@ -1133,7 +953,7 @@ void GrowArc::export_javabean( GlowTransform *t, void *node,
   if ( relief == glow_eRelief_Down)
     drawtype_incr = -shadow_contrast;
 
-  ((GrowCtx *)ctx)->export_jbean->arc( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+  ctx->export_jbean->arc( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	angel1 - rot, angel2, fill, border || !fill, fill_drawtype, draw_type,
 	idx, ish, shadow, drawtype_incr, pass, shape_cnt, node_cnt, fp);
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_syi.h,v 1.2 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_syi.h,v 1.3 2007-01-04 07:52:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,9 +17,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/* rt_syi.h -- System information
+/* rt_syi.h -- System information */
+/* This module gives information about the system.  */
 
-   This module gives information about the system.  */
+#ifndef rt_syi_h
+#define rt_syi_h
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 char		*syi_BootDisk (pwr_tStatus*, char*, int);
 int		syi_Busid (pwr_tStatus*);
@@ -29,3 +35,8 @@ char		*syi_HostSpec (pwr_tStatus*, char*, int);
 char		*syi_NodeName (pwr_tStatus*, char*, int);
 char		*syi_NodeSpec (pwr_tStatus*, char*, int);
 pwr_tBoolean	syi_LocalBoot (pwr_tStatus*);
+
+#if defined __cplusplus
+}
+#endif
+#endif

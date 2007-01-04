@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conclass.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_conclass.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GlowConClass : public GlowArrayElem {
     \param round_corner_amnt The size of the arcs in rounded corners.
     \param grp		Group a connection is a member of.
   */
-  GlowConClass( GlowCtx *glow_ctx, char *name, glow_eConType contype,
+  GlowConClass( GrowCtx *glow_ctx, char *name, glow_eConType contype,
 	glow_eCorner cornertype, glow_eDrawType d_type, int line_w,
 	double arrow_w = 0, double arrow_l = 0, double round_corner_amnt = 0.5,
 	glow_eConGroup grp = glow_eConGroup_Common);
@@ -107,7 +107,7 @@ class GlowConClass : public GlowArrayElem {
   */
   void convert( glow_eConvert version);
 
-  GlowCtx	*ctx;		//!< Glow ctx.
+  GrowCtx	*ctx;		//!< Glow ctx.
   GlowPoint	zero;
   char	cc_name[32];		//!< Con class name.
   glow_eConType con_type;	//!< Connection type.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.h,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_nodeclass.h,v 1.5 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class GlowNodeClass : public GlowArrayElem {
     \param name		Name of the nodeclass.
     \param grp		Node group.
   */
-  GlowNodeClass( GlowCtx *glow_ctx, char *name, 
+  GlowNodeClass( GrowCtx *glow_ctx, char *name, 
 	glow_eNodeGroup grp = glow_eNodeGroup_Common);
 
   //! Copy constructor
@@ -93,7 +93,7 @@ class GlowNodeClass : public GlowArrayElem {
 
   void get_obstacle_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node);
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+  int	event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
 
   //! Event handler
   /*!
@@ -103,7 +103,7 @@ class GlowNodeClass : public GlowArrayElem {
 
     Checks if any of the elements covers the coordinate.
   */
-  int event_handler( glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
 
   //! Print as postscript. Not used.
   void print( GlowPoint *pos, void *node);
@@ -119,11 +119,8 @@ class GlowNodeClass : public GlowArrayElem {
   /*! \param fp	Input file. */
   void open( ifstream& fp);
 
-  void draw( GlowPoint *pos, int highlight, int hot, void *node);
-  void nav_draw( GlowPoint *pos, int highlight, void *node);
-  void draw_inverse( GlowPoint *pos, int hot, void *node);
-  void erase( GlowPoint *pos, int hot, void *node);
-  void nav_erase( GlowPoint *pos, void *node);
+  void draw( GlowWind *w, GlowPoint *pos, int highlight, int hot, void *node);
+  void erase( GlowWind *w, GlowPoint *pos, int hot, void *node);
 
   //! Draw the calling node.
   /*!
@@ -133,20 +130,9 @@ class GlowNodeClass : public GlowArrayElem {
     \param node		Parent node. Can be zero.
     \param colornode	The node that controls the color of the object. Can be zero.
 
-    Call the draw fuction for each element.
+    Call the draw function for each element.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
-
-  //! Draw the calling node in navigation window.
-  /*!
-    \param t		Transform of the node.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-
-    Call the draw fuction for each element.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the calling node.
   /*!
@@ -156,16 +142,7 @@ class GlowNodeClass : public GlowArrayElem {
 
     Call the erase fuction for each element.
   */
-  void erase( GlowTransform *t, int hot, void *node);
-
-  //! Erase the calling node in the navigation window.
-  /*!
-    \param t		Transform of the node.
-    \param node		Parent node. Can be zero.
-
-    Call the erase fuction for each element.
-  */
-  void nav_erase( GlowTransform *t, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   int get_conpoint( int num, double *x, double *y, glow_eDirection *dir);
 
@@ -212,8 +189,6 @@ class GlowNodeClass : public GlowArrayElem {
   void draw_annotation( GlowTransform *t, int highlight, int hot, 
 	void *node, int num);
 
-  void configure_annotations( void *pos, void *node);
-
   //! Get width and height for the text of an annotation.
   /*!
     \param num		Annotation number.
@@ -231,11 +206,6 @@ class GlowNodeClass : public GlowArrayElem {
   //! Get nodeclass name
   /*! \param name	Returned name. */
   void get_object_name( char *name);
-
-  void open_annotation_input( void *pos, void *node, int num);
-  void close_annotation_input( void *node, int num);
-  int get_annotation_input( void *node, int num, char **text);
-  void move_widgets( void *node, int x, int y);
 
   //! Set fill color for all nodeclass elements.
   /*! \param drawtype	Color. */
@@ -399,7 +369,7 @@ class GlowNodeClass : public GlowArrayElem {
   */
   void *get_ctx() { return this->ctx;};
 
-  GlowCtx	*ctx;		//!< Glow context.
+  GrowCtx	*ctx;		//!< Glow context.
   GlowArray 	a;		//!< Array of nodeclass elements.
   char		nc_name[32];	//!< Name of nodeclass.
   glow_eNodeGroup group;	//!< Group the nodeclass belongs to.

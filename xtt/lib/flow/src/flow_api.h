@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.5 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.6 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,8 @@
 #ifndef flow_api_h
 #define flow_api_h
 
+#include "flow.h"
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -30,7 +32,6 @@ typedef void *FlowCtx;
 #endif
 #endif
 
-#include "flow.h"
 
 typedef struct {
 	double	base_zoom_factor;

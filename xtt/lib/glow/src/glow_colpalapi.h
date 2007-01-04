@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalapi.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_colpalapi.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,10 +20,6 @@
 #ifndef glow_colpalapi_h
 #define glow_colpalapi_h
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef __cplusplus
 typedef void *ColPalCtx;
 #ifndef glow_api_h
@@ -33,6 +29,10 @@ typedef void *GlowCtx;
 
 #include "glow.h"
  
+#if defined __cplusplus
+extern "C" {
+#endif
+
 /*! \file glow_colpalapi.h
     \brief Contains c API for the color palette, i.e. the ColPalCtx class. */
 /*! \addtogroup GlowColPalApi */

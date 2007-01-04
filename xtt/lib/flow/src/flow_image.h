@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_image.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_image.h,v 1.4 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -69,13 +69,13 @@ class FlowImage : public FlowArrayElem {
     int  fix_line_width;
     flow_mDisplayLevel display_level;
     int fill;
-    ImlibData   *imlib;
-    ImlibImage  *image;
-    ImlibImage  *original_image;
-    Pixmap      pixmap;
-    Pixmap      nav_pixmap;
-    Pixmap      clip_mask;
-    Pixmap      nav_clip_mask;
+    flow_tImData   imlib;
+    flow_tImImage  image;
+    flow_tImImage  original_image;
+    flow_tPixmap      pixmap;
+    flow_tPixmap      nav_pixmap;
+    flow_tPixmap      clip_mask;
+    flow_tPixmap      nav_clip_mask;
     char        image_filename[120];
     int       current_width;
     int       current_height;

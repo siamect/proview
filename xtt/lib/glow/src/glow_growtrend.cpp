@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.cpp,v 1.5 2005-12-06 09:13:08 claes Exp $
+ * Proview   $Id: glow_growtrend.cpp,v 1.6 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowTrend::GrowTrend( GlowCtx *glow_ctx, char *name, double x, double y, 
+GrowTrend::GrowTrend( GrowCtx *glow_ctx, char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, 
 		glow_mDisplayLevel display_lev,
 		int fill_rect, int display_border, 
@@ -50,15 +50,15 @@ GrowTrend::GrowTrend( GlowCtx *glow_ctx, char *name, double x, double y,
 
   configure_curves();
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
 }
 
 GrowTrend::~GrowTrend()
 {
   if ( ctx->nodraw) return;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   for ( int i = 0; i < curve_cnt; i++)
     delete curve[i];
 }
@@ -85,15 +85,12 @@ void GrowTrend::configure_curves()
 
   pointarray = (glow_sPoint *) calloc( points, sizeof(glow_sPoint));
   point_p = pointarray;
-  for ( i = 0; i < points; i++)
-  {
-    if ( !fill_curve)
-    {
+  for ( i = 0; i < points; i++) {
+    if ( !fill_curve) {
       point_p->y = ur.y;
       point_p->x = ur.x - i * (ur.x - ll.x) / (points - 1);
     }
-    else
-    {
+    else {
       point_p->y = ur.y;
       if ( i == 0)
         point_p->x = ur.x;
@@ -105,8 +102,7 @@ void GrowTrend::configure_curves()
     point_p++;
   }
 
-  for ( i = 0; i < curve_cnt; i++)
-  {
+  for ( i = 0; i < curve_cnt; i++) {
     ctx->nodraw++;
     if ( curve[i])
       delete curve[i];
@@ -270,55 +266,48 @@ void GrowTrend::open( ifstream& fp)
   configure_curves();
 }
 
-void GrowTrend::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GrowTrend::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
 
-  if ( ll_x > ur_x)
-  {
+  if ( ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
     ll_x = ur_x;
     ur_x = tmp;
   }
-  if ( ll_y > ur_y)
-  {
+  if ( ll_y > ur_y) {
     /* Shift */
     tmp = ll_y;
     ll_y = ur_y;
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x + 1 >= ll_x &&
-      	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y + 1 >= ll_y &&
-       	y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
+  if ( x_right * w->zoom_factor_x - w->offset_x + 1 >= ll_x &&
+      	x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       	y_high * w->zoom_factor_y - w->offset_y + 1 >= ll_y &&
+       	y_low * w->zoom_factor_y - w->offset_y <= ur_y)
   {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   }
 }
 
-void GrowTrend::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GrowTrend::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
-  if ( *ll_x > *ur_x)
-  {
+  if ( *ll_x > *ur_x) {
     /* Shift */
     tmp = *ll_x;
     *ll_x = *ur_x;
     *ur_x = tmp;
   }
-  if ( *ll_y > *ur_y)
-  {
+  if ( *ll_y > *ur_y) {
     /* Shift */
     tmp = *ll_y;
     *ll_y = *ur_y;
@@ -328,12 +317,8 @@ void GrowTrend::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   if (  obj_ur_x >= *ll_x &&
       	obj_ll_x <= *ur_x &&
        	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+       	obj_ll_y <= *ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
     // Increase the redraw area
     if ( obj_ur_x > *ur_x)
@@ -347,75 +332,60 @@ void GrowTrend::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   }
 }
 
-void GrowTrend::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int x_right_pix = int( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int x_left_pix = int( x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int y_high_pix = int( y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-  int y_low_pix = int( y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-
-  if ( x_right_pix >= ll_x &&
-       x_left_pix <= ur_x &&
-       y_high_pix >= ll_y &&
-       y_low_pix <= ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
-  }
-}
-
 void GrowTrend::set_highlight( int on)
 {
   highlight = on;
   draw();
 }
 
-void GrowTrend::draw( GlowTransform *t, int highlight, int hot, void *node, 
+void GrowTrend::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, 
 		      void *colornode)
 {
   if ( ctx->nodraw)
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int i;
   if ( !(display_level & ctx->display_level))
     return;
   int idx;
   glow_eDrawType drawtype;
 
-  if ( fix_line_width)
-  {
+  if ( fix_line_width) {
     idx = line_width;
     idx += hot;
     if ( idx < 0)
     {
-      erase( t, hot, node);
+      erase( w, t, hot, node);
       return;
     }
   }
-  else
-  {
+  else {
     if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
     else
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -424,11 +394,11 @@ void GrowTrend::draw( GlowTransform *t, int highlight, int hot, void *node,
   ur_y = max( y1, y2);
   if ( fill)
   {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
+    drawtype = ctx->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
 		 highlight, (GrowNode *)colornode, 1);
-    glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
+    ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype);
   }
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
+  drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
 
   if ( fill_curve)
@@ -436,58 +406,50 @@ void GrowTrend::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < curve_cnt; i++)
       curve[i]->border = 0;
 
-    if ( t)
-    {
+    if ( t) {
       GlowTransform tmp = *t * trf;
       for ( i = 0; i < curve_cnt; i++)
       {
         if ( curve[i])
-          curve[i]->draw( &tmp, highlight, hot, node, colornode);
+          curve[i]->draw( w, &tmp, highlight, hot, node, colornode);
       }
     }
-    else
-    {
+    else {
       for ( i = 0; i < curve_cnt; i++)
       {
         if ( curve[i])
-          curve[i]->draw( &trf, highlight, hot, node, colornode);
+          curve[i]->draw( w, &trf, highlight, hot, node, colornode);
       }
     }
     for ( i = 0; i < curve_cnt; i++)
       curve[i]->border = 1;
   }
 
-  for ( i = 0; i < vertical_lines; i++)
-  {
+  for ( i = 0; i < vertical_lines; i++) {
     int x = int( ll_x + double(ur_x - ll_x) / (vertical_lines + 1) * (i + 1)); 
-    glow_draw_line( ctx, x, ll_y, x, ur_y, drawtype, 0, 0);
+    ctx->gdraw->line( w, x, ll_y, x, ur_y, drawtype, 0, 0);
   }
 
-  for ( i = 0; i < horizontal_lines; i++)
-  {
+  for ( i = 0; i < horizontal_lines; i++) {
     int y = int( ll_y + double(ur_y - ll_y) / (horizontal_lines + 1) * (i + 1)); 
-    glow_draw_line( ctx, ll_x, y, ur_x, y, drawtype, 0, 0);
+    ctx->gdraw->line( w, ll_x, y, ur_x, y, drawtype, 0, 0);
   }
 
   if ( fill_curve)
     for ( i = 0; i < curve_cnt; i++)
       curve[i]->fill = 0;
 
-  if ( t)
-  {
+  if ( t) {
     GlowTransform tmp = *t * trf;
-    for ( i = 0; i < curve_cnt; i++)
-    {
+    for ( i = 0; i < curve_cnt; i++) {
       if ( curve[i])
-        curve[i]->draw( &tmp, highlight, hot, node, colornode);
+        curve[i]->draw( w, &tmp, highlight, hot, node, colornode);
     }
   }
-  else
-  {
-    for ( i = 0; i < curve_cnt; i++)
-    {
+  else {
+    for ( i = 0; i < curve_cnt; i++) {
       if ( curve[i])
-        curve[i]->draw( &trf, highlight, hot, node, colornode);
+        curve[i]->draw( w, &trf, highlight, hot, node, colornode);
     }
   }
 
@@ -495,186 +457,61 @@ void GrowTrend::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < curve_cnt; i++)
       curve[i]->fill = 1;
 
-  if ( border)
-  {
-    glow_draw_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
+  if ( border) {
+    ctx->gdraw->rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, drawtype, idx, 0);
   }
 
 }
 
-void GrowTrend::erase( GlowTransform *t, int hot, void *node)
+void GrowTrend::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int idx;
-  if ( fix_line_width)
-  {
+  if ( fix_line_width) {
     idx = line_width;
     idx += hot;
     if ( idx < 0) return;
   }
-  else
-  {
+  else {
     if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
     else
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ctx->set_draw_buffer_only();
+  w->set_draw_buffer_only();
   if ( border)
-    glow_draw_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowTrend::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  int i;
-  if ( !(display_level & ctx->display_level))
-    return;
-  glow_eDrawType drawtype;
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-    else
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  if ( fill)
-  {
-    drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 0, (GrowNode *)colornode, 1);
-    glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	drawtype);
-  }
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 0, (GrowNode *)colornode, 0);
-
-  if ( t)
-  {
-    GlowTransform tmp = *t * trf;
-    for ( i = 0; i < curve_cnt; i++)
-    {
-      if ( curve[i])
-        curve[i]->nav_draw( &tmp, highlight, node, colornode);
-    }
-  }
-  else
-  {
-    for ( i = 0; i < curve_cnt; i++)
-    {
-      if ( curve[i])
-        curve[i]->nav_draw( &trf, highlight, node, colornode);
-    }
-  }
-  if ( border)
-  {
-    glow_draw_nav_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	drawtype, idx, 0);
-  }
-}
-
-void GrowTrend::nav_erase( GlowTransform *t, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-    else
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  if ( border )
-    glow_draw_nav_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	idx);
-  glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	glow_eDrawType_LineErase);
+    ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  w->reset_draw_buffer_only();
 }
 
 void GrowTrend::trace_scan()
@@ -705,14 +542,14 @@ void GrowTrend::trace_close()
 
 void GrowTrend::draw()
 {
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw,  x_left * ctx->navw.zoom_factor_x - ctx->mw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->mw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->mw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->mw.offset_y + 1);
 }
 
 void GrowTrend::add_value( double value, int idx) 
@@ -728,23 +565,24 @@ void GrowTrend::add_value( double value, int idx)
 
   curve_value = max( ll.y, min( curve_value, ur.y));
   if ( !fill)
-    erase();
+    erase( &ctx->mw);
   if ( !fill_curve)
     curve[idx]->add_and_shift_y_value( curve_value);
   else
     curve[idx]->add_and_shift_y_value_filled( curve_value);
   draw();
-  nav_draw( (GlowTransform *) NULL, highlight, NULL, NULL);
+  draw( &ctx->navw, (GlowTransform *) NULL, highlight, 0, NULL, NULL);
 }
 
 void GrowTrend::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
 
-    erase();
-    nav_erase();
-    switch ( direction)
-    {
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    ctx->set_defered_redraw();
+    draw();
+    switch ( direction) {
       case glow_eAlignDirection_CenterVert:
         dx = x - (x_right + x_left) / 2;
         dy = 0;
@@ -781,6 +619,7 @@ void GrowTrend::align( double x, double y, glow_eAlignDirection direction)
     y_low += dy;
 
     draw();
+    ctx->redraw_defered();
 }
 
 void GrowTrend::set_trace_attr( GlowTraceData *attr)
@@ -816,17 +655,17 @@ void GrowTrend::export_javabean( GlowTransform *t, void *node,
 
   if (!t)
   {
-    x1 = trf.x( ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
   else
   {
-    x1 = trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
   ll_x = min( x1, x2);

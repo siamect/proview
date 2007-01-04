@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.h,v 1.4 2006-06-29 10:51:17 claes Exp $
+ * Proview   $Id: glow_growsubannot.h,v 1.5 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,14 +26,14 @@
 
 class GrowSubAnnot : public GlowAnnot {
   public:
-    GrowSubAnnot( GlowCtx *glow_ctx, char *name, double x = 0, double y = 0,
+    GrowSubAnnot( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0,
 	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
 	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,
 	int rel_pos = 0, glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 	int nodraw =0);
     ~GrowSubAnnot();
-    int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+    int	event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
     void get_borders(
 	double *x1_right, double *x1_left, double *y1_high, double *y1_low)
         { rect.get_borders( 0, 0, x1_right, x1_left, y1_high, y1_low, NULL);};
@@ -46,17 +46,11 @@ class GrowSubAnnot : public GlowAnnot {
     void nav_zoom();
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
-    void draw( int ll_x, int ll_y, int ur_x, int ur_y);
-    void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-    void draw_inverse() {};
-    void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-    void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
-    void erase()
-	{ text.erase( (void *)&pzero, hot, NULL);
-          rect.erase( (void *)&pzero, hot, NULL);};
-    void nav_erase()
-	{ text.nav_erase( (void *)&pzero, NULL);
-          rect.nav_erase( (void *)&pzero, NULL);};
+    void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
+    void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
+    void erase( GlowWind *w)
+	{ text.erase( w, (void *)&pzero, hot, NULL);
+          rect.erase( w, (void *)&pzero, hot, NULL);};
     void move( double delta_x, double delta_y, int grid);
     void move_noerase( int delta_x, int delta_y, int grid);
     void set_highlight( int on);
@@ -89,10 +83,8 @@ class GrowSubAnnot : public GlowAnnot {
     void set_user_data( void *data) { user_data = data;};
     void get_user_data( void **data) { *data = user_data;};
     void *get_ctx() { return this->ctx;};
-    void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
-    void erase( GlowTransform *t, int hot, void *node);
-    void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-    void nav_erase( GlowTransform *t, void *node);
+    void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+    void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
     void set_transform( GlowTransform *t);
     void set_transform_from_stored( GlowTransform *t) 
 	{ trf.set_from_stored( t), get_node_borders(); };

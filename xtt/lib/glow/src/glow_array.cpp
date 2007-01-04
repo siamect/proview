@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.8 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.9 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,9 +38,8 @@
 #include "glow_annot.h"
 #include "glow_arrow.h"
 #include "glow_array.h"
-#include "glow_pixmap.h"
-#include "glow_annotpixmap.h"
-#include "glow_radiobutton.h"
+//#include "glow_pixmap.h"
+//#include "glow_annotpixmap.h"
 #include "glow_growrect.h"
 #include "glow_growrectrounded.h"
 #include "glow_growarc.h"
@@ -119,15 +118,6 @@ void GlowArray::copy_from( const GlowArray& array)
   {
     switch( array.a[i]->type())
     {
-      case glow_eObjectType_Node:
-      {
-        GlowNode *n = new GlowNode();
-	n->copy_from(*(GlowNode *)array.a[i]);
-        n->highlight = 0;
-        n->hot = 0;
-        insert( n);        
-        break;
-      }
       case glow_eObjectType_GrowNode:
       {
         GrowNode *n = new GrowNode();
@@ -194,24 +184,6 @@ void GlowArray::copy_from( const GlowArray& array)
       case glow_eObjectType_Text:
       {
         GlowText *n = new GlowText(*(GlowText *)array.a[i]);
-        insert( n);
-        break;
-      }
-      case glow_eObjectType_Pixmap:
-      {
-        GlowPixmap *n = new GlowPixmap(*(GlowPixmap *)array.a[i]);
-        insert( n);
-        break;
-      }
-      case glow_eObjectType_AnnotPixmap:
-      {
-        GlowAnnotPixmap *n = new GlowAnnotPixmap(*(GlowAnnotPixmap *)array.a[i]);
-        insert( n);
-        break;
-      }
-      case glow_eObjectType_Radiobutton:
-      {
-        GlowRadiobutton *n = new GlowRadiobutton(*(GlowRadiobutton *)array.a[i]);
         insert( n);
         break;
       }
@@ -759,7 +731,7 @@ void GlowArray::save( ofstream& fp, glow_eSaveMode mode)
   fp <<	int(glow_eSave_End) << endl;
 }
 
-void GlowArray::open( void *ctx, ifstream& fp) 
+void GlowArray::open( GrowCtx *ctx, ifstream& fp) 
 {
   int		type;
   int 		end_found = 0;
@@ -773,57 +745,35 @@ void GlowArray::open( void *ctx, ifstream& fp)
       case glow_eSave_Array: break;
       case glow_eSave_Rect: 
       {
-        GlowRect *n = new GlowRect( (GlowCtx *) ctx);
+        GlowRect *n = new GlowRect( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Line: 
       {
-        GlowLine *n = new GlowLine( (GlowCtx *) ctx);
+        GlowLine *n = new GlowLine( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_PolyLine: 
       {
-        GlowPolyLine *n = new GlowPolyLine( (GlowCtx *) ctx, (glow_sPoint *) NULL, 0);
+        GlowPolyLine *n = new GlowPolyLine( ctx, (glow_sPoint *) NULL, 0);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Arc: 
       {
-        GlowArc *n = new GlowArc( (GlowCtx *) ctx);
+        GlowArc *n = new GlowArc( (GrowCtx *) ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Text: 
       {
-        GlowText *n = new GlowText( (GlowCtx *) ctx, "");
-	n->open( fp);
-        insert( n);
-        break;
-      }
-      case glow_eSave_Pixmap: 
-      {
-        GlowPixmap *n = new GlowPixmap( (GlowCtx *) ctx, 
-		(glow_sPixmapData *) NULL);
-	n->open( fp);
-        insert( n);
-        break;
-      }
-      case glow_eSave_AnnotPixmap: 
-      {
-        GlowAnnotPixmap *n = new GlowAnnotPixmap( (GlowCtx *) ctx, 0);
-	n->open( fp);
-        insert( n);
-        break;
-      }
-      case glow_eSave_Radiobutton: 
-      {
-        GlowRadiobutton *n = new GlowRadiobutton( (GlowCtx *) ctx);
+        GlowText *n = new GlowText( ctx, "");
 	n->open( fp);
         insert( n);
         break;
@@ -833,7 +783,7 @@ void GlowArray::open( void *ctx, ifstream& fp)
         char name[32];
 	GlowArrayElem *element;       
 
-        GlowNodeClass *n = new GlowNodeClass( (GlowCtx *) ctx, "");
+        GlowNodeClass *n = new GlowNodeClass( ctx, "");
 	n->open( fp);
 
         //  Check if this NodeClass already is loaded
@@ -849,7 +799,7 @@ void GlowArray::open( void *ctx, ifstream& fp)
         char name[32];
 	GlowArrayElem *element;       
 
-        GlowConClass *n = new GlowConClass( (GlowCtx *) ctx, "", 
+        GlowConClass *n = new GlowConClass( ctx, "", 
 		glow_eConType_Straight, glow_eCorner_Right, glow_eDrawType_Line, 
 		1);
 	n->open( fp);
@@ -864,28 +814,28 @@ void GlowArray::open( void *ctx, ifstream& fp)
       }
       case glow_eSave_ConPoint: 
       {
-        GlowConPoint *n = new GlowConPoint( (GlowCtx *) ctx);
+        GlowConPoint *n = new GlowConPoint( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Annot: 
       {
-        GlowAnnot *n = new GlowAnnot( (GlowCtx *) ctx);
+        GlowAnnot *n = new GlowAnnot( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Arrow: 
       {
-        GlowArrow *n = new GlowArrow( (GlowCtx *) ctx,0,0,0,0,0,0,glow_eDrawType_Line);
+        GlowArrow *n = new GlowArrow( ctx,0,0,0,0,0,0,glow_eDrawType_Line);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_Node: 
       {
-        GlowNode *n = new GlowNode( (GlowCtx *) ctx, "", 0, 0, 0);
+        GlowNode *n = new GlowNode( ctx, "", 0, 0, 0);
 	n->open( fp);
         if ( n->nc)
           insert( n);
@@ -895,7 +845,7 @@ void GlowArray::open( void *ctx, ifstream& fp)
       }
       case glow_eSave_Con: 
       {
-        GlowCon *n = new GlowCon( (GlowCtx *) ctx, "", (GlowConClass *)0, 
+        GlowCon *n = new GlowCon( ctx, "", (GlowConClass *)0, 
 		(GlowNode *)0, (GlowNode *)0, 0, 0);
 	n->open( fp);
         insert( n);
@@ -903,133 +853,133 @@ void GlowArray::open( void *ctx, ifstream& fp)
       }
       case glow_eSave_Point: 
       {
-        GlowPoint *n = new GlowPoint( (GlowCtx *) ctx);
+        GlowPoint *n = new GlowPoint( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowRect:
       {
-        GrowRect *r = new GrowRect( (GlowCtx *) ctx, "");
+        GrowRect *r = new GrowRect( ctx, "");
 	r->open( fp);
         insert( r);
         break;
       }
       case glow_eSave_GrowRectRounded:
       {
-        GrowRectRounded *r = new GrowRectRounded( (GlowCtx *) ctx, "");
+        GrowRectRounded *r = new GrowRectRounded( ctx, "");
 	r->open( fp);
         insert( r);
         break;
       }
       case glow_eSave_GrowImage:
       {
-        GrowImage *r = new GrowImage( (GlowCtx *) ctx, "");
+        GrowImage *r = new GrowImage( ctx, "");
 	r->open( fp);
         insert( r);
         break;
       }
       case glow_eSave_GrowAxis:
       {
-        GrowAxis *r = new GrowAxis( (GlowCtx *) ctx, "");
+        GrowAxis *r = new GrowAxis( ctx, "");
 	r->open( fp);
         insert( r);
         break;
       }
       case glow_eSave_GrowConGlue:
       {
-        GrowConGlue *r = new GrowConGlue( (GlowCtx *) ctx, "");
+        GrowConGlue *r = new GrowConGlue( ctx, "");
 	r->open( fp);
         insert( r);
         break;
       }
       case glow_eSave_GrowLine: 
       {
-        GrowLine *l = new GrowLine( (GlowCtx *) ctx, "");
+        GrowLine *l = new GrowLine( ctx, "");
 	l->open( fp);
         insert( l);
         break;
       }
       case glow_eSave_GrowPolyLine: 
       {
-        GrowPolyLine *l = new GrowPolyLine( (GlowCtx *) ctx, "", (glow_sPoint*) NULL, 0);
+        GrowPolyLine *l = new GrowPolyLine( ctx, "", (glow_sPoint*) NULL, 0);
 	l->open( fp);
         insert( l);
         break;
       }
       case glow_eSave_GrowArc: 
       {
-        GrowArc *a = new GrowArc( (GlowCtx *) ctx, "");
+        GrowArc *a = new GrowArc( (GrowCtx *) ctx, "");
 	a->open( fp);
         insert( a);
         break;
       }
       case glow_eSave_GrowConPoint: 
       {
-        GrowConPoint *n = new GrowConPoint( (GlowCtx *) ctx, "");
+        GrowConPoint *n = new GrowConPoint( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowAnnot: 
       {
-        GrowAnnot *n = new GrowAnnot( (GlowCtx *) ctx);
+        GrowAnnot *n = new GrowAnnot( ctx);
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowSubAnnot: 
       {
-        GrowSubAnnot *n = new GrowSubAnnot( (GlowCtx *) ctx, "");
+        GrowSubAnnot *n = new GrowSubAnnot( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowText: 
       {
-        GrowText *n = new GrowText( (GlowCtx *) ctx, "", "");
+        GrowText *n = new GrowText( ctx, "", "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowBar: 
       {
-        GrowBar *n = new GrowBar( (GlowCtx *) ctx, "");
+        GrowBar *n = new GrowBar( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowTrend: 
       {
-        GrowTrend *n = new GrowTrend( (GlowCtx *) ctx, "");
+        GrowTrend *n = new GrowTrend( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowWindow: 
       {
-        GrowWindow *n = new GrowWindow( (GlowCtx *) ctx, "");
+        GrowWindow *n = new GrowWindow( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowTable: 
       {
-        GrowTable *n = new GrowTable( (GlowCtx *) ctx, "");
+        GrowTable *n = new GrowTable( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowFolder: 
       {
-        GrowFolder *n = new GrowFolder( (GlowCtx *) ctx, "");
+        GrowFolder *n = new GrowFolder( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowNode: 
       {
-        GrowNode *n = new GrowNode( (GlowCtx *) ctx, "", 0, 0, 0);
+        GrowNode *n = new GrowNode( ctx, "", 0, 0, 0);
 	n->open( fp);
         if ( n->nc)
           insert( n);
@@ -1039,14 +989,14 @@ void GlowArray::open( void *ctx, ifstream& fp)
       }
       case glow_eSave_GrowGroup:
       {
-        GrowGroup *n = new GrowGroup( (GlowCtx *) ctx, "");
+        GrowGroup *n = new GrowGroup( ctx, "");
 	n->open( fp);
         insert( n);
         break;
       }
       case glow_eSave_GrowSlider: 
       {
-        GrowSlider *n = new GrowSlider( (GlowCtx *) ctx, "", 0, 0, 0);
+        GrowSlider *n = new GrowSlider( ctx, "", 0, 0, 0);
 	n->open( fp);
         if ( n->nc)
           insert( n);
@@ -1067,24 +1017,24 @@ void GlowArray::open( void *ctx, ifstream& fp)
   }
 }
 
-void GlowArray::draw( void *pos, int highlight, int hot, void *node) 
+void GlowArray::draw( GlowWind *w, void *pos, int highlight, int hot, void *node) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->draw( pos, highlight, hot, node);
+    a[i]->draw( w, pos, highlight, hot, node);
   }
 }
 
-void GlowArray::draw( GlowTransform *t, int highlight, int hot, void *node, 
+void GlowArray::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, 
 		      void *colornode) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->draw( t, highlight, hot, node, colornode);
+    a[i]->draw( w, t, highlight, hot, node, colornode);
   }
 }
 
@@ -1098,23 +1048,23 @@ void GlowArray::draw_inverse( void *pos, int hot, void *node)
   }
 }
 
-void GlowArray::erase( void *pos, int hot, void *node) 
+void GlowArray::erase( GlowWind *w, void *pos, int hot, void *node) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->erase( pos, hot, node);
+    a[i]->erase( w, pos, hot, node);
   }
 }
 
-void GlowArray::erase( GlowTransform *t, int hot, void *node) 
+void GlowArray::erase( GlowWind *w, GlowTransform *t, int hot, void *node) 
 {
   int i;
 
   for ( i = 0; i < a_size; i++)
   {
-    a[i]->erase( t, hot, node);
+    a[i]->erase( w, t, hot, node);
   }
 }
 
@@ -1311,20 +1261,20 @@ void GlowArray::set_inverse( int on)
   }
 }
 
-int GlowArray::event_handler( glow_eEvent event, int x, int y)
+int GlowArray::event_handler( GlowWind *w, glow_eEvent event, int x, int y)
 {
   int		i;
   int		sts;
 
   for ( i = 0; i < a_size; i++)
   {
-    sts = a[i]->event_handler( event, x, y);
+    sts = a[i]->event_handler( w, event, x, y);
     if ( sts) return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler( glow_eEvent event, int x, int y, double fx,
+int GlowArray::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
 	double fy)
 {
   int		i;
@@ -1332,26 +1282,26 @@ int GlowArray::event_handler( glow_eEvent event, int x, int y, double fx,
 
   for ( i = a_size - 1; i >= 0; i--)
   {
-    sts = a[i]->event_handler( event, x, y, fx, fy);
+    sts = a[i]->event_handler( w, event, x, y, fx, fy);
     if ( sts) return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler( glow_eEvent event, double fx, double fy)
+int GlowArray::event_handler( GlowWind *w, glow_eEvent event, double fx, double fy)
 {
   int		i;
   int		sts;
 
   for ( i = a_size - 1; i >= 0; i--)
   {
-    sts = a[i]->event_handler( event, fx, fy);
+    sts = a[i]->event_handler( w, event, fx, fy);
     if ( sts) return sts;
   }
   return 0;
 }
 
-int GlowArray::event_handler( void *pos, glow_eEvent event, int x, int y, 
+int GlowArray::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, 
 	void *node)
 {
   int		i;
@@ -1359,7 +1309,7 @@ int GlowArray::event_handler( void *pos, glow_eEvent event, int x, int y,
 
   for ( i = 0; i < a_size; i++)
   {
-    sts = a[i]->event_handler( pos, event, x, y, node);
+    sts = a[i]->event_handler( w, pos, event, x, y, node);
     if ( sts) return sts;
   }
   return 0;
@@ -1367,7 +1317,7 @@ int GlowArray::event_handler( void *pos, glow_eEvent event, int x, int y,
 
 // Special eventhandler for connection lines...
 
-int GlowArray::event_handler( void *pos, glow_eEvent event, int x, int y, 
+int GlowArray::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, 
 		int num)
 {
   int		i;
@@ -1375,7 +1325,7 @@ int GlowArray::event_handler( void *pos, glow_eEvent event, int x, int y,
 
   for ( i = 0; i < num; i++)
   {
-    sts = a[i]->event_handler( pos, event, x, y, NULL);
+    sts = a[i]->event_handler( w, pos, event, x, y, NULL);
     if ( sts) return sts;
   }
   return 0;

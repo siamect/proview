@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.cpp,v 1.6 2005-12-13 15:14:16 claes Exp $
+ * Proview   $Id: glow_con.cpp,v 1.7 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,10 +102,10 @@ static double sort_dest_y;
 static GlowNode *sort_source;
 static GlowNode *sort_dest;
 
-void draw_line( GlowCtx *ctx, double x1, double y1, double x2, double y2);
+void draw_line( GrowCtx *ctx, double x1, double y1, double x2, double y2);
 
 #if 0
-GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
+GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp) :
 	ctx(glow_ctx), cc(con_class),
 	source_node(source), dest_node(dest), source_conpoint(source_cp),
@@ -125,12 +125,12 @@ GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
   line_a.insert( l1);
   strcpy( c_name, name);
   get_con_borders();
-  line_a.draw( &cc->zero, highlight, hot, NULL);
-  line_a.nav_draw( &cc->zero, highlight, NULL);
+  line_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+  line_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
 }
 #endif
 
-GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
+GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp, 
 	int nodraw, int point_num, double *x_vect, double *y_vect, int cborder, int cshadow) :
 	ctx(glow_ctx), cc(con_class),
@@ -173,8 +173,8 @@ GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
       nav_zoom();
       if ( nodraw)
         break;
-      l1->draw( &cc->zero, highlight, hot, NULL);
-      l1->nav_draw( &cc->zero, highlight, NULL);
+      l1->draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+      l1->draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
       break;
     case glow_eConType_StraightOneArrow:
       l1 = new GlowLine( ctx, src_x, src_y, dest_x, dest_y, cc->draw_type, cc->line_width);
@@ -187,10 +187,10 @@ GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
       nav_zoom();
       if ( nodraw)
         break;
-      l1->draw( &cc->zero, highlight, hot, NULL);
-      l1->nav_draw( &cc->zero, highlight, NULL);
-      arrow->draw( &cc->zero, highlight, hot, NULL);
-      arrow->nav_draw( &cc->zero, highlight, NULL);
+      l1->draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+      l1->draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
+      arrow->draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+      arrow->draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
       break;
     case glow_eConType_StepDiv:
     case glow_eConType_StepConv:
@@ -291,9 +291,9 @@ GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
       }
       if ( (shadow || border) && cc->con_type == glow_eConType_Routed && cc->corner == glow_eCorner_Rounded) {
 	for ( i = 0; i < l_num; i++)
-	  ((GlowLine *)line_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowLine *)line_a[i])->draw_shadow( &ctx->mw, border, shadow, highlight, hot);
 	for ( i = 0; i < a_num; i++)
-	  ((GlowArc *)arc_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowArc *)arc_a[i])->draw_shadow( &ctx->mw, border, shadow, highlight, hot);
       }
 
       break;
@@ -376,8 +376,8 @@ GlowCon::GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
     source_ref_cnt = source->refcon_cnt[source_cp]++;
     dest_ref_cnt = dest->refcon_cnt[dest_cp]++;
     nav_zoom();
-    ref_a.draw( &cc->zero, highlight, hot, NULL);
-    ref_a.nav_draw( &cc->zero, highlight, NULL);
+    ref_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+    ref_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
   }
 
   strcpy( c_name, name);
@@ -394,17 +394,17 @@ GlowCon::~GlowCon()
   if ( !ctx->nodraw) {
 
     for ( i = 0; i < l_num; i++) {
-      ((GlowLine *)line_a[i])->erase( &cc->zero, hot, NULL);
-      ((GlowLine *)line_a[i])->nav_erase( &cc->zero, NULL);
+      ((GlowLine *)line_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
+      ((GlowLine *)line_a[i])->erase( &ctx->navw, &cc->zero, 0, NULL);
     }
     for ( i = 0; i < a_num; i++) {
-      ((GlowArc *)arc_a[i])->erase( &cc->zero, hot, NULL);
-      ((GlowArc *)arc_a[i])->nav_erase( &cc->zero, NULL);
+      ((GlowArc *)arc_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
+      ((GlowArc *)arc_a[i])->erase( &ctx->navw, &cc->zero, 0, NULL);
     }
-    arrow_a.erase( &cc->zero, hot, NULL);
-    arrow_a.nav_erase( &cc->zero, NULL);
-    ref_a.erase( &cc->zero, hot, NULL);
-    ref_a.nav_erase( &cc->zero, NULL);
+    arrow_a.erase( &ctx->mw, &cc->zero, hot, NULL);
+    arrow_a.erase( &ctx->navw, &cc->zero, 0, NULL);
+    ref_a.erase( &ctx->mw, &cc->zero, hot, NULL);
+    ref_a.erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   ctx->remove(this);
   ctx->select_remove(this);
@@ -419,16 +419,16 @@ GlowCon::~GlowCon()
   if ( source_node->type() == glow_eObjectType_GrowConGlue)
     ((GrowConGlue *)source_node)->con_modified( 0);
   if ( !ctx->nodraw) {
-    ctx->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	       y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-	       x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	       y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-    ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-		    y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-		    x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-		    y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	       y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+	       x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	       y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+    ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+		    y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+		    x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+		    y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
     if ( hot)
-      draw_set_cursor( ctx, glow_eDrawCursor_Normal);
+      ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
   }
 }
 
@@ -457,8 +457,8 @@ void GlowCon::set_highlight( int on)
 {
   highlight = on;
   if ( temporary_ref || cc->con_type == glow_eConType_Reference) {
-    ref_a.draw( &cc->zero, highlight, hot, NULL);
-    ref_a.nav_draw( &cc->zero, highlight, NULL);
+    ref_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+    ref_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
   }
   else
     draw();
@@ -470,8 +470,8 @@ void GlowCon::set_hot( int on)
   if ( hot != on) {
     hot = on;
     if ( temporary_ref || cc->con_type == glow_eConType_Reference) {
-      ref_a.draw( &cc->zero, highlight, hot, NULL);
-      ref_a.nav_draw( &cc->zero, highlight, NULL);
+      ref_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
+      ref_a.draw( &ctx->navw, &cc->zero, highlight, 0, NULL);
     }
     else
       draw();
@@ -517,18 +517,6 @@ void GlowCon::nav_zoom()
    ref_a.nav_zoom();
 }
 
-void GlowCon::print_zoom()
-{
-  int i;
-
-  for ( i = 0; i < l_num; i++)
-    ((GlowLine *)line_a[i])->print_zoom();
-  for ( i = 0; i < a_num; i++)
-    ((GlowLine *)arc_a[i])->print_zoom();
-  arrow_a.print_zoom();
-  ref_a.print_zoom();
-}
-
 void GlowCon::redraw_node_cons( void *node)
 {
   if ( source_node == (GlowNode *) node ||
@@ -564,10 +552,10 @@ void GlowCon::get_con_borders( )
     for ( i = 0; i < a_num; i++)
       arc_a[i]->get_borders( 0, 0, &x_right, &x_left, &y_high, &y_low, NULL);
   }
-  x_right += (cc->line_width + 1) * ctx->zoom_factor_x / 2;
-  x_left -= (cc->line_width + 1) * ctx->zoom_factor_x / 2;
-  y_low -= (cc->line_width + 1) * ctx->zoom_factor_y / 2;
-  y_high += (cc->line_width + 1) * ctx->zoom_factor_y / 2;
+  x_right += (cc->line_width + 1) * ctx->mw.zoom_factor_x / 2;
+  x_left -= (cc->line_width + 1) * ctx->mw.zoom_factor_x / 2;
+  y_low -= (cc->line_width + 1) * ctx->mw.zoom_factor_y / 2;
+  y_high += (cc->line_width + 1) * ctx->mw.zoom_factor_y / 2;
 }
 
 void GlowCon::move( double delta_x, double delta_y, int grid)
@@ -578,14 +566,14 @@ void GlowCon::move( double delta_x, double delta_y, int grid)
   if ( ctx->type() == glow_eCtxType_Grow)
   {
     ctx->set_defered_redraw();
-    ctx->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
   }
 
-  x = delta_x / ctx->zoom_factor_x;
-  y = delta_y / ctx->zoom_factor_y;
+  x = delta_x / ctx->mw.zoom_factor_x;
+  y = delta_y / ctx->mw.zoom_factor_y;
 
   if ( movement_type == glow_eMoveType_Route || grid)
   {
@@ -611,16 +599,16 @@ void GlowCon::move( double delta_x, double delta_y, int grid)
       arrow_a.shift( &cc->zero, x, y, highlight, hot);
     }
     get_con_borders();
-    ctx->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
     if ( ctx->type() == glow_eCtxType_Grow)
       ctx->redraw_defered();
-    ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+    ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   }
 }
 
@@ -629,8 +617,8 @@ void GlowCon::move_noerase( int delta_x, int delta_y, int grid)
   double x, y;
   int i;
 
-  x = delta_x / ctx->zoom_factor_x;
-  y = delta_y / ctx->zoom_factor_y;
+  x = delta_x / ctx->mw.zoom_factor_x;
+  y = delta_y / ctx->mw.zoom_factor_y;
 
   if ( cc->con_type != glow_eConType_Routed ||
        movement_type == glow_eMoveType_Route || grid || p_num == 0)
@@ -653,14 +641,14 @@ void GlowCon::move_noerase( int delta_x, int delta_y, int grid)
       draw_routed( p_num, point_x, point_y);
     get_con_borders();
   }
-  ctx->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GlowCon::reconfigure()
@@ -733,13 +721,13 @@ void GlowCon::reconfigure()
         {
           for ( i = 0; i < l_num; i++)
           {
-            ((GlowLine *)line_a[i])->erase( &cc->zero, hot, NULL);
-            ((GlowLine *)line_a[i])->nav_erase( &cc->zero, NULL);
+            ((GlowLine *)line_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
+            ((GlowLine *)line_a[i])->erase( &ctx->navw, &cc->zero, 0, NULL);
           }
           for ( i = 0; i < a_num; i++)
           {
-            ((GlowArc *)arc_a[i])->erase( &cc->zero, hot, NULL);
-            ((GlowArc *)arc_a[i])->nav_erase( &cc->zero, NULL);
+            ((GlowArc *)arc_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
+            ((GlowArc *)arc_a[i])->erase( &ctx->navw, &cc->zero, 0, NULL);
           }
           temporary_ref = 1;
           a_num = l_num = p_num = 0;
@@ -751,8 +739,8 @@ void GlowCon::reconfigure()
       else if ( temporary_ref)
       {
         temporary_ref = 0;
-        ref_a.erase( &cc->zero, hot, NULL);
-        ref_a.nav_erase( &cc->zero, NULL);
+        ref_a.erase( &ctx->mw, &cc->zero, hot, NULL);
+        ref_a.erase( &ctx->navw, &cc->zero, 0, NULL);
         source_node->conpoint_refcon_reconfig( source_conpoint);
         dest_node->conpoint_refcon_reconfig( dest_conpoint);
       }
@@ -760,52 +748,14 @@ void GlowCon::reconfigure()
     }
   }
   get_con_borders();
-  ctx->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
-}
-
-void GlowCon::print( double ll_x, double ll_y, double ur_x, double ur_y) 
-{ 
-  double tmp;
-  int i;
-
-  if ( ll_x > ur_x)
-  {
-    /* Shift */
-    tmp = ll_x;
-    ll_x = ur_x;
-    ur_x = tmp;
-  }
-  if ( ll_y > ur_y)
-  {
-    /* Shift */
-    tmp = ll_y;
-    ll_y = ur_y;
-    ur_y = tmp;
-  }
-
-  if ( x_right >= ll_x &&
-       x_left <= ur_x &&
-       y_high >= ll_y &&
-       y_low <= ur_y)
-  {
-    if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-      ref_a.print( &cc->zero, NULL);
-    else
-    {
-      for ( i = 0; i < l_num; i++)
-        ((GlowLine *)line_a[i])->print( &cc->zero, NULL);
-      for ( i = 0; i < a_num; i++)
-        ((GlowArc *)arc_a[i])->print( &cc->zero, NULL);
-      arrow_a.print( &cc->zero, NULL);
-    }
-  }
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GlowCon::save( ofstream& fp, glow_eSaveMode mode) 
@@ -947,7 +897,7 @@ void GlowCon::open( ifstream& fp)
   }
 }
 
-void GlowCon::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GlowCon::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
   int i;
@@ -967,38 +917,38 @@ void GlowCon::draw( int ll_x, int ll_y, int ur_x, int ur_y)
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
-       x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
-       y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
+  if ( x_right * w->zoom_factor_x - w->offset_x >= ll_x &&
+       x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       y_high * w->zoom_factor_y - w->offset_y >= ll_y &&
+       y_low * w->zoom_factor_y - w->offset_y <= ur_y)
   {
     if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-      ref_a.draw( &cc->zero, highlight, hot, NULL);
+      ref_a.draw( w, &cc->zero, highlight, hot, NULL);
     else
     {
       for ( i = 0; i < l_num; i++)
-        ((GlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+        ((GlowLine *)line_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
       for ( i = 0; i < a_num; i++)
-        ((GlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-      arrow_a.draw( &cc->zero, highlight, hot, NULL);
+        ((GlowArc *)arc_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
+      arrow_a.draw( w, &cc->zero, highlight, hot, NULL);
       if ( (shadow || border) && cc->con_type == glow_eConType_Routed && cc->corner == glow_eCorner_Rounded) {
 	for ( i = 0; i < l_num; i++)
-	  ((GlowLine *)line_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowLine *)line_a[i])->draw_shadow( w, border, shadow, highlight, hot);
 	for ( i = 0; i < a_num; i++)
-	  ((GlowArc *)arc_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowArc *)arc_a[i])->draw_shadow( w, border, shadow, highlight, hot);
       }
     }
   }
 }
 
-void GlowCon::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GlowCon::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
   int i;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
   if ( *ll_x > *ur_x)
@@ -1022,19 +972,19 @@ void GlowCon::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
        	obj_ll_y <= *ur_y)
   {
     if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-      ref_a.draw( &cc->zero, highlight, hot, NULL);
+      ref_a.draw( w, &cc->zero, highlight, hot, NULL);
     else
     {
       for ( i = 0; i < l_num; i++)
-        ((GlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+        ((GlowLine *)line_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
       for ( i = 0; i < a_num; i++)
-        ((GlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-      arrow_a.draw( &cc->zero, highlight, hot, NULL);
+        ((GlowArc *)arc_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
+      arrow_a.draw( w, &cc->zero, highlight, hot, NULL);
       if ( (shadow || border) && cc->con_type == glow_eConType_Routed && cc->corner == glow_eCorner_Rounded) {
 	for ( i = 0; i < l_num; i++)
-	  ((GlowLine *)line_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowLine *)line_a[i])->draw_shadow( w, border, shadow, highlight, hot);
 	for ( i = 0; i < a_num; i++)
-	  ((GlowArc *)arc_a[i])->draw_shadow( border, shadow, highlight, hot);
+	  ((GlowArc *)arc_a[i])->draw_shadow( w, border, shadow, highlight, hot);
       }
     }
 
@@ -1052,90 +1002,15 @@ void GlowCon::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
 
 void GlowCon::draw()
 {
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+  ((GrowCtx *)ctx)->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
   
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
-}
-
-void GlowCon::nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
-{ 
-  int i;
-  int 	obj_ur_x = int( x_right * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ll_x = int( x_left * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ur_y = int( y_high * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  int   obj_ll_y = int( y_low * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-
-
-  if (  obj_ur_x >= *ll_x &&
-      	obj_ll_x <= *ur_x &&
-       	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-      ref_a.nav_draw( &cc->zero, highlight, NULL);
-    else
-    {
-      for ( i = 0; i < l_num; i++)
-        ((GlowLine *)line_a[i])->nav_draw( &cc->zero, highlight, NULL);
-      for ( i = 0; i < a_num; i++)
-        ((GlowArc *)arc_a[i])->nav_draw( &cc->zero, highlight, NULL);
-      arrow_a.nav_draw( &cc->zero, highlight, NULL);
-    }
-
-    // Increase the redraw area
-    if ( obj_ur_x > *ur_x)
-      *ur_x = obj_ur_x;
-    if ( obj_ur_y > *ur_y)
-      *ur_y = obj_ur_y;
-    if ( obj_ll_x < *ll_x)
-      *ll_x = obj_ll_x;
-    if ( obj_ll_y < *ll_y)
-      *ll_y = obj_ll_y;
-  }
-}
-
-void GlowCon::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int tmp;
-  int i;
-
-  if ( ll_x > ur_x)
-  {
-    /* Shift */
-    tmp = ll_x;
-    ll_x = ur_x;
-    ur_x = tmp;
-  }
-  if ( ll_y > ur_y)
-  {
-    /* Shift */
-    tmp = ll_y;
-    ll_y = ur_y;
-    ur_y = tmp;
-  }
- 
-  if ( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x >= ll_x &&
-       x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x <= ur_x &&
-       y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y >= ll_y &&
-       y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y <= ur_y)
-  {
-    if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-      ref_a.nav_draw( &cc->zero, highlight, NULL);
-    else
-    {
-      for ( i = 0; i < l_num; i++)
-        ((GlowLine *)line_a[i])->nav_draw( &cc->zero, highlight, NULL);
-      for ( i = 0; i < a_num; i++)
-        ((GlowArc *)arc_a[i])->nav_draw( &cc->zero, highlight, NULL);
-      arrow_a.nav_draw( &cc->zero, highlight, NULL);
-    }
-  }
+  ((GrowCtx *)ctx)->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 int GlowCon::con_route_noobstacle( double src_x, double src_y, glow_eDirection src_dir,
@@ -2138,41 +2013,15 @@ int GlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
   return 1;
 }
 
-void draw_line( GlowCtx *ctx, double x1, double y1, double x2, double y2)
+void draw_line( GrowCtx *ctx, double x1, double y1, double x2, double y2)
 {
-  glow_draw_line( ctx, 
-	int( x1*ctx->zoom_factor_x-ctx->offset_x), 
-	int( y1*ctx->zoom_factor_y-ctx->offset_y), 
-	int( x2*ctx->zoom_factor_x-ctx->offset_x), 
-	int( y2*ctx->zoom_factor_y-ctx->offset_y),
+  ctx->gdraw->line( &ctx->mw, 
+	int( x1*ctx->mw.zoom_factor_x-ctx->mw.offset_x), 
+	int( y1*ctx->mw.zoom_factor_y-ctx->mw.offset_y), 
+	int( x2*ctx->mw.zoom_factor_x-ctx->mw.offset_x), 
+	int( y2*ctx->mw.zoom_factor_y-ctx->mw.offset_y),
 	glow_eDrawType_Line, 0, 0);
 }
-#if 0
-static void print_line()
-{
-  int j;
-      printf( "Line nr %d, ", line_table_cnt);
-      if ( line_table[line_table_cnt].start_type == eLineType_Horiz)
-      {
-        for ( j = 0; j < line_table[line_table_cnt].horiz_cnt; j++)
-        {
-          printf( "%d ", int( line_table[line_table_cnt].horiz[j]));
-          if ( j < line_table[line_table_cnt].vert_cnt )
-            printf( "%d ", int( line_table[line_table_cnt].vert[j]));
-        }
-      }
-      else
-      {
-        for ( j = 0; j < line_table[line_table_cnt].vert_cnt; j++)
-        {
-          printf( "%d ", int( line_table[line_table_cnt].vert[j]));
-          if ( j < line_table[line_table_cnt].horiz_cnt )
-            printf( "%d ", int( line_table[line_table_cnt].horiz[j]));
-        }
-      }
-      printf( "\n");
-}
-#endif
 
 static int con_cmp_v1( const void *l1, const void *l2)
 {
@@ -3440,7 +3289,7 @@ void GlowCon::find_vert_line_low_border( double x, double start_y,
   }
 }
 
-int GlowCon::event_handler( glow_eEvent event, int x, int y)
+int GlowCon::event_handler( GlowWind *w, glow_eEvent event, int x, int y)
 {
   int sts, i;
 
@@ -3457,9 +3306,9 @@ int GlowCon::event_handler( glow_eEvent event, int x, int y)
         else
         {
           if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-            sts = ref_a.event_handler( &cc->zero, event, x, y, (void *)NULL);
+            sts = ref_a.event_handler( w, &cc->zero, event, x, y, (void *)NULL);
           else
-            sts = line_a.event_handler( &cc->zero, event, x, y, l_num);
+            sts = line_a.event_handler( w, &cc->zero, event, x, y, l_num);
           if ( sts)
             ctx->hot_found = 1;
         }
@@ -3467,58 +3316,59 @@ int GlowCon::event_handler( glow_eEvent event, int x, int y)
       else
       {
         if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-          sts = ref_a.event_handler( &cc->zero, event, x, y, (void *)NULL);
+          sts = ref_a.event_handler( w, &cc->zero, event, x, y, (void *)NULL);
         else
-          sts = line_a.event_handler( &cc->zero, event, x, y, l_num);
+          sts = line_a.event_handler( w, &cc->zero, event, x, y, l_num);
       }
       if ( sts && !hot &&
 	!(ctx->node_movement_active || ctx->node_movement_paste_active))
       {
-        draw_set_cursor( ctx, glow_eDrawCursor_CrossHair);
+        ctx->gdraw->set_cursor( w, glow_eDrawCursor_CrossHair);
         hot = 1;
         if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-          ref_a.draw( &cc->zero, highlight, hot, NULL);
+          ref_a.draw( w, &cc->zero, highlight, hot, NULL);
         else
         { 
 	  draw();
 #if 0
           for ( i = 0; i < l_num; i++)
-            ((GlowLine *)line_a[i])->draw( &cc->zero, highlight, hot, NULL);
+            ((GlowLine *)line_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
           for ( i = 0; i < a_num; i++)
-            ((GlowArc *)arc_a[i])->draw( &cc->zero, highlight, hot, NULL);
-          arrow_a.draw( &cc->zero, highlight, hot, NULL);
+            ((GlowArc *)arc_a[i])->draw( w, &cc->zero, highlight, hot, NULL);
+          arrow_a.draw( w, &cc->zero, highlight, hot, NULL);
 #endif
         }
       }
       if ( !sts && hot)
       {
-        draw_set_cursor( ctx, glow_eDrawCursor_Normal);
+        ctx->gdraw->set_cursor( w, glow_eDrawCursor_Normal);
         if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-          ref_a.erase( &cc->zero, hot, NULL);
+          ref_a.erase( w, &cc->zero, hot, NULL);
         else
         {
-	  if ( !ctx->double_buffer_on) {
+	  if ( !w->window->double_buffer_on) {
 	    draw();
-	    for ( i = 0; i < l_num; i++)
-	      ((GlowLine *)line_a[i])->erase( &cc->zero, hot, NULL);
-	    for ( i = 0; i < a_num; i++)
-	      ((GlowArc *)arc_a[i])->erase( &cc->zero, hot, NULL);
-	    arrow_a.erase( &cc->zero, hot, NULL);
 	  }
+	    for ( i = 0; i < l_num; i++)
+	      ((GlowLine *)line_a[i])->erase( w, &cc->zero, hot, NULL);
+	    for ( i = 0; i < a_num; i++)
+	      ((GlowArc *)arc_a[i])->erase( w, &cc->zero, hot, NULL);
+	    arrow_a.erase( w, &cc->zero, hot, NULL);
+//	  }
         }
         hot = 0;
 
         if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-          ref_a.draw( &cc->zero, highlight, hot, NULL);
+          ref_a.draw( w, &cc->zero, highlight, hot, NULL);
         else
 	  draw();
       }
       break;
     default:
       if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-        sts = ref_a.event_handler( &cc->zero, event, x, y, (void *)NULL);
+        sts = ref_a.event_handler( w, &cc->zero, event, x, y, (void *)NULL);
       else
-        sts = line_a.event_handler( &cc->zero, event, x, y, l_num);
+        sts = line_a.event_handler( w, &cc->zero, event, x, y, l_num);
   }
   if ( sts)
     ctx->register_callback_object( glow_eObjectType_Con, this);
@@ -3552,15 +3402,15 @@ void GlowCon::draw_routed( int points, double *x, double *y)
   {
     /* Remove lines that isn't used any longer */
     l = (GlowLine *) line_a[i];
-    l->erase( &cc->zero, hot, NULL);
-    l->nav_erase( &cc->zero, NULL);
+    l->erase( &ctx->mw, &cc->zero, hot, NULL);
+    l->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   for ( i = points - 2; i < a_num; i++)
   {
     /* Remove arcs that isn't used any longer */
     a = (GlowArc *) arc_a[i];
-    a->erase( &cc->zero, hot, NULL);
-    a->nav_erase( &cc->zero, NULL);
+    a->erase( &ctx->mw, &cc->zero, hot, NULL);
+    a->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   l_num = points - 1;
   p_num = points;
@@ -3586,8 +3436,8 @@ void GlowCon::draw_routed_trans( int points, double *x, double *y)
   {
     /* Remove lines that isn't used any longer */
     l = (GlowLine *) line_a[i];
-    l->erase( &cc->zero, hot, NULL);
-    l->nav_erase( &cc->zero, NULL);
+    l->erase( &ctx->mw, &cc->zero, hot, NULL);
+    l->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   l_num = j;
   p_num = points;
@@ -3871,15 +3721,15 @@ void GlowCon::draw_routed_roundcorner( int points, double *x, double *y)
   {
     /* Remove lines that isn't used any longer */
     l = (GlowLine *) line_a[i];
-    l->erase( &cc->zero, hot, NULL);
-    l->nav_erase( &cc->zero, NULL);
+    l->erase( &ctx->mw, &cc->zero, hot, NULL);
+    l->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   for ( i = points - 2; i < a_num; i++)
   {
     /* Remove arcs that isn't used any longer */
     a = (GlowArc *) arc_a[i];
-    a->erase( &cc->zero, hot, NULL);
-    a->nav_erase( &cc->zero, NULL);
+    a->erase( &ctx->mw, &cc->zero, hot, NULL);
+    a->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   l_num = points - 1;
   p_num = points;
@@ -4012,19 +3862,19 @@ void GlowCon::conpoint_refcon_erase( void *node, int conpoint)
   {
     r1 = (GlowRect *)ref_a[0];
     t1 = (GlowText *)ref_a[1];
-    t1->erase( &cc->zero, hot, NULL);
-    t1->nav_erase( &cc->zero, NULL);
-    r1->erase( &cc->zero, hot, NULL);
-    r1->nav_erase( &cc->zero, NULL);
+    t1->erase( &ctx->mw, &cc->zero, hot, NULL);
+    t1->erase( &ctx->navw, &cc->zero, 0, NULL);
+    r1->erase( &ctx->mw, &cc->zero, hot, NULL);
+    r1->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
   else if ( dest_node == (GlowNode *)node && conpoint == dest_conpoint)
   {
     r1 = (GlowRect *)ref_a[2];
     t1 = (GlowText *)ref_a[3];
-    t1->erase( &cc->zero, hot, NULL);
-    t1->nav_erase( &cc->zero, NULL);
-    r1->erase( &cc->zero, hot, NULL);
-    r1->nav_erase( &cc->zero, NULL);
+    t1->erase( &ctx->mw, &cc->zero, hot, NULL);
+    t1->erase( &ctx->navw, &cc->zero, 0, NULL);
+    r1->erase( &ctx->mw, &cc->zero, hot, NULL);
+    r1->erase( &ctx->navw, &cc->zero, 0, NULL);
   }
 }
 
@@ -4107,14 +3957,14 @@ void GlowCon::change_conclass( GlowConClass *conclass)
 
   // Erase
   if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-    ref_a.erase( &cc->zero, hot, NULL);
+    ref_a.erase( &ctx->mw, &cc->zero, hot, NULL);
   else
   {
     for ( i = 0; i < l_num; i++)
-      ((GlowLine *)line_a[i])->erase( &cc->zero, hot, NULL);
+      ((GlowLine *)line_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
     for ( i = 0; i < a_num; i++)
-      ((GlowArc *)arc_a[i])->erase( &cc->zero, hot, NULL);
-    arrow_a.erase( &cc->zero, hot, NULL);
+      ((GlowArc *)arc_a[i])->erase( &ctx->mw, &cc->zero, hot, NULL);
+    arrow_a.erase( &ctx->mw, &cc->zero, hot, NULL);
   }
   
   cc = conclass;
@@ -4130,7 +3980,7 @@ void GlowCon::change_conclass( GlowConClass *conclass)
 
   // Draw
   if ( temporary_ref || cc->con_type == glow_eConType_Reference)
-    ref_a.draw( &cc->zero, highlight, hot, NULL);
+    ref_a.draw( &ctx->mw, &cc->zero, highlight, hot, NULL);
   else
     draw();
 }

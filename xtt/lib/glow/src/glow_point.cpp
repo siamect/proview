@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_point.cpp,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_point.cpp,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,13 +18,13 @@
  **/
 
 #include "glow_std.h"
-
+#include "glow_growctx.h"
 
 #include <iostream.h>
 #include "glow_point.h"
 
 
-GlowPoint::GlowPoint( GlowCtx *glow_ctx, double x1, double y1)
+GlowPoint::GlowPoint( GrowCtx *glow_ctx, double x1, double y1)
  : ctx(glow_ctx), x(x1), y(y1)
 {
   (*this).zoom();
@@ -34,33 +34,33 @@ void GlowPoint::posit( double x1, double y1)
 {
   x = x1;
   y = y1;
-  z_x = int( x * ctx->zoom_factor_x + 0.5);
-  z_y = int( y * ctx->zoom_factor_y + 0.5);
-  nav_z_x = int( x * ctx->nav_zoom_factor_x + 0.5);
-  nav_z_y = int( y * ctx->nav_zoom_factor_y + 0.5);
+  z_x = int( x * ctx->mw.zoom_factor_x + 0.5);
+  z_y = int( y * ctx->mw.zoom_factor_y + 0.5);
+  nav_z_x = int( x * ctx->navw.zoom_factor_x + 0.5);
+  nav_z_y = int( y * ctx->navw.zoom_factor_y + 0.5);
 }
 
 void GlowPoint::posit_z( int x1, int y1)
 {
-  x = 1.0 * x1 / ctx->zoom_factor_x;
-  y = 1.0 * y1 / ctx->zoom_factor_y;
+  x = 1.0 * x1 / ctx->mw.zoom_factor_x;
+  y = 1.0 * y1 / ctx->mw.zoom_factor_y;
   z_x = x1;
   z_y = y1;
-  nav_z_x = int( x * ctx->nav_zoom_factor_x);
-  nav_z_y = int( y * ctx->nav_zoom_factor_y);
+  nav_z_x = int( x * ctx->navw.zoom_factor_x);
+  nav_z_y = int( y * ctx->navw.zoom_factor_y);
 }
 
 void GlowPoint::zoom()
 {
-  z_x = int( x * ctx->zoom_factor_x + 0.5);
-  z_y = int( y * ctx->zoom_factor_y + 0.5);
-  current_zoom_factor = ctx->zoom_factor_x;
+  z_x = int( x * ctx->mw.zoom_factor_x + 0.5);
+  z_y = int( y * ctx->mw.zoom_factor_y + 0.5);
+  current_zoom_factor = ctx->mw.zoom_factor_x;
 }
 
 void GlowPoint::nav_zoom()
 {
-  nav_z_x = int( x * ctx->nav_zoom_factor_x + 0.5);
-  nav_z_y = int( y * ctx->nav_zoom_factor_y + 0.5);
+  nav_z_x = int( x * ctx->navw.zoom_factor_x + 0.5);
+  nav_z_y = int( y * ctx->navw.zoom_factor_y + 0.5);
 }
 
 void GlowPoint::print_zoom()

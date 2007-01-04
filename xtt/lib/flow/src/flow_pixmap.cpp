@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pixmap.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_pixmap.cpp,v 1.5 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,18 +31,18 @@ FlowPixmap::FlowPixmap( FlowCtx *flow_ctx, flow_sPixmapData *pix_data,
   if ( pix_data == NULL)
     return;
   memcpy( pixmap_data, pix_data, sizeof( pixmap_data));
-  flow_draw_pixmaps_create( ctx, pix_data, &pixmaps);
+  ctx->fdraw->pixmaps_create( ctx, pix_data, &pixmaps);
 }
 
 FlowPixmap::FlowPixmap( const FlowPixmap& p)
 {
   memcpy( this, &p, sizeof(p));
-  flow_draw_pixmaps_create( ctx, (flow_sPixmapData *) pixmap_data, &pixmaps);
+  ctx->fdraw->pixmaps_create( ctx, (flow_sPixmapData *) pixmap_data, &pixmaps);
 }
 
 FlowPixmap::~FlowPixmap()
 {
-  flow_draw_pixmaps_delete( ctx, pixmaps);
+  ctx->fdraw->pixmaps_delete( ctx, pixmaps);
 }
 
 void FlowPixmap::zoom()
@@ -132,7 +132,7 @@ void FlowPixmap::draw( void *pos, int highlight, int hot, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_pixmap( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->pixmap( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, highlight, 0);
 }
@@ -144,7 +144,7 @@ void FlowPixmap::draw_inverse( void *pos, int hot, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_pixmap_inverse( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->pixmap_inverse( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, 0);
 }
@@ -156,7 +156,7 @@ void FlowPixmap::erase( void *pos, int hot, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_pixmap_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->pixmap_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, &pixmap_data, pixmaps,
 	draw_type, idx, 0);
 }
@@ -168,7 +168,7 @@ void FlowPixmap::nav_draw( void *pos, int highlight, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_pixmap( ctx, 
+  ctx->fdraw->nav_pixmap( ctx, 
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	&pixmap_data, pixmaps, draw_type, idx, highlight, 0);
@@ -181,7 +181,7 @@ void FlowPixmap::nav_erase( void *pos, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_pixmap_erase( ctx,
+  ctx->fdraw->nav_pixmap_erase( ctx,
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	&pixmap_data, pixmaps, draw_type, idx, 0);

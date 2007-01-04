@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.23 2005-11-14 16:27:38 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.24 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,14 @@ extern "C" {
 
 /*! \addtogroup Cdh_DS */
 /*@{*/
+
+#ifndef co_max
+#define co_max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
+#endif
+
+#ifndef co_min
+#define co_min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
+#endif
 
 #define cdh_cMaxVidGroup	 255
 #define cdh_cMaxCix		4095

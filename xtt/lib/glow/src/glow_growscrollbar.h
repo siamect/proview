@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growscrollbar.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growscrollbar.h,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ class GrowScrollBar : public GrowRect {
     \param bar_d_type	Bar color.
     \param nodraw	Don't draw the object now.
   */
-  GrowScrollBar( GlowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowScrollBar( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
 		 double w = 0, double h = 0, glow_eDir dir = glow_eDir_Vertical,
 		 glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		 int line_w = 1,
@@ -82,12 +82,8 @@ class GrowScrollBar : public GrowRect {
   void open( ifstream& fp);
 
   //! Erase the object
-  void erase()
-	{ erase( (GlowTransform *)NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( (GlowTransform *)NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
   //! Set object highlight.
   /*!
@@ -117,7 +113,7 @@ class GrowScrollBar : public GrowRect {
   void register_value_changed_cb( void *userdata, void (*value_changed)(void *, double)) {
     callback_userdata = userdata, value_changed_cb = value_changed; }
 
-  int event_handler( glow_eEvent event, int x, int y, double fx,
+  int event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
 		     double fy);
 
 
@@ -132,7 +128,7 @@ class GrowScrollBar : public GrowRect {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -140,26 +136,10 @@ class GrowScrollBar : public GrowRect {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Redraw the area inside the objects border.
-  void draw() { draw(0,0,0,0,0);}
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
+  void draw() { draw( &ctx->mw,0,0,0,0,0);}
 
   //! Set the bar value
   /*!

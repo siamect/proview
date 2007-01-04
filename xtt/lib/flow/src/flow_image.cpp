@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_image.cpp,v 1.6 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_image.cpp,v 1.7 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,76 +30,31 @@ FlowImage::FlowImage( FlowCtx *flow_ctx, char *imagefile, double x, double y,
 	image(0), original_image(0), 
 	pixmap(0), nav_pixmap(0), clip_mask(0), nav_clip_mask(0), current_zoom_factor(0)
 {
-  imlib = ((draw_tCtx)ctx->draw_ctx)->imlib;
+  imlib = ctx->fdraw->imlib;
   if ( imagefile)
     insert_image( imagefile);
 }
 
 int FlowImage::insert_image( char *imagefile)
 {
-  char filename[120];
-  bool found = false;
 
-  strcpy( image_filename, imagefile);
+  ctx->fdraw->image_load( imagefile, ctx->zoom_factor / ctx->base_zoom_factor,
+			  ctx->nav_zoom_factor / ctx->base_zoom_factor, &original_image,
+			  &image, &pixmap, &clip_mask, &nav_pixmap, &nav_clip_mask);
 
-  // Look for file in $pwrp_exe, $pwr_doc/en_us/orm and $pwr_exe
-  for ( int i = 0; i < 3; i++) {
-    switch( i) {
-    case 0: strcpy( filename, "$pwrp_exe/");  break;
-    case 1: strcpy( filename, "$pwr_doc/en_us/orm/");  break;
-    case 2: strcpy( filename, "$pwr_exe/");  break;
-    }
-    strcat( filename, imagefile);
-    dcli_translate_filename( filename, filename);
-    FILE *fp = fopen( filename, "r");
-    if ( !fp)
-      continue;
-    fclose( fp);
-    found = true;
-    break;
-  }
-  if ( !found)
-    return 0;
-
-#if defined IMLIB
-  if ( pixmap) {
-    Imlib_free_pixmap( imlib, pixmap);
-    pixmap = 0;
-  }
-  if ( nav_pixmap) {
-    Imlib_free_pixmap( imlib, nav_pixmap);  
-    nav_pixmap = 0;
-  }
-  if ( image)
-    Imlib_destroy_image( imlib, image);
-
-  original_image = Imlib_load_image( imlib, filename);
-  if ( !original_image) 
-    return 0;
-  // Make a copy
-  image = Imlib_clone_image( imlib, original_image);
-
-  current_width = int( image->rgb_width * ctx->zoom_factor / 
-		       ctx->base_zoom_factor);
-  current_height = int( image->rgb_height * ctx->zoom_factor / 
-			ctx->base_zoom_factor);
-  current_nav_width = int( image->rgb_width * ctx->nav_zoom_factor / 
-			   ctx->base_zoom_factor);
-  current_nav_height = int( image->rgb_height * ctx->nav_zoom_factor / 
-			    ctx->base_zoom_factor);
-
-  Imlib_render( imlib, image, current_width, current_height);
-  pixmap = Imlib_move_image( imlib, image);
-  clip_mask = Imlib_move_mask( imlib, image);
-
-  Imlib_render( imlib, image, current_nav_width, current_nav_height);
-  nav_pixmap = Imlib_move_image( imlib, image);
-  nav_clip_mask = Imlib_move_mask( imlib, image);
+  current_width = int(  ctx->zoom_factor / ctx->base_zoom_factor * 
+			ctx->fdraw->image_get_width( original_image));
+  current_height = int( ctx->zoom_factor / ctx->base_zoom_factor *
+			ctx->fdraw->image_get_height( original_image));
+  current_nav_width = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
+			   ctx->fdraw->image_get_width( original_image));
+  current_nav_height = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
+			    ctx->fdraw->image_get_height( original_image));
 
   ur.posit( ll.x + double( current_width) / ctx->zoom_factor,
 	    ll.y + double( current_height) / ctx->zoom_factor);
   current_zoom_factor = ctx->zoom_factor;
-#endif
+
   return 1;
 }
 
@@ -196,41 +151,34 @@ void FlowImage::draw( void *pos, int highlight, int hot, void *node)
   if ( !(display_level & ctx->display_level))
     return;
 
-  if ( pixmap)
-  {
-#if defined IMLIB
-
-    if ( fabs( current_zoom_factor - ctx->zoom_factor) > DBL_EPSILON)
-    {
+  if ( pixmap || image) {
+    if ( fabs( current_zoom_factor - ctx->zoom_factor) > DBL_EPSILON) {
       current_zoom_factor = ctx->zoom_factor;
-      current_width = int( image->rgb_width * ctx->zoom_factor / 
-		       ctx->base_zoom_factor);
-      current_height = int( image->rgb_height * ctx->zoom_factor / 
-			ctx->base_zoom_factor);
 
-      Imlib_render( imlib, image, current_width, current_height);
-
-      Imlib_free_pixmap( imlib, pixmap);
-      pixmap = Imlib_move_image( imlib, image);
-      clip_mask = Imlib_move_mask( imlib, image);
+      ctx->fdraw->image_scale( ctx->zoom_factor / ctx->base_zoom_factor,
+			       original_image, &image, &pixmap, &clip_mask);
+      current_width = int( ctx->zoom_factor / ctx->base_zoom_factor * 
+			   ctx->fdraw->image_get_width( image));
+      current_height = int( ctx->zoom_factor / ctx->base_zoom_factor *
+			    ctx->fdraw->image_get_height( image));
     }
-#endif
 
-    flow_draw_image( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-		     ((FlowPoint *)pos)->z_y - ctx->offset_y,
-		     ur.z_x - ll.z_x, ur.z_y - ll.z_y, pixmap, clip_mask);
+    ctx->fdraw->image( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
+		       ((FlowPoint *)pos)->z_y - ctx->offset_y,
+		       ctx->fdraw->image_get_width( image) /*ur.z_x - ll.z_x*/, 
+		       ctx->fdraw->image_get_height( image) /*ur.z_y - ll.z_y*/, image, pixmap, clip_mask);
   }
   else
-    flow_draw_fill_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, flow_eDrawType_LineGray);
+    ctx->fdraw->fill_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
+			   ((FlowPoint *)pos)->z_y - ctx->offset_y, 
+			   ur.z_x - ll.z_x, ur.z_y - ll.z_y, flow_eDrawType_LineGray);
 }
 
 void FlowImage::erase( void *pos, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
-  flow_draw_fill_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
+  ctx->fdraw->fill_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 		       ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 		       ur.z_x - ll.z_x, ur.z_y - ll.z_y, flow_eDrawType_LineErase);
 }

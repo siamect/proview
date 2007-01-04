@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalctx.h,v 1.5 2006-06-02 11:09:51 claes Exp $
+ * Proview   $Id: glow_colpalctx.h,v 1.6 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,7 +76,7 @@ class ColPalCtx : public GrowCtx {
   void zoom( double factor);
 
   //! Reset to base zoomfactor.
-  void unzoom() { zoom( base_zoom_factor / zoom_factor_y);};
+  void unzoom() { zoom( mw.base_zoom_factor / mw.zoom_factor_y);};
 
   //! Not used.
   void print( char *filename);

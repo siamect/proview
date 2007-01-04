@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cnf.h,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_cnf.h,v 1.3 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,8 +23,14 @@
 /* co_cnf.h
    Configuration file. */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 char *cnf_get_value( char *name, char *value);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

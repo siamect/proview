@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.cpp,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_browctx.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,7 +78,7 @@ void BrowCtx::configure( double y_redraw)
   if ( nodraw) 
     return;
   
-  flow_draw_get_window_size( this, &window_width, &window_height);
+  fdraw->get_window_size( this, &window_width, &window_height);
   a.configure();
   get_borders();
   frame_x_right = MAX( x_right, 
@@ -120,16 +120,14 @@ void BrowCtx::change_scrollbar()
 void BrowCtx::redraw( double y_redraw)
 {
 
-  flow_draw_get_window_size( this, &window_width, &window_height);
+  fdraw->get_window_size( this, &window_width, &window_height);
 
-  if ( y_redraw)
-  {
-    draw_clear_area( this, 0, window_width, 
+  if ( y_redraw) {
+    fdraw->clear_area( this, 0, window_width, 
 		int(y_redraw * zoom_factor - offset_y), window_height);
     draw( 0, int(y_redraw * zoom_factor - offset_y), window_width, window_height);
   }
-  else
-  {
+  else {
     clear();
     draw( 0, 0, window_width, window_height);
   }

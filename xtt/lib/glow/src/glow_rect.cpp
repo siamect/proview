@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_rect.cpp,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_rect.cpp,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,30 +49,6 @@ void GlowRect::traverse( int x, int y)
   ur.traverse( x, y);
 }
 
-void GlowRect::print( void *pos, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  if ( fix_line_width && line_width < 0)
-    return;
-  if ( draw_type == glow_eDrawType_LineErase)
-    return;
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * line_width - 
-		1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  if ( !fill)
-    ctx->print_ps->rect( ll.print_z_x + ((GlowPoint *)pos)->print_z_x, 
-	ll.print_z_y + ((GlowPoint *)pos)->print_z_y,
-	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
-	draw_type, idx);
-  else
-    ctx->print_ps->filled_rect( ll.print_z_x + ((GlowPoint *)pos)->print_z_x, 
-	ll.print_z_y + ((GlowPoint *)pos)->print_z_y,
-	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
-	draw_type, idx);
-}
-
 void GlowRect::save( ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_Rect) << endl;
@@ -115,124 +91,103 @@ void GlowRect::open( ifstream& fp)
   }
 }
 
-void GlowRect::draw( void *pos, int highlight, int hot, void *node)
+void GlowRect::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  int ll_x, ll_y, ur_x, ur_y;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+    ll_x = ll.nav_z_x;
+    ll_y = ll.nav_z_y;
+    ur_x = ur.nav_z_x;
+    ur_y = ur.nav_z_y;
+  }
+  else {
+    ll_x = ll.z_x;
+    ll_y = ll.z_y;
+    ur_x = ur.z_x;
+    ur_y = ur.z_y;
+  }
   int idx;
-  if ( fix_line_width)
-  {
+  if ( fix_line_width) {
     idx = line_width;
     idx += hot;
-    if ( idx < 0)
-    {
-      erase( pos, hot, node);
+    if ( idx < 0) {
+      erase( w, pos, hot, node);
       return;
     }
   }
-  else
-  {
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  else {
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
-    glow_draw_rect( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((GlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type, idx, highlight);
+    ctx->gdraw->rect( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
+	((GlowPoint *)pos)->z_y - w->offset_y, 
+	ur_x - ll_x, ur_y - ll_y, draw_type, idx, highlight);
   else
-    glow_draw_fill_rect( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((GlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type);
+    ctx->gdraw->fill_rect( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
+	((GlowPoint *)pos)->z_y - w->offset_y, 
+	ur_x - ll_x, ur_y - ll_y, draw_type);
 }
 
-void GlowRect::erase( void *pos, int hot, void *node)
+void GlowRect::erase( GlowWind *w, void *pos, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  int ll_x, ll_y, ur_x, ur_y;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+    ll_x = ll.nav_z_x;
+    ll_y = ll.nav_z_y;
+    ur_x = ur.nav_z_x;
+    ur_y = ur.nav_z_y;
+  }
+  else {
+    ll_x = ll.z_x;
+    ll_y = ll.z_y;
+    ur_x = ur.z_x;
+    ur_y = ur.z_y;
+  }
   int idx;
-  if ( fix_line_width)
-  {
+  if ( fix_line_width) {
     idx = line_width;
     idx += hot;
     if ( idx < 0) return;
   }
-  else
-  {
-    idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  else {
+    idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   if ( !fill)
-    glow_draw_rect_erase( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((GlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, idx);
+    ctx->gdraw->rect_erase( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
+	((GlowPoint *)pos)->z_y - w->offset_y, 
+	ur_x - ll_x, ur_y - ll_y, idx);
   else
-    glow_draw_fill_rect( ctx, ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
-	((GlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, glow_eDrawType_LineErase);
+    ctx->gdraw->fill_rect( w, ll_x + ((GlowPoint *)pos)->z_x - w->offset_x, ll_y + 
+	((GlowPoint *)pos)->z_y - w->offset_y, 
+	ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
 }
 
-void GlowRect::nav_draw( void *pos, int highlight, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  if ( !fill)
-    glow_draw_nav_rect( ctx, ll.nav_z_x + ((GlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x, ll.nav_z_y + 
-	((GlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
-	draw_type, idx, highlight);
-}
-
-void GlowRect::nav_erase( void *pos, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  int idx;
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  if ( !fill)
-    glow_draw_nav_rect_erase( ctx, ll.nav_z_x + ((GlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x, ll.nav_z_y + 
-	((GlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
-	idx);
-}
-
-int GlowRect::event_handler( void *pos, glow_eEvent event, int x, int y,
+int GlowRect::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,
 	void *node)
 {
   GlowPoint *p;
 
   p = (GlowPoint *) pos;
-  if ( ll.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x <= x && 
-       x <= ur.z_x  + ((GlowPoint *)pos)->z_x - ctx->offset_x &&
-       ll.z_y  + ((GlowPoint *)pos)->z_y - ctx->offset_y <= y && 
-       y <= ur.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y)
+  if ( ll.z_x + ((GlowPoint *)pos)->z_x - w->offset_x <= x && 
+       x <= ur.z_x  + ((GlowPoint *)pos)->z_x - w->offset_x &&
+       ll.z_y  + ((GlowPoint *)pos)->z_y - w->offset_y <= y && 
+       y <= ur.z_y + ((GlowPoint *)pos)->z_y - w->offset_y)
   {
 //    cout << "Event handler: Hit in rect" << endl;
     return 1;
@@ -262,23 +217,23 @@ void GlowRect::move( void *pos, double x, double y, int highlight, int hot)
 
   width = ur.x - ll.x;
   height = ur.y - ll.y;
-  erase( pos, hot, NULL);
-  nav_erase( pos, NULL);
+  erase( &ctx->mw, pos, hot, NULL);
+  erase( &ctx->navw, pos, 0, NULL);
   ll.x = x;
   ll.y = y;
   ur.x = x + width;
   ur.y = y + height;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
+  draw( &ctx->mw, pos, highlight, hot, NULL);
+  draw( &ctx->navw, pos, highlight, 0, NULL);
 }
 
 void GlowRect::shift( void *pos, double delta_x, double delta_y,
 	int highlight, int hot)
 {
-  erase( pos, hot, NULL);
-  nav_erase( pos, NULL);
+  erase( &ctx->mw, pos, hot, NULL);
+  erase( &ctx->navw, pos, 0, NULL);
   ll.x += delta_x;
   ll.y += delta_y;
   ur.x += delta_x;
@@ -286,17 +241,8 @@ void GlowRect::shift( void *pos, double delta_x, double delta_y,
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
+  draw( &ctx->mw, pos, highlight, hot, NULL);
+  draw( &ctx->navw, pos, highlight, 0, NULL);
 }
 
-ostream& operator<< ( ostream& o, const GlowRect r)
-{
-  o << 
-  '(' << r.ll.x << ',' << r.ll.y << ')' << 
-  '(' << r.ur.x << ',' << r.ur.y << ')' << 
-  '[' << r.ll.z_x << ',' << r.ll.z_y << ']' <<
-  '[' << r.ur.z_x << ',' << r.ur.z_y << ']' ;
-  return o;
-}
 

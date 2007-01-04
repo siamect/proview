@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_node.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_node.h,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,7 +22,7 @@
 
 #include <iostream.h>
 #include <fstream.h>
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 #include "glow_nodeclass.h"
@@ -54,7 +54,7 @@ class GlowNode : public GlowArrayElem {
     \param nodraw	Don't draw the object now.
     \param rel_annot_pos Not used.
   */
-  GlowNode( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+  GlowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   // Noargs constructor.
@@ -63,28 +63,20 @@ class GlowNode : public GlowArrayElem {
   // Destructor.
   ~GlowNode();
 
-  void copy_from( const GlowNode& n);
-  friend ostream& operator<< ( ostream& o, const GlowNode n);
   void zoom() { nc->zoom(); pos.zoom();};
   void nav_zoom() { nc->nav_zoom(); pos.nav_zoom();};
-  void print_zoom() { nc->print_zoom(); pos.print_zoom();};
-  void traverse( int x, int y) { pos.traverse(x,y);};
   void get_borders(
 	double *x1_right, double *x1_left, double *y1_high, double *y1_low)
 	{ if ( x_left < *x1_left) *x1_left = x_left;
 	  if ( x_right > *x1_right) *x1_right = x_right;
 	  if ( y_high > *y1_high) *y1_high = y_high;
 	  if ( y_low < *y1_low) *y1_low = y_low;};
-//	{ nc->get_borders(pos.x, pos.y, x1_right, x1_left, y1_high, y1_low,
-//	annotv);};
   void get_node_borders( )
 	{ nc->get_borders(pos.x, pos.y, &x_right, &x_left, &y_high, &y_low,
 	(void *)this);};
   void get_node_obstacle_borders( )
 	{ nc->get_obstacle_borders(pos.x, pos.y, &obst_x_right, &obst_x_left, 
 		&obst_y_high, &obst_y_low, (void *)this);};
-  int	event_handler( glow_eEvent event, int x, int y);
-  void print( double ll_x, double ll_y, double ur_x, double ur_y);
 
   //! Save the content of the object to file.
   /*!
@@ -99,23 +91,11 @@ class GlowNode : public GlowArrayElem {
   */
   void open( ifstream& fp);
 
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
-  void draw_inverse();
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
-  void erase();
-  void nav_erase() /* { nc->nav_erase( &pos, (void *)this);} */;
-  void move( int delta_x, int delta_y, int grid);
-  void move_noerase( int delta_x, int delta_y, int grid);
   void store_position() { stored_pos = pos;};
   void restore_position() { pos = stored_pos;};
   int get_conpoint( int num, double *x, double *y, glow_eDirection *dir);
   void	redraw_node_cons( void *node) {};
   int		delete_node_cons( void *node) {return 0;};
-  void set_highlight( int on);
-  int get_highlight() {return highlight;};
-  void set_inverse( int on);
-  int get_inverse() {return inverse;};
-  void set_hot( int on);
   void select_region_insert( double ll_x, double ll_y, double ur_x, 
 		double ur_y, glow_eSelectPolicy select_policy);
   glow_eObjectType type() { return glow_eObjectType_Node;};
@@ -134,9 +114,6 @@ class GlowNode : public GlowArrayElem {
 
   void	measure( double *ll_x, double *ll_y, double *ur_x, double *ur_y)
 	{ *ll_x = x_left; *ll_y = y_low; *ur_x = x_right; *ur_y = y_high;};
-  void	set_annot_pixmap( int num, glow_sAnnotPixmap *pixmap, 
-			int nodraw);
-  void	remove_annot_pixmap( int num);
   
   double		x_right;	//!< Right border of object.
   double		x_left;		//!< Left border of object.
@@ -147,7 +124,7 @@ class GlowNode : public GlowArrayElem {
   double		obst_y_high;	//!< High border of object used for routing of connections.
   double		obst_y_low;	//!< Low border of object used for routing of connections.
   int			hot;		//!< Object is hot.
-  GlowCtx 		*ctx;		//!< Glow context.
+  GrowCtx 		*ctx;		//!< Glow context.
   GlowNodeClass 	*nc;		//!< Pointer to nodeclass.
   GlowNodeClass 	*nc_root;	//!< Root nodeclass, i.e. the nodeclass of the first page.
   GlowPoint		pos;
@@ -157,7 +134,6 @@ class GlowNode : public GlowArrayElem {
   int			inverse;
   char			*annotv[10];	//!< Array with pointers to annotation texts.
   int			annotsize[10];	//!< The size of the annotation text.
-  glow_sAnnotPixmap	*annotpixmapv[10];
   int			refcon_cnt[MAX_CONPOINTS]; //!< Number of reference connections for each connection point.
   GlowTraceData		trace;
   GlowNode		*link;		//!< Link in list used for routing of connections.
@@ -267,7 +243,6 @@ class GlowNode : public GlowArrayElem {
   */
   void *get_ctx() { return this->ctx;};
 
-  void configure( void *previous);
   void get_node_position( double *x, double *y) {*x = pos.x; *y = pos.y;};
   glow_eNodeGroup get_group() {return nc->group;};
 
@@ -282,7 +257,6 @@ class GlowNode : public GlowArrayElem {
     \param name		Object name.
   */
   void set_object_name( char *name) { strcpy( n_name, name);};
-  void move_widgets( int x, int y);
 
 //  brow stuff
     void set_level( int lev) { level = lev;};
@@ -293,15 +267,11 @@ class GlowNode : public GlowArrayElem {
     void open_annotation_input( int num);
     int annotation_input_is_open( int num) { return annotv_inputmode[num];};
     void close_annotation_input( int num);
-    int get_annotation_input( int num, char **text);
-    void set_radiobutton( int num, int value, int nodraw);
-    void get_radiobutton( int num, int *value);
     int	level;
     int node_open;
     int relative_annot_pos;
     double relative_annot_x;
     double rel_annot_x[10];
-    double rel_annotpixmap_x[10];
     int annotv_inputmode[10];
     void *annotv_input[10];
     int rbuttonv[10];

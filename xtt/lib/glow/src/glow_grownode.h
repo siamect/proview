@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.9 2005-10-12 12:59:05 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.10 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ class GrowNode : public GlowNode {
     \param nodraw	Don't draw the object now.
     \param rel_annot_pos Not used.
   */
-  GrowNode( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+  GrowNode( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw = 0, int rel_annot_pos = 0);
 
   //! Noargs constructor
@@ -68,12 +68,8 @@ class GrowNode : public GlowNode {
   void copy_from( const GrowNode& n);
 
   //! Erase the object
-  void erase()
-	{ erase( (GlowTransform *)NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( (GlowTransform *)NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
   //! Update the borders of the object.
   /*! The borders of the object is stored in x_right, x_left, y_high and y_low.
@@ -151,7 +147,7 @@ class GrowNode : public GlowNode {
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler( glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
 
   //! Event handler
   /*!
@@ -166,7 +162,7 @@ class GrowNode : public GlowNode {
     action: changes the cursor, draws the object hot, and registers the object as
     current callback object.
   */
-  int event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Set hot
   /*! Increase the linewith to mark that the cursor points at the node.
@@ -567,7 +563,7 @@ class GrowNode : public GlowNode {
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
   /*!
@@ -579,14 +575,7 @@ class GrowNode : public GlowNode {
     If some part of object is inside the drawing area, and also outside the drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
   //! Draw the object.
   /*!
     \param t		Transform of parent node. Can be zero.
@@ -598,7 +587,7 @@ class GrowNode : public GlowNode {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -606,23 +595,7 @@ class GrowNode : public GlowNode {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Add a transform to the current transform.
   /*!

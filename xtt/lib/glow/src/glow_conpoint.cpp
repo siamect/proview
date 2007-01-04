@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conpoint.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_conpoint.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,8 +105,8 @@ void GlowConPoint::conpoint_select( void *pos, int x, int y,
   int px, py;
   double dist;
 
-  px = ((GlowPoint *)pos)->z_x - ctx->offset_x + p.z_x;
-  py = ((GlowPoint *)pos)->z_y - ctx->offset_y + p.z_y;
+  px = ((GlowPoint *)pos)->z_x - ctx->mw.offset_x + p.z_x;
+  py = ((GlowPoint *)pos)->z_y - ctx->mw.offset_y + p.z_y;
 
   dist = sqrt( 1.0*(x-px)*(x-px) + 1.0*(y-py)*(y-py));
   if ( dist < *distance)
@@ -125,8 +125,8 @@ void GlowConPoint::conpoint_select( GlowTransform *t, int x, int y,
 
   x1 = trf.x( t, p.x, p.y);
   y1 = trf.y( t, p.x, p.y);
-  px = int( x1 * ctx->zoom_factor_x - ctx->offset_x);
-  py = int( y1 * ctx->zoom_factor_y - ctx->offset_y);
+  px = int( x1 * ctx->mw.zoom_factor_x - ctx->mw.offset_x);
+  py = int( y1 * ctx->mw.zoom_factor_y - ctx->mw.offset_y);
 
   dist = sqrt( 1.0*(x-px)*(x-px) + 1.0*(y-py)*(y-py));
   if ( dist < *distance)

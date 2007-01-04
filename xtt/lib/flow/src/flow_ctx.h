@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.2 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.3 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,8 @@
 #include "flow.h"
 #include "flow_pscript.h"
 #include "flow_array.h"
+
+class FlowDraw;
 
 typedef struct {
 	void	*scroll_data;
@@ -90,7 +92,7 @@ class FlowCtx {
     int		nav_window_height;
     int		nav_rect_ll_x, nav_rect_ll_y, nav_rect_ur_x, nav_rect_ur_y; 
     int		nav_rect_hot;
-    void	*draw_ctx;
+    FlowDraw	*fdraw;
     void	*flow_window;
     int save( char *filename, flow_eSaveMode mode);
     int open( char *filename, flow_eSaveMode mode);

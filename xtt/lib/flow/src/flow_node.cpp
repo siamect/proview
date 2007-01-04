@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.7 2005-12-14 13:06:31 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.8 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,7 +101,7 @@ FlowNode::~FlowNode()
 	     int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
   ctx->redraw_defered();
   if ( hot)
-    draw_set_cursor( ctx, draw_eCursor_Normal);
+    ctx->fdraw->set_cursor( ctx, draw_eCursor_Normal);
 }
 
 int FlowNode::get_conpoint( int num, double *x, double *y, flow_eDirection *dir)
@@ -418,7 +418,7 @@ void FlowNode::draw_inverse()
 
 
   if ( nc->group == flow_eNodeGroup_Document) {
-    flow_draw_fill_rect( ctx,
+    ctx->fdraw->fill_rect( ctx,
        		int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
        		int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
 		int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
@@ -427,7 +427,7 @@ void FlowNode::draw_inverse()
     nc->draw( &pos, highlight, hot, (void *)this);
   }
   else {
-    flow_draw_fill_rect( ctx,
+    ctx->fdraw->fill_rect( ctx,
        		int( x_left * ctx->zoom_factor - ctx->offset_x),
        		int( y_low * ctx->zoom_factor - ctx->offset_y),
 		int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
@@ -450,7 +450,7 @@ void FlowNode::erase()
       x_r = x_right;
 
     if ( nc->group == flow_eNodeGroup_Document) {
-      flow_draw_fill_rect( ctx,
+      ctx->fdraw->fill_rect( ctx,
        	int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
        	int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
 	int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
@@ -458,7 +458,7 @@ void FlowNode::erase()
 	flow_eDrawType_LineErase);
     }
     else {
-      flow_draw_fill_rect( ctx,
+      ctx->fdraw->fill_rect( ctx,
        	int( x_left * ctx->zoom_factor - ctx->offset_x),
        	int( y_low * ctx->zoom_factor - ctx->offset_y),
 	int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
@@ -481,7 +481,7 @@ void FlowNode::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
        y_low_pix <= ur_y)
   {
     if ( x_right_pix - x_left_pix < 10 && y_high_pix - y_low_pix < 10)
-      flow_draw_nav_rect( ctx, x_left_pix, y_low_pix, 
+      ctx->fdraw->nav_rect( ctx, x_left_pix, y_low_pix, 
 	x_right_pix - x_left_pix, y_high_pix - y_low_pix,
 	flow_eDrawType_Line, 0, highlight);
     else
@@ -497,7 +497,7 @@ void FlowNode::nav_erase()
   int y_low_pix = int( y_low * ctx->nav_zoom_factor - ctx->nav_offset_y);
 
   if ( x_right_pix - x_left_pix < 10 && y_high_pix - y_low_pix < 10)
-    flow_draw_nav_rect_erase( ctx, x_left_pix, y_low_pix, 
+    ctx->fdraw->nav_rect_erase( ctx, x_left_pix, y_low_pix, 
 	x_right_pix - x_left_pix, y_high_pix - y_low_pix,
 	0);
   else
@@ -542,7 +542,7 @@ void FlowNode::set_inverse( int on)
       x_r = x_right;
 
     if ( nc->group == flow_eNodeGroup_Document) {
-      flow_draw_fill_rect( ctx,
+      ctx->fdraw->fill_rect( ctx,
        	int( obst_x_left * ctx->zoom_factor - ctx->offset_x),
        	int( obst_y_low * ctx->zoom_factor - ctx->offset_y),
 	int( obst_x_right * ctx->zoom_factor - obst_x_left * ctx->zoom_factor),
@@ -551,7 +551,7 @@ void FlowNode::set_inverse( int on)
       nc->draw( &pos, highlight, hot, (void *)this);
     }
     else {
-      flow_draw_fill_rect( ctx,
+      ctx->fdraw->fill_rect( ctx,
        	int( x_left * ctx->zoom_factor - ctx->offset_x),
        	int( y_low * ctx->zoom_factor - ctx->offset_y),
 	int( x_r * ctx->zoom_factor - x_left * ctx->zoom_factor),
@@ -806,13 +806,13 @@ int FlowNode::event_handler( flow_eEvent event, int x, int y)
       if ( sts && !hot  && 
 	   !(ctx->node_movement_active || ctx->node_movement_paste_active))
       {
-        draw_set_cursor( ctx, draw_eCursor_CrossHair);
+        ctx->fdraw->set_cursor( ctx, draw_eCursor_CrossHair);
         hot = 1;
         redraw = 1;
       }
       if ( !sts && hot)
       {
-        draw_set_cursor( ctx, draw_eCursor_Normal);
+        ctx->fdraw->set_cursor( ctx, draw_eCursor_Normal);
         erase();
         hot = 0;
         redraw = 1;

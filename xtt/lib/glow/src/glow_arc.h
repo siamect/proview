@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_arc.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_arc.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <iostream.h>
 #include <fstream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 
@@ -57,7 +57,7 @@ class GlowArc : public GlowArrayElem {
     \param line_w	Linewidth of border.
     \param fill_arc	Arc is filled.
   */
-  GlowArc( GlowCtx *glow_ctx, double x1 = 0, double y1 = 0, double x2 = 0, 
+  GlowArc( GrowCtx *glow_ctx, double x1 = 0, double y1 = 0, double x2 = 0, 
 		double y2 = 0, int ang1 = 0, int ang2 = 0, 
 		glow_eDrawType d_type = glow_eDrawType_Line, int line_w = 1,
 		int fill_arc = 0) : 
@@ -74,7 +74,6 @@ class GlowArc : public GlowArrayElem {
   //! Adjust pixel coordinates for navigaion window to current zoom factor.
   void nav_zoom();
 
-  void print_zoom();		//!< Not used.
   void traverse( int x, int y);	//!< Not used.
 
   //! Event handler
@@ -88,14 +87,11 @@ class GlowArc : public GlowArrayElem {
 
     Detects if the object is hit by the event.
   */
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+  int	event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
 
   //! Not implemented
   void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-
-  //! Print postscript. Not used.
-  void print( void *pos, void *node);
 
   //! Save the content of the object to file.
   /*!
@@ -119,7 +115,7 @@ class GlowArc : public GlowArrayElem {
 
     Draw the object, without borders or shadow.
   */
-  void draw( void *pos, int highlight, int hot, void *node);
+  void draw( GlowWind *w, void *pos, int highlight, int hot, void *node);
 
   //! Draw border and shadow of the arc.
   /*!
@@ -131,17 +127,7 @@ class GlowArc : public GlowArrayElem {
     Draw border and shadow of the object. The border always has color black and linewidth 1 pixel.
     The shadow also always has linewith 1 pixel.
   */
-  void draw_shadow( int border, int shadow, int highlight, int hot);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-
-    Draw the object, without borders or shadow.
-  */
-  void nav_draw( void *pos, int highlight, void *node);
+  void draw_shadow( GlowWind *w, int border, int shadow, int highlight, int hot);
 
   //! Erase the object.
   /*!
@@ -149,18 +135,7 @@ class GlowArc : public GlowArrayElem {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( void *pos, int hot, void *node);
-
-  //! Not used
-  void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( void *pos, void *node);
+  void erase( GlowWind *w, void *pos, int hot, void *node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -287,7 +262,7 @@ class GlowArc : public GlowArrayElem {
   */
   void convert( glow_eConvert version);
 
-  GlowCtx *ctx;    	//!< Glow context.
+  GrowCtx *ctx;    	//!< Grow context.
   int	      angel1;	//!< Start angel or arc from x-axis in degrees.
   int	      angel2;	//!< Length of arc in degrees.
   GlowPoint ll;		//!< Lower left corner of rectangle that surroundes the elipse of the arc.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.cpp,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_tiptext.cpp,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,13 +18,13 @@
  **/
 
 #include "glow_std.h"
+#include "glow_tiptext.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <iostream.h>
 #include <math.h>
-#include "glow_tiptext.h"
 #include "glow_ctx.h"
 #include "glow_draw.h"
 #include "glow_growctx.h"
@@ -39,7 +39,7 @@ static void tiptext_timer_cb( GlowCtx *ctx)
 GlowTipText::~GlowTipText()
 {
   if ( timer_id)
-    draw_remove_timer( timer_id);
+    ctx->gdraw->remove_timer( timer_id);
 }
 
 void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y) 
@@ -49,11 +49,11 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
   if ( active)
     remove_text( text_object);
   if ( timer_id) {
-    draw_remove_timer( timer_id);
+    ctx->gdraw->remove_timer( timer_id);
     timer_id = 0;
   }
 
-  draw_get_text_extent( ctx, text, strlen(text), glow_eDrawType_TextHelvetica, 2, &z_width,
+  ctx->gdraw->get_text_extent( text, strlen(text), glow_eDrawType_TextHelvetica, 2, &z_width,
 			&z_height, &z_descent);
 
   text_x = x;
@@ -64,16 +64,16 @@ void GlowTipText::draw_text( GlowArrayElem *e, char *text, int x, int y)
   strncpy( tiptext, text, sizeof(tiptext));
   text_object = e;
 
-  if ( text_x + text_width > ctx->window_width)
-    text_x = ctx->window_width - text_width;
+  if ( text_x + text_width > ctx->mw.window_width)
+    text_x = ctx->mw.window_width - text_width;
   if ( text_x < 0)
     text_x = 0;
-  if ( text_y + text_height > ctx->window_height)
-    text_y = ctx->window_height - text_height;
+  if ( text_y + text_height > ctx->mw.window_height)
+    text_y = ctx->mw.window_height - text_height;
   if ( text_y < 0)
     text_y = 0;
 
-  draw_set_timer( ctx, 1000, tiptext_timer_cb, &timer_id);
+  ctx->gdraw->set_timer( ctx, 1000, tiptext_timer_cb, &timer_id);
 }
 
 void GlowTipText::draw()
@@ -81,11 +81,11 @@ void GlowTipText::draw()
   if ( !active)
     return;
 
-  glow_draw_fill_rect( ctx, text_x, text_y, text_width, text_height,
+  ctx->gdraw->fill_rect( &ctx->mw, text_x, text_y, text_width, text_height,
 		       glow_eDrawType_Color22);
-  glow_draw_rect( ctx, text_x, text_y, text_width, text_height,
+  ctx->gdraw->rect( &ctx->mw, text_x, text_y, text_width, text_height,
 		       glow_eDrawType_Line, 0, 0);
-  glow_draw_text( ctx, text_x + 2, text_y + text_height - text_descent - 2, tiptext, 
+  ctx->gdraw->text( &ctx->mw, text_x + 2, text_y + text_height - text_descent - 2, tiptext, 
 		  strlen(tiptext), glow_eDrawType_TextHelvetica, glow_eDrawType_Line, 2, 0, 0);
 
 }
@@ -96,23 +96,23 @@ void GlowTipText::remove_text( GlowArrayElem *e)
     return;
 
   if ( timer_id) {
-    draw_remove_timer( timer_id);
+    ctx->gdraw->remove_timer( timer_id);
     timer_id = 0;
     return;
   }
 
   if ( active) {
     active = false;
-    glow_draw_fill_rect( ctx, text_x, text_y, text_width + 1, text_height + 1,
+    ctx->gdraw->fill_rect( &ctx->mw, text_x, text_y, text_width + 1, text_height + 1,
 		       glow_eDrawType_LineErase);
-    ctx->draw( text_x, text_y, text_x + text_width + 1, text_y + text_height + 1);
+    ctx->draw( &ctx->mw, text_x, text_y, text_x + text_width + 1, text_y + text_height + 1);
   }
 }
 
 void GlowTipText::remove()
 {
   if ( timer_id) {
-    draw_remove_timer( timer_id);
+    ctx->gdraw->remove_timer( timer_id);
     timer_id = 0;
   }
 

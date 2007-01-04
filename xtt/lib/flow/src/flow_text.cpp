@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_text.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_text.cpp,v 1.5 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,7 +104,7 @@ void FlowText::draw( void *pos, int highlight, int hot, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_text( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->text( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
 	draw_type, idx, highlight, 0);
 }
@@ -115,7 +115,7 @@ void FlowText::erase( void *pos, int hot, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_text_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->text_erase( ctx, p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, text,  strlen(text),
 	draw_type, idx, 0);
 }
@@ -127,7 +127,7 @@ void FlowText::nav_draw( void *pos, int highlight, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_text( ctx, 
+  ctx->fdraw->nav_text( ctx, 
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	text, strlen(text), draw_type, idx, highlight, 0);
@@ -140,7 +140,7 @@ void FlowText::nav_erase( void *pos, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_text_erase( ctx,
+  ctx->fdraw->nav_text_erase( ctx,
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	text, strlen(text), draw_type, idx, 0);

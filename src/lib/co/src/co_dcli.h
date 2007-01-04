@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli.h,v 1.9 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_dcli.h,v 1.10 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -88,6 +88,7 @@ int     dcli_replace_env( char *str, char *newstr);
 char	*dcli_fgetname( FILE *fp, char *name, char *def_name);
 int	dcli_translate_filename( char *out, const char *in);
 pwr_tStatus dcli_file_time( char *filename, pwr_tTime *time);
+pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time);
 
 
 /* Functions in module co_dcli_dir */

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.5 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.6 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,14 +50,10 @@ extern "C" {
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "xnav_bitmap_morehelp12.h"
 
 #include "co_msglist.h"
-
-static int msglist_init_brow_cb( FlowCtx *fctx, void *client_data);
-static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event);
 
 //
 //  Free pixmaps
@@ -72,17 +68,16 @@ void MsgListBrow::free_pixmaps()
 //
 void MsgListBrow::allocate_pixmaps()
 {
-	flow_sPixmapData pixmap_data;
-	int i;
+  flow_sPixmapData pixmap_data;
+  int i;
 
-          for ( i = 0; i < 9; i++)
-          {
-	    pixmap_data[i].width =xnav_bitmap_morehelp12_width;
-	    pixmap_data[i].height =xnav_bitmap_morehelp12_height;
-	    pixmap_data[i].bits = (char *)xnav_bitmap_morehelp12_bits;
-          }
+  for ( i = 0; i < 9; i++) {
+    pixmap_data[i].width =xnav_bitmap_morehelp12_width;
+    pixmap_data[i].height =xnav_bitmap_morehelp12_height;
+    pixmap_data[i].bits = (char *)xnav_bitmap_morehelp12_bits;
+  }
 
-	  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_morehelp);
+  brow_AllocAnnotPixmap( ctx, &pixmap_data, &pixmap_morehelp);
 }
 
 //
@@ -208,34 +203,42 @@ void MsgListBrow::brow_setup()
   brow_SetCtxUserData( ctx, msglist);
 
   brow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB1DoubleClick, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_ObjectDeleted, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Up, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Down, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Right, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_Left, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
-	msglist_brow_cb);
+	MsgList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	MsgList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	MsgList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	MsgList::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	MsgList::brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int msglist_init_brow_cb( FlowCtx *fctx, void *client_data)
+int MsgList::init_brow_cb( FlowCtx *fctx, void *client_data)
 {
   MsgList *msglist = (MsgList *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -249,16 +252,9 @@ static int msglist_init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 MsgList::MsgList(
-	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
-	Widget *w) :
-  parent_ctx(ev_parent_ctx), parent_wid(ev_parent_wid), find_wnav_cb(0), find_plc_cb(0)
+	void *ev_parent_ctx) :
+  parent_ctx(ev_parent_ctx), find_wnav_cb(0), find_plc_cb(0)
 {
-  form_widget = ScrolledBrowCreate( parent_wid, "MsgList", NULL, 0, 
-	msglist_init_brow_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-
-  *w = form_widget;
 }
 
 
@@ -267,8 +263,6 @@ MsgList::MsgList(
 //
 MsgList::~MsgList()
 {
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 MsgListBrow::~MsgListBrow()
@@ -276,12 +270,6 @@ MsgListBrow::~MsgListBrow()
   free_pixmaps();
 }
 
-
-void MsgList::set_input_focus()
-{
-  if ( flow_IsViewable( brow_widget))
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-}
 
 //
 //  Zoom
@@ -326,7 +314,7 @@ void MsgList::clear()
 //
 // Callbacks from brow
 //
-static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
+int MsgList::brow_cb( FlowCtx *ctx, flow_tEvent event)
 {
   MsgList		*msglist;
   ItemMsg 		*item;
@@ -434,7 +422,7 @@ static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
             doubleclick_event = (flow_tEvent) calloc( 1, sizeof(*doubleclick_event));
             memcpy( doubleclick_event, event, sizeof(*doubleclick_event));
             doubleclick_event->event = flow_eEvent_MB1DoubleClick;
-            sts = msglist_brow_cb( ctx, doubleclick_event);
+            sts = MsgList::brow_cb( ctx, doubleclick_event);
             free( (char *) doubleclick_event);
             return sts;
           }
@@ -454,6 +442,22 @@ static int msglist_brow_cb( FlowCtx *ctx, flow_tEvent event)
           brow_SelectClear( msglist->brow->ctx);
       }
       break;
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( msglist->brow->ctx, 0.95);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( msglist->brow->ctx, -0.95);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( msglist->brow->ctx, 0.10);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( msglist->brow->ctx, -0.10);
+      break;
+    }
     case flow_eEvent_Key_Left:
     {
       brow_tNode	*node_list;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_colpalctx.cpp,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_colpalctx.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,6 @@
 #include "glow_nodeclass.h"
 #include "glow_con.h"
 #include "glow_conclass.h"
-#include "glow_pushbutton.h"
 #include "glow_growrect.h"
 #include "glow_growtext.h"
 #include "glow_draw.h"
@@ -181,17 +180,17 @@ void ColPalCtx::change_scrollbar()
 
   if ( !scroll_size)
   {
-    scroll_size = entry_height + 1.0 / zoom_factor_y;
+    scroll_size = entry_height + 1.0 / mw.zoom_factor_y;
   }
 
   data.scroll_data = scroll_data;
   data.total_width = int( (x_right - x_left) / scroll_size);
   data.total_height = int( (y_high - y_low) / scroll_size);
-  data.window_width = int( window_width / scroll_size / zoom_factor_x);
-  data.window_height = int( window_height / scroll_size / zoom_factor_y + 1);
-  data.offset_x = int( offset_x / scroll_size / zoom_factor_x - x_left / 
+  data.window_width = int( mw.window_width / scroll_size / mw.zoom_factor_x);
+  data.window_height = int( mw.window_height / scroll_size / mw.zoom_factor_y + 1);
+  data.offset_x = int( mw.offset_x / scroll_size / mw.zoom_factor_x - x_left / 
 	scroll_size);
-  data.offset_y = int( offset_y /scroll_size / zoom_factor_y - y_low / 
+  data.offset_y = int( mw.offset_y /scroll_size / mw.zoom_factor_y - y_low / 
 	scroll_size);
 
   (scroll_callback)( &data);
@@ -200,8 +199,8 @@ void ColPalCtx::change_scrollbar()
 
 void ColPalCtx::redraw()
 {
-  clear();
-  draw( 0, 0, window_width, window_height);
+  clear( &mw);
+  draw( &mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
 }
 
@@ -210,23 +209,23 @@ void ColPalCtx::zoom( double factor)
   if ( fabs(factor) < DBL_EPSILON)
     return;
 
-  zoom_factor_x *= factor;
-  zoom_factor_y *= factor;
-  if ( offset_x != 0)
-    offset_x = int( (offset_x - window_width / 2.0 * ( 1.0/factor - 1)) 
+  mw.zoom_factor_x *= factor;
+  mw.zoom_factor_y *= factor;
+  if ( mw.offset_x != 0)
+    mw.offset_x = int( (mw.offset_x - mw.window_width / 2.0 * ( 1.0/factor - 1)) 
 		* factor);
-  if ( offset_y != 0)
-    offset_y = int( (offset_y  - window_height / 2.0 * ( 1.0/factor - 1)) 
+  if ( mw.offset_y != 0)
+    mw.offset_y = int( (mw.offset_y  - mw.window_height / 2.0 * ( 1.0/factor - 1)) 
 		* factor);
-  offset_x = max( offset_x, 0);
-  offset_y = max( offset_y, 0);
-  if ( (x_right - x_left) * zoom_factor_x <= window_width)
-    offset_x = 0;
-  if ( (y_high - y_low) * zoom_factor_y <= window_height)
-    offset_y = 0;
+  mw.offset_x = max( mw.offset_x, 0);
+  mw.offset_y = max( mw.offset_y, 0);
+  if ( (x_right - x_left) * mw.zoom_factor_x <= mw.window_width)
+    mw.offset_x = 0;
+  if ( (y_high - y_low) * mw.zoom_factor_y <= mw.window_height)
+    mw.offset_y = 0;
   a.zoom();
-  clear();
-  draw( 0, 0, window_width, window_height);
+  clear( &mw);
+  draw( &mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -263,8 +262,8 @@ void colpal_scroll_horizontal( ColPalCtx *ctx, int value, int bottom)
 {
   int x_pix;
 
-  x_pix = int( - value * ctx->scroll_size * ctx->zoom_factor_x + 
-	(ctx->offset_x - ctx->x_left * ctx->zoom_factor_x));
+  x_pix = int( - value * ctx->scroll_size * ctx->mw.zoom_factor_x + 
+	(ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
   ctx->scroll( x_pix, 0);
 }
 
@@ -272,14 +271,14 @@ void colpal_scroll_vertical( ColPalCtx *ctx, int value, int bottom)
 {
   int y_pix;
 
-  y_pix = int( - value * ctx->scroll_size * ctx->zoom_factor_y + 
-	(ctx->offset_y - ctx->y_low * ctx->zoom_factor_y));
+  y_pix = int( - value * ctx->scroll_size * ctx->mw.zoom_factor_y + 
+	(ctx->mw.offset_y - ctx->y_low * ctx->mw.zoom_factor_y));
   // Correction for the bottom position
   if ( bottom && ( y_pix >= 0 ||
-	ctx->window_height + y_pix < ctx->y_high * ctx->zoom_factor_y - ctx->offset_y))
+	ctx->mw.window_height + y_pix < ctx->y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y))
 //        window_height >= (y_high - y_low) * zoom_factor_y)
-    y_pix = int( ctx->window_height + ctx->offset_y - 
-		ctx->y_high * ctx->zoom_factor_y);
+    y_pix = int( ctx->mw.window_height + ctx->mw.offset_y - 
+		ctx->y_high * ctx->mw.zoom_factor_y);
   ctx->scroll( 0, y_pix);
 }
 
@@ -296,21 +295,19 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
   ctx = this;
 //  cout << "Event: " << event << endl;
 
-  fx = double( x + ctx->offset_x) / ctx->zoom_factor_x;
-  fy = double( y + ctx->offset_y) / ctx->zoom_factor_y;
+  fx = double( x + ctx->mw.offset_x) / ctx->mw.zoom_factor_x;
+  fy = double( y + ctx->mw.offset_y) / ctx->mw.zoom_factor_y;
 
   callback_object_type = glow_eObjectType_NoObject;
   callback_object = 0;
 
-  switch ( event)
-  {
+  switch ( event) {
     case glow_eEvent_MB1Click:
     case glow_eEvent_MB1ClickShift:
     case glow_eEvent_MB2Click:
       sts = 0;
-      for ( i = 0; i < a.a_size; i++)
-      {
-        sts = a.a[i]->event_handler( event, x, y, fx, fy);
+      for ( i = 0; i < a.a_size; i++) {
+        sts = a.a[i]->event_handler( &ctx->mw, event, x, y, fx, fy);
         if ( sts == GLOW__NO_PROPAGATE)
           break;
       }
@@ -329,16 +326,15 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
 
             sscanf( &name[9], "%d", (int *) &tone);
             if ( event_callback[event] &&
-	         sts != GLOW__NO_PROPAGATE)
-            {
+	         sts != GLOW__NO_PROPAGATE) {
               static glow_sEvent e;
 
               e.event = event;
               e.any.type = glow_eEventType_ColorTone;
               e.any.x_pixel = x;
               e.any.y_pixel = y;
-              e.any.x = 1.0 * (x + offset_x) / zoom_factor_x;
-              e.any.y = 1.0 * (y + offset_y) / zoom_factor_y;
+              e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+              e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
               e.colortone.tone = tone;
               event_callback[event]( this, &e);
             }
@@ -398,8 +394,8 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
               e.any.type = glow_eEventType_ColorTone;
               e.any.x_pixel = x;
               e.any.y_pixel = y;
-              e.any.x = 1.0 * (x + offset_x) / zoom_factor_x;
-              e.any.y = 1.0 * (y + offset_y) / zoom_factor_y;
+              e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+              e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
               e.colortone.tone = tone;
               event_callback[event]( this, &e);
             }
@@ -427,14 +423,14 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     case glow_eEvent_Exposure:
       int width, height;
 
-      glow_draw_get_window_size( ctx, &width, &height);
-      if ( window_width != width || window_height != height) {
-        window_width = width;
-        window_height = height;
+      gdraw->get_window_size( &mw, &width, &height);
+      if ( mw.window_width != width || mw.window_height != height) {
+        mw.window_width = width;
+        mw.window_height = height;
         change_scrollbar();
       }
 
-      draw( x, y, x + w, y + h);
+      draw( &mw, x, y, x + w, y + h);
       break;
     default:
       ;
@@ -449,8 +445,8 @@ int ColPalCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
     e.any.type = glow_eEventType_Object;
     e.any.x_pixel = x;
     e.any.y_pixel = y;
-    e.any.x = 1.0 * (x + offset_x) / zoom_factor_x;
-    e.any.y = 1.0 * (y + offset_y) / zoom_factor_y;
+    e.any.x = 1.0 * (x + mw.offset_x) / mw.zoom_factor_x;
+    e.any.y = 1.0 * (y + mw.offset_y) / mw.zoom_factor_y;
     e.object.object_type = callback_object_type;
     if ( callback_object_type != glow_eObjectType_NoObject)
       e.object.object = callback_object;

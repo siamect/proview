@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_thread.c,v 1.11 2006-09-05 12:17:00 claes Exp $
+ * Proview   $Id: rt_plc_thread.c,v 1.12 2007-01-04 07:52:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -201,6 +201,7 @@ scan (
 
   time_Uptime(&sts, &tp->before_scan, NULL);  
   clock_gettime(CLOCK_REALTIME, &tp->before_scan_abs);
+  pp->Node->SystemTime = tp->before_scan_abs;
 
   if (tp->loops > 0) {
     if (sts == TIME__CLKCHANGE) {
@@ -257,7 +258,6 @@ scan (
     tp->after_scan = tp->before_scan;
   }
   clock_gettime(CLOCK_REALTIME, &tp->after_scan_abs);
-  pp->Node->SystemTime = tp->after_scan_abs;
   if (tp->log)
     pwrb_PlcThread_Exec(tp);
 

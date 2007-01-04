@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.6 2006-06-14 05:04:10 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.7 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowFolder::GrowFolder( GlowCtx *glow_ctx, char *name, double x, double y, 
+GrowFolder::GrowFolder( GrowCtx *glow_ctx, char *name, double x, double y, 
 		double w, double h, glow_eDrawType border_d_type, int line_w, 
 		glow_eDrawType sel_color, glow_eDrawType unsel_color,
 		glow_mDisplayLevel display_lev, int nodraw) : 
@@ -54,14 +54,14 @@ GrowFolder::GrowFolder( GlowCtx *glow_ctx, char *name, double x, double y,
   y_low_offs = header_height;
 
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 }
 
 GrowFolder::~GrowFolder()
 {
   if ( ctx->nodraw) return;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 }
 
 void GrowFolder::save( ofstream& fp, glow_eSaveMode mode) 
@@ -95,8 +95,7 @@ void GrowFolder::open( ifstream& fp)
   char		dummy[40];
   int		tmp;
 
-  for (;;)
-  {
+  for (;;) {
     fp >> type;
     switch( type) {
       case glow_eSave_GrowFolder: break;
@@ -236,51 +235,47 @@ void GrowFolder::open( ifstream& fp)
   GrowWindow::update_attributes();
 }
 
-void GrowFolder::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GrowFolder::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
 
-  if ( ll_x > ur_x)
-  {
+  if ( ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
     ll_x = ur_x;
     ur_x = tmp;
   }
-  if ( ll_y > ur_y)
-  {
+  if ( ll_y > ur_y) {
     /* Shift */
     tmp = ll_y;
     ll_y = ur_y;
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
-      	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
-       	y_low * ctx->zoom_factor_y- ctx->offset_y <= ur_y) {
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+  if ( x_right * w->zoom_factor_x - w->offset_x >= ll_x &&
+      	x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       	y_high * w->zoom_factor_y - w->offset_y >= ll_y &&
+       	y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   }
 }
 
-void GrowFolder::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GrowFolder::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
-  if ( *ll_x > *ur_x)
-  {
+  if ( *ll_x > *ur_x) {
     /* Shift */
     tmp = *ll_x;
     *ll_x = *ur_x;
     *ur_x = tmp;
   }
-  if ( *ll_y > *ur_y)
-  {
+  if ( *ll_y > *ur_y) {
     /* Shift */
     tmp = *ll_y;
     *ll_y = *ur_y;
@@ -291,7 +286,7 @@ void GrowFolder::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
       	obj_ll_x <= *ur_x &&
        	obj_ur_y >= *ll_y &&
        	obj_ll_y <= *ur_y) {
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+      draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
     // Increase the redraw area
     if ( obj_ur_x > *ur_x)
@@ -305,40 +300,30 @@ void GrowFolder::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   }
 }
 
-void GrowFolder::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int x_right_pix = int( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int x_left_pix = int( x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int y_high_pix = int( y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-  int y_low_pix = int( y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-
-  if ( x_right_pix >= ll_x &&
-       x_left_pix <= ur_x &&
-       y_high_pix >= ll_y &&
-       y_low_pix <= ur_y) {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
-  }
-}
-
 void GrowFolder::set_highlight( int on)
 {
   highlight = on;
   draw();
 }
 
-void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode)
+void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode)
 {
   if ( ctx->nodraw || !(display_level & ctx->display_level))
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int idx;
   glow_eDrawType drawtype;
 
-  idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
-  int text_idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
 
   int ll_x, ll_y, ur_x, ur_y;
@@ -361,21 +346,21 @@ void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, voi
   dy1 = min( dy1, dy2);
   dy2 = max( dy1, dy2);
 
-  ll_x = int( dx1 * ctx->zoom_factor_x) - ctx->offset_x;
-  ur_x = int( dx2 * ctx->zoom_factor_x) - ctx->offset_x;
-  ur_y = int( (dy1 + y_low_offs) * ctx->zoom_factor_y) - ctx->offset_y;
-  ll_y = int( dy1 * ctx->zoom_factor_y) - ctx->offset_y;
+  ll_x = int( dx1 * w->zoom_factor_x) - w->offset_x;
+  ur_x = int( dx2 * w->zoom_factor_x) - w->offset_x;
+  ur_y = int( (dy1 + y_low_offs) * w->zoom_factor_y) - w->offset_y;
+  ll_y = int( dy1 * w->zoom_factor_y) - w->offset_y;
 
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
+  drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 0);
-  glow_eDrawType drawtype_light = ((GrowCtx *)ctx)->shift_drawtype( color_unselected, -2, 
+  glow_eDrawType drawtype_light = ctx->shift_drawtype( color_unselected, -2, 
 								    (GrowNode *)colornode);
-  glow_eDrawType drawtype_dark = ((GrowCtx *)ctx)->shift_drawtype( color_unselected, 2, 
+  glow_eDrawType drawtype_dark = ctx->shift_drawtype( color_unselected, 2, 
 								    (GrowNode *)colornode);
   int x;
-  int w = (ur_x - ll_x) / folders;
+  int width = (ur_x - ll_x) / folders;
   int h = ur_y - ll_y;
-  XPoint p[4];
+  glow_sPointX p[4];
   for ( int i = folders - 1; i >= -1; i--) {
     if ( i == current_folder)
       // Draw this last
@@ -384,7 +369,7 @@ void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, voi
     if ( i == -1)
       i = current_folder;
 
-    x = ll_x + i * w;
+    x = ll_x + i * width;
     if ( i == 0)
       p[0].x = ll_x;
     else
@@ -392,22 +377,22 @@ void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, voi
     p[0].y = ll_y + h;
     p[1].x = x + h/4;
     p[1].y = ll_y;
-    p[2].x = x + w - h/4;
+    p[2].x = x + width - h/4;
     p[2].y = ll_y;
     if ( i == folders - 1) 
       p[3].x = ur_x;
     else
-      p[3].x = x + w + h/4;
+      p[3].x = x + width + h/4;
     p[3].y = ll_y + h;
 
     if ( i == current_folder)
-      glow_draw_fill_polyline( ctx, p, 4, color_selected, 0);
+      ctx->gdraw->fill_polyline( w, p, 4, color_selected, 0);
     else {
-      glow_draw_fill_polyline( ctx, p, 4, color_unselected, 0);	
+      ctx->gdraw->fill_polyline( w, p, 4, color_unselected, 0);	
       if ( shadow) {
-	glow_draw_line( ctx, p[0].x+1, p[0].y, p[1].x+1, p[1].y, drawtype_light, 0, 0);
+	ctx->gdraw->line( w, p[0].x+1, p[0].y, p[1].x+1, p[1].y, drawtype_light, 0, 0);
 	if ( i != 0) {
-	  XPoint ps[4];
+	  glow_sPointX ps[4];
 
 	  ps[0].x = x + h/4;
 	  ps[0].y = ll_y + h;
@@ -418,7 +403,7 @@ void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, voi
 	  ps[3].x = x + h/2;
 	  ps[3].y = ll_y + h;
 
-	  glow_draw_fill_polyline( ctx, ps, 4, drawtype_dark, 0);	
+	  ctx->gdraw->fill_polyline( w, ps, 4, drawtype_dark, 0);	
 	}
       }
     }
@@ -427,147 +412,74 @@ void GrowFolder::draw( GlowTransform *t, int highlight, int hot, void *node, voi
       if ( i == current_folder) {
 	drawtype_light = ((GrowCtx *)ctx)->shift_drawtype( color_selected, -2, 
 								    (GrowNode *)colornode);
-	glow_draw_line( ctx, p[0].x+1, p[0].y, p[1].x+1, p[1].y, drawtype_light, 0, 0);
+	ctx->gdraw->line( w, p[0].x+1, p[0].y, p[1].x+1, p[1].y, drawtype_light, 0, 0);
       }
-      glow_draw_line( ctx, p[1].x, p[1].y+1, p[2].x, p[2].y+1, drawtype_light, 0, 0);
+      ctx->gdraw->line( w, p[1].x, p[1].y+1, p[2].x, p[2].y+1, drawtype_light, 0, 0);
     }
-    glow_draw_polyline( ctx, p, 4, drawtype, idx, 0);
+    ctx->gdraw->polyline( w, p, 4, drawtype, idx, 0);
       
     if ( text_idx >= 0) {
-      glow_draw_text( ctx, x + h/2, ll_y + h - 2,
+      ctx->gdraw->text( w, x + h/2, ll_y + h - 2,
 		    folder_text[i], strlen(folder_text[i]), text_drawtype, text_color_drawtype, 
 		    text_idx, highlight, 0);
     }
     if ( i == current_folder)
       break;
   }
-  GrowWindow::draw( t, highlight, hot, node, colornode);
-  glow_draw_line( ctx, p[0].x+1, p[0].y, p[3].x-1, p[3].y, color_selected, idx, 0);
+  GrowWindow::draw( w, t, highlight, hot, node, colornode);
+  ctx->gdraw->line( w, p[0].x+1, p[0].y, p[3].x-1, p[3].y, color_selected, idx, 0);
 }
 
-void GrowFolder::erase( GlowTransform *t, int hot, void *node)
+void GrowFolder::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int idx;
-  idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ctx->set_draw_buffer_only();
-  glow_draw_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowFolder::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  glow_eDrawType drawtype;
-  int idx;
-  idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  if ( window_ctx && fill)
-      glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fill_drawtype);
-
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 highlight, (GrowNode *)colornode, 0);
-  glow_draw_nav_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	drawtype, idx, 0);
-}
-
-void GrowFolder::nav_erase( GlowTransform *t, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  int idx;
-  idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  glow_draw_nav_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			    idx);
-  glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	glow_eDrawType_LineErase);
+  w->set_draw_buffer_only();
+  ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  w->reset_draw_buffer_only();
 }
 
 void GrowFolder::draw()
 {
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowFolder::export_javabean( GlowTransform *t, void *node,
@@ -575,19 +487,17 @@ void GrowFolder::export_javabean( GlowTransform *t, void *node,
 {
   double x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = trf.x( ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+  if (!t) {
+    x1 = trf.x( ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
-  else
-  {
-    x1 = trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+  else {
+    x1 = trf.x( t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -595,10 +505,10 @@ void GrowFolder::export_javabean( GlowTransform *t, void *node,
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ((GrowCtx *)ctx)->export_jbean->folder( ll_x, ll_y, ur_x, ur_y, folders,
-					  (char *)folder_file_names, (char *)folder_text, 
-					  (int *)folder_v_scrollbar, (int *)folder_h_scrollbar,
-					  owner, pass, shape_cnt, node_cnt, fp);
+  ctx->export_jbean->folder( ll_x, ll_y, ur_x, ur_y, folders,
+			     (char *)folder_file_names, (char *)folder_text, 
+			     (int *)folder_v_scrollbar, (int *)folder_h_scrollbar,
+			     owner, pass, shape_cnt, node_cnt, fp);
 }
 
 void GrowFolder::convert( glow_eConvert version) 
@@ -610,7 +520,7 @@ void GrowFolder::convert( glow_eConvert version)
   }  
 }
 
-int GrowFolder::event_handler( glow_eEvent event, int x, int y, double fx,
+int GrowFolder::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
 	double fy)
 {
   int sts;
@@ -641,7 +551,7 @@ int GrowFolder::event_handler( glow_eEvent event, int x, int y, double fx,
       return 1;
     }
   }
-  sts = GrowWindow::event_handler( event, x, y, fx, fy);
+  sts = GrowWindow::event_handler( w, event, x, y, fx, fy);
 #if 0
   if ( ctx->trace_started && ctx->callback_object == this) {
     // Disable event callback for this object, let the window ctx handle it

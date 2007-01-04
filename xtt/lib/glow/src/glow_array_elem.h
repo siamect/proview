@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.7 2005-12-06 09:18:34 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.8 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,8 @@
 /*! \addtogroup Glow */
 /*@{*/
 
+class GlowWind;
+
 //! Virtual base class for all drawing objects and components.
 /*! A GlowArrayElem object can be inserted in a GlowArray vector, which contains all the
   object in a window, in a group, or in a subgraph component.
@@ -47,26 +49,26 @@ class GlowArrayElem {
 	double *x_right, double *x_left, double *y_high, double *y_low) {};
     virtual void get_borders( double pos_x, double pos_y, double *x_right, 
 	double *x_left, double *y_high, double *y_low, void *node) {};
-    virtual int	 event_handler( glow_eEvent event, 
+    virtual int	 event_handler( GlowWind *w, glow_eEvent event, 
 		int x, int y) { return 0;};
-    virtual int	 event_handler( glow_eEvent event, 
+    virtual int	 event_handler( GlowWind *w, glow_eEvent event, 
 		int x, int y, double fx, double fy) { return 0;};
-    virtual int	 event_handler( glow_eEvent event, double fx, double fy) 
+    virtual int	 event_handler( GlowWind *w, glow_eEvent event, double fx, double fy) 
 		{ return 0;};
-    virtual int	 event_handler( void *pos, 
+    virtual int	 event_handler( GlowWind *w, void *pos, 
 		glow_eEvent event, int x, int y, void *node) { return 0;};
     virtual void print( double ll_x, double ll_y, double ur_x, double ur_y) {};
     virtual void save( ofstream& fp, glow_eSaveMode mode) {};
     virtual void open( ifstream& fp) {};
     virtual void print( void *pos, void *node) {};
-    virtual void draw( int ll_x, int ll_y, int ur_x, int ur_y) {};
-    virtual void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) {};
-    virtual void draw( void *pos, int highlight, int hot, void *node) {};
-    virtual void draw( GlowTransform *t, int highlight, int hot, void *node, 
+    virtual void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) {};
+    virtual void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) {};
+    virtual void draw( GlowWind *w, void *pos, int highlight, int hot, void *node) {};
+    virtual void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, 
 		       void *colornode) {};
     virtual void erase() {};
-    virtual void erase( void *pos, int hot, void *node) {};
-    virtual void erase( GlowTransform *t, int hot, void *node) {};
+    virtual void erase( GlowWind *w, void *pos, int hot, void *node) {};
+    virtual void erase( GlowWind *w, GlowTransform *t, int hot, void *node) {};
     virtual void draw_inverse( void *pos, int hot, void *node) {};
     virtual void move( double delta_x, double delta_y, int grid) {};
     virtual void move_noerase( int delta_x, int delta_y, int grid) {};

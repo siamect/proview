@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_con.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <iostream.h>
 #include <fstream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 #include "glow_node.h"
@@ -66,7 +66,7 @@ typedef struct {
 class GlowCon : public GlowArrayElem {
  public:
 #if 0
-  GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
+  GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp);
 #endif
   //! Constructor.
@@ -85,7 +85,7 @@ class GlowCon : public GlowArrayElem {
     \param cborder	Draw with border.
     \param cshadow	Draw width shadow.
   */
-  GlowCon( GlowCtx *glow_ctx, char *name, GlowConClass *con_class,
+  GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 	GlowNode *source, GlowNode *dest, int source_cp, int dest_cp,
 	int nodraw = 0, int point_num = 0, double *x_vect = 0,
 	double *y_vect = 0, int cborder = 0, int cshadow = 0);
@@ -108,15 +108,12 @@ class GlowCon : public GlowArrayElem {
 
   void zoom();
   void nav_zoom();
-  void print_zoom();
-  void traverse( int x, int y) { line_a.traverse(x,y);};
   void get_borders(
 	double *x1_right, double *x1_left, double *y1_high, double *y1_low) {};
   void get_con_borders();
-  int	event_handler( glow_eEvent event, int x, int y);
-  int event_handler( glow_eEvent event, int x, int y, double fx, double fy)
-	{ return event_handler( event, x, y);};
-  void print( double ll_x, double ll_y, double ur_x, double ur_y);
+  int	event_handler( GlowWind *w, glow_eEvent event, int x, int y);
+  int event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy)
+	{ return event_handler( w, event, x, y);};
 
   //! Save the content of the object to file.
   /*!
@@ -130,13 +127,10 @@ class GlowCon : public GlowArrayElem {
     \param fp	Input file.
   */
   void open( ifstream& fp);
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
   void draw();
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
   void erase() {};
-  void nav_erase() {};
   void move( double delta_x, double delta_y, int grid);
   void move_noerase( int delta_x, int delta_y, int move);
   void reconfigure();
@@ -163,7 +157,7 @@ class GlowCon : public GlowArrayElem {
   double	x_left;
   double	y_high;
   double	y_low;
-  GlowCtx 		*ctx;
+  GrowCtx 		*ctx;
   GlowConClass 	*cc;
   GlowNode		*destination() { return dest_node;};
   GlowNode		*source() { return source_node;};

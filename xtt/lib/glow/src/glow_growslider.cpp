@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growslider.cpp,v 1.4 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growslider.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 
 #define SLIDER_BACKGROUND 21
 
-GrowSlider::GrowSlider( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
+GrowSlider::GrowSlider( GrowCtx *glow_ctx, char *name, GlowNodeClass *node_class,
 	double x1, double y1, int nodraw, int rel_annot_pos) :
 	GrowNode(glow_ctx,name,node_class,x1,y1,nodraw,rel_annot_pos),
 	direction(glow_eDirection_Down),
@@ -42,16 +42,13 @@ GrowSlider::GrowSlider( GlowCtx *glow_ctx, char *name, GlowNodeClass *node_class
 void GrowSlider::copy_from( const GrowSlider& n) 
 {
   memcpy( this, &n, sizeof(n));
-  for ( int i = 0; i < 10; i++)
-  {
-    if ( annotsize[i])
-    {
+  for ( int i = 0; i < 10; i++) {
+    if ( annotsize[i]) {
       annotv[i] = (char *) calloc( 1, annotsize[i]);
       memcpy( annotv[i], n.annotv[i], annotsize[i]);
     }
   }
-  if ( n.dynamicsize)
-  {
+  if ( n.dynamicsize) {
     dynamic = (char *) calloc( 1, n.dynamicsize);
     memcpy( dynamic, n.nc->dynamic, n.dynamicsize);
   }
@@ -81,8 +78,7 @@ void GrowSlider::open( ifstream& fp)
   char		dummy[40];
   int		tmp;
 
-  for (;;)
-  {
+  for (;;) {
     fp >> type;
     switch( type) {
       case glow_eSave_GrowSlider: break;
@@ -125,7 +121,7 @@ void GrowSlider::get_info_pixel( glow_eDirection *dir, double *max_position,
   int sts;
   double origo;
 
-  sts = ((GrowCtx *)ctx)->get_background_object_limits(
+  sts = ctx->get_background_object_limits(
                (glow_eTraceType) bg_dyn_type,
 	       (x_right + x_left) / 2, (y_low + y_high) / 2, 
 	       &background, &bg_min, &bg_max, &bg_dir);
@@ -138,12 +134,12 @@ void GrowSlider::get_info_pixel( glow_eDirection *dir, double *max_position,
     *dir = direction;
     if ( direction == glow_eDirection_Left ||
          direction == glow_eDirection_Right) {
-      *max_position = max_pos * ctx->zoom_factor_x - ctx->offset_x;
-      *min_position = min_pos * ctx->zoom_factor_x - ctx->offset_x;
+      *max_position = max_pos * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+      *min_position = min_pos * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
     }
     else {
-      *max_position = max_pos * ctx->zoom_factor_y - ctx->offset_y;
-      *min_position = min_pos * ctx->zoom_factor_y - ctx->offset_y;
+      *max_position = max_pos * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+      *min_position = min_pos * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     }
   }
   else {
@@ -151,24 +147,24 @@ void GrowSlider::get_info_pixel( glow_eDirection *dir, double *max_position,
     get_origo( bg_dir, &origo);
     switch ( bg_dir) {
       case glow_eDirection_Right: 
-        *max_position = (bg_max - origo) * ctx->zoom_factor_x- ctx->offset_x;
-        *min_position = (bg_min - origo) * ctx->zoom_factor_x- ctx->offset_x;
+        *max_position = (bg_max - origo) * ctx->mw.zoom_factor_x- ctx->mw.offset_x;
+        *min_position = (bg_min - origo) * ctx->mw.zoom_factor_x- ctx->mw.offset_x;
         break;
       case glow_eDirection_Left: 
         *max_position = (bg_max - (x_right - x_left - origo)) * 
-	    ctx->zoom_factor_x- ctx->offset_x;
+	    ctx->mw.zoom_factor_x- ctx->mw.offset_x;
         *min_position = (bg_min - (x_right - x_left - origo)) * 
-	    ctx->zoom_factor_x- ctx->offset_x;
+	    ctx->mw.zoom_factor_x- ctx->mw.offset_x;
         break;
       case glow_eDirection_Down: 
-        *max_position = (bg_max - origo) * ctx->zoom_factor_y - ctx->offset_y;
-        *min_position = (bg_min - origo) * ctx->zoom_factor_y - ctx->offset_y;
+        *max_position = (bg_max - origo) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+        *min_position = (bg_min - origo) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
         break;
       case glow_eDirection_Up: 
         *max_position = (bg_max - (y_high - y_low - origo)) * 
-	    ctx->zoom_factor_y - ctx->offset_y;
+	    ctx->mw.zoom_factor_y - ctx->mw.offset_y;
         *min_position = (bg_min - (y_high - y_low - origo)) * 
-	    ctx->zoom_factor_y - ctx->offset_y;
+	    ctx->mw.zoom_factor_y - ctx->mw.offset_y;
         break;
       default:
         ;
@@ -230,22 +226,22 @@ void GrowSlider::export_javabean( GlowTransform *t, void *node,
   char java_name[40];
 
   if (!t) {
-    x1 = x_left * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = y_low * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = x_right * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = y_high * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     rot = trf.rot();
   }
   else {
-    x1 = t->x( x_left, y_low) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = t->y( x_left, y_low) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = t->x( x_right, y_high) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = t->y( x_right, y_high) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = t->x( x_left, y_low) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = t->y( x_left, y_low) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = t->x( x_right, y_high) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = t->y( x_right, y_high) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
     rot = trf.rot(t);
   }
 
   nc->get_java_name( java_name);
-  ((GrowCtx *)ctx)->export_jbean->slider( x1, y1, x2, y2, java_name, 
+  ctx->export_jbean->slider( x1, y1, x2, y2, java_name, 
     	draw_type, fill_drawtype, text_drawtype, color_tone, color_lightness,
     	color_intensity, color_shift, line_width, rot, shadow,
     	pass, shape_cnt, node_cnt, in_nc, fp);

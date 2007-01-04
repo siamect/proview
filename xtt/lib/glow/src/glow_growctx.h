@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.8 2006-05-16 11:50:27 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.9 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,23 +127,23 @@ class GrowCtx : public GlowCtx {
     other objects in the area. Draws the tooltip text, if this is active, and selection rectangle
     if this is active.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw a specified area of the window.
   /*! Interface with double arguments */
-  void draw( double ll_x, double ll_y, double ur_x, double ur_y)
-                {draw( (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
+  void draw( GlowWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
+                {draw( w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
 
   //! Draw a specified area of the navigation window.
   /*! The drawing is done with extending drawing area which should be replaced with drawing with clip
     to increase performance.
   */
-  void nav_draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void nav_draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw a specified area of the navigation window.
   /*! Interface with double arguments */
-  void nav_draw( double ll_x, double ll_y, double ur_x, double ur_y)
-                {nav_draw( (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
+  void nav_draw( GlowWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
+                {nav_draw( w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
 
   //! Draw the defered drawing area.
   /*! Redraw the area and deactivate refered drawing. */

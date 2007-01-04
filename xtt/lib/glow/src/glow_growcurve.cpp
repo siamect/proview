@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growcurve.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growcurve.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowCurve::GrowCurve( GlowCtx *glow_ctx, char *name, glow_sCurveData *data,
+GrowCurve::GrowCurve( GrowCtx *glow_ctx, char *name, glow_sCurveData *data,
                 double x, double y,
 		double w, double h, glow_eDrawType border_d_type, int line_w,
 		glow_mDisplayLevel display_lev,
@@ -41,7 +41,7 @@ GrowCurve::GrowCurve( GlowCtx *glow_ctx, char *name, glow_sCurveData *data,
   if ( data)
     configure_curves( data);
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
 }
 
@@ -182,7 +182,7 @@ void GrowCurve::add_points( glow_sCurveData *data)
     y_value = max( ll.y, min( y_value, ur.y));
 
     if ( !fill)
-      erase();
+      erase( &ctx->mw);
     if ( !fill_curve)
       curve[idx]->add_and_shift_y_value( y_value);
     else
@@ -192,7 +192,7 @@ void GrowCurve::add_points( glow_sCurveData *data)
 
   draw();
   // draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-  ctx->nav_draw( 0, 0, ctx->nav_window_width, ctx->nav_window_height);
+  ctx->nav_draw( &ctx->navw, 0, 0, ctx->navw.window_width, ctx->navw.window_height);
   // nav_draw( (GlowTransform *) NULL, highlight, NULL, NULL);
 }
 

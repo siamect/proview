@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_std.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_std.h,v 1.4 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,7 @@
 #define flow_std_h
 
 #include <stdlib.h>
+#include <math.h>
 
 #if defined __cplusplus
 #if defined OS_VMS && defined __ALPHA

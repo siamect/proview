@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.9 2006-05-24 06:59:47 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.10 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,27 +44,17 @@ extern "C" {
 #include "co_msgwindow.h"
 
 
-static void msg_action_inputfocus( Widget w, XmAnyCallbackStruct *data);
-static void msg_activate_exit( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_clear( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_zoom_in( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_zoom_out( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data);
-
 MsgWindow *MsgWindow::default_window = 0;
 int  MsgWindow::hide_info = 0;
 
-static void msgw_find_wnav_cb( void *ctx, pwr_tOid oid)
+void MsgWindow::msgw_find_wnav_cb( void *ctx, pwr_tOid oid)
 {
   MsgWindow *msgw = (MsgWindow *)ctx;
   if ( msgw->find_wnav_cb)
     (msgw->find_wnav_cb)( msgw->parent_ctx, oid);
 }
 
-static void msgw_find_plc_cb( void *ctx, pwr_tOid oid)
+void MsgWindow::msgw_find_plc_cb( void *ctx, pwr_tOid oid)
 {
   MsgWindow *msgw = (MsgWindow *)ctx;
   if ( msgw->find_plc_cb)
@@ -140,143 +130,16 @@ void MsgWindow::message( int severity, const char *text1, const char *text2, con
 
 MsgWindow::MsgWindow(
 	void *msg_parent_ctx,
-	Widget	msg_parent_wid,
 	char *msg_name,
 	pwr_tStatus *status) :
-  parent_ctx(msg_parent_ctx), parent_wid(msg_parent_wid), msgnav(NULL), displayed(0),
-  deferred_map(0), nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0)
+  parent_ctx(msg_parent_ctx), msgnav(NULL), displayed(0),
+  deferred_map(0), nodraw(0), size(0), max_size(500), find_wnav_cb(0), find_plc_cb(0),
+  wow(0)
 {
-  char		uid_filename[120] = {"$pwr_exe/wb_msgwindow.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  int		i;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-
-  static char msg_translations[] =
-    "<FocusIn>: msg_inputfocus()\n";
-  static XtTranslations msg_compiled_translations = NULL;
-
-  static XtActionsRec msg_actions[] =
-  {
-    {"msg_inputfocus",      (XtActionProc) msg_action_inputfocus}
-  };
-
-  static MrmRegisterArg	reglist[] = {
-        { "msg_ctx", 0 },
-	{"msg_activate_exit",(caddr_t)msg_activate_exit },
-	{"msg_activate_clear",(caddr_t)msg_activate_clear },
-	{"msg_activate_zoom_in",(caddr_t)msg_activate_zoom_in },
-	{"msg_activate_zoom_out",(caddr_t)msg_activate_zoom_out },
-	{"msg_activate_zoom_reset",(caddr_t)msg_activate_zoom_reset },
-	{"msg_activate_help",(caddr_t)msg_activate_help },
-	{"msg_activate_help_message",(caddr_t)msg_activate_help_message },
-	{"msg_create_form",(caddr_t)msg_create_form }
-	};
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
   *status = 1;
   strcpy( name, msg_name);
-
-  reglist[0].value = (caddr_t) this;
-
-  // Motif
-  MrmInitialize();
-
-
-  // Save the context structure in the widget
-  i = 0;
-  XtSetArg(args[i], XmNuserData, (unsigned int) this);i++;
-  XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
-
-  dcli_translate_filename( uid_filename, uid_filename);
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  parent_wid = XtCreatePopupShell( name, 
-		topLevelShellWidgetClass, parent_wid, args, i);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "msg_window", parent_wid,
-			name, args, 1, &toplevel, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  MrmCloseHierarchy(s_DRMh);
-
-  if ( msg_compiled_translations == NULL) 
-  {
-    XtAppAddActions( XtWidgetToApplicationContext( toplevel), 
-		msg_actions, XtNumber(msg_actions));
-    msg_compiled_translations = XtParseTranslationTable( msg_translations);
-  }
-  XtOverrideTranslations( toplevel, msg_compiled_translations);
-
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,900);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
-  XtSetValues( toplevel, args,i);
-    
-  XtManageChild( toplevel);
-
-  // Create msgnav
-  msgnav = new MsgList( this, form, &nav_widget);
-  msgnav->find_wnav_cb = msgw_find_wnav_cb;
-  msgnav->find_plc_cb = msgw_find_plc_cb;
-
-//  XtManageChild( form_widget);
-
-  XtRealizeWidget( parent_wid);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( parent_wid, 
-	(XtCallbackProc)msg_activate_exit, this);
-
 }
 
-
-//
-//  Delete window
-//
-MsgWindow::~MsgWindow()
-{
-  if ( parent_wid)
-    XtDestroyWidget( parent_wid);
-  if ( msgnav)
-    delete msgnav;
-}
-
-void MsgWindow::map()
-{
-  if ( nodraw) {
-    deferred_map = 1;
-    return;
-  }
-  else
-    deferred_map = 0;
-
-  if ( !displayed)
-  {
-    flow_MapWidget( parent_wid);
-    displayed = 1;
-  }
-  else
-  {
-    flow_UnmapWidget( parent_wid);
-    flow_MapWidget( parent_wid);
-  }
-}
-
-void MsgWindow::unmap()
-{
-  if ( displayed)
-  {
-    flow_UnmapWidget( parent_wid);
-    displayed = 0;
-  }
-}
 
 void MsgWindow::reset_nodraw()
 {
@@ -305,61 +168,6 @@ void MsgWindow::insert( int severity, const char *text, pwr_tOid oid, bool is_pl
   }
   else
     size++;
-}
-
-static void msg_action_inputfocus( Widget w, XmAnyCallbackStruct *data)
-{
-  Arg args[1];
-  MsgWindow *msgw;
-
-  XtSetArg    (args[0], XmNuserData, &msgw);
-  XtGetValues (w, args, 1);
-
-  if ( msgw && msgw->displayed)
-    msgw->msgnav->set_input_focus();
-}
-
-static void msg_activate_exit( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  flow_UnmapWidget( msgw->parent_wid);
-  msgw->displayed = 0;
-}
-
-static void msg_activate_clear( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  msgw->msgnav->clear();
-  msgw->size = 0;
-}
-
-static void msg_activate_zoom_in( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  msgw->msgnav->zoom( 1.2);
-}
-
-static void msg_activate_zoom_out( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  msgw->msgnav->zoom( 5.0/6);
-}
-
-static void msg_activate_zoom_reset( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  msgw->msgnav->unzoom();
-}
-
-static void msg_activate_help( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  CoXHelp::dhelp( "messagewindow_refman", 0, navh_eHelpFile_Other, "$pwr_lang/man_dg.dat", 
-		  true);
-}
-
-static void msg_activate_help_message( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  CoXHelp::dhelp( "message window", 0, navh_eHelpFile_Base, 0, true);
-}
-
-static void msg_create_form( Widget w, MsgWindow *msgw, XmAnyCallbackStruct *data)
-{
-  msgw->form = w;
 }
 
 

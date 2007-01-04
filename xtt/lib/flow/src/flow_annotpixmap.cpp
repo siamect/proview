@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annotpixmap.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_annotpixmap.cpp,v 1.5 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,7 +150,7 @@ void FlowAnnotPixmap::draw( void *pos, int highlight, int hot, void *node)
   }
   else
     x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
-  flow_draw_pixmap( ctx, x, 
+  ctx->fdraw->pixmap( ctx, x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
 	((FlowNode *) node)->annotpixmapv[number]->pixmaps,
@@ -175,7 +175,7 @@ void FlowAnnotPixmap::draw_inverse( void *pos, int hot, void *node)
   }
   else
     x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
-  flow_draw_pixmap_inverse( ctx, x, 
+  ctx->fdraw->pixmap_inverse( ctx, x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
 	((FlowNode *) node)->annotpixmapv[number]->pixmaps,
@@ -200,7 +200,7 @@ void FlowAnnotPixmap::erase( void *pos, int hot, void *node)
   }
   else
     x = p.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x;
-  flow_draw_pixmap_erase( ctx, x, 
+  ctx->fdraw->pixmap_erase( ctx, x, 
 	p.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
 	((FlowNode *) node)->annotpixmapv[number]->pixmaps,
@@ -216,7 +216,7 @@ void FlowAnnotPixmap::nav_draw( void *pos, int highlight, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_pixmap( ctx, 
+  ctx->fdraw->nav_pixmap( ctx, 
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
@@ -233,7 +233,7 @@ void FlowAnnotPixmap::nav_erase( void *pos, void *node)
   if ( idx < 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_pixmap_erase( ctx,
+  ctx->fdraw->nav_pixmap_erase( ctx,
 	p.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	&((FlowNode *) node)->annotpixmapv[number]->pixmap_data, 
@@ -339,11 +339,11 @@ void flow_annot_pixmap_create( FlowCtx *ctx, flow_sPixmapData *pixmap_data,
 {
   *pixmap = (flow_sAnnotPixmap *) calloc( 1, sizeof( flow_sAnnotPixmap));
   memcpy( &(*pixmap)->pixmap_data, pixmap_data, sizeof( flow_sPixmapData));
-  flow_draw_pixmaps_create( ctx, pixmap_data, &(*pixmap)->pixmaps);
+  ctx->fdraw->pixmaps_create( ctx, pixmap_data, &(*pixmap)->pixmaps);
 }
 
 void flow_annot_pixmap_free( FlowCtx *ctx, flow_sAnnotPixmap *pixmap)
 {
-  flow_draw_pixmaps_delete( ctx, pixmap->pixmaps);
+  ctx->fdraw->pixmaps_delete( ctx, pixmap->pixmaps);
   free( pixmap);
 }

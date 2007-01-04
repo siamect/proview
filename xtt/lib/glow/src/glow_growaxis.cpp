@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.7 2005-11-14 16:28:12 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.8 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowAxis::GrowAxis( GlowCtx *glow_ctx, char *name, double x1, double y1, 
+GrowAxis::GrowAxis( GrowCtx *glow_ctx, char *name, double x1, double y1, 
 		double x2, double y2, glow_eDrawType border_d_type, 
 		int line_w, int t_size, glow_eDrawType t_drawtype, 
 	        int nodraw) : 
@@ -44,15 +44,15 @@ GrowAxis::GrowAxis( GlowCtx *glow_ctx, char *name, double x1, double y1,
 
   configure();
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
 }
 
 GrowAxis::~GrowAxis()
 {
   if ( ctx->nodraw) return;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 }
 
 void GrowAxis::configure() 
@@ -122,55 +122,47 @@ void GrowAxis::open( ifstream& fp)
   configure();
 }
 
-void GrowAxis::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GrowAxis::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
 
-  if ( ll_x > ur_x)
-  {
+  if ( ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
     ll_x = ur_x;
     ur_x = tmp;
   }
-  if ( ll_y > ur_y)
-  {
+  if ( ll_y > ur_y) {
     /* Shift */
     tmp = ll_y;
     ll_y = ur_y;
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
-      	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
-       	y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+  if ( x_right * w->zoom_factor_x - w->offset_x >= ll_x &&
+      	x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       	y_high * w->zoom_factor_y - w->offset_y >= ll_y &&
+       	y_low * w->zoom_factor_y - w->offset_y <= ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   }
 }
 
-void GrowAxis::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GrowAxis::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
-  if ( *ll_x > *ur_x)
-  {
+  if ( *ll_x > *ur_x) {
     /* Shift */
     tmp = *ll_x;
     *ll_x = *ur_x;
     *ur_x = tmp;
   }
-  if ( *ll_y > *ur_y)
-  {
+  if ( *ll_y > *ur_y) {
     /* Shift */
     tmp = *ll_y;
     *ll_y = *ur_y;
@@ -180,12 +172,8 @@ void GrowAxis::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   if (  obj_ur_x >= *ll_x &&
       	obj_ll_x <= *ur_x &&
        	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+       	obj_ll_y <= *ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
     // Increase the redraw area
     if ( obj_ur_x > *ur_x)
@@ -199,33 +187,22 @@ void GrowAxis::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   }
 }
 
-void GrowAxis::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int x_right_pix = int( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int x_left_pix = int( x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int y_high_pix = int( y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-  int y_low_pix = int( y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-
-  if ( x_right_pix >= ll_x &&
-       x_left_pix <= ur_x &&
-       y_high_pix >= ll_y &&
-       y_low_pix <= ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
-  }
-}
-
 void GrowAxis::set_highlight( int on)
 {
   highlight = on;
   draw();
 }
 
-void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node, 
-		      void *colornode)
+void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, 
+		     void *colornode)
 {
   if ( ctx->nodraw)
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int i;
   int draw_text = (fabs(increment) > DBL_EPSILON);
   int idx;
@@ -237,46 +214,41 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
   int max_z_width = 0;
   double rotation;
   glow_eDrawType drawtype;
-  int text_idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int text_idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   text_idx = min( text_idx, DRAW_TYPE_SIZE-1);
 
-  if ( fix_line_width)
-  {
+  if ( fix_line_width) {
     idx = line_width;
     idx += hot;
-    if ( idx < 0)
-    {
-      erase( t, hot, node);
+    if ( idx < 0) {
+      erase( w, t, hot, node);
       return;
     }
   }
-  else
-  {
+  else {
     if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * 
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
     else
-      idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+      idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
     idx += hot;
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
     rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
     rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
   }
 
@@ -284,22 +256,20 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 highlight, (GrowNode *)colornode, 0);
+  drawtype = ctx->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
+				highlight, (GrowNode *)colornode, 0);
 
-
-  if ( 45 >= rotation || rotation > 315)
-  {
+  if ( 45 >= rotation || rotation > 315) {
     // Vertical line to the right and values to the left
 
-    glow_draw_line( ctx, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line( w, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
-	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
 				max( 0, text_idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -318,10 +288,10 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < lines; i++) {
       y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * i);
       if ( i % longquotient == 0)
-        glow_draw_line( ctx, ur_x - line_length, y, 
+        ctx->gdraw->line( w, ur_x - line_length, y, 
           ur_x, y, drawtype, idx, 0);
       else
-        glow_draw_line( ctx, ur_x -  int( 2.0 / 3 * line_length), y, 
+        ctx->gdraw->line( w, ur_x -  int( 2.0 / 3 * line_length), y, 
           ur_x, y, drawtype, idx, 0);
       if ( draw_text) {
 	format_text( text, format, max_value - i * increment);
@@ -334,21 +304,20 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
 	    y_text = y + z_height - z_descent - 3;
 	  else
 	    y_text = y + (z_height-z_descent)/2;
-	  glow_draw_text( ctx, ll_x, y_text,
+	  ctx->gdraw->text( w, ll_x, y_text,
 	       text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
 	}
       }
     }
   }
-  else if ( 45 < rotation && rotation <= 135)  
-  {
+  else if ( 45 < rotation && rotation <= 135)   {
     // Horizontal line at bottom and values to the top
 
-    glow_draw_line( ctx, ll_x, ur_y, ur_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line( w, ll_x, ur_y, ur_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text height
     if ( draw_text) {
-      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
 			    max( 0, text_idx), &z_width, &z_height, &z_descent);
 
       line_length = ur_y - ll_y - z_height;
@@ -362,15 +331,15 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < lines; i++) {
       x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * (lines - 1- i));
       if ( i % longquotient == 0)
-        glow_draw_line( ctx, x, ur_y - line_length, x, 
+        ctx->gdraw->line( w, x, ur_y - line_length, x, 
           ur_y, drawtype, idx, 0);
       else
-        glow_draw_line( ctx, x, ur_y -  int( 2.0 / 3 * line_length), x, 
+        ctx->gdraw->line( w, x, ur_y -  int( 2.0 / 3 * line_length), x, 
           ur_y, drawtype, idx, 0);
 
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+        ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);
 
         if ( text_idx >= 0 && z_height < ur_y - ll_y ) {
@@ -380,24 +349,23 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
             x_text = x - z_width;
           else
             x_text = x - (z_width)/2;
-          glow_draw_text( ctx, x_text, ll_y + z_height - z_descent,
+          ctx->gdraw->text( w, x_text, ll_y + z_height - z_descent,
 		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
         }
       }
     }
   }
-  else if ( 135 < rotation && rotation <= 225)
-  {
+  else if ( 135 < rotation && rotation <= 225) {
     // Vertical line to the left and values to the right
 
-    glow_draw_line( ctx, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
+    ctx->gdraw->line( w, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
 
     // Calculate max value text width
     if ( draw_text) {
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
-	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
 				max( 0, text_idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -416,10 +384,10 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < lines; i++) {
       y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * ( lines - 1 - i));
       if ( i % longquotient == 0)
-        glow_draw_line( ctx, ll_x, y, 
+        ctx->gdraw->line( w, ll_x, y, 
           ll_x + line_length, y, drawtype, idx, 0);
       else
-        glow_draw_line( ctx, ll_x, y, 
+        ctx->gdraw->line( w, ll_x, y, 
           ll_x + int( 2.0 / 3 * line_length), y, drawtype, idx, 0);
       format_text( text, format, max_value - i * increment);
 
@@ -432,20 +400,19 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
           y_text = y;
         else
           y_text = y + (z_height-z_descent)/2;
-        glow_draw_text( ctx, x_text, y_text,
+        ctx->gdraw->text( w, x_text, y_text,
 		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
       }
     }
   }
-  else // if ( 225 < rotation && rotation <= 315)
-  {
+  else { // if ( 225 < rotation && rotation <= 315)
     // Horizontal line at top and values at the bottom
 
-    glow_draw_line( ctx, ll_x, ll_y, ur_x, ll_y, drawtype, idx, 0);
+    ctx->gdraw->line( w, ll_x, ll_y, ur_x, ll_y, drawtype, idx, 0);
 
     // Calculate max value text height
     if ( draw_text) {
-      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
 			    max( 0, text_idx), &z_width, &z_height, &z_descent);
 
       line_length = ur_y - ll_y - (z_height - z_descent);
@@ -459,14 +426,14 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
     for ( i = 0; i < lines; i++) {
       x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * i);
       if ( i % longquotient == 0)
-        glow_draw_line( ctx, x, ll_y, x, 
+        ctx->gdraw->line( w, x, ll_y, x, 
           ll_y + line_length, drawtype, idx, 0);
       else
-        glow_draw_line( ctx, x, ll_y, x, 
+        ctx->gdraw->line( w, x, ll_y, x, 
           ll_y  +  int( 2.0 / 3 * line_length), drawtype, idx, 0);
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
-        draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+        ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
                 max( 0, text_idx), &z_width, &z_height, &z_descent);
 
         if ( text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
@@ -476,7 +443,7 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
             x_text = x;
           else
             x_text = x - (z_width)/2;
-          glow_draw_text( ctx, x_text, ur_y,
+          ctx->gdraw->text( w, x_text, ur_y,
 		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
         }
       }
@@ -485,156 +452,28 @@ void GrowAxis::draw( GlowTransform *t, int highlight, int hot, void *node,
 
 }
 
-
-void GrowAxis::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  int i;
-  glow_eDrawType drawtype;
-  double rotation;
-  int idx;
-  int x, y;
-  int line_length;
-
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-    else
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-  ctx->set_draw_buffer_only();
-
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 0, (GrowNode *)colornode, 0);
-
-  if ( 45 >= rotation || rotation > 315)
-  {
-    // Vertical line to the right and values to the left
-
-    glow_draw_nav_line( ctx, ur_x, ll_y, ur_x, ur_y, drawtype, idx, 0);
-
-    line_length = ur_x - ll_x;
-
-    for ( i = 0; i < lines; i++)
-    {
-      y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * i);
-      if ( i % longquotient == 0)
-        glow_draw_nav_line( ctx, ur_x - line_length, y, 
-          ur_x, y, drawtype, idx, 0);
-      else
-        glow_draw_nav_line( ctx, ur_x -  int( 2.0 / 3 * line_length), y, 
-          ur_x, y, drawtype, idx, 0);
-    }
-  }
-  else if ( 45 < rotation && rotation <= 135)  
-  {
-    // Horizontal line at bottom and values to the top
-
-    glow_draw_nav_line( ctx, ll_x, ur_y, ur_x, ur_y, drawtype, idx, 0);
-
-    line_length = ur_y - ll_y;
-
-    for ( i = 0; i < lines; i++)
-    {
-      x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * (lines - 1- i));
-      if ( i % longquotient == 0)
-        glow_draw_nav_line( ctx, x, ur_y - line_length, x, 
-          ur_y, drawtype, idx, 0);
-      else
-        glow_draw_nav_line( ctx, x, ur_y -  int( 2.0 / 3 * line_length), x, 
-          ur_y, drawtype, idx, 0);
-    }
-  }
-  else if ( 135 < rotation && rotation <= 225)
-  {
-    // Vertical line to the left and values to the right
-
-    glow_draw_nav_line( ctx, ll_x, ll_y, ll_x, ur_y, drawtype, idx, 0);
-
-    line_length = ur_x - ll_x;
-
-    for ( i = 0; i < lines; i++)
-    {
-      y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * ( lines - 1 - i));
-      if ( i % longquotient == 0)
-        glow_draw_nav_line( ctx, ll_x, y, 
-          ll_x + line_length, y, drawtype, idx, 0);
-      else
-        glow_draw_nav_line( ctx, ll_x, y, 
-          ll_x + int( 2.0 / 3 * line_length), y, drawtype, idx, 0);
-    }
-  }
-  else // if ( 225 < rotation && rotation <= 315)
-  {
-    // Horizontal line at top and values at the bottom
-
-    glow_draw_nav_line( ctx, ll_x, ll_y, ur_x, ll_y, drawtype, idx, 0);
-
-    line_length = ur_y - ll_y;
-
-    for ( i = 0; i < lines; i++)
-    {
-      x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * i);
-      if ( i % longquotient == 0)
-        glow_draw_nav_line( ctx, x, ll_y, x, 
-          ll_y + line_length, drawtype, idx, 0);
-      else
-        glow_draw_nav_line( ctx, x, ll_y, x, 
-          ll_y  +  int( 2.0 / 3 * line_length), drawtype, idx, 0);
-    }
-  }
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowAxis::erase( GlowTransform *t, int hot, void *node)
+void GrowAxis::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   if ( ctx->nodraw)
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -642,156 +481,32 @@ void GrowAxis::erase( GlowTransform *t, int hot, void *node)
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ctx->set_draw_buffer_only();
-  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowAxis::nav_erase( GlowTransform *t, void *node)
-{
-  int i;
-  double rotation;
-  int idx;
-  int x, y;
-  int line_length;
-
-  if ( fix_line_width)
-  {
-    idx = line_width;
-    if ( idx < 0) return;
-  }
-  else
-  {
-    if ( node && ((GrowNode *)node)->line_width)
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * 
-		((GrowNode *)node)->line_width - 1);
-    else
-      idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  }
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    rotation = (trf.rot() / 360 - floor( trf.rot() / 360)) * 360;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    rotation = (trf.rot( t) / 360 - floor( trf.rot( t) / 360)) * 360;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-
-  if ( 45 >= rotation || rotation > 315)
-  {
-    // Vertical line to the right and values to the left
-
-    glow_draw_nav_line_erase( ctx, ur_x, ll_y, ur_x, ur_y, idx);
-
-    line_length = ur_x - ll_x;
-
-    for ( i = 0; i < lines; i++)
-    {
-      y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * i);
-      if ( i % longquotient == 0)
-        glow_draw_nav_line_erase( ctx, ur_x - line_length, y, 
-          ur_x, y, idx);
-      else
-        glow_draw_nav_line_erase( ctx, ur_x -  int( 2.0 / 3 * line_length), y, 
-          ur_x, y, idx);
-    }
-  }
-  else if ( 45 < rotation && rotation <= 135)  
-  {
-    // Horizontal line at bottom and values to the top
-
-    glow_draw_nav_line_erase( ctx, ll_x, ur_y, ur_x, ur_y, idx);
-
-    line_length = ur_y - ll_y;
-
-    for ( i = 0; i < lines; i++)
-    {
-      x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * (lines - 1- i));
-      if ( i % longquotient == 0)
-        glow_draw_nav_line_erase( ctx, x, ur_y - line_length, x, 
-          ur_y, idx);
-      else
-        glow_draw_nav_line_erase( ctx, x, ur_y -  int( 2.0 / 3 * line_length), x, 
-          ur_y, idx);
-    }
-  }
-  else if ( 135 < rotation && rotation <= 225)
-  {
-    // Vertical line to the left and values to the right
-
-    glow_draw_nav_line_erase( ctx, ll_x, ll_y, ll_x, ur_y, idx);
-
-    line_length = ur_x - ll_x;
-
-    for ( i = 0; i < lines; i++)
-    {
-      y = int( ll_y + double(ur_y - ll_y) / (lines - 1) * ( lines - 1 - i));
-      if ( i % longquotient == 0)
-        glow_draw_nav_line_erase( ctx, ll_x, y, 
-          ll_x + line_length, y, idx);
-      else
-        glow_draw_nav_line_erase( ctx, ll_x, y, 
-          ll_x + int( 2.0 / 3 * line_length), y, idx);
-    }
-  }
-  else // if ( 225 < rotation && rotation <= 315)
-  {
-    // Horizontal line at top and values at the bottom
-
-    glow_draw_nav_line_erase( ctx, ll_x, ll_y, ur_x, ll_y, idx);
-
-    line_length = ur_y - ll_y;
-
-    for ( i = 0; i < lines; i++)
-    {
-      x = int( ll_x + double(ur_x - ll_x) / (lines - 1) * i);
-      if ( i % longquotient == 0)
-        glow_draw_nav_line_erase( ctx, x, ll_y, x, 
-          ll_y + line_length, idx);
-      else
-        glow_draw_nav_line_erase( ctx, x, ll_y, x, 
-          ll_y  +  int( 2.0 / 3 * line_length), idx);
-    }
-  }
+  w->set_draw_buffer_only();
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  w->reset_draw_buffer_only();
 }
 
 void GrowAxis::draw()
 {
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ctx->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowAxis::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
 
-    erase();
-    nav_erase();
-    switch ( direction)
-    {
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    ctx->set_defered_redraw();
+    draw();
+    switch ( direction) {
       case glow_eAlignDirection_CenterVert:
         dx = x - (x_right + x_left) / 2;
         dy = 0;
@@ -828,12 +543,13 @@ void GrowAxis::align( double x, double y, glow_eAlignDirection direction)
     y_low += dy;
 
     draw();
+    ctx->redraw_defered();
 }
 
 void GrowAxis::set_textsize( int size) 
 { 
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   text_size = size;
   get_node_borders();
   draw();
@@ -845,8 +561,8 @@ void GrowAxis::set_textbold( int bold)
        ( !bold && text_drawtype == glow_eDrawType_TextHelvetica))
     return;
 
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
   if ( bold)
     text_drawtype = glow_eDrawType_TextHelveticaBold;
   else
@@ -874,24 +590,24 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   int line_length;
   int z_height, z_width, z_descent;
   int max_z_width = 0;
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int idx = int( ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
   idx = min( idx, DRAW_TYPE_SIZE-1);
 
   bold = (text_drawtype == glow_eDrawType_TextHelveticaBold);
 
   if (!t)
   {
-    x1 = trf.x( ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
   else
   {
-    x1 = trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y1 = trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y - ctx->offset_y;
-    x2 = trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x - ctx->offset_x;
-    y2 = trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y - ctx->offset_y;
+    x1 = trf.x( t, ll.x, ll.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y1 = trf.y( t, ll.x, ll.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
+    x2 = trf.x( t, ur.x, ur.y) * ctx->mw.zoom_factor_x - ctx->mw.offset_x;
+    y2 = trf.y( t, ur.x, ur.y) * ctx->mw.zoom_factor_y - ctx->mw.offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -911,7 +627,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
-	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
 				max( 0, idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -925,7 +641,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   else if ( 45 < rotation && rotation <= 135)  
   {
     if ( draw_text) {
-      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);
@@ -939,7 +655,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
-	  draw_get_text_extent( ctx, text, strlen(text), text_drawtype, 
+	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
@@ -953,7 +669,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   else // if ( 225 < rotation && rotation <= 315)
   {
     if ( draw_text) {
-      draw_get_text_extent( ctx, "0", 1, text_drawtype, 
+      ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
                 max( 0, idx), &z_width, &z_height, &z_descent);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);
@@ -974,7 +690,7 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 void GrowAxis::set_conf( double max_val, double min_val, int no_of_lines, 
      int long_quot, int value_quot, double rot, char *value_format)
 {
-  erase();
+  erase( &ctx->mw);
   max_value = max_val;
   min_value = min_val;
   lines = no_of_lines;

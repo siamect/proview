@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_frame.cpp,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_frame.cpp,v 1.4 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,7 @@ void FlowFrame::draw( void *pos, int highlight, int hot, void *node)
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
 	int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 
@@ -93,7 +93,7 @@ void FlowFrame::erase( void *pos, int hot, void *node)
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
-  flow_draw_rect_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
+  ctx->fdraw->rect_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 	((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	int( ur_x * ctx->zoom_factor - ll.z_x - ((FlowPoint *)pos)->z_x - 1), 
 	int( ur_y * ctx->zoom_factor - ll.z_y - ((FlowPoint *)pos)->z_y - 1), 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_text.cpp,v 1.4 2005-12-13 15:14:16 claes Exp $
+ * Proview   $Id: glow_text.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,20 +46,6 @@ void GlowText::traverse( int x, int y)
   p.traverse( x, y);
 }
 
-void GlowText::print( void *pos, void *node)
-{
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
-		(text_size +4) - 4);
-  int size = int( 8.0 + 6.0/3*idx);
-
-  if ( size <= 0)
-    return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  ctx->print_ps->text( p.print_z_x + ((GlowPoint *)pos)->print_z_x , 
-	p.print_z_y + ((GlowPoint *)pos)->print_z_y, text, strlen(text),
-	draw_type, size);
-}
-
 void GlowText::save( ofstream& fp, glow_eSaveMode mode)
 {
   fp << int(glow_eSave_Text) << endl;
@@ -102,128 +88,67 @@ void GlowText::open( ifstream& fp)
   }
 }
 
-void GlowText::draw( void *pos, int highlight, int hot, void *node)
+void GlowText::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
 {
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  glow_draw_text( ctx, p.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
-	p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, text, strlen(text),
+  ctx->gdraw->text( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
+	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text, strlen(text),
 	draw_type, color_drawtype, idx, highlight, 0);
 }
 
-void GlowText::erase( void *pos, int hot, void *node)
+void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
 {
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * (text_size +4) - 4);
+  int idx = int( w->zoom_factor_y / w->base_zoom_factor * (text_size +4) - 4);
   if ( idx < 0)
     return;
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  glow_draw_text_erase( ctx, p.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x, 
-	p.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y, text,  strlen(text),
+  ctx->gdraw->text_erase( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
+	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text,  strlen(text),
 	draw_type, idx, 0);
 }
 
-void GlowText::nav_draw( void *pos, int highlight, void *node)
-{
-  int idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * (text_size +4) 
-		- 4);
-  if ( idx < 0)
-    return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  glow_draw_nav_text( ctx, 
-	p.nav_z_x + ((GlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((GlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	text, strlen(text), draw_type, idx, highlight, 0);
-}
-
-void GlowText::nav_erase( void *pos, void *node)
-{
-  int idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * (text_size +4) -
-		 4);
-  if ( idx < 0)
-    return;
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  glow_draw_nav_text_erase( ctx,
-	p.nav_z_x + ((GlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
-	p.nav_z_y + ((GlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
-	text, strlen(text), draw_type, idx, 0);
-}
-
-int GlowText::event_handler( void *pos, glow_eEvent event, int x, int y,
+int GlowText::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,
 	void *node)
 {
   GlowPoint *p;
 
   p = (GlowPoint *) pos;
-/**
-  if ( p1.z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x < x && 
-       x < p2.z_x  + ((GlowPoint *)pos)->z_x - ctx->offset_x &&
-       p1.z_y  + ((GlowPoint *)pos)->z_y - ctx->offset_y < y && 
-       y < p2.z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y)
-  {
-    cout << "Event handler: Hit in text" << endl;
-    return 1;
-  }  
-  else
-***/
     return 0;
 }
 
 void GlowText::get_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node)
 {
-/*
-  if ( pos_x + p1.x < *x_left)
-    *x_left = pos_x + p1.x;
-  if ( pos_x + p2.x < *x_left)
-    *x_left = pos_x + p1.x;
-  if ( pos_x + p1.x > *x_right)
-    *x_right = pos_x + p2.x;
-  if ( pos_x + p2.x > *x_right)
-    *x_right = pos_x + p2.x;
-  if ( pos_y + p1.y < *y_low)
-    *y_low = pos_y + p1.y;
-  if ( pos_y + p2.y < *y_low)
-    *y_low = pos_y + p1.y;
-  if ( pos_y + p1.y > *y_high)
-    *y_high = pos_y + p2.y;
-  if ( pos_y + p2.y > *y_high)
-    *y_high = pos_y + p2.y;
-*/
 }
 
 void GlowText::move( void *pos, double x, double y, int highlight, int hot)
 {
 
-  erase( pos, hot, NULL);
-  nav_erase( pos, NULL);
+  erase( &ctx->mw, pos, hot, NULL);
+  erase( &ctx->navw, pos, 0, NULL);
   p.x = x;
   p.y = y;
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
+  draw( &ctx->mw, pos, highlight, hot, NULL);
+  draw( &ctx->navw, pos, highlight, 0, NULL);
 }
 
 void GlowText::shift( void *pos, double delta_x, double delta_y,
 	int highlight, int hot)
 {
-  erase( pos, hot, NULL);
-  nav_erase( pos, NULL);
+  erase( &ctx->mw, pos, hot, NULL);
+  erase( &ctx->navw, pos, 0, NULL);
   p.x += delta_x;
   p.y += delta_y;
   zoom();
   nav_zoom();
 
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
+  draw( &ctx->mw, pos, highlight, hot, NULL);
+  draw( &ctx->navw, pos, highlight, 0, NULL);
 }
 
-ostream& operator<< ( ostream& o, const GlowText t)
-{
-  o << 
-  '(' << t.p.x << ',' << t.p.y << ')' << t.text;
-  return o;
-}
 

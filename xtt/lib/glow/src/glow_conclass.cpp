@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conclass.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_conclass.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <fstream.h>
 #include "glow_conclass.h"
 
-GlowConClass::GlowConClass( GlowCtx *glow_ctx, char *name, 
+GlowConClass::GlowConClass( GrowCtx *glow_ctx, char *name, 
 	glow_eConType contype, glow_eCorner cornertype, glow_eDrawType d_type,
 	int line_w, double arrow_w, double arrow_l, double round_corner_amnt,
 	glow_eConGroup grp)

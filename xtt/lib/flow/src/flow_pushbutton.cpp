@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pushbutton.cpp,v 1.2 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_pushbutton.cpp,v 1.3 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,10 +50,10 @@ void FlowPushButton::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 //  r.draw( &pos, 0);
 //  t.draw( &pos, 0);
 
-  flow_draw_rect( ctx, pos.z_x + r.ll.z_x, pos.z_y + r.ll.z_y, 
+  ctx->fdraw->rect( ctx, pos.z_x + r.ll.z_x, pos.z_y + r.ll.z_y, 
 	  r.ur.z_x - r.ll.z_x, r.ur.z_y - r.ll.z_y, r.draw_type, 
 	  r.line_width-1, 0);
-  flow_draw_text( ctx, pos.z_x + t.p.z_x, pos.z_y + t.p.z_y, t.text,
+  ctx->fdraw->text( ctx, pos.z_x + t.p.z_x, pos.z_y + t.p.z_y, t.text,
 	  strlen(t.text), t.draw_type, t.text_size, 0, 0);
 }
 

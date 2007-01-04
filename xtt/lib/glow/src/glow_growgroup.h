@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growgroup.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growgroup.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,13 +43,13 @@ class GrowGroup : public GrowNode {
     \param array	Array with group member objects.
     \param nodraw	Don't draw the object now.
   */
-  GrowGroup( GlowCtx *glow_ctx, char *name, GlowArray& array, 
+  GrowGroup( GrowCtx *glow_ctx, char *name, GlowArray& array, 
 	       int nodraw = 0);
 
   //! Noargs constructor.
   GrowGroup() {};
 
-  GrowGroup( GlowCtx *glow_ctx, char *name);
+  GrowGroup( GrowCtx *glow_ctx, char *name);
   ~GrowGroup();
 
   //! Make this object a copy of another image object.

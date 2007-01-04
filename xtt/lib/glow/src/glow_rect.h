@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_rect.h,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_rect.h,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <iostream.h>
 #include <fstream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 
@@ -53,7 +53,7 @@ class GlowRect : public GlowArrayElem {
     \param display_lev	Displaylevel when this object is visible.
     \param fill_rect	Rectangle is filled.
   */
-  GlowRect( GlowCtx *glow_ctx, double x = 0, double y = 0, double w = 0, 
+  GlowRect( GrowCtx *glow_ctx, double x = 0, double y = 0, double w = 0, 
 		double h = 0, glow_eDrawType d_type = glow_eDrawType_Line, 
 		int line_w = 1, int fix_line_w = 0, 
 		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
@@ -61,8 +61,6 @@ class GlowRect : public GlowArrayElem {
 	ctx(glow_ctx), ll(glow_ctx,x,y), ur(glow_ctx,x+w,y+h), 
 	draw_type(d_type), line_width(line_w), fix_line_width(fix_line_w),
 	display_level(display_lev), fill(fill_rect) {};
-
-  friend ostream& operator<< ( ostream& o, const GlowRect r);
 
   //! Adjust pixel coordinates to current zoom factor.
   void zoom();
@@ -84,14 +82,11 @@ class GlowRect : public GlowArrayElem {
 
     Detects if the object is hit by the event.
   */
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+  int	event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
 
   //! Not implemented
   void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-
-  //! Print postscript. Not used.
-  void print( void *pos, void *node);
 
   //! Save the content of the object to file.
   /*!
@@ -115,21 +110,7 @@ class GlowRect : public GlowArrayElem {
 
     Draw the object, without borders or shadow.
   */
-  void draw( void *pos, int highlight, int hot, void *node);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-
-    Draw the object, without borders or shadow.
-  */
-  void nav_draw( void *pos, int highlight, void *node);
-
-  //! Not used
-  void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
+  void draw( GlowWind *w, void *pos, int highlight, int hot, void *node);
 
   //! Erase the object.
   /*!
@@ -137,14 +118,7 @@ class GlowRect : public GlowArrayElem {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( void *pos, int hot, void *node);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( void *pos, void *node);
+  void erase( GlowWind *w, void *pos, int hot, void *node);
 
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -190,7 +164,7 @@ class GlowRect : public GlowArrayElem {
   */
   glow_eObjectType type() { return glow_eObjectType_Rect;};
 
-  GlowCtx *ctx;    //!< Glow context
+  GrowCtx *ctx;    //!< Glow context
 
   //! Get the width.
   /*!

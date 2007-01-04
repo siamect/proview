@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.cpp,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_con.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -414,7 +414,7 @@ FlowCon::~FlowCon()
   	     int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
 	     int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
   if ( hot)
-    draw_set_cursor( ctx, draw_eCursor_Normal);
+    ctx->fdraw->set_cursor( ctx, draw_eCursor_Normal);
 }
 
 FlowCon::FlowCon( const FlowCon& c, FlowNode *source, FlowNode *dest)
@@ -2028,7 +2028,7 @@ int FlowCon::con_route_area( double wind_ll_x, double wind_ll_y,
 
 void draw_line( FlowCtx *ctx, double x1, double y1, double x2, double y2)
 {
-  flow_draw_line( ctx, 
+  ctx->fdraw->line( ctx, 
 	int( x1*ctx->zoom_factor-ctx->offset_x), 
 	int( y1*ctx->zoom_factor-ctx->offset_y), 
 	int( x2*ctx->zoom_factor-ctx->offset_x), 
@@ -3341,7 +3341,7 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
       if ( sts && !hot &&
 	   !(ctx->node_movement_active || ctx->node_movement_paste_active))
       {
-        draw_set_cursor( ctx, draw_eCursor_CrossHair);
+        ctx->fdraw->set_cursor( ctx, draw_eCursor_CrossHair);
         hot = 1;
         if ( temporary_ref || cc->con_type == flow_eConType_Reference)
           ref_a.draw( &cc->zero, highlight, hot, NULL);
@@ -3356,7 +3356,7 @@ int FlowCon::event_handler( flow_eEvent event, int x, int y)
       }
       if ( !sts && hot)
       {
-        draw_set_cursor( ctx, draw_eCursor_Normal);
+        ctx->fdraw->set_cursor( ctx, draw_eCursor_Normal);
         if ( temporary_ref || cc->con_type == flow_eConType_Reference)
           ref_a.erase( &cc->zero, hot, NULL);
         else

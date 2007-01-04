@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.9 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -720,7 +720,7 @@ extern "C" int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
 	void  *client_data, 
 	flow_eCtxType type)
 {
-  return flow_draw_create_secondary_ctx( (FlowCtx *)ctx, 
+  return ctx->fdraw->create_secondary_ctx( (FlowCtx *)ctx, 
 	(void **)secondary_ctx, 
 	(int (*)(FlowCtx *, void *))init_proc, 
 	client_data, type);
@@ -728,30 +728,25 @@ extern "C" int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
 
 void brow_DeleteSecondaryCtx( brow_tCtx ctx)
 {
-  flow_draw_delete_secondary_ctx( (FlowCtx *)ctx);
+  ctx->fdraw->delete_secondary_ctx( (FlowCtx *)ctx);
 }
 
-int brow_ChangeCtx( Widget w, brow_tCtx from_ctx, brow_tCtx to_ctx)
+int brow_ChangeCtx( brow_tCtx from_ctx, brow_tCtx to_ctx)
 {
-  return flow_draw_change_ctx( w, (FlowCtx *)from_ctx, (FlowCtx *)to_ctx);
+  return from_ctx->fdraw->change_ctx( (FlowCtx *)from_ctx, (FlowCtx *)to_ctx);
 }
 
 void brow_SetInputFocus( brow_tCtx ctx)
 {
-  flow_set_inputfocus( (FlowCtx *)ctx);
-}
-
-void brow_SetWidgetInputFocus( Widget w)
-{
-  flow_set_widget_inputfocus( w);
+  ctx->fdraw->set_inputfocus( (FlowCtx *)ctx);
 }
 
 void brow_SetClickSensitivity( brow_tCtx ctx, int value)
 {
-  flow_draw_set_click_sensitivity( (FlowCtx *)ctx, value);
+  ctx->fdraw->set_click_sensitivity( (FlowCtx *)ctx, value);
 }
 
 void brow_SetWhiteBackground( brow_tCtx ctx)
 {
-  flow_set_white_background( (FlowCtx *)ctx);
+  ctx->fdraw->set_white_background( (FlowCtx *)ctx);
 }

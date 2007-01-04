@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.10 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: flow.h,v 1.11 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,7 +42,7 @@ extern "C" {
 #endif
 
   //#ifndef __ALPHA
-#define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
+  //#define ABS(Dragon) ((Dragon) >= 0 ? (Dragon) : (-(Dragon)))
   //#endif
 
 #define DRAW_TYPE_SIZE 9
@@ -54,6 +54,10 @@ extern "C" {
 typedef char flow_tTraceObj[200];
 typedef char flow_tTraceAttr[200];
 typedef char flow_tName[80];
+typedef void *flow_tPixmap;
+typedef void *flow_tWidget;
+typedef void *flow_tImData;
+typedef void *flow_tImImage;
 
 typedef enum {
 	flow_eCtxType_Flow,
@@ -250,6 +254,8 @@ typedef enum {
 	flow_eEvent_Map,
 	flow_eEvent_Unmap,
 	flow_eEvent_Resized,
+	flow_eEvent_ScrollUp,
+	flow_eEvent_ScrollDown,
 	flow_eEvent__
 	} flow_eEvent;
 

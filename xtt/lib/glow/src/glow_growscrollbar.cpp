@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growscrollbar.cpp,v 1.3 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_growscrollbar.cpp,v 1.4 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowScrollBar::GrowScrollBar( GlowCtx *glow_ctx, char *name, double x, double y, 
+GrowScrollBar::GrowScrollBar( GrowCtx *glow_ctx, char *name, double x, double y, 
 		double w, double h, glow_eDir dir, glow_eDrawType border_d_type, int line_w, 
 		glow_mDisplayLevel display_lev,
 		glow_eDrawType fill_d_type, glow_eDrawType bar_d_type, int nodraw) : 
@@ -40,14 +40,14 @@ GrowScrollBar::GrowScrollBar( GlowCtx *glow_ctx, char *name, double x, double y,
 		callback_userdata(0), value_changed_cb(0), bar_color(bar_d_type)
 {
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 }
 
 GrowScrollBar::~GrowScrollBar()
 {
   if ( ctx->nodraw) return;
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 }
 
 void GrowScrollBar::save( ofstream& fp, glow_eSaveMode mode) 
@@ -64,13 +64,18 @@ void GrowScrollBar::set_highlight( int on)
   draw();
 }
 
-void GrowScrollBar::draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode)
+void GrowScrollBar::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int idx;
 
-  idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
   idx = max( 0, idx);
@@ -78,19 +83,17 @@ void GrowScrollBar::draw( GlowTransform *t, int highlight, int hot, void *node, 
   int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
   int x0, y0, width, height;
 
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  if (!t) {
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+  else {
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
 
   ll_x = min( x1, x2);
@@ -104,14 +107,14 @@ void GrowScrollBar::draw( GlowTransform *t, int highlight, int hot, void *node, 
 		 highlight, (GrowNode *)colornode, 0);
   glow_eDrawType shift_drawtype;
 
-  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype);
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, fdrawtype);
   if ( shadow) {
     shift_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fill_drawtype, 2, 0); // Dark
-    glow_draw_line( ctx, ll_x+1, ll_y+1, ll_x+1, ur_y-1, shift_drawtype, 0, 0);
-    glow_draw_line( ctx, ll_x+1, ll_y+1, ur_x-1, ll_y+1, shift_drawtype, 0, 0);
+    ctx->gdraw->line( w, ll_x+1, ll_y+1, ll_x+1, ur_y-1, shift_drawtype, 0, 0);
+    ctx->gdraw->line( w, ll_x+1, ll_y+1, ur_x-1, ll_y+1, shift_drawtype, 0, 0);
     shift_drawtype = ((GrowCtx *)ctx)->shift_drawtype( fill_drawtype, -2, 0); // Light
-    glow_draw_line( ctx, ll_x+1, ur_y-1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
-    glow_draw_line( ctx, ur_x-1, ll_y+1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
+    ctx->gdraw->line( w, ll_x+1, ur_y-1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
+    ctx->gdraw->line( w, ur_x-1, ll_y+1, ur_x-1, ur_y-1, shift_drawtype, 0, 0);
   }
  
   if ( max_value != min_value) {
@@ -135,28 +138,33 @@ void GrowScrollBar::draw( GlowTransform *t, int highlight, int hot, void *node, 
       break;
     }
 
-    glow_draw_fill_rect( ctx, x0, y0, width, height, bar_color);
+    ctx->gdraw->fill_rect( w, x0, y0, width, height, bar_color);
     if ( shadow) {
       shift_drawtype = ((GrowCtx *)ctx)->shift_drawtype( bar_color, -2, 0); // Light
-      glow_draw_line( ctx, x0+1, y0+1, x0+1, y0+height-1, shift_drawtype, 0, 0);
-      glow_draw_line( ctx, x0+1, y0+1, x0+width-1, y0+1, shift_drawtype, 0, 0);
+      ctx->gdraw->line( w, x0+1, y0+1, x0+1, y0+height-1, shift_drawtype, 0, 0);
+      ctx->gdraw->line( w, x0+1, y0+1, x0+width-1, y0+1, shift_drawtype, 0, 0);
       shift_drawtype = ((GrowCtx *)ctx)->shift_drawtype( bar_color, 2, 0); // Dark
-      glow_draw_line( ctx, x0+1, y0+height-1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
-      glow_draw_line( ctx, x0+width-1, y0+1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
+      ctx->gdraw->line( w, x0+1, y0+height-1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
+      ctx->gdraw->line( w, x0+width-1, y0+1, x0+width-1, y0+height-1, shift_drawtype, 0, 0);
     }
-    glow_draw_rect( ctx, x0, y0, width, height, bdrawtype, idx, 0);
+    ctx->gdraw->rect( w, x0, y0, width, height, bdrawtype, idx, 0);
   }
 
-  glow_draw_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx, 0);
+  ctx->gdraw->rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, bdrawtype, idx, 0);
 }
 
-void GrowScrollBar::erase( GlowTransform *t, int hot, void *node)
+void GrowScrollBar::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
     return;
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
   int idx;
 
-  idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
+  idx = int( w->zoom_factor_y / w->base_zoom_factor * line_width - 1);
   idx += hot;
 
   idx = max( 0, idx);
@@ -165,108 +173,27 @@ void GrowScrollBar::erase( GlowTransform *t, int hot, void *node)
 
   if (!t)
   {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
   else
   {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->zoom_factor_y) - ctx->offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->zoom_factor_x) - ctx->offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->zoom_factor_y) - ctx->offset_y;
+    x1 = int( trf.x( t, ll.x, ll.y) * w->zoom_factor_x) - w->offset_x;
+    y1 = int( trf.y( t, ll.x, ll.y) * w->zoom_factor_y) - w->offset_y;
+    x2 = int( trf.x( t, ur.x, ur.y) * w->zoom_factor_x) - w->offset_x;
+    y2 = int( trf.y( t, ur.x, ur.y) * w->zoom_factor_y) - w->offset_y;
   }
   ll_x = min( x1, x2);
   ur_x = max( x1, x2);
   ll_y = min( y1, y2);
   ur_y = max( y1, y2);
 
-  ctx->set_draw_buffer_only();
-  glow_draw_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
-  glow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
-  ctx->reset_draw_buffer_only();
-}
-
-void GrowScrollBar::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  glow_eDrawType drawtype;
-  int idx;
-  idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( fill_drawtype, glow_eDrawType_FillHighlight,
-		 0, (GrowNode *)colornode, 1);
-  glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			   drawtype);
-
-  drawtype = ((GrowCtx *)ctx)->get_drawtype( draw_type, glow_eDrawType_LineHighlight,
-		 0, (GrowNode *)colornode, 0);
-
-  if ( max_value != min_value) {
-  }
-  glow_draw_nav_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-	drawtype, idx, 0);
-}
-
-void GrowScrollBar::nav_erase( GlowTransform *t, void *node)
-{
-  if ( !(display_level & ctx->display_level))
-    return;
-  int idx;
-  idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  int x1, y1, x2, y2, ll_x, ll_y, ur_x, ur_y;
-
-  if (!t)
-  {
-    x1 = int( trf.x( ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  else
-  {
-    x1 = int( trf.x( t, ll.x, ll.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y1 = int( trf.y( t, ll.x, ll.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-    x2 = int( trf.x( t, ur.x, ur.y) * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-    y2 = int( trf.y( t, ur.x, ur.y) * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  }
-  ll_x = min( x1, x2);
-  ur_x = max( x1, x2);
-  ll_y = min( y1, y2);
-  ur_y = max( y1, y2);
-
-  glow_draw_nav_rect_erase( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			    idx);
-  glow_draw_nav_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
-			   glow_eDrawType_LineErase);
+  w->set_draw_buffer_only();
+  ctx->gdraw->rect_erase( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, idx);
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  w->reset_draw_buffer_only();
 }
 
 double GrowScrollBar::set_value( double value, double length) 
@@ -281,7 +208,7 @@ double GrowScrollBar::set_value( double value, double length)
     bar_value = max_value - bar_length;
 
   if ( !fill) 
-    erase(); 
+    erase( &ctx->mw); 
 
   draw();
   return bar_value;
@@ -308,7 +235,7 @@ void GrowScrollBar::convert( glow_eConvert version)
   }  
 }
 
-int GrowScrollBar::event_handler( glow_eEvent event, int x, int y, double fx,
+int GrowScrollBar::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
 	double fy)
 {
   double ll_x, ur_x, ll_y, ur_y;
@@ -339,7 +266,7 @@ int GrowScrollBar::event_handler( glow_eEvent event, int x, int y, double fx,
 	start_pos = fy;
 	start_value = bar_value;
 	movement_active = 1;
-	glow_draw_set_click_sensitivity( ctx, glow_mSensitivity_MB1Press);
+	ctx->gdraw->set_click_sensitivity( w, glow_mSensitivity_MB1Press);
       }
       break;
     case glow_eDir_Horizontal:
@@ -348,7 +275,7 @@ int GrowScrollBar::event_handler( glow_eEvent event, int x, int y, double fx,
 	start_pos = fx;
 	start_value = bar_value;
 	movement_active = 1;
-	glow_draw_set_click_sensitivity( ctx, glow_mSensitivity_MB1Press);
+	ctx->gdraw->set_click_sensitivity( w, glow_mSensitivity_MB1Press);
       }
       break;
     }

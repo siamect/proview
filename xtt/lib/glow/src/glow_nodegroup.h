@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodegroup.h,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_nodegroup.h,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,8 +24,8 @@
 
 class GlowNodeGroup : public GlowNodeClass {
   public:
-    GlowNodeGroup( GlowCtx *glow_ctx, char *name, GlowArray& array);
-    GlowNodeGroup( GlowCtx *glow_ctx, char *name);
+    GlowNodeGroup( GrowCtx *glow_ctx, char *name, GlowArray& array);
+    GlowNodeGroup( GrowCtx *glow_ctx, char *name);
     GlowNodeGroup( const GlowNodeGroup& nc);
     ~GlowNodeGroup();
     glow_eObjectType type() { return glow_eObjectType_NodeGroup;};

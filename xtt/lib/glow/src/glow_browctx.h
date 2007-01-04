@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_browctx.h,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_browctx.h,v 1.3 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,7 @@ class BrowCtx : public GlowCtx {
     void change_scrollbar();
     void redraw( double y_redraw);
     void zoom( double factor);
-    void unzoom() { zoom( base_zoom_factor / zoom_factor_y);};
+    void unzoom() { zoom( mw.base_zoom_factor / mw.zoom_factor_y);};
     void print( char *filename);
     int get_first( GlowArrayElem **first) { return a.get_first( first);};
     int get_last( GlowArrayElem **last) { return a.get_last( last);};

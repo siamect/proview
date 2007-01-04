@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.h,v 1.4 2005-12-06 09:18:34 claes Exp $
+ * Proview   $Id: glow_growpolyline.h,v 1.5 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class GrowPolyLine : public GlowPolyLine {
     \param closed	Polyline is closed.
     \param nodraw	Don't draw the object now.
   */
-  GrowPolyLine( GlowCtx *glow_ctx, char *name,
+  GrowPolyLine( GrowCtx *glow_ctx, char *name,
 		  glow_sPoint *pointarray, int point_cnt,
 		  glow_eDrawType border_d_type = glow_eDrawType_Line, 
 		  int line_w = 1, int fix_line_w = 0, 
@@ -75,7 +75,7 @@ class GrowPolyLine : public GlowPolyLine {
     action: changes the cursor, draws the object hot, and registers the object as
     current callback object.
   */
-  int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+  int	event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Detects if the object is hit by an event in transformed coordinates
   /*!
@@ -87,7 +87,7 @@ class GrowPolyLine : public GlowPolyLine {
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler( glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
 
   //! Detects if the object is hit by an event in local coordinates
   /*!
@@ -99,7 +99,7 @@ class GrowPolyLine : public GlowPolyLine {
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int local_event_handler( glow_eEvent event, double x, double y);
+  int local_event_handler( GlowWind *w, glow_eEvent event, double x, double y);
   
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -159,7 +159,7 @@ class GrowPolyLine : public GlowPolyLine {
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
   /*!
@@ -171,25 +171,15 @@ class GrowPolyLine : public GlowPolyLine {
     If some part of object is inside the drawing area, and also outside the drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
 
   //! Not implemented
   void draw_inverse()
 	{ GlowPolyLine::draw_inverse( (void *)&pzero, hot, NULL);};
 
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
   //! Erase the object
-  void erase()
-	{ erase( (GlowTransform *)NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( (GlowTransform *)NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
   //! Move the object.
   /*!
@@ -478,7 +468,7 @@ class GrowPolyLine : public GlowPolyLine {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -486,26 +476,10 @@ class GrowPolyLine : public GlowPolyLine {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Redraw the area inside the objects border.
   void draw();
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
 
   //! Add a transform to the current transform.
   /*!

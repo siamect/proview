@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_point.h,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_point.h,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,10 +27,12 @@
 #include "glow_ctx.h"
 #include "glow_array_elem.h"
 
+class GrowCtx;
+
 class GlowPoint : public GlowArrayElem {
   public:
     GlowPoint() {};
-    GlowPoint( GlowCtx *glow_ctx, double x1 = 0, double y1 = 0);
+    GlowPoint( GrowCtx *glow_ctx, double x1 = 0, double y1 = 0);
     const GlowPoint& operator+= (const GlowPoint p);
     GlowPoint operator+ (const GlowPoint p);
     const GlowPoint& operator-= (const GlowPoint p);
@@ -45,7 +47,7 @@ class GlowPoint : public GlowArrayElem {
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
     glow_eObjectType type() { return glow_eObjectType_Point;};
-    GlowCtx *ctx;    
+    GrowCtx *ctx;    
     double x;
     double y;
     int z_x;

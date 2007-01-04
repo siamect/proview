@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.9 2006-01-25 10:46:23 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.10 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,51 @@
 /*! \addtogroup Glow */
 /*@{*/
 
+class DrawWind;
+class GlowDraw;
+
+//! Main or navigation window
+class GlowWind {
+ public:
+  DrawWind     	*window;		//!< Window context.
+  double 	zoom_factor_x;		//!< Zoom factor in x direction.
+  double 	zoom_factor_y;		//!< Zoom factor in y direction.
+  double 	base_zoom_factor;	//!< Original zoom factor.
+  int		offset_x;		//!< Offset in pixel between origo and displayed window in x direction.
+  int		offset_y;		//!< Offset in pixel between origo and displayde window in y direction.
+  int		window_width;		//!< Window width in pixel.
+  int		window_height;		//!< Window height in pixel.
+  int		subwindow_x;		//!< Subwindow x coordinate in pixel.
+  int		subwindow_y;		//!< Subwindow y coordinate in pixel.
+  double       	subwindow_scale;       	//!< Subwindow scale.
+  int		defered_x_low;		//!< Left border of defered redrawing area.
+  int		defered_x_high;		//!< Right border of defered redrawing area.
+  int		defered_y_low;		//!< Low border of defered redrawing area.
+  int		defered_y_high;		//!< High border of defered redrawing area.
+
+  GlowWind( double zoom_fact_x, double zoom_fact_y, double base_zoom_fact,
+	    int offs_x, int offs_y) :
+    window(0), zoom_factor_x(zoom_fact_x), zoom_factor_y(zoom_fact_y),
+    base_zoom_factor(base_zoom_fact), offset_x(offs_x), offset_y(offs_y),
+    window_width(0), window_height(0), subwindow_x(0), subwindow_y(0),
+    subwindow_scale(1)
+    {}
+
+  //! Draw in the double buffering buffer only.
+  /*! Increase the draw_buffer_only count. As long as this is > 0, no drawing is made to the screen, only in the buffer. */
+  void set_draw_buffer_only();
+
+  //! Reset draw in the double buffering buffer only.
+  /*! Decrease the draw_buffer_only count. As long as this is > 0, no drawing is made to the screen, only in the buffer. */
+  void reset_draw_buffer_only();
+
+  int draw_buffer_only();
+  int double_buffer_on();
+  int double_buffered();
+  void set_double_buffered( int val);
+  void set_double_buffer_on( int val);
+};
+
 //! Backcall data for scrollbar reconfiguration
 typedef struct {
   void	*scroll_data;	//!< Scrollbar data (growwidget_sScroll).
@@ -67,34 +112,19 @@ class GlowCtx {
   GlowCtx( char *ctx_name, double zoom_fact = 100, int offs_x = 0, int offs_y = 0);
 
   glow_eCtxType ctx_type;		//!< Type of context
-  double 	zoom_factor_x;		//!< Zoom factor in x direction.
-  double 	zoom_factor_y;		//!< Zoom factor in y direction.
-  double 	base_zoom_factor;	//!< Original zoom factor.
-  int		offset_x;		//!< Offset in pixel between origo and displayed window in x direction.
-  int		offset_y;		//!< Offset in pixel between origo and displayde window in y direction.
-  double 	nav_zoom_factor_x;	//!< Zoom factor in navigation window in x direction.
-  double 	nav_zoom_factor_y;	//!< Zoom factor in navigation window in y direction.
+  GlowWind	mw;			//!< Main window data.
+  GlowWind	navw;			//!< Navigation window data.
   double 	print_zoom_factor;	//!< Zoom factor when printing to postscript.
-  int		nav_offset_x;		//!< Offset in navigation window in x direction.
-  int		nav_offset_y;		//!< Offset in navigation window in y direction.
   double	x_right;		//!< Right border of work area.
   double	x_left;			//!< Left border of work area.
   double	y_high;			//!< High border of work area.
   double	y_low;			//!< Low border of work area.
-  int		window_width;		//!< Window width in pixel.
-  int		window_height;		//!< Window height in pixel.
-  int		subwindow_x;		//!< Subwindow x coordinate in pixel.
-  int		subwindow_y;		//!< Subwindow y coordinate in pixel.
-  double       	subwindow_scale;       	//!< Subwindow scale.
-  int		nav_window_width;	//!< Navigation window width in pixel.
-  int		nav_window_height;	//!< Navigation window height in pixel.
   int		nav_rect_ll_x;		//!< x coordinate for lower left corner of navigation rectangle in nav window.
   int 		nav_rect_ll_y;		//!< y coordinate for lower left corner of navigation rectangle in nav window.
   int		nav_rect_ur_x;		//!< x coordinate for upper right corner of navigation rectangle in nav window.
   int		nav_rect_ur_y; 		//!< y coordinate for upper right corner of navigation rectangle in nav window.
   int		nav_rect_hot;		//!< Cursor is in navigation rectangle in navigation window.
-  void		*draw_ctx;		//!< Draw context.
-  void		*glow_window;		//!< Not used.
+  GlowDraw     	*gdraw;			//!< Draw context.
 
   //! Save context to file.
   /*!
@@ -421,7 +451,7 @@ class GlowCtx {
     \param ur_x		x coordiate for upper right corner of area to draw in pixel.
     \param ur_y		y coordiate for upper right corner of area to draw in pixel.
   */
-  void 	draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void 	draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Redraw an area of the window. Arguments in double.
   /*!
@@ -430,12 +460,12 @@ class GlowCtx {
     \param ur_x		x coordiate for upper right corner of area to draw in pixel.
     \param ur_y		y coordiate for upper right corner of area to draw in pixel.
   */
-  void        draw( double ll_x, double ll_y, double ur_x, double ur_y)
-                           {draw( (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
+  void        draw( GlowWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
+                           {draw( w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
 
   //! Clear the window.
   /*! Draw background color. */
-  void 	clear();
+  void 	clear( GlowWind *w);
 
   //! Update zoom of navigation window.
   /*! The zoomfactor of the navigation window is updated to match the extent of the working space. */
@@ -456,7 +486,7 @@ class GlowCtx {
     \param ur_x		x coordiate for upper right corner of area to draw in pixel.
     \param ur_y		y coordiate for upper right corner of area to draw in pixel.
   */
-  void	nav_draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void	nav_draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Redraw an area of the navigation window. Arguments in double.
   /*!
@@ -465,8 +495,8 @@ class GlowCtx {
     \param ur_x		x coordiate for upper right corner of area to draw in pixel.
     \param ur_y		y coordiate for upper right corner of area to draw in pixel.
   */
-  void        nav_draw( double ll_x, double ll_y, double ur_x, double ur_y)
-    		{nav_draw( (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
+  void        nav_draw( GlowWind *w, double ll_x, double ll_y, double ur_x, double ur_y)
+    		{nav_draw( w, (int)ll_x, (int)ll_y, (int)ur_x, (int)ur_y);};
 
   //! Handle events.
   /*! Calls the event handler of GrowCtx. */
@@ -511,14 +541,6 @@ class GlowCtx {
   void	redraw_defered();
 
   int		defered_redraw_active;	//!< Defered redraw is active.
-  int		defered_x_low;		//!< Left border of defered redrawing area.
-  int		defered_x_high;		//!< Right border of defered redrawing area.
-  int		defered_y_low;		//!< Low border of defered redrawing area.
-  int		defered_y_high;		//!< High border of defered redrawing area.
-  int		defered_x_low_nav;	//!< Left border of deferd redraing area in navigation window.
-  int		defered_x_high_nav;	//!< Right border of deferd redraing area in navigation window.
-  int		defered_y_low_nav;	//!< Low border of deferd redraing area in navigation window.
-  int		defered_y_high_nav;	//!< High border of deferd redraing area in navigation window.
   GlowArray 	a_nc;			//!< Array of nodeclasses.
   GlowArray 	a_cc;			//!< Array of connection classes.
   GlowArray 	a;			//!< Object array.
@@ -685,12 +707,12 @@ class GlowCtx {
     \param pix_y	y coordinate in pixel.
   */
   void position_to_pixel( double x, double y, int *pix_x, int *pix_y)
-	{ *pix_x = int( x * zoom_factor_x - offset_x);
-	  *pix_y = int( y * zoom_factor_y - offset_y);};
+	{ *pix_x = int( x * mw.zoom_factor_x - mw.offset_x);
+	  *pix_y = int( y * mw.zoom_factor_y - mw.offset_y);};
 
   //! Unzoom.
   /*! Return to base zoom factor. */
-  void unzoom() { zoom( base_zoom_factor / zoom_factor_x);};
+  void unzoom() { zoom( mw.base_zoom_factor / mw.zoom_factor_x);};
 
   //! Position the view so that the specified object is in the center of the window.
   /*! \param object	Object to center. */
@@ -764,9 +786,6 @@ class GlowCtx {
   glow_eHotMode hot_mode;	//!< Hot mode.
   glow_eHotMode default_hot_mode; //!< Default hot mode.
   int hot_found;		//!< A hot object is found.
-  int double_buffered;		//!< Double buffering is configured.
-  int double_buffer_on;		//!< Double buffering is on.
-  int draw_buffer_only;		//!< Draw in double buffering buffer only.
   glow_tUserDataSaveCb userdata_save_callback; //!< Callback function called when userdata is saved.
   glow_tUserDataOpenCb userdata_open_callback; //!< Callback function called when userdata is opened.
   glow_tUserDataCopyCb userdata_copy_callback; //!< Callback function called when userdata is copied.
@@ -816,15 +835,7 @@ class GlowCtx {
     \param ur_x		x coordinate for upper right corner of area in pixel.
     \param ur_y		y coordinate for upper right corner of area in pixel.
   */
-  void draw_grid( int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Draw in the double buffering buffer only.
-  /*! Increase the draw_buffer_only count. As long as this is > 0, no drawing is made to the screen, only in the buffer. */
-  void set_draw_buffer_only() { if (double_buffer_on) draw_buffer_only++;};
-
-  //! Reset draw in the double buffering buffer only.
-  /*! Decrease the draw_buffer_only count. As long as this is > 0, no drawing is made to the screen, only in the buffer. */
-  void reset_draw_buffer_only() { if (double_buffer_on) draw_buffer_only--;};
+  void draw_grid( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Register callback functions for userdata handling.
   /*!

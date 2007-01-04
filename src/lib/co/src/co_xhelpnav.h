@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.h,v 1.8 2005-12-13 15:13:13 claes Exp $
+ * Proview   $Id: co_xhelpnav.h,v 1.9 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,8 +42,8 @@
 #include "flow_browapi.h"
 #endif
 
-#ifndef flow_browwidget_h
-#include "flow_browwidget.h"
+#ifndef flow_browwidget_motif_h
+// #include "flow_browwidget_motif.h"
 #endif
 
 #define xhelp_cFile_BaseXtt "$pwr_exe/xtt_help.dat"
@@ -96,22 +96,16 @@ class CoXHelpNav {
   public:
     CoXHelpNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	xhelp_eUtility xn_utility,
-	Widget *w,
 	pwr_tStatus *status);
-    ~CoXHelpNav();
+    virtual ~CoXHelpNav();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
-    CoXHelpNavBrow		*brow;
-    CoXHelpNavBrow		*collect_brow;
-    CoXHelpNavBrow		*brow_stack[XHELPNAV_BROW_MAX];
+    CoXHelpNavBrow     	*brow;
+    CoXHelpNavBrow     	*collect_brow;
+    CoXHelpNavBrow     	*brow_stack[XHELPNAV_BROW_MAX];
     int			brow_cnt;
     int			closing_down;
     int			displayed;
@@ -122,6 +116,9 @@ class CoXHelpNav {
     bool 		search_strict;
     void 		(*open_URL_cb)( void *, char *);
 
+    virtual void set_inputfocus() {}
+    virtual void pop() {}
+
     void print( char *filename);
     void zoom( double zoom_factor);
     void unzoom();
@@ -131,8 +128,6 @@ class CoXHelpNav {
     int brow_pop();
     int brow_push();
     int brow_push_all();
-    void set_inputfocus();
-    void pop();
     void enable_events( CoXHelpNavBrow *brow);
     int help( char *key, char *help_bookmark, navh_eHelpFile file_type,
 	      char *file_name, int pop, bool strict);
@@ -141,6 +136,10 @@ class CoXHelpNav {
     pwr_tStatus search_next();
     pwr_tStatus search_next_reverse();
     pwr_tStatus search_exec( bool reverse);
+
+    static int init_brow_cb( BrowCtx *ctx, void *client_data);
+    static int init_brow_base_cb( FlowCtx *fctx, void *client_data);
+
 };
 
 class HItem {

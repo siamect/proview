@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.h,v 1.8 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: rt_trace.h,v 1.9 2007-01-04 07:52:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,39 +33,31 @@
 #endif
 
 
-typedef struct
-{
-  void          *parent_ctx;
-  Widget        parent_wid;
-  char          *name;
-} trace_t_commonpart;
+class RtTrace;
+class CoWow;
+class CoWowTimer;
 
-typedef struct tra_sCtx *tra_tCtx;
-typedef struct trace_s_node trace_t_node;
+typedef struct trace_sNode trace_tNode;
 
-struct trace_s_node {
-  trace_t_node  *Next;
-  tra_tCtx    tractx;
+struct trace_sNode {
+  trace_tNode  *Next;
+  RtTrace    	*tractx;
 };
 
-struct tra_sCtx{
-  trace_t_commonpart	cp;
-  Widget		flow_widget;
-  Widget		toplevel;
-  Widget		form;
-  Widget		menu;
-  Widget		nav_shell;
-  Widget		nav_widget;
+class RtTrace {
+ public:
+  void			*parent_ctx;
+  char			name[80];
   flow_tNodeClass	trace_analyse_nc;
   flow_tConClass	trace_con_cc;
   int			trace_started;
-  XtIntervalId		trace_timerid;
+  CoWowTimer		*trace_timerid;
   flow_tCtx		flow_ctx;
   flow_tNode		trace_changenode;
   pwr_tObjid		objid;
   double		scan_time;
-  void			(*close_cb) (tra_tCtx);
-  void			(*help_cb) (tra_tCtx, char *);
+  void			(*close_cb) (RtTrace *);
+  void			(*help_cb) (RtTrace *, char *);
   void			(*subwindow_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*display_object_cb) (void *parent_ctx, pwr_tObjid objid);
   void			(*collect_insert_cb) (void *parent_ctx, pwr_tObjid objid);
@@ -74,39 +66,73 @@ struct tra_sCtx{
 					 pwr_sAttrRef attrref,
 					 unsigned long item_type,
 					 unsigned long utility, 
-					 char *arg, Widget *popup); 
+					 char *arg, int x, int y); 
   int                   (*call_method_cb)(void *parent_ctx, char *method,
 					  char *filter,
 					  pwr_sAttrRef attrref,
 					  unsigned long item_type,
 					  unsigned long utility, 
 					  char *arg);
-  trace_t_node		*trace_list;
+  trace_tNode		*trace_list;
   pwr_tFileName	       	filename;
   int			version;
-  int			has_host;
-  pwr_tOName   		hostname;
-  pwr_tAName   		plcconnect;
+  int			m_has_host;
+  pwr_tOName   		m_hostname;
+  pwr_tAName   		m_plcconnect;
+  CoWow			*wow;
+
+  RtTrace( void *parent_ctx, pwr_tObjid objid, pwr_tStatus *status);
+  virtual ~RtTrace();
+
+  virtual void pop() {}
+  virtual RtTrace *subwindow_new( void *ctx, pwr_tObjid oid, pwr_tStatus *sts) {return 0;}
+  virtual void popup_menu_position( int event_x, int event_y, int *x, int *y) {}
+  int search_object( char *object_str);
+  void swap( int mode);
+
+  void activate_close();
+  void activate_print();
+  void activate_printselect();
+  void activate_savetrace();
+  void activate_restoretrace();
+  void activate_cleartrace();
+  void activate_display_object();
+  void activate_collect_insert();
+  void activate_open_object();
+  void activate_show_cross();
+  void activate_open_classgraph();
+  void activate_trace();
+  void activate_simulate();
+  void activate_view();
+  void activate_help();
+  void activate_helpplc();
+
+ protected:
+  void get_trace_attr( flow_tObject object, 
+		       char *object_str, char *attr_str, flow_eTraceType *type,
+		       int *inverted);
+  int get_objid( flow_tObject node, pwr_tObjid *objid);
+  int get_selected_node( flow_tObject *node);
+  pwr_tStatus viewsetup();
+  pwr_tStatus simsetup();
+  pwr_tStatus trasetup();
+  int trace_start();
+  int trace_stop();
+  void changevalue( flow_tNode fnode);
+  
+  static void get_save_filename( pwr_tObjid window_objid, char *filename);
+  static int get_filename( pwr_tObjid window_objid, char *filename,
+			   int *has_host, char *hostname, char *plcconnect);
+  static int connect_bc( flow_tObject object, char *name, char *attr, 
+			 flow_eTraceType type, void **p);
+  static int disconnect_bc( flow_tObject object);
+  static void trace_scan( void *data);
+  static int init_flow( FlowCtx *ctx, void *client_data);
+  static int flow_cb( FlowCtx *ctx, flow_tEvent event);
+  static void trace_close_cb( RtTrace *child_tractx);
+  static char *id_to_str( pwr_tObjid objid);
+
 };
-
-
-tra_tCtx trace_new( 	void 		*parent_ctx, 
-			Widget 		parent_wid, 
-			pwr_tObjid	objid,
-			void 		(*close_cb)(tra_tCtx),
-			void 		(*help_cb)(tra_tCtx, char *),
-			void 		(*subwindow_cb)(void *, pwr_tObjid),
-			void 		(*display_object_cb)(void *, pwr_tObjid),
-			void 		(*collect_insert_cb)(void *, pwr_tObjid),
-			int             (*is_authorized_cb)(void *, unsigned int) 
-);
-void	trace_del( tra_tCtx	tractx);
-
-int trace_search_object( 	tra_tCtx	tractx,
-				char		*object_str);
-void trace_pop( tra_tCtx	tractx);
-
-void trace_swap( tra_tCtx tractx, int mode);
 
 #endif
 

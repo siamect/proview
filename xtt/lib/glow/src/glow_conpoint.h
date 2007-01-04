@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conpoint.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_conpoint.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,14 +23,14 @@
 #include <iostream.h>
 #include <fstream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 
 
 class GlowConPoint : public GlowArrayElem {
   public:
-    GlowConPoint( GlowCtx *glow_ctx, double x = 0, double y = 0, 
+    GlowConPoint( GrowCtx *glow_ctx, double x = 0, double y = 0, 
 	int cp_num = 0, glow_eDirection d = glow_eDirection_Center) : 
 	ctx(glow_ctx), number(cp_num), p(glow_ctx,x,y), direction(d),
 	trace_attr_type(glow_eTraceType_Boolean)
@@ -49,16 +49,14 @@ class GlowConPoint : public GlowArrayElem {
     void save( ofstream& fp, glow_eSaveMode mode);
     void open( ifstream& fp);
     void draw( void *pos, int highlight, int hot, void *node) {};
-    void nav_draw( void *pos, int highlight, void *node) {};
     void erase( void *pos, int hot, void *node) {};
-    void nav_erase( void *pos, void *node) {};
     void get_borders( double pos_x, double pos_y, double *x_right, 
 	double *x_left, double *y_high, double *y_low, void *node) {};
     int get_conpoint( int num, double *x, double *y, glow_eDirection *dir);
     int get_conpoint( GlowTransform *t, int num, bool flip_horizontal, 
 		      bool flip_vertical, double *x, double *y, glow_eDirection *dir);
     glow_eObjectType type() { return glow_eObjectType_ConPoint;};
-    GlowCtx *ctx;
+    GrowCtx *ctx;
     int	number;
     GlowPoint p;
     glow_eDirection direction;

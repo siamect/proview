@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.h,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growimage.h,v 1.5 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,7 +47,7 @@ class GrowImage : public GlowArrayElem {
     \param imagefile	Image filename.
     \param display_lev	Displaylevel when this object is visible.
   */
-  GrowImage( GlowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowImage( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
 	       char *imagefile = 0,
 		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1);
 
@@ -73,7 +73,7 @@ class GrowImage : public GlowArrayElem {
     action: changes the cursor, draws the object hot, and registers the object as
     current callback object.
   */
-  int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+  int	event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
 
   //! Detects if the object is hit by an event in transformed coordinates
   /*!
@@ -85,7 +85,7 @@ class GrowImage : public GlowArrayElem {
     Compares the coordinates of the event with the borders of the object.
     If the event is inside the borders, 1 is returned, otherwise 0 is returned.
   */
-  int event_handler( glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
 
   //! Detects if the object is hit by an event in local coordinates
   /*!
@@ -134,9 +134,6 @@ class GrowImage : public GlowArrayElem {
 	{ x_left = y_low = 1e37; x_right = y_high = -1e37;
 	  get_borders( (GlowTransform *) NULL, &x_right, &x_left, &y_high, &y_low);};
 
-  //! Not implemented
-  void print( double ll_x, double ll_y, double ur_x, double ur_y) {};
-
   //! Save the content of the object to file.
   /*!
     \param fp	Ouput file.
@@ -157,7 +154,7 @@ class GrowImage : public GlowArrayElem {
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
   /*!
@@ -169,24 +166,11 @@ class GrowImage : public GlowArrayElem {
     If some part of object is inside the drawing area, and also outside the drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
-  //! Not implemented
-  void draw_inverse() {};
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int ll_x, int ll_y, int ur_x, int ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
 
   //! Erase the object
-  void erase()
-	{ erase( (GlowTransform *)NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( (GlowTransform *)NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
   //! Move the object.
   /*!
@@ -215,12 +199,6 @@ class GrowImage : public GlowArrayElem {
     \return Return 1 if object is highlighted, else 0.
   */
   int get_highlight() {return highlight;};
-
-  //! Not implemented.
-  void set_inverse( int on) {};
-
-  //! Not implemented.
-  int get_inverse() {return inverse;};
 
   //! Not used.
   void set_hot( int on) {};
@@ -291,14 +269,14 @@ class GrowImage : public GlowArrayElem {
   char 		*dynamic;	//!< Dynamic code.
   int 		dynamicsize;	//!< Size of dynamic code.
   GlowTransform trf;		//!< Transformation matrix of object.
-  ImlibData   	*imlib;		//!< Pointer to imlib
-  ImlibImage  	*image;		//!< The rendered and scaled image.
-  ImlibImage  	*original_image; //!< The original image.
-  Pixmap      	pixmap;		//!< Pixmap of the image.
-  Pixmap      	nav_pixmap;	//!< Pixmap of the image in navigation window.
-  Pixmap      	clip_mask;	//!< Clip mask if transparent GIF image.
-  Pixmap      	nav_clip_mask;	//!< Clip mask in navigation window i transparent GIF image.
-  GlowCtx 	*ctx;		//!< Pointer to Grow context.
+  glow_tImData  imlib;		//!< Pointer to imlib
+  glow_tImImage image;		//!< The rendered and scaled image.
+  glow_tImImage original_image; //!< The original image.
+  glow_tPixmap  pixmap;		//!< Pixmap of the image.
+  glow_tPixmap  nav_pixmap;	//!< Pixmap of the image in navigation window.
+  glow_tPixmap  clip_mask;	//!< Clip mask if transparent GIF image.
+  glow_tPixmap  nav_clip_mask;	//!< Clip mask in navigation window i transparent GIF image.
+  GrowCtx 	*ctx;		//!< Pointer to Grow context.
   glow_mDisplayLevel display_level; //!< Display level when this object is visible.
   int       	current_width;		//!< Current width of the image.
   int       	current_height;		//!< Current height of the image.
@@ -324,6 +302,19 @@ class GrowImage : public GlowArrayElem {
   char        	last_group[32];		//!< The last group the object was a member of.
   int		date;			//!< Date of the image file.
   char		filename[256];		//!< Name of the image file with full path.
+  bool		flip_vertical;		//!< The object is flipped vertically.
+  bool		flip_horizontal;	//!< The object is flipped horizontally.
+  bool		current_flip_vertical;	//!< Current vertical flip.
+  bool		current_flip_horizontal; //!< Current horizontal flip.
+  int		rotation;
+  int		current_rotation;
+  glow_eDrawTone c_color_tone;
+  int		c_color_lightness;
+  int		c_color_intensity;
+  int		c_color_shift;
+  int		c_color_inverse;
+  float         factor_intens;
+  float		factor_light;
  
   //! Read the image file and create pixmaps for the image.
   /*!
@@ -339,9 +330,6 @@ class GrowImage : public GlowArrayElem {
 
   //! Zoom to the current navigation window zoom factor.
   void nav_zoom();
-
-  //! Zoom to the current print zoom factor.
-  void print_zoom();
 
   // Traverse coordinates of ll and ur the distance (x,y)
   void traverse( int x, int y);
@@ -410,6 +398,14 @@ class GrowImage : public GlowArrayElem {
   void set_rotation( double angel, 
 		double x0, double y0, glow_eRotationPoint type);
 
+  //! Mirror the object around a horizontal or vertical mirror line.
+  /*!
+    \param x0	x coordinate of mirror line.
+    \param y0	y coordinate of mirror line.
+    \param dir	Direction of mirror.
+  */
+  void flip( double x0, double y0, glow_eFlipDirection dir);
+
   //! Draw the object.
   /*!
     \param t		Transform of parent node. Can be zero.
@@ -421,7 +417,7 @@ class GrowImage : public GlowArrayElem {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -429,26 +425,10 @@ class GrowImage : public GlowArrayElem {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Redraw the area inside the objects border.
   void draw();
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
 
   //! Set the original color tone
   /*!
@@ -564,7 +544,7 @@ class GrowImage : public GlowArrayElem {
     \param image 	The Imlib image.
     \param node		The node that controls the color of the object.
   */
-  int set_image_color( ImlibImage *image, void *node);
+  int set_image_color( glow_tImImage image, void *node);
 
   //! Add a transform to the current transform.
   /*!
@@ -620,6 +600,8 @@ class GrowImage : public GlowArrayElem {
   */
   char *get_last_group() { return last_group; };
 
+  static void pixel_cb( void *data, unsigned char *rgb);
+
   //! Destructor
   /*! Remove object from context, delete the image and erase if from the screen.
    */
@@ -640,8 +622,8 @@ class GrowImage : public GlowArrayElem {
   If width and height is not zero, the image is scaled to the desired width and height.
   If they are zero, the size from the image file is kept, and returned in w and h.
 */
-int grow_image_to_pixmap( GlowCtx *ctx, char *imagefile, 
-	    int width, int height, Pixmap *pixmap, int *w, int *h);
+int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile, 
+	    int width, int height, glow_tPixmap *pixmap, int *w, int *h);
 
 /*@}*/
 #endif

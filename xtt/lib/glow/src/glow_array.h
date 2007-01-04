@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_array.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,8 @@
   and connections. The class has functions to insert and remove objects, but also corresponding functions
   to all the functions of GlowArrayElem.
 */
+
+class GrowCtx;
 
 class GlowArray {
  public:
@@ -122,11 +124,11 @@ class GlowArray {
   void print_zoom();
   void print( void *pos, void *node);
   void save( ofstream& fp, glow_eSaveMode mode);
-  void open( void *ctx, ifstream& fp);
-  void draw( void *pos, int highlight, int hot, void *node);
-  void erase( void *pos, int hot, void *node); 
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
-  void erase( GlowTransform *t, int hot, void *node); 
+  void open( GrowCtx *ctx, ifstream& fp);
+  void draw( GlowWind *w, void *pos, int highlight, int hot, void *node);
+  void erase( GlowWind *w, void *pos, int hot, void *node); 
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node); 
   void draw_inverse( void *pos, int hot, void *node);
   void nav_draw( void *pos, int highlight, void *node);
   void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
@@ -139,11 +141,11 @@ class GlowArray {
 		double *x_left, double *y_high, double *y_low, void *node);
   void get_borders( GlowTransform *t, double *x_right, 
 		double *x_left, double *y_high, double *y_low);
-  int	event_handler( glow_eEvent event, int x, int y);
-  int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
-  int	event_handler( glow_eEvent event, double fx, double fy);
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
-  int event_handler( void *pos, glow_eEvent event, int x, int y, int num);
+  int event_handler( GlowWind *w, glow_eEvent event, int x, int y);
+  int event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
+  int event_handler( GlowWind *w, glow_eEvent event, double fx, double fy);
+  int event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
+  int event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, int num);
   void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp);
   void conpoint_select( GlowTransform *t, int x, int y, double *distance, 

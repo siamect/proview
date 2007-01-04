@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvectx.cpp,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_curvectx.cpp,v 1.3 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,8 +68,8 @@ void CurveCtx::configure()
 
 void CurveCtx::get_zoom( double *factor_x, double *factor_y)
 {
-  *factor_x = zoom_factor_x;
-  *factor_y = zoom_factor_y;
+  *factor_x = mw.zoom_factor_x;
+  *factor_y = mw.zoom_factor_y;
 }
 
 void CurveCtx::zoom( double factor)
@@ -79,15 +79,15 @@ void CurveCtx::zoom( double factor)
 
 //  cout << "Before zoom zoom factor : " << zoom_factor_x << ", offset : " <<
 //     offset_x << "," << offset_y << endl;
-  zoom_factor_x *= factor;
+  mw.zoom_factor_x *= factor;
   // zoom_factor_y *= factor;
-  offset_x = int( (offset_x - window_width / 2.0 * ( 1.0/factor - 1)) * factor);
+  mw.offset_x = int( (mw.offset_x - mw.window_width / 2.0 * ( 1.0/factor - 1)) * factor);
   //  offset_y = int( (offset_y  - window_height / 2.0 * ( 1.0/factor - 1)) * factor);
 //  cout << "After  zoom zoom factor : " << zoom_factor_x << ", offset : " <<
 //     offset_x << "," << offset_y << endl;
   a.zoom();
-  clear();
-  draw( 0, 0, window_width, window_height);
+  clear( &mw);
+  draw( &mw, 0, 0, mw.window_width, mw.window_height);
   nav_zoom();
   change_scrollbar();
 }
@@ -96,13 +96,13 @@ void CurveCtx::adjust_layout()
 {
   int width, height;
 
-  glow_draw_get_window_size( this, &width, &height);
-  if ( (window_height != height && y_high != y_low) || !layout_adjusted ) {
-    zoom_factor_y = height / (y_high - y_low);
+  gdraw->get_window_size( &mw, &width, &height);
+  if ( (mw.window_height != height && y_high != y_low) || !layout_adjusted ) {
+    mw.zoom_factor_y = height / (y_high - y_low);
     if ( !layout_adjusted && initial_position == glow_eDirection_Right) {
-      offset_x = int( x_right * zoom_factor_x) - width;
+      mw.offset_x = int( x_right * mw.zoom_factor_x) - width;
     }
-    draw( 0, 0, width, height);
+    draw( &mw, 0, 0, width, height);
     layout_adjusted = 1;
   }
 }
@@ -124,13 +124,13 @@ void CurveCtx::nav_zoom()
     y_nav_high = y_high;
     if ( x_nav_right - x_nav_left == 0 || y_nav_high - y_nav_low == 0)
       return;
-    nav_zoom_factor_x = nav_window_width / (x_nav_right - x_nav_left);
-    nav_zoom_factor_y = nav_window_height / (y_nav_high - y_nav_low);
-    nav_offset_x = int( x_nav_left * nav_zoom_factor_x);
-    nav_offset_y = int( y_nav_low * nav_zoom_factor_y);
+    navw.zoom_factor_x = navw.window_width / (x_nav_right - x_nav_left);
+    navw.zoom_factor_y = navw.window_height / (y_nav_high - y_nav_low);
+    navw.offset_x = int( x_nav_left * navw.zoom_factor_x);
+    navw.offset_y = int( y_nav_low * navw.zoom_factor_y);
     a.nav_zoom();
-    nav_clear();
-    nav_draw( 0, 0, nav_window_width, nav_window_height);
+    clear( &navw);
+    nav_draw( &navw, 0, 0, navw.window_width, navw.window_height);
   }
 }
 
@@ -145,8 +145,7 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
 
   ctx = this;
 
-  switch ( event)
-  {
+  switch ( event) {
     case glow_eEvent_MB1Press:
       if ( nav_rect_ll_x < x && x < nav_rect_ur_x &&
            nav_rect_ll_y < y && y < nav_rect_ur_y)
@@ -173,7 +172,7 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
       {
         if ( !nav_rect_hot)
         {
-          draw_set_nav_cursor( ctx, glow_eDrawCursor_CrossHair);
+          gdraw->set_cursor( &navw, glow_eDrawCursor_CrossHair);
           nav_rect_hot = 1;
         }
       }
@@ -181,13 +180,13 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
       {
         if ( nav_rect_hot)
         {
-          draw_set_nav_cursor( ctx, glow_eDrawCursor_Normal);
+          gdraw->set_cursor( &navw, glow_eDrawCursor_Normal);
           nav_rect_hot = 0;
         }
       }
       break;
     case glow_eEvent_Exposure:
-      glow_draw_get_nav_window_size( ctx, &nav_window_width, &nav_window_height);
+      gdraw->get_window_size( &navw, &navw.window_width, &navw.window_height);
       nav_zoom();
       break;
     case glow_eEvent_ButtonMotion:
@@ -195,7 +194,7 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
       {
         int delta_x, delta_y, mainwind_delta_x, mainwind_delta_y;
 
-        glow_draw_nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
+        gdraw->rect_erase( &navw, nav_rect_ll_x, nav_rect_ll_y, 
 		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y, 0);
 
 	delta_x = x - nav_rect_move_last_x;
@@ -206,71 +205,65 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
         nav_rect_ur_y += delta_y;
         nav_rect_move_last_x = x;
         nav_rect_move_last_y = y;
-        nav_draw( nav_rect_ll_x - 10, nav_rect_ll_y - 10, 
+        nav_draw( &navw, nav_rect_ll_x - 10, nav_rect_ll_y - 10, 
 		nav_rect_ur_x + 10, nav_rect_ur_y + 10);
 //        glow_draw_nav_rect( this, nav_rect_ll_x, nav_rect_ll_y, 
 //		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y,
 //		glow_eDrawType_Line, 0, 0);
 
-        mainwind_delta_x = int( - zoom_factor_x / nav_zoom_factor_x * delta_x);
-        mainwind_delta_y = int( - zoom_factor_y / nav_zoom_factor_y * delta_y);
-        offset_x -= mainwind_delta_x;
-        offset_y -= mainwind_delta_y;
+        mainwind_delta_x = int( - mw.zoom_factor_x / navw.zoom_factor_x * delta_x);
+        mainwind_delta_y = int( - mw.zoom_factor_y / navw.zoom_factor_y * delta_y);
+        mw.offset_x -= mainwind_delta_x;
+        mw.offset_y -= mainwind_delta_y;
         a.traverse( mainwind_delta_x, mainwind_delta_y);
-        if ( ctx_type == glow_eCtxType_Grow)
-        {
+        if ( ctx_type == glow_eCtxType_Grow) {
           ((GrowCtx *)this)->polyline_last_end_x += mainwind_delta_x;
           ((GrowCtx *)this)->polyline_last_end_y += mainwind_delta_y;
         }
 
-        draw_copy_area( ctx, mainwind_delta_x, mainwind_delta_y);
+        gdraw->copy_area( &mw, mainwind_delta_x, mainwind_delta_y);
 //        clear();
         if ( !unobscured) 
-          draw( 0, 0, window_width, window_height);
-        else
-        {
-          if ( mainwind_delta_x >= 0 && mainwind_delta_y >= 0)
-          {
+          draw( &mw, 0, 0, mw.window_width, mw.window_height);
+        else {
+          if ( mainwind_delta_x >= 0 && mainwind_delta_y >= 0) {
             if ( mainwind_delta_x)
-              draw( 0, 0, mainwind_delta_x, window_height);
+              draw( &mw, 0, 0, mainwind_delta_x, mw.window_height);
             if ( mainwind_delta_y)
-              draw( mainwind_delta_x, 0, window_width, mainwind_delta_y);
+              draw( &mw, mainwind_delta_x, 0, mw.window_width, mainwind_delta_y);
           }
-          else if ( mainwind_delta_x <= 0 && mainwind_delta_y <= 0)
-          {
+          else if ( mainwind_delta_x <= 0 && mainwind_delta_y <= 0) {
             if ( mainwind_delta_x)
-              draw( window_width+mainwind_delta_x, 0, window_width, window_height);
+              draw( &mw, mw.window_width+mainwind_delta_x, 0, mw.window_width, mw.window_height);
             if ( mainwind_delta_y)
-              draw( 0, window_height + mainwind_delta_y, 
-		window_width + mainwind_delta_x, window_height);
+              draw( &mw, 0, mw.window_height + mainwind_delta_y, 
+		mw.window_width + mainwind_delta_x, mw.window_height);
           }
-          else if ( mainwind_delta_x <= 0 && mainwind_delta_y >= 0)
-          {
+          else if ( mainwind_delta_x <= 0 && mainwind_delta_y >= 0) {
             if ( mainwind_delta_x)
-              draw( window_width + mainwind_delta_x, 0, window_width, 
-			window_height);
+              draw( &mw, mw.window_width + mainwind_delta_x, 0, mw.window_width, 
+			mw.window_height);
             if ( mainwind_delta_y)
-              draw( 0, 0, window_width + mainwind_delta_x, mainwind_delta_y);
+              draw( &mw, 0, 0, mw.window_width + mainwind_delta_x, mainwind_delta_y);
           }
           else
           {
             if ( mainwind_delta_x)
-              draw( 0, 0, mainwind_delta_x, window_height);
+              draw( &mw, 0, 0, mainwind_delta_x, mw.window_height);
             if ( mainwind_delta_y)
-              draw( mainwind_delta_x, window_height+ mainwind_delta_y, 
-		window_width, window_height);
+              draw( &mw, mainwind_delta_x, mw.window_height+ mainwind_delta_y, 
+		mw.window_width, mw.window_height);
           }
         }
         change_scrollbar();
       }
-      else if ( nav_rect_zoom_active)
-      {
+      else if ( nav_rect_zoom_active) {
         int delta_x, delta_y;
 	double zoom_f;
         double center_x, center_y;
         double center_dist, center_dist_last;
 
-        glow_draw_nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
+        gdraw->rect_erase( &navw, nav_rect_ll_x, nav_rect_ll_y, 
 		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y, 0);
 
 	delta_x = x - nav_rect_move_last_x;
@@ -295,13 +288,11 @@ int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
       }
       break;
     case glow_eEvent_ButtonRelease:
-      if ( nav_rect_movement_active)
-      {
+      if ( nav_rect_movement_active) {
         nav_rect_movement_active = 0;
 	nav_zoom();
       }
-      if ( nav_rect_zoom_active)
-      {
+      if ( nav_rect_zoom_active) {
         nav_rect_zoom_active = 0;
       }
       break;
@@ -315,8 +306,8 @@ void curve_scroll_horizontal( CurveCtx *ctx, int value, int bottom)
 {
   int x_pix;
 
-  x_pix = int( - value * ctx->scroll_size * ctx->zoom_factor_x + 
-	(ctx->offset_x - ctx->x_left * ctx->zoom_factor_x));
+  x_pix = int( - value * ctx->scroll_size * ctx->mw.zoom_factor_x + 
+	(ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
   ctx->scroll( x_pix, 0);
 }
 
@@ -324,14 +315,14 @@ void curve_scroll_vertical( CurveCtx *ctx, int value, int bottom)
 {
   int y_pix;
 
-  y_pix = int( - value * ctx->scroll_size * ctx->zoom_factor_y + 
-	(ctx->offset_y - ctx->y_low * ctx->zoom_factor_y));
+  y_pix = int( - value * ctx->scroll_size * ctx->mw.zoom_factor_y + 
+	(ctx->mw.offset_y - ctx->y_low * ctx->mw.zoom_factor_y));
   // Correction for the bottom position
   if ( bottom && ( y_pix >= 0 ||
-	ctx->window_height + y_pix < ctx->y_high * ctx->zoom_factor_y - ctx->offset_y))
+	ctx->mw.window_height + y_pix < ctx->y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y))
 //        window_height >= (y_high - y_low) * zoom_factor_y)
-    y_pix = int( ctx->window_height + ctx->offset_y - 
-		ctx->y_high * ctx->zoom_factor_y);
+    y_pix = int( ctx->mw.window_height + ctx->mw.offset_y - 
+		ctx->y_high * ctx->mw.zoom_factor_y);
   ctx->scroll( 0, y_pix);
 }
 

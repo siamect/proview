@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_polyline.cpp,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_polyline.cpp,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@
 #include "glow_polyline.h"
 #include "glow_draw.h"
 
-GlowPolyLine::GlowPolyLine( GlowCtx *glow_ctx, glow_sPoint *pointarray, 
+GlowPolyLine::GlowPolyLine( GrowCtx *glow_ctx, glow_sPoint *pointarray, 
 		int point_cnt, glow_eDrawType d_type,
 		int line_w, int fix_line_w, int line_fill, 
 		int closed) : 
@@ -35,7 +35,7 @@ GlowPolyLine::GlowPolyLine( GlowCtx *glow_ctx, glow_sPoint *pointarray,
 {
   int i;
 
-  points = (XPoint *) calloc( point_cnt, sizeof(XPoint));
+  points = (glow_sPointX *) calloc( point_cnt, sizeof(glow_sPointX));
   for ( i = 0; i < point_cnt; i++)
   {
     GlowPoint *p = new GlowPoint(ctx, pointarray[i].x, pointarray[i].y);
@@ -54,7 +54,7 @@ GlowPolyLine::GlowPolyLine( const GlowPolyLine& c)
 
   a_points.new_array( c.a_points);
   a_points.copy_from( c.a_points);
-  points = (XPoint *) calloc( a_points.a_size, sizeof(XPoint));
+  points = (glow_sPointX *) calloc( a_points.a_size, sizeof(glow_sPointX));
   
 }
 
@@ -76,27 +76,6 @@ void GlowPolyLine::print_zoom()
 void GlowPolyLine::traverse( int x, int y)
 {
   a_points.traverse( x, y);
-}
-
-void GlowPolyLine::print( void *pos, void *node)
-{
-  GlowPoint *p1;
-  GlowPoint *p2;
-  int i;
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
-	line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  for ( i = 0; i < a_points.a_size - 1; i++)
-  {
-    p1 = (GlowPoint *)a_points[i];
-    p2 = (GlowPoint *)a_points[i+1];
-    ctx->print_ps->line( p1->print_z_x + ((GlowPoint *)pos)->print_z_x, 
-	p1->print_z_y + ((GlowPoint *)pos)->print_z_y, 
-	p2->print_z_x + ((GlowPoint *)pos)->print_z_x, 
-	p2->print_z_y + ((GlowPoint *)pos)->print_z_y,
-	draw_type, idx);
-  }
 }
 
 void GlowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
@@ -136,135 +115,7 @@ void GlowPolyLine::open( ifstream& fp)
     if ( end_found)
       break;
   }
-  points = (XPoint *) calloc( a_points.a_size, sizeof(XPoint));
-}
-
-void GlowPolyLine::draw( void *pos, int highlight, int hot, void *node)
-{
-  int i;
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  XPoint *point_p = points;
-  for ( i = 0; i < a_points.a_size; i++)
-  {
-    point_p->x = ((GlowPoint *)a_points[i])->z_x + ((GlowPoint *)pos)->z_x - 
-	ctx->offset_x;
-    point_p->y = ((GlowPoint *)a_points[i])->z_y + ((GlowPoint *)pos)->z_y - 
-	ctx->offset_y;
-    point_p++;
-  }
-  if ( !fill)
-    glow_draw_polyline( ctx, points, a_points.a_size, draw_type, idx, highlight);
-  else
-    glow_draw_fill_polyline( ctx, points, a_points.a_size, draw_type, highlight);
-}
-
-void GlowPolyLine::erase( void *pos, int hot, void *node)
-{
-  int i;
-  int idx = int( ctx->zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx += hot;
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  XPoint *point_p = points;
-  for ( i = 0; i < a_points.a_size; i++)
-  {
-    point_p->x = ((GlowPoint *)a_points[i])->z_x + ((GlowPoint *)pos)->z_x - 
-	ctx->offset_x;
-    point_p->y = ((GlowPoint *)a_points[i])->z_y + ((GlowPoint *)pos)->z_y - 
-	ctx->offset_y;
-    point_p++;
-  }
-  if ( !fill)
-    glow_draw_polyline_erase( ctx, points, a_points.a_size, idx);
-  else
-    glow_draw_fill_polyline( ctx, points, a_points.a_size, 
-		glow_eDrawType_LineErase, 0);
-}
-
-void GlowPolyLine::nav_draw( void *pos, int highlight, void *node)
-{
-  int i;
-  int idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  XPoint *point_p = points;
-  for ( i = 0; i < a_points.a_size; i++)
-  {
-    point_p->x = ((GlowPoint *)a_points[i])->nav_z_x + ((GlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x;
-    point_p->y = ((GlowPoint *)a_points[i])->nav_z_y + ((GlowPoint *)pos)->nav_z_y - 
-	ctx->nav_offset_y;
-    point_p++;
-  }
-  glow_draw_nav_polyline( ctx, points, a_points.a_size, draw_type, idx, highlight);
-}
-
-void GlowPolyLine::nav_erase( void *pos, void *node)
-{
-  int i;
-  int idx = int( ctx->nav_zoom_factor_y / ctx->base_zoom_factor * line_width - 1);
-  idx = max( 0, idx);
-  idx = min( idx, DRAW_TYPE_SIZE-1);
-  XPoint *point_p = points;
-  for ( i = 0; i < a_points.a_size; i++)
-  {
-    point_p->x = ((GlowPoint *)a_points[i])->nav_z_x + ((GlowPoint *)pos)->nav_z_x - 
-	ctx->nav_offset_x;
-    point_p->y = ((GlowPoint *)a_points[i])->nav_z_y + ((GlowPoint *)pos)->nav_z_y - 
-	ctx->nav_offset_y;
-    point_p++;
-  }
-  glow_draw_nav_polyline_erase( ctx, points, a_points.a_size, idx);
-}
-
-int GlowPolyLine::event_handler( void *pos, glow_eEvent event, int x, int y,
-	void *node)
-{
-  GlowPoint *p;
-  int x1, x2, y1, y2;
-  int i;
-
-  p = (GlowPoint *) pos;
-  for ( i = 0; i < a_points.a_size -1; i++)
-  {
-    x1 = ((GlowPoint *)a_points[i])->z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x;
-    x2 = ((GlowPoint *)a_points[i+1])->z_x + ((GlowPoint *)pos)->z_x - ctx->offset_x;
-    y1 = ((GlowPoint *)a_points[i])->z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y;
-    y2 = ((GlowPoint *)a_points[i+1])->z_y + ((GlowPoint *)pos)->z_y - ctx->offset_y;
-
-    if ((x1 == x2 && y1 < y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
-       y1 < y && y < y2)
-	||
-      (x1 == x2 && y1 > y2 && 		// Vertical
-       abs( x1 - x) < 3 && 
-       y2 < y && y < y1)
-	||
-      (y1 == y2 && x1 < x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
-       x1 < x && x < x2)
-        ||
-      (y1 == y2 && x1 > x2 &&		// Horizontal
-       abs( y1 - y) < 3 && 
-       x2 < x && x < x1))
-    {
-//    cout << "Event handler: Hit in line" << endl;
-      return 1;
-    }  
-    else if (( !(x1 == x2 || y1 == y2) && x1 < x2 && x1 <= x && x <= x2 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3)
-           ||
-           ( !(x1 == x2 || y1 == y2) && x1 > x2 && x2 <= x && x <= x1 &&
-             abs(y - 1.0 * (y2-y1)/(x2-x1) * x - y1 + 1.0 * (y2-y1)/(x2-x1) * x1) < 3))
-    {
-//      cout << "Event handler: Hit in line" << endl;
-      return 1;
-    }
-  }
-  return 0;
+  points = (glow_sPointX *) calloc( a_points.a_size, sizeof(glow_sPointX));
 }
 
 void GlowPolyLine::get_borders( double pos_x, double pos_y,
@@ -294,74 +145,6 @@ void GlowPolyLine::get_borders( double pos_x, double pos_y,
   }
 }
 
-void GlowPolyLine::move( void *pos, glow_sPoint *pointarray, int point_cnt,
-	int highlight, int hot)
-{
-  int i;
-
-  if ( points)
-  {
-    erase( pos, hot, NULL);
-    nav_erase( pos, NULL);
-    free( (char *)points);
-  }
-  points = (XPoint *) calloc( point_cnt, sizeof(XPoint));
-  for ( i = 0; i < point_cnt; i++)
-  {
-    if ( a_points.a_size < i)
-    {
-      ((GlowPoint *)a_points[i])->x = pointarray[i].x;
-      ((GlowPoint *)a_points[i])->y = pointarray[i].y;
-    }
-    else
-    {
-      GlowPoint *p = new GlowPoint(ctx, pointarray[i].x, pointarray[i].y);
-      a_points.insert( p);
-    }
-  }
-  for ( ; i < a_points.a_size; i++)
-  {
-    delete a_points[i];
-  }
-  a_points.a_size = point_cnt;
-
-  zoom();
-  nav_zoom();
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
-}
-
-void GlowPolyLine::shift( void *pos, double delta_x, double delta_y,
-	int highlight, int hot)
-{
-  int i;
-
-  erase( pos, hot, NULL);
-  nav_erase( pos, NULL);
-  for ( i = 0; i < a_points.a_size; i++)
-  {
-    ((GlowPoint *)a_points[i])->x += delta_x;
-    ((GlowPoint *)a_points[i])->y += delta_y;
-  }
-  zoom();
-  nav_zoom();
-
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
-}
-
-ostream& operator<< ( ostream& o, const GlowPolyLine l)
-{
-#if 0
-  o << 
-  '(' << l.p1.x << ',' << l.p1.y << ')' << 
-  '(' << l.p2.x << ',' << l.p2.y << ')' << 
-  '[' << l.p1.z_x << ',' << l.p1.z_y << ']' <<
-  '[' << l.p2.z_x << ',' << l.p2.z_y << ']' ;
-#endif
-  return o;
-}
-
 void GlowPolyLine::add_points( void *pos, glow_sPoint *pointarray, 
 	int point_cnt, int highlight, int hot)
 {
@@ -369,11 +152,11 @@ void GlowPolyLine::add_points( void *pos, glow_sPoint *pointarray,
 
   if ( points)
   {
-    erase( pos, hot, NULL);
-    nav_erase( pos, NULL);
+    // erase( pos, hot, NULL);
+    // nav_erase( pos, NULL);
     free( (char *)points);
   }
-  points = (XPoint *) calloc( a_points.a_size + point_cnt, sizeof(XPoint));
+  points = (glow_sPointX *) calloc( a_points.a_size + point_cnt, sizeof(glow_sPointX));
   for ( i = 0; i < point_cnt; i++)
   {
     GlowPoint *p = new GlowPoint(ctx, pointarray[i].x, pointarray[i].y);
@@ -381,6 +164,6 @@ void GlowPolyLine::add_points( void *pos, glow_sPoint *pointarray,
   }
   zoom();
   nav_zoom();
-  draw( pos, highlight, hot, NULL);
-  nav_draw( pos, highlight, NULL);
+  // draw( pos, highlight, hot, NULL);
+  // nav_draw( pos, highlight, NULL);
 }

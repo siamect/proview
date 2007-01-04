@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelpnav.cpp,v 1.9 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_xhelpnav.cpp,v 1.10 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,14 +43,11 @@
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 #include "flow_utils.h"
 
 #include "co_xhelpnav.h"
 
 extern "C" {
-#include "flow_x.h"
-#include "co_mrm_util.h"
 #include "co_api.h"
 }
 
@@ -74,8 +71,6 @@ extern "C" {
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
 
-static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data);
-static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data);
 static int help_cmp_items( const void *node1, const void *node2);
 
 static void xhelpnav_open_URL( CoXHelpNav *xhelpnav, char *url)
@@ -262,59 +257,21 @@ void CoXHelpNav::clear()
 }
 
 
-//
-//  Pop xhelpnav window
-//
-static Boolean set_displayed( void *xhelpnav)
-{
-  ((CoXHelpNav *)xhelpnav)->displayed = 1;
-  return True;
-}
-
-void CoXHelpNav::pop()
-{
-  Widget parent, top;
-
-  parent = XtParent( parent_wid);
-  while( parent)
-  {
-    top = parent;
-    if ( flow_IsShell( top))
-      break;
-    parent = XtParent( parent);
-  }
-  displayed = 0;
-  flow_UnmapWidget( top);
-  flow_MapWidget( top);
-
-  // A fix to avoid a krash in setinputfocus
-  XtAppAddWorkProc( XtWidgetToApplicationContext(top),
-			(XtWorkProc)set_displayed, (XtPointer)this);
-}
 
 //
 // Create the navigator widget
 //
 CoXHelpNav::CoXHelpNav(
 	void *xn_parent_ctx,
-	Widget	xn_parent_wid,
 	char *xn_name,
 	xhelp_eUtility xn_utility,
-	Widget *w,
 	pwr_tStatus *status) :
-	parent_ctx(xn_parent_ctx), parent_wid(xn_parent_wid),
+	parent_ctx(xn_parent_ctx),
 	brow_cnt(0), closing_down(0), displayed(0), utility(xn_utility),
 	search_node(0), search_strict(false), open_URL_cb(0)
 {
   strcpy( name, xn_name);
   strcpy( search_str, "");
-
-  form_widget = ScrolledBrowCreate( parent_wid, name, NULL, 0, 
-	xhelpnav_init_brow_base_cb, this, (Widget *)&brow_widget);
-  XtManageChild( form_widget);
-  displayed = 1;
-
-  *w = form_widget;
   *status = 1;
 }
 
@@ -323,15 +280,6 @@ CoXHelpNav::CoXHelpNav(
 //
 CoXHelpNav::~CoXHelpNav()
 {
-  closing_down = 1;
-
-  for ( int i = 0; i < brow_cnt; i++) {
-    brow_DeleteSecondaryCtx( brow_stack[i]->ctx);
-    brow_stack[i]->free_pixmaps();
-    delete brow_stack[i];
-  }
-  delete brow;
-  XtDestroyWidget( form_widget);
 }
 
 //
@@ -365,13 +313,6 @@ void CoXHelpNav::unzoom()
 void CoXHelpNav::get_zoom( double *zoom_factor)
 {
   brow_GetZoom( brow->ctx, zoom_factor);
-}
-
-void CoXHelpNav::set_inputfocus()
-{
-  if ( displayed && flow_IsViewable( brow_widget)) {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-  }
 }
 
 //
@@ -458,6 +399,14 @@ static int xhelpnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_Key_PageUp: {
       brow_Page( xhelpnav->brow->ctx, -0.95);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( xhelpnav->brow->ctx, 0.10);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( xhelpnav->brow->ctx, -0.10);
       break;
     }
     case flow_eEvent_Key_Return:
@@ -579,9 +528,9 @@ int CoXHelpNav::brow_pop()
   if ( brow_cnt >= XHELPNAV_BROW_MAX)
     return 0;
   brow_CreateSecondaryCtx( brow->ctx, &secondary_ctx,
-        xhelpnav_init_brow_cb, (void *)this, flow_eCtxType_Brow);
+        CoXHelpNav::init_brow_cb, (void *)this, flow_eCtxType_Brow);
 
-  brow_ChangeCtx( brow_widget, brow->ctx, brow_stack[brow_cnt]->ctx);
+  brow_ChangeCtx( brow->ctx, brow_stack[brow_cnt]->ctx);
   *brow = *brow_stack[brow_cnt];
   brow_cnt++;
   return 1;
@@ -593,7 +542,7 @@ int CoXHelpNav::brow_push()
      return 0;
 
   brow_cnt--;
-  brow_ChangeCtx( brow_widget, brow_stack[brow_cnt]->ctx, 
+  brow_ChangeCtx( brow_stack[brow_cnt]->ctx, 
 		brow_stack[brow_cnt-1]->ctx);
   *brow = *brow_stack[brow_cnt-1];
   delete brow_stack[brow_cnt];
@@ -654,13 +603,17 @@ void  CoXHelpNav::enable_events( CoXHelpNavBrow *brow)
 	xhelpnav_brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Resized, flow_eEventType_CallBack, 
 	xhelpnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	xhelpnav_brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	xhelpnav_brow_cb);
 }
 
 //
 // Backcall routine called at creation of the brow widget
 // Enable event, create nodeclasses and insert the root objects.
 //
-static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
+int CoXHelpNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
 {
   CoXHelpNav *xhelpnav = (CoXHelpNav *) client_data;
   BrowCtx *ctx = (BrowCtx *)fctx;
@@ -678,7 +631,7 @@ static int xhelpnav_init_brow_base_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-static int xhelpnav_init_brow_cb( BrowCtx *ctx, void *client_data)
+int CoXHelpNav::init_brow_cb( BrowCtx *ctx, void *client_data)
 {
   CoXHelpNav *xhelpnav = (CoXHelpNav *) client_data;
 

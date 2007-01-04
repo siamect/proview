@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.15 2006-06-29 10:51:17 claes Exp $
+ * Proview   $Id: glow.h,v 1.16 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,11 @@ extern "C" {
 
 /** \addtogroup GlowEnum */
 /*@{*/
+
+typedef void *glow_tPixmap;
+typedef void *glow_tImImage;
+typedef void *glow_tImData;
+typedef void *glow_tWidget;
 
 //!  Types of glow variables, used when displaying varables in attribute editors.
 typedef enum {
@@ -1850,6 +1855,12 @@ typedef struct {
   double	x;		//!< x coordinate
   double	y;		//!< y coordinate
 } glow_sPoint;
+
+//! A point with integer x and y coordinate
+typedef struct {
+  short		x;		//!< x coordinate
+  short		y;		//!< y coordinate
+} glow_sPointX;
 
 //! Configuration of curves
 typedef struct {

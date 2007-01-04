@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api.cpp,v 1.9 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_api.cpp,v 1.10 2007-01-04 07:51:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,6 @@ extern "C" {
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"
-#include "flow_browwidget.h"
 
 #include "co_msgwindow.h"
 #include "co_xhelp.h"

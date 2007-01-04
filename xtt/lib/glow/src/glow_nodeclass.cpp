@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.cpp,v 1.6 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_nodeclass.cpp,v 1.7 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,12 +28,11 @@
 #include "glow_nodeclass.h"
 #include "glow_annot.h"
 #include "glow_growannot.h"
-#include "glow_annotpixmap.h"
 #include "glow_growrect.h"
 #include "glow_growctx.h"
 #include "glow_msg.h"
 
-GlowNodeClass::GlowNodeClass( GlowCtx *glow_ctx, char *name, 
+GlowNodeClass::GlowNodeClass( GrowCtx *glow_ctx, char *name, 
 	glow_eNodeGroup grp)
   : ctx(glow_ctx), a(10,10), group(grp), dynamic(0), dynamicsize(0),
     arg_cnt(0), nc_extern(0), dyn_type(0), dyn_action_type(0),
@@ -74,8 +73,7 @@ void GlowNodeClass::print( GlowPoint *pos, void *node)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     a.a[i]->print( pos, node);
   }
 }
@@ -274,7 +272,7 @@ void GlowNodeClass::open( ifstream& fp)
     next_nc = ctx->get_nodeclass_from_name( next_nodeclass);
     if ( !next_nc)
     {
-      sts = ((GrowCtx *)ctx)->open_subgraph_from_name( next_nodeclass, 
+      sts = ctx->open_subgraph_from_name( next_nodeclass, 
 			glow_eSaveMode_SubGraph);
       if ( ODD(sts))
       {
@@ -297,102 +295,40 @@ void GlowNodeClass::open( ifstream& fp)
   }
 }
 
-void GlowNodeClass::draw( GlowPoint *pos, int highlight, int hot, void *node)
+void GlowNodeClass::draw( GlowWind *w, GlowPoint *pos, int highlight, int hot, void *node)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->draw( pos, highlight, hot, node);
+  for ( i = 0; i < a.a_size; i++) {
+    a.a[i]->draw( w, pos, highlight, hot, node);
   }
 }
 
-void GlowNodeClass::nav_draw( GlowPoint *pos, int highlight, void *node)
+void GlowNodeClass::erase( GlowWind *w, GlowPoint *pos, int hot, void *node)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->nav_draw( pos, highlight, node);
+  for ( i = 0; i < a.a_size; i++) {
+    a.a[i]->erase( w, pos, hot, node);
   }
 }
 
-void GlowNodeClass::draw_inverse( GlowPoint *pos, int hot, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    switch ( a.a[i]->type())
-    { 
-      case glow_eObjectType_Radiobutton:
-        a.a[i]->draw( pos, 0, hot, node);
-        break;
-      default:
-        a.a[i]->draw_inverse( pos, hot, node);
-    }
-  }
-}
-
-void GlowNodeClass::erase( GlowPoint *pos, int hot, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->erase( pos, hot, node);
-  }
-}
-
-void GlowNodeClass::nav_erase( GlowPoint *pos, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->nav_erase( pos, node);
-  }
-}
-
-void GlowNodeClass::draw( GlowTransform *t, int highlight, int hot, void *node,
+void GlowNodeClass::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node,
 			  void *colornode)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->draw( t, highlight, hot, node, colornode);
+  for ( i = 0; i < a.a_size; i++) {
+    a.a[i]->draw( w, t, highlight, hot, node, colornode);
   }
 }
 
-void GlowNodeClass::nav_draw( GlowTransform *t, int highlight, void *node, 
-			      void *colornode)
+void GlowNodeClass::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->nav_draw( t, highlight, node, colornode);
-  }
-}
-
-void GlowNodeClass::erase( GlowTransform *t, int hot, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->erase( t, hot, node);
-  }
-}
-
-void GlowNodeClass::nav_erase( GlowTransform *t, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    a.a[i]->nav_erase( t, node);
+  for ( i = 0; i < a.a_size; i++) {
+    a.a[i]->erase( w, t, hot, node);
   }
 }
 
@@ -401,8 +337,7 @@ int GlowNodeClass::get_conpoint( int num, double *x, double *y,
 {
   int		i, sts;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     sts = a.a[i]->get_conpoint( num, x, y, dir);
     if ( sts)
       return sts;
@@ -416,8 +351,7 @@ int GlowNodeClass::get_conpoint( GlowTransform *t, int num, bool flip_horizontal
 {
   int		i, sts;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     sts = a.a[i]->get_conpoint( t, num, flip_horizontal, flip_vertical, x, y, dir);
     if ( sts)
       return sts;
@@ -425,15 +359,15 @@ int GlowNodeClass::get_conpoint( GlowTransform *t, int num, bool flip_horizontal
   return GLOW__NOCONPOINT;
 }
 
-int GlowNodeClass::event_handler( void *pos, glow_eEvent event, int x, int y,
+int GlowNodeClass::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,
 	void *node)
 {
-  return a.event_handler( pos, event, x, y, node);
+  return a.event_handler( w, pos, event, x, y, node);
 }
 
-int GlowNodeClass::event_handler( glow_eEvent event, double fx, double fy)
+int GlowNodeClass::event_handler( GlowWind *w, glow_eEvent event, double fx, double fy)
 {
-  return a.event_handler( event, fx, fy);
+  return a.event_handler( w, event, fx, fy);
 }
 
 void GlowNodeClass::erase_annotation( void *pos, int highlight, int hot, 
@@ -441,14 +375,12 @@ void GlowNodeClass::erase_annotation( void *pos, int highlight, int hot,
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( (a.a[i]->type() == glow_eObjectType_Annot ||
 	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      a.a[i]->erase( pos, hot, node);
-      a.a[i]->nav_erase( pos, node);
+         ((GlowAnnot *)a.a[i])->number == num) {
+      a.a[i]->erase( &ctx->mw, pos, hot, node);
+      a.a[i]->erase( &ctx->navw, pos, 0, node);
       break;
     }
   }
@@ -463,10 +395,9 @@ void GlowNodeClass::draw_annotation( void *pos, int highlight, int hot,
   {
     if ( (a.a[i]->type() == glow_eObjectType_Annot ||
 	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      a.a[i]->draw( pos, highlight, hot, node);
-      a.a[i]->nav_draw( pos, highlight, node);
+         ((GlowAnnot *)a.a[i])->number == num) {
+      a.a[i]->draw( &ctx->mw, pos, highlight, hot, node);
+      a.a[i]->draw( &ctx->navw, pos, highlight, 0, node);
       break;
     }
   }
@@ -477,13 +408,11 @@ void GlowNodeClass::erase_annotation( GlowTransform *t, int highlight, int hot,
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      ((GrowAnnot *)a.a[i])->erase_background( t, hot, node);
-      a.a[i]->nav_erase( t, node);
+         ((GlowAnnot *)a.a[i])->number == num) {
+      ((GrowAnnot *)a.a[i])->erase_background( &ctx->mw, t, hot, node);
+      a.a[i]->erase( &ctx->navw, t, 0, node);
       break;
     }
   }
@@ -494,13 +423,11 @@ void GlowNodeClass::draw_annotation( GlowTransform *t, int highlight, int hot,
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      a.a[i]->draw( t, highlight, hot, node, NULL);
-      a.a[i]->nav_draw( t, highlight, node, NULL);
+         ((GlowAnnot *)a.a[i])->number == num) {
+      a.a[i]->draw( &ctx->mw, t, highlight, hot, node, NULL);
+      a.a[i]->draw( &ctx->navw, t, highlight, 0, node, NULL);
       break;
     }
   }
@@ -510,8 +437,7 @@ int GlowNodeClass::check_annotation( int num)
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( (a.a[i]->type() == glow_eObjectType_Annot || 
 	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
          ((GlowAnnot *)a.a[i])->number == num)
@@ -520,110 +446,14 @@ int GlowNodeClass::check_annotation( int num)
   return 0;
 }
 
-void GlowNodeClass::open_annotation_input( void *pos, void *node, int num)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    if ( (a.a[i]->type() == glow_eObjectType_Annot &&
-         ((GlowAnnot *)a.a[i])->number == num) ||
-         (a.a[i]->type() == glow_eObjectType_GrowAnnot &&
-         ((GrowAnnot *)a.a[i])->number == num))
-    {
-      ((GlowAnnot *)a.a[i])->open_annotation_input( pos, node);
-      break;
-    }
-  }
-}
-
-void GlowNodeClass::close_annotation_input( void *node, int num)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    if ( (a.a[i]->type() == glow_eObjectType_Annot || 
-	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      ((GlowAnnot *)a.a[i])->close_annotation_input( node);
-      break;
-    }
-  }
-}
-
-int GlowNodeClass::get_annotation_input( void *node, int num, char **text)
-{
-  int		i, sts;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    if ( (a.a[i]->type() == glow_eObjectType_Annot || 
-	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      sts = ((GlowAnnot *)a.a[i])->get_annotation_input( node, text);
-      break;
-    }
-  }
-  return sts;
-}
-
-void GlowNodeClass::move_widgets( void *node, int x, int y)
-{
-  for ( int i = 0; i < a.a_size; i++)
-  {
-    if ( a.a[i]->type() == glow_eObjectType_Annot || 
-	 a.a[i]->type() == glow_eObjectType_GrowAnnot)
-      ((GlowAnnot *)a.a[i])->move_widgets( node, x, y);
-  }
-}
-
-void GlowNodeClass::configure_annotations( void *pos, void *node)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    if ( a.a[i]->type() == glow_eObjectType_Annot)
-    {
-      ((GlowAnnot *)a.a[i])->configure_annotations( pos, node);
-    }
-    else if ( a.a[i]->type() == glow_eObjectType_AnnotPixmap)
-    {
-      ((GlowAnnotPixmap *)a.a[i])->configure_annotations( pos, node);
-    }
-  }
-}
-
-void GlowNodeClass::measure_annotation( int num, char *text, double *width,
-	double *height)
-{
-  int		i;
-
-  for ( i = 0; i < a.a_size; i++)
-  {
-    if ( (a.a[i]->type() == glow_eObjectType_Annot || 
-	  a.a[i]->type() == glow_eObjectType_GrowAnnot) &&
-         ((GlowAnnot *)a.a[i])->number == num)
-    {
-      ((GlowAnnot *)a.a[i])->measure_annot( text, width, height);
-      break;
-    }
-  }
-}
-
 void GlowNodeClass::get_obstacle_borders( double pos_x, double pos_y, double *x_right, 
 		double *x_left, double *y_high, double *y_low, void *node)
 { 
   int i;
 
-  switch ( group)
-  {
+  switch ( group) {
     case glow_eNodeGroup_Document:
-      for ( i = 0; i < a.a_size; i++)
-      {
+      for ( i = 0; i < a.a_size; i++) {
         if ( a.a[i]->type() == glow_eObjectType_Rect)
           a.a[i]->get_borders(pos_x, pos_y, x_right, x_left, y_high, y_low, node);
       }
@@ -687,8 +517,7 @@ int GlowNodeClass::draw_annot_background(  GlowTransform *t, void *node,
 
   for ( int i = a.a_size - 1; i >= 0; i--)
   {
-    if ( a.a[i]->type() == glow_eObjectType_GrowRect)
-    {
+    if ( a.a[i]->type() == glow_eObjectType_GrowRect) {
       sts = ((GrowRect *)a.a[i])->draw_annot_background( t, node, x, y);
       if ( ODD(sts)) return sts;
     }
@@ -701,10 +530,8 @@ int GlowNodeClass::get_annot_background(  GlowTransform *t, void *node,
 {
   int sts;
 
-  for ( int i = a.a_size - 1; i >= 0; i--)
-  {
-    if ( a.a[i]->type() == glow_eObjectType_GrowRect)
-    {
+  for ( int i = a.a_size - 1; i >= 0; i--) {
+    if ( a.a[i]->type() == glow_eObjectType_GrowRect) {
       sts = ((GrowRect *)a.a[i])->get_annot_background( t, node, background);
       if ( ODD(sts)) return sts;
     }
@@ -719,11 +546,9 @@ void GlowNodeClass::get_annotation_numbers( int **numbers, int *cnt)
 
   *cnt = 0;  
   p = (int *) calloc( 10, sizeof(int));
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_Annot ||
-	 a.a[i]->type() == glow_eObjectType_GrowAnnot)
-    {
+	 a.a[i]->type() == glow_eObjectType_GrowAnnot) {
       if ( *cnt >= 10)
         break;
       p[*cnt] = ((GlowAnnot *)a.a[i])->number;
@@ -756,10 +581,10 @@ void GlowNodeClass::measure_javabean( double *pix_x_right, double *pix_x_left,
     a.get_borders( (GlowTransform *) NULL, &jb_x_right, &jb_x_left, 
 		   &jb_y_high, &jb_y_low);
 
-  *pix_x_right = jb_x_right * ctx->zoom_factor_x - double(ctx->offset_x);
-  *pix_x_left = jb_x_left * ctx->zoom_factor_x - double(ctx->offset_x);
-  *pix_y_high = jb_y_high * ctx->zoom_factor_y - double(ctx->offset_y);
-  *pix_y_low = jb_y_low * ctx->zoom_factor_y - double(ctx->offset_y);
+  *pix_x_right = jb_x_right * ctx->mw.zoom_factor_x - double(ctx->mw.offset_x);
+  *pix_x_left = jb_x_left * ctx->mw.zoom_factor_x - double(ctx->mw.offset_x);
+  *pix_y_high = jb_y_high * ctx->mw.zoom_factor_y - double(ctx->mw.offset_y);
+  *pix_y_low = jb_y_low * ctx->mw.zoom_factor_y - double(ctx->mw.offset_y);
 }
 
 int GlowNodeClass::get_java_name( char *jname) 
@@ -807,15 +632,13 @@ void GlowNodeClass::get_borders( GlowTransform *t, double *x_right,
     // Will not work in rotated nodes
     double ll_x, ur_x, ll_y, ur_y, kx1, kx2, ky1, ky2;
 
-    if ( t)
-    {
+    if ( t) {
       kx1 = t->x( base->x0, base->y0);
       kx2 = t->x( base->x1, base->y1);
       ky1 = t->y( base->x0, base->y0);
       ky2 = t->y( base->x1, base->y1);
     }
-    else
-    {
+    else {
       kx1 = base->x0;
       kx2 = base->x1;
       ky1 = base->y0;
@@ -850,8 +673,7 @@ void GlowNodeClass::get_origo( GlowTransform *t, double *x,
 	 fabs( base->y0 - base->y1) < DBL_EPSILON)) {
     // Borders are given i x0, y0, x1, y1
 
-    if ( t)
-    {
+    if ( t) {
       double ll_x, ll_y, ur_x, ur_y;
       ll_x = ll_y = 1e37; 
       ur_x = ur_y = -1e37;
@@ -860,8 +682,7 @@ void GlowNodeClass::get_origo( GlowTransform *t, double *x,
       *x = t->x( 0, 0) - ll_x;
       *y = t->y( 0, 0) - ll_y;
     }
-    else
-    {
+    else {
       *x = - base->x0;
       *y = - base->y0;
     }
@@ -902,11 +723,9 @@ int GlowNodeClass::get_annotation_info( void *node, int num, int *t_size, glow_e
 {
   int		i;
 
-  for ( i = 0; i < a.a_size; i++)
-  {
+  for ( i = 0; i < a.a_size; i++) {
     if ( a.a[i]->type() == glow_eObjectType_GrowAnnot &&
-         ((GrowAnnot *)a.a[i])->number == num)
-    {
+         ((GrowAnnot *)a.a[i])->number == num) {
       ((GrowAnnot *)a.a[i])->get_annotation_info( node, t_size, t_drawtype, t_color);
       return 1;
     }

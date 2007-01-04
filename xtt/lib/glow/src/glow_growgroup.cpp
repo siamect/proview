@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growgroup.cpp,v 1.4 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growgroup.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "glow_growctx.h"
 #include "glow_nodegroup.h"
 
-GrowGroup::GrowGroup( GlowCtx *glow_ctx, char *name, GlowArray& array,
+GrowGroup::GrowGroup( GrowCtx *glow_ctx, char *name, GlowArray& array,
 	int nodraw) :
 	GrowNode(glow_ctx,name,0,0,0,nodraw,0)
 {
@@ -38,7 +38,7 @@ GrowGroup::GrowGroup( GlowCtx *glow_ctx, char *name, GlowArray& array,
   get_node_borders();
 }
 
-GrowGroup::GrowGroup( GlowCtx *glow_ctx, char *name) :
+GrowGroup::GrowGroup( GrowCtx *glow_ctx, char *name) :
 	GrowNode(glow_ctx,name,0,0,0)
 {
   object_type = glow_eObjectType_GrowGroup;
@@ -46,22 +46,22 @@ GrowGroup::GrowGroup( GlowCtx *glow_ctx, char *name) :
 
 GrowGroup::~GrowGroup()
 {
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 
   ctx->set_defered_redraw();
   ctx->delete_node_cons( this);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   ctx->redraw_defered();
   if ( hot)
-    draw_set_cursor( ctx, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
 
   delete nc;
   nc = 0;
@@ -70,8 +70,7 @@ GrowGroup::~GrowGroup()
 void GrowGroup::copy_from( const GrowGroup& n) 
 {
   memcpy( this, &n, sizeof(n));
-  if ( n.dynamicsize)
-  {
+  if ( n.dynamicsize) {
     dynamic = (char *) calloc( 1, n.dynamicsize);
     memcpy( dynamic, n.nc->dynamic, n.dynamicsize);
   }

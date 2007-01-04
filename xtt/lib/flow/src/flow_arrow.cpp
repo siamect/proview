@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arrow.cpp,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_arrow.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -176,7 +176,7 @@ void FlowArrow::draw( void *pos, int highlight, int hot, void *node)
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_arrow( ctx,
+  ctx->fdraw->arrow( ctx,
 	p_dest.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p_dest.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
@@ -192,7 +192,7 @@ void FlowArrow::erase( void *pos, int hot, void *node)
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_arrow_erase( ctx,
+  ctx->fdraw->arrow_erase( ctx,
 	p_dest.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	p_dest.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	p1.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
@@ -207,7 +207,7 @@ void FlowArrow::nav_draw( void *pos, int highlight, void *node)
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_arrow( ctx,
+  ctx->fdraw->nav_arrow( ctx,
 	p_dest.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p_dest.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	p1.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
@@ -222,7 +222,7 @@ void FlowArrow::nav_erase( void *pos, void *node)
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_arrow_erase( ctx,
+  ctx->fdraw->nav_arrow_erase( ctx,
 	p_dest.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	p_dest.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	p1.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 

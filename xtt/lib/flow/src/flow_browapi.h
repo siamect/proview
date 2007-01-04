@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.h,v 1.8 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: flow_browapi.h,v 1.9 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,20 +24,19 @@
 #include "flow.h"
 #endif
 
-#ifndef flow_browctx_h
+#if defined __cplusplus
 #include "flow_browctx.h"
+#else
+typedef void *BrowCtx;
+#ifndef flow_api_h
+typedef void *FlowCtx;
+#endif
 #endif
 
 #if defined __cplusplus
 extern "C" {
 #endif
 
-#ifndef __cplusplus
-typedef void *BrowCtx;
-#ifndef flow_api_h
-typedef void *FlowCtx;
-#endif
-#endif
 
 typedef struct {
 	double	base_zoom_factor;
@@ -232,9 +231,8 @@ int brow_CreateSecondaryCtx( brow_tCtx ctx, brow_tCtx *secondary_ctx,
 	void  *client_data, 
 	flow_eCtxType type);
 void brow_DeleteSecondaryCtx( brow_tCtx ctx);
-int brow_ChangeCtx( Widget w, brow_tCtx from_ctx, brow_tCtx to_ctx);
+int brow_ChangeCtx( brow_tCtx from_ctx, brow_tCtx to_ctx);
 void brow_SetInputFocus( brow_tCtx ctx);
-void brow_SetWidgetInputFocus( Widget w);
 void brow_SetClickSensitivity( brow_tCtx ctx, int value);
 void brow_SetWhiteBackground( brow_tCtx ctx);
 

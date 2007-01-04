@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arc.cpp,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_arc.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -108,7 +108,7 @@ void FlowArc::draw( void *pos, int highlight, int hot, void *node)
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_arc( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->arc( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2,
 	draw_type, idx, highlight);
@@ -120,7 +120,7 @@ void FlowArc::erase( void *pos, int hot, void *node)
   idx += hot;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_arc_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
+  ctx->fdraw->arc_erase( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, 
 	ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, angel1, angel2, idx);
 }
@@ -130,7 +130,7 @@ void FlowArc::nav_draw( void *pos, int highlight, void *node)
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_arc( ctx, 
+  ctx->fdraw->nav_arc( ctx, 
 	ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	ll.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angel1, angel2,
@@ -142,7 +142,7 @@ void FlowArc::nav_erase( void *pos, void *node)
   int idx = int( ctx->nav_zoom_factor / ctx->base_zoom_factor * line_width - 1);
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_arc_erase( ctx,
+  ctx->fdraw->nav_arc_erase( ctx,
 	ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - ctx->nav_offset_x, 
 	ll.nav_z_y + ((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y, angel1, angel2,

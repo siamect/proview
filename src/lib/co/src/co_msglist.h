@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.h,v 1.4 2005-12-13 15:13:13 claes Exp $
+ * Proview   $Id: co_msglist.h,v 1.5 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,27 +79,25 @@ class MsgListBrow {
 class MsgList {
   public:
     MsgList(
-	void *ev_parent_ctx,
-	Widget	ev_parent_wid,
-	Widget *w);
-    ~MsgList();
+	void *ev_parent_ctx);
+    virtual ~MsgList();
 
     void 		*parent_ctx;
-    Widget		parent_wid;
-    Widget		brow_widget;
-    Widget		form_widget;
-    Widget		toplevel;
     MsgListBrow		*brow;
     void 		(*find_wnav_cb)( void *, pwr_tObjid);
     void 		(*find_plc_cb)( void *, pwr_tObjid);
 
-    void set_input_focus();
+    virtual void set_input_focus() {}
+
     void zoom( double zoom_factor);
     void unzoom();
     void set_nodraw();
     void reset_nodraw();
     void remove_oldest();
     void clear();
+
+    static int init_brow_cb( FlowCtx *fctx, void *client_data);
+    static int brow_cb( FlowCtx *ctx, flow_tEvent event);
 };
 
 class ItemMsg {

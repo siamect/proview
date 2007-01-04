@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.21 2006-06-14 05:04:10 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.22 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,10 +19,6 @@
 
 #ifndef glow_growapi_h
 #define glow_growapi_h
-
-#if defined __cplusplus
-extern "C" {
-#endif
 
 /*! \file glow_growapi.h
     \brief Contains c API for grow. */
@@ -52,6 +48,11 @@ typedef GlowTraceData glow_sTraceData;
 #endif
 
 #include "glow.h"
+
+#if defined __cplusplus
+extern "C" {
+#endif
+
 
 
   typedef enum {
@@ -397,14 +398,6 @@ typedef GlowTraceData glow_sTraceData;
   */
   int grow_AnnotationInputIsOpen( grow_tNode node, int number);
 
-  //! Get the input of an annotation.
-  /*!
-    \param node		Node object.
-    \param number	Annotation number.
-    \param text		Pointer to the input text.
-  */
-  int grow_GetAnnotationInput( grow_tNode node, int number, char **text);
-
   //! Close the annotation for input.
   /*!
     \param node		Node object.
@@ -477,22 +470,11 @@ typedef GlowTraceData glow_sTraceData;
 	glow_eDrawType draw_type, int line_width, grow_tObject *arc);
   void grow_CreateText( grow_tCtx ctx, char *text_str, double x, double y, 
 	glow_eDrawType draw_type, int text_size, grow_tObject *text);
-  void grow_CreatePixmap( grow_tCtx ctx, glow_sPixmapData *pixmap_data, 
-	double x, double y, glow_eDrawType draw_type, int size, 
-	grow_tObject *pixmap);
-  void grow_CreateAnnotPixmap( grow_tCtx ctx, int number, 
-	double x, double y, glow_eDrawType draw_type, int size, int relative_pos,
-	grow_tObject *annot_pixmap);
-  void grow_CreateAnnot( grow_tCtx ctx, double x, double y, int number, 
-	glow_eDrawType draw_type, int text_size, grow_tObject *annot);
   void grow_AddRect( grow_tNodeClass nc, char *name, 
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
 	glow_mDisplayLevel display_level, int fill_rect, 
 	int border, int shadow, glow_eDrawType fill_draw_type, void *user_data);
-  void grow_AddFrame( grow_tNodeClass nc, double x, double y, 
-	double width, double height,
-	glow_eDrawType draw_type, int line_width, int fix_line_width);
   void grow_AddLine( grow_tNodeClass nc, char *name, 
 	double x1, double y1, double x2, double y2,
 	glow_eDrawType draw_type, int line_width, int fix_line_width, 
@@ -516,13 +498,6 @@ typedef GlowTraceData glow_sTraceData;
 	int t_size, glow_eAnnotType a_type,
 	int rel_pos, glow_mDisplayLevel display_lev,
 	void *user_data);
-  void grow_AddAnnotPixmap( grow_tNodeClass nc, int number,
-	double x, double y, glow_eDrawType draw_type, int size, int relative_pos);
-  void grow_AddRadiobutton( grow_tNodeClass nc, double x, double y, 
-	double width, double height, int number,
-	glow_eDrawType draw_type, int line_width);
-  void grow_CreatePushButton( grow_tCtx ctx, char *text, double x, double y, 
-	double width, double height, grow_tObject *pushbutton);
   void grow_CreateNodeClass( grow_tCtx ctx, char *name, glow_eNodeGroup group,
 	grow_tNodeClass *nodeclass);
   void grow_NodeClassAdd( grow_tNodeClass nc, grow_tObject object);
@@ -737,17 +712,6 @@ typedef GlowTraceData glow_sTraceData;
 
   void grow_GetNodePosition( grow_tNode node, double *x, double *y);
 
-  //! Measure the size a text would have in a specific annotation.
-  /*!
-    \param node_class	Nodeclass for the annotation.
-    \param number	Annotation number.
-    \param text		Text to measure.
-    \param width	Width of text.
-    \param height	Hight of text.
-  */
-  void grow_MeasureAnnotation( grow_tNodeClass node_class, int number, char *text, 
-	double *width, double *height);
-
   //! Measure the size a text would have in an annotation with specified attributes.
   /*!
     \param ctx		Grow context.
@@ -816,20 +780,6 @@ typedef GlowTraceData glow_sTraceData;
   /*! \param ctx	Grow context. */
   void grow_Redraw( grow_tCtx ctx);
 
-  void grow_SetAnnotPixmap( grow_tNode node, int number, 
-	glow_sAnnotPixmap *pixmap);
-  void grow_RemoveAnnotPixmap( grow_tNode node, int number);
-  void grow_AllocAnnotPixmap( grow_tCtx ctx, glow_sPixmapData *pixmap_data, 
-		glow_sAnnotPixmap **pixmap);
-  void grow_FreeAnnotPixmap( grow_tCtx ctx, glow_sAnnotPixmap *pixmap);
-  void grow_SetRadiobutton( grow_tNode node, int number, int value);
-  void grow_GetRadiobutton( grow_tNode node, int number, int *value);
-  int grow_CreateSecondaryCtx( grow_tCtx ctx, grow_tCtx *secondary_ctx,
-        int (*init_proc)(grow_tCtx ctx, void *client_data),
-	void  *client_data, 
-	glow_eCtxType type);
-  void grow_DeleteSecondaryCtx( grow_tCtx ctx);
-  int grow_ChangeCtx( Widget w, grow_tCtx from_ctx, grow_tCtx to_ctx);
   void grow_SetInputFocus( grow_tCtx ctx);
 
   //! Set editing mode of grow.

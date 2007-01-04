@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_radiobutton.cpp,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_radiobutton.cpp,v 1.4 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -107,48 +107,48 @@ void FlowRadiobutton::draw( void *pos, int highlight, int hot, void *node)
   ll_y = ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
   ur_x = ll_x + ur.z_x - ll.z_x;
   ur_y = ll_y + ur.z_y - ll.z_y;
-  flow_draw_rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+  ctx->fdraw->rect( ctx, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	draw_type, idx, 0);
   if ( ((FlowNode *)node)->rbuttonv[number])
   {
-    flow_draw_line( ctx, ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1,
+    ctx->fdraw->line( ctx, ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ll_x + 2, ll_y + 2, ur_x - 2, ll_y + 2,
+    ctx->fdraw->line( ctx, ll_x + 2, ll_y + 2, ur_x - 2, ll_y + 2,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
+    ctx->fdraw->line( ctx, ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
+    ctx->fdraw->line( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line_erase( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
+    ctx->fdraw->line_erase( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
 	idx);
-    flow_draw_line_erase( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
+    ctx->fdraw->line_erase( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
 	idx);
-    flow_draw_line_erase( ctx, ur_x - 1, ur_y - 1, ur_x - 1, ll_y + 1,
+    ctx->fdraw->line_erase( ctx, ur_x - 1, ur_y - 1, ur_x - 1, ll_y + 1,
 	idx);
-    flow_draw_line_erase( ctx, ur_x - 2, ur_y - 2, ur_x - 2, ll_y + 2,
+    ctx->fdraw->line_erase( ctx, ur_x - 2, ur_y - 2, ur_x - 2, ll_y + 2,
 	idx);
-    flow_draw_fill_rect( ctx, ll_x + 3, ll_y + 3, ur_x - ll_x - 5, 
+    ctx->fdraw->fill_rect( ctx, ll_x + 3, ll_y + 3, ur_x - ll_x - 5, 
 	ur_y - ll_y - 5, flow_eDrawType_Line);
   }
   else
   {
-    flow_draw_line_erase( ctx, ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1,
+    ctx->fdraw->line_erase( ctx, ll_x + 1, ll_y + 1, ur_x - 1, ll_y + 1,
 	idx);
-    flow_draw_line_erase( ctx, ll_x + 2, ll_y + 2, ur_x - 2, ll_y + 2,
+    ctx->fdraw->line_erase( ctx, ll_x + 2, ll_y + 2, ur_x - 2, ll_y + 2,
 	idx);
-    flow_draw_line_erase( ctx, ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
+    ctx->fdraw->line_erase( ctx, ll_x + 1, ll_y + 1, ll_x + 1, ur_y - 1,
 	idx);
-    flow_draw_line_erase( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
+    ctx->fdraw->line_erase( ctx, ll_x + 2, ll_y + 2, ll_x + 2, ur_y - 2,
 	idx);
-    flow_draw_line( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
+    ctx->fdraw->line( ctx, ur_x - 1, ur_y - 1, ll_x + 1, ur_y - 1,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
+    ctx->fdraw->line( ctx, ur_x - 2, ur_y - 2, ll_x + 2, ur_y - 2,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ur_x - 1, ur_y - 1, ur_x - 1, ll_y + 1,
+    ctx->fdraw->line( ctx, ur_x - 1, ur_y - 1, ur_x - 1, ll_y + 1,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_line( ctx, ur_x - 2, ur_y - 2, ur_x - 2, ll_y + 2,
+    ctx->fdraw->line( ctx, ur_x - 2, ur_y - 2, ur_x - 2, ll_y + 2,
 	flow_eDrawType_LineGray, idx, 0);
-    flow_draw_fill_rect( ctx, ll_x + 3, ll_y + 3, ur_x - ll_x - 5, 
+    ctx->fdraw->fill_rect( ctx, ll_x + 3, ll_y + 3, ur_x - ll_x - 5, 
 	ur_y - ll_y - 5, flow_eDrawType_LineErase);
   }
 }
@@ -161,7 +161,7 @@ void FlowRadiobutton::erase( void *pos, int hot, void *node)
   ll_y = ll.z_y + ((FlowPoint *)pos)->z_y - ctx->offset_y;
   ur_x = ll_x + ur.z_x - ll.z_x;
   ur_y = ll_y + ur.z_y - ll.z_y;
-  flow_draw_fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, 
+  ctx->fdraw->fill_rect( ctx, ll_x, ll_y, ur_x - ll_x, 
 	ur_y - ll_y, flow_eDrawType_LineErase);
 }
 
@@ -180,7 +180,7 @@ void FlowRadiobutton::nav_draw( void *pos, int highlight, void *node)
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_rect( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
+  ctx->fdraw->nav_rect( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 
 	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,
@@ -203,7 +203,7 @@ void FlowRadiobutton::nav_erase( void *pos, void *node)
   }
   idx = max( 0, idx);
   idx = min( idx, DRAW_TYPE_SIZE-1);
-  flow_draw_nav_rect_erase( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
+  ctx->fdraw->nav_rect_erase( ctx, ll.nav_z_x + ((FlowPoint *)pos)->nav_z_x - 
 	ctx->nav_offset_x, ll.nav_z_y + 
 	((FlowPoint *)pos)->nav_z_y - ctx->nav_offset_y, 
 	ur.nav_z_x - ll.nav_z_x, ur.nav_z_y - ll.nav_z_y,

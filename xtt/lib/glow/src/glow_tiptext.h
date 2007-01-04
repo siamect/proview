@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_tiptext.h,v 1.2 2005-09-01 14:57:54 claes Exp $
+ * Proview   $Id: glow_tiptext.h,v 1.3 2007-01-04 07:57:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@
 
 #include "glow.h"
 
-class GlowCtx;
+class GrowCtx;
 class GlowArrayElem;
 
 /*! \file glow_tiptext.h
@@ -48,14 +48,14 @@ class GlowTipText {
   /*!
     \param gctx		Glow context.
   */
-  GlowTipText( GlowCtx *gctx) : ctx(gctx), active(false), timer_id(0) {}
+  GlowTipText( GrowCtx *gctx) : ctx(gctx), active(false), timer_id(0) {}
 
   //! Destructor
   /*! Removes the timer if it is set.
    */
   ~GlowTipText();
 
-  GlowCtx *ctx;		//!< Glow context.
+  GrowCtx *ctx;		//!< Glow context.
   int text_x;		//!< x coordinate in pixels for text.
   int text_y;		//!< y coordinate in pixels for text.
   int text_width;	//!< Text width in pixels.

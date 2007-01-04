@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_file.c,v 1.5 2005-09-21 14:19:39 claes Exp $
+ * Proview   $Id: co_dcli_file.c,v 1.6 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -479,6 +479,18 @@ pwr_tStatus dcli_file_time( char *filename, pwr_tTime *time)
 
   if ( stat( filename, &info) != -1) {
     time->tv_sec = info.st_mtime;
+    time->tv_nsec = 0;
+    return DCLI__SUCCESS;
+  }
+  return DCLI__NOFILE;
+}
+
+pwr_tStatus dcli_file_ctime( char *filename, pwr_tTime *time)
+{
+  struct stat info;
+
+  if ( stat( filename, &info) != -1) {
+    time->tv_sec = info.st_ctime;
     time->tv_nsec = 0;
     return DCLI__SUCCESS;
   }

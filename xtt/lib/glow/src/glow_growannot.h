@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.h,v 1.4 2006-06-29 10:51:17 claes Exp $
+ * Proview   $Id: glow_growannot.h,v 1.5 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,7 +53,7 @@ class GrowAnnot : public GlowAnnot {
     \param display_lev	Level when the object is visible.
     \param nodraw	Don't draw the object now.
   */
-  GrowAnnot( GlowCtx *glow_ctx, double x = 0, double y = 0,
+  GrowAnnot( GrowCtx *glow_ctx, double x = 0, double y = 0,
 	int annot_num = 0, glow_eDrawType d_type = glow_eDrawType_TextHelveticaBold,
 	glow_eDrawType color_d_type = glow_eDrawType_Line,
 	int t_size = 2, glow_eAnnotType a_type = glow_eAnnotType_OneLine,
@@ -99,7 +99,7 @@ class GrowAnnot : public GlowAnnot {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -107,7 +107,7 @@ class GrowAnnot : public GlowAnnot {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Redraw the background of the annotation
   /*!
@@ -115,23 +115,7 @@ class GrowAnnot : public GlowAnnot {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase_background( GlowTransform *t, int hot, void *node);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
+  void erase_background( GlowWind *w, GlowTransform *t, int hot, void *node);
   
   //! Calculate the border for a set of objects or for a parent node.
   /*!

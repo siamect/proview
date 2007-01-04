@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curveapi.h,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_curveapi.h,v 1.3 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,8 @@
 #ifndef glow_curveapi_h
 #define glow_curveapi_h
 
+#include "glow.h"
+
 #if defined __cplusplus
 extern "C" {
 #endif
@@ -31,7 +33,6 @@ typedef void *GlowCtx;
 #endif
 #endif
 
-#include "glow.h"
 
 typedef CurveCtx *curve_tCtx;
 

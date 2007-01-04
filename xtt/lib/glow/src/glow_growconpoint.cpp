@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.cpp,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growconpoint.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@
 #include "glow_draw.h"
 #include "glow_growctx.h"
 
-GrowConPoint::GrowConPoint( GlowCtx *glow_ctx, char *name, double x, double y, 
+GrowConPoint::GrowConPoint( GrowCtx *glow_ctx, char *name, double x, double y, 
 		int cp_num, glow_eDirection d, int nodraw) :
 		GlowConPoint(glow_ctx,x,y,cp_num,d), 
     		hot(0), pzero(ctx), highlight(0), inverse(0), 
@@ -50,7 +50,7 @@ GrowConPoint::GrowConPoint( GlowCtx *glow_ctx, char *name, double x, double y,
   arc.ll.posit( - ctx->draw_delta, - ctx->draw_delta);
   arc.ur.posit( ctx->draw_delta, ctx->draw_delta);
   if ( !nodraw)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+    draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   get_node_borders();
 }
 
@@ -59,39 +59,38 @@ GrowConPoint::~GrowConPoint()
   ctx->object_deleted( this);
   if ( ctx->nodraw) return;
 
-  erase();
-  nav_erase();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
 
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   if ( hot)
-    draw_set_cursor( ctx, glow_eDrawCursor_Normal);
+    ctx->gdraw->set_cursor( &ctx->navw, glow_eDrawCursor_Normal);
 }
 
 void GrowConPoint::move( double delta_x, double delta_y, int grid)
 {
   ctx->set_defered_redraw();
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  if ( grid)
-  {
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  if ( grid) {
     double x, y, x_grid, y_grid;
 
     /* Move to closest grid point */
-    erase();
-    nav_erase();
+    erase( &ctx->mw);
+    erase( &ctx->navw);
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid( x + delta_x / ctx->zoom_factor_x,
-	y + delta_y / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x + delta_x / ctx->mw.zoom_factor_x,
+	y + delta_y / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x, y_grid - y);
     get_node_borders();
   }
@@ -99,79 +98,65 @@ void GrowConPoint::move( double delta_x, double delta_y, int grid)
   {
     double dx, dy;
 
-    erase();
-    nav_erase();
-    dx = delta_x / ctx->zoom_factor_x;
-    dy = delta_y / ctx->zoom_factor_y;
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    dx = delta_x / ctx->mw.zoom_factor_x;
+    dy = delta_y / ctx->mw.zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-//  x1 = trf.x( p.x, p.y);
-//  y1 = trf.y( p.x, p.y);
-//  arc.move( (void *)&pzero, x1 - ctx->draw_delta, 
-//	y1 - ctx->draw_delta,
-//	x1 + ctx->draw_delta, y1 + ctx->draw_delta, arc.angel1, arc.angel2,
-//	highlight, hot);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
   ctx->redraw_defered();
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
 
 }
 
 void GrowConPoint::move_noerase( int delta_x, int delta_y, int grid)
 {
-  if ( grid)
-  {
+  if ( grid) {
     double x, y, x_grid, y_grid;
 
     /* Move to closest grid point */
     x = (x_right + x_left) / 2;
     y = (y_high + y_low) / 2;
-    ctx->find_grid( x + double( delta_x) / ctx->zoom_factor_x,
-	y + double( delta_y) / ctx->zoom_factor_y, &x_grid, &y_grid);
+    ctx->find_grid( x + double( delta_x) / ctx->mw.zoom_factor_x,
+	y + double( delta_y) / ctx->mw.zoom_factor_y, &x_grid, &y_grid);
     trf.move( x_grid - x, y_grid - y);
     get_node_borders();
   }
-  else
-  {
+  else {
     double dx, dy;
 
-    dx = double( delta_x) / ctx->zoom_factor_x;
-    dy = double( delta_y) / ctx->zoom_factor_y;
+    dx = double( delta_x) / ctx->mw.zoom_factor_x;
+    dy = double( delta_y) / ctx->mw.zoom_factor_y;
     trf.move( dx, dy);
     x_right += dx;
     x_left += dx;
     y_high += dy;
     y_low += dy;
   }
-//  x1 = trf.x( p.x, p.y);
-//  y1 = trf.y( p.x, p.y);
-//  arc.move( (void *)&pzero, x1 - ctx->draw_delta, 
-//	y1 - ctx->draw_delta,
-//	x1 + ctx->draw_delta, y1 + ctx->draw_delta, arc.angel1, arc.angel2,
-//	highlight, hot);
-  ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-  ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 
 }
 
-int GrowConPoint::event_handler( glow_eEvent event, int x, int y, double fx,
-	double fy)
+int GrowConPoint::event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx,
+				 double fy)
 {
   int sts;
   GlowPoint p1(p);
@@ -180,60 +165,48 @@ int GrowConPoint::event_handler( glow_eEvent event, int x, int y, double fx,
   p1.zoom();
 
   sts = 0;
-  if ( event == ctx->event_move_node)
-  {
-    sts = arc.event_handler( (void *)&p1, 
-		event, x, y, NULL);
-    if ( sts)
-    {
+  if ( event == ctx->event_move_node) {
+    sts = arc.event_handler( w, (void *)&p1, 
+			     event, x, y, NULL);
+    if ( sts) {
       /* Register node for potential movement */
       ctx->move_insert( this);
     }
     return sts;
   }
-  switch ( event)
-  {
-    case glow_eEvent_CursorMotion:
-    {
+  switch ( event) {
+    case glow_eEvent_CursorMotion: {
       int redraw = 0;
 
       if ( ctx->hot_found)
         sts = 0;
-      else
-      {
-        sts = arc.event_handler( (void *)&p1, event, x, y, NULL);
+      else {
+        sts = arc.event_handler( w, (void *)&p1, event, x, y, NULL);
         if ( sts)
           ctx->hot_found = 1;
       }
       if ( sts && !hot  &&
-	   !(ctx->node_movement_active || ctx->node_movement_paste_active))
-      {
-        draw_set_cursor( ctx, glow_eDrawCursor_CrossHair);
+	   !(ctx->node_movement_active || ctx->node_movement_paste_active)) {
+        ctx->gdraw->set_cursor( w, glow_eDrawCursor_CrossHair);
         hot = 1;
         redraw = 1;
       }
-      if ( !sts && hot)
-      {
-        draw_set_cursor( ctx, glow_eDrawCursor_Normal);
-        erase();
+      if ( !sts && hot) {
+        ctx->gdraw->set_cursor( w, glow_eDrawCursor_Normal);
+        erase( w);
         hot = 0;
         redraw = 1;
       }
-      if ( redraw)
-      {
-        if ( !inverse)
-          ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-//          arc.draw( (void *)&pzero, highlight, hot, NULL);
-        else
-          draw_inverse();
+      if ( redraw) {
+	ctx->draw( w, x_left * w->zoom_factor_x - w->offset_x - DRAW_MP,
+	     y_low * w->zoom_factor_y - w->offset_y - DRAW_MP,
+  	     x_right * w->zoom_factor_x - w->offset_x + DRAW_MP,
+	     y_high * w->zoom_factor_y - w->offset_y + DRAW_MP);
       }
       break;
     }
     default:
-      sts = arc.event_handler( (void *)&p1, 
+      sts = arc.event_handler( w, (void *)&p1, 
 		event, x, y, NULL);
   }
   if ( sts)
@@ -247,8 +220,7 @@ void GrowConPoint::save( ofstream& fp, glow_eSaveMode mode)
 
   if ( mode == glow_eSaveMode_SubGraph)
     GlowConPoint::save( fp, mode);
-  else
-  {
+  else {
     fp << int(glow_eSave_GrowConPoint) << endl;
     fp << int(glow_eSave_GrowConPoint_n_name) << FSPACE << n_name << endl;
     fp << int(glow_eSave_GrowConPoint_x_right) << FSPACE << x_right << endl;
@@ -269,8 +241,7 @@ void GrowConPoint::open( ifstream& fp)
   int 		end_found = 0;
   char		dummy[40];
 
-  for (;;)
-  {
+  for (;;) {
     fp >> type;
     switch( type) {
       case glow_eSave_GrowConPoint: break;
@@ -296,55 +267,48 @@ void GrowConPoint::open( ifstream& fp)
   }
 }
 
-void GrowConPoint::draw( int ll_x, int ll_y, int ur_x, int ur_y) 
+void GrowConPoint::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y) 
 { 
   int tmp;
 
-  if ( ll_x > ur_x)
-  {
+  if ( ll_x > ur_x) {
     /* Shift */
     tmp = ll_x;
     ll_x = ur_x;
     ur_x = tmp;
   }
-  if ( ll_y > ur_y)
-  {
+  if ( ll_y > ur_y) {
     /* Shift */
     tmp = ll_y;
     ll_y = ur_y;
     ur_y = tmp;
   }
 
-  if ( x_right * ctx->zoom_factor_x - ctx->offset_x >= ll_x &&
-      	x_left * ctx->zoom_factor_x - ctx->offset_x <= ur_x &&
-       	y_high * ctx->zoom_factor_y - ctx->offset_y >= ll_y &&
-       	y_low * ctx->zoom_factor_y - ctx->offset_y <= ur_y)
+  if ( x_right * w->zoom_factor_x - w->offset_x >= ll_x &&
+      	x_left * w->zoom_factor_x - w->offset_x <= ur_x &&
+       	y_high * w->zoom_factor_y - w->offset_y >= ll_y &&
+       	y_low * w->zoom_factor_y - w->offset_y <= ur_y)
   {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
   }
 }
 
-void GrowConPoint::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
+void GrowConPoint::draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
 { 
   int 	tmp;
-  int 	obj_ur_x = int( x_right * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ll_x = int( x_left * ctx->zoom_factor_x) - ctx->offset_x;
-  int	obj_ur_y = int( y_high * ctx->zoom_factor_y) - ctx->offset_y;
-  int   obj_ll_y = int( y_low * ctx->zoom_factor_y) - ctx->offset_y;
+  int 	obj_ur_x = int( x_right * w->zoom_factor_x) - w->offset_x;
+  int	obj_ll_x = int( x_left * w->zoom_factor_x) - w->offset_x;
+  int	obj_ur_y = int( y_high * w->zoom_factor_y) - w->offset_y;
+  int   obj_ll_y = int( y_low * w->zoom_factor_y) - w->offset_y;
 
 
-  if ( *ll_x > *ur_x)
-  {
+  if ( *ll_x > *ur_x) {
     /* Shift */
     tmp = *ll_x;
     *ll_x = *ur_x;
     *ur_x = tmp;
   }
-  if ( *ll_y > *ur_y)
-  {
+  if ( *ll_y > *ur_y) {
     /* Shift */
     tmp = *ll_y;
     *ll_y = *ur_y;
@@ -354,12 +318,8 @@ void GrowConPoint::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
   if (  obj_ur_x >= *ll_x &&
       	obj_ll_x <= *ur_x &&
        	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    if ( !inverse)
-      draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-    else
-      draw_inverse();
+       	obj_ll_y <= *ur_y) {
+    draw( w, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
     // Increase the redraw area
     if ( obj_ur_x > *ur_x)
@@ -370,71 +330,24 @@ void GrowConPoint::draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y)
       *ll_x = obj_ll_x;
     if ( obj_ll_y < *ll_y)
       *ll_y = obj_ll_y;
-  }
-}
-
-void GrowConPoint::nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y) 
-{ 
-  int 	obj_ur_x = int( x_right * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ll_x = int( x_left * ctx->nav_zoom_factor_x) - ctx->nav_offset_x;
-  int	obj_ur_y = int( y_high * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-  int   obj_ll_y = int( y_low * ctx->nav_zoom_factor_y) - ctx->nav_offset_y;
-
-  if (  obj_ur_x >= *ll_x &&
-      	obj_ll_x <= *ur_x &&
-       	obj_ur_y >= *ll_y &&
-       	obj_ll_y <= *ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
-
-    // Increase the redraw area
-    if ( obj_ur_x > *ur_x)
-      *ur_x = obj_ur_x;
-    if ( obj_ur_y > *ur_y)
-      *ur_y = obj_ur_y;
-    if ( obj_ll_x < *ll_x)
-      *ll_x = obj_ll_x;
-    if ( obj_ll_y < *ll_y)
-      *ll_y = obj_ll_y;
-  }
-}
-
-void GrowConPoint::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y) 
-{ 
-  int x_right_pix = int( x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int x_left_pix = int( x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x);
-  int y_high_pix = int( y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-  int y_low_pix = int( y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y);
-
-  if ( x_right_pix >= ll_x &&
-       x_left_pix <= ur_x &&
-       y_high_pix >= ll_y &&
-       y_low_pix <= ur_y)
-  {
-    nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
   }
 }
 
 void GrowConPoint::set_highlight( int on)
 {
   highlight = on;
-  if ( !inverse)
-    draw( (GlowTransform *)NULL, highlight, hot, NULL, NULL);
-  else
-    draw_inverse();
-  nav_draw( (GlowTransform *)NULL, highlight, NULL, NULL);
+  draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
+  draw( &ctx->navw, (GlowTransform *)NULL, highlight, 0, NULL, NULL);
 }
 
 void GrowConPoint::select_region_insert( double ll_x, double ll_y, double ur_x, 
 		double ur_y, glow_eSelectPolicy select_policy)
 {
-  if ( select_policy == glow_eSelectPolicy_Surround )
-  {
+  if ( select_policy == glow_eSelectPolicy_Surround ) {
     if ( x_left > ll_x && x_right < ur_x && y_high < ur_y && y_low > ll_y)
       ctx->select_insert( this);
   }
-  else
-  {
+  else {
     if ( x_right > ll_x && x_left < ur_x && y_low < ur_y && y_high > ll_y)
       ctx->select_insert( this);
   }
@@ -452,77 +365,50 @@ void GrowConPoint::nav_zoom()
   arc.nav_zoom();
 }
 
-void GrowConPoint::draw( GlowTransform *t, int highlight, int hot, void *node,
+void GrowConPoint::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node,
 			 void *colornode)
 {
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
+
   GlowPoint p1(p);
-  if ( t)
-  {
+  if ( t) {
     p1.x = trf.x( t, p.x, p.y);
     p1.y = trf.y( t, p.x, p.y);
   }
-  else
-  {
+  else {
     p1.x = trf.x( p.x, p.y);
     p1.y = trf.y( p.x, p.y);
   }
   p1.zoom();
-  arc.draw( (void *)&p1, highlight, hot, NULL);
+  arc.draw( w, (void *)&p1, highlight, hot, NULL);
 }
 
-void GrowConPoint::erase( GlowTransform *t, int hot, void *node)
+void GrowConPoint::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
+  if ( w == &ctx->navw) {
+    if ( ctx->no_nav)
+      return;
+    hot = 0;
+  }
+
   GlowPoint p1(p);
-  if ( t)
-  {
+  if ( t) {
     p1.x = trf.x( t, p.x, p.y);
     p1.y = trf.y( t, p.x, p.y);
   }
-  else
-  {
+  else {
     p1.x = trf.x( p.x, p.y);
     p1.y = trf.y( p.x, p.y);
   }
   p1.zoom();
-  ctx->set_draw_buffer_only();
-  arc.erase( (void *)&p1, hot, NULL);
-  ctx->reset_draw_buffer_only();
+  w->set_draw_buffer_only();
+  arc.erase( w, (void *)&p1, hot, NULL);
+  w->reset_draw_buffer_only();
 }
-
-void GrowConPoint::nav_draw( GlowTransform *t, int highlight, void *node, void *colornode)
-{
-  GlowPoint p1(p);
-  if ( t)
-  {
-    p1.x = trf.x( t, p.x, p.y);
-    p1.y = trf.y( t, p.x, p.y);
-  }
-  else
-  {
-    p1.x = trf.x( p.x, p.y);
-    p1.y = trf.y( p.x, p.y);
-  }
-  p1.nav_zoom();
-  arc.nav_draw( (void *)&p1, highlight, NULL);
-}
-
-void GrowConPoint::nav_erase( GlowTransform *t, void *node)
-{
-  GlowPoint p1(p);
-  if ( t)
-  {
-    p1.x = trf.x( t, p.x, p.y);
-    p1.y = trf.y( t, p.x, p.y);
-  }
-  else
-  {
-    p1.x = trf.x( p.x, p.y);
-    p1.y = trf.y( p.x, p.y);
-  }
-  p1.nav_zoom();
-  arc.nav_erase( (void *)&p1, NULL);
-}
-
 
 void GrowConPoint::set_transform( GlowTransform *t)
 {
@@ -536,10 +422,11 @@ void GrowConPoint::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
 
-    erase();
-    nav_erase();
-    switch ( direction)
-    {
+    erase( &ctx->mw);
+    erase( &ctx->navw);
+    ctx->set_defered_redraw();
+    draw();
+    switch ( direction) {
       case glow_eAlignDirection_CenterVert:
         dx = x - (x_right + x_left) / 2;
         dy = 0;
@@ -575,20 +462,20 @@ void GrowConPoint::align( double x, double y, glow_eAlignDirection direction)
     y_high += dy;
     y_low += dy;
 
-//    x1 = trf.x( p.x, p.y);
-//    y1 = trf.y( p.x, p.y);
-//    arc.move( (void *)&pzero, x1 - ctx->draw_delta, 
-//	y1 - ctx->draw_delta,
-//	x1 + ctx->draw_delta, y1 + ctx->draw_delta, arc.angel1, arc.angel2,
-//	highlight, hot);
-    ((GrowCtx *)ctx)->draw( x_left * ctx->zoom_factor_x - ctx->offset_x - DRAW_MP,
-	     y_low * ctx->zoom_factor_y - ctx->offset_y - DRAW_MP,
-  	     x_right * ctx->zoom_factor_x - ctx->offset_x + DRAW_MP,
-	     y_high * ctx->zoom_factor_y - ctx->offset_y + DRAW_MP);
-    ((GrowCtx *)ctx)->nav_draw(  x_left * ctx->nav_zoom_factor_x - ctx->nav_offset_x - 1,
-	     y_low * ctx->nav_zoom_factor_y - ctx->nav_offset_y - 1,
-  	     x_right * ctx->nav_zoom_factor_x - ctx->nav_offset_x + 1,
-	     y_high * ctx->nav_zoom_factor_y - ctx->nav_offset_y + 1);
+    draw();
+    ctx->redraw_defered();
+}
+
+void GrowConPoint::draw()
+{
+  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+  ctx->draw( &ctx->navw,  x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
 
 void GrowConPoint::get_node_borders( GlowTransform *t, double *x_right, 
@@ -613,13 +500,11 @@ void GrowConPoint::get_borders( GlowTransform *t, double *x_right,
 {
   double x1, y1;
 
-  if ( t)
-  {
+  if ( t) {
     x1 = trf.x( t, p.x, p.y);
     y1 = trf.y( t, p.x, p.y);
   }
-  else
-  {
+  else {
     x1 = trf.x( p.x, p.y);
     y1 = trf.y( p.x, p.y);
   }

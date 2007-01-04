@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_growconpoint.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@ class GrowConPoint : public GlowConPoint {
     \param d 		Conpoint direction.
     \param nodraw	Don't draw the object now.
   */
-  GrowConPoint( GlowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
+  GrowConPoint( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
 		int cp_num = 0, glow_eDirection d = glow_eDirection_Center,
 		int nodraw =0);
 
@@ -67,7 +67,7 @@ class GrowConPoint : public GlowConPoint {
     action: changes the cursor, draws the object hot, and registers the object as
     current callback object.
   */
-  int	event_handler( glow_eEvent event, int x, int y, double fx, double fy);
+  int	event_handler( GlowWind *w, glow_eEvent event, int x, int y, double fx, double fy);
   
   //! Calculate the border for a set of objects or for a parent node.
   /*!
@@ -144,7 +144,7 @@ class GrowConPoint : public GlowConPoint {
     \param ur_x		Upper right x coordinate of drawing area.
     \param ur_y		Upper right y coordinate of drawing area.
   */
-  void draw( int ll_x, int ll_y, int ur_x, int ur_y);
+  void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
   //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
   /*!
@@ -156,24 +156,14 @@ class GrowConPoint : public GlowConPoint {
     If some part of object is inside the drawing area, and also outside the drawing area,
     the drawingarea is extended so it contains the whole objects.
   */
-  void draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
+  void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
 
-  //! Not implemented
-  void draw_inverse() {};
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw( int *ll_x, int *ll_y, int *ur_x, int *ur_y);
-
-  //! Drawing in the navigation window. See the corresponding draw function.
-  void nav_draw(int ll_x, int ll_y, int ur_x, int ur_y);
+  //! Redraw the area inside the objects border.
+  void draw();
 
   //! Erase the object
-  void erase()
-	{ erase( NULL, hot, NULL);};
-
-  //! Erase the object in the navigator window.
-  void nav_erase()
-	{ nav_erase( NULL, NULL);};
+  void erase( GlowWind *w)
+	{ erase( w, NULL, hot, NULL);};
 
   //! Move the object.
   /*!
@@ -294,7 +284,7 @@ class GrowConPoint : public GlowConPoint {
     The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
     multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
   */
-  void draw( GlowTransform *t, int highlight, int hot, void *node, void *colornode);
+  void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
   //! Erase the object.
   /*!
@@ -302,23 +292,7 @@ class GrowConPoint : public GlowConPoint {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( GlowTransform *t, int hot, void *node);
-
-  //! Draw the object in the navigation window.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-  */
-  void nav_draw( GlowTransform *t, int highlight, void *node, void *colornode);  
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param t		Transform of parent node.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( GlowTransform *t, void *node);
+  void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
   //! Add a transform to the current transform.
   /*!

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.5 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -431,7 +431,7 @@ void FlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
   }
   if ( select_rect_active)
   {
-    flow_draw_rect( this, select_rect_ll_x, select_rect_ll_y, 
+    fdraw->rect( this, select_rect_ll_x, select_rect_ll_y, 
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, flow_eDrawType_Line, 0, 0);
   }
@@ -439,7 +439,7 @@ void FlowCtx::draw( int ll_x, int ll_y, int ur_x, int ur_y)
 
 void FlowCtx::clear()
 {
-  flow_draw_clear( this);
+  fdraw->clear( this);
 }
 
 void FlowCtx::cut()
@@ -523,7 +523,7 @@ void FlowCtx::paste_execute()
   node_move_last_x = cursor_x;
   node_move_last_y = cursor_y;
   redraw_defered();
-  draw_set_cursor( this, draw_eCursor_DiamondCross);
+  fdraw->set_cursor( this, draw_eCursor_DiamondCross);
   nav_zoom();
 
 //  if ( !user_highlight)
@@ -570,7 +570,7 @@ void FlowCtx::nav_zoom()
 //    nav_window_height = y_nav_high * nav_zoom_factor - nav_offset_y;
 //    if ( nav_window_height < 200) 
 //      nav_window_height = 200;
-//    flow_draw_set_nav_window_size( this, nav_window_width, nav_window_height);
+//    fdraw->set_nav_window_size( this, nav_window_width, nav_window_height);
     a.nav_zoom();
     nav_clear();
     nav_draw( 0, 0, nav_window_width, nav_window_height);
@@ -600,7 +600,7 @@ int FlowCtx::print_region( double ll_x, double ll_y, double ur_x,
 
 void FlowCtx::nav_clear()
 {
-  flow_draw_nav_clear( this);
+  fdraw->nav_clear( this);
 }
 
 void FlowCtx::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
@@ -637,7 +637,7 @@ void FlowCtx::nav_draw( int ll_x, int ll_y, int ur_x, int ur_y)
 
 //  cout << "Nav rect: ll : " << nav_rect_ll_x << "," << nav_rect_ll_y << 
 //	" ur: " << nav_rect_ur_x << "," << nav_rect_ur_y << endl;
-  flow_draw_nav_rect( this, nav_rect_ll_x, nav_rect_ll_y, 
+  fdraw->nav_rect( this, nav_rect_ll_x, nav_rect_ll_y, 
 	nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y,
 	flow_eDrawType_Line, 0, 0);
 }
@@ -749,7 +749,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
 	}
       }
 
-      draw_set_cursor( ctx, draw_eCursor_DiamondCross);
+      fdraw->set_cursor( ctx, draw_eCursor_DiamondCross);
       if ( event == event_region_select) 
         // Move and region select is defined as the same event
         node_move_event = 1;
@@ -785,7 +785,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         redraw_defered();
         node_movement_paste_active = 0;
 	nav_zoom();
-        draw_set_cursor( ctx, draw_eCursor_Normal);
+        fdraw->set_cursor( ctx, draw_eCursor_Normal);
 
 	/* Send callback for all move objects */
 	if ( event_callback[flow_eEvent_ObjectMoved] )
@@ -838,7 +838,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
     case flow_eEvent_Exposure:
       int width, height;
 
-      flow_draw_get_window_size( ctx, &width, &height);
+      ctx->fdraw->get_window_size( ctx, &width, &height);
       if ( window_width != width || window_height != height) {
         window_width = width;
         window_height = height;
@@ -886,11 +886,11 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       else if ( con_create_active)
       {
-        flow_draw_line_erase( this, con_create_conpoint_x, 
+        fdraw->line_erase( this, con_create_conpoint_x, 
 		con_create_conpoint_y, con_create_last_x, con_create_last_y ,0);
         draw( con_create_conpoint_x, con_create_conpoint_y, 
 		con_create_last_x, con_create_last_y);
-        flow_draw_line( this, con_create_conpoint_x, con_create_conpoint_y,
+        fdraw->line( this, con_create_conpoint_x, con_create_conpoint_y,
 		x, y, flow_eDrawType_Line, 0, 0);
         con_create_last_x = x;
         con_create_last_y = y;
@@ -901,7 +901,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       else if ( select_rect_active)
       {
-        flow_draw_rect_erase( this, select_rect_ll_x, select_rect_ll_y,
+        fdraw->rect_erase( this, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, 0);
 
@@ -929,7 +929,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         redraw_defered();
         node_movement_active = 0;
 	nav_zoom();
-        draw_set_cursor( ctx, draw_eCursor_CrossHair);
+        fdraw->set_cursor( ctx, draw_eCursor_CrossHair);
 
 	/* Send callback for all move objects */
 	if ( event_callback[flow_eEvent_ObjectMoved] )
@@ -960,7 +960,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
         select_rect_ur_x = MAX( x, select_rect_start_x);
         select_rect_ur_y = MAX( y, select_rect_start_y);
 
-        flow_draw_rect_erase( this, select_rect_ll_x, select_rect_ll_y,
+        fdraw->rect_erase( this, select_rect_ll_x, select_rect_ll_y,
 	  select_rect_ur_x - select_rect_ll_x,
 	  select_rect_ur_y - select_rect_ll_y, 0);
 
@@ -1005,7 +1005,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       else if ( con_create_active)
       {
-        flow_draw_line_erase( this, con_create_conpoint_x,
+        fdraw->line_erase( this, con_create_conpoint_x,
 		con_create_conpoint_y, con_create_last_x, con_create_last_y, 0);
         draw( con_create_conpoint_x, con_create_conpoint_y, 
 		con_create_last_x, con_create_last_y);
@@ -1131,7 +1131,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
       {
         if ( !nav_rect_hot)
         {
-          draw_set_nav_cursor( ctx, draw_eCursor_CrossHair);
+          fdraw->set_nav_cursor( this, draw_eCursor_CrossHair);
           nav_rect_hot = 1;
         }
       }
@@ -1139,13 +1139,13 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
       {
         if ( nav_rect_hot)
         {
-          draw_set_nav_cursor( ctx, draw_eCursor_Normal);
+          fdraw->set_nav_cursor( this, draw_eCursor_Normal);
           nav_rect_hot = 0;
         }
       }
       break;
     case flow_eEvent_Exposure:
-      flow_draw_get_nav_window_size( ctx, &nav_window_width, &nav_window_height);
+      fdraw->get_nav_window_size( this, &nav_window_width, &nav_window_height);
       nav_zoom();
       break;
     case flow_eEvent_ButtonMotion:
@@ -1153,7 +1153,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
       {
         int delta_x, delta_y, mainwind_delta_x, mainwind_delta_y;
 
-        flow_draw_nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
+        fdraw->nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
 		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y, 0);
 
 	delta_x = x - nav_rect_move_last_x;
@@ -1166,7 +1166,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
         nav_rect_move_last_y = y;
         nav_draw( nav_rect_ll_x - 10, nav_rect_ll_y - 10, 
 		nav_rect_ur_x + 10, nav_rect_ur_y + 10);
-//        flow_draw_nav_rect( this, nav_rect_ll_x, nav_rect_ll_y, 
+//        fdraw->nav_rect( this, nav_rect_ll_x, nav_rect_ll_y, 
 //		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y,
 //		flow_eDrawType_Line, 0, 0);
 
@@ -1176,7 +1176,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
         offset_y -= mainwind_delta_y;
         a.traverse( mainwind_delta_x, mainwind_delta_y);
 
-        draw_copy_area( ctx, mainwind_delta_x, mainwind_delta_y);
+        fdraw->copy_area( this, mainwind_delta_x, mainwind_delta_y);
 //        clear();
         if ( !unobscured) 
           draw( 0, 0, window_width, window_height);
@@ -1223,7 +1223,7 @@ int FlowCtx::event_handler_nav( flow_eEvent event, int x, int y)
         double center_x, center_y;
         double center_dist, center_dist_last;
 
-        flow_draw_nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
+        fdraw->nav_rect_erase( this, nav_rect_ll_x, nav_rect_ll_y, 
 		nav_rect_ur_x - nav_rect_ll_x, nav_rect_ur_y - nav_rect_ll_y, 0);
 
 	delta_x = x - nav_rect_move_last_x;
@@ -1479,7 +1479,7 @@ void FlowCtx::center_object( FlowArrayElem *object)
 {
   double ll_x, ll_y, ur_x, ur_y;
 
-  flow_draw_get_window_size( this, &window_width, &window_height);
+  fdraw->get_window_size( this, &window_width, &window_height);
 
   ur_x = -1e10;
   ll_x = 1e10;
@@ -1568,7 +1568,7 @@ void FlowCtx::reconfigure()
 
 void FlowCtx::redraw()
 {
-  flow_draw_get_window_size( this, &window_width, &window_height);
+  fdraw->get_window_size( this, &window_width, &window_height);
   get_borders();
   clear();
   draw( 0, 0, window_width, window_height);
@@ -1685,7 +1685,7 @@ void FlowCtx::scroll( int delta_x, int delta_y)
   }
   else
   {
-    draw_copy_area( this, delta_x, delta_y);
+    fdraw->copy_area( this, delta_x, delta_y);
     if ( !unobscured || widget_cnt) 
       draw( 0, 0, window_width, window_height);
     else
@@ -1730,7 +1730,7 @@ void FlowCtx::scroll( int delta_x, int delta_y)
 void FlowCtx::auto_scrolling_stop()
 {
   auto_scrolling_active = 0;
-  draw_cancel_timer( auto_scrolling_id);
+  fdraw->cancel_timer( this, auto_scrolling_id);
 }
 
 void auto_scrolling( FlowCtx *ctx)
@@ -1761,7 +1761,7 @@ void auto_scrolling( FlowCtx *ctx)
   ctx->traverse( delta_x,delta_y);
   ctx->nav_draw( 0, 0, ctx->nav_window_width, ctx->nav_window_height);
   ctx->change_scrollbar();
-  draw_set_timer( ctx, 300, auto_scrolling, &ctx->auto_scrolling_id);
+  ctx->fdraw->set_timer( ctx, 300, auto_scrolling, &ctx->auto_scrolling_id);
 }
 
 void flow_scroll_horizontal( FlowCtx *ctx, int value, int bottom)

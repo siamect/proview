@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_arrow.h,v 1.3 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_arrow.h,v 1.4 2007-01-04 07:57:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <iostream.h>
 #include "glow.h"
-#include "glow_ctx.h"
+#include "glow_growctx.h"
 #include "glow_point.h"
 #include "glow_array_elem.h"
 
@@ -52,7 +52,7 @@ class GlowArrow : public GlowArrayElem {
     \param l		Arrow length.
     \param d_type 	Color.
   */
-  GlowArrow( GlowCtx *glow_ctx, double x1, double y1, double x2, 
+  GlowArrow( GrowCtx *glow_ctx, double x1, double y1, double x2, 
 		double y2, double w, double l,
 	   	glow_eDrawType d_type = glow_eDrawType_Line);
 
@@ -61,10 +61,6 @@ class GlowArrow : public GlowArrayElem {
 
   //! Adjust pixel coordinates for navigaion window to current zoom factor.
   void nav_zoom();
-
-  void print_zoom();		//!< Not used
-  void traverse( int x, int y); //!< Not used
-
 
   //! Event handler
   /*!
@@ -77,14 +73,11 @@ class GlowArrow : public GlowArrayElem {
 
     Detects if the object is hit by the event.
   */
-  int	event_handler( void *pos, glow_eEvent event, int x, int y, void *node);
+  int	event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y, void *node);
 
   //! Not implemented
   void conpoint_select( void *pos, int x, int y, double *distance, 
 		void **cp) {};
-
-  //! Print postscript. Not used.
-  void print( void *pos, void *node);
 
   //! Save the content of the object to file.
   /*!
@@ -108,17 +101,8 @@ class GlowArrow : public GlowArrayElem {
 
     Draw the object, without borders or shadow.
   */
-  void draw( void *pos, int highlight, int hot, void *node);
+  void draw( GlowWind *w, void *pos, int highlight, int hot, void *node);
 
-  //! Draw the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param highlight	Draw with highlight colors.
-    \param node		Parent node. Can be zero.
-
-    Draw the object, without borders or shadow.
-  */
-  void nav_draw( void *pos, int highlight, void *node);
 
   //! Erase the object.
   /*!
@@ -126,19 +110,8 @@ class GlowArrow : public GlowArrayElem {
     \param hot		Draw as hot, with larger line width.
     \param node		Parent node. Can be zero.
   */
-  void erase( void *pos, int hot, void *node);
+  void erase( GlowWind *w, void *pos, int hot, void *node);
 
-  //! Not used
-  void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
-
-  //! Erase the object in the navigation window.
-  /*!
-    \param pos		Position of object. Should be zero.
-    \param node		Parent node. Can be zero.
-  */
-  void nav_erase( void *pos, void *node);
- 
   //! Calculate the border for a set of objects or for a parent node.
   /*!
     \param pos_x        x coordinate for position.
@@ -197,7 +170,7 @@ class GlowArrow : public GlowArrayElem {
   */
   void set_drawtype( glow_eDrawType drawtype) { draw_type = drawtype;};
 
-  GlowCtx *ctx;    	//!< Glow context.
+  GrowCtx *ctx;    	//!< Glow context.
   GlowPoint p_dest;	//!< Point of destination corner of arrow.
   GlowPoint p1;		//!< Point of first corner.
   GlowPoint p2;		//!< Point of second corner.

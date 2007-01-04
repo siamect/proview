@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.17 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.18 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1283,8 +1283,8 @@ cdh_ArefToString (
   int			prefix
 )
 {
-  static char		ls[sizeof("_A255.255.255.255:4294967295(_T255.255:1.15.2047)[1234567890.1234567890]")];
-  char			tmp[sizeof("[0123456789.01234567890]")];
+  static char		ls[200];
+  char			tmp[40];
 
   sprintf(ls, "%s", (prefix ? "_A" : ""));
 

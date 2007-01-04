@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.h,v 1.6 2005-12-27 09:28:12 claes Exp $
+ * Proview   $Id: co_msgwindow.h,v 1.7 2007-01-04 07:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,18 +22,8 @@
 
 /* co_msgwindow.h -- Message window */
 
-#if defined __cplusplus
-extern "C" {
-#endif
-
 #ifndef pwr_h
 # include "pwr.h"
-#endif
-
-#include <Xm/Xm.h>
-
-#if defined __cplusplus
-}
 #endif
 
 #ifndef co_msglist_h
@@ -50,21 +40,19 @@ typedef enum {
   msgw_ePop_Default
 } msgw_ePop;
 
+class CoWow;
+class CoWowFocusTimer;
+
 class MsgWindow {
   public:
     MsgWindow(
 	void *msg_parent_ctx,
-	Widget	msg_parent_wid,
 	char *msg_name,
 	pwr_tStatus *status);
-    ~MsgWindow();
+    virtual ~MsgWindow() {}
 
     void 		*parent_ctx;
-    Widget		parent_wid;
     char 		name[80];
-    Widget		toplevel;
-    Widget		form;
-    Widget		nav_widget;
     MsgList		*msgnav;
     int		        displayed;
     int                 deferred_map;
@@ -73,12 +61,14 @@ class MsgWindow {
     int			max_size;
     void 		(*find_wnav_cb)( void *, pwr_tObjid);
     void 		(*find_plc_cb)( void *, pwr_tObjid);
+    CoWow		*wow;
 
     static MsgWindow 	*default_window;
     static int	       	hide_info;
 
-    void	map();
-    void	unmap();
+    virtual void	map() {}
+    virtual void	unmap() {}
+
     int         is_mapped() { return displayed;};
     void 	insert( int severity, const char *text, pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     void	set_nodraw() { msgnav->set_nodraw(); nodraw++;}
@@ -90,16 +80,14 @@ class MsgWindow {
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     static void message( int severity, const char *text1, const char *text2, const char *text3 = 0,
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
+    static bool	has_window() { return default_window != 0;}
+    static CoWow *get_wow() { return default_window ? default_window->wow : 0;}
     static void map_default() { if ( default_window) default_window->map();}
     static void dset_nodraw() { if ( default_window) default_window->set_nodraw();}
     static void dreset_nodraw() { if ( default_window) default_window->reset_nodraw();}
-    static void get_parent_widget( Widget *w) { 
-      if ( default_window) 
-	*w = default_window->parent_wid;
-      else
-	*w = 0;
-    }
     static void hide_info_messages( int hide) { hide_info = hide;}
+    static void msgw_find_wnav_cb( void *ctx, pwr_tOid oid);
+    static void msgw_find_plc_cb( void *ctx, pwr_tOid oid);
 };
 
 #endif
