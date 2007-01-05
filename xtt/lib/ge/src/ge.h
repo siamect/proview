@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.5 2007-01-04 08:18:34 claes Exp $
+ * Proview   $Id: ge.h,v 1.6 2007-01-05 10:39:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@ typedef struct {
 
 class ColPalCtx;
 class Graph;
+class Nav;
 
 class Ge {
  public:
@@ -80,13 +81,15 @@ class Ge {
   void		*current_value_object;
   void		*current_confirm_object;
   ldh_tSesContext ldhses;
-  void		*plantctx;
+  Nav     	*plantctx;
   int		exit_when_close;
   ge_tPrevPage	prev_table[40];
   int		prev_count;
   void		*focused_component;
   grow_tObject  recover_object;
   char          recover_name[80];
+  int		plant_mapped;
+  int		subpalette_mapped;
 
   Ge( void *parent_ctx,
       ldh_tSesContext ldhses, int exit_when_close);

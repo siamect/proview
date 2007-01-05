@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.2 2007-01-05 07:54:20 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.3 2007-01-05 10:36:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
 #include "co_wow_gtk.h"
-#include "wb_nav.h"
+#include "wb_nav_gtk.h"
 
 
 
@@ -255,7 +255,7 @@ void GeGtk::change_value_cb( void *ge_ctx, void *value_object, char *text)
 
 int GeGtk::get_plant_select( char *select_name)
 {
-#if LDH
+#ifdef LDH
   pwr_sAttrRef	attrref;
   int		is_attrref;
   int		sts;
@@ -948,6 +948,33 @@ void GeGtk::activate_zoom_reset(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_zoom_reset();
 }
 
+void GeGtk::activate_view_plant(GtkWidget *w, gpointer data)
+{
+#ifdef LDH
+  Ge *ge = (Ge *)data;
+
+  if ( !ge->ldhses)
+    return;
+
+  int set = (int) gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( ((GeGtk *)ge)->view_plant_w));
+
+  if ( set) {
+    g_object_set( ((GeGtk *)ge)->plant_widget, "visible", TRUE, NULL);
+    g_object_set( ((GeGtk *)ge)->subpalette_widget, "visible", FALSE, NULL);
+    ge->plant_mapped = 1;
+    ge->subpalette_mapped = 0;
+  }
+  else {
+    g_object_set( ((GeGtk *)ge)->plant_widget, "visible", FALSE, NULL);
+    g_object_set( ((GeGtk *)ge)->subpalette_widget, "visible", TRUE, NULL);
+    ge->plant_mapped = 0;
+    ge->subpalette_mapped = 1;
+  }
+  ge->set_focus(0);
+#endif
+}
+
+
 void GeGtk::activate_concorner_right(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_concorner_right();
@@ -1105,28 +1132,28 @@ void GeGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->text_input_open = 0;
-    gectx->subpalette->set_inputfocus(1);
+    gectx->set_focus(0);
   }
   else if ( gectx->name_input_open) {
     gectx->graph->change_name( gectx->current_text_object, text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->name_input_open = 0;
-    gectx->subpalette->set_inputfocus(1);
+    gectx->set_focus(0);
   }
   else if ( gectx->value_input_open) {
     gectx->graph->change_value( gectx->current_value_object, text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->value_input_open = 0;
-    gectx->subpalette->set_inputfocus(1);
+    gectx->set_focus(0);
   }
   else if ( gectx->command_open) {
     sts = gectx->graph->command( text);
     g_object_set( w, "visible", FALSE, NULL);
     gectx->set_prompt( "");
     gectx->command_open = 0;
-    gectx->subpalette->set_inputfocus(1);
+    gectx->set_focus(0);
   }
   g_free(text);
 }
@@ -1198,7 +1225,7 @@ gboolean GeGtk::ge_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer da
 	 gectx->text_input_open || gectx->command_open)
       gtk_widget_grab_focus( gectx->cmd_input);
     else
-      gectx->subpalette->set_inputfocus(1);
+      gectx->set_focus(0);
   }
   return FALSE;
 }
@@ -1710,12 +1737,19 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *view_zoom_reset = gtk_image_menu_item_new_from_stock(GTK_STOCK_ZOOM_100, NULL);
   g_signal_connect(view_zoom_reset, "activate", G_CALLBACK(GeGtk::activate_zoom_reset), this);
 
+  view_plant_w = gtk_check_menu_item_new_with_mnemonic( "Vi_ew Plant");
+  g_signal_connect( view_plant_w, "activate", 
+		    G_CALLBACK(GeGtk::activate_view_plant), this);
+  gtk_widget_add_accelerator( view_plant_w, "activate", accel_g,
+			      'p', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_preview_start);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_preview_stop);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_plant_w);
 
   GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), view);
@@ -2191,21 +2225,36 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *vpaned1 = gtk_vpaned_new();
   GtkWidget *vpaned2 = gtk_vpaned_new();
 
+  GtkWidget *palbox = gtk_hbox_new( FALSE, 0);
+
   // SubGraphs palette
-  subpalette = new SubPaletteGtk( this, vpaned1, "SubGraphs",
+  subpalette = new SubPaletteGtk( this, palbox, "SubGraphs",
 		&subpalette_widget, &sts);
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
-  gtk_paned_add1( GTK_PANED(vpaned1), subpalette_widget);
+  gtk_box_pack_start( GTK_BOX(palbox), subpalette_widget, TRUE, TRUE, 0);
   gtk_widget_show( subpalette_widget);
+  subpalette_mapped = 1;
 
   // Color palette
   colpal_main_widget = scrolledcolpalwidgetgtk_new( 
 		Ge::init_colorpalette_cb, this,
 		&colorpalette_widget);
-  gtk_paned_add2( GTK_PANED(vpaned1), colpal_main_widget);
   gtk_widget_show( colpal_main_widget);
+
+#ifdef LDH
+  if ( ldhses) {
+    plantctx = new NavGtk( this, palbox, "Plant",
+			   ldhses, "NavigatorW1", 
+			   &plant_widget, &sts);
+    ((NavGtk *)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
+    gtk_box_pack_start( GTK_BOX(palbox), plant_widget, TRUE, TRUE, 0);
+  }
+#endif
+
+  gtk_paned_add1( GTK_PANED(vpaned1), palbox);
+  gtk_paned_add2( GTK_PANED(vpaned1), colpal_main_widget);
 
   ((GraphGtk *)graph)->create_navigator( vpaned1);
   gtk_paned_add1( GTK_PANED(vpaned2), vpaned1);
@@ -2236,6 +2285,10 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_paned_set_position( GTK_PANED(vpaned2), window_height * 2 / 3);
   gtk_paned_set_position( GTK_PANED(vpaned1), window_height / 3);
 
+#ifdef LDH
+  if ( ldhses)
+    g_object_set( plant_widget, "visible", FALSE, NULL);
+#endif
   g_object_set( cmd_prompt, "visible", FALSE, NULL);
   g_object_set( cmd_input, "visible", FALSE, NULL);
 

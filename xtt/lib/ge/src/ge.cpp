@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.23 2007-01-04 08:18:34 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.24 2007-01-05 10:39:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@
 #include "ge_util.h"
 #include "ge_msg.h"
 #include "wb_wnav_selformat.h"
+#include "wb_nav.h"
 
 
 void Ge::set_title()
@@ -1812,9 +1813,15 @@ int Ge::traverse_focus( void *ctx, void *component)
   Ge *gectx = (Ge *) ctx;
 
   if ( component == (void *) gectx->graph) {
-    gectx->set_focus( gectx->subpalette);
+    if ( gectx->subpalette_mapped)
+      gectx->set_focus( gectx->subpalette);
+    else if ( gectx->plant_mapped)
+      gectx->set_focus( gectx->plantctx);
   }
   else if ( component == (void *) gectx->subpalette) {
+    gectx->set_focus( gectx->graph);
+  }
+  else if ( component == (void *) gectx->plantctx) {
     gectx->set_focus( gectx->graph);
   }
   else
@@ -1831,14 +1838,37 @@ int Ge::set_focus( void *component)
 {
   if ( component == (void *)graph) {
     graph->set_inputfocus( 1);
-    subpalette->set_inputfocus( 0);
+    if ( subpalette_mapped)
+      subpalette->set_inputfocus( 0);
+    if ( plant_mapped)
+      plantctx->set_inputfocus(0);
     focused_component = component;
   }
   else if ( component == (void *)subpalette) {
-    graph->set_inputfocus( 0);
-    subpalette->set_inputfocus( 1);
-    focused_component = component;
+    if ( subpalette_mapped) {
+      graph->set_inputfocus( 0);
+      subpalette->set_inputfocus( 1);
+      focused_component = component;
+      if ( plant_mapped)
+	plantctx->set_inputfocus(0);
+    }
   }
+  else if ( component == (void *)plantctx) {
+    if ( plant_mapped) {
+      if ( subpalette_mapped)
+	subpalette->set_inputfocus(0);
+      graph->set_inputfocus( 0);
+      plantctx->set_inputfocus( 1);
+      focused_component = component;
+    }
+  }
+  else if ( component == 0) {
+    if ( subpalette_mapped)
+      set_focus( subpalette);
+    else if ( plant_mapped)
+      set_focus( plantctx);
+  }
+
   return 1;
 }
 
@@ -1879,7 +1909,7 @@ Ge::Ge( 	void 	*x_parent_ctx,
   yesnodia_yes_cb(0), yesnodia_no_cb(0), india_ok_cb(0), current_text_object(0),
   current_value_object(0), current_confirm_object(0), ldhses(0), plantctx(0),
   exit_when_close(x_exit_when_close), prev_count(0), focused_component(0),
-  recover_object(0)
+  recover_object(0), plant_mapped(0), subpalette_mapped(0)
 {
   strcpy( name, "PwR Ge");
 

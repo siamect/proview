@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.2 2007-01-05 10:36:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,7 @@ class GeGtk : public Ge {
   GtkWidget	*grid_size_02_w;
   GtkWidget	*grid_size_01_w;
   GtkWidget	*show_grid_w;
+  GtkWidget	*view_plant_w;
   GdkAtom	graph_atom;
   CoWowRecall	*text_recall;
   CoWowRecall	*name_recall;
@@ -209,6 +210,7 @@ class GeGtk : public Ge {
   static void activate_zoom_in( GtkWidget *w, gpointer gectx);
   static void activate_zoom_out( GtkWidget *w, gpointer gectx);
   static void activate_zoom_reset( GtkWidget *w, gpointer gectx);
+  static void activate_view_plant( GtkWidget *w, gpointer gectx);
   static void activate_concorner_right( GtkWidget *w, gpointer gectx);
   static void activate_concorner_rounded( GtkWidget *w, gpointer gectx);
   static void activate_round_amount_1( GtkWidget *w, gpointer gectx);

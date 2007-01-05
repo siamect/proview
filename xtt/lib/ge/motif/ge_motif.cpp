@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.cpp,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_motif.cpp,v 1.2 2007-01-05 10:36:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1556,6 +1556,7 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
+  subpalette_mapped = 1;
 
   colpal_main_widget = ScrolledColPalCreate( palette_pane, 
 		"Colors", NULL, 
@@ -1569,6 +1570,7 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 		ldhses, "NavigatorW1", 
 		&plant_widget, &sts);
     ((NavMotif *)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
+    plant_mapped = 1;
 //  XtUnmanageChild( plant_widget);
   }
 #endif
