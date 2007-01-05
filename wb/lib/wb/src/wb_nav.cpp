@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.8 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.9 2007-01-05 10:40:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -183,6 +183,7 @@ ItemObject::ItemObject( Nav *nav, pwr_tObjid item_objid,
   int size;
   pwr_tObjid child;
   pwr_tClassId classid;
+  char	*descr;
 
   type = nav_eItemType_Object;
   if ( !is_root) {
@@ -207,6 +208,22 @@ ItemObject::ItemObject( Nav *nav, pwr_tObjid item_objid,
 			   ldh_eName_Object, name, sizeof(name), &size);
     brow_SetAnnotation( node, 1, name, strlen(name));
     brow_SetUserData( node, (void *)this);
+
+    // Set description annotation
+    if ( nav->show_descrip) {
+      sts = ldh_GetObjectPar( nav->ldhses, objid, "RtBody", "Description",
+		&descr, &size);
+      if ( EVEN(sts))
+        sts = ldh_GetObjectPar( nav->ldhses, objid, "DevBody", "Description",
+		&descr, &size);
+      if ( EVEN(sts))
+        sts = ldh_GetObjectPar( nav->ldhses, objid, "SysBody", "Description",
+		&descr, &size);
+      if ( ODD(sts)) {
+        brow_SetAnnotation( node, 2, descr, strlen(descr));
+        free( descr);
+      }
+    }
   }
 }
 
@@ -1195,6 +1212,9 @@ void Nav::create_nodeclasses()
   brow_AddAnnot( nc_object, 5, 0.6, 1,
 		 flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		 1);
+  brow_AddAnnot( nc_object, 9, 0.6, 2,
+		 flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
+		 1);
 }
 
 //
@@ -1304,7 +1324,7 @@ Nav::Nav(
 	 ) :
   parent_ctx(nav_parent_ctx), ldhses(nav_ldhses),
   root_item(0), last_selected(0), get_plant_select_cb(0), set_focus_cb(0),
-  traverse_focus_cb(0), displayed(0), menu(0), selection_owner(0)
+  traverse_focus_cb(0), displayed(0), menu(0), selection_owner(0), show_descrip(1)
 {
   strcpy( name, nav_name);
   strcpy( root_name, nav_root_name);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.h,v 1.5 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_nav.h,v 1.6 2007-01-05 10:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,6 +73,7 @@ class Nav {
   int		displayed;
   PalFileMenu   *menu;
   int	       	selection_owner;
+  int		show_descrip;
 
   virtual void set_inputfocus( int focus) {}
   virtual void set_selection_owner() {}
