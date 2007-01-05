@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.2 2007-01-05 07:51:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1826,6 +1826,7 @@ WttGtk::WttGtk(
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", window_height,
 			   "default-width", window_width,
+			   "title", title,
 			   NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
@@ -2406,6 +2407,7 @@ WttGtk::WttGtk(
   wnavnode->global_unselect_objid_cb = Wtt::global_unselect_objid_cb;
   wnavnode->set_window_char_cb = Wtt::set_window_char_cb;
   wnavnode->open_vsel_cb = Wtt::open_vsel_cb;
+  wnavnode_mapped = 1;
 
   gtk_paned_add1( GTK_PANED(wnav_paned), wnav_brow_widget);
   gtk_paned_add2( GTK_PANED(wnav_paned), wnavnode_brow_widget);
@@ -2672,6 +2674,8 @@ void WttGtk::create_input_dialog()
 			   NULL);
   g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   india_text = gtk_entry_new();
+  g_signal_connect( india_text, "activate", 
+  		    G_CALLBACK(WttGtk::activate_india_ok), this);
   india_label = gtk_label_new("");
   GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,

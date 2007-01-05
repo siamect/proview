@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.2 2007-01-05 07:54:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2251,6 +2251,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 			   NULL);
   g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   india_text = gtk_entry_new();
+  g_signal_connect( india_text, "activate", 
+  		    G_CALLBACK(GeGtk::activate_india_ok), this);
   india_label = gtk_label_new("Graph Name");
   GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,

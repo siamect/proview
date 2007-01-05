@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.1 2007-01-04 08:40:24 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.2 2007-01-05 07:53:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1032,6 +1032,8 @@ void XttGtk::create_input_dialog()
   CoWowGtk::SetWindowIcon( india_widget);
 
   india_text = gtk_entry_new();
+  g_signal_connect( india_text, "activate", 
+  		    G_CALLBACK(activate_india_ok), this);
   india_label = gtk_label_new("");
   GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,
