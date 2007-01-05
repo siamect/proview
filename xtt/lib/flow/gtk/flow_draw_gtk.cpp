@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.1 2007-01-04 07:56:44 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.2 2007-01-05 05:45:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -438,7 +438,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
   static int	last_press_y = 0;
   int           sts = 1;
 
-  if ( event.any.window == window) {
+  if ( event.any.window == window || event.type == GDK_KEY_PRESS) {
     switch ( event.type) {
     case GDK_KEY_PRESS : {
       guint keysym = event.key.keyval;
