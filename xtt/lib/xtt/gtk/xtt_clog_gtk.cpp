@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clog_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_clog_gtk.cpp,v 1.2 2007-01-11 12:00:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -110,6 +110,8 @@ CLogGtk::CLogGtk( void *clog_parent_ctx,
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_close), 
 				 gtk_image_new_from_stock( "gtk-close", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_close, "activate", G_CALLBACK(activate_exit), this);
+  gtk_widget_add_accelerator( file_close, "activate", accel_g,
+			      'w', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_filter);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.4 2007-01-11 12:00:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -402,12 +402,6 @@ FlowDrawGtk::FlowDrawGtk(
   set_white_background( basectx);
 
   flow_create_cursor( this);
-
-#if defined IMLIB
-  gdk_imlib_init();
-  gtk_widget_push_visual( gdk_imlib_get_visual());
-  gtk_widget_push_colormap( gdk_imlib_get_colormap());
-#endif
 
   init_proc( toplevel, basectx, client_data);
 }

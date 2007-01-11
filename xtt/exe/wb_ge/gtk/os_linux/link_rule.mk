@@ -10,8 +10,7 @@ link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/wb_ge_gtk \
 	-lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow -lpwr_rt_gtk -lpwr_rt \
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow \
 	`pkg-config --libs gtk+-2.0` \
-	-lpwr_msg_dummy -lantlr -lgdk_imlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
-        -lXmu -lSM -lICE\
+	-lpwr_msg_dummy -lantlr \
 	-lrpcsvc -lpthread -lm -ldb_cxx -lz
 
 endif

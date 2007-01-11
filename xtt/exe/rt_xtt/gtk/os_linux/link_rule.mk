@@ -9,8 +9,7 @@ ifeq ($(export_type),exp)
 	-lpwr_xtt_gtk -lpwr_xtt -lpwr_xtt_gtk -lpwr_xtt -lpwr_ge_gtk -lpwr_ge -lpwr_rt_gtk -lpwr_rt \
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
-	-lpwr_msg_dummy -lgdk_imlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
-        -lSM -lICE\
+	-lpwr_msg_dummy \
 	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
 else
   link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/rt_xtt_gtk \
@@ -20,8 +19,7 @@ else
 	-lpwr_xtt_gtk -lpwr_xtt -lpwr_xtt_gtk -lpwr_xtt -lpwr_ge_gtk -lpwr_ge -lpwr_rt_gtk -lpwr_rt \
 	-lpwr_co_gtk -lpwr_co -lpwr_flow_gtk -lpwr_flow -lpwr_glow_gtk -lpwr_glow \
 	`pkg-config --libs gtk+-2.0` \
-	-lpwr_msg_dummy -lgdk_imlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
-        -lSM -lICE\
+	-lpwr_msg_dummy \
 	-ldb -lrpcsvc -lpthread -lm -lrt -lasound
 endif
 endif

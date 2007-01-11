@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.9 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.10 2007-01-11 12:00:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -132,7 +132,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
     if ( node_count > 0)
     {
       node_objid = *nodelist;
-      XtFree( (char *)nodelist);
+      free( (char *)nodelist);
     }
     else
       sts = 0;
@@ -160,63 +160,63 @@ int Graph::generate_web( ldh_tSesContext ldhses)
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( file_name, value_p);
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute Title
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "Title",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( title, value_p);
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute Text
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "Text",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( text, value_p);
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute EnableLogin
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableLogin",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_login = *(pwr_tBoolean *)value_p;
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute EnableAlarmList
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableAlarmList",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_alarmlist = *(pwr_tBoolean *)value_p;
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute EnableEventList
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableEventList",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_eventlist = *(pwr_tBoolean *)value_p;
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute EnableNavigator
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableNavigator",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   enable_navigator = *(pwr_tBoolean *)value_p;
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute StyleSheet
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "StyleSheet",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( style_sheet, value_p);
-  XtFree( value_p); 
+  free( value_p); 
 
   // Attribute StartURL
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "StartURL",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
   strcpy( start_URL, value_p);
-  XtFree( value_p); 
+  free( value_p); 
 
   // Login applet as default start URL
   if ( strcmp( start_URL, "") == 0 && enable_login)
@@ -346,14 +346,14 @@ int Graph::generate_web( ldh_tSesContext ldhses)
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       cdh_ToLower( graph_name, value_p);
-      XtFree( value_p); 
+      free( value_p); 
 
         // Attribute WebTarget
       sts = ldh_GetObjectPar( ldhses, webgraph_objid, "RtBody", "WebTarget",
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       web_target = *(pwr_tEnum *) value_p;
-      XtFree( value_p); 
+      free( value_p); 
 
       if ( (s == strrchr( graph_name, '.')))
         *s = 0;
@@ -363,7 +363,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       strcpy( graph_text, value_p);
-      XtFree( value_p); 
+      free( value_p); 
 
       switch ( web_target) {
         case graph_eWebTarget_ParentWindow :
@@ -417,21 +417,21 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       strcpy( link_URL, value_p);
-      XtFree( value_p); 
+      free( value_p); 
 
       // Attribute Text
       sts = ldh_GetObjectPar( ldhses, weblink_objid, "RtBody", "Text",
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       strcpy( link_text, value_p);
-      XtFree( value_p); 
+      free( value_p); 
 
       // Attribute WebTarget
       sts = ldh_GetObjectPar( ldhses, weblink_objid, "RtBody", "WebTarget",
 			  &value_p, &size);
       if (EVEN(sts)) return sts;
       web_target = *(pwr_tEnum *) value_p;
-      XtFree( value_p); 
+      free( value_p); 
 
       switch ( web_target) {
         case graph_eWebTarget_ParentWindow :
