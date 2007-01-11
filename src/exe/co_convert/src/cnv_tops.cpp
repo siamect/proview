@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_tops.cpp,v 1.4 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_tops.cpp,v 1.5 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -393,17 +393,33 @@ ps_cPageWidth << " " << y << " moveto" << endl <<
   y -= 3;
 }
 
+static int char_cnt;
+
+static void image_pixel( void *userdata, ofstream& fp, unsigned char *rgb)
+{ 
+  unsigned char transp[3] = {255,0,255};
+  int grey;
+
+  if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2])
+    grey = 255;
+  else
+    grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
+
+  fp.width(2);
+  fp << grey;
+  if ( ++char_cnt >= 40) {
+    char_cnt = 0;
+    fp << endl;
+  }
+}
+
 int CnvToPs::print_image( char *filename)
 {
-  ImlibImage *image;
-  Pixmap pixmap;
+  cnv_tImImage image;
+  cnv_tPixmap pixmap;
   pwr_tFileName fname;
   int sts;
   int width, height;
-  unsigned char *rgb;
-  unsigned char transp[3] = {255,0,255};
-  int i, j;
-  int grey;
   double scalex = 0.71;
   double scaley = 0.78;
 	
@@ -425,8 +441,8 @@ int CnvToPs::print_image( char *filename)
     if ( EVEN(sts)) return 0;
   }
 
-  width = image->rgb_width;
-  height = image->rgb_height;
+  width = cnv_image_width( image);
+  height = cnv_image_height( image);
 
   if ( width * scalex  > ps_cPageWidth - ps_cLeftMargin) {
     x = ps_cPageWidth - width * scalex;
@@ -455,23 +471,9 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
 
     fp[cf].flags( (fp[cf].flags() & ~ios_base::dec) | ios_base::hex | ios_base::uppercase);
     fp[cf].fill('0');
-    rgb = image->rgb_data;
-    j = 0;
-    for ( i = 0; i < image->rgb_height * image->rgb_width * 3; i+=3) {
-      if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
-	grey = 255;
-      }
-      else {
-	grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
-      }
-      rgb += 3;
-      fp[cf].width(2);
-      fp[cf] << grey;
-      if ( ++j >= 40) {
-	j = 0;
-	fp[cf] << endl;
-      }
-    }
+
+    char_cnt = 0;
+    cnv_image_pixel_iter( image, image_pixel, 0, fp[cf]);
 
     fp[cf] << endl <<
 "restore" << endl;

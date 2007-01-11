@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkg_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wpkg_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -312,21 +312,21 @@ WPkgGtk::WPkgGtk(
   gtk_toolbar_append_widget( tools, tools_distribute, "Distribute", "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(WPkgGtk::activate_zoom_in), this);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(WPkgGtk::activate_zoom_out), this);
   gtk_toolbar_append_widget( tools, tools_zoom_out, "Zoom out", "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_reset.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(WPkgGtk::activate_zoom_reset), this);

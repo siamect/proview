@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.cpp,v 1.2 2007-01-05 10:36:37 claes Exp $
+ * Proview   $Id: ge_motif.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1277,6 +1277,7 @@ GeMotif::~GeMotif()
   if ( subgraphs)
     delete subgraphs;
   delete graph;
+  delete wow;
   XtDestroyWidget( toplevel);
 
   if ( exit_when_close)
@@ -1566,9 +1567,9 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 
 #ifdef LDH
   if ( ldhses) {
-    plantctx = (void *) new NavMotif( this, palette_pane, "Plant",
-		ldhses, "NavigatorW1", 
-		&plant_widget, &sts);
+    plantctx = new NavMotif( this, palette_pane, "Plant",
+			     ldhses, "NavigatorW1", 
+			     &plant_widget, &sts);
     ((NavMotif *)plantctx)->get_plant_select_cb = Ge::get_plant_select_cb;
     plant_mapped = 1;
 //  XtUnmanageChild( plant_widget);
@@ -1609,7 +1610,8 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
   CoWowMotif::GetAtoms( toplevel, &graph_atom, 0, 0);
 
   ge_get_systemname( systemname);
-  graph->set_systemname( systemname);
+  graph->set_systemname( systemname); 
+  wow = new CoWowMotif( toplevel);
 }
 
 void GeMotif::plant_del( void *plantctx)

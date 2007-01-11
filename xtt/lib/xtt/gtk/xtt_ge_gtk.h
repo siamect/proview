@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.h,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,10 @@
 # include "xtt_ge.h"
 #endif
 
+#ifndef co_wow_gtk_h
+# include "co_wow_gtk.h"
+#endif
+
 class XttGeGtk : public XttGe {
  public:
   GtkWidget	*parent_wid;
@@ -40,6 +44,7 @@ class XttGeGtk : public XttGe {
   GtkWidget	*confirm_label;
   GtkWidget	*message_dia_widget;
   GtkWidget	*message_dia_label;
+  CoWowFocusTimerGtk focustimer;
 
   XttGeGtk( GtkWidget *parent_wid, void *parent_ctx, char *name, char *filename,
 	    int scrollbar, int menu, int navigator, int width, int height,

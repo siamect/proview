@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.7 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.8 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -413,19 +413,18 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( subpalette->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( subpalette->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( subpalette->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( subpalette->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( subpalette->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( subpalette->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( subpalette->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( subpalette->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -449,19 +448,18 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( subpalette->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( subpalette->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( subpalette->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( subpalette->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( subpalette->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( subpalette->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( subpalette->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( subpalette->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -532,17 +530,8 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
         break;
       brow_GetUserData( node_list[0], (void **)&item);
       free( node_list);
-      switch( item->type)
-      {
-        case subpalette_eItemType_LocalSubGraphs: 
-	  ((ItemLocalSubGraphs *)item)->open_children( subpalette, 0, 0);
-          break;
-        case subpalette_eItemType_Menu: 
-	  ((ItemMenu *)item)->open_children( subpalette, 0, 0);
-          break;
-        default:
-          ;
-      }
+
+      item->open_children( subpalette, 0, 0);
       break;
     }
     case flow_eEvent_Key_PF4:
@@ -571,17 +560,8 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
 
       brow_GetUserData( object, (void **)&item);
-      switch( item->type)
-      {
-        case subpalette_eItemType_LocalSubGraphs: 
-	  ((ItemLocalSubGraphs *)item)->close( subpalette, 0, 0);
-          break;
-        case subpalette_eItemType_Menu: 
-	  ((ItemMenu *)item)->close( subpalette, 0, 0);
-          break;
-        default:
-          ;
-      }
+      item->close( subpalette, 0, 0);
+
       brow_SelectClear( subpalette->brow->ctx);
       brow_SetInverse( object, 1);
       brow_SelectInsert( subpalette->brow->ctx, object);
@@ -595,19 +575,7 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       {
         case flow_eObjectType_Node:
           brow_GetUserData( event->object.object, (void **)&item);
-          switch( item->type)
-          {
-            case subpalette_eItemType_LocalSubGraphs: 
-	      ((ItemLocalSubGraphs *)item)->open_children( subpalette,
-			event->object.x, event->object.y);
-              break;
-            case subpalette_eItemType_Menu: 
-	      ((ItemMenu *)item)->open_children( subpalette,
-			event->object.x, event->object.y);
-              break;
-            default:
-              ;
-          }
+	  item->open_children( subpalette, event->object.x, event->object.y);
           break;
         default:
           ;
@@ -615,7 +583,6 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
       break;
     case flow_eEvent_Key_Tab:
     {
-      printf("Subpalette: Tab detected\n");
       if ( subpalette->traverse_focus_cb)
         (subpalette->traverse_focus_cb)( subpalette->parent_ctx, subpalette);
       break;
@@ -772,6 +739,77 @@ int	SubPalette::object_attr()
   brow_ResetNodraw( brow->ctx);
   brow_Redraw( brow->ctx, 0);
   return SUBPALETTE__SUCCESS;
+}
+
+void SubPalette::select_by_name( char *name)
+{
+  // Refresh
+  brow_SetNodraw( brow->ctx);
+  brow_DeleteAll( brow->ctx);
+  ((ItemMenu *)root_item)->open_children( this, 0, 0);
+
+  char *s = name;
+  char *t = name;
+  char itemname[200];
+  int level = 0;
+  brow_tObject *nodelist;
+  brow_tObject current;
+  brow_tObject child;
+  int nodecnt;
+  Item *item;
+  int sts;
+
+  for (;;) {
+    if ( !t)
+      break;
+
+    level ++;
+    strcpy( itemname, t);
+    if ( (s = strchr( itemname, '-'))) {
+      *s = 0;
+      t += (s - itemname + 1);
+
+    }
+    else 
+      t = 0;
+
+    if ( level == 1) {
+      brow_GetObjectList( brow->ctx, &nodelist, &nodecnt);
+      for ( int i = 0; i < nodecnt; i++) {
+  
+	brow_GetUserData( nodelist[i], (void **)&item);
+	if ( strcmp( itemname, item->name) == 0) {
+	  current = nodelist[i];
+	}
+      }
+    }
+    else {
+      current = 0;
+      item->open_children( this, 0, 0);
+      for ( sts = brow_GetChild( brow->ctx, item->node, &child);
+	    ODD( sts);
+	    sts = brow_GetNextSibling( brow->ctx, child, &child)) {
+
+	brow_GetUserData( child, (void **)&item);
+	if ( cdh_NoCaseStrcmp( itemname, item->name) == 0) {
+	  current = child;
+	  break;
+	}
+      }
+      if ( !current)
+	break;
+    }
+
+  }
+  brow_ResetNodraw( brow->ctx);
+  brow_Redraw( brow->ctx, 0);
+
+  if ( current) {
+    brow_SetInverse( current, 1);
+    brow_SelectInsert( brow->ctx, current);
+    if ( !brow_IsVisible( brow->ctx, current, flow_eVisible_Full))
+      brow_CenterObject( brow->ctx, current, 0.25);
+  }
 }
 
 void SubPalette::menu_tree_build( char *filename)
@@ -1172,7 +1210,7 @@ int ItemLocalSubGraphs::close( SubPalette *subpalette, double x, double y)
 ItemMenu::ItemMenu( SubPalette *subpalette, char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, subpalette_sMenu **item_child_list,
 	int item_is_root) :
-	Item( subpalette_eItemType_Menu), node(NULL), child_list(item_child_list), 
+	Item( subpalette_eItemType_Menu), child_list(item_child_list), 
 	is_root(item_is_root)
 {
   type = subpalette_eItemType_Menu;

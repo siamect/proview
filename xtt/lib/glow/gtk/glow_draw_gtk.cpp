@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.1 2007-01-04 08:07:43 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,6 +28,7 @@ using namespace std;
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>
 
 #include "glow.h"
@@ -39,12 +40,6 @@ using namespace std;
 #include "glow_draw_gtk.h"
 
 #include "glow_msg.h"
-
-#if defined IMLIB
-# include <gdk_imlib.h>
-#else
-typedef void *GdkImlibImage;
-#endif
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -483,7 +478,7 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 //  cout << "Event : button_pressed " << button_pressed << " clicked " << 
 //	button_clicked << " c&p " << button_clicked_and_pressed << endl;
 
-  if ( event.any.window == m_wind.window) {
+  if ( event.any.window == m_wind.window || event.type == GDK_KEY_PRESS) {
     switch ( event.type) {
     case GDK_KEY_PRESS : {
       guint keysym;
@@ -492,10 +487,11 @@ int GlowDrawGtk::event_handler( GdkEvent event)
       if ( (keysym >= 0x020 && keysym <= 0x20ac) ||
 	   (keysym >= 0xFF80 && keysym <= 0xFFB9 && keysym != GDK_KP_Enter && keysym != 0xFF44)) {
 	char buff;
-	gchar *bp;
-	
-	bp = gdk_keyval_name( keysym);
-	buff = *bp;
+	gint unival = gdk_keyval_to_unicode( keysym);
+        gchar utfval[6];
+	g_unichar_to_utf8( unival, utfval);
+	// s = g_convert( utfval, 1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+	buff = utfval[0];
 
 	if ( buff >= 0x020)
 	  ctx->event_handler( glow_eEvent_Key_Ascii, 0, 0, (int)buff, 0);
@@ -1511,9 +1507,14 @@ int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
-  int width, height, descent;
-  get_text_extent( text, pos, gc_type, idx,
+  int theight, tdescent, width, height, descent;
+  get_text_extent( "A", 1, gc_type, idx,
 			&width, &height, &descent);
+  if ( pos != 0)
+    get_text_extent( text, pos, gc_type, idx,
+		     &width, &theight, &tdescent);
+  else
+    width = 0;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
@@ -1996,15 +1997,22 @@ static int glow_read_color_file( char *filename, draw_sColor **color_array,
   return 1;
 }
 
-void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype, 
-				  glow_tPixmap pixmap, int pixmap_width, int pixmap_height)
+void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype, glow_tPixmap pixmap,
+				  glow_tImImage image, int pixmap_width, int pixmap_height)
 {
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
   GdkGCValues 		xgcv;
   int			i;
+  double r, g, b;
 
-  gdk_gc_get_values( get_gc( this, drawtype, 0), &xgcv);
-  gdk_colormap_query_color( colormap, xgcv.foreground.pixel, &background);
+  if ( drawtype == glow_eDrawType_LineErase)
+    drawtype = glow_eDrawType_Color32;
+
+  GlowColor::rgb_color( (int)drawtype, &r, &g, &b);
+  background = glow_allocate_color( this, int(r * 65535), 
+				    int(g * 65535), int(b * 65535));
+  // gdk_gc_get_values( get_gc( this, drawtype, 0), &xgcv);
+  // gdk_colormap_query_color( colormap, xgcv.foreground.pixel, &background);
 
   // Change erase gcs
   xgcv.foreground = background;
@@ -2018,22 +2026,24 @@ void GlowDrawGtk::set_background( GlowWind *wind, glow_eDrawType drawtype,
         (GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND));
   }
 
-  if ( !pixmap) {
-    gtk_widget_modify_bg( m_wind.toplevel, GTK_STATE_NORMAL, &background);
+  if ( !image) {
+    gtk_widget_modify_bg( w->toplevel, GTK_STATE_NORMAL, &background);
 
     if ( w->buffer)
       buffer_background( w);
   }
   else {
+    GdkBitmap *mask;
     // GdkPixmap *gpixmap = gdk_pixmap_foreign_new( pixmap);
 
     if ( w->background_pixmap)
       g_object_unref( w->background_pixmap);
 
-    w->background_pixmap = (GdkPixmap *)pixmap;
+    gdk_pixbuf_render_pixmap_and_mask_for_colormap( (GdkPixbuf *)image, colormap, &w->background_pixmap,
+						    &mask, 0);
     w->background_pixmap_width = pixmap_width;
     w->background_pixmap_height = pixmap_height;
-    gdk_window_set_back_pixmap( w->window, (GdkPixmap *)pixmap, FALSE);
+    gdk_window_set_back_pixmap( w->window, w->background_pixmap, FALSE);
     if ( w->buffer)
       buffer_background( w);
   }
@@ -2295,7 +2305,6 @@ void GlowDrawGtk::buffer_background( DrawWind *wind)
 
 int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
 {
-#if defined IMLIB
 
 #define ps_cPageHeight 820
 #define ps_cPageWidth 535
@@ -2305,8 +2314,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   DrawWindGtk *w = &m_wind;
   int width, height;
   unsigned char *rgb;
-  unsigned char transp[3] = {255,0,255};
-  int i, j;
+  int i, j, k;
   int grey;
   int red, blue, green;
   double scalex = 0.71;
@@ -2315,6 +2323,9 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   bool colorimage = true;
   static DrawPs *ps = 0;
   bool new_file = false;
+  int rowstride;
+  int n_channels;
+  unsigned char *rgb_row;
 
   int window_width = ctx->mw.window_width;
   int window_height = ctx->mw.window_height;
@@ -2322,17 +2333,15 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   x = ps_cLeftMargin;
   y = ps_cPageHeight - ps_cTopMargin;
 
-  // imlib = Imlib_init( display);
-
-  GdkImlibImage *image;
+  GdkPixbuf *image;
 
   if ( w->double_buffer_on)
-    image = gdk_imlib_create_image_from_drawable( w->buffer,
-					    0, 0, 0, w->buffer_width,
+    image = gdk_pixbuf_get_from_drawable( NULL, w->buffer, 0,
+					    0, 0, 0, 0, w->buffer_width,
 					    w->buffer_height);
   else
-    image = gdk_imlib_create_image_from_drawable( w->window,
-					    0, 0, 0, window_width,
+    image = gdk_pixbuf_get_from_drawable( NULL, w->window, 0,
+					    0, 0, 0, 0, window_width,
 					    window_height);
   if ( !image)
     return 0;
@@ -2345,8 +2354,8 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   else
     y = ps->y;
 
-  width = image->rgb_width;
-  height = image->rgb_height;
+  width = gdk_pixbuf_get_width( image);
+  height = gdk_pixbuf_get_height( image);
 
   if ( x0 != 0 || x1 != 0) {
     double total_width = width / (x1 - x0);
@@ -2377,7 +2386,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.1 2007-01-04 08:07:43 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -2408,45 +2417,50 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
 
   ps->fp.flags( (ps->fp.flags() & ~ios_base::dec) | ios_base::hex | ios_base::uppercase);
   ps->fp.fill('0');
-  rgb = image->rgb_data;
+  rgb = gdk_pixbuf_get_pixels( image);
+  rowstride = gdk_pixbuf_get_rowstride( image);
+  n_channels = gdk_pixbuf_get_n_channels( image);
   j = 0;
-  for ( i = 0; i < image->rgb_height * image->rgb_width * 3; i+=3) {
-    if ( !colorimage) {
-      if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
-	grey = 255;
+  rgb_row = rgb;
+  for ( k = 0; k < height; k++) {
+    rgb = rgb_row;
+    for ( i = 0; i < width; i++) {
+      if ( !colorimage) {
+	if ( n_channels >= 4 && !(rgb+3))
+	  grey = 255;
+	else
+	  grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
+
+	rgb += n_channels;
+	ps->fp.width(2);
+	ps->fp << grey;
+	if ( ++j >= 40) {
+	  j = 0;
+	  ps->fp << endl;
+	}
       }
       else {
-	grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
-      }
-      rgb += 3;
-      ps->fp.width(2);
-      ps->fp << grey;
-      if ( ++j >= 40) {
-	j = 0;
-	ps->fp << endl;
-      }
-    }
-    else {
-      if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
-	red = blue = green = 255;
-      }
-      else {
-	red = *rgb;
-	green = *(rgb+1);
-	blue = *(rgb+2);
-      }
-      rgb += 3;
-      ps->fp.width(2);
-      ps->fp << blue;
-      ps->fp.width(2);
-      ps->fp << green;
-      ps->fp.width(2);
-      ps->fp << red;
-      if ( ++j >= 20) {
-	j = 0;
-	ps->fp << endl;
+	if ( n_channels >= 4 && !(rgb+3))
+	  red = blue = green = 255;
+	else {
+	  red = *rgb;
+	  green = *(rgb+1);
+	  blue = *(rgb+2);
+	}
+	rgb += n_channels;
+	ps->fp.width(2);
+	ps->fp << red;
+	ps->fp.width(2);
+	ps->fp << green;
+	ps->fp.width(2);
+	ps->fp << blue;
+	if ( ++j >= 20) {
+	  j = 0;
+	  ps->fp << endl;
+	}
       }
     }
+    rgb_row += rowstride;
   }
 
   if ( end) {
@@ -2459,9 +2473,8 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
   else {
     ps->fp.flags( ((ps->fp.flags() & ~ios_base::hex) & ~ios_base::uppercase) | ios_base::dec);
   }
-  gdk_imlib_destroy_image( image);
+  gdk_pixbuf_unref( image);
 
-#endif
   return 1;
 }
 
@@ -2490,96 +2503,6 @@ int GlowDrawGtk::get_font_idx( int gc_type)
   }
 
   return font_idx;
-}
-
-void GlowDrawGtk::imlib_destroy_image( glow_tImData imlib, glow_tImImage image) 
-{
-  gdk_imlib_destroy_image( (GdkImlibImage *)image);
-}
-
-void GlowDrawGtk::imlib_kill_image( glow_tImData imlib, glow_tImImage image) 
-{
-  gdk_imlib_kill_image( (GdkImlibImage *)image);
-}
-
-void GlowDrawGtk::imlib_free_pixmap( glow_tImData imlib, glow_tPixmap pixmap) 
-{
-  gdk_imlib_free_pixmap( (GdkPixmap *)pixmap);
-}
-
-glow_tImImage GlowDrawGtk::imlib_load_image( glow_tImData imlib, char *filename) 
-{
-  return (glow_tImImage) gdk_imlib_load_image( filename);
-}
-
-glow_tImImage GlowDrawGtk::imlib_clone_image( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tImImage) gdk_imlib_clone_image( (GdkImlibImage *)image);
-}
-
-int GlowDrawGtk::imlib_render( glow_tImData imlib, glow_tImImage image, int width, int height) 
-{
-  return gdk_imlib_render( (GdkImlibImage *)image, width, height);
-}
-
-glow_tPixmap GlowDrawGtk::imlib_move_image( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tPixmap) gdk_imlib_move_image( (GdkImlibImage *)image);
-}
-
-glow_tPixmap GlowDrawGtk::imlib_move_mask( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tPixmap) gdk_imlib_move_mask( (GdkImlibImage *)image);
-}
-
-void GlowDrawGtk::imlib_rotate_image( glow_tImData imlib, glow_tImImage image, int d) 
-{
-  gdk_imlib_rotate_image( (GdkImlibImage *)image, d);
-}
-
-void GlowDrawGtk::imlib_flip_image_vertical( glow_tImData imlib, glow_tImImage image) 
-{
-  gdk_imlib_flip_image_vertical( (GdkImlibImage *)image);
-}
-
-void GlowDrawGtk::imlib_flip_image_horizontal( glow_tImData imlib, glow_tImImage image) 
-{
-  gdk_imlib_flip_image_horizontal( (GdkImlibImage *)image);
-}
-
-void GlowDrawGtk::imlib_set_image_red_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  gdk_imlib_set_image_red_curve( (GdkImlibImage *)image, mod);
-}
-
-void GlowDrawGtk::imlib_set_image_green_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  gdk_imlib_set_image_green_curve( (GdkImlibImage *)image, mod);
-}
-
-void GlowDrawGtk::imlib_set_image_blue_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  gdk_imlib_set_image_blue_curve( (GdkImlibImage *)image, mod);
-}
-
-void GlowDrawGtk::imlib_changed_image( glow_tImData imlib, glow_tImImage image) 
-{
-  gdk_imlib_changed_image( (GdkImlibImage *)image);
-}
-
-int GlowDrawGtk::imlib_image_rgb_width( glow_tImImage image)
-{
-  return ((GdkImlibImage *)image)->rgb_width;
-}
-
-int GlowDrawGtk::imlib_image_rgb_height( glow_tImImage image)
-{
-  return ((GdkImlibImage *)image)->rgb_height;
-}
-
-unsigned char *GlowDrawGtk::imlib_image_rgb_data( glow_tImImage image)
-{
-  return ((GdkImlibImage *)image)->rgb_data;
 }
 
 // Image functions
@@ -2667,13 +2590,14 @@ void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glo
 int GlowDrawGtk::image_load( char *imagefile, 
 			     glow_tImImage *orig_im, glow_tImImage *im)
 {
-  if ( *im)
+  if ( im && *im)
     gdk_pixbuf_unref( (GdkPixbuf *)*im);
   if ( *orig_im)
     gdk_pixbuf_unref( (GdkPixbuf *)*orig_im);
   *orig_im = (glow_tImImage *) gdk_pixbuf_new_from_file( imagefile, 0);
 
-  *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
+  if ( im)
+    *im = (glow_tImImage *) gdk_pixbuf_copy( (GdkPixbuf *)*orig_im);
   return 1;
 }
 

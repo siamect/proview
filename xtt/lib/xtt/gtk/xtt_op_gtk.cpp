@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,7 +64,7 @@ OpGtk::OpGtk( void *op_parent_ctx,
   gtk_window_set_decorated( GTK_WINDOW(toplevel), FALSE);
 
   pwr_tFileName fname;
-  dcli_translate_filename( fname, "$pwr_exe/wtt_messages.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_alarm_active.png");
   aalarm_active[0] = gtk_image_new_from_file( fname);
   aalarm_active[1] = gtk_image_new_from_file( fname);
   aalarm_active[2] = gtk_image_new_from_file( fname);
@@ -246,14 +246,14 @@ OpGtk::OpGtk( void *op_parent_ctx,
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);

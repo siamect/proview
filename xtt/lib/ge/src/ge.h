@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.6 2007-01-05 10:39:13 claes Exp $
+ * Proview   $Id: ge.h,v 1.7 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,7 @@ typedef struct {
 class ColPalCtx;
 class Graph;
 class Nav;
+class CoWow;
 
 class Ge {
  public:
@@ -90,6 +91,7 @@ class Ge {
   char          recover_name[80];
   int		plant_mapped;
   int		subpalette_mapped;
+  CoWow		*wow;
 
   Ge( void *parent_ctx,
       ldh_tSesContext ldhses, int exit_when_close);

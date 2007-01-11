@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_gtk.h,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_graph_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,6 +64,7 @@ class GraphGtk : public Graph {
   int create_navigator( GtkWidget *parent);
   Attr *attr_new( void *parent_ctx, void *object, attr_sItem *itemlist, int item_cnt);
   void set_inputfocus( int focus);
+  void popup_position( int event_x, int event_y, int *x, int *y);
 
   GtkWidget		*parent_wid;		//! Parent widget.
   GtkWidget		*grow_widget;		//! Grow widget.

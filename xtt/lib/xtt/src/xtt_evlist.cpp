@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.14 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.15 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -961,19 +961,18 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( evlist->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( evlist->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( evlist->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( evlist->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( evlist->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( evlist->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( evlist->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( evlist->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -997,19 +996,18 @@ int EvList::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( evlist->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( evlist->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( evlist->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( evlist->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( evlist->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( evlist->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( evlist->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( evlist->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;

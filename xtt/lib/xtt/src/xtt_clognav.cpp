@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.6 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.7 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -627,23 +627,25 @@ int CLogNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( clognav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( clognav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( clognav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( clognav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( clognav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
- 	  }
+      else {
+	if ( !brow_IsVisible( clognav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( clognav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( clognav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
+	    sts = brow_GetLast( clognav->brow->ctx, &object);
+	    if ( EVEN(sts)) {
+	      if ( node_count)
+		free( node_list);
+	      return 1;
+	    }
+	  }
         }
       }
       brow_SelectClear( clognav->brow->ctx);
@@ -663,22 +665,24 @@ int CLogNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( clognav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( clognav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( clognav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( clognav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( clognav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
-	      free( node_list);
-            return 1;
+      else {
+	if ( !brow_IsVisible( clognav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( clognav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( clognav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
+	    sts = brow_GetFirst( clognav->brow->ctx, &object);
+	    if ( EVEN(sts)) {
+	      if ( node_count)
+		free( node_list);
+	      return 1;
+	    }
  	  }
         }
       }

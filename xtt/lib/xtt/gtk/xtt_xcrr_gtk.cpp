@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xcrr_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xcrr_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,9 +66,9 @@ gboolean XCrrGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
 {
   XCrrGtk *xcrr = (XCrrGtk *)data;
 
-  if ( xcrr->focustimer.disabled()) {
+  if ( xcrr->focustimer.disabled())
     return TRUE;
-  }
+
   if ( xcrr->xcrrnav)
     xcrr->xcrrnav->set_inputfocus();
   xcrr->focustimer.disable( 400);

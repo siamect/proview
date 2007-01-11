@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.2 2007-01-05 07:53:46 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@
 #include "co_xhelp_gtk.h"
 #include "co_wow_gtk.h"
 #include "rt_xnav_msg.h"
-
+#include "rt_syi.h"
 
 void XttGtk::hotkey_Command( char *arg, void *userdata)
 {
@@ -489,12 +489,19 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   const int    	window_height = 700;
   pwr_tStatus   sts;
   pwr_tFileName fname;
+  char		title[120] = "Xtt ";
+  char		nodename[80];
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts))
+    strcat( title, nodename);
 
   // Gtk
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", window_height,
-			   "default-width", window_width,
-			   NULL);
+					 "default-height", window_height,
+					 "default-width", window_width,
+					 "title", title,
+					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
@@ -756,21 +763,21 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_toolbar_append_widget( tools, tools_advuser,CoWowGtk::translate_utf8("Advanced user"), "");
   
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
   gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
   gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_reset.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
@@ -852,161 +859,6 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
 
   xtt_mainloop();  
 
-#if 0
-  char		uid_filename[120] = {"xtt.uid"};
-  char		*uid_filename_p = uid_filename;
-  Arg 		args[20];
-  pwr_tStatus	sts;
-  char 		title[80];
-  int		i;
-  XtAppContext  app_ctx;
-  MrmHierarchy s_DRMh;
-  MrmType dclass;
-  Widget	xtt_widget;
-  char		name[] = "PwR Xtt";
-
-  static char translations[] =
-    "<FocusIn>: xtt_inputfocus()\n";
-  static XtTranslations compiled_translations = NULL;
-
-  static XtActionsRec actions[] =
-  {
-    {"xtt_inputfocus",      (XtActionProc) action_inputfocus}
-  };
-
-  static MrmRegisterArg	reglist[] = {
-        { "xtt_ctx", 0 },
-	{"xtt_activate_exit",(caddr_t)activate_exit },
-	{"xtt_activate_print",(caddr_t)activate_print },
-	{"xtt_activate_find",(caddr_t)activate_find },
-	{"xtt_activate_findregex",(caddr_t)activate_findregex },
-	{"xtt_activate_findnext",(caddr_t)activate_findnext },
-	{"xtt_activate_collapse",(caddr_t)activate_collapse },
-	{"xtt_activate_openobject",(caddr_t)activate_openobject },
-	{"xtt_activate_openplc",(caddr_t)activate_openplc },
-	{"xtt_activate_opengraph",(caddr_t)activate_opengraph },
-	{"xtt_activate_showcrossref",(caddr_t)activate_showcrossref },
-	{"xtt_activate_change_value",(caddr_t)activate_change_value },
-	{"xtt_activate_command",(caddr_t)activate_command },
-	{"xtt_activate_collect_insert",(caddr_t)activate_collect_insert },
-	{"xtt_activate_collect_show",(caddr_t)activate_collect_show },
-	{"xtt_activate_collect_remove",(caddr_t)activate_collect_remove },
-	{"xtt_activate_collect_clear",(caddr_t)activate_collect_clear },
-	{"xtt_activate_advanceduser",(caddr_t)activate_advanceduser },
-	{"xtt_activate_zoom_in",(caddr_t)activate_zoom_in },
-	{"xtt_activate_zoom_out",(caddr_t)activate_zoom_out },
-	{"xtt_activate_zoom_reset",(caddr_t)activate_zoom_reset },
-	{"xtt_activate_help",(caddr_t)activate_help },
-	{"xtt_activate_help_project",(caddr_t)activate_help_project },
-	{"xtt_activate_help_proview",(caddr_t)activate_help_proview },
-	{"xtt_create_msg_label",(caddr_t)create_msg_label },
-	{"xtt_create_cmd_prompt",(caddr_t)create_cmd_prompt },
-	{"xtt_create_cmd_input",(caddr_t)create_cmd_input },
-	{"xtt_create_xnav_form",(caddr_t)create_xnav_form },
-	{"xtt_activate_india_ok",(caddr_t)activate_india_ok },
-	{"xtt_activate_india_cancel",(caddr_t)activate_india_cancel },
-	{"xtt_create_india_label",(caddr_t)create_india_label },
-	{"xtt_create_india_text",(caddr_t)create_india_text }
-	};
-
-  static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
-
-  // Gtk
-  Lng::get_uid( uid_filename, uid_filename);
-  MrmInitialize();
-
-  strcpy( title, "PwR Xtt");
-
-  toplevel = XtVaAppInitialize (
-		      &app_ctx, 
-		      "Rt_xtt",
-		      NULL, 0, 
-		      &argc, argv, 
-		      fbr, 
-		      XtNallowShellResize,  True,
-		      XtNtitle, title,
-		      XmNmappedWhenManaged, True,
-		      NULL);
-
-  reglist[0].value = (caddr_t) this;
-
-  if (compiled_translations == NULL) 
-    XtAppAddActions( XtWidgetToApplicationContext(toplevel), 
-						actions, XtNumber(actions));
- 
-  // Save the context structure in the widget
-  i = 0;
-  XtSetArg( args[i], XmNuserData, (unsigned int) this);i++;
-
-  sts = MrmOpenHierarchy( 1, &uid_filename_p, NULL, &s_DRMh);
-  if (sts != MrmSUCCESS) printf("can't open %s\n", uid_filename);
-
-  MrmRegisterNames(reglist, reglist_num);
-
-  sts = MrmFetchWidgetOverride( s_DRMh, "xtt_window", toplevel,
-			name, args, i, &xtt_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
-
-  sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
-  		&india_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch input dialog\n");
-
-  MrmCloseHierarchy(s_DRMh);
-
-
-  if (compiled_translations == NULL) 
-    compiled_translations = XtParseTranslationTable(translations);
-  XtOverrideTranslations( xtt_widget, compiled_translations);
-
-  i = 0;
-  XtSetArg(args[i],XmNwidth,350);i++;
-  XtSetArg(args[i],XmNheight,600);i++;
-  XtSetArg(args[i], XmNdeleteResponse, XmDO_NOTHING);i++;
-  XtSetValues( toplevel ,args,i);
-    
-  XtManageChild( xtt_widget);
-  XtUnmanageChild( cmd_input);
-
-  xnav = new XNavGtk( this, xnav_form, "Plant",
-		&brow_widget, (xnav_sStartMenu *)root_menu, 
-		opplace_str, &sts);
-  xnav->message_cb = &xtt_message_cb;
-  xnav->close_cb = &close;
-  xnav->map_cb = &map;
-  xnav->change_value_cb = &change_value;
-  xnav->set_dimension_cb = &set_dimension;
-  xnav->attach_audio = attach_audio;
-
-  // Create help window
-  CoXHelp *xhelp = new CoXHelpGtk( toplevel, this, xhelp_eUtility_Xtt, &sts);
-  xhelp->open_URL_cb = open_URL_cb;
-  CoXHelp::set_default( xhelp);
-
-  XtRealizeWidget( toplevel);
-
-  wow = new CoWowGtk( toplevel);
-  if ( !quiet)
-    wow->DisplayWarranty();
-
-//  XmProcessTraversal( xnav->brow_widget, XmTRAVERSE_CURRENT);
-//  xnav->set_inputfocus();
-
-  init_hotkey( app_ctx, toplevel);
-
-  // Connect the window manager close-button to exit
-  flow_AddCloseVMProtocolCb( toplevel, 
-	(XtCallbackProc)activate_exit, this);
-
-  if ( xnav->op)
-    close( this, 0);
-
-  timerid = wow->timer_new();
-
-  // Start timer to check for qcom events
-  timerid->add( 1000, qcom_events, this);
-
-  xtt_mainloop( app_ctx);  
-#endif
 }
 
 static gint india_delete_event( GtkWidget *w, GdkEvent *event, gpointer xtt)
@@ -1024,10 +876,11 @@ void XttGtk::create_input_dialog()
 
   // Create an input dialog
   india_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 150,
-			   "default-width", 350,
-			   "title", "Input Dialog",
-			   NULL);
+					     "default-height", 150,
+					     "default-width", 350,
+					     "title", "Input Dialog",
+					     "window-position", GTK_WIN_POS_CENTER,
+					     NULL);
   g_signal_connect( india_widget, "delete_event", G_CALLBACK(india_delete_event), this);
   CoWowGtk::SetWindowIcon( india_widget);
 

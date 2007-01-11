@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_pal.cpp,v 1.10 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_pal.cpp,v 1.11 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1067,24 +1067,22 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( pal->brow_ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
+      if ( !node_count) {
         if ( pal->last_selected && pal->object_exist( pal->last_selected))
           object = pal->last_selected;
-        else
-        {
-          sts = brow_GetLast( pal->brow_ctx, &object);
+        else {
+          sts = brow_GetLastVisible( pal->brow_ctx, &object);
           if ( EVEN(sts)) return 1;
         }
       }
-      else
-      {
-        sts = brow_GetPrevious( pal->brow_ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( pal->brow_ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( pal->brow_ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( pal->brow_ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( pal->brow_ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -1109,24 +1107,22 @@ int Pal::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( pal->brow_ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
+      if ( !node_count) {
         if ( pal->last_selected && pal->object_exist( pal->last_selected))
           object = pal->last_selected;
-        else
-        {
-          sts = brow_GetFirst( pal->brow_ctx, &object);
+        else {
+          sts = brow_GetFirstVisible( pal->brow_ctx, &object);
           if ( EVEN(sts)) return 1;
         }
       }
-      else
-      {
-        sts = brow_GetNext( pal->brow_ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( pal->brow_ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( pal->brow_ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( pal->brow_ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( pal->brow_ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;

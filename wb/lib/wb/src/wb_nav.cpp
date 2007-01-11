@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.9 2007-01-05 10:40:22 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.10 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -925,14 +925,17 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       if ( nav->last_selected && nav->object_exist( nav->last_selected))
 	object = nav->last_selected;
       else {
-	sts = brow_GetLast( nav->brow_ctx, &object);
+	sts = brow_GetLastVisible( nav->brow_ctx, &object);
 	if ( EVEN(sts)) return 1;
       }
     }
     else {
-      sts = brow_GetPrevious( nav->brow_ctx, node_list[0], &object);
-      if ( EVEN(sts)) {
-	sts = brow_GetLast( nav->brow_ctx, &object);
+      if ( !brow_IsVisible( nav->brow_ctx, node_list[0], flow_eVisible_Partial)) {
+	sts = brow_GetLastVisible( nav->brow_ctx, &object);
+	if ( EVEN(sts)) return 1;
+      }
+      else {
+	sts = brow_GetPrevious( nav->brow_ctx, node_list[0], &object);
 	if ( EVEN(sts)) {
 	  if ( node_count)
 	    free( node_list);
@@ -962,14 +965,17 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	if ( nav->last_selected && nav->object_exist( nav->last_selected))
 	  object = nav->last_selected;
 	else {
-	  sts = brow_GetFirst( nav->brow_ctx, &object);
+	  sts = brow_GetFirstVisible( nav->brow_ctx, &object);
 	  if ( EVEN(sts)) return 1;
 	}
       }
       else {
-	sts = brow_GetNext( nav->brow_ctx, node_list[0], &object);
-	if ( EVEN(sts)) {
-	  sts = brow_GetFirst( nav->brow_ctx, &object);
+	if ( !brow_IsVisible( nav->brow_ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( nav->brow_ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( nav->brow_ctx, node_list[0], &object);
 	  if ( EVEN(sts)) {
 	    if ( node_count)
 	      free( node_list);

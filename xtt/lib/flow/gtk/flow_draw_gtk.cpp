@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.2 2007-01-05 05:45:39 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@
 #include "pwr.h"
 #include "co_dcli.h"
 #include "flow_browwidget_gtk.h"
+#include <gdk/gdkkeysyms.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <gdk/gdkx.h>

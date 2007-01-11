@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.11 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.12 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,16 +24,16 @@
 
 #include <string.h>
 
-#ifndef co_wow_api_h
 typedef enum {
   wow_eFileSelType_,
   wow_eFileSelType_All,
   wow_eFileSelType_Dbs,
   wow_eFileSelType_Wbl,
   wow_eFileSelType_WblClass,
+  wow_eFileSelType_Graph,
+  wow_eFileSelType_Image,
   wow_eFileSelType__
 } wow_eFileSelType;
-#endif
 
 class CoWowWidget {
 };

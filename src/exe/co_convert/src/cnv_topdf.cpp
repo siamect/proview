@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.cpp,v 1.3 2005-12-13 15:10:42 claes Exp $
+ * Proview   $Id: cnv_topdf.cpp,v 1.4 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -233,8 +233,8 @@ void CnvPdfObj::print_end()
 
 int CnvPdfObj::print_image()
 {
-  ImlibImage *image;
-  Pixmap pixmap;
+  cnv_tImImage image;
+  cnv_tPixmap pixmap;
   pwr_tFileName fname;
   int sts;
   int width, height;
@@ -270,8 +270,8 @@ int CnvPdfObj::print_image()
     }
   }
 
-  width = image->rgb_width;
-  height = image->rgb_height;
+  width = cnv_image_width( image);
+  height = cnv_image_height( image);
 
   topdf->fp[topdf->cf] <<
 number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size() + 
@@ -291,26 +291,6 @@ number + topdf->v_outline.size() + topdf->v_pages.size() + topdf->v_content.size
 
   strcpy( fname, "/tmp/pwr_cnv.jpg");
   cnv_print_image( image, fname);
-
-#if 0
-  rgb = image->rgb_data;
-  j = 0;
-  for ( i = 0; i < image->rgb_height * image->rgb_width * 3; i+=3) {
-    if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
-      grey = 255;
-    }
-    else {
-      grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
-    }
-    rgb += 3;
-    //    fp[cf].width(2);
-    topdf->fp[topdf->cf] << (unsigned char)grey;
-    if ( ++j >= 40) {
-      j = 0;
-      // fp[cf] << endl;
-    }
-  }
-#endif
 
   ifstream fimg( fname);
   while ( fimg.get(c))
@@ -678,6 +658,19 @@ xref_offset - start_offset<< endl <<
   fp[pdf_eFile_Body].close();
 }
 
+static void image_pixel( void *userdata, ofstream& fp, unsigned char *rgb)
+{
+  unsigned char transp[3] = {255,0,255};
+  int grey;
+
+  if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2])
+    grey = 255;
+  else
+    grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
+
+  fp << (unsigned char)grey;
+
+}
 
 void CnvToPdf::print_horizontal_line()
 {
@@ -693,15 +686,11 @@ void CnvToPdf::print_horizontal_line()
 
 int CnvToPdf::print_image_inline( char *filename)
 {
-  ImlibImage *image;
-  Pixmap pixmap;
+  cnv_tImImage image;
+  cnv_tPixmap pixmap;
   pwr_tFileName fname;
   int sts;
   int width, height;
-  unsigned char *rgb;
-  unsigned char transp[3] = {255,0,255};
-  int i, j;
-  int grey;
   double scalex = 0.71;
   double scaley = 0.78;
 	
@@ -731,8 +720,8 @@ int CnvToPdf::print_image_inline( char *filename)
     }
   }
 
-  width = image->rgb_width;
-  height = image->rgb_height;
+  width = cnv_image_width( image);
+  height = cnv_image_height( image);
 
   if ( width * scalex  > pdf_cPageWidth - pdf_cLeftMargin) {
     x = pdf_cPageWidth - width * scalex;
@@ -761,23 +750,8 @@ scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * 
 #endif
 "  ID" << endl;
 
-  rgb = image->rgb_data;
-  j = 0;
-  for ( i = 0; i < image->rgb_height * image->rgb_width * 3; i+=3) {
-    if ( *rgb == transp[0] && *(rgb+1) == transp[1] && *(rgb+2) == transp[2]) {
-      grey = 255;
-    }
-    else {
-      grey = (int) ((0.0 + *rgb + *(rgb+1) + *(rgb+2)) / 3 + 0.5);
-    }
-    rgb += 3;
-    //    fp[cf].width(2);
-    fp[cf] << (unsigned char)grey;
-    if ( ++j >= 40) {
-      j = 0;
-      // fp[cf] << endl;
-    }
-  }
+  cnv_image_pixel_iter( image, image_pixel, 0, fp[cf]);
+
 
   fp[cf] << endl <<
 "EI" << endl << 
@@ -792,8 +766,8 @@ scalex * width << " 0 0 " << scaley * height << " " << x << " " << y - scaley * 
 
 int CnvToPdf::print_image( char *filename)
 {
-  ImlibImage *image;
-  Pixmap pixmap;
+  cnv_tImImage image;
+  cnv_tPixmap pixmap;
   pwr_tFileName fname;
   int sts;
   int width, height;
@@ -827,8 +801,8 @@ int CnvToPdf::print_image( char *filename)
     }
   }
 
-  width = image->rgb_width;
-  height = image->rgb_height;
+  width = cnv_image_width( image);
+  height = cnv_image_height( image);
 
   if ( width * scalex  > pdf_cPageWidth - pdf_cLeftMargin) {
     x = pdf_cPageWidth - width * scalex;

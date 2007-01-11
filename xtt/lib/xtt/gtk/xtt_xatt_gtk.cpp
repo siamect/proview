@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xatt_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -93,11 +93,13 @@ void XAttGtk::change_value( int set_focus)
     gtk_paned_set_position( GTK_PANED(pane), h - 170);
     if ( set_focus)
       gtk_widget_grab_focus( cmd_scrolledtextview);
+    input_max_length = input_size - 1;
     input_multiline = 1;
   }
   else {
     text_w = cmd_input;
-    g_object_set( text_w, "visible", TRUE, NULL);
+    g_object_set( text_w, "visible", TRUE,
+		  "max-length", input_size - 1, NULL);
     if ( set_focus)
       gtk_widget_grab_focus( cmd_input);
     input_multiline = 0;
@@ -137,6 +139,25 @@ void XAttGtk::change_value( int set_focus)
   message( ' ', "");
   set_prompt( Lng::translate("value >"));
   input_open = 1;
+}
+
+void XAttGtk::action_text_inserted( GtkTextBuffer *w, GtkTextIter *iter, gchar *str, gint len, gpointer data)
+{
+  XAttGtk *xatt = (XAttGtk *)data;
+
+  int count = gtk_text_buffer_get_char_count( w);  
+
+  if ( count > xatt->input_max_length) {
+    // Remove inserted chars (note that iter now points at the end of the inserted text)
+    GtkTextIter start_iter;
+
+    int offs = gtk_text_iter_get_offset( iter);
+    gtk_text_buffer_get_iter_at_offset( w, &start_iter, offs - len);
+    gtk_text_buffer_delete( w, &start_iter, iter);
+
+    CoWowGtk wow( xatt->toplevel);
+    wow.DisplayError( "Error message", "Attribute size exceeded");
+  }
 }
 
 //
@@ -207,6 +228,9 @@ gboolean XAttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
   gboolean scrolledinput_visible;
   gboolean input_visible;
 
+  if ( xatt->focustimer.disabled())
+    return TRUE;
+
   g_object_get( xatt->cmd_scrolledinput, "visible", &scrolledinput_visible, NULL);
   g_object_get( xatt->cmd_input, "visible", &input_visible, NULL);
   if ( scrolledinput_visible)
@@ -215,6 +239,8 @@ gboolean XAttGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer dat
     gtk_widget_grab_focus( xatt->cmd_input);
   else if ( xatt->xattnav)
     xatt->xattnav->set_inputfocus();
+
+  xatt->focustimer.disable( 400);
 
   return FALSE;
 }
@@ -555,6 +581,8 @@ XAttGtk::XAttGtk( GtkWidget 		*xa_parent_wid,
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
 
   cmd_scrolled_buffer = gtk_text_buffer_new( NULL);
+  g_signal_connect_after( cmd_scrolled_buffer, "insert-text", 
+ 		    G_CALLBACK(action_text_inserted), this);
 
   cmd_scrolledtextview = gtk_text_view_new_with_buffer( cmd_scrolled_buffer);
   GtkWidget *viewport = gtk_viewport_new( NULL, NULL);

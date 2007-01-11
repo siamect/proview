@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.29 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.30 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1579,23 +1579,22 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( xnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( xnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( xnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( xnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( xnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
+      else {
+	if ( !brow_IsVisible( xnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( xnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( xnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
+	    if ( node_count)
 	      free( node_list);
-            return 1;
- 	  }
+	    return 1;
+	  }
         }
       }
       brow_SelectClear( xnav->brow->ctx);
@@ -1615,23 +1614,22 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( xnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( xnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( xnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( xnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( xnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
+      else {
+	if ( !brow_IsVisible( xnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( xnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( xnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
+	    if ( node_count)
 	      free( node_list);
-            return 1;
- 	  }
+	    return 1;
+	  }
         }
       }
       brow_SelectClear( xnav->brow->ctx);

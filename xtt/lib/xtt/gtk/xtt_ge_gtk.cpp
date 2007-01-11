@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,11 +43,15 @@ typedef void *Widget;
 
 gboolean XttGeGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
 {
-  XttGe *ge = (XttGe *)data;
+  XttGeGtk *ge = (XttGeGtk *)data;
+
+  if ( ge->focustimer.disabled())
+    return TRUE;
 
   if ( ge->graph)
     ge->graph->set_inputfocus(1);
 
+  ge->focustimer.disable( 400);
   return FALSE;
 }
 
@@ -114,10 +118,12 @@ void XttGeGtk::confirm_cb( void *ge_ctx, void *confirm_object, char *text)
 void XttGeGtk::message_dialog_cb( void *ge_ctx, char *text)
 {
   XttGe 	*ge = (XttGe *)ge_ctx;
+  CoWowGtk 	wow( ((XttGeGtk *)ge)->toplevel);
+  
+  wow.DisplayError( "Message", CoWowGtk::translate_utf8(text));
 
-  g_object_set( ((XttGeGtk *)ge)->message_dia_widget, "visible", TRUE, NULL);
-
-  gtk_label_set_text( GTK_LABEL(((XttGeGtk *)ge)->message_dia_label), text);
+  // g_object_set( ((XttGeGtk *)ge)->message_dia_widget, "visible", TRUE, NULL);
+  // gtk_label_set_text( GTK_LABEL(((XttGeGtk *)ge)->message_dia_label), text);
 }
 
 void XttGeGtk::activate_value_input( GtkWidget *w, gpointer data)
@@ -240,7 +246,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, char *xg_name
   XttGe( xg_parent_ctx, xg_name, xg_filename, xg_scrollbar, xg_menu, xg_navigator, xg_width,
 	 xg_height, x, y, scan_time, object_name, use_default_access, access,
 	 xg_command_cb, xg_get_current_objects_cb, xg_is_authorized_cb), 
-  parent_wid(xg_parent_wid), nav_shell(0), value_dialog(0), confirm_widget(0)
+  parent_wid(xg_parent_wid), nav_shell(0), value_dialog(0), confirm_widget(0), message_dia_widget(0)
 {
   int	window_width = 600;
   int   window_height = 500;
@@ -368,11 +374,11 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, char *xg_name
 
     gtk_widget_show_all( nav_shell);
     ((Graph *)graph)->set_nav_background_color();
+  }
 
-    if ( !(x == 0 && y == 0)) {
-      // Set position
-      gtk_window_move( GTK_WINDOW(toplevel), x, y);
-    }
+  if ( !(x == 0 && y == 0)) {
+    // Set position
+    gtk_window_move( GTK_WINDOW(toplevel), x, y);
   }
 }
 
@@ -393,7 +399,7 @@ void XttGeGtk::create_confirm_dialog()
   confirm_widget = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 150,
 			   "default-width", 400,
-			   "title", "Confirm",
+			   "title", CoWowGtk::translate_utf8("Confirm"),
 			   NULL);
   g_signal_connect( confirm_widget, "delete_event", G_CALLBACK(confirm_delete_event), this);
   confirm_label = gtk_label_new("");
@@ -404,12 +410,12 @@ void XttGeGtk::create_confirm_dialog()
 				"yalign", 1.0,
 				NULL);
 
-  GtkWidget *confirm_ok = gtk_button_new_with_label( "Yes");
+  GtkWidget *confirm_ok = gtk_button_new_with_label( CoWowGtk::translate_utf8("Yes"));
   gtk_widget_set_size_request( confirm_ok, 70, 25);
   g_signal_connect( confirm_ok, "clicked", 
   		    G_CALLBACK(activate_confirm_ok), this);
 
-  GtkWidget *confirm_cancel = gtk_button_new_with_label( "No");
+  GtkWidget *confirm_cancel = gtk_button_new_with_label( CoWowGtk::translate_utf8("No"));
   gtk_widget_set_size_request( confirm_cancel, 70, 25);
   g_signal_connect( confirm_cancel, "clicked", 
   		    G_CALLBACK(activate_confirm_cancel), this);
@@ -429,3 +435,4 @@ void XttGeGtk::create_confirm_dialog()
   gtk_container_add( GTK_CONTAINER(confirm_widget), confirm_vbox);
   gtk_widget_show_all( confirm_widget);
 }
+

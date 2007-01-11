@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_watt_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,11 +92,14 @@ void WAttGtk::change_value( int set_focus)
     gdk_drawable_get_size( pane->window, &w, &h);
     gtk_paned_set_position( GTK_PANED(pane), h - 170);
     gtk_widget_grab_focus( cmd_scrolledtextview);
+    input_max_length = input_size - 1;
     input_multiline = 1;
   }
   else {
     text_w = cmd_input;
-    g_object_set( text_w, "visible", TRUE, NULL);
+    g_object_set( text_w, 
+		  "visible", TRUE, 
+		  "max-length", input_size - 1, NULL);
     gtk_widget_grab_focus( cmd_input);
     input_multiline = 0;
   }
@@ -135,6 +138,26 @@ void WAttGtk::change_value( int set_focus)
   input_open = 1;
 }
 
+void WAttGtk::action_text_inserted( GtkTextBuffer *w, GtkTextIter *iter, gchar *str, gint len, gpointer data)
+{
+  WAttGtk *watt = (WAttGtk *)data;
+
+  int count = gtk_text_buffer_get_char_count( w);  
+
+  if ( count > watt->input_max_length) {
+    // Remove inserted chars (note that iter now points at the end of the inserted text)
+    GtkTextIter start_iter;
+
+    int offs = gtk_text_iter_get_offset( iter);
+    gtk_text_buffer_get_iter_at_offset( w, &start_iter, offs - len);
+    gtk_text_buffer_delete( w, &start_iter, iter);
+
+    CoWowGtk wow( watt->toplevel);
+    wow.DisplayError( "Error message", "Attribute size exceeded");
+  }
+  else
+    watt->message( ' ', "");
+}
 //
 //  Callbackfunctions from menu entries
 //
@@ -501,6 +524,8 @@ WAttGtk::WAttGtk(
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
 
   cmd_scrolled_buffer = gtk_text_buffer_new( NULL);
+  g_signal_connect_after( cmd_scrolled_buffer, "insert-text", 
+ 		    G_CALLBACK(action_text_inserted), this);
 
   cmd_scrolledtextview = gtk_text_view_new_with_buffer( cmd_scrolled_buffer);
   GtkWidget *viewport = gtk_viewport_new( NULL, NULL);

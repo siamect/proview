@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2197,8 +2197,8 @@ static int glow_read_color_file( char *filename, draw_sColor **color_array,
   return 1;
 }
 
-void GlowDrawXLib::set_background( GlowWind *wind, glow_eDrawType drawtype, 
-				   glow_tPixmap pixmap, int pixmap_width, int pixmap_height)
+void GlowDrawXLib::set_background( GlowWind *wind, glow_eDrawType drawtype, glow_tPixmap pixmap, 
+				   glow_tImImage image, int pixmap_width, int pixmap_height)
 {
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
   XGCValues 		xgcv;
@@ -2590,7 +2590,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.1 2007-01-04 08:08:00 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -2678,80 +2678,6 @@ x/scalex/width << " " << (y - height*scaley)/scaley/height << " translate" << en
   return 1;
 }
 
-void GlowDrawXLib::imlib_destroy_image( glow_tImData imlib, glow_tImImage image) 
-{
-  Imlib_destroy_image( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-void GlowDrawXLib::imlib_kill_image( glow_tImData imlib, glow_tImImage image) 
-{
-  Imlib_kill_image( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-void GlowDrawXLib::imlib_free_pixmap( glow_tImData imlib, glow_tPixmap pixmap) 
-{
-  Imlib_free_pixmap( (ImlibData *)imlib, (Pixmap)pixmap);
-}
-
-glow_tImImage GlowDrawXLib::imlib_load_image( glow_tImData imlib, char *filename) 
-{
-  return (glow_tImImage) Imlib_load_image( (ImlibData *)imlib, filename);
-}
-
-glow_tImImage GlowDrawXLib::imlib_clone_image( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tImImage) Imlib_clone_image( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-int GlowDrawXLib::imlib_render( glow_tImData imlib, glow_tImImage image, int width, int height) 
-{
-  return Imlib_render( (ImlibData *)imlib, (ImlibImage *)image, width, height);
-}
-
-glow_tPixmap GlowDrawXLib::imlib_move_image( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tPixmap) Imlib_move_image( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-glow_tPixmap GlowDrawXLib::imlib_move_mask( glow_tImData imlib, glow_tImImage image) 
-{
-  return (glow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-void GlowDrawXLib::imlib_set_image_red_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  Imlib_set_image_red_curve( (ImlibData *)imlib, (ImlibImage *)image, mod);
-}
-
-void GlowDrawXLib::imlib_set_image_green_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  Imlib_set_image_green_curve( (ImlibData *)imlib, (ImlibImage *)image, mod);
-}
-
-void GlowDrawXLib::imlib_set_image_blue_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) 
-{
-  Imlib_set_image_blue_curve( (ImlibData *)imlib, (ImlibImage *)image, mod);
-}
-
-void GlowDrawXLib::imlib_changed_image( glow_tImData imlib, glow_tImImage image) 
-{
-  Imlib_changed_image( (ImlibData *)imlib, (ImlibImage *)image);
-}
-
-int GlowDrawXLib::imlib_image_rgb_width( glow_tImImage image)
-{
-  return ((ImlibImage *)image)->rgb_width;
-}
-
-int GlowDrawXLib::imlib_image_rgb_height( glow_tImImage image)
-{
-  return ((ImlibImage *)image)->rgb_height;
-}
-
-unsigned char *GlowDrawXLib::imlib_image_rgb_data( glow_tImImage image)
-{
-  return ((ImlibImage *)image)->rgb_data;
-}
 
 // Image functions
 int GlowDrawXLib::image_get_width( glow_tImImage image)
@@ -2825,7 +2751,7 @@ int GlowDrawXLib::image_load( char *imagefile,
   if ( *orig_im)
     Imlib_kill_image( (ImlibData *)imlib, (ImlibImage *)*orig_im);
 
-  if ( *im)
+  if ( im && *im)
     Imlib_kill_image( (ImlibData *)imlib, (ImlibImage *)*im);
 
   *orig_im = Imlib_load_image( (ImlibData *)imlib, imagefile);
@@ -2833,7 +2759,8 @@ int GlowDrawXLib::image_load( char *imagefile,
     return 0;
 
   // Make a copy
-  *im = Imlib_clone_image( (ImlibData *)imlib, (ImlibImage *)*orig_im);
+  if ( im)
+    *im = Imlib_clone_image( (ImlibData *)imlib, (ImlibImage *)*orig_im);
 #endif
   return 1;
 }
@@ -2851,7 +2778,8 @@ int GlowDrawXLib::image_render( int width, int height,
 
   Imlib_render( (ImlibData *)imlib, (ImlibImage *)*im, width, height);
   *im_pixmap = (glow_tPixmap) Imlib_move_image( (ImlibData *)imlib, (ImlibImage *)*im);
-  *im_mask = (glow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
+  if ( im_mask)
+    *im_mask = (glow_tPixmap) Imlib_move_mask( (ImlibData *)imlib, (ImlibImage *)*im);
 
 #endif
   return 1;

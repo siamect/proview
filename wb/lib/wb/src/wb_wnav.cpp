@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.32 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.33 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1050,19 +1050,16 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
+      if ( !node_count) {
 	current = 0;
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
-        else
-        {
-          sts = brow_GetLast( wnav->brow->ctx, &object);
+        else {
+          sts = brow_GetLastVisible( wnav->brow->ctx, &object);
           if ( EVEN(sts)) return 1;
         }
       }
-      else
-      {
+      else {
 	if ( node_count == 1)
 	  current = node_list[0];
 	else {
@@ -1076,15 +1073,16 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  else
 	    current = node_list[0];
 	}
-	sts = brow_GetPrevious( wnav->brow->ctx, current, &object);
-        if ( EVEN(sts)) {
-	  current = 0;
-          sts = brow_GetLast( wnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
-            if ( node_count)
+	if ( !brow_IsVisible( wnav->brow->ctx, current, flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( wnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( wnav->brow->ctx, current, &object);
+	  if ( EVEN(sts)) {
+	    if ( node_count)
 	      free( node_list);
-            return 1;
+	    return 1;
  	  }
         }
       }
@@ -1128,19 +1126,16 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( wnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
+      if ( !node_count) {
 	current = 0;
         if ( wnav->last_selected && wnav->object_exist( wnav->last_selected))
           object = wnav->last_selected;
-        else
-        {
-          sts = brow_GetFirst( wnav->brow->ctx, &object);
+        else {
+          sts = brow_GetFirstVisible( wnav->brow->ctx, &object);
           if ( EVEN(sts)) return 1;
         }
       }
-      else
-      {
+      else {
 	if ( node_count == 1)
 	  current = node_list[0];
 	else {
@@ -1154,12 +1149,13 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	  else
 	    current = node_list[0];
 	}
-	sts = brow_GetNext( wnav->brow->ctx, current, &object);
-        if ( EVEN(sts)) {
-	  current = 0;
-          sts = brow_GetFirst( wnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+	if ( !brow_IsVisible( wnav->brow->ctx, current, flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( wnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( wnav->brow->ctx, current, &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;

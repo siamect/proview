@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_graph_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -132,3 +132,7 @@ void GraphGtk::set_inputfocus( int focus)
   gtk_widget_grab_focus( grow_widget);
 }
 
+void GraphGtk::popup_position( int event_x, int event_y, int *x, int *y) 
+{
+  CoWowGtk::PopupPosition( grow_widget, event_x, event_y, x, y);
+}

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.cpp,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_image.cpp,v 1.4 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,46 +19,171 @@
 
 
 #include <iostream.h>
+#include <fstream.h>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
 
 #include "cnv_image.h"
 
+#define PWRE_GTK 1
+
+#if defined PWRE_GTK
+
+# include <gdk/gdk.h>
+# include <gdk-pixbuf/gdk-pixbuf.h>
+
+static int gdk_init_done = 0;
+ 
+#elif defined PWRE_IMLIB
+
+# include <Xm/Xm.h>
+# include <Mrm/MrmPublic.h>
+# ifndef _XtIntrinsic_h
+#  include <X11/Intrinsic.h>
+# endif
+# include <X11/Xlib.h>
+# include <X11/Xutil.h>
+# if defined OS_LYNX
+#  define __NO_INCLUDE_WARN__ 1
+# endif
+# include <X11/extensions/shape.h>
+# include <Imlib.h>
+# if defined OS_LYNX
+#  undef __NO_INCLUDE_WARN__
+# endif
 
 static ImlibData *imlib = 0;
 static Display *display = 0;
 
+#endif
 
-int cnv_get_image( char *fname, ImlibImage **image, Pixmap *pixmap)
+
+
+
+int cnv_get_image( char *fname, cnv_tImImage *image, cnv_tPixmap *pixmap)
 {
-#if defined IMLIB
+#if defined PWRE_GTK
+  if ( !gdk_init_done) {
+    gdk_init( 0, 0);
+    gdk_init_done = 1;
+  }
+
+  *image = (cnv_tImImage *) gdk_pixbuf_new_from_file( fname, 0);
+  if ( !*image)
+    return 0;
+
+#elif defined PWRE_IMLIB
   if ( !imlib) {
     display = XOpenDisplay(NULL);
     imlib = Imlib_init( display);
   }
-#endif
 
-  *image = Imlib_load_image( imlib, fname);
+  *image = (cnv_tImImage) Imlib_load_image( imlib, fname);
   if ( !*image)
     return 0;
-  *pixmap = Imlib_move_image( imlib, *image);
+  *pixmap = (cnv_tPixmap) Imlib_move_image( imlib, (ImlibImage *)*image);
+#endif
 
   return 1;
 }
 
-void cnv_free_image( ImlibImage *image, Pixmap pixmap)
+void cnv_free_image( cnv_tImImage image, cnv_tPixmap pixmap)
 {
-  Imlib_free_pixmap( imlib, pixmap);
-  Imlib_destroy_image( imlib, image);
+#if defined PWRE_GTK
+  gdk_pixbuf_unref( (GdkPixbuf *) image);
+
+#elif defined PWRE_IMLIB
+
+  Imlib_free_pixmap( imlib, (Pixmap) pixmap);
+  Imlib_destroy_image( imlib, (ImlibImage *) image);
+#endif
 }
 
-void cnv_print_image( ImlibImage *image, char *filename)
+void cnv_print_image( cnv_tImImage image, char *filename)
 {
-  Imlib_save_image( imlib, image, filename, 0);
+#if defined PWRE_GTK
+  char *s;
+  char type[20];
+  GError *error;
+
+  s = strrchr( filename, '.');
+  if ( !s)
+    return;
+
+  strcpy( type, s+1);
+
+  if ( strcmp( type, "jpg") == 0)
+    gdk_pixbuf_save( (GdkPixbuf *)image, filename, "jpeg", &error, "quality", "100", NULL);
+  else
+    gdk_pixbuf_save( (GdkPixbuf *)image, filename, type, &error, NULL);
+
+#elif defined  PWRE_IMLIB
+  Imlib_save_image( imlib, (ImlibImage *) image, filename, 0);
+#endif
 }
 
+int cnv_image_width( cnv_tImImage image) 
+{
+#if defined PWRE_GTK
+  return gdk_pixbuf_get_width( (GdkPixbuf *)image);
+#elif defined  PWRE_IMLIB
+  return ((ImlibImage *)image)->rgb_width;
+#endif
+}
 
+int cnv_image_height( cnv_tImImage image)
+{
+#if defined PWRE_GTK
+  return gdk_pixbuf_get_height( (GdkPixbuf *)image);
+#elif defined  PWRE_IMLIB
+  return ((ImlibImage *)image)->rgb_height;
+#endif
+}
+
+void cnv_image_pixel_iter( cnv_tImImage image, 
+			   void (* pixel_cb)(void *, ofstream&, unsigned char *), 
+			   void *userdata, ofstream& fp)
+{
+#if defined PWRE_GTK
+  unsigned char *rgb, *rgb_row;
+  int 		rgb_height;
+  int 		rgb_width;
+  int		rowstride;
+  int		n_channels;
+   
+  rgb = gdk_pixbuf_get_pixels( (GdkPixbuf *)image);
+  rgb_height = gdk_pixbuf_get_height( (GdkPixbuf *)image);
+  rgb_width = gdk_pixbuf_get_width( (GdkPixbuf *)image);
+  rowstride = gdk_pixbuf_get_rowstride( (GdkPixbuf *)image);
+  n_channels = gdk_pixbuf_get_n_channels( (GdkPixbuf *)image);
+
+  rgb_row = rgb;
+  for ( int j = 0; j < rgb_height; j++) {
+    rgb = rgb_row;
+    for ( int i = 0; i < rgb_width; i++) {
+      if ( n_channels >= 4 && *(rgb+3))
+	(pixel_cb) ( userdata, fp, rgb);
+      rgb += n_channels;
+    }
+    rgb_row += rowstride;
+  }
+
+#elif defined  PWRE_IMLIB
+  unsigned char *rgb;
+  int 		rgb_height;
+  int 		rgb_width;
+
+  rgb = ((ImlibImage *)image)->rgb_data;
+  rgb_height = cnv_image_height( image);
+  rgb_width = cnv_image_width( image);
+
+  for ( int i = 0; i < rgb_height * rgb_width * 3; i+=3) {
+    (pixel_cb) ( userdata, fp, rgb);
+    rgb += 3;
+  }
+#endif
+}
 
 
 

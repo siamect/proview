@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browwidget_gtk.cpp,v 1.1 2007-01-04 07:56:44 claes Exp $
+ * Proview   $Id: flow_browwidget_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -144,8 +144,6 @@ static void scroll_h_action( 	GtkWidget      	*w,
     return;
   }
 
-  printf( "Horizontal scroll callback\n");
-
   BrowCtx *ctx = (BrowCtx *) broww->brow_ctx;
   gdouble value;
   g_object_get( w,
@@ -165,8 +163,6 @@ static void scroll_v_action( 	GtkWidget 	*w,
     return;
   }
     
-  printf( "Vertical scroll callback\n");
-
   BrowCtx *ctx = (BrowCtx *) broww->brow_ctx;
   gdouble value;
   g_object_get( w,
@@ -202,90 +198,9 @@ static gboolean browwidgetgtk_expose( GtkWidget *flow, GdkEventExpose *event)
   return TRUE;
 }
 
-static void
-reset_focus_recurse (GtkWidget *widget,
-		     gpointer   data)
-{
-  if (GTK_IS_CONTAINER (widget))
-    {
-      GtkContainer *container;
-
-      container = GTK_CONTAINER (widget);
-      gtk_container_set_focus_child (container, NULL);
-
-      gtk_container_foreach (container,
-			     reset_focus_recurse,
-			     NULL);
-    }
-}
-
-static void
-gtk_widget_real_grab_focus (GtkWidget *focus_widget)
-{
-  if (GTK_WIDGET_CAN_FOCUS (focus_widget))
-    {
-      GtkWidget *toplevel;
-      GtkWidget *widget;
-      
-      /* clear the current focus setting, break if the current widget
-       * is the focus widget's parent, since containers above that will
-       * be set by the next loop.
-       */
-      toplevel = gtk_widget_get_toplevel (focus_widget);
-      if (GTK_WIDGET_TOPLEVEL (toplevel))
-	{
-	  widget = GTK_WINDOW (toplevel)->focus_widget;
-	  
-	  if (widget == focus_widget)
-	    {
-	      /* We call _gtk_window_internal_set_focus() here so that the
-	       * toplevel window can request the focus if necessary.
-	       * This is needed when the toplevel is a GtkPlug
-	       */
-	      if (!GTK_WIDGET_HAS_FOCUS (widget))
-		_gtk_window_internal_set_focus (GTK_WINDOW (toplevel), focus_widget);
-
-	      return;
-	    }
-	  
-	  if (widget)
-	    {
-	      while (widget->parent && widget->parent != focus_widget->parent)
-		{
-		  widget = widget->parent;
-		  gtk_container_set_focus_child (GTK_CONTAINER (widget), NULL);
-		}
-	    }
-	}
-      else if (toplevel != focus_widget)
-	{
-	  /* gtk_widget_grab_focus() operates on a tree without window...
-	   * actually, this is very questionable behaviour.
-	   */
-	  
-	  gtk_container_foreach (GTK_CONTAINER (toplevel),
-				 reset_focus_recurse,
-				 NULL);
-	}
-
-      /* now propagate the new focus up the widget tree and finally
-       * set it on the window
-       */
-      widget = focus_widget;
-      while (widget->parent)
-	{
-	  gtk_container_set_focus_child (GTK_CONTAINER (widget->parent), widget);
-	  widget = widget->parent;
-	}
-      if (GTK_IS_WINDOW (widget))
-	_gtk_window_internal_set_focus (GTK_WINDOW (widget), focus_widget);
-    }
-}
-
 static void browwidgetgtk_grab_focus( GtkWidget *flow)
 {
-  gtk_widget_real_grab_focus( flow);
-  //GTK_WIDGET_CLASS( browwidgetgtk_parent_class)->grab_focus( flow);
+  GTK_WIDGET_CLASS( browwidgetgtk_parent_class)->grab_focus( flow);
   gdk_window_focus( flow->window, GDK_CURRENT_TIME);
 }
 

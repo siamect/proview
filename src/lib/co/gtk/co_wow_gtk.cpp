@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,6 +101,7 @@ void CoWowGtk::DisplayQuestion( void *ctx, char *title, char *text,
 						"default-height", 150,
 						"default-width", 400,
 						"title", title,
+						"window-position", GTK_WIN_POS_CENTER,
 						NULL);
   cbdata->question_widget = question_widget;
   g_signal_connect( question_widget, "delete_event", G_CALLBACK(question_delete_event), cbdata);
@@ -238,10 +239,11 @@ void *CoWowGtk::CreateList (
   
  
   ctx->toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 400,
-			   "default-width", 200,
-			   "title", title,
-			   NULL);
+					      "default-height", 400,
+					      "default-width", 200,
+					      "title", title,
+					      "window-position", GTK_WIN_POS_CENTER,
+					      NULL);
 
   store = gtk_list_store_new( 1, G_TYPE_STRING);
   name_p = texts;
@@ -564,6 +566,33 @@ void CoWowGtk::CreateFileSelDia( char *title, void *parent_ctx,
     gtk_file_filter_set_name( filter,  "*.wb_load,*.wb_dmp");
     gtk_file_filter_add_pattern( filter, "*.wb_load");
     gtk_file_filter_add_pattern( filter, "*.wb_dmp");
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
+
+    filter = gtk_file_filter_new();
+    gtk_file_filter_set_name( filter,  "All Files");
+    gtk_file_filter_add_pattern( filter, "*");
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
+  }
+  else if ( file_type == wow_eFileSelType_Graph) {    
+    pwr_tFileName folder;
+    dcli_translate_filename( folder, "$pwrp_pop");
+    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER(dialog), folder);
+
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name( filter,  "*.pwg");
+    gtk_file_filter_add_pattern( filter, "*.pwg");
+    gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
+  }
+  else if ( file_type == wow_eFileSelType_Image) {
+    pwr_tFileName folder;
+    dcli_translate_filename( folder, "$pwrp_pop");
+    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER(dialog), folder);
+
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_set_name( filter,  "*.png,*.jpg,*.gif");
+    gtk_file_filter_add_pattern( filter, "*.png");
+    gtk_file_filter_add_pattern( filter, "*.jpg");
+    gtk_file_filter_add_pattern( filter, "*.gif");
     gtk_file_chooser_add_filter( GTK_FILE_CHOOSER(dialog), filter);
 
     filter = gtk_file_filter_new();

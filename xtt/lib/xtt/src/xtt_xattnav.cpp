@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.15 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.16 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,13 +145,16 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
     brow_GetSelectedNodes( xattnav->brow->ctx, &node_list, &node_count);
     if ( !node_count) {
-      sts = brow_GetLast( xattnav->brow->ctx, &object);
+      sts = brow_GetLastVisible( xattnav->brow->ctx, &object);
       if ( EVEN(sts)) return 1;
     }
     else {
-      sts = brow_GetPrevious( xattnav->brow->ctx, node_list[0], &object);
-      if ( EVEN(sts)) {
-	sts = brow_GetLast( xattnav->brow->ctx, &object);
+      if ( !brow_IsVisible( xattnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	sts = brow_GetLastVisible( xattnav->brow->ctx, &object);
+	if ( EVEN(sts)) return 1;
+      }
+      else {
+	sts = brow_GetPrevious( xattnav->brow->ctx, node_list[0], &object);
 	if ( EVEN(sts)) {
 	  if ( node_count)
 	    free( node_list);
@@ -176,13 +179,16 @@ int XAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
     brow_GetSelectedNodes( xattnav->brow->ctx, &node_list, &node_count);
     if ( !node_count) {
-      sts = brow_GetFirst( xattnav->brow->ctx, &object);
+      sts = brow_GetFirstVisible( xattnav->brow->ctx, &object);
       if ( EVEN(sts)) return 1;
     }
     else {
-      sts = brow_GetNext( xattnav->brow->ctx, node_list[0], &object);
-      if ( EVEN(sts)) {
-	sts = brow_GetFirst( xattnav->brow->ctx, &object);
+      if ( !brow_IsVisible( xattnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	sts = brow_GetFirstVisible( xattnav->brow->ctx, &object);
+	if ( EVEN(sts)) return 1;
+      }
+      else {
+	sts = brow_GetNext( xattnav->brow->ctx, node_list[0], &object);
 	if ( EVEN(sts)) {
 	  if ( node_count)
 	    free( node_list);

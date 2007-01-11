@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.24 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.25 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -632,6 +632,10 @@ class Graph {
   //! Set backgound color.
   /*! Background color is set to the currently selected fill color. */
   void set_background_color();
+
+  //! Set default backgound color.
+  /*! Background color is set to a default color. */
+  void set_default_background_color();
 
   //! Display gridpoints.
   /*! \param show	1 gridpoints are displayed, 0 gridpoints are hidden. */

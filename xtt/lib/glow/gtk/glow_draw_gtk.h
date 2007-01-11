@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.h,v 1.1 2007-01-04 08:07:43 claes Exp $
+ * Proview   $Id: glow_draw_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,7 @@
 
 #include <stdlib.h>
 
-#include <libgnome.h>
-#include <libgnomeui/libgnomeui.h>
-#include <gtk/gtkprivate.h>
+#include <gtk/gtk.h>
 
 #include "glow_draw.h"
 
@@ -47,9 +45,9 @@ class DrawWindGtk : public DrawWind {
   int		clip_on;
   int		clip_cnt;
   GdkRectangle 	clip_rectangle[DRAW_CLIP_SIZE];
-  GdkPixmap  *background_pixmap;
-  int     background_pixmap_width;
-  int     background_pixmap_height;
+  GdkPixmap  	*background_pixmap;
+  int     	background_pixmap_width;
+  int     	background_pixmap_height;
 };
 
 class GlowDrawGtk : public GlowDraw {
@@ -149,7 +147,7 @@ class GlowDrawGtk : public GlowDraw {
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y);
   virtual void set_inputfocus( GlowWind *w);
   virtual void set_background(  GlowWind *w, glow_eDrawType drawtype, glow_tPixmap pixmap,
-		       int pixmap_width, int pixmap_height);
+		       glow_tImImage image, int pixmap_width, int pixmap_height);
   virtual void reset_background( GlowWind *w);
   virtual void set_image_clip_mask( glow_tPixmap pixmap, int x, int y);
   virtual void reset_image_clip_mask();
@@ -174,24 +172,6 @@ class GlowDrawGtk : public GlowDraw {
   GdkPoint *points_to_gdk_points( glow_sPointX *points, int point_cnt);
   int get_font_idx( int gc_type);
 
-  virtual void imlib_destroy_image( glow_tImData imlib, glow_tImImage image);
-  virtual void imlib_kill_image( glow_tImData imlib, glow_tImImage image);
-  virtual void imlib_free_pixmap( glow_tImData imlib, glow_tPixmap pixmap);
-  virtual glow_tImImage imlib_load_image( glow_tImData imlib, char *filename);
-  virtual glow_tImImage imlib_clone_image( glow_tImData imlib, glow_tImImage image);
-  virtual int imlib_render( glow_tImData imlib, glow_tImImage image, int width, int height);
-  virtual glow_tPixmap imlib_move_image( glow_tImData imlib, glow_tImImage image);
-  virtual glow_tPixmap imlib_move_mask( glow_tImData imlib, glow_tImImage image);
-  virtual void imlib_rotate_image( glow_tImData imlib, glow_tImImage image, int d);
-  virtual void imlib_flip_image_vertical( glow_tImData imlib, glow_tImImage image);
-  virtual void imlib_flip_image_horizontal( glow_tImData imlib, glow_tImImage image);
-  virtual void imlib_set_image_red_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod);
-  virtual void imlib_set_image_green_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod);
-  virtual void imlib_set_image_blue_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod);
-  virtual void imlib_changed_image( glow_tImData imlib, glow_tImImage image);
-  virtual int imlib_image_rgb_width( glow_tImImage image);
-  virtual int imlib_image_rgb_height( glow_tImImage image);
-  virtual unsigned char *imlib_image_rgb_data( glow_tImImage image);
   int image_get_width( glow_tImImage image);
   int image_get_height( glow_tImImage image);
   int image_get_rowstride( glow_tImImage image);

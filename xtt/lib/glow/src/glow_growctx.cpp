@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.18 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.19 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2556,34 +2556,35 @@ void GrowCtx::flip_select( glow_eFlipDirection dir)
 
 void GrowCtx::set_background( glow_eDrawType color)
 {
+
   if ( background_disabled)
     return;
 
-  if ( enable_bg_pixmap && strcmp( background_image, "") != 0)
-  {
-    glow_tPixmap pixmap;
+  if ( enable_bg_pixmap && strcmp( background_image, "") != 0) {
+    glow_tPixmap pixmap = 0;
+    glow_tImImage image = 0;
     int sts;
     int width, height;
 
     if ( !background_tiled && !(mw.window_width == 0 || mw.window_height == 0)) {
       sts = grow_image_to_pixmap( this, background_image,
-				  mw.window_width, mw.window_height, &pixmap,
+				  mw.window_width, mw.window_height, &pixmap, &image,
 				  &width, &height);
       if ( EVEN(sts))
-        gdraw->set_background( &mw, color, 0, 0, 0);
+        gdraw->set_background( &mw, color, 0, 0, 0, 0);
       else
-        gdraw->set_background( &mw, color, pixmap, width, height);
+        gdraw->set_background( &mw, color, pixmap, image, width, height);
     }
     else if ( background_tiled ) {
       sts = grow_image_to_pixmap( this, background_image, 0, 0,
-			    &pixmap, &width, &height);
+			    &pixmap, &image, &width, &height);
       if ( EVEN(sts))
-        gdraw->set_background( &mw, color, 0, 0, 0);
+        gdraw->set_background( &mw, color, 0, 0, 0, 0);
       else
-        gdraw->set_background( &mw, color, pixmap, width, height);
+        gdraw->set_background( &mw, color, pixmap, image, width, height);
     }
     else
-      gdraw->set_background( &mw, color, 0, 0, 0);
+      gdraw->set_background( &mw, color, 0, 0, 0, 0);
 
 #if 0
     // Create a pixmap
@@ -2617,9 +2618,11 @@ void GrowCtx::set_background( glow_eDrawType color)
     delete i1;
 #endif
   }
-  else
-    gdraw->set_background( &mw, color, 0, 0, 0);
-
+  else {
+    gdraw->set_background( &mw, color, 0, 0, 0, 0);
+    if ( !no_nav)
+      gdraw->set_background( &navw, color, 0, 0, 0, 0);
+  }
   background_color = color;
 }
 

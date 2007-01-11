@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.34 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.35 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -941,6 +941,11 @@ void Graph::set_nav_background_color()
 
   grow_GetBackgroundColor( grow->ctx, &color);
   grow_SetBackgroundColor( grow->ctx, color);
+}
+
+void Graph::set_default_background_color()
+{
+  grow_SetBackgroundColor( grow->ctx, glow_eDrawType_Color32);
 }
 
 void Graph::set_show_grid( int show)
@@ -2092,8 +2097,9 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  dyn->action_type = ge_mActionType( dyn->action_type | ge_mActionType_Slider);
 
       }
-      else if ( strcmp( type, ".gif") == 0 || strcmp( type, ".jpg") == 0)
-      {
+      else if ( strcmp( type, ".gif") == 0 || 
+		strcmp( type, ".jpg") == 0 || 
+		strcmp( type, ".png") == 0) {
 	grow_tObject i1;
 
         if ( strncmp( dir, "jpwr/", 5) == 0) {
@@ -2571,6 +2577,7 @@ void GraphGrow::grow_setup()
 
   grow_RegisterUserDataCallbacks( ctx, graph_userdata_save_cb, graph_userdata_open_cb,
 				  graph_userdata_copy_cb);
+
 }
 
 void GraphGrow::grow_trace_setup()
@@ -3211,6 +3218,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
       }
       default: ;
       }
+      break;
     }
     case glow_eEvent_MB1Click:
     {

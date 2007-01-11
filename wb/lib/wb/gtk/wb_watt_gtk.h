@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_watt_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@ class WAttGtk : public WAtt {
   static CoWowRecall value_recall;
   CoWowEntryGtk *cmd_entry;
   CoWowFocusTimerGtk focustimer;
+  int 		input_max_length;
 
   void message( char severity, char *message);
   void set_prompt( char *prompt);
@@ -75,6 +76,7 @@ class WAttGtk : public WAtt {
   static void activate_cmd_input( GtkWidget *w, gpointer data);
   static void activate_cmd_scrolled_ok( GtkWidget *w, gpointer data);
   static void activate_cmd_scrolled_ca( GtkWidget *w, gpointer data);
+  static void action_text_inserted( GtkTextBuffer *w, GtkTextIter *arg1, gchar *arg2, gint arg3, gpointer data);
 };
 
 #endif

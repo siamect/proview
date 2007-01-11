@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,6 +99,8 @@ class WttGtk : public Wtt {
     GtkWidget	*menu_edit_w;
     GtkWidget	*menu_classeditor_w;
     GtkWidget	*menu_updateclasses_w;
+    GtkWidget	*tools_edit_w;
+    GtkWidget	*tools_save_w;
     int		set_focus_disabled;
     gint 	disfocus_timerid;
     gint 	selection_timerid;

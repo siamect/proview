@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xatt_gtk.h,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,6 +56,8 @@ class XAttGtk : public XAtt {
     GtkWidget	*pane;
     static CoWowRecall value_recall;
     CoWowEntryGtk *cmd_entry;
+    CoWowFocusTimerGtk focustimer;
+    int input_max_length;
 
     void message( char severity, char *message);
     void set_prompt( char *prompt);
@@ -77,6 +79,7 @@ class XAttGtk : public XAtt {
     static void activate_cmd_input( GtkWidget *w, gpointer data);
     static void activate_cmd_scrolled_ok( GtkWidget *w, gpointer data);
     static void activate_cmd_scrolled_ca( GtkWidget *w, gpointer data);
+    static void action_text_inserted( GtkTextBuffer *w, GtkTextIter *iter, gchar *str, gint len, gpointer data);
     
 };
 

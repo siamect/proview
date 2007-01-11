@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.2 2007-01-05 10:36:25 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.3 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,8 @@
 #ifndef ge_h
 #include "ge.h"
 #endif
+
+#include "co_wow.h"
 
 /* ge_gtk.h -- Simple graphic editor */
 class CoWowRecall;
@@ -155,6 +157,8 @@ class GeGtk : public Ge {
   static void activate_export_gejava_as( GtkWidget *w, gpointer gectx);
   static void activate_export_java( GtkWidget *w, gpointer gectx);
   static void activate_export_java_as( GtkWidget *w, gpointer gectx);
+  static void activate_import_graph( GtkWidget *w, gpointer gectx);
+  static void activate_import_image( GtkWidget *w, gpointer gectx);
   static void activate_generate_web( GtkWidget *w, gpointer gectx);
   static void activate_creanextpage( GtkWidget *w, gpointer gectx);
   static void activate_nextpage( GtkWidget *w, gpointer gectx);
@@ -240,6 +244,8 @@ class GeGtk : public Ge {
   static void activate_confirm_ok( GtkWidget *w, gpointer gectx);
   static void activate_confirm_cancel( GtkWidget *w, gpointer gectx);
   static gboolean ge_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
+  static void graph_file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
+  static void image_file_selected_cb( void *ctx, char *filename, wow_eFileSelType file_type);
 };
 
 #endif

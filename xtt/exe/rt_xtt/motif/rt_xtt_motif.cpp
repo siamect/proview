@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.cpp,v 1.1 2007-01-04 08:40:33 claes Exp $
+ * Proview   $Id: rt_xtt_motif.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,7 @@ extern "C" {
 #include "co_xhelp_motif.h"
 #include "co_wow_motif.h"
 #include "rt_xnav_msg.h"
+#include "rt_syi.h"
 
 // Static variables
 static String   fbr[] = {
@@ -537,13 +538,13 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
   char		*uid_filename_p = uid_filename;
   Arg 		args[20];
   pwr_tStatus	sts;
-  char 		title[80];
   int		i;
   XtAppContext  app_ctx;
   MrmHierarchy s_DRMh;
   MrmType dclass;
   Widget	xtt_widget;
-  char		name[] = "PwR Xtt";
+  char		title[120] = "Xtt ";
+  char		nodename[80];
 
   static char translations[] =
     "<FocusIn>: xtt_inputfocus()\n";
@@ -591,11 +592,13 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
 
   static int	reglist_num = (sizeof reglist / sizeof reglist[0]);
 
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  if ( ODD(sts))
+    strcat( title, nodename);
+
   // Motif
   Lng::get_uid( uid_filename, uid_filename);
   MrmInitialize();
-
-  strcpy( title, "PwR Xtt");
 
   toplevel = XtVaAppInitialize (
 		      &app_ctx, 
@@ -624,8 +627,8 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
   MrmRegisterNames(reglist, reglist_num);
 
   sts = MrmFetchWidgetOverride( s_DRMh, "xtt_window", toplevel,
-			name, args, i, &xtt_widget, &dclass);
-  if (sts != MrmSUCCESS)  printf("can't fetch %s\n", name);
+			title, args, i, &xtt_widget, &dclass);
+  if (sts != MrmSUCCESS)  printf("can't fetch xtt_window\n");
 
   sts = MrmFetchWidget(s_DRMh, "input_dialog", toplevel,
   		&india_widget, &dclass);

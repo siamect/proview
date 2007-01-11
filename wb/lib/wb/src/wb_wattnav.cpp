@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.13 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.14 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -215,19 +215,18 @@ int WAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( wattnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetLast( wattnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetLastVisible( wattnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetPrevious( wattnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetLast( wattnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( wattnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( wattnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( wattnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -267,19 +266,18 @@ int WAttNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       int		sts;
 
       brow_GetSelectedNodes( wattnav->brow->ctx, &node_list, &node_count);
-      if ( !node_count)
-      {
-        sts = brow_GetFirst( wattnav->brow->ctx, &object);
+      if ( !node_count) {
+        sts = brow_GetFirstVisible( wattnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
-      else
-      {
-        sts = brow_GetNext( wattnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts))
-        {
-          sts = brow_GetFirst( wattnav->brow->ctx, &object);
-          if ( EVEN(sts))
-	  {
+      else {
+	if ( !brow_IsVisible( wattnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( wattnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( wattnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;

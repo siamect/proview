@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_widget_gtk.cpp,v 1.1 2007-01-04 07:56:44 claes Exp $
+ * Proview   $Id: flow_widget_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -142,8 +142,6 @@ static void scroll_h_action( 	GtkWidget      	*w,
     return;
   }
 
-  printf( "Horizontal scroll callback\n");
-
   FlowCtx *ctx = (FlowCtx *) floww->flow_ctx;
   gdouble value;
   g_object_get( w,
@@ -163,8 +161,6 @@ static void scroll_v_action( 	GtkWidget 	*w,
     return;
   }
     
-  printf( "Vertical scroll callback\n");
-
   FlowCtx *ctx = (FlowCtx *) floww->flow_ctx;
   gdouble value;
   g_object_get( w,

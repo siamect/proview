@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_gtk.cpp,v 1.1 2007-01-04 08:07:43 claes Exp $
+ * Proview   $Id: glow_growwidget_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -144,8 +144,6 @@ static void scroll_h_action( 	GtkWidget      	*w,
     return;
   }
 
-  printf( "Horizontal scroll callback\n");
-
   GrowCtx *ctx = (GrowCtx *) groww->grow_ctx;
   gdouble value;
   g_object_get( w,
@@ -165,8 +163,6 @@ static void scroll_v_action( 	GtkWidget 	*w,
     return;
   }
     
-  printf( "Vertical scroll callback\n");
-
   GrowCtx *ctx = (GrowCtx *) groww->grow_ctx;
   gdouble value;
   g_object_get( w,
@@ -207,6 +203,16 @@ static void growwidgetgtk_grab_focus( GtkWidget *glow)
 {
   GTK_WIDGET_CLASS( growwidgetgtk_parent_class)->grab_focus( glow);
   gdk_window_focus( glow->window, GDK_CURRENT_TIME);
+}
+
+static void growwidgetgtk_destroy( GtkObject *object)
+{
+  GrowWidgetGtk *grow = (GrowWidgetGtk *)object;
+
+  if ( grow->is_navigator) {
+    ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
+  }
+  GTK_OBJECT_CLASS( growwidgetgtk_parent_class)->destroy( object);
 }
 
 
@@ -289,11 +295,15 @@ static void growwidgetgtk_realize( GtkWidget *widget)
 static void growwidgetgtk_class_init( GrowWidgetGtkClass *klass)
 {
   GtkWidgetClass *widget_class;
+  GtkObjectClass *object_class;
+
   widget_class = GTK_WIDGET_CLASS( klass);
+  object_class = GTK_OBJECT_CLASS(klass);
   widget_class->realize = growwidgetgtk_realize;
   widget_class->expose_event = growwidgetgtk_expose;
   widget_class->event = growwidgetgtk_event;
   widget_class->grab_focus = growwidgetgtk_grab_focus;
+  object_class->destroy = growwidgetgtk_destroy;
 }
 
 static void growwidgetgtk_init( GrowWidgetGtk *glow)

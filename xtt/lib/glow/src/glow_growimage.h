@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.h,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growimage.h,v 1.6 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -623,7 +623,7 @@ class GrowImage : public GlowArrayElem {
   If they are zero, the size from the image file is kept, and returned in w and h.
 */
 int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile, 
-	    int width, int height, glow_tPixmap *pixmap, int *w, int *h);
+	    int width, int height, glow_tPixmap *pixmap, glow_tImImage *image, int *w, int *h);
 
 /*@}*/
 #endif

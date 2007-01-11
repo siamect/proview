@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.h,v 1.3 2005-09-01 14:57:47 claes Exp $
+ * Proview   $Id: cnv_image.h,v 1.4 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,35 +22,17 @@
 
 #include <stdlib.h>
 
-#include <Xm/Xm.h>
-#include <Mrm/MrmPublic.h>
-#ifndef _XtIntrinsic_h
-#include <X11/Intrinsic.h>
-#endif
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+typedef void *cnv_tImImage;
+typedef void *cnv_tPixmap;
 
-#if defined OS_LINUX
-#define IMLIB 1
-#endif
-
-#if defined IMLIB
-# if defined OS_LYNX
-#  define __NO_INCLUDE_WARN__ 1
-# endif
-# include <X11/extensions/shape.h>
-# include <Imlib.h>
-# if defined OS_LYNX
-#  undef __NO_INCLUDE_WARN__
-# endif
-#else
-typedef void *ImlibData;
-typedef void *ImlibImage;
-#endif
-
-int cnv_get_image( char *fname, ImlibImage **image, Pixmap *pixmap);
-void cnv_free_image( ImlibImage *image, Pixmap pixmap);
-void cnv_print_image( ImlibImage *image, char *filename);
+int cnv_get_image( char *fname, cnv_tImImage *image, cnv_tPixmap *pixmap);
+void cnv_free_image( cnv_tImImage image, cnv_tPixmap pixmap);
+void cnv_print_image( cnv_tImImage image, char *filename);
+int cnv_image_width( cnv_tImImage image);
+int cnv_image_height( cnv_tImImage image);
+void cnv_image_pixel_iter( cnv_tImImage image, 
+			   void (* pixel_cb)(void *, ofstream&, unsigned char *), 
+			   void *userdata, ofstream& fp);
 
 #endif

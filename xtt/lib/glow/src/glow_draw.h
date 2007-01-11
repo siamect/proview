@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.6 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.7 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -107,7 +107,7 @@ class GlowDraw {
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y) {}
   virtual void set_inputfocus( GlowWind *w) {}
   virtual void set_background(  GlowWind *w, glow_eDrawType drawtype, glow_tPixmap pixmap,
-		       int pixmap_width, int pixmap_height) {}
+		       glow_tImImage image, int pixmap_width, int pixmap_height) {}
   virtual void reset_background( GlowWind *w) {}
   virtual void set_image_clip_mask( DrawWind *w, glow_tPixmap pixmap, int x, int y) {}
   virtual void reset_image_clip_mask( DrawWind *w) {}
@@ -129,22 +129,6 @@ class GlowDraw {
 		  void (*callback_func)( GlowCtx *ctx), void **id) {}
   virtual void remove_timer( void *id) {}
 
-  virtual void imlib_destroy_image( glow_tImData imlib, glow_tImImage image) {}
-  virtual void imlib_kill_image( glow_tImData imlib, glow_tImImage image) {}
-  virtual void imlib_free_pixmap( glow_tImData imlib, glow_tPixmap pixmap) {}
-  virtual glow_tImImage imlib_load_image( glow_tImData imlib, char *filename) {return 0;}
-  virtual glow_tImImage imlib_clone_image( glow_tImData imlib, glow_tImImage image) {return 0;}
-  virtual int imlib_render( glow_tImData imlib, glow_tImImage image, int width, int height) {return 0;}
-  virtual glow_tPixmap imlib_move_image( glow_tImData imlib, glow_tImImage image) {return 0;}
-  virtual glow_tPixmap imlib_move_mask( glow_tImData imlib, glow_tImImage image) {return 0;}
-  virtual void imlib_set_image_red_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) {}
-  virtual void imlib_set_image_green_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) {}
-  virtual void imlib_set_image_blue_curve( glow_tImData imlib, glow_tImImage image, unsigned char *mod) {}
-  virtual void imlib_changed_image( glow_tImData imlib, glow_tImImage image) {}
-  virtual int imlib_image_rgb_width( glow_tImImage image) {return 0;}
-  virtual int imlib_image_rgb_height( glow_tImImage image) {return 0;}
-  virtual unsigned char *imlib_image_rgb_data( glow_tImImage image) {return 0;}
-  
   virtual int image_get_width( glow_tImImage image) {return 0;}
   virtual int image_get_height( glow_tImImage image) {return 0;}
   virtual int image_get_rowstride( glow_tImImage image) {return 0;}

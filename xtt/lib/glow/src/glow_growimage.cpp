@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growimage.cpp,v 1.6 2007-01-11 11:40:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1669,15 +1669,12 @@ static int rgb_shift( unsigned char *x0, unsigned char *y0, unsigned char *z0, i
 #endif
 
 int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile, 
-	    int width, int height, glow_tPixmap *pixmap, int *w, int *h)
+	    int width, int height, glow_tPixmap *pixmap, glow_tImImage *image, int *w, int *h)
 {
   int found = 0;
   char imagename[80];
-  char filename[120];
-  char *s;
-  glow_tImData imlib;  
-
-  imlib = ((GlowDraw *)ctx->gdraw)->imlib;
+  pwr_tFileName filename;
+    char *s;
 
   // Find file
   if ( strncmp( imagefile, "jpwr/", 5) == 0) {
@@ -1693,16 +1690,14 @@ int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile,
   if ( check_file( filename))
     found = 1;
 
-  if ( !found)
-  {
+  if ( !found) {
     // Add some search path
-    for ( int i = 0; i < ((GrowCtx *)ctx)->path_cnt; i++)
-    {
+    for ( int i = 0; i < ((GrowCtx *)ctx)->path_cnt; i++) {
+
       strcpy( filename, ((GrowCtx *)ctx)->path[i]);
       strcat( filename, imagename);
       dcli_translate_filename( filename, filename);
-      if ( check_file( filename))
-      {
+      if ( check_file( filename)) {
         found = 1;
         break;
       }
@@ -1711,24 +1706,23 @@ int grow_image_to_pixmap( GrowCtx *ctx, char *imagefile,
       return 0;
   }
 
-#if defined IMLIB
-  glow_tImImage image;
-
-  image = ctx->gdraw->imlib_load_image( imlib, filename);
-  if ( !image) 
+  ctx->gdraw->image_load( filename, image, 0);
+  if ( !*image)
     return 0;
 
   if ( width == 0 || height == 0) {
-    width = ctx->gdraw->imlib_image_rgb_width(image);
-    height = ctx->gdraw->imlib_image_rgb_height(image);
+    width = ctx->gdraw->image_get_width( *image);
+    height = ctx->gdraw->image_get_height( *image);
   }
-  ctx->gdraw->imlib_render( imlib, image, width, height);
-  *pixmap = ctx->gdraw->imlib_move_image( imlib, image);
-  ctx->gdraw->imlib_kill_image( imlib, image);
+  else {
+    ctx->gdraw->image_scale( width, height,
+			     0, image, pixmap, 0);
+  }
+  ctx->gdraw->image_render( width, height,
+			    0, image, pixmap, 0);
   *w = width;
   *h = height;
 
-#endif
   return 1;
 }
 

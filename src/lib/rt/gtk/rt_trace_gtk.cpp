@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_gtk.cpp,v 1.1 2007-01-04 07:52:30 claes Exp $
+ * Proview   $Id: rt_trace_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -256,21 +256,23 @@ static void destroy_event( GtkWidget *w, gpointer data)
 {
 }
 
+#if 0
 static gint nav_delete_event( GtkWidget *w, GdkEvent *event, gpointer tra)
 {
   gtk_widget_destroy( ((RtTraceGtk *)tra)->nav_shell);
   ((RtTraceGtk *)tra)->nav_shell = 0;
   return TRUE;
 }
+#endif
 
 RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObjid tr_objid,
 			pwr_tStatus *status) :
-  RtTrace( tr_parent_ctx, tr_objid, status), parent_wid(tr_parent_wid)
+  RtTrace( tr_parent_ctx, tr_objid, status), parent_wid(tr_parent_wid), nav_shell(0)
 {
 
   const int	window_width = 900;
   const int    	window_height = 800;
-  //const int    	palette_width = 220;
+  const int    	nav_width = 180;
   pwr_tStatus 	sts;
   pwr_tObjid	window_objid;
   pwr_tClassId	cid;
@@ -574,21 +576,21 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   gtk_toolbar_append_widget( tools, tools_show_cross, "Show Crossreferences", "");
   
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoomin), this);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoomout), this);
   gtk_toolbar_append_widget( tools, tools_zoom_out, "Zoom out", "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_reset.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoomreset), this);
@@ -599,14 +601,23 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
 							this, &flow_widget);
   gtk_widget_show_all(flow_widget);
 
+  nav_widget = flownavwidgetgtk_new( flow_widget);
+
+  GtkWidget *paned = gtk_hpaned_new();
+  gtk_paned_pack1( GTK_PANED(paned), flow_scrolled, TRUE, TRUE);
+  gtk_paned_pack2( GTK_PANED(paned), nav_widget, FALSE, TRUE);
+
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
-  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(flow_scrolled), TRUE, TRUE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(paned), TRUE, TRUE, 0);
 
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
   gtk_widget_show_all( toplevel);
 
+  gtk_paned_set_position( GTK_PANED(paned), window_width - nav_width);
+
+#if 0
   // Navigator window
   nav_shell = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					  "default-height", 200,
@@ -618,7 +629,7 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
   nav_widget = flownavwidgetgtk_new( flow_widget);
   gtk_container_add( GTK_CONTAINER(nav_shell), nav_widget);
   gtk_widget_show_all( nav_shell);
-
+#endif
 
   wow = new CoWowGtk( toplevel);
   trace_timerid = wow->timer_new();

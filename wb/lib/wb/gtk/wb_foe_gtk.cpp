@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1329,7 +1329,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   widgets.tools_save = gtk_button_new();
-  gtk_container_add( GTK_CONTAINER(widgets.tools_save), 
+  gtk_container_add( GTK_CONTAINER( widgets.tools_save), 
 	  gtk_image_new_from_stock( "gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(widgets.tools_save, "clicked", G_CALLBACK(WFoeGtk::activate_save), this);
   gtk_toolbar_append_widget( tools, widgets.tools_save, "Save", "");
@@ -1355,21 +1355,21 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_toolbar_append_widget( tools, widgets.tools_build, "Build Program", "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(WFoeGtk::activate_zoomin), this);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(WFoeGtk::activate_zoomout), this);
   gtk_toolbar_append_widget( tools, tools_zoom_out, "Zoom out", "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_reset.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(WFoeGtk::activate_unzoom), this);
@@ -1846,6 +1846,7 @@ void WFoeGtk::create_confirm_dialog()
 						"default-height", 150,
 						"default-width", 400,
 						"title", "Confirm",
+						"window-position", GTK_WIN_POS_CENTER,
 						NULL);
   g_signal_connect( widgets.caution, "delete_event", G_CALLBACK(confirm_delete_event), this);
   widgets.caution_label = gtk_label_new("");

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.7 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.8 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,14 +122,22 @@ class SubPalette {
     void menu_tree_free_children( subpalette_sMenu *first_child);
     void get_path( int *path_count, char **path_vect) 
 		{ *path_count = path_cnt; *path_vect = (char *)path;}; 
+    void select_by_name( char *name);
     static int init_brow_cb( FlowCtx *fctx, void *client_data);
 };
 
 class Item {
   public:
     Item( subpalette_eItemType	item_type) :
-	type( item_type) {};
+	type( item_type), node(0) 
+      { strcpy( name, "");}
+    virtual ~Item() {}
     subpalette_eItemType	type;
+    char	 	        name[120];
+    brow_tNode			node;
+
+    virtual int	 open_children( SubPalette *subpalette, double x, double y) { return 0;}
+    virtual int	 close( SubPalette *subpalette, double x, double y) { return 0;}
 };
 
 class ItemLocalSubGraphs : public Item {
@@ -137,8 +145,6 @@ class ItemLocalSubGraphs : public Item {
     ItemLocalSubGraphs( SubPalette *subpalette, char *item_name, 
 	char *item_filename,
 	brow_tNode dest, flow_eDest dest_code);
-    brow_tNode		node;
-    char	 	name[120];
     char	 	filename[120];
 
     int			open_children( SubPalette *subpalette, double x, double y);
@@ -150,8 +156,6 @@ class ItemFile : public Item {
     ItemFile( SubPalette *subpalette, char *item_name, 
 	char *item_filename, int item_pixmap,
 	brow_tNode dest, flow_eDest dest_code);
-    brow_tNode		node;
-    char	 	name[120];
     char	 	filename[120];
     int			pixmap;
 };
@@ -161,8 +165,6 @@ class ItemMenu : public Item {
     ItemMenu( SubPalette *subpalette, char *item_name, 
 	brow_tNode dest, flow_eDest dest_code, subpalette_sMenu **item_child_list,
 	int item_is_root);
-    brow_tNode		node;
-    char	 	name[120];
     subpalette_sMenu	**child_list;
     int			is_root;
     int			open_children( SubPalette *subpalette, double x, double y);

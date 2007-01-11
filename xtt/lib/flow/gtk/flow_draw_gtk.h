@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.h,v 1.1 2007-01-04 07:56:44 claes Exp $
+ * Proview   $Id: flow_draw_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,9 +22,7 @@
 
 #include <stdlib.h>
 
-#include <libgnome.h>
-#include <libgnomeui/libgnomeui.h>
-#include <gtk/gtkprivate.h>
+#include <gtk/gtk.h>
 #include "flow_draw.h"
 
 class FlowDrawGtk : public FlowDraw {
