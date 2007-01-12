@@ -1,29 +1,13 @@
-/* 
- * Proview   $Id: pb_dp.h,v 1.2 2006-02-01 08:35:51 claes Exp $
- * Copyright (C) SOFTING GmbH 1995-1999.
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
 /*****************************************************************************/
 /*                                                                           */
-/*                              SOFTING GmbH                                 */
+/*                                SOFTING AG                                 */
 /*                        Richard-Reitzner-Allee 6                           */
 /*                              D-85540 Haar                                 */
 /*                      Phone: (++49)-(0)89-45656-0                          */
 /*                      Fax:   (++49)-(0)89-45656-399                        */
 /*                                                                           */
-/*                    Copyright (C) SOFTING GmbH 1995-1999                   */
+/*                    Copyright (C) SOFTING AG 1995-2003                     */
+/*                            All Rights Reserved                            */
 /*                                                                           */
 /*****************************************************************************/
 /*****************************************************************************/
@@ -32,30 +16,27 @@
 /*  Filename    : PB_DP.H                                                    */
 /*  Version     : 5.22.0.00.release                                          */
 /*  Date        : 26-February-1999                                           */
-/*  Author      : SOFTING-BG2                                                */
+/*  Author      : SOFTING AG                                                 */
 /*                                                                           */
 /*  Description : This file contains the global defines and types of         */
 /*                component DP                                               */
 /*                                                                           */
-/*  CHANGE_NOTES                                                             */
-/*                                                                           */
-/*  date      name      change                                               */
-/*  -----------------------------------------------------------------------  */
-/*  22.07.97  BG2-BOE   set #pragma pack(2) and reset to #pragma pack()      */
-/*  24.09.97  BG2-BOE   add new baudrate #defines                            */
-/*                      - #define DP_KBAUD_45_45                             */
-/*  07.10.97  BG2-NI    add new types for DP/V1                              */
-/*  07.02.98  BG2-BOE   set #pragma pack(1)                                  */
-/*  01.02.99  BG2-BOE   add new service identifier and data structure for    */
-/*                      DP_DATA_TRANSPORT service                            */
-/*                                                                           */
-/*                                                                           */
-/*****************************************************************************/
-/*****************************************************************************/
 /*****************************************************************************/
 
 #ifndef __PB_DP__
 #define __PB_DP__
+
+
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to change alignment */
+#ifdef WIN32
+#pragma pack(push,1)
+#else
+#pragma pack(1)
+#endif
+#pragma warning (default : 4103)
+#endif
+
 
 /****************************************************************************/
 /*** DEFINES ****************************************************************/
@@ -258,7 +239,9 @@
 #define DP_OP_MODE_OFFLINE          0x00
 #define DP_OP_MODE_STOP             0x40
 #define DP_OP_MODE_CLEAR            0x80
+#define DP_OP_MODE_RED_CLEAR        0x81            /* new redundancy state */
 #define DP_OP_MODE_OPERATE          0xC0
+#define DP_OP_MODE_RED_OPERATE      0xC1            /* new redundancy state */
 
 /*--- DP MASTER DIAG IDENTIFIERS -------------------------------------------*/
 
@@ -743,7 +726,7 @@ typedef struct _T_DP_GET_MASTER_DIAG_RES_CON
 
 /*==========================================================================*/
 
-typedef void T_DP_GET_SLAVE_DIAG_REQ;
+typedef VOID T_DP_GET_SLAVE_DIAG_REQ;
 
 /*--------------------------------------------------------------------------*/
 
@@ -764,7 +747,7 @@ typedef T_DP_GET_SLAVE_DIAG_CON    T_DP_GET_SLAVE_DIAG_IND;         /* dito */
 
 /*==========================================================================*/
 
-typedef void T_DP_DATA_TRANSFER_REQ;                              /* no SDU */
+typedef VOID T_DP_DATA_TRANSFER_REQ;                              /* no SDU */
 
 /*--------------------------------------------------------------------------*/
 
@@ -1141,7 +1124,7 @@ typedef struct _T_DP_WRITE_REQ
    USIGN8   slot_number;                         /* 0..254, 255 is reserved */
    USIGN8   index;                               /* 0..254, 255 is reserved */
    USIGN8   length;                                 /* 0..DP_MSAC2_DATA_LEN */
-/* OCTET    data [length]                                                   */
+   /* OCTET    data [length]                                                   */
 
 } T_DP_WRITE_REQ;
 
@@ -1216,5 +1199,14 @@ typedef struct _T_DP_ERROR_CON
 
 /****************************************************************************/
 
-#endif /* __PB_DP__ */
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to reset alignment */
+#ifdef WIN32
+#pragma pack(pop)
+#else
+#pragma pack()
+#endif
+#pragma warning (default : 4103)
+#endif
 
+#endif /* __PB_DP__ */

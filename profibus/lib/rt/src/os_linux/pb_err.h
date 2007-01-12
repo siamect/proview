@@ -1,57 +1,40 @@
-/* 
- * Proview   $Id: pb_err.h,v 1.2 2006-02-01 08:35:51 claes Exp $
- * Copyright (C) SOFTING GmbH 1995-1999.
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
 /*****************************************************************************/
 /*                                                                           */
-/*                              SOFTING GmbH                                 */
+/*                                SOFTING AG                                 */
 /*                        Richard-Reitzner-Allee 6                           */
 /*                              D-85540 Haar                                 */
 /*                      Phone: (++49)-(0)89-45656-0                          */
 /*                      Fax:   (++49)-(0)89-45656-399                        */
 /*                                                                           */
-/*                    Copyright (C) SOFTING GmbH 1995-1999                   */
+/*                    Copyright (C) SOFTING AG 1995-2003                     */
+/*                            All Rights Reserved                            */
 /*                                                                           */
 /*****************************************************************************/
 /*****************************************************************************/
 /*      PROFIBUS ABORT-, REJECT-, EVENT- and ERROR DEFINES and -TYPES        */
 /*                                                                           */
 /*  Filename    : PB_ERR.H                                                   */
-/*  Version     : 5.21.0.00.release                                          */
-/*  Date        : 27-February-1998                                           */
-/*  Author      : SOFTING-FE3                                                */
+/*  Version     : 5.26.1.00.release                                          */
+/*  Date        : 27-June-2003                                               */
+/*  Author      : SOFTING AG                                                 */
 /*                                                                           */
 /*  Description : This file contains the ABORT, REJECT, EVENT and ERROR      */
 /*                types and defines and the according reason codes.          */
 /*                                                                           */
-/*  CHANGE_NOTES                                                             */
-/*                                                                           */
-/*  date      name      change                                               */
-/*  -----------------------------------------------------------------------  */
-/*  22.07.97  BG2-BOE   set #pragma pack(2) and reset to #pragma pack()      */
-/*  24.09.97  BG2-BOE   add additional error codes                           */
-/*  25.09.97  BG2-NI    add DP/V1 abort reason codes and DP/V1 errors        */
-/*  27.02.98  BG2-BOE   modify add. interface error codes                    */
-/*****************************************************************************/
-/*****************************************************************************/
 /*****************************************************************************/
 
 #ifndef __PB_ERR__
 #define __PB_ERR__
 
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to change alignment */
+#ifdef WIN32
+#pragma pack(push,2)
+#else
+#pragma pack(2)
+#endif
+#pragma warning (default : 4103)
+#endif
 
 /*****************************************************************************/
 /*************   ABORT REASON CODES                      *********************/
@@ -561,6 +544,8 @@
 #define E_FMB_SERV_PARAM_INCONSIST         0x0303
 #define E_FMB_SERV_ILLEGAL_PARAM           0x0304
 #define E_FMB_SERV_PERM_INTERN_FAULT       0x0305
+#define E_FMB_SERV_LOCAL_DISCONNECT        0x0306
+#define E_FMB_SERV_NO_ACKNOWLEDGE          0x0307
 
 #define E_FMB_ACCESS_OTHER                 0x0500
 #define E_FMB_ACCESS_OBJ_ACC_UNSUP         0x0501
@@ -571,6 +556,7 @@
 
 #define E_FMB_OTHER                        0x0700
 
+#define E_FMB_CFG_DP_OTHER                 0x0900
 #define E_FMB_CFG_DP_TOO_MANY_SLAVES       0x0901
 #define E_FMB_CFG_DP_WRONG_IO_DATA_LEN     0x0902
 #define E_FMB_CFG_DP_IO_ALIGNMENT_ERROR    0x0903
@@ -649,6 +635,57 @@
 #define E_DP_ILLEGAL_SLOT         0x2400
 #define E_DP_ILLEGAL_LENGTH       0x2500
 #define E_DP_ILLEGAL_EXTENSION    0x2600
+
+
+/****************************************************************************/
+/*************    DP ERROR CODE DEFINITIONS      ****************************/
+/****************************************************************************/
+
+/*--- DPS SERVICE RESULTS ---------------------------------------------------*/
+
+#define E_DPS_OK                   0x0000        /* acknowledgement positive */
+#define E_DPS_UE                   0x0001               /* remote user error */
+#define E_DPS_RR                   0x0002    /* remote resource insufficient */
+#define E_DPS_RS                   0x0003  /* remote service/SAP deactivated */
+#define E_DPS_RA                   0x0004    /* access of remote SAP blocked */
+#define E_DPS_NA                   0x0011 /* no reaction from remote station */
+#define E_DPS_DS                   0x0012       /* local entity disconnected */
+#define E_DPS_NO                   0x0013      /* not possible in this state */
+#define E_DPS_LR                   0x0014    /* local resource not available */
+#define E_DPS_IV                   0x0015    /* invalid parameter in request */
+#define E_DPS_TO                   0x0016                 /* timeout expired */
+
+#define E_DPS_FE                   0x00C1   /* format error in request frame */
+#define E_DPS_NI                   0x00C2        /* function not implemented */
+#define E_DPS_AD                   0x00C3                   /* access denied */
+#define E_DPS_EA                   0x00C4                  /* area too large */
+#define E_DPS_LE                   0x00C5      /* data block length exceeded */
+#define E_DPS_RE                   0x00C6  /* format error in response frame */
+#define E_DPS_IP                   0x00C7               /* invalid parameter */
+#define E_DPS_SC                   0x00C8               /* sequence conflict */
+#define E_DPS_SE                   0x00C9                  /* sequence error */
+#define E_DPS_NE                   0x00CA               /* area non-existent */
+#define E_DPS_DI                   0x00CB                 /* data incomplete */
+#define E_DPS_NC                   0x00CC                   /* not connected */
+
+/*--- DPS ERROR EXTENSIONS --------------------------------------------------*/
+
+#define E_DPS_DUPLICATED_SERVICE        0x0100
+#define E_DPS_WRONG_SLAVE_ADDRESS       0x0200
+#define E_DPS_WRONG_CFG_LEN             0x0300
+#define E_DPS_WRONG_PRM_LEN             0x0400
+#define E_DPS_WRONG_DIAG_LEN            0x0500
+#define E_DPS_WRONG_SSA_LEN             0x0600
+#define E_DPS_WRONG_ENHANCED_INIT_LEN   0x0700
+#define E_DPS_ILLEGAL_CFG_DATA          0x0800
+#define E_DPS_NOT_ENOUGH_FRAME_MEMORY   0x0900
+#define E_DPS_WRONG_INPUT_LEN           0x0A00
+#define E_DPS_WRONG_OUTPUT_LEN          0x0B00
+#define E_DPS_INVALID_DIAG_STATE        0x0C00
+#define E_DPS_INVALID_EXT_DIAG_DATA     0x0D00
+#define E_DPS_SSA_REQUIRED              0x0E00
+#define E_DPS_SSA_NOT_SUPPORTED         0x0F00
+
 
 
 /*****************************************************************************/
@@ -745,21 +782,24 @@
 #define   E_IF_SERVICE_NOT_EXECUTABLE     25          /* service not executable */
 #define   E_IF_INVALID_VERSION            26                 /* invalid version */
 
-#define   E_IF_NO_CNTRL_PRESENT                       28
+#define   E_IF_NO_CNTRL_PRESENT           28        /* controller not available */
 #define   E_IF_INVALID_PARAMETER          30   /* wrong parameter in REQ or RES */
 #define   E_IF_INIT_FAILED                31  /* init. API or Controller failed */
 #define   E_IF_EXIT_FAILED                32   /* exit API or Controller failed */
 #define   E_IF_PAPI_NOT_INITIALIZED       33             /* API not initialized */
 
+#define   E_IF_NO_DEVICE_CONNECTION       34   /* no PROFIBUS device connection */
+
 /* error codes available only in Win NT --------------------------------------- */
 #define E_IF_SLAVE_DIAG_DATA            0xF0               /* no data available */
                                               /* new diagnostics data available */
 #define E_IF_SLAVE_ERROR                0xF1                /* no data exchange */
-#define E_IF_INVALID_DP_STATE           0xF2      /* DP is not in state operate */
+#define E_IF_INVALID_DP_STATE           0xF2 /* DP is not in state clear/operate*/
+#define E_IF_READING_REGISTRY           0xF3          /* error reading registry */
 #define E_IF_OS_ERROR                   0xFF       /* OS system (WIN,DOS) error */
                                                 /* get detail with GetLastError */
 
-/* INTERFACE ERROR DETAIL CODES ----------------------------------------------- */
+/* INTERFACE ERROR DETAIL CODES (only Win95/98) ------------------------------- */
 /* for folLowing INTERFACE-ERRORS                                               */
 /* - E_IF_NO_CNTRL_PRESENT                                                      */
 /* - E_IF_INIT_FAILED                                                           */
@@ -788,11 +828,12 @@
 #define PROFIBRD_PORT_ALREADY_USED       0x0043       /* IO port already in use */
 
 
+
 /*****************************************************************************/
 /*************        ERROR DATA STRUCTURES      *****************************/
 /*****************************************************************************/
 
-#define MAX_ERROR_DESCR_LENGTH    ERROR_DESCR_LENGTH
+#define MAX_ERROR_DESCR_LENGTH    _NAME_LENGTH(ERROR_DESCR_LENGTH)
 
 /* --- standard error data structure --------------------------------------- */
 typedef struct _T_ERROR
@@ -886,6 +927,17 @@ typedef struct _T_EXCEPTION
   USIGN16 par2;                                               /* parameter 2 */
   USIGN16 par3;                                               /* parameter 3 */
 } T_EXCEPTION;
+
+
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to reset alignment */
+#ifdef WIN32
+#pragma pack(pop)
+#else
+#pragma pack()
+#endif
+#pragma warning (default : 4103)
+#endif
 
 #endif
 

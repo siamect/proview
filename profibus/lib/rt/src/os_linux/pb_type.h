@@ -1,29 +1,13 @@
-/* 
- * Proview   $Id: pb_type.h,v 1.2 2006-02-01 08:35:51 claes Exp $
- * Copyright (C) SOFTING GmbH 1995-1999.
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
 /*****************************************************************************/
 /*                                                                           */
-/*                              SOFTING GmbH                                 */
+/*                                SOFTING AG                                 */
 /*                        Richard-Reitzner-Allee 6                           */
 /*                              D-85540 Haar                                 */
 /*                      Phone: (++49)-(0)89-45656-0                          */
 /*                      Fax:   (++49)-(0)89-45656-399                        */
 /*                                                                           */
-/*                    Copyright (C) SOFTING GmbH 1995-1999                   */
+/*                    Copyright (C) SOFTING AG 1995-2003                     */
+/*                            All Rights Reserved                            */
 /*                                                                           */
 /*****************************************************************************/
 /*****************************************************************************/
@@ -32,20 +16,10 @@
 /*  Filename    : PB_TYPE.H                                                  */
 /*  Version     : 5.22.0.00.release                                          */
 /*  Date        : 26-February-1999                                           */
-/*  Author      : SOFTING-BG2                                                */
+/*  Author      : SOFTING AG                                                 */
 /*                                                                           */
 /*  Description : This file contains the PROFIBUS basic types                */
 /*                                                                           */
-/*  CHANGE_NOTES                                                             */
-/*                                                                           */
-/*  date      name      change                                               */
-/*  -----------------------------------------------------------------------  */
-/*  18.03.97  BG2-BOE   include header file 'pb_conf.h'                      */
-/*  18.03.97  BG2-BOE   remove #define FAR and #define HUGE                  */
-/*  02.02.99  BG2-BOE   define INT32 as int using WIN32                      */
-/*                      (compatibility to MSVC60)                            */
-/*****************************************************************************/
-/*****************************************************************************/
 /*****************************************************************************/
 
 #ifndef __PB_TYPE__
@@ -53,31 +27,52 @@
 
 #include "pb_conf.h"                        /* PAPI configuration parameters */
 
+#ifndef NULL
+   #ifdef __cplusplus
+       #define NULL    0
+   #else
+       #define NULL ((void *)0)
+   #endif
+#endif
+
+
 /* --- global type definitions --------------------------------------------- */
 #ifndef VOID
 #define     VOID                 void
 #endif
 
-#define     PB_BOOL	unsigned char
+typedef     unsigned char        PB_BOOL;
 #if (PB_VER < 500)
 #undef      BOOL
-#define     BOOL        PB_BOOL
+#define     BOOL                 PB_BOOL
 #endif
 
-#define     OCTET 	unsigned char        
-#define     USIGN8 	unsigned char
-#define     USIGN16 	unsigned short
-#define     USIGN32 	unsigned int
+typedef     unsigned char        OCTET;
+typedef     unsigned char        USIGN8;
+typedef     unsigned short       USIGN16;
+typedef     unsigned long        USIGN32;
 
-#define     INT8 	signed char
-#define     INT16	signed short
-#define     INT32	signed int
+typedef     signed char          INT8;
+typedef     signed short         INT16;
 
-#define     FLOAT	float
-#define     DOUBLE	double
+#ifdef WIN32
+typedef     int                  INT32;
+#else
+typedef     signed long          INT32;
+#endif
 
-#define     STRINGV	char
-#define     CSTRING	char
+#ifdef _LINUX
+typedef     unsigned int         UINT;
+#endif
+
+typedef     float                FLOAT;
+typedef     double               DOUBLE;
+
+typedef     char                 STRINGV;
+
+#ifndef PB_CSTRING_NOT_USED
+typedef     char                 CSTRING;
+#endif
 
 
 /* --- PROFIBUS true and false definitions --------------------------------- */
@@ -97,5 +92,4 @@
 #define     GLOBAL
 
 #endif
-
 

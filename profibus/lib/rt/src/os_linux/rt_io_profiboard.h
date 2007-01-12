@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_profiboard.h,v 1.1 2006-01-16 13:56:52 claes Exp $
+ * Proview   $Id: rt_io_profiboard.h,v 1.2 2007-01-12 13:28:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,74 +32,6 @@ unsigned short swap16(unsigned short in);
 
 extern
 unsigned int swap32(unsigned int in); 
-
-extern
-pwr_tUInt16 pb_cmi_init(int fp);
-
-extern
-pwr_tUInt16 pb_cmi_write(int fp,
-		         T_PROFI_SERVICE_DESCR *sdb_ptr,
-		         void *data_ptr,
-		         pwr_tUInt16 data_len); 
-
-extern
-pwr_tUInt16 pb_set_stalltime(int fp, unsigned short t);
-
-extern
-pwr_tUInt16 pb_cmi_read(int fp,
-		        T_PROFI_SERVICE_DESCR *sdb_ptr,
-		        void *data_ptr,
-		        pwr_tUInt16 *data_len_ptr);
-
-extern
-pwr_tUInt16 pb_cmi_poll(int fp,
-		        T_PROFI_SERVICE_DESCR *sdb_ptr,
-		        void *data_ptr,
-		        pwr_tUInt16 *data_len_ptr);
-
-extern
-pwr_tUInt16 pb_cmi_flush(int fp);
-
-extern
-pwr_tUInt16 pb_cmi_get_data(int fp,
-		            pwr_tUInt8 data_id,
-		            pwr_tUInt16 offset,
-		            pwr_tUInt16 data_size,
-		            void *data_ptr);
-
-extern
-pwr_tUInt16 pb_cmi_set_data(int fp,
-		            pwr_tUInt8 data_id,
-		            pwr_tUInt16 offset,
-		            pwr_tUInt16 data_size,
-		            void *data_ptr);
-
-extern
-pwr_tUInt16 pb_get_slave_info(int fp,
-		              pwr_tUInt16 slave_address,
-		              pwr_tUInt16 *offset_inputs,
-		              pwr_tUInt16 *offset_outputs,
-		              pwr_tUInt16 *bytes_of_input,
-		              pwr_tUInt16 *bytes_of_output);
-
-extern
-pwr_tUInt16 pb_get_slave_cfg(int fp,
-		 	     pwr_tUInt16 slave_address,
-			     pwr_tUInt16 *cfg_data_len,
-			     void *cfg_data);
-
-extern
-pwr_tUInt16 pb_download_all(int fp,
-		            pwr_tUInt16 slave_address,
-		            pwr_tUInt8 wd_fact1,
-		            pwr_tUInt8 wd_fact2,
-		            pwr_tUInt8 min_tsdr,
-		            pwr_tUInt16 ident_number,
-		            pwr_tUInt8 group_ident,
-		            pwr_tUInt16 prm_user_data_len,
-		            void *prm_user_data,
-		            pwr_tUInt16 cfg_data_len,
-		            void *cfg_data);
 
 #endif
 

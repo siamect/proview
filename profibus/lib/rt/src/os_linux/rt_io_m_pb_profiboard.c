@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.4 2006-09-14 10:28:16 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.5 2007-01-12 13:28:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,10 +30,15 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
+#include "keywords.h"
+
 #include "pb_type.h"
+#include "pb_conf.h"
 #include "pb_if.h"
+#include "pb_err.h"
 #include "pb_fmb.h"
 #include "pb_dp.h"
+
 #include "rt_io_pb_locals.h"
 
 #include "pwr.h"
@@ -48,7 +53,24 @@
 
 #include "rt_io_profiboard.h"
 
+#define DP_MAX_SERVICE_RETRY    10
+
+#define PROFI_RCV_CON_IND()  retry_counter = DP_MAX_SERVICE_RETRY; \
+                             do {                                                                                \
+                               result = profi_rcv_con_ind (hDevice, &con_ind_sdb, con_ind_buffer, &con_ind_buffer_len); \
+                             } while ((result == NO_CON_IND_RECEIVED) && (retry_counter-- > 0)); \
+                                                                                                  \
+                             if (result == E_IF_FATAL_ERROR) return (PB_FALSE); \
+
+
 static int count;
+
+USIGN8                   con_ind_buffer [256];
+USIGN16                  con_ind_buffer_len = 256;
+T_PROFI_SERVICE_DESCR    con_ind_sdb;
+INT16                    result;              /* !!! local result variable !!! */
+USIGN16                  retry_counter;
+
 
 static pwr_tStatus IoAgentInit (
   io_tCtx	ctx,
@@ -71,12 +93,17 @@ static pwr_tStatus IoAgentClose (
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting FMB parameters
 \*----------------------------------------------------------------------------*/
-static short fmb_set_configuration(int fp,  
+static short fmb_set_configuration(T_PROFI_DEVICE_HANDLE *hDevice,  
 				   pwr_sClass_Pb_Profiboard *op) 
 {
   T_PROFI_SERVICE_DESCR sdb;
   T_FMB_SET_CONFIGURATION_REQ data;
-  pwr_tUInt16 retval;
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
 
   sdb.comm_ref = 0;
   sdb.layer = FMB;
@@ -100,26 +127,34 @@ static short fmb_set_configuration(int fp,
   data.dp.max_bus_para_len = 1024;
   data.dp.max_slave_para_len = 1024;
 
-  retval = pb_cmi_flush(fp);
-  if (retval != PB_OK) return retval;
+  profi_snd_req_res(hDevice, &sdb, &data, PB_FALSE);
 
-  retval = pb_cmi_write(fp, &sdb, &data, sizeof(T_FMB_SET_CONFIGURATION_REQ));
-  if (retval != PB_OK) return retval;
+  PROFI_RCV_CON_IND (); /*Macro to fetch one confirmation or indication*/
+  
+  if ((con_ind_sdb.service   == FMB_SET_CONFIGURATION) &&
+      (con_ind_sdb.primitive == CON                  ) &&
+      (con_ind_sdb.result    == POS                  )) {
+    return (PB_TRUE);
+  }
 
-  retval = pb_cmi_read(fp, NULL, NULL, NULL);
-  return retval;
+  return (PB_FALSE);
+
 }
 
 
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting DP master parameters
 \*----------------------------------------------------------------------------*/
-static short dp_init_master(int fp,  
-			    pwr_sClass_Pb_Profiboard *op)
+static short dp_init_master(T_PROFI_DEVICE_HANDLE *hDevice)
 {
   T_PROFI_SERVICE_DESCR sdb;
   T_DP_INIT_MASTER_REQ data;
-  pwr_tUInt16 retval;
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
 
   sdb.comm_ref = 0;
   sdb.layer = DP;
@@ -131,35 +166,43 @@ static short dp_init_master(int fp,
   data.master_default_address = 0;
   data.master_class2 = PB_FALSE;
   data.lowest_slave_address = 2;
-  data.slave_io_address_mode = DP_AAM_ARRAY;
+  data.slave_io_address_mode = DP_AAM_IO_BLOCKS; // only mode possible with Linux-driver DP_AAM_ARRAY;
   data.clear_outputs = PB_TRUE;
   data.auto_remote_services = DP_AUTO_REMOTE_SERVICES;
   data.cyclic_data_transfer = PB_TRUE;
 
-  retval = pb_cmi_flush(fp);
-  if (retval != PB_OK) return retval;
+  profi_snd_req_res(hDevice, &sdb, &data, PB_FALSE);
 
-  retval = pb_cmi_write(fp, &sdb, &data, sizeof(T_DP_INIT_MASTER_REQ));
-  if (retval != PB_OK) return retval;
+  PROFI_RCV_CON_IND (); /*Macro to fetch one confirmation or indication*/
+    
+  if ((con_ind_sdb.service   == DP_INIT_MASTER) &&
+      (con_ind_sdb.primitive == CON                  ) &&
+      (con_ind_sdb.result    == POS                  )) {
+    return (PB_TRUE);
+  }
 
-  retval = pb_cmi_read(fp, NULL, NULL, NULL);
-  return retval;
+  return (PB_FALSE);
 }
 
 
 /*----------------------------------------------------------------------------*\
   Sends request to Profiboard for setting DP bus parameters
 \*----------------------------------------------------------------------------*/
-static short dp_init_bus(int fp,  
-		         pwr_sClass_Pb_Profiboard *op)
+static short dp_download_bus(T_PROFI_DEVICE_HANDLE *hDevice,  
+			    pwr_sClass_Pb_Profiboard *op)
 {
   T_PROFI_SERVICE_DESCR sdb;
   struct {
     T_DP_DOWNLOAD_REQ drp; 
     T_DP_BUS_PARA_SET dbp;
   } data;
-  pwr_tUInt16 retval;
   int i;
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
 
   sdb.comm_ref = 0;
   sdb.layer = DP;
@@ -219,22 +262,25 @@ static short dp_init_bus(int fp,
   for (i=0; i<32; i++) 
     data.dbp.master_class2_name[i] = 0;
 
-  retval = pb_cmi_flush(fp);
-  if (retval != PB_OK) return retval;
+  profi_snd_req_res(hDevice, &sdb, &data, PB_FALSE);
 
-  retval = pb_cmi_write(fp, &sdb, &data, 72);
-  if (retval != PB_OK) return retval;
+  PROFI_RCV_CON_IND (); /*Macro to fetch one confirmation or indication*/
 
-  retval = pb_cmi_read(fp, NULL, NULL, NULL);
-  return retval;
+  if ((con_ind_sdb.service   == DP_DOWNLOAD_LOC) &&
+      (con_ind_sdb.primitive == CON                  ) &&
+      (con_ind_sdb.result    == POS                  )) {
+    return (PB_TRUE);
+  }
+
+  return (PB_FALSE);
+
 }
 
 
 /*----------------------------------------------------------------------------*\
   Sends request for selecting operation mode to the Profiboard
 \*----------------------------------------------------------------------------*/
-static short act_param_loc(int fp, 
-			   pwr_sClass_Pb_Profiboard *op, 
+static short dp_act_param_loc(T_PROFI_DEVICE_HANDLE *hDevice, 
 			   short arg) {
   T_PROFI_SERVICE_DESCR sdb;
   T_DP_ACT_PARAM_REQ apr;
@@ -253,96 +299,223 @@ static short act_param_loc(int fp,
   apr.activate = arg;
   apr.dummy = 0;
 
-  retval = pb_cmi_flush(fp);
-  if (retval != PB_OK) return retval;
+  retval = profi_snd_req_res(hDevice, &sdb, &apr, PB_FALSE);
 
-  retval = pb_cmi_write(fp, &sdb, &apr, sizeof(T_DP_ACT_PARAM_REQ));
-  if (retval != PB_OK) return retval;
-
-  retval = pb_cmi_read(fp, NULL, NULL, NULL);
   return retval;
 }
 
 /*----------------------------------------------------------------------------*\
+  Sends request for selecting operation mode to the Profiboard
+\*----------------------------------------------------------------------------*/
+static pwr_tBoolean dp_get_slave_diag(T_PROFI_DEVICE_HANDLE *hDevice) 
+{
+  T_PROFI_SERVICE_DESCR sdb;
+  pwr_tUInt16 retval;
+    
+  /* Fill the service description block */
+  sdb.comm_ref = 0;
+  sdb.layer = DP;
+  sdb.service = DP_GET_SLAVE_DIAG;
+  sdb.primitive = REQ;
+  sdb.invoke_id = 0;
+  sdb.result = 0;
+
+  retval = profi_snd_req_res(hDevice, &sdb, &sdb, PB_FALSE);
+
+  return ((pwr_tBoolean) (retval == E_OK));
+}
+
+/*----------------------------------------------------------------------------*\
+  Sends request for selecting operation mode to the Profiboard
+\*----------------------------------------------------------------------------*/
+static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_ptr) 
+{
+  T_DP_DIAG_DATA    FAR *diag_data_ptr;
+  char                     s [128];
+
+  if (get_slave_diag_con_ptr->diag_data_len >= DP_MIN_SLAVE_DIAG_LEN)
+  {
+    diag_data_ptr = (T_DP_DIAG_DATA FAR*) (get_slave_diag_con_ptr + 1);
+
+    sprintf (s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, Master = %3hu, Ext = %hu, Diags = %hu",
+             get_slave_diag_con_ptr->rem_add,
+             swap16 (diag_data_ptr->ident_number),
+             diag_data_ptr->station_status_1,
+             diag_data_ptr->station_status_2,
+             diag_data_ptr->station_status_3,
+             diag_data_ptr->master_add,
+             get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN,
+             get_slave_diag_con_ptr->diag_entries);
+
+    errh_Info( "Profibus DP slave diag - %s", s);
+
+  } /* diag_data_len */
+
+}
+/*----------------------------------------------------------------------------*\
   Initializes one DP slave in the master card
 \*----------------------------------------------------------------------------*/
-static pwr_tStatus init_dp_slave (
-  io_sAgent	*ap,
-  pwr_tObjid	oid,
-  int restart
+static pwr_tStatus dp_download_slave (
+  T_PROFI_DEVICE_HANDLE *hDevice,
+  pwr_sClass_Pb_DP_Slave *op
 )
 {
-  
-  pwr_sClass_Pb_DP_Slave *op;
-  io_sAgentLocal *local_agent;
-  int i;
-  char name[196];
-  pwr_tUInt16 sts;
-  pwr_tStatus status;
-  struct timespec rqtp, rmtp;
 
-  status = gdh_ObjidToPointer(oid, (pwr_tAddress *) &op);
-  status = gdh_ObjidToName(oid, (char *) &name, sizeof(name), cdh_mNName);
-  
-  local_agent = (io_sAgentLocal *) (ap->Local);
+  int i;
+  T_PROFI_SERVICE_DESCR   sdb;
+  struct {
+    T_DP_DOWNLOAD_REQ drp; 
+    unsigned char param[512];
+  } slave_data;
+
+  T_DP_SLAVE_PARA_SET prm_head;
+  T_DP_PRM_DATA prm_data;
+  T_DP_AAT_DATA aat_data;
+  T_DP_SLAVE_USER_DATA user_data;
+  USIGN16 download_data_size;
+  USIGN16 data_len;
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
 
   op->Status = PB__NOTINIT;
  
-  errh_Info( "Download Profibus DP Slave config - %s", name );
- 
   // Try to initialize slave, make three attempts before we give up
-
-  sts = PB_OK;
   
-  for(i=0; i<3; i++) {
-if (!restart) {
 
-    if (op->AutoConfigure == 1) {
-      sts = pb_get_slave_cfg(local_agent->Pb_fp,
-		       op->SlaveAddress,
-		       &op->ConfigDataLen,
-		       &op->ConfigData);
-    }
-    else {
-      sts = PB_OK;
-    }
-    if (sts == PB_OK) {
-      sts = pb_download_all(local_agent->Pb_fp,
-		      op->SlaveAddress,
-		      op->WdFact1,
-		      op->WdFact2,
-		      0,
-		      op->PNOIdent,
-		      op->GroupIdent,
-		      op->PrmUserDataLen,
-		      &op->PrmUserData,
-		      op->ConfigDataLen,
-		      &op->ConfigData);
-    }
-}
-    if (sts == PB_OK) {
-      sts = pb_get_slave_info(local_agent->Pb_fp, 
-			op->SlaveAddress, 
-			&op->OffsetInputs,
-			&op->OffsetOutputs,
-			&op->BytesOfInput,
-			&op->BytesOfOutput);
-    }
-    if (sts == PB_OK) break;
-    rqtp.tv_sec = 1;
-    rqtp.tv_nsec = 0;
-    nanosleep(&rqtp, &rmtp);
+  download_data_size = sizeof(prm_head) + sizeof(prm_data) + 
+			op->PrmUserDataLen + op->ConfigDataLen +
+			sizeof(aat_data) + sizeof(user_data);
+
+  data_len = sizeof(slave_data.drp) + download_data_size;
+
+  sdb.comm_ref = 0;
+  sdb.layer = DP;
+  sdb.service = DP_DOWNLOAD_LOC;
+  sdb.primitive = REQ;
+  sdb.invoke_id = 0;
+  sdb.result = 0;
+
+  slave_data.drp.data_len =  download_data_size;
+  slave_data.drp.rem_add = 0;
+  slave_data.drp.area_code = op->SlaveAddress;
+  slave_data.drp.add_offset = 0;
+
+  prm_head.slave_para_len = swap16(download_data_size);
+  prm_head.sl_flag = DP_SL_NEW_PRM | DP_SL_ACTIVE;
+  prm_head.slave_type = DP_SLAVE_TYPE_DP;
+  for (i = 0; i < 12; i++) prm_head.reserved[i] = 0;
+  
+  i = 0;
+  memcpy(&slave_data.param[i], &prm_head, sizeof(prm_head));
+  i += sizeof(prm_head);
+
+  prm_data.prm_data_len = swap16(sizeof(prm_data) + op->PrmUserDataLen);
+  prm_data.station_status = DP_PRM_LOCK_REQ | DP_PRM_WD_ON;
+  prm_data.wd_fact_1 = op->WdFact1;
+  prm_data.wd_fact_2 = op->WdFact2;
+  prm_data.min_tsdr = 0;
+  prm_data.ident_number = swap16(op->PNOIdent);
+  prm_data.group_ident = op->GroupIdent;
+
+  memcpy(&slave_data.param[i], &prm_data, sizeof(prm_data));
+  i += sizeof(prm_data);
+
+  memcpy(&slave_data.param[i], op->PrmUserData, op->PrmUserDataLen);
+  i += op->PrmUserDataLen;
+
+  memcpy(&slave_data.param[i], op->ConfigData, op->ConfigDataLen);
+  i += op->ConfigDataLen;
+
+  aat_data.aat_data_len = swap16(4);		// AAT data not used in array mode
+  aat_data.number_inputs = 0;
+  aat_data.number_outputs = 0;
+//  aat_data.offset_inputs = 0;
+//  aat_data.offset_outputs = 0;
+
+  memcpy(&slave_data.param[i], &aat_data, sizeof(aat_data));
+  i += sizeof(aat_data);
+
+  user_data.slave_user_data_len = swap16(2);
+
+  memcpy(&slave_data.param[i], &user_data, sizeof(user_data));
+  i += sizeof(user_data);
+
+  profi_snd_req_res(hDevice, &sdb, &slave_data, PB_FALSE);
+
+  PROFI_RCV_CON_IND (); /*Macro to fetch one confirmation or indication*/
+
+  if ((con_ind_sdb.service   == DP_DOWNLOAD_LOC) &&
+      (con_ind_sdb.primitive == CON                  ) &&
+      (con_ind_sdb.result    == POS                  )) {
+    op->Status = PB__NOCONN;
+    return (PB_TRUE);
   }
-  if (sts != PB_OK) {
-    op->Status = PB__INITFAIL;
-    errh_Info( "ERROR Init Profibus DP slave %s", name);
-    return IO__ERRINIDEVICE;
-  }
 
-  op->Status = PB__NOCONN;
-  return IO__SUCCESS;
+  op->Status = PB__INITFAIL;
+
+  return (PB_FALSE);
+
 }
 
+
+/*----------------------------------------------------------------------------*\
+  Calculate offsets of inputs and outputs for a slave
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus dp_io_offsets (
+  T_PROFI_DEVICE_HANDLE *hDevice,
+  pwr_sClass_Pb_DP_Slave *op
+)
+{
+  T_PROFI_SERVICE_DESCR         sdb;
+  T_DP_GET_SLAVE_PARAM_REQ      get_slave_param_req;
+  T_DP_GET_SLAVE_PARAM_CON      FAR *get_slave_param_con_ptr;
+  T_DP_SLAVE_PARAM_SLAVE_INFO   FAR *slave_info_ptr;
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
+
+  sdb.comm_ref = 0;
+  sdb.layer = DP;
+  sdb.service = DP_GET_SLAVE_PARAM;
+  sdb.primitive = REQ;
+  sdb.invoke_id = 0;
+  sdb.result = 0;
+
+  get_slave_param_req.identifier = DP_SLAVE_PARAM_SLAVE_INFO;
+  get_slave_param_req.rem_add    = op->SlaveAddress;
+
+  result = profi_snd_req_res (hDevice, &sdb, &get_slave_param_req, PB_FALSE);
+
+  if (result != E_OK) return (result);
+  
+  PROFI_RCV_CON_IND ();
+
+  get_slave_param_con_ptr = (T_DP_GET_SLAVE_PARAM_CON FAR*) con_ind_buffer;
+
+  if ( (con_ind_sdb.service   == DP_GET_SLAVE_PARAM) &&
+       (con_ind_sdb.primitive == CON               ) &&
+       (con_ind_sdb.result    == POS               ) )
+  {
+    slave_info_ptr = (T_DP_SLAVE_PARAM_SLAVE_INFO FAR*) (get_slave_param_con_ptr + 1);
+    
+    op->BytesOfInput  = slave_info_ptr->number_inputs;
+    op->BytesOfOutput = slave_info_ptr->number_outputs;
+    op->OffsetInputs  = slave_info_ptr->offset_inputs;
+    op->OffsetOutputs = slave_info_ptr->offset_outputs;
+
+    return (PB_TRUE);
+
+  } 
+  
+  return (PB_FALSE);
+}
 
 /*----------------------------------------------------------------------------*\
    Init method for the Pb_profiboard agent  
@@ -355,15 +528,20 @@ static pwr_tStatus IoAgentInit (
   pwr_sClass_Pb_Profiboard *op;
   pwr_tUInt16 sts;
   pwr_tStatus status;
-  io_sAgentLocal *local;
-  char devname[25];
-  struct timespec rqtp, rmtp;
-  int i;
+  T_PROFI_DEVICE_HANDLE *hDevice;
   char ok;
 
   pwr_tObjid slave_objid;
   pwr_tClassId slave_class;
-  
+
+  pwr_sClass_Pb_DP_Slave *sop;
+  char name[196];
+
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+
+    
   count=0;
 
   /* Allocate area for local data structure */
@@ -373,16 +551,16 @@ static pwr_tStatus IoAgentInit (
     return IO__ERRINIDEVICE;
   }
     
-  local = (io_sAgentLocal *) ap->Local;
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
 
   op->Status = PB__NOTINIT;
 
-  /* Open Pb driver */
-  sprintf(devname, "/dev/pbus%1d", (int)op->BusNumber);
-  local->Pb_fp = open(devname, O_RDWR);
+  /* Initialize interface */
+  
+  sts = profi_init(hDevice, (unsigned char) op->BusNumber - 1, 0, 0);
 
-  if (local->Pb_fp == -1)
+  if (sts != E_OK)
   {
     /* Can't open driver */
     op->Status = PB__INITFAIL;
@@ -411,116 +589,153 @@ static pwr_tStatus IoAgentInit (
   
     ok = FALSE;
     
-    while (!ok) {
+    if (ctx->Node->Restarts == 0) {
+
+      while (!ok) {
     
-if (ctx->Node->Restarts == 0) {
-      op->Status = PB__NOTINIT;
+        op->Status = PB__NOTINIT;
       
-      /* Initialize CMI */
+        /* Set FMB configuration */
 
-      sts = pb_cmi_init(local->Pb_fp);
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "cmi init");
-        return IO__ERRINIDEVICE;
-      }
+        sts = fmb_set_configuration(hDevice,  op); 
+        if (!sts) {
+          op->Status = PB__INITFAIL;
+          errh_Info( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
+          return IO__ERRINIDEVICE;
+        }
 
-      /* Set FMB configuration */
+        /* Set DP master parameters */
 
-      sts = fmb_set_configuration(local->Pb_fp,  op); 
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
-        return IO__ERRINIDEVICE;
-      }
+        sts = dp_init_master(hDevice); 
+        if (!sts) {
+          op->Status = PB__INITFAIL;
+          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init master");
+          return IO__ERRINIDEVICE;
+        }
 
-      /* Set DP master parameters */
+        /* Download DP bus parameters */
 
-      sts = dp_init_master(local->Pb_fp,  op); 
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init master");
-        return IO__ERRINIDEVICE;
-      }
-
-      /* Set DP bus parameters */
-      sts = dp_init_bus(local->Pb_fp,  op); 
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp init bus");
-        return IO__ERRINIDEVICE;
-      }
+        sts = dp_download_bus(hDevice,  op); 
+        if (sts != PB_OK) {
+          op->Status = PB__INITFAIL;
+          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "dp download bus");
+          return IO__ERRINIDEVICE;
+        }
       
-      /* Set stalltime */
-      
-      sts = pb_set_stalltime(local->Pb_fp, op->StallTime);
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "set stalltime");
-        return IO__ERRINIDEVICE;
-      }
+        /* Loop through all slaves (traverse agent's children) and initialize them */
 
-      /* Move to STOP mode */
-      sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_STOP);
-      if (sts != PB_OK) {
-        op->Status = PB__INITFAIL;
-        errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
-        return IO__ERRINIDEVICE;
-      }
-
-      op->Status = PB__STOPPED;
-}
-      /* Loop through all slaves (traverse agent's children) and initialize them */
-
-      op->NumberSlaves = 0;
-      status = gdh_GetChild(ap->Objid, &slave_objid);
+        op->NumberSlaves = 0;
+        status = gdh_GetChild(ap->Objid, &slave_objid);
   
-      while (ODD(status)) {
-        status = gdh_GetObjectClass(slave_objid, &slave_class);
-//	printf("Found slave, class %d\n", slave_class);
-        status = init_dp_slave(ap, slave_objid, ctx->Node->Restarts);
-        op->NumberSlaves++;
-        status = gdh_GetNextSibling(slave_objid, &slave_objid);
-      }
+        while (ODD(status)) {
+          status = gdh_GetObjectClass(slave_objid, &slave_class);
 
-      /* Move to CLEAR and OPERATE mode */
-if (ctx->Node->Restarts == 0) {
+          status = gdh_ObjidToPointer(slave_objid, (pwr_tAddress *) &sop);
+          status = gdh_ObjidToName(slave_objid, (char *) &name, sizeof(name), cdh_mNName);
   
-      sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_CLEAR);
-      if (sts == PB_OK) {
-        op->Status = PB__CLEARED;
-        sts = act_param_loc(local->Pb_fp, op, DP_OP_MODE_OPERATE);
-        if (sts == PB_OK) {
-          op->Status = PB__NORMAL;
-          errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
+          errh_Info( "Download Profibus DP Slave config - %s", name );
+
+          status = dp_download_slave(hDevice, sop);
+
+          if (!status) {
+            errh_Info( "ERROR Init Profibus DP slave %s", name);
+	  }
+
+          op->NumberSlaves++;
+          status = gdh_GetNextSibling(slave_objid, &slave_objid);
+        }
+
+
+        /* Move to STOP mode, this will fix the DPRAM layout */
+
+        sts = dp_act_param_loc(hDevice, DP_OP_MODE_STOP);
+        if (sts != E_OK) {
+          op->Status = PB__INITFAIL;
+          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
+          return IO__ERRINIDEVICE;
+        }
+	
+        PROFI_RCV_CON_IND ();
+
+        if ( (con_ind_sdb.service   == DP_ACT_PARAM_LOC  ) &&
+             (con_ind_sdb.primitive == CON               ) &&
+             (con_ind_sdb.result    == POS               ) ) {
+          op->Status = PB__STOPPED;
+        } else {
+          op->Status = PB__INITFAIL;
+          errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
+          return IO__ERRINIDEVICE;
+	}
+	
+        /* Calculate offsets of inputs and outputs for a slave */
+      
+        status = gdh_GetChild(ap->Objid, &slave_objid);
+  
+        while (ODD(status)) {
+          status = gdh_GetObjectClass(slave_objid, &slave_class);
+          status = gdh_ObjidToPointer(slave_objid, (pwr_tAddress *) &sop);
+
+          status = dp_io_offsets(hDevice, sop);
+
+          status = gdh_GetNextSibling(slave_objid, &slave_objid);
+        }
+
+        /* Move to CLEAR and OPERATE mode */
+  
+        sts = dp_act_param_loc(hDevice, DP_OP_MODE_CLEAR);
+        if (sts == E_OK) {
+
+          PROFI_RCV_CON_IND ();
+
+          if ( (con_ind_sdb.service   == DP_ACT_PARAM_LOC  ) &&
+               (con_ind_sdb.primitive == CON               ) &&
+               (con_ind_sdb.result    == POS               ) ) {
+            op->Status = PB__CLEARED;
+          } else {
+            op->Status = PB__INITFAIL;
+            errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEARED");
+            return IO__ERRINIDEVICE;
+	  }
+
+          sts = dp_act_param_loc(hDevice, DP_OP_MODE_OPERATE);
+          if (sts == E_OK) {
+
+            if ( (con_ind_sdb.service   == DP_ACT_PARAM_LOC  ) &&
+                 (con_ind_sdb.primitive == CON               ) &&
+                 (con_ind_sdb.result    == POS               ) ) {
+              op->Status = PB__NORMAL;
+              errh_Info( "Profibus DP Master %s to state OPERATE", ap->Name);
+            } else {
+              op->Status = PB__INITFAIL;
+              errh_Info( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+              return IO__ERRINIDEVICE;
+	    }
+          } else {
+            op->Status = PB__INITFAIL;
+            errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+            return IO__ERRINIDEVICE;
+          }    
         }
         else {
-          errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to OPERATE");
+          op->Status = PB__INITFAIL;
+          errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
           return IO__ERRINIDEVICE;
-        }    
-      }
-      else {
-        errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to CLEAR");
-        return IO__ERRINIDEVICE;
-      }
+        }
       
-      ok = TRUE;
-      for (i=0; i<4; i++) {  
-        if (ok) {
-          sts = pb_cmi_poll(local->Pb_fp, NULL, NULL, NULL);
-          if (sts == PB_DEVICE_ERROR) {
-	    errh_Info("Init problems, Reconfig - %d", i);
-	    ok = FALSE;
-	  }
-          rqtp.tv_sec = 0;
-          rqtp.tv_nsec = 200000000;
-          nanosleep(&rqtp, &rmtp);
-	}
-      }
-}
-    
-    }
-    
+        ok = TRUE;
+	
+/*        for (i=0; i<4; i++) {  
+          if (ok) {
+            sts = profi_rcv_con_ind (local, &con_ind_sdb, con_ind_buffer, &con_ind_buffer_len);
+            if (sts !=  PB_DEVICE_ERROR) {
+	      errh_Info("Init problems, Reconfig - %d", i);
+	      ok = FALSE;
+	    }
+            rqtp.tv_sec = 0;
+            rqtp.tv_nsec = 200000000;
+            nanosleep(&rqtp, &rmtp); */
+      }  /* End - While !ok */
+    } /* End - Initialization only if not restart */   
   }    
   else
     op->Status = PB__DISABLED;
@@ -538,10 +753,18 @@ static pwr_tStatus IoAgentRead (
 )
 {
   io_sAgentLocal *local;
+  T_PROFI_DEVICE_HANDLE *hDevice;
   pwr_sClass_Pb_Profiboard *op;
   pwr_tUInt16 sts;
   static int count;
+  char                     s [128];
 
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  T_DP_GET_SLAVE_DIAG_CON   FAR *get_slave_diag_con_ptr;
+
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   local = (io_sAgentLocal *) ap->Local;
   op = (pwr_sClass_Pb_Profiboard *) ap->op;
 
@@ -559,17 +782,159 @@ static pwr_tStatus IoAgentRead (
     switch (op->Status) {
   
       case PB__NORMAL:
-        sts = pb_cmi_poll(local->Pb_fp, NULL, NULL, NULL);
+      case PB__STOPPED:
+      case PB__CLEARED:
+        sts = profi_rcv_con_ind (  hDevice, &con_ind_sdb, con_ind_buffer, &con_ind_buffer_len);
+	
+	if (sts == CON_IND_RECEIVED) {
+          if (con_ind_sdb.primitive == CON) {
+            if (con_ind_sdb.result == POS) {
+              switch (con_ind_sdb.service) {
+                /*--------------------------------------------------------------*/
+
+                case DP_ACT_PARAM_LOC: {
+
+                  if (op->Status == PB__NOTINIT) {
+                    op->Status = PB__STOPPED;
+
+                    dp_act_param_loc(hDevice, DP_OP_MODE_CLEAR);
+                  }
+                  else if (op->Status == PB__STOPPED) {
+                    op->Status = PB__CLEARED;
+
+                    dp_act_param_loc(hDevice, DP_OP_MODE_OPERATE);
+                  }
+                  else if (op->Status == PB__CLEARED) {
+                    op->Status = PB__NORMAL;
+                  }
+
+                  break;
+                } /* case DP_ACT_PARAM_LOC */
+
+                /*--------------------------------------------------------------*/
+
+                case DP_GET_SLAVE_DIAG: {
+                  get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
+
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr);
+
+                  local->slave_diag_requested = PB_FALSE;
+
+                  if (get_slave_diag_con_ptr->diag_entries) {
+                    local->slave_diag_requested = PB_TRUE;
+                    dp_get_slave_diag (hDevice);
+                  }
+                  break;
+                } /* case DP_GET_SLAVE_DIAG */
+
+                /*--------------------------------------------------------------*/
+
+                default: {
+		  break;
+                } /* deafult service */
+              } /* switch */
+            } /* if POS */
+            else {
+              op->Status = PB__NOTINIT;
+              errh_Info( "Profibus DP Master %s - %d neg con rec", ap->Name, count );      
+            } /* else POS */
+          } /* if CON */
+          else if (con_ind_sdb.primitive == IND) {
+            if (con_ind_sdb.result == POS) {
+              switch (con_ind_sdb.service) {
+                case FMB_FM2_EVENT: {
+                  switch (((T_FMB_FM2_EVENT_IND FAR*) con_ind_buffer)->reason) {
+                    case FM2_FAULT_ADDRESS     : sprintf (s, "Duplicate address recognized"); break;
+                    case FM2_FAULT_PHY         : sprintf (s, "Phys.layer is malfunctioning"); break;
+                    case FM2_FAULT_TTO         : sprintf (s, "Time out on bus detected    "); break;
+                    case FM2_FAULT_SYN         : sprintf (s, "No receiver synchronization "); break;
+                    case FM2_FAULT_OUT_OF_RING : sprintf (s, "Station out of ring         "); break;
+                    case FM2_GAP_EVENT         : sprintf (s, "New station in ring         "); break;
+
+                    default                    : sprintf (s, "Unknown reason code received");
+
+                  } /* switch reason */
+
+                  errh_Info( "Profibus DP Master %s - %s", ap->Name, s );      
  
-        /* In case of device error, move to state NOTINIT */
-        if (sts == PB_DEVICE_ERROR) {
+                  break;
+                } /* case FMB_FM2_EVENT */
+
+                /*--------------------------------------------------------------*/
+
+                case DP_ACT_PARAM_LOC: {
+		  USIGN8 usif_state;
+                  usif_state = ((T_DP_ACT_PARAM_IND FAR*) con_ind_buffer)->activate;
+
+                  switch (usif_state) {
+                    case DP_OP_MODE_STOP   : {
+		      op->Status = PB__STOPPED;
+		      sprintf (s, "Mode changed to STOP");
+		      break;
+		    }
+                    case DP_OP_MODE_CLEAR  : {
+		      op->Status = PB__CLEARED;
+		      sprintf (s, "Mode changed to CLEAR");
+		      break;
+		    }
+                    case DP_OP_MODE_OPERATE: { 
+		      op->Status = PB__NORMAL;
+		      sprintf (s, "Mode changed to OPERATE");
+		      break;
+		    }
+                  }
+
+                  errh_Info( "Profibus DP Master %s - %s", ap->Name, s );      
+
+                  if (usif_state == DP_OP_MODE_STOP) {
+                    usif_state = DP_OP_MODE_CLEAR;
+
+                    dp_act_param_loc(hDevice, DP_OP_MODE_CLEAR);
+                  }
+                  else if (usif_state == DP_OP_MODE_CLEAR) {
+                    usif_state = DP_OP_MODE_OPERATE;
+
+                    dp_act_param_loc (hDevice, DP_OP_MODE_OPERATE);
+                  }
+
+                  break;
+                } /* case DP_ACT_PARAM_LOC */
+
+                /*--------------------------------------------------------------*/
+
+                case DP_GET_SLAVE_DIAG: {
+                  get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
+
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr);
+
+                  op->Diag[0]++;
+		  
+                  if ( (get_slave_diag_con_ptr->diag_entries) &&
+                       (! local->slave_diag_requested              ) ) {
+                    if (dp_get_slave_diag(hDevice)) {
+                      local->slave_diag_requested = PB_TRUE;
+                    }
+                  }
+
+                  break;
+                } /* case DP_GET_SLAVE_DIAG */
+
+                /*--------------------------------------------------------------*/
+
+                default: {
+		  break;
+                } /* deafult service */
+              } /* switch */
+            } /* if POS */
+            else {
+              op->Status = PB__NOTINIT;
+              errh_Info( "Profibus DP Master %s - %d neg ind rec", ap->Name, count );      
+            } /* else POS */
+          } /* if IND */
+	} else if (sts != NO_CON_IND_RECEIVED) {
           op->Status = PB__NOTINIT;
-        }
-        /* In case of diagnostic message, just mark it.
-           in the future, take care of it */
-        else if (sts != PB_NO_CON_IND_RECEIVED) {
-          op->Diag[0]++;
-        }
+	}
+
         break;
 
       default:
@@ -579,7 +944,6 @@ static pwr_tStatus IoAgentRead (
         IoAgentInit(ctx, ap);
         break;
     }
- 
   }
    
   return IO__SUCCESS;
@@ -607,14 +971,45 @@ static pwr_tStatus IoAgentClose (
 ) 
 {
   io_sAgentLocal 	*local;
+  T_PROFI_DEVICE_HANDLE *hDevice;
+  pwr_tStatus            sts = PB_FALSE;
 
-  /* Close Pb driver */
-  local = ap->Local;
+  T_PROFI_SERVICE_DESCR sdb;
 
-  close( local->Pb_fp);
+  USIGN8                   con_ind_buffer [256];
+  USIGN16                  con_ind_buffer_len = 256;
+  T_PROFI_SERVICE_DESCR    con_ind_sdb;
+  INT16                    result;              /* !!! local result variable !!! */
+  USIGN16                  retry_counter;
+
+  local = (io_sAgentLocal *) ap->Local;
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
+  sdb.comm_ref = 0;
+  sdb.layer = DP;
+  sdb.service = DP_EXIT_MASTER;
+  sdb.primitive = REQ;
+  sdb.invoke_id = 0;
+  sdb.result = 0;
+
+  profi_snd_req_res(hDevice, &sdb, &sdb, PB_FALSE);
+
+  PROFI_RCV_CON_IND (); /*Macro to fetch one confirmation or indication*/
+    
+  if ((con_ind_sdb.service   == DP_EXIT_MASTER) &&
+      (con_ind_sdb.primitive == CON                  ) &&
+      (con_ind_sdb.result    == POS                  )) {
+    sts = PB_TRUE;
+  }
+
+  close(local->hServiceReadDevice);
+  close(local->hServiceWriteDevice);
+  close(local->hDpDataDevice);
+  close(local->hDpsInputDataDevice);
+  close(local->hDpsOutputDataDevice);
+
   free( (char *)local);
 
-  return IO__SUCCESS;
+  return sts;
 }
 
 

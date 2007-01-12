@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_pb_locals.h,v 1.3 2006-07-03 06:20:03 claes Exp $
+ * Proview   $Id: rt_io_pb_locals.h,v 1.4 2007-01-12 13:28:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,13 @@
 #define PB_ORIENTATION_DWORD	32
 
 typedef struct {
-  int  Pb_fp;
+  int             hServiceReadDevice;               // Handle for Service device
+  int             hServiceWriteDevice;              // Handle for Service device
+  int             hDpDataDevice;                    // Handle for DP-Data device
+  int             hDpsInputDataDevice;              // Handle for DP-Slave Input-Data device
+  int             hDpsOutputDataDevice;             // Handle for DP-Slave Output-Data device
+  unsigned char   CurrentBoardNumber;
+  int             slave_diag_requested;
 } io_sAgentLocal;
 
 typedef struct {

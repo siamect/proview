@@ -1,0 +1,8 @@
+#define BUILD_NUMBER 52
+#define BUILD_NUMBER_STR "52"
+
+
+#define MAJOR_VERSION_NUMBER 5
+#define MINOR_VERSION_NUMBER 26
+
+#define VERSION_TEXT   "5.26.1.00.release"

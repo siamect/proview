@@ -1,29 +1,13 @@
-/* 
- * Proview   $Id: pb_fmb.h,v 1.2 2006-02-01 08:35:51 claes Exp $
- * Copyright (C) SOFTING GmbH 1995-1999.
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
- * published by the Free Software Foundation, either version 2 of 
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with the program, if not, write to the Free Software 
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
 /*****************************************************************************/
 /*                                                                           */
-/*                              SOFTING GmbH                                 */
+/*                                SOFTING AG                                 */
 /*                        Richard-Reitzner-Allee 6                           */
 /*                              D-85540 Haar                                 */
 /*                      Phone: (++49)-(0)89-45656-0                          */
 /*                      Fax:   (++49)-(0)89-45656-399                        */
 /*                                                                           */
-/*                    Copyright (C) SOFTING GmbH 1995-1999                   */
+/*                    Copyright (C) SOFTING AG 1995-2003                     */
+/*                            All Rights Reserved                            */
 /*                                                                           */
 /*****************************************************************************/
 /*****************************************************************************/
@@ -32,35 +16,26 @@
 /*  Filename    : PB_FMB.H                                                   */
 /*  Version     : 5.21.0.00.release                                          */
 /*  Date        : 27-February-1998                                           */
-/*  Author      : SOFTING-BG2                                                */
+/*  Author      : SOFTING AG                                                 */
 /*                                                                           */
 /*                                                                           */
 /*  Description : This file contains the types and defines of the Fieldbus-  */
 /*                Basic Management User-Interface                            */
-/*  CHANGE_NOTES                                                             */
-/*                                                                           */
-/*  date      name      change                                               */
-/*  -----------------------------------------------------------------------  */
-/*  22.07.97  BG2-BOE   set #pragma pack(2) and reset to #pragma pack()      */
-/*  24.09.97  BG2-BOE   add new baudrate #defines                            */
-/*                      - #define KBAUD_45_45                                */
-/*                                                                           */
-/*****************************************************************************/
-/*****************************************************************************/
 /*****************************************************************************/
 
 #ifndef __PB_FMB__
 #define __PB_FMB__
 
-/*
-#pragma warning (disable : 4103)
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to change alignment */
 #ifdef WIN32
 #pragma pack(push,2)
 #else
 #pragma pack(2)
 #endif
 #pragma warning (default : 4103)
-*/
+#endif
+
 
 /*****************************************************************************/
 /***     FMB service identifier                                            ***/
@@ -73,6 +48,7 @@
 #define FMB_EXIT                  21
 #define FMB_SET_BUSPARAMETER      22
 #define FMB_READ_BUSPARAMETER     24
+#define FMB_VALIDATE_MASTER       25
 #define FMB_GET_LIVE_LIST         26
 #define FMB_SET_CONFIGURATION     27
 
@@ -328,6 +304,17 @@ typedef struct _T_FMB_LSAP_STATUS_CNF
 
 
 /*****************************************************************************/
+/* FMB-Validate-Master Service                                               */
+/*****************************************************************************/
+
+typedef struct _T_FMB_VALIDATE_MASTER_REQ
+{
+  USIGN8    rem_add;                               /* desired remote station */
+  USIGN8    dummy;                                         /* alignment byte */
+} T_FMB_VALIDATE_MASTER_REQ;
+
+
+/*****************************************************************************/
 /* FMB-Get-Live-List Service                                                 */
 /*****************************************************************************/
 /* Status of Stations in Live-List ----------------------------------------- */
@@ -370,15 +357,15 @@ typedef struct _T_FMB_FM2_EVENT_IND
   USIGN16    reason;                                         /* reason code */
 } T_FMB_FM2_EVENT_IND;
 
-/*
-#pragma warning (disable : 4103)
+
+#if defined (WIN32) || defined (_WIN32) || defined (WIN16) || defined (_WIN16)
+#pragma warning (disable : 4103)     /* used #pragma pack to reset alignment */
 #ifdef WIN32
 #pragma pack(pop)
 #else
 #pragma pack()
 #endif
 #pragma warning (default : 4103)
-*/
+#endif
 
 #endif  /* __PB_FMB__ */
-

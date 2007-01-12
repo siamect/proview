@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.5 2006-07-25 11:00:56 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.6 2007-01-12 13:28:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,10 +27,15 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
+#include "keywords.h"
+
 #include "pb_type.h"
+#include "pb_conf.h"
 #include "pb_if.h"
+#include "pb_err.h"
 #include "pb_fmb.h"
 #include "pb_dp.h"
+
 #include "rt_io_pb_locals.h"
 
 #include "pwr.h"
@@ -321,40 +326,27 @@ static pwr_tStatus IoRackRead (
 {
   pwr_sClass_Pb_Profiboard *mp;
   pwr_sClass_Pb_DP_Slave *sp;
-  int fp;
-  unsigned char diag;
+  T_PROFI_DEVICE_HANDLE *hDevice;
   pwr_tUInt16 sts;
+  pwr_tUInt16 data_len;
   
-  fp = ((io_sAgentLocal *) (ap->Local))->Pb_fp;
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
   if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
 
-    sts = pb_cmi_get_data(fp, ID_DP_STATUS_IMAGE, sp->SlaveAddress, 1, &diag);
+    data_len = sp->BytesOfInput;
+    sts = profi_get_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetInputs, &data_len, &sp->Inputs );
 
-    if ((sts != PB_OK) || (diag & 1)) {
+    if ((sts != E_OK)) {
       sp->Status = PB__NOCONN;
       sp->ErrorCount++;
     }
     else {
       sp->Status = PB__NORMAL;
       sp->ErrorCount = 0;
-    }
-
-    if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && sp->BytesOfInput > 0) {
-
-      sts = pb_cmi_get_data(fp, 
-			ID_DP_SLAVE_IO_IMAGE, 
-			sp->OffsetInputs, 
-			sp->BytesOfInput, 
-			&sp->Inputs);
-
-      if (sts != PB_OK) 
-        sp->ErrorCount++;
-//      else
-//        sp->ErrorCount = 0;
     }
 
     // Stall handling
@@ -384,27 +376,24 @@ static pwr_tStatus IoRackWrite (
 {
   pwr_sClass_Pb_Profiboard *mp;
   pwr_sClass_Pb_DP_Slave *sp;
-  int fp;
+  T_PROFI_DEVICE_HANDLE *hDevice;
   pwr_tUInt16 sts;
 
-  fp = ((io_sAgentLocal *) (ap->Local))->Pb_fp;
+  hDevice = (T_PROFI_DEVICE_HANDLE *) ap->Local;
   
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
   // Write the whole I/O output area from local area
 
-  if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
+  if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && 
+       mp->Status == PB__NORMAL && (sp->DisableSlave != 1) && (mp->DisableBus != 1)) {
 
     if (sp->BytesOfOutput > 0) {
+    
+      sts = profi_set_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetOutputs, sp->BytesOfOutput, &sp->Outputs);
 
-      sts = pb_cmi_set_data(fp, 
-			ID_DP_SLAVE_IO_IMAGE, 
-			sp->OffsetOutputs, 
-			sp->BytesOfOutput, 
-			&sp->Outputs);
-
-      if (sts != PB_OK) sp->ErrorCount++;
+      if (sts != E_OK) sp->ErrorCount++;
     }
   }
 
