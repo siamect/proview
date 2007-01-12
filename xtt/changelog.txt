@@ -18,3 +18,8 @@
 060628 cs  glow      Adjustment property (Left/Right/Center) added to annotations and table object.
 060628 cs  ge        New Value, ValueInput and Button subgraphs with Right and Center adjustment.
 060629 cs  ge        Format for Time and DeltaTime in table added.
+070112 cs  xtt       Gtk version of xtt.
+070112 cs  ge        Fileview for import of pwg and image files.
+070112 cs  xtt       Font size in alarmtexts in operator window can be changed.
+070112 cs  xtt       Nodename displayed i Xtt title.
+070112 cs  xtt       New syntax for function key definition file (gtk version).

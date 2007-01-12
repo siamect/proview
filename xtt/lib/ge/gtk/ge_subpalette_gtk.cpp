@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_subpalette_gtk.cpp,v 1.2 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,24 +75,8 @@ SubPaletteGtk::~SubPaletteGtk()
 
 void SubPaletteGtk::set_inputfocus( int focus)
 {
-#if 0
-  Arg 		args[2];
-  Pixel 	bg, fg;
-
-  if ( !displayed)
-    return;
-
-  XtVaGetValues( form_widget, XmNbackground, &bg, XmNforeground, &fg, NULL);
-  if ( !focus) {
-    XtSetArg(args[0], XmNborderColor, bg);
-    XtSetValues( form_widget, args, 1);
-  }
-  else {
-    XtCallAcceptFocus( brow_widget, CurrentTime);
-    XtSetArg(args[0], XmNborderColor, fg);
-    XtSetValues( form_widget, args, 1);
-  }
-#endif
+  // TODO if ( focus) Set border ...
+  
   gtk_widget_grab_focus( brow_widget);
 }
 

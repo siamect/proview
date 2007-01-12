@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.15 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.16 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1344,6 +1344,22 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
   attrnav->message( ' ', null_str);
   switch ( event->event)
   {
+    case flow_eEvent_Key_PageDown: {
+      brow_Page( attrnav->brow->ctx, 0.8);
+      break;
+    }
+    case flow_eEvent_Key_PageUp: {
+      brow_Page( attrnav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( attrnav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( attrnav->brow->ctx, -0.1);
+      break;
+    }
     case flow_eEvent_Key_Up:
     {
       brow_tNode	*node_list;
@@ -1393,7 +1409,7 @@ static int attrnav_brow_cb( FlowCtx *ctx, flow_tEvent event)
       }
       else {
 	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
-	  sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
+	  sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
 	  if ( EVEN(sts)) return 1;
 	}
 	else {
@@ -2012,6 +2028,14 @@ void AttrNavBrow::brow_setup()
   brow_EnableEvent( ctx, flow_eEvent_Key_PF3, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Radiobutton, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	attrnav_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	attrnav_brow_cb);
 }
 

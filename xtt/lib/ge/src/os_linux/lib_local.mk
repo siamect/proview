@@ -8,7 +8,7 @@ l_clean_copy := clean_dat
 
 clean_dat :
 	@ $(rm) $(rmflags) $(exe_dir)/pwr_ge_setup.dat
-	@ $(rm) $(rmflags) $(exe_dir)/ge_colors.dat
+	@ $(rm) $(rmflags) $(src_dir)/ge_colors.dat
 
 $(exe_dir)/pwr_ge_setup.dat : pwr_ge_setup.dat
 	@ $(log_export)

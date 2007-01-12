@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.4 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.5 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1310,13 +1310,28 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   char          systemname[80];
   const int	window_width = 900;
   const int    	window_height = 800;
-  const int    	palette_width = 220;
+  const int    	palette_width = 200;
   pwr_tFileName	fname;
+  char		title[200];
+  char		tmp_name[200];
+  char 		*s;
+
+  strcpy( title, "PwR Ge");
+
+  if ( graph_name) {
+    cdh_ToLower( tmp_name, graph_name);
+    tmp_name[0] = toupper( tmp_name[0]);
+    if ( (s = strrchr( tmp_name, '.')))
+      *s = 0;
+    strcat( title, " ");
+    strcat( title, tmp_name);
+  }
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", window_height,
-			   "default-width", window_width,
-			   NULL);
+					 "default-height", window_height,
+					 "default-width", window_width,
+					 "title", title,
+					 NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
@@ -1481,6 +1496,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *functions_scale_equal = gtk_menu_item_new_with_mnemonic( "_Scale Equal");
   g_signal_connect( functions_scale_equal, "activate", 
 		    G_CALLBACK(activate_scale_equal), this);
+  gtk_widget_add_accelerator( functions_scale_equal, "activate", accel_g,
+			      'e', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 
   GtkWidget *functions_move_horizontal = gtk_menu_item_new_with_mnemonic( "_Horizontal");
@@ -1630,6 +1647,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *functions_connect = gtk_menu_item_new_with_mnemonic( "_Connect");
   g_signal_connect( functions_connect, "activate",
 		    G_CALLBACK(activate_connect), this);
+  gtk_widget_add_accelerator( functions_connect, "activate", accel_g,
+			      'q', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_connectsecond = gtk_menu_item_new_with_mnemonic( "C_onnect Second");
   g_signal_connect( functions_connectsecond, "activate",
@@ -1638,6 +1657,8 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *functions_objectattr = gtk_menu_item_new_with_mnemonic( "_Object Attributes");
   g_signal_connect( functions_objectattr, "activate",
 		    G_CALLBACK(activate_objectattributes), this);
+  gtk_widget_add_accelerator( functions_objectattr, "activate", accel_g,
+			      'a', GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
   GtkWidget *functions_show_grid = gtk_menu_item_new_with_mnemonic( "S_how Grid");
   g_signal_connect( functions_show_grid, "activate",
@@ -1979,6 +2000,11 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_view_plant = image_button( "$pwr_exe/foe_navpalette.png");
   g_signal_connect(tools_view_plant, "clicked", G_CALLBACK(activate_view_plant), this);
   gtk_toolbar_append_widget( tools, tools_view_plant, "View plant hierarchy", "");
+
+  // Open Object attributes
+  GtkWidget *tools_open_object = image_button( "$pwr_exe/xtt_object.png");
+  g_signal_connect(tools_open_object, "clicked", G_CALLBACK(activate_objectattributes), this);
+  gtk_toolbar_append_widget( tools, tools_open_object, "Open selected object", "");
 
   // Scale button
   GtkWidget *tools_scale = image_button( "$pwr_exe/ge_scale.png");

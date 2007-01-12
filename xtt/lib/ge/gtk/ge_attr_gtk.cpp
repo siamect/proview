@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.2 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -313,27 +313,6 @@ static void attr_activate_recall_prev( GtkWidget *w, gpointer attr)
   ((Attr *)attr)->recall_prev();
 }
 
-#if 0
-static void attr_action_inputfocus( GtkWidget w, gpointer data)
-{
-  Arg args[1];
-  AttrMotif *attr;
-
-  XtSetArg    (args[0], XmNuserData, &attr);
-  XtGetValues (w, args, 1);
-
-  if ( !attr)
-    return;
-
-  if ( flow_IsManaged( attr->cmd_scrolledinput))
-    flow_SetInputFocus( attr->cmd_scrolledinput);
-  else if ( flow_IsManaged( attr->cmd_input))
-    flow_SetInputFocus( attr->cmd_input);
-  else if ( attr->attrnav)
-    attr->attrnav->set_inputfocus();
-}
-#endif
-
 AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   void			*a_parent_ctx,
   void 			*a_object,
@@ -345,8 +324,8 @@ AttrGtk::AttrGtk( GtkWidget *a_parent_wid,
   int sts;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 400,
-			   "default-width", 300,
+			   "default-height", 700,
+			   "default-width", 500,
 			   "title", "Object Attributes",
 			   NULL);
 

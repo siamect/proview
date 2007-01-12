@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: rt_trace_gtk.cpp,v 1.3 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -227,7 +227,8 @@ RtTraceGtk::~RtTraceGtk()
     gtk_widget_destroy( nav_shell);
 
   /* Destroy the widgets */
-  gtk_widget_destroy( toplevel);
+  if ( toplevel)
+    gtk_widget_destroy( toplevel);
 }
 
 void RtTraceGtk::pop()
@@ -267,7 +268,7 @@ static gint nav_delete_event( GtkWidget *w, GdkEvent *event, gpointer tra)
 
 RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObjid tr_objid,
 			pwr_tStatus *status) :
-  RtTrace( tr_parent_ctx, tr_objid, status), parent_wid(tr_parent_wid), nav_shell(0)
+  RtTrace( tr_parent_ctx, tr_objid, status), parent_wid(tr_parent_wid), toplevel(0), nav_shell(0)
 {
 
   const int	window_width = 900;

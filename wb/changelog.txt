@@ -41,3 +41,4 @@
 060822 cs  wb        Performance improved when opening a node, and displaying the packages in the distributor.
 061010 cs  pkg       Support for bootnodes added, i.e. copying of package to other 
                      nodes than the actual process or operator station.
+070112 cs  wb        Gtk version of wb.

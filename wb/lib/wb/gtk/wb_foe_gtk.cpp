@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.3 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1429,17 +1429,17 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_box_pack_start( GTK_BOX(palbox), widgets.con_palette, TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(palbox), widgets.nav_palette, TRUE, TRUE, 0);
 
-  gtk_paned_add1( GTK_PANED(widgets.subpane), palbox);
+  gtk_paned_pack1( GTK_PANED(widgets.subpane), palbox, TRUE, TRUE);
   
   widgets.pane = gtk_hpaned_new();
   gre = new WGreGtk( this, widgets.pane, "Name");
 
   ((WGreGtk *)gre)->new_navigator( widgets.subpane);
-  gtk_paned_add2( GTK_PANED(widgets.subpane), ((WGreGtk *)gre)->nav_widget);
+  gtk_paned_pack2( GTK_PANED(widgets.subpane), ((WGreGtk *)gre)->nav_widget, FALSE, TRUE);
   gtk_widget_show_all( widgets.subpane);
 
-  gtk_paned_add1( GTK_PANED(widgets.pane), ((WGreGtk *)gre)->form_widget);
-  gtk_paned_add2( GTK_PANED(widgets.pane), widgets.subpane);
+  gtk_paned_pack1( GTK_PANED(widgets.pane), ((WGreGtk *)gre)->form_widget, TRUE, TRUE);
+  gtk_paned_pack2( GTK_PANED(widgets.pane), widgets.subpane, FALSE, TRUE);
   gtk_widget_show_all( widgets.pane);
 
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_attrnav_gtk.cpp,v 1.2 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,18 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"

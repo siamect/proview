@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.4 2007-01-11 12:00:05 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.5 2007-01-12 07:58:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1582,6 +1582,13 @@ void FlowDrawGtk::reset_image_clip_mask( FlowCtx *ctx)
 
 void FlowDrawGtk::set_white_background( FlowCtx *ctx)
 {
+  // background.red = int( 0.9 * 65534);
+  // background.green = int( 0.9 * 65534);
+  // background.blue = int( 0.9 * 65534);
+
+  // if ( !gdk_colormap_alloc_color( colormap, &background, TRUE, TRUE))
+  //   return;
+
   background = flow_allocate_color( this, "white");
 
   // Change erase gcs
