@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.16 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.17 2007-01-15 13:18:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,6 +89,7 @@ int XAttNav::check_attr( int *multiline, brow_tObject *node, char *name,
   brow_tNode	*node_list;
   int		node_count;
   Item		*base_item;
+  pwr_tStatus   sts;
 
   *init_value = 0;
   *multiline = 0;
@@ -101,19 +102,44 @@ int XAttNav::check_attr( int *multiline, brow_tObject *node, char *name,
   *node = node_list[0];
   free( node_list);
 
-  switch( base_item->type)
-  {
-    case xnav_eItemType_Attr:
-    case xnav_eItemType_AttrArrayElem:
-    case xnav_eItemType_Collect:
-    {
-      ItemBaseAttr *item = (ItemBaseAttr *)base_item;
+  switch( base_item->type) {
 
-      strcpy( name, item->attr);
-      return 1;
+  case xnav_eItemType_Attr:
+  case xnav_eItemType_AttrArrayElem:
+  case xnav_eItemType_Collect: {
+
+    pwr_tTypeId a_tid;
+    pwr_tUInt32 a_size, a_offs, a_elem;
+    ItemBaseAttr *item = (ItemBaseAttr *)base_item;
+
+    strcpy( name, item->attr);
+
+    sts = gdh_GetAttributeCharacteristics( name, &a_tid, &a_size, &a_offs, &a_elem);
+    if ( ODD(sts)) {
+      switch ( item->type_id) {
+      case pwr_eType_Objid:
+      case pwr_eType_AttrRef:
+      case pwr_eType_ClassId:
+	*size = sizeof(pwr_tAName) - 1;
+      case pwr_eType_VolumeId:
+      case pwr_eType_TypeId:
+	*size = sizeof(pwr_tObjName) - 1;
+	break;
+      case pwr_eType_Time:
+      case pwr_eType_DeltaTime:
+	*size = 40;
+	break;
+      default:
+	*size = a_size / a_elem;
+      }
     }
-    default:
-      return XATT__NOCHANGE;
+    else
+      *size = 80;
+    
+    return 1;
+  }
+  default:
+    return XATT__NOCHANGE;
   }
 }
 
