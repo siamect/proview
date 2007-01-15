@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.15 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.16 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -290,6 +290,24 @@ int GeCurve::growcurve_cb( GlowCtx *ctx, glow_tEvent event)
     grow_SetAnnotation( curve->cursor_annot[0], 0, str, strlen(str));
     break;
   }
+  case glow_eEvent_Key_Left:
+    curve_Scroll( curve->growcurve_ctx, 0.1);
+    break;
+  case glow_eEvent_Key_Right:
+    curve_Scroll( curve->growcurve_ctx, -0.1);
+    break;
+  case glow_eEvent_Key_Up:
+    curve_Zoom( curve->growcurve_ctx, 1.5);
+    break;
+  case glow_eEvent_Key_Down:
+    curve_Zoom( curve->growcurve_ctx, 0.75);
+    break;
+  case glow_eEvent_ScrollUp:
+    curve_Scroll( curve->growcurve_ctx, 0.05);
+    break;
+  case glow_eEvent_ScrollDown:
+    curve_Scroll( curve->growcurve_ctx, -0.05);
+    break;
   default:
     ;
   }
@@ -331,6 +349,18 @@ int GeCurve::init_growcurve_cb( GlowCtx *fctx, void *client_data)
 	glow_eEventType_CallBack, growcurve_cb);
   grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_MB1Press, 
         glow_eEventType_MoveNode, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_Key_Left, 
+        glow_eEventType_CallBack, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_Key_Right, 
+        glow_eEventType_CallBack, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_Key_Up, 
+        glow_eEventType_CallBack, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_Key_Down, 
+        glow_eEventType_CallBack, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_ScrollUp, 
+        glow_eEventType_CallBack, growcurve_cb);
+  grow_EnableEvent( (GrowCtx *)curve->growcurve_ctx, glow_eEvent_ScrollDown, 
+        glow_eEventType_CallBack, growcurve_cb);
 
   grow_CreateGrowCurve( curve->growcurve_ctx, "curve", NULL, 0, 0, 200, 30,
 			curve->curve_border, 2, glow_mDisplayLevel_1, 1, 1,
@@ -664,6 +694,11 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   grow_SetAnnotation( curve->mark_annot[0], 0, "0", 1);
 
   return 1;
+}
+
+void GeCurve::scroll( double value)
+{
+  curve_Scroll( growcurve_ctx, value);
 }
 
 void GeCurve::print( char *filename)

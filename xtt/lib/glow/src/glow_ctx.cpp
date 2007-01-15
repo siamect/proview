@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.11 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.12 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -563,7 +563,7 @@ void GlowCtx::draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
   int		i;
 
-  if ( ctx_type == glow_eCtxType_Grow) {
+  if ( ctx_type == glow_eCtxType_Grow || ctx_type == glow_eCtxType_Curve) {
     ((GrowCtx *)this)->draw( w, ll_x, ll_y, ur_x, ur_y);
     return;
   }

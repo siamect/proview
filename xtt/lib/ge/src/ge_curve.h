@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.h,v 1.9 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_curve.h,v 1.10 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,6 +135,7 @@ class GeCurve {
     virtual void resize() {}
     virtual void open_minmax( int idx) {}
     virtual void axis_set_width( int width) {}  
+    void set_inputfocus() {}
 
     int read_file( char *filename);
     int configure_curves();
@@ -143,6 +144,7 @@ class GeCurve {
     void set_title( char *str);
     void set_time( pwr_tTime time);
     void print( char *filename);
+    void scroll( double value);
     void activate_exit();
     void activate_configure();
     void activate_print();

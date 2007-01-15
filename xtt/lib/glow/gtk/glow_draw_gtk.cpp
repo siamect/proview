@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.3 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -949,31 +949,27 @@ int GlowDrawGtk::event_handler( GdkEvent event)
 	ctx->event_handler( glow_eEvent_CursorMotion, (int)event.button.x, (int)event.button.y, 0, 0);
       break;
     case GDK_ENTER_NOTIFY:
-//        printf( "-- Enter event: (%d,%d)\n", event.crossing.x, 
-//		event.crossing.y);
       ctx->event_handler( glow_eEvent_Enter, (int)event.crossing.x, (int)event.crossing.y, 0, 0);
       break;          
     case GDK_LEAVE_NOTIFY:
-//        printf( "-- Leave event: (%d,%d)\n", event.crossing.x, 
-//		event.button.y);
 
       ctx->event_handler( glow_eEvent_Leave, (int)event.crossing.x, (int)event.crossing.y, 0, 0);
       break;          
     case GDK_MAP:
-//        printf( "-- Enter event: (%d,%d)\n", event.button.x, 
-//		event.button.y);
       ctx->event_handler( glow_eEvent_Map, 0, 0, 0, 0);
       break;          
     case GDK_UNMAP:
-//        printf( "-- Enter event: (%d,%d)\n", event.button.x, 
-//		event.button.y);
       ctx->event_handler( glow_eEvent_Unmap, 0, 0, 0, 0);
       break;          
     case GDK_FOCUS_CHANGE:
-//        printf( "-- Focus in event\n");
       break;          
+    case GDK_SCROLL:
+      if ( event.scroll.direction == GDK_SCROLL_UP)
+	ctx->event_handler( glow_eEvent_ScrollUp, 0, 0, 0, 0);
+      else if ( event.scroll.direction == GDK_SCROLL_DOWN)
+	ctx->event_handler( glow_eEvent_ScrollDown, 0, 0, 0, 0);
+      break;
     default:
-//        printf("-- Other event: %d \n", event.type);
       break;
     }
   }
@@ -1848,11 +1844,11 @@ void GlowDrawGtk::copy_area( GlowWind *wind, int x, int y)
       if ( x)
         gdk_draw_rectangle( w->buffer, 
 			    get_gc( this, glow_eDrawType_LineErase, 0), 1,
-			    window_width+x, 0, window_width, window_height);
+			    window_width+x, 0, -x, window_height);
       if ( y)
         gdk_draw_rectangle( w->buffer, 
 			    get_gc( this, glow_eDrawType_LineErase, 0), 1,
-			    0, window_height+y, window_width+x, window_height);
+			    0, window_height+y, window_width+x, -y);
     }
   }
   else if ( x <= 0 && y >= 0)
@@ -1873,14 +1869,14 @@ void GlowDrawGtk::copy_area( GlowWind *wind, int x, int y)
       if ( x)
         gdk_draw_rectangle( w->buffer, 
 			     get_gc( this, glow_eDrawType_LineErase, 0), 1,
-			     window_width+x, 0, window_width, window_height);
+			     window_width+x, 0, -x, window_height);
       if ( y)
         gdk_draw_rectangle( w->buffer, 
 			     get_gc( this, glow_eDrawType_LineErase, 0), 1,
 			     0, 0, window_width+x, y);
     }
   }
-  else
+  else // x > 0 && y < 0
   {
     gdk_draw_drawable( w->window, gc, w->window,
 	0, -y, x, 0, window_width-x, window_height+y);
@@ -1902,7 +1898,7 @@ void GlowDrawGtk::copy_area( GlowWind *wind, int x, int y)
       if ( y)
         gdk_draw_rectangle( w->buffer, 
 			    get_gc( this, glow_eDrawType_LineErase, 0), 1,
-			    x, window_height+y, window_width, window_height);
+			    x, window_height+y, window_width - x, -y);
     }
   }
 }
@@ -2386,7 +2382,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.3 2007-01-15 13:19:09 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

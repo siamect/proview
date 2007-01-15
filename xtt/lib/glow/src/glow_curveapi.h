@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curveapi.h,v 1.3 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_curveapi.h,v 1.4 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,9 +36,11 @@ typedef void *GlowCtx;
 
 typedef CurveCtx *curve_tCtx;
 
-void    curve_Zoom( CurveCtx *ctx, double factor);
-void	curve_GetZoom( CurveCtx *ctx, double *factor_x, double *factor_y);
-void	curve_GetPreferedZoomY( CurveCtx *ctx, int height, double *factor_y);
+void curve_Zoom( CurveCtx *ctx, double factor);
+void curve_Unzoom( CurveCtx *ctx);
+void curve_GetZoom( CurveCtx *ctx, double *factor_x, double *factor_y);
+void curve_GetPreferedZoomY( CurveCtx *ctx, int height, double *factor_y);
+void curve_Scroll( CurveCtx *ctx, double value);
 
 #if defined __cplusplus
 }

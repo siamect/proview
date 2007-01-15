@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvectx.cpp,v 1.3 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_curvectx.cpp,v 1.4 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -77,14 +77,8 @@ void CurveCtx::zoom( double factor)
   if ( fabs(factor) < DBL_EPSILON)
     return;
 
-//  cout << "Before zoom zoom factor : " << zoom_factor_x << ", offset : " <<
-//     offset_x << "," << offset_y << endl;
   mw.zoom_factor_x *= factor;
-  // zoom_factor_y *= factor;
   mw.offset_x = int( (mw.offset_x - mw.window_width / 2.0 * ( 1.0/factor - 1)) * factor);
-  //  offset_y = int( (offset_y  - window_height / 2.0 * ( 1.0/factor - 1)) * factor);
-//  cout << "After  zoom zoom factor : " << zoom_factor_x << ", offset : " <<
-//     offset_x << "," << offset_y << endl;
   a.zoom();
   clear( &mw);
   draw( &mw, 0, 0, mw.window_width, mw.window_height);
@@ -137,6 +131,19 @@ void CurveCtx::nav_zoom()
 void CurveCtx::get_prefered_zoom_y( int height, double *factor_y)
 {
   *factor_y = height / (y_high - y_low);
+}
+
+void CurveCtx::scroll( double value)
+{
+  int x_pix;
+
+  if ( value < 0 && mw.offset_x + mw.window_width >= int( x_right * mw.zoom_factor_x))
+    return;
+  else if ( value > 0 && mw.offset_x <= int( x_left * mw.zoom_factor_x))
+    return;
+
+  x_pix = int( mw.window_width * value);
+  ((GlowCtx *)this)->scroll( x_pix, 0);
 }
 
 int CurveCtx::event_handler_nav( glow_eEvent event, int x, int y)
@@ -308,7 +315,7 @@ void curve_scroll_horizontal( CurveCtx *ctx, int value, int bottom)
 
   x_pix = int( - value * ctx->scroll_size * ctx->mw.zoom_factor_x + 
 	(ctx->mw.offset_x - ctx->x_left * ctx->mw.zoom_factor_x));
-  ctx->scroll( x_pix, 0);
+  ((GlowCtx *)ctx)->scroll( x_pix, 0);
 }
 
 void curve_scroll_vertical( CurveCtx *ctx, int value, int bottom)
@@ -323,7 +330,7 @@ void curve_scroll_vertical( CurveCtx *ctx, int value, int bottom)
 //        window_height >= (y_high - y_low) * zoom_factor_y)
     y_pix = int( ctx->mw.window_height + ctx->mw.offset_y - 
 		ctx->y_high * ctx->mw.zoom_factor_y);
-  ctx->scroll( 0, y_pix);
+  ((GlowCtx *)ctx)->scroll( 0, y_pix);
 }
 
 

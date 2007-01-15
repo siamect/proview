@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.16 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow.h,v 1.17 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -907,6 +907,8 @@ typedef enum {
   glow_eEvent_MenuActivated,        	//!< Menu is activated.
   glow_eEvent_MenuCreate,        	//!< Create pulldown menu.
   glow_eEvent_MenuDelete,        	//!< Delete pulldown menu.
+  glow_eEvent_ScrollUp,        		//!< Scroll up.
+  glow_eEvent_ScrollDown,     		//!< Scroll down.
   glow_eEvent__
 } glow_eEvent;
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve_gtk.h,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_curve_gtk.h,v 1.2 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,8 @@
 #include "ge_curve.h"
 #endif
 
+#include "co_wow_gtk.h"
+
 class GeCurveGtk : public GeCurve {
   public:
     GeCurveGtk( void *gc_parent_ctx, GtkWidget *parent_widget, char *curve_name,
@@ -45,6 +47,7 @@ class GeCurveGtk : public GeCurve {
     GtkWidget   *minmax_widget;
     GtkWidget   *minmax_textmin_widget;
     GtkWidget   *minmax_textmax_widget;
+    CoWowFocusTimerGtk focustimer;
 
     void pop();
     void write_title( char *str);
@@ -52,6 +55,7 @@ class GeCurveGtk : public GeCurve {
     void open_minmax( int idx);
     void axis_set_width( int width);
     void create_minmax_dialog();
+    void set_inputfocus();
 
     ~GeCurveGtk();
 
@@ -61,6 +65,10 @@ class GeCurveGtk : public GeCurve {
     static void activate_zoomin( GtkWidget *w, gpointer data);
     static void activate_zoomout( GtkWidget *w, gpointer data);
     static void activate_zoomreset( GtkWidget *w, gpointer data);
+    static void activate_page_left( GtkWidget *w, gpointer data);
+    static void activate_page_right( GtkWidget *w, gpointer data);
+    static void activate_scroll_left( GtkWidget *w, gpointer data);
+    static void activate_scroll_right( GtkWidget *w, gpointer data);
     static void activate_background( GtkWidget *w, gpointer data);
     static void activate_showname( GtkWidget *w, gpointer data);
     static void activate_filledcurves( GtkWidget *w, gpointer data);
@@ -68,6 +76,7 @@ class GeCurveGtk : public GeCurve {
     static void activate_help( GtkWidget *w, gpointer data);
     static void activate_minmax_ok( GtkWidget *w, gpointer data);
     static void activate_minmax_cancel( GtkWidget *w, gpointer data);
+    static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
 };
 
 #endif

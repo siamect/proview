@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.1 2007-01-04 08:07:43 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.2 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -210,6 +210,14 @@ static gboolean curvewidgetgtk_expose( GtkWidget *glow, GdkEventExpose *event)
   return TRUE;
 }
 
+static void curvewidgetgtk_grab_focus( GtkWidget *glow)
+{
+  if ( !glow->window)
+    return;
+  GTK_WIDGET_CLASS( curvewidgetgtk_parent_class)->grab_focus( glow);
+  gdk_window_focus( glow->window, GDK_CURRENT_TIME);
+}
+
 static gboolean curvewidgetgtk_event( GtkWidget *glow, GdkEvent *event)
 {
   if ( !((CurveWidgetGtk *)glow)->curve_ctx)
@@ -310,6 +318,7 @@ static void curvewidgetgtk_class_init( CurveWidgetGtkClass *klass)
   widget_class->realize = curvewidgetgtk_realize;
   widget_class->expose_event = curvewidgetgtk_expose;
   widget_class->event = curvewidgetgtk_event;
+  widget_class->grab_focus = curvewidgetgtk_grab_focus;
 }
 
 static void curvewidgetgtk_init( CurveWidgetGtk *glow)

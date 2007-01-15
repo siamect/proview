@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve_gtk.cpp,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_curve_gtk.cpp,v 1.2 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,6 +87,38 @@ void GeCurveGtk::activate_zoomout( GtkWidget *w, gpointer data)
 
 void GeCurveGtk::activate_zoomreset( GtkWidget *w, gpointer data)
 {
+  GeCurve *curve = (GeCurve *)data;
+
+  curve_Unzoom( curve->growcurve_ctx);
+}
+
+void GeCurveGtk::activate_page_right( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve_Scroll( curve->growcurve_ctx, -0.9);
+}
+
+void GeCurveGtk::activate_page_left( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve_Scroll( curve->growcurve_ctx, 0.9);
+}
+
+void GeCurveGtk::activate_scroll_right( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve_Scroll( curve->growcurve_ctx, -0.1);
+}
+
+void GeCurveGtk::activate_scroll_left( GtkWidget *w, gpointer data)
+{
+  GeCurve *curve = (GeCurve *)data;
+
+  curve_Scroll( curve->growcurve_ctx, 0.1);
+  curve->set_inputfocus();
 }
 
 void GeCurveGtk::activate_background( GtkWidget *w, gpointer data)
@@ -205,6 +237,11 @@ void GeCurveGtk::open_minmax( int idx)
   minmax_idx = idx;
 }
 
+void GeCurveGtk::set_inputfocus()
+{
+  gtk_widget_grab_focus( growcurve_main_widget);
+}
+
 GeCurveGtk::~GeCurveGtk()
 {
   delete wow;
@@ -222,6 +259,19 @@ static gboolean delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
 
 static void destroy_event( GtkWidget *w, gpointer data)
 {
+}
+
+gboolean GeCurveGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  GeCurveGtk *curve = (GeCurveGtk *)data;
+
+  if ( curve->focustimer.disabled())
+    return TRUE;
+  
+  curve->set_inputfocus();
+
+  curve->focustimer.disable( 400);
+  return FALSE;
 }
 
 GeCurveGtk::GeCurveGtk( void *gc_parent_ctx, 
@@ -250,6 +300,7 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
+  g_signal_connect( toplevel, "focus-in-event", G_CALLBACK(action_inputfocus), this);
 
   CoWowGtk::SetWindowIcon( toplevel);
 
@@ -356,25 +407,60 @@ GeCurveGtk::GeCurveGtk( void *gc_parent_ctx,
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   GtkWidget *tools_zoom_in = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_in.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_in.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoomin), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_in, CoWowGtk::translate_utf8("Zoom in"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_out.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_out.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoomout), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_out, CoWowGtk::translate_utf8("Zoom out"), "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/ge_zoom_reset.png");
+  dcli_translate_filename( fname, "$pwr_exe/xtt_zoom_reset.png");
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoomreset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset, CoWowGtk::translate_utf8("Zoom reset"), "");
+
+  GtkWidget *tools_page_left = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_left.png");
+  gtk_container_add( GTK_CONTAINER(tools_page_left), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_page_left, "clicked", G_CALLBACK(activate_page_left), this);
+  g_object_set( tools_page_left, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_page_left, CoWowGtk::translate_utf8("Page left"), "");
+
+  GtkWidget *tools_scroll_left = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_left.png");
+  gtk_container_add( GTK_CONTAINER(tools_scroll_left), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_scroll_left, "clicked", G_CALLBACK(activate_scroll_left), this);
+  g_object_set( tools_scroll_left, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_scroll_left, CoWowGtk::translate_utf8("Scroll left"), "");
+
+  GtkWidget *tools_scroll_right = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_scroll_right.png");
+  gtk_container_add( GTK_CONTAINER(tools_scroll_right), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_scroll_right, "clicked", G_CALLBACK(activate_scroll_right), this);
+  g_object_set( tools_scroll_right, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_scroll_right, CoWowGtk::translate_utf8("Scroll right"), "");
+
+  GtkWidget *tools_page_right = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/ge_page_right.png");
+  gtk_container_add( GTK_CONTAINER(tools_page_right), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_page_right, "clicked", G_CALLBACK(activate_page_right), this);
+  g_object_set( tools_page_right, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_page_right, CoWowGtk::translate_utf8("Page right"), "");
 
   GtkWidget *w;
   grownames_main_widget = scrolledgrowwidgetgtk_new( init_grownames_cb, this, &w);
@@ -441,6 +527,8 @@ void GeCurveGtk::create_minmax_dialog()
   GtkWidget *min_label = gtk_label_new(CoWowGtk::translate_utf8("MinValue"));
   gtk_widget_set_size_request( min_label, 100, -1);
   minmax_textmax_widget = gtk_entry_new();
+  g_signal_connect( minmax_textmax_widget, "activate",
+  		    G_CALLBACK(activate_minmax_ok), this);
   GtkWidget *max_label = gtk_label_new(CoWowGtk::translate_utf8("MaxValue"));
   gtk_widget_set_size_request( max_label, 100, -1);
 

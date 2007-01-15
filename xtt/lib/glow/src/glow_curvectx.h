@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvectx.h,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_curvectx.h,v 1.3 2007-01-15 13:19:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,10 +34,12 @@ class CurveCtx : public GrowCtx {
     int layout_adjusted;
     void configure();
     void zoom( double factor);
+    void unzoom() { zoom( mw.base_zoom_factor / mw.zoom_factor_x);};
     void nav_zoom();
     void get_zoom( double *factor_x, double *factor_y);
     void get_prefered_zoom_y( int height, double *factor_y);
     void adjust_layout();
+    void scroll( double value);
     int event_handler_nav( glow_eEvent event, int x, int y);
     ~CurveCtx() {};
 };
