@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.2 2007-01-15 13:22:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2543,10 +2543,10 @@ int WFoe::new_local( pwr_tObjid	plcprogram,
 	if ( EVEN(sts)) return sts;
 
 	/* Create window object in vldh */
-	sts = vldh_wind_create(plcobject, 0, 0, wind_class,
+	sts = vldh_wind_create(plc, 0, 0, wind_class,
 			       0, &windowobject, access);
 	if ( EVEN(sts)) {
-	  vldh_plc_delete(plcobject);
+	  vldh_plc_delete(plc);
 	  return sts;
 	}
 	
