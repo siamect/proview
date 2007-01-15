@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.4 2007-01-04 08:42:20 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav.cpp,v 1.5 2007-01-15 13:20:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -593,17 +593,20 @@ int GsdAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       brow_GetSelectedNodes( attrnav->brow->ctx, &node_list, &node_count);
       if ( !node_count) {
-        sts = brow_GetLast( attrnav->brow->ctx, &object);
+        sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
       else {
-        sts = brow_GetPrevious( attrnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts)) {
-          sts = brow_GetLast( attrnav->brow->ctx, &object);
-          if ( EVEN(sts)) {
-            if ( node_count)
+	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetLastVisible( attrnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetPrevious( attrnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
+	    if ( node_count)
 	      free( node_list);
-            return 1;
+	    return 1;
  	  }
         }
       }
@@ -624,14 +627,17 @@ int GsdAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 
       brow_GetSelectedNodes( attrnav->brow->ctx, &node_list, &node_count);
       if ( !node_count) {
-        sts = brow_GetFirst( attrnav->brow->ctx, &object);
+        sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
         if ( EVEN(sts)) return 1;
       }
       else {
-        sts = brow_GetNext( attrnav->brow->ctx, node_list[0], &object);
-        if ( EVEN(sts)) {
-          sts = brow_GetFirst( attrnav->brow->ctx, &object);
-          if ( EVEN(sts)) {
+	if ( !brow_IsVisible( attrnav->brow->ctx, node_list[0], flow_eVisible_Partial)) {
+	  sts = brow_GetFirstVisible( attrnav->brow->ctx, &object);
+	  if ( EVEN(sts)) return 1;
+	}
+	else {
+	  sts = brow_GetNext( attrnav->brow->ctx, node_list[0], &object);
+	  if ( EVEN(sts)) {
             if ( node_count)
 	      free( node_list);
             return 1;
@@ -854,6 +860,14 @@ int GsdAttrNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     }
     case flow_eEvent_Key_PageUp: {
       brow_Page( attrnav->brow->ctx, -0.8);
+      break;
+    }
+    case flow_eEvent_ScrollDown: {
+      brow_Page( attrnav->brow->ctx, 0.1);
+      break;
+    }
+    case flow_eEvent_ScrollUp: {
+      brow_Page( attrnav->brow->ctx, -0.1);
       break;
     }
     default:
@@ -1438,6 +1452,10 @@ void GsdAttrNavBrow::brow_setup()
   brow_EnableEvent( ctx, flow_eEvent_Key_PageUp, flow_eEventType_CallBack, 
 	GsdAttrNav::brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Key_PageDown, flow_eEventType_CallBack, 
+	GsdAttrNav::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	GsdAttrNav::brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	GsdAttrNav::brow_cb);
 }
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attrnav_gtk.cpp,v 1.1 2007-01-04 08:42:43 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attrnav_gtk.cpp,v 1.2 2007-01-15 13:20:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,5 +80,5 @@ GsdAttrNavGtk::~GsdAttrNavGtk()
 
 void GsdAttrNavGtk::set_inputfocus()
 {
-  gdk_window_focus( brow_widget->window, GDK_CURRENT_TIME);
+  gtk_widget_grab_focus( brow_widget);
 }

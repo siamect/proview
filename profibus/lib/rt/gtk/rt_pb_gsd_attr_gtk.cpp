@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_gtk.cpp,v 1.1 2007-01-04 08:42:43 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_gtk.cpp,v 1.2 2007-01-15 13:20:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -220,12 +220,18 @@ gboolean GsdAttrGtk::action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer 
   GsdAttrGtk *attr = (GsdAttrGtk *)data;
   gboolean input_visible;
 
+  if ( attr->focustimer.disabled())
+    return FALSE;
+
   g_object_get( attr->cmd_input, "visible", &input_visible, NULL);
   if ( input_visible)
     gtk_widget_grab_focus( attr->cmd_input);
   else if ( attr->attrnav)
     attr->attrnav->set_inputfocus();
-  return TRUE;
+
+  attr->focustimer.disable( 400);
+
+  return FALSE;
 }
 
 #if 0

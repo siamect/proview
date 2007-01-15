@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd_attr_gtk.h,v 1.1 2007-01-04 08:42:43 claes Exp $
+ * Proview   $Id: rt_pb_gsd_attr_gtk.h,v 1.2 2007-01-15 13:20:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 /* rt_pb_gsd_attr_gtk.h -- Profibus gsd attribute editor */
 
 #include "rt_pb_gsd_attr.h"
+#include "co_wow_gtk.h"
 
 class GsdAttrGtk : public GsdAttr {
  public:
@@ -40,6 +41,7 @@ class GsdAttrGtk : public GsdAttr {
   GtkWidget	*menubutton_cut;
   GtkWidget	*menubutton_paste;
   GtkWidget	*menubutton_changevalue;
+  CoWowFocusTimerGtk focustimer;
 
   GsdAttrGtk( GtkWidget *a_parent_wid,
 	      void *a_parent_ctx,
