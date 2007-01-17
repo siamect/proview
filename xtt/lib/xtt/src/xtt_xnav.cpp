@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.31 2007-01-17 06:19:57 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.32 2007-01-17 10:34:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1779,6 +1779,8 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         {
           free( node_list);
 	  xnav->brow_push();
+	  if ( xnav->selection_changed_cb)
+	    (xnav->selection_changed_cb)( xnav->parent_ctx);
           return 1;
         }
       }
@@ -1790,6 +1792,8 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       if ( !brow_IsVisible( xnav->brow->ctx, object, flow_eVisible_Full))
         brow_CenterObject( xnav->brow->ctx, object, 0.25);
       free( node_list);
+      if ( xnav->selection_changed_cb)
+	(xnav->selection_changed_cb)( xnav->parent_ctx);
       break;
     }
     case flow_eEvent_SelectClear:
