@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.24 2007-01-05 10:39:06 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.25 2007-01-17 10:31:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1836,7 +1836,13 @@ int Ge::set_focus_cb( void *ctx, void *component)
 
 int Ge::set_focus( void *component)
 {
-  if ( component == (void *)graph) {
+  if ( component == 0) {
+    if ( subpalette_mapped)
+      set_focus( subpalette);
+    else if ( plant_mapped)
+      set_focus( plantctx);
+  }
+  else if ( component == (void *)graph) {
     graph->set_inputfocus( 1);
     if ( subpalette_mapped)
       subpalette->set_inputfocus( 0);
@@ -1861,12 +1867,6 @@ int Ge::set_focus( void *component)
       plantctx->set_inputfocus( 1);
       focused_component = component;
     }
-  }
-  else if ( component == 0) {
-    if ( subpalette_mapped)
-      set_focus( subpalette);
-    else if ( plant_mapped)
-      set_focus( plantctx);
   }
 
   return 1;
