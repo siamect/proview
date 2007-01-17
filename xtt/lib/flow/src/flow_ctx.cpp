@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.7 2007-01-17 06:19:26 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.8 2007-01-17 10:33:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1688,6 +1688,7 @@ void FlowCtx::scroll( double x, double y)
     return;
 
   scroll( delta_x, delta_y);
+  change_scrollbar();
 }
 
 void FlowCtx::scroll( int delta_x, int delta_y)
