@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.30 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.31 2007-01-17 06:20:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -324,6 +324,7 @@
     ge_eSave_ValueInput_unselect      	= 1306,
     ge_eSave_ValueInput_minvalue_attr   = 1307,
     ge_eSave_ValueInput_maxvalue_attr   = 1308,
+    ge_eSave_ValueInput_escape_store    = 1309,
     ge_eSave_Rotate_attribute		= 1400,
     ge_eSave_Rotate_x0			= 1401,
     ge_eSave_Rotate_y0			= 1402,
@@ -1138,6 +1139,7 @@ class GeValueInput : public GeDynElem {
   int clear;			//!< Clear input field it is when opened.
   int popup;			//!< Input in popup dialog.
   int unselect;			//!< Text not selected in input field when opened.
+  int escape_store;	       	//!< Store value when focus is lost.
   pwr_tAName minvalue_attr;
   pwr_tAName maxvalue_attr;
 	
@@ -1148,11 +1150,12 @@ class GeValueInput : public GeDynElem {
   GeValueInput( GeDyn *e_dyn) : 
     GeDynElem(e_dyn, (ge_mDynType) 0, ge_mActionType_ValueInput, 
 	      ge_eDynPrio_ValueInput),
-    min_value(0), max_value(0), clear(0), popup(0), unselect(0), value_element(0)
+    min_value(0), max_value(0), clear(0), popup(0), unselect(0), escape_store(0), value_element(0)
     { strcpy( minvalue_attr, ""); strcpy( maxvalue_attr, "");}
   GeValueInput( const GeValueInput& x) :
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), min_value(x.min_value),
-    max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect)
+    max_value(x.max_value), clear(x.clear), popup(x.popup), unselect(x.unselect), 
+    escape_store(x.escape_store)
     { strcpy( minvalue_attr, x.minvalue_attr); strcpy( maxvalue_attr, x.maxvalue_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.47 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.48 2007-01-17 06:20:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3525,6 +3525,11 @@ void GeValueInput::get_attributes( attr_sItem *attrinfo, int *item_count)
   attrinfo[i].type = glow_eType_Boolean;
   attrinfo[i++].size = sizeof( unselect);
 
+  strcpy( attrinfo[i].name, "ValueInput.EscapeStore");
+  attrinfo[i].value = &escape_store;
+  attrinfo[i].type = glow_eType_Boolean;
+  attrinfo[i++].size = sizeof( escape_store);
+
   strcpy( attrinfo[i].name, "ValueInput.MinValueAttr");
   attrinfo[i].value = minvalue_attr;
   attrinfo[i].type = glow_eType_String;
@@ -3555,6 +3560,7 @@ void GeValueInput::save( ofstream& fp)
   fp << int(ge_eSave_ValueInput_unselect) << FSPACE << unselect << endl;
   fp << int(ge_eSave_ValueInput_minvalue_attr) << FSPACE << minvalue_attr << endl;
   fp << int(ge_eSave_ValueInput_maxvalue_attr) << FSPACE << maxvalue_attr << endl;
+  fp << int(ge_eSave_ValueInput_escape_store) << FSPACE << escape_store << endl;
   fp << int(ge_eSave_End) << endl;
 }
 
@@ -3582,6 +3588,7 @@ void GeValueInput::open( ifstream& fp)
         fp.get();
         fp.getline( maxvalue_attr, sizeof(maxvalue_attr));
         break;
+      case ge_eSave_ValueInput_escape_store: fp >> escape_store; break;
       case ge_eSave_End: end_found = 1; break;
       default:
         cout << "GeValueInput:open syntax error" << endl;
@@ -3669,8 +3676,17 @@ int GeValueInput::action( grow_tObject object, glow_tEvent event)
     break;
   }
   case glow_eEvent_InputFocusLost: {
+
+    if ( escape_store) {
+      pwr_tStatus sts;
+      char str[200];
+
+      grow_GetAnnotation( object, 1, str, sizeof(str));
+      sts = change_value( object, str);
+    }
     grow_CloseAnnotationInput( object, 1);
     value_element->first_scan = 1;
+
     break;
   }
   default: ;    
