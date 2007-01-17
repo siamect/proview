@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.35 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.36 2007-01-17 10:31:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2396,6 +2396,16 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
         event->translate.new_text = new_text;
       return sts;
     }
+    case glow_eEvent_ScrollUp:
+    {
+      grow_Scroll( graph->grow->ctx, 0, 0.05);
+      break;
+    }
+    case glow_eEvent_ScrollDown:
+    {
+      grow_Scroll( graph->grow->ctx, 0, -0.05);
+      break;
+    }
     default:
       ;
   }
@@ -2573,6 +2583,10 @@ void GraphGrow::grow_setup()
   grow_EnableEvent( ctx, glow_eEvent_Map, glow_eEventType_CallBack,
 	graph_grow_cb);
   grow_EnableEvent( ctx, glow_eEvent_Key_Tab, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_ScrollUp, glow_eEventType_CallBack,
+	graph_grow_cb);
+  grow_EnableEvent( ctx, glow_eEvent_ScrollDown, glow_eEventType_CallBack,
 	graph_grow_cb);
 
   grow_RegisterUserDataCallbacks( ctx, graph_userdata_save_cb, graph_userdata_open_cb,

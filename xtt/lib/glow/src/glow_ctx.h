@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.10 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.11 2007-01-17 10:31:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -772,6 +772,13 @@ class GlowCtx {
   void move_widgets( int x, int y) { if ( widget_cnt) a.move_widgets( x, y);};
 
   int display_level;		//!< Current display level.
+
+  //! Scroll the window the specified distance.
+  /*!
+    \param delta_x	Scroll this factor in relation to window size in x direction.
+    \param delta_y	Scroll this factor in relation to window size in y direction.
+  */
+  void scroll( double x, double y);
 
   //! Scroll the window the specified distance.
   /*!

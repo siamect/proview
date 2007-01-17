@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.22 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.23 2007-01-17 10:31:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -669,6 +669,14 @@ extern "C" {
     \param zoom_factor	Zoom factor.
   */
   void grow_GetZoom( grow_tCtx ctx, double *zoom_factor);
+
+  //! Scroll window.
+  /*! 
+    \param ctx		Grow context.
+    \param x	        Scrollfactor of window size in x direction.
+    \param y		Scrollfactor of window size in y direction.
+  */
+  void grow_Scroll( grow_tCtx ctx, double x, double y);
 
   //! Set attributes of the grow context.
   /*! 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.12 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.13 2007-01-17 10:31:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1912,6 +1912,28 @@ void GlowCtx::change_scrollbar()
 	scroll_size);
 
   (scroll_callback)( &data);
+}
+
+void GlowCtx::scroll( double x, double y)
+{
+  int delta_x = int( x * mw.window_width);
+  int delta_y = int( y * mw.window_height);
+
+  if ( delta_y < 0 && mw.offset_y + mw.window_height > y_high * mw.zoom_factor_y)
+    delta_y = 0;
+  else if ( delta_y > 0 && mw.offset_y < y_low * mw.zoom_factor_y)
+    delta_y = 0;
+
+  if ( delta_x < 0 && mw.offset_x + mw.window_width > x_right * mw.zoom_factor_x)
+    delta_x = 0;
+  else if ( delta_x > 0 && mw.offset_x < x_left * mw.zoom_factor_x)
+    delta_x = 0;
+
+  if ( delta_x == 0 && delta_y == 0)
+    return;
+
+  scroll( delta_x, delta_y);
+  change_scrollbar();
 }
 
 void GlowCtx::scroll( int delta_x, int delta_y)

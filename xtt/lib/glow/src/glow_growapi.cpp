@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.25 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.26 2007-01-17 10:31:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -617,6 +617,11 @@ void grow_ZoomAbsolute( grow_tCtx ctx, double zoom_factor)
 void grow_GetZoom( grow_tCtx ctx, double *zoom_factor)
 {
   *zoom_factor = ctx->mw.zoom_factor_x;
+}
+
+void grow_Scroll( grow_tCtx ctx, double x, double y)
+{
+  ctx->scroll( x, y);;
 }
 
 void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr, 
