@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.4 2007-01-15 13:21:05 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.5 2007-01-17 10:28:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2287,6 +2287,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_save_w), 
 	  gtk_image_new_from_stock( "gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(tools_save_w, "clicked", G_CALLBACK(WttGtk::activate_save), this);
+  g_object_set( tools_save_w, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_save_w, "Save", "");
 
   tools_edit_w = gtk_button_new();
@@ -2294,12 +2295,14 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_edit_w), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_edit_w, "clicked", G_CALLBACK(WttGtk::activate_configure), this);
+  g_object_set( tools_edit_w, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_edit_w, "Edit", "");
 
   GtkWidget *tools_buildnode = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_buildnode), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
+  g_object_set( tools_buildnode, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_buildnode, "Build Node", "");
 
   GtkWidget *tools_distribute = gtk_button_new();
@@ -2307,6 +2310,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_distribute), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_distribute, "clicked", G_CALLBACK(WttGtk::activate_distribute), this);
+  g_object_set( tools_distribute, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_distribute, "Distribute", "");
 
   GtkWidget *tools_openplc = gtk_button_new();
@@ -2314,6 +2318,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_openplc), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_openplc, "clicked", G_CALLBACK(WttGtk::activate_openplc), this);
+  g_object_set( tools_openplc, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_openplc, "Open Program", "");
 
   GtkWidget *tools_openge = gtk_button_new();
@@ -2321,6 +2326,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_openge), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_openge, "clicked", G_CALLBACK(WttGtk::activate_openge), this);
+  g_object_set( tools_openge, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_openge, "Open Ge", "");
 
   GtkWidget *tools_utilities = gtk_button_new();
@@ -2328,6 +2334,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_utilities), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_utilities, "clicked", G_CALLBACK(WttGtk::activate_utilities), this);
+  g_object_set( tools_utilities, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_utilities, "Utilities", "");
 
   GtkWidget *tools_twowindows = gtk_button_new();
@@ -2335,6 +2342,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_twowindows), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_twowindows, "clicked", G_CALLBACK(WttGtk::activate_twowindows), this);
+  g_object_set( tools_twowindows, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_twowindows, "Two windows/One window", "");
 
   GtkWidget *tools_messages = gtk_button_new();
@@ -2342,12 +2350,14 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_messages), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_messages, "clicked", G_CALLBACK(WttGtk::activate_messages), this);
+  g_object_set( tools_messages, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_messages, "Show Messages", "");
 
   GtkWidget *tools_options = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_options), 
 	  gtk_image_new_from_stock( "gtk-preferences", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(tools_options, "clicked", G_CALLBACK(WttGtk::activate_view), this);
+  g_object_set( tools_options, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_options, "Options", "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
@@ -2355,6 +2365,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(WttGtk::activate_zoom_in), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
@@ -2362,6 +2373,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(WttGtk::activate_zoom_out), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_out, "Zoom out", "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
@@ -2369,6 +2381,7 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(WttGtk::activate_zoom_reset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset, "Zoom reset", "");
 
   // Vertical palette pane

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.3 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.4 2007-01-17 10:28:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1332,6 +1332,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( widgets.tools_save), 
 	  gtk_image_new_from_stock( "gtk-save", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(widgets.tools_save, "clicked", G_CALLBACK(WFoeGtk::activate_save), this);
+  g_object_set( widgets.tools_save, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, widgets.tools_save, "Save", "");
 
   GtkWidget *tools_edit = gtk_button_new();
@@ -1339,6 +1340,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( tools_edit), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_edit, "clicked", G_CALLBACK(WFoeGtk::activate_edit_togg), this);
+  g_object_set( tools_edit, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_edit, "Set edit mode", "");
 
   GtkWidget *tools_view = gtk_button_new();
@@ -1346,12 +1348,14 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( tools_view), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_view, "clicked", G_CALLBACK(WFoeGtk::activate_view_togg), this);
+  g_object_set( tools_view, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_view, "Set view mode", "");
 
   widgets.tools_build = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(widgets.tools_build), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(widgets.tools_build, "clicked", G_CALLBACK(WFoeGtk::activate_compile), this);
+  g_object_set( widgets.tools_build, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, widgets.tools_build, "Build Program", "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
@@ -1359,6 +1363,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(WFoeGtk::activate_zoomin), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_in, "Zoom in", "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
@@ -1366,6 +1371,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(WFoeGtk::activate_zoomout), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_out, "Zoom out", "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
@@ -1373,6 +1379,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(WFoeGtk::activate_unzoom), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset, "Zoom reset", "");
 
   GtkWidget *tools_objectpalette = gtk_button_new();
@@ -1380,6 +1387,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( tools_objectpalette), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_objectpalette, "clicked", G_CALLBACK(WFoeGtk::activate_palette_object), this);
+  g_object_set( tools_objectpalette, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_objectpalette, "Show Object palette", "");
 
   GtkWidget *tools_conpalette = gtk_button_new();
@@ -1387,6 +1395,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( tools_conpalette), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_conpalette, "clicked", G_CALLBACK(WFoeGtk::activate_palette_con), this);
+  g_object_set( tools_conpalette, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_conpalette, "Show Connection palette", "");
 
   GtkWidget *tools_plantpalette = gtk_button_new();
@@ -1394,6 +1403,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_container_add( GTK_CONTAINER( tools_plantpalette), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_plantpalette, "clicked", G_CALLBACK(WFoeGtk::activate_palette_plant), this);
+  g_object_set( tools_plantpalette, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_plantpalette, "Show Plant Hierarchy", "");
 
   // Statusbar and cmd input
