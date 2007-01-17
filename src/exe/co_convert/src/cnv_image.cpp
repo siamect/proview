@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_image.cpp,v 1.4 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: cnv_image.cpp,v 1.5 2007-01-17 13:44:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,7 +105,7 @@ void cnv_print_image( cnv_tImImage image, char *filename)
 #if defined PWRE_GTK
   char *s;
   char type[20];
-  GError *error;
+  GError *error = NULL;
 
   s = strrchr( filename, '.');
   if ( !s)
