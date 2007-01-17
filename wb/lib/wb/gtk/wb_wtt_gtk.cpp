@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.5 2007-01-17 10:28:39 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.6 2007-01-17 12:44:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -453,7 +453,7 @@ int WttGtk::create_popup_menu( pwr_sAttrRef aref,
     GdkEvent *e = gtk_get_current_event();
     if ( e->any.window == ((WNavGtk *)wnavnode)->brow_widget->window) {
       gint pos = gtk_paned_get_position( GTK_PANED(wnav_paned));
-      popupmenu_x += pos + 5;
+      popupmenu_x += pos + 9;
     }
     gdk_event_free( e);
   }
