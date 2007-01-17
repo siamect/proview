@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.6 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.7 2007-01-17 06:19:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -201,6 +201,7 @@ void flow_TraceScan( flow_tCtx ctx);
 void flow_RemoveTraceObjects( flow_tCtx ctx);
 void flow_Zoom( flow_tCtx ctx, double zoom_factor);
 void flow_ZoomAbsolute( flow_tCtx ctx, double zoom_factor);
+void flow_Scroll( flow_tCtx ctx, double x, double y);
 void flow_SetAttributes( flow_tCtx ctx, flow_sAttributes *attr,
 	unsigned long mask);
 void flow_GetAttributes( flow_tCtx ctx, flow_sAttributes *attr);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.2 2007-01-17 06:21:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1589,6 +1589,12 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
   case flow_eEvent_SelectClear:
     flow_ResetSelectHighlight( ctx);
     break;
+  case flow_eEvent_ScrollDown:
+    flow_Scroll( ctx, 0, -0.05);
+    break;
+  case flow_eEvent_ScrollUp:
+    flow_Scroll( ctx, 0, 0.05);
+    break;
   default:
     ;
   }
@@ -1738,6 +1744,10 @@ int WGre::edit_setup()
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_ObjectMoved, flow_eEventType_CallBack, 
 	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	flow_cb);
   return 1;
 }
 
@@ -1767,6 +1777,10 @@ int WGre::view_setup()
   flow_EnableEvent( ctx, flow_eEvent_Init, flow_eEventType_CallBack, 
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
 	flow_cb);
   return 1;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.7 2007-01-17 06:19:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1667,6 +1667,27 @@ void FlowCtx::change_scrollbar()
 	scroll_size);
 
   (scroll_callback)( &data);
+}
+
+void FlowCtx::scroll( double x, double y)
+{
+  int delta_x = int( x * window_width);
+  int delta_y = int( y * window_height);
+
+  if ( delta_y < 0 && offset_y + window_height > y_high * zoom_factor)
+    delta_y = 0;
+  else if ( delta_y > 0 && offset_y < y_low * zoom_factor)
+    delta_y = 0;
+
+  if ( delta_x < 0 && offset_x + window_width > x_right * zoom_factor)
+    delta_x = 0;
+  else if ( delta_x > 0 && offset_x < x_left * zoom_factor)
+    delta_x = 0;
+
+  if ( delta_x == 0 && delta_y == 0)
+    return;
+
+  scroll( delta_x, delta_y);
 }
 
 void FlowCtx::scroll( int delta_x, int delta_y)

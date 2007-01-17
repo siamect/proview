@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.3 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.4 2007-01-17 06:19:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -307,6 +307,7 @@ class FlowCtx {
     void move_widgets( int x, int y) { if ( widget_cnt) a.move_widgets( x, y);};
     int display_level;
     void scroll( int delta_x, int delta_y);
+    void scroll( double delta_x, double delta_y);
     double scroll_size;
     void (*scroll_callback)( flow_sScroll *);
     void *scroll_data;

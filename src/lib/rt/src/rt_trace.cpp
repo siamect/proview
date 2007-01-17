@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.1 2007-01-04 07:52:31 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.2 2007-01-17 06:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -800,6 +800,12 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
     case flow_eEvent_SelectClear:
       flow_ResetSelectInverse( ctx);
       break;
+    case flow_eEvent_ScrollDown:
+      flow_Scroll( ctx, 0, -0.05);
+      break;
+    case flow_eEvent_ScrollUp:
+      flow_Scroll( ctx, 0, 0.05);
+      break;
     default:
       ;
   }
@@ -887,6 +893,10 @@ pwr_tStatus RtTrace::viewsetup()
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	flow_cb);
 
   return 1;
 }
@@ -918,6 +928,10 @@ pwr_tStatus RtTrace::simsetup()
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
 	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
+	flow_cb);
   return 1;
 }
 
@@ -943,6 +957,10 @@ pwr_tStatus RtTrace::trasetup()
   flow_EnableEvent( ctx, flow_eEvent_MB1Click, flow_eEventType_CallBack, 
 	flow_cb);
   flow_EnableEvent( ctx, flow_eEvent_SelectClear, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollDown, flow_eEventType_CallBack, 
+	flow_cb);
+  flow_EnableEvent( ctx, flow_eEvent_ScrollUp, flow_eEventType_CallBack, 
 	flow_cb);
   return 1;
 }
