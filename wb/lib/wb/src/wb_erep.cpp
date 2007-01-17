@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.48 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.49 2007-01-17 10:29:26 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@
 #include "wb_dblock.h"
 #include "wb_ldh_msg.h"
 #include "co_msgwindow.h"
+#include "co_wow.h"
 
 extern "C" {
 #include "co_dcli.h"
@@ -678,43 +679,71 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 
       sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
       dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-      if ( wb_dblock::is_locked(vname, uname)) {
-
-        MsgWindow::message( 'E', "Database is locked by user", uname, vname);
-	if ( MsgWindow::has_window())
-	  exit(0);
-
-        // Try to load dbs-file instead
-        cdh_ToLower( vol_array[0], vol_array[0]);
-        strcpy( vname, "$pwrp_load/");
-        strcat( vname, vol_array[0]);
-        strcat( vname, ".dbs");
-        dcli_translate_filename( vname, vname);
-
-        try {
-          vrep = new wb_vrepdbs( this, vname);
-          vrep->load();
-          addDbs( &sts, vrep);
-          MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
-          vol_cnt++;
-        }
-        catch ( wb_error& e) {
-	  if ( m_options & ldh_mWbOption_IgnoreDLoadError)
-	    MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
-	  else
-          MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
-        }
+      if ( EVEN(sts)) {
+	MsgWindow::message( 'E', "Database not found", vname);
       }
       else {
-        if ( ODD(sts)) {
+	int open_loadfile = 0;
+
+	if ( wb_dblock::is_locked(vname, uname)) {
+	  char msg[120];
+
+	  sprintf( msg, "Database %s is locked by user %s", vol_array[0], uname);
+	  MsgWindow::message( 'E', msg, msgw_ePop_No);
+
+	  if ( ! MsgWindow::has_window())
+	    exit(0);
+
+	  CoWow *wow = MsgWindow::get_wow();
+	  int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", "Enter loadfile", "Remove lock", 
+					    "$pwr_exe/wtt_padlock.png");
+	  switch( res) {
+	  case wow_eModalDialogReturn_Button1:
+	  case wow_eModalDialogReturn_Deleted:
+	    exit(0);
+	  case wow_eModalDialogReturn_Button3:
+	    // Remove lock
+	    wb_dblock::dbunlock(vname);
+	    break;
+	  case wow_eModalDialogReturn_NYI:
+	  case wow_eModalDialogReturn_Button2:
+	    // Enter loadfile
+	    open_loadfile = 1;
+	    break;
+	  }
+
+	}
+
+	if ( open_loadfile) {
+	  // Open dbs
+	  cdh_ToLower( vol_array[0], vol_array[0]);
+	  strcpy( vname, "$pwrp_load/");
+	  strcat( vname, vol_array[0]);
+	  strcat( vname, ".dbs");
+	  dcli_translate_filename( vname, vname);
+	  
+	  try {
+	    vrep = new wb_vrepdbs( this, vname);
+	    vrep->load();
+	    addDbs( &sts, vrep);
+	    MsgWindow::message( 'I', "Volume loaded from snapshot file", vname);
+	    vol_cnt++;
+	  }
+	  catch ( wb_error& e) {
+	    if ( m_options & ldh_mWbOption_IgnoreDLoadError)
+	      MsgWindow::message( 'I', "Unable to open volume snapshot file", vname);
+	    else
+	      MsgWindow::message( 'E', "Unable to open volume snapshot file", vname, e.what().c_str());
+	  }
+	}
+	else {
+	  // Open db
 	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-          vrepdb->name(vol_array[0]);
-          addDb( &sts, vrepdb);
-          MsgWindow::message( 'I', "Database opened", vname);
-          vol_cnt++;
-        }
-        else
-          MsgWindow::message( 'E', "Database not found", vname);
+	  vrepdb->name(vol_array[0]);
+	  addDb( &sts, vrepdb);
+	  MsgWindow::message( 'I', "Database opened", vname);
+	  vol_cnt++;
+	}
       }
     }
   }
@@ -740,20 +769,35 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 
     sts = dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_INIT);
     dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
-    if ( wb_dblock::is_locked(vname, uname))
-      MsgWindow::message( 'E', "Database is locked by user", uname, vname);
-    else {
-      if ( ODD(sts)) {
-	wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
-        vrepdb->name("directory");
-        addDb( &sts, vrepdb);
-        MsgWindow::message( 'I', "Database opened", vname);
-      }
-      if ( EVEN(sts)) {
-        *status = LDH__PROJCONFIG;
-        return;
-      }
+    if ( EVEN(sts)) {
+      *status = LDH__PROJCONFIG;
+      return;
     }
+    if ( wb_dblock::is_locked(vname, uname)) {
+      char msg[120];
+
+      sprintf( msg, "Database directory.db is locked by user %s", uname);
+      MsgWindow::message( 'E', msg, msgw_ePop_No);
+
+      CoWow *wow = MsgWindow::get_wow();
+      int res = wow->CreateModalDialog( "Database Locked", msg, "Exit", 0, "Remove lock", "$pwr_exe/wtt_padlock.png");
+      switch( res) {
+      case wow_eModalDialogReturn_NYI:
+      case wow_eModalDialogReturn_Button2:
+      case wow_eModalDialogReturn_Button1:
+      case wow_eModalDialogReturn_Deleted:
+	exit(0);
+      case wow_eModalDialogReturn_Button3:
+	// Remove lock
+	wb_dblock::dbunlock(vname);
+	break;
+      }    
+    }
+
+    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+    vrepdb->name("directory");
+    addDb( &sts, vrepdb);
+    MsgWindow::message( 'I', "Database opened", vname);
   }
   if ( !vol_cnt)
     *status = LDH__PROJCONFIG;
