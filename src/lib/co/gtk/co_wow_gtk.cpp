@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.3 2007-01-17 10:27:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -828,6 +828,102 @@ char *CoWowGtk::translate_utf8( char *str)
   return result;
 }
 
+static void modaldia_button1_cb( GtkWidget *w, gpointer data)
+{
+  *(int *)data = wow_eModalDialogReturn_Button1;
+  gtk_main_quit();
+}
+static void modaldia_button2_cb( GtkWidget *w, gpointer data)
+{
+  *(int *)data = wow_eModalDialogReturn_Button2;
+  gtk_main_quit();
+}
+static void modaldia_button3_cb( GtkWidget *w, gpointer data)
+{
+  *(int *)data = wow_eModalDialogReturn_Button3;
+  gtk_main_quit();
+}
+static gboolean modaldia_delete_event( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  *(int *)data = wow_eModalDialogReturn_Deleted;
+  gtk_main_quit();
+
+  return TRUE;
+}
+
+int CoWowGtk::CreateModalDialog( char *title, char *text, char *button1, char *button2, char *button3,
+				 char *image)
+{
+  int status = 0;
+  GtkWidget *image_w;
+  pwr_tFileName fname;
+
+  // Create a question window
+  GtkWidget *dialog_w = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
+							 "default-height", 150,
+							 "default-width", 400,
+							 "title", title,
+							 "window-position", GTK_WIN_POS_CENTER,
+							 NULL);
+
+  g_signal_connect( dialog_w, "delete_event", G_CALLBACK(modaldia_delete_event), &status);
+  GtkWidget *text_w = gtk_label_new(text);
+
+
+  if ( image) {
+    dcli_translate_filename( fname, image);
+    image_w = gtk_image_new_from_file( fname);
+  }
+  if ( !image) {
+    image_w = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
+				"stock", GTK_STOCK_DIALOG_QUESTION,
+				"icon-size", GTK_ICON_SIZE_DIALOG,
+				"xalign", 0.5,
+				"yalign", 1.0,
+				NULL);
+  }
+
+  GtkWidget *hboxtext = gtk_hbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(hboxtext), image_w, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(hboxtext), text_w, TRUE, TRUE, 15);
+
+  GtkWidget *hboxbuttons = gtk_hbox_new( TRUE, 40);
+
+  if ( button1) {
+    GtkWidget *button1_w = gtk_button_new_with_label( translate_utf8(button1));
+    gtk_widget_set_size_request( button1_w, -1, 25);
+    g_signal_connect( button1_w, "clicked", 
+		      G_CALLBACK(modaldia_button1_cb), &status);
+    gtk_box_pack_start( GTK_BOX(hboxbuttons), button1_w, FALSE, FALSE, 0);
+  }
+  if ( button2) {
+    GtkWidget *button2_w = gtk_button_new_with_label( translate_utf8(button2));
+    gtk_widget_set_size_request( button2_w, -1, 25);
+    g_signal_connect( button2_w, "clicked", 
+		      G_CALLBACK(modaldia_button2_cb), &status);
+    gtk_box_pack_start( GTK_BOX(hboxbuttons), button2_w, FALSE, FALSE, 0);
+  }
+  if ( button3) {
+    GtkWidget *button3_w = gtk_button_new_with_label( translate_utf8(button3));
+    gtk_widget_set_size_request( button3_w, -1, 25);
+    g_signal_connect( button3_w, "clicked", 
+		      G_CALLBACK(modaldia_button3_cb), &status);
+    gtk_box_pack_end( GTK_BOX(hboxbuttons), button3_w, FALSE, FALSE, 0);
+  }
+
+
+  GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), hboxtext, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
+  gtk_box_pack_end( GTK_BOX(vbox), hboxbuttons, FALSE, FALSE, 15);
+  gtk_container_add( GTK_CONTAINER(dialog_w), vbox);
+  gtk_widget_show_all( dialog_w);
+
+  gtk_main();
+  gtk_widget_destroy( dialog_w);
+
+  return status;
+}
 
 
 

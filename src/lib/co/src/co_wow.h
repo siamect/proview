@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow.h,v 1.12 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: co_wow.h,v 1.13 2007-01-17 10:27:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,14 @@ typedef enum {
   wow_eFileSelType_Image,
   wow_eFileSelType__
 } wow_eFileSelType;
+
+typedef enum {
+  wow_eModalDialogReturn_NYI,
+  wow_eModalDialogReturn_Button1,
+  wow_eModalDialogReturn_Button2,
+  wow_eModalDialogReturn_Button3,
+  wow_eModalDialogReturn_Deleted
+} wow_eMotalDialogReturn;
 
 class CoWowWidget {
 };
@@ -74,8 +82,10 @@ class CoWow {
 			    void (action_cb)( void *, char *),
 			    void *ctx) { return NULL;}
   virtual void CreateFileSelDia( char *title, void *parent_ctx,
-	       void (*file_selected_cb)(void *, char *, wow_eFileSelType),
-				  wow_eFileSelType file_type) {}
+				 void (*file_selected_cb)(void *, char *, wow_eFileSelType),
+				 wow_eFileSelType file_type) {}
+  virtual int CreateModalDialog( char *title, char *text, char *button1, char *button2, char *button3,
+				 char *image) { return wow_eModalDialogReturn_NYI;}
   static int HideWarranty();
   virtual int DisplayWarranty() { return 0;}
   virtual void DisplayLicense() {} 
