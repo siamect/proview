@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.4 2007-01-17 06:18:10 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.5 2007-01-17 10:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -741,27 +741,15 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_container_add( GTK_CONTAINER(tools_back), 
 	  gtk_image_new_from_stock( "gtk-go-back", GTK_ICON_SIZE_SMALL_TOOLBAR));
   g_signal_connect(tools_back, "clicked", G_CALLBACK(activate_back), this);
+  g_object_set( tools_back, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_back,CoWowGtk::translate_utf8("Go back"), "");
 
-  GtkWidget *tools_openobject = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/xtt_object.png");
-  gtk_container_add( GTK_CONTAINER(tools_openobject), 
-	  gtk_image_new_from_file( fname));
-  g_signal_connect(tools_openobject, "clicked", G_CALLBACK(XttGtk::activate_openobject), this);
-  gtk_toolbar_append_widget( tools, tools_openobject,CoWowGtk::translate_utf8("Open Object"), "");
-  
-  GtkWidget *tools_openplc = gtk_button_new();
-  dcli_translate_filename( fname, "$pwr_exe/wtt_program.png");
-  gtk_container_add( GTK_CONTAINER(tools_openplc), 
-	  gtk_image_new_from_file( fname));
-  g_signal_connect(tools_openplc, "clicked", G_CALLBACK(XttGtk::activate_openplc), this);
-  gtk_toolbar_append_widget( tools, tools_openplc,CoWowGtk::translate_utf8("Open Program"), "");
-  
   GtkWidget *tools_advuser = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/xtt_advuser.png");
   gtk_container_add( GTK_CONTAINER(tools_advuser), 
 	  gtk_image_new_from_file( fname));
   g_signal_connect(tools_advuser, "clicked", G_CALLBACK(XttGtk::activate_advanceduser), this);
+  g_object_set( tools_advuser, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_advuser,CoWowGtk::translate_utf8("Advanced user"), "");
   
   GtkWidget *tools_zoom_in = gtk_button_new();
@@ -769,6 +757,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_in, "clicked", G_CALLBACK(activate_zoom_in), this);
+  g_object_set( tools_zoom_in, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_in,CoWowGtk::translate_utf8("Zoom in"), "");
 
   GtkWidget *tools_zoom_out = gtk_button_new();
@@ -776,6 +765,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_container_add( GTK_CONTAINER(tools_zoom_out), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_out, "clicked", G_CALLBACK(activate_zoom_out), this);
+  g_object_set( tools_zoom_out, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_out,CoWowGtk::translate_utf8("Zoom out"), "");
 
   GtkWidget *tools_zoom_reset = gtk_button_new();
@@ -783,6 +773,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   gtk_container_add( GTK_CONTAINER(tools_zoom_reset), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
+  g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
 
   // Toolbar

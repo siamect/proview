@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.5 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.6 2007-01-17 10:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -76,6 +76,7 @@ static GtkWidget *image_button( char *filename)
   image = gtk_image_new_from_file( fname);
 
   gtk_container_add( GTK_CONTAINER( box), image);
+  g_object_set( box, "can-focus", FALSE, NULL);
   gtk_widget_show( image);
 
   return box;
@@ -1886,6 +1887,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_border), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_border, "clicked", G_CALLBACK(activate_border), this);
+  g_object_set( tools_border, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_border, "Set border property on selected objects, and as default", "");
 
   // Fill checkbutton
@@ -1894,6 +1896,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_fill), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_fill, "clicked", G_CALLBACK(activate_fill), this);
+  g_object_set( tools_fill, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_fill, "Set fill property on selected objects, and as default", "");
 
   // 3D checkbutton
@@ -1902,6 +1905,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_shadow), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_shadow, "clicked", G_CALLBACK(activate_shadow), this);
+  g_object_set( tools_shadow, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_shadow, "Set 3D property on selected objects, and as default", "");
 
 
@@ -1911,6 +1915,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_pop), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_pop, "clicked", G_CALLBACK(activate_pop), this);
+  g_object_set( tools_pop, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_pop, "Pop selected objects", "");
 
 
@@ -1920,6 +1925,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_push), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_push, "clicked", G_CALLBACK(activate_push), this);
+  g_object_set( tools_push, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_push, "Push selected objects", "");
 
 
@@ -1929,6 +1935,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_move_horiz), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_move_horiz, "clicked", G_CALLBACK(activate_move_horizontal), this);
+  g_object_set( tools_move_horiz, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_move_horiz, "Move horizontal", "");
 
   // Move vertical
@@ -1937,6 +1944,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_move_vert), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_move_vert, "clicked", G_CALLBACK(activate_move_vertical), this);
+  g_object_set( tools_move_vert, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_move_vert, "Move vertical", "");
 
   // Group button
@@ -1945,6 +1953,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_group), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_group, "clicked", G_CALLBACK(activate_group), this);
+  g_object_set( tools_group, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_group, "Group selected objects", "");
 
   // Ungroup button
@@ -1953,6 +1962,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(tools_ungroup), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(tools_ungroup, "clicked", G_CALLBACK(activate_ungroup), this);
+  g_object_set( tools_ungroup, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_ungroup, "Split selected group", "");
 
 
@@ -2095,6 +2105,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 								"menu", linewidth_menu, NULL);
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_linewidth_omenu), 0);
+  g_object_set( tools_linewidth_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, tools_linewidth_omenu, "Line Width", "");
 
   // Line type option menu
@@ -2146,6 +2157,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 								"menu", linetype_menu, NULL);
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_linetype_omenu), 0);
+  g_object_set( tools_linetype_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, tools_linetype_omenu, "Line Type", "");
 
   // Text size options menu
@@ -2191,12 +2203,14 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 								"menu", textsize_menu, NULL);
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 0);
+  g_object_set( tools_textsize_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, tools_textsize_omenu, "Text Size", "");
 
   // Bold checkbutton
   GtkWidget *tools_textbold = gtk_check_button_new_with_label( "Bold");
   gtk_toolbar_append_widget( tools2, tools_textbold, "Set bold on selected text, and as default", "");
   g_signal_connect(tools_textbold, "toggled", G_CALLBACK(activate_textbold), this);
+  g_object_set( tools_textbold, "can-focus", FALSE, NULL);
 
   // Grid size options menu
   GtkWidget *tools_gridsize_4 = gtk_menu_item_new_with_label( "Gridsize 1.0");
@@ -2218,6 +2232,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   grid_size_w = tools_gridsize_omenu;
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_gridsize_omenu), 0);
+  g_object_set( tools_gridsize_omenu, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, tools_gridsize_omenu, "Grid Size", "");
 
   // Show grid checkbutton
@@ -2226,6 +2241,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(show_grid_w), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(show_grid_w, "clicked", G_CALLBACK(activate_show_grid), this);
+  g_object_set( show_grid_w, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, show_grid_w, "Show grid", "");
 
   // Snap to grid checkbutton
@@ -2234,6 +2250,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_container_add( GTK_CONTAINER(grid_on_w), 
 		     gtk_image_new_from_file( fname));
   g_signal_connect(grid_on_w, "clicked", G_CALLBACK(activate_grid), this);
+  g_object_set( grid_on_w, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools2, grid_on_w, "Snap to grid", "");
 
   // Brightness
