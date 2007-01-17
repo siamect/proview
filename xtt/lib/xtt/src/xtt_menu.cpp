@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.12 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.13 2007-01-17 06:19:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -489,6 +489,8 @@ int XNav::call_method( char *method, char *filter,
     strcpy( mcp->Arg, arg);
 
   sel_cnt = 1;
+  if ( mcp->Selected)
+    free( mcp->Selected);
   mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
@@ -507,6 +509,9 @@ int XNav::call_method( char *method, char *filter,
 
   sts = (method_func) ( mcp);
   if ( EVEN(sts)) return sts;
+
+  free( mcp->Selected);
+  mcp->Selected = 0;
 
   return XNAV__SUCCESS;
 }
@@ -536,6 +541,8 @@ int XNav::call_object_method( pwr_sAttrRef attrref,
   mcp->SelectedSet = xmenu_eMenuSet_Object;
 
   sel_cnt = 1;
+  if ( mcp->Selected)
+    free( mcp->Selected);
   mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
@@ -589,6 +596,8 @@ int XNav::check_object_methodfilter( pwr_sAttrRef attrref,
   mcp->SelectedSet = xmenu_eMenuSet_Object;
 
   sel_cnt = 1;
+  if ( mcp->Selected)
+    free( mcp->Selected);
   mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;
@@ -642,6 +651,8 @@ void XNav::get_popup_menu_items( pwr_sAttrRef attrref,
     strcpy( mcp->Arg, arg);
 
   sel_cnt = 1;
+  if ( mcp->Selected)
+    free( mcp->Selected);
   mcp->Selected = (pwr_sAttrRef *) calloc( sel_cnt + 1, sizeof (pwr_sAttrRef));
   mcp->Selected[0] = attrref;
   mcp->Selected[sel_cnt].Objid = pwr_cNObjid;

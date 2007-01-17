@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_main.h,v 1.1 2007-01-04 08:40:17 claes Exp $
+ * Proview   $Id: rt_xtt_main.h,v 1.2 2007-01-17 06:18:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,7 @@
 
 class CoWow;
 class CoWowTimer;
+class XttMethodToolbar;
 
 class Xtt {
   public:
@@ -61,6 +62,7 @@ class Xtt {
     pwr_tOName	opplace_str;
     int 	quiet;
     int 	attach_audio;
+    XttMethodToolbar *methodtoolbar;
 
     Xtt( int argc, char *argv[], int *return_sts);
     virtual ~Xtt() {}
@@ -83,7 +85,8 @@ class Xtt {
     static void xtt_message_cb( void *ctx, char severity, char *msg);
     static void close_ok( void *ctx, void *data);
     static void change_value( void *ctx);
- 
+    static void selection_changed( void *ctx);
+    
     void activate_print();
     void activate_find();
     void activate_findregex();
@@ -99,6 +102,7 @@ class Xtt {
     void activate_help();
     void activate_help_project();
     void activate_help_proview();
+    void activate_method( char *method, char *filter);
 
     static Xtt *hot_xtt;
     static xnav_sStartMenu alarm_menu[];

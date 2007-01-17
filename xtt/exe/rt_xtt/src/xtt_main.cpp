@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.1 2007-01-04 08:40:17 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.2 2007-01-17 06:18:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,10 +42,12 @@
 #include "xtt_xnav.h"
 #include "xtt_item.h"
 #include "xtt_url.h"
+#include "xtt_methodtoolbar.h"
 #include "co_lng.h"
 #include "co_xhelp.h"
 #include "co_wow.h"
 #include "rt_xnav_msg.h"
+
 
 // Static variables
 Xtt *Xtt::hot_xtt = 0;
@@ -237,6 +239,13 @@ void Xtt::change_value( void *ctx)
   xtt->open_change_value();
 }
 
+void Xtt::selection_changed( void *ctx)
+{
+  Xtt *xtt = (Xtt *) ctx;
+
+  xtt->methodtoolbar->set_sensitive();
+}
+
 //
 //  Callbackfunctions from menu entries
 //
@@ -395,6 +404,29 @@ void Xtt::activate_zoom_out()
     return;
 
   xnav->zoom( 1.0 / 1.18);
+}
+
+void Xtt::activate_method( char *method, char *filter)
+{
+  int		sts;
+  int		is_attr;
+  pwr_sAttrRef	aref;
+  xmenu_eItemType menu_type;
+
+  sts = xnav->get_select( &aref, &is_attr);
+
+  if ( aref.Flags.b.Object)
+    menu_type = xmenu_eItemType_Object;
+  else if ( aref.Flags.b.ObjectAttr)
+    menu_type = xmenu_eItemType_AttrObject;
+  else
+    menu_type = xmenu_eItemType_Attribute;
+
+  if ( ODD(sts))
+    xnav->call_method( method, filter, aref,
+		       menu_type,
+		       xmenu_mUtility_XNav,
+		       xnav->priv, 0);
 }
 
 void Xtt::activate_help()

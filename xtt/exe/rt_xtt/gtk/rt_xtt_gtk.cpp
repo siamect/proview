@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.4 2007-01-17 06:18:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@
 #include "co_wow_gtk.h"
 #include "rt_xnav_msg.h"
 #include "rt_syi.h"
+#include "xtt_methodtoolbar_gtk.h"
 
 void XttGtk::hotkey_Command( char *arg, void *userdata)
 {
@@ -469,6 +470,7 @@ XttGtk::~XttGtk()
   delete cmd_recall;
   delete value_recall;
   delete hotkey;
+  delete methodtoolbar;
 }
 
 static gint delete_event( GtkWidget *w, GdkEvent *event, gpointer xtt)
@@ -783,6 +785,10 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   g_signal_connect(tools_zoom_reset, "clicked", G_CALLBACK(activate_zoom_reset), this);
   gtk_toolbar_append_widget( tools, tools_zoom_reset,CoWowGtk::translate_utf8("Zoom reset"), "");
 
+  // Toolbar
+  methodtoolbar = new XttMethodToolbarGtk(0);
+  GtkToolbar *tools2 = (GtkToolbar *) ((XttMethodToolbarGtk *)methodtoolbar)->build();
+
   // Statusbar and cmd input
   GtkWidget *statusbar = gtk_hbox_new( FALSE, 0);
   msg_label = gtk_label_new( "");
@@ -811,11 +817,15 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
   xnav->map_cb = &map;
   xnav->change_value_cb = &change_value;
   xnav->set_dimension_cb = &set_dimension;
+  xnav->selection_changed_cb = &selection_changed;
   xnav->attach_audio = attach_audio;
+
+  methodtoolbar->m_xnav = xnav;
 
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools2), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(brow_widget), TRUE, TRUE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(statusbar), FALSE, FALSE, 3);
 
@@ -856,6 +866,7 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
                  gdk_display_get_default(), i));
     gdk_window_add_filter( root, xtt_hotkey_filter, hotkey);
   }
+  methodtoolbar->set_sensitive();
 
   xtt_mainloop();  
 

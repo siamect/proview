@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.19 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.20 2007-01-17 06:19:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -279,6 +279,7 @@ class XNav {
     void 		(*map_cb)( void *);
     void 		(*change_value_cb)( void *);
     void 		(*set_dimension_cb)( void *, int, int);
+    void 		(*selection_changed_cb)( void *);
     int			ccm_func_registred;
     int			verify;    
     xnav_sMenu 		*menu_tree;

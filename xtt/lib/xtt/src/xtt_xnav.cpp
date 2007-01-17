@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.30 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.31 2007-01-17 06:19:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -987,7 +987,7 @@ XNav::XNav(
 	parent_ctx(xn_parent_ctx),
 	brow_cnt(0), TraceList(NULL), trace_started(0),
 	message_cb(NULL), close_cb(NULL), map_cb(NULL), change_value_cb(NULL),
-	set_dimension_cb(NULL), ccm_func_registred(0), verify(0),
+	set_dimension_cb(NULL), selection_changed_cb(0), ccm_func_registred(0), verify(0),
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
@@ -1604,6 +1604,8 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( xnav->brow->ctx, object, 0.25);
       if ( node_count)
         free( node_list);
+      if ( xnav->selection_changed_cb)
+	(xnav->selection_changed_cb)( xnav->parent_ctx);
       break;
     }
     case flow_eEvent_Key_Down:
@@ -1639,6 +1641,8 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         brow_CenterObject( xnav->brow->ctx, object, 0.75);
       if ( node_count)
         free( node_list);
+      if ( xnav->selection_changed_cb)
+	(xnav->selection_changed_cb)( xnav->parent_ctx);
       break;
     }
     case flow_eEvent_Key_PageDown: {
@@ -1905,6 +1909,8 @@ int XNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
         default:
           brow_SelectClear( xnav->brow->ctx);
       }
+      if ( xnav->selection_changed_cb)
+	(xnav->selection_changed_cb)( xnav->parent_ctx);
       break;
     case flow_eEvent_Radiobutton:
     {
