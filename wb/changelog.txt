@@ -42,3 +42,4 @@
 061010 cs  pkg       Support for bootnodes added, i.e. copying of package to other 
                      nodes than the actual process or operator station.
 070112 cs  wb        Gtk version of wb.
+070116 cs  plc       Mouse Scroll events added.

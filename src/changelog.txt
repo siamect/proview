@@ -21,3 +21,4 @@
 060905 rk  rt_tmon   Established new callback function for glibc malloc memory checks.
 060905 rk  plc       Wait for all threads to set its priority before changing real and effective user id.
 070112 cs  rt        Gtk version of rt_trace. Navigator window inserted in main window.
+070116 cs  trace     Mouse Scroll events added.

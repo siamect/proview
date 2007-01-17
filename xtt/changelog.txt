@@ -23,4 +23,7 @@
 070112 cs  xtt       Font size in alarmtexts in operator window can be changed.
 070112 cs  xtt       Nodename displayed i Xtt title.
 070112 cs  xtt       New syntax for function key definition file (gtk version).
-070115 cs  curve     Scroll and zoom with arrow keys and mouse wheel. Scroll buttons in tools.   
+070115 cs  curve     Scroll and zoom with arrow keys and mouse wheel. Scroll buttons in tools.  
+070116 cs  xtt       Toolbar with icons for the methods of the selected object added.
+070117 cs  ge        Property EscapeStore for dynamic type ValueInput added.
+ 
