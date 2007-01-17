@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_ai.c,v 1.4 2006-09-05 11:14:34 claes Exp $
+ * Proview   $Id: rt_io_m_pb_ai.c,v 1.5 2007-01-17 12:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,8 +30,12 @@
 #include <sys/file.h>
 #include <sys/ioctl.h>
 
+#include "keywords.h"
+
 #include "pb_type.h"
+#include "pb_conf.h"
 #include "pb_if.h"
+#include "pb_err.h"
 #include "pb_fmb.h"
 #include "pb_dp.h"
 #include "rt_io_pb_locals.h"
