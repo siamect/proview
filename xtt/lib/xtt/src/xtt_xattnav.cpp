@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xattnav.cpp,v 1.17 2007-01-15 13:18:00 claes Exp $
+ * Proview   $Id: xtt_xattnav.cpp,v 1.18 2007-01-18 07:49:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -115,24 +115,8 @@ int XAttNav::check_attr( int *multiline, brow_tObject *node, char *name,
     strcpy( name, item->attr);
 
     sts = gdh_GetAttributeCharacteristics( name, &a_tid, &a_size, &a_offs, &a_elem);
-    if ( ODD(sts)) {
-      switch ( item->type_id) {
-      case pwr_eType_Objid:
-      case pwr_eType_AttrRef:
-      case pwr_eType_ClassId:
-	*size = sizeof(pwr_tAName) - 1;
-      case pwr_eType_VolumeId:
-      case pwr_eType_TypeId:
-	*size = sizeof(pwr_tObjName) - 1;
-	break;
-      case pwr_eType_Time:
-      case pwr_eType_DeltaTime:
-	*size = 40;
-	break;
-      default:
-	*size = a_size / a_elem;
-      }
-    }
+    if ( ODD(sts))
+      *size = cdh_TypeToMaxStrSize( (pwr_eType)item->type_id, a_size, a_elem);
     else
       *size = 80;
     

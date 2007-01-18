@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.18 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.19 2007-01-18 07:49:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2621,6 +2621,79 @@ void cdh_SuppressSuper( char *out, char *in)
     s += 6;
   strcpy( out, s);
 }
+
+int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements)
+{
+  int size;
+
+  switch( type) {
+  case pwr_eType_Boolean:
+    size = 1;
+    break;
+  case pwr_eType_Int64:
+    size = 20;
+    break;
+  case pwr_eType_UInt64:
+    size = 20;
+    break;
+  case pwr_eType_Enum:
+  case pwr_eType_Mask:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+  case pwr_eType_Int32:
+    size = 11;
+    break;
+  case pwr_eType_UInt32:
+    size = 10;
+    break;
+  case pwr_eType_Int16:
+    size = 6;
+    break;
+  case pwr_eType_UInt16:
+    size = 5;
+    break;
+  case pwr_eType_Int8:
+    size = 4;
+    break;
+  case pwr_eType_UInt8:
+    size = 3;
+    break;
+  case pwr_eType_Char:
+    size = 1;
+    break;
+  case pwr_eType_Float32:
+    size = 40;
+    break;
+  case pwr_eType_Float64:
+    size = 40;
+    break;
+  case pwr_eType_Time:
+    size = 23;
+    break;
+  case pwr_eType_DeltaTime:
+    size = 40;
+    break;
+  case pwr_eType_AttrRef:
+    size = sizeof(pwr_tAName) - 1;
+    break;
+  case pwr_eType_TypeId:
+  case pwr_eType_ClassId:
+  case pwr_eType_Objid:
+    size = sizeof(pwr_tOName) - 1;
+    break;
+  case pwr_eType_VolumeId:
+    size = sizeof(pwr_tObjName) - 1;
+    break;
+  case pwr_eType_String:
+  case pwr_eType_Text:
+    size = attr_size / attr_elements;
+    break;
+  default:
+    size = 80;
+  }
+  return size;
+}
+
 /*@}*/
 
 

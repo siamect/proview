@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.34 2007-01-15 13:23:45 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.35 2007-01-18 07:49:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -739,23 +739,7 @@ int WNav::check_attr_value( brow_tObject node, int *multiline,
 				  &len);
       free( p);
 
-      switch ( item->type_id) {
-      case pwr_eType_Objid:
-      case pwr_eType_AttrRef:
-      case pwr_eType_ClassId:
-	*size = sizeof(pwr_tOName) - 1;
-	break;
-      case pwr_eType_VolumeId:
-      case pwr_eType_TypeId:
-	*size = sizeof(pwr_tObjName) - 1;
-	break;
-      case pwr_eType_Time:
-      case pwr_eType_DeltaTime:
-	*size = 40;
-	break;
-      default:
-	*size = item->size;
-      }
+      *size = cdh_TypeToMaxStrSize( (pwr_eType)item->type_id, item->size, 1);
 
       if ( item->type_id == pwr_eType_Text)
         *multiline = 1;
@@ -780,23 +764,8 @@ int WNav::check_attr_value( brow_tObject node, int *multiline,
 				  &len);
       free( p);
 
-      switch ( item->type_id) {
-      case pwr_eType_Objid:
-      case pwr_eType_AttrRef:
-      case pwr_eType_ClassId:
-	*size = sizeof(pwr_tOName) - 1;
-	break;
-      case pwr_eType_VolumeId:
-      case pwr_eType_TypeId:
-	*size = sizeof(pwr_tObjName) - 1;
-	break;
-      case pwr_eType_Time:
-      case pwr_eType_DeltaTime:
-	*size = 40;
-	break;
-      default:
-	*size = item->size;
-      }
+      *size = cdh_TypeToMaxStrSize( (pwr_eType)item->type_id, item->size, 1);
+
       if ( item->type_id == pwr_eType_Text)
         *multiline = 1;
       else
@@ -2689,7 +2658,7 @@ int WNav::volume_attached( ldh_tWBContext wbcontext, ldh_tSesContext ldhsession,
   ldhses = ldhsession;
   wbctx = wbcontext;
   wccm_store_ldhses( (void *)this, ldhses);
-  if ( window_type != wnav_eWindowType_No)
+  if ( brow && window_type != wnav_eWindowType_No)
     show_volume( pop);
   return 1;
 }
