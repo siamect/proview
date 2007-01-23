@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.3 2007-01-23 13:15:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,9 +66,12 @@ void XttGeGtk::set_size( int width, int height)
 
   gtk_window_resize( GTK_WINDOW(toplevel), default_width, default_height);
 
-  geometry.min_aspect = geometry.max_aspect = gdouble(default_width)/default_height;
-  gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
-				 &geometry, GDK_HINT_ASPECT);
+  // This condition is due to a bug in Reflection X 11.0.5...
+  if ( !((XNav *)parent_ctx)->gbl.no_graph_ratio) {
+    geometry.min_aspect = geometry.max_aspect = gdouble(default_width)/default_height;
+    gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
+				   &geometry, GDK_HINT_ASPECT);
+  }
 }
 
 void XttGeGtk::ge_change_value_cb( void *ge_ctx, void *value_object, char *text)
