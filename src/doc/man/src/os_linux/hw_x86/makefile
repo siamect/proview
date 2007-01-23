@@ -105,7 +105,7 @@ clean_pdf := $(patsubst %.pdf,clean_%.pdf,$(pdf_sources))
 #docbook-related, added by jonas_h 2006-04-nn
 
 #targetsuffixes := _single.html _index.html .pdf
-targetsuffixes := _single.html .pdf
+targetsuffixes := _single.html
 nopdf_targetsuffixes := _single.html
 
 sv_se_xmlsources := dbpwr.xml upgrade42.xml
