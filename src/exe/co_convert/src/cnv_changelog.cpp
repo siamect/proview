@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.3 2006-09-07 14:03:02 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.4 2007-01-23 13:11:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,9 +35,17 @@ extern "C" {
 #include "cnv_changelog.h"
 
 
-CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx) :
-  ctx(cnv_ctx)
+CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
+  ctx(cnv_ctx), from(0)
 {
+  pwr_tStatus sts;
+
+  if ( strcmp( from_str, "") != 0) {
+    sts = time_AsciiToA( from_str, &from_time);
+    if ( ODD( sts))
+      from = 1;
+  }
+
   read( "src");
   read( "xtt");
   read( "wb");
@@ -218,6 +226,11 @@ void CnvChangeLog::print()
 
   sort_time();
   for ( int i = 0; i < (int) entries.size(); i++) {
+    if ( from) {
+      if ( time_Acomp( &entries[i].time, &from_time) < 0)
+	continue;
+    }
+
     time_AtoAscii( &entries[i].time, time_eFormat_DateAndTime, timstr1, sizeof(timstr1));
     timstr1[11] = 0;
     
@@ -266,6 +279,11 @@ void CnvChangeLog::print_docbook()
     "<td><classname>Change</classname></td></tr>" << endl;
 
   for ( int i = (int) entries.size() - 1; i >= 0; i--) {
+    if ( from) {
+      if ( time_Acomp( &entries[i].time, &from_time) < 0)
+	continue;
+    }
+
     time_AtoAscii( &entries[i].time, time_eFormat_DateAndTime, timstr1, sizeof(timstr1));
     timstr1[11] = 0;
     

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.h,v 1.2 2006-05-22 13:31:41 claes Exp $
+ * Proview   $Id: cnv_changelog.h,v 1.3 2007-01-23 13:11:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,8 +71,11 @@ class CnvChangeLog {
  public:
   vector<LogEntry> entries;
   CnvCtx 	*ctx;
+  int		from;
+  pwr_tTime	from_time;
+  
 
-  CnvChangeLog( CnvCtx *cnv_ctx);
+  CnvChangeLog( CnvCtx *cnv_ctx, char *from_str);
 
   int read( char *module);
   void print();

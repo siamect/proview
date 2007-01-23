@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_convert.cpp,v 1.12 2006-07-03 05:09:48 claes Exp $
+ * Proview   $Id: co_convert.cpp,v 1.13 2007-01-23 13:11:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -127,6 +127,7 @@ int main( int argc, char *argv[])
   int   xtthelp_to_ps = 0;
   int   xtthelp_to_pdf = 0;
   int   changelog = 0;
+  char from[80] = "";
 
   if ( argc < 2 || argc > 9) {
     usage();
@@ -170,60 +171,71 @@ int main( int argc, char *argv[])
       i++;
     }
     else if ( argv[i][0] == '-') {
+      int next = 0;
       s = &argv[i][1];
       while( *s) {
         switch( *s) {
-          case 'h':
-            help();
-            exit(0);
-          case 'w':
-            ctx->generate_html = 1;
+	case 'h':
+	  help();
+	  exit(0);
+	case 'w':
+	  ctx->generate_html = 1;
+	  break;
+	case 'x':
+	  ctx->generate_xtthelp = 1;
+	  break;
+	case 'c':
+	  ctx->generate_src = 1;
+	  break;
+	case 's':
+	  ctx->generate_struct = 1;
+	  break;
+	case 'q':
+	  ctx->generate_ps = 1;
+	  ctx->common_structfile_only = 1;
+	  break;
+	case 'p':
+	  ctx->generate_struct = 1;
+	  ctx->hpp = 1;
+	  break;
+	case 'o':
+	  ctx->common_structfile_only = 1;
+	  break;
+	case 'k':
+	  ctx->generate_cdp = 1;
+	  break;
+	case 'v':
+	  ctx->verbose = 1;
+	  break;
+	case 't':
+	  xtthelp_to_html = 1;
+	  break;
+	case 'm':
+	  xtthelp_to_xml = 1;
+	  break;
+	case 'n':
+	  xtthelp_to_ps = 1;
             break;
-          case 'x':
-            ctx->generate_xtthelp = 1;
-            break;
-          case 'c':
-            ctx->generate_src = 1;
-            break;
-          case 's':
-            ctx->generate_struct = 1;
-            break;
-          case 'q':
-            ctx->generate_ps = 1;
-            ctx->common_structfile_only = 1;
-            break;
-          case 'p':
-            ctx->generate_struct = 1;
-	    ctx->hpp = 1;
-            break;
-          case 'o':
-            ctx->common_structfile_only = 1;
-            break;
-          case 'k':
-            ctx->generate_cdp = 1;
-            break;
-          case 'v':
-            ctx->verbose = 1;
-            break;
-          case 't':
-            xtthelp_to_html = 1;
-            break;
-          case 'm':
-            xtthelp_to_xml = 1;
-            break;
-          case 'n':
-            xtthelp_to_ps = 1;
-            break;
-          case 'f':
-            xtthelp_to_pdf = 1;
-            break;
-          case 'e':
-            changelog = 1;
-            break;
-          default:
-            usage();
-            exit(0);
+	case 'f':
+	  xtthelp_to_pdf = 1;
+	  break;
+	case 'e':
+	  changelog = 1;
+	  break;
+	case '-': {
+	  if ( strcmp( s, "-from") == 0 && ( i+1 < argc)) {
+	    strcpy( from, argv[i+1]);
+	    next = 1;
+	    i++;
+	  }
+	  break;
+	}
+	default:
+	  usage();
+	  exit(0);
         }
+	if ( next)
+	  break;
         s++;
       }
     }
@@ -237,7 +249,7 @@ int main( int argc, char *argv[])
   }
 
   if ( changelog) {
-    CnvChangeLog *c = new CnvChangeLog( ctx);
+    CnvChangeLog *c = new CnvChangeLog( ctx, from);
     delete c;
     exit(0);
   }
