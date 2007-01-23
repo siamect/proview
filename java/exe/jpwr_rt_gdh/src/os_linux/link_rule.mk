@@ -26,6 +26,7 @@ link =	g++ -shared -DHW_X86 -DOS_LINUX \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_hist.o \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_gdh.o \
 	-o ${pwr_exe}/libjpwr_rt_gdh.so -lm -lpthread -lrt -lpwr_dtt \
+	`pkg-config --libs gtk+-2.0` \
 	-L/opt/gnome/lib \
 	-lImlib -lMrm -lXm -lXpm -lXt -lX11 -lXext -lXp\
         -lSM -lICE -ldb
