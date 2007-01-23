@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_ge_motif.cpp,v 1.2 2007-01-23 13:18:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,12 +117,12 @@ void XttGeMotif::set_size( int width, int height)
   x2 = default_width;
   y2 = default_height;
   // This condition is due to a bug in Reflection X 11.0.5...
-  // if ( !((XNav *)ge->parent_ctx)->gbl.no_graph_ratio) {
-  XtSetArg(args[i], XmNminAspectX, x1); i++;
-  XtSetArg(args[i], XmNminAspectY, y1); i++;
-  XtSetArg(args[i], XmNmaxAspectX, x2); i++;
-  XtSetArg(args[i], XmNmaxAspectY, y2); i++;
-  
+  if ( !((XNav *)parent_ctx)->gbl.no_graph_ratio) {
+    XtSetArg(args[i], XmNminAspectX, x1); i++;
+    XtSetArg(args[i], XmNminAspectY, y1); i++;
+    XtSetArg(args[i], XmNmaxAspectX, x2); i++;
+    XtSetArg(args[i], XmNmaxAspectY, y2); i++;
+  }  
   XtSetValues( toplevel, args,i);
 }
 
