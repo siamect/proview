@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.17 2006-05-24 15:02:03 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.18 2007-01-23 13:13:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -131,6 +131,11 @@ void wb_print_wbl::printBody(wb_volume& v,
     switch ( bix) {
     case pwr_eBix_rt:
       btime = o.rbTime();
+
+      // Bugcheck in 4.2 btime can be corrupt
+      if ( btime.tv_nsec < 0 || btime.tv_nsec >= 1000000000)
+	break;
+
       strcpy( timestr, " ");
       time_AtoAscii( &btime, time_eFormat_DateAndTime, &timestr[1], sizeof(timestr)-1);
       break;
