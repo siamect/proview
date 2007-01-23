@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: upgrade.sh,v 1.11 2006-09-07 14:14:07 claes Exp $
+# Proview   $Id: upgrade.sh,v 1.12 2007-01-23 13:16:56 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -50,9 +50,10 @@ reload_dumpdb()
     dump_file=$pwrp_db/$cdb.wb_dmp
 
     echo "Dumping volume $cdb in $dump_file"
-    export pwr_load=$v41_root/os_linux/hw_x86/exp/load
-    $v41_root/os_linux/hw_x86/exp/exe/wb_cmd -v $cdb wb dump/out=\"$dump_file\"
-    export pwr_load=$pwrb_root/os_linux/hw_x86/exp/load
+#    export pwr_load=$v41_root/os_linux/hw_x86/exp/load
+#    $v41_root/os_linux/hw_x86/exp/exe/wb_cmd -v $cdb wb dump/out=\"$dump_file\"
+#    export pwr_load=$pwrb_root/os_linux/hw_x86/exp/load
+    wb_cmd -v $cdb wb dump/out=\"$dump_file\"
   done
 }
 
@@ -183,7 +184,7 @@ reload_cnvdump()
     if [ $db = "wb.db" ]; then
       db=""
     else
-      source $pwr_exe/upgrade_cnvdmp.sh $dmpfile $pwrp_tmp/t.wb_dmp
+      awk -f $pwr_exe/upgrade_dmp.awk $dmpfile > $pwrp_tmp/t.wb_dmp
       mv $pwrp_tmp/t.wb_dmp $dmpfile
     fi
   done
@@ -458,9 +459,8 @@ usage()
 {
   cat << EOF
 
-  upgrade.sh  Upgrade from V3.4 or V3.9 to V4.0.
+  upgrade.sh  Upgrade from V4.2.0 to V4.3.0
 
-  Arguments   Project name.
 
   Pass
 
@@ -468,12 +468,12 @@ usage()
     classvolumes   Create loadfiles for classvolumes.
     renamedb       Rename old databases.
     dirvolume      Load the directory volume.
+    cnvdump        Convert dumpfiles.
     loaddb         Load dumpfiles.
     compile        Compile all plcprograms in the database
     createload     Create new loadfiles.
     createboot     Create bootfiles for all nodes in the project.
 
-  Note!
 EOF
 }
 
@@ -510,8 +510,8 @@ for db in $tmp; do
   fi
 done
 
-passes="dumpdb classvolumes renamedb dirvolume loaddb compile createload createboot"
-echo "Pass: $passes"
+passes="dumpdb classvolumes renamedb dirvolume cnvdump loaddb compile createload createboot"
+#echo "Pass: $passes"
 echo ""
 echo -n "Enter start pass [dumpdb] > "
 read start_pass
