@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_pscript.cpp,v 1.5 2007-01-24 12:35:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@ FlowPscript::FlowPscript( char *filename, void *flow_ctx, int page_border,
     *sts = 0;
     return;
   }
-  fprintf( file, "%%!\n\n");
+  fprintf( file, "%%!PS-Adobe-3.0\n\n");
 
   // Define ISO Latin fonts
   {
