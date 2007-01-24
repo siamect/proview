@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.6 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.7 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,7 +109,9 @@ class WGre {
   int			trace_started;
   flow_tNodeClass	trace_analyse_nc;
   flow_tConClass	trace_con_cc;
-  flow_tNode	trace_changenode;
+  flow_tNode		trace_changenode;
+  int			popup_menu_x;
+  int			popup_menu_y;
 
   /* Callbacks */
   void (*gre_setup_window)(WGre *);
@@ -223,6 +225,7 @@ class WGre {
   void disable_button_events();
   int get_conclass( pwr_tClassId cid, ldh_tSesContext ldhses, unsigned long con_type,
 		    flow_tConClass *con_class);
+  void pixel_to_position( int pix_x, int pix_y, double *x, double *y);
 
   static int get_annot_width( flow_tNodeClass nodeclass,
 			      float *annot_width, char *annot_str, int annot_count,

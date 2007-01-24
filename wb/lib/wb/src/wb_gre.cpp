@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.2 2007-01-17 06:21:33 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.3 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1437,7 +1437,7 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     flow_SetSelectHighlight( ctx);
     break;
   case flow_eEvent_MB2Click:
-    /* Crdate node */
+    /* Create node */
     switch ( event->object.object_type) {
     case flow_eObjectType_NoObject:
       (gre->gre_node_created) ( gre, dummy, event->object.x,
@@ -1511,6 +1511,8 @@ int WGre::flow_cb( FlowCtx *ctx, flow_tEvent event)
     flow_PositionToPixel( gre->flow_ctx, event->object.x,
 			  event->object.y, &x_pix, &y_pix); 
 	  
+    gre->popup_menu_x = x_pix;
+    gre->popup_menu_y = y_pix;
     gre->get_popup_position( &x_pix, &y_pix);
 
     current_node = 0;
@@ -2882,6 +2884,7 @@ int WGre::set_trace_attributes( char *host)
 
   node_ptr = nodelist;
   for ( i = 0; i < (int)node_count; i++) {
+    inverted = 0;
     sts = trace_get_attributes( this, *node_ptr, object_str, attr_str,
 		&trace_type, &inverted);
     if ( ODD(sts) && sts != TRA__DISCARD ) {
@@ -3013,4 +3016,9 @@ void WGre::set_grid_size( double size)
   flow_attr.grid_size_y = size;
   mask |= flow_eAttr_grid_size_y;
   flow_SetAttributes( flow_ctx, &flow_attr, mask);
+}
+
+void WGre::pixel_to_position( int pix_x, int pix_y, double *x, double *y)
+{ 
+  flow_PixelToPosition( flow_ctx, pix_x, pix_y, x, y);
 }

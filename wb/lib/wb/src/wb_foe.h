@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.11 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.12 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -65,7 +65,8 @@ enum foe_e_popupmenu {
   foe_e_popupmenu_copy		= 1 << 5,
   foe_e_popupmenu_cut		= 1 << 6,
   foe_e_popupmenu_printselect	= 1 << 7,
-  foe_e_popupmenu_helpclass	= 1 << 8
+  foe_e_popupmenu_helpclass	= 1 << 8,
+  foe_e_popupmenu_createobject	= 1 << 9
 };
 
 class WFoe;
@@ -197,6 +198,7 @@ class WFoe : public WUtility {
   void activate_syntax();
   void activate_compile();
   void activate_delete();
+  void activate_createobject( float x, float y);
   void activate_changetext();
   void activate_cut();
   void activate_copy();

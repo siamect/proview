@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.7 2007-01-17 06:19:26 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.8 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -207,6 +207,8 @@ void flow_SetAttributes( flow_tCtx ctx, flow_sAttributes *attr,
 void flow_GetAttributes( flow_tCtx ctx, flow_sAttributes *attr);
 void flow_PositionToPixel( flow_tCtx ctx, double x, double y, 
 		int *pix_x, int *pix_y);
+void flow_PixelToPosition( flow_tCtx ctx, int pix_x, int pix_y, 
+			   double *x, double *y);
 void flow_UnZoom( flow_tCtx ctx);
 void flow_CenterObject( flow_tCtx ctx, flow_tObject object);
 void flow_GetNodePosition( flow_tNode node, double *x, double *y);

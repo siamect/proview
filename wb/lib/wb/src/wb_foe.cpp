@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.2 2007-01-15 13:22:11 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.3 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -606,6 +606,11 @@ void WFoe::activate_delete()
     gre->delete_selected();
     popupmenu_node = 0;
   }
+}
+
+void WFoe::activate_createobject( float x, float y)
+{
+  gre_node_created( gre, 0, x, y);
 }
 
 //
@@ -1640,7 +1645,8 @@ void WFoe::gre_popupmenu( WGre *gre, int x_pix, int y_pix, int popupmenu_type,
       foe->modify_popup( foe_e_popupmenu_delete	|
 			 foe_e_popupmenu_copy |
 			 foe_e_popupmenu_cut |
-			 foe_e_popupmenu_printselect,
+			 foe_e_popupmenu_printselect |
+			 foe_e_popupmenu_createobject,
 			 x_pix + 5, y_pix);
     }
   }

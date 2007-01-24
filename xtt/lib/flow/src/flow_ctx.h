@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.4 2007-01-17 06:19:26 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.5 2007-01-24 12:37:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -286,6 +286,9 @@ class FlowCtx {
     void position_to_pixel( double x, double y, int *pix_x, int *pix_y)
 	{ *pix_x = int( x * zoom_factor - offset_x);
 	  *pix_y = int( y * zoom_factor - offset_y);};
+    void pixel_to_position( int pix_x, int pix_y, double *x, double *y)
+	{ *x = double( pix_x + offset_x) / zoom_factor;
+	  *y = double( pix_y + offset_y) / zoom_factor;};
     void unzoom() { zoom( base_zoom_factor / zoom_factor);};
     void center_object( FlowArrayElem *object);
     FlowArrayElem *get_document( double x, double y);
