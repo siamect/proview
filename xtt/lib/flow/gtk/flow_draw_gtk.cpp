@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.5 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.6 2007-01-24 12:41:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -501,6 +501,50 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
     case GDK_BUTTON_PRESS : 
 
       switch ( event.button.button) {
+      case 1:
+	ctx->event_handler( flow_eEvent_MB1Down, (int)event.button.x, (int)event.button.y, 0, 0);
+	if ( click_sensitivity & flow_mSensitivity_MB1Click && 
+	     !(click_sensitivity & flow_mSensitivity_MB1DoubleClick) && 
+	     !(click_sensitivity & flow_mSensitivity_MB1Press)) {
+	  memcpy( &last_event, &event, sizeof(event));
+	  button_pressed = 0;
+	  button_clicked = 1;
+	  last_press_x = (int)event.button.x;
+	  last_press_y = (int)event.button.y;
+	  return 1;
+	}
+	else if ( !(click_sensitivity & flow_mSensitivity_MB1Click) && 
+		  !(click_sensitivity & flow_mSensitivity_MB1DoubleClick) && 
+		  click_sensitivity & flow_mSensitivity_MB1Press) {
+	  memcpy( &last_event, &event, sizeof(event));
+	  button_pressed = 1;
+	  button_clicked = 0;
+	  last_press_x = (int)event.button.x;
+	  last_press_y = (int)event.button.y;
+	}
+	break;
+      case 2:
+	ctx->event_handler( flow_eEvent_MB2Down, (int)event.button.x, (int)event.button.y, 0, 0);
+	if ( click_sensitivity & flow_mSensitivity_MB2Click && 
+	     !(click_sensitivity & flow_mSensitivity_MB2DoubleClick) && 
+	     !(click_sensitivity & flow_mSensitivity_MB2Press)) {
+	  memcpy( &last_event, &event, sizeof(event));
+	  button_pressed = 0;
+	  button_clicked = 1;
+	  last_press_x = (int)event.button.x;
+	  last_press_y = (int)event.button.y;
+	  return 1;
+	}
+	else if ( !(click_sensitivity & flow_mSensitivity_MB2Click) && 
+		  !(click_sensitivity & flow_mSensitivity_MB2DoubleClick) && 
+		  click_sensitivity & flow_mSensitivity_MB2Press) {
+	  memcpy( &last_event, &event, sizeof(event));
+	  button_pressed = 1;
+	  button_clicked = 0;
+	  last_press_x = (int)event.button.x;
+	  last_press_y = (int)event.button.y;
+	}
+	break;
       case 3: // Button 3
 	ctx->event_handler( flow_eEvent_MB3Down, (int)event.button.x, (int)event.button.y, 0, 0);
 	if ( click_sensitivity & flow_mSensitivity_MB3Press && 
@@ -554,6 +598,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    sts = ctx->event_handler( flow_eEvent_MB1PressShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	  else
 	    ctx->event_handler( flow_eEvent_MB1Press, (int)event.button.x, (int)event.button.y, 0, 0);
+	  click_sensitivity = 0;
 	  break;
 	case 2: // Button2
 	  button2_pressed = 1;
@@ -568,6 +613,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    sts = ctx->event_handler( flow_eEvent_MB2PressShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	  else
 	    sts = ctx->event_handler( flow_eEvent_MB2Press, (int)event.button.x, (int)event.button.y, 0, 0);
+	  click_sensitivity = 0;
 	  break;
 	case 3: // Button3
 	  button3_pressed = 1;
@@ -584,6 +630,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	  else
 #endif
 	    sts = ctx->event_handler( flow_eEvent_MB3Press, (int)event.button.x, (int)event.button.y, 0, 0);
+	  click_sensitivity = 0;
 	  break;
 	}
       }
@@ -611,6 +658,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB1ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB1Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	    click_sensitivity = 0;
 	    break;
 	  case 2: // Button2
 	    if ( (event.button.state & GDK_SHIFT_MASK) && 
@@ -624,6 +672,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB2ClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB2Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	    click_sensitivity = 0;
 	    break;
 	  case 3: // Button3
 #if 0
@@ -639,6 +688,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    else
 #endif
 	      sts = ctx->event_handler( flow_eEvent_MB3Click, (int)event.button.x, (int)event.button.y, 0, 0);
+	    click_sensitivity = 0;
 	    break;
 	  }
 	}
@@ -677,6 +727,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB1DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB1DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
+	    click_sensitivity = 0;
 	    break;
 	  case 2: // Button2
 	    if ( (event.button.state & GDK_SHIFT_MASK) && 
@@ -690,6 +741,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	      sts = ctx->event_handler( flow_eEvent_MB2DoubleClickShiftCtrl, (int)event.button.x, (int)event.button.y, 0, 0);
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB2DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
+	    click_sensitivity = 0;
 	    break;
 	  case 3: // Button3
 #if 0
@@ -705,6 +757,7 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	    else
 	      sts = ctx->event_handler( flow_eEvent_MB3DoubleClick, (int)event.button.x, (int)event.button.y, 0, 0);
 #endif
+	    click_sensitivity = 0;
 	    break;
 	  }
 	}
