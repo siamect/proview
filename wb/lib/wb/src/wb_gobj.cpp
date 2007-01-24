@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gobj.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_gobj.cpp,v 1.2 2007-01-24 12:38:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,7 @@
 
 #define	BEEP	    putchar( '\7' );
 
-#define	GOBJ_MAX_METHOD 29
+#define	GOBJ_MAX_METHOD 31
 
 typedef int (* gobj_tMethod)( WFoe *, vldh_t_node, unsigned long);
 
@@ -75,6 +75,8 @@ int	gobj_get_object_m26( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m27( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m28( WFoe *foe, vldh_t_node node, unsigned long index);
 int	gobj_get_object_m29( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m30( WFoe *foe, vldh_t_node node, unsigned long index);
+int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index);
 
 gobj_tMethod gobj_get_object_m[40] = {
 	gobj_get_object_m0,
@@ -107,6 +109,8 @@ gobj_tMethod gobj_get_object_m[40] = {
  	gobj_get_object_m27,
  	gobj_get_object_m28,
  	gobj_get_object_m29,
+ 	gobj_get_object_m30,
+ 	gobj_get_object_m31,
 	};
 
 static int	gobj_expand_m0(	WFoe		*foe,
@@ -2595,6 +2599,112 @@ int	gobj_get_object_m29( WFoe *foe, vldh_t_node node, unsigned long index)
   foe->gre->node_update( new_node);
 
   if ( con_count > 0) free((char *) con_list);
+
+  return FOE__SUCCESS;
+}
+
+//
+//	Method for getatv, stoatv, cstoatv. Inserts the selected atv-object in the
+//	navigator in the parameter AtvObject in a GetATv object.
+//
+int	gobj_get_object_m30( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  pwr_tClassId	cid;
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select ATv object in the navigator");
+    BEEP;
+    return sts;
+  }
+
+
+  /* Check that the objdid is an av object */
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
+  if (EVEN(sts)) return sts;
+
+  if ( cid != pwr_cClass_ATv) {
+    foe->message( "Selected object is not a ATv object");
+    BEEP;
+    return 0;
+  }
+	
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "ATvObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
+
+  return FOE__SUCCESS;
+}
+
+//
+//	Method for getatv, stodtv, cstodtv. Inserts the selected dtv-object in the
+//	navigator in the parameter DtvObject in a GetDTv object.
+//
+int	gobj_get_object_m31( WFoe *foe, vldh_t_node node, unsigned long index)
+{
+  pwr_tClassId	cid;
+  ldh_tSesContext	ldhses;
+  int		sts;
+  vldh_t_plc	plc;
+  pwr_sAttrRef	attrref;
+  int		is_attr;
+
+  /* Get the selected object in the navigator */
+  plc = (node->hn.wind)->hw.plc;
+  ldhses =(node->hn.wind)->hw.ldhses;
+
+  sts = gobj_get_select( foe, &attrref, &is_attr);
+  if ( EVEN(sts)) { 
+    foe->message( "Select DTv object in the navigator");
+    BEEP;
+    return sts;
+  }
+
+
+  /* Check that the objdid is an av object */
+  sts = ldh_GetAttrRefTid( ldhses, &attrref, &cid);
+  if (EVEN(sts)) return sts;
+
+  if ( cid != pwr_cClass_DTv) {
+    foe->message( "Selected object is not a DTv object");
+    BEEP;
+    return 0;
+  }
+	
+  if ( cdh_IsClassVolume( node->ln.oid.vid)) {
+    gobj_ref_replace( ldhses, node, &attrref);
+    if ( EVEN(sts)) return sts;
+  }
+
+  /* Set the parameter value */
+  sts = ldh_SetObjectPar( ldhses,
+			  node->ln.oid, 
+			  "DevBody",
+			  "DTvObject",
+			  (char *)&attrref, sizeof(attrref)); 
+  if ( EVEN(sts)) return sts;
+
+  foe->gre->node_update( node);
 
   return FOE__SUCCESS;
 }

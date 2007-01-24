@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_cstodtv.wb_load,v 1.2 2006-04-28 04:59:58 claes Exp $
+!  Proview   $Id: pwrb_c_cstodtv.wb_load,v 1.3 2007-01-24 12:38:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -135,7 +135,7 @@ SObject pwrb:Class
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 1
-        Attr connectmethod = 18
+        Attr connectmethod = 31
         Attr executeordermethod = 2
         Attr objname = "CStoDTv"
         Attr graphname = "CStoDTv"

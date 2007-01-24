@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_getdtv.wb_load,v 1.1 2006-04-24 13:15:30 claes Exp $
+!  Proview   $Id: pwrb_c_getdtv.wb_load,v 1.2 2007-01-24 12:38:31 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -106,7 +106,7 @@ SObject pwrb:Class
         Attr compindex = 0
         Attr tracemethod = 0
         Attr traceindex = 0
-        Attr connectmethod = 18
+        Attr connectmethod = 31
         Attr executeordermethod = 0
         Attr objname = "GetDtv"
         Attr graphname = "DTv"
