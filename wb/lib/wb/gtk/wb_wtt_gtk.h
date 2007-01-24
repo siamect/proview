@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.3 2007-01-24 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -114,6 +114,7 @@ class WttGtk : public Wtt {
     static CoWowRecall name_recall;
     CoWowEntryGtk *cmd_entry;
     CoWowFocusTimerGtk focustimer;
+    int		realized;
 
     GtkWidget *build_menu();
     GtkWidget *build_submenu( GtkWidget *Parent, int MenuType,

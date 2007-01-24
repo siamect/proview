@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.6 2007-01-17 12:44:05 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.7 2007-01-24 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -535,12 +535,14 @@ void WttGtk::set_twowindows( int two, int display_wnav, int display_wnavnode)
       wnavnode_mapped = 1;
     }
     if ( !display_wnav && wnav_mapped) {
-      g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
+      if ( realized)
+	g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
       set_focus( wnavnode);
       wnav_mapped = 0;
     }
     if ( !display_wnavnode && wnavnode_mapped) {
-      g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
+      if ( realized)
+	g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
       set_focus( wnav);
       wnavnode_mapped = 0;
     }
@@ -553,13 +555,15 @@ void WttGtk::set_twowindows( int two, int display_wnav, int display_wnavnode)
     if ( !two) {
       // Keep the focused window
       if ( focused_wnav == wnavnode) {
-	g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
+	if ( realized)
+	  g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
         set_focus( wnavnode);
         wnav_mapped = 0;
         wnavnode_mapped = 1;
       }
       else {
-	g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
+	if ( realized)
+	  g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
         set_focus( wnav);
         wnav_mapped = 1;
         wnavnode_mapped = 0;
@@ -1471,6 +1475,7 @@ void WttGtk::open_boot_window()
   gtk_box_pack_end( GTK_BOX(vbox), hboxbuttons, FALSE, FALSE, 10);
 
   gtk_container_add( GTK_CONTAINER(boot_dia), vbox);
+
   gtk_widget_show_all( boot_dia);
 
   // GtkTreeSelection *selection = gtk_tree_view_get_selection( GTK_TREE_VIEW(ctx->list));
@@ -1702,7 +1707,7 @@ WttGtk::WttGtk(
   Wtt(wt_parent_ctx, wt_name, iconname, wt_wbctx, wt_volid, wt_volctx, root_menu, status),
   parent_wid( wt_parent_wid), india_widget(0), confirm_widget(0), boot_dia(0), options_form(0),
   set_focus_disabled(0), disfocus_timerid(0), selection_timerid(0), avoid_deadlock(0),
-  clock_cursor(0)
+  clock_cursor(0), realized(0)
 {
   const int	window_width = 900;
   const int    	window_height = 800;
@@ -2481,6 +2486,12 @@ WttGtk::WttGtk(
   gtk_container_add( GTK_CONTAINER(toplevel), vbox);
 
   gtk_widget_show_all( toplevel);
+  realized = 1;
+
+  if ( !wnav_mapped)
+    g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
+  if ( !wnavnode_mapped)
+    g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
 
   if ( !editmode)
     g_object_set( palette_widget, "visible", FALSE, NULL);
