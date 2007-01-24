@@ -43,3 +43,7 @@
                      nodes than the actual process or operator station.
 070112 cs  wb        Gtk version of wb.
 070116 cs  plc       Mouse Scroll events added.
+070123 cs  wb        Connect methods for GetATv, StoAtv, CStoATv, GetDTv etc added.
+070123 cs  wb        Bugfix in trace attribute for GetIpToA.
+070124 cs  wb        Click time increated for MB2 (create object) in wtt.
+070124 cs  plc       'Create Object' added to the Plc Editor popupmenu.
