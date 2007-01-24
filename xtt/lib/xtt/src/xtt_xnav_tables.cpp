@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_tables.cpp,v 1.14 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xnav_tables.cpp,v 1.15 2007-01-24 12:45:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1421,6 +1421,7 @@ int XNav::show_remtrans( pwr_tObjid remnode_objid)
   pwr_sAttrRef		attrref;
   pwr_sClass_RemTrans	*object_ptr;
   pwr_tOName   		namebuf;
+  pwr_tCid		cid;
 
   brow_pop();
   brow_SetNodraw( brow->ctx);
@@ -1441,108 +1442,111 @@ int XNav::show_remtrans( pwr_tObjid remnode_objid)
     sts = gdh_GetClassList ( pwr_cClass_RemTrans, &objid);
   else
     sts = gdh_GetChild( remnode_objid, &objid);
-  while ( ODD(sts))
-  {
-    memset( &attrref, 0, sizeof( attrref));
-    attrref.Objid = objid;
-    sts = gdh_DLRefObjectInfoAttrref ( &attrref,
-		(pwr_tAddress *) &object_ptr,
-		&subid);
+  while ( ODD(sts)) {
+    sts = gdh_GetObjectClass( objid, &cid);
     if ( EVEN(sts)) return sts;
 
-    sts = gdh_ObjidToName ( objid, object_name,
-			sizeof(object_name), cdh_mName_volumeStrict);
-    if ( EVEN(sts)) return sts;
+    if ( cid == pwr_cClass_RemTrans) {
+      memset( &attrref, 0, sizeof( attrref));
+      attrref.Objid = objid;
+      sts = gdh_DLRefObjectInfoAttrref ( &attrref,
+					 (pwr_tAddress *) &object_ptr,
+					 &subid);
+      if ( EVEN(sts)) return sts;
 
-    t.elem_cnt = 0;
+      sts = gdh_ObjidToName ( objid, object_name,
+			      sizeof(object_name), cdh_mName_volumeStrict);
+      if ( EVEN(sts)) return sts;
 
-    // Object name
-    xnav_cut_segments( namebuf, object_name, 1);
+      t.elem_cnt = 0;
 
-    strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+      // Object name
+      xnav_cut_segments( namebuf, object_name, 1);
 
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+      strcpy( t.elem[t.elem_cnt].fix_str, namebuf);
+      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
 
-    // DataValid
-    strcpy( attr_name, object_name);
-    strcat( attr_name, ".DataValid");
-    sts = gdh_GetAttributeCharacteristics ( attr_name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
-    if ( EVEN(sts)) return sts;
+      t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
 
-    t.elem[t.elem_cnt].value_p = &object_ptr->DataValid;
-    t.elem[t.elem_cnt].type_id = attrtype;
-    t.elem[t.elem_cnt].size = attrsize;
-    strcpy( t.elem[t.elem_cnt++].format, "%2d");
+      // DataValid
+      strcpy( attr_name, object_name);
+      strcat( attr_name, ".DataValid");
+      sts = gdh_GetAttributeCharacteristics ( attr_name,
+					      &attrtype, &attrsize, &attroffs, &attrelem);
+      if ( EVEN(sts)) return sts;
 
-    // Direction
-    switch( object_ptr->Direction)
-    {
-      case 1:
-        strcpy( t.elem[t.elem_cnt].fix_str, "Rcv");
-        break;
-      case 2:
-        strcpy( t.elem[t.elem_cnt].fix_str, "Snd");
-        break;
+      t.elem[t.elem_cnt].value_p = &object_ptr->DataValid;
+      t.elem[t.elem_cnt].type_id = attrtype;
+      t.elem[t.elem_cnt].size = attrsize;
+      strcpy( t.elem[t.elem_cnt++].format, "%2d");
+
+      // Direction
+      switch( object_ptr->Direction)
+	{
+	case 1:
+	  strcpy( t.elem[t.elem_cnt].fix_str, "Rcv");
+	  break;
+	case 2:
+	  strcpy( t.elem[t.elem_cnt].fix_str, "Snd");
+	  break;
+	}
+      t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
+
+      // TransCount
+      strcpy( attr_name, object_name);
+      strcat( attr_name, ".TransCount");
+      sts = gdh_GetAttributeCharacteristics ( attr_name,
+					      &attrtype, &attrsize, &attroffs, &attrelem);
+      if ( EVEN(sts)) return sts;
+
+      t.elem[t.elem_cnt].value_p = &object_ptr->TransCount;
+      t.elem[t.elem_cnt].type_id = attrtype;
+      t.elem[t.elem_cnt].size = attrsize;
+      strcpy( t.elem[t.elem_cnt++].format, "%2d");
+
+      // TransTime
+      strcpy( attr_name, object_name);
+      strcat( attr_name, ".TransTime");
+      sts = gdh_GetAttributeCharacteristics ( attr_name,
+					      &attrtype, &attrsize, &attroffs, &attrelem);
+      if ( EVEN(sts)) return sts;
+
+      t.elem[t.elem_cnt].value_p = &object_ptr->TransTime;
+      t.elem[t.elem_cnt].type_id = attrtype;
+      t.elem[t.elem_cnt].size = attrsize;
+      strcpy( t.elem[t.elem_cnt++].format, "");
+
+      t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
+
+      // ErrCount
+      strcpy( attr_name, object_name);
+      strcat( attr_name, ".ErrCount");
+      sts = gdh_GetAttributeCharacteristics ( attr_name,
+					      &attrtype, &attrsize, &attroffs, &attrelem);
+      if ( EVEN(sts)) return sts;
+
+      t.elem[t.elem_cnt].value_p = &object_ptr->ErrCount;
+      t.elem[t.elem_cnt].type_id = attrtype;
+      t.elem[t.elem_cnt].size = attrsize;
+      strcpy( t.elem[t.elem_cnt++].format, "%8d");
+
+      // LastSts
+      strcpy( attr_name, object_name);
+      strcat( attr_name, ".LastSts");
+      sts = gdh_GetAttributeCharacteristics ( attr_name,
+					      &attrtype, &attrsize, &attroffs, &attrelem);
+      if ( EVEN(sts)) return sts;
+
+      t.elem[t.elem_cnt].value_p = &object_ptr->LastSts;
+      t.elem[t.elem_cnt].type_id = attrtype;
+      t.elem[t.elem_cnt].size = attrsize;
+      strcpy( t.elem[t.elem_cnt++].format, "%8d");
+
+      ts.subid[0] = subid;
+      ts.subid_cnt = 1;
+      new ItemRemTrans( brow, this, objid, &t, &ts, -1, 0, 0, 0, NULL,
+			flow_eDest_IntoLast);
     }
-    t.elem[t.elem_cnt++].type_id = xnav_eType_FixStr;
-
-    // TransCount
-    strcpy( attr_name, object_name);
-    strcat( attr_name, ".TransCount");
-    sts = gdh_GetAttributeCharacteristics ( attr_name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
-    if ( EVEN(sts)) return sts;
-
-    t.elem[t.elem_cnt].value_p = &object_ptr->TransCount;
-    t.elem[t.elem_cnt].type_id = attrtype;
-    t.elem[t.elem_cnt].size = attrsize;
-    strcpy( t.elem[t.elem_cnt++].format, "%2d");
-
-    // TransTime
-    strcpy( attr_name, object_name);
-    strcat( attr_name, ".TransTime");
-    sts = gdh_GetAttributeCharacteristics ( attr_name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
-    if ( EVEN(sts)) return sts;
-
-    t.elem[t.elem_cnt].value_p = &object_ptr->TransTime;
-    t.elem[t.elem_cnt].type_id = attrtype;
-    t.elem[t.elem_cnt].size = attrsize;
-    strcpy( t.elem[t.elem_cnt++].format, "");
-
-    t.elem[t.elem_cnt++].type_id = xnav_eType_Empty;
-
-    // ErrCount
-    strcpy( attr_name, object_name);
-    strcat( attr_name, ".ErrCount");
-    sts = gdh_GetAttributeCharacteristics ( attr_name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
-    if ( EVEN(sts)) return sts;
-
-    t.elem[t.elem_cnt].value_p = &object_ptr->ErrCount;
-    t.elem[t.elem_cnt].type_id = attrtype;
-    t.elem[t.elem_cnt].size = attrsize;
-    strcpy( t.elem[t.elem_cnt++].format, "%8d");
-
-    // LastSts
-    strcpy( attr_name, object_name);
-    strcat( attr_name, ".LastSts");
-    sts = gdh_GetAttributeCharacteristics ( attr_name,
-		&attrtype, &attrsize, &attroffs, &attrelem);
-    if ( EVEN(sts)) return sts;
-
-    t.elem[t.elem_cnt].value_p = &object_ptr->LastSts;
-    t.elem[t.elem_cnt].type_id = attrtype;
-    t.elem[t.elem_cnt].size = attrsize;
-    strcpy( t.elem[t.elem_cnt++].format, "%8d");
-
-    ts.subid[0] = subid;
-    ts.subid_cnt = 1;
-    new ItemRemTrans( brow, this, objid, &t, &ts, -1, 0, 0, 0, NULL,
-		      flow_eDest_IntoLast);
-
     if ( cdh_ObjidIsNull( remnode_objid))
       sts = gdh_GetNextObject( objid, &objid);
     else
