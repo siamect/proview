@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.35 2007-01-18 07:49:19 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.36 2007-01-24 12:40:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1668,6 +1668,11 @@ int WNav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       brow_SetClickSensitivity( wnav->brow->ctx, flow_mSensitivity_MB3Press);
       break;
     }
+    case flow_eEvent_MB2Down:
+    {
+      brow_SetClickSensitivity( wnav->brow->ctx, flow_mSensitivity_MB2Click);
+      break;
+    }
     case flow_eEvent_MB3Press:
     {
       // Popup menu
@@ -3071,6 +3076,8 @@ void WNav::enable_events( WNavBrow *brow)
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
 	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_MB3Down, flow_eEventType_CallBack, 
+	WNav::brow_cb);
+  brow_EnableEvent( brow->ctx, flow_eEvent_MB2Down, flow_eEventType_CallBack, 
 	WNav::brow_cb);
   brow_EnableEvent( brow->ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
 	WNav::brow_cb);
