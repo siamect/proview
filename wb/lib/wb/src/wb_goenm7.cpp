@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goenm7.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goenm7.cpp,v 1.2 2007-01-24 12:40:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -262,7 +262,6 @@ int goen_create_nodetype_m7(
     case pwr_cClass_GetDp:
     case pwr_cClass_GetAp:
     case pwr_cClass_GetIp:
-    case pwr_cClass_GetIpToA:
       /* Use objects trace attribute */
       strcpy( trace_attr, "$object");
       break;
