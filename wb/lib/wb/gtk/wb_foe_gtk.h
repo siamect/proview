@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_foe_gtk.h,v 1.2 2007-01-24 12:42:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,6 +173,7 @@ class WFoeGtk : public WFoe {
   static void activate_compile( GtkWidget *w, gpointer data);
   static void delete_subwindow_ok_cb( void *ctx, void *data);
   static void activate_delete( GtkWidget *w, gpointer data);
+  static void activate_createobject( GtkWidget *w, gpointer data);
   static void activate_changetext( GtkWidget *w, gpointer data);
   static void activate_cut( GtkWidget *w, gpointer data);
   static void activate_copy( GtkWidget *w, gpointer data);

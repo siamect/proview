@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.4 2007-01-17 10:28:39 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.5 2007-01-24 12:42:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -140,6 +140,15 @@ void WFoeGtk::activate_delete( GtkWidget *w, gpointer data)
   WFoe *foe = (WFoe *)data;
 
   foe->activate_delete();
+}
+
+void WFoeGtk::activate_createobject( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+  double x, y;
+
+  foe->gre->pixel_to_position( foe->gre->popup_menu_x, foe->gre->popup_menu_y, &x, &y);
+  foe->activate_createobject( (float)x, (float)y);
 }
 
 //	Callback from the menu.
@@ -634,7 +643,8 @@ typedef void (*gtk_tCallback)(GtkWidget *,gpointer);
 int WFoeGtk::modify_popup( unsigned long popupmenu_mask, int x, int y)
 {
   static char buttontext[][40] = { "ObjectEditor", "SubWindow", "Connect", "Delete",
-				   "Paste", "Copy", "Cut", "PrintSelect", "HelpClass"};
+				   "Paste", "Copy", "Cut", "PrintSelect", "HelpClass",
+                                   "CreateObject"};
   static gtk_tCallback menu_callbacks[] = { WFoeGtk::activate_attribute,
 					    WFoeGtk::activate_subwindow,
 					    WFoeGtk::activate_getobj,
@@ -643,12 +653,13 @@ int WFoeGtk::modify_popup( unsigned long popupmenu_mask, int x, int y)
 					    WFoeGtk::activate_copy,
 					    WFoeGtk::activate_cut,
 					    WFoeGtk::activate_printselect,
-					    WFoeGtk::activate_helpclass};
+					    WFoeGtk::activate_helpclass,
+					    WFoeGtk::activate_createobject};
 
   popupmenu_x = x + 5;
   popupmenu_y = y;
   GtkMenu *menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  for ( int i = 0; i < 9; i++) {
+  for ( int i = 0; i < 10; i++) {
     if ( popupmenu_mask & (1 << i)) {
       GtkWidget *w = gtk_menu_item_new_with_label( buttontext[i]);
       g_signal_connect( w, "activate", 
