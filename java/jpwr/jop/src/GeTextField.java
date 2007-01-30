@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeTextField.java,v 1.9 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: GeTextField.java,v 1.10 2007-01-30 13:03:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -199,7 +199,7 @@ public class GeTextField extends JTextField implements GeComponentIfc,
 
   Font annot1Font = new Font("Helvetica", Font.BOLD, 14);
   public Font annotFont = annot1Font;
-  public int annotBackground = 9999;
+  public int annotBackground = 30;
   public void setAnnot1Font( Font font) { annot1Font = font; 
                                           annotFont = font; setFont(font);}
   public Font getAnnot1Font() { return annot1Font;}
