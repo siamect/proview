@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_appl.cpp,v 1.3 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_appl.cpp,v 1.4 2007-01-30 07:01:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,7 @@
 #include "rt_qcom_msg.h"
 #include "rt_ini_event.h"
 #include "co_error.h"
-
+#include "pwr_baseclasses.h"
 
 void rt_appl::init()
 {
@@ -75,12 +75,17 @@ void rt_appl::init()
 void rt_appl::register_appl( char *name)
 {
   pwr_tStatus sts;
+  pwr_sClass_Application *op;
 
   // Get configuration object
   sts = gdh_NameToObjid( name, &m_apploid);
   if ( EVEN(sts)) throw co_error(sts);
 
   aproc_RegisterObject( m_apploid);
+
+  sts = gdh_ObjidToPointer( m_apploid, (void **)&op);
+  if ( ODD(sts))
+    op->Anix = m_anix;
 }
 
 void rt_appl::mainloop()
