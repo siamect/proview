@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: MhServer.java,v 1.5 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: MhServer.java,v 1.6 2007-01-30 06:49:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -177,9 +177,10 @@ public class MhServer
 
     maxConnections = cdhrMaxCon.value;
     maxAlarms = cdhrMaxAlarms.value;
+    maxEvents = cdhrMaxEvents.value;
     //pga bugg i proview, MaxNoOfAlarms syns ej i arbetsbänken
     if(maxAlarms == 0) maxAlarms = 100;
-    maxEvents = cdhrMaxEvents.value;
+    if(maxEvents == 0) maxEvents = 200;
     //currentConnectionsStr = cdhrString.str + ".CurrentConnections";
     //setCurrentConnections(threadCount);
     errh.info("MhServer started, MaxConnections: " + maxConnections);
