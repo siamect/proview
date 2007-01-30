@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_bcomp.c,v 1.2 2006-05-22 13:27:23 claes Exp $
+ * Proview   $Id: rt_plc_bcomp.c,v 1.3 2007-01-30 07:15:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -365,6 +365,146 @@ void CompPID_Fo_exec( plc_sThread *tp,
   o->ControlDiff = co->ControlDiff;
   o->EndMax = co->EndMax;
   o->EndMin = co->EndMin;
+}
+
+/*_*
+  OnOffBurnerFo
+
+  @aref onoffburnerfo OnOffBurnerFo
+*/
+void CompOnOffBurnerFo_init( pwr_sClass_CompOnOffBurnerFo  *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+}
+
+void CompOnOffBurnerFo_exec( plc_sThread		*tp,
+			     pwr_sClass_CompOnOffBurnerFo *o)
+{
+  pwr_sClass_CompOnOffBurner *co = (pwr_sClass_CompOnOffBurner *) o->PlcConnectP;
+  pwr_sClass_CompOnOffZoneFo	*zono;
+  pwr_sClass_CompOnOffZone	*zonco;
+  pwr_tFloat32 Cnt;
+
+  zono = (pwr_sClass_CompOnOffZoneFo *)
+    ((char *)o->InP - sizeof(pwr_tAttrRef) - 24);
+  zonco = (pwr_sClass_CompOnOffZone *)zono->PlcConnectP;
+
+  if ( !co || !zonco)
+    return;
+
+  co->Executing = zonco->Executing;
+  if ( !co->Executing) {
+    o->Status = co->Status = 0;
+    co->BrTime = 0;
+    co->TrendStatus = co->Number;
+    return;
+  }
+     
+  if ( zonco->CycleCount < 0.5)
+    co->OnDetected = 0;
+
+  if ( (co->PulseOn && co->BrTime < zonco->BurnerTimeMinOn) ||
+       (!co->PulseOn && co->BrTime < zonco->BurnerTimeMinOff)) {
+    co->BrTime += *o->ScanTime;
+    return;
+  }
+
+  if ( co->ManMode && co->OpMan) {
+    if ( (o->Status && !co->ManStatus) || (!o->Status && co->ManStatus))
+      co->BrTime = 0;
+    o->Status = co->Status = co->ManStatus;
+    co->TrendStatus = co->Number + (co->Status ? 1 : 0);
+    co->BrTime += *o->ScanTime;
+    return;
+  }
+  else
+    co->ManStatus = 0;
+
+  if ( zonco->PauseMode)
+    co->PulseTime = zonco->BurnerTimeMinOff;
+  else
+    co->PulseTime = zonco->BurnerTimeMinOn;
+
+  Cnt = zonco->CycleCount - 100.0 * co->Number / zonco->NumberOfBurners;
+  if ( Cnt < 0)
+    Cnt += 100;
+  if ( zonco->PauseMode)
+    co->OffCnt = co->PulseTime / zonco->CycleTime * 100;
+  else
+    co->OffCnt = (zonco->CycleTime - co->PulseTime) / zonco->CycleTime * 100;
+
+  if ( Cnt >= 0 && Cnt < co->OffCnt &&
+       !co->Status) {
+    // Turn on
+    co->OnDetected = 1;
+    co->Status = 1;
+    co->BrTime = 0;
+  }
+  else if ( Cnt >= co->OffCnt &&
+            co->Status) {
+    // Turn off
+    co->Status = 0;
+    co->BrTime = 0;
+  }
+  co->BrTime += *o->ScanTime;
+  co->TrendStatus = co->Number + (co->Status ? 1 : 0);
+  o->Status = co->Status;
+}
+
+
+/*_*
+  CompOnOffZoneFo
+
+  @aref componoffzonefo CompOnOffZoneFo
+*/
+void CompOnOffZoneFo_init( pwr_sClass_CompOnOffZoneFo  *o)
+{
+  pwr_tDlid dlid;
+  pwr_tStatus sts;
+
+  sts = gdh_DLRefObjectInfoAttrref( &o->PlcConnect, (void **)&o->PlcConnectP, &dlid);
+  if ( EVEN(sts)) 
+    o->PlcConnectP = 0;
+}
+
+void CompOnOffZoneFo_exec( plc_sThread	    *tp,
+		           pwr_sClass_CompOnOffZoneFo *o)
+{
+  pwr_sClass_CompOnOffZone *co = (pwr_sClass_CompOnOffZone *) o->PlcConnectP;
+
+  if ( !co)
+    return;
+
+  co->Power = o->Power = *o->PowerP;
+  co->Executing = o->Execute = *o->ExecuteP;
+  if ( co->Power < co->PowerMin)
+    co->Power = co->PowerMin;
+  if ( co->Power > co->PowerMax)
+    co->Power = co->PowerMax;
+
+  if ( !co->Executing) {
+    co->CycleCount = 0;
+    return;
+  }
+
+  co->PauseMode = ( co->Power / 100 > (co->BurnerTimeMinOff / (co->BurnerTimeMinOn + co->BurnerTimeMinOn))) ? 0 : 1;
+
+  if ( co->PauseMode) {
+    if ( co->Power != 100.0)
+      co->CycleTime = co->BurnerTimeMinOff * 100.0 / co->Power;
+  }
+  else {
+    if ( co->Power != 0)
+      co->CycleTime = co->BurnerTimeMinOn * 100.0 / (100.0 - co->Power);
+  }
+  co->CycleCount += *o->ScanTime / co->CycleTime * 100;
+  if ( co->CycleCount > 100)
+    co->CycleCount = 0;
 }
 
 
