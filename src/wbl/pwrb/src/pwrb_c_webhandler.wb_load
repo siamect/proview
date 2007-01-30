@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.10 2007-01-30 07:04:32 claes Exp $
+!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.11 2007-01-30 13:00:18 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -79,6 +79,7 @@ SObject pwrb:Class
       EndObject
       !/**
       !  Name of the html-file for the start page.
+      !  Default index.html
       !*/
       Object FileName $Attribute 3
         Body SysBody
@@ -162,6 +163,18 @@ SObject pwrb:Class
       Object StartURL $Attribute 12
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      !  @Summary Web archives that is loaded when the menu applet is opened.
+      !  Web archives that is loaded when the menu applet is opened.
+      !  Object graphs for some classvolumes are not loaded as default, as
+      !  they are quite large and timeconsuming. They will be loaded if the
+      !  corresponding bit is set in this mask.
+      !*/
+      Object LoadArchives $Attribute 13 
+        Body SysBody
+          Attr TypeRef = "pwrb:Type-WebLoadArchiveMask"
         EndBody
       EndObject
     EndObject

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.10 2007-01-11 12:00:05 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.11 2007-01-30 13:00:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,8 +97,9 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   pwr_tString80 file_name;
   pwr_tBoolean  enable_login;
   pwr_tBoolean  enable_alarmlist;
-  pwr_tBoolean  enable_eventlist;
+  pwr_tBoolean  enable_eventlog;
   pwr_tBoolean  enable_navigator;
+  pwr_tMask	load_archives;
   char          style_sheet[80];
   char          start_URL[80];
   char          name[80];
@@ -118,6 +119,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   pwr_tEnum     web_target;
   char          target_str[80];
   char          sname[80];
+  char		arlist[400];
 
   ge_get_systemname( sname);
 
@@ -159,7 +161,10 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "FileName",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
-  strcpy( file_name, value_p);
+  if ( strcmp( value_p, "") == 0)
+    strcpy( file_name, "index.html");
+  else 
+    strcpy( file_name, value_p);
   free( value_p); 
 
   // Attribute Title
@@ -190,11 +195,11 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   enable_alarmlist = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
-  // Attribute EnableEventList
-  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableEventList",
+  // Attribute EnableEventLog
+  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "EnableEventLog",
 			  &value_p, &size);
   if (EVEN(sts)) return sts;
-  enable_eventlist = *(pwr_tBoolean *)value_p;
+  enable_eventlog = *(pwr_tBoolean *)value_p;
   free( value_p); 
 
   // Attribute EnableNavigator
@@ -218,6 +223,20 @@ int Graph::generate_web( ldh_tSesContext ldhses)
   strcpy( start_URL, value_p);
   free( value_p); 
 
+  // Attribute LoadArchives
+  sts = ldh_GetObjectPar( ldhses, webhandler_objid, "RtBody", "LoadArchives",
+			  &value_p, &size);
+  if (EVEN(sts)) return sts;
+  load_archives = *(pwr_tMask *)value_p;
+  free( value_p); 
+
+  strcpy( arlist, "pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar");
+  if ( load_archives & pwr_mWebLoadArchiveMask_BaseComponent)
+    strcat( arlist, ",pwr_bcomp.jar");
+  if ( load_archives & pwr_mWebLoadArchiveMask_ABB)
+    strcat( arlist, ",pwr_abb.jar");
+
+
   // Login applet as default start URL
   if ( strcmp( start_URL, "") == 0 && enable_login)
     strcpy( start_URL, "pwr_login.html");
@@ -238,7 +257,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
     *s = 0;
 
   strcpy( menu_file_name, name);
-  strcat( menu_file_name, "_menu.html");
+  strcat( menu_file_name, "_menu_as.html");
 
   // Generate html-file for login applet
   strcpy( fname, "$pwrp_web/pwr_login.html");
@@ -265,9 +284,8 @@ int Graph::generate_web( ldh_tSesContext ldhses)
 "</html>" << endl;
   fp_login.close();
 
-  // Generate html-file for start page
-
-  sprintf( fname, "$pwrp_web/%s.html", name);
+  // Generate html-file for start page applet style
+  sprintf( fname, "$pwrp_web/%s_as.html", name);
   dcli_translate_filename( fname, fname);
 
   fp_start.open( fname);
@@ -355,7 +373,7 @@ int Graph::generate_web( ldh_tSesContext ldhses)
       web_target = *(pwr_tEnum *) value_p;
       free( value_p); 
 
-      if ( (s == strrchr( graph_name, '.')))
+      if ( (s = strrchr( graph_name, '.')))
         *s = 0;
 
       // Attribute Text
@@ -483,12 +501,12 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 "    <object classid=\"clsid:8AD9C840-044E-11D1-B3E9-00805F499D93\"" << endl <<
 "      width=100% height=100%  codebase=\"" << codebase << "\">" << endl <<
 "      <param name = code value=jpwr.jop.JopOpWindowApplet.class >" << endl <<
-    "      <param name =\"archive\" value=\"pwr_rt_client.jar,pwr_jop.jar,pwr_jopc.jar,pwrp_" << sname << "_web.jar\">" << endl <<
+"      <param name =\"archive\" value=\"" << arlist << ",pwrp_" << sname << "_web.jar\">" << endl <<
 "      <param name=\"type\" value=\"application/x-java-applet;version=1.3\">" << endl <<
 "      <param name=\"scriptable\" value=\"false\">" << endl <<
 "    <embed type=\"application/x-java-applet;version=1.4\" " << endl <<
 "      code = jpwr.jop.JopOpWindowApplet.class " << endl <<
-    "      archive=\"pwr_jop.jar,pwr_jopc.jar,pwr_rt_client.jar,pwrp_" << sname << "_web.jar\" " << endl <<
+"      archive=\"" << arlist << ",pwrp_" << sname << "_web.jar\" " << endl <<
 "      width = 100% height = 100% scriptable=false " << endl <<
 "      pluginspage=\"http://java.sun.com/products/plugin/index.html#download\">" << endl <<
 "  </body>" << endl <<
@@ -497,7 +515,7 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 
   // Generate html-file for start page for opwindow applet
 
-  sprintf( fname, "$pwrp_web/%s_opwin.html", name);
+  sprintf( fname, "$pwrp_web/%s.html", name);
   dcli_translate_filename( fname, fname);
 
   fp_ows.open( fname);
@@ -517,7 +535,7 @@ graph_text << "'," << resize << "," << width+20 << "," << height+20
 
   fp_ows.close();
 
-  printf( "-- Web startpages generated $pwrp_web/%s.html and %s_opwin.html\n", name, name);
+  printf( "-- Web startpage generated $pwrp_web/%s.html\n", name);
 #endif
   return 1;
 }
