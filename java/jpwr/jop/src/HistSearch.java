@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistSearch.java,v 1.3 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: HistSearch.java,v 1.4 2007-01-30 06:51:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,7 +116,7 @@ public class HistSearch extends JFrame implements ActionListener
     /**** Menu + textstrings ****/
     JMenu fileMenu, langMenu;
     
-    String[][] menuTitle = {{"File","Byt Språk"},{"Arkiv","Change Language"}};
+    String[][] menuTitle = {{"File","Language"},{"Arkiv","Språk"}};
     String[][] fileItems = {{"Copy result to excel","Quit"},{"Kopiera resultat till Excel","Avsluta"}};
     String[][] langItems = {{"Svenska","English"},{"Svenska","English"}};
     
