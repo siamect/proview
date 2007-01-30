@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: RatioLayout.java,v 1.5 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: RatioLayout.java,v 1.6 2007-01-30 06:53:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,10 +74,9 @@ public class RatioLayout implements LayoutManager2 {
     }
     //Reset the Layout
     public void invalidateLayout(Container target){
-	 //ratios = new Vector<Proportion>(1);
-	 //components = new Vector<Component>(1);
-	 ratios = new Vector(1);
-	 components = new Vector(1);
+	// This is called more frequently in 1.5...
+	// ratios = new Vector(1);
+	//components = new Vector(1);
     }
 
     
@@ -99,7 +98,6 @@ public class RatioLayout implements LayoutManager2 {
     }
 
     public void layoutContainer(Container target) {
-	
 
 	Insets insets = target.getInsets();
         int ncomponents = target.getComponentCount();

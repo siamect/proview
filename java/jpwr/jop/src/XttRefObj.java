@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttRefObj.java,v 1.2 2005-09-01 14:57:51 claes Exp $
+ * Proview   $Id: XttRefObj.java,v 1.3 2007-01-30 06:53:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,17 +30,17 @@ import jpwr.rt.*;
 public class XttRefObj extends DynamicObj implements JopDynamic
 {
   /**  Description of the Field */
-  public XttObjAttr objAttr = null;
+  public XttObjAttr objAttribute = null;
   //static JopEngine en;
   /**  Description of the Field */
-  int classid;
+  int cid;
 //  String showableClassName = null;
   /**  Description of the Field */
-  String fullName;
+  String fullname;
   /**  Description of the Field */
   int index;
   
-  static boolean initDone = false;
+  static boolean initdone = false;
   /**  Description of the Field */
   static String[] AttributeNameArray = {"ActualValue", 
                                         "ActualValue", 
@@ -188,18 +188,18 @@ public class XttRefObj extends DynamicObj implements JopDynamic
   /**
    *  Constructor for the XttRefObj object
    *
-   *@param  fullName  Description of the Parameter
+   *@param  fullname  Description of the Parameter
    *@param  en        Description of the Parameter
-   *@param  classid   Description of the Parameter
+   *@param  cid   Description of the Parameter
    *@param  treeNode  Description of the Parameter
    *@param  index     Description of the Parameter
    */
-  public XttRefObj(String fullName, JopEngine en, int classid,  /*String showableClassName,*/DefaultMutableTreeNode treeNode, int index)
+  public XttRefObj(String fullname, JopEngine en, int cid,  /*String showableClassName,*/DefaultMutableTreeNode treeNode, int index)
   {
     this.index = index;
-    this.fullName = fullName;
-    this.en = en;
-    this.classid = classid;
+    this.fullname = fullname;
+    XttRefObj.en = en;
+    this.cid = cid;
 //    this.showableClassName = showableClassName;
     if(index < 0)
     {
@@ -210,14 +210,14 @@ public class XttRefObj extends DynamicObj implements JopDynamic
     Logg.logg("XttRefObj konstruktor", 6);
     if(oa != null)
     {
-      objAttr = new XttObjAttr(oa);
-      objAttr.treeNode = treeNode;
-      objAttr.showName = false;
+      objAttribute = new XttObjAttr(oa);
+      objAttribute.treeNode = treeNode;
+      objAttribute.showName = false;
       en.add(this);
     }
     else
     {
-      Logg.logg("Kan ej debugga " + fullName + " classid: " + classid + " på index " + index, 0);
+      Logg.logg("Kan ej debugga " + fullname + " cid: " + cid + " på index " + index, 0);
     }
   }
 
@@ -229,9 +229,9 @@ public class XttRefObj extends DynamicObj implements JopDynamic
    */
   public PwrtRefId getPwrtRefId()
   {
-    if(objAttr != null && objAttr.refObj != null)
+    if(objAttribute != null && objAttribute.refObj != null)
     {
-      return objAttr.refObj.refid;
+      return objAttribute.refObj.refid;
     }
     return null;
   }
@@ -248,11 +248,11 @@ public class XttRefObj extends DynamicObj implements JopDynamic
     Logg.logg("XttRefObj: getXttObjAttr", 6);
     String s = null;
     String suffix;
-    suffix = this.setTypeIdString(objAttr.type, objAttr.size);
-    s = this.fullName + "." + objAttr.name + suffix;
-    objAttr.fullName = s;
+    suffix = this.setTypeIdString(objAttribute.type, objAttribute.size);
+    s = this.fullname + "." + objAttribute.name + suffix;
+    objAttribute.fullName = s;
     Logg.logg("XttRefObj:  Name " + s, 6);
-    return objAttr;
+    return objAttribute;
   }
 
 
@@ -286,7 +286,7 @@ public class XttRefObj extends DynamicObj implements JopDynamic
       Logg.logg("XttRefObj: animationOnly", 6);
       return;
     }
-    this.setObjectAttributeValue(objAttr);
+    this.setObjectAttributeValue(objAttribute);
   }
 
 
@@ -303,9 +303,9 @@ public class XttRefObj extends DynamicObj implements JopDynamic
    */
   public String toString()
   {
-    if(objAttr != null)
+    if(objAttribute != null)
     {
-      return objAttr.toString();
+      return objAttribute.toString();
     }
     else
     {
@@ -365,14 +365,14 @@ public class XttRefObj extends DynamicObj implements JopDynamic
    */
   public static void init(JopEngine en)
   {
-    if(XttRefObj.initDone)
+    if(XttRefObj.initdone)
       return;
     XttRefObj.en = en;
     for(int i = 0; i < TypeClassId.length; i++)
     {
       AttrObj[i] = XttRefObj.getWantedClassAttribute(i);
     }
-    XttRefObj.initDone = true;
+    XttRefObj.initdone = true;
   }
 
 }

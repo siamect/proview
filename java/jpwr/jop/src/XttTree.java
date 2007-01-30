@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: XttTree.java,v 1.12 2006-06-16 05:19:28 claes Exp $
+ * Proview   $Id: XttTree.java,v 1.13 2007-01-30 06:53:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -246,12 +246,12 @@ public class XttTree extends JPanel
     DynamicObj.init(engine);
     
     //get the icons that is for the + and - signs to the left of every node
-    BasicTreeUI ui = (BasicTreeUI)tree.getUI();
+    BasicTreeUI tui = (BasicTreeUI)tree.getUI();
     ImageIcon OpenCloseIcon = new ImageIcon(XttOpenCloseIcon);
     ImageIcon OpenIcon = new ImageIcon(XttOpenIcon);
     ImageIcon CloseIcon = new ImageIcon(XttCloseIcon);
-    ui.setCollapsedIcon(OpenIcon);
-    ui.setExpandedIcon(CloseIcon);
+    tui.setCollapsedIcon(OpenIcon);
+    tui.setExpandedIcon(CloseIcon);
 
     tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
@@ -293,7 +293,7 @@ public class XttTree extends JPanel
         xttObj.init(false);
         if(xttObj.refObj != null)
 	{
-	  xttObj.refObj.objAttr.treeModel = this.treeModel;
+	  AttrObj.treeModel = this.treeModel;
         }
         rootNode.add(tNodeRoot);
         if(gdhr.hasChildren)
@@ -1712,7 +1712,7 @@ public class XttTree extends JPanel
               obj.elements);
           DefaultMutableTreeNode arrayChildNode = new DefaultMutableTreeNode(arrayAttr);
           arrayAttr.treeNode = arrayChildNode;
-          arrayAttr.treeModel = obj.treeModel;
+          XttArrayAttr.treeModel = XttObjAttr.treeModel;
           obj.treeNode.add(arrayChildNode);
           Logg.logg("XttObj: arrayAttr.fullName= " + arrayAttr.fullName, 8);
           String str = arrayAttr.fullName;
