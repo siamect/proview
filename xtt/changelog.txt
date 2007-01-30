@@ -27,3 +27,4 @@
 070116 cs  xtt       Toolbar with icons for the methods of the selected object added.
 070117 cs  ge        Property EscapeStore for dynamic type ValueInput added.
 070123 cs  xtt       Bugfix in remtrans table. If multicast object found, object was not displayed. 
+070125 cs  ev        Problem with double appearence of alarm when communication is bad fixed.
