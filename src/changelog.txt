@@ -20,5 +20,8 @@
 060905 rk  rt_qmon   Wait a while for correct scheduler to be set before starting threads.
 060905 rk  rt_tmon   Established new callback function for glibc malloc memory checks.
 060905 rk  plc       Wait for all threads to set its priority before changing real and effective user id.
-070112 cs  rt        Gtk version of rt_trace. Navigator window inserted in main window.
+070112 cs  trace     Gtk version of rt_trace. Navigator window inserted in main window.
 070116 cs  trace     Mouse Scroll events added.
+070124 cs  io        Check at io startup if multiple signals are connected to the same channel.
+070124 cs  wbl       Attribute BuildCmd moved/added to Application and PlcProcess.
+070130 cs  init      Process rt_webmonelog (web eventlog server) added to startup.
