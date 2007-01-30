@@ -30,7 +30,8 @@ export pwrp_db=$pwrp_root/common/db
 export pwrp_web=$web_dir
 
 export pwra_db=/usr/pwrp/adm/db
-export jdk_home=/usr/local/jdk1.3/bin
+jdk=`eval ls /usr/local | grep ^jre`
+export jdk_home=/usr/local/$jdk/bin
 PATH=$PATH:$pwr_exe:$pwrp_exe:$jdk_home
 
 #Set display to remote computer

@@ -231,9 +231,9 @@ fi
 #
 # Add proview web directories to Apache
 #
-if [ -e /etc/apache/httpd.conf ]; then
-  if ! egrep -q "Alias[ ]+/pwrp_web/" /etc/apache/httpd.conf; then
-    cat >> /etc/apache/httpd.conf <<-EOF
+if [ -e /etc/apache2/apache2.conf ]; then
+  if ! egrep -q "Alias[ ]+/pwrp_web/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
 
 	#
 	# Proview alias pwrp_web, added by Proview installation
