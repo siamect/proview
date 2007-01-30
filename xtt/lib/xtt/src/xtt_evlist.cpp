@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.15 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.16 2007-01-30 06:54:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -443,11 +443,17 @@ void EvList::event_alarm( mh_sMessage *msg)
   flow_eDest	dest_code;
   brow_tNode	dest_node;
 
-  if ( type == ev_eType_AlarmList &&
-       !( msg->Status & mh_mEventStatus_NotAck ||
-          msg->Status & mh_mEventStatus_NotRet))
-    return;
+  if ( type == ev_eType_AlarmList ) {
+    if ( !( msg->Status & mh_mEventStatus_NotAck ||
+	    msg->Status & mh_mEventStatus_NotRet))
+      return;
 
+    // Check that this id not already inserted
+    ItemAlarm *item;
+
+    if ( id_to_item( &event->Info.Id, (void **)&item))
+      return;      
+  }
   if ( type != ev_eType_HistList ) {
     sts = get_destination( event->Info.EventTime, (void **)&dest);
     if ( EVEN(sts)) {
