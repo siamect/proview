@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.h,v 1.2 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_build.h,v 1.3 2007-01-30 07:13:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@ class wb_build : public wb_status
   void plcpgm( pwr_tOid oid);
   void xttgraph( pwr_tOid oid);
   void webhandler( pwr_tOid oid);
+  void application( pwr_tOid oid);
 
   wb_build_opt opt;
   wb_session m_session;

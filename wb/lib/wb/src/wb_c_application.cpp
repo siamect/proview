@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_plcprocess.cpp,v 1.2 2007-01-30 07:13:02 claes Exp $
+ * Proview   $Id: wb_c_application.cpp,v 1.1 2007-01-30 07:13:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,36 +17,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-/* wb_c_plcprocess.c -- work bench methods of the PlcProcess class. */
+/* wb_c_application.cpp -- work bench methods of the Application class. */
 
 #include "wb_pwrs.h"
-#include "wb_pwrb_msg.h"
+#include "pwr_baseclasses.h"
+#include "wb_ldh_msg.h"
 #include "wb_ldh.h"
+#include "wb_pwrb_msg.h"
+#include "wb_wsx.h"
+#include "wb_wsx_msg.h"
+#include "co_cdh.h"
+#include "co_dcli.h"
+#include "flow.h"
+#include "flow_browctx.h"
+#include "flow_browapi.h"
+#include "wb_wnav.h"
 #include "wb_build.h"
-
-static pwr_tStatus PostCreate (
-  ldh_tSesContext   Session,
-  pwr_tOid	    Object,
-  pwr_tOid	    Father,
-  pwr_tCid	    Class
-) {
-  pwr_tOid oid;
-  pwr_tCid cid;
-  pwr_tStatus sts;
-  pwr_tFloat32 scan_time = 0.1;
-
-  sts = ldh_ClassNameToId(Session, &cid, "PlcThread");
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_CreateObject(Session, &oid, "100ms", cid, Object, ldh_eDest_IntoLast); 
-  if ( EVEN(sts)) return sts;
-
-  sts = ldh_SetObjectPar(Session, oid, "RtBody", "ScanTime", (char *)&scan_time,
-			 sizeof(scan_time));
-  if ( EVEN(sts)) return sts;
-
-  return PWRB__SUCCESS;
-}
+#include "co_msgwindow.h"
+#include "ge.h"
 
 static pwr_tStatus Build (
   ldh_sMenuCall *ip
@@ -62,15 +50,9 @@ static pwr_tStatus Build (
   return build.sts();
 }
 
-pwr_dExport pwr_BindMethods(PlcProcess) = {
-  pwr_BindMethod(PostCreate),
+
+pwr_dExport pwr_BindMethods(Application) = {
   pwr_BindMethod(Build),
   pwr_NullMethod
 };
-
-
-
-
-
-
 

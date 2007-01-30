@@ -33,3 +33,4 @@ WebHandler
 PlcProcess
 PlcThread
 NodeConfig
+Application

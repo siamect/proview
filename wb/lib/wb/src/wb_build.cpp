@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.4 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.5 2007-01-30 07:13:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,12 @@ void wb_build::classlist( pwr_tCid cid)
       break;
     case pwr_cClass_WebHandler:
       webhandler( o.oid());
+      break;
+    case pwr_cClass_Application:
+      application( o.oid());
+      break;
+    case pwr_cClass_PlcProcess:
+      application( o.oid());
       break;
     default: 
       m_sts = PWRB__NOBUILT;
@@ -189,6 +195,16 @@ void wb_build::rootvolume( pwr_tVid vid)
       sumsts = m_sts;
 
     classlist( pwr_cClass_WebHandler);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    classlist( pwr_cClass_Application);
+    if ( evenSts()) return;
+    if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+      sumsts = m_sts;
+
+    classlist( pwr_cClass_PlcProcess);
     if ( evenSts()) return;
     if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
       sumsts = m_sts;
@@ -382,6 +398,16 @@ void wb_build::nodehier( pwr_tOid oid)
     sumsts = m_sts;
 
   classlist( pwr_cClass_WebHandler);
+  if ( evenSts()) return;
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  classlist( pwr_cClass_Application);
+  if ( evenSts()) return;
+  if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
+    sumsts = m_sts;
+
+  classlist( pwr_cClass_PlcProcess);
   if ( evenSts()) return;
   if ( sumsts == PWRB__NOBUILT && m_sts != PWRB__NOBUILT)
     sumsts = m_sts;
@@ -609,6 +635,66 @@ void wb_build::webhandler( pwr_tOid oid)
     sprintf( msg, "Build:    WebHandler xtt_help.dat converted to html");
     MsgWindow::message( 'I', msg, msgw_ePop_No, oid);
     m_sts = PWRB__SUCCESS;
+  }
+}
+
+void wb_build::application( pwr_tOid oid)
+{
+  pwr_tString80 buildcmd;
+  pwr_tCmd	cmd;
+  int 		check_hierarchy = cdh_ObjidIsNotNull( m_hierarchy);
+  int 		hierarchy_found = 0;
+  int		sts;
+
+  wb_object o = m_session.object(oid);
+  if ( !o) {
+    m_sts = o.sts();
+    return;
+  }
+
+  // Check that no ancestor is a LibHier
+  for ( wb_object p = o.parent(); p.oddSts(); p = p.parent()) {
+    if ( p.cid() == pwr_eClass_LibHier) {
+      m_sts =  PWRB__INLIBHIER;
+      return;
+    }
+    if ( check_hierarchy && cdh_ObjidIsEqual( m_hierarchy, p.oid()))
+      hierarchy_found = 1;
+  }
+
+  if ( check_hierarchy && !hierarchy_found) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  wb_attribute a = m_session.attribute( oid, "DevBody", "BuildCmd");
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+  a.value( &buildcmd);
+  if ( !a) {
+    m_sts = a.sts();
+    return;
+  }
+
+  if ( strcmp( buildcmd, "") == 0) {
+    m_sts = PWRB__NOBUILT;
+    return;
+  }
+
+  // Exectute the build command
+  dcli_translate_filename( cmd, buildcmd);
+  sts = system( cmd);
+  if ( sts != 0) {
+    char msg[300];
+
+    sprintf( msg, "Build Application error %s", o.longName().name(cdh_mName_path | cdh_mName_object));
+    MsgWindow::message( 'E', msg, msgw_ePop_Yes, oid);
+    m_sts = PWRB__SUCCESS;
+  }
+  else {
+    m_sts = PWRB__NOBUILT;
   }
 }
 
