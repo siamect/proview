@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.25 2006-07-27 10:35:18 claes Exp $
+ * Proview   $Id: ini.c,v 1.26 2007-01-30 07:00:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,6 +101,7 @@
 # define cPrio_trend		(cPrio_base + 15)
 # define cPrio_webmon		(cPrio_base + 15)
 # define cPrio_webmonmh		(cPrio_base + 15)
+# define cPrio_webmonelog      	(cPrio_base + 15)
 # define cPrio_elog		(cPrio_base + 15)
 # define cPrio_sysmon		(cPrio_base + 16)
 # define cPrio_plc_init		(cPrio_base + 5)
@@ -2047,6 +2048,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_webmonmh", "pwr_webmonmh_%d", 0, 1, "rt_webmonmh.sh", cPrio_webmonmh, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "pwr_webmonelog", "pwr_webmonglog_%d", 0, 1, "rt_webmonelog.sh", cPrio_webmonelog, 0, "");
   pp->proc.flags.b.system = 1;
 #endif
 
