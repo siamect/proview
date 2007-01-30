@@ -598,6 +598,9 @@ sub build_all ()
       _build("jpwr", "beans", "src", "all");
       _build("jpwr", "rt_client", "src", "all");
     }
+    if ( $exe == 1) {
+      _build("exe", "jpwr_rt_gdh", "src", "all");
+    }
   }
   else {
     if ( $copy == 1) {
