@@ -747,6 +747,8 @@ palette PlcEditorPalette
       class CompModeAMFo
       class CompModePID_Fo
       class CompPID_Fo
+      class CompOnOffBurnerFo
+      class CompOnOffZoneFo
       class BaseMotorAggrFo
       class BaseMotorIncrDecrAggrFo
       class RunTimeCounterFo
