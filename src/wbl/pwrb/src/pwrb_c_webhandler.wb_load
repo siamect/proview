@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.9 2006-03-31 14:47:15 claes Exp $
+!  Proview   $Id: pwrb_c_webhandler.wb_load,v 1.10 2007-01-30 07:04:32 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -37,9 +37,6 @@ SObject pwrb:Class
 !  If the EnableLogin attribute is set, the menu will contain a link to
 !  a login-applet which makes it possible to login as a proview user, and
 !  gain privilege to make changes to the database.
-!
-!  The EnableNavigator, EnableAlarmList and EnableEventList are not yet
-!  implemented.
 !
 ! @b See also
 !  @classlink WebGraph pwrb_webgraph.html
@@ -116,7 +113,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Not yet implemented
+      !  An entry for alarm and eventlist will be placed in the menu.
       !*/
       Object EnableAlarmList $Attribute 7
         Body SysBody
@@ -124,15 +121,15 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Not yet implemented
+      !  An entry for eventlog will be placed in the menu.
       !*/
-      Object EnableEventList $Attribute 8
+      Object EnableEventLog $Attribute 8
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Boolean"
         EndBody
       EndObject
       !/**
-      !  Not yet implemented
+      !  An entry for runtime navigator will be placed in the menu.
       !*/
       Object EnableNavigator $Attribute 9
         Body SysBody
@@ -140,7 +137,7 @@ SObject pwrb:Class
         EndBody
       EndObject
       !/**
-      !  Not yet implemented
+      !  User object with data for the alarm and eventlist.
       !*/
       Object UserObject $Attribute 10
         Body SysBody
