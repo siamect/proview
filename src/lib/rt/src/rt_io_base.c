@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.21 2006-06-30 12:17:12 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.22 2007-01-30 07:02:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -227,6 +227,24 @@ pwr_tStatus io_init_ai_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanAi, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanAi, &sig_aref, &sig_aref);
+  }
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanAit, &sig_aref);
+  while (ODD(sts)) {
+    pwr_sClass_ChanAit chan_opt;
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_opt);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanAit, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Ai, &sig_aref);
   while (ODD(sts)) {
 
@@ -245,15 +263,21 @@ pwr_tStatus io_init_ai_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  !(class == pwr_cClass_ChanAi || class == pwr_cClass_ChanAit)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -307,6 +331,16 @@ pwr_tStatus io_init_ao_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanAo, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanAo, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Ao, &sig_aref);
   while (ODD(sts)) {
     sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
@@ -324,15 +358,21 @@ pwr_tStatus io_init_ao_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanAo)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -385,6 +425,16 @@ pwr_tStatus io_init_di_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanDi, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanDi, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Di, &sig_aref);
   while (ODD(sts)) {
     sts = gdh_AttrrefToName( &sig_aref, buf, sizeof(buf), cdh_mNName);
@@ -402,15 +452,21 @@ pwr_tStatus io_init_di_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanDi)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -464,6 +520,16 @@ pwr_tStatus io_init_do_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanDo, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanDo, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Do, &sig_aref);
   while (ODD(sts)) {
 
@@ -482,15 +548,21 @@ pwr_tStatus io_init_do_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) ||
 	  (class != pwr_cClass_ChanDo)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -522,15 +594,21 @@ pwr_tStatus io_init_do_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) ||
 	  (class != pwr_cClass_ChanDo)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -581,6 +659,16 @@ pwr_tStatus io_init_co_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanCo, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanCo, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Co, &sig_aref);
   while (ODD(sts)) {
 
@@ -599,15 +687,21 @@ pwr_tStatus io_init_co_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanCo)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->RawValue, &area_op->Value[sig_count]);
@@ -796,6 +890,16 @@ pwr_tStatus io_init_ii_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanIi, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanIi, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Ii, &sig_aref);
   while (ODD(sts)) {
 
@@ -814,15 +918,21 @@ pwr_tStatus io_init_ii_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanIi)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
@@ -876,6 +986,16 @@ pwr_tStatus io_init_io_signals(
   if (EVEN(sts)) return sts;
 
   // Check SigChanCon and put signal in channels SigChanCon
+
+  // Zero sigchancon in channel to detect double connections
+  sts = gdh_GetClassListAttrRef( pwr_cClass_ChanIo, &sig_aref);
+  while (ODD(sts)) {
+    sts = gdh_AttrRefToPointer( &sig_aref, (void *) &chan_op);
+    if ( ODD(sts))
+      chan_op->SigChanCon.Objid = pwr_cNObjid;
+    sts = gdh_GetNextAttrRef( pwr_cClass_ChanIo, &sig_aref, &sig_aref);
+  }
+
   sts = gdh_GetClassListAttrRef( pwr_cClass_Io, &sig_aref);
   while (ODD(sts)) {
 
@@ -894,15 +1014,21 @@ pwr_tStatus io_init_io_signals(
       sts = gdh_GetAttrRefTid( &sig_op->SigChanCon, &class);
       if (EVEN(sts) || 
 	  (class != pwr_cClass_ChanIo)) {
-	errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	errh_Error("IO init: Signal SigChanCon error '%s'", buf);
       }
       else {
 	sts = gdh_AttrRefToPointer( &sig_op->SigChanCon, (void *) &chan_op);
 	if (EVEN(sts)) {
-	  errh_Info("IO init: Signal SigChanCon error '%s'", buf);
+	  errh_Error("IO init: Signal SigChanCon error '%s'", buf);
 	}	
-	else
+	else {
+	  if ( cdh_ObjidIsNotNull( chan_op->SigChanCon.Objid)) {
+	    pwr_tAName oldsig;
+	    sts = gdh_AttrrefToName( &chan_op->SigChanCon, oldsig, sizeof(oldsig), cdh_mNName);
+	    errh_Error( "IO init: Double signal connection '%s' and '%s'", buf, oldsig);
+	  }
 	  chan_op->SigChanCon = sig_aref;
+	}
       }		
     }
     gdh_StoreRtdbPointer( (pwr_tUInt32 *) &sig_op->ActualValue, &area_op->Value[sig_count]);
