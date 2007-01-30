@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDyn.java,v 1.9 2006-06-14 05:06:05 claes Exp $
+ * Proview   $Id: GeDyn.java,v 1.10 2007-01-30 06:51:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -131,7 +131,10 @@ public class GeDyn {
 	this.access = access;
     }
     public void setInstance( String instance) {
-	this.instance = instance;
+	if ( instance.equals(""))
+	    instance = null;
+	else
+	    this.instance = instance;
     }
     public void setHostObject( String hostObject) {
 	this.hostObject = hostObject;
