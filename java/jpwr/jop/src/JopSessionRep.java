@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionRep.java,v 1.10 2007-01-30 06:52:55 claes Exp $
+ * Proview   $Id: JopSessionRep.java,v 1.11 2007-01-30 13:02:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,6 +167,9 @@ public class JopSessionRep implements JopSessionIfc {
 	  if ( coid.objid.vid == 1)
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(1,2).toUpperCase() + 
 	      sret.str.substring(2).toLowerCase() + suffix;
+	  else if ( coid.objid.vid == 10)
+	    name = "jpwr.bcomp.Jopc" + sret.str.substring(0,1).toUpperCase() + 
+	      sret.str.substring(1).toLowerCase() + suffix;
 	  else
 	    name = "jpwr.jopc.Jopc" + sret.str.substring(0,1).toUpperCase() + 
 	      sret.str.substring(1).toLowerCase() + suffix;
