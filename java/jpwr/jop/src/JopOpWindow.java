@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopOpWindow.java,v 1.6 2006-03-28 06:14:38 claes Exp $
+ * Proview   $Id: JopOpWindow.java,v 1.7 2007-01-30 06:52:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,16 @@ public class JopOpWindow extends JPanel {
     if ( iret.value != 0) {
       button = new OpWindButton( session, "", "Alarm and Eventlist",
 				 OpWindButton.ALARMLIST);
+      this.add( button);
+    }
+      
+    s = sret.str + ".EnableEventLog";
+    iret = en.gdh.getObjectInfoInt( s);
+    if ( iret.evenSts()) return;
+
+    if ( iret.value != 0) {
+      button = new OpWindButton( session, "", "Eventlog",
+				 OpWindButton.EVENTLOG);
       this.add( button);
     }
       
@@ -164,8 +174,9 @@ public class JopOpWindow extends JPanel {
     public static final int LOGIN = 3;
     public static final int NAVIGATOR = 4;
     public static final int ALARMLIST = 5;
-    public static final int HELP = 6;
-    public static final int PROVIEW = 7;
+    public static final int EVENTLOG = 6;
+    public static final int HELP = 7;
+    public static final int PROVIEW = 8;
     JopSession session;
     String action;
     int type;
@@ -195,6 +206,9 @@ public class JopOpWindow extends JPanel {
 	      break;
 	    case ALARMLIST:
 	      session.openAlarmList();
+	      break;
+	    case EVENTLOG:
+	      session.openEventLog();
 	      break;
 	    case HELP:
 	      session.executeCommand("help index");

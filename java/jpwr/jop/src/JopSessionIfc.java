@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSessionIfc.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopSessionIfc.java,v 1.5 2007-01-30 06:52:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@ public interface JopSessionIfc {
   public void removeUtility( Object utility);
   public void openNavigator( PwrtObjid oid);
   public void openAlarmList();
+  public void openEventLog();
   public void openLogin();
   public void openGraphFrame( String name, String instance, boolean scrollbar, boolean classGraph);
   public void openFlowFrame( PwrtObjid oid, String center);

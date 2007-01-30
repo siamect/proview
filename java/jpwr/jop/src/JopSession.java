@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: JopSession.java,v 1.4 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: JopSession.java,v 1.5 2007-01-30 06:52:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,6 +82,10 @@ public class JopSession {
 
   public void openAlarmList() {
     ((JopSessionIfc) sessionRep).openAlarmList();
+  }
+
+  public void openEventLog() {
+    ((JopSessionIfc) sessionRep).openEventLog();
   }
 
   public void openLogin() {
