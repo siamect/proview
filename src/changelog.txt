@@ -25,3 +25,4 @@
 070124 cs  io        Check at io startup if multiple signals are connected to the same channel.
 070124 cs  wbl       Attribute BuildCmd moved/added to Application and PlcProcess.
 070130 cs  init      Process rt_webmonelog (web eventlog server) added to startup.
+070130 cs  wbl       Attribute LoadArchives added to WebHandler with new type WebLoadArchiveMask.

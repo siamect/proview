@@ -28,3 +28,5 @@
 070117 cs  ge        Property EscapeStore for dynamic type ValueInput added.
 070123 cs  xtt       Bugfix in remtrans table. If multicast object found, object was not displayed. 
 070125 cs  ev        Problem with double appearence of alarm when communication is bad fixed.
+070130 cs  web       _opwin removed from homepage name. index.html set as defaultname.
+070130 cs  web       Possibility to configure which objectgraph jar-files that should be loaded (BaseComponent or ABB).
