@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_application.wb_load,v 1.2 2005-09-01 14:58:01 claes Exp $
+!  Proview   $Id: pwrb_c_application.wb_load,v 1.3 2007-01-30 07:03:24 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@ SObject pwrb:Class
   Object Application $ClassDef 363
     Body SysBody
       Attr Editor = pwr_eEditor_AttrEd
-      Attr Method = pwr_eMethod_Standard
+      Attr Method = pwr_eMethod_RtAndDevBodies
       Attr PopEditor = 2
     EndBody
     Object RtBody $ObjBodyDef 1
@@ -40,15 +40,74 @@ SObject pwrb:Class
           Attr TypeRef = "pwrs:Type-$String80"
         EndBody
       EndObject
+      Object Anix $Attribute 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_STATE
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2
       Object BuildCmd $Attribute 2
 	Body SysBody
 	  Attr TypeRef = "pwrs:Type-$String80"
 	EndBody
       EndObject
-      Object Anix $Attribute 3
-        Body SysBody
-          Attr TypeRef = "pwrs:Type-$Int32"
-        EndBody
+    EndObject
+    Object NavigatorPosnn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "Application-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPoson $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "Application-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosos $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "Application-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosms $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "Application-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
+      EndObject
+    EndObject
+    Object NavigatorPosmn $Menu
+      Object Pointed $Menu
+	Object Build $MenuButton
+	  Body SysBody
+	    Attr ButtonName = "Build"
+	    Attr MethodName = "Application-Build"
+	    Attr FilterName = "$Object-BuildFilter"
+	  EndBody
+	EndObject
       EndObject
     EndObject
   EndObject
