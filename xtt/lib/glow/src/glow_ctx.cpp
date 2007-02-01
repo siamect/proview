@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.13 2007-01-17 10:31:20 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.14 2007-02-01 07:09:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1231,7 +1231,7 @@ int GlowCtx::event_handler( glow_eEvent event, int x, int y, int w, int h)
       if ( node_movement_active || con_create_active || select_rect_active ||
 	   node_movement_paste_active)
       {
-        if ( x < 0 || x > ctx->mw.window_width || y < 0 || y > mw.window_height)
+        if ( x < 0 || x >= ctx->mw.window_width || y < 0 || y >= mw.window_height)
         {
           /* Start auto scrolling */
           auto_scrolling( this);

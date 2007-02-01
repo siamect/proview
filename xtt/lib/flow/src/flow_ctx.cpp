@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.8 2007-01-17 10:33:09 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.9 2007-02-01 07:09:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -835,13 +835,15 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       }
       break;
 
-    case flow_eEvent_Exposure:
+    case flow_eEvent_Exposure: {
       int width, height;
+      int size_changed = 0;
 
       ctx->fdraw->get_window_size( ctx, &width, &height);
       if ( window_width != width || window_height != height) {
         window_width = width;
         window_height = height;
+	size_changed = 1;
 	
         if ( event_callback[flow_eEvent_Resized]) {
 	  static flow_sEvent e;
@@ -854,9 +856,10 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       nav_zoom();
 //      draw( 0, 0, window_width, window_height);
       draw( x, y, x + w, y + h);
-      if ( ctx_type == flow_eCtxType_Brow)
+      if ( size_changed && ctx_type == flow_eCtxType_Brow)
         ((BrowCtx *)this)->change_scrollbar();
       break;
+    }
     case flow_eEvent_CursorMotion:
       cursor_present = 1;
       cursor_x = x;
@@ -1057,7 +1060,7 @@ int FlowCtx::event_handler( flow_eEvent event, int x, int y, int w, int h)
       if ( node_movement_active || con_create_active || select_rect_active ||
 	   node_movement_paste_active)
       {
-        if ( x < 0 || x > ctx->window_width || y < 0 || y > window_height)
+        if ( x < 0 || x >= ctx->window_width || y < 0 || y >= window_height)
         {
           /* Start auto scrolling */
           auto_scrolling( this);
