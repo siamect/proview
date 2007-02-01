@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: glow_growwidget_gtk.cpp,v 1.3 2007-02-01 07:10:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,7 @@
  **/
 
 #include <stdlib.h>
+#include <math.h>
 #include "glow_std.h"
 
 #include <gtk/gtk.h>
@@ -56,6 +57,8 @@ struct _GrowWidgetGtk {
   GtkWidget    	*form;
   int		scroll_h_ignore;
   int		scroll_v_ignore;
+  gdouble       scroll_h_value;
+  gdouble       scroll_v_value;
 };
 
 struct _GrowWidgetGtkClass {
@@ -121,6 +124,7 @@ static void scroll_callback( glow_sScroll *data)
 		 NULL);
     gtk_adjustment_changed( 
         ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_value = (gdouble)data->offset_x;
   }
 
   if ( scroll_data->scroll_v_managed) {
@@ -132,6 +136,7 @@ static void scroll_callback( glow_sScroll *data)
 		 NULL);
     gtk_adjustment_changed( 
         ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_value = (gdouble)data->offset_y;
   }
 }
 
@@ -146,9 +151,15 @@ static void scroll_h_action( 	GtkWidget      	*w,
 
   GrowCtx *ctx = (GrowCtx *) groww->grow_ctx;
   gdouble value;
-  g_object_get( w,
-		"value", &value,
-		NULL);
+  value = gtk_range_get_value( GTK_RANGE(groww->scroll_h));
+
+  if ( value == 0 && fabs(groww->scroll_h_value) > 2) {
+    // Probably a resize that seems to set value to zero, set old value
+    ctx->change_scrollbar();
+    return;
+  }
+  groww->scroll_h_value = value;
+
   glow_scroll_horizontal( ctx, int(value), 0);
 
 }
@@ -165,9 +176,15 @@ static void scroll_v_action( 	GtkWidget 	*w,
     
   GrowCtx *ctx = (GrowCtx *) groww->grow_ctx;
   gdouble value;
-  g_object_get( w,
-		"value", &value,
-		NULL);
+  value = gtk_range_get_value( GTK_RANGE(groww->scroll_v));
+
+  if ( value == 0 && fabs(groww->scroll_v_value) > 2) {
+    // Probably a resize that seems to set value to zero, set old value
+    ctx->change_scrollbar();
+    return;
+  }
+  groww->scroll_v_value = value;
+
   glow_scroll_vertical( ctx, int(value), 0);
 }
 

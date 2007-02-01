@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_widget_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: flow_widget_gtk.cpp,v 1.3 2007-02-01 07:10:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,7 @@
  **/
 
 #include <stdlib.h>
+#include <math.h>
 #include "glow_std.h"
 
 #include "flow.h"
@@ -54,6 +55,8 @@ struct _FlowWidgetGtk {
   GtkWidget    	*form;
   int		scroll_h_ignore;
   int		scroll_v_ignore;
+  gdouble       scroll_h_value;
+  gdouble       scroll_v_value;
 };
 
 struct _FlowWidgetGtkClass {
@@ -119,6 +122,7 @@ static void scroll_callback( flow_sScroll *data)
 		 NULL);
     gtk_adjustment_changed( 
         ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
+    ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_value = (gdouble)data->offset_x;
   }
 
   if ( scroll_data->scroll_v_managed) {
@@ -130,6 +134,7 @@ static void scroll_callback( flow_sScroll *data)
 		 NULL);
     gtk_adjustment_changed( 
         ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    ((FlowWidgetGtk *)scroll_data->flow)->scroll_v_value = (gdouble)data->offset_y;
   }
 }
 
@@ -144,9 +149,15 @@ static void scroll_h_action( 	GtkWidget      	*w,
 
   FlowCtx *ctx = (FlowCtx *) floww->flow_ctx;
   gdouble value;
-  g_object_get( w,
-		"value", &value,
-		NULL);
+  value = gtk_range_get_value( GTK_RANGE(floww->scroll_h));
+
+  if ( value == 0 && fabs(floww->scroll_h_value) > 2) {
+    // Probably a resize that seems to set value to zero, set old value
+    ctx->change_scrollbar();
+    return;
+  }
+  floww->scroll_h_value = value;
+
   flow_scroll_horizontal( ctx, int(value), 0);
 
 }
@@ -163,9 +174,15 @@ static void scroll_v_action( 	GtkWidget 	*w,
     
   FlowCtx *ctx = (FlowCtx *) floww->flow_ctx;
   gdouble value;
-  g_object_get( w,
-		"value", &value,
-		NULL);
+  value = gtk_range_get_value( GTK_RANGE(floww->scroll_v));
+
+  if ( value == 0 && fabs( floww->scroll_v_value) > 2) {
+    // Probably a resize that seems to set value to zero, set old value
+    ctx->change_scrollbar();
+    return;
+  }
+  floww->scroll_v_value = value;
+
   flow_scroll_vertical( ctx, int(value), 0);
 }
 
