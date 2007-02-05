@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_gre_gtk.cpp,v 1.2 2007-02-05 09:31:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_dcli.h"
+#include "co_wow_gtk.h"
 #include "wb_ldh.h"
 #include "wb_foe_msg.h"
 #include "wb_vldh_msg.h"
@@ -142,12 +143,7 @@ void WGreGtk::get_popup_position( int *x, int *y)
 {
   gint wind_x, wind_y;
 
-  GtkWidget *parent = gtk_widget_get_parent( form_widget);
-  while( !GTK_IS_WINDOW(parent))
-    parent = gtk_widget_get_parent( parent);
-  if ( parent) {
-    gtk_window_get_position( GTK_WINDOW(parent), &wind_x, &wind_y);
-    *x += wind_x;
-    *y += wind_y + 40;
-  }    
+  CoWowGtk::PopupPosition( form_widget, *x, *y, &wind_x, &wind_y);
+  *x = wind_x;
+  *y = wind_y;
 }
