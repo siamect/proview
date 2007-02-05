@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.48 2007-01-17 06:20:38 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.49 2007-02-05 09:40:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -12362,7 +12362,7 @@ int GeAnalogText::export_java( grow_tObject object, ofstream& fp, bool first, ch
   b_mask = 1;
   for ( int i = 0; i < 32; i++) {
     if ( b_mask & button_mask)
-      fp << items_enum[i];
+      fp << (int) items_enum[i];
     else
       fp << "0";
     if ( i != 31)
