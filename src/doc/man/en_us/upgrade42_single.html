@@ -1,589 +1,190 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Release Notes V4.2.0</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id3375566"></a>Release Notes V4.2.0</h1></div><div><h2 class="subtitle"></h2></div><div><div class="authorgroup">
-      <div class="author"><h3 class="author"><span class="firstname">Claes</span> <span class="surname">Sjöfors</span></h3><div class="affiliation">
-	  <span class="orgname">SSAB Oxelösund AB<br></span>
-	</div><code class="email">&lt;<a href="mailto:postmaster@proview.se">postmaster@proview.se</a>&gt;</code></div>
-    </div></div><div><p class="copyright">Copyright © 2006 SSAB Oxelösund AB</p></div><div><div class="legalnotice"><a name="id3375966"></a>
-      <p>Permission is granted to copy, distribute and/or modify this document 
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>???TITLE???</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><font color="red">&lt;book&gt;
+
+  <font color="red">&lt;info&gt;
+    <font color="red">&lt;title&gt;Release Notes V4.3.0&lt;/title&gt;</font>
+    
+    <font color="red">&lt;subtitle&gt;&lt;/subtitle&gt;</font>
+    <font color="red">&lt;authorgroup&gt;
+      <font color="red">&lt;author&gt;
+	<font color="red">&lt;personname&gt;<font color="red">&lt;firstname&gt;Claes&lt;/firstname&gt;</font>
+	<font color="red">&lt;surname&gt;Sjöfors&lt;/surname&gt;</font>&lt;/personname&gt;</font>
+	<font color="red">&lt;affiliation&gt;
+	  <font color="red">&lt;orgname&gt;SSAB Oxelösund AB&lt;/orgname&gt;</font>
+	&lt;/affiliation&gt;</font>
+	<font color="red">&lt;email&gt;postmaster@proview.se&lt;/email&gt;</font>
+      &lt;/author&gt;</font>
+    &lt;/authorgroup&gt;</font>
+    <font color="red">&lt;revhistory&gt;
+      <font color="red">&lt;revision&gt;
+	<font color="red">&lt;revnumber&gt;0.1&lt;/revnumber&gt;</font>
+	<font color="red">&lt;date&gt;2006-04-01&lt;/date&gt;</font>
+	<font color="red">&lt;authorinitials&gt;cs&lt;/authorinitials&gt;</font>
+	<font color="red">&lt;revremark&gt;v0.1&lt;/revremark&gt;</font>
+      &lt;/revision&gt;</font>
+    &lt;/revhistory&gt;</font>
+    <font color="red">&lt;edition&gt;v0.1&lt;/edition&gt;</font>
+    <font color="red">&lt;copyright&gt;<font color="red">&lt;year&gt;2007&lt;/year&gt;</font><font color="red">&lt;holder&gt;SSAB Oxelösund AB&lt;/holder&gt;</font>&lt;/copyright&gt;</font>
+    <font color="red">&lt;date&gt;2007-01-21&lt;/date&gt;</font>
+    <font color="red">&lt;legalnotice&gt;
+      <font color="red">&lt;para&gt;Permission is granted to copy, distribute and/or modify this document 
       under the terms of the GNU Free Documentation License, Version 1.2
       or any later version published by the Free Software Foundation;
-      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.</p>
-    </div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revision History</b></th></tr>
-      <tr><td align="left">Revision 0.1</td><td align="left">2006-04-01</td><td align="left">cs</td></tr><tr><td align="left" colspan="3">v0.1</td></tr>
-    </table></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="#upgradev42_chaintro">1. Introduction</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_intro">1.1. Upgrading to Proview 4.2.0</a></span></dt></dl></dd><dt><span class="chapter"><a href="#upgradev42_chanewfunc">2. New functions</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_profibus">2.1. Profibus configurator</a></span></dt><dt><span class="section"><a href="#upgradev42_buildmeth">2.2. Build methods</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Build methods for objects</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Build methods for volumes</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Build methods for nodes</a></span></dt></dl></dd><dt><span class="section"><a href="#upgradev42_remrack">2.3. PSS9000 Remote rack</a></span></dt><dt><span class="section"><a href="#upgradev42_ld_node">2.4. ld_node_xxx.dat</a></span></dt><dt><span class="section"><a href="#upgradev42_sub">2.5. Buffering of subscriptions removed</a></span></dt><dt><span class="section"><a href="#upgradev42_wiz">2.6. Project configuration Wizard</a></span></dt><dt><span class="section"><a href="#upgradev42_cupdate">2.7. Update of classes</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objects for time handling</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Update Classes</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Modified types</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Modified classes</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. New classes</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#upgradev42_chascript">3. Upgrade procedure</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_upgr">3.1. Procedure for upgradeing</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Make a copy of the project</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></dd></dl></dd></dl></div>
-
-  
-
-  <div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chaintro"></a>Chapter 1. Introduction</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#upgradev42_intro">1.1. Upgrading to Proview 4.2.0</a></span></dt></dl></div>
-  
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_intro"></a>1.1. Upgrading to Proview 4.2.0</h2></div></div></div>
-  
-  <p>This document describes new functions i Proview V4.2.0, and how to upgrade a project
-  from V4.1.3 to V4.2.0.</p>
-  </div>
-  </div>
-
-  <div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chanewfunc"></a>Chapter 2. New functions</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#upgradev42_profibus">2.1. Profibus configurator</a></span></dt><dt><span class="section"><a href="#upgradev42_buildmeth">2.2. Build methods</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Build methods for objects</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Build methods for volumes</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Build methods for nodes</a></span></dt></dl></dd><dt><span class="section"><a href="#upgradev42_remrack">2.3. PSS9000 Remote rack</a></span></dt><dt><span class="section"><a href="#upgradev42_ld_node">2.4. ld_node_xxx.dat</a></span></dt><dt><span class="section"><a href="#upgradev42_sub">2.5. Buffering of subscriptions removed</a></span></dt><dt><span class="section"><a href="#upgradev42_wiz">2.6. Project configuration Wizard</a></span></dt><dt><span class="section"><a href="#upgradev42_cupdate">2.7. Update of classes</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objects for time handling</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Update Classes</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Modified types</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Modified classes</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. New classes</a></span></dt></dl></dd></dl></div>
-  
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_profibus"></a>2.1. Profibus configurator</h2></div></div></div>
-  
-  <p>The configuration of profibus is changed in V4.2.0, both the configuration procedure and
-  the objects used for the configuration.</p>
-
-  <p>You start by creating a master object in the node hierarchy, for Softing profiboard the class 
-  <span class="classname">Pb_Profiboard</span> is used. Under this the slaves of the profibus circuit are 
-  configured with
-  <span class="classname">Pb_DP_Slave</span> objects, or object that is a subclass of 
-  <span class="classname">Pb_DP_Slave</span>. If you use the
-  <span class="classname">Pb_DP_Slave</span> object you put the name of a gsd-file, byteordering and possible
-  floatrepresentation into the object. For some slaves, there are specific subclasses, for example
-  <span class="classname">Siemens_ET200S_IM151</span>, <span class="classname">Siemens_ET200M_IM153</span> 
-  and <span class="classname">ABB_ACS_Pb_Slave</span>. In this case, the gsd-file is already specified in
-  the object, and the file also comes with the proview release. </p>
-
-  <p>Next step is to open the profibus configuartor for each slave, by activating
-  <span class="guimenu">Configure Slave</span> in the popup menu for the slave.
-  The Profibus configurator reads the gsd-file and displayes data and configuration alternatives for
-  the slave. Under the map <code class="sgmltag-element">SlaveGsdData</code> information about the slave is displayed, and under
-  the map <code class="sgmltag-element">UserPrmData</code> configuration data for the slave is displayed.</p>
-
-  <p>
-  </p><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="450"><tr style="height: 540px"><td><img src="../upgrade42_pbconf.gif" width="450"></td></tr></table><p>
-  </p>
-
-  <p>The slave can keep a specific number of modues, and for each possible module
-  there is a module entry in the configurator. By opening a module entry you can specify
-  type, configuration data, objectname and object class for the module.
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_type"></a>Type</h4></div></div></div>
-  
-  <p>Under Type all possible types are displayed for the actual slave. Select the
-  desired type by clicking in the checkbox for the type.</p>
-  </div><p>
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_confdata"></a>Configuration data</h4></div></div></div>
-  
-  <p>Under UserPrmData the configuration alternatives of the selected module
-  are displayed.You can specifiy data and choose between different alternatives to
-  configure the module. See the datasheet for the module for more information about
-  the alternatives.
-  </p>
-  </div><p>
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_objname"></a>Objekt name</h4></div></div></div>
-  
-  <p>When configurinn, the Profibus configuration creates a module object under the 
-  slave object. In ObjectName you specify a name of the module object. The name should be
-  unic for the slave.
-  </p></div><p>
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_pb_mclass"></a>Modul class</h4></div></div></div>
-  
-  <p>Under ModuleClass the possible classes of the module object, that is created under
-  the slave object, are displayed. The class you choose is dependent on the layout of
-  the dataarea tranfered on the profibus circuit. There are a number of specific classes,
-  e.g.<span class="classname">Siemens_ET200S_Ai2, Siemens_ET200SDi2, ABB_ACS_PPO4.</span>
-  These contains a specified dataarea described by intern channel objects. If there is no
-  matching module class, you choose <span class="classname">Pb_Module</span> and specify
-  the layout of the datarea later, by creating channel objects under the module object.
-  </p>
-  </div><p>
-  Whan all the modules are configured, you click on apply, and the different module
-  objects are created. Now the PrmUserData configuration of the slave and the modules
-  is stored in the attribute PrmUserData in the slave object, together with some other data.</p>
-
-  <p>You also have to assign a Process and PlcThread for the the configuration objects, and
-  configure channel object under Pb_Module object if necessary.
-  </p>
-  </div>  
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_buildmeth"></a>2.2. Build methods</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_build_obj">2.2.1. Build methods for objects</a></span></dt><dt><span class="section"><a href="#upgradev42_build_vol">2.2.2. Build methods for volumes</a></span></dt><dt><span class="section"><a href="#upgradev42_build_node">2.2.3. Build methods for nodes</a></span></dt></dl></div>
-  
-  <p>Compiling PlcPgm, creation of loadfiles and bootfiles are now preformed by the
-  Build function. The build function consists of build methods for node, volumes and objects.
-  </p>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_obj"></a>2.2.1. Build methods for objects</h3></div></div></div>
-  
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_plc"></a>PlgPgm</h4></div></div></div>
-  
-  <p>The build method for a PlcPgm checks if the plc-kode is modified since the last
-  compilation. If it is changed, the program with all subwindows are  compiled.
-  </p></div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_xtt"></a>XttGraph</h4></div></div></div>
-  
-  <p>The build method for a XttGraph copies the .pwg file from $pwrp_pop to $pwrp_exe
-  if the file on $pwrp_pop is more recent than the file on $pwrp_exe. If the graph is
-  a java applet or java application, it is exported as java and compiled.
-  </p></div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_web"></a>WebHandler</h4></div></div></div>
-  
-  <p>The build method for a WebHandler object creates a home sita for a node (calls
-  Generate Web).
-  </p></div>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_vol"></a>2.2.2. Build methods for volumes</h3></div></div></div>
-  
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_rootvol"></a>Rootvolume</h4></div></div></div>
-  
-  <p>The build medhod of the rootvolume calls the build method of all PlcPgm,
-  XttGraph and WebHandler objects in the volume. If the volume is modified since the
-  last loadfile creation, new loadfiles are created. Also new crossreference files are
-  created if this is specified in Options.
-  </p></div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_build_classvol"></a>Classvolume</h4></div></div></div>
-  
-  <p>If the class volume is modified since the last creation of loadfiles for
-  the volume, new loadfiles and structfiles are created for the volume.
-  </p></div>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_build_node"></a>2.2.3. Build methods for nodes</h3></div></div></div>
-  
-  <p>The build method of a node calls the build method of the opened volume, and
-  thereafter creates a new bootfile for the node.
-  </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Note]" src="../note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">Only the volumes that are opened is built. If the node contatins several volumes
-  the other volumes must be built separatley, before the node is built.
-  </td></tr></table></div><p>
-  </p>
-  </div>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_remrack"></a>2.3. PSS9000 Remote rack</h2></div></div></div>
-  
-
-  <p>A Proview system can now fetch data from a PSS9000 rack via ethernet. The
-  rack is configured by a Ssab_RemoteRack object in the node hierarchy. Under the
-  rack the cards are configured in the ordinary way.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_ld_node"></a>2.4. ld_node_xxx.dat</h2></div></div></div>
-  
-
-  <p>ld_node file contains the nodes a node connects to via QCOM at proview startup.
-  The files is generated from data in NodeConfig and FriendNodeConfig objects in the 
-  project volume.</p>
-  <p>Until now, the ls_node file has been common for all nodes of a project in the 
-  same QCOM bus. Now each node has a separate ld_nod file. This makes it possible to
-  control individually which external nodes a node connects to. </p>
-  <p>As before, this is configured by FriendNodeConfig objects in the project volume.
-  These have been configured as siblings to the NodeConfig objects in a QCOM bus, and
-  results in all local nodes connecting to this external node.Now a FriendNodeConfig
-  object can also reside as a child to a NodeConfig object, implying that only this node
-  connects to the external node.  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_sub"></a>2.5. Buffering of subscriptions removed</h2></div></div></div>
-  
-
-  <p>The buffering of subscriptions, which could lead to catch up fenomena at bad
-  communicaion, is now removed.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_wiz"></a>2.6. Project configuration Wizard</h2></div></div></div>
-  
-
-  <p>The configuration of the project volume is now simplified by using a wizard
-  that is automaticaly started when an empty project volumes is opened. The wizard
-  feches the configured volumes of the project from the global volumelist, and creates
-  volume and node configuration objects for these.
-  </p>
-
-  <p>
-  </p><table border="0" summary="manufactured viewport for HTML img" cellspacing="0" cellpadding="0" width="450"><tr style="height: 540px"><td><img src="../upgrade42_pvconfig.gif" width="450"></td></tr></table><p>
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_cupdate"></a>2.7. Update of classes</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_otime">2.7.1. Objects for time handling</a></span></dt><dt><span class="section"><a href="#upgradev42_updatecls">2.7.2. Update Classes</a></span></dt><dt><span class="section"><a href="#upgradev42_ge">2.7.3. Ge</a></span></dt><dt><span class="section"><a href="#upgradev42_types">2.7.4. Modified types</a></span></dt><dt><span class="section"><a href="#upgradev42_changed_classes">2.7.5. Modified classes</a></span></dt><dt><span class="section"><a href="#upgradev42_new_classes">2.7.6. New classes</a></span></dt></dl></div>
-  
-  <p>If a class in a classvolyme was modified, you previously had to dump the database
-  to a textfile and the reload this, to update the instances of the modified class.
-  Now there is a function that updates instances without dump and reload.</p>
-
-  <p>Every database stores loadfiles for classvolymes locally in the database directory.
-  It is these local files, and not the global dbs-files in $pwr_load or $pwrp_load that is used 
-  when the workbench is opened. This makes you independent of changes in the global dbs-files.
-  When the workbench is started, the versions of local and global dbs-files are compared, and
-  if a new version in a global dbs-file is found, you get a warning message about this. The
-  command 'check classes' displayes which classes are modified, and if there are any instances
-  of the classes in the database. You should then activate Functions-&gt;Update Classes in the 
-  menu to update the instances and the local dbs-files.</p>
-
-  <p>For function object classes there are some restrictions. In some cases the connections
-  to the function object has to be reconnected. If an input or output is removed, the input or
-  output pin should not be visible in any instance, otherwise the connections should be redrawn.
-  Also if an input or output is moved, the connections should be redrawn.
-  </p>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_otime"></a>2.7.1. Objects for time handling</h3></div></div></div>
-  
-  <p>A number of new objects to handle times is added in V4.2.0. There are objects
-  to store, add, subtract times etc.
-
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="upgradev42_otime_sig"></a>Signals</h5></div></div></div>
-  
-  <p>The signal objects ATv (AboluteTimeValue) and DTv (DeltaTimeValue) store time
-  values in the shape of an absolute time (of type pwr_tTime) or a delta time (of type
-  pwr_tDeltaTime, i.e. a time intervall). </p>
-  <p>The objects are found under the signal map in the palette. IO-copying of the objects
-  is not performed.</p>
-  </div><p>
-  
-  </p><div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title"><a name="upgradev42_otime_plc"></a>Plc objects</h5></div></div></div>
-  
-  <p>Addition and subtraction of times is perfomed in the plc program by the objects
-   <span class="classname">AtAdd, DtAdd, AtSub, DtSub</span> and <span class="classname">AtDtSub</span>. </p>
-  <p>To fetch an ATv or DTv the objects <span class="classname">GetATv</span> and
-  <span class="classname">GetDTv</span> is used. To fetch an attribute of type pwr_tTime or pwr_tDeltaTime
-  in an object, the objects <span class="classname">GetATp</span> and <span class="classname">GetDTp</span></p>
-  <p>To store a time value in an <span class="classname">ATv</span> or 
-  <span class="classname">DTv</span>, <span class="classname">StoATv</span> and 
-  <span class="classname">StoDTv</span>, or <span class="classname">CStoATv</span> and 
-  <span class="classname">CStoDTv</span> for conditional storeage. To store a time value in
-  an attrbiute of type pwr_tTime or pwr_tDeltaTime, the objects
-  <span class="classname">StoATp</span> and <span class="classname">StoDTp</span>, or 
-  <span class="classname">CStoATp</span> and <span class="classname">CStoDTp</span> for conditional storage.</p>
-  <p>To convert a deltatime to float DtToA is used, and vice vers AToDt.</p>
-  <p>All objects are found under the map Signals-&gt;Time in the palette of the plc editor.</p>
-  </div><p>
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_updatecls"></a>2.7.2. Update Classes</h3></div></div></div>
-  
-  <p>Previously, if you made a change in a class, you had to reload the database, i.e. dump
-  the database to a textfile, and then load the textfile into the database again. Now
-  there is a funcion that converts the objects in a database to the now class description
-  without a reload. When the workbench is started, any new version of a dbs-file for a
-  classvolume is detected. If a new version i found, an error message is displayed in 
-  the message window. You can then either continue with the old class description, or
-  update the objects to the new. The update is performed from
-  <span class="guimenu">Function-&gt;Update Classes</span> in the menu.
-  The objects that are influenced by the new class description can first be displayed
-  by the command
-  <code class="prompt">wtt&gt; </code><strong class="userinput"><code><span><strong class="command">check classes</strong></span></code></strong>
-  that lists the modified classes and the number of instances found for each class.
-  </p>
-  <p>Before executing a class update, be sure to have a backup of the database.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_ge"></a>2.7.3. Ge</h3></div></div></div>
-  
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_gefolder"></a>Object graph in Window and Folder</h4></div></div></div>
-  
-  <p>It is now possible to display an object graph in a window or folder object. 
-  The instance object of the object graph is inserted in the properties Window.Object and
-  Folderx.Object.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_getable"></a>Select color in Table</h4></div></div></div>
-  
-  <p>A property to modify the color of selected cells in tables is added to the Table object.
-  Set the desired color in Table.SelectColor.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_invbit"></a>Bit type in Invisible</h4></div></div></div>
-  
-  <p>Access is often stored as bits in a bitmask, and it is now possible to influence the
-  sensitivity and visibility for an object from a bit in a bitmask. The type for the attribute
-  is written ##Bit#32[7] which means a 32-bit bitmask, bit number 7 (the first bit is bit 0).
-  </p>
-  </div>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_types"></a>2.7.4. Modified types</h3></div></div></div>
-  
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_types_repenum"></a>pwrb:DataRepEnum</h4></div></div></div>
-  
-  <p>The values Int32 and UInt24 is added.</p>
-  </div>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_changed_classes"></a>2.7.5. Modified classes</h3></div></div></div>
-  
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_pb"></a>Profibus:Pb_Module</h4></div></div></div>
-  
-  <p>The attribute ModuleName is added.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_complimit"></a>BaseComponent:CompLimit</h4></div></div></div>
-  
-  <p>The attribute DisableAlarm is added, which makes it possible to use the
-  limitvalue supervision in a BaseSensor without alarm.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_compmodedm"></a>BaseComponent:CompModeDM, CompModeDMFo</h4></div></div></div>
-  
-  <p>Funktionality for local mode added.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_basemvalve"></a>BaseComponent:BaseMValveFo</h4></div></div></div>
-  
-  <p>Funktionality for local mode added.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_ch_volumes"></a>RootVolume, SubVolume, SharedVolume</h4></div></div></div>
-  
-  <p>The attribute Modified is added, where the time of the latest save is stored.</p>
-  </div>
-
-  </div>
-
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_new_classes"></a>2.7.6. New classes</h3></div></div></div>
-  
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_comppid"></a>CompPID, CompPID_Fo</h4></div></div></div>
-  <p>The Pid controller divided into a main object and a function object. The controller 
-  can be a component of another object.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_compmode"></a>CompModePID, CompModePID_Fo</h4></div></div></div>
-  <p>The mode object to the PID controller.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getdatap"></a>GetDatap</h4></div></div></div>
-  <p>Plc object to fetch the reference to a data object, e.g. a data output in a DataArithm.
-  Can also be used to attach data inputs in function objects with template plc code.
-  </p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atv"></a>pwrb:ATv</h4></div></div></div>
-  <p>Absolute Time Value, storage of an absolut time, pwr_tTime.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtv"></a>pwrb:DTv</h4></div></div></div>
-  <p>Delta Time Value, storage of a delta time, pwr_tDeltaTime.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atadd"></a>pwrb:AtAdd</h4></div></div></div>
-  <p>Addition of an absolute time and a delta time.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtadd"></a>pwrb:DtAdd</h4></div></div></div>
-  <p>Addition of two deltatimes.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atsub"></a>pwrb:AtSub</h4></div></div></div>
-  <p>Subtract an absolute time from an absolute time.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dtsub"></a>pwrb:DtSub</h4></div></div></div>
-  <p>Subtract a delta time from a delta time.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_atdtsub"></a>pwrb:AtDtSub</h4></div></div></div>
-  <p>Subtract a delta time from an absolute time.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_ateq"></a>pwrb:AtEqual, pwrb:AtGreaterThan, pwrb:AtLessThan</h4></div></div></div>
-  <p>Comparition two abolute times.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dteq"></a>pwrb:DtEqual, pwrb:DtGreaterThan, pwrb:DtLessThan</h4></div></div></div>
-  <p>Comparition of two delta times.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_currenttime"></a>pwrb:CurrentTime</h4></div></div></div>
-  <p>Fetches the system time.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_dttoa"></a>pwrb:DtToA, pwrb:AToDt</h4></div></div></div>
-  <p>Konverterar från detatid till flyttal och vice versa.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getatv"></a>pwrb:GetATv</h4></div></div></div>
-  <p>Fetches the value of an ATv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_getdtv"></a>pwrb:GetDTv</h4></div></div></div>
-  <p>Fetches the value of a DTv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stoatv"></a>pwrb:StoATv</h4></div></div></div>
-  <p>Stores a value into an ATv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstoatv"></a>pwrb:CStoATv</h4></div></div></div>
-  <p>Conditional storage of a value into an ATv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stodtv"></a>pwrb:StoDTv</h4></div></div></div>
-  <p>Stores a value into a DTv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstodtv"></a>pwrb:CStoDTv</h4></div></div></div>
-  <p>Conditional storage of a value into a DTv.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stoatp"></a>pwrb:StoATp</h4></div></div></div>
-  <p>Store a value into an absolute time attribute.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstoatp"></a>pwrb:CStoATp</h4></div></div></div>
-  <p>Conditional storage of a value into an absolute time attribute.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_stodtp"></a>pwrb:StoDTp</h4></div></div></div>
-  <p>Store a value into a delta time attribute.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_cstodtp"></a>pwrb:CStoDTv</h4></div></div></div>
-  <p>Conditional storage of a value into a delta time attribute.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_remoterack"></a>ssabox:Ssab_RemoteRack</h4></div></div></div>
-  <p>Configuration of a PSS9000 remote rack.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_acc"></a>ABB_ACC800, ABB_ACC800Fo, ABB_ACC800Sim</h4></div></div></div>
-  <p>Control of a motor aggregate using the crane macro in ASC800.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_accppo5"></a>ABB_ACC_PPO5</h4></div></div></div>
-  <p>Profibus module to ABB_ACC800.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_acsslave"></a>ABB_ACS_Pb_Slave</h4></div></div></div>
-  <p>Profibus slave to ABB_ACS800.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_abbpbbase"></a>ABB_Sensor_Pb_PA, ABB_Sensor_Pb_PA_Fo</h4></div></div></div>
-  <p>Baseclass for  ABB Profibus PA sensor.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_abbpb"></a>ABB_TempSensor_TF12, ABB_DiffPressure_265G, ABB_FlowSensor_FXE4000</h4></div></div></div>
-  <p>Some ABB Profibus PA sensors.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200"></a>Siemens_ET200S_IM151, Siemens_ET200M_IM153</h4></div></div></div>
-  <p>Profibus slave objects for ET200S IM151 and ET200M IM153</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mdi"></a>Siemens_ET200M_Di32, Siemens_ET200M_Di16, Siemens_ET200S_Di8</h4></div></div></div>
-  <p>Profibus module objects for ET200M digital input modules</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mdo"></a>Siemens_ET200M_Do32, Siemens_ET200M_Do16, Siemens_ET200S_Do8</h4></div></div></div>
-  <p>Profibus module objects for ET200M digital outout modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mai"></a>Siemens_ET200M_Ai8, Siemens_ET200M_Ai4, Siemens_ET200S_Ai2</h4></div></div></div>
-  <p>Profibus module objects for ET200M analoga input modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200mao"></a>Siemens_ET200M_Ao8, Siemens_ET200M_Ao4, Siemens_ET200S_Ao2</h4></div></div></div>
-  <p>Profibus module objects for ET200M analog output modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sdi"></a>Siemens_ET200S_Di4, Siemens_ET200S_Di2</h4></div></div></div>
-  <p>Profibus module objects for ET200S digital input modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sdo"></a>Siemens_ET200S_Do4, Siemens_ET200S_Do2</h4></div></div></div>
-  <p>Profibus module objects for ET200S digital output modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sai"></a>Siemens_ET200S_Ai2</h4></div></div></div>
-  <p>Profibus module objects for ET200S analog input modules.</p>
-  </div>
-
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_new_et200sao"></a>Siemens_ET200S_Ao2</h4></div></div></div>
-  <p>Profibus module objects for ET200S analog output modules.</p>
-  </div>
-
-  </div>
-  </div>
-  </div>
-
-  <div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="upgradev42_chascript"></a>Chapter 3. Upgrade procedure</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="#upgradev42_upgr">3.1. Procedure for upgradeing</a></span></dt><dd><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Make a copy of the project</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></dd></dl></div>
-  <div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="upgradev42_upgr"></a>3.1. Procedure for upgradeing</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#upgradev42_copyproj">3.1.1. Make a copy of the project</a></span></dt><dt><span class="section"><a href="#upgradev42_up_">3.1.2. upgrade.sh</a></span></dt></dl></div>
-  <p>The upgrading has to be done from V4.1.3. If the project as a lower version, the 
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.&lt;/para&gt;</font>
+    &lt;/legalnotice&gt;</font>
+    <font color="red">&lt;mediaobject&gt;
+      <font color="red">&lt;imageobject&gt;
+	<font color="red">&lt;imagedata&gt;&lt;/imagedata&gt;</font>
+      &lt;/imageobject&gt;</font>
+      <font color="red">&lt;imageobject&gt;
+	<font color="red">&lt;imagedata&gt;&lt;/imagedata&gt;</font>
+      &lt;/imageobject&gt;</font> 
+    &lt;/mediaobject&gt;</font>
+  &lt;/info&gt;</font>
+
+  <font color="red">&lt;chapter&gt;
+  <font color="red">&lt;title&gt;Introduction&lt;/title&gt;</font>
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Upgrading to Proview 4.3.0&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;This document describes new functions i Proview V4.3.0, and how to upgrade a project
+  from V4.2.0 to V4.3.0.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+  &lt;/chapter&gt;</font>
+
+  <font color="red">&lt;chapter&gt;
+  <font color="red">&lt;title&gt;New functions&lt;/title&gt;</font>
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Graphical user interface&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;The graphical user interface is change to GTK (The GIMP Toolkit), on which the Gnome desctop
+  is built. The interface is totaly rewritten and now have a more modern look and layout. The previous
+  interface, Motif, is still available in the source code, but not included in the released packages. &lt;/para&gt;</font>
+    
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Configurator&lt;/title&gt;</font> 
+  <font color="red">&lt;para&gt;The Configurator now has a toolbar with buttons for save, enter editmode, zoom etc. 
+  &lt;/para&gt;</font>&lt;/section&gt;</font>
+  &lt;/section&gt;</font>
+
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Installation&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;
+  The dependency of Motif and Imlib is removed in the released packages, which strongly simpifies the
+  installation procedure.
+  &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Database locked dialog&lt;/title&gt;</font>
+
+  <font color="red">&lt;para&gt;If the database is locked, a dialog window is viewed where the user can choose whether to
+  exit, enter the loadfile, or remove the lock and enter the database.
+  &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+
+
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Profibus driver for Softing Profiboard&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;...
+  &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Property EscapeStore for dynamic type ValueInput&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Dynamic type ValueInput has a new property, EscapeStore. Normally the input value is stored
+  when 'Return' is pressed. However, when EscapeStore is set, the value is stored when the input field
+  looses input focus, or when 'Return' is pressed.
+  &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+
+
+  <font color="red">&lt;section&gt;
+  <font color="red">&lt;title&gt;Changed classes&lt;/title&gt;</font>
+
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;CStoNumSp&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;The Object attribute type is changed from pwr_tObjid to pwr_tAttrRef, and the
+  Parameter attributes is removed.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+
+  &lt;/section&gt;</font>
+  &lt;/chapter&gt;</font>
+
+  <font color="red">&lt;chapter&gt;<font color="red">&lt;title&gt;Upgrade procedure&lt;/title&gt;</font>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;Procedure for upgradeing&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;The upgrading has to be done from V4.2.0. If the project as a lower version, the 
   upgrade has to be performed stepwise following the scheme 
-  <span class="classname">V2.1 -&gt; V2.7b -&gt; V3.0 -&gt; V3.3 -&gt; V3.4b -&gt; V4.0.0 -&gt; V4.1.3 -&gt; V4.2.0</span></p>
+  <font color="red">&lt;classname&gt;V2.1 -&gt; V2.7b -&gt; V3.0 -&gt; V3.3 -&gt; V3.4b -&gt; V4.0.0 -&gt; V4.1.3 -&gt; V4.2.0 -&gt; V4.3.0&lt;/classname&gt;</font>&lt;/para&gt;</font>
 
-  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Note]" src="../note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">Upgradeing a Debian project from V4.1.3 requires that a new debian release is 
-  installed.
-  Dump the project with the reload.sh script before installing the new debian release,
-  and while the project is still pointing at V4.1.3. Execute only the dumpdb pass.
-  Install the new debian release, and when executing the upgrade.sh script, skip the dumpdb
-  pass. </td></tr></table></div>
+  <font color="red">&lt;para&gt;The upgrading is made in two steps:
+  <font color="red">&lt;itemizedlist&gt;
+  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Make a copy of the project&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Execute upgrade.sh&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+  &lt;/itemizedlist&gt;</font>
+  &lt;/para&gt;</font>
 
-  <p>The upgrading is made in two steps:
-  </p><div class="itemizedlist"><ul type="disc"><li><p>Make a copy of the project</p></li><li><p>Execute upgrade.sh</p></li></ul></div><p>
-  </p>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;Make a copy of the project&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Do <font color="red">&lt;tag&gt;sdf&lt;/tag&gt;</font> to the project and start the administrator.&lt;/para&gt;</font>
+  <font color="red">&lt;prompt&gt;&gt; &lt;/prompt&gt;</font><font color="red">&lt;userinput&gt;<font color="red">&lt;command&gt;pwra&lt;/command&gt;</font>&lt;/userinput&gt;</font>
 
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_copyproj"></a>3.1.1. Make a copy of the project</h3></div></div></div>
-  <p>Do <code class="sgmltag-element">sdf</code> to the project and start the administrator.</p>
-  <code class="prompt">&gt; </code><strong class="userinput"><code><span><strong class="command">pwra</strong></span></code></strong>
-
-  <p>Now the Projectlist is opened. Enter edit mode, login as administrator if you lack access.
-  Find the current project, and select <code class="sgmltag-element">Copy Project</code> from the popup menu of the
+  <font color="red">&lt;para&gt;Now the Projectlist is opened. Enter edit mode, login as administrator if you lack access.
+  Find the current project, and select <font color="red">&lt;tag&gt;Copy Project&lt;/tag&gt;</font> from the popup menu of the
   ProjectReg object. Open the copy and assign a suitable projectname and path. Change the
-  vertion to V4.2.0. Save and close the administrator.
-  </p>
-  <p>Do sdf to the project.</p>  
+  vertion to V4.3.0. Save and close the administrator.
+  &lt;/para&gt;</font>
+  <font color="red">&lt;para&gt;Do sdf to the project.&lt;/para&gt;</font>  
 
-  </div>
+  &lt;/section&gt;</font>
 
-  <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="upgradev42_up_"></a>3.1.2. upgrade.sh</h3></div></div></div>
-  <p>upgrade.sh is a script that is divided into a number of passes. After each pass you
-  you have to answere whether to continue with the next pass or not.</p>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;upgrade.sh&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;upgrade.sh is a script that is divided into a number of passes. After each pass you
+  you have to answere whether to continue with the next pass or not.&lt;/para&gt;</font>
 
-  <p>Start the script with </p>
-  <code class="prompt">&gt; </code><strong class="userinput"><code><code class="filename">upgrade.sh</code></code></strong>
-  <p>and go through all the passes.</p>  
+  <font color="red">&lt;para&gt;Start the script with &lt;/para&gt;</font>
+  <font color="red">&lt;prompt&gt;&gt; &lt;/prompt&gt;</font><font color="red">&lt;userinput&gt;<font color="red">&lt;filename&gt;upgrade.sh&lt;/filename&gt;</font>&lt;/userinput&gt;</font>
+  <font color="red">&lt;para&gt;and go through all the passes.&lt;/para&gt;</font>  
 
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_dumpdb"></a>dumpdb</h4></div></div></div>
-  <p>Creates a dump file for each volume in the project. The name of the dumpfile is
-  <code class="filename">$pwrp_db/'volumename'.wb_dmp</code>
-  </p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;dumpdb&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Creates a dump file for each volume in the project. The name of the dumpfile is
+  <font color="red">&lt;filename&gt;$pwrp_db/'volumename'.wb_dmp&lt;/filename&gt;</font>
+  &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
 
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_classvolumes"></a>classvolumes</h4></div></div></div>
-  <p>Create loadfiles and structfiles for the class volumes.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;classvolumes&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Create loadfiles and structfiles for the class volumes.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_renamedb"></a>renamedb</h4></div></div></div>
-  <p>Store the old databases under the name  <code class="filename">$pwrp_db/'volumename'.db.1</code>.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;renamedb&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Store the old databases under the name  <font color="red">&lt;filename&gt;$pwrp_db/'volumename'.db.1&lt;/filename&gt;</font>.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_dirvolume"></a>dirvolume</h4></div></div></div>
-  <p>Create a directory database and load the dumpfile for the project volume into the database.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;dirvolume&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Create a directory database and load the dumpfile for the project volume into the database.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_loaddb"></a>loaddb</h4></div></div></div>
-  <p>Create databases and load the dumpfiles into them.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;loaddb&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Create databases and load the dumpfiles into them.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
 
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_compile"></a>compile</h4></div></div></div>
-  <p>Compile all the plc programs.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;compile&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Compile all the plc programs.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_createload"></a>createload</h4></div></div></div>
-  <p>Create loadfiles for the root volumes.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;createload&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Create loadfiles for the root volumes.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="upgradev42_up_createboot"></a>createboot</h4></div></div></div>
-  <p>Create bootfiles for all nodes in the project.</p>
-  </div>
+  <font color="red">&lt;section&gt;<font color="red">&lt;title&gt;createboot&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Create bootfiles for all nodes in the project.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
   
-  <p>If the project contains any application programs, these has to be built manually.</p>
+  <font color="red">&lt;para&gt;If the project contains any application programs, these has to be built manually.&lt;/para&gt;</font>
 
-  <p>Delete files from the upgrading procedure:</p>
-  <p><code class="filename">$pwrp_db/*.wb_dmp.*</code></p>
-  <p><code class="filename">$pwrp_db/*.db.1</code> (V4.1 databases, directories which content also is removed)</p>
+  <font color="red">&lt;para&gt;Delete files from the upgrading procedure:&lt;/para&gt;</font>
+  <font color="red">&lt;para&gt;<font color="red">&lt;filename&gt;$pwrp_db/*.wb_dmp.*&lt;/filename&gt;</font>&lt;/para&gt;</font>
+  <font color="red">&lt;para&gt;<font color="red">&lt;filename&gt;$pwrp_db/*.db.1&lt;/filename&gt;</font> (V4.2 databases, directories which content also is removed)&lt;/para&gt;</font>
   
   
-  </div>
+  &lt;/section&gt;</font>
 
-  </div>
-  </div>
-</div></body></html>
+  &lt;/section&gt;</font>
+  &lt;/chapter&gt;</font>
+&lt;/book&gt;</font></body></html>

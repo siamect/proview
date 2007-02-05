@@ -1,125 +1,159 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>Att skriva dokumentation i DocBook för Proview</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.70.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="sv"><div class="titlepage"><div><div><h1 class="title"><a name="id3374960"></a>Att skriva dokumentation i DocBook för <span class="application">Proview</span></h1></div><div><h2 class="subtitle">Kort introduktion</h2></div><div><div class="authorgroup">
-      <div class="author"><h3 class="author"><span class="firstname">Jonas</span> <span class="surname">Haulin</span></h3><div class="affiliation">
-	  <span class="orgname">SSAB Oxelösund<br></span>
-	</div><code class="email">&lt;<a href="mailto:info@proview.se">info@proview.se</a>&gt;</code></div>
-    </div></div><div><p class="copyright">Copyright © 2006 SSAB Oxelösund AB</p></div><div><div class="legalnotice"><a name="id3375349"></a>
-      <p>Permission is granted to copy, distribute and/or modify this document 
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>???TITLE???</title><link rel="stylesheet" href="pwrdoc.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><font color="red">&lt;book&gt;
+  <font color="red">&lt;info&gt;
+    <font color="red">&lt;title&gt;Att skriva dokumentation i DocBook för <font color="red">&lt;application&gt;Proview&lt;/application&gt;</font>&lt;/title&gt;</font>
+    
+    <font color="red">&lt;subtitle&gt;Kort introduktion&lt;/subtitle&gt;</font>
+    <font color="red">&lt;authorgroup&gt;
+      <font color="red">&lt;author&gt;
+	<font color="red">&lt;personname&gt;<font color="red">&lt;firstname&gt;Jonas&lt;/firstname&gt;</font>
+	<font color="red">&lt;surname&gt;Haulin&lt;/surname&gt;</font>&lt;/personname&gt;</font>
+	<font color="red">&lt;affiliation&gt;
+	  <font color="red">&lt;orgname&gt;SSAB Oxelösund&lt;/orgname&gt;</font>
+	&lt;/affiliation&gt;</font>
+	<font color="red">&lt;email&gt;info@proview.se&lt;/email&gt;</font>
+      &lt;/author&gt;</font>
+    &lt;/authorgroup&gt;</font>
+    <font color="red">&lt;revhistory&gt;
+      <font color="red">&lt;revision&gt;
+	<font color="red">&lt;revnumber&gt;0.1&lt;/revnumber&gt;</font>
+	<font color="red">&lt;date&gt;2006-04-01&lt;/date&gt;</font>
+	<font color="red">&lt;authorinitials&gt;jh&lt;/authorinitials&gt;</font>
+	<font color="red">&lt;revremark&gt;v0.1 för Proview v4.2 skapad&lt;/revremark&gt;</font>
+      &lt;/revision&gt;</font>
+    &lt;/revhistory&gt;</font>
+    <font color="red">&lt;edition&gt;v0.1 för Proview v4.2&lt;/edition&gt;</font>
+    <font color="red">&lt;copyright&gt;<font color="red">&lt;year&gt;2006&lt;/year&gt;</font><font color="red">&lt;holder&gt;SSAB Oxelösund AB&lt;/holder&gt;</font>&lt;/copyright&gt;</font>
+    <font color="red">&lt;date&gt;2006-04-01&lt;/date&gt;</font>
+    <font color="red">&lt;legalnotice&gt;
+      <font color="red">&lt;para&gt;Permission is granted to copy, distribute and/or modify this document 
       under the terms of the GNU Free Documentation License, Version 1.2
       or any later version published by the Free Software Foundation;
-      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.</p>
-    </div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="3"><b>Revisionshistorik</b></th></tr>
-      <tr><td align="left">Revision 0.1</td><td align="left">2006-04-01</td><td align="left">jh</td></tr><tr><td align="left" colspan="3">v0.1 för Proview v4.2 skapad</td></tr>
-    </table></div></div></div><hr></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="chapter"><a href="#dbpwr_intro">1. Introduktion</a></span></dt><dd><dl><dt><span class="section"><a href="#id3375425">1.1. Om DocBook</a></span></dt><dt><span class="section"><a href="#id3375263">1.2. Hello world</a></span></dt></dl></dd><dt><span class="chapter"><a href="#dbpwr_editering">2. Editeringsverktyg</a></span></dt><dd><dl><dt><span class="section"><a href="#dpbwr_emacsnxml">2.1. Emacs + nXML</a></span></dt><dt><span class="section"><a href="#dbpwr_alternativ">2.2. Andra alternativ</a></span></dt></dl></dd><dt><span class="chapter"><a href="#dbpwr_exempel">3. Ett exempeldokument</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_prolog">3.1. Dokumentprolog</a></span></dt><dt><span class="section"><a href="#dbpwr_uppm">3.2. Uppmärkning</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_dsuppm">3.2.1. Dokumentstruktur</a></span></dt><dt><span class="section"><a href="#dbpwr_liuppm">3.2.2. Listor etc.</a></span></dt><dt><span class="section"><a href="#dbpwr_komuppm">3.2.3. Kommandon, filnamn...</a></span></dt><dt><span class="section"><a href="#dbpwr_pwruppm">3.2.4. Proview-uppmärkning</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="#dbpwr_utdata">4. Generering av utdata</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_byggut">4.1. Bygga DocBook-dokumentation</a></span></dt><dt><span class="section"><a href="#dbpwr_komponenter">4.2. Byggkomponenter</a></span></dt><dt><span class="section"><a href="#dbpwr_instlager">4.3. Inställningslager</a></span></dt><dt><span class="section"><a href="#dbpwr_anpassningut">4.4. Anpassning av utfiler</a></span></dt></dl></dd><dt><span class="chapter"><a href="#dbpwr_omdocbook">5. Mer om DocBook</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_bakgrund">5.1. Bakgrund</a></span></dt><dt><span class="section"><a href="#dbpwr_verktyg">5.2. Vilka verktyg behövs?</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_vkedja">5.2.1. DocBook:s verktygskedja</a></span></dt><dt><span class="section"><a href="#dbpwr_editorer">5.2.2. Editorer för DocBook</a></span></dt></dl></dd><dt><span class="section"><a href="#dbpwr_referenser">5.3. Referenser</a></span></dt></dl></dd></dl></div>
-  
+      with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.&lt;/para&gt;</font>
+    &lt;/legalnotice&gt;</font>
+    <font color="red">&lt;mediaobject&gt;
+      <font color="red">&lt;imageobject&gt;
+	<font color="red">&lt;imagedata&gt;&lt;/imagedata&gt;</font>
+      &lt;/imageobject&gt;</font>
+      <font color="red">&lt;imageobject&gt;
+	<font color="red">&lt;imagedata&gt;&lt;/imagedata&gt;</font>
+      &lt;/imageobject&gt;</font> 
+    &lt;/mediaobject&gt;</font>
+  &lt;/info&gt;</font>
 
-<div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="dbpwr_intro"></a>Kapitel 1. Introduktion</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#id3375425">1.1. Om DocBook</a></span></dt><dt><span class="section"><a href="#id3375263">1.2. Hello world</a></span></dt></dl></div>
+<font color="red">&lt;chapter&gt;
 
-     
-    <p>Det här dokumentet är en snabböversikt av dokumentationsstandarden Docbook, 
-    och hur den kan användas för dokumentation i <a href="http://www.proview.se" target="_top">Proview</a>.
+    <font color="red">&lt;title&gt;Introduktion&lt;/title&gt;</font> 
+    <font color="red">&lt;para&gt;Det här dokumentet är en snabböversikt av dokumentationsstandarden Docbook, 
+    och hur den kan användas för dokumentation i <font color="red">&lt;link&gt;Proview&lt;/link&gt;</font>.
     Texten i dokumentet är för närvarande minimalt uppmärkt/taggad. 
-    För ett mer uppmärkt dokument, se <a href="../en_us/pwrgsg_index.html" target="_top">Proview Getting Started Guide</a>.
-    </p>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id3375425"></a>1.1. Om DocBook</h2></div></div></div>
-      
-      <p>DocBook är en XML-dialekt för teknisk dokumentation.
+    För ett mer uppmärkt dokument, se <font color="red">&lt;link&gt;Proview Getting Started Guide&lt;/link&gt;</font>.
+    &lt;/para&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Om DocBook&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;DocBook är en XML-dialekt för teknisk dokumentation.
       Den används i många stora mjukvaruprojekt, både kommersiella och open source. 
       Från ett källdokument skrivet i DocBook/XML kan utdata i en mängd format genereras, 
       exempelvis html, pdf, ps, man-sidor. 
       Med xml-taggarna anges dokumentets struktur och innehåll, däremot inte dess formatering 
       - detta beror istället av vilken utdata som skapas.
-      </p>
-      <p>Mer om DocBook i <a href="#dbpwr_omdocbook" title="Kapitel 5. Mer om DocBook">Kapitel 5, <i>Mer om DocBook</i></a></p>
-    </div>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id3375263"></a>1.2. Hello world</h2></div></div></div>
-      
-<p>Ett minimalt DocBook-dokument kan se ut såhär:
-</p><pre class="programlisting">
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;Mer om DocBook i <font color="red">&lt;xref&gt;&lt;/xref&gt;</font>&lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Hello world&lt;/title&gt;</font>
+<font color="red">&lt;para&gt;Ett minimalt DocBook-dokument kan se ut såhär:
+<font color="red">&lt;programlisting&gt;
 &lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;article xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="sv"&gt;
   &lt;title&gt;Ett minimalt DocBook-dokument&lt;/title&gt;
   &lt;para&gt;kan se ut såhär.&lt;/para&gt;
 &lt;/article&gt;
 
-</pre><p>
-</p>
-<p>
-Spara filen ovan som exempelvis <code class="filename">minimalt.xml</code>.
+&lt;/programlisting&gt;</font>
+&lt;/para&gt;</font>
+<font color="red">&lt;para&gt;
+Spara filen ovan som exempelvis <font color="red">&lt;filename&gt;minimalt.xml&lt;/filename&gt;</font>.
   Följande kommando skapar en html-fil.
-  </p><pre class="screen">
-<code class="prompt">bash$</code> <span><strong class="command">xsltproc</strong></span> <code class="option">-o</code> <code class="filename">minimalt.html</code> <code class="filename">/usr/local/share/xml/docbook/stylesheet/snapshot/html/docbook.xsl</code> <code class="filename">minimalt.xml</code>
-</pre><p>
-</p>
-<p>För att skapa en pdf behövs två kommandon.
-</p><pre class="screen">
-<code class="prompt">bash$</code> <span><strong class="command">xsltproc</strong></span> <code class="option">-o</code> <code class="filename">minimalt.fo</code> <code class="filename">/usr/local/share/xml/docbook/stylesheet/snapshot/fo/docbook.xsl</code> <code class="filename">minimalt.xml</code>
-<code class="prompt">bash$</code> <span><strong class="command">fop</strong></span> <code class="filename">minimalt.fo</code> <code class="option">-pdf</code> <code class="filename">minimalt.pdf</code>
-</pre><p>
-</p>
-</div>
-</div>
-<div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="dbpwr_editering"></a>Kapitel 2. Editeringsverktyg</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#dpbwr_emacsnxml">2.1. Emacs + nXML</a></span></dt><dt><span class="section"><a href="#dbpwr_alternativ">2.2. Andra alternativ</a></span></dt></dl></div>
-  
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dpbwr_emacsnxml"></a>2.1. Emacs + nXML</h2></div></div></div>
-      
-      <p>
+  <font color="red">&lt;screen&gt;
+<font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;command&gt;xsltproc&lt;/command&gt;</font> <font color="red">&lt;option&gt;-o&lt;/option&gt;</font> <font color="red">&lt;filename&gt;minimalt.html&lt;/filename&gt;</font> <font color="red">&lt;filename&gt;/usr/local/share/xml/docbook/stylesheet/snapshot/html/docbook.xsl&lt;/filename&gt;</font> <font color="red">&lt;filename&gt;minimalt.xml&lt;/filename&gt;</font>
+&lt;/screen&gt;</font>
+&lt;/para&gt;</font>
+<font color="red">&lt;para&gt;För att skapa en pdf behövs två kommandon.
+<font color="red">&lt;screen&gt;
+<font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;command&gt;xsltproc&lt;/command&gt;</font> <font color="red">&lt;option&gt;-o&lt;/option&gt;</font> <font color="red">&lt;filename&gt;minimalt.fo&lt;/filename&gt;</font> <font color="red">&lt;filename&gt;/usr/local/share/xml/docbook/stylesheet/snapshot/fo/docbook.xsl&lt;/filename&gt;</font> <font color="red">&lt;filename&gt;minimalt.xml&lt;/filename&gt;</font>
+<font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;command&gt;fop&lt;/command&gt;</font> <font color="red">&lt;filename&gt;minimalt.fo&lt;/filename&gt;</font> <font color="red">&lt;option&gt;-pdf&lt;/option&gt;</font> <font color="red">&lt;filename&gt;minimalt.pdf&lt;/filename&gt;</font>
+&lt;/screen&gt;</font>
+&lt;/para&gt;</font>
+&lt;/section&gt;</font>
+&lt;/chapter&gt;</font>
+<font color="red">&lt;chapter&gt;
+  <font color="red">&lt;title&gt;Editeringsverktyg&lt;/title&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Emacs + nXML&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;
 	I princip kan vilken texteditor som helst användas för att skriva xml. 
 	En syntaxmedveten editor underlättar dock avsevärt.
-	<span class="application">Emacs 21.3</span> och uppåt med nXML-läge fungerar mycket bra (finns på pwr42). 
+	<font color="red">&lt;application&gt;Emacs 21.3&lt;/application&gt;</font> och uppåt med nXML-läge fungerar mycket bra (finns på pwr42). 
 	De viktigaste funktionerna är:
-	</p><div class="itemizedlist"><ul type="disc"><li><p>Autokomplettering av taggar (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">RET</strong></span>): 
-	  man skriver de första bokstäverna och autokompletterar sedan.</p></li><li><p>Insättning av sluttag 1 
-	  (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">c</strong></span> <span><strong class="keycap">C</strong></span>-<span><strong class="keycap">i</strong></span>): 
-	  sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.</p></li><li><p>Insättning av sluttag 2 
-	  (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">c</strong></span> <span><strong class="keycap">C</strong></span>-<span><strong class="keycap">b</strong></span>): 
-	  sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.</p></li><li><p>Insättning av sluttag 3 (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">f</strong></span>): 
-	  Avslutar närmaste öppna tag uppåt i trädet.</p></li><li><p>Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.</p></li></ul></div><p>
-      </p>
-      <p>
-	För att ladda nXML-läget, och för att <span class="application"> Emacs</span> ska bete sig acceptabelt i övrigt (scroll-hjul, fonter etc), 
-	behöver man göra en del inställningar i någon eller några av filerna <code class="filename">.emacs</code>, 
-	<code class="filename">.gnu-emacs</code> och <code class="filename">.gnu-emacs-custom</code> i sin hemkatalog. 
-	Exempel på hur detta kan göras finns i <code class="filename">/home/jonas_h</code>. 
-	nXML fungerar inte med <span class="application">XEmacs</span>. 
-      </p>
-      <p>
+	<font color="red">&lt;itemizedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Autokomplettering av taggar (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;RET&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	  man skriver de första bokstäverna och autokompletterar sedan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 1 
+	  (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;c&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font> <font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;i&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	  sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 2 
+	  (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;c&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font> <font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;b&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	  sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 3 (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;f&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	  Avslutar närmaste öppna tag uppåt i trädet.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	&lt;/itemizedlist&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	För att ladda nXML-läget, och för att <font color="red">&lt;application&gt; Emacs&lt;/application&gt;</font> ska bete sig acceptabelt i övrigt (scroll-hjul, fonter etc), 
+	behöver man göra en del inställningar i någon eller några av filerna <font color="red">&lt;filename&gt;.emacs&lt;/filename&gt;</font>, 
+	<font color="red">&lt;filename&gt;.gnu-emacs&lt;/filename&gt;</font> och <font color="red">&lt;filename&gt;.gnu-emacs-custom&lt;/filename&gt;</font> i sin hemkatalog. 
+	Exempel på hur detta kan göras finns i <font color="red">&lt;filename&gt;/home/jonas_h&lt;/filename&gt;</font>. 
+	nXML fungerar inte med <font color="red">&lt;application&gt;XEmacs&lt;/application&gt;</font>. 
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
 	Källkod och dokumentation för nXML finns på pwr42 i 
-	<code class="filename">/usr/local/share/emacs/21.4/site-lisp/nxml-mode-20041004/</code>. 
-	I underkatalogen <code class="filename">schema/</code> finns den senaste versionen av docbook-schemat 
-      (filerna <code class="filename">docbook.rnc</code> och <code class="filename">docbookxi.rnc</code>) inlagt. 
+	<font color="red">&lt;filename&gt;/usr/local/share/emacs/21.4/site-lisp/nxml-mode-20041004/&lt;/filename&gt;</font>. 
+	I underkatalogen <font color="red">&lt;filename&gt;schema/&lt;/filename&gt;</font> finns den senaste versionen av docbook-schemat 
+      (filerna <font color="red">&lt;filename&gt;docbook.rnc&lt;/filename&gt;</font> och <font color="red">&lt;filename&gt;docbookxi.rnc&lt;/filename&gt;</font>) inlagt. 
       nXML använder schemat för validering och autkomplettering, så det är bra om man har rätt schema kopplat till sitt dokument.
-    </p>
-    <p>
-      En DocBook-meny till Emacs finns i <code class="filename">/usr/local/share/emacs/21.4/site-lisp/docbook-menu-0.92/</code>. 
-      Även den laddas in med inställningar i filerna <code class="filename">.emacs</code> m fl. 
+    &lt;/para&gt;</font>
+    <font color="red">&lt;para&gt;
+      En DocBook-meny till Emacs finns i <font color="red">&lt;filename&gt;/usr/local/share/emacs/21.4/site-lisp/docbook-menu-0.92/&lt;/filename&gt;</font>. 
+      Även den laddas in med inställningar i filerna <font color="red">&lt;filename&gt;.emacs&lt;/filename&gt;</font> m fl. 
       Menyn innehåller inga kommandon, men länkar till dokumentation, samt alla element/taggar grupperade alfabetiskt och logiskt. 
-    Den beskriver DocBook version 4, men skillnaderna mot version 5 är inte jättestora.</p>
-    </div>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_alternativ"></a>2.2. Andra alternativ</h2></div></div></div>
-      
-      <p>Ett flertal xml-editorer finns, både fria och kommersiella, några med WYSIWYG-funktionalitet. 
-      En annan möjlighet som skulle kunna undersökas är att editera via ett wiki/web-gränssnitt.</p>
-    </div>
-</div>
-<div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="dbpwr_exempel"></a>Kapitel 3. Ett exempeldokument</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#dbpwr_prolog">3.1. Dokumentprolog</a></span></dt><dt><span class="section"><a href="#dbpwr_uppm">3.2. Uppmärkning</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_dsuppm">3.2.1. Dokumentstruktur</a></span></dt><dt><span class="section"><a href="#dbpwr_liuppm">3.2.2. Listor etc.</a></span></dt><dt><span class="section"><a href="#dbpwr_komuppm">3.2.3. Kommandon, filnamn...</a></span></dt><dt><span class="section"><a href="#dbpwr_pwruppm">3.2.4. Proview-uppmärkning</a></span></dt></dl></dd></dl></div>
-  
-  <p>Här beskrivs hur man kan bygga upp ett större dokument, av typen bok eller artikel. 
-  Exempel på lämpliga taggar och uppmärkning för <span class="application">Proview</span> ges.</p>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_prolog"></a>3.1. Dokumentprolog</h2></div></div></div>
-    
-    <p>Prologen, eller dokumenthuvudet till en docbookfil kan se ut på följande sätt:
-    </p><pre class="programlisting"> 
-    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <a name="co.prolog.xml"></a><img src="../1.png" alt="1" border="0">
-    &lt;!DOCTYPE article [     <a name="co.prolog.article"></a><img src="../2.png" alt="2" border="0">
-    &lt;!ENTITY % isopub PUBLIC    <a name="co.prolog.isopub"></a><img src="../3.png" alt="3" border="0">
+    Den beskriver DocBook version 4, men skillnaderna mot version 5 är inte jättestora.&lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Andra alternativ&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;Ett flertal xml-editorer finns, både fria och kommersiella, några med WYSIWYG-funktionalitet. 
+      En annan möjlighet som skulle kunna undersökas är att editera via ett wiki/web-gränssnitt.&lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+&lt;/chapter&gt;</font>
+<font color="red">&lt;chapter&gt;
+  <font color="red">&lt;title&gt;Ett exempeldokument&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;Här beskrivs hur man kan bygga upp ett större dokument, av typen bok eller artikel. 
+  Exempel på lämpliga taggar och uppmärkning för <font color="red">&lt;application&gt;Proview&lt;/application&gt;</font> ges.&lt;/para&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Dokumentprolog&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;Prologen, eller dokumenthuvudet till en docbookfil kan se ut på följande sätt:
+    <font color="red">&lt;programlisting&gt; 
+    &lt;?xml version="1.0" encoding="UTF-8"?&gt; <font color="red">&lt;co&gt;&lt;/co&gt;</font>
+    &lt;!DOCTYPE article [     <font color="red">&lt;co&gt;&lt;/co&gt;</font>
+    &lt;!ENTITY % isopub PUBLIC    <font color="red">&lt;co&gt;&lt;/co&gt;</font>
     "ISO 8879:1986//ENTITIES Publishing//EN//XML"
     "/usr/share/xml/entities/xml-iso-entities-8879.1986/isopub.ent"&gt; 
     &lt;!-- "http://www.w3.org/2003/entities/iso8879/isopub.ent"&gt; --&gt;
     %isopub;
-    &lt;!ENTITY % pwrent SYSTEM "../src/pwrent.ent"&gt; <a name="co.prolog.pwrent"></a><img src="../4.png" alt="4" border="0">
+    &lt;!ENTITY % pwrent SYSTEM "../src/pwrent.ent"&gt; <font color="red">&lt;co&gt;&lt;/co&gt;</font>
     %pwrent;
     ]&gt;
-    &lt;article version="5.0" xml:lang="en" xmlns="http://docbook.org/ns/docbook" <a name="co.prolog.docbook"></a><img src="../5.png" alt="5" border="0">
+    &lt;article version="5.0" xml:lang="en" xmlns="http://docbook.org/ns/docbook" <font color="red">&lt;co&gt;&lt;/co&gt;</font>
     xmlns:mathml="http://www.w3.org/1998/Math/MathML"
     xmlns:svg="http://www.w3.org/2000/svg"
     xmlns:xhtml="http://www.w3.org/1999/xhtml"
@@ -138,41 +172,47 @@ Spara filen ovan som exempelvis <code class="filename">minimalt.xml</code>.
       &lt;/affiliation&gt;
     &lt;/author&gt;
     &lt;/info&gt; 
-    </pre><p>
-    </p><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><a href="#co.prolog.xml"><img src="../1.png" alt="1" border="0"></a> </td><td valign="top" align="left"><p>Det här är ett XML-dokument.</p></td></tr><tr><td width="5%" valign="top" align="left"><a href="#co.prolog.article"><img src="../2.png" alt="2" border="0"></a> </td><td valign="top" align="left"><p>Detta är en artikel. Kan även vara &#8220;<span class="quote">book</span>&#8221;</p></td></tr><tr><td width="5%" valign="top" align="left"><a href="#co.prolog.isopub"><img src="../3.png" alt="3" border="0"></a> </td><td valign="top" align="left"><p>Hämta standard-entity-koder för särskilda tecken.
-      Lokal fil går snabbast. URL:en bortkommenterad.</p></td></tr><tr><td width="5%" valign="top" align="left"><a href="#co.prolog.pwrent"><img src="../4.png" alt="4" border="0"></a> </td><td valign="top" align="left"><p>Egendefinierade entiteter, se <a href="#dbpwr_pwruppm" title="3.2.4. Proview-uppmärkning">Avsnitt 3.2.4, &#8220;Proview-uppmärkning&#8221;</a></p></td></tr><tr><td width="5%" valign="top" align="left"><a href="#co.prolog.docbook"><img src="../5.png" alt="5" border="0"></a> </td><td valign="top" align="left"><p>Detta är en artikel, DocBook (5.0) namespace. Fler namespace följer.
-      Det här är rotelementet för dokumentet, som kommer att avslutas med <code class="sgmltag-element">&lt;/article&gt;</code>.</p></td></tr></table></div><p>
-    </p>
-  </div>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_uppm"></a>3.2. Uppmärkning</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#dbpwr_dsuppm">3.2.1. Dokumentstruktur</a></span></dt><dt><span class="section"><a href="#dbpwr_liuppm">3.2.2. Listor etc.</a></span></dt><dt><span class="section"><a href="#dbpwr_komuppm">3.2.3. Kommandon, filnamn...</a></span></dt><dt><span class="section"><a href="#dbpwr_pwruppm">3.2.4. Proview-uppmärkning</a></span></dt></dl></div>
-    
-    <p>Här ges exempel på uppmärkning av ett dokument. 
+    &lt;/programlisting&gt;</font>
+    <font color="red">&lt;calloutlist&gt;
+      <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Det här är ett XML-dokument.&lt;/para&gt;</font>&lt;/callout&gt;</font>
+      <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Detta är en artikel. Kan även vara <font color="red">&lt;quote&gt;book&lt;/quote&gt;</font>&lt;/para&gt;</font>&lt;/callout&gt;</font>
+      <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Hämta standard-entity-koder för särskilda tecken.
+      Lokal fil går snabbast. URL:en bortkommenterad.&lt;/para&gt;</font>&lt;/callout&gt;</font>
+      <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Egendefinierade entiteter, se <font color="red">&lt;xref&gt;&lt;/xref&gt;</font>&lt;/para&gt;</font>&lt;/callout&gt;</font>
+      <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Detta är en artikel, DocBook (5.0) namespace. Fler namespace följer.
+      Det här är rotelementet för dokumentet, som kommer att avslutas med <font color="red">&lt;tag&gt;&lt;/article&gt;&lt;/tag&gt;</font>.&lt;/para&gt;</font>&lt;/callout&gt;</font>
+    &lt;/calloutlist&gt;</font>
+    &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Uppmärkning&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;Här ges exempel på uppmärkning av ett dokument. 
     För en fullständig referens, se 
-    <a href="http://www.docbook.org/tdg5/en/html/docbook.html" target="_top">DocBook 5.0: The Definitive Guide</a>. 
-    Fler länkar finns i <a href="#dbpwr_referenser" title="5.3. Referenser">Avsnitt 5.3, &#8220;Referenser&#8221;</a>.</p>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_dsuppm"></a>3.2.1. Dokumentstruktur</h3></div></div></div>
-      
-      <p>För att dela in en article används avsnitt/sections. 
+    <font color="red">&lt;link&gt;DocBook 5.0: The Definitive Guide&lt;/link&gt;</font>. 
+    Fler länkar finns i <font color="red">&lt;xref&gt;&lt;/xref&gt;</font>.&lt;/para&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Dokumentstruktur&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;För att dela in en article används avsnitt/sections. 
       Texten delas in i stycken. Det kan se ut så här:
-      </p><pre class="programlisting">
+      <font color="red">&lt;programlisting&gt;
       &lt;section&gt;&lt;title&gt;första avsnittet&lt;/title&gt;
       &lt;para&gt;Ett stycke text&lt;/para&gt;
       &lt;section&gt;&lt;title&gt;första underavsnittet&lt;/title&gt;
       &lt;para&gt;Ett stycke text&lt;/para&gt;
       &lt;/section&gt;
       &lt;/section&gt;
-      </pre><p>
-      <code class="sgmltag-element">&lt;section&gt;</code> kan alltså innehålla sig själv, och underavsnitt skapas rekursivt. 
-      Ett alternativ är att använda <code class="sgmltag-element">&lt;sect1&gt;</code>, <code class="sgmltag-element">&lt;sect2&gt;</code> etc (upp till 5)
+      &lt;/programlisting&gt;</font>
+      <font color="red">&lt;tag&gt;&lt;section&gt;&lt;/tag&gt;</font> kan alltså innehålla sig själv, och underavsnitt skapas rekursivt. 
+      Ett alternativ är att använda <font color="red">&lt;tag&gt;&lt;sect1&gt;&lt;/tag&gt;</font>, <font color="red">&lt;tag&gt;&lt;sect2&gt;&lt;/tag&gt;</font> etc (upp till 5)
       för att explicit ange avsnittsstrukturen.
-      </p>
-      <p>Ett dokument av typen <code class="sgmltag-element">&lt;book&gt;</code> kan ha en kapitelnivå, <code class="sgmltag-element">&lt;chapter&gt;</code>, över avsnitten, 
-      och däröver en delnivå, <code class="sgmltag-element">&lt;part&gt;</code>.
-      Ofta vill man dela upp en &#8220;<span class="quote">book</span>&#8221; så att varje kapitel utgör en egen fil. 
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;Ett dokument av typen <font color="red">&lt;tag&gt;&lt;book&gt;&lt;/tag&gt;</font> kan ha en kapitelnivå, <font color="red">&lt;tag&gt;&lt;chapter&gt;&lt;/tag&gt;</font>, över avsnitten, 
+      och däröver en delnivå, <font color="red">&lt;tag&gt;&lt;part&gt;&lt;/tag&gt;</font>.
+      Ofta vill man dela upp en <font color="red">&lt;quote&gt;book&lt;/quote&gt;</font> så att varje kapitel utgör en egen fil. 
       Detta är särskilt användbart för större dokument, som då blir mer hanterliga, 
       kan editeras av flera personer samtidigt, och kan sammanfogas modulärt. 
-      Man infogar delarna i boken med hjälp av xinclude:</p>
-      <pre class="programlisting">
+      Man infogar delarna i boken med hjälp av xinclude:&lt;/para&gt;</font>
+      <font color="red">&lt;programlisting&gt;
       &lt;?xml version="1.0" encoding="UTF-8"?&gt; 
       &lt;!DOCTYPE book [
       &lt;!ENTITY % isopub PUBLIC
@@ -187,60 +227,73 @@ Spara filen ovan som exempelvis <code class="filename">minimalt.xml</code>.
 	    xmlns:svg="http://www.w3.org/2000/svg"
 	    xmlns:xhtml="http://www.w3.org/1999/xhtml"
 	    xmlns:xlink="http://www.w3.org/1999/xlink"
-	    xmlns:xi="http://www.w3.org/2001/XInclude"&gt; <a name="co.xi.ns"></a><img src="../1.png" alt="1" border="0">
+	    xmlns:xi="http://www.w3.org/2001/XInclude"&gt; <font color="red">&lt;co&gt;&lt;/co&gt;</font>
 	    &lt;info&gt;
 	      ...
 	    &lt;/info&gt;
 	    
-	    &lt;xi:include href="dbpwr_intro.xml"/&gt; <a name="co.xi.include"></a><img src="../2.png" alt="2" border="0">
+	    &lt;xi:include href="dbpwr_intro.xml"/&gt; <font color="red">&lt;co&gt;&lt;/co&gt;</font>
 	    &lt;xi:include href="dbpwr_skapadok.xml"/&gt;
 	    &lt;xi:include href="dbpwr_utdata.xml"/&gt;
 	    &lt;xi:include href="dbpwr_omdocbook.xml"/&gt;
 	    
 	    &lt;/book&gt;
-      </pre>
-      <div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><a href="#co.xi.ns"><img src="../1.png" alt="1" border="0"></a> </td><td valign="top" align="left"><p>Namespace för XInclude måste läggas till.</p></td></tr><tr><td width="5%" valign="top" align="left"><a href="#co.xi.include"><img src="../2.png" alt="2" border="0"></a> </td><td valign="top" align="left"><p>Här inkluderas bokens kapitel. 
-	Dessa skrivs som enskilda och fullständiga DocBook-dokument, men av dokumenttypen &#8220;<span class="quote">chapter</span>&#8221;
-	istället för &#8220;<span class="quote">book</span>&#8221; eller &#8220;<span class="quote">article</span>&#8221;.</p></td></tr></table></div>
-      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Notera]" src="../note.png"></td><th align="left">Notera</th></tr><tr><td align="left" valign="top">
-	<p>Om man vill autovalidera ett dokument med xincludes i nXML måste man koppla schemat 
-	<code class="filename">docbookxi.rnc</code>, till dokumentet. 
+      &lt;/programlisting&gt;</font>
+      <font color="red">&lt;calloutlist&gt;
+	<font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Namespace för XInclude måste läggas till.&lt;/para&gt;</font>&lt;/callout&gt;</font>
+	<font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Här inkluderas bokens kapitel. 
+	Dessa skrivs som enskilda och fullständiga DocBook-dokument, men av dokumenttypen <font color="red">&lt;quote&gt;chapter&lt;/quote&gt;</font>
+	istället för <font color="red">&lt;quote&gt;book&lt;/quote&gt;</font> eller <font color="red">&lt;quote&gt;article&lt;/quote&gt;</font>.&lt;/para&gt;</font>&lt;/callout&gt;</font>
+      &lt;/calloutlist&gt;</font>
+      <font color="red">&lt;note&gt;
+	<font color="red">&lt;para&gt;Om man vill autovalidera ett dokument med xincludes i nXML måste man koppla schemat 
+	<font color="red">&lt;filename&gt;docbookxi.rnc&lt;/filename&gt;</font>, till dokumentet. 
 	Detta görs i 
-	<span class="guimenu">XML</span> &#8594; <span class="guisubmenu">Set Schema</span> &#8594; <span class="guimenuitem">File...</span>.
-	Default är annars <code class="filename">docbook.rnc</code>.</p>
-      </td></tr></table></div>
-    </div>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_liuppm"></a>3.2.2. Listor etc.</h3></div></div></div>
-      
-      <p>
-	</p><pre class="programlisting">
+	<font color="red">&lt;menuchoice&gt;
+	  <font color="red">&lt;guimenu&gt;XML&lt;/guimenu&gt;</font><font color="red">&lt;guisubmenu&gt;Set Schema&lt;/guisubmenu&gt;</font><font color="red">&lt;guimenuitem&gt;File...&lt;/guimenuitem&gt;</font>  
+	  &lt;/menuchoice&gt;</font>.
+	Default är annars <font color="red">&lt;filename&gt;docbook.rnc&lt;/filename&gt;</font>.&lt;/para&gt;</font>
+      &lt;/note&gt;</font>
+    &lt;/section&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Listor etc.&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;programlisting&gt;
 	itemizedlist&gt;
 	&lt;listitem&gt;&lt;para&gt;xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara&lt;/para&gt;&lt;/listitem&gt;  
 	&lt;listitem&gt;&lt;para&gt;Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
 	Möjligt att skapa mer sökbara databaser.&lt;/para&gt;&lt;/listitem&gt;
 	&lt;/itemizedlist&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	</p><div class="itemizedlist"><ul type="disc"><li><p>xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara</p></li><li><p>Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
-	  Möjligt att skapa mer sökbara databaser.</p></li></ul></div><p>
-	<code class="sgmltag-element">&lt;orderedlist&gt;</code> skapar en numrerad lista istället för en punktlista.
-      </p>
-      <p>
-	</p><pre class="programlisting">
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;itemizedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara&lt;/para&gt;</font>&lt;/listitem&gt;</font>  
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
+	  Möjligt att skapa mer sökbara databaser.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	&lt;/itemizedlist&gt;</font>
+	<font color="red">&lt;tag&gt;&lt;orderedlist&gt;&lt;/tag&gt;</font> skapar en numrerad lista istället för en punktlista.
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;programlisting&gt;
 	&lt;variablelist&gt;
 	  &lt;varlistentry&gt;&lt;term&gt;&lt;filename&gt;pwr_xsl/common-customizations.xsl&lt;/filename&gt;&lt;/term&gt;
 	  &lt;listitem&gt;&lt;para&gt;Gemensamma parameterinställningar och template-definitioner.&lt;/para&gt;&lt;/listitem&gt;&lt;/varlistentry&gt;
 	  &lt;varlistentry&gt;&lt;term&gt;&lt;filename&gt;pwr_xsl/html-common.xsl&lt;/filename&gt;&lt;/term&gt;
 	  &lt;listitem&gt;&lt;para&gt;Html-specifika parameterinställningar och template-definitioner.&lt;/para&gt;&lt;/listitem&gt;&lt;/varlistentry&gt;
 	  &lt;/variablelist&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	</p><div class="variablelist"><dl><dt><span class="term"><code class="filename">pwr_xsl/common-customizations.xsl</code></span></dt><dd><p>Gemensamma parameterinställningar och template-definitioner.</p></dd><dt><span class="term"><code class="filename">pwr_xsl/html-common.xsl</code></span></dt><dd><p>Html-specifika parameterinställningar och template-definitioner.</p></dd></dl></div><p>
-      </p>
-      <p>
-	</p><pre class="programlisting">
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;variablelist&gt;
+	  <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwr_xsl/common-customizations.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Gemensamma parameterinställningar och template-definitioner.&lt;/para&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+	  <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwr_xsl/html-common.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Html-specifika parameterinställningar och template-definitioner.&lt;/para&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+	&lt;/variablelist&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;programlisting&gt;
 	&lt;programlisting&gt;
 	  ### Document filename without suffix (.xml):
 	  ###FILE = pwr_gsg
@@ -249,193 +302,253 @@ Spara filen ovan som exempelvis <code class="filename">minimalt.xml</code>.
 	&lt;calloutlist&gt;
 	  &lt;callout arearefs="co.makefil.file2"&gt;&lt;para&gt;Här anges filnamnet utan ändelse för infil (.xml) och utfil (.html, .fo, .pdf)&lt;/para&gt;&lt;/callout&gt;
 	  &lt;/calloutlist&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	</p><pre class="programlisting">
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;programlisting&gt;
 	  ### Document filename without suffix (.xml):
 	  ###FILE = pwr_gsg
-	  FILE = dbpwr                                        <a name="co.makefil.file2"></a><img src="../1.png" alt="1" border="0">
-	</pre><p>
-	</p><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><a href="#co.makefil.file2"><img src="../1.png" alt="1" border="0"></a> </td><td valign="top" align="left"><p>Här anges filnamnet utan ändelse för infil (.xml) och utfil (.html, .fo, .pdf)</p></td></tr></table></div><p>
-      </p>
-      <p>
-	</p><pre class="programlisting">
+	  FILE = dbpwr                                        <font color="red">&lt;co&gt;&lt;/co&gt;</font>
+	&lt;/programlisting&gt;</font>
+	<font color="red">&lt;calloutlist&gt;
+	  <font color="red">&lt;callout&gt;<font color="red">&lt;para&gt;Här anges filnamnet utan ändelse för infil (.xml) och utfil (.html, .fo, .pdf)&lt;/para&gt;</font>&lt;/callout&gt;</font>
+	&lt;/calloutlist&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;programlisting&gt;
 	&lt;qandaset&gt;
 	  &lt;qandaentry&gt;&lt;question&gt;&lt;para&gt;Hur gör man en FAQ-avdelning?&lt;/para&gt;&lt;/question&gt;
 	  &lt;answer&gt;&lt;para&gt;Med en &lt;tag&gt;&amp;lt;qandaset&amp;gt;&lt;/tag&gt;&lt;/para&gt;&lt;/answer&gt; &lt;/qandaentry&gt;
 	  &lt;/qandaset&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	</p><div class="qandaset"><dl><dt>3.2.2.1. <a href="#id3376477">Hur gör man en FAQ-avdelning?</a></dt></dl><table border="0" summary="Q and A Set"><col align="left" width="1%"><tbody><tr class="question"><td align="left" valign="top"><a name="id3376477"></a><a name="id3376479"></a><b>3.2.2.1.</b></td><td align="left" valign="top"><p>Hur gör man en FAQ-avdelning?</p></td></tr>
-	  <tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Med en <code class="sgmltag-element">&lt;qandaset&gt;</code></p></td></tr> </tbody></table></div><p>
-      </p>
-    </div>
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;qandaset&gt;
+	  <font color="red">&lt;qandaentry&gt;<font color="red">&lt;question&gt;<font color="red">&lt;para&gt;Hur gör man en FAQ-avdelning?&lt;/para&gt;</font>&lt;/question&gt;</font>
+	  <font color="red">&lt;answer&gt;<font color="red">&lt;para&gt;Med en <font color="red">&lt;tag&gt;&lt;qandaset&gt;&lt;/tag&gt;</font>&lt;/para&gt;</font>&lt;/answer&gt;</font> &lt;/qandaentry&gt;</font>
+	&lt;/qandaset&gt;</font>
+      &lt;/para&gt;</font>
+    &lt;/section&gt;</font>
     
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_komuppm"></a>3.2.3. Kommandon, filnamn...</h3></div></div></div>
-      
-      <p>Detta är lånat från KDE, och är kanske litet övertaggat..:
-      </p><pre class="programlisting">
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Kommandon, filnamn...&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;Detta är lånat från KDE, och är kanske litet övertaggat..:
+      <font color="red">&lt;programlisting&gt;
       &lt;screen&gt;
 	&lt;prompt&gt;bash$&lt;/prompt&gt; &lt;userinput&gt;&lt;command&gt;mkdir&lt;/command&gt; &lt;parameter&gt;&lt;filename&gt;/dev/mqueue&lt;/filename&gt;&lt;/parameter&gt;&lt;/userinput&gt;
 	&lt;prompt&gt;bash$&lt;/prompt&gt; &lt;userinput&gt;&lt;command&gt;mount&lt;/command&gt; &lt;option&gt;-t&lt;/option&gt; &lt;parameter&gt;&lt;systemitem role="filesystem"&gt;mqueue&lt;/systemitem&gt;&lt;/parameter&gt; &lt;option&gt;none&lt;/option&gt; &lt;parameter&gt;&lt;filename&gt;/dev/mqueue&lt;/filename&gt;&lt;/parameter&gt;&lt;/userinput&gt;&lt;/screen&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	</p><pre class="screen">
-	  <code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">mkdir</strong></span> <em class="parameter"><code><code class="filename">/dev/mqueue</code></code></em></code></strong>
-	<code class="prompt">bash$</code> <strong class="userinput"><code><span><strong class="command">mount</strong></span> <code class="option">-t</code> <em class="parameter"><code><code class="systemitem">mqueue</code></code></em> <code class="option">none</code> <em class="parameter"><code><code class="filename">/dev/mqueue</code></code></em></code></strong></pre><p>
-      </p>
-      <p>
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;screen&gt;
+	  <font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;userinput&gt;<font color="red">&lt;command&gt;mkdir&lt;/command&gt;</font> <font color="red">&lt;parameter&gt;<font color="red">&lt;filename&gt;/dev/mqueue&lt;/filename&gt;</font>&lt;/parameter&gt;</font>&lt;/userinput&gt;</font>
+	<font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;userinput&gt;<font color="red">&lt;command&gt;mount&lt;/command&gt;</font> <font color="red">&lt;option&gt;-t&lt;/option&gt;</font> <font color="red">&lt;parameter&gt;<font color="red">&lt;systemitem&gt;mqueue&lt;/systemitem&gt;</font>&lt;/parameter&gt;</font> <font color="red">&lt;option&gt;none&lt;/option&gt;</font> <font color="red">&lt;parameter&gt;<font color="red">&lt;filename&gt;/dev/mqueue&lt;/filename&gt;</font>&lt;/parameter&gt;</font>&lt;/userinput&gt;</font>&lt;/screen&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
 	Annan uppmärkning som kan vara värda att använda är: 
-	</p><pre class="programlisting">
+	<font color="red">&lt;programlisting&gt;
 	&lt;menuchoice&gt;
 	  &lt;shortcut&gt;&lt;keycombo&gt;&lt;keycap&gt;Ctrl&lt;/keycap&gt;&lt;keycap&gt;Q&lt;/keycap&gt;&lt;/keycombo&gt;&lt;/shortcut&gt;
 	  &lt;guimenu&gt;Edit&lt;/guimenu&gt;
 	  &lt;guimenuitem&gt;Change value&lt;/guimenuitem&gt;
 	  &lt;/menuchoice&gt;
-      </pre>
-      <p>ger</p>
-      <p>
-	<span class="guimenu">Edit</span> &#8594; <span class="guimenuitem">Change value</span> (<span><strong class="shortcut"><span><strong class="keycap">Ctrl</strong></span>-<span><strong class="keycap">Q</strong></span></strong></span>)
-      </p>
-      <p>
-	</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Tips]" src="../tip.png"></td><th align="left">Tips</th></tr><tr><td align="left" valign="top">
-	  <p>Noteringar, tips, viktigt, uppmaning till försiktighet och varningar skapas med taggarna 
-	  <code class="sgmltag-element">&lt;note&gt;</code>, <code class="sgmltag-element">&lt;tip&gt;</code>, <code class="sgmltag-element">&lt;important&gt;</code>, <code class="sgmltag-element">&lt;caution&gt;</code> och <code class="sgmltag-element">&lt;warning&gt;</code>.</p> 
-	</td></tr></table></div><p>
-	</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Viktigt]" src="../important.png"></td><th align="left">Viktigt</th></tr><tr><td align="left" valign="top">
-	  <p>Texten i ex.vis en viktigt måste skrivas inom en <code class="sgmltag-element">&lt;para&gt;</code></p>
-	</td></tr></table></div><p>
-	</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Notera]" src="../note.png"></td><th align="left">Notera</th></tr><tr><td align="left" valign="top">
-	  <p>Andra taggar som använts är <code class="systemitem">pwrp</code> 
-	  (<code class="sgmltag-element">&lt;systemitem role="user"&gt;pwrp&lt;/systemitem&gt;</code>) och <code class="envar">PWR_BUS_ID</code> 
-	  (<code class="sgmltag-element">&lt;envar&gt;PWR_BUS_ID&lt;/envar&gt;</code>).</p>
-	</td></tr></table></div><p>
-      </p>
-    </div>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_pwruppm"></a>3.2.4. Proview-uppmärkning</h3></div></div></div>
-      
-      <p>
-	</p><div class="itemizedlist"><ul type="disc"><li><p>Klasser: Taggen <code class="sgmltag-element">&lt;classname&gt;</code> har använts. Exempel <span class="classname">ProjectReg</span>. 
-	  Den är kanske framför allt avsedd för objektorienterade programmeringsspråk, iofs.</p></li><li><p>Attribut: Taggen <code class="sgmltag-element">&lt;property&gt;</code> har använts. Exempel <span class="property">ObjectName</span>.</p></li><li><p>Miljöer/applikationer: Entiteter har använts för <span class="pwrenv">ProjectList</span>, <span class="pwrenv">VolumeList</span>, <span class="pwrenv">Directory</span>, <span class="pwrenv">Volume</span>, <span class="pwrenv">Xtt</span>. 
-	  De översätts till <code class="sgmltag-element">&lt;application role='pwrenv'&gt;VolumeList&lt;/application&gt;</code> etc. 
-	  Entiteterna är definierade i filen <code class="filename">pwrent.ent</code>.</p></li></ul></div><p>
-      </p>
-    </div>
-  </div>
-</div>
-<div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="dbpwr_utdata"></a>Kapitel 4. Generering av utdata</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#dbpwr_byggut">4.1. Bygga DocBook-dokumentation</a></span></dt><dt><span class="section"><a href="#dbpwr_komponenter">4.2. Byggkomponenter</a></span></dt><dt><span class="section"><a href="#dbpwr_instlager">4.3. Inställningslager</a></span></dt><dt><span class="section"><a href="#dbpwr_anpassningut">4.4. Anpassning av utfiler</a></span></dt></dl></div>
+      &lt;/programlisting&gt;</font>&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;ger&lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;menuchoice&gt;
+	  <font color="red">&lt;shortcut&gt;<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;Ctrl&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;Q&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>&lt;/shortcut&gt;</font>
+	  <font color="red">&lt;guimenu&gt;Edit&lt;/guimenu&gt;</font>
+	  <font color="red">&lt;guimenuitem&gt;Change value&lt;/guimenuitem&gt;</font>
+	&lt;/menuchoice&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;tip&gt;
+	  <font color="red">&lt;para&gt;Noteringar, tips, viktigt, uppmaning till försiktighet och varningar skapas med taggarna 
+	  <font color="red">&lt;tag&gt;&lt;note&gt;&lt;/tag&gt;</font>, <font color="red">&lt;tag&gt;&lt;tip&gt;&lt;/tag&gt;</font>, <font color="red">&lt;tag&gt;&lt;important&gt;&lt;/tag&gt;</font>, <font color="red">&lt;tag&gt;&lt;caution&gt;&lt;/tag&gt;</font> och <font color="red">&lt;tag&gt;&lt;warning&gt;&lt;/tag&gt;</font>.&lt;/para&gt;</font> 
+	&lt;/tip&gt;</font>
+	<font color="red">&lt;important&gt;
+	  <font color="red">&lt;para&gt;Texten i ex.vis en viktigt måste skrivas inom en <font color="red">&lt;tag&gt;&lt;para&gt;&lt;/tag&gt;</font>&lt;/para&gt;</font>
+	&lt;/important&gt;</font>
+	<font color="red">&lt;note&gt;
+	  <font color="red">&lt;para&gt;Andra taggar som använts är <font color="red">&lt;systemitem&gt;pwrp&lt;/systemitem&gt;</font> 
+	  (<font color="red">&lt;tag&gt;&lt;systemitem role="user"&gt;pwrp&lt;/systemitem&gt;&lt;/tag&gt;</font>) och <font color="red">&lt;envar&gt;PWR_BUS_ID&lt;/envar&gt;</font> 
+	  (<font color="red">&lt;tag&gt;&lt;envar&gt;PWR_BUS_ID&lt;/envar&gt;&lt;/tag&gt;</font>).&lt;/para&gt;</font>
+	&lt;/note&gt;</font>
+      &lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Proview-uppmärkning&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;
+	<font color="red">&lt;itemizedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Klasser: Taggen <font color="red">&lt;tag&gt;&lt;classname&gt;&lt;/tag&gt;</font> har använts. Exempel <font color="red">&lt;classname&gt;ProjectReg&lt;/classname&gt;</font>. 
+	  Den är kanske framför allt avsedd för objektorienterade programmeringsspråk, iofs.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Attribut: Taggen <font color="red">&lt;tag&gt;&lt;property&gt;&lt;/tag&gt;</font> har använts. Exempel <font color="red">&lt;property&gt;ObjectName&lt;/property&gt;</font>.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Miljöer/applikationer: Entiteter har använts för <span class="pwrenv">ProjectList</span>, <span class="pwrenv">VolumeList</span>, <span class="pwrenv">Directory</span>, <span class="pwrenv">Volume</span>, <span class="pwrenv">Xtt</span>. 
+	  De översätts till <font color="red">&lt;tag&gt;&lt;application role='pwrenv'&gt;VolumeList&lt;/application&gt;&lt;/tag&gt;</font> etc. 
+	  Entiteterna är definierade i filen <font color="red">&lt;filename&gt;pwrent.ent&lt;/filename&gt;</font>.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	&lt;/itemizedlist&gt;</font>
+      &lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+  &lt;/section&gt;</font>
+&lt;/chapter&gt;</font>
+<font color="red">&lt;chapter&gt;
 
-  
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_byggut"></a>4.1. Bygga DocBook-dokumentation</h2></div></div></div>
-    
-    <p>
+  <font color="red">&lt;title&gt;Generering av utdata&lt;/title&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Bygga DocBook-dokumentation&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;
       Generering av dokument från docbook-filer är integrerad i byggrutinen för Proview. 
       Dessa byggs med kommandot
-      </p><pre class="screen">
-	<code class="prompt">bash$</code> <span><strong class="command">pwre</strong></span> <em class="parameter"><code>build doc man docbook</code></em>
-      </pre><p>
+      <font color="red">&lt;screen&gt;
+	<font color="red">&lt;prompt&gt;bash$&lt;/prompt&gt;</font> <font color="red">&lt;command&gt;pwre&lt;/command&gt;</font> <font color="red">&lt;parameter&gt;build doc man docbook&lt;/parameter&gt;</font>
+      &lt;/screen&gt;</font>
       vilket ger utdata i form av html och pdf. 
       Html-dokumentet skapas i två versioner: i en respektive flera filer.
       I ett sista steg kopieras css- och mediafiler till målkatalogen.
-    </p>
-    <p>Nya xml-dokument kan läggas till genom att placera xml-filerna i 
-    <code class="filename">$pwre_sroot/doc/man/en_us/</code>, 
-    eller <code class="filename">$pwre_sroot/doc/man/sv_se/</code>. 
+    &lt;/para&gt;</font>
+    <font color="red">&lt;para&gt;Nya xml-dokument kan läggas till genom att placera xml-filerna i 
+    <font color="red">&lt;filename&gt;$pwre_sroot/doc/man/en_us/&lt;/filename&gt;</font>, 
+    eller <font color="red">&lt;filename&gt;$pwre_sroot/doc/man/sv_se/&lt;/filename&gt;</font>. 
     De grafik- eller mediafiler som dokumenten använder läggs i 
-    <code class="filename">$pwre_sroot/doc/man/src/</code>. 
+    <font color="red">&lt;filename&gt;$pwre_sroot/doc/man/src/&lt;/filename&gt;</font>. 
     För att utdatafiler ska genereras måste man lägga till filnamnet (endast namnet på huvudfilen, om flera) i variablerna 
-    <code class="varname">sv_se_xmlsources</code> och / eller <code class="varname">en_us_xmlsources</code> i makefilen. 
+    <font color="red">&lt;varname&gt;sv_se_xmlsources&lt;/varname&gt;</font> och / eller <font color="red">&lt;varname&gt;en_us_xmlsources&lt;/varname&gt;</font> i makefilen. 
     Huvudkällfilerna måste anges, eftersom det finns xml-filer i katalogen som inte är fristående källfiler (ex.vis kapitelfiler).
-    Mediafiler kopieras automatiskt dit de behövs, och behöver inte anges någonstans.</p>
-  </div>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_komponenter"></a>4.2. Byggkomponenter</h2></div></div></div>
-    
-    <p>För att generera dokumentationen behövs följande:
-    </p><div class="itemizedlist"><ul type="disc"><li><p>Xsltproc. Standardkomponent i de flesta linuxdistributioner.</p></li><li><p>DocBook-xsl-stylesheets. Går att hämta med apt-get, eller från sourceforge. 
+    Mediafiler kopieras automatiskt dit de behövs, och behöver inte anges någonstans.&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Byggkomponenter&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;För att generera dokumentationen behövs följande:
+    <font color="red">&lt;itemizedlist&gt;
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Xsltproc. Standardkomponent i de flesta linuxdistributioner.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;DocBook-xsl-stylesheets. Går att hämta med apt-get, eller från sourceforge. 
       Den senaste versionen finns på pwr42 i 
-      <code class="filename">/usr/local/share/xml/docbook/stylesheet/docbook-xsl-1.70.1/</code>. 
-      När man uppdaterar till en ny release av dessa måste man köra installationsscriptet <code class="filename">install.sh</code> 
+      <font color="red">&lt;filename&gt;/usr/local/share/xml/docbook/stylesheet/docbook-xsl-1.70.1/&lt;/filename&gt;</font>. 
+      När man uppdaterar till en ny release av dessa måste man köra installationsscriptet <font color="red">&lt;filename&gt;install.sh&lt;/filename&gt;</font> 
       i distributionen. 
-      Detta uppdaterar användarens <code class="envar">XML_CATALOG_FILES</code> att länka till den nya distributionen.</p></li><li><p>Fop. Version 0.92b av Apaches fo-processor är installerad på pwr42 i 
-      <code class="filename">/usr/local/fop-0.92beta/</code>. 
-      En symlänk finns i <code class="filename">/usr/local/bin</code>.</p></li></ul></div><p>
-    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="32pt"><img alt="[Notera]" src="../note.png"></td><th align="left">Notera</th></tr><tr><td align="left" valign="top"><p>Ingen kontroll görs i nuläget för att dessa komponenter finns på systemet. 
-    Detta bör antagligen läggas till i makefilen om möjligt.</p></td></tr></table></div><p>
-    </p>  
-  </div>
+      Detta uppdaterar användarens <font color="red">&lt;envar&gt;XML_CATALOG_FILES&lt;/envar&gt;</font> att länka till den nya distributionen.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Fop. Version 0.92b av Apaches fo-processor är installerad på pwr42 i 
+      <font color="red">&lt;filename&gt;/usr/local/fop-0.92beta/&lt;/filename&gt;</font>. 
+      En symlänk finns i <font color="red">&lt;filename&gt;/usr/local/bin&lt;/filename&gt;</font>.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+    &lt;/itemizedlist&gt;</font>
+    <font color="red">&lt;note&gt;<font color="red">&lt;para&gt;Ingen kontroll görs i nuläget för att dessa komponenter finns på systemet. 
+    Detta bör antagligen läggas till i makefilen om möjligt.&lt;/para&gt;</font>&lt;/note&gt;</font>
+    &lt;/para&gt;</font>  
+  &lt;/section&gt;</font>
   
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_instlager"></a>4.3. Inställningslager</h2></div></div></div>
-    
-    <p>Ett stort antal parametrar går att ställa in för xsl-mallarna. 
-    I de fall man inte vill ha defaultvärdena (sätts i <code class="filename">param.xsl</code>) kan man ange parametervärden i xsltproc-anropet, 
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Inställningslager&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;Ett stort antal parametrar går att ställa in för xsl-mallarna. 
+    I de fall man inte vill ha defaultvärdena (sätts i <font color="red">&lt;filename&gt;param.xsl&lt;/filename&gt;</font>) kan man ange parametervärden i xsltproc-anropet, 
     eller i inställningslager (customization layers). 
     Där kan också modifierade versioner av olika templates i mallarna definieras.
     Dokumentation över vilka parameterinställningar som kan göras finns på 
-    <a href="http://docbook.xml-doc.org/snapshots/xsl/doc/" target="_top">DocBook XSL Stylesheet Reference Documentation</a>.
-    Följande inställningslager ligger under <code class="filename">$pwre_sroot/doc/man/src/</code>.
-    </p><div class="variablelist"><dl><dt><span class="term"><code class="filename">pwrxsl-common.xsl</code></span></dt><dd><p>Gemensamma parameterinställningar och template-definitioner.</p></dd><dt><span class="term"><code class="filename">pwrxsl-html-common.xsl</code></span></dt><dd><p>Html-specifika parameterinställningar och template-definitioner.</p></dd><dt><span class="term"><code class="filename">pwrxsl-html.xsl</code></span></dt><dd>
-	<div class="orderedlist"><ol type="1"><li><p>Importerar <code class="filename">/docbook-xsl-n.nn.n/html/docbook.xsl</code> 
-	  som är grundmallen för html-processning - en utfil.</p></li><li><p>Hämtar från <code class="filename">pwrxsl-common.xsl</code></p></li><li><p>Hämtar från <code class="filename">pwrxsl-html-common.xsl</code></p></li><li><p>Sätter parametrar och templates specifika för html - en utfil.</p></li></ol></div></dd><dt><span class="term"><code class="filename">pwrxsl-chunk.xsl</code></span></dt><dd> 
-	<div class="orderedlist"><ol type="1"><li><p>Importerar <code class="filename">/docbook-xsl-n.nn.n/html/chunk.xsl</code> 
-	  som är grundmallen för html-processning - flera utfiler.</p></li><li><p>Hämtar från <code class="filename">pwrxsl-common.xsl</code></p></li><li><p>Hämtar från <code class="filename">pwrxsl-html-common.xsl</code></p></li><li><p>Sätter parametrar och templates specifika för html - flera utfiler.</p></li></ol></div></dd><dt><span class="term"><code class="filename">pwrxsl-fo.xsl</code></span></dt><dd>
-	<div class="orderedlist"><ol type="1"><li><p>Importerar <code class="filename">/docbook-xsl-n.nn.n/fo/docbook.xsl</code> som är grundmallen för fo-processning.</p></li><li><p>Hämtar från <code class="filename">pwrxsl-common.xsl</code></p></li><li><p>Sätter parametrar och templates specifika för fo.</p></li></ol></div></dd></dl></div><p>
-    </p>
-  </div>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_anpassningut"></a>4.4. Anpassning av utfiler</h2></div></div></div>
-    
-    <div class="itemizedlist"><ul type="disc"><li><p>FO/PDF: Justering av utseende, fonter, textstorlek etc. görs helt i inställningslagret, 
+    <font color="red">&lt;link&gt;DocBook XSL Stylesheet Reference Documentation&lt;/link&gt;</font>.
+    Följande inställningslager ligger under <font color="red">&lt;filename&gt;$pwre_sroot/doc/man/src/&lt;/filename&gt;</font>.
+    <font color="red">&lt;variablelist&gt;
+      <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwrxsl-common.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Gemensamma parameterinställningar och template-definitioner.&lt;/para&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+      <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwrxsl-html-common.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Html-specifika parameterinställningar och template-definitioner.&lt;/para&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+      <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwrxsl-html.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+      <font color="red">&lt;listitem&gt;
+	<font color="red">&lt;orderedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Importerar <font color="red">&lt;filename&gt;/docbook-xsl-n.nn.n/html/docbook.xsl&lt;/filename&gt;</font> 
+	  som är grundmallen för html-processning - en utfil.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Hämtar från <font color="red">&lt;filename&gt;pwrxsl-common.xsl&lt;/filename&gt;</font>&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Hämtar från <font color="red">&lt;filename&gt;pwrxsl-html-common.xsl&lt;/filename&gt;</font>&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Sätter parametrar och templates specifika för html - en utfil.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      &lt;/orderedlist&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+      <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwrxsl-chunk.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+      <font color="red">&lt;listitem&gt; 
+	<font color="red">&lt;orderedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Importerar <font color="red">&lt;filename&gt;/docbook-xsl-n.nn.n/html/chunk.xsl&lt;/filename&gt;</font> 
+	  som är grundmallen för html-processning - flera utfiler.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Hämtar från <font color="red">&lt;filename&gt;pwrxsl-common.xsl&lt;/filename&gt;</font>&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Hämtar från <font color="red">&lt;filename&gt;pwrxsl-html-common.xsl&lt;/filename&gt;</font>&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Sätter parametrar och templates specifika för html - flera utfiler.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      &lt;/orderedlist&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+      <font color="red">&lt;varlistentry&gt;<font color="red">&lt;term&gt;<font color="red">&lt;filename&gt;pwrxsl-fo.xsl&lt;/filename&gt;</font>&lt;/term&gt;</font>
+      <font color="red">&lt;listitem&gt;
+	<font color="red">&lt;orderedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Importerar <font color="red">&lt;filename&gt;/docbook-xsl-n.nn.n/fo/docbook.xsl&lt;/filename&gt;</font> som är grundmallen för fo-processning.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Hämtar från <font color="red">&lt;filename&gt;pwrxsl-common.xsl&lt;/filename&gt;</font>&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Sätter parametrar och templates specifika för fo.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      &lt;/orderedlist&gt;</font>&lt;/listitem&gt;</font>&lt;/varlistentry&gt;</font>
+    &lt;/variablelist&gt;</font>
+    &lt;/para&gt;</font>
+  &lt;/section&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Anpassning av utfiler&lt;/title&gt;</font>
+    <font color="red">&lt;itemizedlist&gt;
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;FO/PDF: Justering av utseende, fonter, textstorlek etc. görs helt i inställningslagret, 
       och behandlas av xslt-processorn.
-      FO-processorn tar inga sådana argument eller parametrar.</p></li><li><p>HTML: Slutgiltig formatering bestäms av css. 
+      FO-processorn tar inga sådana argument eller parametrar.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;HTML: Slutgiltig formatering bestäms av css. 
       Man kopplar de element/taggar man använt till formateringsinstruktioner i css:en. 
       Ger önskad grafisk profil åt dokumentet. 
-      För att det ska fungera krävs dock att uppmärkningen är konsekvent.</p></li></ul></div>
-  </div>
-</div>
-<div class="chapter" lang="sv"><div class="titlepage"><div><div><h2 class="title"><a name="dbpwr_omdocbook"></a>Kapitel 5. Mer om DocBook</h2></div></div></div><div class="toc"><p><b>Innehållsförteckning</b></p><dl><dt><span class="section"><a href="#dbpwr_bakgrund">5.1. Bakgrund</a></span></dt><dt><span class="section"><a href="#dbpwr_verktyg">5.2. Vilka verktyg behövs?</a></span></dt><dd><dl><dt><span class="section"><a href="#dbpwr_vkedja">5.2.1. DocBook:s verktygskedja</a></span></dt><dt><span class="section"><a href="#dbpwr_editorer">5.2.2. Editorer för DocBook</a></span></dt></dl></dd><dt><span class="section"><a href="#dbpwr_referenser">5.3. Referenser</a></span></dt></dl></div>
-  
-  <p>
+      För att det ska fungera krävs dock att uppmärkningen är konsekvent.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+    &lt;/itemizedlist&gt;</font>
+  &lt;/section&gt;</font>
+&lt;/chapter&gt;</font>
+<font color="red">&lt;chapter&gt;
+  <font color="red">&lt;title&gt;Mer om DocBook&lt;/title&gt;</font>
+  <font color="red">&lt;para&gt;
     Detta kapitel är framför allt av orienterande karaktär.
-  </p>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_bakgrund"></a>5.1. Bakgrund</h2></div></div></div>
-    
-    <p>Docbook utvecklades ursprungligen av HaL och O'Reilly med början 1991. 
-    1998 blev det en del av SGML Open Consortium, vilket senare blev <acronym class="acronym">OASIS</acronym> (Organization for the Advancement of Structured Information Standards). </p>
-    <p>
+  &lt;/para&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Bakgrund&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;Docbook utvecklades ursprungligen av HaL och O'Reilly med början 1991. 
+    1998 blev det en del av SGML Open Consortium, vilket senare blev <font color="red">&lt;acronym&gt;OASIS&lt;/acronym&gt;</font> (Organization for the Advancement of Structured Information Standards). &lt;/para&gt;</font>
+    <font color="red">&lt;para&gt;
       Några punkter..
-    </p>
-    <div class="itemizedlist"><ul type="disc"><li><p>xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara</p></li><li><p>Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
-      Möjligt att skapa mer sökbara databaser.</p></li><li><p>Kan generera utdata i många olika format från en källa: html, pdf, manpages, rtf, txt, htmlhelp, 
+    &lt;/para&gt;</font>
+    <font color="red">&lt;itemizedlist&gt;
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;xml-grammatik för dokumentation, ssk teknisk, ssk hård- och mjukvara&lt;/para&gt;</font>&lt;/listitem&gt;</font>  
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Strukturerad uppmärkning baserat på innehåll, ej formatering (som ex.vis html). 
+      Möjligt att skapa mer sökbara databaser.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Kan generera utdata i många olika format från en källa: html, pdf, manpages, rtf, txt, htmlhelp, 
       Utdata för olika plattformar från samma källa (t ex SuSE / RedHat / Windows) - profiling. 
-      Utdata på olika språk från samma källa (med fallback).</p></li><li><p>Enkelt att integrera i byggrutinen för ett projekt. Make-filer, versionshantering.</p></li><li><p>OASIS-standard. Används av bl a: Sun, Microsoft, HP, Novell, Red Hat, och open source projekt som 
-      Linux kernel, KDE, Gnome, debian, Ubuntu, Fedora, Free-BSD, LDP, m fl.</p></li><li><p>Möjligt att skapa stora korsrefererande dokumentationssystem från fristående komponenter.</p></li><li><p>Aktiv open source-utveckling av hela verktygskedjan.</p></li></ul></div>
-    <p>Fördelar: Alla ovan.</p>
-    <p>Nackdelar: många taggar, ej entydigt vilka man ska använda, inlärningskurva, sammansatt verktygskedja, 
-    XML (om man inte gillar XML...).</p>
-  </div>
+      Utdata på olika språk från samma källa (med fallback).&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Enkelt att integrera i byggrutinen för ett projekt. Make-filer, versionshantering.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;OASIS-standard. Används av bl a: Sun, Microsoft, HP, Novell, Red Hat, och open source projekt som 
+      Linux kernel, KDE, Gnome, debian, Ubuntu, Fedora, Free-BSD, LDP, m fl.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Möjligt att skapa stora korsrefererande dokumentationssystem från fristående komponenter.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Aktiv open source-utveckling av hela verktygskedjan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+    &lt;/itemizedlist&gt;</font>
+    <font color="red">&lt;para&gt;Fördelar: Alla ovan.&lt;/para&gt;</font>
+    <font color="red">&lt;para&gt;Nackdelar: många taggar, ej entydigt vilka man ska använda, inlärningskurva, sammansatt verktygskedja, 
+    XML (om man inte gillar XML...).&lt;/para&gt;</font>
+  &lt;/section&gt;</font>
 
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_verktyg"></a>5.2. Vilka verktyg behövs?</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="#dbpwr_vkedja">5.2.1. DocBook:s verktygskedja</a></span></dt><dt><span class="section"><a href="#dbpwr_editorer">5.2.2. Editorer för DocBook</a></span></dt></dl></div>
-    
-    <p>Detta avsnitt beskriver verktygskedjan för Docbook, och hur man editerar och processar docbook-dokument.</p>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_vkedja"></a>5.2.1. DocBook:s verktygskedja</h3></div></div></div>
-      
-      <div class="itemizedlist"><ul type="disc"><li><p>Vokabulären specificeras i ett <acronym class="acronym">RELAX NG</acronym>
-	<sup>[<a name="id3377278" href="#ftn.id3377278">1</a>]</sup> 
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Vilka verktyg behövs?&lt;/title&gt;</font>
+    <font color="red">&lt;para&gt;Detta avsnitt beskriver verktygskedjan för Docbook, och hur man editerar och processar docbook-dokument.&lt;/para&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;DocBook:s verktygskedja&lt;/title&gt;</font>
+      <font color="red">&lt;itemizedlist&gt;
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Vokabulären specificeras i ett <font color="red">&lt;acronym&gt;RELAX NG&lt;/acronym&gt;</font>
+	<font color="red">&lt;footnote&gt;<font color="red">&lt;para&gt;REgular LAnguage for XML Next Generation, är en xml-vokabulär för att specificera xml-vokabulärer. 
+	Det går att skriva <font color="red">&lt;acronym&gt;RELAX NG&lt;/acronym&gt;</font>-schemat i kompakt notation, men då är schemat inte själv ett xml-dokument.
+	<font color="red">&lt;acronym&gt;RELAX NG&lt;/acronym&gt;</font> används som schemaspråk för DocBook, OpenDocument (OpenOffice.org:s dokumentformat), m fl. 
+	Ett alternativ till <font color="red">&lt;acronym&gt;RELAX NG&lt;/acronym&gt;</font> är W3C XML Schema.
+	&lt;/para&gt;</font>&lt;/footnote&gt;</font> 
 	schema fr o m Docbook v 5.0, tidigare användes en DTD (Document Type Definition). 
 	Den har bantats ned och stramats upp fr o m 5.0, möjligen ej helt fryst ännu.
 	För detta dokument används v 5.05b.
-	Schemat behövs egentligen bara för validering och för editorer, och om man ska skriva egna stylesheets.</p></li><li><p>Stylesheets definierar hur docbookvokabulär transformeras till andra taggar för olika utformat. 
+	Schemat behövs egentligen bara för validering och för editorer, och om man ska skriva egna stylesheets.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Stylesheets definierar hur docbookvokabulär transformeras till andra taggar för olika utformat. 
 	Mallarna är skrivna i xsl (extensible stylesheet language) som också är en xml-vokabulär. 
 	Tidigare användes dssl.
 	Senaste släppta versionen är docbook-xsl-1.69.1 (för detta dokument används en snapshot-version från sourceforge).
 	Huvudstylesheets för html, chunk, fo (formatted output), manpages etc. anropas. 
-	Dessa använder sig av ett flertal gemensamma stylesheets.</p></li><li><p>En xslt-processor används för att generera utdata (.html, .fo, etc). 
+	Dessa använder sig av ett flertal gemensamma stylesheets.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;En xslt-processor används för att generera utdata (.html, .fo, etc). 
 	Man anropar den med indata och stylesheet som argument, enklast via en make-fil. 
 	xsltproc är standard i många linuxdistributioner, ingår i libxslt. 
 	Andra processorer finns, ex.vis saxon, xalan.
-	För detta dokument används en snapshot-version av libxslt från xmlsoft.org.</p></li><li><p>För att skapa utdata för papper (pdf, ps, rtf, txt) 
+	För detta dokument används en snapshot-version av libxslt från xmlsoft.org.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;För att skapa utdata för papper (pdf, ps, rtf, txt) 
 	får man processa den skapade .fo-filen ett steg till, med en xsl-fo-processor.
 	xsl-fo är en xml-vokabulär för att beskriva formaterad text. 
 	Den innehåller information om hur texten ska se ut på pappret med fonter, textstorlek, pappersformat, styckeindelningar etc.
@@ -445,57 +558,71 @@ Spara filen ovan som exempelvis <code class="filename">minimalt.xml</code>.
 	Många av dem fungerar bra för de flesta tillämpningar, 
 	men ingen implementerar xsl-fo-standarden fullständigt. 
 	Detta uppges bero på tre saker:
-	</p><div class="orderedlist"><ol type="1"><li><p>Xsl-fo-standarden är ganska ny och omfattande.</p></li><li><p>Den har visat sig svårimplementerad i sin helhet.</p></li><li><p>Typsättning är svårt, generellt.</p></li></ol></div>
-	<p>Den mest använda open source-processorn är Apache's javabaserade FOP. 
+	<font color="red">&lt;orderedlist&gt;
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Xsl-fo-standarden är ganska ny och omfattande.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Den har visat sig svårimplementerad i sin helhet.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	  <font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Typsättning är svårt, generellt.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	&lt;/orderedlist&gt;</font>&lt;/para&gt;</font>
+	<font color="red">&lt;para&gt;Den mest använda open source-processorn är Apache's javabaserade FOP. 
 	Senaste stabila releasen var 0.20.5. 
 	En helt omarbetad version 0.90 alfa gjordes tillgänglig nyligen. 
 	För pdf-versionen av detta dokument används 0.92 beta. 
-	En 1.0-version uppges kunna släppas snart.</p>
-	<p>Andra open source fop:ar: PassiveTeX och xmlroff. 
-	Kommersiella: E3, XEP, XPP, XSL Formatter m fl. </p>
-	</li></ul></div>
-    </div>
-    <div class="section" lang="sv"><div class="titlepage"><div><div><h3 class="title"><a name="dbpwr_editorer"></a>5.2.2. Editorer för DocBook</h3></div></div></div>
-      
-      <p>I princip kan vilken texteditor som helst användas. 
+	En 1.0-version uppges kunna släppas snart.&lt;/para&gt;</font>
+	<font color="red">&lt;para&gt;Andra open source fop:ar: PassiveTeX och xmlroff. 
+	Kommersiella: E3, XEP, XPP, XSL Formatter m fl. &lt;/para&gt;</font>
+	&lt;/listitem&gt;</font>
+      &lt;/itemizedlist&gt;</font>
+    &lt;/section&gt;</font>
+    <font color="red">&lt;section&gt;
+      <font color="red">&lt;title&gt;Editorer för DocBook&lt;/title&gt;</font>
+      <font color="red">&lt;para&gt;I princip kan vilken texteditor som helst användas. 
       Eftersom taggarna ofta är långa (inga förkortningar) blir det dock lätt omständligt utan xml-medveten editor.
       Två alternativ:
-      </p><div class="itemizedlist"><ul type="disc"><li><p>Wysiwyg-editorer: Gömmer xml-taggarna. Exempel: oXygen (kommersiellt), XXE (halvt kommersiellt)</p></li><li><p>Emacs-lägen, etc.: psgml-mode, nXML-mode</p></li></ul></div><p>
-      </p>
-      <p>För detta dokument har Emacs med nXML-läge använts (Emacs version 21.x krävs). 
+      <font color="red">&lt;itemizedlist&gt;
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Wysiwyg-editorer: Gömmer xml-taggarna. Exempel: oXygen (kommersiellt), XXE (halvt kommersiellt)&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Emacs-lägen, etc.: psgml-mode, nXML-mode&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      &lt;/itemizedlist&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;För detta dokument har Emacs med nXML-läge använts (Emacs version 21.x krävs). 
       nXML är skrivet av xml-gurun James Clark (groff, expat, xml-standarden, relax ng mm). 
       Man kopplar nXML till sitt schema (docbook.rng i detta fall), 
       och sedan får man bl a:
-      </p><div class="itemizedlist"><ul type="disc"><li><p>auto-komplettering av taggar (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">RET</strong></span>): 
-	man skriver de första bokstäverna och autokompletterar sedan.</p></li><li><p>Insättning av sluttag 1 
-	(<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">c</strong></span> <span><strong class="keycap">C</strong></span>-<span><strong class="keycap">i</strong></span>): 
-	sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.</p></li><li><p>Insättning av sluttag 2 
-	(<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">c</strong></span> <span><strong class="keycap">C</strong></span>-<span><strong class="keycap">b</strong></span>): 
-	sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.</p></li><li><p>Insättning av sluttag 3 (<span><strong class="keycap">C</strong></span>-<span><strong class="keycap">f</strong></span>): 
-	Avslutar närmaste öppna tag uppåt i trädet.</p></li><li><p>Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.</p></li></ul></div><p>
-      </p>
-      <p>Till Emacs finns också en DocBook-meny att ladda ned.
-      Den innehåller inga kommandon, men länkar till dokumentation, samt alla element/taggar grupperade alfabetiskt och logiskt. Användbart.</p>
-    </div>
-  </div>
-  <div class="section" lang="sv"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="dbpwr_referenser"></a>5.3. Referenser</h2></div></div></div>
-    
-    <div class="itemizedlist"><ul type="disc"><li>
-	<p><a href="http://www.docbook.org/tdg5/en/html/docbook.html" target="_top">DocBook 5.0: The Definitive Guide</a>. 
+      <font color="red">&lt;itemizedlist&gt;
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;auto-komplettering av taggar (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;RET&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	man skriver de första bokstäverna och autokompletterar sedan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 1 
+	(<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;c&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font> <font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;i&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	sätter sluttaggen direkt efter öppningstaggen, och placerar markören mitt emellan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 2 
+	(<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;c&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font> <font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;b&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	sätter sluttagen på ny rad nedanför, och placerar markören på blank rad mitt emellan.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Insättning av sluttag 3 (<font color="red">&lt;keycombo&gt;<font color="red">&lt;keycap&gt;C&lt;/keycap&gt;</font><font color="red">&lt;keycap&gt;f&lt;/keycap&gt;</font>&lt;/keycombo&gt;</font>): 
+	Avslutar närmaste öppna tag uppåt i trädet.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+	<font color="red">&lt;listitem&gt;<font color="red">&lt;para&gt;Autovalidering: Syntaxen kollas mot schemat kontinuerligt. Info om fel. Syntaxfärgning och indentering.&lt;/para&gt;</font>&lt;/listitem&gt;</font>
+      &lt;/itemizedlist&gt;</font>
+      &lt;/para&gt;</font>
+      <font color="red">&lt;para&gt;Till Emacs finns också en DocBook-meny att ladda ned.
+      Den innehåller inga kommandon, men länkar till dokumentation, samt alla element/taggar grupperade alfabetiskt och logiskt. Användbart.&lt;/para&gt;</font>
+    &lt;/section&gt;</font>
+  &lt;/section&gt;</font>
+  <font color="red">&lt;section&gt;
+    <font color="red">&lt;title&gt;Referenser&lt;/title&gt;</font>
+    <font color="red">&lt;itemizedlist&gt;
+      <font color="red">&lt;listitem&gt;
+	<font color="red">&lt;para&gt;<font color="red">&lt;link&gt;DocBook 5.0: The Definitive Guide&lt;/link&gt;</font>. 
 	Komplett referens över alla element. 
-	Innehåller även en <a href="http://www.docbook.org/tdg5/en/html/quickref.html" target="_top">Quick Reference</a>.</p>
-      </li><li>
-	<p><a href="http://www.sagehill.net/docbookxsl/index.html" target="_top">DocBook XSL: The Complete Guide</a>. 
-	  Använda och sätta upp ett DocBook-system.</p>
-      </li><li>
-	<p><a href="http://docbook.xml-doc.org/snapshots/xsl/doc/" target="_top">DocBook XSL Stylesheet Reference Documentation</a>. 
-	Referensdokumentation över inställningsparametrar för html och fo.</p>
-      </li></ul></div>
-  </div>
-<div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id3377278" href="#id3377278">1</a>] </sup>REgular LAnguage for XML Next Generation, är en xml-vokabulär för att specificera xml-vokabulärer. 
-	Det går att skriva <acronym class="acronym">RELAX NG</acronym>-schemat i kompakt notation, men då är schemat inte själv ett xml-dokument.
-	<acronym class="acronym">RELAX NG</acronym> används som schemaspråk för DocBook, OpenDocument (OpenOffice.org:s dokumentformat), m fl. 
-	Ett alternativ till <acronym class="acronym">RELAX NG</acronym> är W3C XML Schema.
-	</p></div></div></div>
+	Innehåller även en <font color="red">&lt;link&gt;Quick Reference&lt;/link&gt;</font>.&lt;/para&gt;</font>
+      &lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;
+	<font color="red">&lt;para&gt;<font color="red">&lt;link&gt;DocBook XSL: The Complete Guide&lt;/link&gt;</font>. 
+	  Använda och sätta upp ett DocBook-system.&lt;/para&gt;</font>
+      &lt;/listitem&gt;</font>
+      <font color="red">&lt;listitem&gt;
+	<font color="red">&lt;para&gt;<font color="red">&lt;link&gt;DocBook XSL Stylesheet Reference Documentation&lt;/link&gt;</font>. 
+	Referensdokumentation över inställningsparametrar för html och fo.&lt;/para&gt;</font>
+      &lt;/listitem&gt;</font>
+    &lt;/itemizedlist&gt;</font>
+  &lt;/section&gt;</font>
+&lt;/chapter&gt;</font>
 
-</div></body></html>
+&lt;/book&gt;</font></body></html>
