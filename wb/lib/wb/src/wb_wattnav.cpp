@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.16 2007-01-18 07:49:19 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.17 2007-02-05 09:32:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -748,25 +748,24 @@ int	WAttNav::object_attr()
       if ( bodydef[j].Par->Output.Info.Type == pwr_eType_Buffer)
         continue;
 
-      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {
-       if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
-          continue;
-       if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
-	    j > 0) {
-	 pwr_tDisableAttr disabled;
-	 pwr_sAttrRef aar;
-	 pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
+	continue;
+      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	   j > 0) {
+	pwr_tDisableAttr disabled;
+	pwr_sAttrRef aar;
+	pwr_sAttrRef ar = cdh_ObjidToAref( objid);
 	 
-	 sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
-	 if ( EVEN(sts)) return sts;
+	sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
+	if ( EVEN(sts)) return sts;
 
-	 sts = ldh_AttributeDisabled( ldhses, &ar, &disabled);
-	 if ( EVEN(sts)) return sts;
-
-	 if ( disabled)
-	   continue;
-        }
-       
+	sts = ldh_AttributeDisabled( ldhses, &aar, &disabled);
+	if ( EVEN(sts)) return sts;
+	
+	if ( disabled)
+	  continue;
+      }
+      if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY ) {       
         elements = bodydef[j].Par->Output.Info.Elements;
 
         if ( bodydef[j].ParClass == pwr_eClass_Output &&
@@ -884,7 +883,15 @@ int	WAttNav::object_attr()
 	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_INVISIBLE )
           continue;
 
-        new WItemAttr( brow, ldhses, objid, NULL, 
+	if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_CLASS)
+	  new WItemAttrObject( brow, ldhses, objid, NULL, 
+		flow_eDest_IntoLast, parname,
+		bodydef[j].Par->Output.Info.Type, 
+		bodydef[j].Par->Output.Info.Size, false, 0,
+		bodydef[j].Par->Output.Info.Flags,
+		body, 0);
+	else
+	  new WItemAttr( brow, ldhses, objid, NULL, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.TypeRef, 
