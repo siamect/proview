@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.3 2007-01-17 10:27:06 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.4 2007-02-05 09:30:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -169,20 +169,21 @@ void CoWowGtk::DisplayError( char *title, char *text)
 *
 *************************************************************************/
 
-typedef struct {
+class WowListCtx {
+ public:
   GtkWidget    *toplevel;
   GtkWidget    *list;
   char      *texts;
   void      (* action_cb) ( void *, char *);
   void      *parent_ctx;
-} *wow_tListCtx;
+};
 
 void CoWowGtk::list_ok_cb (
   GtkWidget *w, 
   gpointer data
 )
 {
-  wow_tListCtx ctx = (wow_tListCtx) data;
+  WowListCtx *ctx = (WowListCtx *) data;
   char		*text;
   static char   selected_text[80];
   GtkTreeIter   iter;
@@ -203,7 +204,7 @@ void CoWowGtk::list_ok_cb (
 
   gtk_widget_destroy( ctx->toplevel);
   free( ctx->texts);
-  free( ctx);
+  delete ctx;
 }
 
 void CoWowGtk::list_cancel_cb (
@@ -211,11 +212,17 @@ void CoWowGtk::list_cancel_cb (
   gpointer data
 )
 {
-  wow_tListCtx ctx = (wow_tListCtx) data;
+  WowListCtx *ctx = (WowListCtx *) data;
   
   gtk_widget_destroy( ctx->toplevel);
   free( ctx->texts);
-  free( ctx);
+  delete ctx;
+}
+
+static gboolean list_action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data)
+{
+  gtk_window_present( GTK_WINDOW(w));
+  return FALSE;
 }
 
 void *CoWowGtk::CreateList (
@@ -227,13 +234,13 @@ void *CoWowGtk::CreateList (
 {
   char *name_p;
   int i;
-  wow_tListCtx ctx;
+  WowListCtx *ctx;
   GtkListStore *store;
   GtkTreeIter iter;
   GtkCellRenderer *text_renderer;
   GtkTreeViewColumn *name_column;
 
-  ctx = (wow_tListCtx) calloc( 1, sizeof(*ctx));
+  ctx = new WowListCtx();
   ctx->action_cb = action_cb;
   ctx->parent_ctx = parent_ctx;
   
@@ -244,6 +251,9 @@ void *CoWowGtk::CreateList (
 					      "title", title,
 					      "window-position", GTK_WIN_POS_CENTER,
 					      NULL);
+
+  g_signal_connect( ctx->toplevel, "focus-in-event", G_CALLBACK(list_action_inputfocus), ctx);
+
 
   store = gtk_list_store_new( 1, G_TYPE_STRING);
   name_p = texts;
@@ -308,7 +318,6 @@ void *CoWowGtk::CreateList (
 
   // Set input focus to the scrolled list widget
   gtk_widget_grab_focus( ctx->list);
-
 
   return ctx;
 }
