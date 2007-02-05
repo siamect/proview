@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.10 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.11 2007-02-05 09:33:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -320,6 +320,8 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
     int 	rows;
     pwr_tClassId classid;
     char	body[20];
+    char parname[40];
+    pwr_tAttrRef aref = cdh_ObjidToAref( objid);
 
     if ( brow_IsOpen( node) & nav_mOpen_Children) {
       // Close children first
@@ -351,9 +353,33 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
       if ( EVEN(sts) ) continue;
 
       for ( i = 0; i < rows; i++) {
+	if ( aref.Flags.b.Object)
+	  strcpy( parname, bodydef[i].ParName);
+	else {
+	  strcpy( parname, name);
+	  strcat( parname, ".");
+	  strcat( parname, bodydef[i].ParName);
+	}
+
 	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_INVISIBLE ||
 	     bodydef[i].Par->Param.Info.Flags & PWR_MASK_RTVIRTUAL)
 	  continue;
+
+	if ( bodydef[i].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	     i > 0) {
+	  pwr_tDisableAttr disabled;
+	  pwr_sAttrRef aar;
+	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+	 
+	  sts = ldh_ArefANameToAref( nav->ldhses, &ar, parname, &aar);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_AttributeDisabled( nav->ldhses, &aar, &disabled);
+	  if ( EVEN(sts)) return sts;
+	
+	  if ( disabled)
+	    continue;
+	}
 
 	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
 	  attr_exist = 1;
