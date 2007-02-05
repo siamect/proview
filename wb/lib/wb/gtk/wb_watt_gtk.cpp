@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: wb_watt_gtk.cpp,v 1.3 2007-02-05 09:35:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -423,11 +423,17 @@ WAttGtk::WAttGtk(
        wa_display_objectname), parent_wid(wa_parent_wid)
 {
   int sts;
+  int size;
+  char *namep;
+
+  sts = ldh_AttrRefToName( ldhses, &aref, ldh_eName_Hierarchy, 
+			   &namep, &size);
+  if ( EVEN(sts)) return;
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", 400,
-			   "default-width", 300,
-			   "title", "Object Attributes",
+			   "default-height", 570,
+			   "default-width", 410,
+			   "title", namep,
 			   NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
