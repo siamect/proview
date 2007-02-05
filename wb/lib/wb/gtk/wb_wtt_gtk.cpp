@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.7 2007-01-24 12:43:42 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.8 2007-02-05 09:34:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -438,25 +438,17 @@ int WttGtk::create_popup_menu( pwr_sAttrRef aref,
   int sts;
 
   // Calculate position
-  gint wind_x, wind_y;
-
-  gtk_window_get_position( GTK_WINDOW(toplevel), &wind_x, &wind_y);
-  popupmenu_x = x + wind_x + 5;
-  popupmenu_y = y + wind_y + 50;
-
-  if ( editmode) {
-    gint pos = gtk_paned_get_position( GTK_PANED(palette_paned));
-    popupmenu_x += pos + 5;
+  GdkEvent *e = gtk_get_current_event();
+  if ( e->any.window == ((WNavGtk *)wnavnode)->brow_widget->window) {
+    CoWowGtk::PopupPosition( ((WNavGtk *)wnavnode)->brow_widget, x, y, &popupmenu_x, &popupmenu_y);
   }
-
-  if ( wnav_mapped && wnavnode_mapped) {
-    GdkEvent *e = gtk_get_current_event();
-    if ( e->any.window == ((WNavGtk *)wnavnode)->brow_widget->window) {
-      gint pos = gtk_paned_get_position( GTK_PANED(wnav_paned));
-      popupmenu_x += pos + 9;
-    }
-    gdk_event_free( e);
+  else if ( e->any.window == ((WNavGtk *)wnav)->brow_widget->window) {
+    CoWowGtk::PopupPosition( ((WNavGtk *)wnav)->brow_widget, x, y, &popupmenu_x, &popupmenu_y);
   }
+  else
+    return 0;
+  gdk_event_free( e);
+  popupmenu_x += 10;
 
   // Create the menu
   sts = get_popup_menu_items( aref, pwr_cNCid);
@@ -1160,6 +1152,13 @@ void WttGtk::activate_scriptbase( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
   wtt->activate_scriptbase();
+}
+
+void WttGtk::activate_set_advuser( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  pwr_tCmd cmd = "set advanceduser";
+  wtt->wnav->command( cmd);
 }
 
 void WttGtk::activate_help( GtkWidget *w, gpointer data)
@@ -2389,6 +2388,14 @@ WttGtk::WttGtk(
   g_object_set( tools_zoom_reset, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_zoom_reset, "Zoom reset", "");
 
+  GtkWidget *tools_set_advuser = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_advuser.png");
+  gtk_container_add( GTK_CONTAINER(tools_set_advuser), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_set_advuser, "clicked", G_CALLBACK(WttGtk::activate_set_advuser), this);
+  g_object_set( tools_set_advuser, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_set_advuser, "Advanced user", "");
+
   // Vertical palette pane
   palette_paned = gtk_hpaned_new();
   wnav_paned = gtk_hpaned_new();
@@ -2492,6 +2499,7 @@ WttGtk::WttGtk(
     g_object_set( wnav_brow_widget, "visible", FALSE, NULL);
   if ( !wnavnode_mapped)
     g_object_set( wnavnode_brow_widget, "visible", FALSE, NULL);
+  twowindows = wnav_mapped && wnavnode_mapped ? 1 : 0;
 
   if ( !editmode)
     g_object_set( palette_widget, "visible", FALSE, NULL);

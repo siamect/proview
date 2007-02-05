@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.3 2007-01-24 12:43:42 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.4 2007-02-05 09:34:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -213,6 +213,7 @@ class WttGtk : public Wtt {
     static void activate_restoresettings( GtkWidget *w, gpointer data);
     static void activate_scriptproj( GtkWidget *w, gpointer data);
     static void activate_scriptbase( GtkWidget *w, gpointer data);
+    static void activate_set_advuser( GtkWidget *w, gpointer data);
     static void activate_help( GtkWidget *w, gpointer data);
     static void activate_help_project( GtkWidget *w, gpointer data);
     static void activate_help_proview( GtkWidget *w, gpointer data);
