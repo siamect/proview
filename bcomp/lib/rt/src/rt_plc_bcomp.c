@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_bcomp.c,v 1.3 2007-01-30 07:15:04 claes Exp $
+ * Proview   $Id: rt_plc_bcomp.c,v 1.4 2007-02-05 09:44:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -401,7 +401,7 @@ void CompOnOffBurnerFo_exec( plc_sThread		*tp,
   if ( !co->Executing) {
     o->Status = co->Status = 0;
     co->BrTime = 0;
-    co->TrendStatus = co->Number;
+    co->TrendStatus = (pwr_tFloat32) co->Number;
     return;
   }
      
@@ -418,7 +418,7 @@ void CompOnOffBurnerFo_exec( plc_sThread		*tp,
     if ( (o->Status && !co->ManStatus) || (!o->Status && co->ManStatus))
       co->BrTime = 0;
     o->Status = co->Status = co->ManStatus;
-    co->TrendStatus = co->Number + (co->Status ? 1 : 0);
+    co->TrendStatus = (pwr_tFloat32) co->Number + 0.8 * (co->Status ? 1 : 0);
     co->BrTime += *o->ScanTime;
     return;
   }
@@ -452,7 +452,7 @@ void CompOnOffBurnerFo_exec( plc_sThread		*tp,
     co->BrTime = 0;
   }
   co->BrTime += *o->ScanTime;
-  co->TrendStatus = co->Number + (co->Status ? 1 : 0);
+  co->TrendStatus = (pwr_tFloat32) co->Number + 0.8 * (co->Status ? 1 : 0);
   o->Status = co->Status;
 }
 
