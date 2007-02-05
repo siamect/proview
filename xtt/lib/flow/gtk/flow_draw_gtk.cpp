@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.6 2007-01-24 12:41:58 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.7 2007-02-05 09:41:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -837,10 +837,10 @@ int FlowDrawGtk::event_handler( FlowCtx *ctx, GdkEvent event)
 	sts = ctx->event_handler( flow_eEvent_CursorMotion, (int)event.button.x, (int)event.button.y, 0, 0);
       break;
     case GDK_ENTER_NOTIFY:
-      sts = ctx->event_handler( flow_eEvent_Enter, (int)event.button.x, (int)event.button.y, 0, 0);
+      sts = ctx->event_handler( flow_eEvent_Enter, (int)event.crossing.x, (int)event.crossing.y, 0, 0);
       break;          
     case GDK_LEAVE_NOTIFY:
-      sts = ctx->event_handler( flow_eEvent_Leave, (int)event.button.x, (int)event.button.y, 0, 0);
+      sts = ctx->event_handler( flow_eEvent_Leave, (int)event.crossing.x, (int)event.crossing.y, 0, 0);
       break;          
     case GDK_MAP:
       sts = ctx->event_handler( flow_eEvent_Map, 0, 0, 0, 0);
@@ -1458,7 +1458,7 @@ int FlowDrawGtk::get_text_extent( FlowCtx *ctx, char *text, int len,
   gdk_text_extents( font[font_idx][idx], text, len,
 	&text_lbearing, &text_rbearing, &text_width, &text_ascent, 
 		    &text_descent);
-  *height = text_ascent + text_descent;
+  *height = int(1.6 * text_ascent)  + text_descent;
   *width = text_width;
   return 1;
 }
