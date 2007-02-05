@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xhelp_gtk.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_xhelp_gtk.cpp,v 1.2 2007-02-05 09:28:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -219,7 +219,7 @@ CoXHelpGtk::CoXHelpGtk(
 
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 700,
-			   "default-width", 400,
+			   "default-width", 600,
 			   "title", title,
 			   NULL);
 
