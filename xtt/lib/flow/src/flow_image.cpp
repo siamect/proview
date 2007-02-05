@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_image.cpp,v 1.7 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_image.cpp,v 1.8 2007-02-05 09:42:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,19 +42,20 @@ int FlowImage::insert_image( char *imagefile)
 			  ctx->nav_zoom_factor / ctx->base_zoom_factor, &original_image,
 			  &image, &pixmap, &clip_mask, &nav_pixmap, &nav_clip_mask);
 
-  current_width = int(  ctx->zoom_factor / ctx->base_zoom_factor * 
-			ctx->fdraw->image_get_width( original_image));
-  current_height = int( ctx->zoom_factor / ctx->base_zoom_factor *
-			ctx->fdraw->image_get_height( original_image));
-  current_nav_width = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
-			   ctx->fdraw->image_get_width( original_image));
-  current_nav_height = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
-			    ctx->fdraw->image_get_height( original_image));
-
-  ur.posit( ll.x + double( current_width) / ctx->zoom_factor,
-	    ll.y + double( current_height) / ctx->zoom_factor);
-  current_zoom_factor = ctx->zoom_factor;
-
+  if ( original_image) {
+    current_width = int(  ctx->zoom_factor / ctx->base_zoom_factor * 
+			  ctx->fdraw->image_get_width( original_image));
+    current_height = int( ctx->zoom_factor / ctx->base_zoom_factor *
+			  ctx->fdraw->image_get_height( original_image));
+    current_nav_width = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
+			     ctx->fdraw->image_get_width( original_image));
+    current_nav_height = int( ctx->nav_zoom_factor / ctx->base_zoom_factor *
+			      ctx->fdraw->image_get_height( original_image));
+    
+    ur.posit( ll.x + double( current_width) / ctx->zoom_factor,
+	      ll.y + double( current_height) / ctx->zoom_factor);
+    current_zoom_factor = ctx->zoom_factor;
+  }
   return 1;
 }
 
