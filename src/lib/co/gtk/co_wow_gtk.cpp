@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.4 2007-02-05 09:30:02 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.5 2007-02-06 07:32:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@ typedef struct {
   int			received;
   pwr_tStatus		sts;
   GdkAtom	       	atom;
+  int			new_main;
 } wow_sSelection;
 
 
@@ -514,7 +515,8 @@ static void wow_get_selection_cb( GtkWidget *w, GtkSelectionData *selection_data
   else
     data->sts = 0;
   data->received = 1;
-  gtk_main_quit();
+  if ( data->new_main)
+    gtk_main_quit();
 }
 
 int CoWowGtk::GetSelection( GtkWidget *w, char *str, int size, GdkAtom atom)
@@ -524,6 +526,7 @@ int CoWowGtk::GetSelection( GtkWidget *w, char *str, int size, GdkAtom atom)
   data.received = 0;
   data.sts = 0;
   data.atom = atom;
+  data.new_main = 0;
   
   gulong id = g_signal_connect( w, "selection_received", 
 				G_CALLBACK(wow_get_selection_cb), &data);
@@ -532,6 +535,7 @@ int CoWowGtk::GetSelection( GtkWidget *w, char *str, int size, GdkAtom atom)
 
   while ( !data.received) {
     // From other application
+    data.new_main = 1;
     gtk_main();
   }
 
