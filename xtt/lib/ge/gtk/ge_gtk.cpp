@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.6 2007-01-17 10:33:55 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.7 2007-02-06 07:30:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -288,7 +288,7 @@ int GeGtk::get_plant_select( char *select_name)
     if ( ODD(sts))
       strcpy( select_name, str);
     else {
-      sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), GDK_SELECTION_TYPE_STRING);
+      sts = CoWowGtk::GetSelection( toplevel, str, sizeof(str), GDK_TARGET_STRING);
       if ( ODD(sts))
 	strcpy( select_name, str);
     }
