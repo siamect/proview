@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_hist.cpp,v 1.5 2006-06-14 10:41:53 claes Exp $
+ * Proview   $Id: jpwr_rt_hist.cpp,v 1.6 2007-02-06 15:12:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -258,7 +258,7 @@ JNIEXPORT jobjectArray JNICALL Java_jpwr_rt_Hist_getHistList
 
 
   //create a new MhrEvent[]
-  jobjectArr = env->NewObjectArray(nrOfEvents, mhrEventArrCls, NULL);
+  jobjectArr = (jobjectArray)env->NewObjectArray(nrOfEvents, mhrEventArrCls, NULL);
   
   printf("nrOfEvents: %d\n", nrOfEvents);
   sEvent ev;
