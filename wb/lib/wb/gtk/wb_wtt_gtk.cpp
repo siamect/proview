@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.9 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.10 2007-02-06 13:22:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -726,9 +726,11 @@ void WttGtk::open_change_value()
   gtk_widget_grab_focus( cmd_input);
 
   if ( value) {
+    char *textutf8 = g_convert( value, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
     gint pos = 0;
     gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
-    gtk_editable_insert_text( GTK_EDITABLE(cmd_input), value, strlen(value), &pos);
+    gtk_editable_insert_text( GTK_EDITABLE(cmd_input), textutf8, strlen(textutf8), &pos);
+    g_free( textutf8);
 
     // Select the text
     gtk_editable_set_position( GTK_EDITABLE(cmd_input), -1);
