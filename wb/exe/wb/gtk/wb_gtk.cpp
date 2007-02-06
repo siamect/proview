@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.2 2007-02-06 15:14:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -297,7 +297,9 @@ WbGtk::WbGtk( int argc, char *argv[])
   strcat( title, login_prv.username);
   strcat( title, " on ");
   strcat( title, systemname);
+#if !(GTK_MAJOR_VERSION == 2 && GTK_MINOR_VERSION < 8)
   gtk_window_set_icon_name( GTK_WINDOW(toplevel), title);
+#endif
 
   gtk_widget_show_all( toplevel);
   g_object_set( toplevel, "visible", FALSE, NULL);

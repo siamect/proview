@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.2 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.3 2007-02-06 15:13:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -353,8 +353,8 @@ GtkWidget *scrolledcurvewidgetgtk_new(
   w->curve_ctx = 0;
   w->is_navigator = 0;
   w->client_data = client_data;
-  w->scroll_h = gtk_scrolled_window_get_hscrollbar( GTK_SCROLLED_WINDOW(form));
-  w->scroll_v = gtk_scrolled_window_get_vscrollbar( GTK_SCROLLED_WINDOW(form));
+  w->scroll_h = GTK_SCROLLED_WINDOW(form)->hscrollbar;
+  w->scroll_v = GTK_SCROLLED_WINDOW(form)->vscrollbar;
   w->scroll_h_ignore = 0;
   w->scroll_v_ignore = 0;
   w->form = form;

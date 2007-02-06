@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.3 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.4 2007-02-06 15:13:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2382,7 +2382,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.3 2007-01-15 13:19:09 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.4 2007-02-06 15:13:34 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -2524,6 +2524,9 @@ unsigned char *GlowDrawGtk::image_get_data( glow_tImImage image)
 
 void GlowDrawGtk::image_rotate( glow_tImImage *image, int to_rotation, int from_rotation) 
 {
+#if GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR < 8
+  return;
+#else
   int grot;
   int drot = to_rotation - from_rotation;
   drot = int( (float(drot) / 360 - floor( float(drot) / 360)) * 360);
@@ -2543,20 +2546,29 @@ void GlowDrawGtk::image_rotate( glow_tImImage *image, int to_rotation, int from_
   GdkPixbuf *im = gdk_pixbuf_rotate_simple( (GdkPixbuf *)*image, (GdkPixbufRotation) grot);
   gdk_pixbuf_unref( (GdkPixbuf *)*image);
   *image = (glow_tImImage) im;
+#endif
 }
 
 void GlowDrawGtk::image_flip_vertical( glow_tImImage *image) 
 {
+#if GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR < 8
+  return;
+#else
   GdkPixbuf *im = gdk_pixbuf_flip( (GdkPixbuf *)*image, TRUE);
   gdk_pixbuf_unref( (GdkPixbuf *)*image);
   *image = (glow_tImImage) im;
+#endif
 }
 
 void GlowDrawGtk::image_flip_horizontal( glow_tImImage *image) 
 {
+#if GDK_PIXBUF_MAJOR == 2 && GDK_PIXBUF_MINOR < 8
+  return;
+#else
   GdkPixbuf *im = gdk_pixbuf_flip( (GdkPixbuf *)*image, FALSE);
   gdk_pixbuf_unref( (GdkPixbuf *)*image);
   *image = (glow_tImImage) im;
+#endif
 }
 
 void GlowDrawGtk::image_scale( int width, int height, glow_tImImage orig_im, glow_tImImage *im, 
