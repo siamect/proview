@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wda_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wda_gtk.cpp,v 1.2 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -212,11 +212,17 @@ void WdaGtk::class_activate_ok( GtkWidget *w, gpointer data)
   WdaGtk *wda = (WdaGtk *)data;
   char *hiername;
   char *classname;
+  char *utf8;
   int sts;
   pwr_tClassId new_classid;
 
-  hiername = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_hiervalue), 0, -1);
-  classname = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_classvalue), 0, -1);
+  utf8 = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_hiervalue), 0, -1);
+  hiername = g_convert( utf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( utf8);
+  utf8 = gtk_editable_get_chars( GTK_EDITABLE(wda->wdaclass_classvalue), 0, -1);
+  classname = g_convert( utf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( utf8);
+
   wda->attrobjects = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(wda->wdaclass_attrobjects));
 
   if ( strcmp( hiername, "") == 0)
@@ -352,8 +358,11 @@ void WdaGtk::change_value_close()
       wdanav->set_inputfocus();
     }
     else {
-      char *text;
-      text = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
+      char *text, *textutf8;
+      textutf8 = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
+      text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+      g_free( textutf8);
+
       sts = wdanav->set_attr_value( input_node, 
 				     input_name, text);
       g_free( text);
@@ -370,7 +379,7 @@ void WdaGtk::change_value_close()
 
 void WdaGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 {
-  char *text;
+  char *text, *textutf8;
   WdaGtk *wda = (WdaGtk *)data;
   int sts;
 
@@ -379,7 +388,10 @@ void WdaGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 
   wda->wdanav->set_inputfocus();
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   if ( wda->input_open) {
     sts = wda->wdanav->set_attr_value( wda->input_node, 
 				       wda->input_name, text);

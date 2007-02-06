@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.5 2007-01-17 10:33:55 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.6 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -400,10 +400,13 @@ void XttGtk::activate_back( GtkWidget *w, gpointer data)
 void XttGtk::activate_india_ok( GtkWidget *w, gpointer data)
 {
   Xtt *xtt = (Xtt *)data;
-  char *text;
+  char *text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(((XttGtk *)xtt)->india_text), 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((XttGtk *)xtt)->india_text), 
 				 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   g_object_set( ((XttGtk *)xtt)->india_widget, "visible", FALSE, NULL);
 
   (xtt->india_ok_cb)( xtt, text);
@@ -435,9 +438,12 @@ void XttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
 {
   Xtt 	*xtt = (Xtt *)data;
   int 	sts;
-  char 	*text;
+  char 	*text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   if ( xtt->input_open) {
     sts = xtt->xnav->set_attr_value( text);
     g_object_set( w, "visible", FALSE, NULL);

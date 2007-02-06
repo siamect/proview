@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xatt_gtk.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_xatt_gtk.cpp,v 1.3 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -284,13 +284,15 @@ void XAttGtk::change_value_close()
 
   if ( input_open) {
     if ( input_multiline) {
-      gchar *text;
+      gchar *text, *textutf8;
       GtkTextIter start_iter, end_iter;
       gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
       gtk_text_buffer_get_end_iter( cmd_scrolled_buffer, &end_iter);
 
-      text = gtk_text_buffer_get_text( cmd_scrolled_buffer, &start_iter, &end_iter,
+      textutf8 = gtk_text_buffer_get_text( cmd_scrolled_buffer, &start_iter, &end_iter,
 				       FALSE);
+      text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+      g_free( textutf8);
 
       sts = xattnav->set_attr_value( input_node,
 				     input_name, text);
@@ -307,8 +309,12 @@ void XAttGtk::change_value_close()
       xattnav->set_inputfocus();
     }
     else {
-      char *text;
-      text = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
+      char *text, *textutf8;
+
+      textutf8 = gtk_editable_get_chars( GTK_EDITABLE(cmd_input), 0, -1);
+      text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+      g_free( textutf8);
+
       sts = xattnav->set_attr_value( input_node, 
 				     input_name, text);
       g_free( text);
@@ -325,7 +331,7 @@ void XAttGtk::change_value_close()
 
 void XAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 {
-  char *text;
+  char *text, *textutf8;
   XAttGtk *xatt = (XAttGtk *)data;
   int sts;
 
@@ -334,7 +340,10 @@ void XAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 
   xatt->xattnav->set_inputfocus();
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   if ( xatt->input_open) {
     sts = xatt->xattnav->set_attr_value( xatt->input_node, 
 					 xatt->input_name, text);
@@ -350,7 +359,7 @@ void XAttGtk::activate_cmd_input( GtkWidget *w, gpointer data)
 void XAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 {
   XAttGtk *xatt = (XAttGtk *)data;
-  gchar *text;
+  gchar *text, *textutf8;
   int sts;
 
   if ( xatt->input_open) {
@@ -358,8 +367,10 @@ void XAttGtk::activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     gtk_text_buffer_get_start_iter( xatt->cmd_scrolled_buffer, &start_iter);
     gtk_text_buffer_get_end_iter( xatt->cmd_scrolled_buffer, &end_iter);
 
-    text = gtk_text_buffer_get_text( xatt->cmd_scrolled_buffer, &start_iter, &end_iter,
+    textutf8 = gtk_text_buffer_get_text( xatt->cmd_scrolled_buffer, &start_iter, &end_iter,
 				     FALSE);
+    text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+    g_free( textutf8);
 
     sts = xatt->xattnav->set_attr_value( xatt->input_node,
 						      xatt->input_name, text);

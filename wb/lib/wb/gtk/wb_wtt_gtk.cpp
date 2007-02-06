@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.8 2007-02-05 09:34:37 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.9 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1183,9 +1183,12 @@ void WttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
 {
   Wtt 	*wtt = (Wtt *)data;
   int 	sts;
-  char 	*text;
+  char 	*text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   if ( wtt->input_open) {
     switch( wtt->input_mode)  {
     case wtt_eInputMode_Attribute:
@@ -1228,10 +1231,13 @@ void WttGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
 void WttGtk::activate_india_ok( GtkWidget *w, gpointer data)
 {
   Wtt *wtt = (Wtt *)data;
-  char *text;
+  char *text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(((WttGtk *)wtt)->india_text), 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((WttGtk *)wtt)->india_text), 
 				 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   g_object_set( ((WttGtk *)wtt)->india_widget, "visible", FALSE, NULL);
 
   (wtt->india_ok_cb)( wtt, text);

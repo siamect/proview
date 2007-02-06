@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.2 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.3 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -207,7 +207,7 @@ static gboolean attr_focus_in_event( GtkWidget *w, GdkEvent *event, gpointer dat
 
 static void attr_activate_cmd_input( GtkWidget *w, gpointer data)
 {
-  char *text;
+  char *text, *textutf8;
   AttrGtk *attr = (AttrGtk *)data;
   int sts;
 
@@ -216,7 +216,9 @@ static void attr_activate_cmd_input( GtkWidget *w, gpointer data)
 
   attr->attrnav->set_inputfocus();
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
   if ( attr->input_open) {
     sts = ((AttrNav *)attr->attrnav)->set_attr_value( text);
     g_object_set( w, "visible", FALSE, NULL);
@@ -232,7 +234,7 @@ static void attr_activate_cmd_input( GtkWidget *w, gpointer data)
 static void attr_activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
 {
   AttrGtk *attr = (AttrGtk *)data;
-  gchar *text;
+  gchar *text, *textutf8;
   int sts;
 
   if ( attr->input_open) {
@@ -240,8 +242,10 @@ static void attr_activate_cmd_scrolled_ok( GtkWidget *w, gpointer data)
     gtk_text_buffer_get_start_iter( attr->cmd_scrolled_buffer, &start_iter);
     gtk_text_buffer_get_end_iter( attr->cmd_scrolled_buffer, &end_iter);
 
-    text = gtk_text_buffer_get_text( attr->cmd_scrolled_buffer, &start_iter, &end_iter,
+    textutf8 = gtk_text_buffer_get_text( attr->cmd_scrolled_buffer, &start_iter, &end_iter,
 				     FALSE);
+    text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+    g_free( textutf8);
 
     sts = attr->attrnav->set_attr_value( text);
     g_object_set( attr->cmd_scrolledinput, "visible", FALSE, NULL);

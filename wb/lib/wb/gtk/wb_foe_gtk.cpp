@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.5 2007-01-24 12:42:44 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.6 2007-02-06 10:06:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -528,17 +528,19 @@ void WFoeGtk::activate_edit_togg( GtkWidget *w, gpointer data)
 void WFoeGtk::valchanged_textinput( GtkWidget *w, gpointer data)
 {
   WFoeGtk *foe = (WFoeGtk *)data;
-  char	*value;
+  char	*value, *valueutf8;
   int	sts;
 
   if ( foe->widgets.textinput == 0)
     return;
 
-  value = gtk_editable_get_chars( GTK_EDITABLE(foe->widgets.textinput), 0, -1);
-  if ( *value == 0) {
-    g_free(value);
+  valueutf8 = gtk_editable_get_chars( GTK_EDITABLE(foe->widgets.textinput), 0, -1);
+  if ( *valueutf8 == 0) {
+    g_free(valueutf8);
     return;
   }
+  value = g_convert( valueutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( valueutf8);
 
   strcpy( foe->searchstring, value);
 

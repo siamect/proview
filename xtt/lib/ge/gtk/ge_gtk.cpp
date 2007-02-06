@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.7 2007-02-06 07:30:35 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.8 2007-02-06 10:06:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1130,9 +1130,12 @@ void GeGtk::activate_help(GtkWidget *w, gpointer gectx)
 
 void GeGtk::activate_india_ok(GtkWidget *w, gpointer gectx)
 {
-  char *text;
+  char *text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(((GeGtk *)gectx)->india_text), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((GeGtk *)gectx)->india_text), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   g_object_set( ((GeGtk *)gectx)->india_widget, "visible", FALSE, NULL);
   ((Ge *)gectx)->activate_india_ok( text);
   g_free( text);
@@ -1171,9 +1174,11 @@ void GeGtk::valchanged_cmd_input( GtkWidget *w, gpointer data)
 {
   GeGtk *gectx = (GeGtk *)data;
   int sts;
-  char *text;
+  char *text, *textutf8;
 
-  text = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(w), 0, -1);
+  text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
 
   if ( gectx->text_input_open) {
     gectx->graph->change_text( gectx->current_text_object, text);
