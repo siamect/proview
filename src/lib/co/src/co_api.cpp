@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_api.cpp,v 1.10 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_api.cpp,v 1.11 2007-02-07 15:46:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,16 +31,6 @@
 extern "C" {
 #include "pwr.h"
 }
-
-#include <Xm/Xm.h>
-#include <Mrm/MrmPublic.h>
-#ifndef _XtIntrinsic_h
-#include <X11/Intrinsic.h>
-#endif
-#include <X11/IntrinsicP.h>
-
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"

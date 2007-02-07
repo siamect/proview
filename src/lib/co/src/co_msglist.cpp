@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msglist.cpp,v 1.7 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: co_msglist.cpp,v 1.8 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,29 +24,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
-//#include "pwr_baseclasses.h"
-}
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
-// Status is defined as int i xlib...
-#ifdef Status
-# undef Status
-#endif
-
-extern "C" {
-#include "flow_x.h"
-#include "co_mrm_util.h"
-}
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"

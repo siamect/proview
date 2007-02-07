@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_convert.cpp,v 1.5 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_convert.cpp,v 1.6 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,24 +31,11 @@
 # include <stdlib.h>
 # include <ctype.h>
 
-extern "C" {
 #include "pwr_class.h"
 #include "co_cdh.h"
 #include "co_ccm.h"
 #include "co_dcli.h"
 #include "co_ccm_msg.h"
-}
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Xm/MessageB.h>
-#include <Xm/SelectioB.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"
@@ -60,7 +47,6 @@ extern "C" {
 #include "ge_dyn.h"
 
 extern "C" {
-#include "flow_x.h"
 #if LDH
 # include "wb_wccm.h"
 #endif

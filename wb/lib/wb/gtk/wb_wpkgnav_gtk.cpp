@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wpkgnav_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wpkgnav_gtk.cpp,v 1.2 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,14 +28,6 @@
 #include "co_time.h"
 #include "rt_load.h"
 #include "wb_pkg_msg.h"
-
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
 
 #include "flow.h"
 #include "flow_browctx.h"

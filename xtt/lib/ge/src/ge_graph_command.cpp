@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.11 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.12 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,9 +46,6 @@
 #include "ge.h"
 #include "ge_dyn.h"
 
-extern "C" {
-#include "flow_x.h"
-}
 #if LDH
 # include "wb_wccm.h"
 #endif

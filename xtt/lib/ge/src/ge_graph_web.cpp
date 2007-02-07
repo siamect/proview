@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_web.cpp,v 1.11 2007-01-30 13:00:18 claes Exp $
+ * Proview   $Id: ge_graph_web.cpp,v 1.12 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-
-extern "C" {
 #include "co_cdh.h"
 #include "co_time.h"
 #include "co_ccm_msg.h"
@@ -34,10 +32,6 @@ extern "C" {
 #include "co_cnf.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-}
-
-#include <Xm/Xm.h>
-
 #include "glow.h"
 #include "glow_growctx.h"
 #include "glow_growapi.h"

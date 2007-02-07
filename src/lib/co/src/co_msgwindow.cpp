@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.10 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.11 2007-02-07 15:45:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,17 +28,6 @@
 #include "co_time.h"
 #include "co_dcli.h"
 
-#include <Xm/Xm.h>
-#include <Xm/XmP.h>
-#include <Xm/Text.h>
-#include <Mrm/MrmPublic.h>
-#include <X11/Intrinsic.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-extern "C" {
-#include "flow_x.h"
-}
 #include "co_lng.h"
 #include "co_xhelp.h"
 #include "co_msgwindow.h"
