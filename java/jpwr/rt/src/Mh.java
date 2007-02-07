@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Mh.java,v 1.3 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: Mh.java,v 1.4 2007-02-07 08:22:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,8 +150,8 @@ public class Mh
     
     if(!initDone)
     {
-      this.maxNoOfAlarms = maxNoOfAlarms;
-      this.maxNoOfEvents = maxNoOfEvents;
+      Mh.maxNoOfAlarms = maxNoOfAlarms;
+      Mh.maxNoOfEvents = maxNoOfEvents;
       initDone = true;
     }
   }
