@@ -8,11 +8,11 @@
 #
 
 
-Name: pwr42
+Name: pwr43
 Summary: Proview/R development and runtime environment
-Version: 4.2.0
-Release: 8
-Copyright: (c) 2006 SSAB Oxelösund AB, Sweden
+Version: 4.3.0
+Release: 1
+Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
 #License: GPL
 BuildArch: i386
 Packager: robert.karlsson@ssabox.com
@@ -178,18 +178,5 @@ fi
 #%postun
 
 %changelog
-* Tue Sep 06 2006 Claes Sjofors <claes.sjofors@ssabox.com> 4.2.0-7
-- Xtt: System-Device table works for attribute object signals and channels.
-- Profibus: Bugfix in area offset.
-- Ge: Adjustment property added for text in value and table objects.
-- Ge: Format for Time and DeltaTime in table.
-- Plc: bugfix for StoIp and CStoIp, supplied value was not fetched for not connected objects.
-- User b66 added to operator station.
-- BaseSensorFo: inputs Error and Warning added.
-- Local mq replaced.
-- ABB_ACS800_Slave: IORack bit was missing.
-- Bugfix in classcache for large classes.
-- Volume volref version check for not yet loaded volume removed.
-- Problems with mq quota fixed.
-- Profibus: problems with user PRM data for bigendian slaves fixed.
+* Wed Feb 07 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.3.0-1
 - Base release 

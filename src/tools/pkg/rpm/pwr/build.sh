@@ -140,12 +140,12 @@ rm $tarfile
 cd $currentdir
 
 # Remove not needed libraries
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_flow.a
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_ge.a
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_glow.a
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_tlog.a
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_wb.a
-rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_xtt.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_flow*.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_ge*.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_glow*.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_tlog*.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_wb*.a
+rm $pkgroot/usr/pwr$ver/$pwre_target/exp/lib/libpwr_xtt*.a
 
 # Copy configuration files to cnf
 cp $pkgsrc/proview.cnf $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf
