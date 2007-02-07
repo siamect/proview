@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.6 2007-01-17 12:40:30 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.7 2007-02-07 14:13:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -335,16 +335,33 @@ static pwr_tBoolean dp_get_slave_diag(T_PROFI_DEVICE_HANDLE *hDevice)
 /*----------------------------------------------------------------------------*\
   Get slave diagnostics
 \*----------------------------------------------------------------------------*/
-static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_ptr) 
+static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_ptr, io_sRack *slave_list) 
 {
   T_DP_DIAG_DATA    FAR *diag_data_ptr;
-  char                     s [128];
+//  char                     s [128];
+  pwr_sClass_Pb_DP_Slave  *sp;
 
   if (get_slave_diag_con_ptr->diag_data_len >= DP_MIN_SLAVE_DIAG_LEN)
   {
     diag_data_ptr = (T_DP_DIAG_DATA FAR*) (get_slave_diag_con_ptr + 1);
 
-    sprintf (s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, Master = %3hu, Ext = %hu, Diags = %hu",
+    while (slave_list != NULL) {
+      sp = (pwr_sClass_Pb_DP_Slave *) slave_list->op;
+      
+      if (sp->SlaveAddress == get_slave_diag_con_ptr->rem_add) {
+        sp->StationStatus1 = diag_data_ptr->station_status_1;
+        sp->StationStatus2 = diag_data_ptr->station_status_2;
+        sp->StationStatus3 = diag_data_ptr->station_status_3;
+	
+	memcpy(sp->Diag, diag_data_ptr + 1, MIN(get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN, DP_MAX_EXT_DIAG_DATA_LEN));	
+	
+	break;
+      }
+      
+      slave_list = slave_list->next;
+    }
+
+/*    sprintf (s, "Slave [%3hu] [0x%04hX]: Status = 0x%02hX 0x%02hX 0x%02hX, Master = %3hu, Ext = %hu, Diags = %hu",
              get_slave_diag_con_ptr->rem_add,
              swap16 (diag_data_ptr->ident_number),
              diag_data_ptr->station_status_1,
@@ -354,7 +371,7 @@ static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_p
              get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN,
              get_slave_diag_con_ptr->diag_entries);
 
-    errh_Info( "Profibus DP slave diag - %s", s);
+    errh_Info( "Profibus DP slave diag - %s", s); */
 
   } /* diag_data_len */
 
@@ -760,7 +777,7 @@ static pwr_tStatus IoAgentRead (
                 case DP_GET_SLAVE_DIAG: {
                   get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
 
-                  dp_get_slave_diag_con (get_slave_diag_con_ptr);
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist);
 
                   local->slave_diag_requested = PB_FALSE;
 
@@ -849,7 +866,7 @@ static pwr_tStatus IoAgentRead (
                 case DP_GET_SLAVE_DIAG: {
                   get_slave_diag_con_ptr = (T_DP_GET_SLAVE_DIAG_CON FAR*) con_ind_buffer;
 
-                  dp_get_slave_diag_con (get_slave_diag_con_ptr);
+                  dp_get_slave_diag_con (get_slave_diag_con_ptr, ap->racklist);
 
                   op->Diag[0]++;
 		  
