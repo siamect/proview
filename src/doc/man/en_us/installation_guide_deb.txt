@@ -1,0 +1,129 @@
+INSTALLATION GUIDE DEBIAN
+-------------------------
+
+Debian distribution: Debian Sarge
+
+System Requirements:
+
+Platform: x86
+Kernel: >= 2.6.6
+glibc: >= 2.3.6
+
+See specific package information below:
+
+1. PACKAGE PWR42
+----------------
+
+Dependencies:
+
+GTK+ v2.0 (libgtk2.0)
+Berkeley DB v4.3.29 (libdb4.3)
+Alsa v1.0.11 (libasound2)
+
+Install with dpkg
+
+dpkg doesn't check any dependency, and all the depedencies package has to be installed first.
+
+Download your selected debian-package and install it as:
+
+> dpkg -i pwr43_4.3.0-x_i386.deb
+
+During installation the files will be unpacked and a user named 'pwrp'
+belonging to a group with the same name 'pwrp' will be created.
+
+Install with aptitude or apt
+
+aptitude or apt will check dependencies and install required packages, but local packages
+first have to be known to apt with this procedure. 
+(See also http://debian.org/doc/manuals/apt-howto)
+
+Download the pwr debian packages and libmotif3 and place them in a directory, e.g. /root/debs
+Create a package file with the command
+
+> dpkg-scanpackages /root/debs /dev/null | gzip > /root/debs/Packages.gz
+
+Add the following line to /etc/apt/sources.lis
+
+deb file:/root debs/
+
+Update apt with the new packages
+
+> apt-get update
+
+Start aptitude, search the pwr43 package with '/pwr43', enter '+', 'g' and 'g' again to 
+start installation.
+
+Getting started:
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
+'pwrp' a correct environment for working with Proview will be set up. 
+How to work with Proview and set up your projects can be read in 
+"Proview/R Designer's guide" available from www.proview.se. Have a special 
+look at the 'Administration' chapter as well as the 'A case study' chapter. 
+Soon there will also exist a more simple  "Getting started guide" which 
+will help you taking the first steps.
+
+2. PACKAGE PWRRT
+----------------
+
+Dependencies:
+
+GTK+ v2.0 (libgtk2.0)
+Berkeley DB v4.3.29 (libdb4.3)
+Alsa v1.0.11 (libasound2)
+
+Download:
+
+Download your selected debian-package and install it as:
+
+> dpkg -i pwrrt_4.3.0-x_i386.deb
+
+Information:
+
+The runtime package should be installed "stand-alone" without the pwr43-package.
+A linux-system with the pwrrt-package is your control-system. Proview will be
+started automatically at boot-time.
+
+3. PACKAGE PWRDEMO43
+--------------------
+
+The proview demo project is under construction and contains so far
+a demo of the dynamics and components of the HMI.
+
+Dependencies:
+
+pwr43 V4.3.0
+
+Download:
+
+Download your selected debian-package and install it as:
+
+> dpkg -i pwrdemo43_4.3.0-x_i386.deb
+
+Getting started:
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
+'pwrp' a correct environment for working with Proview will be set up. 
+
+A demonstration project named pwrdemo43 is created. 
+Attach to the project with
+
+> sdf pwrdemo43
+
+Start proview runtime environment with
+
+> rt_ini &
+
+Start the operator environment with
+
+> rt_xtt -u op
+
+Press the 'PwrDemo' button in the operator window and
+
+
+
+
+
+
+
+

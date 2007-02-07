@@ -1,0 +1,103 @@
+INSTALLATION GUIDE RED HAT
+--------------------------
+
+Red Hat distribution: Red Hat Enterprise Linux 4
+
+System Requirements:
+
+Platform: x86
+Kernel: >= 2.6.6
+glibc: >= 2.3.4
+
+Specific package information follow below:
+
+1. PACKAGE PWR43
+----------------
+
+Dependencies:
+
+Berkeley DB v4.2
+Alsa v1.0.6
+
+Download:
+
+Download your selected rpm-package and install it as:
+
+rpm -Uvh pwr43_4.3.0-x.rhel4.i386.rpm
+
+During installation the files will be unpacked and a user named 'pwrp'
+belonging to a group with the same name 'pwrp' will be created.
+
+Getting started:
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user
+'pwrp' a correct environment for working with Proview will be set up.
+How to work with Proview and set up your projects can be read in
+"Proview/R Designer's guide" available from proview.se. Have a special
+look at the 'Administration' chapter as well as the 'A case study' chapter.
+Soon there will also exist a more simple "Getting started guide" which 
+will help you taking the first steps.
+
+2. PACKAGE PWRRT
+----------------
+
+Dependencies:
+
+Berkeley DB v4.2
+Alsa v1.0.6
+
+Download:
+
+Download your selected rpm-package and install it as:
+
+rpm -Uvh pwrrt_4.3.0-x.rhel4.i386.rpm
+
+Information:
+
+The runtime package should be installed "stand-alone" without the pwr43-package.
+A linux-system with the pwrrt-package is your control-system. Proview will be
+started automatically at boot-time.
+
+3. PACKAGE PWRDEMO43
+--------------------
+
+The proview demo project contains demo of HMI functions, component objects, and some
+process control applications.
+
+System Requirements:
+
+Platform: x86
+Kernel: >= 2.6.6
+glibc: >= 2.2.4
+
+Dependencies:
+
+pwr43 V4.3.0
+
+Download:
+
+Download your selected rpm-package and install it as:
+
+rpm -Uvh pwrdemo43_4.3.0-x.rhel4.i386.deb
+
+Getting started:
+
+Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
+'pwrp' a correct environment for working with Proview will be set up. 
+
+A demonstration project named pwrdemo43 is created. 
+Attach to the project with
+
+> sdf pwrdemo43
+
+Start proview runtime environment with
+
+> rt_ini &
+
+Start the operator environment with
+
+> rt_xtt -u op
+
+Press the 'PwrDemo' button in the operator window and
+
+
