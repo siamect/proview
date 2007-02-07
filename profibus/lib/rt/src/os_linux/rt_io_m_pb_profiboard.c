@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.7 2007-02-07 14:13:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.8 2007-02-07 14:43:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -352,6 +352,8 @@ static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_p
         sp->StationStatus1 = diag_data_ptr->station_status_1;
         sp->StationStatus2 = diag_data_ptr->station_status_2;
         sp->StationStatus3 = diag_data_ptr->station_status_3;
+	
+	sp->BytesOfDiag = get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN;
 	
 	memcpy(sp->Diag, diag_data_ptr + 1, MIN(get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN, DP_MAX_EXT_DIAG_DATA_LEN));	
 	
