@@ -3,3 +3,6 @@
                       Fixed bug in pb_ai and pb_di. 3-byte input where not properly
 		      aligned when byte swapping.
 060725 cs -           Byte order dependency added for PRM data in profibus configurator.
+070207 rk -           Adapted I/O routines to work with new driver for Softing Profiboard.
+                      Incorporated driver API from Softing to work with new Softing driver.
+		      Added diagnostics infomation to pwr_sClass_Pb_DP_Slave-class.
