@@ -1,0 +1,503 @@
+! 
+!  Proview   $Id: pb_gsd_attr.uil,v 1.1 2007-02-07 15:40:48 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+module pb_gsdattr
+        version = 'v1.0'
+        names = case_sensitive
+        objects = {
+                XmSeparator = gadget ;
+                }
+identifier
+	gsdattr_ctx;
+procedure
+	gsdattr_activate_exit(integer);
+	gsdattr_activate_print(integer);
+	gsdattr_activate_change_value(integer);
+	gsdattr_activate_copy(integer);
+	gsdattr_activate_cut(integer);
+	gsdattr_activate_paste(integer);
+	gsdattr_activate_zoom_in(integer);
+	gsdattr_activate_zoom_out(integer);
+	gsdattr_activate_zoom_reset(integer);
+	gsdattr_activate_help(integer);
+	gsdattr_create_menubutton(integer);
+	gsdattr_create_msg_label(integer);
+	gsdattr_create_cmd_prompt(integer);
+	gsdattr_create_cmd_input(integer);
+	gsdattr_create_attrnav_form(integer);
+	gsdattr_create_cmd_ok(integer);
+	gsdattr_activate_cmd_ok(integer);
+	gsdattr_create_cmd_ca(integer);
+	gsdattr_activate_cmd_ca(integer);
+value
+	menu_font : font ('-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1');
+
+!----------------------------------------
+! First declare the 'top level' widgets.  These are not controlled by
+! any other widgets.  They are each fetched individually as needed.
+!----------------------------------------
+
+object  gsd_attr_window : XmMainWindow
+{
+  arguments
+  {
+    XmNx = 0;
+    XmNy = 0;
+    XmNwidth = 450;
+    XmNheight = 400;
+  };
+  controls
+  {
+     XmMenuBar	attr_menu;
+     XmPanedWindow  main_pane;
+  };
+};
+
+
+object main_pane : XmPanedWindow
+{
+   arguments
+   {
+     XmNtraversalOn = false;
+   };
+   controls
+   {
+     XmPanedWindow attrnav_form;
+     XmForm form;
+   };
+};
+
+object form : XmForm
+{
+  arguments
+  {
+     XmNwidth = 500;
+     XmNheight = 100;
+     XmNpaneMinimum = 100;
+     XmNpaneMaximum = 100;
+     XmNresizePolicy = XmRESIZE_NONE;
+  };
+  controls
+  {
+     XmLabel	msg_label;
+     XmText	cmd_input;
+     XmLabel	cmd_prompt;
+     XmPushButton	cmd_ok;
+     XmPushButton	cmd_cancel;
+  };
+};
+
+object attr_menu : XmMenuBar
+{
+  arguments
+  {
+    XmNorientation 	= XmHORIZONTAL;
+    XmNspacing  	= 15;
+    XmNmenuHelpWidget 	= XmCascadeButton help_entry; 
+  };
+  controls
+  {
+    XmCascadeButton file_entry;
+    XmCascadeButton edit_entry;
+    XmCascadeButton functions_entry;
+    XmCascadeButton view_entry;
+    XmCascadeButton help_entry;
+  };
+};
+
+object file_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString  = compound_string("File");
+    XmNfontList	    = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Print");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_print(gsdattr_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Close");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_exit(gsdattr_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object edit_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Edit");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Copy");
+            XmNmnemonic = keysym('C');
+	    XmNaccelerator = "Ctrl<Key>C";
+	    XmNacceleratorText = compound_string('Ctrl+C');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 1;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_copy(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Cut");
+            XmNmnemonic = keysym('u');
+	    XmNaccelerator = "Ctrl<Key>X";
+	    XmNacceleratorText = compound_string('Ctrl+X');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 2;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_cut(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Paste");
+            XmNmnemonic = keysym('P');
+	    XmNaccelerator = "Ctrl<Key>V";
+	    XmNacceleratorText = compound_string('Ctrl+V');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 3;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_paste(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object functions_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Functions");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Change value");
+            XmNmnemonic = keysym('H');
+	    XmNaccelerator = "Ctrl<Key>Q";
+	    XmNacceleratorText = compound_string('Ctrl+Q');
+            XmNfontList	   = menu_font;
+	    XmNuserData = 4;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_change_value(gsdattr_ctx);
+	    MrmNcreateCallback = procedure gsdattr_create_menubutton( gsdattr_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+
+object view_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("View");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom in");
+            XmNmnemonic = keysym('i');
+	    XmNaccelerator = "Ctrl<Key>I";
+	    XmNacceleratorText = compound_string('Ctrl+I');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_zoom_in(gsdattr_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom out");
+            XmNmnemonic = keysym('o');
+	    XmNaccelerator = "Ctrl<Key>O";
+	    XmNacceleratorText = compound_string('Ctrl+O');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_zoom_out(gsdattr_ctx);
+          };
+	};
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Zoom reset");
+            XmNmnemonic = keysym('r');
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+            XmNactivateCallback = procedure gsdattr_activate_zoom_reset(gsdattr_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object help_entry : XmCascadeButton      
+{
+  arguments
+  {
+    XmNlabelString = compound_string("Help");
+    XmNfontList	   = menu_font;
+  };
+  controls
+  {
+    XmPulldownMenu
+    {
+      controls
+      {
+        XmPushButton
+        {
+          arguments
+          {
+  	    XmNlabelString = compound_string("Help");
+            XmNfontList	   = menu_font;
+	  };
+	  callbacks
+          {
+	    XmNactivateCallback = procedure gsdattr_activate_help(gsdattr_ctx);
+          };
+	};
+      };
+    };
+  };
+};
+
+object attrnav_form : XmPanedWindow
+{
+   arguments
+   {
+!     XmNleftAttachment 	= 	XmATTACH_FORM;
+!     XmNrightAttachment 	= XmATTACH_FORM;
+!     XmNbottomAttachment    	= XmATTACH_FORM;
+!     XmNbottomOffset        	= 150;
+!     XmNtopAttachment    	= XmATTACH_FORM;
+!     XmNheight = 300;
+!     XmNpaneMinimum = 300;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure gsdattr_create_attrnav_form( gsdattr_ctx);
+   };
+};
+
+object msg_label : XmLabel
+{
+   arguments
+   {
+     XmNborderWidth 		= 0;
+     XmNrightAttachment 	= XmATTACH_FORM;
+     XmNleftAttachment 		= XmATTACH_FORM;
+     XmNbottomAttachment    	= XmATTACH_FORM;
+     XmNbottomOffset        	= 50;
+     XmNalignment		= XmALIGNMENT_BEGINNING;
+     XmNlabelString		= "";
+     XmNheight			= 20;
+     XmNfontList	   		= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure gsdattr_create_msg_label( gsdattr_ctx);
+   };
+};
+
+object cmd_prompt : XmLabel
+{
+   arguments
+   {
+!      XmNborderWidth 		= 1;
+      XmNleftAttachment 	= XmATTACH_FORM;
+!      XmNbottomAttachment    	= XmATTACH_FORM;
+!      XmNbottomOffset        	= 20;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow attrnav_form;
+      XmNtopOffset        	= 5;
+      XmNalignment		= XmALIGNMENT_BEGINNING;
+      XmNlabelString		= "";
+      XmNwidth			= 50;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure gsdattr_create_cmd_prompt ( gsdattr_ctx) ;
+   };
+};
+
+object cmd_input : XmText
+{
+   arguments
+   {
+      XmNleftAttachment 	= XmATTACH_FORM;
+      XmNleftOffset        	= 50;
+      XmNrightAttachment 	= XmATTACH_FORM;
+      XmNtopAttachment    	= XmATTACH_WIDGET;
+      XmNtopWidget		= XmPanedWindow attrnav_form;
+!      XmNeditMode		= XmMULTI_LINE_EDIT;
+      XmNrows 			= 1;
+      XmNborderWidth		= 0;
+      XmNshadowThickness	= 0;
+      XmNheight			= 30;
+      XmNfontList	   	= menu_font;
+   };
+   controls
+   {
+   };
+   callbacks
+   {
+     MrmNcreateCallback = procedure gsdattr_create_cmd_input( gsdattr_ctx);
+   };
+};
+
+object cmd_ok : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString = compound_string("  Apply");
+    XmNleftAttachment 		= XmATTACH_FORM;
+    XmNleftOffset        	= 50;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+    XmNbottomOffset        	= 10;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 70;
+    !XmNheight			= 30;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure gsdattr_create_cmd_ok( gsdattr_ctx);
+    XmNactivateCallback = procedure gsdattr_activate_cmd_ok(gsdattr_ctx);
+  };
+};
+
+object cmd_cancel : XmPushButton
+{ 
+  arguments
+  {
+    XmNlabelString = compound_string("  Close");
+    XmNrightAttachment 		= XmATTACH_FORM;
+    XmNrightOffset        	= 110;
+    XmNbottomAttachment    	= XmATTACH_FORM;
+    XmNbottomOffset        	= 10;
+    XmNalignment		= XmALIGNMENT_BEGINNING;
+    XmNwidth			= 70;
+    !XmNheight			= 30;
+    XmNfontList	   		= menu_font;
+  };
+  callbacks
+  {
+    MrmNcreateCallback = procedure gsdattr_create_cmd_ca( gsdattr_ctx);
+    XmNactivateCallback = procedure gsdattr_activate_cmd_ca(gsdattr_ctx);
+  };
+};
+
+end module;
+
+
+
+
+
