@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.26 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.27 2007-02-08 12:45:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1056,6 +1056,36 @@ wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **c
     for ( int i = 0; i < cnt; i++) {
       aref = cdh_ArefAdd( arp, &arlst[i]);
       cidInsert(&lsts, lst[i], &aref, &entry);
+
+      if ( aref.Flags.b.CastAttr) {
+	cast_aref = cdh_ArefToCastAref( &aref);
+
+	wb_volume v(m_v);
+	wb_attribute a = v.attribute( &cast_aref);
+	if ( a) {
+	  a.value( &cast_cid);
+	  if ( cast_cid != pwr_cNCid)
+	    cidInsert(&lsts, cast_cid, 0, &entry);
+	}
+      }
+    }
+    free(lst);
+    free(arlst);
+  }
+  else if ( !(cdh_CidToVid(cid) == 1 && cdh_CidToVid(cid) == 2)) {
+    // Check class of casted attribute for every instance
+    pwr_tCid *lst;
+    pwr_sAttrRef *arlst;
+    sCentry *entry;
+    int cnt;
+    pwr_tStatus lsts;
+    pwr_sAttrRef aref;
+    pwr_sAttrRef cast_aref;
+    pwr_tCid cast_cid;
+
+    m_v->merep()->classDependency( &lsts, cid, &lst, &arlst, &cnt);
+    for ( int i = 0; i < cnt; i++) {
+      aref = cdh_ArefAdd( arp, &arlst[i]);
 
       if ( aref.Flags.b.CastAttr) {
 	cast_aref = cdh_ArefToCastAref( &aref);
