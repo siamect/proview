@@ -42,6 +42,7 @@ set -e
 # pwre_target=""
 #
 aroot="/usr/pwrp/adm"
+export pwra_db=$aroot/db
 
 chown -R pwrp:pwrp /usr/pwrp/pwrdemo%{ver}
 
