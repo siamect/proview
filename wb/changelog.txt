@@ -48,3 +48,4 @@
 070124 cs  wb        Click time increated for MB2 (create object) in wtt.
 070124 cs  plc       'Create Object' added to the Plc Editor popupmenu.
 070124 cs  wtt       Application build method for Application and PlcProcess objects. 
+070206 cs  wb        Bugfix in volumereferences in loadfiles. Casted attributes wasn't always checked.

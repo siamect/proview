@@ -13,6 +13,7 @@ fi
 # End automatically added section
 
 aroot="/usr/pwrp/adm"
+export pwra_db=$aroot/db
 
 echo "Change owner of files to pwrp"
 chown -R pwrp:pwrp /usr/pwrp/pwrdemo$ver

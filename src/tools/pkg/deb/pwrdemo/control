@@ -1,16 +1,11 @@
-Package: pwrdemo42
-Version: 4.2.0-8
+Package: pwrdemo43
+Version: 4.3.0-1
 Section: base
 Priority: optional
 Architecture: i386
-Depends: pwr42 (>= 4.2.0-1)
+Depends: pwr43 (>= 4.3.0-1)
 Replaces:
 Maintainer: Proview <postmaster@proview.se>
 Description: Proview Demo Project package
  Proview Demo Project
  4.1.3-1 Base release 
- Changes in 4.1.3-2:
-   - Demo graphs for BaseComponents added.
-   - Demo graph for level control added.
- 4.2.0-1 Upgraded to Proview V4.2
- 4.2.0-8 Upgraded to Proview V4.2.0-8

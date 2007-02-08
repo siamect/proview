@@ -37,12 +37,12 @@ aptitude or apt will check dependencies and install required packages, but local
 first have to be known to apt with this procedure. 
 (See also http://debian.org/doc/manuals/apt-howto)
 
-Download the pwr debian packages and libmotif3 and place them in a directory, e.g. /root/debs
+Download the pwr debian packages and place them in a directory, e.g. /root/debs
 Create a package file with the command
 
 > dpkg-scanpackages /root/debs /dev/null | gzip > /root/debs/Packages.gz
 
-Add the following line to /etc/apt/sources.lis
+Add the following line to /etc/apt/sources.list
 
 deb file:/root debs/
 

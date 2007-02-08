@@ -3,24 +3,11 @@ A guide on how to build Proview
 
 Written by: Robert Karlsson
 
-1. Setting up the environment
------------------------------
-
-The first thing to do is to set up your environment properly. Add the 
-following lines to .bashrc:
-
-# Where /home/robert/x4-1-3 is replaced with wherever you unpacked the sources.
-export pwre_bin="/home/robert/x4-1-3/pwr/src/tools/pwre/src/os_linux"
-export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
-source $pwre_bin/pwre_function
-export pwre_env_db="/home/robert/pwre_new"
-
 The following libraries (devel and runtime) are needed to build Proview:
 
-Imlib (v1.9.14 recommended)
 Berkeley DB (>= v4.0, recommended v4.3)
 antlr (v2.7.5 recommended )
-openmotif (v2.2.3 recommended)
+gtk2-devel (>= v2.4, recommended v2.8)
 alsa (>= 0.9.8, recommended v1.0.6)
 
 Proview has been built with the follwing compilers:
@@ -29,8 +16,47 @@ gcc v3.3.3
 gcc v3.4.3
 gcc v4.0.2
 
-2. Creating the environment
----------------------------
+
+
+1. Easy way
+-----------
+Unpack the source package
+
+> tar -xzvf pwrsrc_4.3.0.tar.gz
+
+Enter the sourcecode root directory
+
+> cd pwr_4.3.0
+
+Execute the makefile
+
+> make
+
+Follow the instructions to insert three lines in your .bashrc file.
+
+
+2. Thorough way
+---------------
+
+This is a more thorough way to install the development environment, which
+is recommended if you will make a lots of changes in the source code and
+handle different version of proview.
+
+2.1 Setting up the environment
+------------------------------
+
+The first thing to do is to set up your environment properly. Add the 
+following lines to .bashrc:
+
+# Where /home/robert/x4-3-0 is replaced with wherever you unpacked the sources.
+export pwre_bin="/home/robert/x4-3-0/pwr/src/tools/pwre/src/os_linux"
+export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
+source $pwre_bin/pwre_function
+export pwre_env_db="/home/robert/pwre_new"
+
+
+2.2 Creating the environment
+----------------------------
 
 Creating and handling your environment is done with the pwre-function (added
 by sourcing $pwre_bin/pwre_function).
@@ -39,13 +65,13 @@ by sourcing $pwre_bin/pwre_function).
 
 shows all possibilites with the pwre function.
 
-Add environment named 'x413x86' (choose any name you like).
+Add environment named 'x430x86' (choose any name you like).
 
-> pwre add x413x86
+> pwre add x430x86
 
-Source root [...] ? /home/robert/x4-1-3/pwr/src  (where /home/robert/x4-1-3 is
+Source root [...] ? /home/robert/x4-3-0/pwr/src  (where /home/robert/x4-3-0 is
 replaced with wherever you unpacked the sources)
-Build root [...] ? /home/robert/pwr/x4-1-3/rls_dbg  (choose typically .../pwr/version/rls_dbg)
+Build root [...] ? /home/robert/pwr/x4-3-0/rls_dbg  (choose typically .../pwr/version/rls_dbg)
 Build type [dbg] ? 
 OS [linux] ? 
 Hardware [x86] ?
@@ -55,13 +81,13 @@ list all existing environments:
 
 > pwre list
 -- Defined environments:
-   x413x86
+   x430x86
 --
 himBh
 
 Initiate your new environment:
 
-> pwre init x413x86
+> pwre init x430x86
 
 Now, create the build tree
 
@@ -69,8 +95,8 @@ Now, create the build tree
 
 Finally the environment is set up and we can start the build procedure.
 
-3. Building Proview
--------------------
+2.3 Building Proview
+--------------------
 
 To build Proview from scratch 
 
@@ -142,7 +168,7 @@ Copy some files to this directory (if they do not already exist)
 Create a file name pwr_projectlist.dat in this directory and add the following
 line to this file:
 
-%base X4.1.3	/home/robert/pwr/X4-1-3/rls_dbg
+%base X4.3.0	/home/robert/pwr/X4-3-0/rls_dbg
 
 where the path is your build-root ($pwre_broot).
 
