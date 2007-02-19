@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.5 2007-02-09 10:26:25 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.6 2007-02-19 10:20:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1028,11 +1028,12 @@ int pb_gsd::build()
     }
   }
   if ( max_user_prm_data_len) {
-    if ( max_user_prm_data_len < 
+    if ( extuserprmdataconst && 
+	 max_user_prm_data_len < 
          extuserprmdataconst->len + extuserprmdataconst->Const_Offset)
       printf( "ExtUserPrmDataConst exceeds Max_User_Prm_Data_Len, line %d\n", line_cnt);
   }
-  else
+  else if ( extuserprmdataconst)
     max_user_prm_data_len = extuserprmdataconst->len + extuserprmdataconst->Const_Offset;
 
   // Check Module UserPrmDataLen
