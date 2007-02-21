@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.5 2007-02-06 07:32:34 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.6 2007-02-21 14:12:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -828,7 +828,7 @@ void CoWowGtk::SetWindowIcon( GtkWidget *w)
 
 char *CoWowGtk::translate_utf8( char *str)
 {
-  static char result[200];
+  static char result[400];
   gchar *s;
 
   s = g_convert( Lng::translate( str), -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
