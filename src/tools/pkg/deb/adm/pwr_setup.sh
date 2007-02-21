@@ -1,3 +1,7 @@
+if [ "$pwra_db" == "" ]; then
+  source /etc/pwrp_profile
+fi
+
 pwrp()
 {
 	source $pwra_db/pwra_env.sh $@

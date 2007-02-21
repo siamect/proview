@@ -30,3 +30,4 @@
 070125 cs  ev        Problem with double appearence of alarm when communication is bad fixed.
 070130 cs  web       _opwin removed from homepage name. index.html set as defaultname.
 070130 cs  web       Possibility to configure which objectgraph jar-files that should be loaded (BaseComponent or ABB).
+070221 cs  xtt       Problems with national characters in alarmtext in operator window fixed.
