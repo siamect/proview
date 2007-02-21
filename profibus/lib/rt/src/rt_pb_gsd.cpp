@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.6 2007-02-19 10:20:36 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.7 2007-02-21 14:08:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -314,7 +314,8 @@ static void *t_malloc( int a1) {
 
 pb_gsd::pb_gsd() :
   dptype(0), modular_station(0), max_module(0),
-  user_prm_data_len(0), max_user_prm_data_len(0), status(0), address(0),
+  user_prm_data_len(0), max_user_prm_data_len(0), items_user_prm_data_len(0),
+  status(0), address(0),
   datalist(0), modulelist(0), prm_textlist(0), extuserprmdatalist(0), 
   extuserprmdatareflist(0), current_module(0), current_area(0), current_prm_text(0), 
   current_extuserprmdata(0), extuserprmdataconst(0), prm_dataitems(0), module_conf(0), 
@@ -1027,14 +1028,22 @@ int pb_gsd::build()
 	printf( "** Referenced ExtUserPrmData not found %d\n", ep->Reference_Number);
     }
   }
+
+  // Calculate ExtUserPrmData length
+  items_user_prm_data_len = prm_len( prm_dataitems, prm_dataitems_cnt);
+
+  if ( extuserprmdataconst) {
+    if ( items_user_prm_data_len < 
+	 extuserprmdataconst->len + extuserprmdataconst->Const_Offset)
+      items_user_prm_data_len = extuserprmdataconst->len + 
+	extuserprmdataconst->Const_Offset;
+  }
   if ( max_user_prm_data_len) {
     if ( extuserprmdataconst && 
 	 max_user_prm_data_len < 
          extuserprmdataconst->len + extuserprmdataconst->Const_Offset)
       printf( "ExtUserPrmDataConst exceeds Max_User_Prm_Data_Len, line %d\n", line_cnt);
   }
-  else if ( extuserprmdataconst)
-    max_user_prm_data_len = extuserprmdataconst->len + extuserprmdataconst->Const_Offset;
 
   // Check Module UserPrmDataLen
   for ( gsd_sModule *mp = modulelist; mp; mp = mp->next) {
@@ -1061,6 +1070,40 @@ int pb_gsd::build()
   if ( !extuserprmdataconst)
     extuserprmdataconst = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
   return 1;
+}
+
+int pb_gsd::prm_len( gsd_sPrmDataItem *item, int item_size)
+{
+  gsd_sExtUserPrmData *pd;
+  int len = 0;
+  int size;
+
+  for ( int i = 0; i < item_size; i++) {
+    pd = item[i].ref->prm_data;
+
+    // Check value
+    switch ( pd->data_type) {
+    case gsd_Bit:
+    case gsd_BitArea:
+    case gsd_Unsigned8:
+    case gsd_Signed8:
+      size = 1;
+      break;
+    case gsd_Signed16:
+    case gsd_Unsigned16:
+      size = 2;
+      break;
+    case gsd_Unsigned32:
+    case gsd_Signed32:
+      size = 4;
+      break;
+    default: 
+      size = 0;
+    }
+    if ( item[i].ref->Reference_Offset + size > len)
+      len = item[i].ref->Reference_Offset + size;
+  }
+  return len;
 }
 
 int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size, 
@@ -1959,11 +2002,11 @@ int pb_gsd::configure_module( gsd_sModuleConf *m)
 		m->module->extuserprmdataconst->len);
 	prm_data_to_items( m->prm_dataitems, m->prm_dataitems_cnt, 
 			   m->prm_data,
-			   m->module->extuserprmdataconst->len, 1);
+			   m->module->Ext_Module_Prm_Data_Len, 1);
 	// Test Remove this !!!
 	prm_items_to_data( m->prm_dataitems, m->prm_dataitems_cnt, 
 			   m->prm_data,
-			   m->module->extuserprmdataconst->len);
+			   m->module->Ext_Module_Prm_Data_Len);
       }
     }
   }
@@ -2008,17 +2051,22 @@ void pb_gsd::pack_ext_user_prm_data( char *data, int *len)
 
   prm_items_to_data( prm_dataitems, prm_dataitems_cnt,
 		     extuserprmdataconst->Const_Prm_Data,
-		     max_user_prm_data_len);
+		     items_user_prm_data_len);
 
   data_idx = 0;
   memcpy( &data[data_idx], extuserprmdataconst->Const_Prm_Data,
-	  max_user_prm_data_len);
-  data_idx += max_user_prm_data_len;
+	  items_user_prm_data_len);
+  data_idx += items_user_prm_data_len;
 
   for ( i = 0; i < module_conf_cnt; i++) {
     if ( !module_conf[i].module || !module_conf[i].module->extuserprmdataconst)
       continue;
 
+    if ( module_conf[i].module->extuserprmdataconst)
+      memcpy( module_conf[i].prm_data + 
+	      module_conf[i].module->extuserprmdataconst->Const_Offset, 
+	      module_conf[i].module->extuserprmdataconst->Const_Prm_Data,
+	      module_conf[i].module->extuserprmdataconst->len);
     prm_items_to_data( module_conf[i].prm_dataitems, module_conf[i].prm_dataitems_cnt,
 		     module_conf[i].prm_data,
 		     module_conf[i].module->Ext_Module_Prm_Data_Len);
@@ -2036,12 +2084,12 @@ int pb_gsd::unpack_ext_user_prm_data( char *data, int len)
 
   data_idx = 0;
   memcpy( extuserprmdataconst->Const_Prm_Data, &data[data_idx], 
-	  max_user_prm_data_len);
-  data_idx += max_user_prm_data_len;
+	  items_user_prm_data_len);
+  data_idx += items_user_prm_data_len;
 
   prm_data_to_items( prm_dataitems, prm_dataitems_cnt,
 		     extuserprmdataconst->Const_Prm_Data,
-		     max_user_prm_data_len);
+		     items_user_prm_data_len);
 
   for ( i = 0; i < module_conf_cnt; i++) {
     if ( !module_conf[i].module || !module_conf[i].module->extuserprmdataconst)

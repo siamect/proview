@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.h,v 1.4 2006-07-25 11:01:19 claes Exp $
+ * Proview   $Id: rt_pb_gsd.h,v 1.5 2007-02-21 14:09:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,6 +186,7 @@ class pb_gsd {
   int max_module;
   int user_prm_data_len;
   int max_user_prm_data_len;
+  int items_user_prm_data_len;
   int line_cnt;
   int status;
   int address;
@@ -217,6 +218,7 @@ class pb_gsd {
   int print();
   int build();
   int configure_module( gsd_sModuleConf *mclist);
+  int prm_len( gsd_sPrmDataItem *item, int item_size);
   int prm_items_to_data( gsd_sPrmDataItem *item, int item_size, unsigned char *data, 
 			 int data_size);
   int prm_data_to_items( gsd_sPrmDataItem *item, int item_size, unsigned char *data, 
