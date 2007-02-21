@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.10 2007-02-06 13:22:47 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.11 2007-02-21 14:13:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -661,6 +661,7 @@ void WttGtk::open_change_value()
     g_object_set( cmd_input, "visible", FALSE, NULL);
     set_prompt( "");
     input_open = 0;
+    focused_wnav->set_inputfocus(1);
     return;
   }
 
