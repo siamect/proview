@@ -144,6 +144,12 @@ chmod u+s /usr/pwrrt/exe/rt_xtt
 chmod u+s /usr/pwrrt/exe/rt_bck
 chown root /usr/pwrrt/exe/rs_remote_alcm
 chmod u+s /usr/pwrrt/exe/rs_remote_alcm
+if grep -q "\bdialout:" /etc/group; then
+  chgrp dialout /usr/pwrrt/exe/rs_remote_serial
+  chmod ug+s /usr/pwrrt/exe/rs_remote_serial
+  chgrp dialout /usr/pwrrt/exe/rs_remote_3964r
+  chmod ug+s /usr/pwrrt/exe/rs_remote_3964r
+fi
 chown root /usr/pwrrt/exe/rt_prio
 chmod u+s /usr/pwrrt/exe/rt_prio
 chown root /usr/pwrrt/exe/rt_mozilla
@@ -250,8 +256,8 @@ EOF
   fi
 
 
-  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache/httpd.conf; then
-    cat >> /etc/apache/httpd.conf <<-EOF
+  if ! egrep -q "Alias[ ]+/pwr_doc/" /etc/apache2/apache2.conf; then
+    cat >> /etc/apache2/apache2.conf <<-EOF
 
 	#
 	# Proview alias pwr_doc, added by Proview installation
