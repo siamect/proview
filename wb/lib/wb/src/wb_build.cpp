@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_build.cpp,v 1.5 2007-01-30 07:13:02 claes Exp $
+ * Proview   $Id: wb_build.cpp,v 1.6 2007-02-22 13:02:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -467,6 +467,7 @@ void wb_build::xttgraph( pwr_tOid oid)
   char 		java_name[80];
   pwr_tStatus  	fsts;
   int		jexport;
+  char		*s;
 
   wb_object o = m_session.object(oid);
   if ( !o) {
@@ -530,6 +531,14 @@ void wb_build::xttgraph( pwr_tOid oid)
     if ( EVEN(fsts)) {
       m_sts = fsts;
       return;
+    }
+    if ( (is_frame || is_applet)  && 
+	 strcmp( java_name, "") == 0) {
+      // Java name is not yet set, use the default java name
+      strcpy( java_name, action);
+      if ( (s = strchr( java_name, '.')) != 0)
+	*s = 0;
+      java_name[0] = _toupper( java_name[0]);
     }
     if ( is_frame) {
       // Check exported java frame
