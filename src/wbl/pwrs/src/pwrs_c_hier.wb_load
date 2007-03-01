@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_c_hier.wb_load,v 1.1 2005-09-20 13:18:56 claes Exp $
+!  Proview   $Id: pwrs_c_hier.wb_load,v 1.2 2007-03-01 09:17:06 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@ SObject pwrs:Class
     EndBody
     Object SysBody $ObjBodyDef 1
       Body SysBody
-        Attr StructName = "DocHier"
+        Attr StructName = "Hier"
       EndBody
       !/**
       !  Optional text to describe the use of the object.
