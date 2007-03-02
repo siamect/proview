@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.1 2007-03-01 09:12:54 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.2 2007-03-02 08:52:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,6 +33,7 @@
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "pwr_opcclasses.h"
 #include "opc_soap_H.h"
 #include "Service.nsmap"
 
@@ -52,9 +53,182 @@ void opc_provider::object( co_procom *pcom)
   objectOid( pcom, m_list[0].fchoix);
 }
 
+void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
+				  int first, int last, int load_children)
+{
+  procom_obj o;
+	
+  strcpy( o.name, element->Name->c_str());
+  o.oix = next_oix++;
+  o.fthoix = fth;
+  if ( !element->IsItem) {
+    o.cid = pwr_cClass_Opc_Hier;
+  }
+  else {
+    if ( element->Properties.size() &&
+	 element->Properties[0]->Name == "dataType") {
+      if ( strcmp( element->Properties[0]->Value, "string") == 0) {
+	o.cid = pwr_cClass_Opc_String;
+	o.body_size = sizeof(pwr_sClass_Opc_String);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "boolean") == 0) {
+	o.cid = pwr_cClass_Opc_Boolean;
+	o.body_size = sizeof(pwr_sClass_Opc_Boolean);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "float") == 0) {
+	o.cid = pwr_cClass_Opc_Float;
+	o.body_size = sizeof(pwr_sClass_Opc_Float);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "double") == 0) {
+	o.cid = pwr_cClass_Opc_Double;
+	o.body_size = sizeof(pwr_sClass_Opc_Double);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "double") == 0) {
+	o.cid = pwr_cClass_Opc_Double;
+	o.body_size = sizeof(pwr_sClass_Opc_Double);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "decimal") == 0) {
+	o.cid = pwr_cClass_Opc_Decimal;
+	o.body_size = sizeof(pwr_sClass_Opc_Decimal);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "int") == 0) {
+	o.cid = pwr_cClass_Opc_Int;
+	o.body_size = sizeof(pwr_sClass_Opc_Int);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "short") == 0) {
+	o.cid = pwr_cClass_Opc_Short;
+	o.body_size = sizeof(pwr_sClass_Opc_Short);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "byte") == 0) {
+	o.cid = pwr_cClass_Opc_Byte;
+	o.body_size = sizeof(pwr_sClass_Opc_Byte);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "unsignedLong") == 0) {
+	o.cid = pwr_cClass_Opc_UnsignedLong;
+	o.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "unsignedInt") == 0) {
+	o.cid = pwr_cClass_Opc_UnsignedInt;
+	o.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "unsignedShort") == 0) {
+	o.cid = pwr_cClass_Opc_UnsignedShort;
+	o.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "unsignedByte") == 0) {
+	o.cid = pwr_cClass_Opc_UnsignedByte;
+	o.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "base64Binary") == 0) {
+	o.cid = pwr_cClass_Opc_Base64Binary;
+	o.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "dateTime") == 0) {
+	o.cid = pwr_cClass_Opc_DateTime;
+	o.body_size = sizeof(pwr_sClass_Opc_DateTime);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "time") == 0) {
+	o.cid = pwr_cClass_Opc_Time;
+	o.body_size = sizeof(pwr_sClass_Opc_Time);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "date") == 0) {
+	o.cid = pwr_cClass_Opc_Date;
+	o.body_size = sizeof(pwr_sClass_Opc_Date);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "duration") == 0) {
+	o.cid = pwr_cClass_Opc_Duration;
+	o.body_size = sizeof(pwr_sClass_Opc_Duration);
+	o.body = calloc( 1, o.body_size);
+      }
+      else if ( strcmp( element->Properties[0]->Value, "QName") == 0) {
+	o.cid = pwr_cClass_Opc_QName;
+	o.body_size = sizeof(pwr_sClass_Opc_QName);
+	o.body = calloc( 1, o.body_size);
+      }
+    }
+    else {
+      o.cid = pwr_cClass_Opc_Hier;
+    }
+  }
+  if ( first)
+    m_list[fth].fchoix = o.oix;
+  else {
+    o.bwsoix = bws;
+    m_list[bws].fwsoix = o.oix;
+  }
+  if ( last) {
+    m_list[fth].lchoix = o.oix;
+    if ( !first) {
+      o.fwsoix = m_list[fth].fchoix;
+      m_list[o.fwsoix].bwsoix = o.oix;
+    }
+    else {
+      // Single child
+      o.fwsoix = o.oix;
+      o.bwsoix = o.oix;
+    }
+  }
+  if ( element->HasChildren && load_children)
+    o.flags |= procom_obj_mFlags_Loaded;
+  else if ( !element->HasChildren)
+    o.flags |= procom_obj_mFlags_Loaded;
+  m_list.push_back( o);
+
+  if ( load_children) {
+    _ns1__Browse browse;
+    _ns1__BrowseResponse browse_response;
+
+    if ( fth != 0)
+      browse.ItemPath = new std::string( longname(fth));
+    browse.ItemName = new std::string( o.name);
+    std::string s("dataType");
+    browse.PropertyNames.push_back( s);
+
+    if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+	 SOAP_OK) {
+      pwr_tOix next_bws;
+      pwr_tOix bws = 0;
+      for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
+	next_bws = next_oix;
+	insert_object( o.oix, bws, browse_response.Elements[i],
+		       i == 0, i == (int)browse_response.Elements.size() - 1, 0);
+	bws = next_bws;
+      }
+    }
+  }
+}
+
 void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 {
   if ( m_list.size() == 0) {
+    // Insert volume object
+    procom_obj vo;
+
+    vo.cid = pwr_eClass_ExternVolume;
+    strcpy( vo.name, opc_vname);
+    vo.body_size = sizeof(pwr_sExternVolume);
+    vo.body = calloc( 1, vo.body_size);
+    vo.oix = 0;
+    vo.flags |= procom_obj_mFlags_Loaded;
+    m_list.push_back( vo);
+
     // Load Rootlist
     _ns1__Browse browse;
     _ns1__BrowseResponse browse_response;
@@ -63,32 +237,67 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
     browse.PropertyNames.push_back( s);
     if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
+      pwr_tOix bws = 0;
+      pwr_tOix next_bws;
       for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
-	procom_obj o;
-	
-	strcpy( o.name, browse_response.Elements[i]->Name->c_str());
-	strcpy( o.lname, o.name);
-	o.oix = next_oix++;
-	if ( i != 0)
-	  o.bwsoix = o.oix - 1;
-	if ( i != (int)browse_response.Elements.size() - 1)
-	  o.fwsoix = o.oix + 1;
-	if ( browse_response.Elements[i]->HasChildren)
-	  o.flags |= procom_obj_mFlags_Loaded;
-	else
-	  o.flags |= procom_obj_mFlags_Loaded;
-	m_list.push_back( o);
+	next_bws = next_oix;
+	insert_object( oix, bws, browse_response.Elements[i],
+		       i == 0, i == (int)browse_response.Elements.size() - 1, 1);
+	bws = next_bws;
       }
     }
     else
       soap_print_fault( &soap, stderr);
+  }
+  else if ( oix < m_list.size()) {
+    if ( !(m_list[oix].flags & procom_obj_mFlags_Loaded)) {
+      _ns1__Browse browse;
+      _ns1__BrowseResponse browse_response;
+
+      browse.ItemPath = new std::string( longname(m_list[oix].fthoix));
+      browse.ItemName = new std::string( m_list[oix].name);
+      std::string s("dataType");
+      browse.PropertyNames.push_back( s);
+      
+      if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+	   SOAP_OK) {
+	pwr_tOix next_bws;
+	pwr_tOix bws = 0;
+	for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
+	  next_bws = next_oix;
+	  insert_object( oix, bws, browse_response.Elements[i],
+			 i == 0, i == (int)browse_response.Elements.size() - 1, 0);
+	  bws = next_bws;
+	}
+      }
+      m_list[oix].flags |= procom_obj_mFlags_Loaded;
+    }
   }
 
   if ( oix >= m_list.size() || oix < 0) {
     pcom->provideStatus( GDH__NOSUCHOBJ);
     return;
   }
-  pcom->provideObjects( GDH__SUCCESS, m_list);
+
+#if 0
+  for ( int i = 0; i < (int)m_list.size(); i++) {
+    printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
+	    m_list[i].oix, m_list[i].bwsoix, m_list[i].fwsoix, m_list[i].fthoix, 
+	    m_list[i].fchoix, m_list[i].lchoix, m_list[i].flags, m_list[i].name);
+  }
+#endif
+  vector<procom_obj>olist;
+  for ( int i = 0; i < (int) m_list.size(); i++) {
+    if  ( m_list[i].flags & procom_obj_mFlags_Loaded)
+      olist.push_back( m_list[i]);
+  }
+  printf( "*********************************************\n");
+  for ( int i = 0; i < (int)olist.size(); i++) {
+    printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
+	    olist[i].oix, olist[i].bwsoix, olist[i].fwsoix, olist[i].fthoix, 
+	    olist[i].fchoix, olist[i].lchoix, olist[i].flags, olist[i].name);
+  }
+  pcom->provideObjects( GDH__SUCCESS, olist);
 }
 
 void opc_provider::objectName( co_procom *pcom, char *name)
@@ -271,7 +480,7 @@ int main(int argc, char *argv[])
   /* Read arguments */
   if ( argc < 4) {
     usage();
-    strcpy( server_url, "http://localhost:18083");
+    strcpy( server_url, "http://linuxlab1:18083");
     strcpy( extern_vid, "0.1.99.55");
     strcpy( extern_volume_name, "MyOpcVolume");
     // exit(0);

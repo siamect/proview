@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.1 2007-03-01 09:12:54 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.2 2007-03-02 08:52:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,9 @@ public:
 
   virtual bool find( pwr_tOix fthoix, char *name, pwr_tOix *oix);
   
+  void insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
+		      int first, int last, int load_children);
+
   vector<procom_obj> m_list;
   pwr_tOix root;
   pwr_tOix next_oix;

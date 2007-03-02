@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.1 2007-03-01 09:12:54 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.2 2007-03-02 08:52:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,51 @@
 #include "opc_utl.h"
 #include "opc_soap_H.h"
 #include "Service.nsmap"
+
+static bool opc_type_to_string( int type, char **str)
+{
+  *str = (char *) malloc(20);
+  switch ( type) {
+  case pwr_eType_String:
+    strcpy( *str, "string");
+    break;
+  case pwr_eType_Float32:
+    strcpy( *str, "float");
+    break;
+  case pwr_eType_Float64:
+    strcpy( *str, "double");
+    break;
+  case pwr_eType_Int32:
+    strcpy( *str, "int");
+    break;
+  case pwr_eType_Int16:
+    strcpy( *str, "short");
+    break;
+  case pwr_eType_Int8:
+    strcpy( *str, "char");
+    break;
+  case pwr_eType_UInt32:
+    strcpy( *str, "unsignedInt");
+    break;
+  case pwr_eType_UInt16:
+    strcpy( *str, "unsignedShort");
+    break;
+  case pwr_eType_UInt8:
+    strcpy( *str, "unsignedChar");
+    break;
+  case pwr_eType_Time:
+    strcpy( *str, "dateTime");
+    break;
+  case pwr_eType_DeltaTime:
+    strcpy( *str, "duration");
+    break;
+  default:
+    free( *str);
+    *str = 0;
+    return false;
+  }
+  return true;
+}
 
 
 int main()
@@ -163,6 +208,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse,
   else {
     // Return attributes and children
     pwr_tOName itemname;
+    gdh_sAttrDef *bd;
+    int 	rows;
     
     if ( ns1__Browse->ItemPath && !ns1__Browse->ItemPath->empty()) {
       strncpy( itemname, ns1__Browse->ItemPath->c_str(), sizeof( itemname));
@@ -177,6 +224,74 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse,
     sts = gdh_NameToObjid( itemname, &oid);
     if ( EVEN(sts)) {
       return 0;
+    }
+
+    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, oid);
+    if ( ODD(sts)) {
+
+      for ( int i = 0; i < rows; i++) {
+	if ( bd[i].flags & gdh_mAttrDef_Shadowed)
+	  continue;
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL || 
+	     bd[i].attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	  continue;
+	if ( bd[i].attr->Param.Info.Type == pwr_eType_CastId ||
+	     bd[i].attr->Param.Info.Type == pwr_eType_DisableAttr)
+	  continue;
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE)
+	  continue;
+	
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
+	  pwr_sAttrRef aref = cdh_ObjidToAref( oid);
+	  pwr_sAttrRef aaref;
+	  pwr_tDisableAttr disabled;
+
+	  sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = gdh_ArefDisabled( &aaref, &disabled);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( disabled)
+	    continue;
+	}
+	
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
+	}
+	else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
+	}
+	else {
+	  ns1__BrowseElement *element = new ns1__BrowseElement();
+	  
+	  element->Name = new std::string( bd[i].attrName);
+	  element->ItemName = element->Name;
+	  element->ItemPath = new std::string( itemname);
+	  element->IsItem = true;
+	  element->HasChildren = false;
+
+	  for ( int i = 0; i < (int)ns1__Browse->PropertyNames.size(); i++) {
+	    ns1__ItemProperty *property = new ns1__ItemProperty();
+	    property->Name = ns1__Browse->PropertyNames[i];
+
+	    if ( property->Name == "\"\":dataType") {
+	      char *type_p;
+
+	      if ( ! opc_type_to_string( bd[i].attr->Param.Info.Type, &type_p)) {
+		// Untranslatable type
+		element->IsItem = false;
+		element->HasChildren = false;		
+		continue;
+	      }
+	      property->Value = type_p;
+	    }
+	    element->Properties.push_back( property);
+	  }
+
+	  ns1__BrowseResponse->Elements.push_back( element);	
+
+	} 
+      }
+      free( (char *)bd);      
     }
 
     for ( sts = gdh_GetChild( oid, &child); ODD(sts); sts = gdh_GetNextSibling( child, &child)) {

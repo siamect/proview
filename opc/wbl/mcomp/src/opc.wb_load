@@ -1,0 +1,489 @@
+Volume Opc $ClassVolume 0.0.250.9 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X1"
+    Attr NextCix = "_X22"
+  EndBody
+  Object Class $ClassHier 1 01-MAR-2007 16:47:50.47
+    Object Opc_Hier $ClassDef 1 01-MAR-2007 16:48:24.56
+      Body SysBody 01-MAR-2007 16:47:58.95
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 18:05:06.28
+        Body SysBody 01-MAR-2007 18:05:06.28
+          Attr StructName = "Opc_Hier"
+        EndBody
+      EndObject
+      Object Template Opc_Hier 2147975168 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'string'.
+    !*/
+    Object Opc_String $ClassDef 2 01-MAR-2007 16:49:18.37
+      Body SysBody 01-MAR-2007 16:48:51.39
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:49:33.17
+        Body SysBody 01-MAR-2007 16:49:33.17
+          Attr StructName = "Opc_String"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Value $Attribute 1 01-MAR-2007 16:49:41.73
+          Body SysBody 01-MAR-2007 16:49:54.49
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_String 2148237312 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Boolean $ClassDef 19 01-MAR-2007 16:50:41.94
+      Body SysBody 01-MAR-2007 16:50:28.50
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.50
+        Body SysBody 01-MAR-2007 16:50:28.50
+          Attr StructName = "Opc_Boolean"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:28.50
+          Body SysBody 01-MAR-2007 16:50:51.77
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Boolean 2152693760 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Float $ClassDef 18 01-MAR-2007 16:51:15.25
+      Body SysBody 01-MAR-2007 16:50:28.36
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.36
+        Body SysBody 01-MAR-2007 16:50:28.36
+          Attr StructName = "Opc_Float"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:28.36
+          Body SysBody 01-MAR-2007 16:51:29.73
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Float 2152431616 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Double $ClassDef 17 01-MAR-2007 16:51:56.40
+      Body SysBody 01-MAR-2007 16:50:28.21
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.21
+        Body SysBody 01-MAR-2007 16:50:28.21
+          Attr StructName = "Opc_Double"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:28.21
+          Body SysBody 01-MAR-2007 16:52:07.62
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Double 2152169472 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Decimal $ClassDef 16 01-MAR-2007 16:52:29.00
+      Body SysBody 01-MAR-2007 16:50:28.06
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.06
+        Body SysBody 01-MAR-2007 16:50:28.06
+          Attr StructName = "Opc_Decimal"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:28.06
+          Body SysBody 01-MAR-2007 16:52:37.40
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Decimal 2151907328 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Long $ClassDef 15 01-MAR-2007 16:52:57.57
+      Body SysBody 01-MAR-2007 16:50:27.91
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.91
+        Body SysBody 01-MAR-2007 16:50:27.91
+          Attr StructName = "Opc_Long"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.91
+          Body SysBody 01-MAR-2007 16:53:11.79
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Long 2151645184 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Int $ClassDef 14 01-MAR-2007 16:53:30.28
+      Body SysBody 01-MAR-2007 16:50:27.77
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.77
+        Body SysBody 01-MAR-2007 16:50:27.77
+          Attr StructName = "Opc_Int"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.77
+          Body SysBody 01-MAR-2007 16:53:46.18
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Int 2151383040 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Short $ClassDef 13 01-MAR-2007 16:54:41.65
+      Body SysBody 01-MAR-2007 16:50:27.62
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.62
+        Body SysBody 01-MAR-2007 16:50:27.62
+          Attr StructName = "Opc_Short"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.62
+          Body SysBody 01-MAR-2007 16:54:54.38
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Short 2151120896 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Byte $ClassDef 12 01-MAR-2007 16:55:02.92
+      Body SysBody 01-MAR-2007 16:50:27.44
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.44
+        Body SysBody 01-MAR-2007 16:50:27.44
+          Attr StructName = "Opc_Byte"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.44
+          Body SysBody 01-MAR-2007 16:55:12.30
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Int8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Byte 2150858752 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_UnsignedLong $ClassDef 11 01-MAR-2007 16:55:43.95
+      Body SysBody 01-MAR-2007 16:50:27.27
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.27
+        Body SysBody 01-MAR-2007 16:50:27.27
+          Attr StructName = "Opc_UnsignedLong"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.27
+          Body SysBody 01-MAR-2007 16:55:57.73
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_UnsignedLong 2150596608 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_UnsignedInt $ClassDef 10 01-MAR-2007 16:56:14.97
+      Body SysBody 01-MAR-2007 16:50:27.07
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.07
+        Body SysBody 01-MAR-2007 16:50:27.07
+          Attr StructName = "Opc_UnsignedInt"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:27.07
+          Body SysBody 01-MAR-2007 16:56:25.07
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_UnsignedInt 2150334464 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_UnsignedShort $ClassDef 9 01-MAR-2007 16:56:40.00
+      Body SysBody 01-MAR-2007 16:50:25.68
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.68
+        Body SysBody 01-MAR-2007 16:50:25.68
+          Attr StructName = "Opc_UnsignedShort"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:25.68
+          Body SysBody 01-MAR-2007 16:56:51.26
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_UnsignedShort 2150072320 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_UnsignedByte $ClassDef 8 01-MAR-2007 16:57:06.57
+      Body SysBody 01-MAR-2007 16:50:25.44
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.44
+        Body SysBody 01-MAR-2007 16:50:25.44
+          Attr StructName = "Opc_UnsignedByte"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:25.44
+          Body SysBody 01-MAR-2007 16:57:15.03
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_UnsignedByte 2149810176 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Base64Binary $ClassDef 20 01-MAR-2007 17:01:30.50
+      Body SysBody 01-MAR-2007 17:01:17.11
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 17:01:17.11
+        Body SysBody 01-MAR-2007 17:01:17.11
+          Attr StructName = "Opc_Base64Binary"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 17:01:17.11
+          Body SysBody 01-MAR-2007 17:01:47.78
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Base64Binary 2152955904 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_DateTime $ClassDef 7 01-MAR-2007 16:58:17.76
+      Body SysBody 01-MAR-2007 16:50:25.22
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.22
+        Body SysBody 01-MAR-2007 16:50:25.22
+          Attr StructName = "Opc_DateTime"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:25.22
+          Body SysBody 01-MAR-2007 16:58:37.27
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_DateTime 2149548032 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Time $ClassDef 6 01-MAR-2007 16:58:53.13
+      Body SysBody 01-MAR-2007 16:50:25.00
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.00
+        Body SysBody 01-MAR-2007 16:50:25.00
+          Attr StructName = "Opc_Time"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:25.00
+          Body SysBody 01-MAR-2007 16:59:03.22
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Time 2149285888 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Date $ClassDef 5 01-MAR-2007 16:59:12.70
+      Body SysBody 01-MAR-2007 16:50:24.78
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:24.78
+        Body SysBody 01-MAR-2007 16:50:24.78
+          Attr StructName = "Opc_Date"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:24.78
+          Body SysBody 01-MAR-2007 16:59:19.57
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Date 2149023744 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_Duration $ClassDef 4 01-MAR-2007 16:59:30.41
+      Body SysBody 01-MAR-2007 16:50:24.50
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:24.50
+        Body SysBody 01-MAR-2007 16:50:24.50
+          Attr StructName = "Opc_Duration"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:24.50
+          Body SysBody 01-MAR-2007 16:59:42.13
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$DeltaTime"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_Duration 2148761600 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_QName $ClassDef 3 01-MAR-2007 17:00:42.44
+      Body SysBody 01-MAR-2007 16:50:22.30
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:22.30
+        Body SysBody 01-MAR-2007 16:50:22.30
+          Attr StructName = "Opc_QName"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Value $Attribute 2 01-MAR-2007 16:50:22.30
+          Body SysBody 01-MAR-2007 17:00:54.92
+            Attr PgmName = "Value"
+            Attr TypeRef = "pwrs:Type-$String256"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_QName 2148499456 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_ServerConfig $ClassDef 21 01-MAR-2007 17:02:45.29
+      Body SysBody 01-MAR-2007 17:02:25.32
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 01-MAR-2007 17:02:58.07
+        Body SysBody 01-MAR-2007 17:02:58.07
+          Attr StructName = "Opc_ServerConfig"
+          Attr NextAix = "_X2"
+        EndBody
+        Object Access $Attribute 1 01-MAR-2007 17:03:37.18
+          Body SysBody 01-MAR-2007 17:03:49.47
+            Attr PgmName = "Access"
+            Attr TypeRef = "pwrs:Type-$Mask"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_ServerConfig 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume
