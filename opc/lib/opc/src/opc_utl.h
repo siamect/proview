@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.1 2007-03-01 09:12:54 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.2 2007-03-05 14:56:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,5 +17,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <vector.h>
+#include <string.h>
 #include "pwr.h"
 
+typedef enum {
+  opc_mProperty_DataType 	= 1 << 0,
+  opc_mProperty_Value 		= 1 << 1,
+  opc_mProperty_Quality 	= 1 << 2,
+  opc_mProperty_Timestamp 	= 1 << 3,
+  opc_mProperty_ScanRate 	= 1 << 4,
+  opc_mProperty_EuType 		= 1 << 5,
+  opc_mProperty_EuInfo 		= 1 << 6,
+  opc_mProperty_EngineeringUnits = 1 << 7,
+  opc_mProperty_Description 	= 1 << 8,
+  opc_mProperty_HighEU 		= 1 << 9,
+  opc_mProperty_LowEU 		= 1 << 10,
+  opc_mProperty_HighIR 		= 1 << 11,
+  opc_mProperty_LowIR 		= 1 << 12,
+  opc_mProperty_CloseLabel 	= 1 << 13,
+  opc_mProperty_OpenLabel 	= 1 << 14,
+  opc_mProperty_TimeZone 	= 1 << 15
+} opc_mProperty;
+
+bool opc_pwrtype_to_string( int type, char **str);
+void opc_mask_to_propertynames( std::vector<std::string>& pnames, unsigned int mask);
+bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *mask);
