@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.2 2007-03-02 08:52:20 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.3 2007-03-08 07:26:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,58 +17,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <net/if.h>
+#include <net/if_arp.h>
+
 #include "pwr.h"
 #include "pwr_version.h"
+#include "pwr_baseclasses.h"
+#include "pwr_opcclasses.h"
 #include "co_cdh.h"
 #include "rt_gdh.h"
 #include "opc_utl.h"
 #include "opc_soap_H.h"
 #include "Service.nsmap"
 
-static bool opc_type_to_string( int type, char **str)
-{
-  *str = (char *) malloc(20);
-  switch ( type) {
-  case pwr_eType_String:
-    strcpy( *str, "string");
-    break;
-  case pwr_eType_Float32:
-    strcpy( *str, "float");
-    break;
-  case pwr_eType_Float64:
-    strcpy( *str, "double");
-    break;
-  case pwr_eType_Int32:
-    strcpy( *str, "int");
-    break;
-  case pwr_eType_Int16:
-    strcpy( *str, "short");
-    break;
-  case pwr_eType_Int8:
-    strcpy( *str, "char");
-    break;
-  case pwr_eType_UInt32:
-    strcpy( *str, "unsignedInt");
-    break;
-  case pwr_eType_UInt16:
-    strcpy( *str, "unsignedShort");
-    break;
-  case pwr_eType_UInt8:
-    strcpy( *str, "unsignedChar");
-    break;
-  case pwr_eType_Time:
-    strcpy( *str, "dateTime");
-    break;
-  case pwr_eType_DeltaTime:
-    strcpy( *str, "duration");
-    break;
-  default:
-    free( *str);
-    *str = 0;
-    return false;
-  }
-  return true;
-}
+typedef struct {
+  int address;
+  int access;
+} opc_sClientAccess;
+
+static pwr_tTime opc_start_time;
+static pwr_sClass_Opc_ServerConfig *opc_config;
+static opc_sClientAccess opc_client_access[20];
+static int opc_client_access_cnt = 0;
+static int opc_current_access;
 
 
 int main()
@@ -80,7 +51,46 @@ int main()
   sts = gdh_Init("opc_server");
   if ( EVEN(sts)) {
     exit(sts);
-  }  
+  }
+
+#if 0
+  pwr_tOid config_oid;
+
+  // Get OpcServerConfig object
+  sts = gdh_GetClassList( pwr_cClass_Opc_ServerConfig, &config_oid);
+  if ( EVEN(sts)) {
+    // Not configured
+    exit(0);
+  }
+
+  sts = gdh_ObjidToPointer( config_oid, &opc_config);
+  if ( EVEN(sts)) {
+    exit(0);
+  }
+#endif  
+
+  // Test
+  pwr_sClass_Opc_ServerConfig sc;
+  memset( &sc, 0, sizeof(sc));
+  strcpy( sc.ClientAccess[0].Address, "192.168.62.186");
+  sc.ClientAccess[0].Access = pwr_eOpc_AccessEnum_ReadWrite;
+  opc_config = &sc;
+  // End Test
+
+  for ( int i = 0; 
+	i < (int)(sizeof(opc_config->ClientAccess)/sizeof(opc_config->ClientAccess[0])); 
+	i++) {
+    if ( strcmp( opc_config->ClientAccess[i].Address, "") != 0) {
+      opc_client_access[opc_client_access_cnt].address = 
+	inet_network( opc_config->ClientAccess[i].Address);
+      if ( opc_client_access[opc_client_access_cnt].address != -1) {
+	opc_client_access[opc_client_access_cnt].access = opc_config->ClientAccess[i].Access;
+	opc_client_access_cnt++;
+      }
+    }      
+  }
+
+  clock_gettime( CLOCK_REALTIME, &opc_start_time);
 
   soap_init( &soap);
   m = soap_bind( &soap, NULL, 18083, 100);
@@ -130,6 +140,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetStatus(struct soap*,
 
   ns1__GetStatusResponse->Status = new ns1__ServerStatus();
   ns1__GetStatusResponse->Status->VendorInfo = new std::string("Proview " pwrv_cPwrVersionStr);
+  ns1__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( ns1__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
+  ns1__GetStatusResponse->Status->StartTime = opc_start_time.tv_sec;
+  ns1__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
+
   return 0;
 }
 
@@ -168,13 +182,342 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap*,
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse, 
+bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp, 
+			    pwr_tAttrRef *arp, unsigned int propmask, gdh_sAttrDef *bd,
+			    std::vector<ns1__ItemProperty *>& properties)
+{
+  pwr_tStatus sts;
+
+  if ( !is_item) {
+    if ( propmask & opc_mProperty_Description) {
+      pwr_tAttrRef aaref;
+      pwr_tString80 desc;
+
+      sts = gdh_ArefANameToAref( arp, "Description", &aaref);
+      if ( ODD(sts)) {
+	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
+	if ( ODD(sts)) {
+	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  ip->Name = std::string("description");
+	  ip->Value = (char *) malloc( sizeof(pwr_tString80));
+	  strncpy( ip->Value, desc, sizeof(pwr_tString80));
+	  strcpy( ip->ValueType, "xsd:string");
+	  properties.push_back( ip);
+	}
+      }
+      if ( EVEN(sts)) {
+	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	ip->Name = std::string("description");
+	ip->Value = (char *) calloc(1, 1);
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+      }
+    }
+  }
+  else {
+    // IsItem
+
+    // Description
+    if ( propmask & opc_mProperty_Description) {
+      ns1__ItemProperty *ip = new ns1__ItemProperty();
+      ip->Name = std::string("description");
+      ip->Value = (char *) calloc(1,1);
+      strcpy( ip->ValueType, "xsd:string");
+      properties.push_back( ip);
+    }
+
+    // DataType
+    if ( propmask & opc_mProperty_DataType) {
+      char *type_p;
+      ns1__ItemProperty *ip = new ns1__ItemProperty();
+
+      if ( opc_pwrtype_to_string( bd->attr->Param.Info.Type, &type_p)) {
+	ip->Name = std::string("dataType");
+	ip->Value = type_p;
+	strcpy( ip->ValueType, "xsd:QName");
+	properties.push_back( ip);
+      }
+      else {
+	// Untranslatable type TODO
+      }     
+    }
+
+    // Quality
+    if ( propmask & opc_mProperty_Quality) {
+      char *qual_p;
+      ns1__ItemProperty *ip = new ns1__ItemProperty();
+
+      if ( opc_quality_to_string( ns1__qualityBits__good, &qual_p)) {
+	ip->Name = std::string("quality");
+	ip->Value = qual_p;
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+      }
+    }
+
+    // Timestamp
+    if ( propmask & opc_mProperty_Timestamp) {
+      // TODO ...
+    }
+
+    // Access Rights
+    if ( propmask & opc_mProperty_AccessRights) {
+      ns1__ItemProperty *ip = new ns1__ItemProperty();
+
+      ip->Name = std::string("accessRights");
+      ip->Value = (char *) malloc( 20);
+      strcpy( ip->ValueType, "xsd:string");
+
+      switch ( opc_current_access) {
+      case pwr_eOpc_AccessEnum_ReadOnly:
+	strcpy( ip->Value, "readable");
+	break;
+      case pwr_eOpc_AccessEnum_ReadWrite:
+	if ( bd->attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL ||
+	     bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE)
+	  strcpy( ip->Value, "readable");
+	else
+	    strcpy( ip->Value, "readWriteable");
+	break;
+      default:
+	strcpy( ip->Value, "unknown");
+	break;
+      }
+      properties.push_back( ip);
+    }
+
+    // EngineeringUnits
+    if ( propmask & opc_mProperty_EngineeringUnits) {
+      if ( parp) {
+
+	switch ( pcid) {
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ao:
+	case pwr_cClass_Av: {
+	  if ( strcmp( bd->attrName, "ActualValue") != 0)
+	    break;
+
+	  pwr_tAttrRef aaref;
+	  pwr_tString16 unit;
+
+	  // Get Range from channel
+	  sts = gdh_ArefANameToAref( parp, "Unit", &aaref);
+	  if ( EVEN(sts)) break;
+	  
+	  sts = gdh_GetObjectInfoAttrref( &aaref, &unit, sizeof(unit));
+	  if ( EVEN(sts)) break;
+
+	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  ip->Name = std::string("engineeringUnits");
+	  ip->Value = (char *) malloc( 20);
+	  strcpy( ip->Value, unit);
+	  strcpy( ip->ValueType, "xsd:string");
+	  properties.push_back( ip);
+	  break;
+	}
+	default: ;
+ 	}
+      }
+    }
+
+    // EuType
+    if ( propmask & opc_mProperty_EuType) {
+      switch( bd->attr->Param.Info.Type) {
+      case pwr_eType_Float32: {
+	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	ip->Name = std::string("euType");
+	ip->Value = (char *) malloc( 20);
+	strcpy( ip->Value, "analog");
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+	break;
+      }
+      default: {
+	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	ip->Name = std::string("euType");
+	ip->Value = (char *) malloc( 20);
+	strcpy( ip->Value, "noEnum");
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+	break;
+      }
+      }
+    }
+
+    
+    // HighEU
+    if ( propmask & opc_mProperty_HighEU) {
+      if ( parp) {
+	pwr_tAttrRef aaref;
+	pwr_tFloat32 fval;
+
+	switch ( pcid) {
+	case pwr_cClass_Av:
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ao:
+	  sts = gdh_ArefANameToAref( parp, "PresMaxLimit", &aaref);
+	  if ( ODD(sts)) {
+	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
+	    if ( ODD(sts)) {
+	      ns1__ItemProperty *ip = new ns1__ItemProperty();
+	      ip->Name = std::string("highEU");
+	      ip->Value = (char *) malloc( 20);
+	      sprintf( ip->Value, "%5.2f", fval);
+	      strcpy( ip->ValueType, "xsd:double");
+	      properties.push_back( ip);
+	    }
+	  }
+	  break;
+	default: ;
+ 	}
+      }
+    }
+
+    // LowEU
+    if ( propmask & opc_mProperty_LowEU) {
+      if ( parp) {
+	pwr_tAttrRef aaref;
+	pwr_tFloat32 fval;
+
+	switch ( pcid) {
+	case pwr_cClass_Av:
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ao:
+	  sts = gdh_ArefANameToAref( parp, "PresMinLimit", &aaref);
+	  if ( ODD(sts)) {
+	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
+	    if ( ODD(sts)) {
+	      ns1__ItemProperty *ip = new ns1__ItemProperty();
+	      ip->Name = std::string("lowEU");
+	      ip->Value = (char *) malloc( 20);
+	      sprintf( ip->Value, "%5.2f", fval);
+	      strcpy( ip->ValueType, "xsd:double");
+	      properties.push_back( ip);
+	    }
+	  }
+	  break;
+	default: ;
+ 	}
+      }
+    }
+
+    // HighIR
+    if ( propmask & opc_mProperty_HighIR) {
+      if ( parp) {
+
+	switch ( pcid) {
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ii:
+	case pwr_cClass_Ao:
+	case pwr_cClass_Io: {
+	  if ( strcmp( bd->attrName, "ActualValue") != 0)
+	    break;
+
+	  pwr_tAttrRef aaref;
+	  pwr_tAttrRef sigchancon;
+	  pwr_tFloat32 fval;
+
+	  // Get Range from channel
+	  sts = gdh_ArefANameToAref( parp, "SigChanCon", &aaref);
+	  if ( EVEN(sts)) break;
+	  
+	  sts = gdh_GetObjectInfoAttrref( &aaref, &sigchancon, sizeof(sigchancon));
+	  if ( EVEN(sts)) break;
+
+	  if ( cdh_ObjidIsNull( sigchancon.Objid))
+	    break;
+
+	  sts = gdh_ArefANameToAref( &sigchancon, "ActValRangeHigh", &aaref);
+	  if ( EVEN(sts)) break;
+
+	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
+	  if ( EVEN(sts)) break;
+
+	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  ip->Name = std::string("highIR");
+	  ip->Value = (char *) malloc( 20);
+	  sprintf( ip->Value, "%5.2f", fval);
+	  strcpy( ip->ValueType, "xsd:double");
+	  properties.push_back( ip);
+	  break;
+	}
+	default: ;
+ 	}
+      }
+    }
+
+    // LowIR
+    if ( propmask & opc_mProperty_LowIR) {
+      if ( parp) {
+	
+	switch ( pcid) {
+	case pwr_cClass_Ai:
+	case pwr_cClass_Ii:
+	case pwr_cClass_Ao:
+	case pwr_cClass_Io: {
+	  if ( strcmp( bd->attrName, "ActualValue") != 0)
+	    break;
+
+	  pwr_tAttrRef sigchancon;
+	  pwr_tAttrRef aaref;
+	  pwr_tFloat32 fval;
+
+	  // Get Range from channel
+	  sts = gdh_ArefANameToAref( parp, "SigChanCon", &aaref);
+	  if ( EVEN(sts)) break;
+	  
+	  sts = gdh_GetObjectInfoAttrref( &aaref, &sigchancon, sizeof(sigchancon));
+	  if ( EVEN(sts)) break;
+
+	  if ( cdh_ObjidIsNull( sigchancon.Objid))
+	    break;
+
+	  sts = gdh_ArefANameToAref( &sigchancon, "ActValRangeLow", &aaref);
+	  if ( EVEN(sts)) break;
+
+	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
+	  if ( EVEN(sts)) break;
+
+	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  ip->Name = std::string("lowIR");
+	  ip->Value = (char *) malloc( 20);
+	  sprintf( ip->Value, "%5.2f", fval);
+	  strcpy( ip->ValueType, "xsd:double");
+	  properties.push_back( ip);
+	  break;
+	}
+	default: ;
+ 	}
+      }
+    }
+
+  }
+  return true;
+}
+
+int opcsrv_get_access( struct soap *so)
+{
+  int access = pwr_eOpc_AccessEnum_None;
+      
+  for ( int i = 0; i < opc_client_access_cnt; i++) {
+    if ( opc_client_access[i].address == (int)so->ip) {
+      access = opc_client_access[i].access;
+      break;
+    }
+  }
+  return access;
+}
+  
+SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Browse, 
 					_ns1__BrowseResponse *ns1__BrowseResponse)
 {
   pwr_tStatus sts;
   pwr_tOid oid, child, ch;
   pwr_tOName name;
   pwr_tCid cid;
+  unsigned int property_mask;
+
+  opc_current_access = opcsrv_get_access( so);
 
   if ( (!ns1__Browse->ItemName || ns1__Browse->ItemName->empty()) &&
        (!ns1__Browse->ItemPath || ns1__Browse->ItemPath->empty())) {
@@ -189,40 +532,50 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse,
       ns1__BrowseElement *element = new ns1__BrowseElement();
       element->Name = new std::string( name);
       element->ItemName = element->Name;
-      element->IsItem = ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier) ? true : false;
-      element->HasChildren = ODD( gdh_GetChild( oid, &ch)) ? true : false;
-      ns1__BrowseResponse->Elements.push_back( element);	
+      element->IsItem = false;
+      if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
+	element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
+      else
+	element->HasChildren = true;
 
-      for ( int i = 0; i < (int)ns1__Browse->PropertyNames.size(); i++) {
-	ns1__ItemProperty *property = new ns1__ItemProperty();
-	property->Name = ns1__Browse->PropertyNames[i];
+      opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
 
-	if ( property->Name == "\"\":dataType") {
-	  property->Value = (char *) malloc( 6);
-	  strcpy( property->Value, "float");
-	}
-	element->Properties.push_back( property);
-      }
+      pwr_tAttrRef aref = cdh_ObjidToAref( oid);
+      opcsrv_get_properties( false, cid, 0, &aref, 
+			     property_mask, 0,
+			     element->Properties);
+
+      ns1__BrowseResponse->Elements.push_back( element);
     }
   }
   else {
     // Return attributes and children
+    pwr_tOName pname;
     pwr_tOName itemname;
     gdh_sAttrDef *bd;
     int 	rows;
+    pwr_sAttrRef paref;
+    pwr_sAttrRef aref;
     
     if ( ns1__Browse->ItemPath && !ns1__Browse->ItemPath->empty()) {
-      strncpy( itemname, ns1__Browse->ItemPath->c_str(), sizeof( itemname));
+      strncpy( pname, ns1__Browse->ItemPath->c_str(), sizeof( pname));
       if ( ns1__Browse->ItemName && !ns1__Browse->ItemName->empty()) {
-	strcat( itemname, "-");
-	strcat( itemname, ns1__Browse->ItemName->c_str());
+	strcat( pname, ns1__Browse->ItemName->c_str());
       }
     }
     else
-      strncpy( itemname, ns1__Browse->ItemName->c_str(), sizeof(itemname));
+      strncpy( pname, ns1__Browse->ItemName->c_str(), sizeof(pname));
 
-    sts = gdh_NameToObjid( itemname, &oid);
+    sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
     if ( EVEN(sts)) {
+      return 0;
+    }
+
+    sts = gdh_GetAttrRefTid( &paref, &cid);
+    if ( EVEN(sts)) {
+      return 0;
+    }
+    if ( !cdh_tidIsCid( cid)) {
       return 0;
     }
 
@@ -241,15 +594,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse,
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_RTHIDE)
 	  continue;
 	
+	sts = gdh_ArefANameToAref( &paref, bd[i].attrName, &aref);
+	if ( EVEN(sts)) return sts;
+
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
-	  pwr_sAttrRef aref = cdh_ObjidToAref( oid);
-	  pwr_sAttrRef aaref;
 	  pwr_tDisableAttr disabled;
 
-	  sts = gdh_ArefANameToAref( &aref, bd[i].attrName, &aaref);
-	  if ( EVEN(sts)) return sts;
-
-	  sts = gdh_ArefDisabled( &aaref, &disabled);
+	  sts = gdh_ArefDisabled( &aref, &disabled);
 	  if ( EVEN(sts)) return sts;
 
 	  if ( disabled)
@@ -264,51 +615,59 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse,
 	  ns1__BrowseElement *element = new ns1__BrowseElement();
 	  
 	  element->Name = new std::string( bd[i].attrName);
-	  element->ItemName = element->Name;
-	  element->ItemPath = new std::string( itemname);
+	  strcpy( itemname, pname);
+	  strcat( itemname, ".");
+	  strcat( itemname, bd[i].attrName);
+	  element->ItemName = new std::string( itemname);
 	  element->IsItem = true;
 	  element->HasChildren = false;
 
-	  for ( int i = 0; i < (int)ns1__Browse->PropertyNames.size(); i++) {
-	    ns1__ItemProperty *property = new ns1__ItemProperty();
-	    property->Name = ns1__Browse->PropertyNames[i];
+	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
 
-	    if ( property->Name == "\"\":dataType") {
-	      char *type_p;
+	  if ( property_mask)
+	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+				   property_mask, &bd[i],
+				   element->Properties);
 
-	      if ( ! opc_type_to_string( bd[i].attr->Param.Info.Type, &type_p)) {
-		// Untranslatable type
-		element->IsItem = false;
-		element->HasChildren = false;		
-		continue;
-	      }
-	      property->Value = type_p;
-	    }
-	    element->Properties.push_back( property);
-	  }
-
-	  ns1__BrowseResponse->Elements.push_back( element);	
-
+	  ns1__BrowseResponse->Elements.push_back( element);
 	} 
       }
       free( (char *)bd);      
     }
 
-    for ( sts = gdh_GetChild( oid, &child); ODD(sts); sts = gdh_GetNextSibling( child, &child)) {
-      sts = gdh_ObjidToName( child, name, sizeof(name), cdh_mName_object);
-      if ( EVEN(sts)) continue;
+    if ( paref.Flags.b.Object) {
+      for ( sts = gdh_GetChild( paref.Objid, &child); 
+	    ODD(sts); 
+	    sts = gdh_GetNextSibling( child, &child)) {
+	sts = gdh_ObjidToName( child, name, sizeof(name), cdh_mName_object);
+	if ( EVEN(sts)) continue;
 
-      sts = gdh_GetObjectClass( child, &cid);
-      if ( EVEN(sts)) continue;
+	sts = gdh_GetObjectClass( child, &cid);
+	if ( EVEN(sts)) continue;
       
-      ns1__BrowseElement *element = new ns1__BrowseElement();
-	  
-      element->Name = new std::string( name);
-      element->ItemName = element->Name;
-      element->ItemPath = new std::string( itemname);
-      element->IsItem = ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier) ? true : false;
-      element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
-      ns1__BrowseResponse->Elements.push_back( element);	
+	ns1__BrowseElement *element = new ns1__BrowseElement();
+	
+	element->Name = new std::string( name);
+	strcpy( itemname, pname);
+	strcat( itemname, "-");
+	strcat( itemname, name);
+	element->ItemName = new std::string( itemname);
+	element->IsItem = false;
+	if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
+	  element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
+	else
+	  element->HasChildren = true;
+					       
+	opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+
+	if ( property_mask) {
+	  aref = cdh_ObjidToAref( child);
+	  opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+				 property_mask, 0,
+				 element->Properties);
+	}
+	ns1__BrowseResponse->Elements.push_back( element);	
+      }
     }
   }
   return 0;

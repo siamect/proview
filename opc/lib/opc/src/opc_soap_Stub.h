@@ -218,6 +218,7 @@ class SOAP_CMAC ns1__ItemValue
 public:
 	std::string *DiagnosticInfo;	/* optional element of type xsd:string */
 	char *Value;	/* optional element of type xsd:anyType */
+	char ValueType[80]; /* !! Value type added !! */
 	class ns1__OPCQuality *Quality;	/* optional element of type ns1:OPCQuality */
 	std::string *ValueTypeQualifier;	/* optional attribute */
 	std::string *ItemPath;	/* optional attribute */
@@ -752,6 +753,7 @@ class SOAP_CMAC ns1__ItemProperty
 {
 public:
 	char *Value;	/* optional element of type xsd:anyType */
+	char ValueType[80]; /* !! Added to insert value type !! */
 	std::string Name;	/* required attribute */
 	std::string *Description;	/* optional attribute */
 	std::string *ItemPath;	/* optional attribute */

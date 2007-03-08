@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.2 2007-03-05 14:56:51 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.3 2007-03-08 07:26:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +21,24 @@
 #include "pwr_class.h"
 #include "opc_utl.h"
 #include "opc_soap_Stub.h"
+
+static char opc_PropertyNames[17][20] = {"dataType",
+					 "value",
+					 "quality",
+					 "timestamp",
+					 "accessRights",
+					 "scanRate",
+					 "euType",
+					 "euInfo",
+					 "engineeringUnits",
+					 "description",
+					 "highEU",
+					 "lowEU",
+					 "highIR",
+					 "lowIR",
+					 "closeLabel",
+					 "openLabel",
+					 "timeZone"};
 
 //
 // Return the corresponding opc type string for a pwr_eType
@@ -82,38 +100,47 @@ bool opc_pwrtype_to_string( int type, char **str)
 
 void opc_mask_to_propertynames( std::vector<std::string>& pnames, unsigned int mask)
 {
-  if ( mask & opc_mProperty_DataType)
-    pnames.push_back( std::string("dataName"));
-  if ( mask & opc_mProperty_Value)
-    pnames.push_back( std::string("value"));
-  if ( mask & opc_mProperty_Quality)
-    pnames.push_back( std::string("quality"));
-  if ( mask & opc_mProperty_Timestamp)
-    pnames.push_back( std::string("timestamp"));
-  if ( mask & opc_mProperty_ScanRate)
-    pnames.push_back( std::string("scanRate"));
-  if ( mask & opc_mProperty_EuType)
-    pnames.push_back( std::string("euType"));
-  if ( mask & opc_mProperty_EuInfo)
-    pnames.push_back( std::string("euInfo"));
-  if ( mask & opc_mProperty_EngineeringUnits)
-    pnames.push_back( std::string("engineeringUnits"));
-  if ( mask & opc_mProperty_Description)
-    pnames.push_back( std::string("description"));
-  if ( mask & opc_mProperty_HighEU)
-    pnames.push_back( std::string("highEU"));
-  if ( mask & opc_mProperty_LowEU)
-    pnames.push_back( std::string("lowEU"));
-  if ( mask & opc_mProperty_HighIR)
-    pnames.push_back( std::string("highIR"));
-  if ( mask & opc_mProperty_LowIR)
-    pnames.push_back( std::string("lowIR"));
-  if ( mask & opc_mProperty_CloseLabel)
-    pnames.push_back( std::string("closeLabel"));
-  if ( mask & opc_mProperty_OpenLabel)
-    pnames.push_back( std::string("openLabel"));
-  if ( mask & opc_mProperty_TimeZone)
-    pnames.push_back( std::string("timeZone"));
+  unsigned int m;
+
+  for ( int i = 0; i < opc_cPropertySize; i++) {
+    m = 1 << i;
+    if ( mask & m)
+      pnames.push_back( std::string( opc_PropertyNames[i]));
+  }
+}
+
+bool opc_get_property( std::vector<ns1__ItemProperty *> properties, unsigned int mask,
+		       char **valp)
+{
+  char name[80];
+  char *s;
+  int idx = -1;
+
+  for ( int i = 0; i < opc_cPropertySize; i++) {
+    if ( (unsigned int)(1 << i) == mask) {
+      idx = i;
+      break;
+    }
+  }
+  if ( idx == -1)
+    return false;
+
+  for ( int i = 0; i < (int)properties.size(); i++) {
+
+    strcpy( name, properties[i]->Name.c_str());
+    if ( (s = strrchr( name, ':')))
+      s++;
+    else
+      s = name;
+
+    if ( strcmp( s, opc_PropertyNames[idx]) == 0) {
+      if ( !properties[0]->Value)
+	return false;
+      *valp = properties[i]->Value;
+      return true;
+    }
+  }
+  return false;
 }
 
 bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *mask)
@@ -215,3 +242,62 @@ bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *
   }
   return true;
 }
+
+bool opc_quality_to_string( int quality, char **str)
+{
+  *str = (char *) malloc(30);
+  switch ( quality) {
+  case ns1__qualityBits__bad:
+    strcpy( *str, "bad");
+    break;
+  case ns1__qualityBits__badConfigurationError:
+    strcpy( *str, "badConfigurationError");
+    break;
+  case ns1__qualityBits__badNotConnected:
+    strcpy( *str, "badNotConnected");
+    break;
+  case ns1__qualityBits__badDeviceFailure:
+    strcpy( *str, "badDeviceFailure");
+    break;
+  case ns1__qualityBits__badSensorFailure:
+    strcpy( *str, "badSensorFailure");
+    break;
+  case ns1__qualityBits__badLastKnownValue:
+    strcpy( *str, "badLastKnownValue");
+    break;
+  case ns1__qualityBits__badCommFailure:
+    strcpy( *str, "badCommFailure");
+    break;
+  case ns1__qualityBits__badOutOfService:
+    strcpy( *str, "badOutOfService");
+    break;
+  case ns1__qualityBits__badWaitingForInitialData:
+    strcpy( *str, "badWaitingForInitialData");
+    break;
+  case ns1__qualityBits__uncertain:
+    strcpy( *str, "uncertain");
+    break;
+  case ns1__qualityBits__uncertainLastUsableValue:
+    strcpy( *str, "uncertainLastUsableValue");
+    break;
+  case ns1__qualityBits__uncertainSensorNotAccurate:
+    strcpy( *str, "uncertainSensorNotAccurate");
+    break;
+  case ns1__qualityBits__uncertainEUExceeded:
+    strcpy( *str, "uncertainEUExceede");
+    break;
+  case ns1__qualityBits__uncertainSubNormal:
+    strcpy( *str, "uncertainSubNormal");
+    break;
+  case ns1__qualityBits__good:
+    strcpy( *str, "good");
+    break;
+  case ns1__qualityBits__goodLocalOverride:
+    strcpy( *str, "goodLocalOverride");
+    break;
+  default:
+    return false;
+  }
+  return true;
+}
+

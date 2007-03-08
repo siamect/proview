@@ -6294,7 +6294,9 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__ItemProperty(struct soap *soap, const ch
 	if (((ns1__ItemProperty *)a)->ResultID)
 		soap_set_attr(soap, "ResultID", soap_QName2s(soap, ((ns1__ItemProperty *)a)->ResultID->c_str()));
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__ItemProperty), type);
-	soap_outliteral(soap, "ns1:Value", &(((ns1__ItemProperty*)a)->Value), NULL);
+	/* !! Value type added !! */
+	soap_outliteral(soap, "ns1:Value", &(((ns1__ItemProperty*)a)->Value),
+			((ns1__ItemProperty*)a)->ValueType);
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -6407,7 +6409,9 @@ SOAP_FMAC3 ns1__ItemProperty * SOAP_FMAC4 soap_in_ns1__ItemProperty(struct soap 
 			if (soap_flag_Value1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_inliteral(soap, "ns1:Value", &(((ns1__ItemProperty*)a)->Value)))
 				{	soap_flag_Value1--;
-					continue;
+ 				        /* !! Extract type !! */
+				        strcpy( ((ns1__ItemValue*)a)->ValueType, soap->type);
+		       			continue;
 				}
 			/* transient soap skipped */
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -10101,7 +10105,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ns1__ItemValue(struct soap *soap, const char 
 		soap_set_attr(soap, "ResultID", soap_QName2s(soap, ((ns1__ItemValue *)a)->ResultID->c_str()));
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ns1__ItemValue), type);
 	soap_out_PointerTostd__string(soap, "ns1:DiagnosticInfo", -1, &(((ns1__ItemValue*)a)->DiagnosticInfo), "");
-	soap_outliteral(soap, "ns1:Value", &(((ns1__ItemValue*)a)->Value), NULL);
+        /* !! Value type added !! */
+	soap_outliteral(soap, "ns1:Value", &(((ns1__ItemValue*)a)->Value), ((ns1__ItemValue*)a)->ValueType);
 	soap_out_PointerTons1__OPCQuality(soap, "ns1:Quality", -1, &(((ns1__ItemValue*)a)->Quality), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -10237,6 +10242,8 @@ SOAP_FMAC3 ns1__ItemValue * SOAP_FMAC4 soap_in_ns1__ItemValue(struct soap *soap,
 			if (soap_flag_Value1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_inliteral(soap, "ns1:Value", &(((ns1__ItemValue*)a)->Value)))
 				{	soap_flag_Value1--;
+ 				        /* !! Extract type !! */
+				        strcpy( ((ns1__ItemValue*)a)->ValueType, soap->type);
 					continue;
 				}
 			if (soap_flag_Quality1 && soap->error == SOAP_TAG_MISMATCH)

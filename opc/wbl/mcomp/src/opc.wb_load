@@ -1,9 +1,114 @@
 Volume Opc $ClassVolume 0.0.250.9 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X1"
-    Attr NextCix = "_X22"
+    Attr NextOix = "_X12"
+    Attr NextCix = "_X24"
+    Attr NextTix[0] = "_X3"
   EndBody
-  Object Class $ClassHier 1 01-MAR-2007 16:47:50.47
+  Object Type $TypeHier 2 02-MAR-2007 14:45:01.59
+    Object Opc_ServerStateEnum $TypeDef 1 05-MAR-2007 13:22:13.08
+      Body SysBody 02-MAR-2007 14:46:14.99
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Running $Value 3 02-MAR-2007 14:46:58.69
+        Body SysBody 02-MAR-2007 14:47:02.58
+          Attr Text = "Running"
+          Attr PgmName = "Running"
+        EndBody
+      EndObject
+      Object Failed $Value 4 02-MAR-2007 14:47:15.15
+        Body SysBody 02-MAR-2007 14:47:20.37
+          Attr Text = "Failed"
+          Attr PgmName = "Failed"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object NoConfig $Value 5 02-MAR-2007 14:48:09.87
+        Body SysBody 02-MAR-2007 14:48:29.97
+          Attr Text = "NoConfig"
+          Attr PgmName = "NoConfig"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object Suspended $Value 8 02-MAR-2007 14:48:24.34
+        Body SysBody 02-MAR-2007 14:48:34.32
+          Attr Text = "Suspended"
+          Attr PgmName = "Suspended"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object Test $Value 7 02-MAR-2007 14:48:44.36
+        Body SysBody 02-MAR-2007 14:48:48.73
+          Attr Text = "Test"
+          Attr PgmName = "Test"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object CommFault $Value 6 02-MAR-2007 14:48:58.72
+        Body SysBody 02-MAR-2007 14:49:03.64
+          Attr Text = "CommFault"
+          Attr PgmName = "CommFault"
+          Attr Value = 5
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_AccessEnum $TypeDef 2 05-MAR-2007 13:22:42.62
+      Body SysBody 05-MAR-2007 13:20:09.54
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object None $Value 9 05-MAR-2007 13:22:58.87
+        Body SysBody 05-MAR-2007 13:23:03.93
+          Attr Text = "None"
+          Attr PgmName = "None"
+        EndBody
+      EndObject
+      Object ReadOnly $Value 10 05-MAR-2007 13:23:11.59
+        Body SysBody 05-MAR-2007 13:23:18.24
+          Attr Text = "ReadOnly"
+          Attr PgmName = "ReadOnly"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object ReadWrite $Value 11 05-MAR-2007 13:23:28.18
+        Body SysBody 05-MAR-2007 13:23:39.62
+          Attr Text = "ReadWrite"
+          Attr PgmName = "ReadWrite"
+          Attr Value = 2
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 1 02-MAR-2007 14:45:04.90
+    Object Opc_ClientAccess $ClassDef 23 05-MAR-2007 13:28:06.11
+      Body SysBody 05-MAR-2007 13:27:57.56
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 05-MAR-2007 13:28:16.74
+        Body SysBody 05-MAR-2007 13:28:16.74
+          Attr StructName = "Opc_ClientAccess"
+          Attr NextAix = "_X3"
+        EndBody
+        Object Address $Attribute 1 05-MAR-2007 13:28:48.14
+          Body SysBody 05-MAR-2007 13:28:52.79
+            Attr PgmName = "Address"
+            Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object Access $Attribute 2 05-MAR-2007 13:29:22.75
+          Body SysBody 05-MAR-2007 13:29:47.95
+            Attr PgmName = "Access"
+            Attr TypeRef = "Opc:Type-Opc_AccessEnum"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_ClientAccess 2153742336 01-JAN-1970 01:00:00.00
+        Body RtBody 05-MAR-2007 13:30:16.97
+        EndBody
+      EndObject
+    EndObject
     Object Opc_Hier $ClassDef 1 01-MAR-2007 16:48:24.56
       Body SysBody 01-MAR-2007 16:47:58.95
         Attr Editor = 0
@@ -13,7 +118,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 18:05:06.28
         Body SysBody 01-MAR-2007 18:05:06.28
           Attr StructName = "Opc_Hier"
+          Attr NextAix = "_X2"
         EndBody
+        Object Description $Attribute 1 05-MAR-2007 13:41:33.76
+          Body SysBody 05-MAR-2007 13:41:39.19
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Hier 2147975168 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -34,8 +146,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:49:33.17
         Body SysBody 01-MAR-2007 16:49:33.17
           Attr StructName = "Opc_String"
-          Attr NextAix = "_X2"
+          Attr NextAix = "_X3"
         EndBody
+        Object Description $Attribute 2 05-MAR-2007 13:45:02.33
+          Body SysBody 05-MAR-2007 13:45:02.33
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 1 01-MAR-2007 16:49:41.73
           Body SysBody 01-MAR-2007 16:49:54.49
             Attr PgmName = "Value"
@@ -57,8 +175,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.50
         Body SysBody 01-MAR-2007 16:50:28.50
           Attr StructName = "Opc_Boolean"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:09.01
+          Body SysBody 05-MAR-2007 13:45:09.01
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:28.50
           Body SysBody 01-MAR-2007 16:50:51.77
             Attr PgmName = "Value"
@@ -80,12 +204,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.36
         Body SysBody 01-MAR-2007 16:50:28.36
           Attr StructName = "Opc_Float"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:13.76
+          Body SysBody 05-MAR-2007 13:45:13.76
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:28.36
           Body SysBody 01-MAR-2007 16:51:29.73
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:47:07.23
+          Body SysBody 05-MAR-2007 13:47:24.75
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:47:49.35
+          Body SysBody 05-MAR-2007 13:47:45.28
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:48:07.66
+          Body SysBody 05-MAR-2007 13:48:12.29
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:48:24.95
+          Body SysBody 05-MAR-2007 13:48:28.48
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:49:08.68
+          Body SysBody 05-MAR-2007 13:49:27.27
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -103,12 +258,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.21
         Body SysBody 01-MAR-2007 16:50:28.21
           Attr StructName = "Opc_Double"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:19.21
+          Body SysBody 05-MAR-2007 13:45:19.21
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:28.21
           Body SysBody 01-MAR-2007 16:52:07.62
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:23.71
+          Body SysBody 05-MAR-2007 13:51:23.71
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:23.71
+          Body SysBody 05-MAR-2007 13:51:23.71
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:23.71
+          Body SysBody 05-MAR-2007 13:51:23.71
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:23.71
+          Body SysBody 05-MAR-2007 13:51:23.71
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:23.71
+          Body SysBody 05-MAR-2007 13:51:23.71
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -126,12 +312,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.06
         Body SysBody 01-MAR-2007 16:50:28.06
           Attr StructName = "Opc_Decimal"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:24.10
+          Body SysBody 05-MAR-2007 13:45:24.10
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:28.06
           Body SysBody 01-MAR-2007 16:52:37.40
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:28.14
+          Body SysBody 05-MAR-2007 13:51:28.14
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:28.14
+          Body SysBody 05-MAR-2007 13:51:28.14
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:28.14
+          Body SysBody 05-MAR-2007 13:51:28.14
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:28.14
+          Body SysBody 05-MAR-2007 13:51:28.14
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:28.14
+          Body SysBody 05-MAR-2007 13:51:28.14
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -149,12 +366,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.91
         Body SysBody 01-MAR-2007 16:50:27.91
           Attr StructName = "Opc_Long"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:28.22
+          Body SysBody 05-MAR-2007 13:45:28.22
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.91
           Body SysBody 01-MAR-2007 16:53:11.79
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:31.83
+          Body SysBody 05-MAR-2007 13:51:31.83
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:31.83
+          Body SysBody 05-MAR-2007 13:51:31.83
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:31.83
+          Body SysBody 05-MAR-2007 13:51:31.83
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:31.83
+          Body SysBody 05-MAR-2007 13:51:31.83
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:31.83
+          Body SysBody 05-MAR-2007 13:51:31.83
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -172,12 +420,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.77
         Body SysBody 01-MAR-2007 16:50:27.77
           Attr StructName = "Opc_Int"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:31.37
+          Body SysBody 05-MAR-2007 13:45:31.37
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.77
           Body SysBody 01-MAR-2007 16:53:46.18
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:36.44
+          Body SysBody 05-MAR-2007 13:51:36.44
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:36.44
+          Body SysBody 05-MAR-2007 13:51:36.44
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:36.44
+          Body SysBody 05-MAR-2007 13:51:36.44
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:36.44
+          Body SysBody 05-MAR-2007 13:51:36.44
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:36.44
+          Body SysBody 05-MAR-2007 13:51:36.44
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -195,12 +474,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.62
         Body SysBody 01-MAR-2007 16:50:27.62
           Attr StructName = "Opc_Short"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:34.58
+          Body SysBody 05-MAR-2007 13:45:34.58
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.62
           Body SysBody 01-MAR-2007 16:54:54.38
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int16"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:40.55
+          Body SysBody 05-MAR-2007 13:51:40.55
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:40.55
+          Body SysBody 05-MAR-2007 13:51:40.55
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:40.55
+          Body SysBody 05-MAR-2007 13:51:40.55
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:40.55
+          Body SysBody 05-MAR-2007 13:51:40.55
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:40.55
+          Body SysBody 05-MAR-2007 13:51:40.55
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -218,12 +528,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.44
         Body SysBody 01-MAR-2007 16:50:27.44
           Attr StructName = "Opc_Byte"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:37.39
+          Body SysBody 05-MAR-2007 13:45:37.39
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.44
           Body SysBody 01-MAR-2007 16:55:12.30
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int8"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:48.00
+          Body SysBody 05-MAR-2007 13:51:48.00
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:48.00
+          Body SysBody 05-MAR-2007 13:51:48.00
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:48.00
+          Body SysBody 05-MAR-2007 13:51:48.00
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:48.00
+          Body SysBody 05-MAR-2007 13:51:48.00
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:48.00
+          Body SysBody 05-MAR-2007 13:51:48.00
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -241,12 +582,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.27
         Body SysBody 01-MAR-2007 16:50:27.27
           Attr StructName = "Opc_UnsignedLong"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:40.10
+          Body SysBody 05-MAR-2007 13:45:40.10
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.27
           Body SysBody 01-MAR-2007 16:55:57.73
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:51.24
+          Body SysBody 05-MAR-2007 13:51:51.24
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:51.24
+          Body SysBody 05-MAR-2007 13:51:51.24
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:51.24
+          Body SysBody 05-MAR-2007 13:51:51.24
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:51.24
+          Body SysBody 05-MAR-2007 13:51:51.24
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:51.24
+          Body SysBody 05-MAR-2007 13:51:51.24
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -264,12 +636,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.07
         Body SysBody 01-MAR-2007 16:50:27.07
           Attr StructName = "Opc_UnsignedInt"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:42.87
+          Body SysBody 05-MAR-2007 13:45:42.87
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:27.07
           Body SysBody 01-MAR-2007 16:56:25.07
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:54.37
+          Body SysBody 05-MAR-2007 13:51:54.37
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:54.37
+          Body SysBody 05-MAR-2007 13:51:54.37
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:54.37
+          Body SysBody 05-MAR-2007 13:51:54.37
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:54.37
+          Body SysBody 05-MAR-2007 13:51:54.37
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:54.37
+          Body SysBody 05-MAR-2007 13:51:54.37
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -287,12 +690,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.68
         Body SysBody 01-MAR-2007 16:50:25.68
           Attr StructName = "Opc_UnsignedShort"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:51.52
+          Body SysBody 05-MAR-2007 13:45:51.52
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:25.68
           Body SysBody 01-MAR-2007 16:56:51.26
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:51:59.01
+          Body SysBody 05-MAR-2007 13:51:59.01
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:51:59.01
+          Body SysBody 05-MAR-2007 13:51:59.01
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:51:59.01
+          Body SysBody 05-MAR-2007 13:51:59.01
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:51:59.01
+          Body SysBody 05-MAR-2007 13:51:59.01
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:59.01
+          Body SysBody 05-MAR-2007 13:51:59.01
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -310,12 +744,43 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.44
         Body SysBody 01-MAR-2007 16:50:25.44
           Attr StructName = "Opc_UnsignedByte"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X9"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:54.72
+          Body SysBody 05-MAR-2007 13:45:54.72
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:25.44
           Body SysBody 01-MAR-2007 16:57:15.03
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt8"
+          EndBody
+        EndObject
+        Object HighEU $Attribute 4 05-MAR-2007 13:52:02.66
+          Body SysBody 05-MAR-2007 13:52:02.66
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowEU $Attribute 5 05-MAR-2007 13:52:02.66
+          Body SysBody 05-MAR-2007 13:52:02.66
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object HighIR $Attribute 6 05-MAR-2007 13:52:02.66
+          Body SysBody 05-MAR-2007 13:52:02.66
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object LowIR $Attribute 7 05-MAR-2007 13:52:02.66
+          Body SysBody 05-MAR-2007 13:52:02.66
+            Attr TypeRef = "pwrs:Type-$Float64"
+          EndBody
+        EndObject
+        Object EngineeringUnits $Attribute 8 05-MAR-2007 13:52:02.66
+          Body SysBody 05-MAR-2007 13:52:02.66
+            Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
       EndObject
@@ -333,8 +798,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 17:01:17.11
         Body SysBody 01-MAR-2007 17:01:17.11
           Attr StructName = "Opc_Base64Binary"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:45:57.15
+          Body SysBody 05-MAR-2007 13:45:57.15
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 17:01:17.11
           Body SysBody 01-MAR-2007 17:01:47.78
             Attr PgmName = "Value"
@@ -356,8 +827,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.22
         Body SysBody 01-MAR-2007 16:50:25.22
           Attr StructName = "Opc_DateTime"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:46:00.31
+          Body SysBody 05-MAR-2007 13:46:00.31
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:25.22
           Body SysBody 01-MAR-2007 16:58:37.27
             Attr PgmName = "Value"
@@ -379,8 +856,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.00
         Body SysBody 01-MAR-2007 16:50:25.00
           Attr StructName = "Opc_Time"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:46:03.34
+          Body SysBody 05-MAR-2007 13:46:03.34
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:25.00
           Body SysBody 01-MAR-2007 16:59:03.22
             Attr PgmName = "Value"
@@ -402,8 +885,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:24.78
         Body SysBody 01-MAR-2007 16:50:24.78
           Attr StructName = "Opc_Date"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:46:06.10
+          Body SysBody 05-MAR-2007 13:46:06.10
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:24.78
           Body SysBody 01-MAR-2007 16:59:19.57
             Attr PgmName = "Value"
@@ -425,8 +914,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:24.50
         Body SysBody 01-MAR-2007 16:50:24.50
           Attr StructName = "Opc_Duration"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:46:09.90
+          Body SysBody 05-MAR-2007 13:46:09.90
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:24.50
           Body SysBody 01-MAR-2007 16:59:42.13
             Attr PgmName = "Value"
@@ -448,8 +943,14 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:22.30
         Body SysBody 01-MAR-2007 16:50:22.30
           Attr StructName = "Opc_QName"
-          Attr NextAix = "_X3"
+          Attr NextAix = "_X4"
         EndBody
+        Object Description $Attribute 3 05-MAR-2007 13:46:12.59
+          Body SysBody 05-MAR-2007 13:46:12.59
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
         Object Value $Attribute 2 01-MAR-2007 16:50:22.30
           Body SysBody 01-MAR-2007 17:00:54.92
             Attr PgmName = "Value"
@@ -471,16 +972,77 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 17:02:58.07
         Body SysBody 01-MAR-2007 17:02:58.07
           Attr StructName = "Opc_ServerConfig"
-          Attr NextAix = "_X2"
+          Attr NextAix = "_X4"
         EndBody
-        Object Access $Attribute 1 01-MAR-2007 17:03:37.18
-          Body SysBody 01-MAR-2007 17:03:49.47
-            Attr PgmName = "Access"
-            Attr TypeRef = "pwrs:Type-$Mask"
+        Object Description $Attribute 2 05-MAR-2007 13:33:10.56
+          Body SysBody 05-MAR-2007 13:33:20.61
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object Port $Attribute 3 05-MAR-2007 13:34:44.55
+          Body SysBody 05-MAR-2007 13:34:56.97
+            Attr PgmName = "Port"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ClientAccess $Attribute 1 05-MAR-2007 13:33:32.49
+          Body SysBody 05-MAR-2007 13:33:35.01
+            Attr PgmName = "ClientAccess"
+            Attr Flags = 131074
+            Attr Elements = 20
+            Attr TypeRef = "Opc:Class-Opc_ClientAccess"
           EndBody
         EndObject
       EndObject
       Object Template Opc_ServerConfig 2153218048 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Opc_ServerState $ClassDef 22 02-MAR-2007 14:49:50.99
+      Body SysBody 02-MAR-2007 14:49:26.55
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 02-MAR-2007 14:49:57.91
+        Body SysBody 02-MAR-2007 14:49:57.91
+          Attr StructName = "Opc_ServerState"
+          Attr NextAix = "_X6"
+        EndBody
+        Object Server $Attribute 1 02-MAR-2007 14:50:39.12
+          Body SysBody 02-MAR-2007 14:50:19.42
+            Attr PgmName = "Server"
+            Attr TypeRef = "pwrs:Type-$URL"
+          EndBody
+        EndObject
+        Object VendorInfo $Attribute 2 02-MAR-2007 14:51:34.94
+          Body SysBody 02-MAR-2007 14:51:44.69
+            Attr PgmName = "VendorInfo"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object ProductVersion $Attribute 3 02-MAR-2007 14:52:12.84
+          Body SysBody 02-MAR-2007 14:52:16.47
+            Attr PgmName = "ProductVersion"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        Object StartTime $Attribute 4 02-MAR-2007 14:52:55.61
+          Body SysBody 02-MAR-2007 14:53:02.41
+            Attr PgmName = "StartTime"
+            Attr TypeRef = "pwrs:Type-$Time"
+          EndBody
+        EndObject
+        Object ServerState $Attribute 5 02-MAR-2007 14:54:30.98
+          Body SysBody 02-MAR-2007 14:54:38.95
+            Attr PgmName = "ServerState"
+            Attr TypeRef = "Opc:Type-Opc_ServerStateEnum"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Opc_ServerState 2153480192 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
         EndBody
       EndObject

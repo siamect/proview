@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.2 2007-03-02 08:52:20 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.3 2007-03-08 07:26:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,12 +22,15 @@
 
 #include "co_provider.h"
 #include "co_procom.h"
+#include "pwr_opcclasses.h"
 #include "opc_soap_H.h"
 
 
 class opc_provider : public co_provider {
 public:
-  opc_provider( pvd_eEnv env = pvd_eEnv_Wb) : co_provider(env), root(0), next_oix(1) {}
+  opc_provider( pvd_eEnv env = pvd_eEnv_Wb) : co_provider(env), root(0), next_oix(1) {
+    memset( &server_state, 0, sizeof(server_state));
+  }
   virtual void object( co_procom *pcom);
   virtual void objectOid( co_procom *pcom, pwr_tOix oix);
   virtual void objectName( co_procom *pcom, char *name);
@@ -61,10 +64,13 @@ public:
   void insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
 		      int first, int last, int load_children);
 
+  void get_server_state();
+
   vector<procom_obj> m_list;
   pwr_tOix root;
   pwr_tOix next_oix;
   struct soap soap;
+  pwr_sClass_Opc_ServerState server_state;
 };
 
 #endif

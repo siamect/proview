@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.2 2007-03-02 08:52:20 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.3 2007-03-08 07:26:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,7 @@
 #include "co_cdh.h"
 #include "co_dcli.h"
 #include "pwr_opcclasses.h"
+#include "opc_utl.h"
 #include "opc_soap_H.h"
 #include "Service.nsmap"
 
@@ -57,107 +58,112 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
 				  int first, int last, int load_children)
 {
   procom_obj o;
+  char *valp;
 	
   strcpy( o.name, element->Name->c_str());
   o.oix = next_oix++;
   o.fthoix = fth;
   if ( !element->IsItem) {
     o.cid = pwr_cClass_Opc_Hier;
+    o.body_size = sizeof(pwr_sClass_Opc_Hier);
+    o.body = calloc( 1, o.body_size);
+    if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
+      strncpy( ((pwr_sClass_Opc_Hier *)o.body)->Description, valp, 
+	       sizeof(((pwr_sClass_Opc_Hier *)o.body)->Description));
   }
   else {
-    if ( element->Properties.size() &&
-	 element->Properties[0]->Name == "dataType") {
-      if ( strcmp( element->Properties[0]->Value, "string") == 0) {
+    if ( opc_get_property( element->Properties, opc_mProperty_DataType, &valp)) {
+      if ( strcmp( valp, "string") == 0) {
 	o.cid = pwr_cClass_Opc_String;
 	o.body_size = sizeof(pwr_sClass_Opc_String);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "boolean") == 0) {
+      else if ( strcmp( valp, "boolean") == 0) {
 	o.cid = pwr_cClass_Opc_Boolean;
 	o.body_size = sizeof(pwr_sClass_Opc_Boolean);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "float") == 0) {
+      else if ( strcmp( valp, "float") == 0) {
 	o.cid = pwr_cClass_Opc_Float;
 	o.body_size = sizeof(pwr_sClass_Opc_Float);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "double") == 0) {
+      else if ( strcmp( valp, "double") == 0) {
 	o.cid = pwr_cClass_Opc_Double;
 	o.body_size = sizeof(pwr_sClass_Opc_Double);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "double") == 0) {
+      else if ( strcmp( valp, "double") == 0) {
 	o.cid = pwr_cClass_Opc_Double;
 	o.body_size = sizeof(pwr_sClass_Opc_Double);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "decimal") == 0) {
+      else if ( strcmp( valp, "decimal") == 0) {
 	o.cid = pwr_cClass_Opc_Decimal;
 	o.body_size = sizeof(pwr_sClass_Opc_Decimal);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "int") == 0) {
+      else if ( strcmp( valp, "int") == 0) {
 	o.cid = pwr_cClass_Opc_Int;
 	o.body_size = sizeof(pwr_sClass_Opc_Int);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "short") == 0) {
+      else if ( strcmp( valp, "short") == 0) {
 	o.cid = pwr_cClass_Opc_Short;
 	o.body_size = sizeof(pwr_sClass_Opc_Short);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "byte") == 0) {
+      else if ( strcmp( valp, "byte") == 0) {
 	o.cid = pwr_cClass_Opc_Byte;
 	o.body_size = sizeof(pwr_sClass_Opc_Byte);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "unsignedLong") == 0) {
+      else if ( strcmp( valp, "unsignedLong") == 0) {
 	o.cid = pwr_cClass_Opc_UnsignedLong;
 	o.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "unsignedInt") == 0) {
+      else if ( strcmp( valp, "unsignedInt") == 0) {
 	o.cid = pwr_cClass_Opc_UnsignedInt;
 	o.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "unsignedShort") == 0) {
+      else if ( strcmp( valp, "unsignedShort") == 0) {
 	o.cid = pwr_cClass_Opc_UnsignedShort;
 	o.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "unsignedByte") == 0) {
+      else if ( strcmp( valp, "unsignedByte") == 0) {
 	o.cid = pwr_cClass_Opc_UnsignedByte;
 	o.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "base64Binary") == 0) {
+      else if ( strcmp( valp, "base64Binary") == 0) {
 	o.cid = pwr_cClass_Opc_Base64Binary;
 	o.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "dateTime") == 0) {
+      else if ( strcmp( valp, "dateTime") == 0) {
 	o.cid = pwr_cClass_Opc_DateTime;
 	o.body_size = sizeof(pwr_sClass_Opc_DateTime);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "time") == 0) {
+      else if ( strcmp( valp, "time") == 0) {
 	o.cid = pwr_cClass_Opc_Time;
 	o.body_size = sizeof(pwr_sClass_Opc_Time);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "date") == 0) {
+      else if ( strcmp( valp, "date") == 0) {
 	o.cid = pwr_cClass_Opc_Date;
 	o.body_size = sizeof(pwr_sClass_Opc_Date);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "duration") == 0) {
+      else if ( strcmp( valp, "duration") == 0) {
 	o.cid = pwr_cClass_Opc_Duration;
 	o.body_size = sizeof(pwr_sClass_Opc_Duration);
 	o.body = calloc( 1, o.body_size);
       }
-      else if ( strcmp( element->Properties[0]->Value, "QName") == 0) {
+      else if ( strcmp( valp, "QName") == 0) {
 	o.cid = pwr_cClass_Opc_QName;
 	o.body_size = sizeof(pwr_sClass_Opc_QName);
 	o.body = calloc( 1, o.body_size);
@@ -165,6 +171,11 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
     }
     else {
       o.cid = pwr_cClass_Opc_Hier;
+      o.body_size = sizeof(pwr_sClass_Opc_Hier);
+      o.body = calloc( 1, o.body_size);
+      if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
+	strncpy( ((pwr_sClass_Opc_Hier *)o.body)->Description, valp, 
+		 sizeof(((pwr_sClass_Opc_Hier *)o.body)->Description));
     }
   }
   if ( first)
@@ -195,11 +206,9 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
     _ns1__Browse browse;
     _ns1__BrowseResponse browse_response;
 
-    if ( fth != 0)
-      browse.ItemPath = new std::string( longname(fth));
-    browse.ItemName = new std::string( o.name);
-    std::string s("dataType");
-    browse.PropertyNames.push_back( s);
+    browse.ItemName = new std::string( longname(o.oix));
+    opc_mask_to_propertynames( browse.PropertyNames, 
+			       opc_mProperty_DataType | opc_mProperty_Description);
 
     if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
@@ -229,20 +238,36 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
     vo.flags |= procom_obj_mFlags_Loaded;
     m_list.push_back( vo);
 
+    // Insert ServerState object
+    procom_obj so;
+    so.cid = pwr_cClass_Opc_ServerState;
+    strcpy( so.name, "OpcServerState");
+    so.body_size = sizeof(pwr_sClass_Opc_ServerState);
+    so.body = calloc( 1, so.body_size);
+    memcpy( so.body, &server_state, so.body_size);
+    so.oix = next_oix++;
+    so.fthoix = 0;
+    so.bwsoix = so.oix;
+    so.fwsoix = so.oix;
+    m_list[0].fchoix = so.oix;
+    m_list[0].lchoix = so.oix;
+    so.flags |= procom_obj_mFlags_Loaded;
+    m_list.push_back( so);
+
     // Load Rootlist
     _ns1__Browse browse;
     _ns1__BrowseResponse browse_response;
 
-    std::string s("dataType");
-    browse.PropertyNames.push_back( s);
+    opc_mask_to_propertynames( browse.PropertyNames, 
+			       opc_mProperty_DataType | opc_mProperty_Description);
     if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
-      pwr_tOix bws = 0;
+      pwr_tOix bws = so.oix;
       pwr_tOix next_bws;
       for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
 	next_bws = next_oix;
 	insert_object( oix, bws, browse_response.Elements[i],
-		       i == 0, i == (int)browse_response.Elements.size() - 1, 1);
+		       0, i == (int)browse_response.Elements.size() - 1, 1);
 	bws = next_bws;
       }
     }
@@ -254,10 +279,9 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
       _ns1__Browse browse;
       _ns1__BrowseResponse browse_response;
 
-      browse.ItemPath = new std::string( longname(m_list[oix].fthoix));
-      browse.ItemName = new std::string( m_list[oix].name);
-      std::string s("dataType");
-      browse.PropertyNames.push_back( s);
+      browse.ItemName = new std::string( longname(oix));
+      opc_mask_to_propertynames( browse.PropertyNames, 
+				 opc_mProperty_DataType | opc_mProperty_Description);
       
       if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	   SOAP_OK) {
@@ -458,6 +482,27 @@ bool opc_provider::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
   return false;
 }
 
+void opc_provider::get_server_state()
+{
+  _ns1__GetStatus get_status;
+  _ns1__GetStatusResponse get_status_response;
+  get_status.ClientRequestHandle = new std::string("Opc Client");
+
+  if ( soap_call___ns1__GetStatus( &soap, opc_endpoint, NULL, &get_status, &get_status_response) ==
+       SOAP_OK) {
+    if ( get_status_response.Status->VendorInfo)
+      strcpy( server_state.VendorInfo, get_status_response.Status->VendorInfo->c_str());
+    if ( get_status_response.Status->ProductVersion)
+      strcpy( server_state.ProductVersion, get_status_response.Status->ProductVersion->c_str());
+    server_state.StartTime.tv_sec = get_status_response.Status->StartTime;
+    server_state.ServerState = get_status_response.GetStatusResult->ServerState;
+  }
+  else {
+    server_state.ServerState = ns1__serverState__commFault;    
+    soap_print_fault( &soap, stderr);
+  }
+}
+
 
 void usage()
 {
@@ -515,9 +560,12 @@ int main(int argc, char *argv[])
 		    0);			// Global
   
   procom.init();
+  strcpy( provider.server_state.Server, server_url);
 
   // provider.nodeUp();
   soap_init( &provider.soap);
+
+  provider.get_server_state();
 
   procom.mainLoop();
 }
