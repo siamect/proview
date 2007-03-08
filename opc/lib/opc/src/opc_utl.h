@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.3 2007-03-08 07:26:29 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.4 2007-03-08 08:10:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,32 @@ typedef enum {
   opc_mProperty_TimeZone 	= 1 << 16
 } opc_mProperty;
 
+typedef enum {
+  opc_mDataType_string ,
+  opc_mDataType_boolean ,
+  opc_mDataType_float ,
+  opc_mDataType_double ,
+  opc_mDataType_decimal ,
+  opc_mDataType_long ,
+  opc_mDataType_int ,
+  opc_mDataType_short ,
+  opc_mDataType_byte ,
+  opc_mDataType_unsignedLong ,
+  opc_mDataType_unsignedInt ,
+  opc_mDataType_unsignedShort ,
+  opc_mDataType_unsignedByte ,
+  opc_mDataType_base64Binary ,
+  opc_mDataType_dateTime ,
+  opc_mDataType_time ,
+  opc_mDataType_date ,
+  opc_mDataType_duration ,
+  opc_mDataType_QName ,
+  opc_mDataType_anyType 
+} opc_mDataType;
+
+pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
+bool opc_string_to_opctype(char *str, int *type);
+bool opc_type_to_pwrtype(int type, int *pwrtype); 
 bool opc_pwrtype_to_string( int type, char **str);
 
 bool opc_get_property( std::vector<ns1__ItemProperty *> properties, unsigned int mask,
