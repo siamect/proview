@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.4 2007-03-08 08:10:03 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.5 2007-03-12 07:52:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 #include "opc_utl.h"
 #include "opc_soap_Stub.h"
 
-pwr_tString16 str_dt[20] = {"str" ,
+static pwr_tString16 str_dt[20] = {"string" ,
 			    "boolean" ,
 			    "float" ,
 			    "double" ,
@@ -63,6 +63,146 @@ static char opc_PropertyNames[17][20] = {"dataType",
 					 "openLabel",
 					 "timeZone"};
 
+static char opc_ResultCodes[23][30] = {"s:S_CLAMP",
+				       "s:S_DATAQUEUEOVERFLOW",
+				       "s:S_UNSUPPORTEDRATE",
+				       "s:E_ACCESS_DENIED",
+				       "s:E_BUSY",
+				       "s:E_FAIL",
+				       "s:E_INVALIDCONTINUATIONPOINT",
+				       "s:E_INVALIDFILTER",
+				       "s:E_INVALIDHOLDTIME",
+				       "s:E_INVALIDITEMNAME",
+				       "s:E_INVALIDITEMPATH",
+				       "s:E_INVALIDPID",
+				       "s:E_NOSUBSCRIPTION",
+				       "s:E_NOTSUPPORTED",
+				       "s:E_OUTOFMEMORY",
+				       "s:E_RANGE",
+				       "s:E_READONLY",
+				       "s:E_SERVERSTATE",
+				       "s:E_TIMEDOUT",
+				       "s:E_UNKNOWNITEMNAME",
+				       "s:E_UNKNOWNITEMPATH",
+				       "s:E_WRITEONLY",
+				       "s:E_BADTYPE"};
+
+static char opc_ResultTexts[23][20] = {"edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here",
+				       "edgar o was here"};
+
+void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string *rc, int err_code, unsigned int options)
+{
+  pwr_tString32 str;
+  int ii;
+  bool exists = false;
+
+	
+  opc_resultcode_to_string(err_code, str);
+  rc = new std::string(str);
+
+  for (ii = 0; ii < (int) errors.size(); ii++) {
+    if (strncmp(errors[ii]->ID.c_str(), str, sizeof(str)) == 0) {
+      exists = true;
+    }
+  }
+  
+  if (!exists) {
+    ns1__OPCError *oe = new ns1__OPCError();
+    oe->ID = std::string(str);
+    
+    if (options & opc_mRequestOption_ReturnErrorText) {
+      opc_resultcode_to_text(err_code, str);
+      oe->Text = new std::string(str);
+    }
+	
+    errors.push_back(oe);
+  }
+
+}
+
+bool opc_requestoptions_to_mask( ns1__RequestOptions *options, unsigned int *mask)
+{
+
+  if (!options) {
+    *mask = 0;
+    return false;
+  }
+  
+  if (options->ReturnErrorText)
+    *mask |= *options->ReturnErrorText ? opc_mRequestOption_ReturnErrorText : 0;
+
+  if (options->ReturnDiagnosticInfo)
+    *mask |= *options->ReturnDiagnosticInfo ? opc_mRequestOption_ReturnDiagnosticInfo : 0;
+
+  if (options->ReturnItemTime)
+    *mask |= *options->ReturnItemTime ? opc_mRequestOption_ReturnItemTime : 0;
+
+  if (options->ReturnItemPath)
+    *mask |= *options->ReturnItemPath ? opc_mRequestOption_ReturnItemPath : 0;
+
+  if (options->ReturnItemName)
+    *mask |= *options->ReturnItemName ? opc_mRequestOption_ReturnItemName : 0;
+  
+  return true;
+}  
+
+bool opc_resultcode_to_string( int type, char *str)
+{
+  str = opc_ResultCodes[type];
+  
+  return true;  
+  
+}
+
+bool opc_resultcode_to_text( int type, char *str)
+{
+  
+  str = opc_ResultTexts[type];
+  
+  return true;  
+  
+}
+
+bool opc_string_to_resultcode(char *str, int *type)
+{
+  int ii;
+
+  for (ii = 0; ii < opc_cResultCodesSize; ii++) {
+    if (strncmp(opc_ResultCodes[ii], str, sizeof(opc_ResultCodes[ii])) == 0) {
+      *type  = ii;
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+
+//
+// Return the corresponding opc type string for a pwr_eType
+//
+
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
 {
 
@@ -83,13 +223,76 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
 //
 // Return the corresponding opc type for a opc type string
 //
+bool opc_opctype_to_value(void *bufp, int size, int opc_type)
+{
+  switch (opc_type) {
+    case opc_eDataType_string:
+      break;
+    case opc_eDataType_boolean:
+      if (*(char *) bufp) {
+        sprintf((char *) bufp, "true");
+      } else {
+        sprintf((char *) bufp, "false");
+      }
+      break;
+    case opc_eDataType_float:
+      snprintf((char *)bufp, size, "%f", *(pwr_tFloat32 *) bufp );
+      break;
+    case opc_eDataType_decimal:
+    case opc_eDataType_double:
+      snprintf((char *)bufp, size, "%f", *(pwr_tFloat64 *) bufp );
+      break;
+    case opc_eDataType_long:
+      snprintf((char *)bufp, size, "%lli", *(long long int *) bufp );
+      break;
+    case opc_eDataType_int:
+      snprintf((char *)bufp, size, "%i", *(pwr_tInt32 *) bufp );
+      break;
+    case opc_eDataType_short:
+      snprintf((char *)bufp, size, "%hi", *(pwr_tInt16 *) bufp );
+      break;
+    case opc_eDataType_byte:
+      snprintf((char *)bufp, size, "%hhi", *(pwr_tChar *) bufp );
+      break;
+    case opc_eDataType_unsignedLong:
+      snprintf((char *)bufp, size, "%llu", *(long long unsigned *) bufp );
+      break;
+    case opc_eDataType_unsignedInt:
+      snprintf((char *)bufp, size, "%u", *(pwr_tInt32 *) bufp );
+      break;
+    case opc_eDataType_unsignedShort:
+      snprintf((char *)bufp, size, "%hu", *(pwr_tUInt16 *) bufp );
+      break;
+    case opc_eDataType_unsignedByte:
+      snprintf((char *)bufp, size, "%hhu", *(pwr_tUInt8 *) bufp );
+      break;
+    case opc_eDataType_dateTime:
+      pwr_tTime  at;
+      at = (*(pwr_tTime *) bufp);
+      time_AtoOPCAscii(&at, (char *) bufp, size);
+      break;
+    case opc_eDataType_duration:
+      time_DtoAscii ((pwr_tDeltaTime *) bufp, 0, (char *) bufp, size);
+      break;
+    default:
+      break;
+  }
+  
+  return true;
+}
+//
+// Return the corresponding opc type for a opc type string
+//
 bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type)
 {
   switch (opc_type) {
-    case opc_mDataType_string:
+    case opc_eDataType_string:
       switch (pwr_type) {
         case pwr_eType_Float64:
 	  snprintf((char *)bufp, size, "%f", *(pwr_tFloat64 *) bufp );
+	  break;
+        case pwr_eType_Float32:
+	  snprintf((char *)bufp, size, "%f", *(pwr_tFloat32 *) bufp );
 	  break;
         case pwr_eType_Char:
 	  snprintf((char *)bufp, size, "%c", *(pwr_tChar *) bufp );
@@ -101,6 +304,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  snprintf((char *)bufp, size, "%hi", *(pwr_tInt16 *) bufp );
           break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  snprintf((char *)bufp, size, "%i", *(pwr_tInt32 *) bufp );
           break;
         case pwr_eType_UInt8:
@@ -130,29 +334,33 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_boolean:
+    case opc_eDataType_boolean:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(char *) bufp) = (*(pwr_tFloat32 *) bufp) ? 1 : 0;
+	  break;
         case pwr_eType_Float64:
-	  (*(char *) bufp) = (char) (*(pwr_tFloat64 *) bufp);
+	  (*(char *) bufp) = (*(pwr_tFloat64 *) bufp) ? 1 : 0;
 	  break;
         case pwr_eType_Char:
         case pwr_eType_Int8:
 //	  *bufp = (char) (char *bufp);
 	  break;
         case pwr_eType_Int16:
-	  (*(char *) bufp) = (char) (*(pwr_tInt16 *) bufp);
+	  (*(char *) bufp) = (*(pwr_tInt16 *) bufp) ? 1 : 0;
 	  break;
         case pwr_eType_Int32:
-	  (*(char *) bufp) = (char) (*(pwr_tInt32 *) bufp);
+        case pwr_eType_Boolean:
+	  (*(char *) bufp) = (*(pwr_tInt32 *) bufp) ? 1 : 0;
 	  break;
         case pwr_eType_UInt8:
 //	  *bufp = (char) (unsigned char *bufp);
 	  break;
         case pwr_eType_UInt16:
-	  (*(char *) bufp) = (char) (*(pwr_tUInt16 *) bufp);
+	  (*(char *) bufp) = (*(pwr_tUInt16 *) bufp) ? 1 : 0;
 	  break;
         case pwr_eType_UInt32:
-	  (*(char *) bufp) = (char) (*(pwr_tUInt32 *) bufp);
+	  (*(char *) bufp) = (*(pwr_tUInt32 *) bufp) ? 1 : 0;
 	  break;
         case pwr_eType_String:
         case pwr_eType_Time:
@@ -163,8 +371,11 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_float:
+    case opc_eDataType_float:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+//	  (*(float *) bufp) = (float) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(float *) bufp) = (float) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -176,6 +387,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  (*(float *) bufp) = (float) (*(pwr_tInt16 *) bufp);
 	  break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  (*(float *) bufp) = (float) (*(pwr_tInt32 *) bufp);
 	  break;
         case pwr_eType_UInt8:
@@ -196,9 +408,12 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_double:
-    case opc_mDataType_decimal:
+    case opc_eDataType_double:
+    case opc_eDataType_decimal:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(double *) bufp) = (double) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(double *) bufp) = (double) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -210,6 +425,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  (*(double *) bufp) = (double) (*(pwr_tInt16 *) bufp);
 	  break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  (*(double *) bufp) = (double) (*(pwr_tInt32 *) bufp);
 	  break;
         case pwr_eType_UInt8:
@@ -230,9 +446,12 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_int:
-    case opc_mDataType_unsignedInt:
+    case opc_eDataType_int:
+    case opc_eDataType_unsignedInt:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(int *) bufp) = (int) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(int *) bufp) = (int) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -243,6 +462,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
         case pwr_eType_Int16:
 	  (*(int *) bufp) = (int) (*(pwr_tInt16 *) bufp);
 	  break;
+        case pwr_eType_Boolean:
         case pwr_eType_Int32:
 //	  (*(double *) bufp) = (double) (*(pwr_tInt32 *) bufp);
 	  break;
@@ -264,9 +484,12 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_short:
-    case opc_mDataType_unsignedShort:
+    case opc_eDataType_short:
+    case opc_eDataType_unsignedShort:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(short int *) bufp) = (short int) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(short int *) bufp) = (short int) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -278,6 +501,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 //	  (*(short int *) bufp) = (short int) (*(pwr_tInt16 *) bufp);
 	  break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  (*(short int *) bufp) = (short int) (*(pwr_tInt32 *) bufp);
 	  break;
         case pwr_eType_UInt8:
@@ -298,9 +522,12 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_unsignedByte:
-    case opc_mDataType_byte:
+    case opc_eDataType_unsignedByte:
+    case opc_eDataType_byte:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(char *) bufp) = (char) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(char *) bufp) = (char) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -312,6 +539,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  (*(char *) bufp) = (char) (*(pwr_tInt16 *) bufp);
 	  break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  (*(char *) bufp) = (char) (*(pwr_tInt32 *) bufp);
 	  break;
         case pwr_eType_UInt8:
@@ -332,9 +560,12 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_unsignedLong:
-    case opc_mDataType_long:
+    case opc_eDataType_unsignedLong:
+    case opc_eDataType_long:
       switch (pwr_type) {
+        case pwr_eType_Float32:
+	  (*(long long *) bufp) = (long long) (*(pwr_tFloat32 *) bufp);
+	  break;
         case pwr_eType_Float64:
 	  (*(long long *) bufp) = (long long) (*(pwr_tFloat64 *) bufp);
 	  break;
@@ -346,6 +577,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  (*(long long *) bufp) = (long long) (*(pwr_tInt16 *) bufp);
 	  break;
         case pwr_eType_Int32:
+        case pwr_eType_Boolean:
 	  (*(long long *) bufp) = (long long) (*(pwr_tInt32 *) bufp);
 	  break;
         case pwr_eType_UInt8:
@@ -366,13 +598,13 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 	  break;
       }
       break;
-    case opc_mDataType_dateTime:
-    case opc_mDataType_duration:
-    case opc_mDataType_base64Binary:
-    case opc_mDataType_time:
-    case opc_mDataType_date:
-    case opc_mDataType_QName:
-    case opc_mDataType_anyType :
+    case opc_eDataType_dateTime:
+    case opc_eDataType_duration:
+    case opc_eDataType_base64Binary:
+    case opc_eDataType_time:
+    case opc_eDataType_date:
+    case opc_eDataType_QName:
+    case opc_eDataType_anyType :
       return false;
       break;
   }
@@ -387,7 +619,7 @@ bool opc_string_to_opctype(char *str, int *type)
 {
   int ii;
 
-  for (ii = 0; ii < 20; ii++) {
+  for (ii = 0; ii < opc_cDataTypeSize; ii++) {
     if (strncmp(str_dt[ii], str, sizeof(str_dt[ii])) == 0) {
       *type  = ii;
       return true;
@@ -396,55 +628,64 @@ bool opc_string_to_opctype(char *str, int *type)
   
   return false;
 }
+//
+// Return the corresponding opc type string for a opc type
+//
+char *opc_opctype_to_string(int type)
+{
+
+  return str_dt[type];
+  
+}
 
 bool opc_type_to_pwrtype(int type, int *pwrtype) 
 {
   switch (type) {
 
-  case opc_mDataType_string:
+  case opc_eDataType_string:
     *pwrtype = pwr_eType_String;
     break;
-  case opc_mDataType_boolean:
+  case opc_eDataType_boolean:
     *pwrtype = pwr_eType_Boolean;
     break;
-  case opc_mDataType_float:
+  case opc_eDataType_float:
     *pwrtype = pwr_eType_Float32;
     break;
-  case opc_mDataType_double:
+  case opc_eDataType_double:
     *pwrtype = pwr_eType_Float64;
     break;
-  case opc_mDataType_int:
+  case opc_eDataType_int:
     *pwrtype = pwr_eType_Int32;
     break;
-  case opc_mDataType_short:
+  case opc_eDataType_short:
     *pwrtype = pwr_eType_Int16;
     break;
-  case opc_mDataType_byte:
+  case opc_eDataType_byte:
     *pwrtype = pwr_eType_Int8;
     break;
-  case opc_mDataType_unsignedInt:
+  case opc_eDataType_unsignedInt:
     *pwrtype = pwr_eType_UInt32;
     break;
-  case opc_mDataType_unsignedShort:
+  case opc_eDataType_unsignedShort:
     *pwrtype = pwr_eType_UInt16;
     break;
-  case opc_mDataType_unsignedByte:
+  case opc_eDataType_unsignedByte:
     *pwrtype = pwr_eType_UInt8;
     break;
-  case opc_mDataType_dateTime:
+  case opc_eDataType_dateTime:
     *pwrtype = pwr_eType_Time;
     break;
-  case opc_mDataType_duration:
+  case opc_eDataType_duration:
     *pwrtype = pwr_eType_DeltaTime;
     break;
-  case opc_mDataType_QName:
-  case opc_mDataType_anyType: 
-  case opc_mDataType_decimal:
-  case opc_mDataType_long:
-  case opc_mDataType_unsignedLong:
-  case opc_mDataType_base64Binary:
-  case opc_mDataType_time:
-  case opc_mDataType_date:
+  case opc_eDataType_QName:
+  case opc_eDataType_anyType: 
+  case opc_eDataType_decimal:
+  case opc_eDataType_long:
+  case opc_eDataType_unsignedLong:
+  case opc_eDataType_base64Binary:
+  case opc_eDataType_time:
+  case opc_eDataType_date:
   default:
     *pwrtype = 0;
     return false;

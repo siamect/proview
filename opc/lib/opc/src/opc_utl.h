@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.4 2007-03-08 08:10:03 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.5 2007-03-12 07:52:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,30 +45,74 @@ typedef enum {
 } opc_mProperty;
 
 typedef enum {
-  opc_mDataType_string ,
-  opc_mDataType_boolean ,
-  opc_mDataType_float ,
-  opc_mDataType_double ,
-  opc_mDataType_decimal ,
-  opc_mDataType_long ,
-  opc_mDataType_int ,
-  opc_mDataType_short ,
-  opc_mDataType_byte ,
-  opc_mDataType_unsignedLong ,
-  opc_mDataType_unsignedInt ,
-  opc_mDataType_unsignedShort ,
-  opc_mDataType_unsignedByte ,
-  opc_mDataType_base64Binary ,
-  opc_mDataType_dateTime ,
-  opc_mDataType_time ,
-  opc_mDataType_date ,
-  opc_mDataType_duration ,
-  opc_mDataType_QName ,
-  opc_mDataType_anyType 
-} opc_mDataType;
+  opc_mRequestOption_ReturnErrorText      = 1 << 0,
+  opc_mRequestOption_ReturnDiagnosticInfo = 1 << 1,
+  opc_mRequestOption_ReturnItemTime       = 1 << 2,
+  opc_mRequestOption_ReturnItemPath       = 1 << 3,
+  opc_mRequestOption_ReturnItemName       = 1 << 4
+} opc_mRequestOptions;
 
+const int opc_cDataTypeSize = 20;
+
+typedef enum {
+  opc_eDataType_string ,
+  opc_eDataType_boolean ,
+  opc_eDataType_float ,
+  opc_eDataType_double ,
+  opc_eDataType_decimal ,
+  opc_eDataType_long ,
+  opc_eDataType_int ,
+  opc_eDataType_short ,
+  opc_eDataType_byte ,
+  opc_eDataType_unsignedLong ,
+  opc_eDataType_unsignedInt ,
+  opc_eDataType_unsignedShort ,
+  opc_eDataType_unsignedByte ,
+  opc_eDataType_base64Binary ,
+  opc_eDataType_dateTime ,
+  opc_eDataType_time ,
+  opc_eDataType_date ,
+  opc_eDataType_duration ,
+  opc_eDataType_QName ,
+  opc_eDataType_anyType 
+} opc_eDataType;
+
+const int opc_cResultCodesSize = 20;
+
+typedef enum {
+  opc_eResultCode_S_CLAMP ,
+  opc_eResultCode_S_DATAQUEUEOVERFLOW ,
+  opc_eResultCode_S_UNSUPPORTEDRATE ,
+  opc_eResultCode_E_ACCESS_DENIED ,
+  opc_eResultCode_E_BUSY ,
+  opc_eResultCode_E_FAIL ,
+  opc_eResultCode_E_INVALIDCONTINUATIONPOINT ,
+  opc_eResultCode_E_INVALIDFILTER ,
+  opc_eResultCode_E_INVALIDHOLDTIME ,
+  opc_eResultCode_E_INVALIDITEMNAME ,
+  opc_eResultCode_E_INVALIDITEMPATH ,
+  opc_eResultCode_E_INVALIDPID ,
+  opc_eResultCode_E_NOSUBSCRIPTION ,
+  opc_eResultCode_E_NOTSUPPORTED ,
+  opc_eResultCode_E_OUTOFMEMORY ,
+  opc_eResultCode_E_RANGE ,
+  opc_eResultCode_E_READONLY ,
+  opc_eResultCode_E_SERVERSTATE ,
+  opc_eResultCode_E_TIMEDOUT ,
+  opc_eResultCode_E_UNKNOWNITEMNAME ,
+  opc_eResultCode_E_UNKNOWNITEMPATH ,
+  opc_eResultCode_E_WRITEONLY ,
+  opc_eResultCode_E_BADTYPE ,
+} opc_eResultCode;
+
+void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string *rc, int err_code );
+bool opc_requestoptions_to_mask( ns1__RequestOptions *options, unsigned int *mask);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
+bool opc_resultcode_to_string( int type, char *str);
+bool opc_resultcode_to_text( int type, char *str);
+bool opc_opctype_to_value(void *bufp, int size, int opc_type);
 bool opc_string_to_opctype(char *str, int *type);
+char *opc_opctype_to_string(int type);
 bool opc_type_to_pwrtype(int type, int *pwrtype); 
 bool opc_pwrtype_to_string( int type, char **str);
 
