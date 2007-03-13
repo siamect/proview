@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.4 2007-03-13 12:02:07 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.5 2007-03-13 15:48:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -83,6 +83,7 @@ public:
 
   void get_server_state();
   char *opc_provider::name_to_objectname( char *name);
+  void errlog( std::string* item, std::vector<ns1__OPCError *>& errvect);
 
   vector<opcprv_obj> m_list;
   pwr_tOix root;

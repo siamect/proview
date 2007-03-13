@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.6 2007-03-13 12:02:07 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.7 2007-03-13 15:48:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,7 +111,7 @@ static char opc_ResultTexts[23][20] = {"edgar o was here",
 				       "edgar o was here",
 				       "edgar o was here"};
 
-void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string *rc, int err_code, unsigned int options)
+void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, int err_code, unsigned int options)
 {
   pwr_tString32 str;
   int ii;
@@ -119,8 +119,9 @@ void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string *rc, i
 
 	
   opc_resultcode_to_string(err_code, str);
-  rc = new std::string(str);
-
+  if ( rc)
+    *rc = new std::string(str);
+  
   for (ii = 0; ii < (int) errors.size(); ii++) {
     if (strncmp(errors[ii]->ID.c_str(), str, sizeof(str)) == 0) {
       exists = true;

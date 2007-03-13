@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.5 2007-03-12 07:52:02 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.6 2007-03-13 15:48:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,7 +105,7 @@ typedef enum {
   opc_eResultCode_E_BADTYPE ,
 } opc_eResultCode;
 
-void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string *rc, int err_code );
+void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, int err_code, unsigned int options);
 bool opc_requestoptions_to_mask( ns1__RequestOptions *options, unsigned int *mask);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
 bool opc_resultcode_to_string( int type, char *str);

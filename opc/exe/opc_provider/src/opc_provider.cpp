@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.4 2007-03-13 12:02:07 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.5 2007-03-13 15:48:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -397,6 +397,10 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 	   SOAP_OK) {
 	pwr_tOix next_bws;
 	pwr_tOix bws = 0;
+
+	if ( browse_response.Errors.size() > 0) {
+	  errlog( browse.ItemName, browse_response.Errors);
+	}
 	for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
 	  next_bws = next_oix;
 	  insert_object( oix, bws, browse_response.Elements[i],
@@ -678,6 +682,13 @@ char *opc_provider::name_to_objectname( char *name)
   *t = 0;
   return n;
 }
+
+void opc_provider::errlog( std::string* item, std::vector<ns1__OPCError *>& errvect)
+{
+  for ( int i = 0; i < (int) errvect.size(); i++)
+    printf( "OPC Error: %s  %s\n", item->c_str(), errvect[i]->ID.c_str());
+}
+
 
 void usage()
 {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.4 2007-03-13 12:02:07 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.5 2007-03-13 15:48:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -552,18 +552,33 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
   pwr_tOName name;
   pwr_tCid cid;
   unsigned int property_mask;
+  pwr_tTime current_time;
+  unsigned int erropt = 0;
 
   opc_current_access = opcsrv_get_access( so);
+  clock_gettime( CLOCK_REALTIME, &current_time);
+
+  ns1__BrowseResponse->BrowseResult = new ns1__ReplyBase();
+  ns1__BrowseResponse->BrowseResult->RcvTime = current_time.tv_sec;
+  ns1__BrowseResponse->BrowseResult->ReplyTime = current_time.tv_sec;
+  ns1__BrowseResponse->BrowseResult->ClientRequestHandle = ns1__Browse->ClientRequestHandle;
+  ns1__BrowseResponse->BrowseResult->ServerState = ns1__serverState__running;
 
   if ( (!ns1__Browse->ItemName || ns1__Browse->ItemName->empty()) &&
        (!ns1__Browse->ItemPath || ns1__Browse->ItemPath->empty())) {
     // Return rootlist
     for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-      if ( EVEN(sts)) continue;
+      if ( EVEN(sts)) {
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	return 0;
+      }
 
       sts = gdh_GetObjectClass( oid, &cid);
-      if ( EVEN(sts)) continue;
+      if ( EVEN(sts)) {
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	return 0;
+      }
       
       ns1__BrowseElement *element = new ns1__BrowseElement();
       element->Name = new std::string( name);
@@ -608,11 +623,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 
     sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
     if ( EVEN(sts)) {
+      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_UNKNOWNITEMNAME, erropt);
       return 0;
     }
 
     sts = gdh_GetAttrRefTid( &paref, &cid);
     if ( EVEN(sts)) {
+      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
       return 0;
     }
 
@@ -627,17 +644,18 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 
       sts = gdh_AttrArefToObjectAref( &paref, &oaref);
       if ( EVEN(sts)) {
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       sts = gdh_GetAttrRefTid( &oaref, &cid);
       if ( EVEN(sts)) {
-	// E_INVALIDITEMNAME
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       if ( !( attrname = strrchr( pname, '.'))) {
-	// E_INVALIDITEMNAME
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
       attrname++;
@@ -645,7 +663,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       // Get body definition
       sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
       if ( EVEN(sts)) {
-	// E_INVALIDITEMNAME
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
       int bd_idx = -1;
@@ -657,12 +675,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       }
       if ( bd_idx == -1) {
 	// E_INVALIDITEMNAME
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	free( (char *)bd);
 	return 0;
       }
 
       sts = gdh_GetAttributeCharAttrref( &paref, &a_type, &a_size, &a_offs, &a_dim);
-      if ( EVEN(sts)) return 0;
+      if ( EVEN(sts)) {
+	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	return 0;
+      }
 
       for ( int i = 0; i < (int)a_dim; i++) {
 	ns1__BrowseElement *element = new ns1__BrowseElement();
@@ -671,8 +693,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	s = strrchr( itemname, '.');
 	if ( s)
 	  strcpy( aname, s + 1);
-	else
+	else {
+	  opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	  return 0;
+	}
 	element->Name = new std::string( aname);
 	element->ItemName = new std::string( itemname);
 	element->IsItem = true;
@@ -686,7 +710,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	if ( property_mask) {
 	  sts = gdh_NameToAttrref( pwr_cNOid, itemname, &aref);
 	  if ( EVEN(sts)) {
-	    // E_INVALIDITEMNAME
+	    opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	    return 0;
 	  }
 	  
@@ -703,6 +727,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
     }
 
     if ( !cdh_tidIsCid( cid)) {
+      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
       return 0;
     }
 
@@ -722,14 +747,19 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	  continue;
 	
 	sts = gdh_ArefANameToAref( &paref, bd[i].attrName, &aref);
-	if ( EVEN(sts)) return sts;
-
+	if ( EVEN(sts)) {
+	  opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	  return 0;
+	}
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
 	  pwr_tDisableAttr disabled;
 
 	  sts = gdh_ArefDisabled( &aref, &disabled);
-	  if ( EVEN(sts)) return sts;
-
+	  if ( EVEN(sts)) {
+	    opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	    return 0;
+	  }
+	    
 	  if ( disabled)
 	    continue;
 	}
