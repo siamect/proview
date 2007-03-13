@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.3 2007-03-08 07:26:29 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.4 2007-03-13 12:02:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,23 @@
 #include "pwr_opcclasses.h"
 #include "opc_soap_H.h"
 
+class opcprv_obj {
+ public:
+  procom_obj po;
+  char item_name[512];
+
+  opcprv_obj() { strcpy( item_name, "");}
+  opcprv_obj( const opcprv_obj& x) : po(x.po)
+    {
+      strcpy( item_name, x.item_name);
+    }
+  opcprv_obj& operator=(const opcprv_obj& x)
+  {
+    po = x.po;
+    strcpy( item_name, x.item_name);
+    return *this;
+  }
+};
 
 class opc_provider : public co_provider {
 public:
@@ -62,11 +79,12 @@ public:
   virtual bool find( pwr_tOix fthoix, char *name, pwr_tOix *oix);
   
   void insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
-		      int first, int last, int load_children);
+		      int first, int last, int load_children, std::string *path);
 
   void get_server_state();
+  char *opc_provider::name_to_objectname( char *name);
 
-  vector<procom_obj> m_list;
+  vector<opcprv_obj> m_list;
   pwr_tOix root;
   pwr_tOix next_oix;
   struct soap soap;

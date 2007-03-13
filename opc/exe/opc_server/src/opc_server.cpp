@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.3 2007-03-08 07:26:29 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.4 2007-03-13 12:02:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -219,11 +219,47 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 
     // Description
     if ( propmask & opc_mProperty_Description) {
-      ns1__ItemProperty *ip = new ns1__ItemProperty();
-      ip->Name = std::string("description");
-      ip->Value = (char *) calloc(1,1);
-      strcpy( ip->ValueType, "xsd:string");
-      properties.push_back( ip);
+      
+      switch ( pcid) {
+      case pwr_cClass_Di:
+      case pwr_cClass_Do:
+      case pwr_cClass_Dv:
+      case pwr_cClass_Ai:
+      case pwr_cClass_Ao:
+      case pwr_cClass_Av:
+      case pwr_cClass_Ii:
+      case pwr_cClass_Io:
+      case pwr_cClass_Iv: {
+	if ( strcmp( bd->attrName, "ActualValue") != 0)
+	  break;
+
+	pwr_tAttrRef aaref;
+	pwr_tString80 desc;
+	
+	// Description from signal object
+	sts = gdh_ArefANameToAref( parp, "Description", &aaref);
+	if ( EVEN(sts)) break;
+	
+	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
+	if ( EVEN(sts)) break;
+	
+	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	ip->Name = std::string("description");
+	ip->Value = (char *) calloc( 1, sizeof(desc));
+	strncpy( ip->Value, desc, sizeof(desc));
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+	break;
+      }
+      default: {
+	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	ip->Name = std::string("description");
+	ip->Value = (char *) calloc(1,1);
+	strcpy( ip->ValueType, "xsd:string");
+	properties.push_back( ip);
+      }
+      }
+
     }
 
     // DataType
@@ -538,7 +574,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       else
 	element->HasChildren = true;
 
-      opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+      if ( ns1__Browse->ReturnAllProperties)
+	property_mask = ~0;
+      else
+	opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
 
       pwr_tAttrRef aref = cdh_ObjidToAref( oid);
       opcsrv_get_properties( false, cid, 0, &aref, 
@@ -552,6 +591,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
     // Return attributes and children
     pwr_tOName pname;
     pwr_tOName itemname;
+    pwr_tObjName aname;
     gdh_sAttrDef *bd;
     int 	rows;
     pwr_sAttrRef paref;
@@ -575,11 +615,98 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
     if ( EVEN(sts)) {
       return 0;
     }
+
+    if ( paref.Flags.b.Array) {
+      // Return all elements
+      pwr_tTypeId a_type;
+      unsigned int a_size, a_offs, a_dim;
+      pwr_tAttrRef oaref;
+      char *s;
+      char *attrname;
+
+
+      sts = gdh_AttrArefToObjectAref( &paref, &oaref);
+      if ( EVEN(sts)) {
+	return 0;
+      }
+
+      sts = gdh_GetAttrRefTid( &oaref, &cid);
+      if ( EVEN(sts)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+
+      if ( !( attrname = strrchr( pname, '.'))) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+      attrname++;
+
+      // Get body definition
+      sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
+      if ( EVEN(sts)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+      int bd_idx = -1;
+      for ( int i = 0; i < rows; i++) {
+	if ( cdh_NoCaseStrcmp( attrname, bd[i].attrName) == 0) {
+	  bd_idx = i;
+	  break;
+	}
+      }
+      if ( bd_idx == -1) {
+	// E_INVALIDITEMNAME
+	free( (char *)bd);
+	return 0;
+      }
+
+      sts = gdh_GetAttributeCharAttrref( &paref, &a_type, &a_size, &a_offs, &a_dim);
+      if ( EVEN(sts)) return 0;
+
+      for ( int i = 0; i < (int)a_dim; i++) {
+	ns1__BrowseElement *element = new ns1__BrowseElement();
+
+	sprintf( itemname, "%s[%d]", pname, i);
+	s = strrchr( itemname, '.');
+	if ( s)
+	  strcpy( aname, s + 1);
+	else
+	  return 0;
+	element->Name = new std::string( aname);
+	element->ItemName = new std::string( itemname);
+	element->IsItem = true;
+	element->HasChildren = false;
+
+	if ( ns1__Browse->ReturnAllProperties)
+	  property_mask = ~0;
+	else
+	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+
+	if ( property_mask) {
+	  sts = gdh_NameToAttrref( pwr_cNOid, itemname, &aref);
+	  if ( EVEN(sts)) {
+	    // E_INVALIDITEMNAME
+	    return 0;
+	  }
+	  
+	  opcsrv_get_properties( true, cid, &paref, &aref,
+				 property_mask, &bd[bd_idx],
+				 element->Properties);
+
+	}
+	ns1__BrowseResponse->Elements.push_back( element);
+      }
+      free( (char *)bd);
+
+      return 0;      
+    }
+
     if ( !cdh_tidIsCid( cid)) {
       return 0;
     }
 
-    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, oid);
+    sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
     if ( ODD(sts)) {
 
       for ( int i = 0; i < rows; i++) {
@@ -607,14 +734,36 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	    continue;
 	}
 	
-	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ) {
-	}
-	else if ( bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
+	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ||
+	     bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
+	  ns1__BrowseElement *element = new ns1__BrowseElement();
+	  
+	  cdh_SuppressSuper( aname, bd[i].attrName);
+	  element->Name = new std::string( aname);
+	  strcpy( itemname, pname);
+	  strcat( itemname, ".");
+	  strcat( itemname, bd[i].attrName);
+	  element->ItemName = new std::string( itemname);
+	  element->IsItem = false;
+	  element->HasChildren = true;
+
+	  if ( ns1__Browse->ReturnAllProperties)
+	    property_mask = ~0;
+	  else
+	    opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+
+	  if ( property_mask)
+	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+				   property_mask, &bd[i],
+				   element->Properties);
+
+	  ns1__BrowseResponse->Elements.push_back( element);
 	}
 	else {
 	  ns1__BrowseElement *element = new ns1__BrowseElement();
 	  
-	  element->Name = new std::string( bd[i].attrName);
+	  cdh_SuppressSuper( aname, bd[i].attrName);
+	  element->Name = new std::string( aname);
 	  strcpy( itemname, pname);
 	  strcat( itemname, ".");
 	  strcat( itemname, bd[i].attrName);
@@ -622,7 +771,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	  element->IsItem = true;
 	  element->HasChildren = false;
 
-	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	  if ( ns1__Browse->ReturnAllProperties)
+	    property_mask = ~0;
+	  else
+	    opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
 
 	  if ( property_mask)
 	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
@@ -658,7 +810,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	else
 	  element->HasChildren = true;
 					       
-	opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	if ( ns1__Browse->ReturnAllProperties)
+	  property_mask = ~0;
+	else
+	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
 
 	if ( property_mask) {
 	  aref = cdh_ObjidToAref( child);
@@ -677,6 +832,109 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*,
 					       _ns1__GetProperties *ns1__GetProperties, 
 					       _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse)
 {
+  unsigned int property_mask;
+  pwr_tCid cid;
+  pwr_tAName iname;
+  char *aname;
+  pwr_tStatus sts;
+  pwr_tAttrRef aref;
+  pwr_tAttrRef paref;
+  gdh_sAttrDef *bd;
+  int 	rows;
+
+  if ( ns1__GetProperties->ReturnAllProperties)
+    property_mask = ~0;
+  else
+    opc_propertynames_to_mask( ns1__GetProperties->PropertyNames, &property_mask);
+
+  for ( int i = 0; i < (int)ns1__GetProperties->ItemIDs.size(); i++) {
+    ns1__PropertyReplyList *plist = new ns1__PropertyReplyList();
+    std::string *path;
+
+    if ( ns1__GetProperties->ItemIDs[i]->ItemPath)
+      path = ns1__GetProperties->ItemIDs[i]->ItemPath;
+    else
+      path = ns1__GetProperties->ItemPath;
+
+    plist->ItemPath = path;
+    plist->ItemName = new std::string(*ns1__GetProperties->ItemIDs[i]->ItemName);
+
+    if ( path) {
+      strcpy( iname, path->c_str());
+      strcat( iname, plist->ItemName->c_str());
+    }
+    else
+      strcpy( iname, plist->ItemName->c_str());
+
+    sts = gdh_NameToAttrref( pwr_cNOid, iname, &aref);
+    if ( EVEN(sts)) {
+      // E_INVALIDITEMNAME
+      return 0;
+    }
+
+    if ( aref.Flags.b.Object || aref.Flags.b.ObjectAttr) {
+      // This is an object
+      sts = gdh_GetAttrRefTid( &aref, &cid);
+      if ( EVEN(sts)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+      if ( !cdh_tidIsCid( cid)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+
+      opcsrv_get_properties( false, cid, 0, &aref, 
+			     property_mask, 0,
+			     plist->Properties);
+    }
+    else {
+      // Get the object attrref and class for this attribute
+      if ( !( aname = strrchr( iname, '.'))) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+      aname++;
+      
+      sts = gdh_AttrArefToObjectAref( &aref, &paref);
+      if ( EVEN(sts)) {
+	return 0;
+      }
+
+      sts = gdh_GetAttrRefTid( &paref, &cid);
+      if ( EVEN(sts)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+
+      // Get body definition
+      sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
+      if ( EVEN(sts)) {
+	// E_INVALIDITEMNAME
+	return 0;
+      }
+      int bd_idx = -1;
+      for ( int i = 0; i < rows; i++) {
+	if ( cdh_NoCaseStrcmp( aname, bd[i].attrName) == 0) {
+	  bd_idx = i;
+	  break;
+	}
+      }
+      if ( bd_idx == -1) {
+	// E_INVALIDITEMNAME
+	free( (char *)bd);
+	return 0;
+      }
+
+      opcsrv_get_properties( true, cid, &paref, &aref,
+			     property_mask, &bd[bd_idx],
+			     plist->Properties);
+      free( (char *)bd);
+    }
+
+    ns1__GetPropertiesResponse->PropertyLists.push_back( plist);
+  }
+
   return 0;
 }
 

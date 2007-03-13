@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.3 2007-03-08 07:26:29 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.4 2007-03-13 12:02:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@
 #include "Service.nsmap"
 
 #define START_OIX 1000
+#define procom_obj_mFlags_Analog (1 << 31)
 
 static pwr_tVid opc_vid;
 static char opc_vname[32];
@@ -47,177 +48,284 @@ static char opc_endpoint[256];
 // Wb only
 void opc_provider::object( co_procom *pcom)
 {
-  if ( m_list.size() <= 1 || m_list[0].fchoix == 0) {
+  if ( m_list.size() <= 1 || m_list[0].po.fchoix == 0) {
     pcom->provideObject( LDH__NOSUCHOBJ,0,0,0,0,0,0,0,"","");
     return;
   }
-  objectOid( pcom, m_list[0].fchoix);
+  objectOid( pcom, m_list[0].po.fchoix);
 }
 
 void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
-				  int first, int last, int load_children)
+				  int first, int last, int load_children, std::string *path)
 {
-  procom_obj o;
+  opcprv_obj o;
   char *valp;
 	
-  strcpy( o.name, element->Name->c_str());
-  o.oix = next_oix++;
-  o.fthoix = fth;
+  strcpy( o.po.name, name_to_objectname( (char *) element->Name->c_str()));
+  if ( element->ItemPath)
+    path = element->ItemPath;
+  if ( path) {
+    strcpy( o.item_name, path->c_str());
+    strcat( o.item_name, element->ItemName->c_str());
+  }
+  else
+    strcpy( o.item_name, element->ItemName->c_str());
+
+  o.po.oix = next_oix++;
+  o.po.fthoix = fth;
   if ( !element->IsItem) {
-    o.cid = pwr_cClass_Opc_Hier;
-    o.body_size = sizeof(pwr_sClass_Opc_Hier);
-    o.body = calloc( 1, o.body_size);
+    o.po.cid = pwr_cClass_Opc_Hier;
+    o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
+    o.po.body = calloc( 1, o.po.body_size);
     if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
-      strncpy( ((pwr_sClass_Opc_Hier *)o.body)->Description, valp, 
-	       sizeof(((pwr_sClass_Opc_Hier *)o.body)->Description));
+      strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, valp, 
+	       sizeof(((pwr_sClass_Opc_Hier *)o.po.body)->Description));
   }
   else {
     if ( opc_get_property( element->Properties, opc_mProperty_DataType, &valp)) {
       if ( strcmp( valp, "string") == 0) {
-	o.cid = pwr_cClass_Opc_String;
-	o.body_size = sizeof(pwr_sClass_Opc_String);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_String;
+	o.po.body_size = sizeof(pwr_sClass_Opc_String);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "boolean") == 0) {
-	o.cid = pwr_cClass_Opc_Boolean;
-	o.body_size = sizeof(pwr_sClass_Opc_Boolean);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Boolean;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Boolean);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "float") == 0) {
-	o.cid = pwr_cClass_Opc_Float;
-	o.body_size = sizeof(pwr_sClass_Opc_Float);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Float;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Float);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "double") == 0) {
-	o.cid = pwr_cClass_Opc_Double;
-	o.body_size = sizeof(pwr_sClass_Opc_Double);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Double;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Double);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "double") == 0) {
-	o.cid = pwr_cClass_Opc_Double;
-	o.body_size = sizeof(pwr_sClass_Opc_Double);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Double;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Double);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "decimal") == 0) {
-	o.cid = pwr_cClass_Opc_Decimal;
-	o.body_size = sizeof(pwr_sClass_Opc_Decimal);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Decimal;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Decimal);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "int") == 0) {
-	o.cid = pwr_cClass_Opc_Int;
-	o.body_size = sizeof(pwr_sClass_Opc_Int);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Int;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Int);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "short") == 0) {
-	o.cid = pwr_cClass_Opc_Short;
-	o.body_size = sizeof(pwr_sClass_Opc_Short);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Short;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Short);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "byte") == 0) {
-	o.cid = pwr_cClass_Opc_Byte;
-	o.body_size = sizeof(pwr_sClass_Opc_Byte);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Byte;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Byte);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "unsignedLong") == 0) {
-	o.cid = pwr_cClass_Opc_UnsignedLong;
-	o.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_UnsignedLong;
+	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "unsignedInt") == 0) {
-	o.cid = pwr_cClass_Opc_UnsignedInt;
-	o.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_UnsignedInt;
+	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "unsignedShort") == 0) {
-	o.cid = pwr_cClass_Opc_UnsignedShort;
-	o.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_UnsignedShort;
+	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "unsignedByte") == 0) {
-	o.cid = pwr_cClass_Opc_UnsignedByte;
-	o.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_UnsignedByte;
+	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "base64Binary") == 0) {
-	o.cid = pwr_cClass_Opc_Base64Binary;
-	o.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Base64Binary;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "dateTime") == 0) {
-	o.cid = pwr_cClass_Opc_DateTime;
-	o.body_size = sizeof(pwr_sClass_Opc_DateTime);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_DateTime;
+	o.po.body_size = sizeof(pwr_sClass_Opc_DateTime);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "time") == 0) {
-	o.cid = pwr_cClass_Opc_Time;
-	o.body_size = sizeof(pwr_sClass_Opc_Time);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Time;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Time);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "date") == 0) {
-	o.cid = pwr_cClass_Opc_Date;
-	o.body_size = sizeof(pwr_sClass_Opc_Date);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Date;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Date);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "duration") == 0) {
-	o.cid = pwr_cClass_Opc_Duration;
-	o.body_size = sizeof(pwr_sClass_Opc_Duration);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_Duration;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Duration);
+	o.po.body = calloc( 1, o.po.body_size);
       }
       else if ( strcmp( valp, "QName") == 0) {
-	o.cid = pwr_cClass_Opc_QName;
-	o.body_size = sizeof(pwr_sClass_Opc_QName);
-	o.body = calloc( 1, o.body_size);
+	o.po.cid = pwr_cClass_Opc_QName;
+	o.po.body_size = sizeof(pwr_sClass_Opc_QName);
+	o.po.body = calloc( 1, o.po.body_size);
+      }
+
+      if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp)) {
+	switch ( o.po.cid) {
+	case pwr_cClass_Opc_Float:
+	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_Float *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_Double:
+	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_Double *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_Int:
+	  strncpy( ((pwr_sClass_Opc_Int *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_Int *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_Short:
+	  strncpy( ((pwr_sClass_Opc_Short *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_Short *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_Byte:
+	  strncpy( ((pwr_sClass_Opc_Byte *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_Byte *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_UnsignedInt:
+	  strncpy( ((pwr_sClass_Opc_UnsignedInt *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_UnsignedInt *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_UnsignedShort:
+	  strncpy( ((pwr_sClass_Opc_UnsignedShort *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_UnsignedShort *)o.po.body)->Description));
+	  break;
+	case pwr_cClass_Opc_UnsignedByte:
+	  strncpy( ((pwr_sClass_Opc_UnsignedByte *)o.po.body)->Description, valp, 
+		   sizeof(((pwr_sClass_Opc_UnsignedByte *)o.po.body)->Description));
+	  break;
+	}
       }
     }
     else {
-      o.cid = pwr_cClass_Opc_Hier;
-      o.body_size = sizeof(pwr_sClass_Opc_Hier);
-      o.body = calloc( 1, o.body_size);
+      o.po.cid = pwr_cClass_Opc_Hier;
+      o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
+      o.po.body = calloc( 1, o.po.body_size);
       if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
-	strncpy( ((pwr_sClass_Opc_Hier *)o.body)->Description, valp, 
-		 sizeof(((pwr_sClass_Opc_Hier *)o.body)->Description));
+	strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, valp, 
+		 sizeof(((pwr_sClass_Opc_Hier *)o.po.body)->Description));
     }
   }
   if ( first)
-    m_list[fth].fchoix = o.oix;
+    m_list[fth].po.fchoix = o.po.oix;
   else {
-    o.bwsoix = bws;
-    m_list[bws].fwsoix = o.oix;
+    o.po.bwsoix = bws;
+    m_list[bws].po.fwsoix = o.po.oix;
   }
   if ( last) {
-    m_list[fth].lchoix = o.oix;
+    m_list[fth].po.lchoix = o.po.oix;
     if ( !first) {
-      o.fwsoix = m_list[fth].fchoix;
-      m_list[o.fwsoix].bwsoix = o.oix;
+      o.po.fwsoix = m_list[fth].po.fchoix;
+      m_list[o.po.fwsoix].po.bwsoix = o.po.oix;
     }
     else {
       // Single child
-      o.fwsoix = o.oix;
-      o.bwsoix = o.oix;
+      o.po.fwsoix = o.po.oix;
+      o.po.bwsoix = o.po.oix;
     }
   }
   if ( element->HasChildren && load_children)
-    o.flags |= procom_obj_mFlags_Loaded;
+    o.po.flags |= procom_obj_mFlags_Loaded;
   else if ( !element->HasChildren)
-    o.flags |= procom_obj_mFlags_Loaded;
+    o.po.flags |= procom_obj_mFlags_Loaded;
+
   m_list.push_back( o);
+
+  if ( opc_get_property( element->Properties, opc_mProperty_EuType, &valp)) {
+    if ( strcmp( valp, "analog") == 0)
+      m_list[o.po.oix].po.flags |= procom_obj_mFlags_Analog;
+  }
+  if ( m_list[o.po.oix].po.flags & procom_obj_mFlags_Analog) {
+    // Get analog properties
+    _ns1__GetProperties get_properties;
+    _ns1__GetPropertiesResponse properties_response;
+    ns1__ItemIdentifier id;      
+    pwr_tFloat32 high_eu = 0;
+    pwr_tFloat32 low_eu = 0;
+    pwr_tString16 engineering_units = "";
+
+    id.ItemName = new std::string( o.item_name);
+    
+    get_properties.ItemIDs.push_back( &id);
+
+    opc_mask_to_propertynames( get_properties.PropertyNames, 
+			       opc_mProperty_HighEU | opc_mProperty_LowEU |
+			       opc_mProperty_EngineeringUnits);
+    
+    if ( soap_call___ns1__GetProperties( &soap, opc_endpoint, NULL, &get_properties, 
+					 &properties_response) == SOAP_OK) {
+      if ( properties_response.PropertyLists.size() > 0 &&
+	   properties_response.PropertyLists[0]->Properties.size() > 0) {
+	  	
+	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
+			       opc_mProperty_HighEU, &valp)) {
+	  sscanf( valp, "%f", &high_eu);
+	}
+	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
+			       opc_mProperty_LowEU, &valp)) {
+	  sscanf( valp, "%f", &low_eu);
+	}
+	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
+			       opc_mProperty_EngineeringUnits, &valp)) {
+	  strncpy( engineering_units, valp, sizeof(engineering_units));
+	}
+	
+	void *body = m_list[o.po.oix].po.body;
+	switch ( o.po.cid) {
+	case pwr_cClass_Opc_Float:
+	  ((pwr_sClass_Opc_Float *)body)->HighEU = high_eu;
+	  ((pwr_sClass_Opc_Float *)body)->LowEU = low_eu;
+	  strcpy( ((pwr_sClass_Opc_Float *)body)->EngineeringUnits, engineering_units);
+	  break;
+	case pwr_cClass_Opc_Double:
+	  ((pwr_sClass_Opc_Float *)body)->HighEU = high_eu;
+	  ((pwr_sClass_Opc_Float *)body)->LowEU = low_eu;
+	  strcpy( ((pwr_sClass_Opc_Float *)body)->EngineeringUnits, engineering_units);
+	  break;
+	default: ;
+	}
+      }
+    }
+  }
+
 
   if ( load_children) {
     _ns1__Browse browse;
     _ns1__BrowseResponse browse_response;
 
-    browse.ItemName = new std::string( longname(o.oix));
+    browse.ItemName = new std::string( o.item_name);
     opc_mask_to_propertynames( browse.PropertyNames, 
-			       opc_mProperty_DataType | opc_mProperty_Description);
+			       opc_mProperty_DataType | opc_mProperty_Description |
+			       opc_mProperty_EuType);
 
     if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
       pwr_tOix next_bws;
       pwr_tOix bws = 0;
+
       for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
 	next_bws = next_oix;
-	insert_object( o.oix, bws, browse_response.Elements[i],
-		       i == 0, i == (int)browse_response.Elements.size() - 1, 0);
+	insert_object( o.po.oix, bws, browse_response.Elements[i],
+		       i == 0, i == (int)browse_response.Elements.size() - 1, 0, 0);
 	bws = next_bws;
       }
     }
@@ -228,30 +336,30 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 {
   if ( m_list.size() == 0) {
     // Insert volume object
-    procom_obj vo;
+    opcprv_obj vo;
 
-    vo.cid = pwr_eClass_ExternVolume;
-    strcpy( vo.name, opc_vname);
-    vo.body_size = sizeof(pwr_sExternVolume);
-    vo.body = calloc( 1, vo.body_size);
-    vo.oix = 0;
-    vo.flags |= procom_obj_mFlags_Loaded;
+    vo.po.cid = pwr_eClass_ExternVolume;
+    strcpy( vo.po.name, opc_vname);
+    vo.po.body_size = sizeof(pwr_sExternVolume);
+    vo.po.body = calloc( 1, vo.po.body_size);
+    vo.po.oix = 0;
+    vo.po.flags |= procom_obj_mFlags_Loaded;
     m_list.push_back( vo);
 
     // Insert ServerState object
-    procom_obj so;
-    so.cid = pwr_cClass_Opc_ServerState;
-    strcpy( so.name, "OpcServerState");
-    so.body_size = sizeof(pwr_sClass_Opc_ServerState);
-    so.body = calloc( 1, so.body_size);
-    memcpy( so.body, &server_state, so.body_size);
-    so.oix = next_oix++;
-    so.fthoix = 0;
-    so.bwsoix = so.oix;
-    so.fwsoix = so.oix;
-    m_list[0].fchoix = so.oix;
-    m_list[0].lchoix = so.oix;
-    so.flags |= procom_obj_mFlags_Loaded;
+    opcprv_obj so;
+    so.po.cid = pwr_cClass_Opc_ServerState;
+    strcpy( so.po.name, "OpcServerState");
+    so.po.body_size = sizeof(pwr_sClass_Opc_ServerState);
+    so.po.body = calloc( 1, so.po.body_size);
+    memcpy( so.po.body, &server_state, so.po.body_size);
+    so.po.oix = next_oix++;
+    so.po.fthoix = 0;
+    so.po.bwsoix = so.po.oix;
+    so.po.fwsoix = so.po.oix;
+    m_list[0].po.fchoix = so.po.oix;
+    m_list[0].po.lchoix = so.po.oix;
+    so.po.flags |= procom_obj_mFlags_Loaded;
     m_list.push_back( so);
 
     // Load Rootlist
@@ -259,15 +367,16 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
     _ns1__BrowseResponse browse_response;
 
     opc_mask_to_propertynames( browse.PropertyNames, 
-			       opc_mProperty_DataType | opc_mProperty_Description);
+			       opc_mProperty_DataType | opc_mProperty_Description |
+			       opc_mProperty_EuType);
     if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
-      pwr_tOix bws = so.oix;
+      pwr_tOix bws = so.po.oix;
       pwr_tOix next_bws;
       for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
 	next_bws = next_oix;
 	insert_object( oix, bws, browse_response.Elements[i],
-		       0, i == (int)browse_response.Elements.size() - 1, 1);
+		       0, i == (int)browse_response.Elements.size() - 1, 1, 0);
 	bws = next_bws;
       }
     }
@@ -275,13 +384,14 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
       soap_print_fault( &soap, stderr);
   }
   else if ( oix < m_list.size()) {
-    if ( !(m_list[oix].flags & procom_obj_mFlags_Loaded)) {
+    if ( !(m_list[oix].po.flags & procom_obj_mFlags_Loaded)) {
       _ns1__Browse browse;
       _ns1__BrowseResponse browse_response;
 
-      browse.ItemName = new std::string( longname(oix));
+      browse.ItemName = new std::string( m_list[oix].item_name);
       opc_mask_to_propertynames( browse.PropertyNames, 
-				 opc_mProperty_DataType | opc_mProperty_Description);
+				 opc_mProperty_DataType | opc_mProperty_Description |
+				 opc_mProperty_EuType);
       
       if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	   SOAP_OK) {
@@ -290,11 +400,11 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 	for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
 	  next_bws = next_oix;
 	  insert_object( oix, bws, browse_response.Elements[i],
-			 i == 0, i == (int)browse_response.Elements.size() - 1, 0);
+			 i == 0, i == (int)browse_response.Elements.size() - 1, 0, 0);
 	  bws = next_bws;
 	}
       }
-      m_list[oix].flags |= procom_obj_mFlags_Loaded;
+      m_list[oix].po.flags |= procom_obj_mFlags_Loaded;
     }
   }
 
@@ -306,14 +416,14 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 #if 0
   for ( int i = 0; i < (int)m_list.size(); i++) {
     printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
-	    m_list[i].oix, m_list[i].bwsoix, m_list[i].fwsoix, m_list[i].fthoix, 
-	    m_list[i].fchoix, m_list[i].lchoix, m_list[i].flags, m_list[i].name);
+	    m_list[i].po.oix, m_list[i].po.bwsoix, m_list[i].po.fwsoix, m_list[i].po.fthoix, 
+	    m_list[i].po.fchoix, m_list[i].po.lchoix, m_list[i].po.flags, m_list[i].po.name);
   }
 #endif
   vector<procom_obj>olist;
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( m_list[i].flags & procom_obj_mFlags_Loaded)
-      olist.push_back( m_list[i]);
+    if  ( m_list[i].po.flags & procom_obj_mFlags_Loaded)
+      olist.push_back( m_list[i].po);
   }
   printf( "*********************************************\n");
   for ( int i = 0; i < (int)olist.size(); i++) {
@@ -328,8 +438,8 @@ void opc_provider::objectName( co_procom *pcom, char *name)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
-      if ( cdh_NoCaseStrcmp( name, longname(m_list[i].oix)) == 0) {
+    if  ( !m_list[i].po.flags & procom_obj_mFlags_Deleted) {
+      if ( cdh_NoCaseStrcmp( name, longname(m_list[i].po.oix)) == 0) {
 	objectOid( pcom, i);
 	return;
       }
@@ -388,12 +498,12 @@ void opc_provider::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int o
     return;
   }
 
-  if ( offset + size > m_list[oix].body_size) {
+  if ( offset + size > m_list[oix].po.body_size) {
     pcom->provideStatus( LDH__NOSUCHATTR);
     return;
   }
 
-  memcpy( (void *)((unsigned long)m_list[oix].body + (unsigned long)offset), buffer, size);
+  memcpy( (void *)((unsigned long)m_list[oix].po.body + (unsigned long)offset), buffer, size);
   pcom->provideStatus( 1);
 }
 
@@ -406,12 +516,56 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
     return;
   }
 
-  if ( offset + size > m_list[oix].body_size) {
+  if ( offset + size > m_list[oix].po.body_size) {
     pcom->provideStatus( GDH__NOSUCHOBJ);
     return;
   }
 
-  void *p = (void *)((unsigned long)m_list[oix].body + (unsigned long)offset);
+  switch ( m_list[oix].po.cid) {
+  case pwr_cClass_Opc_Float:
+    if ( offset == (unsigned int) ((char *) &((pwr_sClass_Opc_Float *)m_list[oix].po.body)->Value -
+		    (char *)m_list[oix].po.body)) {      
+      _ns1__Read read;
+      _ns1__ReadResponse read_response;
+
+      ns1__ReadRequestItem *item = new ns1__ReadRequestItem();      
+      item->ItemName = new std::string( m_list[oix].item_name);
+      read.ItemList = new ns1__ReadRequestItemList;
+      read.ItemList->Items.push_back( item);
+				   
+      if ( soap_call___ns1__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
+	   SOAP_OK) {
+	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
+	  printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
+	}
+      }
+    }
+    break;
+  case pwr_cClass_Opc_String:
+    if ( offset == (unsigned int) ((char *) ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value -
+		    (char *)m_list[oix].po.body)) {      
+      _ns1__Read read;
+      _ns1__ReadResponse read_response;
+
+      ns1__ReadRequestItem *item = new ns1__ReadRequestItem();      
+      item->ItemName = new std::string( m_list[oix].item_name);
+      read.ItemList = new ns1__ReadRequestItemList;
+      read.ItemList->Items.push_back( item);
+				   
+      if ( soap_call___ns1__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
+	   SOAP_OK) {
+	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
+	  strncpy( ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value, 
+		   read_response.RItemList->Items[0]->Value,
+		   sizeof(((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value));
+	  printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
+	}
+      }
+    }
+    break;
+  }
+
+  void *p = (void *)((unsigned long)m_list[oix].po.body + (unsigned long)offset);
   pcom->provideAttr( GDH__SUCCESS, oix, size, p);
 }
 
@@ -420,7 +574,7 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 				      int size, pwr_tSubid sid) 
 {
   if ( oix < (int)m_list.size())
-    *buff = (char *)m_list[oix].body + offset;
+    *buff = (char *)m_list[oix].po.body + offset;
   else 
     *buff = 0;
 }
@@ -447,34 +601,34 @@ void opc_provider::abort( co_procom *pcom)
 
 void opc_provider::delete_tree( pwr_tOix oix)
 {
-  m_list[oix].flags = procom_obj_mFlags_Deleted;
+  m_list[oix].po.flags = procom_obj_mFlags_Deleted;
 
-  for ( pwr_tOix ix = m_list[oix].fchoix;
+  for ( pwr_tOix ix = m_list[oix].po.fchoix;
 	ix;
-	ix = m_list[ix].fwsoix)
+	ix = m_list[ix].po.fwsoix)
     delete_tree( ix);
 }
 
 char *opc_provider::longname( pwr_tOix oix)
 {
-  if ( m_list[oix].fthoix == 0)
-    strcpy( m_list[oix].lname, m_list[oix].name);
+  if ( m_list[oix].po.fthoix == 0)
+    strcpy( m_list[oix].po.lname, m_list[oix].po.name);
   else {
-    strcpy( m_list[oix].lname, longname( m_list[oix].fthoix));
-    strcat( m_list[oix].lname, "-");
-    strcat( m_list[oix].lname, m_list[oix].name);
+    strcpy( m_list[oix].po.lname, longname( m_list[oix].po.fthoix));
+    strcat( m_list[oix].po.lname, "-");
+    strcat( m_list[oix].po.lname, m_list[oix].po.name);
   }
-  return m_list[oix].lname;
+  return m_list[oix].po.lname;
 }
 
 bool opc_provider::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i].flags & procom_obj_mFlags_Deleted) {
-      if ( m_list[i].fthoix == fthoix && 
-	   cdh_NoCaseStrcmp( name, m_list[i].name) == 0) {
-	*oix = m_list[i].oix;
+    if  ( !m_list[i].po.flags & procom_obj_mFlags_Deleted) {
+      if ( m_list[i].po.fthoix == fthoix && 
+	   cdh_NoCaseStrcmp( name, m_list[i].po.name) == 0) {
+	*oix = m_list[i].po.oix;
 	return true;
       }
     }
@@ -503,6 +657,27 @@ void opc_provider::get_server_state()
   }
 }
 
+//
+// Create a valid object name from an item name
+//
+char *opc_provider::name_to_objectname( char *name)
+{
+  static char n[32];
+  char *s, *t;
+
+  for ( s = name, t = n; *s; s++) {
+    if ( t - n >= (int)sizeof(n) - 1)
+      break;
+
+    if ( *s == '[' || *s == ']' || *s == '-' || *s == '/' || *s == '.')
+      *t = '$';
+    else
+      *t = *s;
+    t++;
+  }
+  *t = 0;
+  return n;
+}
 
 void usage()
 {

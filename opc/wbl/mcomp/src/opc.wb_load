@@ -219,27 +219,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:47:07.23
-          Body SysBody 05-MAR-2007 13:47:24.75
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:17:40.34
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:47:49.35
-          Body SysBody 05-MAR-2007 13:47:45.28
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:17:45.95
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:48:07.66
-          Body SysBody 05-MAR-2007 13:48:12.29
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:14.24
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:48:24.95
-          Body SysBody 05-MAR-2007 13:48:28.48
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:17.51
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:49:08.68
           Body SysBody 05-MAR-2007 13:49:27.27
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -273,27 +278,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:23.71
-          Body SysBody 05-MAR-2007 13:51:23.71
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:25.69
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:23.71
-          Body SysBody 05-MAR-2007 13:51:23.71
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:29.79
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:23.71
-          Body SysBody 05-MAR-2007 13:51:23.71
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:33.17
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:23.71
-          Body SysBody 05-MAR-2007 13:51:23.71
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:36.44
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:23.71
           Body SysBody 05-MAR-2007 13:51:23.71
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -327,27 +337,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:28.14
-          Body SysBody 05-MAR-2007 13:51:28.14
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:54.87
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:28.14
-          Body SysBody 05-MAR-2007 13:51:28.14
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:58.75
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:28.14
-          Body SysBody 05-MAR-2007 13:51:28.14
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:46.39
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:28.14
-          Body SysBody 05-MAR-2007 13:51:28.14
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:49.66
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:28.14
           Body SysBody 05-MAR-2007 13:51:28.14
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -381,27 +396,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:31.83
-          Body SysBody 05-MAR-2007 13:51:31.83
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:42.10
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:31.83
-          Body SysBody 05-MAR-2007 13:51:31.83
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:46.62
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:31.83
-          Body SysBody 05-MAR-2007 13:51:31.83
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:20:57.93
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:31.83
-          Body SysBody 05-MAR-2007 13:51:31.83
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:01.44
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:31.83
           Body SysBody 05-MAR-2007 13:51:31.83
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -435,27 +455,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:36.44
-          Body SysBody 05-MAR-2007 13:51:36.44
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:26.59
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:36.44
-          Body SysBody 05-MAR-2007 13:51:36.44
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:33.16
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:36.44
-          Body SysBody 05-MAR-2007 13:51:36.44
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:09.76
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:36.44
-          Body SysBody 05-MAR-2007 13:51:36.44
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:12.90
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:36.44
           Body SysBody 05-MAR-2007 13:51:36.44
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -489,27 +514,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:40.55
-          Body SysBody 05-MAR-2007 13:51:40.55
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:18:55.71
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:40.55
-          Body SysBody 05-MAR-2007 13:51:40.55
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:04.24
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:40.55
-          Body SysBody 05-MAR-2007 13:51:40.55
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:21.73
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:40.55
-          Body SysBody 05-MAR-2007 13:51:40.55
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:24.70
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:40.55
           Body SysBody 05-MAR-2007 13:51:40.55
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -543,27 +573,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:48.00
-          Body SysBody 05-MAR-2007 13:51:48.00
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:12.51
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:48.00
-          Body SysBody 05-MAR-2007 13:51:48.00
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:19:16.80
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:48.00
-          Body SysBody 05-MAR-2007 13:51:48.00
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:32.38
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:48.00
-          Body SysBody 05-MAR-2007 13:51:48.00
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:35.55
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:48.00
           Body SysBody 05-MAR-2007 13:51:48.00
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -597,27 +632,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:51.24
-          Body SysBody 05-MAR-2007 13:51:51.24
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:43.83
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:51.24
-          Body SysBody 05-MAR-2007 13:51:51.24
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:47.05
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:51.24
-          Body SysBody 05-MAR-2007 13:51:51.24
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:50.25
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:51.24
-          Body SysBody 05-MAR-2007 13:51:51.24
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:21:53.28
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:51.24
           Body SysBody 05-MAR-2007 13:51:51.24
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -651,27 +691,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:54.37
-          Body SysBody 05-MAR-2007 13:51:54.37
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:00.44
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:54.37
-          Body SysBody 05-MAR-2007 13:51:54.37
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:03.35
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:54.37
-          Body SysBody 05-MAR-2007 13:51:54.37
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:06.30
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:54.37
-          Body SysBody 05-MAR-2007 13:51:54.37
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:09.05
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:54.37
           Body SysBody 05-MAR-2007 13:51:54.37
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -705,27 +750,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:51:59.01
-          Body SysBody 05-MAR-2007 13:51:59.01
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:16.81
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:51:59.01
-          Body SysBody 05-MAR-2007 13:51:59.01
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:19.92
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:51:59.01
-          Body SysBody 05-MAR-2007 13:51:59.01
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:23.09
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:51:59.01
-          Body SysBody 05-MAR-2007 13:51:59.01
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:25.89
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:59.01
           Body SysBody 05-MAR-2007 13:51:59.01
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
@@ -759,27 +809,32 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         Object HighEU $Attribute 4 05-MAR-2007 13:52:02.66
-          Body SysBody 05-MAR-2007 13:52:02.66
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:35.13
+            Attr PgmName = "HighEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowEU $Attribute 5 05-MAR-2007 13:52:02.66
-          Body SysBody 05-MAR-2007 13:52:02.66
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:38.33
+            Attr PgmName = "LowEU"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object HighIR $Attribute 6 05-MAR-2007 13:52:02.66
-          Body SysBody 05-MAR-2007 13:52:02.66
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:41.38
+            Attr PgmName = "HighIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object LowIR $Attribute 7 05-MAR-2007 13:52:02.66
-          Body SysBody 05-MAR-2007 13:52:02.66
-            Attr TypeRef = "pwrs:Type-$Float64"
+          Body SysBody 08-MAR-2007 18:22:44.29
+            Attr PgmName = "LowIR"
+            Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:52:02.66
           Body SysBody 05-MAR-2007 13:52:02.66
+            Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject

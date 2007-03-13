@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.5 2007-03-12 07:52:02 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.6 2007-03-13 12:02:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -726,7 +726,7 @@ bool opc_pwrtype_to_string( int type, char **str)
     strcpy( *str, "short");
     break;
   case pwr_eType_Int8:
-    strcpy( *str, "char");
+    strcpy( *str, "byte");
     break;
   case pwr_eType_UInt32:
     strcpy( *str, "unsignedInt");
@@ -735,7 +735,7 @@ bool opc_pwrtype_to_string( int type, char **str)
     strcpy( *str, "unsignedShort");
     break;
   case pwr_eType_UInt8:
-    strcpy( *str, "unsignedChar");
+    strcpy( *str, "unsignedByte");
     break;
   case pwr_eType_Time:
     strcpy( *str, "dateTime");
