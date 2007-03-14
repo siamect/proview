@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_gdh_msg.msg,v 1.4 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_gdh_msg.msg,v 1.5 2007-03-14 07:49:14 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -78,6 +78,7 @@ voldelete	<a volume cannot be deleted>				/error
 rtnotstarted	<Proview runtime is not started>			/error
 nocclasssup	<Cached Classes not supported on other node>		/error
 nomountobject	<Mount object is missing>				/error
+noattr          <AttrRef is not an attribute>				/error
 .end
 
 
