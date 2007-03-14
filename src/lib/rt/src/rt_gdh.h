@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.h,v 1.15 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_gdh.h,v 1.16 2007-03-14 06:42:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -615,6 +615,12 @@ gdh_GetAttributeCharAttrref (
   unsigned int		*attributeSize,
   unsigned int		*attributeOffset,
   unsigned int		*attributeDimension
+);
+
+pwr_tStatus
+gdh_AttrArefToObjectAref (
+  pwr_sAttrRef *arp,
+  pwr_sAttrRef *oarp
 );
 
 pwr_tStatus

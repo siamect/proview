@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.28 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.29 2007-03-14 06:42:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -219,6 +219,61 @@ gdh_ArefANameToAref (
     }
     strcat( string, ".");
     strcat( string, aname);
+
+    pn = cdh_ParseName(&sts, &parseName, pwr_cNOid, string, 0);
+    if (pn == NULL) break;
+
+    memset(&Attribute, 0, sizeof(Attribute));
+
+    ap = vol_NameToAttribute(&sts, &Attribute, pn, gdb_mLo_global, vol_mTrans_all);
+    if (ap == NULL) break;
+
+    mvol_AttributeToAref(&sts, ap, oarp);
+
+  } gdh_ScopeUnlock;
+
+  return sts;
+}
+
+
+/** 
+ * @brief Get the object attrref for an attribute attrref.
+ *
+ * @return pwr_tStatus 
+ */
+pwr_tStatus
+gdh_AttrArefToObjectAref (
+  pwr_sAttrRef *arp,
+  pwr_sAttrRef *oarp
+)
+{
+  pwr_tStatus		sts = GDH__SUCCESS;
+  mvol_sAttribute	Attribute;
+  mvol_sAttribute	*ap;
+  char			string[512];
+  char			*s = NULL;
+  char			*t;
+  cdh_sParseName	parseName;
+  cdh_sParseName	*pn = NULL;
+
+  if ( arp->Flags.b.Object)
+    return GDH__NOATTR;
+
+  gdh_ScopeLock {
+    memset(&Attribute, 0, sizeof(Attribute));
+
+    ap = vol_ArefToAttribute(&sts, &Attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap == NULL) break;
+
+    touchObject(ap->op);
+    s = vol_AttributeToName(&sts, ap, cdh_mName_volumeStrict, string);
+
+    t = strrchr( string, '.');
+    if ( !t) {
+      sts = GDH__NOATTR;
+      break;
+    }
+    *t = 0;
 
     pn = cdh_ParseName(&sts, &parseName, pwr_cNOid, string, 0);
     if (pn == NULL) break;
