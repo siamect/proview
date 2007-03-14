@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.5 2007-03-13 15:48:41 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.6 2007-03-14 08:02:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,6 +151,111 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
 				      _ns1__Read *ns1__Read, 
 				      _ns1__ReadResponse *ns1__ReadResponse)
 {
+  int ii;
+  class ns1__ReadRequestItem *item;
+  pwr_sAttrRef               ar;
+  pwr_tStatus sts;
+  pwr_tOName itemname;
+  pwr_tOName itempath;
+  pwr_tOName path;
+  int reqType = -1;
+  pwr_tTypeId tid;
+  unsigned int elem;
+  char  buf[40];
+  unsigned int options = 0;
+  
+  
+  if (!ns1__Read->ItemList)
+    return 0;
+
+  if (ns1__Read->ItemList->Items.empty())
+    return 0;
+  
+  memset(path, 0, sizeof(path));
+  
+  opc_requestoptions_to_mask(ns1__Read->Options, &options);
+
+  if (ns1__Read->ItemList->ItemPath && !ns1__Read->ItemList->ItemPath->empty())
+    strncpy(path, ns1__Read->ItemList->ItemPath->c_str(), sizeof(path));
+  
+  for (ii = 0; ii < (int) ns1__Read->ItemList->Items.size(); ii++) {
+
+    ns1__ItemValue *iv = new ns1__ItemValue();
+      
+    if (!ns1__ReadResponse->RItemList)
+      ns1__ReadResponse->RItemList = new ns1__ReplyItemList();
+
+    item = ns1__Read->ItemList->Items[ii];
+    
+    if (item->ItemPath && !item->ItemPath->empty())
+      strncpy(itempath, item->ItemPath->c_str(), sizeof(itemname));
+    else
+      strncpy(itempath, path, sizeof(itemname));
+
+    strncpy(itemname, itempath, sizeof(itemname));
+    strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
+
+    if (options & opc_mRequestOption_ReturnItemPath)
+      iv->ItemPath = new std::string(itempath);
+
+    if (options & opc_mRequestOption_ReturnItemName)
+      iv->ItemName = new std::string(itemname);
+
+    if (options & opc_mRequestOption_ReturnDiagnosticInfo)
+      iv->DiagnosticInfo = new std::string(""); // ToDo !!
+
+    sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);
+    
+    if (EVEN(sts)) {
+      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      continue;
+    }
+    
+    if (!item->ReqType || item->ReqType->empty()) {
+      if (!ns1__Read->ItemList->ReqType || ns1__Read->ItemList->ReqType->empty()) {
+        reqType = -1;
+      } else {
+        opc_string_to_opctype(ns1__Read->ItemList->ReqType->c_str(), &reqType);
+      }
+    } else {
+      opc_string_to_opctype(item->ReqType->c_str(), &reqType);
+    }
+    
+    gdh_GetAttributeCharAttrref(&ar, &tid, NULL, NULL, &elem);
+    
+    if (cdh_tidIsCid(tid) || elem > 1) {
+      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      ns1__ReadResponse->RItemList->Items.push_back(iv);
+      continue;
+    }
+          
+    sts = gdh_GetObjectInfoAttrref(&ar, buf, 40);  
+
+    if ( ODD(sts)) {
+        
+      if (reqType < 0) opc_pwrtype_to_opctype(tid, &reqType);
+      
+      if (opc_convert_pwrtype_to_opctype(buf, 40, reqType, tid)) {
+        char *str;
+        opc_opctype_to_value(buf, 40, reqType);
+	str = (char *) malloc(strlen(buf));
+	strncpy(str, buf, 40);
+	iv->Value = str;
+	sprintf(iv->ValueType, "xsd:%s", opc_opctype_to_string(reqType));
+	if (options & opc_mRequestOption_ReturnItemTime) {
+	  // ToDo !!!
+	}
+        ns1__ReadResponse->RItemList->Items.push_back(iv);
+
+      } else {
+        opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+        continue;
+      }
+    } else {
+      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      continue;
+    }
+  }
   return 0;
 }
 

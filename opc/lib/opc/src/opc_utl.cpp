@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.7 2007-03-13 15:48:41 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.8 2007-03-14 08:02:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,6 +119,7 @@ void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, 
 
 	
   opc_resultcode_to_string(err_code, str);
+
   if ( rc)
     *rc = new std::string(str);
   
@@ -616,7 +617,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 //
 // Return the corresponding opc type for a opc type string
 //
-bool opc_string_to_opctype(char *str, int *type)
+bool opc_string_to_opctype(const char *str, int *type)
 {
   int ii;
 
@@ -639,6 +640,57 @@ char *opc_opctype_to_string(int type)
   
 }
 
+bool opc_pwrtype_to_opctype(int pwrtype, int *opctype) 
+{
+  switch (pwrtype) {
+  case pwr_eType_String:
+  case pwr_eType_Objid:
+  case pwr_eType_AttrRef:
+    *opctype = opc_eDataType_string;
+    break;
+  case pwr_eType_Boolean:
+    *opctype = opc_eDataType_boolean;
+    break;
+  case pwr_eType_Float32:
+    *opctype = opc_eDataType_float;
+    break;
+  case pwr_eType_Float64:
+    *opctype = opc_eDataType_double;
+    break;
+  case pwr_eType_Enum:
+  case pwr_eType_Mask:
+  case pwr_eType_Status:
+  case pwr_eType_NetStatus:
+  case pwr_eType_Int32:
+    *opctype = opc_eDataType_int;
+    break;
+  case pwr_eType_Int16:
+    *opctype = opc_eDataType_short;
+    break;
+  case pwr_eType_Int8:
+    *opctype = opc_eDataType_byte;
+    break;
+  case pwr_eType_UInt32:
+    *opctype = opc_eDataType_unsignedInt;
+    break;
+  case pwr_eType_UInt16:
+    *opctype = opc_eDataType_unsignedShort;
+    break;
+  case pwr_eType_UInt8:
+    *opctype = opc_eDataType_unsignedByte;
+    break;
+  case pwr_eType_Time:
+    *opctype = opc_eDataType_dateTime;
+    break;
+  case pwr_eType_DeltaTime:
+    *opctype = opc_eDataType_duration;
+    break;
+  default:
+    *opctype = opc_eDataType_;
+    return false;
+  }
+  return true;
+}
 bool opc_type_to_pwrtype(int type, int *pwrtype) 
 {
   switch (type) {

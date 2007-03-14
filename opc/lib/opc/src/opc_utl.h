@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.6 2007-03-13 15:48:41 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.7 2007-03-14 08:02:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,7 +74,8 @@ typedef enum {
   opc_eDataType_date ,
   opc_eDataType_duration ,
   opc_eDataType_QName ,
-  opc_eDataType_anyType 
+  opc_eDataType_anyType , 
+  opc_eDataType_ 
 } opc_eDataType;
 
 const int opc_cResultCodesSize = 20;
@@ -111,8 +112,10 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
 bool opc_resultcode_to_string( int type, char *str);
 bool opc_resultcode_to_text( int type, char *str);
 bool opc_opctype_to_value(void *bufp, int size, int opc_type);
-bool opc_string_to_opctype(char *str, int *type);
+bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type);
+bool opc_string_to_opctype(const char *str, int *type);
 char *opc_opctype_to_string(int type);
+bool opc_pwrtype_to_opctype(int pwrtype, int *opctype);
 bool opc_type_to_pwrtype(int type, int *pwrtype); 
 bool opc_pwrtype_to_string( int type, char **str);
 
