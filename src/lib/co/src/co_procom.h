@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_procom.h,v 1.1 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: co_procom.h,v 1.2 2007-03-14 06:42:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,8 @@ extern "C" {
 
 typedef enum {
   procom_obj_mFlags_Deleted 	= 1 << 0,
-  procom_obj_mFlags_Created 	= 1 << 1
+  procom_obj_mFlags_Created 	= 1 << 1,
+  procom_obj_mFlags_Loaded 	= 1 << 2
 } procom_obj_mFlags;
 
 class procom_obj {
