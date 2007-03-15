@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.7 2007-03-15 08:07:50 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.8 2007-03-15 12:33:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,9 +99,9 @@ int main()
     exit(sts);
   }
 
+#if 0
   opcsrv = new opc_server();
 
-#if 0
   pwr_tOid config_oid;
 
   // Get OpcServerConfig object
@@ -209,10 +209,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
   int reqType = -1;
   pwr_tTypeId tid;
   unsigned int elem;
-  char  buf[40];
+  char  buf[1024];
   unsigned int options = 0;
   
-  
+  ns1__ReadResponse->ReadResult = new ns1__ReplyBase();
+//  ns1__ReadResponse->ReadResult->RcvTime = current_time.tv_sec;
+//  ns1__ReadResponse->ReadResult->ReplyTime = current_time.tv_sec;
+  if (ns1__Read->Options)
+    ns1__ReadResponse->ReadResult->ClientRequestHandle = ns1__Read->Options->ClientRequestHandle;
+  ns1__ReadResponse->ReadResult->ServerState = ns1__serverState__running;
+
   if (!ns1__Read->ItemList)
     return 0;
 
@@ -277,19 +283,19 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
       continue;
     }
           
-    sts = gdh_GetObjectInfoAttrref(&ar, buf, 40);  
+    sts = gdh_GetObjectInfoAttrref(&ar, buf, sizeof(buf));  
 
     if ( ODD(sts)) {
         
       if (reqType < 0) opc_pwrtype_to_opctype(tid, &reqType);
       
-      if (opc_convert_pwrtype_to_opctype(buf, 40, reqType, tid)) {
+      if (opc_convert_pwrtype_to_opctype(buf, sizeof(buf), reqType, tid)) {
         char *str;
-        opc_opctype_to_value(buf, 40, reqType);
-	str = (char *) malloc(strlen(buf));
-	strncpy(str, buf, 40);
+        opc_opctype_to_value(buf, sizeof(buf), reqType);
+	str = (char *) malloc(strlen(buf) + 1);
+	strncpy(str, buf, sizeof(buf));
 	iv->Value = str;
-	sprintf(iv->ValueType, "xsd:%s", opc_opctype_to_string(reqType));
+	sprintf(iv->ValueType, "%s", opc_opctype_to_string(reqType));
 	if (options & opc_mRequestOption_ReturnItemTime) {
 	  // ToDo !!!
 	}
