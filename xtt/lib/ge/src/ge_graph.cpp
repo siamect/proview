@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.36 2007-01-17 10:31:20 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.37 2007-03-15 15:42:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3770,9 +3770,18 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
     char oname[256];
     if ( grow->stack_cnt == 0)
       strcpy( oname, object_name);
-    else
+    else {
       grow_GetOwner( grow->ctx, oname);
     
+      // Replace $object in oname (one level only)
+      char *s1;
+      if ( (s1 = strstr( oname, "$object"))) {
+	strcpy( str1, s1 + strlen("$object"));
+	strcpy( s1, object_name);
+	strcat( oname, str1);
+      }
+    }
+
     strcpy( str1, s + strlen("$object"));
     strcpy( s, oname);
     strcat( str, str1);
