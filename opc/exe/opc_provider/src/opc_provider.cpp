@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.5 2007-03-13 15:48:41 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.6 2007-03-15 08:07:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,8 @@
 
 #define START_OIX 1000
 #define procom_obj_mFlags_Analog (1 << 31)
+
+typedef map<pwr_tUInt32, opcprv_sub>::iterator sublist_iterator;
 
 static pwr_tVid opc_vid;
 static char opc_vname[32];
@@ -577,11 +579,130 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
 void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, int offset, 
 				      int size, pwr_tSubid sid) 
 {
-  if ( oix < (int)m_list.size())
-    *buff = (char *)m_list[oix].po.body + offset;
-  else 
+  if ( oix >= (int)m_list.size()) {
     *buff = 0;
+    return;
+  }
+
+  *buff = (char *)m_list[oix].po.body + offset;
+
+  switch ( m_list[oix].po.cid) {
+  case pwr_cClass_Opc_String:
+  case pwr_cClass_Opc_Boolean:
+  case pwr_cClass_Opc_Float:
+  case pwr_cClass_Opc_Double:
+  case pwr_cClass_Opc_Decimal:
+  case pwr_cClass_Opc_Long:
+  case pwr_cClass_Opc_Int:
+  case pwr_cClass_Opc_Short:
+  case pwr_cClass_Opc_Byte:
+  case pwr_cClass_Opc_UnsignedLong:
+  case pwr_cClass_Opc_UnsignedInt:
+  case pwr_cClass_Opc_UnsignedShort:
+  case pwr_cClass_Opc_UnsignedByte:
+  case pwr_cClass_Opc_Base64Binary:
+  case pwr_cClass_Opc_Time:
+  case pwr_cClass_Opc_Date:
+  case pwr_cClass_Opc_Duration:
+  case pwr_cClass_Opc_QName:
+    if ( *buff == ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value) {
+      // Add opc subscription
+      _ns1__Subscribe subscribe;
+      _ns1__SubscribeResponse subscribe_response;
+      char handle[20];
+
+      subscribe.Options = new ns1__RequestOptions();
+      subscribe.Options->ReturnItemTime = (bool *) malloc( sizeof(bool));
+      *subscribe.Options->ReturnItemTime = true;
+
+      subscribe.ItemList = new ns1__SubscribeRequestItemList();
+      ns1__SubscribeRequestItem *ritem = new ns1__SubscribeRequestItem();
+      ritem->ItemName = new std::string( m_list[oix].item_name);
+      sprintf( handle, "%d", oix);
+      ritem->ClientItemHandle = new std::string( handle);
+      ritem->RequestedSamplingRate = (int *) malloc( sizeof(int));
+      *ritem->RequestedSamplingRate = 1000;
+
+      subscribe.ItemList->Items.push_back( ritem);
+
+      if ( soap_call___ns1__Subscribe( &soap, opc_endpoint, NULL, &subscribe, &subscribe_response) ==
+	 SOAP_OK) {
+	opcprv_sub sub;
+
+	sub.handle = *subscribe_response.ServerSubHandle;
+	sub.oix = oix;
+	m_sublist[sid.rix] = sub;
+
+	if ( subscribe_response.RItemList && subscribe_response.RItemList->Items.size()) {
+	  for ( int i = 0; i < (int)subscribe_response.RItemList->Items.size(); i++) {
+	    // subscribe_response.RItemList->Items[i]->ItemValue...
+	  }
+	}
+      }
+    }
+    break;
+  default: ;
+  }
 }
+
+// Rt only
+void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid) 
+{
+  sublist_iterator it = m_sublist.find( sid.rix);
+  if ( it != m_sublist.end()) {
+    // Cancel subscription
+    _ns1__SubscriptionCancel subcancel;
+    _ns1__SubscriptionCancelResponse subcancel_response;
+
+    subcancel.ServerSubHandle = new std::string(it->second.handle);
+
+    if ( soap_call___ns1__SubscriptionCancel( &soap, opc_endpoint, NULL, &subcancel, &subcancel_response) ==
+	 SOAP_OK) {
+      // Where are the fault codes ???
+    }
+
+    m_sublist.erase( it);
+  }
+}
+
+// Rt only
+void opc_provider::cyclic( co_procom *pcom)
+{
+  int size = 0;
+  _ns1__SubscriptionPolledRefresh subpoll;
+  _ns1__SubscriptionPolledRefreshResponse subpoll_response;
+  
+  
+  for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
+    subpoll.ServerSubHandles.push_back( it->second.handle);
+    size++;
+  }
+
+  if ( size) {
+    if ( soap_call___ns1__SubscriptionPolledRefresh( &soap, opc_endpoint, NULL, &subpoll, &subpoll_response) ==
+	 SOAP_OK) {
+      if ( (int) subpoll_response.RItemList.size() != size) {
+	return;
+      }
+
+      int idx = 0;
+      for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
+	if ( subpoll_response.RItemList[idx]->Items.size()) { 
+	  switch ( m_list[it->second.oix].po.cid) {
+	  case pwr_cClass_Opc_String:
+	    strcpy( ((pwr_sClass_Opc_String *)m_list[it->second.oix].po.body)->Value,
+		    subpoll_response.RItemList[idx]->Items[0]->Value);
+	    break;
+	  default: ;
+	  }
+	}
+	idx++;
+      }
+      
+    }
+  }
+}
+
 
 // Wb only
 void opc_provider::commit( co_procom *pcom)

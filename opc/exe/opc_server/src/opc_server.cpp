@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.6 2007-03-14 08:02:16 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.7 2007-03-15 08:07:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,6 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <map.h>
 #include <net/if.h>
 #include <net/if_arp.h>
 
@@ -35,11 +36,56 @@ typedef struct {
   int access;
 } opc_sClientAccess;
 
+class opcsrv_sub {
+ public:  
+  void *p;
+  int size;
+  opc_eDataType opc_type;
+  pwr_eType pwr_type;
+  pwr_tSubid subid;
+};
+  
+class opcsrv_client {
+ public:
+  pwr_tTime m_last_time;
+  map< std::string, vector<opcsrv_sub> > m_sublist;
+};
+
+typedef map< std::string, vector<opcsrv_sub> >::iterator sublist_iterator;
+typedef map< int, opcsrv_client>::iterator client_iterator;
+
+class opc_server {
+ public:
+  map< int, opcsrv_client> m_client;
+
+  opcsrv_client *find_client( int sid);
+  opcsrv_client *new_client( int sid);
+};
+
+static opc_server *opcsrv;
 static pwr_tTime opc_start_time;
 static pwr_sClass_Opc_ServerConfig *opc_config;
 static opc_sClientAccess opc_client_access[20];
 static int opc_client_access_cnt = 0;
 static int opc_current_access;
+
+opcsrv_client *opc_server::find_client( int sid)
+{
+  client_iterator it = opcsrv->m_client.find( sid);
+  if ( it == opcsrv->m_client.end())
+    return 0;
+  else
+    return &it->second;
+}
+
+opcsrv_client *opc_server::new_client( int sid)
+{
+  opcsrv_client client;
+
+  m_client[sid] = client;
+  return &m_client[sid];
+}
+
 
 
 int main()
@@ -52,6 +98,8 @@ int main()
   if ( EVEN(sts)) {
     exit(sts);
   }
+
+  opcsrv = new opc_server();
 
 #if 0
   pwr_tOid config_oid;
@@ -266,24 +314,123 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Write(struct soap*,
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap* soap, 
 					   _ns1__Subscribe *ns1__Subscribe, 
 					   _ns1__SubscribeResponse *ns1__SubscribeResponse)
 {
+  pwr_tStatus sts;
+  pwr_tTypeId a_tid;
+  pwr_tUInt32 a_size, a_offs, a_elem;
+  pwr_tAName aname;
+
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  clock_gettime( CLOCK_REALTIME, &client->m_last_time);
+
+
+  if ( ns1__Subscribe->ItemList) {
+
+    for ( int i = 0; i < (int) ns1__Subscribe->ItemList->Items.size(); i++) {
+      opcsrv_sub sub;
+      
+      strcpy( aname, ns1__Subscribe->ItemList->Items[0]->ItemName->c_str());
+      sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size, &a_offs, &a_elem);
+      if ( EVEN(sts)) {
+	// TODO Set the fault code somewhere... 
+	continue;
+      }
+
+      sub.size = a_size;
+      sub.pwr_type = (pwr_eType) a_tid;  // TODO
+      if ( !opc_pwrtype_to_opctype( sub.pwr_type, (int *)&sub.opc_type))
+	printf( "Type error %s\n", aname);
+
+      sts = gdh_RefObjectInfo( aname, &sub.p, &sub.subid, sub.size);
+      if ( EVEN(sts)) {
+	// TODO
+	continue;
+      }
+      if ( i == 0) {
+	vector<opcsrv_sub> subv;
+	
+	ns1__SubscribeResponse->ServerSubHandle = 
+	  new std::string( cdh_SubidToString( 0, sub.subid, 0));
+	
+	client->m_sublist[*ns1__SubscribeResponse->ServerSubHandle] = subv;
+      }
+      client->m_sublist[*ns1__SubscribeResponse->ServerSubHandle].push_back( sub);
+    }
+  }
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap* soap, 
 							   _ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, 
 							   _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse)
 {
+  pwr_tTime current_time;
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client) {
+    // TODO
+    return 0;
+  }
+
+  clock_gettime( CLOCK_REALTIME, &current_time);
+  client->m_last_time = current_time;
+
+  for ( int i = 0; i < (int) ns1__SubscriptionPolledRefresh->ServerSubHandles.size(); i++) {
+    sublist_iterator it = 
+      client->m_sublist.find( ns1__SubscriptionPolledRefresh->ServerSubHandles[i]);
+    
+    if ( it != client->m_sublist.end()) {
+      ns1__SubscribePolledRefreshReplyItemList *rlist = new ns1__SubscribePolledRefreshReplyItemList();
+
+      rlist->SubscriptionHandle = new std::string(ns1__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      for ( int j = 0; j < (int)it->second.size(); j++) {
+	ns1__ItemValue *ritem = new ns1__ItemValue();
+	
+	// TODO
+	ritem->Value = (char *) malloc( 80);
+	strcpy( ritem->Value, "1");
+	strcpy( ritem->ValueType, "xsd:string");
+	ritem->Timestamp = (time_t *) malloc( sizeof(time_t));
+	*ritem->Timestamp = current_time.tv_sec;
+
+	rlist->Items.push_back( ritem);
+      }
+      ns1__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
+    }
+    else {
+    }
+  }
+
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap* soap, 
 						    _ns1__SubscriptionCancel *ns1__SubscriptionCancel, 
 						    _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse)
 {
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client) {
+    // TODO
+    return 0;
+  }
+
+  clock_gettime( CLOCK_REALTIME, &client->m_last_time);
+
+  sublist_iterator it = 
+    client->m_sublist.find( *ns1__SubscriptionCancel->ServerSubHandle);
+
+  if ( it != client->m_sublist.end()) {
+    client->m_sublist.erase( it);
+  }
+  else {
+    // TODO Set the fault code somewhere...
+  }
+  ns1__SubscriptionCancelResponse->ClientRequestHandle = 
+    ns1__SubscriptionCancel->ClientRequestHandle;
   return 0;
 }
 

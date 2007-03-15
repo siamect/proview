@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.5 2007-03-13 15:48:41 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.6 2007-03-15 08:07:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 #ifndef opc_provider_h
 #define opc_provider_h
 
+#include <map.h>
 #include "co_provider.h"
 #include "co_procom.h"
 #include "pwr_opcclasses.h"
@@ -41,6 +42,12 @@ class opcprv_obj {
     strcpy( item_name, x.item_name);
     return *this;
   }
+};
+
+class opcprv_sub {
+ public:
+  pwr_tOix oix;
+  std::string handle;
 };
 
 class opc_provider : public co_provider {
@@ -66,6 +73,8 @@ public:
 			      unsigned int size);
   virtual void subAssociateBuffer( co_procom *pcom, void **buff, int oix, int offset, 
 				   int size, pwr_tSubid sid);
+  virtual void subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid); 
+  virtual void cyclic( co_procom *pcom);
   virtual void commit( co_procom *pcom);
   virtual void abort( co_procom *pcom);
 
@@ -86,6 +95,7 @@ public:
   void errlog( std::string* item, std::vector<ns1__OPCError *>& errvect);
 
   vector<opcprv_obj> m_list;
+  map<pwr_tUInt32, opcprv_sub> m_sublist;
   pwr_tOix root;
   pwr_tOix next_oix;
   struct soap soap;
