@@ -24,7 +24,7 @@ class Service : public soap
 	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
 	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
 	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"ns1", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL},
+	{"s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL},
 	{NULL, NULL, NULL, NULL}
 };
 	soap_init(this); if (!this->namespaces) this->namespaces = namespaces; };
@@ -41,20 +41,20 @@ class Service : public soap
 \******************************************************************************/
 
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetStatus(struct soap*, _ns1__GetStatus *ns1__GetStatus, _ns1__GetStatusResponse *ns1__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*, _ns1__Read *ns1__Read, _ns1__ReadResponse *ns1__ReadResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*, _s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Write(struct soap*, _ns1__Write *ns1__Write, _ns1__WriteResponse *ns1__WriteResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap*, _s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap*, _ns1__Subscribe *ns1__Subscribe, _ns1__SubscribeResponse *ns1__SubscribeResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap*, _s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap*, _ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap*, _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap*, _ns1__SubscriptionCancel *ns1__SubscriptionCancel, _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap*, _s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse, _ns1__BrowseResponse *ns1__BrowseResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap*, _s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*, _ns1__GetProperties *ns1__GetProperties, _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, _s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse);
 
 #endif

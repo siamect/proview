@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.9 2007-03-14 10:19:35 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.10 2007-03-15 15:25:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,7 +111,7 @@ static char opc_ResultTexts[23][20] = {"edgar o was here",
 				       "edgar o was here",
 				       "edgar o was here"};
 
-void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, int err_code, unsigned int options)
+void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options)
 {
   pwr_tString32 str;
   int ii;
@@ -130,7 +130,7 @@ void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, 
   }
   
   if (!exists) {
-    ns1__OPCError *oe = new ns1__OPCError();
+    s0__OPCError *oe = new s0__OPCError();
     oe->ID = std::string(str);
     
     if (options & opc_mRequestOption_ReturnErrorText) {
@@ -143,7 +143,7 @@ void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, 
 
 }
 
-bool opc_requestoptions_to_mask( ns1__RequestOptions *options, unsigned int *mask)
+bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask)
 {
 
   if (!options) {
@@ -205,13 +205,29 @@ bool opc_string_to_resultcode(char *str, int *type)
 // Return the corresponding opc type string for a pwr_eType
 //
 
+std::string& opc_datetime( pwr_tTime *tp)
+{
+  static std::string timstr;
+  char str[40];
+
+  time_AtoOPCAscii( tp, str, sizeof(str));
+  timstr = std::string( str);
+  return timstr;
+}
+
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
 {
 
    struct tm *tmpTm;
    int        buflen;
    char       tmpStr[16];
+   pwr_tTime  t;
 
+   if ( !tp) {
+     clock_gettime( CLOCK_REALTIME, &t);
+     tp = &t;
+   }
+  
    tmpTm = localtime(&tp->tv_sec);
    strftime(buf, bufsize, "%Y-%m-%dT%H:%M:%S", tmpTm);
 
@@ -752,55 +768,12 @@ bool opc_type_to_pwrtype(int type, int *pwrtype)
 //
 bool opc_pwrtype_to_string( int type, char **str)
 {
-  *str = (char *) malloc(20);
-  switch ( type) {
-  case pwr_eType_String:
-  case pwr_eType_Objid:
-  case pwr_eType_AttrRef:
-    strcpy( *str, "string");
-    break;
-  case pwr_eType_Boolean:
-    strcpy( *str, "boolean");
-    break;
-  case pwr_eType_Float32:
-    strcpy( *str, "float");
-    break;
-  case pwr_eType_Float64:
-    strcpy( *str, "double");
-    break;
-  case pwr_eType_Enum:
-  case pwr_eType_Mask:
-  case pwr_eType_Status:
-  case pwr_eType_NetStatus:
-  case pwr_eType_Int32:
-    strcpy( *str, "int");
-    break;
-  case pwr_eType_Int16:
-    strcpy( *str, "short");
-    break;
-  case pwr_eType_Int8:
-    strcpy( *str, "byte");
-    break;
-  case pwr_eType_UInt32:
-    strcpy( *str, "unsignedInt");
-    break;
-  case pwr_eType_UInt16:
-    strcpy( *str, "unsignedShort");
-    break;
-  case pwr_eType_UInt8:
-    strcpy( *str, "unsignedByte");
-    break;
-  case pwr_eType_Time:
-    strcpy( *str, "dateTime");
-    break;
-  case pwr_eType_DeltaTime:
-    strcpy( *str, "duration");
-    break;
-  default:
-    free( *str);
-    *str = 0;
+  int opctype;
+
+  if ( !opc_pwrtype_to_opctype( type, &opctype))
     return false;
-  }
+
+  *str = str_dt[opctype];
   return true;
 }
 
@@ -816,8 +789,8 @@ void opc_mask_to_propertynames( std::vector<std::string>& pnames, unsigned int m
   }
 }
 
-bool opc_get_property( std::vector<ns1__ItemProperty *> properties, unsigned int mask,
-		       char **valp)
+bool opc_get_property( std::vector<s0__ItemProperty *> properties, unsigned int mask,
+		       xsd__anyType **valp)
 {
   char name[80];
   char *s;
@@ -954,52 +927,52 @@ bool opc_quality_to_string( int quality, char **str)
 {
   *str = (char *) malloc(30);
   switch ( quality) {
-  case ns1__qualityBits__bad:
+  case s0__qualityBits__bad:
     strcpy( *str, "bad");
     break;
-  case ns1__qualityBits__badConfigurationError:
+  case s0__qualityBits__badConfigurationError:
     strcpy( *str, "badConfigurationError");
     break;
-  case ns1__qualityBits__badNotConnected:
+  case s0__qualityBits__badNotConnected:
     strcpy( *str, "badNotConnected");
     break;
-  case ns1__qualityBits__badDeviceFailure:
+  case s0__qualityBits__badDeviceFailure:
     strcpy( *str, "badDeviceFailure");
     break;
-  case ns1__qualityBits__badSensorFailure:
+  case s0__qualityBits__badSensorFailure:
     strcpy( *str, "badSensorFailure");
     break;
-  case ns1__qualityBits__badLastKnownValue:
+  case s0__qualityBits__badLastKnownValue:
     strcpy( *str, "badLastKnownValue");
     break;
-  case ns1__qualityBits__badCommFailure:
+  case s0__qualityBits__badCommFailure:
     strcpy( *str, "badCommFailure");
     break;
-  case ns1__qualityBits__badOutOfService:
+  case s0__qualityBits__badOutOfService:
     strcpy( *str, "badOutOfService");
     break;
-  case ns1__qualityBits__badWaitingForInitialData:
+  case s0__qualityBits__badWaitingForInitialData:
     strcpy( *str, "badWaitingForInitialData");
     break;
-  case ns1__qualityBits__uncertain:
+  case s0__qualityBits__uncertain:
     strcpy( *str, "uncertain");
     break;
-  case ns1__qualityBits__uncertainLastUsableValue:
+  case s0__qualityBits__uncertainLastUsableValue:
     strcpy( *str, "uncertainLastUsableValue");
     break;
-  case ns1__qualityBits__uncertainSensorNotAccurate:
+  case s0__qualityBits__uncertainSensorNotAccurate:
     strcpy( *str, "uncertainSensorNotAccurate");
     break;
-  case ns1__qualityBits__uncertainEUExceeded:
+  case s0__qualityBits__uncertainEUExceeded:
     strcpy( *str, "uncertainEUExceede");
     break;
-  case ns1__qualityBits__uncertainSubNormal:
+  case s0__qualityBits__uncertainSubNormal:
     strcpy( *str, "uncertainSubNormal");
     break;
-  case ns1__qualityBits__good:
+  case s0__qualityBits__good:
     strcpy( *str, "good");
     break;
-  case ns1__qualityBits__goodLocalOverride:
+  case s0__qualityBits__goodLocalOverride:
     strcpy( *str, "goodLocalOverride");
     break;
   default:

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.7 2007-03-14 08:02:54 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.8 2007-03-15 15:25:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,8 +106,9 @@ typedef enum {
   opc_eResultCode_E_BADTYPE ,
 } opc_eResultCode;
 
-void opcsrv_returnerror(std::vector<ns1__OPCError *>& errors, std::string **rc, int err_code, unsigned int options);
-bool opc_requestoptions_to_mask( ns1__RequestOptions *options, unsigned int *mask);
+void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options);
+bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask);
+std::string& opc_datetime( pwr_tTime *tp);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
 bool opc_resultcode_to_string( int type, char *str);
 bool opc_resultcode_to_text( int type, char *str);
@@ -119,8 +120,8 @@ bool opc_pwrtype_to_opctype(int pwrtype, int *opctype);
 bool opc_type_to_pwrtype(int type, int *pwrtype); 
 bool opc_pwrtype_to_string( int type, char **str);
 
-bool opc_get_property( std::vector<ns1__ItemProperty *> properties, unsigned int mask,
-		       char **valp);
+bool opc_get_property( std::vector<s0__ItemProperty *> properties, unsigned int mask,
+		       xsd__anyType **valp);
 
 void opc_mask_to_propertynames( std::vector<std::string>& pnames, unsigned int mask);
 

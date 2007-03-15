@@ -19,18 +19,18 @@ class Service
 	{"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", "http://www.w3.org/*/soap-encoding", NULL},
 	{"xsi", "http://www.w3.org/2001/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", NULL},
 	{"xsd", "http://www.w3.org/2001/XMLSchema", "http://www.w3.org/*/XMLSchema", NULL},
-	{"ns1", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL},
+	{"s0", "http://opcfoundation.org/webservices/XMLDA/1.0/", NULL, NULL},
 	{NULL, NULL, NULL, NULL}
 };
 	soap->namespaces = namespaces; } };
 	virtual ~Service() { if (soap) { soap_destroy(soap); soap_end(soap); soap_free(soap); } };
-	virtual int __ns1__GetStatus(_ns1__GetStatus *ns1__GetStatus, _ns1__GetStatusResponse *ns1__GetStatusResponse) { return soap ? soap_call___ns1__GetStatus(soap, endpoint, NULL, ns1__GetStatus, ns1__GetStatusResponse) : SOAP_EOM; };
-	virtual int __ns1__Read(_ns1__Read *ns1__Read, _ns1__ReadResponse *ns1__ReadResponse) { return soap ? soap_call___ns1__Read(soap, endpoint, NULL, ns1__Read, ns1__ReadResponse) : SOAP_EOM; };
-	virtual int __ns1__Write(_ns1__Write *ns1__Write, _ns1__WriteResponse *ns1__WriteResponse) { return soap ? soap_call___ns1__Write(soap, endpoint, NULL, ns1__Write, ns1__WriteResponse) : SOAP_EOM; };
-	virtual int __ns1__Subscribe(_ns1__Subscribe *ns1__Subscribe, _ns1__SubscribeResponse *ns1__SubscribeResponse) { return soap ? soap_call___ns1__Subscribe(soap, endpoint, NULL, ns1__Subscribe, ns1__SubscribeResponse) : SOAP_EOM; };
-	virtual int __ns1__SubscriptionPolledRefresh(_ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse) { return soap ? soap_call___ns1__SubscriptionPolledRefresh(soap, endpoint, NULL, ns1__SubscriptionPolledRefresh, ns1__SubscriptionPolledRefreshResponse) : SOAP_EOM; };
-	virtual int __ns1__SubscriptionCancel(_ns1__SubscriptionCancel *ns1__SubscriptionCancel, _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse) { return soap ? soap_call___ns1__SubscriptionCancel(soap, endpoint, NULL, ns1__SubscriptionCancel, ns1__SubscriptionCancelResponse) : SOAP_EOM; };
-	virtual int __ns1__Browse(_ns1__Browse *ns1__Browse, _ns1__BrowseResponse *ns1__BrowseResponse) { return soap ? soap_call___ns1__Browse(soap, endpoint, NULL, ns1__Browse, ns1__BrowseResponse) : SOAP_EOM; };
-	virtual int __ns1__GetProperties(_ns1__GetProperties *ns1__GetProperties, _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse) { return soap ? soap_call___ns1__GetProperties(soap, endpoint, NULL, ns1__GetProperties, ns1__GetPropertiesResponse) : SOAP_EOM; };
+	virtual int __s0__GetStatus(_s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse) { return soap ? soap_call___s0__GetStatus(soap, endpoint, NULL, s0__GetStatus, s0__GetStatusResponse) : SOAP_EOM; };
+	virtual int __s0__Read(_s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse) { return soap ? soap_call___s0__Read(soap, endpoint, NULL, s0__Read, s0__ReadResponse) : SOAP_EOM; };
+	virtual int __s0__Write(_s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse) { return soap ? soap_call___s0__Write(soap, endpoint, NULL, s0__Write, s0__WriteResponse) : SOAP_EOM; };
+	virtual int __s0__Subscribe(_s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse) { return soap ? soap_call___s0__Subscribe(soap, endpoint, NULL, s0__Subscribe, s0__SubscribeResponse) : SOAP_EOM; };
+	virtual int __s0__SubscriptionPolledRefresh(_s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse) { return soap ? soap_call___s0__SubscriptionPolledRefresh(soap, endpoint, NULL, s0__SubscriptionPolledRefresh, s0__SubscriptionPolledRefreshResponse) : SOAP_EOM; };
+	virtual int __s0__SubscriptionCancel(_s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse) { return soap ? soap_call___s0__SubscriptionCancel(soap, endpoint, NULL, s0__SubscriptionCancel, s0__SubscriptionCancelResponse) : SOAP_EOM; };
+	virtual int __s0__Browse(_s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse) { return soap ? soap_call___s0__Browse(soap, endpoint, NULL, s0__Browse, s0__BrowseResponse) : SOAP_EOM; };
+	virtual int __s0__GetProperties(_s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse) { return soap ? soap_call___s0__GetProperties(soap, endpoint, NULL, s0__GetProperties, s0__GetPropertiesResponse) : SOAP_EOM; };
 };
 #endif

@@ -17,34 +17,34 @@
 \******************************************************************************/
 
 
-#ifndef SOAP_TYPE_ns1__serverState
-#define SOAP_TYPE_ns1__serverState (59)
-/* ns1:serverState */
-enum ns1__serverState {ns1__serverState__running = 0, ns1__serverState__failed = 1, ns1__serverState__noConfig = 2, ns1__serverState__suspended = 3, ns1__serverState__test = 4, ns1__serverState__commFault = 5};
+#ifndef SOAP_TYPE_s0__serverState
+#define SOAP_TYPE_s0__serverState (87)
+/* s0:serverState */
+enum s0__serverState {s0__serverState__running = 0, s0__serverState__failed = 1, s0__serverState__noConfig = 2, s0__serverState__suspended = 3, s0__serverState__test = 4, s0__serverState__commFault = 5};
 #endif
 
-#ifndef SOAP_TYPE_ns1__interfaceVersion
-#define SOAP_TYPE_ns1__interfaceVersion (60)
-/* ns1:interfaceVersion */
-enum ns1__interfaceVersion {ns1__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0 = 0};
+#ifndef SOAP_TYPE_s0__interfaceVersion
+#define SOAP_TYPE_s0__interfaceVersion (89)
+/* s0:interfaceVersion */
+enum s0__interfaceVersion {s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0 = 0};
 #endif
 
-#ifndef SOAP_TYPE_ns1__qualityBits
-#define SOAP_TYPE_ns1__qualityBits (61)
-/* ns1:qualityBits */
-enum ns1__qualityBits {ns1__qualityBits__bad = 0, ns1__qualityBits__badConfigurationError = 1, ns1__qualityBits__badNotConnected = 2, ns1__qualityBits__badDeviceFailure = 3, ns1__qualityBits__badSensorFailure = 4, ns1__qualityBits__badLastKnownValue = 5, ns1__qualityBits__badCommFailure = 6, ns1__qualityBits__badOutOfService = 7, ns1__qualityBits__badWaitingForInitialData = 8, ns1__qualityBits__uncertain = 9, ns1__qualityBits__uncertainLastUsableValue = 10, ns1__qualityBits__uncertainSensorNotAccurate = 11, ns1__qualityBits__uncertainEUExceeded = 12, ns1__qualityBits__uncertainSubNormal = 13, ns1__qualityBits__good = 14, ns1__qualityBits__goodLocalOverride = 15};
+#ifndef SOAP_TYPE_s0__qualityBits
+#define SOAP_TYPE_s0__qualityBits (91)
+/* s0:qualityBits */
+enum s0__qualityBits {s0__qualityBits__bad = 0, s0__qualityBits__badConfigurationError = 1, s0__qualityBits__badNotConnected = 2, s0__qualityBits__badDeviceFailure = 3, s0__qualityBits__badSensorFailure = 4, s0__qualityBits__badLastKnownValue = 5, s0__qualityBits__badCommFailure = 6, s0__qualityBits__badOutOfService = 7, s0__qualityBits__badWaitingForInitialData = 8, s0__qualityBits__uncertain = 9, s0__qualityBits__uncertainLastUsableValue = 10, s0__qualityBits__uncertainSensorNotAccurate = 11, s0__qualityBits__uncertainEUExceeded = 12, s0__qualityBits__uncertainSubNormal = 13, s0__qualityBits__good = 14, s0__qualityBits__goodLocalOverride = 15};
 #endif
 
-#ifndef SOAP_TYPE_ns1__limitBits
-#define SOAP_TYPE_ns1__limitBits (62)
-/* ns1:limitBits */
-enum ns1__limitBits {ns1__limitBits__none = 0, ns1__limitBits__low = 1, ns1__limitBits__high = 2, ns1__limitBits__constant = 3};
+#ifndef SOAP_TYPE_s0__limitBits
+#define SOAP_TYPE_s0__limitBits (93)
+/* s0:limitBits */
+enum s0__limitBits {s0__limitBits__none = 0, s0__limitBits__low = 1, s0__limitBits__high = 2, s0__limitBits__constant = 3};
 #endif
 
-#ifndef SOAP_TYPE_ns1__browseFilter
-#define SOAP_TYPE_ns1__browseFilter (63)
-/* ns1:browseFilter */
-enum ns1__browseFilter {ns1__browseFilter__all = 0, ns1__browseFilter__branch = 1, ns1__browseFilter__item = 2};
+#ifndef SOAP_TYPE_s0__browseFilter
+#define SOAP_TYPE_s0__browseFilter (95)
+/* s0:browseFilter */
+enum s0__browseFilter {s0__browseFilter__all = 0, s0__browseFilter__branch = 1, s0__browseFilter__item = 2};
 #endif
 
 /******************************************************************************\
@@ -54,67 +54,486 @@ enum ns1__browseFilter {ns1__browseFilter__all = 0, ns1__browseFilter__branch = 
 \******************************************************************************/
 
 
-#if 0 /* volatile type: do not redeclare */
-
-#endif
 
 
-
-#ifndef SOAP_TYPE_ns1__ReplyBase
-#define SOAP_TYPE_ns1__ReplyBase (10)
-/* ns1:ReplyBase */
-class SOAP_CMAC ns1__ReplyBase
+#ifndef SOAP_TYPE_xsd__anyType
+#define SOAP_TYPE_xsd__anyType (7)
+/* Primitive xsd:anyType schema type: */
+class SOAP_CMAC xsd__anyType
 {
 public:
-	time_t RcvTime;	/* required attribute */
-	time_t ReplyTime;	/* required attribute */
-	std::string *ClientRequestHandle;	/* optional attribute */
-	std::string *RevisedLocaleID;	/* optional attribute */
-	enum ns1__serverState ServerState;	/* required attribute */
+	char *__item;
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 10; } /* = unique id SOAP_TYPE_ns1__ReplyBase */
+	virtual int soap_type() const { return 7; } /* = unique id SOAP_TYPE_xsd__anyType */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ReplyBase() : ClientRequestHandle(NULL), RevisedLocaleID(NULL), soap(NULL) { }
-	virtual ~ns1__ReplyBase() { }
+	         xsd__anyType() : __item(NULL), soap(NULL) { }
+	virtual ~xsd__anyType() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ServerStatus
-#define SOAP_TYPE_ns1__ServerStatus (11)
-/* ns1:ServerStatus */
-class SOAP_CMAC ns1__ServerStatus
+#if 0 /* volatile type: do not redeclare */
+
+#endif
+
+#ifndef SOAP_TYPE_xsd__QName_
+#define SOAP_TYPE_xsd__QName_ (12)
+/* Primitive xsd:QName schema type: */
+class SOAP_CMAC xsd__QName_ : public xsd__anyType
+{
+public:
+	std::string __item;
+public:
+	virtual int soap_type() const { return 12; } /* = unique id SOAP_TYPE_xsd__QName_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__QName_()  { }
+	virtual ~xsd__QName_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__boolean
+#define SOAP_TYPE_xsd__boolean (13)
+/* Primitive xsd:boolean schema type: */
+class SOAP_CMAC xsd__boolean : public xsd__anyType
+{
+public:
+	bool __item;
+public:
+	virtual int soap_type() const { return 13; } /* = unique id SOAP_TYPE_xsd__boolean */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__boolean()  { }
+	virtual ~xsd__boolean() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__byte
+#define SOAP_TYPE_xsd__byte (15)
+/* Primitive xsd:byte schema type: */
+class SOAP_CMAC xsd__byte : public xsd__anyType
+{
+public:
+	char __item;
+public:
+	virtual int soap_type() const { return 15; } /* = unique id SOAP_TYPE_xsd__byte */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__byte()  { }
+	virtual ~xsd__byte() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__dateTime
+#define SOAP_TYPE_xsd__dateTime (16)
+/* Primitive xsd:dateTime schema type: */
+class SOAP_CMAC xsd__dateTime : public xsd__anyType
+{
+public:
+	std::string __item;
+public:
+	virtual int soap_type() const { return 16; } /* = unique id SOAP_TYPE_xsd__dateTime */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__dateTime()  { }
+	virtual ~xsd__dateTime() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__decimal_
+#define SOAP_TYPE_xsd__decimal_ (18)
+/* Primitive xsd:decimal schema type: */
+class SOAP_CMAC xsd__decimal_ : public xsd__anyType
+{
+public:
+	std::string __item;
+public:
+	virtual int soap_type() const { return 18; } /* = unique id SOAP_TYPE_xsd__decimal_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__decimal_()  { }
+	virtual ~xsd__decimal_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__double
+#define SOAP_TYPE_xsd__double (19)
+/* Primitive xsd:double schema type: */
+class SOAP_CMAC xsd__double : public xsd__anyType
+{
+public:
+	double __item;
+public:
+	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE_xsd__double */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__double()  { }
+	virtual ~xsd__double() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__float
+#define SOAP_TYPE_xsd__float (21)
+/* Primitive xsd:float schema type: */
+class SOAP_CMAC xsd__float : public xsd__anyType
+{
+public:
+	float __item;
+public:
+	virtual int soap_type() const { return 21; } /* = unique id SOAP_TYPE_xsd__float */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__float()  { }
+	virtual ~xsd__float() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__int
+#define SOAP_TYPE_xsd__int (23)
+/* Primitive xsd:int schema type: */
+class SOAP_CMAC xsd__int : public xsd__anyType
+{
+public:
+	int __item;
+public:
+	virtual int soap_type() const { return 23; } /* = unique id SOAP_TYPE_xsd__int */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__int()  { }
+	virtual ~xsd__int() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__long
+#define SOAP_TYPE_xsd__long (24)
+/* Primitive xsd:long schema type: */
+class SOAP_CMAC xsd__long : public xsd__anyType
+{
+public:
+	LONG64 __item;
+public:
+	virtual int soap_type() const { return 24; } /* = unique id SOAP_TYPE_xsd__long */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__long()  { }
+	virtual ~xsd__long() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__short
+#define SOAP_TYPE_xsd__short (26)
+/* Primitive xsd:short schema type: */
+class SOAP_CMAC xsd__short : public xsd__anyType
+{
+public:
+	short __item;
+public:
+	virtual int soap_type() const { return 26; } /* = unique id SOAP_TYPE_xsd__short */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__short()  { }
+	virtual ~xsd__short() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__string
+#define SOAP_TYPE_xsd__string (28)
+/* Primitive xsd:string schema type: */
+class SOAP_CMAC xsd__string : public xsd__anyType
+{
+public:
+	std::string __item;
+public:
+	virtual int soap_type() const { return 28; } /* = unique id SOAP_TYPE_xsd__string */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__string()  { }
+	virtual ~xsd__string() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__unsignedByte
+#define SOAP_TYPE_xsd__unsignedByte (29)
+/* Primitive xsd:unsignedByte schema type: */
+class SOAP_CMAC xsd__unsignedByte : public xsd__anyType
+{
+public:
+	unsigned char __item;
+public:
+	virtual int soap_type() const { return 29; } /* = unique id SOAP_TYPE_xsd__unsignedByte */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__unsignedByte()  { }
+	virtual ~xsd__unsignedByte() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__unsignedInt
+#define SOAP_TYPE_xsd__unsignedInt (32)
+/* Primitive xsd:unsignedInt schema type: */
+class SOAP_CMAC xsd__unsignedInt : public xsd__anyType
+{
+public:
+	unsigned int __item;
+public:
+	virtual int soap_type() const { return 32; } /* = unique id SOAP_TYPE_xsd__unsignedInt */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__unsignedInt()  { }
+	virtual ~xsd__unsignedInt() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__unsignedLong
+#define SOAP_TYPE_xsd__unsignedLong (33)
+/* Primitive xsd:unsignedLong schema type: */
+class SOAP_CMAC xsd__unsignedLong : public xsd__anyType
+{
+public:
+	ULONG64 __item;
+public:
+	virtual int soap_type() const { return 33; } /* = unique id SOAP_TYPE_xsd__unsignedLong */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__unsignedLong()  { }
+	virtual ~xsd__unsignedLong() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_xsd__unsignedShort
+#define SOAP_TYPE_xsd__unsignedShort (35)
+/* Primitive xsd:unsignedShort schema type: */
+class SOAP_CMAC xsd__unsignedShort : public xsd__anyType
+{
+public:
+	unsigned short __item;
+public:
+	virtual int soap_type() const { return 35; } /* = unique id SOAP_TYPE_xsd__unsignedShort */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         xsd__unsignedShort()  { }
+	virtual ~xsd__unsignedShort() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__serverState_
+#define SOAP_TYPE_s0__serverState_ (88)
+/* Primitive s0:serverState schema type: */
+class SOAP_CMAC s0__serverState_ : public xsd__anyType
+{
+public:
+	enum s0__serverState __item;
+public:
+	virtual int soap_type() const { return 88; } /* = unique id SOAP_TYPE_s0__serverState_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__serverState_()  { }
+	virtual ~s0__serverState_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__interfaceVersion_
+#define SOAP_TYPE_s0__interfaceVersion_ (90)
+/* Primitive s0:interfaceVersion schema type: */
+class SOAP_CMAC s0__interfaceVersion_ : public xsd__anyType
+{
+public:
+	enum s0__interfaceVersion __item;
+public:
+	virtual int soap_type() const { return 90; } /* = unique id SOAP_TYPE_s0__interfaceVersion_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__interfaceVersion_()  { }
+	virtual ~s0__interfaceVersion_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__qualityBits_
+#define SOAP_TYPE_s0__qualityBits_ (92)
+/* Primitive s0:qualityBits schema type: */
+class SOAP_CMAC s0__qualityBits_ : public xsd__anyType
+{
+public:
+	enum s0__qualityBits __item;
+public:
+	virtual int soap_type() const { return 92; } /* = unique id SOAP_TYPE_s0__qualityBits_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__qualityBits_()  { }
+	virtual ~s0__qualityBits_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__limitBits_
+#define SOAP_TYPE_s0__limitBits_ (94)
+/* Primitive s0:limitBits schema type: */
+class SOAP_CMAC s0__limitBits_ : public xsd__anyType
+{
+public:
+	enum s0__limitBits __item;
+public:
+	virtual int soap_type() const { return 94; } /* = unique id SOAP_TYPE_s0__limitBits_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__limitBits_()  { }
+	virtual ~s0__limitBits_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__browseFilter_
+#define SOAP_TYPE_s0__browseFilter_ (96)
+/* Primitive s0:browseFilter schema type: */
+class SOAP_CMAC s0__browseFilter_ : public xsd__anyType
+{
+public:
+	enum s0__browseFilter __item;
+public:
+	virtual int soap_type() const { return 96; } /* = unique id SOAP_TYPE_s0__browseFilter_ */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__browseFilter_()  { }
+	virtual ~s0__browseFilter_() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__ReplyBase
+#define SOAP_TYPE_s0__ReplyBase (37)
+/* s0:ReplyBase */
+class SOAP_CMAC s0__ReplyBase : public xsd__anyType
+{
+public:
+	xsd__dateTime RcvTime;	/* required element of type xsd:dateTime */
+	xsd__dateTime ReplyTime;	/* required element of type xsd:dateTime */
+	std::string *ClientRequestHandle;	/* optional attribute */
+	std::string *RevisedLocaleID;	/* optional attribute */
+	enum s0__serverState ServerState;	/* required attribute */
+public:
+	virtual int soap_type() const { return 37; } /* = unique id SOAP_TYPE_s0__ReplyBase */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__ReplyBase() : ClientRequestHandle(NULL), RevisedLocaleID(NULL) { }
+	virtual ~s0__ReplyBase() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__ServerStatus
+#define SOAP_TYPE_s0__ServerStatus (38)
+/* s0:ServerStatus */
+class SOAP_CMAC s0__ServerStatus : public xsd__anyType
 {
 public:
 	std::string *StatusInfo;	/* optional element of type xsd:string */
 	std::string *VendorInfo;	/* optional element of type xsd:string */
 	std::vector<std::string >SupportedLocaleIDs;	/* optional element of type xsd:string */
-	std::vector<enum ns1__interfaceVersion >SupportedInterfaceVersions;	/* optional element of type ns1:interfaceVersion */
-	time_t StartTime;	/* required attribute */
+	std::vector<enum s0__interfaceVersion >SupportedInterfaceVersions;	/* optional element of type s0:interfaceVersion */
+	xsd__dateTime StartTime;	/* required element of type xsd:dateTime */
 	std::string *ProductVersion;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 11; } /* = unique id SOAP_TYPE_ns1__ServerStatus */
+	virtual int soap_type() const { return 38; } /* = unique id SOAP_TYPE_s0__ServerStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ServerStatus() : StatusInfo(NULL), VendorInfo(NULL), ProductVersion(NULL), soap(NULL) { }
-	virtual ~ns1__ServerStatus() { }
+	         s0__ServerStatus() : StatusInfo(NULL), VendorInfo(NULL), ProductVersion(NULL) { }
+	virtual ~s0__ServerStatus() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__RequestOptions
-#define SOAP_TYPE_ns1__RequestOptions (12)
-/* ns1:RequestOptions */
-class SOAP_CMAC ns1__RequestOptions
+#ifndef SOAP_TYPE_s0__RequestOptions
+#define SOAP_TYPE_s0__RequestOptions (39)
+/* s0:RequestOptions */
+class SOAP_CMAC s0__RequestOptions : public xsd__anyType
 {
 public:
 	bool *ReturnErrorText;	/* optional attribute */
@@ -122,51 +541,49 @@ public:
 	bool *ReturnItemTime;	/* optional attribute */
 	bool *ReturnItemPath;	/* optional attribute */
 	bool *ReturnItemName;	/* optional attribute */
-	time_t *RequestDeadline;	/* optional attribute */
+	xsd__dateTime *RequestDeadline;	/* optional element of type xsd:dateTime */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	std::string *LocaleID;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 12; } /* = unique id SOAP_TYPE_ns1__RequestOptions */
+	virtual int soap_type() const { return 39; } /* = unique id SOAP_TYPE_s0__RequestOptions */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__RequestOptions() : ReturnErrorText(NULL), ReturnDiagnosticInfo(NULL), ReturnItemTime(NULL), ReturnItemPath(NULL), ReturnItemName(NULL), RequestDeadline(NULL), ClientRequestHandle(NULL), LocaleID(NULL), soap(NULL) { }
-	virtual ~ns1__RequestOptions() { }
+	         s0__RequestOptions() : ReturnErrorText(NULL), ReturnDiagnosticInfo(NULL), ReturnItemTime(NULL), ReturnItemPath(NULL), ReturnItemName(NULL), RequestDeadline(NULL), ClientRequestHandle(NULL), LocaleID(NULL) { }
+	virtual ~s0__RequestOptions() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ReadRequestItemList
-#define SOAP_TYPE_ns1__ReadRequestItemList (13)
-/* ns1:ReadRequestItemList */
-class SOAP_CMAC ns1__ReadRequestItemList
+#ifndef SOAP_TYPE_s0__ReadRequestItemList
+#define SOAP_TYPE_s0__ReadRequestItemList (40)
+/* s0:ReadRequestItemList */
+class SOAP_CMAC s0__ReadRequestItemList : public xsd__anyType
 {
 public:
-	std::vector<class ns1__ReadRequestItem * >Items;	/* optional element of type ns1:ReadRequestItem */
+	std::vector<class s0__ReadRequestItem * >Items;	/* optional element of type s0:ReadRequestItem */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ReqType;	/* optional attribute */
 	int *MaxAge;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 13; } /* = unique id SOAP_TYPE_ns1__ReadRequestItemList */
+	virtual int soap_type() const { return 40; } /* = unique id SOAP_TYPE_s0__ReadRequestItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ReadRequestItemList() : ItemPath(NULL), ReqType(NULL), MaxAge(NULL), soap(NULL) { }
-	virtual ~ns1__ReadRequestItemList() { }
+	         s0__ReadRequestItemList() : ItemPath(NULL), ReqType(NULL), MaxAge(NULL) { }
+	virtual ~s0__ReadRequestItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ReadRequestItem
-#define SOAP_TYPE_ns1__ReadRequestItem (14)
-/* ns1:ReadRequestItem */
-class SOAP_CMAC ns1__ReadRequestItem
+#ifndef SOAP_TYPE_s0__ReadRequestItem
+#define SOAP_TYPE_s0__ReadRequestItem (41)
+/* Primitive s0:ReadRequestItem schema type: */
+class SOAP_CMAC s0__ReadRequestItem : public xsd__anyType
 {
 public:
 	std::string *ItemPath;	/* optional attribute */
@@ -174,463 +591,461 @@ public:
 	std::string *ItemName;	/* optional attribute */
 	std::string *ClientItemHandle;	/* optional attribute */
 	int *MaxAge;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 14; } /* = unique id SOAP_TYPE_ns1__ReadRequestItem */
+	virtual int soap_type() const { return 41; } /* = unique id SOAP_TYPE_s0__ReadRequestItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ReadRequestItem() : ItemPath(NULL), ReqType(NULL), ItemName(NULL), ClientItemHandle(NULL), MaxAge(NULL), soap(NULL) { }
-	virtual ~ns1__ReadRequestItem() { }
+	         s0__ReadRequestItem() : ItemPath(NULL), ReqType(NULL), ItemName(NULL), ClientItemHandle(NULL), MaxAge(NULL) { }
+	virtual ~s0__ReadRequestItem() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ReplyItemList
-#define SOAP_TYPE_ns1__ReplyItemList (15)
-/* ns1:ReplyItemList */
-class SOAP_CMAC ns1__ReplyItemList
+#ifndef SOAP_TYPE_s0__ReplyItemList
+#define SOAP_TYPE_s0__ReplyItemList (42)
+/* s0:ReplyItemList */
+class SOAP_CMAC s0__ReplyItemList : public xsd__anyType
 {
 public:
-	std::vector<class ns1__ItemValue * >Items;	/* optional element of type ns1:ItemValue */
+	std::vector<class s0__ItemValue * >Items;	/* optional element of type s0:ItemValue */
 	std::string *Reserved;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 15; } /* = unique id SOAP_TYPE_ns1__ReplyItemList */
+	virtual int soap_type() const { return 42; } /* = unique id SOAP_TYPE_s0__ReplyItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ReplyItemList() : Reserved(NULL), soap(NULL) { }
-	virtual ~ns1__ReplyItemList() { }
+	         s0__ReplyItemList() : Reserved(NULL) { }
+	virtual ~s0__ReplyItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ItemValue
-#define SOAP_TYPE_ns1__ItemValue (16)
-/* ns1:ItemValue */
-class SOAP_CMAC ns1__ItemValue
+#ifndef SOAP_TYPE_s0__ItemValue
+#define SOAP_TYPE_s0__ItemValue (43)
+/* s0:ItemValue */
+class SOAP_CMAC s0__ItemValue : public xsd__anyType
 {
 public:
 	std::string *DiagnosticInfo;	/* optional element of type xsd:string */
-	char *Value;	/* optional element of type xsd:anyType */
-	char ValueType[80]; /* !! Value type added !! */
-	class ns1__OPCQuality *Quality;	/* optional element of type ns1:OPCQuality */
+	xsd__anyType *Value;	/* optional element of type xsd:anyType */
+	class s0__OPCQuality *Quality;	/* optional element of type s0:OPCQuality */
 	std::string *ValueTypeQualifier;	/* optional attribute */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
 	std::string *ClientItemHandle;	/* optional attribute */
-	time_t *Timestamp;	/* optional attribute */
+	xsd__dateTime *Timestamp;	/* optional element of type xsd:dateTime */
 	std::string *ResultID;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 16; } /* = unique id SOAP_TYPE_ns1__ItemValue */
+	virtual int soap_type() const { return 43; } /* = unique id SOAP_TYPE_s0__ItemValue */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ItemValue() : DiagnosticInfo(NULL), Value(NULL), Quality(NULL), ValueTypeQualifier(NULL), ItemPath(NULL), ItemName(NULL), ClientItemHandle(NULL), Timestamp(NULL), ResultID(NULL), soap(NULL) { }
-	virtual ~ns1__ItemValue() { }
+	         s0__ItemValue() : DiagnosticInfo(NULL), Value(NULL), Quality(NULL), ValueTypeQualifier(NULL), ItemPath(NULL), ItemName(NULL), ClientItemHandle(NULL), Timestamp(NULL), ResultID(NULL) { }
+	virtual ~s0__ItemValue() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__OPCQuality
-#define SOAP_TYPE_ns1__OPCQuality (17)
-/* ns1:OPCQuality */
-class SOAP_CMAC ns1__OPCQuality
+#ifndef SOAP_TYPE_s0__Value
+#define SOAP_TYPE_s0__Value (44)
+/* Primitive s0:Value schema type: */
+class SOAP_CMAC s0__Value : public xsd__anyType
 {
 public:
-	enum ns1__qualityBits *QualityField;	/* optional attribute */
-	enum ns1__limitBits *LimitField;	/* optional attribute */
-	unsigned short *VendorField;	/* optional attribute */
-	struct soap *soap;	/* transient */
+	std::string *xsi__type;	/* optional attribute */
 public:
-	virtual int soap_type() const { return 17; } /* = unique id SOAP_TYPE_ns1__OPCQuality */
+	virtual int soap_type() const { return 44; } /* = unique id SOAP_TYPE_s0__Value */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__OPCQuality() : QualityField(NULL), LimitField(NULL), VendorField(NULL), soap(NULL) { }
-	virtual ~ns1__OPCQuality() { }
+	         s0__Value() : xsi__type(NULL) { }
+	virtual ~s0__Value() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__OPCError
-#define SOAP_TYPE_ns1__OPCError (18)
-/* ns1:OPCError */
-class SOAP_CMAC ns1__OPCError
+#ifndef SOAP_TYPE_s0__OPCQuality
+#define SOAP_TYPE_s0__OPCQuality (45)
+/* Primitive s0:OPCQuality schema type: */
+class SOAP_CMAC s0__OPCQuality : public xsd__anyType
+{
+public:
+	enum s0__qualityBits *QualityField;	/* optional attribute */
+	enum s0__limitBits *LimitField;	/* optional attribute */
+	unsigned short *VendorField;	/* optional attribute */
+public:
+	virtual int soap_type() const { return 45; } /* = unique id SOAP_TYPE_s0__OPCQuality */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         s0__OPCQuality() : QualityField(NULL), LimitField(NULL), VendorField(NULL) { }
+	virtual ~s0__OPCQuality() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_s0__OPCError
+#define SOAP_TYPE_s0__OPCError (46)
+/* s0:OPCError */
+class SOAP_CMAC s0__OPCError : public xsd__anyType
 {
 public:
 	std::string *Text;	/* optional element of type xsd:string */
 	std::string ID;	/* required attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 18; } /* = unique id SOAP_TYPE_ns1__OPCError */
+	virtual int soap_type() const { return 46; } /* = unique id SOAP_TYPE_s0__OPCError */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__OPCError() : Text(NULL), soap(NULL) { }
-	virtual ~ns1__OPCError() { }
+	         s0__OPCError() : Text(NULL) { }
+	virtual ~s0__OPCError() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfFloat
-#define SOAP_TYPE_ns1__ArrayOfFloat (19)
-/* ns1:ArrayOfFloat */
-class SOAP_CMAC ns1__ArrayOfFloat
+#ifndef SOAP_TYPE_s0__ArrayOfFloat
+#define SOAP_TYPE_s0__ArrayOfFloat (47)
+/* s0:ArrayOfFloat */
+class SOAP_CMAC s0__ArrayOfFloat : public xsd__anyType
 {
 public:
 	std::vector<float >float_;	/* optional element of type xsd:float */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE_ns1__ArrayOfFloat */
+	virtual int soap_type() const { return 47; } /* = unique id SOAP_TYPE_s0__ArrayOfFloat */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfFloat() : soap(NULL) { }
-	virtual ~ns1__ArrayOfFloat() { }
+	         s0__ArrayOfFloat()  { }
+	virtual ~s0__ArrayOfFloat() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfInt
-#define SOAP_TYPE_ns1__ArrayOfInt (20)
-/* ns1:ArrayOfInt */
-class SOAP_CMAC ns1__ArrayOfInt
+#ifndef SOAP_TYPE_s0__ArrayOfInt
+#define SOAP_TYPE_s0__ArrayOfInt (48)
+/* s0:ArrayOfInt */
+class SOAP_CMAC s0__ArrayOfInt : public xsd__anyType
 {
 public:
 	std::vector<int >int_;	/* optional element of type xsd:int */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 20; } /* = unique id SOAP_TYPE_ns1__ArrayOfInt */
+	virtual int soap_type() const { return 48; } /* = unique id SOAP_TYPE_s0__ArrayOfInt */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfInt() : soap(NULL) { }
-	virtual ~ns1__ArrayOfInt() { }
+	         s0__ArrayOfInt()  { }
+	virtual ~s0__ArrayOfInt() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfUnsignedInt
-#define SOAP_TYPE_ns1__ArrayOfUnsignedInt (21)
-/* ns1:ArrayOfUnsignedInt */
-class SOAP_CMAC ns1__ArrayOfUnsignedInt
+#ifndef SOAP_TYPE_s0__ArrayOfUnsignedInt
+#define SOAP_TYPE_s0__ArrayOfUnsignedInt (49)
+/* s0:ArrayOfUnsignedInt */
+class SOAP_CMAC s0__ArrayOfUnsignedInt : public xsd__anyType
 {
 public:
 	std::vector<unsigned int >unsignedInt;	/* optional element of type xsd:unsignedInt */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 21; } /* = unique id SOAP_TYPE_ns1__ArrayOfUnsignedInt */
+	virtual int soap_type() const { return 49; } /* = unique id SOAP_TYPE_s0__ArrayOfUnsignedInt */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfUnsignedInt() : soap(NULL) { }
-	virtual ~ns1__ArrayOfUnsignedInt() { }
+	         s0__ArrayOfUnsignedInt()  { }
+	virtual ~s0__ArrayOfUnsignedInt() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfLong
-#define SOAP_TYPE_ns1__ArrayOfLong (22)
-/* ns1:ArrayOfLong */
-class SOAP_CMAC ns1__ArrayOfLong
+#ifndef SOAP_TYPE_s0__ArrayOfLong
+#define SOAP_TYPE_s0__ArrayOfLong (50)
+/* s0:ArrayOfLong */
+class SOAP_CMAC s0__ArrayOfLong : public xsd__anyType
 {
 public:
 	std::vector<LONG64 >long_;	/* optional element of type xsd:long */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 22; } /* = unique id SOAP_TYPE_ns1__ArrayOfLong */
+	virtual int soap_type() const { return 50; } /* = unique id SOAP_TYPE_s0__ArrayOfLong */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfLong() : soap(NULL) { }
-	virtual ~ns1__ArrayOfLong() { }
+	         s0__ArrayOfLong()  { }
+	virtual ~s0__ArrayOfLong() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfUnsignedLong
-#define SOAP_TYPE_ns1__ArrayOfUnsignedLong (23)
-/* ns1:ArrayOfUnsignedLong */
-class SOAP_CMAC ns1__ArrayOfUnsignedLong
+#ifndef SOAP_TYPE_s0__ArrayOfUnsignedLong
+#define SOAP_TYPE_s0__ArrayOfUnsignedLong (51)
+/* s0:ArrayOfUnsignedLong */
+class SOAP_CMAC s0__ArrayOfUnsignedLong : public xsd__anyType
 {
 public:
 	std::vector<ULONG64 >unsignedLong;	/* optional element of type xsd:unsignedLong */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 23; } /* = unique id SOAP_TYPE_ns1__ArrayOfUnsignedLong */
+	virtual int soap_type() const { return 51; } /* = unique id SOAP_TYPE_s0__ArrayOfUnsignedLong */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfUnsignedLong() : soap(NULL) { }
-	virtual ~ns1__ArrayOfUnsignedLong() { }
+	         s0__ArrayOfUnsignedLong()  { }
+	virtual ~s0__ArrayOfUnsignedLong() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfDouble
-#define SOAP_TYPE_ns1__ArrayOfDouble (24)
-/* ns1:ArrayOfDouble */
-class SOAP_CMAC ns1__ArrayOfDouble
+#ifndef SOAP_TYPE_s0__ArrayOfDouble
+#define SOAP_TYPE_s0__ArrayOfDouble (52)
+/* s0:ArrayOfDouble */
+class SOAP_CMAC s0__ArrayOfDouble : public xsd__anyType
 {
 public:
 	std::vector<double >double_;	/* optional element of type xsd:double */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 24; } /* = unique id SOAP_TYPE_ns1__ArrayOfDouble */
+	virtual int soap_type() const { return 52; } /* = unique id SOAP_TYPE_s0__ArrayOfDouble */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfDouble() : soap(NULL) { }
-	virtual ~ns1__ArrayOfDouble() { }
+	         s0__ArrayOfDouble()  { }
+	virtual ~s0__ArrayOfDouble() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfUnsignedShort
-#define SOAP_TYPE_ns1__ArrayOfUnsignedShort (25)
-/* ns1:ArrayOfUnsignedShort */
-class SOAP_CMAC ns1__ArrayOfUnsignedShort
+#ifndef SOAP_TYPE_s0__ArrayOfUnsignedShort
+#define SOAP_TYPE_s0__ArrayOfUnsignedShort (53)
+/* s0:ArrayOfUnsignedShort */
+class SOAP_CMAC s0__ArrayOfUnsignedShort : public xsd__anyType
 {
 public:
 	std::vector<unsigned short >unsignedShort;	/* optional element of type xsd:unsignedShort */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 25; } /* = unique id SOAP_TYPE_ns1__ArrayOfUnsignedShort */
+	virtual int soap_type() const { return 53; } /* = unique id SOAP_TYPE_s0__ArrayOfUnsignedShort */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfUnsignedShort() : soap(NULL) { }
-	virtual ~ns1__ArrayOfUnsignedShort() { }
+	         s0__ArrayOfUnsignedShort()  { }
+	virtual ~s0__ArrayOfUnsignedShort() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfBoolean
-#define SOAP_TYPE_ns1__ArrayOfBoolean (26)
-/* ns1:ArrayOfBoolean */
-class SOAP_CMAC ns1__ArrayOfBoolean
+#ifndef SOAP_TYPE_s0__ArrayOfBoolean
+#define SOAP_TYPE_s0__ArrayOfBoolean (54)
+/* s0:ArrayOfBoolean */
+class SOAP_CMAC s0__ArrayOfBoolean : public xsd__anyType
 {
 public:
 	std::vector<bool >boolean;	/* optional element of type xsd:boolean */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 26; } /* = unique id SOAP_TYPE_ns1__ArrayOfBoolean */
+	virtual int soap_type() const { return 54; } /* = unique id SOAP_TYPE_s0__ArrayOfBoolean */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfBoolean() : soap(NULL) { }
-	virtual ~ns1__ArrayOfBoolean() { }
+	         s0__ArrayOfBoolean()  { }
+	virtual ~s0__ArrayOfBoolean() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfString
-#define SOAP_TYPE_ns1__ArrayOfString (27)
-/* ns1:ArrayOfString */
-class SOAP_CMAC ns1__ArrayOfString
+#ifndef SOAP_TYPE_s0__ArrayOfString
+#define SOAP_TYPE_s0__ArrayOfString (55)
+/* s0:ArrayOfString */
+class SOAP_CMAC s0__ArrayOfString : public xsd__anyType
 {
 public:
 	std::vector<std::string >string;	/* optional element of type xsd:string */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 27; } /* = unique id SOAP_TYPE_ns1__ArrayOfString */
+	virtual int soap_type() const { return 55; } /* = unique id SOAP_TYPE_s0__ArrayOfString */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfString() : soap(NULL) { }
-	virtual ~ns1__ArrayOfString() { }
+	         s0__ArrayOfString()  { }
+	virtual ~s0__ArrayOfString() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfDateTime
-#define SOAP_TYPE_ns1__ArrayOfDateTime (28)
-/* ns1:ArrayOfDateTime */
-class SOAP_CMAC ns1__ArrayOfDateTime
+#ifndef SOAP_TYPE_s0__ArrayOfDateTime
+#define SOAP_TYPE_s0__ArrayOfDateTime (56)
+/* s0:ArrayOfDateTime */
+class SOAP_CMAC s0__ArrayOfDateTime : public xsd__anyType
 {
 public:
-	std::vector<time_t >dateTime;	/* optional element of type xsd:dateTime */
-	struct soap *soap;	/* transient */
+	std::vector<std::string >dateTime;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 28; } /* = unique id SOAP_TYPE_ns1__ArrayOfDateTime */
+	virtual int soap_type() const { return 56; } /* = unique id SOAP_TYPE_s0__ArrayOfDateTime */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfDateTime() : soap(NULL) { }
-	virtual ~ns1__ArrayOfDateTime() { }
+	         s0__ArrayOfDateTime()  { }
+	virtual ~s0__ArrayOfDateTime() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfAnyType
-#define SOAP_TYPE_ns1__ArrayOfAnyType (29)
-/* ns1:ArrayOfAnyType */
-class SOAP_CMAC ns1__ArrayOfAnyType
+#ifndef SOAP_TYPE_s0__ArrayOfAnyType
+#define SOAP_TYPE_s0__ArrayOfAnyType (57)
+/* s0:ArrayOfAnyType */
+class SOAP_CMAC s0__ArrayOfAnyType : public xsd__anyType
 {
 public:
 	std::vector<char * >anyType;	/* optional element of type xsd:anyType */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 29; } /* = unique id SOAP_TYPE_ns1__ArrayOfAnyType */
+	virtual int soap_type() const { return 57; } /* = unique id SOAP_TYPE_s0__ArrayOfAnyType */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfAnyType() : soap(NULL) { }
-	virtual ~ns1__ArrayOfAnyType() { }
+	         s0__ArrayOfAnyType()  { }
+	virtual ~s0__ArrayOfAnyType() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfDecimal
-#define SOAP_TYPE_ns1__ArrayOfDecimal (30)
-/* ns1:ArrayOfDecimal */
-class SOAP_CMAC ns1__ArrayOfDecimal
+#ifndef SOAP_TYPE_s0__ArrayOfDecimal
+#define SOAP_TYPE_s0__ArrayOfDecimal (58)
+/* s0:ArrayOfDecimal */
+class SOAP_CMAC s0__ArrayOfDecimal : public xsd__anyType
 {
 public:
 	std::vector<std::string >decimal;	/* optional element of type xsd:decimal */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 30; } /* = unique id SOAP_TYPE_ns1__ArrayOfDecimal */
+	virtual int soap_type() const { return 58; } /* = unique id SOAP_TYPE_s0__ArrayOfDecimal */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfDecimal() : soap(NULL) { }
-	virtual ~ns1__ArrayOfDecimal() { }
+	         s0__ArrayOfDecimal()  { }
+	virtual ~s0__ArrayOfDecimal() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfByte
-#define SOAP_TYPE_ns1__ArrayOfByte (31)
-/* ns1:ArrayOfByte */
-class SOAP_CMAC ns1__ArrayOfByte
+#ifndef SOAP_TYPE_s0__ArrayOfByte
+#define SOAP_TYPE_s0__ArrayOfByte (59)
+/* s0:ArrayOfByte */
+class SOAP_CMAC s0__ArrayOfByte : public xsd__anyType
 {
 public:
 	std::vector<char >byte;	/* optional element of type xsd:byte */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 31; } /* = unique id SOAP_TYPE_ns1__ArrayOfByte */
+	virtual int soap_type() const { return 59; } /* = unique id SOAP_TYPE_s0__ArrayOfByte */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfByte() : soap(NULL) { }
-	virtual ~ns1__ArrayOfByte() { }
+	         s0__ArrayOfByte()  { }
+	virtual ~s0__ArrayOfByte() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ArrayOfShort
-#define SOAP_TYPE_ns1__ArrayOfShort (32)
-/* ns1:ArrayOfShort */
-class SOAP_CMAC ns1__ArrayOfShort
+#ifndef SOAP_TYPE_s0__ArrayOfShort
+#define SOAP_TYPE_s0__ArrayOfShort (60)
+/* s0:ArrayOfShort */
+class SOAP_CMAC s0__ArrayOfShort : public xsd__anyType
 {
 public:
 	std::vector<short >short_;	/* optional element of type xsd:short */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 32; } /* = unique id SOAP_TYPE_ns1__ArrayOfShort */
+	virtual int soap_type() const { return 60; } /* = unique id SOAP_TYPE_s0__ArrayOfShort */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ArrayOfShort() : soap(NULL) { }
-	virtual ~ns1__ArrayOfShort() { }
+	         s0__ArrayOfShort()  { }
+	virtual ~s0__ArrayOfShort() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__WriteRequestItemList
-#define SOAP_TYPE_ns1__WriteRequestItemList (33)
-/* ns1:WriteRequestItemList */
-class SOAP_CMAC ns1__WriteRequestItemList
+#ifndef SOAP_TYPE_s0__WriteRequestItemList
+#define SOAP_TYPE_s0__WriteRequestItemList (61)
+/* s0:WriteRequestItemList */
+class SOAP_CMAC s0__WriteRequestItemList : public xsd__anyType
 {
 public:
-	std::vector<ns1__ItemValue * >Items;	/* optional element of type ns1:ItemValue */
+	std::vector<s0__ItemValue * >Items;	/* optional element of type s0:ItemValue */
 	std::string *ItemPath;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 33; } /* = unique id SOAP_TYPE_ns1__WriteRequestItemList */
+	virtual int soap_type() const { return 61; } /* = unique id SOAP_TYPE_s0__WriteRequestItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__WriteRequestItemList() : ItemPath(NULL), soap(NULL) { }
-	virtual ~ns1__WriteRequestItemList() { }
+	         s0__WriteRequestItemList() : ItemPath(NULL) { }
+	virtual ~s0__WriteRequestItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__SubscribeRequestItemList
-#define SOAP_TYPE_ns1__SubscribeRequestItemList (34)
-/* ns1:SubscribeRequestItemList */
-class SOAP_CMAC ns1__SubscribeRequestItemList
+#ifndef SOAP_TYPE_s0__SubscribeRequestItemList
+#define SOAP_TYPE_s0__SubscribeRequestItemList (62)
+/* s0:SubscribeRequestItemList */
+class SOAP_CMAC s0__SubscribeRequestItemList : public xsd__anyType
 {
 public:
-	std::vector<class ns1__SubscribeRequestItem * >Items;	/* optional element of type ns1:SubscribeRequestItem */
+	std::vector<class s0__SubscribeRequestItem * >Items;	/* optional element of type s0:SubscribeRequestItem */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ReqType;	/* optional attribute */
 	float *Deadband;	/* optional attribute */
 	int *RequestedSamplingRate;	/* optional attribute */
 	bool *EnableBuffering;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 34; } /* = unique id SOAP_TYPE_ns1__SubscribeRequestItemList */
+	virtual int soap_type() const { return 62; } /* = unique id SOAP_TYPE_s0__SubscribeRequestItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__SubscribeRequestItemList() : ItemPath(NULL), ReqType(NULL), Deadband(NULL), RequestedSamplingRate(NULL), EnableBuffering(NULL), soap(NULL) { }
-	virtual ~ns1__SubscribeRequestItemList() { }
+	         s0__SubscribeRequestItemList() : ItemPath(NULL), ReqType(NULL), Deadband(NULL), RequestedSamplingRate(NULL), EnableBuffering(NULL) { }
+	virtual ~s0__SubscribeRequestItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__SubscribeRequestItem
-#define SOAP_TYPE_ns1__SubscribeRequestItem (35)
-/* ns1:SubscribeRequestItem */
-class SOAP_CMAC ns1__SubscribeRequestItem
+#ifndef SOAP_TYPE_s0__SubscribeRequestItem
+#define SOAP_TYPE_s0__SubscribeRequestItem (63)
+/* Primitive s0:SubscribeRequestItem schema type: */
+class SOAP_CMAC s0__SubscribeRequestItem : public xsd__anyType
 {
 public:
 	std::string *ItemPath;	/* optional attribute */
@@ -640,465 +1055,456 @@ public:
 	float *Deadband;	/* optional attribute */
 	int *RequestedSamplingRate;	/* optional attribute */
 	bool *EnableBuffering;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 35; } /* = unique id SOAP_TYPE_ns1__SubscribeRequestItem */
+	virtual int soap_type() const { return 63; } /* = unique id SOAP_TYPE_s0__SubscribeRequestItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__SubscribeRequestItem() : ItemPath(NULL), ReqType(NULL), ItemName(NULL), ClientItemHandle(NULL), Deadband(NULL), RequestedSamplingRate(NULL), EnableBuffering(NULL), soap(NULL) { }
-	virtual ~ns1__SubscribeRequestItem() { }
+	         s0__SubscribeRequestItem() : ItemPath(NULL), ReqType(NULL), ItemName(NULL), ClientItemHandle(NULL), Deadband(NULL), RequestedSamplingRate(NULL), EnableBuffering(NULL) { }
+	virtual ~s0__SubscribeRequestItem() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__SubscribeReplyItemList
-#define SOAP_TYPE_ns1__SubscribeReplyItemList (36)
-/* ns1:SubscribeReplyItemList */
-class SOAP_CMAC ns1__SubscribeReplyItemList
+#ifndef SOAP_TYPE_s0__SubscribeReplyItemList
+#define SOAP_TYPE_s0__SubscribeReplyItemList (64)
+/* s0:SubscribeReplyItemList */
+class SOAP_CMAC s0__SubscribeReplyItemList : public xsd__anyType
 {
 public:
-	std::vector<class ns1__SubscribeItemValue * >Items;	/* optional element of type ns1:SubscribeItemValue */
+	std::vector<class s0__SubscribeItemValue * >Items;	/* optional element of type s0:SubscribeItemValue */
 	int *RevisedSamplingRate;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 36; } /* = unique id SOAP_TYPE_ns1__SubscribeReplyItemList */
+	virtual int soap_type() const { return 64; } /* = unique id SOAP_TYPE_s0__SubscribeReplyItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__SubscribeReplyItemList() : RevisedSamplingRate(NULL), soap(NULL) { }
-	virtual ~ns1__SubscribeReplyItemList() { }
+	         s0__SubscribeReplyItemList() : RevisedSamplingRate(NULL) { }
+	virtual ~s0__SubscribeReplyItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__SubscribeItemValue
-#define SOAP_TYPE_ns1__SubscribeItemValue (37)
-/* ns1:SubscribeItemValue */
-class SOAP_CMAC ns1__SubscribeItemValue
+#ifndef SOAP_TYPE_s0__SubscribeItemValue
+#define SOAP_TYPE_s0__SubscribeItemValue (65)
+/* s0:SubscribeItemValue */
+class SOAP_CMAC s0__SubscribeItemValue : public xsd__anyType
 {
 public:
-	ns1__ItemValue *ItemValue;	/* optional element of type ns1:ItemValue */
+	s0__ItemValue *ItemValue;	/* optional element of type s0:ItemValue */
 	int *RevisedSamplingRate;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 37; } /* = unique id SOAP_TYPE_ns1__SubscribeItemValue */
+	virtual int soap_type() const { return 65; } /* = unique id SOAP_TYPE_s0__SubscribeItemValue */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__SubscribeItemValue() : ItemValue(NULL), RevisedSamplingRate(NULL), soap(NULL) { }
-	virtual ~ns1__SubscribeItemValue() { }
+	         s0__SubscribeItemValue() : ItemValue(NULL), RevisedSamplingRate(NULL) { }
+	virtual ~s0__SubscribeItemValue() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__SubscribePolledRefreshReplyItemList
-#define SOAP_TYPE_ns1__SubscribePolledRefreshReplyItemList (38)
-/* ns1:SubscribePolledRefreshReplyItemList */
-class SOAP_CMAC ns1__SubscribePolledRefreshReplyItemList
+#ifndef SOAP_TYPE_s0__SubscribePolledRefreshReplyItemList
+#define SOAP_TYPE_s0__SubscribePolledRefreshReplyItemList (66)
+/* s0:SubscribePolledRefreshReplyItemList */
+class SOAP_CMAC s0__SubscribePolledRefreshReplyItemList : public xsd__anyType
 {
 public:
-	std::vector<ns1__ItemValue * >Items;	/* optional element of type ns1:ItemValue */
+	std::vector<s0__ItemValue * >Items;	/* optional element of type s0:ItemValue */
 	std::string *SubscriptionHandle;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 38; } /* = unique id SOAP_TYPE_ns1__SubscribePolledRefreshReplyItemList */
+	virtual int soap_type() const { return 66; } /* = unique id SOAP_TYPE_s0__SubscribePolledRefreshReplyItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__SubscribePolledRefreshReplyItemList() : SubscriptionHandle(NULL), soap(NULL) { }
-	virtual ~ns1__SubscribePolledRefreshReplyItemList() { }
+	         s0__SubscribePolledRefreshReplyItemList() : SubscriptionHandle(NULL) { }
+	virtual ~s0__SubscribePolledRefreshReplyItemList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__BrowseElement
-#define SOAP_TYPE_ns1__BrowseElement (39)
-/* ns1:BrowseElement */
-class SOAP_CMAC ns1__BrowseElement
+#ifndef SOAP_TYPE_s0__BrowseElement
+#define SOAP_TYPE_s0__BrowseElement (67)
+/* s0:BrowseElement */
+class SOAP_CMAC s0__BrowseElement : public xsd__anyType
 {
 public:
-	std::vector<class ns1__ItemProperty * >Properties;	/* optional element of type ns1:ItemProperty */
+	std::vector<class s0__ItemProperty * >Properties;	/* optional element of type s0:ItemProperty */
 	std::string *Name;	/* optional attribute */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
 	bool IsItem;	/* required attribute */
 	bool HasChildren;	/* required attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 39; } /* = unique id SOAP_TYPE_ns1__BrowseElement */
+	virtual int soap_type() const { return 67; } /* = unique id SOAP_TYPE_s0__BrowseElement */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__BrowseElement() : Name(NULL), ItemPath(NULL), ItemName(NULL), soap(NULL) { }
-	virtual ~ns1__BrowseElement() { }
+	         s0__BrowseElement() : Name(NULL), ItemPath(NULL), ItemName(NULL) { }
+	virtual ~s0__BrowseElement() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ItemProperty
-#define SOAP_TYPE_ns1__ItemProperty (40)
-/* ns1:ItemProperty */
-class SOAP_CMAC ns1__ItemProperty
+#ifndef SOAP_TYPE_s0__ItemProperty
+#define SOAP_TYPE_s0__ItemProperty (68)
+/* s0:ItemProperty */
+class SOAP_CMAC s0__ItemProperty : public xsd__anyType
 {
 public:
-	char *Value;	/* optional element of type xsd:anyType */
-	char ValueType[80]; /* !! Added to insert value type !! */
+	xsd__anyType *Value;	/* optional element of type xsd:anyType */
 	std::string Name;	/* required attribute */
 	std::string *Description;	/* optional attribute */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
 	std::string *ResultID;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 40; } /* = unique id SOAP_TYPE_ns1__ItemProperty */
+	virtual int soap_type() const { return 68; } /* = unique id SOAP_TYPE_s0__ItemProperty */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ItemProperty() : Value(NULL), Description(NULL), ItemPath(NULL), ItemName(NULL), ResultID(NULL), soap(NULL) { }
-	virtual ~ns1__ItemProperty() { }
+	         s0__ItemProperty() : Value(NULL), Description(NULL), ItemPath(NULL), ItemName(NULL), ResultID(NULL) { }
+	virtual ~s0__ItemProperty() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__ItemIdentifier
-#define SOAP_TYPE_ns1__ItemIdentifier (41)
-/* ns1:ItemIdentifier */
-class SOAP_CMAC ns1__ItemIdentifier
+#ifndef SOAP_TYPE_s0__ItemIdentifier
+#define SOAP_TYPE_s0__ItemIdentifier (69)
+/* Primitive s0:ItemIdentifier schema type: */
+class SOAP_CMAC s0__ItemIdentifier : public xsd__anyType
 {
 public:
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 41; } /* = unique id SOAP_TYPE_ns1__ItemIdentifier */
+	virtual int soap_type() const { return 69; } /* = unique id SOAP_TYPE_s0__ItemIdentifier */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__ItemIdentifier() : ItemPath(NULL), ItemName(NULL), soap(NULL) { }
-	virtual ~ns1__ItemIdentifier() { }
+	         s0__ItemIdentifier() : ItemPath(NULL), ItemName(NULL) { }
+	virtual ~s0__ItemIdentifier() { }
 };
 #endif
 
-#ifndef SOAP_TYPE_ns1__PropertyReplyList
-#define SOAP_TYPE_ns1__PropertyReplyList (42)
-/* ns1:PropertyReplyList */
-class SOAP_CMAC ns1__PropertyReplyList
+#ifndef SOAP_TYPE_s0__PropertyReplyList
+#define SOAP_TYPE_s0__PropertyReplyList (70)
+/* s0:PropertyReplyList */
+class SOAP_CMAC s0__PropertyReplyList : public xsd__anyType
 {
 public:
-	std::vector<ns1__ItemProperty * >Properties;	/* optional element of type ns1:ItemProperty */
+	std::vector<s0__ItemProperty * >Properties;	/* optional element of type s0:ItemProperty */
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
 	std::string *ResultID;	/* optional attribute */
-	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 42; } /* = unique id SOAP_TYPE_ns1__PropertyReplyList */
+	virtual int soap_type() const { return 70; } /* = unique id SOAP_TYPE_s0__PropertyReplyList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ns1__PropertyReplyList() : ItemPath(NULL), ItemName(NULL), ResultID(NULL), soap(NULL) { }
-	virtual ~ns1__PropertyReplyList() { }
+	         s0__PropertyReplyList() : ItemPath(NULL), ItemName(NULL), ResultID(NULL) { }
+	virtual ~s0__PropertyReplyList() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__GetStatus
-#define SOAP_TYPE__ns1__GetStatus (43)
-/* ns1:GetStatus */
-class SOAP_CMAC _ns1__GetStatus
+#ifndef SOAP_TYPE__s0__GetStatus
+#define SOAP_TYPE__s0__GetStatus (71)
+/* s0:GetStatus */
+class SOAP_CMAC _s0__GetStatus
 {
 public:
 	std::string *LocaleID;	/* optional attribute */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 43; } /* = unique id SOAP_TYPE__ns1__GetStatus */
+	virtual int soap_type() const { return 71; } /* = unique id SOAP_TYPE__s0__GetStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetStatus() : LocaleID(NULL), ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_ns1__GetStatus() { }
+	         _s0__GetStatus() : LocaleID(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	virtual ~_s0__GetStatus() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__GetStatusResponse
-#define SOAP_TYPE__ns1__GetStatusResponse (44)
-/* ns1:GetStatusResponse */
-class SOAP_CMAC _ns1__GetStatusResponse
+#ifndef SOAP_TYPE__s0__GetStatusResponse
+#define SOAP_TYPE__s0__GetStatusResponse (72)
+/* s0:GetStatusResponse */
+class SOAP_CMAC _s0__GetStatusResponse
 {
 public:
-	ns1__ReplyBase *GetStatusResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	ns1__ServerStatus *Status;	/* optional element of type ns1:ServerStatus */
+	s0__ReplyBase *GetStatusResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	s0__ServerStatus *Status;	/* optional element of type s0:ServerStatus */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 44; } /* = unique id SOAP_TYPE__ns1__GetStatusResponse */
+	virtual int soap_type() const { return 72; } /* = unique id SOAP_TYPE__s0__GetStatusResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetStatusResponse() : GetStatusResult(NULL), Status(NULL), soap(NULL) { }
-	virtual ~_ns1__GetStatusResponse() { }
+	         _s0__GetStatusResponse() : GetStatusResult(NULL), Status(NULL), soap(NULL) { }
+	virtual ~_s0__GetStatusResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__Read
-#define SOAP_TYPE__ns1__Read (45)
-/* ns1:Read */
-class SOAP_CMAC _ns1__Read
+#ifndef SOAP_TYPE__s0__Read
+#define SOAP_TYPE__s0__Read (73)
+/* s0:Read */
+class SOAP_CMAC _s0__Read
 {
 public:
-	ns1__RequestOptions *Options;	/* optional element of type ns1:RequestOptions */
-	ns1__ReadRequestItemList *ItemList;	/* optional element of type ns1:ReadRequestItemList */
+	s0__RequestOptions *Options;	/* optional element of type s0:RequestOptions */
+	s0__ReadRequestItemList *ItemList;	/* optional element of type s0:ReadRequestItemList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 45; } /* = unique id SOAP_TYPE__ns1__Read */
+	virtual int soap_type() const { return 73; } /* = unique id SOAP_TYPE__s0__Read */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Read() : Options(NULL), ItemList(NULL), soap(NULL) { }
-	virtual ~_ns1__Read() { }
+	         _s0__Read() : Options(NULL), ItemList(NULL), soap(NULL) { }
+	virtual ~_s0__Read() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__ReadResponse
-#define SOAP_TYPE__ns1__ReadResponse (46)
-/* ns1:ReadResponse */
-class SOAP_CMAC _ns1__ReadResponse
+#ifndef SOAP_TYPE__s0__ReadResponse
+#define SOAP_TYPE__s0__ReadResponse (74)
+/* s0:ReadResponse */
+class SOAP_CMAC _s0__ReadResponse
 {
 public:
-	ns1__ReplyBase *ReadResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	ns1__ReplyItemList *RItemList;	/* optional element of type ns1:ReplyItemList */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	s0__ReplyBase *ReadResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	s0__ReplyItemList *RItemList;	/* optional element of type s0:ReplyItemList */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 46; } /* = unique id SOAP_TYPE__ns1__ReadResponse */
+	virtual int soap_type() const { return 74; } /* = unique id SOAP_TYPE__s0__ReadResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__ReadResponse() : ReadResult(NULL), RItemList(NULL), soap(NULL) { }
-	virtual ~_ns1__ReadResponse() { }
+	         _s0__ReadResponse() : ReadResult(NULL), RItemList(NULL), soap(NULL) { }
+	virtual ~_s0__ReadResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__Write
-#define SOAP_TYPE__ns1__Write (47)
-/* ns1:Write */
-class SOAP_CMAC _ns1__Write
+#ifndef SOAP_TYPE__s0__Write
+#define SOAP_TYPE__s0__Write (75)
+/* s0:Write */
+class SOAP_CMAC _s0__Write
 {
 public:
-	ns1__RequestOptions *Options;	/* optional element of type ns1:RequestOptions */
-	ns1__WriteRequestItemList *ItemList;	/* optional element of type ns1:WriteRequestItemList */
+	s0__RequestOptions *Options;	/* optional element of type s0:RequestOptions */
+	s0__WriteRequestItemList *ItemList;	/* optional element of type s0:WriteRequestItemList */
 	bool ReturnValuesOnReply;	/* required attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 47; } /* = unique id SOAP_TYPE__ns1__Write */
+	virtual int soap_type() const { return 75; } /* = unique id SOAP_TYPE__s0__Write */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Write() : Options(NULL), ItemList(NULL), soap(NULL) { }
-	virtual ~_ns1__Write() { }
+	         _s0__Write() : Options(NULL), ItemList(NULL), soap(NULL) { }
+	virtual ~_s0__Write() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__WriteResponse
-#define SOAP_TYPE__ns1__WriteResponse (48)
-/* ns1:WriteResponse */
-class SOAP_CMAC _ns1__WriteResponse
+#ifndef SOAP_TYPE__s0__WriteResponse
+#define SOAP_TYPE__s0__WriteResponse (76)
+/* s0:WriteResponse */
+class SOAP_CMAC _s0__WriteResponse
 {
 public:
-	ns1__ReplyBase *WriteResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	ns1__ReplyItemList *RItemList;	/* optional element of type ns1:ReplyItemList */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	s0__ReplyBase *WriteResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	s0__ReplyItemList *RItemList;	/* optional element of type s0:ReplyItemList */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 48; } /* = unique id SOAP_TYPE__ns1__WriteResponse */
+	virtual int soap_type() const { return 76; } /* = unique id SOAP_TYPE__s0__WriteResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__WriteResponse() : WriteResult(NULL), RItemList(NULL), soap(NULL) { }
-	virtual ~_ns1__WriteResponse() { }
+	         _s0__WriteResponse() : WriteResult(NULL), RItemList(NULL), soap(NULL) { }
+	virtual ~_s0__WriteResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__Subscribe
-#define SOAP_TYPE__ns1__Subscribe (49)
-/* ns1:Subscribe */
-class SOAP_CMAC _ns1__Subscribe
+#ifndef SOAP_TYPE__s0__Subscribe
+#define SOAP_TYPE__s0__Subscribe (77)
+/* s0:Subscribe */
+class SOAP_CMAC _s0__Subscribe
 {
 public:
-	ns1__RequestOptions *Options;	/* optional element of type ns1:RequestOptions */
-	ns1__SubscribeRequestItemList *ItemList;	/* optional element of type ns1:SubscribeRequestItemList */
+	s0__RequestOptions *Options;	/* optional element of type s0:RequestOptions */
+	s0__SubscribeRequestItemList *ItemList;	/* optional element of type s0:SubscribeRequestItemList */
 	bool ReturnValuesOnReply;	/* required attribute */
 	int *SubscriptionPingRate;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 49; } /* = unique id SOAP_TYPE__ns1__Subscribe */
+	virtual int soap_type() const { return 77; } /* = unique id SOAP_TYPE__s0__Subscribe */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Subscribe() : Options(NULL), ItemList(NULL), SubscriptionPingRate(NULL), soap(NULL) { }
-	virtual ~_ns1__Subscribe() { }
+	         _s0__Subscribe() : Options(NULL), ItemList(NULL), SubscriptionPingRate(NULL), soap(NULL) { }
+	virtual ~_s0__Subscribe() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__SubscribeResponse
-#define SOAP_TYPE__ns1__SubscribeResponse (50)
-/* ns1:SubscribeResponse */
-class SOAP_CMAC _ns1__SubscribeResponse
+#ifndef SOAP_TYPE__s0__SubscribeResponse
+#define SOAP_TYPE__s0__SubscribeResponse (78)
+/* s0:SubscribeResponse */
+class SOAP_CMAC _s0__SubscribeResponse
 {
 public:
-	ns1__ReplyBase *SubscribeResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	ns1__SubscribeReplyItemList *RItemList;	/* optional element of type ns1:SubscribeReplyItemList */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	s0__ReplyBase *SubscribeResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	s0__SubscribeReplyItemList *RItemList;	/* optional element of type s0:SubscribeReplyItemList */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	std::string *ServerSubHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 50; } /* = unique id SOAP_TYPE__ns1__SubscribeResponse */
+	virtual int soap_type() const { return 78; } /* = unique id SOAP_TYPE__s0__SubscribeResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__SubscribeResponse() : SubscribeResult(NULL), RItemList(NULL), ServerSubHandle(NULL), soap(NULL) { }
-	virtual ~_ns1__SubscribeResponse() { }
+	         _s0__SubscribeResponse() : SubscribeResult(NULL), RItemList(NULL), ServerSubHandle(NULL), soap(NULL) { }
+	virtual ~_s0__SubscribeResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__SubscriptionPolledRefresh
-#define SOAP_TYPE__ns1__SubscriptionPolledRefresh (51)
-/* ns1:SubscriptionPolledRefresh */
-class SOAP_CMAC _ns1__SubscriptionPolledRefresh
+#ifndef SOAP_TYPE__s0__SubscriptionPolledRefresh
+#define SOAP_TYPE__s0__SubscriptionPolledRefresh (79)
+/* s0:SubscriptionPolledRefresh */
+class SOAP_CMAC _s0__SubscriptionPolledRefresh
 {
 public:
-	ns1__RequestOptions *Options;	/* optional element of type ns1:RequestOptions */
+	s0__RequestOptions *Options;	/* optional element of type s0:RequestOptions */
 	std::vector<std::string >ServerSubHandles;	/* optional element of type xsd:string */
-	time_t *HoldTime;	/* optional attribute */
+	xsd__dateTime *HoldTime;	/* optional element of type xsd:dateTime */
 	int *WaitTime;	/* optional attribute */
 	bool *ReturnAllItems;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 51; } /* = unique id SOAP_TYPE__ns1__SubscriptionPolledRefresh */
+	virtual int soap_type() const { return 79; } /* = unique id SOAP_TYPE__s0__SubscriptionPolledRefresh */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__SubscriptionPolledRefresh() : Options(NULL), HoldTime(NULL), WaitTime(NULL), ReturnAllItems(NULL), soap(NULL) { }
-	virtual ~_ns1__SubscriptionPolledRefresh() { }
+	         _s0__SubscriptionPolledRefresh() : Options(NULL), HoldTime(NULL), WaitTime(NULL), ReturnAllItems(NULL), soap(NULL) { }
+	virtual ~_s0__SubscriptionPolledRefresh() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__SubscriptionPolledRefreshResponse
-#define SOAP_TYPE__ns1__SubscriptionPolledRefreshResponse (52)
-/* ns1:SubscriptionPolledRefreshResponse */
-class SOAP_CMAC _ns1__SubscriptionPolledRefreshResponse
+#ifndef SOAP_TYPE__s0__SubscriptionPolledRefreshResponse
+#define SOAP_TYPE__s0__SubscriptionPolledRefreshResponse (80)
+/* s0:SubscriptionPolledRefreshResponse */
+class SOAP_CMAC _s0__SubscriptionPolledRefreshResponse
 {
 public:
-	ns1__ReplyBase *SubscriptionPolledRefreshResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
+	s0__ReplyBase *SubscriptionPolledRefreshResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
 	std::vector<std::string >InvalidServerSubHandles;	/* optional element of type xsd:string */
-	std::vector<ns1__SubscribePolledRefreshReplyItemList * >RItemList;	/* optional element of type ns1:SubscribePolledRefreshReplyItemList */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	std::vector<s0__SubscribePolledRefreshReplyItemList * >RItemList;	/* optional element of type s0:SubscribePolledRefreshReplyItemList */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	bool *DataBufferOverflow;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 52; } /* = unique id SOAP_TYPE__ns1__SubscriptionPolledRefreshResponse */
+	virtual int soap_type() const { return 80; } /* = unique id SOAP_TYPE__s0__SubscriptionPolledRefreshResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__SubscriptionPolledRefreshResponse() : SubscriptionPolledRefreshResult(NULL), DataBufferOverflow(NULL), soap(NULL) { }
-	virtual ~_ns1__SubscriptionPolledRefreshResponse() { }
+	         _s0__SubscriptionPolledRefreshResponse() : SubscriptionPolledRefreshResult(NULL), DataBufferOverflow(NULL), soap(NULL) { }
+	virtual ~_s0__SubscriptionPolledRefreshResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__SubscriptionCancel
-#define SOAP_TYPE__ns1__SubscriptionCancel (53)
-/* ns1:SubscriptionCancel */
-class SOAP_CMAC _ns1__SubscriptionCancel
+#ifndef SOAP_TYPE__s0__SubscriptionCancel
+#define SOAP_TYPE__s0__SubscriptionCancel (81)
+/* s0:SubscriptionCancel */
+class SOAP_CMAC _s0__SubscriptionCancel
 {
 public:
 	std::string *ServerSubHandle;	/* optional attribute */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 53; } /* = unique id SOAP_TYPE__ns1__SubscriptionCancel */
+	virtual int soap_type() const { return 81; } /* = unique id SOAP_TYPE__s0__SubscriptionCancel */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__SubscriptionCancel() : ServerSubHandle(NULL), ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_ns1__SubscriptionCancel() { }
+	         _s0__SubscriptionCancel() : ServerSubHandle(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	virtual ~_s0__SubscriptionCancel() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__SubscriptionCancelResponse
-#define SOAP_TYPE__ns1__SubscriptionCancelResponse (54)
-/* ns1:SubscriptionCancelResponse */
-class SOAP_CMAC _ns1__SubscriptionCancelResponse
+#ifndef SOAP_TYPE__s0__SubscriptionCancelResponse
+#define SOAP_TYPE__s0__SubscriptionCancelResponse (82)
+/* s0:SubscriptionCancelResponse */
+class SOAP_CMAC _s0__SubscriptionCancelResponse
 {
 public:
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 54; } /* = unique id SOAP_TYPE__ns1__SubscriptionCancelResponse */
+	virtual int soap_type() const { return 82; } /* = unique id SOAP_TYPE__s0__SubscriptionCancelResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__SubscriptionCancelResponse() : ClientRequestHandle(NULL), soap(NULL) { }
-	virtual ~_ns1__SubscriptionCancelResponse() { }
+	         _s0__SubscriptionCancelResponse() : ClientRequestHandle(NULL), soap(NULL) { }
+	virtual ~_s0__SubscriptionCancelResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__Browse
-#define SOAP_TYPE__ns1__Browse (55)
-/* ns1:Browse */
-class SOAP_CMAC _ns1__Browse
+#ifndef SOAP_TYPE__s0__Browse
+#define SOAP_TYPE__s0__Browse (83)
+/* s0:Browse */
+class SOAP_CMAC _s0__Browse
 {
 public:
 	std::vector<std::string >PropertyNames;	/* optional element of type xsd:QName */
@@ -1108,7 +1514,7 @@ public:
 	std::string *ItemName;	/* optional attribute */
 	std::string *ContinuationPoint;	/* optional attribute */
 	int *MaxElementsReturned;	/* optional attribute */
-	enum ns1__browseFilter *BrowseFilter;	/* optional attribute */
+	enum s0__browseFilter *BrowseFilter;	/* optional attribute */
 	std::string *ElementNameFilter;	/* optional attribute */
 	std::string *VendorFilter;	/* optional attribute */
 	bool *ReturnAllProperties;	/* optional attribute */
@@ -1116,50 +1522,50 @@ public:
 	bool *ReturnErrorText;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 55; } /* = unique id SOAP_TYPE__ns1__Browse */
+	virtual int soap_type() const { return 83; } /* = unique id SOAP_TYPE__s0__Browse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__Browse() : LocaleID(NULL), ClientRequestHandle(NULL), ItemPath(NULL), ItemName(NULL), ContinuationPoint(NULL), MaxElementsReturned(NULL), BrowseFilter(NULL), ElementNameFilter(NULL), VendorFilter(NULL), ReturnAllProperties(NULL), ReturnPropertyValues(NULL), ReturnErrorText(NULL), soap(NULL) { }
-	virtual ~_ns1__Browse() { }
+	         _s0__Browse() : LocaleID(NULL), ClientRequestHandle(NULL), ItemPath(NULL), ItemName(NULL), ContinuationPoint(NULL), MaxElementsReturned(NULL), BrowseFilter(NULL), ElementNameFilter(NULL), VendorFilter(NULL), ReturnAllProperties(NULL), ReturnPropertyValues(NULL), ReturnErrorText(NULL), soap(NULL) { }
+	virtual ~_s0__Browse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__BrowseResponse
-#define SOAP_TYPE__ns1__BrowseResponse (56)
-/* ns1:BrowseResponse */
-class SOAP_CMAC _ns1__BrowseResponse
+#ifndef SOAP_TYPE__s0__BrowseResponse
+#define SOAP_TYPE__s0__BrowseResponse (84)
+/* s0:BrowseResponse */
+class SOAP_CMAC _s0__BrowseResponse
 {
 public:
-	ns1__ReplyBase *BrowseResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	std::vector<ns1__BrowseElement * >Elements;	/* optional element of type ns1:BrowseElement */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	s0__ReplyBase *BrowseResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	std::vector<s0__BrowseElement * >Elements;	/* optional element of type s0:BrowseElement */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	std::string *ContinuationPoint;	/* optional attribute */
 	bool *MoreElements;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 56; } /* = unique id SOAP_TYPE__ns1__BrowseResponse */
+	virtual int soap_type() const { return 84; } /* = unique id SOAP_TYPE__s0__BrowseResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__BrowseResponse() : BrowseResult(NULL), ContinuationPoint(NULL), MoreElements(NULL), soap(NULL) { }
-	virtual ~_ns1__BrowseResponse() { }
+	         _s0__BrowseResponse() : BrowseResult(NULL), ContinuationPoint(NULL), MoreElements(NULL), soap(NULL) { }
+	virtual ~_s0__BrowseResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__GetProperties
-#define SOAP_TYPE__ns1__GetProperties (57)
-/* ns1:GetProperties */
-class SOAP_CMAC _ns1__GetProperties
+#ifndef SOAP_TYPE__s0__GetProperties
+#define SOAP_TYPE__s0__GetProperties (85)
+/* s0:GetProperties */
+class SOAP_CMAC _s0__GetProperties
 {
 public:
-	std::vector<ns1__ItemIdentifier * >ItemIDs;	/* optional element of type ns1:ItemIdentifier */
+	std::vector<s0__ItemIdentifier * >ItemIDs;	/* optional element of type s0:ItemIdentifier */
 	std::vector<std::string >PropertyNames;	/* optional element of type xsd:QName */
 	std::string *LocaleID;	/* optional attribute */
 	std::string *ClientRequestHandle;	/* optional attribute */
@@ -1169,123 +1575,123 @@ public:
 	bool *ReturnErrorText;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 57; } /* = unique id SOAP_TYPE__ns1__GetProperties */
+	virtual int soap_type() const { return 85; } /* = unique id SOAP_TYPE__s0__GetProperties */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetProperties() : LocaleID(NULL), ClientRequestHandle(NULL), ItemPath(NULL), ReturnAllProperties(NULL), ReturnPropertyValues(NULL), ReturnErrorText(NULL), soap(NULL) { }
-	virtual ~_ns1__GetProperties() { }
+	         _s0__GetProperties() : LocaleID(NULL), ClientRequestHandle(NULL), ItemPath(NULL), ReturnAllProperties(NULL), ReturnPropertyValues(NULL), ReturnErrorText(NULL), soap(NULL) { }
+	virtual ~_s0__GetProperties() { }
 };
 #endif
 
-#ifndef SOAP_TYPE__ns1__GetPropertiesResponse
-#define SOAP_TYPE__ns1__GetPropertiesResponse (58)
-/* ns1:GetPropertiesResponse */
-class SOAP_CMAC _ns1__GetPropertiesResponse
+#ifndef SOAP_TYPE__s0__GetPropertiesResponse
+#define SOAP_TYPE__s0__GetPropertiesResponse (86)
+/* s0:GetPropertiesResponse */
+class SOAP_CMAC _s0__GetPropertiesResponse
 {
 public:
-	ns1__ReplyBase *GetPropertiesResult;	/* RPC return element */	/* optional element of type ns1:ReplyBase */
-	std::vector<ns1__PropertyReplyList * >PropertyLists;	/* optional element of type ns1:PropertyReplyList */
-	std::vector<ns1__OPCError * >Errors;	/* optional element of type ns1:OPCError */
+	s0__ReplyBase *GetPropertiesResult;	/* RPC return element */	/* optional element of type s0:ReplyBase */
+	std::vector<s0__PropertyReplyList * >PropertyLists;	/* optional element of type s0:PropertyReplyList */
+	std::vector<s0__OPCError * >Errors;	/* optional element of type s0:OPCError */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 58; } /* = unique id SOAP_TYPE__ns1__GetPropertiesResponse */
+	virtual int soap_type() const { return 86; } /* = unique id SOAP_TYPE__s0__GetPropertiesResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _ns1__GetPropertiesResponse() : GetPropertiesResult(NULL), soap(NULL) { }
-	virtual ~_ns1__GetPropertiesResponse() { }
+	         _s0__GetPropertiesResponse() : GetPropertiesResult(NULL), soap(NULL) { }
+	virtual ~_s0__GetPropertiesResponse() { }
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__GetStatus
-#define SOAP_TYPE___ns1__GetStatus (133)
+#ifndef SOAP_TYPE___s0__GetStatus
+#define SOAP_TYPE___s0__GetStatus (155)
 /* Operation wrapper: */
-struct __ns1__GetStatus
+struct __s0__GetStatus
 {
 public:
-	_ns1__GetStatus *ns1__GetStatus;	/* optional element of type ns1:GetStatus */
+	_s0__GetStatus *s0__GetStatus;	/* optional element of type s0:GetStatus */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__Read
-#define SOAP_TYPE___ns1__Read (137)
+#ifndef SOAP_TYPE___s0__Read
+#define SOAP_TYPE___s0__Read (159)
 /* Operation wrapper: */
-struct __ns1__Read
+struct __s0__Read
 {
 public:
-	_ns1__Read *ns1__Read;	/* optional element of type ns1:Read */
+	_s0__Read *s0__Read;	/* optional element of type s0:Read */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__Write
-#define SOAP_TYPE___ns1__Write (141)
+#ifndef SOAP_TYPE___s0__Write
+#define SOAP_TYPE___s0__Write (163)
 /* Operation wrapper: */
-struct __ns1__Write
+struct __s0__Write
 {
 public:
-	_ns1__Write *ns1__Write;	/* optional element of type ns1:Write */
+	_s0__Write *s0__Write;	/* optional element of type s0:Write */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__Subscribe
-#define SOAP_TYPE___ns1__Subscribe (145)
+#ifndef SOAP_TYPE___s0__Subscribe
+#define SOAP_TYPE___s0__Subscribe (167)
 /* Operation wrapper: */
-struct __ns1__Subscribe
+struct __s0__Subscribe
 {
 public:
-	_ns1__Subscribe *ns1__Subscribe;	/* optional element of type ns1:Subscribe */
+	_s0__Subscribe *s0__Subscribe;	/* optional element of type s0:Subscribe */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__SubscriptionPolledRefresh
-#define SOAP_TYPE___ns1__SubscriptionPolledRefresh (149)
+#ifndef SOAP_TYPE___s0__SubscriptionPolledRefresh
+#define SOAP_TYPE___s0__SubscriptionPolledRefresh (171)
 /* Operation wrapper: */
-struct __ns1__SubscriptionPolledRefresh
+struct __s0__SubscriptionPolledRefresh
 {
 public:
-	_ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh;	/* optional element of type ns1:SubscriptionPolledRefresh */
+	_s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh;	/* optional element of type s0:SubscriptionPolledRefresh */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__SubscriptionCancel
-#define SOAP_TYPE___ns1__SubscriptionCancel (153)
+#ifndef SOAP_TYPE___s0__SubscriptionCancel
+#define SOAP_TYPE___s0__SubscriptionCancel (175)
 /* Operation wrapper: */
-struct __ns1__SubscriptionCancel
+struct __s0__SubscriptionCancel
 {
 public:
-	_ns1__SubscriptionCancel *ns1__SubscriptionCancel;	/* optional element of type ns1:SubscriptionCancel */
+	_s0__SubscriptionCancel *s0__SubscriptionCancel;	/* optional element of type s0:SubscriptionCancel */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__Browse
-#define SOAP_TYPE___ns1__Browse (157)
+#ifndef SOAP_TYPE___s0__Browse
+#define SOAP_TYPE___s0__Browse (179)
 /* Operation wrapper: */
-struct __ns1__Browse
+struct __s0__Browse
 {
 public:
-	_ns1__Browse *ns1__Browse;	/* optional element of type ns1:Browse */
+	_s0__Browse *s0__Browse;	/* optional element of type s0:Browse */
 };
 #endif
 
-#ifndef SOAP_TYPE___ns1__GetProperties
-#define SOAP_TYPE___ns1__GetProperties (161)
+#ifndef SOAP_TYPE___s0__GetProperties
+#define SOAP_TYPE___s0__GetProperties (183)
 /* Operation wrapper: */
-struct __ns1__GetProperties
+struct __s0__GetProperties
 {
 public:
-	_ns1__GetProperties *ns1__GetProperties;	/* optional element of type ns1:GetProperties */
+	_s0__GetProperties *s0__GetProperties;	/* optional element of type s0:GetProperties */
 };
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (164)
+#define SOAP_TYPE_SOAP_ENV__Header (186)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -1295,7 +1701,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (165)
+#define SOAP_TYPE_SOAP_ENV__Code (187)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -1306,7 +1712,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (167)
+#define SOAP_TYPE_SOAP_ENV__Detail (189)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -1318,7 +1724,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (168)
+#define SOAP_TYPE_SOAP_ENV__Reason (190)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -1328,7 +1734,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (169)
+#define SOAP_TYPE_SOAP_ENV__Fault (191)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -1369,12 +1775,12 @@ typedef char *_QName;
 #endif
 
 #ifndef SOAP_TYPE_xsd__QName
-#define SOAP_TYPE_xsd__QName (8)
+#define SOAP_TYPE_xsd__QName (11)
 typedef std::string xsd__QName;
 #endif
 
 #ifndef SOAP_TYPE_xsd__decimal
-#define SOAP_TYPE_xsd__decimal (9)
+#define SOAP_TYPE_xsd__decimal (17)
 typedef std::string xsd__decimal;
 #endif
 
@@ -1400,21 +1806,21 @@ typedef std::string xsd__decimal;
 \******************************************************************************/
 
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetStatus(struct soap*, _ns1__GetStatus *ns1__GetStatus, _ns1__GetStatusResponse *ns1__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*, _ns1__Read *ns1__Read, _ns1__ReadResponse *ns1__ReadResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*, _s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Write(struct soap*, _ns1__Write *ns1__Write, _ns1__WriteResponse *ns1__WriteResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap*, _s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap*, _ns1__Subscribe *ns1__Subscribe, _ns1__SubscribeResponse *ns1__SubscribeResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap*, _s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap*, _ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap*, _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap*, _ns1__SubscriptionCancel *ns1__SubscriptionCancel, _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap*, _s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap*, _ns1__Browse *ns1__Browse, _ns1__BrowseResponse *ns1__BrowseResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap*, _s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*, _ns1__GetProperties *ns1__GetProperties, _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse);
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, _s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse);
 
 /******************************************************************************\
  *                                                                            *
@@ -1423,21 +1829,21 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*, _ns1__GetProperties
 \******************************************************************************/
 
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__GetStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__GetStatus *ns1__GetStatus, _ns1__GetStatusResponse *ns1__GetStatusResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__Read(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__Read *ns1__Read, _ns1__ReadResponse *ns1__ReadResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Read(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Read *s0__Read, _s0__ReadResponse *s0__ReadResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__Write(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__Write *ns1__Write, _ns1__WriteResponse *ns1__WriteResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Write(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Write *s0__Write, _s0__WriteResponse *s0__WriteResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__Subscribe(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__Subscribe *ns1__Subscribe, _ns1__SubscribeResponse *ns1__SubscribeResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Subscribe(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Subscribe *s0__Subscribe, _s0__SubscribeResponse *s0__SubscribeResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__SubscriptionPolledRefresh(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionPolledRefresh(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__SubscriptionCancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__SubscriptionCancel *ns1__SubscriptionCancel, _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__SubscriptionCancel(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__SubscriptionCancel *s0__SubscriptionCancel, _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__Browse(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__Browse *ns1__Browse, _ns1__BrowseResponse *ns1__BrowseResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Browse(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Browse *s0__Browse, _s0__BrowseResponse *s0__BrowseResponse);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_call___ns1__GetProperties(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ns1__GetProperties *ns1__GetProperties, _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetProperties(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetProperties *s0__GetProperties, _s0__GetPropertiesResponse *s0__GetPropertiesResponse);
 
 /******************************************************************************\
  *                                                                            *
@@ -1449,21 +1855,21 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetStatus(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetStatus(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Read(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Read(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Write(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Write(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Subscribe(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Subscribe(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionPolledRefresh(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__SubscriptionPolledRefresh(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionCancel(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__SubscriptionCancel(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Browse(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Browse(struct soap*);
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetProperties(struct soap*);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetProperties(struct soap*);
 
 #endif
 

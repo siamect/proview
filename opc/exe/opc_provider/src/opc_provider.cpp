@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.6 2007-03-15 08:07:50 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.7 2007-03-15 15:25:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,11 +57,12 @@ void opc_provider::object( co_procom *pcom)
   objectOid( pcom, m_list[0].po.fchoix);
 }
 
-void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
+void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement *element,
 				  int first, int last, int load_children, std::string *path)
 {
   opcprv_obj o;
-  char *valp;
+  xsd__anyType *valp;
+  int opctype;
 	
   strcpy( o.po.name, name_to_objectname( (char *) element->Name->c_str()));
   if ( element->ItemPath)
@@ -80,139 +81,146 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
     o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
     o.po.body = calloc( 1, o.po.body_size);
     if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
-      strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, valp, 
+      strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, 
+	       ((xsd__string *)valp)->__item.c_str(), 
 	       sizeof(((pwr_sClass_Opc_Hier *)o.po.body)->Description));
   }
   else {
     if ( opc_get_property( element->Properties, opc_mProperty_DataType, &valp)) {
-      if ( strcmp( valp, "string") == 0) {
+      if ( !opc_string_to_opctype( ((xsd__string *)valp)->__item.c_str(), &opctype))
+	opctype = opc_eDataType_;
+      
+      switch ( opctype) {
+      case opc_eDataType_string:
 	o.po.cid = pwr_cClass_Opc_String;
 	o.po.body_size = sizeof(pwr_sClass_Opc_String);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "boolean") == 0) {
+	break;
+      case opc_eDataType_boolean:
 	o.po.cid = pwr_cClass_Opc_Boolean;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Boolean);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "float") == 0) {
+	break;
+      case opc_eDataType_float:
 	o.po.cid = pwr_cClass_Opc_Float;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Float);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "double") == 0) {
+	break;
+      case opc_eDataType_double:
 	o.po.cid = pwr_cClass_Opc_Double;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Double);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "double") == 0) {
-	o.po.cid = pwr_cClass_Opc_Double;
-	o.po.body_size = sizeof(pwr_sClass_Opc_Double);
-	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "decimal") == 0) {
+	break;
+      case opc_eDataType_decimal:
 	o.po.cid = pwr_cClass_Opc_Decimal;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Decimal);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "int") == 0) {
+	break;
+      case opc_eDataType_int:
 	o.po.cid = pwr_cClass_Opc_Int;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Int);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "short") == 0) {
+	break;
+      case opc_eDataType_short:
 	o.po.cid = pwr_cClass_Opc_Short;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Short);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "byte") == 0) {
+	break;
+      case opc_eDataType_byte:
 	o.po.cid = pwr_cClass_Opc_Byte;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Byte);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "unsignedLong") == 0) {
+	break;
+      case opc_eDataType_unsignedLong:
 	o.po.cid = pwr_cClass_Opc_UnsignedLong;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "unsignedInt") == 0) {
+	break;
+      case opc_eDataType_unsignedInt:
 	o.po.cid = pwr_cClass_Opc_UnsignedInt;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "unsignedShort") == 0) {
+	break;
+      case opc_eDataType_unsignedShort:
 	o.po.cid = pwr_cClass_Opc_UnsignedShort;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "unsignedByte") == 0) {
+	break;
+      case opc_eDataType_unsignedByte:
 	o.po.cid = pwr_cClass_Opc_UnsignedByte;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "base64Binary") == 0) {
+	break;
+      case opc_eDataType_base64Binary:
 	o.po.cid = pwr_cClass_Opc_Base64Binary;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "dateTime") == 0) {
+	break;
+      case opc_eDataType_dateTime:
 	o.po.cid = pwr_cClass_Opc_DateTime;
 	o.po.body_size = sizeof(pwr_sClass_Opc_DateTime);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "time") == 0) {
+	break;
+      case opc_eDataType_time:
 	o.po.cid = pwr_cClass_Opc_Time;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Time);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "date") == 0) {
+	break;
+      case opc_eDataType_date:
 	o.po.cid = pwr_cClass_Opc_Date;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Date);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "duration") == 0) {
+	break;
+      case opc_eDataType_duration:
 	o.po.cid = pwr_cClass_Opc_Duration;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Duration);
 	o.po.body = calloc( 1, o.po.body_size);
-      }
-      else if ( strcmp( valp, "QName") == 0) {
+	break;
+      case opc_eDataType_QName:
 	o.po.cid = pwr_cClass_Opc_QName;
 	o.po.body_size = sizeof(pwr_sClass_Opc_QName);
+	o.po.body = calloc( 1, o.po.body_size);
+      default:
+	o.po.cid = pwr_cClass_Opc_Hier;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
 	o.po.body = calloc( 1, o.po.body_size);
       }
 
       if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp)) {
+	pwr_tString80 desc;
+	strncpy( desc, ((xsd__string *)valp)->__item.c_str(), sizeof(desc));
+
 	switch ( o.po.cid) {
 	case pwr_cClass_Opc_Float:
-	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_Float *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_Double:
-	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_Float *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_Double *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_Int:
-	  strncpy( ((pwr_sClass_Opc_Int *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_Int *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_Int *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_Short:
-	  strncpy( ((pwr_sClass_Opc_Short *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_Short *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_Short *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_Byte:
-	  strncpy( ((pwr_sClass_Opc_Byte *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_Byte *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_Byte *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_UnsignedInt:
-	  strncpy( ((pwr_sClass_Opc_UnsignedInt *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_UnsignedInt *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_UnsignedInt *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_UnsignedShort:
-	  strncpy( ((pwr_sClass_Opc_UnsignedShort *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_UnsignedShort *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_UnsignedShort *)o.po.body)->Description));
 	  break;
 	case pwr_cClass_Opc_UnsignedByte:
-	  strncpy( ((pwr_sClass_Opc_UnsignedByte *)o.po.body)->Description, valp, 
+	  strncpy( ((pwr_sClass_Opc_UnsignedByte *)o.po.body)->Description, desc, 
 		   sizeof(((pwr_sClass_Opc_UnsignedByte *)o.po.body)->Description));
 	  break;
 	}
@@ -222,9 +230,11 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
       o.po.cid = pwr_cClass_Opc_Hier;
       o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
       o.po.body = calloc( 1, o.po.body_size);
-      if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp))
-	strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, valp, 
+      if ( opc_get_property( element->Properties, opc_mProperty_Description, &valp)) {
+	strncpy( ((pwr_sClass_Opc_Hier *)o.po.body)->Description, 
+		 ((xsd__string *)valp)->__item.c_str(),
 		 sizeof(((pwr_sClass_Opc_Hier *)o.po.body)->Description));
+      }
     }
   }
   if ( first)
@@ -253,14 +263,14 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
   m_list.push_back( o);
 
   if ( opc_get_property( element->Properties, opc_mProperty_EuType, &valp)) {
-    if ( strcmp( valp, "analog") == 0)
+    if ( ((xsd__string *)valp)->__item == "analog")
       m_list[o.po.oix].po.flags |= procom_obj_mFlags_Analog;
   }
   if ( m_list[o.po.oix].po.flags & procom_obj_mFlags_Analog) {
     // Get analog properties
-    _ns1__GetProperties get_properties;
-    _ns1__GetPropertiesResponse properties_response;
-    ns1__ItemIdentifier id;      
+    _s0__GetProperties get_properties;
+    _s0__GetPropertiesResponse properties_response;
+    s0__ItemIdentifier id;      
     pwr_tFloat32 high_eu = 0;
     pwr_tFloat32 low_eu = 0;
     pwr_tString16 engineering_units = "";
@@ -273,22 +283,23 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
 			       opc_mProperty_HighEU | opc_mProperty_LowEU |
 			       opc_mProperty_EngineeringUnits);
     
-    if ( soap_call___ns1__GetProperties( &soap, opc_endpoint, NULL, &get_properties, 
+    if ( soap_call___s0__GetProperties( &soap, opc_endpoint, NULL, &get_properties, 
 					 &properties_response) == SOAP_OK) {
       if ( properties_response.PropertyLists.size() > 0 &&
 	   properties_response.PropertyLists[0]->Properties.size() > 0) {
 	  	
 	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
 			       opc_mProperty_HighEU, &valp)) {
-	  sscanf( valp, "%f", &high_eu);
+	  high_eu = ((xsd__double *)valp)->__item;
 	}
 	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
 			       opc_mProperty_LowEU, &valp)) {
-	  sscanf( valp, "%f", &low_eu);
+	  low_eu = ((xsd__double *)valp)->__item;
 	}
 	if ( opc_get_property( properties_response.PropertyLists[0]->Properties, 
 			       opc_mProperty_EngineeringUnits, &valp)) {
-	  strncpy( engineering_units, valp, sizeof(engineering_units));
+	  strncpy( engineering_units, ((xsd__string *)valp)->__item.c_str(), 
+				       sizeof(engineering_units));
 	}
 	
 	void *body = m_list[o.po.oix].po.body;
@@ -311,15 +322,15 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement
 
 
   if ( load_children) {
-    _ns1__Browse browse;
-    _ns1__BrowseResponse browse_response;
+    _s0__Browse browse;
+    _s0__BrowseResponse browse_response;
 
     browse.ItemName = new std::string( o.item_name);
     opc_mask_to_propertynames( browse.PropertyNames, 
 			       opc_mProperty_DataType | opc_mProperty_Description |
 			       opc_mProperty_EuType);
 
-    if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+    if ( soap_call___s0__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
       pwr_tOix next_bws;
       pwr_tOix bws = 0;
@@ -365,13 +376,13 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
     m_list.push_back( so);
 
     // Load Rootlist
-    _ns1__Browse browse;
-    _ns1__BrowseResponse browse_response;
+    _s0__Browse browse;
+    _s0__BrowseResponse browse_response;
 
     opc_mask_to_propertynames( browse.PropertyNames, 
 			       opc_mProperty_DataType | opc_mProperty_Description |
 			       opc_mProperty_EuType);
-    if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+    if ( soap_call___s0__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	 SOAP_OK) {
       pwr_tOix bws = so.po.oix;
       pwr_tOix next_bws;
@@ -387,15 +398,15 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
   }
   else if ( oix < m_list.size()) {
     if ( !(m_list[oix].po.flags & procom_obj_mFlags_Loaded)) {
-      _ns1__Browse browse;
-      _ns1__BrowseResponse browse_response;
+      _s0__Browse browse;
+      _s0__BrowseResponse browse_response;
 
       browse.ItemName = new std::string( m_list[oix].item_name);
       opc_mask_to_propertynames( browse.PropertyNames, 
 				 opc_mProperty_DataType | opc_mProperty_Description |
 				 opc_mProperty_EuType);
       
-      if ( soap_call___ns1__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+      if ( soap_call___s0__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
 	   SOAP_OK) {
 	pwr_tOix next_bws;
 	pwr_tOix bws = 0;
@@ -531,18 +542,18 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
   case pwr_cClass_Opc_Float:
     if ( offset == (unsigned int) ((char *) &((pwr_sClass_Opc_Float *)m_list[oix].po.body)->Value -
 		    (char *)m_list[oix].po.body)) {      
-      _ns1__Read read;
-      _ns1__ReadResponse read_response;
+      _s0__Read read;
+      _s0__ReadResponse read_response;
 
-      ns1__ReadRequestItem *item = new ns1__ReadRequestItem();      
+      s0__ReadRequestItem *item = new s0__ReadRequestItem();      
       item->ItemName = new std::string( m_list[oix].item_name);
-      read.ItemList = new ns1__ReadRequestItemList;
+      read.ItemList = new s0__ReadRequestItemList;
       read.ItemList->Items.push_back( item);
 				   
-      if ( soap_call___ns1__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
+      if ( soap_call___s0__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
 	   SOAP_OK) {
 	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
-	  printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
+	  // printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
 	}
       }
     }
@@ -550,21 +561,23 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
   case pwr_cClass_Opc_String:
     if ( offset == (unsigned int) ((char *) ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value -
 		    (char *)m_list[oix].po.body)) {      
-      _ns1__Read read;
-      _ns1__ReadResponse read_response;
+      _s0__Read read;
+      _s0__ReadResponse read_response;
 
-      ns1__ReadRequestItem *item = new ns1__ReadRequestItem();      
+      s0__ReadRequestItem *item = new s0__ReadRequestItem();      
       item->ItemName = new std::string( m_list[oix].item_name);
-      read.ItemList = new ns1__ReadRequestItemList;
+      read.ItemList = new s0__ReadRequestItemList;
       read.ItemList->Items.push_back( item);
 				   
-      if ( soap_call___ns1__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
+      if ( soap_call___s0__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
 	   SOAP_OK) {
 	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
+#if 0
 	  strncpy( ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value, 
 		   read_response.RItemList->Items[0]->Value,
 		   sizeof(((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value));
 	  printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
+#endif
 	}
       }
     }
@@ -607,16 +620,16 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
   case pwr_cClass_Opc_QName:
     if ( *buff == ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value) {
       // Add opc subscription
-      _ns1__Subscribe subscribe;
-      _ns1__SubscribeResponse subscribe_response;
+      _s0__Subscribe subscribe;
+      _s0__SubscribeResponse subscribe_response;
       char handle[20];
 
-      subscribe.Options = new ns1__RequestOptions();
+      subscribe.Options = new s0__RequestOptions();
       subscribe.Options->ReturnItemTime = (bool *) malloc( sizeof(bool));
       *subscribe.Options->ReturnItemTime = true;
 
-      subscribe.ItemList = new ns1__SubscribeRequestItemList();
-      ns1__SubscribeRequestItem *ritem = new ns1__SubscribeRequestItem();
+      subscribe.ItemList = new s0__SubscribeRequestItemList();
+      s0__SubscribeRequestItem *ritem = new s0__SubscribeRequestItem();
       ritem->ItemName = new std::string( m_list[oix].item_name);
       sprintf( handle, "%d", oix);
       ritem->ClientItemHandle = new std::string( handle);
@@ -625,7 +638,7 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 
       subscribe.ItemList->Items.push_back( ritem);
 
-      if ( soap_call___ns1__Subscribe( &soap, opc_endpoint, NULL, &subscribe, &subscribe_response) ==
+      if ( soap_call___s0__Subscribe( &soap, opc_endpoint, NULL, &subscribe, &subscribe_response) ==
 	 SOAP_OK) {
 	opcprv_sub sub;
 
@@ -651,12 +664,12 @@ void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid)
   sublist_iterator it = m_sublist.find( sid.rix);
   if ( it != m_sublist.end()) {
     // Cancel subscription
-    _ns1__SubscriptionCancel subcancel;
-    _ns1__SubscriptionCancelResponse subcancel_response;
+    _s0__SubscriptionCancel subcancel;
+    _s0__SubscriptionCancelResponse subcancel_response;
 
     subcancel.ServerSubHandle = new std::string(it->second.handle);
 
-    if ( soap_call___ns1__SubscriptionCancel( &soap, opc_endpoint, NULL, &subcancel, &subcancel_response) ==
+    if ( soap_call___s0__SubscriptionCancel( &soap, opc_endpoint, NULL, &subcancel, &subcancel_response) ==
 	 SOAP_OK) {
       // Where are the fault codes ???
     }
@@ -669,8 +682,8 @@ void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid)
 void opc_provider::cyclic( co_procom *pcom)
 {
   int size = 0;
-  _ns1__SubscriptionPolledRefresh subpoll;
-  _ns1__SubscriptionPolledRefreshResponse subpoll_response;
+  _s0__SubscriptionPolledRefresh subpoll;
+  _s0__SubscriptionPolledRefreshResponse subpoll_response;
   
   
   for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
@@ -679,7 +692,7 @@ void opc_provider::cyclic( co_procom *pcom)
   }
 
   if ( size) {
-    if ( soap_call___ns1__SubscriptionPolledRefresh( &soap, opc_endpoint, NULL, &subpoll, &subpoll_response) ==
+    if ( soap_call___s0__SubscriptionPolledRefresh( &soap, opc_endpoint, NULL, &subpoll, &subpoll_response) ==
 	 SOAP_OK) {
       if ( (int) subpoll_response.RItemList.size() != size) {
 	return;
@@ -691,7 +704,7 @@ void opc_provider::cyclic( co_procom *pcom)
 	  switch ( m_list[it->second.oix].po.cid) {
 	  case pwr_cClass_Opc_String:
 	    strcpy( ((pwr_sClass_Opc_String *)m_list[it->second.oix].po.body)->Value,
-		    subpoll_response.RItemList[idx]->Items[0]->Value);
+		    ((xsd__string *)subpoll_response.RItemList[idx]->Items[0]->Value)->__item.c_str());
 	    break;
 	  default: ;
 	  }
@@ -763,21 +776,21 @@ bool opc_provider::find( pwr_tOix fthoix, char *name, pwr_tOix *oix)
 
 void opc_provider::get_server_state()
 {
-  _ns1__GetStatus get_status;
-  _ns1__GetStatusResponse get_status_response;
+  _s0__GetStatus get_status;
+  _s0__GetStatusResponse get_status_response;
   get_status.ClientRequestHandle = new std::string("Opc Client");
 
-  if ( soap_call___ns1__GetStatus( &soap, opc_endpoint, NULL, &get_status, &get_status_response) ==
+  if ( soap_call___s0__GetStatus( &soap, opc_endpoint, NULL, &get_status, &get_status_response) ==
        SOAP_OK) {
     if ( get_status_response.Status->VendorInfo)
       strcpy( server_state.VendorInfo, get_status_response.Status->VendorInfo->c_str());
     if ( get_status_response.Status->ProductVersion)
       strcpy( server_state.ProductVersion, get_status_response.Status->ProductVersion->c_str());
-    server_state.StartTime.tv_sec = get_status_response.Status->StartTime;
+    // TODO server_state.StartTime.tv_sec = get_status_response.Status->StartTime;
     server_state.ServerState = get_status_response.GetStatusResult->ServerState;
   }
   else {
-    server_state.ServerState = ns1__serverState__commFault;    
+    server_state.ServerState = s0__serverState__commFault;    
     soap_print_fault( &soap, stderr);
   }
 }
@@ -804,7 +817,7 @@ char *opc_provider::name_to_objectname( char *name)
   return n;
 }
 
-void opc_provider::errlog( std::string* item, std::vector<ns1__OPCError *>& errvect)
+void opc_provider::errlog( std::string* item, std::vector<s0__OPCError *>& errvect)
 {
   for ( int i = 0; i < (int) errvect.size(); i++)
     printf( "OPC Error: %s  %s\n", item->c_str(), errvect[i]->ID.c_str());

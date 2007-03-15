@@ -6,7 +6,7 @@
 */
 #include "opc_soap_H.h"
 
-SOAP_SOURCE_STAMP("@(#) opc_soap_Server.cpp ver 2.7.9d 2007-02-26 14:18:39 GMT")
+SOAP_SOURCE_STAMP("@(#) opc_soap_Server.cpp ver 2.7.9d 2007-03-15 12:24:24 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -71,50 +71,50 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 {
 	soap_peek_element(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:GetStatus"))
-		return soap_serve___ns1__GetStatus(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:Read"))
-		return soap_serve___ns1__Read(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:Write"))
-		return soap_serve___ns1__Write(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:Subscribe"))
-		return soap_serve___ns1__Subscribe(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:SubscriptionPolledRefresh"))
-		return soap_serve___ns1__SubscriptionPolledRefresh(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:SubscriptionCancel"))
-		return soap_serve___ns1__SubscriptionCancel(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:Browse"))
-		return soap_serve___ns1__Browse(soap);
-	if (!soap_match_tag(soap, soap->tag, "ns1:GetProperties"))
-		return soap_serve___ns1__GetProperties(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:GetStatus"))
+		return soap_serve___s0__GetStatus(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:Read"))
+		return soap_serve___s0__Read(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:Write"))
+		return soap_serve___s0__Write(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:Subscribe"))
+		return soap_serve___s0__Subscribe(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:SubscriptionPolledRefresh"))
+		return soap_serve___s0__SubscriptionPolledRefresh(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:SubscriptionCancel"))
+		return soap_serve___s0__SubscriptionCancel(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:Browse"))
+		return soap_serve___s0__Browse(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:GetProperties"))
+		return soap_serve___s0__GetProperties(soap);
 	return soap->error = SOAP_NO_METHOD;
 }
 #endif
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetStatus(struct soap *soap)
-{	struct __ns1__GetStatus soap_tmp___ns1__GetStatus;
-	_ns1__GetStatusResponse ns1__GetStatusResponse;
-	ns1__GetStatusResponse.soap_default(soap);
-	soap_default___ns1__GetStatus(soap, &soap_tmp___ns1__GetStatus);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetStatus(struct soap *soap)
+{	struct __s0__GetStatus soap_tmp___s0__GetStatus;
+	_s0__GetStatusResponse s0__GetStatusResponse;
+	s0__GetStatusResponse.soap_default(soap);
+	soap_default___s0__GetStatus(soap, &soap_tmp___s0__GetStatus);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__GetStatus(soap, &soap_tmp___ns1__GetStatus, "-ns1:GetStatus", NULL))
+	if (!soap_get___s0__GetStatus(soap, &soap_tmp___s0__GetStatus, "-s0:GetStatus", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__GetStatus(soap, soap_tmp___ns1__GetStatus.ns1__GetStatus, &ns1__GetStatusResponse);
+	soap->error = __s0__GetStatus(soap, soap_tmp___s0__GetStatus.s0__GetStatus, &s0__GetStatusResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__GetStatusResponse.soap_serialize(soap);
+	s0__GetStatusResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__GetStatusResponse.soap_put(soap, "ns1:GetStatusResponse", "")
+		 || s0__GetStatusResponse.soap_put(soap, "s0:GetStatusResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -124,7 +124,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetStatus(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__GetStatusResponse.soap_put(soap, "ns1:GetStatusResponse", "")
+	 || s0__GetStatusResponse.soap_put(soap, "s0:GetStatusResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -132,30 +132,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetStatus(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Read(struct soap *soap)
-{	struct __ns1__Read soap_tmp___ns1__Read;
-	_ns1__ReadResponse ns1__ReadResponse;
-	ns1__ReadResponse.soap_default(soap);
-	soap_default___ns1__Read(soap, &soap_tmp___ns1__Read);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Read(struct soap *soap)
+{	struct __s0__Read soap_tmp___s0__Read;
+	_s0__ReadResponse s0__ReadResponse;
+	s0__ReadResponse.soap_default(soap);
+	soap_default___s0__Read(soap, &soap_tmp___s0__Read);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__Read(soap, &soap_tmp___ns1__Read, "-ns1:Read", NULL))
+	if (!soap_get___s0__Read(soap, &soap_tmp___s0__Read, "-s0:Read", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__Read(soap, soap_tmp___ns1__Read.ns1__Read, &ns1__ReadResponse);
+	soap->error = __s0__Read(soap, soap_tmp___s0__Read.s0__Read, &s0__ReadResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__ReadResponse.soap_serialize(soap);
+	s0__ReadResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__ReadResponse.soap_put(soap, "ns1:ReadResponse", "")
+		 || s0__ReadResponse.soap_put(soap, "s0:ReadResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -165,7 +165,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Read(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__ReadResponse.soap_put(soap, "ns1:ReadResponse", "")
+	 || s0__ReadResponse.soap_put(soap, "s0:ReadResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -173,30 +173,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Read(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Write(struct soap *soap)
-{	struct __ns1__Write soap_tmp___ns1__Write;
-	_ns1__WriteResponse ns1__WriteResponse;
-	ns1__WriteResponse.soap_default(soap);
-	soap_default___ns1__Write(soap, &soap_tmp___ns1__Write);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Write(struct soap *soap)
+{	struct __s0__Write soap_tmp___s0__Write;
+	_s0__WriteResponse s0__WriteResponse;
+	s0__WriteResponse.soap_default(soap);
+	soap_default___s0__Write(soap, &soap_tmp___s0__Write);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__Write(soap, &soap_tmp___ns1__Write, "-ns1:Write", NULL))
+	if (!soap_get___s0__Write(soap, &soap_tmp___s0__Write, "-s0:Write", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__Write(soap, soap_tmp___ns1__Write.ns1__Write, &ns1__WriteResponse);
+	soap->error = __s0__Write(soap, soap_tmp___s0__Write.s0__Write, &s0__WriteResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__WriteResponse.soap_serialize(soap);
+	s0__WriteResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__WriteResponse.soap_put(soap, "ns1:WriteResponse", "")
+		 || s0__WriteResponse.soap_put(soap, "s0:WriteResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -206,7 +206,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Write(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__WriteResponse.soap_put(soap, "ns1:WriteResponse", "")
+	 || s0__WriteResponse.soap_put(soap, "s0:WriteResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -214,30 +214,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Write(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Subscribe(struct soap *soap)
-{	struct __ns1__Subscribe soap_tmp___ns1__Subscribe;
-	_ns1__SubscribeResponse ns1__SubscribeResponse;
-	ns1__SubscribeResponse.soap_default(soap);
-	soap_default___ns1__Subscribe(soap, &soap_tmp___ns1__Subscribe);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Subscribe(struct soap *soap)
+{	struct __s0__Subscribe soap_tmp___s0__Subscribe;
+	_s0__SubscribeResponse s0__SubscribeResponse;
+	s0__SubscribeResponse.soap_default(soap);
+	soap_default___s0__Subscribe(soap, &soap_tmp___s0__Subscribe);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__Subscribe(soap, &soap_tmp___ns1__Subscribe, "-ns1:Subscribe", NULL))
+	if (!soap_get___s0__Subscribe(soap, &soap_tmp___s0__Subscribe, "-s0:Subscribe", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__Subscribe(soap, soap_tmp___ns1__Subscribe.ns1__Subscribe, &ns1__SubscribeResponse);
+	soap->error = __s0__Subscribe(soap, soap_tmp___s0__Subscribe.s0__Subscribe, &s0__SubscribeResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__SubscribeResponse.soap_serialize(soap);
+	s0__SubscribeResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__SubscribeResponse.soap_put(soap, "ns1:SubscribeResponse", "")
+		 || s0__SubscribeResponse.soap_put(soap, "s0:SubscribeResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -247,7 +247,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Subscribe(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__SubscribeResponse.soap_put(soap, "ns1:SubscribeResponse", "")
+	 || s0__SubscribeResponse.soap_put(soap, "s0:SubscribeResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -255,30 +255,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Subscribe(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionPolledRefresh(struct soap *soap)
-{	struct __ns1__SubscriptionPolledRefresh soap_tmp___ns1__SubscriptionPolledRefresh;
-	_ns1__SubscriptionPolledRefreshResponse ns1__SubscriptionPolledRefreshResponse;
-	ns1__SubscriptionPolledRefreshResponse.soap_default(soap);
-	soap_default___ns1__SubscriptionPolledRefresh(soap, &soap_tmp___ns1__SubscriptionPolledRefresh);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__SubscriptionPolledRefresh(struct soap *soap)
+{	struct __s0__SubscriptionPolledRefresh soap_tmp___s0__SubscriptionPolledRefresh;
+	_s0__SubscriptionPolledRefreshResponse s0__SubscriptionPolledRefreshResponse;
+	s0__SubscriptionPolledRefreshResponse.soap_default(soap);
+	soap_default___s0__SubscriptionPolledRefresh(soap, &soap_tmp___s0__SubscriptionPolledRefresh);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__SubscriptionPolledRefresh(soap, &soap_tmp___ns1__SubscriptionPolledRefresh, "-ns1:SubscriptionPolledRefresh", NULL))
+	if (!soap_get___s0__SubscriptionPolledRefresh(soap, &soap_tmp___s0__SubscriptionPolledRefresh, "-s0:SubscriptionPolledRefresh", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__SubscriptionPolledRefresh(soap, soap_tmp___ns1__SubscriptionPolledRefresh.ns1__SubscriptionPolledRefresh, &ns1__SubscriptionPolledRefreshResponse);
+	soap->error = __s0__SubscriptionPolledRefresh(soap, soap_tmp___s0__SubscriptionPolledRefresh.s0__SubscriptionPolledRefresh, &s0__SubscriptionPolledRefreshResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__SubscriptionPolledRefreshResponse.soap_serialize(soap);
+	s0__SubscriptionPolledRefreshResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__SubscriptionPolledRefreshResponse.soap_put(soap, "ns1:SubscriptionPolledRefreshResponse", "")
+		 || s0__SubscriptionPolledRefreshResponse.soap_put(soap, "s0:SubscriptionPolledRefreshResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -288,7 +288,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionPolledRefresh(struct soa
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__SubscriptionPolledRefreshResponse.soap_put(soap, "ns1:SubscriptionPolledRefreshResponse", "")
+	 || s0__SubscriptionPolledRefreshResponse.soap_put(soap, "s0:SubscriptionPolledRefreshResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -296,30 +296,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionPolledRefresh(struct soa
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionCancel(struct soap *soap)
-{	struct __ns1__SubscriptionCancel soap_tmp___ns1__SubscriptionCancel;
-	_ns1__SubscriptionCancelResponse ns1__SubscriptionCancelResponse;
-	ns1__SubscriptionCancelResponse.soap_default(soap);
-	soap_default___ns1__SubscriptionCancel(soap, &soap_tmp___ns1__SubscriptionCancel);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__SubscriptionCancel(struct soap *soap)
+{	struct __s0__SubscriptionCancel soap_tmp___s0__SubscriptionCancel;
+	_s0__SubscriptionCancelResponse s0__SubscriptionCancelResponse;
+	s0__SubscriptionCancelResponse.soap_default(soap);
+	soap_default___s0__SubscriptionCancel(soap, &soap_tmp___s0__SubscriptionCancel);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__SubscriptionCancel(soap, &soap_tmp___ns1__SubscriptionCancel, "-ns1:SubscriptionCancel", NULL))
+	if (!soap_get___s0__SubscriptionCancel(soap, &soap_tmp___s0__SubscriptionCancel, "-s0:SubscriptionCancel", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__SubscriptionCancel(soap, soap_tmp___ns1__SubscriptionCancel.ns1__SubscriptionCancel, &ns1__SubscriptionCancelResponse);
+	soap->error = __s0__SubscriptionCancel(soap, soap_tmp___s0__SubscriptionCancel.s0__SubscriptionCancel, &s0__SubscriptionCancelResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__SubscriptionCancelResponse.soap_serialize(soap);
+	s0__SubscriptionCancelResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__SubscriptionCancelResponse.soap_put(soap, "ns1:SubscriptionCancelResponse", "")
+		 || s0__SubscriptionCancelResponse.soap_put(soap, "s0:SubscriptionCancelResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -329,7 +329,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionCancel(struct soap *soap
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__SubscriptionCancelResponse.soap_put(soap, "ns1:SubscriptionCancelResponse", "")
+	 || s0__SubscriptionCancelResponse.soap_put(soap, "s0:SubscriptionCancelResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -337,30 +337,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__SubscriptionCancel(struct soap *soap
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Browse(struct soap *soap)
-{	struct __ns1__Browse soap_tmp___ns1__Browse;
-	_ns1__BrowseResponse ns1__BrowseResponse;
-	ns1__BrowseResponse.soap_default(soap);
-	soap_default___ns1__Browse(soap, &soap_tmp___ns1__Browse);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Browse(struct soap *soap)
+{	struct __s0__Browse soap_tmp___s0__Browse;
+	_s0__BrowseResponse s0__BrowseResponse;
+	s0__BrowseResponse.soap_default(soap);
+	soap_default___s0__Browse(soap, &soap_tmp___s0__Browse);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__Browse(soap, &soap_tmp___ns1__Browse, "-ns1:Browse", NULL))
+	if (!soap_get___s0__Browse(soap, &soap_tmp___s0__Browse, "-s0:Browse", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__Browse(soap, soap_tmp___ns1__Browse.ns1__Browse, &ns1__BrowseResponse);
+	soap->error = __s0__Browse(soap, soap_tmp___s0__Browse.s0__Browse, &s0__BrowseResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__BrowseResponse.soap_serialize(soap);
+	s0__BrowseResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__BrowseResponse.soap_put(soap, "ns1:BrowseResponse", "")
+		 || s0__BrowseResponse.soap_put(soap, "s0:BrowseResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -370,7 +370,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Browse(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__BrowseResponse.soap_put(soap, "ns1:BrowseResponse", "")
+	 || s0__BrowseResponse.soap_put(soap, "s0:BrowseResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))
@@ -378,30 +378,30 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__Browse(struct soap *soap)
 	return soap_closesock(soap);
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetProperties(struct soap *soap)
-{	struct __ns1__GetProperties soap_tmp___ns1__GetProperties;
-	_ns1__GetPropertiesResponse ns1__GetPropertiesResponse;
-	ns1__GetPropertiesResponse.soap_default(soap);
-	soap_default___ns1__GetProperties(soap, &soap_tmp___ns1__GetProperties);
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetProperties(struct soap *soap)
+{	struct __s0__GetProperties soap_tmp___s0__GetProperties;
+	_s0__GetPropertiesResponse s0__GetPropertiesResponse;
+	s0__GetPropertiesResponse.soap_default(soap);
+	soap_default___s0__GetProperties(soap, &soap_tmp___s0__GetProperties);
 	soap->encodingStyle = NULL;
-	if (!soap_get___ns1__GetProperties(soap, &soap_tmp___ns1__GetProperties, "-ns1:GetProperties", NULL))
+	if (!soap_get___s0__GetProperties(soap, &soap_tmp___s0__GetProperties, "-s0:GetProperties", NULL))
 		return soap->error;
 	if (soap_body_end_in(soap)
 	 || soap_envelope_end_in(soap)
 	 || soap_end_recv(soap))
 		return soap->error;
-	soap->error = __ns1__GetProperties(soap, soap_tmp___ns1__GetProperties.ns1__GetProperties, &ns1__GetPropertiesResponse);
+	soap->error = __s0__GetProperties(soap, soap_tmp___s0__GetProperties.s0__GetProperties, &s0__GetPropertiesResponse);
 	if (soap->error)
 		return soap->error;
 	soap_serializeheader(soap);
-	ns1__GetPropertiesResponse.soap_serialize(soap);
+	s0__GetPropertiesResponse.soap_serialize(soap);
 	if (soap_begin_count(soap))
 		return soap->error;
 	if (soap->mode & SOAP_IO_LENGTH)
 	{	if (soap_envelope_begin_out(soap)
 		 || soap_putheader(soap)
 		 || soap_body_begin_out(soap)
-		 || ns1__GetPropertiesResponse.soap_put(soap, "ns1:GetPropertiesResponse", "")
+		 || s0__GetPropertiesResponse.soap_put(soap, "s0:GetPropertiesResponse", "")
 		 || soap_body_end_out(soap)
 		 || soap_envelope_end_out(soap))
 			 return soap->error;
@@ -411,7 +411,7 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ns1__GetProperties(struct soap *soap)
 	 || soap_envelope_begin_out(soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
-	 || ns1__GetPropertiesResponse.soap_put(soap, "ns1:GetPropertiesResponse", "")
+	 || s0__GetPropertiesResponse.soap_put(soap, "s0:GetPropertiesResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

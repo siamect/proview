@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.8 2007-03-15 12:33:03 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.9 2007-03-15 15:25:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,8 +99,9 @@ int main()
     exit(sts);
   }
 
-#if 0
   opcsrv = new opc_server();
+
+#if 0
 
   pwr_tOid config_oid;
 
@@ -171,36 +172,36 @@ int main()
 
 
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetStatus(struct soap*, 
-					   _ns1__GetStatus *ns1__GetStatus, 
-					   _ns1__GetStatusResponse *ns1__GetStatusResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, 
+					   _s0__GetStatus *s0__GetStatus, 
+					   _s0__GetStatusResponse *s0__GetStatusResponse)
 {
   pwr_tTime current_time;
 
   clock_gettime( CLOCK_REALTIME, &current_time);
 
-  ns1__GetStatusResponse->GetStatusResult = new ns1__ReplyBase();
-  ns1__GetStatusResponse->GetStatusResult->RcvTime = current_time.tv_sec;
-  ns1__GetStatusResponse->GetStatusResult->ReplyTime = current_time.tv_sec;
-  ns1__GetStatusResponse->GetStatusResult->RevisedLocaleID = new std::string( "en");
-  ns1__GetStatusResponse->GetStatusResult->ServerState = ns1__serverState__running;
-  ns1__GetStatusResponse->GetStatusResult->ClientRequestHandle = ns1__GetStatus->ClientRequestHandle;
+  s0__GetStatusResponse->GetStatusResult = new s0__ReplyBase();
+  s0__GetStatusResponse->GetStatusResult->RcvTime.__item = opc_datetime(0);
+  s0__GetStatusResponse->GetStatusResult->ReplyTime.__item = opc_datetime(0);
+  s0__GetStatusResponse->GetStatusResult->RevisedLocaleID = new std::string( "en");
+  s0__GetStatusResponse->GetStatusResult->ServerState = s0__serverState__running;
+  s0__GetStatusResponse->GetStatusResult->ClientRequestHandle = s0__GetStatus->ClientRequestHandle;
 
-  ns1__GetStatusResponse->Status = new ns1__ServerStatus();
-  ns1__GetStatusResponse->Status->VendorInfo = new std::string("Proview " pwrv_cPwrVersionStr);
-  ns1__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( ns1__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
-  ns1__GetStatusResponse->Status->StartTime = opc_start_time.tv_sec;
-  ns1__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
+  s0__GetStatusResponse->Status = new s0__ServerStatus();
+  s0__GetStatusResponse->Status->VendorInfo = new std::string("Proview Open Source Process Control");
+  s0__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
+  s0__GetStatusResponse->Status->StartTime.__item = opc_datetime( &opc_start_time);
+  s0__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
 
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*, 
-				      _ns1__Read *ns1__Read, 
-				      _ns1__ReadResponse *ns1__ReadResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*, 
+				      _s0__Read *s0__Read, 
+				      _s0__ReadResponse *s0__ReadResponse)
 {
   int ii;
-  class ns1__ReadRequestItem *item;
+  class s0__ReadRequestItem *item;
   pwr_sAttrRef               ar;
   pwr_tStatus sts;
   pwr_tOName itemname;
@@ -212,34 +213,34 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
   char  buf[1024];
   unsigned int options = 0;
   
-  ns1__ReadResponse->ReadResult = new ns1__ReplyBase();
-//  ns1__ReadResponse->ReadResult->RcvTime = current_time.tv_sec;
-//  ns1__ReadResponse->ReadResult->ReplyTime = current_time.tv_sec;
-  if (ns1__Read->Options)
-    ns1__ReadResponse->ReadResult->ClientRequestHandle = ns1__Read->Options->ClientRequestHandle;
-  ns1__ReadResponse->ReadResult->ServerState = ns1__serverState__running;
+  s0__ReadResponse->ReadResult = new s0__ReplyBase();
+//  s0__ReadResponse->ReadResult->RcvTime = current_time.tv_sec;
+//  s0__ReadResponse->ReadResult->ReplyTime = current_time.tv_sec;
+  if (s0__Read->Options)
+    s0__ReadResponse->ReadResult->ClientRequestHandle = s0__Read->Options->ClientRequestHandle;
+  s0__ReadResponse->ReadResult->ServerState = s0__serverState__running;
 
-  if (!ns1__Read->ItemList)
+  if (!s0__Read->ItemList)
     return 0;
 
-  if (ns1__Read->ItemList->Items.empty())
+  if (s0__Read->ItemList->Items.empty())
     return 0;
   
   memset(path, 0, sizeof(path));
   
-  opc_requestoptions_to_mask(ns1__Read->Options, &options);
+  opc_requestoptions_to_mask(s0__Read->Options, &options);
 
-  if (ns1__Read->ItemList->ItemPath && !ns1__Read->ItemList->ItemPath->empty())
-    strncpy(path, ns1__Read->ItemList->ItemPath->c_str(), sizeof(path));
+  if (s0__Read->ItemList->ItemPath && !s0__Read->ItemList->ItemPath->empty())
+    strncpy(path, s0__Read->ItemList->ItemPath->c_str(), sizeof(path));
   
-  for (ii = 0; ii < (int) ns1__Read->ItemList->Items.size(); ii++) {
+  for (ii = 0; ii < (int) s0__Read->ItemList->Items.size(); ii++) {
 
-    ns1__ItemValue *iv = new ns1__ItemValue();
+    s0__ItemValue *iv = new s0__ItemValue();
       
-    if (!ns1__ReadResponse->RItemList)
-      ns1__ReadResponse->RItemList = new ns1__ReplyItemList();
+    if (!s0__ReadResponse->RItemList)
+      s0__ReadResponse->RItemList = new s0__ReplyItemList();
 
-    item = ns1__Read->ItemList->Items[ii];
+    item = s0__Read->ItemList->Items[ii];
     
     if (item->ItemPath && !item->ItemPath->empty())
       strncpy(itempath, item->ItemPath->c_str(), sizeof(itemname));
@@ -261,15 +262,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
     sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);
     
     if (EVEN(sts)) {
-      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
       continue;
     }
     
     if (!item->ReqType || item->ReqType->empty()) {
-      if (!ns1__Read->ItemList->ReqType || ns1__Read->ItemList->ReqType->empty()) {
+      if (!s0__Read->ItemList->ReqType || s0__Read->ItemList->ReqType->empty()) {
         reqType = -1;
       } else {
-        opc_string_to_opctype(ns1__Read->ItemList->ReqType->c_str(), &reqType);
+        opc_string_to_opctype(s0__Read->ItemList->ReqType->c_str(), &reqType);
       }
     } else {
       opc_string_to_opctype(item->ReqType->c_str(), &reqType);
@@ -278,8 +279,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
     gdh_GetAttributeCharAttrref(&ar, &tid, NULL, NULL, &elem);
     
     if (cdh_tidIsCid(tid) || elem > 1) {
-      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
-      ns1__ReadResponse->RItemList->Items.push_back(iv);
+      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
           
@@ -294,35 +295,37 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Read(struct soap*,
         opc_opctype_to_value(buf, sizeof(buf), reqType);
 	str = (char *) malloc(strlen(buf) + 1);
 	strncpy(str, buf, sizeof(buf));
+#if 0 // TODO
 	iv->Value = str;
 	sprintf(iv->ValueType, "%s", opc_opctype_to_string(reqType));
+#endif
 	if (options & opc_mRequestOption_ReturnItemTime) {
 	  // ToDo !!!
 	}
-        ns1__ReadResponse->RItemList->Items.push_back(iv);
+        s0__ReadResponse->RItemList->Items.push_back(iv);
 
       } else {
-        opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+        opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
         continue;
       }
     } else {
-      opcsrv_returnerror(ns1__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       continue;
     }
   }
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Write(struct soap*, 
-				       _ns1__Write *ns1__Write, 
-				       _ns1__WriteResponse *ns1__WriteResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap*, 
+				       _s0__Write *s0__Write, 
+				       _s0__WriteResponse *s0__WriteResponse)
 {
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap* soap, 
-					   _ns1__Subscribe *ns1__Subscribe, 
-					   _ns1__SubscribeResponse *ns1__SubscribeResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap, 
+					   _s0__Subscribe *s0__Subscribe, 
+					   _s0__SubscribeResponse *s0__SubscribeResponse)
 {
   pwr_tStatus sts;
   pwr_tTypeId a_tid;
@@ -335,12 +338,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap* soap,
   clock_gettime( CLOCK_REALTIME, &client->m_last_time);
 
 
-  if ( ns1__Subscribe->ItemList) {
+  if ( s0__Subscribe->ItemList) {
 
-    for ( int i = 0; i < (int) ns1__Subscribe->ItemList->Items.size(); i++) {
+    for ( int i = 0; i < (int) s0__Subscribe->ItemList->Items.size(); i++) {
       opcsrv_sub sub;
       
-      strcpy( aname, ns1__Subscribe->ItemList->Items[0]->ItemName->c_str());
+      strcpy( aname, s0__Subscribe->ItemList->Items[0]->ItemName->c_str());
       sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size, &a_offs, &a_elem);
       if ( EVEN(sts)) {
 	// TODO Set the fault code somewhere... 
@@ -360,20 +363,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Subscribe(struct soap* soap,
       if ( i == 0) {
 	vector<opcsrv_sub> subv;
 	
-	ns1__SubscribeResponse->ServerSubHandle = 
+	s0__SubscribeResponse->ServerSubHandle = 
 	  new std::string( cdh_SubidToString( 0, sub.subid, 0));
 	
-	client->m_sublist[*ns1__SubscribeResponse->ServerSubHandle] = subv;
+	client->m_sublist[*s0__SubscribeResponse->ServerSubHandle] = subv;
       }
-      client->m_sublist[*ns1__SubscribeResponse->ServerSubHandle].push_back( sub);
+      client->m_sublist[*s0__SubscribeResponse->ServerSubHandle].push_back( sub);
     }
   }
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap* soap, 
-							   _ns1__SubscriptionPolledRefresh *ns1__SubscriptionPolledRefresh, 
-							   _ns1__SubscriptionPolledRefreshResponse *ns1__SubscriptionPolledRefreshResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap, 
+							   _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, 
+							   _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse)
 {
   pwr_tTime current_time;
   opcsrv_client *client = opcsrv->find_client( soap->ip);
@@ -385,27 +388,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap* soap,
   clock_gettime( CLOCK_REALTIME, &current_time);
   client->m_last_time = current_time;
 
-  for ( int i = 0; i < (int) ns1__SubscriptionPolledRefresh->ServerSubHandles.size(); i++) {
+  for ( int i = 0; i < (int) s0__SubscriptionPolledRefresh->ServerSubHandles.size(); i++) {
     sublist_iterator it = 
-      client->m_sublist.find( ns1__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      client->m_sublist.find( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
     
     if ( it != client->m_sublist.end()) {
-      ns1__SubscribePolledRefreshReplyItemList *rlist = new ns1__SubscribePolledRefreshReplyItemList();
+      s0__SubscribePolledRefreshReplyItemList *rlist = new s0__SubscribePolledRefreshReplyItemList();
 
-      rlist->SubscriptionHandle = new std::string(ns1__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      rlist->SubscriptionHandle = new std::string(s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
       for ( int j = 0; j < (int)it->second.size(); j++) {
-	ns1__ItemValue *ritem = new ns1__ItemValue();
+	s0__ItemValue *ritem = new s0__ItemValue();
 	
 	// TODO
-	ritem->Value = (char *) malloc( 80);
-	strcpy( ritem->Value, "1");
-	strcpy( ritem->ValueType, "xsd:string");
-	ritem->Timestamp = (time_t *) malloc( sizeof(time_t));
-	*ritem->Timestamp = current_time.tv_sec;
+	ritem->Value = new xsd__string();
+	((xsd__string *)ritem->Value)->__item = std::string("100");
+	ritem->Timestamp = new xsd__dateTime();
+	ritem->Timestamp->__item = opc_datetime(0);
 
 	rlist->Items.push_back( ritem);
       }
-      ns1__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
+      s0__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
     }
     else {
     }
@@ -414,9 +416,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionPolledRefresh(struct soap* soap,
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap* soap, 
-						    _ns1__SubscriptionCancel *ns1__SubscriptionCancel, 
-						    _ns1__SubscriptionCancelResponse *ns1__SubscriptionCancelResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap, 
+						    _s0__SubscriptionCancel *s0__SubscriptionCancel, 
+						    _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse)
 {
   opcsrv_client *client = opcsrv->find_client( soap->ip);
   if ( !client) {
@@ -427,7 +429,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap* soap,
   clock_gettime( CLOCK_REALTIME, &client->m_last_time);
 
   sublist_iterator it = 
-    client->m_sublist.find( *ns1__SubscriptionCancel->ServerSubHandle);
+    client->m_sublist.find( *s0__SubscriptionCancel->ServerSubHandle);
 
   if ( it != client->m_sublist.end()) {
     client->m_sublist.erase( it);
@@ -435,14 +437,14 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__SubscriptionCancel(struct soap* soap,
   else {
     // TODO Set the fault code somewhere...
   }
-  ns1__SubscriptionCancelResponse->ClientRequestHandle = 
-    ns1__SubscriptionCancel->ClientRequestHandle;
+  s0__SubscriptionCancelResponse->ClientRequestHandle = 
+    s0__SubscriptionCancel->ClientRequestHandle;
   return 0;
 }
 
 bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp, 
 			    pwr_tAttrRef *arp, unsigned int propmask, gdh_sAttrDef *bd,
-			    std::vector<ns1__ItemProperty *>& properties)
+			    std::vector<s0__ItemProperty *>& properties)
 {
   pwr_tStatus sts;
 
@@ -455,19 +457,17 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
       if ( ODD(sts)) {
 	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
 	if ( ODD(sts)) {
-	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  s0__ItemProperty *ip = new s0__ItemProperty();
 	  ip->Name = std::string("description");
-	  ip->Value = (char *) malloc( sizeof(pwr_tString80));
-	  strncpy( ip->Value, desc, sizeof(pwr_tString80));
-	  strcpy( ip->ValueType, "xsd:string");
+	  ip->Value = new xsd__string();
+	  ((xsd__string *)ip->Value)->__item = std::string(desc);
 	  properties.push_back( ip);
 	}
       }
       if ( EVEN(sts)) {
-	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	s0__ItemProperty *ip = new s0__ItemProperty();
 	ip->Name = std::string("description");
-	ip->Value = (char *) calloc(1, 1);
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
 	properties.push_back( ip);
       }
     }
@@ -501,19 +501,17 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
 	if ( EVEN(sts)) break;
 	
-	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	s0__ItemProperty *ip = new s0__ItemProperty();
 	ip->Name = std::string("description");
-	ip->Value = (char *) calloc( 1, sizeof(desc));
-	strncpy( ip->Value, desc, sizeof(desc));
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
+	((xsd__string *)ip->Value)->__item = std::string( desc);
 	properties.push_back( ip);
 	break;
       }
       default: {
-	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	s0__ItemProperty *ip = new s0__ItemProperty();
 	ip->Name = std::string("description");
-	ip->Value = (char *) calloc(1,1);
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
 	properties.push_back( ip);
       }
       }
@@ -523,12 +521,12 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     // DataType
     if ( propmask & opc_mProperty_DataType) {
       char *type_p;
-      ns1__ItemProperty *ip = new ns1__ItemProperty();
+      s0__ItemProperty *ip = new s0__ItemProperty();
 
       if ( opc_pwrtype_to_string( bd->attr->Param.Info.Type, &type_p)) {
 	ip->Name = std::string("dataType");
-	ip->Value = type_p;
-	strcpy( ip->ValueType, "xsd:QName");
+	ip->Value = new xsd__QName_();
+	((xsd__QName_ *)ip->Value)->__item = std::string(type_p);
 	properties.push_back( ip);
       }
       else {
@@ -539,12 +537,12 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     // Quality
     if ( propmask & opc_mProperty_Quality) {
       char *qual_p;
-      ns1__ItemProperty *ip = new ns1__ItemProperty();
+      s0__ItemProperty *ip = new s0__ItemProperty();
 
-      if ( opc_quality_to_string( ns1__qualityBits__good, &qual_p)) {
+      if ( opc_quality_to_string( s0__qualityBits__good, &qual_p)) {
 	ip->Name = std::string("quality");
-	ip->Value = qual_p;
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
+	((xsd__string *)ip->Value)->__item = std::string(qual_p);
 	properties.push_back( ip);
       }
     }
@@ -556,25 +554,24 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 
     // Access Rights
     if ( propmask & opc_mProperty_AccessRights) {
-      ns1__ItemProperty *ip = new ns1__ItemProperty();
+      s0__ItemProperty *ip = new s0__ItemProperty();
 
       ip->Name = std::string("accessRights");
-      ip->Value = (char *) malloc( 20);
-      strcpy( ip->ValueType, "xsd:string");
+      ip->Value = new xsd__string();
 
       switch ( opc_current_access) {
       case pwr_eOpc_AccessEnum_ReadOnly:
-	strcpy( ip->Value, "readable");
+	((xsd__string *)ip->Value)->__item = std::string("readable");
 	break;
       case pwr_eOpc_AccessEnum_ReadWrite:
 	if ( bd->attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL ||
 	     bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE)
-	  strcpy( ip->Value, "readable");
+	  ((xsd__string *)ip->Value)->__item = std::string("readable");
 	else
-	    strcpy( ip->Value, "readWriteable");
+	  ((xsd__string *)ip->Value)->__item = std::string("readWriteable");
 	break;
       default:
-	strcpy( ip->Value, "unknown");
+	((xsd__string *)ip->Value)->__item = std::string("unknown");
 	break;
       }
       properties.push_back( ip);
@@ -601,11 +598,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &unit, sizeof(unit));
 	  if ( EVEN(sts)) break;
 
-	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  s0__ItemProperty *ip = new s0__ItemProperty();
 	  ip->Name = std::string("engineeringUnits");
-	  ip->Value = (char *) malloc( 20);
-	  strcpy( ip->Value, unit);
-	  strcpy( ip->ValueType, "xsd:string");
+	  ip->Value = new xsd__string();
+	  ((xsd__string *)ip->Value)->__item = std::string(unit);
 	  properties.push_back( ip);
 	  break;
 	}
@@ -618,20 +614,18 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     if ( propmask & opc_mProperty_EuType) {
       switch( bd->attr->Param.Info.Type) {
       case pwr_eType_Float32: {
-	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	s0__ItemProperty *ip = new s0__ItemProperty();
 	ip->Name = std::string("euType");
-	ip->Value = (char *) malloc( 20);
-	strcpy( ip->Value, "analog");
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
+	((xsd__string *)ip->Value)->__item = std::string("analog");
 	properties.push_back( ip);
 	break;
       }
       default: {
-	ns1__ItemProperty *ip = new ns1__ItemProperty();
+	s0__ItemProperty *ip = new s0__ItemProperty();
 	ip->Name = std::string("euType");
-	ip->Value = (char *) malloc( 20);
-	strcpy( ip->Value, "noEnum");
-	strcpy( ip->ValueType, "xsd:string");
+	ip->Value = new xsd__string();
+	((xsd__string *)ip->Value)->__item = std::string("noEnum");
 	properties.push_back( ip);
 	break;
       }
@@ -653,11 +647,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  if ( ODD(sts)) {
 	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	    if ( ODD(sts)) {
-	      ns1__ItemProperty *ip = new ns1__ItemProperty();
+	      s0__ItemProperty *ip = new s0__ItemProperty();
 	      ip->Name = std::string("highEU");
-	      ip->Value = (char *) malloc( 20);
-	      sprintf( ip->Value, "%5.2f", fval);
-	      strcpy( ip->ValueType, "xsd:double");
+	      ip->Value = new xsd__double();
+	      ((xsd__double *)ip->Value)->__item = fval;
 	      properties.push_back( ip);
 	    }
 	  }
@@ -681,11 +674,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  if ( ODD(sts)) {
 	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	    if ( ODD(sts)) {
-	      ns1__ItemProperty *ip = new ns1__ItemProperty();
+	      s0__ItemProperty *ip = new s0__ItemProperty();
 	      ip->Name = std::string("lowEU");
-	      ip->Value = (char *) malloc( 20);
-	      sprintf( ip->Value, "%5.2f", fval);
-	      strcpy( ip->ValueType, "xsd:double");
+	      ip->Value = new xsd__double();
+	      ((xsd__double *)ip->Value)->__item = fval;
 	      properties.push_back( ip);
 	    }
 	  }
@@ -727,11 +719,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	  if ( EVEN(sts)) break;
 
-	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  s0__ItemProperty *ip = new s0__ItemProperty();
 	  ip->Name = std::string("highIR");
-	  ip->Value = (char *) malloc( 20);
-	  sprintf( ip->Value, "%5.2f", fval);
-	  strcpy( ip->ValueType, "xsd:double");
+	  ip->Value = new xsd__double();
+	  ((xsd__double *)ip->Value)->__item = fval;
 	  properties.push_back( ip);
 	  break;
 	}
@@ -772,11 +763,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	  if ( EVEN(sts)) break;
 
-	  ns1__ItemProperty *ip = new ns1__ItemProperty();
+	  s0__ItemProperty *ip = new s0__ItemProperty();
 	  ip->Name = std::string("lowIR");
-	  ip->Value = (char *) malloc( 20);
-	  sprintf( ip->Value, "%5.2f", fval);
-	  strcpy( ip->ValueType, "xsd:double");
+	  ip->Value = new xsd__double();
+	  ((xsd__double *)ip->Value)->__item = fval;
 	  properties.push_back( ip);
 	  break;
 	}
@@ -802,8 +792,8 @@ int opcsrv_get_access( struct soap *so)
   return access;
 }
   
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Browse, 
-					_ns1__BrowseResponse *ns1__BrowseResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse, 
+					_s0__BrowseResponse *s0__BrowseResponse)
 {
   pwr_tStatus sts;
   pwr_tOid oid, child, ch;
@@ -816,29 +806,29 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
   opc_current_access = opcsrv_get_access( so);
   clock_gettime( CLOCK_REALTIME, &current_time);
 
-  ns1__BrowseResponse->BrowseResult = new ns1__ReplyBase();
-  ns1__BrowseResponse->BrowseResult->RcvTime = current_time.tv_sec;
-  ns1__BrowseResponse->BrowseResult->ReplyTime = current_time.tv_sec;
-  ns1__BrowseResponse->BrowseResult->ClientRequestHandle = ns1__Browse->ClientRequestHandle;
-  ns1__BrowseResponse->BrowseResult->ServerState = ns1__serverState__running;
+  s0__BrowseResponse->BrowseResult = new s0__ReplyBase();
+  s0__BrowseResponse->BrowseResult->RcvTime.__item = opc_datetime(0);
+  s0__BrowseResponse->BrowseResult->ReplyTime.__item = opc_datetime(0);
+  s0__BrowseResponse->BrowseResult->ClientRequestHandle = s0__Browse->ClientRequestHandle;
+  s0__BrowseResponse->BrowseResult->ServerState = s0__serverState__running;
 
-  if ( (!ns1__Browse->ItemName || ns1__Browse->ItemName->empty()) &&
-       (!ns1__Browse->ItemPath || ns1__Browse->ItemPath->empty())) {
+  if ( (!s0__Browse->ItemName || s0__Browse->ItemName->empty()) &&
+       (!s0__Browse->ItemPath || s0__Browse->ItemPath->empty())) {
     // Return rootlist
     for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       sts = gdh_GetObjectClass( oid, &cid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
       
-      ns1__BrowseElement *element = new ns1__BrowseElement();
+      s0__BrowseElement *element = new s0__BrowseElement();
       element->Name = new std::string( name);
       element->ItemName = element->Name;
       element->IsItem = false;
@@ -847,17 +837,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       else
 	element->HasChildren = true;
 
-      if ( ns1__Browse->ReturnAllProperties)
+      if ( s0__Browse->ReturnAllProperties)
 	property_mask = ~0;
       else
-	opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
       pwr_tAttrRef aref = cdh_ObjidToAref( oid);
       opcsrv_get_properties( false, cid, 0, &aref, 
 			     property_mask, 0,
 			     element->Properties);
 
-      ns1__BrowseResponse->Elements.push_back( element);
+      s0__BrowseResponse->Elements.push_back( element);
     }
   }
   else {
@@ -870,24 +860,24 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
     pwr_sAttrRef paref;
     pwr_sAttrRef aref;
     
-    if ( ns1__Browse->ItemPath && !ns1__Browse->ItemPath->empty()) {
-      strncpy( pname, ns1__Browse->ItemPath->c_str(), sizeof( pname));
-      if ( ns1__Browse->ItemName && !ns1__Browse->ItemName->empty()) {
-	strcat( pname, ns1__Browse->ItemName->c_str());
+    if ( s0__Browse->ItemPath && !s0__Browse->ItemPath->empty()) {
+      strncpy( pname, s0__Browse->ItemPath->c_str(), sizeof( pname));
+      if ( s0__Browse->ItemName && !s0__Browse->ItemName->empty()) {
+	strcat( pname, s0__Browse->ItemName->c_str());
       }
     }
     else
-      strncpy( pname, ns1__Browse->ItemName->c_str(), sizeof(pname));
+      strncpy( pname, s0__Browse->ItemName->c_str(), sizeof(pname));
 
     sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
     if ( EVEN(sts)) {
-      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_UNKNOWNITEMNAME, erropt);
+      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_UNKNOWNITEMNAME, erropt);
       return 0;
     }
 
     sts = gdh_GetAttrRefTid( &paref, &cid);
     if ( EVEN(sts)) {
-      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
       return 0;
     }
 
@@ -902,18 +892,18 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 
       sts = gdh_AttrArefToObjectAref( &paref, &oaref);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       sts = gdh_GetAttrRefTid( &oaref, &cid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       if ( !( attrname = strrchr( pname, '.'))) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
       attrname++;
@@ -921,7 +911,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       // Get body definition
       sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
       int bd_idx = -1;
@@ -933,26 +923,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
       }
       if ( bd_idx == -1) {
 	// E_INVALIDITEMNAME
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	free( (char *)bd);
 	return 0;
       }
 
       sts = gdh_GetAttributeCharAttrref( &paref, &a_type, &a_size, &a_offs, &a_dim);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	return 0;
       }
 
       for ( int i = 0; i < (int)a_dim; i++) {
-	ns1__BrowseElement *element = new ns1__BrowseElement();
+	s0__BrowseElement *element = new s0__BrowseElement();
 
 	sprintf( itemname, "%s[%d]", pname, i);
 	s = strrchr( itemname, '.');
 	if ( s)
 	  strcpy( aname, s + 1);
 	else {
-	  opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	  opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	  return 0;
 	}
 	element->Name = new std::string( aname);
@@ -960,15 +950,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	element->IsItem = true;
 	element->HasChildren = false;
 
-	if ( ns1__Browse->ReturnAllProperties)
+	if ( s0__Browse->ReturnAllProperties)
 	  property_mask = ~0;
 	else
-	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	  opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	if ( property_mask) {
 	  sts = gdh_NameToAttrref( pwr_cNOid, itemname, &aref);
 	  if ( EVEN(sts)) {
-	    opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	    opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	    return 0;
 	  }
 	  
@@ -977,7 +967,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 				 element->Properties);
 
 	}
-	ns1__BrowseResponse->Elements.push_back( element);
+	s0__BrowseResponse->Elements.push_back( element);
       }
       free( (char *)bd);
 
@@ -985,7 +975,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
     }
 
     if ( !cdh_tidIsCid( cid)) {
-      opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
       return 0;
     }
 
@@ -1006,7 +996,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	
 	sts = gdh_ArefANameToAref( &paref, bd[i].attrName, &aref);
 	if ( EVEN(sts)) {
-	  opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	  opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	  return 0;
 	}
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
@@ -1014,7 +1004,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 
 	  sts = gdh_ArefDisabled( &aref, &disabled);
 	  if ( EVEN(sts)) {
-	    opcsrv_returnerror( ns1__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
+	    opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	    return 0;
 	  }
 	    
@@ -1024,7 +1014,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ||
 	     bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
-	  ns1__BrowseElement *element = new ns1__BrowseElement();
+	  s0__BrowseElement *element = new s0__BrowseElement();
 	  
 	  cdh_SuppressSuper( aname, bd[i].attrName);
 	  element->Name = new std::string( aname);
@@ -1035,20 +1025,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	  element->IsItem = false;
 	  element->HasChildren = true;
 
-	  if ( ns1__Browse->ReturnAllProperties)
+	  if ( s0__Browse->ReturnAllProperties)
 	    property_mask = ~0;
 	  else
-	    opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	    opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	  if ( property_mask)
 	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
 				   property_mask, &bd[i],
 				   element->Properties);
 
-	  ns1__BrowseResponse->Elements.push_back( element);
+	  s0__BrowseResponse->Elements.push_back( element);
 	}
 	else {
-	  ns1__BrowseElement *element = new ns1__BrowseElement();
+	  s0__BrowseElement *element = new s0__BrowseElement();
 	  
 	  cdh_SuppressSuper( aname, bd[i].attrName);
 	  element->Name = new std::string( aname);
@@ -1059,17 +1049,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	  element->IsItem = true;
 	  element->HasChildren = false;
 
-	  if ( ns1__Browse->ReturnAllProperties)
+	  if ( s0__Browse->ReturnAllProperties)
 	    property_mask = ~0;
 	  else
-	    opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	    opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	  if ( property_mask)
 	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
 				   property_mask, &bd[i],
 				   element->Properties);
 
-	  ns1__BrowseResponse->Elements.push_back( element);
+	  s0__BrowseResponse->Elements.push_back( element);
 	} 
       }
       free( (char *)bd);      
@@ -1085,7 +1075,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	sts = gdh_GetObjectClass( child, &cid);
 	if ( EVEN(sts)) continue;
       
-	ns1__BrowseElement *element = new ns1__BrowseElement();
+	s0__BrowseElement *element = new s0__BrowseElement();
 	
 	element->Name = new std::string( name);
 	strcpy( itemname, pname);
@@ -1098,10 +1088,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 	else
 	  element->HasChildren = true;
 					       
-	if ( ns1__Browse->ReturnAllProperties)
+	if ( s0__Browse->ReturnAllProperties)
 	  property_mask = ~0;
 	else
-	  opc_propertynames_to_mask( ns1__Browse->PropertyNames, &property_mask);
+	  opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	if ( property_mask) {
 	  aref = cdh_ObjidToAref( child);
@@ -1109,16 +1099,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__Browse(struct soap *so, _ns1__Browse *ns1__Brow
 				 property_mask, 0,
 				 element->Properties);
 	}
-	ns1__BrowseResponse->Elements.push_back( element);	
+	s0__BrowseResponse->Elements.push_back( element);	
       }
     }
   }
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*, 
-					       _ns1__GetProperties *ns1__GetProperties, 
-					       _ns1__GetPropertiesResponse *ns1__GetPropertiesResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, 
+					       _s0__GetProperties *s0__GetProperties, 
+					       _s0__GetPropertiesResponse *s0__GetPropertiesResponse)
 {
   unsigned int property_mask;
   pwr_tCid cid;
@@ -1130,22 +1120,22 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*,
   gdh_sAttrDef *bd;
   int 	rows;
 
-  if ( ns1__GetProperties->ReturnAllProperties)
+  if ( s0__GetProperties->ReturnAllProperties)
     property_mask = ~0;
   else
-    opc_propertynames_to_mask( ns1__GetProperties->PropertyNames, &property_mask);
+    opc_propertynames_to_mask( s0__GetProperties->PropertyNames, &property_mask);
 
-  for ( int i = 0; i < (int)ns1__GetProperties->ItemIDs.size(); i++) {
-    ns1__PropertyReplyList *plist = new ns1__PropertyReplyList();
+  for ( int i = 0; i < (int)s0__GetProperties->ItemIDs.size(); i++) {
+    s0__PropertyReplyList *plist = new s0__PropertyReplyList();
     std::string *path;
 
-    if ( ns1__GetProperties->ItemIDs[i]->ItemPath)
-      path = ns1__GetProperties->ItemIDs[i]->ItemPath;
+    if ( s0__GetProperties->ItemIDs[i]->ItemPath)
+      path = s0__GetProperties->ItemIDs[i]->ItemPath;
     else
-      path = ns1__GetProperties->ItemPath;
+      path = s0__GetProperties->ItemPath;
 
     plist->ItemPath = path;
-    plist->ItemName = new std::string(*ns1__GetProperties->ItemIDs[i]->ItemName);
+    plist->ItemName = new std::string(*s0__GetProperties->ItemIDs[i]->ItemName);
 
     if ( path) {
       strcpy( iname, path->c_str());
@@ -1220,7 +1210,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __ns1__GetProperties(struct soap*,
       free( (char *)bd);
     }
 
-    ns1__GetPropertiesResponse->PropertyLists.push_back( plist);
+    s0__GetPropertiesResponse->PropertyLists.push_back( plist);
   }
 
   return 0;

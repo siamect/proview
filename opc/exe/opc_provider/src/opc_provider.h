@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.6 2007-03-15 08:07:50 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.7 2007-03-15 15:25:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -87,12 +87,12 @@ public:
 
   virtual bool find( pwr_tOix fthoix, char *name, pwr_tOix *oix);
   
-  void insert_object( pwr_tOix fth, pwr_tOix bws, ns1__BrowseElement *element,
+  void insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement *element,
 		      int first, int last, int load_children, std::string *path);
 
   void get_server_state();
   char *opc_provider::name_to_objectname( char *name);
-  void errlog( std::string* item, std::vector<ns1__OPCError *>& errvect);
+  void errlog( std::string* item, std::vector<s0__OPCError *>& errvect);
 
   vector<opcprv_obj> m_list;
   map<pwr_tUInt32, opcprv_sub> m_sublist;
