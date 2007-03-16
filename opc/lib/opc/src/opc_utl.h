@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.9 2007-03-16 10:19:45 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.10 2007-03-16 12:51:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,7 +112,7 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
 const char *opc_resultcode_to_string( int code);
 const char *opc_resultcode_to_text( int code);
 bool opc_string_to_resultcode(char *str, int *code);
-bool opc_opctype_to_value(void *bufp, int size, int opc_type);
+xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type);
 bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type);
 bool opc_string_to_opctype(const char *str, int *type);
 char *opc_opctype_to_string(int type);

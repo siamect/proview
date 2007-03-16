@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.11 2007-03-16 10:19:45 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.12 2007-03-16 12:51:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,62 +237,104 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
 //
 // Return the corresponding opc type for a opc type string
 //
-bool opc_opctype_to_value(void *bufp, int size, int opc_type)
+xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type)
 {
   switch (opc_type) {
     case opc_eDataType_string:
       break;
-    case opc_eDataType_boolean:
-      if (*(char *) bufp) {
-        sprintf((char *) bufp, "true");
-      } else {
-        sprintf((char *) bufp, "false");
-      }
+    case opc_eDataType_boolean: {
+      xsd__boolean *val = new xsd__boolean();
+      val->__item = bool (*(char *) bufp);
+      return val;
       break;
-    case opc_eDataType_float:
-      snprintf((char *)bufp, size, "%f", *(pwr_tFloat32 *) bufp );
+    }
+    case opc_eDataType_float: {
+      xsd__float *val = new xsd__float();
+      val->__item =  *(pwr_tFloat32 *) bufp;
+      return val;
       break;
-    case opc_eDataType_decimal:
-    case opc_eDataType_double:
-      snprintf((char *)bufp, size, "%f", *(pwr_tFloat64 *) bufp );
+    }
+    case opc_eDataType_decimal: {
+      xsd__decimal_ *val = new xsd__decimal_();
+      sprintf((char *) bufp, "%f", *(pwr_tFloat64 *) bufp);
+      val->__item = std::string((char *) bufp);
+      return val;
       break;
-    case opc_eDataType_long:
-      snprintf((char *)bufp, size, "%lli", *(long long int *) bufp );
+    }
+    case opc_eDataType_double: {
+      xsd__double *val = new xsd__double();
+      val->__item = *(pwr_tFloat64 *) bufp;
+      return val;
       break;
-    case opc_eDataType_int:
-      snprintf((char *)bufp, size, "%i", *(pwr_tInt32 *) bufp );
+    }
+    case opc_eDataType_long: {
+      xsd__long *val = new xsd__long();
+      val->__item = *(long long int *) bufp;
+      return val;
       break;
-    case opc_eDataType_short:
-      snprintf((char *)bufp, size, "%hi", *(pwr_tInt16 *) bufp );
+    }
+    case opc_eDataType_int: {
+      xsd__int *val = new xsd__int();
+      val->__item = *(pwr_tInt32 *) bufp;
+      return val;
       break;
-    case opc_eDataType_byte:
-      snprintf((char *)bufp, size, "%hhi", *(pwr_tChar *) bufp );
+    }
+    case opc_eDataType_short: {
+      xsd__short *val = new xsd__short();
+      val->__item = *(pwr_tInt16 *) bufp;
+      return val;
       break;
-    case opc_eDataType_unsignedLong:
-      snprintf((char *)bufp, size, "%llu", *(long long unsigned *) bufp );
+    }
+    case opc_eDataType_byte: {
+      xsd__byte *val = new xsd__byte();
+      val->__item = *(pwr_tChar *) bufp;
+      return val;
       break;
-    case opc_eDataType_unsignedInt:
-      snprintf((char *)bufp, size, "%u", *(pwr_tInt32 *) bufp );
+    }
+    case opc_eDataType_unsignedLong: {
+      xsd__unsignedLong *val = new xsd__unsignedLong();
+      val->__item = *(long long unsigned *) bufp;
+      return val;
       break;
-    case opc_eDataType_unsignedShort:
-      snprintf((char *)bufp, size, "%hu", *(pwr_tUInt16 *) bufp );
+    }
+    case opc_eDataType_unsignedInt: {
+      xsd__unsignedInt *val = new xsd__unsignedInt();
+      val->__item = *(pwr_tInt32 *) bufp;
+      return val;
       break;
-    case opc_eDataType_unsignedByte:
-      snprintf((char *)bufp, size, "%hhu", *(pwr_tUInt8 *) bufp );
+    }
+    case opc_eDataType_unsignedShort: {
+      xsd__unsignedShort *val = new xsd__unsignedShort();
+      val->__item = *(pwr_tUInt16 *) bufp;
+      return val;
       break;
-    case opc_eDataType_dateTime:
+    }
+    case opc_eDataType_unsignedByte: {
+      xsd__unsignedByte *val = new xsd__unsignedByte();
+      val->__item = *(pwr_tUInt8 *) bufp;
+      return val;
+      break;
+    }
+    case opc_eDataType_dateTime: {
+      xsd__dateTime *val = new xsd__dateTime();
       pwr_tTime  at;
       at = (*(pwr_tTime *) bufp);
       time_AtoOPCAscii(&at, (char *) bufp, size);
+      val->__item = std::string((char *) bufp);
+      return val;
       break;
-    case opc_eDataType_duration:
+    }
+/*    case opc_eDataType_duration: {
+      xsd__ *val = new xsd_();
+      val->__item = 
       time_DtoAscii ((pwr_tDeltaTime *) bufp, 0, (char *) bufp, size);
       break;
+    } */
     default:
       break;
   }
   
-  return true;
+  return NULL;
 }
 //
 // Return the corresponding opc type for a opc type string
