@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.8 2007-03-15 15:25:36 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.9 2007-03-16 10:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,40 +78,40 @@ typedef enum {
   opc_eDataType_ 
 } opc_eDataType;
 
-const int opc_cResultCodesSize = 20;
-
 typedef enum {
-  opc_eResultCode_S_CLAMP ,
-  opc_eResultCode_S_DATAQUEUEOVERFLOW ,
-  opc_eResultCode_S_UNSUPPORTEDRATE ,
-  opc_eResultCode_E_ACCESS_DENIED ,
-  opc_eResultCode_E_BUSY ,
-  opc_eResultCode_E_FAIL ,
-  opc_eResultCode_E_INVALIDCONTINUATIONPOINT ,
-  opc_eResultCode_E_INVALIDFILTER ,
-  opc_eResultCode_E_INVALIDHOLDTIME ,
-  opc_eResultCode_E_INVALIDITEMNAME ,
-  opc_eResultCode_E_INVALIDITEMPATH ,
-  opc_eResultCode_E_INVALIDPID ,
-  opc_eResultCode_E_NOSUBSCRIPTION ,
-  opc_eResultCode_E_NOTSUPPORTED ,
-  opc_eResultCode_E_OUTOFMEMORY ,
-  opc_eResultCode_E_RANGE ,
-  opc_eResultCode_E_READONLY ,
-  opc_eResultCode_E_SERVERSTATE ,
-  opc_eResultCode_E_TIMEDOUT ,
-  opc_eResultCode_E_UNKNOWNITEMNAME ,
-  opc_eResultCode_E_UNKNOWNITEMPATH ,
-  opc_eResultCode_E_WRITEONLY ,
-  opc_eResultCode_E_BADTYPE ,
+  opc_eResultCode_S_CLAMP,
+  opc_eResultCode_S_DATAQUEUEOVERFLOW,
+  opc_eResultCode_S_UNSUPPORTEDRATE,
+  opc_eResultCode_E_ACCESS_DENIED,
+  opc_eResultCode_E_BUSY,
+  opc_eResultCode_E_FAIL,
+  opc_eResultCode_E_INVALIDCONTINUATIONPOINT,
+  opc_eResultCode_E_INVALIDFILTER,
+  opc_eResultCode_E_INVALIDHOLDTIME,
+  opc_eResultCode_E_INVALIDITEMNAME,
+  opc_eResultCode_E_INVALIDITEMPATH,
+  opc_eResultCode_E_INVALIDPID,
+  opc_eResultCode_E_NOSUBSCRIPTION,
+  opc_eResultCode_E_NOTSUPPORTED,
+  opc_eResultCode_E_OUTOFMEMORY,
+  opc_eResultCode_E_RANGE,
+  opc_eResultCode_E_READONLY,
+  opc_eResultCode_E_SERVERSTATE,
+  opc_eResultCode_E_TIMEDOUT,
+  opc_eResultCode_E_UNKNOWNITEMNAME,
+  opc_eResultCode_E_UNKNOWNITEMPATH,
+  opc_eResultCode_E_WRITEONLY,
+  opc_eResultCode_E_BADTYPE,
+  opc_eResultCode__
 } opc_eResultCode;
 
 void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options);
 bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask);
 std::string& opc_datetime( pwr_tTime *tp);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
-bool opc_resultcode_to_string( int type, char *str);
-bool opc_resultcode_to_text( int type, char *str);
+const char *opc_resultcode_to_string( int code);
+const char *opc_resultcode_to_text( int code);
+bool opc_string_to_resultcode(char *str, int *code);
 bool opc_opctype_to_value(void *bufp, int size, int opc_type);
 bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type);
 bool opc_string_to_opctype(const char *str, int *type);

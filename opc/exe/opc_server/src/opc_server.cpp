@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.9 2007-03-15 15:25:36 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.10 2007-03-16 10:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,6 +60,8 @@ class opc_server {
 
   opcsrv_client *find_client( int sid);
   opcsrv_client *new_client( int sid);
+  int fault( struct soap *soap, int code);
+
 };
 
 static opc_server *opcsrv;
@@ -68,6 +70,37 @@ static pwr_sClass_Opc_ServerConfig *opc_config;
 static opc_sClientAccess opc_client_access[20];
 static int opc_client_access_cnt = 0;
 static int opc_current_access;
+
+static int
+opcsrv_set_error(struct soap *soap, const char *faultcode, const char *faultsubcode, const char *faultstring, const char *faultdetail, int soaperror)
+{ *soap_faultcode(soap) = faultcode;
+  if (faultsubcode)
+    *soap_faultsubcode(soap) = faultsubcode;
+  *soap_faultstring(soap) = faultstring;
+  if (faultdetail && *faultdetail)
+  { register const char **s = soap_faultdetail(soap);
+    if (s)
+      *s = faultdetail;
+  }
+  return soap->error = soaperror;
+}
+
+static int
+opcsrv_fault(struct soap *soap, const char *faultcode, const char *faultsubcode, const char *faultstring, const char *faultdetail)
+{ char *r = NULL, *s = NULL, *t = NULL;
+  if (faultsubcode)
+    r = soap_strdup(soap, faultsubcode);
+  if (faultstring)
+    s = soap_strdup(soap, faultstring);
+  if (faultdetail)
+    t = soap_strdup(soap, faultdetail);
+  return opcsrv_set_error(soap, faultcode, r, s, t, SOAP_FAULT);
+}
+
+int opc_server::fault( struct soap *soap, int code)
+{    
+  return opcsrv_fault( soap, opc_resultcode_to_string( code), 0, opc_resultcode_to_text( code), 0);
+}
 
 opcsrv_client *opc_server::find_client( int sid)
 {

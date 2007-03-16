@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.10 2007-03-15 15:25:36 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.11 2007-03-16 10:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,8 @@
 #include "co_time_msg.h"
 #include "opc_utl.h"
 #include "opc_soap_Stub.h"
+
+const char nullstr[] = "";
 
 static pwr_tString32 str_dt[20] = {"xsd:string" ,
 			    "xsd:boolean" ,
@@ -63,79 +65,76 @@ static char opc_PropertyNames[17][20] = {"dataType",
 					 "openLabel",
 					 "timeZone"};
 
-static char opc_ResultCodes[23][32] = {"xsd:S_CLAMP",
-				       "xsd:S_DATAQUEUEOVERFLOW",
-				       "xsd:S_UNSUPPORTEDRATE",
-				       "xsd:E_ACCESS_DENIED",
-				       "xsd:E_BUSY",
-				       "xsd:E_FAIL",
-				       "xsd:E_INVALIDCONTINUATIONPOINT",
-				       "xsd:E_INVALIDFILTER",
-				       "xsd:E_INVALIDHOLDTIME",
-				       "xsd:E_INVALIDITEMNAME",
-				       "xsd:E_INVALIDITEMPATH",
-				       "xsd:E_INVALIDPID",
-				       "xsd:E_NOSUBSCRIPTION",
-				       "xsd:E_NOTSUPPORTED",
-				       "xsd:E_OUTOFMEMORY",
-				       "xsd:E_RANGE",
-				       "xsd:E_READONLY",
-				       "xsd:E_SERVERSTATE",
-				       "xsd:E_TIMEDOUT",
-				       "xsd:E_UNKNOWNITEMNAME",
-				       "xsd:E_UNKNOWNITEMPATH",
-				       "xsd:E_WRITEONLY",
-				       "xsd:E_BADTYPE"};
+static char opc_ResultCodes[23][32] = {"s:S_CLAMP",
+				       "s:S_DATAQUEUEOVERFLOW",
+				       "s:S_UNSUPPORTEDRATE",
+				       "s:E_ACCESS_DENIED",
+				       "s:E_BUSY",
+				       "s:E_FAIL",
+				       "s:E_INVALIDCONTINUATIONPOINT",
+				       "s:E_INVALIDFILTER",
+				       "s:E_INVALIDHOLDTIME",
+				       "s:E_INVALIDITEMNAME",
+				       "s:E_INVALIDITEMPATH",
+				       "s:E_INVALIDPID",
+				       "s:E_NOSUBSCRIPTION",
+				       "s:E_NOTSUPPORTED",
+				       "s:E_OUTOFMEMORY",
+				       "s:E_RANGE",
+				       "s:E_READONLY",
+				       "s:E_SERVERSTATE",
+				       "s:E_TIMEDOUT",
+				       "s:E_UNKNOWNITEMNAME",
+				       "s:E_UNKNOWNITEMPATH",
+				       "s:E_WRITEONLY",
+				       "s:E_BADTYPE"};
 
-static char opc_ResultTexts[23][20] = {"edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here",
-				       "edgar o was here"};
+static char opc_ResultTexts[23][140] = {
+  "The value written was accepted but the output was clamped.",
+  "Not every detected change has been returned since the server's buffer reached its limit and had to purge out the oldest data.",
+  "The server does not support the requested rate but will use the closest available rate.",
+  "The server deines access (read and/or write) to the specified item.",
+  "The server is currently processing another polled refresh for one or more of the subscriptions.",
+  "Unspecified error.",
+  "The continuation point is not valid.",
+  "The filter string is not valid.",
+  "The hold time is too long (determined by the server).",
+  "The item name does not conform the server's syntax.",
+  "The item path does not conform the server's syntax.",
+  "The property id is not valid for the item.",
+  "An invalid set of subscription handles was passed to the request.",
+  "The server does not support writing to the quality and/or timestamp.",
+  "Ran out of memory.",
+  "The value was out of range.",
+  "The value is read only and may not be written to.",
+  "The operation could not complete due to an abnormal server state.",
+  "The operation took too long to complete (determined by the server).",
+  "The item name is no longer available in the server address space.",
+  "The item path is no longer available in the server address space.",
+  "The value is write-only and may not be read from or returned as part of a write response.",
+  "The type is not valid."};
 
 void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options)
 {
-  pwr_tString32 str;
   int ii;
   bool exists = false;
 
 	
-  opc_resultcode_to_string(err_code, str);
-
   if ( rc)
-    *rc = new std::string(str);
+    *rc = new std::string( opc_resultcode_to_string( err_code));
   
   for (ii = 0; ii < (int) errors.size(); ii++) {
-    if (strncmp(errors[ii]->ID.c_str(), str, sizeof(str)) == 0) {
+    if (strcmp( errors[ii]->ID.c_str(), opc_resultcode_to_string( err_code)) == 0) {
       exists = true;
     }
   }
   
   if (!exists) {
     s0__OPCError *oe = new s0__OPCError();
-    oe->ID = std::string(str);
+    oe->ID = std::string(opc_resultcode_to_string( err_code));
     
     if (options & opc_mRequestOption_ReturnErrorText) {
-      opc_resultcode_to_text(err_code, str);
-      oe->Text = new std::string(str);
+      oe->Text = new std::string( opc_resultcode_to_text( err_code));
     }
 	
     errors.push_back(oe);
@@ -169,30 +168,27 @@ bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask
   return true;
 }  
 
-bool opc_resultcode_to_string( int type, char *str)
+const char *opc_resultcode_to_string( int code)
 {
-  str = opc_ResultCodes[type];
-  
-  return true;  
-  
+  if ( code >= opc_eResultCode__)
+    return nullstr;
+
+  return opc_ResultCodes[code];
 }
 
-bool opc_resultcode_to_text( int type, char *str)
+const char *opc_resultcode_to_text( int code)
 {
-  
-  str = opc_ResultTexts[type];
-  
-  return true;  
-  
+  if ( code >= opc_eResultCode__)
+    return nullstr;
+
+  return opc_ResultTexts[code];
 }
 
-bool opc_string_to_resultcode(char *str, int *type)
+bool opc_string_to_resultcode(char *str, int *code)
 {
-  int ii;
-
-  for (ii = 0; ii < opc_cResultCodesSize; ii++) {
-    if (strncmp(opc_ResultCodes[ii], str, sizeof(opc_ResultCodes[ii])) == 0) {
-      *type  = ii;
+  for ( int ii = 0; ii < opc_eResultCode__; ii++) {
+    if (strcmp(opc_ResultCodes[ii], str) == 0) {
+      *code  = ii;
       return true;
     }
   }
