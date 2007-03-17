@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.12 2007-03-16 12:51:20 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.13 2007-03-17 09:12:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -336,6 +336,624 @@ xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type)
   
   return NULL;
 }
+
+//
+// Return the corresponding pwrtype for a opctype
+//
+bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, pwr_eType pwr_type)
+{
+  opc_eDataType opc_type;
+  
+  if (typeid(*value) == typeid(xsd__string))
+    opc_type = opc_eDataType_string;
+  
+  else if (typeid(*value) == typeid(xsd__boolean))
+    opc_type = opc_eDataType_boolean;
+
+  else if (typeid(*value) == typeid(xsd__float))
+    opc_type = opc_eDataType_float;
+
+  else if (typeid(*value) == typeid(xsd__decimal))
+    opc_type = opc_eDataType_decimal;
+
+  else if (typeid(*value) == typeid(xsd__double))
+    opc_type = opc_eDataType_double;
+
+  else if (typeid(*value) == typeid(xsd__long))
+    opc_type = opc_eDataType_long;
+
+  else if (typeid(*value) == typeid(xsd__int))
+    opc_type = opc_eDataType_int;
+
+  else if (typeid(*value) == typeid(xsd__short))
+    opc_type = opc_eDataType_short;
+
+  else if (typeid(*value) == typeid(xsd__byte))
+    opc_type = opc_eDataType_byte;
+
+  else if (typeid(*value) == typeid(xsd__unsignedLong))
+    opc_type = opc_eDataType_unsignedLong;
+
+  else if (typeid(*value) == typeid(xsd__unsignedInt))
+    opc_type = opc_eDataType_unsignedInt;
+
+  else if (typeid(*value) == typeid(xsd__short))
+    opc_type = opc_eDataType_short;
+
+  else if (typeid(*value) == typeid(xsd__byte))
+    opc_type = opc_eDataType_byte;
+
+  else if (typeid(*value) == typeid(xsd__dateTime))
+    opc_type = opc_eDataType_dateTime;
+/*
+  else if (typeid(*value) == typeid(xsd__duration))
+    type = opc_eDataType_duration;
+*/
+  else
+    opc_type = opc_eDataType_;
+
+  switch (pwr_type) {
+    case pwr_eType_Float64:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tFloat64 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Float32:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tFloat32 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Char:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tChar *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tChar *) bufp) = (char)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tChar *) bufp) = (char)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tChar *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tChar *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tChar *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tChar *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tChar *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tChar *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tChar *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tChar *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Int8:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tInt8 *) bufp) = (pwr_tInt8)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tInt8 *) bufp) = (pwr_tInt8)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tInt8 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Int16:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tInt16 *) bufp) = (pwr_tInt16)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tInt16 *) bufp) = (pwr_tInt16)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tInt16 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Int32:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tInt32 *) bufp) = (pwr_tInt32)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tInt32 *) bufp) = (pwr_tInt32)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tInt32 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Boolean:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tBoolean *) bufp) = (pwr_tBoolean)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tBoolean *) bufp) = (pwr_tBoolean)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tBoolean *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_UInt8:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tUInt8 *) bufp) = (pwr_tUInt8)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tUInt8 *) bufp) = (pwr_tUInt8)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tUInt8 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_UInt16:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tUInt16 *) bufp) = (pwr_tUInt16)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tUInt16 *) bufp) = (pwr_tUInt16)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tUInt16 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_UInt32:
+      switch (opc_type) {
+        case opc_eDataType_boolean:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__boolean *) value)->__item;
+          break;
+        case opc_eDataType_float:
+	  (*(pwr_tUInt32 *) bufp) = (pwr_tUInt32)((xsd__float *) value)->__item;
+          break;
+        case opc_eDataType_double:
+	  (*(pwr_tUInt32 *) bufp) = (pwr_tUInt32)((xsd__double *) value)->__item;
+          break;
+        case opc_eDataType_long:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__long *) value)->__item;
+          break;
+        case opc_eDataType_int:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__int *) value)->__item;
+          break;
+        case opc_eDataType_short:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__short *) value)->__item;
+          break;
+        case opc_eDataType_byte:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__byte *) value)->__item;
+          break;
+        case opc_eDataType_unsignedLong:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__unsignedLong *) value)->__item;
+          break;
+        case opc_eDataType_unsignedInt:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__unsignedInt *) value)->__item;
+          break;
+        case opc_eDataType_unsignedShort:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__unsignedShort *) value)->__item;
+          break;
+        case opc_eDataType_unsignedByte:
+	  (*(pwr_tUInt32 *) bufp) = ((xsd__unsignedByte *) value)->__item;
+          break;
+        case opc_eDataType_dateTime:
+        case opc_eDataType_string:
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_String:
+      switch (opc_type) {
+        case opc_eDataType_string:
+	  strncpy((char *) bufp, ((xsd__string *) value)->__item.c_str(), size );
+          break;
+        case opc_eDataType_boolean:
+	  if (((xsd__boolean *) value)->__item)
+	    sprintf((char *) bufp, "true");
+	  else
+	    sprintf((char *) bufp, "false");
+          break;
+        case opc_eDataType_float:
+	  snprintf((char *)bufp, size, "%f", ((xsd__float *) value)->__item);
+          break;
+        case opc_eDataType_double:
+	  snprintf((char *)bufp, size, "%f", ((xsd__double *) value)->__item);
+          break;
+        case opc_eDataType_long:
+	  snprintf((char *)bufp, size, "%lli", ((xsd__long *) value)->__item);
+          break;
+        case opc_eDataType_int:
+	  snprintf((char *)bufp, size, "%i", ((xsd__int *) value)->__item);
+          break;
+        case opc_eDataType_short:
+	  snprintf((char *)bufp, size, "%hi", ((xsd__short *) value)->__item);
+          break;
+        case opc_eDataType_byte:
+	  snprintf((char *)bufp, size, "%hhi", ((xsd__byte *) value)->__item);
+          break;
+        case opc_eDataType_unsignedLong:
+	  snprintf((char *)bufp, size, "%llu", ((xsd__unsignedLong *) value)->__item);
+          break;
+        case opc_eDataType_unsignedInt:
+	  snprintf((char *)bufp, size, "%u", ((xsd__unsignedInt *) value)->__item);
+          break;
+        case opc_eDataType_unsignedShort:
+	  snprintf((char *)bufp, size, "%hu", ((xsd__unsignedShort *) value)->__item);
+          break;
+        case opc_eDataType_unsignedByte:
+	  snprintf((char *)bufp, size, "%hhu", ((xsd__unsignedByte *) value)->__item);
+          break;
+        case opc_eDataType_dateTime:
+	  strncpy((char *) bufp, ((xsd__dateTime *) value)->__item.c_str(), size );
+          break;
+        case opc_eDataType_decimal:
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_Time:
+      switch (opc_type) {
+        case opc_eDataType_string:
+          break;
+        case opc_eDataType_boolean:
+          break;
+        case opc_eDataType_float:
+          break;
+        case opc_eDataType_decimal:
+          break;
+        case opc_eDataType_double:
+          break;
+        case opc_eDataType_long:
+          break;
+        case opc_eDataType_int:
+          break;
+        case opc_eDataType_short:
+          break;
+        case opc_eDataType_byte:
+          break;
+        case opc_eDataType_unsignedLong:
+          break;
+        case opc_eDataType_unsignedInt:
+          break;
+        case opc_eDataType_unsignedShort:
+          break;
+        case opc_eDataType_unsignedByte:
+          break;
+        case opc_eDataType_dateTime:
+          break;
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_DeltaTime:
+      switch (opc_type) {
+        case opc_eDataType_string:
+          break;
+        case opc_eDataType_boolean:
+          break;
+        case opc_eDataType_float:
+          break;
+        case opc_eDataType_decimal:
+          break;
+        case opc_eDataType_double:
+          break;
+        case opc_eDataType_long:
+          break;
+        case opc_eDataType_int:
+          break;
+        case opc_eDataType_short:
+          break;
+        case opc_eDataType_byte:
+          break;
+        case opc_eDataType_unsignedLong:
+          break;
+        case opc_eDataType_unsignedInt:
+          break;
+        case opc_eDataType_unsignedShort:
+          break;
+        case opc_eDataType_unsignedByte:
+          break;
+        case opc_eDataType_dateTime:
+          break;
+        default:
+	  return false;
+          break;
+      }
+      break;
+    case pwr_eType_UInt64:
+    case pwr_eType_Int64:
+    default:
+      return false;
+      break;
+  }
+  
+  return true;
+
+}
+
 //
 // Return the corresponding opc type for a opc type string
 //

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.10 2007-03-16 10:19:45 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.11 2007-03-17 09:12:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -247,8 +247,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
   unsigned int options = 0;
   
   s0__ReadResponse->ReadResult = new s0__ReplyBase();
-//  s0__ReadResponse->ReadResult->RcvTime = current_time.tv_sec;
-//  s0__ReadResponse->ReadResult->ReplyTime = current_time.tv_sec;
+  s0__ReadResponse->ReadResult->RcvTime.__item = opc_datetime(0);
+  s0__ReadResponse->ReadResult->ReplyTime.__item = opc_datetime(0);
   if (s0__Read->Options)
     s0__ReadResponse->ReadResult->ClientRequestHandle = s0__Read->Options->ClientRequestHandle;
   s0__ReadResponse->ReadResult->ServerState = s0__serverState__running;
@@ -296,6 +296,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
     
     if (EVEN(sts)) {
       opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
     
@@ -324,14 +325,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
       if (reqType < 0) opc_pwrtype_to_opctype(tid, &reqType);
       
       if (opc_convert_pwrtype_to_opctype(buf, sizeof(buf), reqType, tid)) {
-        char *str;
-        opc_opctype_to_value(buf, sizeof(buf), reqType);
-	str = (char *) malloc(strlen(buf) + 1);
-	strncpy(str, buf, sizeof(buf));
-#if 0 // TODO
-	iv->Value = str;
-	sprintf(iv->ValueType, "%s", opc_opctype_to_string(reqType));
-#endif
+      	iv->Value = opc_opctype_to_value(buf, sizeof(buf), reqType);
 	if (options & opc_mRequestOption_ReturnItemTime) {
 	  // ToDo !!!
 	}
@@ -339,10 +333,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
 
       } else {
         opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+        s0__ReadResponse->RItemList->Items.push_back(iv);
         continue;
       }
     } else {
       opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
   }

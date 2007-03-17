@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.10 2007-03-16 12:51:20 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.11 2007-03-17 09:12:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,6 +113,7 @@ const char *opc_resultcode_to_string( int code);
 const char *opc_resultcode_to_text( int code);
 bool opc_string_to_resultcode(char *str, int *code);
 xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type);
+bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, pwr_eType pwr_type);
 bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type);
 bool opc_string_to_opctype(const char *str, int *type);
 char *opc_opctype_to_string(int type);
