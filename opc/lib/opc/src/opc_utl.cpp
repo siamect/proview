@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.13 2007-03-17 09:12:15 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.14 2007-03-17 09:31:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1363,7 +1363,7 @@ bool opc_pwrtype_to_opctype(int pwrtype, int *opctype)
   }
   return true;
 }
-bool opc_type_to_pwrtype(int type, int *pwrtype) 
+bool opc_opctype_to_pwrtype(int type, int *pwrtype) 
 {
   switch (type) {
 

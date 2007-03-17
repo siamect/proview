@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.11 2007-03-17 09:12:15 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.12 2007-03-17 09:31:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -118,7 +118,7 @@ bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_
 bool opc_string_to_opctype(const char *str, int *type);
 char *opc_opctype_to_string(int type);
 bool opc_pwrtype_to_opctype(int pwrtype, int *opctype);
-bool opc_type_to_pwrtype(int type, int *pwrtype); 
+bool opc_opctype_to_pwrtype(int type, int *pwrtype); 
 bool opc_pwrtype_to_string( int type, char **str);
 
 bool opc_get_property( std::vector<s0__ItemProperty *> properties, unsigned int mask,
