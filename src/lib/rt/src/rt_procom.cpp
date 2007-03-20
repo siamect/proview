@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_procom.cpp,v 1.1 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_procom.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -918,7 +918,7 @@ pvd_NameToObject (
   net_sNameToObject	*mp = (net_sNameToObject *)get->data;
 
   pvd_procom->m_getmsg = get;
-  pvd_procom->m_provider->objectName( pvd_procom, mp->name);
+  pvd_procom->m_provider->objectName( pvd_procom, mp->name, mp->poid.oix);
 }
 
 static void
@@ -1366,6 +1366,7 @@ void rt_procom::provideStatus( pwr_tStatus rsts)
     net_Reply(&sts, m_getmsg, &put, 0);
     break;
   }
+  case net_eMsg_nameToObject:
   case net_eMsg_oidToObject: {
     respondError( m_getmsg, pwr_cNObjid, sts);
     break;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pvd_file.cpp,v 1.1 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: rt_pvd_file.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,7 +68,7 @@ void rt_pvd_file::objectOid( co_procom *pcom, pwr_tOix oix)
   }
 }
 
-void rt_pvd_file::objectName( co_procom *pcom, char *name)
+void rt_pvd_file::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 {
 
   for ( int i = 0; i < (int) m_list.size(); i++) {

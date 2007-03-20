@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrsrv.c,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_pvd_pwrsrv.c,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,11 +151,27 @@ static void pwrsrv_ObjectName( rpvd_sMsgObjectName *msg)
 {
   rpvd_sMsgOid m;
   pwr_tStatus sts;
+  char name[256];
 
   /* Simulate an oid request */
   m.Type = rpvd_eMsg_Oid;
   m.Id = msg->Id;
-  sts = gdh_NameToObjid( msg->Name, &m.Oid);
+  if ( msg->POid.oix) {
+    sts = gdh_ObjidToName( msg->POid, name, sizeof(name), cdh_mName_volumeStrict);
+    if ( EVEN(sts)) {
+      rpvd_sMsgObject rmsg;
+      rmsg.Type = rpvd_eMsg_Object;
+      rmsg.Id = msg->Id;
+      rmsg.Status = sts;
+      udp_Send( (char *)&rmsg, sizeof(rmsg));
+      return;
+    }
+    strcat( name, "-");
+    strcat( name, msg->Name);
+  }
+  else
+    strncpy( name, msg->Name, sizeof(name));
+  sts = gdh_NameToObjid( name, &m.Oid);
   if ( EVEN(sts)) {
     rpvd_sMsgObject rmsg;
     rmsg.Type = rpvd_eMsg_Object;

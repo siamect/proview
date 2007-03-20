@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_provider.h,v 1.1 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: co_provider.h,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@ public:
   virtual ~co_provider() {}
   virtual void object( co_procom *pcom) {}
   virtual void objectOid( co_procom *pcom, pwr_tOix oix) {}
-  virtual void objectName( co_procom *pcom, char *name) {}
+  virtual void objectName( co_procom *pcom, char *name, pwr_tOix poix) {}
   virtual void objectBody( co_procom *pcom, pwr_tOix oix) {}
   virtual void createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 			     pwr_tCid cid, char *name) {}

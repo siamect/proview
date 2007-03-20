@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_udp.h,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_pvd_udp.h,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,6 +70,7 @@ typedef struct {
   int		Id;
   int		Status;
   pwr_tOName 	Name;
+  pwr_tOid	POid;
 } rpvd_sMsgObjectName;
 
 typedef struct {

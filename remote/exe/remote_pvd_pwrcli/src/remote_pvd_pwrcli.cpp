@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,10 @@ extern "C" {
 #include "rt_gdb.h"
 #include "co_cdh.h"
 #include "co_dcli.h"
+#include "co_time.h"
 }
+
+#define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 
 class subitem {
  public:
@@ -50,7 +53,7 @@ class subitem {
   int m_offset;
   pwr_tOName m_attr;
   pwr_tOid m_oid;
-  subitem() : m_size(0), m_p(0), m_cid(0), m_offset(0) { 
+  subitem() : m_size(0), m_p(0), m_cid(0), m_offset(0) {
     m_oid = pwr_cNObjid;
     strcpy( m_attr,"");
   }
@@ -93,6 +96,15 @@ static char rpvd_vname[32];
 static int rpvd_opsys;
 static map<int, subitem> rpvd_sublist;
 static int rpvd_id = 1;
+const bool pvd_cLog = false;
+
+static void logg( char *logger, pwr_tOix oix, char *text)
+{
+  char nowstr[40];
+
+  time_AtoAscii( 0, time_eFormat_Time, nowstr, sizeof(nowstr));
+  printf( "%15s %30s %10d %s\n", nowstr, logger, oix, text);
+}
 
 void remote_pvd_pwrcli::objectOid( co_procom *pcom, pwr_tOix oix)
 {
@@ -104,6 +116,8 @@ void remote_pvd_pwrcli::objectOid( co_procom *pcom, pwr_tOix oix)
   msg.Id = rpvd_id++;
   msg.Oid.oix = oix;
   msg.Oid.vid = rpvd_vid;
+
+  if ( pvd_cLog) logg( "ObjOid", oix, "");
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
@@ -140,7 +154,7 @@ void remote_pvd_pwrcli::objectOid( co_procom *pcom, pwr_tOix oix)
   pcom->provideObjects( GDH__SUCCESS, m_list);
 }
 
-void remote_pvd_pwrcli::objectName( co_procom *pcom, char *name)
+void remote_pvd_pwrcli::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 {
   rpvd_sMsgObjectName msg;
   rpvd_sMsgObject *rmsg;
@@ -149,7 +163,11 @@ void remote_pvd_pwrcli::objectName( co_procom *pcom, char *name)
   msg.Type = rpvd_eMsg_ObjectName;
   msg.Id = rpvd_id++;
   strcpy( msg.Name, name);
+  msg.POid.vid = rpvd_vid;
+  msg.POid.oix = poix;
   
+  if ( pvd_cLog) logg( "ObjName", poix, name);
+
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
@@ -239,6 +257,8 @@ void remote_pvd_pwrcli::writeAttribute( co_procom *pcom, pwr_tOix oix,
     }
   }
 
+  if ( pvd_cLog) logg( "Write", aref.Objid.oix, aname);
+
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
@@ -288,6 +308,9 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
   }
 
   strcpy( msg.Attribute, aname);
+
+  if ( pvd_cLog) logg( "Read", aref.Objid.oix, aname);
+
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
@@ -319,7 +342,7 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
     memset( &n, 0, sizeof(n));
     n.os = (co_eOS) rpvd_opsys;
 
-    p = malloc( rmsg->Size);
+    p = malloc( max(rmsg->Size, (int)aref.Size));
     size = aref.Size;
     cp = (gdb_sClass *) hash_Search(&sts, gdbroot->cid_ht, &cid);
     if (cp != NULL) {
@@ -433,6 +456,8 @@ void remote_pvd_pwrcli::subAssociateBuffer( co_procom *pcom, void **buff, int oi
   msg.Size = size;
 
 
+  if ( pvd_cLog) logg( "AssoBuff", msg.Oid.oix, aname);
+
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
@@ -475,6 +500,8 @@ void remote_pvd_pwrcli::subDisassociateBuffer( co_procom *pcom, pwr_tSubid subid
   msg.Type = rpvd_eMsg_SubRemove;
   msg.Id = rpvd_id++;
   msg.Rix = subid.rix;
+
+  if ( pvd_cLog) logg( "DisoBuff", subid.rix, "(rix)");
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
   if ( EVEN(sts) || sts == REM__TIMEOUT) {

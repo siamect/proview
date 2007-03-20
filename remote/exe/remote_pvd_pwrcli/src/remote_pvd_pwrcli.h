@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrcli.h,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_pvd_pwrcli.h,v 1.2 2007-03-20 12:36:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@ public:
   remote_pvd_pwrcli( pvd_eEnv env = pvd_eEnv_Rt) : co_provider(env) {}
   virtual void object( co_procom *pcom) {}
   virtual void objectOid( co_procom *pcom, pwr_tOix oix);
-  virtual void objectName( co_procom *pcom, char *name);
+  virtual void objectName( co_procom *pcom, char *name, pwr_tOix poix);
   virtual void objectBody( co_procom *pcom, pwr_tOix oix) {}
   virtual void createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 		     pwr_tCid cid, char *name) {}
