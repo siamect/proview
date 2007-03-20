@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.1 2007-01-17 06:18:10 claes Exp $
+ * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.2 2007-03-20 12:39:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -97,6 +97,18 @@ void XttMethodToolbarGtk::set_sensitive()
       gtk_widget_set_sensitive( m_button_w[i], FALSE);      
   }
   else {
+    gdh_sVolumeInfo info;
+    
+    // Skip extern volumes
+    sts = gdh_GetVolumeInfo( aref.Objid.vid, &info);
+    if ( EVEN(sts)) return;
+
+    if ( info.cid == pwr_eClass_ExternVolume) {
+      for ( int i = 0; i < m_size; i++)
+	gtk_widget_set_sensitive( m_button_w[i], FALSE);      
+      return;
+    }
+
     if ( aref.Flags.b.Object)
       menu_type = xmenu_eItemType_Object;
     else if ( aref.Flags.b.ObjectAttr)
