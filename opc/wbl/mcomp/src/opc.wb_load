@@ -204,7 +204,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.36
         Body SysBody 01-MAR-2007 16:50:28.36
           Attr StructName = "Opc_Float"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:13.76
           Body SysBody 05-MAR-2007 13:45:13.76
@@ -248,6 +248,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 10:43:36.02
+          Body SysBody 22-MAR-2007 10:43:57.46
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Float 2152431616 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -263,7 +269,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.21
         Body SysBody 01-MAR-2007 16:50:28.21
           Attr StructName = "Opc_Double"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:19.21
           Body SysBody 05-MAR-2007 13:45:19.21
@@ -307,6 +313,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:50:58.89
+          Body SysBody 22-MAR-2007 15:50:58.89
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Double 2152169472 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -322,7 +334,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:28.06
         Body SysBody 01-MAR-2007 16:50:28.06
           Attr StructName = "Opc_Decimal"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:24.10
           Body SysBody 05-MAR-2007 13:45:24.10
@@ -366,6 +378,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:05.91
+          Body SysBody 22-MAR-2007 15:51:05.91
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Decimal 2151907328 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -381,7 +399,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.91
         Body SysBody 01-MAR-2007 16:50:27.91
           Attr StructName = "Opc_Long"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:28.22
           Body SysBody 05-MAR-2007 13:45:28.22
@@ -425,6 +443,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:11.98
+          Body SysBody 22-MAR-2007 15:51:11.98
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Long 2151645184 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -440,7 +464,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.77
         Body SysBody 01-MAR-2007 16:50:27.77
           Attr StructName = "Opc_Int"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:31.37
           Body SysBody 05-MAR-2007 13:45:31.37
@@ -484,6 +508,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 10:44:19.69
+          Body SysBody 22-MAR-2007 10:44:19.69
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Int 2151383040 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -499,7 +529,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.62
         Body SysBody 01-MAR-2007 16:50:27.62
           Attr StructName = "Opc_Short"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:34.58
           Body SysBody 05-MAR-2007 13:45:34.58
@@ -543,6 +573,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:21.30
+          Body SysBody 22-MAR-2007 15:51:21.30
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Short 2151120896 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -558,7 +594,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.44
         Body SysBody 01-MAR-2007 16:50:27.44
           Attr StructName = "Opc_Byte"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:37.39
           Body SysBody 05-MAR-2007 13:45:37.39
@@ -602,6 +638,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:27.70
+          Body SysBody 22-MAR-2007 15:51:27.70
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_Byte 2150858752 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -617,7 +659,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.27
         Body SysBody 01-MAR-2007 16:50:27.27
           Attr StructName = "Opc_UnsignedLong"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:40.10
           Body SysBody 05-MAR-2007 13:45:40.10
@@ -661,6 +703,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:33.78
+          Body SysBody 22-MAR-2007 15:51:33.78
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_UnsignedLong 2150596608 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -676,7 +724,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:27.07
         Body SysBody 01-MAR-2007 16:50:27.07
           Attr StructName = "Opc_UnsignedInt"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:42.87
           Body SysBody 05-MAR-2007 13:45:42.87
@@ -720,6 +768,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:40.47
+          Body SysBody 22-MAR-2007 15:51:40.47
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_UnsignedInt 2150334464 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -735,7 +789,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.68
         Body SysBody 01-MAR-2007 16:50:25.68
           Attr StructName = "Opc_UnsignedShort"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:51.52
           Body SysBody 05-MAR-2007 13:45:51.52
@@ -779,6 +833,12 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:47.00
+          Body SysBody 22-MAR-2007 15:51:47.00
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
       EndObject
       Object Template Opc_UnsignedShort 2150072320 01-JAN-1970 01:00:00.00
         Body RtBody 01-JAN-1970 01:00:00.00
@@ -794,7 +854,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 16:50:25.44
         Body SysBody 01-MAR-2007 16:50:25.44
           Attr StructName = "Opc_UnsignedByte"
-          Attr NextAix = "_X9"
+          Attr NextAix = "_X10"
         EndBody
         Object Description $Attribute 3 05-MAR-2007 13:45:54.72
           Body SysBody 05-MAR-2007 13:45:54.72
@@ -836,6 +896,12 @@ Volume Opc $ClassVolume 0.0.250.9
           Body SysBody 05-MAR-2007 13:52:02.66
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
+          EndBody
+        EndObject
+        Object EnableSlider $Attribute 9 22-MAR-2007 15:51:52.93
+          Body SysBody 22-MAR-2007 15:51:52.93
+            Attr PgmName = "EnableSlider"
+            Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
       EndObject

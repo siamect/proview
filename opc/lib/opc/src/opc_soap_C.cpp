@@ -7,7 +7,7 @@
 
 #include "opc_soap_H.h"
 
-SOAP_SOURCE_STAMP("@(#) opc_soap_C.cpp ver 2.7.9d 2007-03-15 12:24:24 GMT")
+SOAP_SOURCE_STAMP("@(#) opc_soap_C.cpp ver 2.7.9d 2007-03-23 08:02:36 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -280,6 +280,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_xsd__decimal_(soap, NULL, NULL, "xsd:decimal");
 	case SOAP_TYPE_xsd__decimal:
 		return soap_in_xsd__decimal(soap, NULL, NULL, "xsd:decimal");
+	case SOAP_TYPE_xsd__duration:
+		return soap_in_xsd__duration(soap, NULL, NULL, "xsd:duration");
 	case SOAP_TYPE_xsd__dateTime:
 		return soap_in_xsd__dateTime(soap, NULL, NULL, "xsd:dateTime");
 	case SOAP_TYPE_xsd__byte:
@@ -663,6 +665,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_xsd__decimal;
 			return soap_in_xsd__decimal(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "xsd:duration"))
+		{	*type = SOAP_TYPE_xsd__duration;
+			return soap_in_xsd__duration(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "xsd:dateTime"))
 		{	*type = SOAP_TYPE_xsd__dateTime;
 			return soap_in_xsd__dateTime(soap, NULL, NULL, NULL);
@@ -999,6 +1005,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((xsd__decimal_ *)ptr)->soap_out(soap, tag, id, "xsd:decimal");
 	case SOAP_TYPE_xsd__decimal:
 		return soap_out_xsd__decimal(soap, tag, id, (const std::string *)ptr, "xsd:decimal");
+	case SOAP_TYPE_xsd__duration:
+		return ((xsd__duration *)ptr)->soap_out(soap, tag, id, "xsd:duration");
 	case SOAP_TYPE_xsd__dateTime:
 		return ((xsd__dateTime *)ptr)->soap_out(soap, tag, id, "xsd:dateTime");
 	case SOAP_TYPE_xsd__byte:
@@ -1329,6 +1337,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_xsd__decimal:
 		soap_serialize_xsd__decimal(soap, (const std::string *)ptr);
 		break;
+	case SOAP_TYPE_xsd__duration:
+		((xsd__duration *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE_xsd__dateTime:
 		((xsd__dateTime *)ptr)->soap_serialize(soap);
 		break;
@@ -1542,6 +1553,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_xsd__byte(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__dateTime:
 		return (void*)soap_instantiate_xsd__dateTime(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_xsd__duration:
+		return (void*)soap_instantiate_xsd__duration(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__decimal_:
 		return (void*)soap_instantiate_xsd__decimal_(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__double:
@@ -1806,6 +1819,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (xsd__dateTime*)p->ptr;
 		else
 			delete[] (xsd__dateTime*)p->ptr;
+		break;
+	case SOAP_TYPE_xsd__duration:
+		if (p->size < 0)
+			delete (xsd__duration*)p->ptr;
+		else
+			delete[] (xsd__duration*)p->ptr;
 		break;
 	case SOAP_TYPE_xsd__decimal_:
 		if (p->size < 0)
@@ -14113,6 +14132,123 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_copy_xsd__decimal(struct soap *soap, int st, int
 }
 #endif
 
+void xsd__duration::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__string(soap, &((xsd__duration*)this)->__item);
+	((xsd__anyType*)this)->__item = NULL;
+	/* transient soap skipped */
+}
+
+void xsd__duration::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((xsd__duration*)this)->__item, SOAP_TYPE_std__string);
+	soap_serialize_std__string(soap, &((xsd__duration*)this)->__item);
+	/* transient soap skipped */
+}
+
+int xsd__duration::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_xsd__duration);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int xsd__duration::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_xsd__duration(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__duration(struct soap *soap, const char *tag, int id, const xsd__duration *a, const char *type)
+{
+	return soap_out_std__string(soap, tag, id, &(((xsd__duration*)a)->__item), "xsd:duration");
+}
+
+void *xsd__duration::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_xsd__duration(soap, this, tag, type);
+}
+
+SOAP_FMAC3 xsd__duration * SOAP_FMAC4 soap_get_xsd__duration(struct soap *soap, xsd__duration *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_xsd__duration(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *xsd__duration::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_xsd__duration(soap, tag, this, type);
+}
+
+SOAP_FMAC3 xsd__duration * SOAP_FMAC4 soap_in_xsd__duration(struct soap *soap, const char *tag, xsd__duration *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1, NULL))
+		return NULL;
+	if (!(a = (xsd__duration *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_xsd__duration, sizeof(xsd__duration), soap->type, soap->arrayType)))
+	{	soap->error = SOAP_TAG_MISMATCH;
+		return NULL;
+	}
+	soap_revert(soap);
+	*soap->id = '\0';
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_xsd__duration)
+			return (xsd__duration *)a->soap_in(soap, tag, type);
+	}
+	if (!soap_in_std__string(soap, tag, &(((xsd__duration*)a)->__item), "xsd:duration"))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC5 xsd__duration * SOAP_FMAC6 soap_new_xsd__duration(struct soap *soap, int n)
+{	return soap_instantiate_xsd__duration(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__duration(struct soap *soap, xsd__duration *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC3 xsd__duration * SOAP_FMAC4 soap_instantiate_xsd__duration(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_xsd__duration(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_xsd__duration, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new xsd__duration;
+		if (size)
+			*size = sizeof(xsd__duration);
+		((xsd__duration*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new xsd__duration[n];
+		if (!cp->ptr)
+		{	soap->error = SOAP_EOM;
+			return NULL;
+		}
+		if (size)
+			*size = n * sizeof(xsd__duration);
+		for (int i = 0; i < n; i++)
+			((xsd__duration*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (xsd__duration*)cp->ptr;
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_copy_xsd__duration(struct soap *soap, int st, int tt, void *p, size_t len, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying xsd__duration %p -> %p\n", q, p));
+	*(xsd__duration*)p = *(xsd__duration*)q;
+}
+#ifdef __cplusplus
+}
+#endif
+
 void xsd__dateTime::soap_default(struct soap *soap)
 {
 	this->soap = soap;
@@ -14949,6 +15085,28 @@ SOAP_FMAC3 xsd__anyType * SOAP_FMAC4 soap_instantiate_xsd__anyType(struct soap *
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (xsd__dateTime*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "xsd:duration"))
+	{	cp->type = SOAP_TYPE_xsd__duration;
+		if (n < 0)
+		{	cp->ptr = (void*)new xsd__duration;
+			if (!cp->ptr)
+			{	soap->error = SOAP_EOM;
+				return NULL;
+			}
+			if (size)
+				*size = sizeof(xsd__duration);
+			((xsd__duration*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new xsd__duration[n];
+			if (size)
+				*size = n * sizeof(xsd__duration);
+			for (int i = 0; i < n; i++)
+				((xsd__duration*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (xsd__duration*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "xsd:decimal"))
 	{	cp->type = SOAP_TYPE_xsd__decimal_;

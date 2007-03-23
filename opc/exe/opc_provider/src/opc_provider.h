@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.7 2007-03-15 15:25:36 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.8 2007-03-23 08:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,15 +30,19 @@ class opcprv_obj {
  public:
   procom_obj po;
   char item_name[512];
+  int type;
+  int size;
 
   opcprv_obj() { strcpy( item_name, "");}
-  opcprv_obj( const opcprv_obj& x) : po(x.po)
+  opcprv_obj( const opcprv_obj& x) : po(x.po), type(x.type), size(x.size)
     {
       strcpy( item_name, x.item_name);
     }
   opcprv_obj& operator=(const opcprv_obj& x)
   {
     po = x.po;
+    type = x.type;
+    size = x.size;
     strcpy( item_name, x.item_name);
     return *this;
   }
@@ -57,7 +61,7 @@ public:
   }
   virtual void object( co_procom *pcom);
   virtual void objectOid( co_procom *pcom, pwr_tOix oix);
-  virtual void objectName( co_procom *pcom, char *name);
+  virtual void objectName( co_procom *pcom, char *name, pwr_tOix poix);
   virtual void objectBody( co_procom *pcom, pwr_tOix oix);
   virtual void createObject( co_procom *pcom, pwr_tOix destoix, int desttype,
 		     pwr_tCid cid, char *name);

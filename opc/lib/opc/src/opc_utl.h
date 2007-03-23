@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.12 2007-03-17 09:31:22 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.13 2007-03-23 08:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,12 +109,13 @@ void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, i
 bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask);
 std::string& opc_datetime( pwr_tTime *tp);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
+pwr_tStatus opc_time_OPCAsciiToA( char *tstr, pwr_tTime *ts);
 const char *opc_resultcode_to_string( int code);
 const char *opc_resultcode_to_text( int code);
 bool opc_string_to_resultcode(char *str, int *code);
 xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type);
+bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc_type, int pwr_type);
 bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, pwr_eType pwr_type);
-bool opc_convert_pwrtype_to_opctype(void *bufp, int size, int opc_type, int pwr_type);
 bool opc_string_to_opctype(const char *str, int *type);
 char *opc_opctype_to_string(int type);
 bool opc_pwrtype_to_opctype(int pwrtype, int *opctype);

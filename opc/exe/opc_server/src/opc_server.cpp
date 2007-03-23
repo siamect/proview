@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.11 2007-03-17 09:12:15 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.12 2007-03-23 08:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,7 +37,7 @@ typedef struct {
 } opc_sClientAccess;
 
 class opcsrv_sub {
- public:  
+ public:
   void *p;
   int size;
   opc_eDataType opc_type;
@@ -276,9 +276,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
     item = s0__Read->ItemList->Items[ii];
     
     if (item->ItemPath && !item->ItemPath->empty())
-      strncpy(itempath, item->ItemPath->c_str(), sizeof(itemname));
+      strncpy(itempath, item->ItemPath->c_str(), sizeof(itempath));
     else
-      strncpy(itempath, path, sizeof(itemname));
+      strncpy(itempath, path, sizeof(itempath));
 
     strncpy(itemname, itempath, sizeof(itemname));
     strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
@@ -324,7 +324,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
         
       if (reqType < 0) opc_pwrtype_to_opctype(tid, &reqType);
       
-      if (opc_convert_pwrtype_to_opctype(buf, sizeof(buf), reqType, tid)) {
+      if (opc_convert_pwrtype_to_opctype(buf, 0, sizeof(buf), reqType, tid)) {
       	iv->Value = opc_opctype_to_value(buf, sizeof(buf), reqType);
 	if (options & opc_mRequestOption_ReturnItemTime) {
 	  // ToDo !!!
@@ -345,10 +345,95 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
   return 0;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap*, 
-				       _s0__Write *s0__Write, 
-				       _s0__WriteResponse *s0__WriteResponse)
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap, 
+				      _s0__Write *s0__Write, 
+				      _s0__WriteResponse *s0__WriteResponse)
 {
+  int ii;
+  s0__ItemValue *item;
+  pwr_sAttrRef               ar;
+  pwr_tStatus sts;
+  pwr_tOName itemname;
+  pwr_tOName itempath;
+  pwr_tOName path;
+  pwr_tTypeId a_type;
+  unsigned int a_size, a_elem;
+  char  buf[1024];
+  unsigned int options = 0;
+  
+  s0__WriteResponse->WriteResult = new s0__ReplyBase();
+  s0__WriteResponse->WriteResult->RcvTime.__item = opc_datetime(0);
+  s0__WriteResponse->WriteResult->ReplyTime.__item = opc_datetime(0);
+  if (s0__Write->Options)
+    s0__WriteResponse->WriteResult->ClientRequestHandle = s0__Write->Options->ClientRequestHandle;
+  s0__WriteResponse->WriteResult->ServerState = s0__serverState__running;
+
+  if (!s0__Write->ItemList)
+    return 0;
+
+  if (s0__Write->ItemList->Items.empty())
+    return 0;
+  
+  strcpy(path, "");
+  
+  opc_requestoptions_to_mask(s0__Write->Options, &options);
+
+  if (s0__Write->ItemList->ItemPath && !s0__Write->ItemList->ItemPath->empty())
+    strncpy(path, s0__Write->ItemList->ItemPath->c_str(), sizeof(path));
+  
+  for (ii = 0; ii < (int) s0__Write->ItemList->Items.size(); ii++) {
+
+    s0__ItemValue *iv = new s0__ItemValue();
+      
+    if (!s0__WriteResponse->RItemList)
+      s0__WriteResponse->RItemList = new s0__ReplyItemList();
+
+    item = s0__Write->ItemList->Items[ii];
+    
+    if (item->ItemPath && !item->ItemPath->empty())
+      strncpy(itempath, item->ItemPath->c_str(), sizeof(itempath));
+    else
+      strncpy(itempath, path, sizeof(itempath));
+
+    strncpy(itemname, itempath, sizeof(itemname));
+    strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
+
+    if (options & opc_mRequestOption_ReturnItemPath)
+      iv->ItemPath = new std::string(itempath);
+
+    if (options & opc_mRequestOption_ReturnItemName)
+      iv->ItemName = new std::string(itemname);
+
+    if (options & opc_mRequestOption_ReturnDiagnosticInfo)
+      iv->DiagnosticInfo = new std::string(""); // ToDo !!
+
+    sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);    
+    if (EVEN(sts)) {
+      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      s0__WriteResponse->RItemList->Items.push_back(iv);
+      continue;
+    }
+    
+    gdh_GetAttributeCharAttrref(&ar, &a_type, &a_size, NULL, &a_elem);
+    
+    if (cdh_tidIsCid(a_type) || a_elem > 1) {
+      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      s0__WriteResponse->RItemList->Items.push_back(iv);
+      continue;
+    }          
+
+    if ( !opc_convert_opctype_to_pwrtype( buf, a_size, item->Value, (pwr_eType) a_type)) {
+      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      s0__WriteResponse->RItemList->Items.push_back(iv);
+      continue;
+    }
+
+    sts = gdh_SetObjectInfoAttrref(&ar, buf, a_size);
+    if ( EVEN(sts)) {
+      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      s0__WriteResponse->RItemList->Items.push_back(iv);
+    }
+  }
   return 0;
 }
 
@@ -422,6 +507,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
       client->m_sublist.find( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
     
     if ( it != client->m_sublist.end()) {
+
+      // Test
+      for ( int jj = 0; jj < (int) it->second.size(); jj++) {
+	printf( "%d sub: p %d size %d opc_type %d pwr_type %d subid %d,%d\n", jj, (int)it->second[jj].p,
+		it->second[jj].size, it->second[jj].opc_type, it->second[jj].pwr_type, it->second[jj].subid.nid,
+		it->second[jj].subid.rix);	    
+	jj++;
+      }
+
+
       s0__SubscribePolledRefreshReplyItemList *rlist = new s0__SubscribePolledRefreshReplyItemList();
 
       rlist->SubscriptionHandle = new std::string(s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
@@ -429,8 +524,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 	s0__ItemValue *ritem = new s0__ItemValue();
 	
 	// TODO
-	ritem->Value = new xsd__string();
-	((xsd__string *)ritem->Value)->__item = std::string("100");
+
+	ritem->Value = opc_opctype_to_value( it->second[j].p, it->second[j].size, 
+					     it->second[j].opc_type);
 	ritem->Timestamp = new xsd__dateTime();
 	ritem->Timestamp->__item = opc_datetime(0);
 
@@ -821,7 +917,7 @@ int opcsrv_get_access( struct soap *so)
   return access;
 }
   
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse, 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Browse, 
 					_s0__BrowseResponse *s0__BrowseResponse)
 {
   pwr_tStatus sts;
@@ -830,9 +926,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
   pwr_tCid cid;
   unsigned int property_mask;
   pwr_tTime current_time;
-  unsigned int erropt = 0;
 
-  opc_current_access = opcsrv_get_access( so);
+  opc_current_access = opcsrv_get_access( soap);
   clock_gettime( CLOCK_REALTIME, &current_time);
 
   s0__BrowseResponse->BrowseResult = new s0__ReplyBase();
@@ -846,16 +941,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
     // Return rootlist
     for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
-      if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( EVEN(sts))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
       sts = gdh_GetObjectClass( oid, &cid);
-      if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( EVEN(sts))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
       
       s0__BrowseElement *element = new s0__BrowseElement();
       element->Name = new std::string( name);
@@ -899,16 +990,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
       strncpy( pname, s0__Browse->ItemName->c_str(), sizeof(pname));
 
     sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
-    if ( EVEN(sts)) {
-      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_UNKNOWNITEMNAME, erropt);
-      return 0;
-    }
+    if ( EVEN(sts))
+      return opcsrv->fault( soap, opc_eResultCode_E_UNKNOWNITEMNAME);
 
     sts = gdh_GetAttrRefTid( &paref, &cid);
-    if ( EVEN(sts)) {
-      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-      return 0;
-    }
+    if ( EVEN(sts))
+      return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
     if ( paref.Flags.b.Array) {
       // Return all elements
@@ -920,29 +1007,23 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
 
 
       sts = gdh_AttrArefToObjectAref( &paref, &oaref);
-      if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( EVEN(sts))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
       sts = gdh_GetAttrRefTid( &oaref, &cid);
-      if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( EVEN(sts))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
-      if ( !( attrname = strrchr( pname, '.'))) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( !( attrname = strrchr( pname, '.')))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
       attrname++;
 
       // Get body definition
       sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
-      if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
-      }
+      if ( EVEN(sts))
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
       int bd_idx = -1;
       for ( int i = 0; i < rows; i++) {
 	if ( cdh_NoCaseStrcmp( attrname, bd[i].attrName) == 0) {
@@ -952,15 +1033,14 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
       }
       if ( bd_idx == -1) {
 	// E_INVALIDITEMNAME
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
 	free( (char *)bd);
-	return 0;
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
       }
 
       sts = gdh_GetAttributeCharAttrref( &paref, &a_type, &a_size, &a_offs, &a_dim);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	return 0;
+	free( (char *)bd);
+	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
       }
 
       for ( int i = 0; i < (int)a_dim; i++) {
@@ -970,10 +1050,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
 	s = strrchr( itemname, '.');
 	if ( s)
 	  strcpy( aname, s + 1);
-	else {
-	  opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	  return 0;
-	}
+	else
+	  return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
 	element->Name = new std::string( aname);
 	element->ItemName = new std::string( itemname);
 	element->IsItem = true;
@@ -986,10 +1065,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
 
 	if ( property_mask) {
 	  sts = gdh_NameToAttrref( pwr_cNOid, itemname, &aref);
-	  if ( EVEN(sts)) {
-	    opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	    return 0;
-	  }
+	  if ( EVEN(sts))
+	    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 	  
 	  opcsrv_get_properties( true, cid, &paref, &aref,
 				 property_mask, &bd[bd_idx],
@@ -1000,13 +1077,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
       }
       free( (char *)bd);
 
-      return 0;      
+      return SOAP_OK;      
     }
 
-    if ( !cdh_tidIsCid( cid)) {
-      opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-      return 0;
-    }
+    if ( !cdh_tidIsCid( cid))
+      return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
     sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
     if ( ODD(sts)) {
@@ -1024,18 +1099,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
 	  continue;
 	
 	sts = gdh_ArefANameToAref( &paref, bd[i].attrName, &aref);
-	if ( EVEN(sts)) {
-	  opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	  return 0;
-	}
+	if ( EVEN(sts))
+	  return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_DISABLEATTR) {
 	  pwr_tDisableAttr disabled;
 
 	  sts = gdh_ArefDisabled( &aref, &disabled);
-	  if ( EVEN(sts)) {
-	    opcsrv_returnerror( s0__BrowseResponse->Errors, 0, opc_eResultCode_E_FAIL, erropt);
-	    return 0;
-	  }
+	  if ( EVEN(sts))
+	    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 	    
 	  if ( disabled)
 	    continue;
@@ -1132,7 +1204,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *so, _s0__Browse *s0__Browse,
       }
     }
   }
-  return 0;
+  return SOAP_OK;
 }
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, 

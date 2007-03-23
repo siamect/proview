@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.7 2007-03-15 15:25:36 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.8 2007-03-23 08:19:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,91 +95,145 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	o.po.cid = pwr_cClass_Opc_String;
 	o.po.body_size = sizeof(pwr_sClass_Opc_String);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_String;
+	o.size = sizeof( pwr_tString80);
 	break;
       case opc_eDataType_boolean:
 	o.po.cid = pwr_cClass_Opc_Boolean;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Boolean);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Boolean;
+	o.size = sizeof( pwr_tBoolean);
 	break;
       case opc_eDataType_float:
 	o.po.cid = pwr_cClass_Opc_Float;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Float);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Float32;
+	o.size = sizeof( pwr_tFloat32);
+	((pwr_sClass_Opc_Float *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_double:
 	o.po.cid = pwr_cClass_Opc_Double;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Double);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Float64;
+	o.size = sizeof( pwr_tFloat64);
+	((pwr_sClass_Opc_Double *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_decimal:
 	o.po.cid = pwr_cClass_Opc_Decimal;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Decimal);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Float32;
+	o.size = sizeof( pwr_tFloat32);
+	((pwr_sClass_Opc_Decimal *)o.po.body)->HighEU = 100;
+	break;
+      case opc_eDataType_long:
+	o.po.cid = pwr_cClass_Opc_Long;
+	o.po.body_size = sizeof(pwr_sClass_Opc_Long);
+	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Int32;
+	o.size = sizeof( pwr_tInt32);
+	((pwr_sClass_Opc_Long *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_int:
 	o.po.cid = pwr_cClass_Opc_Int;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Int);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Int32;
+	o.size = sizeof( pwr_tInt32);
+	((pwr_sClass_Opc_Int *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_short:
 	o.po.cid = pwr_cClass_Opc_Short;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Short);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Int16;
+	o.size = sizeof( pwr_tInt16);
+	((pwr_sClass_Opc_Short *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_byte:
 	o.po.cid = pwr_cClass_Opc_Byte;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Byte);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Int8;
+	o.size = sizeof( pwr_tInt8);
+	((pwr_sClass_Opc_Byte *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_unsignedLong:
 	o.po.cid = pwr_cClass_Opc_UnsignedLong;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_UInt32;
+	o.size = sizeof( pwr_tUInt32);
+	((pwr_sClass_Opc_UnsignedLong *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_unsignedInt:
 	o.po.cid = pwr_cClass_Opc_UnsignedInt;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedInt);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_UInt32;
+	o.size = sizeof( pwr_tUInt32);
+	((pwr_sClass_Opc_UnsignedInt *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_unsignedShort:
 	o.po.cid = pwr_cClass_Opc_UnsignedShort;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedShort);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_UInt16;
+	o.size = sizeof( pwr_tUInt16);
+	((pwr_sClass_Opc_UnsignedShort *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_unsignedByte:
 	o.po.cid = pwr_cClass_Opc_UnsignedByte;
 	o.po.body_size = sizeof(pwr_sClass_Opc_UnsignedByte);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_UInt8;
+	o.size = sizeof( pwr_tUInt8);
+	((pwr_sClass_Opc_UnsignedByte *)o.po.body)->HighEU = 100;
 	break;
       case opc_eDataType_base64Binary:
 	o.po.cid = pwr_cClass_Opc_Base64Binary;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_UInt32;
+	o.size = 2 * sizeof( pwr_tUInt32);
 	break;
       case opc_eDataType_dateTime:
 	o.po.cid = pwr_cClass_Opc_DateTime;
 	o.po.body_size = sizeof(pwr_sClass_Opc_DateTime);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Time;
+	o.size = sizeof( pwr_tTime);
 	break;
       case opc_eDataType_time:
 	o.po.cid = pwr_cClass_Opc_Time;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Time);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Time;
+	o.size = sizeof( pwr_tTime);
 	break;
       case opc_eDataType_date:
 	o.po.cid = pwr_cClass_Opc_Date;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Date);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_Time;
+	o.size = sizeof( pwr_tTime);
 	break;
       case opc_eDataType_duration:
 	o.po.cid = pwr_cClass_Opc_Duration;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Duration);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_DeltaTime;
+	o.size = sizeof( pwr_tDeltaTime);
 	break;
       case opc_eDataType_QName:
 	o.po.cid = pwr_cClass_Opc_QName;
 	o.po.body_size = sizeof(pwr_sClass_Opc_QName);
 	o.po.body = calloc( 1, o.po.body_size);
+	o.type = pwr_eType_String;
+	o.size = sizeof( pwr_tString80);
       default:
 	o.po.cid = pwr_cClass_Opc_Hier;
 	o.po.body_size = sizeof(pwr_sClass_Opc_Hier);
@@ -318,6 +372,10 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	}
       }
     }
+    else {
+      // Error returned from soap
+      soap_print_fault( &soap, stderr);
+    }
   }
 
 
@@ -341,6 +399,10 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 		       i == 0, i == (int)browse_response.Elements.size() - 1, 0, 0);
 	bws = next_bws;
       }
+    }
+    else {
+      // Error returned from soap
+      soap_print_fault( &soap, stderr);
     }
   }
 }
@@ -393,8 +455,10 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 	bws = next_bws;
       }
     }
-    else
+    else {
+      // Error returned from soap
       soap_print_fault( &soap, stderr);
+    }
   }
   else if ( oix < m_list.size()) {
     if ( !(m_list[oix].po.flags & procom_obj_mFlags_Loaded)) {
@@ -420,8 +484,12 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 			 i == 0, i == (int)browse_response.Elements.size() - 1, 0, 0);
 	  bws = next_bws;
 	}
+	m_list[oix].po.flags |= procom_obj_mFlags_Loaded;
       }
-      m_list[oix].po.flags |= procom_obj_mFlags_Loaded;
+      else {
+	// Error returned from soap
+	soap_print_fault( &soap, stderr);
+      }
     }
   }
 
@@ -451,12 +519,25 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
   pcom->provideObjects( GDH__SUCCESS, olist);
 }
 
-void opc_provider::objectName( co_procom *pcom, char *name)
+void opc_provider::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 {
+  pwr_tOName oname;
+
+  if ( poix) {
+    if ( poix >= m_list.size()) {
+      pcom->provideStatus( GDH__NOSUCHOBJ);
+      return;
+    }
+    strcpy( oname, longname(poix));
+    strcat( oname, "-");
+    strcat( oname, name);
+  }
+  else
+    strcpy( oname, name);
 
   for ( int i = 0; i < (int) m_list.size(); i++) {
     if  ( !m_list[i].po.flags & procom_obj_mFlags_Deleted) {
-      if ( cdh_NoCaseStrcmp( name, longname(m_list[i].po.oix)) == 0) {
+      if ( cdh_NoCaseStrcmp( oname, longname(m_list[i].po.oix)) == 0) {
 	objectOid( pcom, i);
 	return;
       }
@@ -521,6 +602,59 @@ void opc_provider::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int o
   }
 
   memcpy( (void *)((unsigned long)m_list[oix].po.body + (unsigned long)offset), buffer, size);
+
+  switch ( m_list[oix].po.cid) {
+  case pwr_cClass_Opc_String:
+  case pwr_cClass_Opc_Boolean:
+  case pwr_cClass_Opc_Float:
+  case pwr_cClass_Opc_Double:
+  case pwr_cClass_Opc_Decimal:
+  case pwr_cClass_Opc_Long:
+  case pwr_cClass_Opc_Int:
+  case pwr_cClass_Opc_Short:
+  case pwr_cClass_Opc_Byte:
+  case pwr_cClass_Opc_UnsignedLong:
+  case pwr_cClass_Opc_UnsignedInt:
+  case pwr_cClass_Opc_UnsignedShort:
+  case pwr_cClass_Opc_UnsignedByte:
+  case pwr_cClass_Opc_Base64Binary:
+  case pwr_cClass_Opc_Time:
+  case pwr_cClass_Opc_Date:
+  case pwr_cClass_Opc_DateTime:
+  case pwr_cClass_Opc_Duration:
+  case pwr_cClass_Opc_QName: {
+
+    // Value has the same offset for all opctype classes
+    if ( offset == (unsigned int) ((char *) &((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value -
+		    (char *)m_list[oix].po.body)) {      
+      _s0__Write write;
+      _s0__WriteResponse write_response;
+      char opc_buffer[2000];
+      int opc_type;
+
+      s0__ItemValue *item = new s0__ItemValue();
+      item->ItemName = new std::string( m_list[oix].item_name);
+      opc_pwrtype_to_opctype( m_list[oix].type, &opc_type);
+      opc_convert_pwrtype_to_opctype( buffer, opc_buffer, sizeof(opc_buffer), opc_type, 
+				      m_list[oix].type);
+      item->Value = opc_opctype_to_value( opc_buffer, sizeof(opc_buffer), opc_type);
+      write.ItemList = new s0__WriteRequestItemList;
+      write.ItemList->Items.push_back( item);
+
+      if ( soap_call___s0__Write( &soap, opc_endpoint, NULL, &write, &write_response) ==
+	   SOAP_OK) {
+	// Check item errors
+      }
+      else {
+	// Error returned from soap
+	soap_print_fault( &soap, stderr);
+      }
+    }
+    break;
+  }
+  }
+
+
   pcom->provideStatus( 1);
 }
 
@@ -539,46 +673,45 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
   }
 
   switch ( m_list[oix].po.cid) {
+  case pwr_cClass_Opc_String:
+  case pwr_cClass_Opc_Boolean:
   case pwr_cClass_Opc_Float:
-    if ( offset == (unsigned int) ((char *) &((pwr_sClass_Opc_Float *)m_list[oix].po.body)->Value -
+  case pwr_cClass_Opc_Double:
+  case pwr_cClass_Opc_Decimal:
+  case pwr_cClass_Opc_Long:
+  case pwr_cClass_Opc_Short:
+  case pwr_cClass_Opc_Byte:
+  case pwr_cClass_Opc_UnsignedLong:
+  case pwr_cClass_Opc_UnsignedInt:
+  case pwr_cClass_Opc_UnsignedShort:
+  case pwr_cClass_Opc_UnsignedByte:
+  case pwr_cClass_Opc_Base64Binary:
+  case pwr_cClass_Opc_Time:
+  case pwr_cClass_Opc_Date:
+  case pwr_cClass_Opc_Duration:
+  case pwr_cClass_Opc_QName:
+    // Value has the same offset for all opctype classes
+    if ( offset == (unsigned int) ((char *) &((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value -
 		    (char *)m_list[oix].po.body)) {      
       _s0__Read read;
       _s0__ReadResponse read_response;
 
-      s0__ReadRequestItem *item = new s0__ReadRequestItem();      
+      s0__ReadRequestItem *item = new s0__ReadRequestItem();
       item->ItemName = new std::string( m_list[oix].item_name);
       read.ItemList = new s0__ReadRequestItemList;
       read.ItemList->Items.push_back( item);
-				   
+
       if ( soap_call___s0__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
 	   SOAP_OK) {
 	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
-	  // printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
+	  opc_convert_opctype_to_pwrtype( &((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value,
+					  m_list[oix].size, read_response.RItemList->Items[0]->Value,
+					  (pwr_eType) m_list[oix].type);
 	}
       }
-    }
-    break;
-  case pwr_cClass_Opc_String:
-    if ( offset == (unsigned int) ((char *) ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value -
-		    (char *)m_list[oix].po.body)) {      
-      _s0__Read read;
-      _s0__ReadResponse read_response;
-
-      s0__ReadRequestItem *item = new s0__ReadRequestItem();      
-      item->ItemName = new std::string( m_list[oix].item_name);
-      read.ItemList = new s0__ReadRequestItemList;
-      read.ItemList->Items.push_back( item);
-				   
-      if ( soap_call___s0__Read( &soap, opc_endpoint, NULL, &read, &read_response) ==
-	   SOAP_OK) {
-	if ( read_response.RItemList && read_response.RItemList->Items.size() > 0) {
-#if 0
-	  strncpy( ((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value, 
-		   read_response.RItemList->Items[0]->Value,
-		   sizeof(((pwr_sClass_Opc_String *)m_list[oix].po.body)->Value));
-	  printf( "Read Value: \"%s\"\n", read_response.RItemList->Items[0]->Value);
-#endif
-	}
+      else {
+	// Error returned from soap
+	soap_print_fault( &soap, stderr);
       }
     }
     break;
@@ -614,6 +747,7 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
   case pwr_cClass_Opc_UnsignedShort:
   case pwr_cClass_Opc_UnsignedByte:
   case pwr_cClass_Opc_Base64Binary:
+  case pwr_cClass_Opc_DateTime:
   case pwr_cClass_Opc_Time:
   case pwr_cClass_Opc_Date:
   case pwr_cClass_Opc_Duration:
@@ -652,6 +786,10 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 	  }
 	}
       }
+      else {
+	// Error returned from soap
+	soap_print_fault( &soap, stderr);
+      }
     }
     break;
   default: ;
@@ -671,7 +809,10 @@ void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid)
 
     if ( soap_call___s0__SubscriptionCancel( &soap, opc_endpoint, NULL, &subcancel, &subcancel_response) ==
 	 SOAP_OK) {
-      // Where are the fault codes ???
+    }
+    else {
+      // Error returned from soap
+      soap_print_fault( &soap, stderr);
     }
 
     m_sublist.erase( it);
@@ -700,7 +841,12 @@ void opc_provider::cyclic( co_procom *pcom)
 
       int idx = 0;
       for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
-	if ( subpoll_response.RItemList[idx]->Items.size()) { 
+	if ( subpoll_response.RItemList[idx]->Items.size()) {
+	  opc_convert_opctype_to_pwrtype( (void *) ((pwr_sClass_Opc_String *)m_list[it->second.oix].po.body)->Value,
+					  m_list[it->second.oix].size,
+					  subpoll_response.RItemList[idx]->Items[0]->Value,
+					  (pwr_eType) m_list[it->second.oix].type);
+#if 0
 	  switch ( m_list[it->second.oix].po.cid) {
 	  case pwr_cClass_Opc_String:
 	    strcpy( ((pwr_sClass_Opc_String *)m_list[it->second.oix].po.body)->Value,
@@ -708,10 +854,15 @@ void opc_provider::cyclic( co_procom *pcom)
 	    break;
 	  default: ;
 	  }
+#endif
 	}
 	idx++;
       }
       
+    }
+    else {
+      // Error returned from soap
+      soap_print_fault( &soap, stderr);
     }
   }
 }
