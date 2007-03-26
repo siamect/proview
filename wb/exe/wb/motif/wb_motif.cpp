@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_motif.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_motif.cpp,v 1.2 2007-03-26 06:30:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,9 +105,9 @@ WVsel *WbMotif::vsel_new( pwr_tStatus *status, char *name, ldh_tWBContext ldhwbc
 static void display_warranty( void *data)
 {
   WbMotif *wb = (WbMotif *)data;
-  CoWowMotif wow( wb->toplevel);
+  CoWowMotif *wow = new CoWowMotif( wb->toplevel);
 
-  wow.DisplayWarranty();
+  wow->DisplayWarranty();
 }
 
 int main( int argc, char *argv[])
