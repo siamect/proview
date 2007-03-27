@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.20 2007-01-23 13:14:42 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.21 2007-03-27 08:27:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2024,7 +2024,8 @@ void GrowCtx::open_grow( ifstream& fp)
   }
   if ( double_buffered && navw.window && ! navw.double_buffer_on()) {
     navw.set_double_buffer_on(1);
-    gdraw->create_buffer( &navw);
+    if ( !gdraw->create_buffer( &navw))
+      navw.set_double_buffer_on(0);
   }
   if ( gdraw)
     set_background( background_color);
