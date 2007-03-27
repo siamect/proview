@@ -31,3 +31,5 @@
 070130 cs  web       _opwin removed from homepage name. index.html set as defaultname.
 070130 cs  web       Possibility to configure which objectgraph jar-files that should be loaded (BaseComponent or ABB).
 070221 cs  xtt       Problems with national characters in alarmtext in operator window fixed.
+070327 cs  ge        Bugfix in navigator window, drawing attempt in zero buffer removed.
+070327 cs  ge        Problems with national characters in ge attribute editor fixed.
