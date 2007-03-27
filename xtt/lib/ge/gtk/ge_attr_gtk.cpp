@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.3 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.4 2007-03-27 08:28:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,7 +109,10 @@ void AttrGtk::change_value() {
       gtk_text_buffer_delete( cmd_scrolled_buffer, &start_iter, &end_iter);
 
       gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
-      gtk_text_buffer_insert( cmd_scrolled_buffer, &start_iter, value, -1);
+
+      char *textutf8 = g_convert( value, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+      gtk_text_buffer_insert( cmd_scrolled_buffer, &start_iter, textutf8, -1);
+      g_free( textutf8);
 
       // Select the text
       // gtk_text_buffer_get_start_iter( cmd_scrolled_buffer, &start_iter);
@@ -117,9 +120,11 @@ void AttrGtk::change_value() {
       // gtk_text_buffer_select_range( cmd_scrolled_buffer, &start_iter, &end_iter);
     }
     else {
+      char *textutf8 = g_convert( value, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
       gint pos = 0;
       gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
-      gtk_editable_insert_text( GTK_EDITABLE(text_w), value, strlen(value), &pos);
+      gtk_editable_insert_text( GTK_EDITABLE(text_w), textutf8, strlen(textutf8), &pos);
+      g_free( textutf8);
 
       // Select the text
       gtk_editable_set_position( GTK_EDITABLE(cmd_input), -1);
