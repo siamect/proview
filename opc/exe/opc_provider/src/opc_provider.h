@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.h,v 1.8 2007-03-23 08:19:45 claes Exp $
+ * Proview   $Id: opc_provider.h,v 1.9 2007-03-27 08:37:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,8 +56,13 @@ class opcprv_sub {
 
 class opc_provider : public co_provider {
 public:
-  opc_provider( pvd_eEnv env = pvd_eEnv_Wb) : co_provider(env), root(0), next_oix(1) {
+  opc_provider( pvd_eEnv env = pvd_eEnv_Wb) : co_provider(env), root(0), next_oix(1),
+    server_state(0) {
     memset( &server_state, 0, sizeof(server_state));
+  }
+  ~opc_provider() {
+    for ( int i = 0; i < (int) m_list.size(); i++)
+      delete m_list[i];
   }
   virtual void object( co_procom *pcom);
   virtual void objectOid( co_procom *pcom, pwr_tOix oix);
@@ -97,13 +102,15 @@ public:
   void get_server_state();
   char *opc_provider::name_to_objectname( char *name);
   void errlog( std::string* item, std::vector<s0__OPCError *>& errvect);
+  void init();
+  void fault();
 
-  vector<opcprv_obj> m_list;
+  vector<opcprv_obj *> m_list;
   map<pwr_tUInt32, opcprv_sub> m_sublist;
   pwr_tOix root;
   pwr_tOix next_oix;
   struct soap soap;
-  pwr_sClass_Opc_ServerState server_state;
+  pwr_sClass_Opc_ServerState *server_state;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.13 2007-03-23 08:19:45 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.14 2007-03-27 08:37:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,6 +79,7 @@ typedef enum {
 } opc_eDataType;
 
 typedef enum {
+  opc_eResultCode_S_,
   opc_eResultCode_S_CLAMP,
   opc_eResultCode_S_DATAQUEUEOVERFLOW,
   opc_eResultCode_S_UNSUPPORTEDRATE,

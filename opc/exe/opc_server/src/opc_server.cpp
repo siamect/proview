@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.12 2007-03-23 08:19:45 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.13 2007-03-27 08:37:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,20 +56,24 @@ typedef map< int, opcsrv_client>::iterator client_iterator;
 
 class opc_server {
  public:
+  opc_server() : m_client_access_cnt(0), m_grant_all(true) {}
+
   map< int, opcsrv_client> m_client;
+  pwr_tTime m_start_time;
+  pwr_sClass_Opc_ServerConfig *m_config;
+  opc_sClientAccess m_client_access[20];
+  int m_client_access_cnt;
+  int m_current_access;
+  bool m_grant_all;
 
   opcsrv_client *find_client( int sid);
   opcsrv_client *new_client( int sid);
   int fault( struct soap *soap, int code);
+  int get_access( struct soap *so);
 
 };
 
 static opc_server *opcsrv;
-static pwr_tTime opc_start_time;
-static pwr_sClass_Opc_ServerConfig *opc_config;
-static opc_sClientAccess opc_client_access[20];
-static int opc_client_access_cnt = 0;
-static int opc_current_access;
 
 static int
 opcsrv_set_error(struct soap *soap, const char *faultcode, const char *faultsubcode, const char *faultstring, const char *faultdetail, int soaperror)
@@ -126,6 +130,7 @@ int main()
   struct soap soap;
   int m,s;   // Master and slave sockets
   pwr_tStatus sts;
+  pwr_tOid config_oid;
 
   sts = gdh_Init("opc_server");
   if ( EVEN(sts)) {
@@ -134,45 +139,33 @@ int main()
 
   opcsrv = new opc_server();
 
-#if 0
-
-  pwr_tOid config_oid;
 
   // Get OpcServerConfig object
   sts = gdh_GetClassList( pwr_cClass_Opc_ServerConfig, &config_oid);
   if ( EVEN(sts)) {
     // Not configured
-    exit(0);
+    exit(sts);
   }
 
-  sts = gdh_ObjidToPointer( config_oid, &opc_config);
+  sts = gdh_ObjidToPointer( config_oid, (void **)&opcsrv->m_config);
   if ( EVEN(sts)) {
-    exit(0);
+    exit(sts);
   }
-#endif  
-
-  // Test
-  pwr_sClass_Opc_ServerConfig sc;
-  memset( &sc, 0, sizeof(sc));
-  strcpy( sc.ClientAccess[0].Address, "192.168.62.186");
-  sc.ClientAccess[0].Access = pwr_eOpc_AccessEnum_ReadWrite;
-  opc_config = &sc;
-  // End Test
 
   for ( int i = 0; 
-	i < (int)(sizeof(opc_config->ClientAccess)/sizeof(opc_config->ClientAccess[0])); 
+	i < (int)(sizeof(opcsrv->m_config->ClientAccess)/sizeof(opcsrv->m_config->ClientAccess[0])); 
 	i++) {
-    if ( strcmp( opc_config->ClientAccess[i].Address, "") != 0) {
-      opc_client_access[opc_client_access_cnt].address = 
-	inet_network( opc_config->ClientAccess[i].Address);
-      if ( opc_client_access[opc_client_access_cnt].address != -1) {
-	opc_client_access[opc_client_access_cnt].access = opc_config->ClientAccess[i].Access;
-	opc_client_access_cnt++;
+    if ( strcmp( opcsrv->m_config->ClientAccess[i].Address, "") != 0) {
+      opcsrv->m_client_access[opcsrv->m_client_access_cnt].address = 
+	inet_network( opcsrv->m_config->ClientAccess[i].Address);
+      if ( opcsrv->m_client_access[opcsrv->m_client_access_cnt].address != -1) {
+	opcsrv->m_client_access[opcsrv->m_client_access_cnt].access = opcsrv->m_config->ClientAccess[i].Access;
+	opcsrv->m_client_access_cnt++;
       }
     }      
   }
 
-  clock_gettime( CLOCK_REALTIME, &opc_start_time);
+  clock_gettime( CLOCK_REALTIME, &opcsrv->m_start_time);
 
   soap_init( &soap);
   m = soap_bind( &soap, NULL, 18083, 100);
@@ -200,16 +193,25 @@ int main()
   }
 
   soap_done( &soap);     // Close master socket and detach environment
-  return 0;
+  return SOAP_OK;
 }
 
 
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap, 
 					   _s0__GetStatus *s0__GetStatus, 
 					   _s0__GetStatusResponse *s0__GetStatusResponse)
 {
   pwr_tTime current_time;
+
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_None:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  default: ;
+  }
 
   clock_gettime( CLOCK_REALTIME, &current_time);
 
@@ -223,13 +225,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap*,
   s0__GetStatusResponse->Status = new s0__ServerStatus();
   s0__GetStatusResponse->Status->VendorInfo = new std::string("Proview Open Source Process Control");
   s0__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
-  s0__GetStatusResponse->Status->StartTime.__item = opc_datetime( &opc_start_time);
+  s0__GetStatusResponse->Status->StartTime.__item = opc_datetime( &opcsrv->m_start_time);
   s0__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
 
-  return 0;
+  return SOAP_OK;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap, 
 				      _s0__Read *s0__Read, 
 				      _s0__ReadResponse *s0__ReadResponse)
 {
@@ -246,6 +248,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
   char  buf[1024];
   unsigned int options = 0;
   
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
   s0__ReadResponse->ReadResult = new s0__ReplyBase();
   s0__ReadResponse->ReadResult->RcvTime.__item = opc_datetime(0);
   s0__ReadResponse->ReadResult->ReplyTime.__item = opc_datetime(0);
@@ -254,10 +267,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
   s0__ReadResponse->ReadResult->ServerState = s0__serverState__running;
 
   if (!s0__Read->ItemList)
-    return 0;
+    return SOAP_OK;
 
   if (s0__Read->ItemList->Items.empty())
-    return 0;
+    return SOAP_OK;
   
   memset(path, 0, sizeof(path));
   
@@ -342,7 +355,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap*,
       continue;
     }
   }
-  return 0;
+  return SOAP_OK;
 }
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap, 
@@ -361,6 +374,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
   char  buf[1024];
   unsigned int options = 0;
   
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
   s0__WriteResponse->WriteResult = new s0__ReplyBase();
   s0__WriteResponse->WriteResult->RcvTime.__item = opc_datetime(0);
   s0__WriteResponse->WriteResult->ReplyTime.__item = opc_datetime(0);
@@ -369,10 +392,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
   s0__WriteResponse->WriteResult->ServerState = s0__serverState__running;
 
   if (!s0__Write->ItemList)
-    return 0;
+    return SOAP_OK;
 
   if (s0__Write->ItemList->Items.empty())
-    return 0;
+    return SOAP_OK;
   
   strcpy(path, "");
   
@@ -434,7 +457,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
       s0__WriteResponse->RItemList->Items.push_back(iv);
     }
   }
-  return 0;
+  return SOAP_OK;
 }
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap, 
@@ -445,6 +468,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
   pwr_tTypeId a_tid;
   pwr_tUInt32 a_size, a_offs, a_elem;
   pwr_tAName aname;
+
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
 
   opcsrv_client *client = opcsrv->find_client( soap->ip);
   if ( !client)
@@ -485,13 +519,22 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
       client->m_sublist[*s0__SubscribeResponse->ServerSubHandle].push_back( sub);
     }
   }
-  return 0;
+  return SOAP_OK;
 }
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap, 
 							   _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, 
 							   _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse)
 {
+  // Check access for the connection
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
   pwr_tTime current_time;
   opcsrv_client *client = opcsrv->find_client( soap->ip);
   if ( !client) {
@@ -538,13 +581,22 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
     }
   }
 
-  return 0;
+  return SOAP_OK;
 }
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap, 
 						    _s0__SubscriptionCancel *s0__SubscriptionCancel, 
 						    _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse)
 {
+  // Check access for the connection
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
   opcsrv_client *client = opcsrv->find_client( soap->ip);
   if ( !client) {
     // TODO
@@ -564,7 +616,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
   }
   s0__SubscriptionCancelResponse->ClientRequestHandle = 
     s0__SubscriptionCancel->ClientRequestHandle;
-  return 0;
+  return SOAP_OK;
 }
 
 bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp, 
@@ -684,7 +736,7 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
       ip->Name = std::string("accessRights");
       ip->Value = new xsd__string();
 
-      switch ( opc_current_access) {
+      switch ( opcsrv->m_current_access) {
       case pwr_eOpc_AccessEnum_ReadOnly:
 	((xsd__string *)ip->Value)->__item = std::string("readable");
 	break;
@@ -904,14 +956,17 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
   return true;
 }
 
-int opcsrv_get_access( struct soap *so)
+int opc_server::get_access( struct soap *so)
 {
   int access = pwr_eOpc_AccessEnum_None;
-      
-  for ( int i = 0; i < opc_client_access_cnt; i++) {
-    if ( opc_client_access[i].address == (int)so->ip) {
-      access = opc_client_access[i].access;
-      break;
+  if ( m_grant_all)
+    access = pwr_eOpc_AccessEnum_ReadWrite;
+  else {
+    for ( int i = 0; i < m_client_access_cnt; i++) {
+      if ( m_client_access[i].address == (int)so->ip) {
+	access = m_client_access[i].access;
+	break;
+      }
     }
   }
   return access;
@@ -927,7 +982,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
   unsigned int property_mask;
   pwr_tTime current_time;
 
-  opc_current_access = opcsrv_get_access( soap);
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
   clock_gettime( CLOCK_REALTIME, &current_time);
 
   s0__BrowseResponse->BrowseResult = new s0__ReplyBase();
@@ -1207,7 +1272,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
   return SOAP_OK;
 }
 
-SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*, 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap, 
 					       _s0__GetProperties *s0__GetProperties, 
 					       _s0__GetPropertiesResponse *s0__GetPropertiesResponse)
 {
@@ -1221,7 +1286,18 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
   gdh_sAttrDef *bd;
   int 	rows;
 
-  if ( s0__GetProperties->ReturnAllProperties)
+  // Check access for connection
+  opcsrv->m_current_access = opcsrv->get_access( soap);
+
+  switch ( opcsrv->m_current_access) {
+  case pwr_eOpc_AccessEnum_ReadOnly:
+  case pwr_eOpc_AccessEnum_ReadWrite:
+    break;
+  default:
+    return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
+  }
+
+  if ( s0__GetProperties->ReturnAllProperties && *s0__GetProperties->ReturnAllProperties)
     property_mask = ~0;
   else
     opc_propertynames_to_mask( s0__GetProperties->PropertyNames, &property_mask);
@@ -1247,20 +1323,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
 
     sts = gdh_NameToAttrref( pwr_cNOid, iname, &aref);
     if ( EVEN(sts)) {
-      // E_INVALIDITEMNAME
-      return 0;
+      opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_UNKNOWNITEMNAME, 0);
+      s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+      continue;
     }
 
     if ( aref.Flags.b.Object || aref.Flags.b.ObjectAttr) {
       // This is an object
       sts = gdh_GetAttrRefTid( &aref, &cid);
       if ( EVEN(sts)) {
-	// E_INVALIDITEMNAME
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
       if ( !cdh_tidIsCid( cid)) {
-	// E_INVALIDITEMNAME
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
 
       opcsrv_get_properties( false, cid, 0, &aref, 
@@ -1270,27 +1352,36 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
     else {
       // Get the object attrref and class for this attribute
       if ( !( aname = strrchr( iname, '.'))) {
-	// E_INVALIDITEMNAME
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_INVALIDITEMNAME, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
       aname++;
       
       sts = gdh_AttrArefToObjectAref( &aref, &paref);
       if ( EVEN(sts)) {
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
 
       sts = gdh_GetAttrRefTid( &paref, &cid);
       if ( EVEN(sts)) {
-	// E_INVALIDITEMNAME
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
 
       // Get body definition
       sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
       if ( EVEN(sts)) {
-	// E_INVALIDITEMNAME
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
       int bd_idx = -1;
       for ( int i = 0; i < rows; i++) {
@@ -1300,9 +1391,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
 	}
       }
       if ( bd_idx == -1) {
-	// E_INVALIDITEMNAME
 	free( (char *)bd);
-	return 0;
+	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+			  opc_eResultCode_E_FAIL, 0);
+	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
+	continue;
       }
 
       opcsrv_get_properties( true, cid, &paref, &aref,
@@ -1314,6 +1407,6 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap*,
     s0__GetPropertiesResponse->PropertyLists.push_back( plist);
   }
 
-  return 0;
+  return SOAP_OK;
 }
 

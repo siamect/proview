@@ -98,6 +98,12 @@ class xsd__dateTime : public xsd__anyType
     std::string                          __item;                       
 };
 
+/// Class wrapper for built-in type "xs:duration" derived from xsd__anyType
+class xsd__duration : public xsd__anyType
+{ public:
+    std::string                          __item;                       
+};
+
 /// Primitive built-in type "xs:decimal"
 typedef std::string xsd__decimal;
 

@@ -1,8 +1,8 @@
 Volume Opc $ClassVolume 0.0.250.9 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X12"
+    Attr NextOix = "_X37"
     Attr NextCix = "_X24"
-    Attr NextTix[0] = "_X3"
+    Attr NextTix[0] = "_X4"
   EndBody
   Object Type $TypeHier 2 02-MAR-2007 14:45:01.59
     Object Opc_ServerStateEnum $TypeDef 1 05-MAR-2007 13:22:13.08
@@ -53,7 +53,7 @@ Volume Opc $ClassVolume 0.0.250.9
       EndObject
     EndObject
     Object Opc_AccessEnum $TypeDef 2 05-MAR-2007 13:22:42.62
-      Body SysBody 05-MAR-2007 13:20:09.54
+      Body SysBody 26-MAR-2007 08:57:21.02
         Attr TypeRef = "pwrs:Type-$Enum"
         Attr Elements = 1
       EndBody
@@ -78,8 +78,196 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    Object Opc_ResultCodeEnum $TypeDef 3 26-MAR-2007 08:57:08.63
+      Body SysBody 26-MAR-2007 08:57:24.17
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object None $Value 36 26-MAR-2007 09:17:34.19
+        Body SysBody 26-MAR-2007 09:17:36.98
+          Attr Text = "None"
+          Attr PgmName = "None"
+        EndBody
+      EndObject
+      Object Clamp $Value 13 26-MAR-2007 08:58:04.21
+        Body SysBody 26-MAR-2007 09:15:37.54
+          Attr Text = "Clamp"
+          Attr PgmName = "Clamp"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object DataQueueOverflow $Value 14 26-MAR-2007 09:01:33.58
+        Body SysBody 26-MAR-2007 09:15:39.88
+          Attr Text = "DataQueueOverflow"
+          Attr PgmName = "DataQueueOverflow"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object UnsupportedRate $Value 15 26-MAR-2007 09:01:52.23
+        Body SysBody 26-MAR-2007 09:15:42.03
+          Attr Text = "UnsupportedRate"
+          Attr PgmName = "UnsupportedRate"
+          Attr Value = 3
+        EndBody
+      EndObject
+      Object Access_Denied $Value 16 26-MAR-2007 09:02:08.42
+        Body SysBody 26-MAR-2007 09:15:44.17
+          Attr Text = "Access_Denied"
+          Attr PgmName = "Access_Denied"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object Busy $Value 17 26-MAR-2007 09:02:17.37
+        Body SysBody 26-MAR-2007 09:15:46.48
+          Attr Text = "Busy"
+          Attr PgmName = "Busy"
+          Attr Value = 5
+        EndBody
+      EndObject
+      Object Fail $Value 18 26-MAR-2007 09:02:23.96
+        Body SysBody 26-MAR-2007 09:15:48.65
+          Attr Text = "Fail"
+          Attr PgmName = "Fail"
+          Attr Value = 6
+        EndBody
+      EndObject
+      Object InvalidContinuationPoint $Value 19 26-MAR-2007 09:02:40.66
+        Body SysBody 26-MAR-2007 09:15:50.84
+          Attr Text = "InvalidContinuationPoint"
+          Attr PgmName = "InvalidContinuationPoint"
+          Attr Value = 7
+        EndBody
+      EndObject
+      Object InvalidFilter $Value 20 26-MAR-2007 09:02:54.73
+        Body SysBody 26-MAR-2007 09:15:52.95
+          Attr Text = "InvalidFilter"
+          Attr PgmName = "InvalidFilter"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object InvalidHoldTime $Value 21 26-MAR-2007 09:03:04.96
+        Body SysBody 26-MAR-2007 09:15:55.03
+          Attr Text = "InvalidHoldTime"
+          Attr PgmName = "InvalidHoldTime"
+          Attr Value = 9
+        EndBody
+      EndObject
+      Object InvalidItemName $Value 22 26-MAR-2007 09:03:21.32
+        Body SysBody 26-MAR-2007 09:16:01.04
+          Attr Text = "InvalidItemName"
+          Attr PgmName = "InvalidItemName"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object InvalidItemPath $Value 23 26-MAR-2007 09:03:34.59
+        Body SysBody 26-MAR-2007 09:16:06.28
+          Attr Text = "InvalidItemPath"
+          Attr PgmName = "InvalidItemPath"
+          Attr Value = 11
+        EndBody
+      EndObject
+      Object InvalidPid $Value 24 26-MAR-2007 09:03:50.66
+        Body SysBody 26-MAR-2007 09:16:08.92
+          Attr Text = "InvalidPid"
+          Attr PgmName = "InvalidPid"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object NoSubscription $Value 25 26-MAR-2007 09:04:05.90
+        Body SysBody 26-MAR-2007 09:16:11.44
+          Attr Text = "NoSubscription"
+          Attr PgmName = "NoSubscription"
+          Attr Value = 13
+        EndBody
+      EndObject
+      Object NotSupported $Value 26 26-MAR-2007 09:04:17.85
+        Body SysBody 26-MAR-2007 09:16:13.87
+          Attr Text = "NotSupported"
+          Attr PgmName = "NotSupported"
+          Attr Value = 14
+        EndBody
+      EndObject
+      Object OutOfMemory $Value 27 26-MAR-2007 09:04:28.71
+        Body SysBody 26-MAR-2007 09:16:31.91
+          Attr Text = "OutOfMemory"
+          Attr PgmName = "OutOfMemory"
+          Attr Value = 15
+        EndBody
+      EndObject
+      Object Range $Value 28 26-MAR-2007 09:04:40.01
+        Body SysBody 26-MAR-2007 09:16:34.24
+          Attr Text = "Range"
+          Attr PgmName = "Range"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object ReadOnly $Value 29 26-MAR-2007 09:04:47.72
+        Body SysBody 26-MAR-2007 09:16:36.47
+          Attr Text = "ReadOnly"
+          Attr PgmName = "ReadOnly"
+          Attr Value = 17
+        EndBody
+      EndObject
+      Object ServerState $Value 30 26-MAR-2007 09:04:56.81
+        Body SysBody 26-MAR-2007 09:16:40.76
+          Attr Text = "ServerState"
+          Attr PgmName = "ServerState"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object TimedOut $Value 31 26-MAR-2007 09:05:04.79
+        Body SysBody 26-MAR-2007 09:16:44.64
+          Attr Text = "TimedOut"
+          Attr PgmName = "TimedOut"
+          Attr Value = 19
+        EndBody
+      EndObject
+      Object UnknownItemName $Value 32 26-MAR-2007 09:05:38.19
+        Body SysBody 26-MAR-2007 09:16:48.03
+          Attr Text = "UnknownItemName"
+          Attr PgmName = "UnknownItemName"
+          Attr Value = 20
+        EndBody
+      EndObject
+      Object UnknownItemPath $Value 33 26-MAR-2007 09:05:43.74
+        Body SysBody 26-MAR-2007 09:16:51.16
+          Attr Text = "UnknownItemPath"
+          Attr PgmName = "UnknownItemPath"
+          Attr Value = 21
+        EndBody
+      EndObject
+      Object WriteOnly $Value 34 26-MAR-2007 09:05:52.22
+        Body SysBody 26-MAR-2007 09:16:54.15
+          Attr Text = "WriteOnly"
+          Attr PgmName = "WriteOnly"
+          Attr Value = 22
+        EndBody
+      EndObject
+      Object BadType $Value 35 26-MAR-2007 09:06:04.01
+        Body SysBody 26-MAR-2007 09:16:57.36
+          Attr Text = "BadType"
+          Attr PgmName = "BadType"
+          Attr Value = 23
+        EndBody
+      EndObject
+      Object Unknown $Value 37 26-MAR-2007 12:52:30.99
+        Body SysBody 26-MAR-2007 12:52:38.68
+          Attr Text = "Unknown"
+          Attr PgmName = "Unknown"
+          Attr Value = 10000
+        EndBody
+      EndObject
+    EndObject
   EndObject
   Object Class $ClassHier 1 02-MAR-2007 14:45:04.90
+    !/**
+    !  @Version 1.0
+    !  @Summary Opc client access.
+    !  Part of the Opc_ServerConfig object that defines the authorization for an
+    !  OPC client to access a Proview OPC Server.
+    !  The client is identified by the ip-address, and can have the access None,
+    !  ReadOnly or ReadWrite.
+    !*/
     Object Opc_ClientAccess $ClassDef 23 05-MAR-2007 13:28:06.11
       Body SysBody 05-MAR-2007 13:27:57.56
         Attr Editor = 0
@@ -91,12 +279,18 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_ClientAccess"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Ip-address of OPC client
+        !*/
         Object Address $Attribute 1 05-MAR-2007 13:28:48.14
           Body SysBody 05-MAR-2007 13:28:52.79
             Attr PgmName = "Address"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Access for OPC client, None, ReadOnly or ReadWrite.
+        !*/
         Object Access $Attribute 2 05-MAR-2007 13:29:22.75
           Body SysBody 05-MAR-2007 13:29:47.95
             Attr PgmName = "Access"
@@ -109,6 +303,12 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary OPC Hierarchy object.
+    !  Object to browse an element element in the opc hierarchy that is not an 
+    !  item, i.e. doesn't contain a value.
+    !*/
     Object Opc_Hier $ClassDef 1 01-MAR-2007 16:48:24.56
       Body SysBody 01-MAR-2007 16:47:58.95
         Attr Editor = 0
@@ -120,6 +320,9 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Hier"
           Attr NextAix = "_X2"
         EndBody
+        !/**
+        !  Descripion property.
+        !*/
         Object Description $Attribute 1 05-MAR-2007 13:41:33.76
           Body SysBody 05-MAR-2007 13:41:39.19
             Attr PgmName = "Description"
@@ -148,12 +351,18 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_String"
           Attr NextAix = "_X3"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 2 05-MAR-2007 13:45:02.33
           Body SysBody 05-MAR-2007 13:45:02.33
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tString80.
+        !*/
         Object Value $Attribute 1 01-MAR-2007 16:49:41.73
           Body SysBody 01-MAR-2007 16:49:54.49
             Attr PgmName = "Value"
@@ -166,6 +375,11 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'boolean'.
+    !*/
     Object Opc_Boolean $ClassDef 19 01-MAR-2007 16:50:41.94
       Body SysBody 01-MAR-2007 16:50:28.50
         Attr Editor = 0
@@ -177,12 +391,18 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Boolean"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:09.01
           Body SysBody 05-MAR-2007 13:45:09.01
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tBoolean.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:28.50
           Body SysBody 01-MAR-2007 16:50:51.77
             Attr PgmName = "Value"
@@ -195,6 +415,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'float'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_float_og.gif
+    !*/
     Object Opc_Float $ClassDef 18 01-MAR-2007 16:51:15.25
       Body SysBody 01-MAR-2007 16:50:28.36
         Attr Editor = 0
@@ -206,48 +437,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Float"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:13.76
           Body SysBody 05-MAR-2007 13:45:13.76
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tFloat32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:28.36
           Body SysBody 01-MAR-2007 16:51:29.73
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:47:07.23
           Body SysBody 08-MAR-2007 18:17:40.34
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:47:49.35
           Body SysBody 08-MAR-2007 18:17:45.95
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:48:07.66
           Body SysBody 08-MAR-2007 18:20:14.24
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:48:24.95
           Body SysBody 08-MAR-2007 18:20:17.51
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:49:08.68
           Body SysBody 05-MAR-2007 13:49:27.27
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 10:43:36.02
           Body SysBody 22-MAR-2007 10:43:57.46
             Attr PgmName = "EnableSlider"
@@ -260,6 +525,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'double'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Double $ClassDef 17 01-MAR-2007 16:51:56.40
       Body SysBody 01-MAR-2007 16:50:28.21
         Attr Editor = 0
@@ -271,48 +544,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Double"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:19.21
           Body SysBody 05-MAR-2007 13:45:19.21
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tFloat64.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:28.21
           Body SysBody 01-MAR-2007 16:52:07.62
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float64"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:23.71
           Body SysBody 08-MAR-2007 18:20:25.69
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:23.71
           Body SysBody 08-MAR-2007 18:20:29.79
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:23.71
           Body SysBody 08-MAR-2007 18:20:33.17
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:23.71
           Body SysBody 08-MAR-2007 18:20:36.44
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:23.71
           Body SysBody 05-MAR-2007 13:51:23.71
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:50:58.89
           Body SysBody 22-MAR-2007 15:50:58.89
             Attr PgmName = "EnableSlider"
@@ -325,6 +632,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'decimal'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Decimal $ClassDef 16 01-MAR-2007 16:52:29.00
       Body SysBody 01-MAR-2007 16:50:28.06
         Attr Editor = 0
@@ -336,48 +651,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Decimal"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:24.10
           Body SysBody 05-MAR-2007 13:45:24.10
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tFloat32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:28.06
           Body SysBody 01-MAR-2007 16:52:37.40
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:28.14
           Body SysBody 08-MAR-2007 18:19:54.87
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:28.14
           Body SysBody 08-MAR-2007 18:19:58.75
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:28.14
           Body SysBody 08-MAR-2007 18:20:46.39
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:28.14
           Body SysBody 08-MAR-2007 18:20:49.66
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:28.14
           Body SysBody 05-MAR-2007 13:51:28.14
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:05.91
           Body SysBody 22-MAR-2007 15:51:05.91
             Attr PgmName = "EnableSlider"
@@ -390,6 +739,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'long'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Long $ClassDef 15 01-MAR-2007 16:52:57.57
       Body SysBody 01-MAR-2007 16:50:27.91
         Attr Editor = 0
@@ -401,48 +758,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Long"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:28.22
           Body SysBody 05-MAR-2007 13:45:28.22
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tInt32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.91
           Body SysBody 01-MAR-2007 16:53:11.79
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:31.83
           Body SysBody 08-MAR-2007 18:19:42.10
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:31.83
           Body SysBody 08-MAR-2007 18:19:46.62
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:31.83
           Body SysBody 08-MAR-2007 18:20:57.93
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:31.83
           Body SysBody 08-MAR-2007 18:21:01.44
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:31.83
           Body SysBody 05-MAR-2007 13:51:31.83
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:11.98
           Body SysBody 22-MAR-2007 15:51:11.98
             Attr PgmName = "EnableSlider"
@@ -455,6 +846,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'int'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_int_og.gif
+    !*/
     Object Opc_Int $ClassDef 14 01-MAR-2007 16:53:30.28
       Body SysBody 01-MAR-2007 16:50:27.77
         Attr Editor = 0
@@ -466,48 +868,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Int"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:31.37
           Body SysBody 05-MAR-2007 13:45:31.37
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tInt32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.77
           Body SysBody 01-MAR-2007 16:53:46.18
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:36.44
           Body SysBody 08-MAR-2007 18:19:26.59
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:36.44
           Body SysBody 08-MAR-2007 18:19:33.16
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:36.44
           Body SysBody 08-MAR-2007 18:21:09.76
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:36.44
           Body SysBody 08-MAR-2007 18:21:12.90
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:36.44
           Body SysBody 05-MAR-2007 13:51:36.44
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 10:44:19.69
           Body SysBody 22-MAR-2007 10:44:19.69
             Attr PgmName = "EnableSlider"
@@ -520,6 +956,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'short'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !  @b Object Graph
+    ! 
+    !  @image orm_opc_short_og.gif
+    !*/
     Object Opc_Short $ClassDef 13 01-MAR-2007 16:54:41.65
       Body SysBody 01-MAR-2007 16:50:27.62
         Attr Editor = 0
@@ -531,48 +978,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Short"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:34.58
           Body SysBody 05-MAR-2007 13:45:34.58
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tInt16.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.62
           Body SysBody 01-MAR-2007 16:54:54.38
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int16"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:40.55
           Body SysBody 08-MAR-2007 18:18:55.71
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:40.55
           Body SysBody 08-MAR-2007 18:19:04.24
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:40.55
           Body SysBody 08-MAR-2007 18:21:21.73
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:40.55
           Body SysBody 08-MAR-2007 18:21:24.70
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:40.55
           Body SysBody 05-MAR-2007 13:51:40.55
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:21.30
           Body SysBody 22-MAR-2007 15:51:21.30
             Attr PgmName = "EnableSlider"
@@ -585,6 +1066,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'byte'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_byte_og.gif
+    !*/
     Object Opc_Byte $ClassDef 12 01-MAR-2007 16:55:02.92
       Body SysBody 01-MAR-2007 16:50:27.44
         Attr Editor = 0
@@ -596,48 +1088,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Byte"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:37.39
           Body SysBody 05-MAR-2007 13:45:37.39
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tInt8.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.44
           Body SysBody 01-MAR-2007 16:55:12.30
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$Int8"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:48.00
           Body SysBody 08-MAR-2007 18:19:12.51
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:48.00
           Body SysBody 08-MAR-2007 18:19:16.80
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:48.00
           Body SysBody 08-MAR-2007 18:21:32.38
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:48.00
           Body SysBody 08-MAR-2007 18:21:35.55
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:48.00
           Body SysBody 05-MAR-2007 13:51:48.00
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:27.70
           Body SysBody 22-MAR-2007 15:51:27.70
             Attr PgmName = "EnableSlider"
@@ -650,6 +1176,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'unsignedLong'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_unsignedlong_og.gif
+    !*/
     Object Opc_UnsignedLong $ClassDef 11 01-MAR-2007 16:55:43.95
       Body SysBody 01-MAR-2007 16:50:27.27
         Attr Editor = 0
@@ -661,48 +1198,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_UnsignedLong"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:40.10
           Body SysBody 05-MAR-2007 13:45:40.10
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tUInt32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.27
           Body SysBody 01-MAR-2007 16:55:57.73
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:51.24
           Body SysBody 08-MAR-2007 18:21:43.83
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:51.24
           Body SysBody 08-MAR-2007 18:21:47.05
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:51.24
           Body SysBody 08-MAR-2007 18:21:50.25
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:51.24
           Body SysBody 08-MAR-2007 18:21:53.28
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:51.24
           Body SysBody 05-MAR-2007 13:51:51.24
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:33.78
           Body SysBody 22-MAR-2007 15:51:33.78
             Attr PgmName = "EnableSlider"
@@ -715,6 +1286,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'unsignedInt'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_float_og.gif
+    !*/
     Object Opc_UnsignedInt $ClassDef 10 01-MAR-2007 16:56:14.97
       Body SysBody 01-MAR-2007 16:50:27.07
         Attr Editor = 0
@@ -726,48 +1308,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_UnsignedInt"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:42.87
           Body SysBody 05-MAR-2007 13:45:42.87
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tUInt32.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.07
           Body SysBody 01-MAR-2007 16:56:25.07
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:54.37
           Body SysBody 08-MAR-2007 18:22:00.44
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:54.37
           Body SysBody 08-MAR-2007 18:22:03.35
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:54.37
           Body SysBody 08-MAR-2007 18:22:06.30
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:54.37
           Body SysBody 08-MAR-2007 18:22:09.05
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:54.37
           Body SysBody 05-MAR-2007 13:51:54.37
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:40.47
           Body SysBody 22-MAR-2007 15:51:40.47
             Attr PgmName = "EnableSlider"
@@ -780,6 +1396,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'unsignedShort'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_unsignedshort_og.gif
+    !*/
     Object Opc_UnsignedShort $ClassDef 9 01-MAR-2007 16:56:40.00
       Body SysBody 01-MAR-2007 16:50:25.68
         Attr Editor = 0
@@ -791,48 +1418,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_UnsignedShort"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:51.52
           Body SysBody 05-MAR-2007 13:45:51.52
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tUInt16.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:25.68
           Body SysBody 01-MAR-2007 16:56:51.26
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:51:59.01
           Body SysBody 08-MAR-2007 18:22:16.81
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:51:59.01
           Body SysBody 08-MAR-2007 18:22:19.92
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:51:59.01
           Body SysBody 08-MAR-2007 18:22:23.09
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:51:59.01
           Body SysBody 08-MAR-2007 18:22:25.89
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:51:59.01
           Body SysBody 05-MAR-2007 13:51:59.01
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:47.00
           Body SysBody 22-MAR-2007 15:51:47.00
             Attr PgmName = "EnableSlider"
@@ -845,6 +1506,17 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'unsignedByte'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    ! 
+    !  @b Object Graph
+    !  @image orm_opc_unsignedbyte_og.gif
+    !*/
     Object Opc_UnsignedByte $ClassDef 8 01-MAR-2007 16:57:06.57
       Body SysBody 01-MAR-2007 16:50:25.44
         Attr Editor = 0
@@ -856,48 +1528,82 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_UnsignedByte"
           Attr NextAix = "_X10"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:54.72
           Body SysBody 05-MAR-2007 13:45:54.72
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tUInt8.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:25.44
           Body SysBody 01-MAR-2007 16:57:15.03
             Attr PgmName = "Value"
             Attr TypeRef = "pwrs:Type-$UInt8"
           EndBody
         EndObject
+        !/**
+        !  Property highEU.
+        !  Represents the highest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object HighEU $Attribute 4 05-MAR-2007 13:52:02.66
           Body SysBody 08-MAR-2007 18:22:35.13
             Attr PgmName = "HighEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowEU.
+        !  Represents the lowest value likely to be obtained in normal
+        !  operation and is intended for such use as automatically scaling
+        !  a bargraph display.
+        !*/
         Object LowEU $Attribute 5 05-MAR-2007 13:52:02.66
           Body SysBody 08-MAR-2007 18:22:38.33
             Attr PgmName = "LowEU"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property highIR.
+        !  Represents the highest value that can be returned by the
+        !  instrument.
+        !*/
         Object HighIR $Attribute 6 05-MAR-2007 13:52:02.66
           Body SysBody 08-MAR-2007 18:22:41.38
             Attr PgmName = "HighIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property lowIR.
+        !  Represents the lowest value that can be returned by the
+        !  instrument.
+        !*/
         Object LowIR $Attribute 7 05-MAR-2007 13:52:02.66
           Body SysBody 08-MAR-2007 18:22:44.29
             Attr PgmName = "LowIR"
             Attr TypeRef = "pwrs:Type-$Float32"
           EndBody
         EndObject
+        !/**
+        !  Property engineeringUnits.
+        !*/
         Object EngineeringUnits $Attribute 8 05-MAR-2007 13:52:02.66
           Body SysBody 05-MAR-2007 13:52:02.66
             Attr PgmName = "EngineeringUnits"
             Attr TypeRef = "pwrs:Type-$String16"
           EndBody
         EndObject
+        !/**
+        !  Enable slider in object graph.
+        !*/
         Object EnableSlider $Attribute 9 22-MAR-2007 15:51:52.93
           Body SysBody 22-MAR-2007 15:51:52.93
             Attr PgmName = "EnableSlider"
@@ -910,6 +1616,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'base64Binary'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Base64Binary $ClassDef 20 01-MAR-2007 17:01:30.50
       Body SysBody 01-MAR-2007 17:01:17.11
         Attr Editor = 0
@@ -921,16 +1635,24 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_Base64Binary"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:45:57.15
           Body SysBody 05-MAR-2007 13:45:57.15
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as an array of pwr_tInt16.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 17:01:17.11
           Body SysBody 01-MAR-2007 17:01:47.78
             Attr PgmName = "Value"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr Flags = 2
+            Attr Elements = 4
+            Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
       EndObject
@@ -939,6 +1661,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'dateTime'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_DateTime $ClassDef 7 01-MAR-2007 16:58:17.76
       Body SysBody 01-MAR-2007 16:50:25.22
         Attr Editor = 0
@@ -950,12 +1680,18 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_DateTime"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:46:00.31
           Body SysBody 05-MAR-2007 13:46:00.31
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tTime.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:25.22
           Body SysBody 01-MAR-2007 16:58:37.27
             Attr PgmName = "Value"
@@ -968,6 +1704,15 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'time'.
+    !  Not yet implemented.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Time $ClassDef 6 01-MAR-2007 16:58:53.13
       Body SysBody 01-MAR-2007 16:50:25.00
         Attr Editor = 0
@@ -997,6 +1742,15 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'date'.
+    !  Not yet implemented.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Date $ClassDef 5 01-MAR-2007 16:59:12.70
       Body SysBody 01-MAR-2007 16:50:24.78
         Attr Editor = 0
@@ -1026,6 +1780,15 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'duration'.
+    !  Not yet implemented.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_Duration $ClassDef 4 01-MAR-2007 16:59:30.41
       Body SysBody 01-MAR-2007 16:50:24.50
         Attr Editor = 0
@@ -1055,6 +1818,14 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO_Opc
+    !  Object to browse an OPC item of OPC type 'QName'.
+    ! 
+    !  The object reside in an ExternalVolume browsing an OPC server and is 
+    !  created dynamically by the OPC client process.
+    !*/
     Object Opc_QName $ClassDef 3 01-MAR-2007 17:00:42.44
       Body SysBody 01-MAR-2007 16:50:22.30
         Attr Editor = 0
@@ -1066,12 +1837,18 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_QName"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Description property.
+        !*/
         Object Description $Attribute 3 05-MAR-2007 13:46:12.59
           Body SysBody 05-MAR-2007 13:46:12.59
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Item value, presented as a pwr_tString256.
+        !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:22.30
           Body SysBody 01-MAR-2007 17:00:54.92
             Attr PgmName = "Value"
@@ -1084,6 +1861,21 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary OPC Server Configuration Object.
+    !  OPC Server Configuration object. 
+    !  The object should be placed under the $Node object to configure
+    !  process station as an OPC XML-DA server.
+    ! 
+    !  A Web Service will appear with the URI "http://'nodename':'port'"
+    !  where 'nodname' is the name of the process station, and 'port' the
+    !  portnumber specified in the Port attribute.
+    !  An OPC XML-DA client can request information from this URI, but has
+    !  to be granted access first. Clients that have access to the server are
+    !  specified in the ClientAccess list, with ip-address and accesscode
+    !  for each client.
+    !*/
     Object Opc_ServerConfig $ClassDef 21 01-MAR-2007 17:02:45.29
       Body SysBody 01-MAR-2007 17:02:25.32
         Attr Editor = 0
@@ -1095,18 +1887,29 @@ Volume Opc $ClassVolume 0.0.250.9
           Attr StructName = "Opc_ServerConfig"
           Attr NextAix = "_X4"
         EndBody
+        !/**
+        !  Optional description.
+        !*/
         Object Description $Attribute 2 05-MAR-2007 13:33:10.56
           Body SysBody 05-MAR-2007 13:33:20.61
             Attr PgmName = "Description"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Port for Web Service.
+        !*/
         Object Port $Attribute 3 05-MAR-2007 13:34:44.55
           Body SysBody 05-MAR-2007 13:34:56.97
             Attr PgmName = "Port"
             Attr TypeRef = "pwrs:Type-$UInt32"
           EndBody
         EndObject
+        !/**
+        !  List with authorized clients.
+        !  Clients are identified by ip-address and given the 
+        !  specified access (None, ReadOnly or ReadWrite).
+        !*/
         Object ClientAccess $Attribute 1 05-MAR-2007 13:33:32.49
           Body SysBody 05-MAR-2007 13:33:35.01
             Attr PgmName = "ClientAccess"
@@ -1121,6 +1924,13 @@ Volume Opc $ClassVolume 0.0.250.9
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary OPC Server State object.
+    !  The OPC Server State object displays information of a OPC
+    !  connection in an OP client. The object as first object in the
+    !  Extern volume for the OPC connection.
+    !*/
     Object Opc_ServerState $ClassDef 22 02-MAR-2007 14:49:50.99
       Body SysBody 02-MAR-2007 14:49:26.55
         Attr Editor = 0
@@ -1130,36 +1940,69 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 02-MAR-2007 14:49:57.91
         Body SysBody 02-MAR-2007 14:49:57.91
           Attr StructName = "Opc_ServerState"
-          Attr NextAix = "_X6"
+          Attr NextAix = "_X9"
         EndBody
+        !/**
+        !  OPC server Web Service URI.
+        !*/
         Object Server $Attribute 1 02-MAR-2007 14:50:39.12
           Body SysBody 02-MAR-2007 14:50:19.42
             Attr PgmName = "Server"
             Attr TypeRef = "pwrs:Type-$URL"
           EndBody
         EndObject
+        !/**
+        !  OPC server vendor info.
+        !*/
         Object VendorInfo $Attribute 2 02-MAR-2007 14:51:34.94
           Body SysBody 02-MAR-2007 14:51:44.69
             Attr PgmName = "VendorInfo"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  OPC server product version.
+        !*/
         Object ProductVersion $Attribute 3 02-MAR-2007 14:52:12.84
           Body SysBody 02-MAR-2007 14:52:16.47
             Attr PgmName = "ProductVersion"
             Attr TypeRef = "pwrs:Type-$String80"
           EndBody
         EndObject
+        !/**
+        !  Start time for OPC server.
+        !*/
         Object StartTime $Attribute 4 02-MAR-2007 14:52:55.61
           Body SysBody 02-MAR-2007 14:53:02.41
             Attr PgmName = "StartTime"
             Attr TypeRef = "pwrs:Type-$Time"
           EndBody
         EndObject
+        !/**
+        !  OPC server state.
+        !*/
         Object ServerState $Attribute 5 02-MAR-2007 14:54:30.98
           Body SysBody 02-MAR-2007 14:54:38.95
             Attr PgmName = "ServerState"
             Attr TypeRef = "Opc:Type-Opc_ServerStateEnum"
+          EndBody
+        EndObject
+        Object RequestCnt $Attribute 6 26-MAR-2007 09:10:55.79
+          Body SysBody 26-MAR-2007 09:11:10.62
+            Attr PgmName = "RequestCnt"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object ErrorRequestCnt $Attribute 7 26-MAR-2007 09:11:57.44
+          Body SysBody 26-MAR-2007 09:12:01.61
+            Attr PgmName = "ErrorRequestCnt"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        Object LastError $Attribute 8 26-MAR-2007 09:12:35.90
+          Body SysBody 26-MAR-2007 09:13:07.43
+            Attr PgmName = "LastError"
+            Attr TypeRef = "Opc:Type-Opc_ResultCodeEnum"
           EndBody
         EndObject
       EndObject
