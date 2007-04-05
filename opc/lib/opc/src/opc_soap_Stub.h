@@ -503,12 +503,12 @@ public:
 
 #ifndef SOAP_TYPE_s0__ReplyBase
 #define SOAP_TYPE_s0__ReplyBase (38)
-/* s0:ReplyBase */
+/* Primitive s0:ReplyBase schema type: */
 class SOAP_CMAC s0__ReplyBase : public xsd__anyType
 {
 public:
-	xsd__dateTime RcvTime;	/* required element of type xsd:dateTime */
-	xsd__dateTime ReplyTime;	/* required element of type xsd:dateTime */
+	std::string RcvTime;	/* required attribute */
+	std::string ReplyTime;	/* required attribute */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	std::string *RevisedLocaleID;	/* optional attribute */
 	enum s0__serverState ServerState;	/* required attribute */
@@ -535,7 +535,7 @@ public:
 	std::string *VendorInfo;	/* optional element of type xsd:string */
 	std::vector<std::string >SupportedLocaleIDs;	/* optional element of type xsd:string */
 	std::vector<enum s0__interfaceVersion >SupportedInterfaceVersions;	/* optional element of type s0:interfaceVersion */
-	xsd__dateTime StartTime;	/* required element of type xsd:dateTime */
+	std::string StartTime;	/* required attribute */
 	std::string *ProductVersion;	/* optional attribute */
 public:
 	virtual int soap_type() const { return 39; } /* = unique id SOAP_TYPE_s0__ServerStatus */
@@ -552,7 +552,7 @@ public:
 
 #ifndef SOAP_TYPE_s0__RequestOptions
 #define SOAP_TYPE_s0__RequestOptions (40)
-/* s0:RequestOptions */
+/* Primitive s0:RequestOptions schema type: */
 class SOAP_CMAC s0__RequestOptions : public xsd__anyType
 {
 public:
@@ -561,7 +561,7 @@ public:
 	bool *ReturnItemTime;	/* optional attribute */
 	bool *ReturnItemPath;	/* optional attribute */
 	bool *ReturnItemName;	/* optional attribute */
-	xsd__dateTime *RequestDeadline;	/* optional element of type xsd:dateTime */
+	std::string *RequestDeadline;	/* optional attribute */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	std::string *LocaleID;	/* optional attribute */
 public:
@@ -658,7 +658,7 @@ public:
 	std::string *ItemPath;	/* optional attribute */
 	std::string *ItemName;	/* optional attribute */
 	std::string *ClientItemHandle;	/* optional attribute */
-	xsd__dateTime *Timestamp;	/* optional element of type xsd:dateTime */
+	std::string *Timestamp;	/* optional attribute */
 	std::string *ResultID;	/* optional attribute */
 public:
 	virtual int soap_type() const { return 44; } /* = unique id SOAP_TYPE_s0__ItemValue */
@@ -1436,7 +1436,7 @@ class SOAP_CMAC _s0__SubscriptionPolledRefresh
 public:
 	s0__RequestOptions *Options;	/* optional element of type s0:RequestOptions */
 	std::vector<std::string >ServerSubHandles;	/* optional element of type xsd:string */
-	xsd__dateTime *HoldTime;	/* optional element of type xsd:dateTime */
+	std::string *HoldTime;	/* optional attribute */
 	int *WaitTime;	/* optional attribute */
 	bool *ReturnAllItems;	/* optional attribute */
 	struct soap *soap;	/* transient */
@@ -1631,7 +1631,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__GetStatus
-#define SOAP_TYPE___s0__GetStatus (156)
+#define SOAP_TYPE___s0__GetStatus (155)
 /* Operation wrapper: */
 struct __s0__GetStatus
 {
@@ -1641,7 +1641,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__Read
-#define SOAP_TYPE___s0__Read (160)
+#define SOAP_TYPE___s0__Read (159)
 /* Operation wrapper: */
 struct __s0__Read
 {
@@ -1651,7 +1651,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__Write
-#define SOAP_TYPE___s0__Write (164)
+#define SOAP_TYPE___s0__Write (163)
 /* Operation wrapper: */
 struct __s0__Write
 {
@@ -1661,7 +1661,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__Subscribe
-#define SOAP_TYPE___s0__Subscribe (168)
+#define SOAP_TYPE___s0__Subscribe (167)
 /* Operation wrapper: */
 struct __s0__Subscribe
 {
@@ -1671,7 +1671,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__SubscriptionPolledRefresh
-#define SOAP_TYPE___s0__SubscriptionPolledRefresh (172)
+#define SOAP_TYPE___s0__SubscriptionPolledRefresh (171)
 /* Operation wrapper: */
 struct __s0__SubscriptionPolledRefresh
 {
@@ -1681,7 +1681,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__SubscriptionCancel
-#define SOAP_TYPE___s0__SubscriptionCancel (176)
+#define SOAP_TYPE___s0__SubscriptionCancel (175)
 /* Operation wrapper: */
 struct __s0__SubscriptionCancel
 {
@@ -1691,7 +1691,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__Browse
-#define SOAP_TYPE___s0__Browse (180)
+#define SOAP_TYPE___s0__Browse (179)
 /* Operation wrapper: */
 struct __s0__Browse
 {
@@ -1701,7 +1701,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__GetProperties
-#define SOAP_TYPE___s0__GetProperties (184)
+#define SOAP_TYPE___s0__GetProperties (183)
 /* Operation wrapper: */
 struct __s0__GetProperties
 {
@@ -1711,7 +1711,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (187)
+#define SOAP_TYPE_SOAP_ENV__Header (186)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -1721,7 +1721,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (188)
+#define SOAP_TYPE_SOAP_ENV__Code (187)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -1732,7 +1732,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (190)
+#define SOAP_TYPE_SOAP_ENV__Detail (189)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -1744,7 +1744,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (191)
+#define SOAP_TYPE_SOAP_ENV__Reason (190)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -1754,7 +1754,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (192)
+#define SOAP_TYPE_SOAP_ENV__Fault (191)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {

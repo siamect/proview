@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.15 2007-03-23 08:19:45 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.16 2007-04-05 13:32:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -18,6 +18,7 @@
  */
 
 
+#include <float.h>
 #include "pwr_class.h"
 #include "co_time.h"
 #include "co_time_msg.h"
@@ -65,29 +66,30 @@ static char opc_PropertyNames[17][20] = {"dataType",
 					 "openLabel",
 					 "timeZone"};
 
-static char opc_ResultCodes[23][32] = {"s:S_CLAMP",
-				       "s:S_DATAQUEUEOVERFLOW",
-				       "s:S_UNSUPPORTEDRATE",
-				       "s:E_ACCESS_DENIED",
-				       "s:E_BUSY",
-				       "s:E_FAIL",
-				       "s:E_INVALIDCONTINUATIONPOINT",
-				       "s:E_INVALIDFILTER",
-				       "s:E_INVALIDHOLDTIME",
-				       "s:E_INVALIDITEMNAME",
-				       "s:E_INVALIDITEMPATH",
-				       "s:E_INVALIDPID",
-				       "s:E_NOSUBSCRIPTION",
-				       "s:E_NOTSUPPORTED",
-				       "s:E_OUTOFMEMORY",
-				       "s:E_RANGE",
-				       "s:E_READONLY",
-				       "s:E_SERVERSTATE",
-				       "s:E_TIMEDOUT",
-				       "s:E_UNKNOWNITEMNAME",
-				       "s:E_UNKNOWNITEMPATH",
-				       "s:E_WRITEONLY",
-				       "s:E_BADTYPE"};
+static char opc_ResultCodes[24][32] = {"",
+   				       "s0:S_CLAMP",
+				       "s0:S_DATAQUEUEOVERFLOW",
+				       "s0:S_UNSUPPORTEDRATE",
+				       "s0:E_ACCESS_DENIED",
+				       "s0:E_BUSY",
+				       "s0:E_FAIL",
+				       "s0:E_INVALIDCONTINUATIONPOINT",
+				       "s0:E_INVALIDFILTER",
+				       "s0:E_INVALIDHOLDTIME",
+				       "s0:E_INVALIDITEMNAME",
+				       "s0:E_INVALIDITEMPATH",
+				       "s0:E_INVALIDPID",
+				       "s0:E_NOSUBSCRIPTION",
+				       "s0:E_NOTSUPPORTED",
+				       "s0:E_OUTOFMEMORY",
+				       "s0:E_RANGE",
+				       "s0:E_READONLY",
+				       "s0:E_SERVERSTATE",
+				       "s0:E_TIMEDOUT",
+				       "s0:E_UNKNOWNITEMNAME",
+				       "s0:E_UNKNOWNITEMPATH",
+				       "s0:E_WRITEONLY",
+				       "s0:E_BADTYPE"};
 
 static char opc_ResultTexts[23][140] = {
   "The value written was accepted but the output was clamped.",
@@ -245,6 +247,7 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
    int        buflen;
    char       tmpStr[16];
    pwr_tTime  t;
+   int        tzone;
 
    if ( !tp) {
      clock_gettime( CLOCK_REALTIME, &t);
@@ -252,9 +255,10 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
    }
   
    tmpTm = localtime(&tp->tv_sec);
+   tzone = tmpTm->tm_gmtoff / 3600;
    strftime(buf, bufsize, "%Y-%m-%dT%H:%M:%S", tmpTm);
 
-   sprintf(tmpStr, ".%07d", (int)(tp->tv_nsec / 100));
+   sprintf(tmpStr, ".%07d%s%02d:00", (int)(tp->tv_nsec / 100), tzone >= 0 ? "+" : "", tzone);
    buflen = strlen(buf);
    if (strlen(tmpStr) + buflen < (unsigned int) bufsize)
      strcpy(&buf[buflen], tmpStr);
@@ -963,7 +967,7 @@ bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, p
 bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc_type, int pwr_type)
 {
   if ( !bufout)
-    bufin = bufout;
+    bufout = bufin;
   switch (opc_type) {
     case opc_eDataType_string:
       switch (pwr_type) {
@@ -1633,7 +1637,7 @@ bool opc_get_property( std::vector<s0__ItemProperty *> properties, unsigned int 
 
 bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *mask)
 {
-  char name[40];
+  char name[200];
   char *np;
 
   *mask = 0;
@@ -1646,6 +1650,9 @@ bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *
       np = name;
 
     switch ( *np) {
+    case 'a':
+      *mask |= opc_mProperty_AccessRights;
+      break;
     case 'd':
       switch ( *(np+1)) {
       case 'a':
@@ -1789,3 +1796,26 @@ bool opc_quality_to_string( int quality, char **str)
   return true;
 }
 
+bool opc_cmp_pwr( void *p1, void *p2, int size, int type, float deadband)
+{
+  switch ( type) {
+  case pwr_eType_Boolean:
+  case pwr_eType_Int32:
+  case pwr_eType_UInt32:
+    if ( *(pwr_tUInt32 *)p1 == *(pwr_tUInt32 *)p2)
+      return true;
+    break;
+  case pwr_eType_Float32:
+    if ( deadband == 0) {
+      if ( fabs( *(pwr_tFloat32 *)p1 - *(pwr_tFloat32 *)p2) < FLT_EPSILON)
+	return true;
+    }
+    else {
+      if ( fabs( *(pwr_tFloat32 *)p1 - *(pwr_tFloat32 *)p2) < deadband)
+	return true;
+    }
+    break;
+  default: ;
+  }
+  return false;
+}

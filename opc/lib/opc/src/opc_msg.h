@@ -418,9 +418,9 @@ class s0__browseFilter_ : public xsd__anyType
 class s0__ReplyBase : public xsd__anyType
 { public:
 /// Attribute RcvTime of type xs:dateTime.
-   @xsd__dateTime                        RcvTime                        1;	///< Required attribute.
+   @std::string                          RcvTime                        1;	///< Required attribute.
 /// Attribute ReplyTime of type xs:dateTime.
-   @xsd__dateTime                        ReplyTime                      1;	///< Required attribute.
+   @std::string                          ReplyTime                      1;	///< Required attribute.
 /// Attribute ClientRequestHandle of type xs:string.
    @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
 /// Attribute RevisedLocaleID of type xs:string.
@@ -441,7 +441,7 @@ class s0__ServerStatus : public xsd__anyType
 /// Vector of enum s0__interfaceVersion with length 0..unbounded
     std::vector<enum s0__interfaceVersion> SupportedInterfaceVersions     0;
 /// Attribute StartTime of type xs:dateTime.
-   @xsd__dateTime                        StartTime                      1;	///< Required attribute.
+   @std::string                          StartTime                      1;	///< Required attribute.
 /// Attribute ProductVersion of type xs:string.
    @std::string*                         ProductVersion                 0;	///< Optional attribute.
 };
@@ -460,7 +460,7 @@ class s0__RequestOptions : public xsd__anyType
 /// Attribute ReturnItemName of type xs:boolean.
    @bool*                                ReturnItemName                 0;	///< Optional attribute.
 /// Attribute RequestDeadline of type xs:dateTime.
-   @xsd__dateTime*                       RequestDeadline                0;	///< Optional attribute.
+   @std::string*                       RequestDeadline                0;	///< Optional attribute.
 /// Attribute ClientRequestHandle of type xs:string.
    @std::string*                         ClientRequestHandle            0;	///< Optional attribute.
 /// Attribute LocaleID of type xs:string.
@@ -522,7 +522,7 @@ class s0__ItemValue : public xsd__anyType
 /// Attribute ClientItemHandle of type xs:string.
    @std::string*                         ClientItemHandle               0;	///< Optional attribute.
 /// Attribute Timestamp of type xs:dateTime.
-   @xsd__dateTime*                       Timestamp                      0;	///< Optional attribute.
+   @std::string*                         Timestamp                      0;	///< Optional attribute.
 /// Attribute ResultID of type xs:QName.
    @xsd__QName*                          ResultID                       0;	///< Optional attribute.
 };
@@ -918,7 +918,7 @@ class _s0__SubscriptionPolledRefresh
 /// Vector of std::string with length 0..unbounded
     std::vector<std::string            > ServerSubHandles               0;
 /// Attribute HoldTime of type xs:dateTime.
-   @xsd__dateTime*                       HoldTime                       0;	///< Optional attribute.
+   @std::string*                         HoldTime                       0;	///< Optional attribute.
 /// Attribute WaitTime of type xs:int.
    @int*                                 WaitTime                       0;	///< Optional attribute.
 /// Attribute ReturnAllItems of type xs:boolean.

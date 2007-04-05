@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.13 2007-03-27 08:37:50 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.14 2007-04-05 13:32:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,12 +20,14 @@
 #include <map.h>
 #include <net/if.h>
 #include <net/if_arp.h>
+#include <pthread.h>
 
 #include "pwr.h"
 #include "pwr_version.h"
 #include "pwr_baseclasses.h"
 #include "pwr_opcclasses.h"
 #include "co_cdh.h"
+#include "co_time.h"
 #include "rt_gdh.h"
 #include "opc_utl.h"
 #include "opc_soap_H.h"
@@ -43,12 +45,17 @@ class opcsrv_sub {
   opc_eDataType opc_type;
   pwr_eType pwr_type;
   pwr_tSubid subid;
+  float deadband;
+  std::string client_handle;
+  pwr_tInt64 old_value;
 };
   
 class opcsrv_client {
  public:
+  int access;
   pwr_tTime m_last_time;
   map< std::string, vector<opcsrv_sub> > m_sublist;
+  bool m_multi_threaded;
 };
 
 typedef map< std::string, vector<opcsrv_sub> >::iterator sublist_iterator;
@@ -56,24 +63,28 @@ typedef map< int, opcsrv_client>::iterator client_iterator;
 
 class opc_server {
  public:
-  opc_server() : m_client_access_cnt(0), m_grant_all(true) {}
+  opc_server() : m_client_access_cnt(0), m_grant_all(true), m_client(0) {}
 
-  map< int, opcsrv_client> m_client;
+  map< int, opcsrv_client> m_clientlist;
   pwr_tTime m_start_time;
   pwr_sClass_Opc_ServerConfig *m_config;
   opc_sClientAccess m_client_access[20];
   int m_client_access_cnt;
   int m_current_access;
   bool m_grant_all;
+  opcsrv_client *m_client;
 
   opcsrv_client *find_client( int sid);
   opcsrv_client *new_client( int sid);
   int fault( struct soap *soap, int code);
-  int get_access( struct soap *so);
+  int get_access( int sid);
 
 };
 
 static opc_server *opcsrv;
+
+static void *opcsrv_cyclic( void *arg);
+static void *opcsrv_process_request( void *soap);
 
 static int
 opcsrv_set_error(struct soap *soap, const char *faultcode, const char *faultsubcode, const char *faultstring, const char *faultdetail, int soaperror)
@@ -108,19 +119,28 @@ int opc_server::fault( struct soap *soap, int code)
 
 opcsrv_client *opc_server::find_client( int sid)
 {
-  client_iterator it = opcsrv->m_client.find( sid);
-  if ( it == opcsrv->m_client.end())
+  client_iterator it = opcsrv->m_clientlist.find( sid);
+  if ( it == opcsrv->m_clientlist.end())
     return 0;
-  else
+  else {
+    clock_gettime( CLOCK_REALTIME, &it->second.m_last_time);
     return &it->second;
+  }
 }
 
 opcsrv_client *opc_server::new_client( int sid)
 {
   opcsrv_client client;
 
-  m_client[sid] = client;
-  return &m_client[sid];
+  m_clientlist[sid] = client;
+  m_clientlist[sid].access = get_access( sid);
+  m_clientlist[sid].m_multi_threaded = false;
+  clock_gettime( CLOCK_REALTIME, &m_clientlist[sid].m_last_time);
+
+  fprintf( stderr, "New client IP=%d.%d.%d.%d\n",
+	   (sid>>24)&0xFF,(sid>>16)&0xFF,(sid>>8)&0xFF,sid&0xFF);
+
+  return &m_clientlist[sid];
 }
 
 
@@ -165,6 +185,10 @@ int main()
     }      
   }
 
+  // Create a cyclic tread
+  pthread_t 	thread;
+  sts = pthread_create( &thread, NULL, opcsrv_cyclic, NULL);
+
   clock_gettime( CLOCK_REALTIME, &opcsrv->m_start_time);
 
   soap_init( &soap);
@@ -181,14 +205,29 @@ int main()
 	break;
       }
 
-      fprintf( stderr, "%d: accepted connection from IP=%lu.%lu.%lu.%lu socket=%d", i,
+      fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
 	       (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
 
-      if ( soap_serve( &soap) != SOAP_OK)         // Process RPC request
-	soap_print_fault( &soap, stderr);
-      fprintf( stderr, "Request served\n");
-      soap_destroy( &soap);   // Clean up class instances
-      soap_end( &soap);       // Clean up everything and close socket
+      opcsrv->m_client = opcsrv->find_client( soap.ip);
+      if ( !opcsrv->m_client)
+	opcsrv->m_client = opcsrv->new_client( soap.ip);
+
+      if ( !opcsrv->m_client->m_multi_threaded) {
+	if ( soap_serve( &soap) != SOAP_OK)         // Process RPC request
+	  soap_print_fault( &soap, stderr);
+	soap_destroy( &soap);   // Clean up class instances
+	soap_end( &soap);       // Clean up everything and close socket
+      }
+      else {
+	// Create a thread for every request
+	struct soap *tsoap;
+	pthread_t tid;
+
+	tsoap = soap_copy( &soap);
+	if ( !tsoap)
+	  break;
+	pthread_create( &tid, NULL, opcsrv_process_request, (void *)tsoap);
+      }
     }
   }
 
@@ -196,6 +235,39 @@ int main()
   return SOAP_OK;
 }
 
+static void *opcsrv_process_request( void *soap)
+{
+  pthread_detach( pthread_self());
+  soap_serve( (struct soap *) soap);
+  soap_destroy( (struct soap *) soap);
+  soap_end( (struct soap *) soap);
+  soap_done( (struct soap *) soap);
+  free( soap);
+  return 0;
+}
+
+static void *opcsrv_cyclic( void *arg)
+{
+  pwr_tTime current_time;
+  pwr_tDeltaTime diff;
+
+  for (;;) {
+
+    clock_gettime( CLOCK_REALTIME, &current_time);
+
+    // Check if any client can be removed    
+    for ( client_iterator it = opcsrv->m_clientlist.begin(); it != opcsrv->m_clientlist.end(); it++) {
+      time_Adiff( &diff, &current_time, &it->second.m_last_time);
+      if ( diff.tv_sec > 600) {
+	fprintf( stderr, "Client erased IP=%d.%d.%d.%d\n",
+		 (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
+	opcsrv->m_clientlist.erase( it);
+      }
+    }
+
+    sleep(1);
+  }
+}
 
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap, 
@@ -205,7 +277,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
   pwr_tTime current_time;
 
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_None:
@@ -216,16 +291,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
   clock_gettime( CLOCK_REALTIME, &current_time);
 
   s0__GetStatusResponse->GetStatusResult = new s0__ReplyBase();
-  s0__GetStatusResponse->GetStatusResult->RcvTime.__item = opc_datetime(0);
-  s0__GetStatusResponse->GetStatusResult->ReplyTime.__item = opc_datetime(0);
+  s0__GetStatusResponse->GetStatusResult->RcvTime = opc_datetime(0);
+  s0__GetStatusResponse->GetStatusResult->ReplyTime = opc_datetime(0);
   s0__GetStatusResponse->GetStatusResult->RevisedLocaleID = new std::string( "en");
   s0__GetStatusResponse->GetStatusResult->ServerState = s0__serverState__running;
-  s0__GetStatusResponse->GetStatusResult->ClientRequestHandle = s0__GetStatus->ClientRequestHandle;
+  if ( s0__GetStatus->ClientRequestHandle)
+    s0__GetStatusResponse->GetStatusResult->ClientRequestHandle = 
+      new std::string( *s0__GetStatus->ClientRequestHandle);
 
   s0__GetStatusResponse->Status = new s0__ServerStatus();
-  s0__GetStatusResponse->Status->VendorInfo = new std::string("Proview Open Source Process Control");
+  s0__GetStatusResponse->Status->VendorInfo = new std::string("Proview - Open Source Process Control");
   s0__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
-  s0__GetStatusResponse->Status->StartTime.__item = opc_datetime( &opcsrv->m_start_time);
+  s0__GetStatusResponse->Status->SupportedLocaleIDs.push_back( std::string("en"));
+  s0__GetStatusResponse->Status->SupportedLocaleIDs.push_back( std::string("en-US"));
+  s0__GetStatusResponse->Status->StartTime = opc_datetime( &opcsrv->m_start_time);
   s0__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
 
   return SOAP_OK;
@@ -249,7 +328,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
   unsigned int options = 0;
   
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
@@ -260,10 +342,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
   }
 
   s0__ReadResponse->ReadResult = new s0__ReplyBase();
-  s0__ReadResponse->ReadResult->RcvTime.__item = opc_datetime(0);
-  s0__ReadResponse->ReadResult->ReplyTime.__item = opc_datetime(0);
-  if (s0__Read->Options)
-    s0__ReadResponse->ReadResult->ClientRequestHandle = s0__Read->Options->ClientRequestHandle;
+  s0__ReadResponse->ReadResult->RcvTime = opc_datetime(0);
+  s0__ReadResponse->ReadResult->ReplyTime = opc_datetime(0);
+  if (s0__Read->Options && s0__Read->Options->ClientRequestHandle)
+    s0__ReadResponse->ReadResult->ClientRequestHandle = new std::string(*s0__Read->Options->ClientRequestHandle);
   s0__ReadResponse->ReadResult->ServerState = s0__serverState__running;
 
   if (!s0__Read->ItemList)
@@ -304,6 +386,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
 
     if (options & opc_mRequestOption_ReturnDiagnosticInfo)
       iv->DiagnosticInfo = new std::string(""); // ToDo !!
+
+    if ( s0__Read->ItemList->Items[ii]->ClientItemHandle)
+      iv->ClientItemHandle =
+	new std::string(*s0__Read->ItemList->Items[ii]->ClientItemHandle);
 
     sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);
     
@@ -375,7 +461,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
   unsigned int options = 0;
   
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadWrite:
@@ -385,10 +474,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
   }
 
   s0__WriteResponse->WriteResult = new s0__ReplyBase();
-  s0__WriteResponse->WriteResult->RcvTime.__item = opc_datetime(0);
-  s0__WriteResponse->WriteResult->ReplyTime.__item = opc_datetime(0);
-  if (s0__Write->Options)
-    s0__WriteResponse->WriteResult->ClientRequestHandle = s0__Write->Options->ClientRequestHandle;
+  s0__WriteResponse->WriteResult->RcvTime = opc_datetime(0);
+  s0__WriteResponse->WriteResult->ReplyTime = opc_datetime(0);
+  if (s0__Write->Options && s0__Write->Options->ClientRequestHandle)
+    s0__WriteResponse->WriteResult->ClientRequestHandle = new std::string(*s0__Write->Options->ClientRequestHandle);
   s0__WriteResponse->WriteResult->ServerState = s0__serverState__running;
 
   if (!s0__Write->ItemList)
@@ -468,9 +557,23 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
   pwr_tTypeId a_tid;
   pwr_tUInt32 a_size, a_offs, a_elem;
   pwr_tAName aname;
+  float list_deadband = 0;
+  float deadband;
 
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
+
+  s0__SubscribeResponse->SubscribeResult = new s0__ReplyBase();
+  s0__SubscribeResponse->SubscribeResult->RcvTime = opc_datetime(0);
+  s0__SubscribeResponse->SubscribeResult->ReplyTime = opc_datetime(0);
+  s0__SubscribeResponse->SubscribeResult->ServerState = s0__serverState__running;
+
+  if ( s0__Subscribe->Options && s0__Subscribe->Options->ClientRequestHandle)
+    s0__SubscribeResponse->SubscribeResult->ClientRequestHandle = 
+      new std::string( *s0__Subscribe->Options->ClientRequestHandle);
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
@@ -480,43 +583,180 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  opcsrv_client *client = opcsrv->find_client( soap->ip);
-  if ( !client)
-    client = opcsrv->new_client( soap->ip);
-  clock_gettime( CLOCK_REALTIME, &client->m_last_time);
-
-
   if ( s0__Subscribe->ItemList) {
+
+    if ( s0__Subscribe->ItemList->Deadband)
+      list_deadband = *s0__Subscribe->ItemList->Deadband;
 
     for ( int i = 0; i < (int) s0__Subscribe->ItemList->Items.size(); i++) {
       opcsrv_sub sub;
+      int resultid = 0;
+
+      while (1) {
       
-      strcpy( aname, s0__Subscribe->ItemList->Items[0]->ItemName->c_str());
-      sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size, &a_offs, &a_elem);
-      if ( EVEN(sts)) {
-	// TODO Set the fault code somewhere... 
-	continue;
-      }
+	strcpy( aname, s0__Subscribe->ItemList->Items[i]->ItemName->c_str());
+	sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size, &a_offs, &a_elem);
+	if ( EVEN(sts)) {
+	  resultid = opc_eResultCode_E_UNKNOWNITEMNAME;
+	  break;
+	}
 
-      sub.size = a_size;
-      sub.pwr_type = (pwr_eType) a_tid;  // TODO
-      if ( !opc_pwrtype_to_opctype( sub.pwr_type, (int *)&sub.opc_type))
-	printf( "Type error %s\n", aname);
+	memset( &sub.old_value, 0, sizeof(sub.old_value));
+	sub.size = a_size;
+	sub.pwr_type = (pwr_eType) a_tid;
+	if ( cdh_tidIsCid( a_tid)) {
+	  resultid = opc_eResultCode_E_BADTYPE;
+	  break;
+	}
 
-      sts = gdh_RefObjectInfo( aname, &sub.p, &sub.subid, sub.size);
-      if ( EVEN(sts)) {
-	// TODO
-	continue;
-      }
-      if ( i == 0) {
-	vector<opcsrv_sub> subv;
+	if ( !opc_pwrtype_to_opctype( sub.pwr_type, (int *)&sub.opc_type)) {
+	  resultid = opc_eResultCode_E_BADTYPE;
+	  break;
+	}
+
+	sts = gdh_RefObjectInfo( aname, &sub.p, &sub.subid, sub.size);
+	if ( EVEN(sts)) {
+	  resultid = opc_eResultCode_E_FAIL;
+	  break;
+	}
+
+	deadband = list_deadband;
+	if ( s0__Subscribe->ItemList->Items[i]->Deadband)
+	  deadband = *s0__Subscribe->ItemList->Items[i]->Deadband;
+
+	sub.deadband = 0;
+	if ( deadband != 0) {
+	  // Deadband in percentage of range, get range
+	  pwr_tAName oname;
+	  pwr_tAttrRef oaref;
+	  pwr_tCid cid;
+	  char *s;
+
+	  strcpy( oname, aname);
+	  if ( (s = strrchr( oname, '.')))
+	    *s = 0;
+
+	  sts = gdh_NameToAttrref( pwr_cNOid, oname, &oaref);
+	  if ( EVEN(sts)) break;
+	  
+	  sts = gdh_GetAttrRefTid( &oaref, &cid);
+	  if ( EVEN(sts)) break;
+	   
+	  switch ( cid) {
+	  case pwr_cClass_Ai:
+	  case pwr_cClass_Ao:
+	  case pwr_cClass_Ii:
+	  case pwr_cClass_Io: {
+	    // Get range from channel
+	    pwr_tAttrRef aaref;
+	    pwr_tAttrRef sigchancon;
+	    pwr_tFloat32 range_high = 0;
+	    pwr_tFloat32 range_low = 0;
+	    pwr_tStatus sts;
+
+	    // Get Range from channel
+	    sts = gdh_ArefANameToAref( &oaref, "SigChanCon", &aaref);
+	  
+	    if ( ODD(sts))
+	      sts = gdh_GetObjectInfoAttrref( &aaref, &sigchancon, sizeof(sigchancon));
+
+	    if ( ODD(sts))
+	      if ( cdh_ObjidIsNull( sigchancon.Objid))
+		sts = 0;
+
+	    if ( ODD(sts))
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActValRangeHigh", &aaref);
+
+	    if ( ODD(sts))
+	      sts = gdh_GetObjectInfoAttrref( &aaref, &range_high, sizeof(range_high));
+
+	    if ( ODD(sts))
+	      sts = gdh_ArefANameToAref( &sigchancon, "ActValRangeLow", &aaref);
+
+	    if ( ODD(sts))
+	      sts = gdh_GetObjectInfoAttrref( &aaref, &range_low, sizeof(range_low));
+	    
+	    if ( ODD(sts) && !(range_high == 0 && range_low == 0)) {
+	      sub.deadband = (range_high - range_low) * deadband / 100;
+	      break;
+	    }
+	    // Else continue and use PresMaxLimit and PresMinLimit
+	  }
+	  case pwr_cClass_Av:
+	  case pwr_cClass_Iv: {
+	    // Get range from Min/MaxShow
+	    pwr_tAttrRef aaref;
+	    pwr_tFloat32 range_high = 0;
+	    pwr_tFloat32 range_low = 0;
+	    pwr_tStatus sts;
+
+	    sts = gdh_ArefANameToAref( &oaref, "PresMaxLimit", &aaref);
+
+	    if ( ODD(sts))
+	      sts = gdh_GetObjectInfoAttrref( &aaref, &range_high, sizeof(range_high));
+
+	    if ( ODD(sts))
+	      sts = gdh_ArefANameToAref( &oaref, "PresMinLimit", &aaref);
+
+	    if ( ODD(sts))
+	      sts = gdh_GetObjectInfoAttrref( &aaref, &range_low, sizeof(range_low));
+
+	    if ( ODD(sts) && !(range_high == 0 && range_low == 0))
+	      sub.deadband = (range_high - range_low) * deadband / 100;
+
+	    break;
+	  }
+	  default:
+	    // No range exist
+	    ;
+	  }
+	}
+
+	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle)
+	  sub.client_handle = *s0__Subscribe->ItemList->Items[i]->ClientItemHandle;
+	else
+	  sub.client_handle = std::string("");
+
+	if ( !s0__SubscribeResponse->ServerSubHandle) {
+	  vector<opcsrv_sub> subv;
 	
-	s0__SubscribeResponse->ServerSubHandle = 
-	  new std::string( cdh_SubidToString( 0, sub.subid, 0));
+	  s0__SubscribeResponse->ServerSubHandle = 
+	    new std::string( cdh_SubidToString( 0, sub.subid, 0));
 	
-	client->m_sublist[*s0__SubscribeResponse->ServerSubHandle] = subv;
+	  client->m_sublist[*s0__SubscribeResponse->ServerSubHandle] = subv;
+	}
+	client->m_sublist[*s0__SubscribeResponse->ServerSubHandle].push_back( sub);
+	break;
       }
-      client->m_sublist[*s0__SubscribeResponse->ServerSubHandle].push_back( sub);
+      if ( resultid || s0__Subscribe->ReturnValuesOnReply) {
+	if ( !s0__SubscribeResponse->RItemList)
+	  s0__SubscribeResponse->RItemList = new s0__SubscribeReplyItemList();
+
+	s0__SubscribeItemValue *iv = new s0__SubscribeItemValue();
+	iv->ItemValue = new s0__ItemValue();
+
+	iv->ItemValue->ItemName = new std::string( *s0__Subscribe->ItemList->Items[i]->ItemName);
+	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle)
+	  iv->ItemValue->ClientItemHandle =
+	    new std::string(*s0__Subscribe->ItemList->Items[i]->ClientItemHandle);
+	if ( resultid) {
+	  opcsrv_returnerror( s0__SubscribeResponse->Errors, 
+			      &iv->ItemValue->ResultID, resultid, 0);
+	}
+	else if ( s0__Subscribe->ReturnValuesOnReply) {
+	  int reqType;
+	  char  buf[1024];
+
+	  opc_pwrtype_to_opctype( a_tid, &reqType);
+	  if (opc_convert_pwrtype_to_opctype( sub.p, buf, sizeof(buf), reqType, a_tid)) {
+	    iv->ItemValue->Value = opc_opctype_to_value( buf, sizeof(buf), reqType);
+	  }
+	  else
+	    opcsrv_returnerror( s0__SubscribeResponse->Errors, 
+				&iv->ItemValue->ResultID, opc_eResultCode_E_BADTYPE, 0);
+	}
+	s0__SubscribeResponse->RItemList->Items.push_back( iv);
+      }
     }
   }
   return SOAP_OK;
@@ -527,6 +767,11 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 							   _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse)
 {
   // Check access for the connection
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
+
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
   case pwr_eOpc_AccessEnum_ReadWrite:
@@ -535,27 +780,104 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  pwr_tTime current_time;
-  opcsrv_client *client = opcsrv->find_client( soap->ip);
-  if ( !client) {
-    // TODO
-    return 0;
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult = 
+    new s0__ReplyBase();
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->RcvTime = 
+    opc_datetime(0);
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ReplyTime = 
+    opc_datetime(0);
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ServerState = 
+    s0__serverState__running;
+
+  if ( s0__SubscriptionPolledRefresh->Options && 
+       s0__SubscriptionPolledRefresh->Options->ClientRequestHandle)
+    s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ClientRequestHandle = 
+      new std::string( *s0__SubscriptionPolledRefresh->Options->ClientRequestHandle);
+
+  pwr_tTime hold_time;
+  int wait_time;
+  bool has_holdtime = false;
+  bool has_waittime = false;
+  int waited_time = 0;
+  pwr_tFloat32 wait_scan = 0.5;
+  pwr_tDeltaTime dwait_scan;
+
+  if ( s0__SubscriptionPolledRefresh->HoldTime) {
+    if ( !client->m_multi_threaded)
+      client->m_multi_threaded = true;
+    else {
+      has_holdtime = true;
+      opc_time_OPCAsciiToA( (char *)s0__SubscriptionPolledRefresh->HoldTime->c_str(), 
+			    &hold_time);
+      if ( s0__SubscriptionPolledRefresh->WaitTime) {
+	has_waittime = true;
+	wait_time = *s0__SubscriptionPolledRefresh->WaitTime;
+	time_FloatToD( &dwait_scan, wait_scan);
+      }
+    }
   }
 
-  clock_gettime( CLOCK_REALTIME, &current_time);
-  client->m_last_time = current_time;
+  if ( has_holdtime) {
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+    pwr_tTime current_time;
+    char str1[80], str2[80];
+
+    clock_gettime( CLOCK_REALTIME, &current_time);
+    time_AtoAscii( &current_time, time_eFormat_DateAndTime, str1, sizeof(str1));
+    time_AtoAscii( &hold_time, time_eFormat_DateAndTime, str2, sizeof(str2));
+		   
+    printf( "TimedWait %s  %s\n", str1, str2);
+
+    pthread_cond_timedwait( &cond, &mutex, &hold_time);
+  }
+
+  if ( has_waittime) {
+    // Check all values
+    bool change_found = false;
+
+    for ( waited_time = 0; waited_time < wait_time; waited_time += (int)(wait_scan * 1000)) {
+      for ( int i = 0; i < (int) s0__SubscriptionPolledRefresh->ServerSubHandles.size(); i++) {
+	sublist_iterator it = 
+	  client->m_sublist.find( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      
+	if ( it != client->m_sublist.end()) {
+	  for ( int j = 0; j < (int)it->second.size(); j++) {
+	    if ( !opc_cmp_pwr( &it->second[j].old_value, it->second[j].p, it->second[j].size,
+			      it->second[j].pwr_type, it->second[j].deadband)) {
+	      change_found = true;
+	      break;
+	    }
+	  }
+	}
+	if ( change_found)
+	  break;
+      }
+      
+      if ( change_found)
+	break;
+
+      pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+      pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+      pwr_tTime current_time, next_time;
+      
+      clock_gettime( CLOCK_REALTIME, &current_time);
+      time_Aadd( &next_time, &current_time, &dwait_scan);
+      pthread_cond_timedwait( &cond, &mutex, &next_time);
+    }
+  }
 
   for ( int i = 0; i < (int) s0__SubscriptionPolledRefresh->ServerSubHandles.size(); i++) {
     sublist_iterator it = 
       client->m_sublist.find( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
-    
+
     if ( it != client->m_sublist.end()) {
 
       // Test
       for ( int jj = 0; jj < (int) it->second.size(); jj++) {
 	printf( "%d sub: p %d size %d opc_type %d pwr_type %d subid %d,%d\n", jj, (int)it->second[jj].p,
 		it->second[jj].size, it->second[jj].opc_type, it->second[jj].pwr_type, it->second[jj].subid.nid,
-		it->second[jj].subid.rix);	    
+		it->second[jj].subid.rix);
 	jj++;
       }
 
@@ -570,14 +892,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 
 	ritem->Value = opc_opctype_to_value( it->second[j].p, it->second[j].size, 
 					     it->second[j].opc_type);
-	ritem->Timestamp = new xsd__dateTime();
-	ritem->Timestamp->__item = opc_datetime(0);
+	memcpy( &it->second[j].old_value, it->second[j].p, it->second[j].size);
+	ritem->Timestamp = new std::string( opc_datetime(0));
+	if ( !it->second[j].client_handle.empty())
+	  ritem->ClientItemHandle = new std::string( it->second[j].client_handle);
 
 	rlist->Items.push_back( ritem);
       }
       s0__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
     }
     else {
+      // Subscription not found
+      s0__SubscribePolledRefreshReplyItemList *rlist = new s0__SubscribePolledRefreshReplyItemList();
+
+      rlist->SubscriptionHandle = new std::string(s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
+
+      s0__ItemValue *ritem = new s0__ItemValue();
+      opcsrv_returnerror( s0__SubscriptionPolledRefreshResponse->Errors, &ritem->ResultID, 
+			  opc_eResultCode_E_NOSUBSCRIPTION, 0);
+      rlist->Items.push_back( ritem);
+      s0__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
     }
   }
 
@@ -588,8 +922,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
 						    _s0__SubscriptionCancel *s0__SubscriptionCancel, 
 						    _s0__SubscriptionCancelResponse *s0__SubscriptionCancelResponse)
 {
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
   // Check access for the connection
-  switch ( opcsrv->m_current_access) {
+  switch ( client->access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
   case pwr_eOpc_AccessEnum_ReadWrite:
     break;
@@ -597,11 +935,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  opcsrv_client *client = opcsrv->find_client( soap->ip);
-  if ( !client) {
-    // TODO
-    return 0;
-  }
+  if ( !s0__SubscriptionCancel->ServerSubHandle)
+    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
+
 
   clock_gettime( CLOCK_REALTIME, &client->m_last_time);
 
@@ -612,10 +948,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
     client->m_sublist.erase( it);
   }
   else {
-    // TODO Set the fault code somewhere...
+    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
   }
-  s0__SubscriptionCancelResponse->ClientRequestHandle = 
-    s0__SubscriptionCancel->ClientRequestHandle;
+
+  if ( s0__SubscriptionCancel->ClientRequestHandle)
+    s0__SubscriptionCancelResponse->ClientRequestHandle = 
+      new std::string( *s0__SubscriptionCancel->ClientRequestHandle);
   return SOAP_OK;
 }
 
@@ -745,7 +1083,7 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	     bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE)
 	  ((xsd__string *)ip->Value)->__item = std::string("readable");
 	else
-	  ((xsd__string *)ip->Value)->__item = std::string("readWriteable");
+	  ((xsd__string *)ip->Value)->__item = std::string("readWritable");
 	break;
       default:
 	((xsd__string *)ip->Value)->__item = std::string("unknown");
@@ -808,7 +1146,6 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
       }
       }
     }
-
     
     // HighEU
     if ( propmask & opc_mProperty_HighEU) {
@@ -956,14 +1293,14 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
   return true;
 }
 
-int opc_server::get_access( struct soap *so)
+int opc_server::get_access( int sid)
 {
   int access = pwr_eOpc_AccessEnum_None;
   if ( m_grant_all)
     access = pwr_eOpc_AccessEnum_ReadWrite;
   else {
     for ( int i = 0; i < m_client_access_cnt; i++) {
-      if ( m_client_access[i].address == (int)so->ip) {
+      if ( m_client_access[i].address == (int)sid) {
 	access = m_client_access[i].access;
 	break;
       }
@@ -981,9 +1318,14 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
   pwr_tCid cid;
   unsigned int property_mask;
   pwr_tTime current_time;
+  bool has_max_elem = false;
+  int max_elem = 0;
 
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
@@ -995,16 +1337,101 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 
   clock_gettime( CLOCK_REALTIME, &current_time);
 
+  if ( s0__Browse->MaxElementsReturned) {
+    has_max_elem = true;
+    max_elem = *s0__Browse->MaxElementsReturned;
+  }
   s0__BrowseResponse->BrowseResult = new s0__ReplyBase();
-  s0__BrowseResponse->BrowseResult->RcvTime.__item = opc_datetime(0);
-  s0__BrowseResponse->BrowseResult->ReplyTime.__item = opc_datetime(0);
-  s0__BrowseResponse->BrowseResult->ClientRequestHandle = s0__Browse->ClientRequestHandle;
+  s0__BrowseResponse->BrowseResult->RcvTime = opc_datetime(0);
+  s0__BrowseResponse->BrowseResult->ReplyTime = opc_datetime(0);
+  if ( s0__Browse->ClientRequestHandle)
+    s0__BrowseResponse->BrowseResult->ClientRequestHandle = 
+      new std::string( *s0__Browse->ClientRequestHandle);
   s0__BrowseResponse->BrowseResult->ServerState = s0__serverState__running;
+  s0__BrowseResponse->MoreElements = (bool *) malloc( sizeof(bool));
+  *s0__BrowseResponse->MoreElements = false;
+
+
+  if ( s0__Browse->ContinuationPoint) {
+    // Continue with next siblings
+
+    pwr_tOName pname;
+    pwr_tOName itemname;
+    pwr_sAttrRef paref;
+    pwr_sAttrRef aref;
+
+    cdh_StringToObjid( s0__Browse->ContinuationPoint->c_str(), &child);
+
+    // Check continuationpoint
+    sts = gdh_GetObjectClass( child, &cid);
+    if ( EVEN(sts)) {
+      return opcsrv->fault( soap, opc_eResultCode_E_INVALIDCONTINUATIONPOINT);
+    }
+
+    for ( sts = 1; 
+	  ODD(sts); 
+	  sts = gdh_GetNextSibling( child, &child)) {
+
+      if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
+	// Max elements reached, return current oid as continuation point
+
+	s0__BrowseResponse->ContinuationPoint = 
+	  new std::string( cdh_ObjidToString( 0, child, 1));
+	*s0__BrowseResponse->MoreElements = true;
+	break;
+      }
+
+      sts = gdh_ObjidToName( child, name, sizeof(name), cdh_mName_object);
+      if ( EVEN(sts)) continue;
+
+      sts = gdh_GetObjectClass( child, &cid);
+      if ( EVEN(sts)) continue;
+      
+      s0__BrowseElement *element = new s0__BrowseElement();
+	
+      element->Name = new std::string( name);
+      strcpy( itemname, pname);
+      strcat( itemname, "-");
+      strcat( itemname, name);
+      element->ItemName = new std::string( itemname);
+      element->IsItem = false;
+      if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
+	element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
+      else
+	element->HasChildren = true;
+      
+      if ( s0__Browse->ReturnAllProperties)
+	property_mask = ~0;
+      else
+	opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
+
+      if ( property_mask) {
+	aref = cdh_ObjidToAref( child);
+	opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+			       property_mask, 0,
+			       element->Properties);
+      }
+      s0__BrowseResponse->Elements.push_back( element);	
+    }
+
+    return SOAP_OK;
+  }
+
 
   if ( (!s0__Browse->ItemName || s0__Browse->ItemName->empty()) &&
        (!s0__Browse->ItemPath || s0__Browse->ItemPath->empty())) {
     // Return rootlist
     for ( sts = gdh_GetRootList( &oid); ODD(sts); sts = gdh_GetNextSibling( oid, &oid)) {
+
+      if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
+	// Max elements reached, return current oid as continuation point
+
+	s0__BrowseResponse->ContinuationPoint = 
+	  new std::string( cdh_ObjidToString( 0, oid, 1));
+	*s0__BrowseResponse->MoreElements = true;
+	break;
+      }
+
       sts = gdh_ObjidToName( oid, name, sizeof(name), cdh_mName_object);
       if ( EVEN(sts))
 	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
@@ -1235,6 +1662,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
       for ( sts = gdh_GetChild( paref.Objid, &child); 
 	    ODD(sts); 
 	    sts = gdh_GetNextSibling( child, &child)) {
+
+
+	if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
+	  // Max elements reached, return current oid as continuation point
+
+	  s0__BrowseResponse->ContinuationPoint = 
+	    new std::string( cdh_ObjidToString( 0, child, 1));
+	  *s0__BrowseResponse->MoreElements = true;
+	  break;
+	}
+
 	sts = gdh_ObjidToName( child, name, sizeof(name), cdh_mName_object);
 	if ( EVEN(sts)) continue;
 
@@ -1287,7 +1725,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
   int 	rows;
 
   // Check access for connection
-  opcsrv->m_current_access = opcsrv->get_access( soap);
+  opcsrv_client *client = opcsrv->find_client( soap->ip);
+  if ( !client)
+    client = opcsrv->new_client( soap->ip);
+  opcsrv->m_current_access = client->access;
 
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
@@ -1296,6 +1737,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
   default:
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
+
+  s0__GetPropertiesResponse->GetPropertiesResult = new s0__ReplyBase();
+  s0__GetPropertiesResponse->GetPropertiesResult = new s0__ReplyBase();
+  s0__GetPropertiesResponse->GetPropertiesResult->RcvTime = opc_datetime(0);
+  s0__GetPropertiesResponse->GetPropertiesResult->ReplyTime = opc_datetime(0);
+  if ( s0__GetProperties->ClientRequestHandle)
+    s0__GetPropertiesResponse->GetPropertiesResult->ClientRequestHandle = 
+      new std::string( *s0__GetProperties->ClientRequestHandle);
+  s0__GetPropertiesResponse->GetPropertiesResult->ServerState = s0__serverState__running;
 
   if ( s0__GetProperties->ReturnAllProperties && *s0__GetProperties->ReturnAllProperties)
     property_mask = ~0;

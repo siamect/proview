@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.9 2007-03-27 08:37:50 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.10 2007-04-05 13:32:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -583,10 +583,42 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
   }
 #endif
   vector<procom_obj>olist;
+
+  if ( oix == 0)
+    olist.push_back( m_list[0]->po);
+  else {
+    int plist_cnt = 0;
+    pwr_tOix p, c;
+    pwr_tOix plist[100];
+    
+    // Get parents
+    for ( p = m_list[oix]->po.fthoix; 
+	  ; 
+	  p = m_list[p]->po.fthoix) {
+      plist[plist_cnt++] = p;
+      if ( m_list[p]->po.fthoix == 0)
+	break;
+    }
+
+    // Add parents
+    for ( int i = plist_cnt - 1; i >= 0; i--)
+      olist.push_back( m_list[plist[i]]->po);
+
+    // Add siblings
+    for ( c = m_list[plist[0]]->po.fchoix; ; c = m_list[c]->po.fwsoix) {
+      if  ( m_list[c]->po.flags & procom_obj_mFlags_Loaded)
+	olist.push_back( m_list[c]->po);
+
+      if ( m_list[c]->po.fwsoix == m_list[plist[0]]->po.fchoix)
+	break;
+    }
+  }
+#if 0
   for ( int i = 0; i < (int) m_list.size(); i++) {
     if  ( m_list[i]->po.flags & procom_obj_mFlags_Loaded)
       olist.push_back( m_list[i]->po);
   }
+#endif
   printf( "*********************************************\n");
   for ( int i = 0; i < (int)olist.size(); i++) {
     printf( "oix %2d bws %2d fws %2d fth %2d fch %2d lch %2d flags %lu %s\n", 
@@ -598,33 +630,85 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 
 void opc_provider::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 {
-  pwr_tOName oname;
+  pwr_tStatus sts = GDH__SUCCESS;
+  cdh_sParseName pn;
+  pwr_tOix oix, coix;
 
   if ( poix) {
     if ( poix >= m_list.size()) {
       pcom->provideStatus( GDH__NOSUCHOBJ);
       return;
     }
-    strcpy( oname, longname(poix));
-    strcat( oname, "-");
-    strcat( oname, name);
   }
-  else
-    strcpy( oname, name);
 
-  for ( int i = 0; i < (int) m_list.size(); i++) {
-    if  ( !m_list[i]->po.flags & procom_obj_mFlags_Deleted) {
-      if ( cdh_NoCaseStrcmp( oname, longname(m_list[i]->po.oix)) == 0) {
-	objectOid( pcom, i);
-	return;
+  cdh_ParseName( &sts, &pn, pwr_cNOid, name, 0);
+  if ( poix)
+    oix = poix;
+  else
+    oix = 0;
+
+  for ( int i = 0; i < (int)pn.nObject; i++) {
+    bool found = false;
+
+    if ( !(m_list[oix]->po.flags & procom_obj_mFlags_Loaded)) {
+      _s0__Browse browse;
+      _s0__BrowseResponse browse_response;
+
+      browse.ItemName = new std::string( m_list[oix]->item_name);
+      opc_mask_to_propertynames( browse.PropertyNames, 
+				 opc_mProperty_DataType | opc_mProperty_Description |
+				 opc_mProperty_EuType);
+      
+      if ( soap_call___s0__Browse( &soap, opc_endpoint, NULL, &browse, &browse_response) ==
+	   SOAP_OK) {
+	pwr_tOix next_bws;
+	pwr_tOix bws = 0;
+
+	server_state->RequestCnt++;
+	if ( browse_response.Errors.size() > 0) {
+	  errlog( browse.ItemName, browse_response.Errors);
+	}
+	for ( int i = 0; i < (int)browse_response.Elements.size(); i++) {
+	  next_bws = next_oix;
+	  insert_object( oix, bws, browse_response.Elements[i],
+			 i == 0, i == (int)browse_response.Elements.size() - 1, 0, 0);
+	  bws = next_bws;
+	}
+	m_list[oix]->po.flags |= procom_obj_mFlags_Loaded;
+      }
+      else {
+	// Error returned from soap
+	server_state->RequestCnt++;
+	fault();
+	sts = GDH__NOSUCHOBJ;
+	break;
       }
     }
-  }
-  if ( m_env == pvd_eEnv_Wb)
-    pcom->provideObject( 0,0,0,0,0,0,0,0,"","");
-  else
-    pcom->provideStatus( GDH__NOSUCHOBJ);
 
+    for ( coix = m_list[oix]->po.fchoix; ;
+	  coix = m_list[coix]->po.fwsoix) {
+      if ( cdh_NoCaseStrcmp( m_list[coix]->po.name, pn.object[i].name.norm) == 0) {
+	oix = coix;
+	found = true;
+	break;
+      }
+      if ( m_list[coix]->po.fwsoix == m_list[oix]->po.fchoix)
+	// Last child
+	break;
+    }
+    if ( !found)
+      sts = GDH__NOSUCHOBJ;
+  }
+
+  if ( ODD(sts)) {
+    objectOid( pcom, oix);
+  }
+  else {    
+    if ( m_env == pvd_eEnv_Wb)
+      pcom->provideObject( 0,0,0,0,0,0,0,0,"","");
+    else
+      pcom->provideStatus( sts);
+  }    
 }
 
 // Wb only
@@ -908,6 +992,7 @@ void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid)
 void opc_provider::cyclic( co_procom *pcom)
 {
   int size = 0;
+  bool reconnect = false;
   _s0__SubscriptionPolledRefresh subpoll;
   _s0__SubscriptionPolledRefreshResponse subpoll_response;
   
@@ -928,23 +1013,110 @@ void opc_provider::cyclic( co_procom *pcom)
       int idx = 0;
       for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
 	if ( subpoll_response.RItemList[idx]->Items.size()) {
-	  opc_convert_opctype_to_pwrtype( (void *) ((pwr_sClass_Opc_String *)m_list[it->second.oix]->po.body)->Value,
-					  m_list[it->second.oix]->size,
-					  subpoll_response.RItemList[idx]->Items[0]->Value,
-					  (pwr_eType) m_list[it->second.oix]->type);
-#if 0
-	  switch ( m_list[it->second.oix]->po.cid) {
-	  case pwr_cClass_Opc_String:
-	    strcpy( ((pwr_sClass_Opc_String *)m_list[it->second.oix]->po.body)->Value,
-		    ((xsd__string *)subpoll_response.RItemList[idx]->Items[0]->Value)->__item.c_str());
-	    break;
-	  default: ;
+	  if ( subpoll_response.RItemList[idx]->Items[0]->ResultID) {
+	    int code;
+	    if ( opc_string_to_resultcode( (char *)subpoll_response.RItemList[idx]->Items[0]->ResultID->c_str(),
+					   &code)) {
+	      if ( code == opc_eResultCode_E_NOSUBSCRIPTION) {
+		// Subscription removed, add new subscription
+		reconnect = true;
+		break;
+	      }
+	      else {
+		server_state->LastError = code;
+		server_state->ErrorRequestCnt = server_state->RequestCnt;
+	      }
+	    }
 	  }
-#endif
+	  else {
+	    pwr_tOix oix = it->second.oix;
+	    opc_convert_opctype_to_pwrtype( (void *) ((pwr_sClass_Opc_String *)m_list[oix]->po.body)->Value,
+					    m_list[oix]->size,
+					    subpoll_response.RItemList[idx]->Items[0]->Value,
+					    (pwr_eType) m_list[oix]->type);
+	  }
 	}
 	idx++;
       }
       
+      if ( reconnect) {
+	int idx = 0;
+	map<pwr_tUInt32, opcprv_sub> sublist_add;
+	map<pwr_tUInt32, opcprv_sub> sublist_erase;
+
+	for ( sublist_iterator it = m_sublist.begin(); it != m_sublist.end(); it++) {
+	  if ( subpoll_response.RItemList[idx]->Items.size()) {
+	    if ( subpoll_response.RItemList[idx]->Items[0]->ResultID) {
+	      int code;
+	      if ( opc_string_to_resultcode( (char *)subpoll_response.RItemList[idx]->Items[0]->ResultID->c_str(),
+					     &code)) {
+		if ( code == opc_eResultCode_E_NOSUBSCRIPTION) {
+		  // Subscription removed, add new subscription
+		  server_state->LastError = code;
+		  server_state->ErrorRequestCnt = server_state->RequestCnt;
+		  
+		  _s0__Subscribe subscribe;
+		  _s0__SubscribeResponse subscribe_response;
+		  pwr_tOix oix = it->second.oix;
+		  pwr_tUInt32 rix = it->first;
+		  
+		  subscribe.Options = new s0__RequestOptions();
+		  subscribe.Options->ReturnItemTime = (bool *) malloc( sizeof(bool));
+		  *subscribe.Options->ReturnItemTime = true;
+		  
+		  subscribe.ItemList = new s0__SubscribeRequestItemList();
+		  s0__SubscribeRequestItem *ritem = new s0__SubscribeRequestItem();
+		  ritem->ItemName = new std::string( m_list[oix]->item_name);
+		  ritem->ClientItemHandle = new std::string( it->second.handle);
+		  ritem->RequestedSamplingRate = (int *) malloc( sizeof(int));
+		  *ritem->RequestedSamplingRate = 1000;
+		  subscribe.ItemList->Items.push_back( ritem);
+		  
+		  // Remove old subscription
+		  //m_sublist.erase( it);
+		  sublist_erase[it->first] = it->second;
+
+		  printf( "Reconnect: %s\n", m_list[oix]->item_name); 
+		  
+		  if ( soap_call___s0__Subscribe( &soap, opc_endpoint, NULL, &subscribe, &subscribe_response) ==
+		       SOAP_OK) {
+		    opcprv_sub sub;
+		    
+		    // Insert new subscription with new handle
+		    sub.handle = *subscribe_response.ServerSubHandle;
+		    sub.oix = oix;
+		    //m_sublist[rix] = sub;
+		    sublist_add[rix] = sub;
+
+		    server_state->RequestCnt++;
+		    
+		    if ( subscribe_response.RItemList && subscribe_response.RItemList->Items.size()) {
+		      for ( int i = 0; i < (int)subscribe_response.RItemList->Items.size(); i++) {
+			// subscribe_response.RItemList->Items[i]->ItemValue...
+		      }
+		    }
+		  }
+		  else {
+		    // Error returned from soap
+		    server_state->RequestCnt++;
+		    fault();
+		  }
+		}
+	      }
+	    }
+	  }
+	}
+	idx++;
+
+	// Remove old subscriptions to m_sublist
+	for ( sublist_iterator it = sublist_erase.begin(); it != sublist_erase.end(); it++) {
+	  m_sublist.erase(it->first);
+	}
+	// Add new subscriptions to m_sublist
+	for ( sublist_iterator it = sublist_add.begin(); it != sublist_add.end(); it++) {
+	  m_sublist[it->first] = it->second;
+	}
+      }
     }
     else {
       // Error returned from soap
@@ -1025,8 +1197,8 @@ void opc_provider::get_server_state()
       strcpy( server_state->VendorInfo, get_status_response.Status->VendorInfo->c_str());
     if ( get_status_response.Status->ProductVersion)
       strcpy( server_state->ProductVersion, get_status_response.Status->ProductVersion->c_str());
-    opc_convert_opctype_to_pwrtype( &server_state->StartTime, sizeof(server_state->StartTime),
-				    &get_status_response.Status->StartTime, pwr_eType_Time);
+    opc_time_OPCAsciiToA( (char *)get_status_response.Status->StartTime.c_str(), 
+			  &server_state->StartTime);
     server_state->ServerState = get_status_response.GetStatusResult->ServerState;
   }
   else {
