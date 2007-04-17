@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.6 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.7 2007-04-17 13:58:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -174,9 +174,12 @@ void XttGtk::set_prompt( char *prompt)
     g_object_set( msg_label, "visible", TRUE, NULL);
   }
   else {
+    char *promptutf8 = g_convert( prompt, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     g_object_set( msg_label, "visible", FALSE, NULL);
     g_object_set( cmd_prompt, "visible", TRUE, 
-		  "label", prompt, NULL);
+		  "label", promptutf8, NULL);
+    g_free( promptutf8);
   }
 }
 
