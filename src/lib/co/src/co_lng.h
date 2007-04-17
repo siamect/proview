@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.h,v 1.6 2005-09-26 08:03:02 claes Exp $
+ * Proview   $Id: co_lng.h,v 1.7 2007-04-17 13:55:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -135,6 +135,7 @@ class Lng {
     static void get_uid( char *in, char *out);
     static lng_eLanguage str_to_lang( char *str);
     static char *lang_to_str( lng_eLanguage language);
+    static char *lang_to_locale( lng_eLanguage language);
 };
 
 #if defined __cplusplus

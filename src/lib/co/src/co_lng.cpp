@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.11 2005-12-21 08:30:59 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.12 2007-04-17 13:55:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <locale.h>
 
 #include "pwr.h"
  
@@ -61,6 +62,23 @@ char *Lng::lang_to_str( lng_eLanguage language)
       break;
     default:
       strcpy( result, "en_us");
+  }
+  return result;
+}
+
+char *Lng::lang_to_locale( lng_eLanguage language)
+{
+  static char result[20];
+
+  switch( language) {
+    case lng_eLanguage_sv_se:
+      strcpy( result, "sv_SE");
+      break;
+    case lng_eLanguage_de_de:
+      strcpy( result, "de_DE");
+      break;
+    default:
+      strcpy( result, "en_US");
   }
   return result;
 }
@@ -331,6 +349,8 @@ void Lng::set( char *language)
   lng_eLanguage l = str_to_lang( language);
   if ( l != lng_eLanguage_)
     set( l);
+
+  setlocale( LC_ALL, lang_to_locale( l));
 }
 
 void Lng::set( lng_eLanguage language) 
@@ -343,6 +363,8 @@ void Lng::set( lng_eLanguage language)
     unload();
   else
     read();
+
+  setlocale( LC_ALL, lang_to_locale( lang));
 }
 
 
