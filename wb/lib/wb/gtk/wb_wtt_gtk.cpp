@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.11 2007-02-21 14:13:12 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.12 2007-04-23 11:45:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -721,7 +721,7 @@ void WttGtk::open_change_value()
   else
     g_object_set( cmd_input, "visible", TRUE, NULL);
 
-  g_object_set( cmd_input, "max-length", input_size - 1, NULL);
+  g_object_set( cmd_input, "max-length", input_size, NULL);
   message( ' ', "");
   cmd_entry->set_recall_buffer( &value_recall);
   gtk_widget_grab_focus( cmd_input);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_watt_gtk.cpp,v 1.5 2007-02-06 13:22:47 claes Exp $
+ * Proview   $Id: wb_watt_gtk.cpp,v 1.6 2007-04-23 11:45:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,14 +92,14 @@ void WAttGtk::change_value( int set_focus)
     gdk_drawable_get_size( pane->window, &w, &h);
     gtk_paned_set_position( GTK_PANED(pane), h - 170);
     gtk_widget_grab_focus( cmd_scrolledtextview);
-    input_max_length = input_size - 1;
+    input_max_length = input_size;
     input_multiline = 1;
   }
   else {
     text_w = cmd_input;
     g_object_set( text_w, 
 		  "visible", TRUE, 
-		  "max-length", input_size - 1, NULL);
+		  "max-length", input_size, NULL);
     gtk_widget_grab_focus( cmd_input);
     input_multiline = 0;
   }
