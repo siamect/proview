@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.19 2007-01-18 07:49:00 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.20 2007-04-23 12:08:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2686,7 +2686,7 @@ int cdh_TypeToMaxStrSize( pwr_eType type, int attr_size, int attr_elements)
     break;
   case pwr_eType_String:
   case pwr_eType_Text:
-    size = attr_size / attr_elements;
+    size = attr_size / attr_elements - 1;
     break;
   default:
     size = 80;
