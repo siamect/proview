@@ -1,6 +1,6 @@
 #/bin/bash
 #
-# Proview   $Id: rt_webmonmh.sh,v 1.2 2005-09-01 14:57:49 claes Exp $
+# Proview   $Id: rt_webmonmh.sh,v 1.3 2007-04-24 14:23:15 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -20,4 +20,4 @@
 #
 export LD_LIBRARY_PATH=$pwr_exe
 export CLASSPATH=$pwr_lib/pwr_rt.jar:$pwr_lib/pwr_jop.jar
-$jdk_home/java jpwr.rt.MhServer
+$jdk_home/java -Djava.library.path=$jdk/lib/i386/client:$jdk/lib/i386:$jdk/../lib/i386:/usr/pwrrt/exe jpwr.rt.MhServer
