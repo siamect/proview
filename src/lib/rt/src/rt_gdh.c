@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.29 2007-03-14 06:42:01 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.30 2007-04-25 07:20:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1053,7 +1053,7 @@ gdh_GetAttrRefTid (
       *tid  = ap->adef->TypeRef;
     }
 
-    if (!(ap->op->l.flags.m & gdb_mLo_native)) {
+    if ( cdh_tidIsCid( *tid) && !(ap->op->l.flags.m & gdb_mLo_native)) {
 
       gdh_ScopeLock {
 
@@ -2463,7 +2463,8 @@ gdh_SubRefObjectInfoList (
 
       cp = subc_Create(s, arp, lh);
 
-      subid[i] = cp->sid;
+      if ( subid)
+	subid[i] = cp->sid;
     }
 
     /* Try to get it running */
@@ -2959,7 +2960,6 @@ gdh_RefObjectInfo (
 
   if (infop == NULL) return GDH__BADARG;
   if (name  == NULL) return GDH__BADARG;
-  if (sid   == NULL) return GDH__BADARG;
   if (strlen(name) >= sizeof(objref.fullname)) return GDH__NAMELEN;
 
   objref.bufsize = size;
