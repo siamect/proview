@@ -188,6 +188,7 @@ palette NavigatorPalette
     classvolume TLog TLog
     classvolume Profibus Profibus
     classvolume Remote Remote
+    classvolume Opc Opc
     classvolume BaseComponent BaseComponent
     classvolume Inor Inor
     classvolume OtherManufacturer OtherManufacturer
@@ -595,6 +596,35 @@ palette PlcEditorPalette
       class StoDp
       class StoDv
     }
+    menu Extern
+    {
+      class CStoExtBoolean
+      class CStoExtFloat32
+      class CStoExtFloat64
+      class CStoExtInt8
+      class CStoExtInt16
+      class CStoExtInt32
+      class CStoExtInt64
+      class CStoExtUInt8
+      class CStoExtUInt16
+      class CStoExtUInt32
+      class CStoExtUInt64
+      class CStoExtString
+      class CStoExtTime
+      class GetExtBoolean
+      class GetExtFloat32
+      class GetExtFloat64
+      class GetExtInt8
+      class GetExtInt16
+      class GetExtInt32
+      class GetExtInt64
+      class GetExtUInt8
+      class GetExtUInt16
+      class GetExtUInt32
+      class GetExtUInt64
+      class GetExtString
+      class GetExtTime
+    }
     menu Integer
     {
       class CStoIo
@@ -614,6 +644,7 @@ palette PlcEditorPalette
     menu Conversion
     {
       class AtoI
+      class AToFloat64	
       class AtoStr
       class BCDDo
       class DiBCD
@@ -621,11 +652,18 @@ palette PlcEditorPalette
       class DtoEnum
       class DtoStr
       class EnumToD
+      class Float64ToA	
       class Gray
+      class Int64toI
       class ItoA
+      class ItoInt64
       class ItoStr
+      class ItoUInt32
+      class ItoUInt64	
       class MaskToD
       class NameToStr
+      class UInt64toI	
+      class UInt32toI	
     }
     menu Data
     {

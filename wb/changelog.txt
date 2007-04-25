@@ -50,3 +50,8 @@
 070124 cs  wtt       Application build method for Application and PlcProcess objects. 
 070206 cs  wb        Bugfix in volumereferences in loadfiles. Casted attributes wasn't always checked.
 070221 cs  wtt       Bugfix in input focus when value input was closed.
+070222 cs  wb        Bugfix in build method for XttGraph. Java was always generated if the javaname for the graph wasn't saved.
+070302 cs  wtt       Bugfix in object editor, Used checkbox affected wrong input in some cases (C Order).
+070327 cs  wb        wb_motif: Window utility object was deleted before License window was closed.
+070417 cs  wtt       Bugfix in plc connect, attribute reference to an object in a mounted voume had incorrect size. 
+070419 cs  wtt       Script functions GetClassList and GetNextObject added.
