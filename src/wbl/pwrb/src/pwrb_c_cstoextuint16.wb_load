@@ -1,0 +1,142 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_cstoextuint16.wb_load -- Defines the class CStoExtUInt16.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_macro_io.h
+!  @Group Plc,PlcIO
+!  Conditional Storage of an extern UInt16 value.
+!  @image orm_cstoextuint16_fo.gif
+!  
+!  Conditional storage of a value into an extern UInt16 attribute.
+!  The extern attribute can reside on another node or in an extern volume.
+!
+!  Note! This object should not be used in a high priority plc thread.
+!  The database has to be locked when the storage is done, and the plc
+!  thread might have to wait for a locking done be a low priority process.
+!*/
+  Object CStoExtUInt16 $ClassDef 489
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_RtConnectionsAndDevBodies
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "CStoExtUInt16"
+      EndBody
+      !/**
+      !  The input is connected to an integer output or left
+      !  open. In the latter case the value of In, is considered
+      !  to be stored.
+      !*/
+      Object In $Input 1 
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr PgmName = "ActualValue"
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+      !/**
+      !  Specifies whether a storage will be done or not.
+      !  Storage is done on positive edge of Cond.
+      !*/
+      Object Cond $Input 2 
+        Body SysBody
+          Attr PgmName = "Cond"
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_RTVIRTUAL
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr GraphName = "con"
+        EndBody
+      EndObject
+      !/**
+      !  Used to detect the edge of Cond.
+      !*/
+      Object OldCond $Intern 3
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Boolean"
+        EndBody
+      EndObject
+      !/**
+      !  Status of the last store.
+      !*/
+      Object LastStatus $Intern 4
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr TypeRef = "pwrs:Type-$Status"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the complete name of the extern attribute,
+      !*/
+      Object ExtAttribute $Intern 1
+        Body SysBody
+          Attr PgmName = "ExtAttribute"
+          Attr TypeRef = "pwrs:Type-$String256"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 0
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 15
+        Attr graphindex = 1
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 0
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 65
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 1
+        Attr connectmethod = 0
+        Attr executeordermethod = 2
+        Attr objname = "CStoExtUInt16"
+        Attr graphname = "CStoExtUInt16"
+      EndBody
+    EndObject
+    Object Template CStoExtUInt16
+    EndObject
+  EndObject
+EndSObject

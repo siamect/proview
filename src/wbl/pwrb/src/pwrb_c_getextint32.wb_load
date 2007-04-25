@@ -1,0 +1,113 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_getextint32.wb_load -- Defines the class GetExtInt32.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Group Plc,PlcIO
+!  @Summary Get an extern Int32 value
+!  Get an extern Int32 value.
+!  @image orm_getextint32_fo.gif
+!  
+!  Get the value of an extern attribute that reside in an extern volume.
+!  The value is fetch from the name string, i.e. the attribute does
+!  not have to be known in the development enviroment.
+!*/
+  Object GetExtInt32 $ClassDef 476
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "GetExtInt32"
+      EndBody
+      !/**
+      !  Private pointer to the subscribed value.
+      !*/
+      Object ExtP $Intern 1 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_INVISIBLE
+          Attr Flags |= PWR_MASK_POINTER
+          Attr Flags |= PWR_MASK_PRIVATE
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+      !/**
+      !  The fetched value of the extern attribute.
+      !*/
+      Object ActVal $Output 2 
+        Body SysBody
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "VAL"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      !/**
+      !  Specifies the complete name of the extern attribute.
+      !*/
+      Object ExtAttribute $Intern 1 
+        Body SysBody
+          Attr PgmName = "ExtAttribute"
+          Attr TypeRef = "pwrs:Type-$String256"
+          Attr NiNaAnnot = 1
+        EndBody
+      EndObject
+      Object PlcNode $Buffer 2 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+          Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 0
+        Attr parameters[1] = 1
+        Attr parameters[2] = 1
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 7
+        Attr graphindex = 1
+        Attr default_mask[0] = 0
+        Attr default_mask[1] = 1
+        Attr segname_annotation = 0
+        Attr devbody_annotation = 1
+        Attr compmethod = 64
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+        Attr connectmethod = 0
+        Attr executeordermethod = 0
+        Attr objname = "GetExtInt32"
+        Attr graphname = "GetExtInt32"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template GetExtInt32
+    EndObject
+  EndObject
+EndSObject
