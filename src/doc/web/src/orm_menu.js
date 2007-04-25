@@ -34,6 +34,9 @@ foldersTree = gFld("<b>Object Reference Manual</b>", "../orm_intro.html")
   aux1 = insFld(foldersTree, gFld("<b>Profibus</b>", "profibus_index.html"))
   Profibus(aux1)
 
+  aux1 = insFld(foldersTree, gFld("<b>Opc</b>", "opc_index.html"))
+  Opc(aux1)
+
   aux1 = insFld(foldersTree, gFld("<b>TLog</b>", "tlog_index.html"))
   TLog(aux1)
 
