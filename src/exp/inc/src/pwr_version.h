@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_version.h,v 1.9 2006-09-15 09:32:23 claes Exp $
+ * Proview   $Id: pwr_version.h,v 1.10 2007-04-25 13:41:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,22 +63,22 @@
 # define SET_VERSION(a, b, c, d)  ((pwr_tVersion)((a << 24) + (a << 16) + (a << 8) + a))		  
 #endif
 
-#define pwrv_cBuildTimeStr       "15-SEP-2006 12:00:00"
+#define pwrv_cBuildTimeStr       "25-APR-2007 12:00:00"
 
-#define pwrv_cPwrVersionStr      "V4.3.0"
-#define pwrv_cPwrVersion         SET_VERSION('V', 4, 3, 0)
+#define pwrv_cPwrVersionStr      "V4.4.0"
+#define pwrv_cPwrVersion         SET_VERSION('V', 4, 4, 0)
 
-#define pwrv_cSmdVersion         SET_VERSION('V', 4, 3, 0)
-#define pwrv_cSmdVersionStr      "V4.3.0"
+#define pwrv_cSmdVersion         SET_VERSION('V', 4, 4, 0)
+#define pwrv_cSmdVersionStr      "V4.4.0"
 
-#define pwrv_cBmdVersion         SET_VERSION('V', 4, 3, 0)
-#define pwrv_cBmdVersionStr      "V4.3.0"
+#define pwrv_cBmdVersion         SET_VERSION('V', 4, 4, 0)
+#define pwrv_cBmdVersionStr      "V4.4.0"
 
-#define pwrv_cWbdbVersion        SET_VERSION('V', 4, 3, 0)
-#define pwrv_cWbdbVersionStr     "V4.3.0"
-#define pwrv_cWbdbVersionShortStr "V43"
+#define pwrv_cWbdbVersion        SET_VERSION('V', 4, 4, 0)
+#define pwrv_cWbdbVersionStr     "V4.4.0"
+#define pwrv_cWbdbVersionShortStr "V44"
 
-#define pwrv_cLffVersion         SET_VERSION('V', 4, 3, 0)
-#define pwrv_cLffVersionStr      "V4.3.0"
+#define pwrv_cLffVersion         SET_VERSION('V', 4, 4, 0)
+#define pwrv_cLffVersionStr      "V4.4.0"
 
 #endif
