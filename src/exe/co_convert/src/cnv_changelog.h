@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.h,v 1.3 2007-01-23 13:11:43 claes Exp $
+ * Proview   $Id: cnv_changelog.h,v 1.4 2007-04-25 07:19:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,7 @@ class CnvChangeLog {
   int read( char *module);
   void print();
   void print_docbook();
+  void print_html();
   void sort_time();
   void sort_module();
   void sort_component();

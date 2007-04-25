@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.4 2007-01-23 13:11:43 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.5 2007-04-25 07:19:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   read( "nmps");
   read( "remote");
   read( "profibus");
+  read( "opc");
   read( "java");
   read( "tlog");
   read( "bcomp");
@@ -63,7 +64,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
   read( "inor");
   read( "klocknermoeller");
   print();
-  print_docbook();
+  print_html();
 }
 
 int CnvChangeLog::read( char *module)
@@ -296,6 +297,56 @@ void CnvChangeLog::print_docbook()
 
   }
   fp << "</tbody></table></section></article>" << endl;
+}
+
+void CnvChangeLog::print_html()
+{
+  char timstr1[40];
+  pwr_tFileName fname = "$pwre_croot/src/doc/man/en_us/changelog.html";
+  dcli_translate_filename( fname, fname);
+
+  ofstream fp( fname);
+
+  fp <<
+    "<html>" << endl <<
+    "  <head>" << endl <<
+    "    <link rel=\"stylesheet\" type=\"text/css\" href=\"../pcss.css\">" << endl <<
+    "    <title>Proview Cangelog</title>" << endl <<
+    "  </head>" << endl <<
+    "  <body id=\"news\">" << endl <<
+    "    <div id=\"news\"><p id=\"news\">" << endl <<
+    "    <h1>Proview Changlog</h1>" << endl <<
+    "    <table border=\"1\">" << endl;
+
+  sort_time();
+
+  fp << 
+    "     <tr><td><b>Date</b></td>" << endl <<
+    "         <td><b>Module</b></td>" << endl <<
+    "         <td><b>Change</b></td>" << endl <<
+    "         <td><b>Sign</b></td></tr>" << endl;
+
+  for ( int i = (int) entries.size() - 1; i >= 0; i--) {
+    if ( from) {
+      if ( time_Acomp( &entries[i].time, &from_time) < 0)
+	continue;
+    }
+
+    time_AtoAscii( &entries[i].time, time_eFormat_DateAndTime, timstr1, sizeof(timstr1));
+    timstr1[11] = 0;
+    
+
+
+
+
+    fp << "<tr><td>" << timstr1 << "</td><td>" << entries[i].module << "/" << entries[i].component << "</td>" << endl <<
+      "<td>" << entries[i].text << "</td><td>" << entries[i].signature << "</td></tr>" << endl;
+
+  }
+  fp << 
+    "    </table></div>" << endl << 
+    "  </body>" << endl <<
+    "</html>" << endl;
 }
 
 
