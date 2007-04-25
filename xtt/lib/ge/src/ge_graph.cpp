@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.37 2007-03-15 15:42:03 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.38 2007-04-25 13:36:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,9 +63,11 @@ static const    graph_sTypeStr	graph_type_table[] = {
     {"Int8",	pwr_eType_Int8,	    sizeof(pwr_tInt8)},
     {"Int16",	pwr_eType_Int16,    sizeof(pwr_tInt16)},
     {"Int32",	pwr_eType_Int32,    sizeof(pwr_tInt32)},
+    {"Int64",	pwr_eType_Int64,    sizeof(pwr_tInt64)},
     {"UInt8",	pwr_eType_UInt8,    sizeof(pwr_tUInt8)},
     {"UInt16",	pwr_eType_UInt16,   sizeof(pwr_tUInt16)},
     {"UInt32",	pwr_eType_UInt32,   sizeof(pwr_tUInt32)},
+    {"UInt64",	pwr_eType_UInt64,   sizeof(pwr_tUInt64)},
     {"Objid",	pwr_eType_Objid,    sizeof(pwr_tObjid)},
     {"Time",	pwr_eType_Time,     sizeof(pwr_tTime)},
     {"DeltaTime", pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},
@@ -3904,6 +3906,11 @@ void  Graph::string_to_type( char *type_str, pwr_eType *type,
     else
       *size = atoi( str + 6);
   }
+  if ( !found && strncmp("BIT", str, 3) == 0) 
+  {
+    *type = (pwr_eType) graph_eType_Bit;
+    *size = 4;
+  }
 
   if ( *elements > 1)
     *size *= *elements;
@@ -4333,6 +4340,12 @@ int  graph_attr_string_to_value( int type_id, char *value_str,
         return GE__INPUT_SYNTAX;
       break;
     }
+    case pwr_eType_Int64:
+    {
+      if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+        return GE__INPUT_SYNTAX;
+      break;
+    }
     case pwr_eType_UInt8:
     {
       pwr_tUInt8 	i8;
@@ -4354,6 +4367,12 @@ int  graph_attr_string_to_value( int type_id, char *value_str,
     case pwr_eType_Enum:
     {
       if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+        return GE__INPUT_SYNTAX;
+      break;
+    }
+    case pwr_eType_UInt64:
+    {
+      if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
         return GE__INPUT_SYNTAX;
       break;
     }

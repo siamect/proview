@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.31 2007-01-17 06:20:38 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.32 2007-04-25 13:36:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -869,10 +869,12 @@ class GeDigColor : public GeDynElem {
   int inverted;
   bool first_scan;
   pwr_tBoolean old_value;
+  int a_typeid;
+  unsigned int bitmask;
 
   GeDigColor( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
     GeDynElem(e_dyn, ge_mDynType_DigColor, (ge_mActionType) 0, ge_eDynPrio_DigColor),
-    color(glow_eDrawType_Inherit)
+    color(glow_eDrawType_Inherit), bitmask(0)
     { strcpy( attribute, ""); instance = e_instance;}
   GeDigColor( const GeDigColor& x) : 
     GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), color(x.color)
