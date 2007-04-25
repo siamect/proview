@@ -319,6 +319,11 @@ sub build_all_wbl ()
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
+  _module("opc");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "src", "lib");
+  merge();
   _module("remote");
   my($load_dir) = $ENV{"pwr_load"};
   system( "rm $load_dir/*.dbs");
