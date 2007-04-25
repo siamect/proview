@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.56 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.57 2007-04-25 07:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,12 +52,16 @@ static wbl_sSym datatypes[] =
   ,{ "pwr_eTix_Int16", pwr_eTix_Int16 }
   ,{ "pwr_eType_Int32", pwr_eType_Int32 }
   ,{ "pwr_eTix_Int32", pwr_eTix_Int32 }
+  ,{ "pwr_eType_Int64", pwr_eType_Int64 }
+  ,{ "pwr_eTix_Int64", pwr_eTix_Int64 }
   ,{ "pwr_eType_UInt8", pwr_eType_UInt8 }
   ,{ "pwr_eTix_UInt8", pwr_eTix_UInt8 }
   ,{ "pwr_eType_UInt16", pwr_eType_UInt16 }
   ,{ "pwr_eTix_UInt16", pwr_eTix_UInt16 }
   ,{ "pwr_eType_UInt32", pwr_eType_UInt32 }
   ,{ "pwr_eTix_UInt32", pwr_eTix_UInt32 }
+  ,{ "pwr_eType_UInt64", pwr_eType_UInt64 }
+  ,{ "pwr_eTix_UInt64", pwr_eTix_UInt64 }
 /*  ,{ "pwr_eType_ObjDId", pwr_eType_ObjDId } */
 /*  ,{ "pwr_eTix_ObjDId", pwr_eTix_ObjDId } */
   ,{ "pwr_eType_Buffer", pwr_eType_Buffer }
