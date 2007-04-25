@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.49 2007-02-05 09:40:39 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.50 2007-04-25 07:31:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2607,6 +2607,38 @@ int GeInvisible::scan( grow_tObject object)
     }
     old_value = *p;
     break;
+  case pwr_eType_Float32: {
+    pwr_tFloat32 *fp_old = (pwr_tFloat32 *) &old_value;
+
+    if ( !first_scan) {
+      if ( fabs( *(pwr_tFloat32 *)p - *fp_old) < FLT_EPSILON && !dyn->reset_invisible) {
+	// No change since last time
+	if ( (!inverted && fabs( *(pwr_tFloat32 *)p) > FLT_EPSILON) || 
+	     (inverted && fabs( *(pwr_tFloat32 *)p) < FLT_EPSILON))
+	  dyn->ignore_invisible = true;
+	return 1;
+      }
+    }
+    else
+      first_scan = false;
+
+    if ( (!inverted && fabs( *(pwr_tFloat32 *)p) < FLT_EPSILON) || 
+	 (inverted && fabs( *(pwr_tFloat32 *)p) > FLT_EPSILON)) {
+      grow_SetObjectVisibility( object, glow_eVis_Visible);
+      dyn->reset_color = true;
+      dyn->reset_invisible = true;
+    }
+    else {
+      if ( dimmed)
+	grow_SetObjectVisibility( object, glow_eVis_Dimmed);
+      else
+	grow_SetObjectVisibility( object, glow_eVis_Invisible);
+      dyn->ignore_color = true;
+      dyn->ignore_invisible = true;
+    }
+    *fp_old = *(pwr_tFloat32 *)p;
+    break;
+  }
   case graph_eType_Bit: {
     pwr_tBoolean val = ((*p & bitmask) != 0);
 
