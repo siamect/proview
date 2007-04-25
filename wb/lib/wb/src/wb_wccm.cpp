@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wccm.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wccm.cpp,v 1.2 2007-04-25 07:29:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -294,6 +294,102 @@ static int wccm_getnextsibling_func(
   if ( ODD(sts))
   {
     sts = ldh_GetNextSibling ( ldhses, objid, &next_objid);
+    if (ODD(sts))
+      sts = ldh_ObjidToName( ldhses, next_objid, 
+		ldh_eName_Hierarchy, name, sizeof( name), &size);
+  }
+
+  if ( ODD(sts))
+    strcpy( return_string, name);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int wccm_getclasslist_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tOName   	name;
+  pwr_tCid	cid;
+  pwr_tObjid	oid;
+  int		size;
+  ldh_tSesContext ldhses;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts))
+  {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = ldh_ClassNameToId( ldhses, &cid, arg_list->value_string);
+  if ( ODD(sts))
+  {
+    sts = ldh_GetClassList( ldhses, cid, &oid);
+    if (ODD(sts))
+      sts = ldh_ObjidToName( ldhses, oid, 
+		ldh_eName_Hierarchy, name, sizeof( name), &size);
+  }
+
+  if ( ODD(sts))
+    strcpy( return_string, name);
+  else
+    strcpy( return_string, "");
+  *return_decl = CCM_DECL_STRING;
+  
+  return 1;
+}
+
+static int wccm_getnextobject_func( 
+  void *filectx,
+  ccm_s_arg *arg_list, 
+  int arg_count,
+  int *return_decl, 
+  float *return_float, 
+  int *return_int, 
+  char *return_string)
+{
+  int		sts;
+  pwr_tOName   	name;
+  pwr_tObjid	objid;
+  pwr_tObjid	next_objid;
+  int		size;
+  ldh_tSesContext ldhses;
+
+  sts = wccm_get_ldhses( &ldhses);
+  if ( EVEN(sts))
+  {
+    strcpy( return_string, "");
+    *return_decl = CCM_DECL_STRING;
+    return CMD__NOVOLATTACHED;
+  }
+
+  if ( arg_count != 1)
+    return CCM__ARGMISM;
+
+  if ( arg_list->value_decl != CCM_DECL_STRING)
+    return CCM__ARGMISM;
+
+  sts = ldh_NameToObjid( ldhses, &objid, arg_list->value_string);
+  if ( ODD(sts))
+  {
+    sts = ldh_GetNextObject( ldhses, objid, &next_objid);
     if (ODD(sts))
       sts = ldh_ObjidToName( ldhses, next_objid, 
 		ldh_eName_Hierarchy, name, sizeof( name), &size);
@@ -779,6 +875,10 @@ int	wccm_register(
     sts = ccm_register_function( "GetParent", wccm_getparent_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetNextSibling", wccm_getnextsibling_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetClassList", wccm_getclasslist_func);
+    if ( EVEN(sts)) return sts;
+    sts = ccm_register_function( "GetNextObject", wccm_getnextobject_func);
     if ( EVEN(sts)) return sts;
     sts = ccm_register_function( "GetRootList", wccm_getrootlist_func);
     if ( EVEN(sts)) return sts;
