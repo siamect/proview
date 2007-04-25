@@ -1844,7 +1844,7 @@ The Configurator
 
 The configurator is used to navigate in and configure the Workbench.
 The configurator displayes the object in one volume. The objects are usually separated in two
-windows, a uppper and a lower, and how the separation is done depends on what type of volumes
+windows, an upper and a lower, and how the separation is done depends on what type of volumes
 is handled.
 
 - For rootvolumes and subvolumes, the plant hierarchy is displayed in the upper window, and

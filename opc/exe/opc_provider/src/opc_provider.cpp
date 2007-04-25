@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.10 2007-04-05 13:32:03 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.11 2007-04-25 07:17:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1258,16 +1258,11 @@ int main(int argc, char *argv[])
   /* Read arguments */
   if ( argc < 4) {
     usage();
-    strcpy( server_url, "http://linuxlab1:18083");
-    strcpy( extern_vid, "0.1.99.55");
-    strcpy( extern_volume_name, "MyOpcVolume");
-    // exit(0);
+    exit(0);
   }
-  else {
   strcpy( server_url, argv[1]);
   strcpy( extern_vid, argv[2]);
   strcpy( extern_volume_name, argv[3]);
-  }
 
   if ( argc >= 5) {
     sts = sscanf( argv[4], "%d", &server_id);
