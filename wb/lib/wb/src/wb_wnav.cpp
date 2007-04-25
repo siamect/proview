@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.36 2007-01-24 12:40:55 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.37 2007-04-25 07:31:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -908,7 +908,7 @@ int WNav::get_select( pwr_sAttrRef **attrref, int **is_attr, int *cnt)
         free( (char *) *attrref);
       continue;
     }
-    sts = ldh_ObjidToName( ldhses, item->objid, ldh_eName_Hierarchy,
+    sts = ldh_ObjidToName( ldhses, item->objid, ldh_eName_VolPath,
 	    	attr_str, sizeof(attr_str), &size);
     if ( EVEN(sts)) return sts;
 
