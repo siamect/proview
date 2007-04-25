@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_procom.cpp,v 1.1 2006-09-14 14:16:20 claes Exp $
+ * Proview   $Id: wb_procom.cpp,v 1.2 2007-04-25 13:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -154,7 +154,7 @@ void wb_procom::dispatch( vext_sQMsg *qmsg)
     break;
   case vext_eMsgType_ObjectName:
     // printf( "ObjectName %s\n", qmsg->ObjectName.Name);
-    m_provider->objectName( this, qmsg->ObjectName.Name);
+    m_provider->objectName( this, qmsg->ObjectName.Name, 0);
     break;
   case vext_eMsgType_CreateObject:
     // printf( "CreateObject %s\n", qmsg->CreateObject.Name);
