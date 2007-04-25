@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.11 2007-04-25 07:17:55 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.12 2007-04-25 13:42:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -152,8 +152,8 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	o->po.cid = pwr_cClass_Opc_Long;
 	o->po.body_size = sizeof(pwr_sClass_Opc_Long);
 	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_Int32;
-	o->size = sizeof( pwr_tInt32);
+	o->type = pwr_eType_Int64;
+	o->size = sizeof( pwr_tInt64);
 	((pwr_sClass_Opc_Long *)o->po.body)->HighEU = 100;
 	break;
       case opc_eDataType_int:
@@ -184,8 +184,8 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	o->po.cid = pwr_cClass_Opc_UnsignedLong;
 	o->po.body_size = sizeof(pwr_sClass_Opc_UnsignedLong);
 	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt32;
-	o->size = sizeof( pwr_tUInt32);
+	o->type = pwr_eType_UInt64;
+	o->size = sizeof( pwr_tUInt64);
 	((pwr_sClass_Opc_UnsignedLong *)o->po.body)->HighEU = 100;
 	break;
       case opc_eDataType_unsignedInt:
@@ -216,8 +216,8 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
 	o->po.cid = pwr_cClass_Opc_Base64Binary;
 	o->po.body_size = sizeof(pwr_sClass_Opc_Base64Binary);
 	o->po.body = calloc( 1, o->po.body_size);
-	o->type = pwr_eType_UInt32;
-	o->size = 2 * sizeof( pwr_tUInt32);
+	o->type = pwr_eType_UInt64;
+	o->size = sizeof( pwr_tUInt64);
 	break;
       case opc_eDataType_dateTime:
 	o->po.cid = pwr_cClass_Opc_DateTime;

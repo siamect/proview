@@ -794,12 +794,12 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         !/**
-        !  Item value, presented as a pwr_tInt32.
+        !  Item value.
         !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.91
-          Body SysBody 01-MAR-2007 16:53:11.79
+          Body SysBody 25-APR-2007 11:32:18.97
             Attr PgmName = "Value"
-            Attr TypeRef = "pwrs:Type-$Int32"
+            Attr TypeRef = "pwrs:Type-$Int64"
           EndBody
         EndObject
         !/**
@@ -1234,12 +1234,12 @@ Volume Opc $ClassVolume 0.0.250.9
           EndBody
         EndObject
         !/**
-        !  Item value, presented as a pwr_tUInt32.
+        !  Item value.
         !*/
         Object Value $Attribute 2 01-MAR-2007 16:50:27.27
-          Body SysBody 01-MAR-2007 16:55:57.73
+          Body SysBody 25-APR-2007 11:32:58.76
             Attr PgmName = "Value"
-            Attr TypeRef = "pwrs:Type-$UInt32"
+            Attr TypeRef = "pwrs:Type-$UInt64"
           EndBody
         EndObject
         !/**
