@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.49 2007-01-17 10:29:26 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.50 2007-04-25 13:40:20 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -939,7 +939,7 @@ void wb_erep::bindMethods()
     delete cdrep;
   }
 
-#if DEBUG
+#if PWR_DEBUG
   for (  methods_iterator it = m_methods.begin(); it != m_methods.end(); it++) {
     cout << " Method: " << it->first << endl;
   }
