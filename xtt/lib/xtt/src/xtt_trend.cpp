@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend.cpp,v 1.9 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_trend.cpp,v 1.10 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -212,6 +212,8 @@ XttTrend::XttTrend( void *parent_ctx,
         element_size[i] = 4;
         break;
       case pwr_eType_Float64:
+      case pwr_eType_Int64:
+      case pwr_eType_UInt64:
         element_size[i] = 8;
         break;
       case pwr_eType_Int16:

@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_dcli_struct.c,v 1.2 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_dcli_struct.c,v 1.3 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -575,6 +575,11 @@ static int add_element( 	t_ctx		ctx,
 	  type = pwr_eType_Int32;
 	  size = sizeof(pwr_tInt32);
 	}
+	else if ( strcmp( line_elem[0], "pwr_tInt64") == 0)
+	{
+	  type = pwr_eType_Int64;
+	  size = sizeof(pwr_tInt64);
+	}
 	else if ( strcmp( line_elem[0], "pwr_tUInt8") == 0)
 	{
 	  type = pwr_eType_UInt8;
@@ -589,6 +594,11 @@ static int add_element( 	t_ctx		ctx,
 	{
 	  type = pwr_eType_UInt32;
 	  size = sizeof(pwr_tUInt32);
+	}
+	else if ( strcmp( line_elem[0], "pwr_tUInt64") == 0)
+	{
+	  type = pwr_eType_UInt64;
+	  size = sizeof(pwr_tUInt64);
 	}
 	else if ( strcmp( line_elem[0], "pwr_tObjDId") == 0)
 	{

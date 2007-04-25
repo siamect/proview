@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr.h,v 1.26 2007-04-25 07:20:02 claes Exp $
+ * Proview   $Id: pwr.h,v 1.27 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,26 +151,29 @@ typedef int             pwr_tInt32;		//!< 32-bit integer type.
 /*_*
   @aref int64 Int64
 */
-#if defined OS_LINUX
-  typedef long long int pwr_tInt64;
-#else
 typedef struct {
   unsigned int low;
   int          high;
-} pwr_tInt64;
+} __pwr_tInt64;
+#if defined OS_LINUX
+typedef long long int pwr_tInt64;
+#else
+typedef __pwr_tInt64 pwr_tInt64;
 #endif
 
 //! 64-bit unsigned integer type.
 /*_*
   @aref uint64 UInt64
 */
-#if defined OS_LINUX
-typedef unsigned long long int pwr_tUInt64;
-#else
 typedef struct {
   unsigned int low;
   unsigned int high;
-} pwr_tUInt64;
+} __pwr_tUInt64;
+
+#if defined OS_LINUX
+typedef unsigned long long int pwr_tUInt64;
+#else
+typedef __pwr_tUInt64 pwr_tUInt64;
 #endif
 /*_*
   @aref uint8 UInt8

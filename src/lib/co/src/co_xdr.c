@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_xdr.c,v 1.5 2005-12-13 15:13:13 claes Exp $
+ * Proview   $Id: co_xdr.c,v 1.6 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -262,8 +262,8 @@ xdr_pwr_tInt32(XDR *xdrs, pwr_tInt32 *objp)
 bool_t
 xdr_pwr_tInt64(XDR *xdrs, pwr_tInt64 *objp)
 {
-  if (!xdr_int(xdrs, (int *)&objp->low)) return FALSE;
-  if (!xdr_int(xdrs, &objp->high)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&((__pwr_tInt64 *)objp)->low)) return FALSE;
+  if (!xdr_int(xdrs, &((__pwr_tInt64 *)objp)->high)) return FALSE;
 
   return TRUE;
 }
@@ -293,8 +293,8 @@ xdr_pwr_tUInt32(XDR *xdrs, pwr_tUInt32 *objp)
 bool_t
 xdr_pwr_tUInt64(XDR *xdrs, pwr_tUInt64 *objp)
 {
-  if (!xdr_int(xdrs, (int *)&objp->low)) return FALSE;
-  if (!xdr_int(xdrs, (int *)&objp->high)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&((__pwr_tUInt64 *)objp)->low)) return FALSE;
+  if (!xdr_int(xdrs, (int *)&((__pwr_tUInt64 *)objp)->high)) return FALSE;
 
   return TRUE;
 }

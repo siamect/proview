@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.29 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.30 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -5372,6 +5372,12 @@ static int xnav_attribute_func (
 	    decl = CCM_DECL_INT;
             break;
           }
+          case pwr_eType_Int64:
+          {
+	    int_val = *(pwr_tInt64 *)object_element;
+	    decl = CCM_DECL_INT;
+            break;
+          }
           case pwr_eType_UInt8:
           {
 	    int_val = *(pwr_tUInt8 *)object_element;
@@ -5392,6 +5398,12 @@ static int xnav_attribute_func (
 	  case pwr_eType_ObjectIx:
           {
 	    int_val = *(pwr_tUInt32 *)object_element;
+	    decl = CCM_DECL_INT;
+            break;
+          }
+	  case pwr_eType_UInt64:
+          {
+	    int_val = *(pwr_tUInt64 *)object_element;
 	    decl = CCM_DECL_INT;
             break;
           }

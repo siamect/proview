@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_command.c,v 1.9 2006-07-26 10:54:54 claes Exp $
+ * Proview   $Id: rt_rtt_command.c,v 1.10 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -9127,6 +9127,12 @@ static int	rtt_set_parameter(
 	      value_syntax_error = 1;
 	    break;
 	  }
+	  case pwr_eType_Int64:
+	  {
+	    if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+	      value_syntax_error = 1;
+	    break;
+	  }
 	  case pwr_eType_UInt8:
 	  {
 	    pwr_tUInt16 	ui16 ;
@@ -9149,6 +9155,12 @@ static int	rtt_set_parameter(
 	  case pwr_eType_UInt32:
 	  {
 	    if ( sscanf( value_str, "%d", (pwr_tUInt32 *)buffer_ptr) != 1)
+	      value_syntax_error = 1;
+	    break;
+	  }
+	  case pwr_eType_UInt64:
+	  {
+	    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
 	      value_syntax_error = 1;
 	    break;
 	  }
@@ -10026,6 +10038,11 @@ static int	rtt_print_restore_item_upd(
 	    fprintf( outfile,  "%d\n", *(int *)value_ptr);
 	    break;
 	  }
+	  case pwr_eType_Int64:
+	  {
+	    fprintf( outfile,  "%lld\n", *(pwr_tInt64 *)value_ptr);
+	    break;
+	  }
 	  case pwr_eType_UInt8:
 	  {
 	    fprintf( outfile,  "%d\n", *(unsigned char *)value_ptr);
@@ -10039,6 +10056,11 @@ static int	rtt_print_restore_item_upd(
 	  case pwr_eType_UInt32:
 	  {
 	    fprintf( outfile,  "%lu\n", *(unsigned long *)value_ptr);
+	    break;
+	  }
+	  case pwr_eType_UInt64:
+	  {
+	    fprintf( outfile,  "%llu\n", *(pwr_tUInt64 *)value_ptr);
 	    break;
 	  }
 	  case pwr_eType_String:
@@ -10179,6 +10201,11 @@ static int	rtt_print_item_upd(
 	      fprintf( outfile,  "%d\n", *(int *)value_ptr);
 	      break;
 	    }
+	    case pwr_eType_Int64:
+	    {
+	      fprintf( outfile,  "%lld\n", *(pwr_tInt64 *)value_ptr);
+	      break;
+	    }
 	    case pwr_eType_UInt8:
 	    {
 	      fprintf( outfile,  "%d\n", *(unsigned char *)value_ptr);
@@ -10192,6 +10219,11 @@ static int	rtt_print_item_upd(
 	    case pwr_eType_UInt32:
 	    {
 	      fprintf( outfile,  "%lu\n", *(unsigned long *)value_ptr);
+	      break;
+	    }
+	    case pwr_eType_UInt64:
+	    {
+	      fprintf( outfile,  "%llu\n", *(pwr_tUInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:

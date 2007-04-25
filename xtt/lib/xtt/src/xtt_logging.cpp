@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.6 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.7 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -312,6 +312,8 @@ int XttLogging::logging_set(
 	        case pwr_eType_UInt16:
 	        case pwr_eType_Int32:
 	        case pwr_eType_UInt32:
+	        case pwr_eType_Int64:
+	        case pwr_eType_UInt64:
 	        case pwr_eType_Objid:
 	        case pwr_eType_AttrRef:
 	        case pwr_eType_Time:
@@ -982,6 +984,12 @@ static void	*xtt_logproc( void *arg)
 	            case pwr_eType_UInt32:
 	              char_cnt += logg->log_print( "	%d", *(pwr_tUInt32 *)value_ptr);
 	              break;
+	            case pwr_eType_Int64:
+	              char_cnt += logg->log_print( "	%lld", *(pwr_tInt64 *)value_ptr);
+	              break;
+	            case pwr_eType_UInt64:
+	              char_cnt += logg->log_print( "	%llu", *(pwr_tUInt64 *)value_ptr);
+	              break;
 	            case pwr_eType_Objid:
 	              objid = *(pwr_tObjid *)value_ptr;
 	              if ( !objid.oix)
@@ -1180,6 +1188,36 @@ static void	*xtt_logproc( void *arg)
 	                logg->log_print( "	%d\n", *(pwr_tInt32 *)value_ptr);
 	                *(pwr_tInt32 *)old_value_ptr = 
 				*(pwr_tInt32 *)value_ptr;
+	              }
+	              break;
+	            case pwr_eType_UInt64:
+	              if ( (*(pwr_tUInt64 *)value_ptr != 
+				*(pwr_tUInt64 *)old_value_ptr) || first_scan)
+	              {
+	                /* Value is changed, print */
+	                time_AtoAscii( &time, time_eFormat_DateAndTime, 
+				time_str, sizeof(time_str));
+	                logg->log_print( "%s", &time_str);
+	                logg->log_print( "	%s",  
+				&(logg->parameterstr[i]));
+	                logg->log_print( "	%llu\n", *(pwr_tUInt64 *)value_ptr);
+	                *(pwr_tUInt64 *)old_value_ptr = 
+				*(pwr_tUInt64 *)value_ptr;
+	              }
+	              break;
+	            case pwr_eType_Int64:
+	              if ( (*(pwr_tInt64 *)value_ptr != 
+				*(pwr_tInt64 *)old_value_ptr) || first_scan)
+	              {
+	                /* Value is changed, print */
+	                time_AtoAscii( &time, time_eFormat_DateAndTime, 
+				time_str, sizeof(time_str));
+	                logg->log_print( "%s", &time_str);
+	                logg->log_print( "	%s",  
+				&(logg->parameterstr[i]));
+	                logg->log_print( "	%lld\n", *(pwr_tInt64 *)value_ptr);
+	                *(pwr_tInt64 *)old_value_ptr = 
+				*(pwr_tInt64 *)value_ptr;
 	              }
 	              break;
 	            case pwr_eType_Objid:

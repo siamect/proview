@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_fast.cpp,v 1.5 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_fast.cpp,v 1.6 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -281,6 +281,10 @@ void fastobject::scan()
 	  break;
 	case pwr_eType_Float64:
 	  ((pwr_tFloat64 *)buffers[i])[current_index] = *(pwr_tFloat64 *)attributes[i];
+	  break;
+	case pwr_eType_UInt64:
+	case pwr_eType_Int64:
+	  ((pwr_tInt64 *)buffers[i])[current_index] = *(pwr_tInt64 *)attributes[i];
 	  break;
 	case pwr_eType_UInt32:
 	case pwr_eType_Int32:

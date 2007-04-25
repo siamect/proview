@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_fast.cpp,v 1.8 2007-01-04 08:22:46 claes Exp $
+ * Proview   $Id: xtt_fast.cpp,v 1.9 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -137,6 +137,8 @@ XttFast::XttFast( void *parent_ctx,
         element_size[i] = 4;
         break;
       case pwr_eType_Float64:
+      case pwr_eType_Int64:
+      case pwr_eType_UInt64:
         element_size[i] = 8;
         break;
       case pwr_eType_Int16:
@@ -286,6 +288,12 @@ void XttFast::fast_scan( void *data)
 	  case pwr_eType_Float64:
 	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[k];
 	    break;
+	  case pwr_eType_Int64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[k];
+	    break;
+	  case pwr_eType_UInt64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[k];
+	    break;
 	  case pwr_eType_Int32:
 	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[k];
 	    break;
@@ -319,6 +327,12 @@ void XttFast::fast_scan( void *data)
 	    break;
 	  case pwr_eType_Float64:
 	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[k];
+	    break;
+	  case pwr_eType_Int64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[k];
+	    break;
+	  case pwr_eType_UInt64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[k];
 	    break;
 	  case pwr_eType_Int32:
 	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[k];
@@ -356,6 +370,12 @@ void XttFast::fast_scan( void *data)
 	    break;
 	  case pwr_eType_Float64:
 	    fast->gcd->data[i + 1][j] = ((pwr_tFloat64 *)tmp)[j];
+	    break;
+	  case pwr_eType_Int64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tInt64 *)tmp)[j];
+	    break;
+	  case pwr_eType_UInt64:
+	    fast->gcd->data[i + 1][j] = ((pwr_tUInt64 *)tmp)[j];
 	    break;
 	  case pwr_eType_Int32:
 	    fast->gcd->data[i + 1][j] = ((pwr_tInt32 *)tmp)[j];

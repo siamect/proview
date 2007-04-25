@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_selformat.cpp,v 1.5 2005-10-25 15:28:11 claes Exp $
+ * Proview   $Id: wb_wnav_selformat.cpp,v 1.6 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,9 +42,11 @@ static int wnav_type_to_string(
     {"Int8",	pwr_eType_Int8,	    sizeof(pwr_tInt8)},
     {"Int16",	pwr_eType_Int16,    sizeof(pwr_tInt16)},
     {"Int32",	pwr_eType_Int32,    sizeof(pwr_tInt32)},
+    {"Int64",	pwr_eType_Int64,    sizeof(pwr_tInt64)},
     {"UInt8",	pwr_eType_UInt8,    sizeof(pwr_tUInt8)},
     {"UInt16",	pwr_eType_UInt16,   sizeof(pwr_tUInt16)},
     {"UInt32",	pwr_eType_UInt32,   sizeof(pwr_tUInt32)},
+    {"UInt64",	pwr_eType_UInt64,   sizeof(pwr_tUInt64)},
     {"Objid",	pwr_eType_Objid,    sizeof(pwr_tObjid)},
     {"Time",	pwr_eType_Time,     sizeof(pwr_tTime)},
     {"DeltaTime", pwr_eType_DeltaTime, sizeof(pwr_tDeltaTime)},

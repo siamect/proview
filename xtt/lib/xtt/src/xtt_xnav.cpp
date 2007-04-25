@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.32 2007-01-17 10:34:50 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.33 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -275,6 +275,11 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
       return XNAV__INPUT_SYNTAX;
     break;
   }
+  case pwr_eType_Int64: {
+    if ( sscanf( value_str, "%lld", ( pwr_tInt64 *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
   case pwr_eType_UInt8: {
     pwr_tUInt8 	i8;
     pwr_tUInt16	i16;
@@ -294,6 +299,11 @@ int XNav::attr_string_to_value( int type_id, char *value_str,
   case pwr_eType_Enum:
   case pwr_eType_DisableAttr: {
     if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return XNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt64: {
+    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
       return XNAV__INPUT_SYNTAX;
     break;
   }
@@ -467,6 +477,13 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = sprintf( str, format, *(int *)value_ptr);
     break;
   }
+  case pwr_eType_Int64: {
+    if ( !format)
+      *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
+    break;
+  }
   case pwr_eType_UInt8: {
     if ( !format)
       *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
@@ -488,6 +505,13 @@ void XNav::attrvalue_to_string( int type_id, pwr_tTid tid, void *value_ptr,
       *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
     else
       *len = sprintf( str, format, *(unsigned int *)value_ptr);
+    break;
+  }
+  case pwr_eType_UInt64: {
+    if ( !format)
+      *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+    else
+      *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
     break;
   }
   case pwr_eType_Enum: {
@@ -1445,9 +1469,11 @@ static void  xnav_type_id_to_name( int type_id, char *type_id_name)
     case pwr_eType_Int8: strcpy( type_id_name, "Int8"); break;
     case pwr_eType_Int16: strcpy( type_id_name, "Int16"); break;
     case pwr_eType_Int32: strcpy( type_id_name, "Int32"); break;
+    case pwr_eType_Int64: strcpy( type_id_name, "Int64"); break;
     case pwr_eType_UInt8: strcpy( type_id_name, "UInt8"); break;
     case pwr_eType_UInt16: strcpy( type_id_name, "UInt16"); break;
     case pwr_eType_UInt32: strcpy( type_id_name, "UInt32"); break;
+    case pwr_eType_UInt64: strcpy( type_id_name, "UInt64"); break;
     case pwr_eType_Objid: strcpy( type_id_name, "Objid"); break;
     case pwr_eType_Buffer: strcpy( type_id_name, "Buffer"); break;
     case pwr_eType_String: strcpy( type_id_name, "String"); break;

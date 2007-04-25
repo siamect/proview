@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.37 2007-04-25 07:31:12 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.38 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,6 +109,11 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
       return WNAV__INPUT_SYNTAX;
     break;
   }
+  case pwr_eType_Int64: {
+    if ( sscanf( value_str, "%lld", (long long int *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
   case pwr_eType_UInt8: {
     pwr_tUInt8 	i8;
     pwr_tUInt16	i16;
@@ -126,6 +131,11 @@ int  wnav_attr_string_to_value( ldh_tSesContext ldhses, int type_id, char *value
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr: {
     if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
+      return WNAV__INPUT_SYNTAX;
+    break;
+  }
+  case pwr_eType_UInt64: {
+    if ( sscanf( value_str, "%llu", (unsigned long long *)buffer_ptr) != 1)
       return WNAV__INPUT_SYNTAX;
     break;
   }
@@ -299,19 +309,29 @@ void  wnav_attrvalue_to_string( ldh_tSesContext ldhses, int type_id, void *value
     *buff = str;
     break;
   }
+  case pwr_eType_Int64: {
+    *len = sprintf( str, "%lld", *(long long int *)value_ptr);
+    *buff = str;
+    break;
+  }
   case pwr_eType_UInt8: {
-    *len = sprintf( str, "%d", *(unsigned char *)value_ptr);
+    *len = sprintf( str, "%u", *(unsigned char *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt16: {
-    *len = sprintf( str, "%hd", *(unsigned short *)value_ptr);
+    *len = sprintf( str, "%hu", *(unsigned short *)value_ptr);
     *buff = str;
     break;
   }
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr: {
-    *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
+    *len = sprintf( str, "%u", *(unsigned int *)value_ptr);
+    *buff = str;
+    break;
+  }
+  case pwr_eType_UInt64: {
+    *len = sprintf( str, "%llu", *(unsigned long long int *)value_ptr);
     *buff = str;
     break;
   }

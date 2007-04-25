@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.18 2007-01-23 13:13:51 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.19 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -535,9 +535,11 @@ void wb_print_wbl::printParameter(wb_volume& v,
     case pwr_eType_Int8:
     case pwr_eType_Int16:
     case pwr_eType_Int32:
+    case pwr_eType_Int64:
     case pwr_eType_UInt8:
     case pwr_eType_UInt16:
     case pwr_eType_UInt32:
+    case pwr_eType_UInt64:
     case pwr_eType_Objid:
     case pwr_eType_TypeId:
     case pwr_eType_CastId:
@@ -672,6 +674,9 @@ bool wb_print_wbl::printValue (wb_volume& v,
   case pwr_eType_Int32:
     sprintf(sval, "%d", *(pwr_tInt32 *) val);
     break;
+  case pwr_eType_Int64:
+    sprintf(sval, "%lld", *(pwr_tInt64 *) val);
+    break;
   case pwr_eType_UInt8:
     sprintf(sval, "%u", *(pwr_tUInt8 *) val);
     break;
@@ -681,6 +686,9 @@ bool wb_print_wbl::printValue (wb_volume& v,
   case pwr_eType_UInt32:
   case pwr_eType_DisableAttr:
     sprintf(sval, "%u", *(pwr_tUInt32 *) val);
+    break;
+  case pwr_eType_UInt64:
+    sprintf(sval, "%llu", *(pwr_tUInt64 *) val);
     break;
   case pwr_eType_Mask:
     sprintf(sval, "%u", *(pwr_tUInt32 *) val);

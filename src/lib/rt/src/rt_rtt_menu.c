@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_menu.c,v 1.11 2006-01-13 06:40:47 claes Exp $
+ * Proview   $Id: rt_rtt_menu.c,v 1.12 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -5267,6 +5267,11 @@ static int	rtt_print_value(
 	      r_print( "%d", *(int *)value_ptr);
 	      break;
 	    }
+	    case pwr_eType_Int64:
+	    {
+	      r_print( "%lld", *(pwr_tInt64 *)value_ptr);
+	      break;
+	    }
 	    case pwr_eType_UInt8:
 	    {
 	      r_print( "%d", *(unsigned char *)value_ptr);
@@ -5282,6 +5287,11 @@ static int	rtt_print_value(
 	    case pwr_eType_Enum:
 	    {
 	      r_print( "%d", *(unsigned long *)value_ptr);
+	      break;
+	    }
+	    case pwr_eType_UInt64:
+	    {
+	      r_print( "%llu", *(pwr_tUInt64 *)value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -5765,6 +5775,14 @@ static int	rtt_edit_print_value(
 	        r_print( "%d", *(int *)menu_ptr->value_ptr);
 	      break;
 	    }
+	    case pwr_eType_Int64:
+	    {
+	      if ( menu_ptr->characters > 0)
+	        r_print( "%*lld", menu_ptr->characters, *(pwr_tInt64 *)menu_ptr->value_ptr);
+	      else
+	        r_print( "%lld", *(pwr_tInt64 *)menu_ptr->value_ptr);
+	      break;
+	    }
 	    case pwr_eType_UInt8:
 	    {
 	      if ( menu_ptr->characters > 0)
@@ -5792,6 +5810,15 @@ static int	rtt_edit_print_value(
 			*(unsigned long *)menu_ptr->value_ptr);
 	      else
 	        r_print( "%d", *(unsigned long *)menu_ptr->value_ptr);
+	      break;
+	    }
+	    case pwr_eType_UInt64:
+	    {
+	      if ( menu_ptr->characters > 0)
+	        r_print( "%*lld", menu_ptr->characters, 
+			*(pwr_tUInt64 *)menu_ptr->value_ptr);
+	      else
+	        r_print( "%lld", *(pwr_tUInt64 *)menu_ptr->value_ptr);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -7520,6 +7547,20 @@ static int	rtt_set_value(
 	    }
 	    break;
 	  }
+	  case pwr_eType_Int64:
+	  {
+	    size = sizeof(pwr_tInt64);
+	    if ( sscanf( value_str, "%lld", (pwr_tInt64 *)buffer_ptr) != 1)
+	      return RTT__INPUT_SYNTAX;
+	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
+	    {
+	      if ( *(int *)buffer_ptr > menu_ptr->maxlimit)
+	        return RTT__MAXLIMIT;
+	      if ( *(int *)buffer_ptr < menu_ptr->minlimit)
+	        return RTT__MINLIMIT;
+	    }
+	    break;
+	  }
 	  case pwr_eType_UInt8:
 	  {
 	    pwr_tUInt8 	i8;
@@ -7570,6 +7611,20 @@ static int	rtt_set_value(
 #else
 	    if ( sscanf( value_str, "%lu", (unsigned long *)buffer_ptr) != 1)
 #endif
+	      return RTT__INPUT_SYNTAX;
+	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
+	    {
+	      if ( *(unsigned long *)buffer_ptr > menu_ptr->maxlimit)
+	        return RTT__MAXLIMIT;
+	      if ( *(unsigned long *)buffer_ptr < menu_ptr->minlimit)
+	        return RTT__MINLIMIT;
+	    }
+	    break;
+	  }
+	  case pwr_eType_UInt64:
+	  {
+	    size = sizeof(pwr_tUInt64);
+	    if ( sscanf( value_str, "%llu", (pwr_tUInt64 *)buffer_ptr) != 1)
 	      return RTT__INPUT_SYNTAX;
 	    if ( (menu_ptr->maxlimit != 0.0) || (menu_ptr->minlimit != 0.0))
 	    {

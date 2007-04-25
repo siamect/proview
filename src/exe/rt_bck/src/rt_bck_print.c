@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_bck_print.c,v 1.6 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_bck_print.c,v 1.7 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -109,6 +109,14 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
         *len = sprintf( str, format, *(int *)value_ptr);
       break;
     }
+    case pwr_eType_Int64:
+    {
+      if ( !format)
+        *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+      else
+        *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
+      break;
+    }
     case pwr_eType_UInt8:
     {
       if ( !format)
@@ -133,6 +141,14 @@ static void  attrvalue_to_string( int type_id, void *value_ptr,
         *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned int *)value_ptr);
+      break;
+    }
+    case pwr_eType_UInt64:
+    {
+      if ( !format)
+        *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+      else
+        *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
       break;
     }
     case pwr_eType_String:

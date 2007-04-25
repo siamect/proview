@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_pdr.c,v 1.7 2005-09-01 14:57:52 claes Exp $
+ * Proview   $Id: co_pdr.c,v 1.8 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -361,8 +361,8 @@ pdr_pwr_tInt32(PDR *pdrs, pwr_tInt32 *objp)
 pwr_tBoolean
 pdr_pwr_tInt64(PDR *pdrs, pwr_tInt64 *objp)
 {
-  PWR_PDR_INT(pdrs, &objp->low);
-  PWR_PDR_INT(pdrs, &objp->high);
+  PWR_PDR_INT(pdrs, &((__pwr_tInt64 *)objp)->low);
+  PWR_PDR_INT(pdrs, &((__pwr_tInt64 *)objp)->high);
 
   return TRUE;
 }
@@ -395,8 +395,8 @@ pdr_pwr_tUInt32(PDR *pdrs, pwr_tUInt32 *objp)
 pwr_tBoolean
 pdr_pwr_tUInt64(PDR *pdrs, pwr_tUInt64 *objp)
 {
-  PWR_PDR_INT(pdrs, &objp->low);
-  PWR_PDR_INT(pdrs, &objp->high);
+  PWR_PDR_INT(pdrs, &((__pwr_tUInt64 *)objp)->low);
+  PWR_PDR_INT(pdrs, &((__pwr_tUInt64 *)objp)->high);
 
   return TRUE;
 }

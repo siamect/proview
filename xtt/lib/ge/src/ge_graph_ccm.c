@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: ge_graph_ccm.c,v 1.2 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: ge_graph_ccm.c,v 1.3 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2970,6 +2970,17 @@ static int gccm_getvar(
       case pwr_eType_UInt32:
       {
         pwr_tInt32 val;
+
+        sts = gdh_GetObjectInfo( name, &val, sizeof(val));
+        if ( EVEN(sts)) return sts;
+        *value_int = val;
+        *decl = K_DECL_INT;
+        break;
+      }
+      case pwr_eType_Int64:
+      case pwr_eType_UInt64:
+      {
+        pwr_tInt64 val;
 
         sts = gdh_GetObjectInfo( name, &val, sizeof(val));
         if ( EVEN(sts)) return sts;

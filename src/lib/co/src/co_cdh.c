@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.c,v 1.20 2007-04-23 12:08:00 claes Exp $
+ * Proview   $Id: co_cdh.c,v 1.21 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -523,6 +523,9 @@ cdh_AttrValueToString (
   case pwr_eType_Int32:
     sprintf(sval, "%d", *(pwr_tInt32 *) Value);
     break;
+  case pwr_eType_Int64:
+    sprintf(sval, "%lld", *(pwr_tInt64 *) Value);
+    break;
   case pwr_eType_UInt8:
     sprintf(sval, "%u", *(pwr_tUInt8 *) Value);
     break;
@@ -531,6 +534,9 @@ cdh_AttrValueToString (
     break;
   case pwr_eType_UInt32:
     sprintf(sval, "%u", *(pwr_tUInt32 *) Value);
+    break;
+  case pwr_eType_UInt64:
+    sprintf(sval, "%llu", *(pwr_tUInt64 *) Value);
     break;
   case pwr_eType_Time:
     if (ODD(time_AtoAscii(Value, time_eFormat_DateAndTime, timbuf, sizeof(timbuf)))) {
@@ -583,9 +589,11 @@ cdh_StringToAttrValue (
   pwr_tInt8		i8val = 0;
   pwr_tInt16		i16val = 0;
   pwr_tInt32		i32val = 0;
+  pwr_tInt64		i64val = 0;
   pwr_tUInt8		ui8val = 0;
   pwr_tUInt16		ui16val = 0;
   pwr_tUInt32		ui32val = 0;
+  pwr_tUInt64		ui64val = 0;
   pwr_tFloat32		f32val = 0.0;
   pwr_tFloat64		f64val = 0.0;
   pwr_tClassId		cidval = pwr_cNClassId;
@@ -692,6 +700,17 @@ cdh_StringToAttrValue (
     memcpy(Value, &i32val, sizeof(i32val));
     break;
 
+  case pwr_eType_Int64:
+    if (*String != '\0') {
+      if ( sscanf( String, "%lld", &i64val) != 1)
+      {
+	sts = CDH__INVINT32;
+	break;
+      }
+    }
+    memcpy(Value, &i64val, sizeof(i64val));
+    break;
+
   case pwr_eType_UInt8:
     while (*String && isspace(*String)) String++;
     if (*String != '\0') {
@@ -733,6 +752,17 @@ cdh_StringToAttrValue (
       }
     }
     memcpy(Value, &ui32val, sizeof(ui32val));
+    break;
+
+  case pwr_eType_UInt64:
+    if (*String != '\0') {
+      if ( sscanf( String, "%llu", &ui64val) != 1)
+      {
+	sts = CDH__INVUINT32;
+	break;
+      }
+    }
+    memcpy(Value, &ui64val, sizeof(ui64val));
     break;
 
   case pwr_eType_String:

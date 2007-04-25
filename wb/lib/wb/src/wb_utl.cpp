@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.2 2007-04-25 13:39:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4366,9 +4366,11 @@ static int utl_object_changed (
 	      case pwr_eType_Int8:
 	      case pwr_eType_Int16:
 	      case pwr_eType_Int32:
+	      case pwr_eType_Int64:
 	      case pwr_eType_UInt8:
 	      case pwr_eType_UInt16:
 	      case pwr_eType_UInt32:
+	      case pwr_eType_UInt64:
 	      case pwr_eType_String:
 	      case pwr_eType_ObjDId:
 	      case pwr_eType_AttrRef:
@@ -4459,9 +4461,11 @@ static int utl_print_object_full (
 	pwr_tInt8	*p_Int8;
 	pwr_tInt16	*p_Int16;
 	pwr_tInt32	*p_Int32;
+	pwr_tInt64	*p_Int64;
 	pwr_tUInt8	*p_UInt8;
 	pwr_tUInt16	*p_UInt16;
 	pwr_tUInt32	*p_UInt32;	
+	pwr_tUInt64	*p_UInt64;	
 	pwr_tObjid	*p_ObjDId;	
 	pwr_sAttrRef	*p_AttrRef;	
 	char		*p_String;
@@ -4669,6 +4673,21 @@ static int utl_print_object_full (
 	            u_row( utlctx);
 	            break;
 	          }
+	          case pwr_eType_Int64:
+	          {
+	            p_Int64 = (pwr_tInt64 *)object_element;
+	            u_print( utlctx,  "    %s", parname);
+	            if ( elements > 1 )
+	            {
+	              u_print( utlctx,  "[%2d]", k);
+	              u_posit( utlctx, 4, strlen(parname) + 8);
+	            }
+	            else
+	              u_posit( utlctx, 4, strlen(parname) + 4);
+	            u_print( utlctx, " %lld", *p_Int64);
+	            u_row( utlctx);
+	            break;
+	          }
 	          case pwr_eType_UInt8:
 	          {
 	            p_UInt8 = (pwr_tUInt8 *)object_element;
@@ -4713,6 +4732,21 @@ static int utl_print_object_full (
 	            else
 	              u_posit( utlctx, 4, strlen(parname) + 4);
 	            u_print( utlctx, " %lu", *p_UInt32);
+	            u_row( utlctx);
+	            break;
+	          }
+	          case pwr_eType_UInt64:
+	          {
+	            p_UInt64 = (pwr_tUInt64 *)object_element;
+	            u_print( utlctx,  "    %s", parname);
+	            if ( elements > 1 )
+	            {
+	              u_print( utlctx,  "[%2d]", k);
+	              u_posit( utlctx, 4, strlen(parname) + 8);
+	            }
+	            else
+	              u_posit( utlctx, 4, strlen(parname) + 4);
+	            u_print( utlctx, " %llu", *p_UInt64);
 	            u_row( utlctx);
 	            break;
 	          }
@@ -4873,9 +4907,11 @@ static int utl_print_object_par (
 	pwr_tInt8	*p_Int8;
 	pwr_tInt16	*p_Int16;
 	pwr_tInt32	*p_Int32;
+	pwr_tInt64	*p_Int64;
 	pwr_tUInt8	*p_UInt8;
 	pwr_tUInt16	*p_UInt16;
 	pwr_tUInt32	*p_UInt32;	
+	pwr_tUInt64	*p_UInt64;	
 	pwr_tObjid	*p_ObjDId;	
 	pwr_sAttrRef	*p_AttrRef;	
 	char		*p_String;
@@ -5075,6 +5111,21 @@ static int utl_print_object_par (
 	          u_row( utlctx);
                   break;
                 }
+                case pwr_eType_Int64:
+                {
+                  p_Int64 = (pwr_tInt64 *)object_element;
+                  u_print( utlctx,  "    %s", parname);
+                  if ( elements > 1 )
+                  {
+                    u_print( utlctx,  "[%2d]", k);
+                    u_posit( utlctx, 4, strlen(parname) + 8);
+                  }
+                  else
+                    u_posit( utlctx, 4, strlen(parname) + 4);
+                  u_print( utlctx, " %lld", *p_Int64);
+	          u_row( utlctx);
+                  break;
+                }
                 case pwr_eType_UInt8:
                 {
                   p_UInt8 = (pwr_tUInt8 *)object_element;
@@ -5124,6 +5175,21 @@ static int utl_print_object_par (
                   else
                     u_posit( utlctx, 4, strlen(parname) + 4);
                   u_print( utlctx, " %lu", *p_UInt32);
+	          u_row( utlctx);
+                  break;
+                }
+                case pwr_eType_UInt64:
+                {
+                  p_UInt64 = (pwr_tUInt64 *)object_element;
+                  u_print( utlctx,  "    %s", parname);
+                  if ( elements > 1 )
+                  {
+                    u_print( utlctx,  "[%2d]", k);
+                    u_posit( utlctx, 4, strlen(parname) + 8);
+                  }
+                  else
+                    u_posit( utlctx, 4, strlen(parname) + 4);
+                  u_print( utlctx, " %llu", *p_UInt64);
 	          u_row( utlctx);
                   break;
                 }
@@ -5409,6 +5475,11 @@ static int utl_print_class_full (
 	        u_print( utlctx,  "Int32	");
 	        break;
 	      }
+	      case pwr_eType_Int64:
+	      {
+	        u_print( utlctx,  "Int64	");
+	        break;
+	      }
 	      case pwr_eType_UInt8:
 	      {
 	        u_print( utlctx,  "UInt8	");
@@ -5422,6 +5493,11 @@ static int utl_print_class_full (
 	      case pwr_eType_UInt32:
 	      {
 	        u_print( utlctx,  "UInt32	");
+	        break;
+	      }
+	      case pwr_eType_UInt64:
+	      {
+	        u_print( utlctx,  "UInt64	");
 	        break;
 	      }
 	      case pwr_eType_String:
@@ -5538,9 +5614,11 @@ static int utl_set_parameter (
   pwr_tInt8	*p_Int8;
   pwr_tInt16	*p_Int16;
   pwr_tInt32	*p_Int32;
+  pwr_tInt64	*p_Int64;
   pwr_tUInt8	*p_UInt8;
   pwr_tUInt16	*p_UInt16;
   pwr_tUInt32	*p_UInt32;	
+  pwr_tUInt64	*p_UInt64;	
   pwr_tObjid	*p_ObjDId;	
   pwr_sAttrRef	*p_AttrRef;	
   char		*p_String;
@@ -5706,6 +5784,14 @@ static int utl_set_parameter (
 	      sprintf( logstrptr + strlen(logstr), "%d", *p_Int32);
 	      break;
 	    }
+	    case pwr_eType_Int64:
+	    {
+	      p_Int64 = (pwr_tInt64 *)object_element;
+	      sprintf( logstrptr + strlen(logstr), "( %lld ) ", *p_Int64);
+	      sscanf( valuestr, "%lld", p_Int64);
+	      sprintf( logstrptr + strlen(logstr), "%lld", *p_Int64);
+	      break;
+	    }
 	    case pwr_eType_UInt8:
 	    {
 	      pwr_tUInt16	i16;
@@ -5739,6 +5825,14 @@ static int utl_set_parameter (
 	      sprintf( logstrptr + strlen(logstr), "( %u ) ", *p_UInt32);
 	      sscanf( valuestr, "%d", p_UInt32);
 	      sprintf( logstrptr + strlen(logstr), "%u", *p_UInt32);
+	      break;
+	    }
+	    case pwr_eType_UInt64:
+	    {
+	      p_UInt64 = (pwr_tUInt64 *)object_element;
+	      sprintf( logstrptr + strlen(logstr), "( %llu ) ", *p_UInt64);
+	      sscanf( valuestr, "%lld", p_UInt64);
+	      sprintf( logstrptr + strlen(logstr), "%llu", *p_UInt64);
 	      break;
 	    }
 	    case pwr_eType_String:
@@ -8572,9 +8666,11 @@ static int utl_list_get_parvalue (
 	pwr_tInt8	*p_Int8;
 	pwr_tInt16	*p_Int16;
 	pwr_tInt32	*p_Int32;
+	pwr_tInt64	*p_Int64;
 	pwr_tUInt8	*p_UInt8;
 	pwr_tUInt16	*p_UInt16;
 	pwr_tUInt32	*p_UInt32;	
+	pwr_tUInt64	*p_UInt64;	
 	pwr_tObjid	*p_ObjDId;	
 	pwr_sAttrRef	*p_AttrRef;	
 	char		*p_String;
@@ -8729,6 +8825,12 @@ static int utl_list_get_parvalue (
               sprintf( text + strlen(text), "%d", *p_Int32);
               break;
             }
+            case pwr_eType_Int64:
+            {
+              p_Int64 = (pwr_tInt64 *)object_element;
+              sprintf( text + strlen(text), "%lld", *p_Int64);
+              break;
+            }
             case pwr_eType_UInt8:
             {
               p_UInt8 = (pwr_tUInt8 *)object_element;
@@ -8747,6 +8849,12 @@ static int utl_list_get_parvalue (
             {
               p_UInt32 = (pwr_tUInt32 *)object_element;
               sprintf( text + strlen(text), "%u", *p_UInt32);
+              break;
+            }
+            case pwr_eType_UInt64:
+            {
+              p_UInt64 = (pwr_tUInt64 *)object_element;
+              sprintf( text + strlen(text), "%llu", *p_UInt64);
               break;
             }
             case pwr_eType_String:
@@ -10600,6 +10708,12 @@ int utl_export_object (
                 case pwr_eType_Int16:
 	          strcat( str, "##Int16");
                   break;
+                case pwr_eType_Int32:
+	          strcat( str, "##Int32");
+                  break;
+                case pwr_eType_Int64:
+	          strcat( str, "##Int64");
+                  break;
                 case pwr_eType_UInt8:
 	          strcat( str, "##UInt8");
                   break;
@@ -10609,8 +10723,11 @@ int utl_export_object (
                 case pwr_eType_UInt32:
 	          strcat( str, "##UInt32");
                   break;
-                case pwr_eType_ObjDId:
-	          strcat( str, "##ObjDId");
+                case pwr_eType_UInt64:
+	          strcat( str, "##UInt64");
+                  break;
+                case pwr_eType_Objid:
+	          strcat( str, "##Objid");
                   break;
                 case pwr_eType_String:
 	          strcat( str, "##String");
