@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_macro_io.h,v 1.7 2005-10-18 05:11:34 claes Exp $
+ * Proview   $Id: rt_plc_macro_io.h,v 1.8 2007-04-25 07:25:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -373,4 +373,260 @@
     attr[size-1] = 0; \
   }
 
+/*_*
+  CStoExtFloat32
+  @aref cstoextfloat32 CStoExtFloat32
+*/
+#define CStoExtFloat32_exec(obj, name, in, cond) \
+  if ( cond && !obj->OldCond) { \
+    obj->LastStatus = gdh_SetObjectInfo( name, (void *)&in, sizeof(pwr_tFloat32)); \
+  } \
+  obj->OldCond = cond;
 
+/*_*
+  GetExtFloat32
+  @aref getextfloat32 GetExtFloat32
+*/
+#define GetExtFloat32_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tFloat32)); \
+}
+
+#define GetExtFloat32_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtFloat64
+  @aref getextfloat64 GetExtFloat64
+*/
+#define GetExtFloat64_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tFloat64)); \
+}
+
+#define GetExtFloat64_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtInt64
+  @aref getextint64 GetExtInt64
+*/
+#define GetExtInt64_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt64)); \
+}
+
+#define GetExtInt64_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtUInt64
+  @aref getextuint64 GetExtUInt64
+*/
+#define GetExtUInt64_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt64)); \
+}
+
+#define GetExtUInt64_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+
+/*_*
+  GetExtInt32
+  @aref getextint32 GetExtInt32
+*/
+#define GetExtInt32_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt32)); \
+}
+
+#define GetExtInt32_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtUInt32
+  @aref getextuint32 GetExtUInt32
+*/
+#define GetExtUInt32_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt32)); \
+}
+
+#define GetExtUInt32_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtInt16
+  @aref getextint16 GetExtInt16
+*/
+#define GetExtInt16_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt16)); \
+}
+
+#define GetExtInt16_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtUInt16
+  @aref getextuint16 GetExtUInt16
+*/
+#define GetExtUInt16_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt16)); \
+}
+
+#define GetExtUInt16_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtInt8
+  @aref getextint8 GetExtInt8
+*/
+#define GetExtInt8_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tInt8)); \
+}
+
+#define GetExtInt8_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtUInt8
+  @aref getextuint8 GetExtUInt8
+*/
+#define GetExtUInt8_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tUInt8)); \
+}
+
+#define GetExtUInt8_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtBoolean
+  @aref getextboolean GetExtBoolean
+*/
+#define GetExtBoolean_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tBoolean)); \
+}
+
+#define GetExtBoolean_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  GetExtString
+  @aref getextstring GetExtString
+*/
+#define GetExtString_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tString80)); \
+}
+
+#define GetExtString_exec(obj) \
+  if ( obj->ExtP) \
+    strncpy( obj->ActVal, obj->ExtP, sizeof(pwr_tString80));
+
+/*_*
+  GetExtTime
+  @aref getexttime GetExtTime
+*/
+#define GetExtTime_init(obj, name) \
+{ \
+  gdh_RefObjectInfo( name, &obj->ExtP, 0, sizeof(pwr_tTime)); \
+}
+
+#define GetExtTime_exec(obj) \
+  if ( obj->ExtP) \
+    obj->ActVal = *obj->ExtP;
+
+/*_*
+  Float64toA
+  @aref float64toa Float64toA
+*/
+#define Float64toA_exec(obj,in) \
+  obj->ActVal = in;
+
+/*_*
+  AtoFloat64
+  @aref atofloat64 AtoFloat64
+*/
+#define AtoFloat64_exec(obj,in) \
+  obj->ActVal = in;
+
+/*_*
+  ItoUInt32
+  @aref itouint32 ItoUInt32
+*/
+#define ItoUInt32_exec(obj,in) \
+  obj->ActVal = in;
+
+/*_*
+  UInt32toI
+  @aref uint32toi UInt32toI
+*/
+#define UInt32toI_exec(obj,in) \
+  obj->ActVal = in;
+
+/*_*
+  Int64toI
+  @aref int64toi Int64toI
+*/
+#if defined OS_LINUX
+#define Int64toI_exec(obj,in) \
+  obj->ActVal = in;
+#else
+#define Int64toI_exec(obj,in) \
+  obj->ActVal = (0x80000000 & in.high) | (0xEFFFFFFF & in.low);
+#endif
+
+/*_*
+  ItoInt64t
+  @aref itoint64 ItoInt64
+*/
+#if defined OS_LINUX
+#define ItoInt64_exec(obj,in) \
+  obj->ActVal = in;
+#else
+#define ItoInt64_exec(obj,in) \
+  obj->ActVal.high = in & 0x80000000;
+  obj->ActVal.low = in & 0xEFFFFFFF;
+#endif
+
+/*_*
+  UInt64toI
+  @aref uint64toi UInt64toI
+*/
+#if defined OS_LINUX
+#define UInt64toI_exec(obj,in) \
+  obj->ActVal = in;
+#else
+#define UInt64toI_exec(obj,in) \
+  obj->ActVal = in.low;
+#endif
+
+/*_*
+  ItoUInt64
+  @aref itouint64toi ItoUInt64
+*/
+#if defined OS_LINUX
+#define ItoUInt64_exec(obj,in) \
+  obj->ActVal = in;
+#else
+#define ItoUInt64_exec(obj,in) \
+  obj->ActVal.low = in;
+  obj->ActVal.high = 0;
+#endif

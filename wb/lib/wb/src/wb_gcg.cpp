@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.2 2007-04-25 07:28:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -223,6 +223,8 @@ int	gcg_comp_m60( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m61( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m62( gcg_ctx gcgctx, vldh_t_node node);
 int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m64( gcg_ctx gcgctx, vldh_t_node node);
+int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node);
 
 gcg_tMethod gcg_comp_m[70] = {
 	(gcg_tMethod)gcg_comp_m0,
@@ -288,7 +290,9 @@ gcg_tMethod gcg_comp_m[70] = {
 	gcg_comp_m60,
 	gcg_comp_m61,
 	gcg_comp_m62,
-	gcg_comp_m63
+	gcg_comp_m63,
+	gcg_comp_m64,
+	gcg_comp_m65
 	};
 
 
@@ -15228,6 +15232,137 @@ int	gcg_comp_m63( gcg_ctx gcgctx, vldh_t_node node)
 	  i++;
 	}
 	free((char *) bodydef);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m64()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for a GetExt...
+*	Prints code for declaration and direkt link of rtdbpointer for 
+*	the actual object.
+*	Prints an exec call :
+*
+*	'structname'_exec( 'objectpointer', 'in1', 'in2', 'in3'...);
+*
+*       and init call
+*       'structname'_init( 'objectpointer', "'extattribute'");
+*
+**************************************************************************/
+
+int	gcg_comp_m64( gcg_ctx gcgctx, vldh_t_node node)
+{
+	int 	sts;
+	int     size;
+	char    *extattr_ptr;
+	char    *name;
+
+	// Get extern attribute
+        sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses, node->ln.oid, "DevBody",   
+			"ExtAttribute", (char **)&extattr_ptr, &size); 
+	if (EVEN(sts)) return sts;
+
+	if ( *extattr_ptr == 0) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTNODE;
+	}
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+
+	/* Get name for this class */
+	sts = gcg_get_structname( gcgctx, node->ln.oid, &name);
+	if( EVEN(sts)) return sts;
+
+	 /* Print the execute command */
+	 IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+			"%s_exec( %c%s);\n",
+			name,
+			GCG_PREFIX_REF,
+			vldh_IdToStr(0, node->ln.oid));
+
+	/* Print the init command */
+	IF_PR fprintf( gcgctx->files[GCGM1_REF_FILE], 
+		       "%s_init( %c%s, \"%s\");\n",
+		       name,
+		       GCG_PREFIX_REF,
+		       vldh_IdToStr(0, node->ln.oid),
+		       extattr_ptr);
+
+
+	gcg_scantime_print( gcgctx, node->ln.oid);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	
+ 	free( extattr_ptr);
+
+	return GSX__SUCCESS;
+}
+
+/*************************************************************************
+*
+* Name:		gcg_comp_m65()
+*
+* Type		void
+*
+* Type		Parameter	IOGF	Description
+* gcg_ctx	gcgctx		I	gcg context.
+* vldh_t_node	node		I	vldh node.
+*
+* Description:
+*	Compile method for a CStoExt...
+*	Prints code for declaration and direkt link of rtdbpointer for 
+*	the actual object.
+*	Prints an exec call :
+*
+*	'structname'_exec( 'objectpointer', 'name', 'in1', 'in2');
+*	
+*	If the any inputs are not connected or not visible zero is printed
+*	in its place in the exec call.
+*
+**************************************************************************/
+
+int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node)
+{
+	int 	sts;
+	int     size;
+	char    *extattr_ptr;
+
+	// Get extern attribute
+        sts = ldh_GetObjectPar( (node->hn.wind)->hw.ldhses, node->ln.oid, "DevBody",   
+			"ExtAttribute", (char **)&extattr_ptr, &size); 
+	if (EVEN(sts)) return sts;
+
+	if ( *extattr_ptr == 0) {
+	  gcg_error_msg( gcgctx, GSX__REFOBJ, node);
+	  return GSX__NEXTNODE;
+	}
+
+	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
+
+	sts = gcg_print_exec_macro( gcgctx, node, node->ln.oid, GCG_PREFIX_REF);
+	if (EVEN(sts)) return sts; 
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+		       "\"%s\", ", extattr_ptr);
+
+	sts = gcg_print_inputs( gcgctx, node, ", ", GCG_PRINT_ALLPAR, NULL, NULL);
+	if ( EVEN(sts)) return sts;
+
+	IF_PR fprintf( gcgctx->files[GCGM1_CODE_FILE], 
+	");\n");
+
+	gcg_scantime_print( gcgctx, node->ln.oid);
+	gcg_timer_print( gcgctx, node->ln.oid);
+	
+ 	free( extattr_ptr);
 
 	return GSX__SUCCESS;
 }
