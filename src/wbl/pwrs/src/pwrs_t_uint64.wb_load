@@ -1,0 +1,37 @@
+! 
+!  Proview   $Id$
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrs_t_uint64.wb_load -- Defines the basic type UInt64
+!
+SObject pwrs:Type
+!/**
+!  @Version 1.0
+!  @Code pwr.h
+!  @Group BasicTypes,Types
+!  64-bit unsigned integer. Basic type.
+!
+! @b See also
+!  @classlink Int32 pwrs_int32.html
+!*/
+  Object $UInt64 pwr_eClass_Type pwr_eTix_UInt64
+    Body SysBody
+      Attr Type = pwr_eType_UInt64
+      Attr Size = 8
+    EndBody
+  EndObject
+EndSObject
