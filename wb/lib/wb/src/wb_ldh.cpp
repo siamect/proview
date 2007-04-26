@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.57 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.58 2007-04-26 12:39:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,6 @@
 #include "wb_db.h"
 #include "wb_print_wbl.h"
 #include "pwr_baseclasses.h"
-#include <X11/Intrinsic.h>
 
 pwr_dImport pwr_BindClasses(System);
 pwr_dImport pwr_BindClasses(Base);

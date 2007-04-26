@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_projectreg.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_projectreg.cpp,v 1.2 2007-04-26 12:38:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -19,8 +19,8 @@
 
 /* wb_c_projectref.c -- work bench methods of the ProjectReg class. */
 
-#include <X11/Intrinsic.h>
 #undef Status
+#include <string.h>
 #include "co_dcli.h"
 #include "wb_pwrs.h"
 #include "pwr_baseclasses.h"

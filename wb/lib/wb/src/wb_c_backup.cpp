@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_backup.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_c_backup.cpp,v 1.2 2007-04-26 12:37:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +20,6 @@
 /* wb_c_backup.c -- work bench methods of the Backup class. */
 
 #include <string.h>
-#include <X11/Intrinsic.h>
 #undef Status
 #include "pwr.h"
 #include "wb_pwrs.h"
