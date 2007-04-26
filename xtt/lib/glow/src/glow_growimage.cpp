@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growimage.cpp,v 1.6 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: glow_growimage.cpp,v 1.7 2007-04-26 11:07:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,22 +106,22 @@ void GrowImage::copy_from( const GrowImage& im)
 GrowImage::~GrowImage()
 {
   ctx->object_deleted( this);
-  if ( ctx->nodraw) return;
 
-  erase( &ctx->mw);
-  erase( &ctx->navw);
+  if ( !ctx->nodraw) {
+    erase( &ctx->mw);
+    erase( &ctx->navw);
 
-  ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
-	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
-  	     x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
-	     y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
-  ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
-	     y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
-  	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
-	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
-  if ( hot)
-    ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
-
+    ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
+	       y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
+	       x_right * ctx->mw.zoom_factor_x - ctx->mw.offset_x + DRAW_MP,
+	       y_high * ctx->mw.zoom_factor_y - ctx->mw.offset_y + DRAW_MP);
+    ctx->draw( &ctx->navw, x_left * ctx->navw.zoom_factor_x - ctx->navw.offset_x - 1,
+	       y_low * ctx->navw.zoom_factor_y - ctx->navw.offset_y - 1,
+	       x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
+	       y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
+    if ( hot)
+      ctx->gdraw->set_cursor( &ctx->mw, glow_eDrawCursor_Normal);
+  }
 #if defined IMLIB
   if ( original_image)
     ctx->gdraw->image_free( original_image);
