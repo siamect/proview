@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.7 2007-02-05 09:41:57 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.8 2007-04-26 12:41:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,11 +36,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <gdk/gdkx.h>
-#if defined IMLIB
-# include <gdk_imlib.h>
-#else
 typedef void *GdkImlibImage;
-#endif
 
 #define DRAW_PRESS_PIX 9
 
