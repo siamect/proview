@@ -242,6 +242,9 @@ sub build_all_modules ()
   _module("profibus");
   build_all( $flavour);
   merge();
+  _module("opc");
+  build_all( $flavour);
+  merge();
   _module("ssabox");
   build_all( $flavour);
   merge();
@@ -462,6 +465,8 @@ sub create_all_modules ()
   _module("bcomp");
   create();
   _module("profibus");
+  create();
+  _module("opc");
   create();
   _module("ssabox");
   create();
