@@ -1,3 +1,6 @@
 060227 cs  -          Changelog created.
 060504 cs  wbl        New profibus module classes for ET200M, and slave classes
                       for IM153 and IM155
+070426 rk  wbl        New profibus slave classe for Siemens Diagnostic Repeater,
+		      pwr_sClass_Siemens_DiagRepeater.
+070426 rk  rt         Added IO-method's for Siemens_DiagRepeater.

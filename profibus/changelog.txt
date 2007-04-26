@@ -8,3 +8,4 @@
 		      Added diagnostics infomation to pwr_sClass_Pb_DP_Slave-class.
 070209 cs -           Bugfix in Ext_User_Prm_Data_Len.
 070219 cs -           Bugfix in ExtUserPrmDataConst.
+070426 rk -           Added gsd-file si0380a7.gsd, for Siemens Diagnostic Repeater.
