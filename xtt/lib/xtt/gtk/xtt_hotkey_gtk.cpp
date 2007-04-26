@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_hotkey_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_hotkey_gtk.cpp,v 1.2 2007-04-26 12:42:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -47,8 +47,6 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
-#include <X11/Intrinsic.h>
-#include <X11/StringDefs.h>
 #include <X11/keysym.h>
 #include "xtt_hotkey_gtk.h"
 #include "co_cdh.h"
