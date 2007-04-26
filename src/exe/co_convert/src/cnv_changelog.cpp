@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.5 2007-04-25 07:19:31 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.6 2007-04-26 11:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -316,7 +316,7 @@ void CnvChangeLog::print_html()
     "  <body id=\"news\">" << endl <<
     "    <div id=\"news\"><p id=\"news\">" << endl <<
     "    <h1>Proview Changlog</h1>" << endl <<
-    "    <table border=\"1\">" << endl;
+    "    <table border=\"1\" cellpadding=\"3\">" << endl;
 
   sort_time();
 
