@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.13 2006-06-14 05:06:05 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.14 2007-04-26 11:26:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1490,9 +1490,11 @@ static void  gdh_TranslateSuffixToClassData (
     {"INT8"   ,pwr_eType_Int8,    sizeof(pwr_tInt8)},
     {"INT16"  ,pwr_eType_Int16,   sizeof(pwr_tInt16)},
     {"INT32"  ,pwr_eType_Int32,   sizeof(pwr_tInt32)},
+    {"INT64"  ,pwr_eType_Int64,   sizeof(pwr_tInt64)},
     {"UINT8"  ,pwr_eType_UInt8,   sizeof(pwr_tUInt8)},
     {"UINT16" ,pwr_eType_UInt16,  sizeof(pwr_tInt16)},
     {"UINT32" ,pwr_eType_UInt32,  sizeof(pwr_tInt32)},
+    {"UINT64" ,pwr_eType_UInt64,  sizeof(pwr_tInt64)},
     {"OBJID"  ,pwr_eType_Objid,   sizeof(pwr_tObjid)},
 //    {"STRING" ,pwr_eType_String,  sizeof(void *)},
     {"TIME"   ,pwr_eType_Time,    sizeof(pwr_tTime)},
@@ -1625,6 +1627,10 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
       if ( sscanf( str_value, "%d", (pwr_tInt32 *)buffer_p) != 1)
         return GDH__BADARG;
       break;
+    case pwr_eType_Int64:
+      if ( sscanf( str_value, "%lld", (pwr_tInt64 *)buffer_p) != 1)
+        return GDH__BADARG;
+      break;
     case pwr_eType_UInt8:
     {
       pwr_tUInt8   vint8;
@@ -1645,6 +1651,10 @@ static int gdh_StringToAttr( char *str_value, char *buffer_p, int buffer_size,
     case pwr_eType_Status:
     case pwr_eType_NetStatus:
       if ( sscanf( str_value, "%u", (pwr_tUInt32 *)buffer_p) != 1)
+        return GDH__BADARG;
+      break;
+    case pwr_eType_UInt64:
+      if ( sscanf( str_value, "%llu", (pwr_tUInt64 *)buffer_p) != 1)
         return GDH__BADARG;
       break;
     case pwr_eType_String:
@@ -1810,6 +1820,14 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
         *len = sprintf( str, format, *(int *)value_ptr);
       break;
     }
+    case pwr_eType_Int64:
+    {
+      if ( !format)
+        *len = sprintf( str, "%lld", *(pwr_tInt64 *)value_ptr);
+      else
+        *len = sprintf( str, format, *(pwr_tInt64 *)value_ptr);
+      break;
+    }
     case pwr_eType_UInt8:
     {
       if ( !format)
@@ -1836,6 +1854,14 @@ static void gdh_AttrToString( int type_id, void *value_ptr,
         *len = sprintf( str, "%d", *(unsigned int *)value_ptr);
       else
         *len = sprintf( str, format, *(unsigned int *)value_ptr);
+      break;
+    }
+    case pwr_eType_UInt64:
+    {
+      if ( !format)
+        *len = sprintf( str, "%llu", *(pwr_tUInt64 *)value_ptr);
+      else
+        *len = sprintf( str, format, *(pwr_tUInt64 *)value_ptr);
       break;
     }
     case pwr_eType_String:
