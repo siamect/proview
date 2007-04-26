@@ -1,9 +1,241 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X1"
-    Attr NextCix = "_X22"
+    Attr NextOix = "_X36"
+    Attr NextCix = "_X24"
+    Attr NextTix[0] = "_X3"
   EndBody
-  Object Class $ClassHier 1 06-OCT-2005 14:40:44.00
+  Object Type $TypeHier 5 25-APR-2007 13:44:05.44
+    Object SiemDR_ErrInfo $TypeDef 1 25-APR-2007 13:45:45.85
+      Body SysBody 25-APR-2007 14:19:25.93
+        Attr TypeRef = "pwrs:Type-$Mask"
+        Attr Elements = 1
+      EndBody
+      Object DP3 $Bit 9 25-APR-2007 14:14:46.56
+        Body SysBody 25-APR-2007 14:15:04.03
+          Attr Text = "DP3"
+          Attr PgmName = "DP3"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object DP2 $Bit 10 25-APR-2007 14:15:22.08
+        Body SysBody 25-APR-2007 14:15:27.03
+          Attr Text = "DP2"
+          Attr PgmName = "DP2"
+          Attr Value = 32
+        EndBody
+      EndObject
+      Object DP1 $Bit 11 25-APR-2007 14:15:31.94
+        Body SysBody 25-APR-2007 14:15:40.99
+          Attr Text = "DP1"
+          Attr PgmName = "DP1"
+          Attr Value = 64
+        EndBody
+      EndObject
+      Object PG $Bit 12 25-APR-2007 14:17:15.17
+        Body SysBody 25-APR-2007 14:17:21.33
+          Attr Text = "PG"
+          Attr PgmName = "PG"
+          Attr Value = 128
+        EndBody
+      EndObject
+      Object SegmentOFF $Bit 7 25-APR-2007 13:47:58.27
+        Body SysBody 25-APR-2007 14:17:52.68
+          Attr Text = "SegmentOFF"
+          Attr PgmName = "SegmentOFF"
+          Attr Value = 512
+        EndBody
+      EndObject
+      Object TopologyOFF $Bit 6 25-APR-2007 13:47:50.38
+        Body SysBody 25-APR-2007 14:17:57.60
+          Attr Text = "TopologyOFF"
+          Attr PgmName = "TopologyOFF"
+          Attr Value = 1024
+        EndBody
+      EndObject
+      Object LineDiag $Bit 8 25-APR-2007 14:18:17.23
+        Body SysBody 25-APR-2007 14:18:27.52
+          Attr Text = "LineDiag"
+          Attr PgmName = "LineDiag"
+          Attr Value = 2048
+        EndBody
+      EndObject
+    EndObject
+    Object SiemDR_ErrCause $TypeDef 2 25-APR-2007 14:19:17.07
+      Body SysBody 25-APR-2007 14:19:30.87
+        Attr TypeRef = "pwrs:Type-$Mask"
+        Attr Elements = 1
+      EndBody
+      Object A0 $Bit 13 25-APR-2007 14:19:46.93
+        Body SysBody 25-APR-2007 14:19:51.10
+          Attr Text = "A0"
+          Attr PgmName = "A0"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object A1 $Bit 14 25-APR-2007 14:20:18.32
+        Body SysBody 25-APR-2007 14:20:21.09
+          Attr Text = "A1"
+          Attr PgmName = "A1"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object A2 $Bit 15 25-APR-2007 14:20:24.68
+        Body SysBody 25-APR-2007 14:20:31.87
+          Attr Text = "A2"
+          Attr PgmName = "A2"
+          Attr Value = 4
+        EndBody
+      EndObject
+      Object A3 $Bit 16 25-APR-2007 14:20:37.05
+        Body SysBody 25-APR-2007 14:20:40.62
+          Attr Text = "A3"
+          Attr PgmName = "A3"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object A4 $Bit 17 25-APR-2007 14:20:43.19
+        Body SysBody 25-APR-2007 14:20:47.04
+          Attr Text = "A4"
+          Attr PgmName = "A4"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object A5 $Bit 18 25-APR-2007 14:20:49.94
+        Body SysBody 25-APR-2007 14:20:56.37
+          Attr Text = "A5"
+          Attr PgmName = "A5"
+          Attr Value = 32
+        EndBody
+      EndObject
+      Object A6 $Bit 19 25-APR-2007 14:20:59.42
+        Body SysBody 25-APR-2007 14:21:57.24
+          Attr Text = "A6"
+          Attr PgmName = "A6"
+          Attr Value = 64
+        EndBody
+      EndObject
+      Object A7 $Bit 20 25-APR-2007 14:22:00.11
+        Body SysBody 25-APR-2007 14:22:05.41
+          Attr Text = "A7"
+          Attr PgmName = "A7"
+          Attr Value = 128
+        EndBody
+      EndObject
+      Object B0 $Bit 28 25-APR-2007 14:22:58.15
+        Body SysBody 25-APR-2007 14:32:23.59
+          Attr Text = "B0"
+          Attr PgmName = "B0"
+          Attr Value = 256
+        EndBody
+      EndObject
+      Object B1 $Bit 21 25-APR-2007 14:22:10.41
+        Body SysBody 25-APR-2007 14:32:27.13
+          Attr Text = "B1"
+          Attr PgmName = "B1"
+          Attr Value = 512
+        EndBody
+      EndObject
+      Object B2 $Bit 22 25-APR-2007 14:22:14.68
+        Body SysBody 25-APR-2007 14:32:30.64
+          Attr Text = "B2"
+          Attr PgmName = "B2"
+          Attr Value = 1024
+        EndBody
+      EndObject
+      Object B3 $Bit 23 25-APR-2007 14:22:18.72
+        Body SysBody 25-APR-2007 14:32:35.28
+          Attr Text = "B3"
+          Attr PgmName = "B3"
+          Attr Value = 2048
+        EndBody
+      EndObject
+      Object B4 $Bit 24 25-APR-2007 14:22:25.59
+        Body SysBody 25-APR-2007 14:33:27.39
+          Attr Text = "B4"
+          Attr PgmName = "B4"
+          Attr Value = 4096
+        EndBody
+      EndObject
+      Object B5 $Bit 25 25-APR-2007 14:22:29.79
+        Body SysBody 25-APR-2007 14:33:57.72
+          Attr Text = "B5"
+          Attr PgmName = "B5"
+          Attr Value = 8192
+        EndBody
+      EndObject
+      Object B6 $Bit 26 25-APR-2007 14:22:37.84
+        Body SysBody 25-APR-2007 14:34:16.07
+          Attr Text = "B6"
+          Attr PgmName = "B6"
+          Attr Value = 16384
+        EndBody
+      EndObject
+      Object B7 $Bit 27 25-APR-2007 14:22:42.38
+        Body SysBody 25-APR-2007 14:34:29.22
+          Attr Text = "B7"
+          Attr PgmName = "B7"
+          Attr Value = 32768
+        EndBody
+      EndObject
+      Object C0 $Bit 29 25-APR-2007 14:23:01.65
+        Body SysBody 25-APR-2007 14:34:39.05
+          Attr Text = "C0"
+          Attr PgmName = "C0"
+          Attr Value = 65536
+        EndBody
+      EndObject
+      Object C1 $Bit 30 25-APR-2007 14:23:06.81
+        Body SysBody 25-APR-2007 14:34:50.29
+          Attr Text = "C1"
+          Attr PgmName = "C1"
+          Attr Value = 131072
+        EndBody
+      EndObject
+      Object C2 $Bit 31 25-APR-2007 14:23:12.00
+        Body SysBody 25-APR-2007 14:35:03.78
+          Attr Text = "C2"
+          Attr PgmName = "C2"
+          Attr Value = 262144
+        EndBody
+      EndObject
+      Object C3 $Bit 32 25-APR-2007 14:23:16.26
+        Body SysBody 25-APR-2007 14:35:29.80
+          Attr Text = "C3"
+          Attr PgmName = "C3"
+          Attr Value = 524288
+        EndBody
+      EndObject
+      Object C4 $Bit 33 25-APR-2007 14:23:21.01
+        Body SysBody 25-APR-2007 14:35:44.77
+          Attr Text = "C4"
+          Attr PgmName = "C4"
+          Attr Value = 1048576
+        EndBody
+      EndObject
+      Object C5 $Bit 34 25-APR-2007 14:23:26.26
+        Body SysBody 25-APR-2007 14:36:02.91
+          Attr Text = "C5"
+          Attr PgmName = "C5"
+          Attr Value = 2097152
+        EndBody
+      EndObject
+      Object C6 $Bit 35 25-APR-2007 14:23:30.31
+        Body SysBody 25-APR-2007 14:36:17.94
+          Attr Text = "C6"
+          Attr PgmName = "C6"
+          Attr Value = 4194304
+        EndBody
+      EndObject
+      Object C7 $Bit 36 25-APR-2007 14:23:34.83
+        Body SysBody 25-APR-2007 14:36:30.38
+          Attr Text = "C7"
+          Attr PgmName = "C7"
+          Attr Value = 8388608
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 1 25-APR-2007 13:44:08.34
     !/**
     !  @Version 1.0
     !  @Group Motor
@@ -2156,6 +2388,125 @@ Volume Siemens $ClassVolume 0.0.250.3
         Body RtBody 02-MAY-2006 14:01:38.15
           Attr Super.Specification = "Siemens ET200M IM153"
           Attr Super.GSDfile = "$pwr_exe/siemens_et200m_im153.gsd"
+          Attr Super.Process = 1
+          Attr Super.ByteOrdering = 1
+          Attr Super.StallAction = 1
+          Attr Super.ErrorSoftLimit = 15
+          Attr Super.ErrorHardLimit = 50
+          Attr Super.WdFact1 = 100
+          Attr Super.WdFact2 = 10
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_DR_SegmStatus $ClassDef 23 25-APR-2007 14:38:09.12
+      Body SysBody 25-APR-2007 14:39:39.70
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 16
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-APR-2007 14:40:51.48
+        Body SysBody 25-APR-2007 14:40:51.50
+          Attr StructName = "Siemens_DR_SegmStatus"
+          Attr NextAix = "_X10"
+        EndBody
+        Object SlotNr $Attribute 1 25-APR-2007 14:41:31.15
+          Body SysBody 25-APR-2007 14:43:57.13
+            Attr PgmName = "SlotNr"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrInfo $Attribute 2 25-APR-2007 14:44:30.63
+          Body SysBody 25-APR-2007 14:46:48.29
+            Attr PgmName = "ErrInfo"
+            Attr TypeRef = "Siemens:Type-SiemDR_ErrInfo"
+          EndBody
+        EndObject
+        Object FaultRate $Attribute 3 25-APR-2007 14:46:53.19
+          Body SysBody 25-APR-2007 14:47:01.30
+            Attr PgmName = "FaultRate"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object SlaveX $Attribute 4 25-APR-2007 14:48:01.16
+          Body SysBody 25-APR-2007 14:48:03.13
+            Attr PgmName = "SlaveX"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object SlaveY $Attribute 5 25-APR-2007 14:48:12.61
+          Body SysBody 25-APR-2007 14:48:15.80
+            Attr PgmName = "SlaveY"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object X_Dist $Attribute 6 25-APR-2007 14:48:51.19
+          Body SysBody 25-APR-2007 14:48:52.13
+            Attr PgmName = "X_Dist"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object Y_Dist $Attribute 7 25-APR-2007 14:48:47.62
+          Body SysBody 25-APR-2007 14:48:49.10
+            Attr PgmName = "Y_Dist"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object DR_Dist $Attribute 8 25-APR-2007 14:48:57.07
+          Body SysBody 25-APR-2007 14:49:01.61
+            Attr PgmName = "DR_Dist"
+            Attr TypeRef = "pwrs:Type-$UInt16"
+          EndBody
+        EndObject
+        Object ErrCause $Attribute 9 25-APR-2007 14:50:29.75
+          Body SysBody 25-APR-2007 14:50:44.93
+            Attr PgmName = "ErrCause"
+            Attr TypeRef = "Siemens:Type-SiemDR_ErrCause"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_DR_SegmStatus 2153742336 01-JAN-1970 01:00:00.00
+        Body RtBody 01-JAN-1970 01:00:00.00
+        EndBody
+      EndObject
+    EndObject
+    Object Siemens_DiagRepeater $ClassDef 22 25-APR-2007 13:32:42.74
+      Body SysBody 25-APR-2007 13:26:06.87
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10256
+      EndBody
+      Object RtBody $ObjBodyDef 1 25-APR-2007 13:26:06.87
+        Body SysBody 25-APR-2007 13:35:39.51
+          Attr StructName = "Siemens_DiagRepeater"
+          Attr NextAix = "_X5"
+        EndBody
+        Object Super $Attribute 3 25-APR-2007 13:26:06.87
+          Body SysBody 25-APR-2007 13:26:06.87
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
+          EndBody
+        EndObject
+        Object SegmentStatus $Attribute 4 25-APR-2007 15:47:34.29
+          Body SysBody 25-APR-2007 16:15:28.41
+            Attr PgmName = "SegmentStatus"
+            Attr Flags = 131074
+            Attr Elements = 3
+            Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMenu 3 25-APR-2007 13:39:24.02
+        Object IoRackRead $Method 4 25-APR-2007 13:39:58.38
+          Body SysBody 25-APR-2007 13:40:50.54
+            Attr MethodName = "Siemens_DiagRepeater-IoRackRead"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_DiagRepeater 2153480192 01-JAN-1970 01:00:00.00
+        Body RtBody 25-APR-2007 13:36:27.88
+          Attr Super.Specification = "Siemens Diagnostic Repeater"
+          Attr Super.GSDfile = "$pwr_exe/si0380a7.gsd"
           Attr Super.Process = 1
           Attr Super.ByteOrdering = 1
           Attr Super.StallAction = 1
