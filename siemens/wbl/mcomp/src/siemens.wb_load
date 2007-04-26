@@ -2366,9 +2366,9 @@ Volume Siemens $ClassVolume 0.0.250.3
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
-        Object ToplogyON $Attribute 10 26-APR-2007 13:43:57.88
+        Object TopologyON $Attribute 10 26-APR-2007 13:43:57.88
           Body SysBody 26-APR-2007 13:44:00.32
-            Attr PgmName = "ToplogyON"
+            Attr PgmName = "TopologyON"
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
