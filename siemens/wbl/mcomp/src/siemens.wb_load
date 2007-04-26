@@ -5,61 +5,6 @@ Volume Siemens $ClassVolume 0.0.250.3
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 5 25-APR-2007 13:44:05.44
-    Object SiemDR_ErrInfo $TypeDef 1 25-APR-2007 13:45:45.85
-      Body SysBody 25-APR-2007 14:19:25.93
-        Attr TypeRef = "pwrs:Type-$Mask"
-        Attr Elements = 1
-      EndBody
-      Object DP3 $Bit 9 25-APR-2007 14:14:46.56
-        Body SysBody 25-APR-2007 14:15:04.03
-          Attr Text = "DP3"
-          Attr PgmName = "DP3"
-          Attr Value = 16
-        EndBody
-      EndObject
-      Object DP2 $Bit 10 25-APR-2007 14:15:22.08
-        Body SysBody 25-APR-2007 14:15:27.03
-          Attr Text = "DP2"
-          Attr PgmName = "DP2"
-          Attr Value = 32
-        EndBody
-      EndObject
-      Object DP1 $Bit 11 25-APR-2007 14:15:31.94
-        Body SysBody 25-APR-2007 14:15:40.99
-          Attr Text = "DP1"
-          Attr PgmName = "DP1"
-          Attr Value = 64
-        EndBody
-      EndObject
-      Object PG $Bit 12 25-APR-2007 14:17:15.17
-        Body SysBody 25-APR-2007 14:17:21.33
-          Attr Text = "PG"
-          Attr PgmName = "PG"
-          Attr Value = 128
-        EndBody
-      EndObject
-      Object SegmentOFF $Bit 7 25-APR-2007 13:47:58.27
-        Body SysBody 25-APR-2007 14:17:52.68
-          Attr Text = "SegmentOFF"
-          Attr PgmName = "SegmentOFF"
-          Attr Value = 512
-        EndBody
-      EndObject
-      Object TopologyOFF $Bit 6 25-APR-2007 13:47:50.38
-        Body SysBody 25-APR-2007 14:17:57.60
-          Attr Text = "TopologyOFF"
-          Attr PgmName = "TopologyOFF"
-          Attr Value = 1024
-        EndBody
-      EndObject
-      Object LineDiag $Bit 8 25-APR-2007 14:18:17.23
-        Body SysBody 25-APR-2007 14:18:27.52
-          Attr Text = "LineDiag"
-          Attr PgmName = "LineDiag"
-          Attr Value = 2048
-        EndBody
-      EndObject
-    EndObject
     Object SiemDR_ErrCause $TypeDef 2 25-APR-2007 14:19:17.07
       Body SysBody 25-APR-2007 14:19:30.87
         Attr TypeRef = "pwrs:Type-$Mask"
@@ -2407,7 +2352,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object RtBody $ObjBodyDef 1 25-APR-2007 14:40:51.48
         Body SysBody 25-APR-2007 14:40:51.50
           Attr StructName = "Siemens_DR_SegmStatus"
-          Attr NextAix = "_X10"
+          Attr NextAix = "_X12"
         EndBody
         Object SlotNr $Attribute 1 25-APR-2007 14:41:31.15
           Body SysBody 25-APR-2007 14:43:57.13
@@ -2415,10 +2360,22 @@ Volume Siemens $ClassVolume 0.0.250.3
             Attr TypeRef = "pwrs:Type-$UInt16"
           EndBody
         EndObject
-        Object ErrInfo $Attribute 2 25-APR-2007 14:44:30.63
-          Body SysBody 25-APR-2007 14:46:48.29
-            Attr PgmName = "ErrInfo"
-            Attr TypeRef = "Siemens:Type-SiemDR_ErrInfo"
+        Object LineDiag $Attribute 2 26-APR-2007 13:43:12.01
+          Body SysBody 26-APR-2007 13:43:41.16
+            Attr PgmName = "LineDiag"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object ToplogyON $Attribute 10 26-APR-2007 13:43:57.88
+          Body SysBody 26-APR-2007 13:44:00.32
+            Attr PgmName = "ToplogyON"
+            Attr TypeRef = "pwrs:Type-$Boolean"
+          EndBody
+        EndObject
+        Object SegmentON $Attribute 11 26-APR-2007 13:44:09.84
+          Body SysBody 26-APR-2007 13:44:13.93
+            Attr PgmName = "SegmentON"
+            Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
         Object FaultRate $Attribute 3 25-APR-2007 14:46:53.19
@@ -2478,7 +2435,7 @@ Volume Siemens $ClassVolume 0.0.250.3
       Object RtBody $ObjBodyDef 1 25-APR-2007 13:26:06.87
         Body SysBody 25-APR-2007 13:35:39.51
           Attr StructName = "Siemens_DiagRepeater"
-          Attr NextAix = "_X5"
+          Attr NextAix = "_X8"
         EndBody
         Object Super $Attribute 3 25-APR-2007 13:26:06.87
           Body SysBody 25-APR-2007 13:26:06.87
@@ -2487,11 +2444,31 @@ Volume Siemens $ClassVolume 0.0.250.3
             Attr TypeRef = "Profibus:Class-Pb_DP_Slave"
           EndBody
         EndObject
-        Object SegmentStatus $Attribute 4 25-APR-2007 15:47:34.29
-          Body SysBody 25-APR-2007 16:15:28.41
-            Attr PgmName = "SegmentStatus"
-            Attr Flags = 131074
-            Attr Elements = 3
+        Object DP1 $Attribute 4 26-APR-2007 13:41:04.51
+          Body SysBody 26-APR-2007 13:41:34.58
+            Attr PgmName = "DP1"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
+          EndBody
+        EndObject
+        Object DP2 $Attribute 5 26-APR-2007 13:42:14.40
+          Body SysBody 26-APR-2007 13:42:16.14
+            Attr PgmName = "DP2"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
+          EndBody
+        EndObject
+        Object DP3 $Attribute 6 26-APR-2007 13:42:22.24
+          Body SysBody 26-APR-2007 13:42:24.65
+            Attr PgmName = "DP3"
+            Attr Flags = 131072
+            Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
+          EndBody
+        EndObject
+        Object PG $Attribute 7 26-APR-2007 13:42:29.91
+          Body SysBody 26-APR-2007 13:42:31.71
+            Attr PgmName = "PG"
+            Attr Flags = 131072
             Attr TypeRef = "Siemens:Class-Siemens_DR_SegmStatus"
           EndBody
         EndObject
