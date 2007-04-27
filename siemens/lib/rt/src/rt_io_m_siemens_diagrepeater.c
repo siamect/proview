@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.1 2007-04-26 12:20:45 claes Exp $
+ * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.2 2007-04-27 13:42:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,6 @@
 #include "co_cdh.h"
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
-
 
 
 /*----------------------------------------------------------------------------*\
@@ -84,9 +83,9 @@ static pwr_tStatus IoRackRead (
 	  continue;
 	  
         drs->SlotNr = sp->Super.Diag[4 + 19 * ii];
-	drs->LineDiag = (sp->Super.Diag[7 + 19 * ii] & 0x04);
-	drs->TopologyON = !(sp->Super.Diag[7 + 19 * ii] & 0x02);
-	drs->SegmentON = !(sp->Super.Diag[7 + 19 * ii] & 0x01);
+	drs->LineDiag = (sp->Super.Diag[7 + 19 * ii] & 0x08) ? 1 : 0;
+	drs->TopologyON = !(sp->Super.Diag[7 + 19 * ii] & 0x04) ? 1 : 0;
+	drs->SegmentON = !(sp->Super.Diag[7 + 19 * ii] & 0x02) ? 1 : 0;
 	
         if (sp->Super.Diag[8 + 19 * ii] >= 0x7F)
           drs->FaultRate = 0;
@@ -95,11 +94,11 @@ static pwr_tStatus IoRackRead (
         drs->SlaveX = sp->Super.Diag[9 + 19 * ii];
         drs->SlaveY = sp->Super.Diag[10 + 19 * ii];
         temp = (short int *) &sp->Super.Diag[11 + 19 * ii];
-        drs->X_Dist = *temp;
+        drs->X_Dist = swap16(*temp);
         temp = (short int *) &sp->Super.Diag[13 + 19 * ii];
-        drs->Y_Dist = *temp;
+        drs->Y_Dist = swap16(*temp);
         temp = (short int *) &sp->Super.Diag[15 + 19 * ii];
-        drs->DR_Dist = *temp;
+        drs->DR_Dist = swap16(*temp);
         drs->ErrCause = sp->Super.Diag[17 + 19 * ii];
         drs->ErrCause |= (int) sp->Super.Diag[18 + 19 * ii] << 8;
         drs->ErrCause |= (int) sp->Super.Diag[19 + 19 * ii] << 16;
