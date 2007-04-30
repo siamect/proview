@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.14 2007-04-05 13:32:03 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.15 2007-04-30 07:29:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,12 @@
 #include "opc_utl.h"
 #include "opc_soap_H.h"
 #include "Service.nsmap"
+#include "rt_errh.h"
+#include "rt_qcom.h"
+#include "rt_ini_event.h"
+#include "rt_aproc.h"
+#include "rt_pwr_msg.h"
+#include "rt_qcom_msg.h"
 
 typedef struct {
   int address;
@@ -63,7 +69,8 @@ typedef map< int, opcsrv_client>::iterator client_iterator;
 
 class opc_server {
  public:
-  opc_server() : m_client_access_cnt(0), m_grant_all(true), m_client(0) {}
+  opc_server() : m_client_access_cnt(0), m_grant_all(true), m_client(0),
+  qid(qcom_cNQid) {}
 
   map< int, opcsrv_client> m_clientlist;
   pwr_tTime m_start_time;
@@ -73,6 +80,7 @@ class opc_server {
   int m_current_access;
   bool m_grant_all;
   opcsrv_client *m_client;
+  qcom_sQid qid;
 
   opcsrv_client *find_client( int sid);
   opcsrv_client *new_client( int sid);
@@ -140,6 +148,8 @@ opcsrv_client *opc_server::new_client( int sid)
   fprintf( stderr, "New client IP=%d.%d.%d.%d\n",
 	   (sid>>24)&0xFF,(sid>>16)&0xFF,(sid>>8)&0xFF,sid&0xFF);
 
+  m_config->ClientCnt++;
+
   return &m_clientlist[sid];
 }
 
@@ -151,26 +161,58 @@ int main()
   int m,s;   // Master and slave sockets
   pwr_tStatus sts;
   pwr_tOid config_oid;
+  qcom_sQid qini;
+  qcom_sQattr qAttr;
+  qcom_sQid qid = qcom_cNQid;
 
   sts = gdh_Init("opc_server");
   if ( EVEN(sts)) {
     exit(sts);
   }
 
-  opcsrv = new opc_server();
+  errh_Init("opc_server", errh_eAnix_opc_server);
+  errh_SetStatus( PWR__SRVSTARTUP);
 
+  if (!qcom_Init(&sts, 0, "opc_server")) {
+    errh_Fatal("qcom_Init, %m", sts); 
+    errh_SetStatus( PWR__SRVTERM);
+   exit(sts);
+  } 
+
+  qAttr.type = qcom_eQtype_private;
+  qAttr.quota = 100;
+  if (!qcom_CreateQ(&sts, &qid, &qAttr, "events")) {
+    errh_Fatal("qcom_CreateQ, %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(sts);
+  } 
+
+  qini = qcom_cQini;
+  if (!qcom_Bind(&sts, &qid, &qini)) {
+    errh_Fatal("qcom_Bind(Qini), %m", sts);
+    errh_SetStatus( PWR__SRVTERM);
+    exit(-1);
+  }
+
+
+  opcsrv = new opc_server();
+  opcsrv->qid = qid;
 
   // Get OpcServerConfig object
   sts = gdh_GetClassList( pwr_cClass_Opc_ServerConfig, &config_oid);
   if ( EVEN(sts)) {
     // Not configured
+    errh_SetStatus( 0);
     exit(sts);
   }
 
   sts = gdh_ObjidToPointer( config_oid, (void **)&opcsrv->m_config);
   if ( EVEN(sts)) {
+    errh_SetStatus( sts);
     exit(sts);
   }
+
+  aproc_RegisterObject( config_oid);
 
   for ( int i = 0; 
 	i < (int)(sizeof(opcsrv->m_config->ClientAccess)/sizeof(opcsrv->m_config->ClientAccess[0])); 
@@ -191,6 +233,8 @@ int main()
 
   clock_gettime( CLOCK_REALTIME, &opcsrv->m_start_time);
 
+  errh_SetStatus( PWR__SRUN);
+
   soap_init( &soap);
   m = soap_bind( &soap, NULL, 18083, 100);
   if ( m < 0)
@@ -208,6 +252,7 @@ int main()
       fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
 	       (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
 
+      opcsrv->m_config->RequestCnt++;
       opcsrv->m_client = opcsrv->find_client( soap.ip);
       if ( !opcsrv->m_client)
 	opcsrv->m_client = opcsrv->new_client( soap.ip);
@@ -250,22 +295,45 @@ static void *opcsrv_cyclic( void *arg)
 {
   pwr_tTime current_time;
   pwr_tDeltaTime diff;
+  int tmo = 1000;
+  char mp[2000];
+  qcom_sGet get;
+  pwr_tStatus sts;
 
   for (;;) {
 
     clock_gettime( CLOCK_REALTIME, &current_time);
+    aproc_TimeStamp();
 
-    // Check if any client can be removed    
-    for ( client_iterator it = opcsrv->m_clientlist.begin(); it != opcsrv->m_clientlist.end(); it++) {
-      time_Adiff( &diff, &current_time, &it->second.m_last_time);
-      if ( diff.tv_sec > 600) {
-	fprintf( stderr, "Client erased IP=%d.%d.%d.%d\n",
-		 (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
-	opcsrv->m_clientlist.erase( it);
+    get.maxSize = sizeof(mp);
+    get.data = mp;
+    qcom_Get( &sts, &opcsrv->qid, &get, tmo);
+    if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+
+      // Check if any client can be removed    
+      for ( client_iterator it = opcsrv->m_clientlist.begin(); it != opcsrv->m_clientlist.end(); it++) {
+	time_Adiff( &diff, &current_time, &it->second.m_last_time);
+	if ( diff.tv_sec > 600) {
+	  fprintf( stderr, "Client erased IP=%d.%d.%d.%d\n",
+		   (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
+	  opcsrv->m_clientlist.erase( it);
+	  opcsrv->m_config->ClientCnt--;
+	}
       }
     }
+    else {
+      ini_mEvent  new_event;
+      qcom_sEvent *ep = (qcom_sEvent*) get.data;
 
-    sleep(1);
+      new_event.m  = ep->mask;
+      if (new_event.b.oldPlcStop) {
+	errh_SetStatus( PWR__SRVRESTART);
+      } else if (new_event.b.swapDone) {
+	errh_SetStatus( PWR__SRUN);
+      } else if (new_event.b.terminate) {
+	exit(0);
+      }
+    }
   }
 }
 
