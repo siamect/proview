@@ -1911,7 +1911,7 @@ Volume Opc $ClassVolume 0.0.250.9
       Object RtBody $ObjBodyDef 1 01-MAR-2007 17:02:58.07
         Body SysBody 01-MAR-2007 17:02:58.07
           Attr StructName = "Opc_ServerConfig"
-          Attr NextAix = "_X5"
+          Attr NextAix = "_X8"
         EndBody
         !/**
         !  Optional description.
@@ -1944,10 +1944,36 @@ Volume Opc $ClassVolume 0.0.250.9
             Attr TypeRef = "Opc:Class-Opc_ClientAccess"
           EndBody
         EndObject
+        !/**
+        !  If the client uses HoldTime and WaitTime for subscription
+        !  request, the opc_server has to be multithreaded.
+        !  'IfNeeded' turns on multithreading if a HoldTime or WaitTime
+        !  is detected.
+        !*/
         Object MultiThreaded $Attribute 4 24-APR-2007 15:59:51.88
           Body SysBody 24-APR-2007 16:00:53.96
             Attr PgmName = "MultiThreaded"
             Attr TypeRef = "Opc:Type-Opc_MultiThreadedEnum"
+          EndBody
+        EndObject
+        !/**
+        !  Number of currently connected clients.
+        !*/
+        Object ClientCnt $Attribute 5 26-APR-2007 14:44:36.43
+          Body SysBody 26-APR-2007 14:44:58.22
+            Attr PgmName = "ClientCnt"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int32"
+          EndBody
+        EndObject
+        !/**
+        !  Number of served requests.
+        !*/
+        Object RequestCnt $Attribute 7 26-APR-2007 14:46:36.24
+          Body SysBody 26-APR-2007 14:46:38.12
+            Attr PgmName = "RequestCnt"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Int32"
           EndBody
         EndObject
       EndObject
