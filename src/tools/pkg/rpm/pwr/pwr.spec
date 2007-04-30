@@ -8,9 +8,9 @@
 #
 
 
-Name: pwr43
+Name: pwr44
 Summary: Proview/R development and runtime environment
-Version: 4.3.0
+Version: 4.4.0
 Release: 1
 Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
 #License: GPL
@@ -178,5 +178,5 @@ fi
 #%postun
 
 %changelog
-* Wed Feb 07 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.3.0-1
+* Mon Apr 30 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.0-1
 - Base release 

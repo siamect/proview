@@ -8,9 +8,9 @@
 #
 
 
-Name:		pwrdemo43
+Name:		pwrdemo44
 Summary: 	Proview/R demo project
-Version:        4.3.0
+Version:        4.4.0
 Release: 	1
 Copyright:	(c) 2007 SSAB Oxelosund AB, Sweden
 #License:        GPL
@@ -113,5 +113,5 @@ fi
 #%postun
 
 %changelog
-* Wed Feb 07 2007 Robert Karlsson <robert.karlsson@ssabox.com> 4.3.0-1
+* Mon Apr 30 2007 Robert Karlsson <robert.karlsson@ssabox.com> 4.4.0-1
 - Base release 
