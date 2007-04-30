@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.26 2007-01-30 07:00:50 claes Exp $
+ * Proview   $Id: ini.c,v 1.27 2007-04-30 07:27:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -104,6 +104,7 @@
 # define cPrio_webmonelog      	(cPrio_base + 15)
 # define cPrio_elog		(cPrio_base + 15)
 # define cPrio_sysmon		(cPrio_base + 16)
+# define cPrio_opc_server      	(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
 # define cPrio_remh		(cPrio_base + 5)
 # define cPrio_remotelogg	(cPrio_base + 5)
@@ -2051,6 +2052,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "pwr_webmonelog", "pwr_webmonglog_%d", 0, 1, "rt_webmonelog.sh", cPrio_webmonelog, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "opc_server", "opc_server_%d", 0, 1, "opc_server", cPrio_opc_server, 0, "");
   pp->proc.flags.b.system = 1;
 #endif
 
