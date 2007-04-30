@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.8 2007-02-07 14:43:49 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.9 2007-04-30 09:41:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -356,6 +356,30 @@ static void dp_get_slave_diag_con(T_DP_GET_SLAVE_DIAG_CON * get_slave_diag_con_p
 	sp->BytesOfDiag = get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN;
 	
 	memcpy(sp->Diag, diag_data_ptr + 1, MIN(get_slave_diag_con_ptr->diag_data_len - DP_MIN_SLAVE_DIAG_LEN, DP_MAX_EXT_DIAG_DATA_LEN));	
+	
+	/* Update slave status */
+	
+	if (!(sp->StationStatus1 & ~pwr_mPbStationStatus1Mask_ExternalDiag) &&
+	    !(sp->StationStatus2 & ~(pwr_mPbStationStatus2Mask_Default |
+		                     pwr_mPbStationStatus2Mask_ResponseMonitoringOn))) {
+	  sp->Status = PB__NORMAL;
+	}
+	else if (sp->StationStatus1 & pwr_mPbStationStatus1Mask_NonExistent) {
+	  sp->Status = PB__NOCONN;
+	}
+	else if ((sp->StationStatus1 & (pwr_mPbStationStatus1Mask_ConfigFault |
+	                                pwr_mPbStationStatus1Mask_ParamFault)) ||
+	         (sp->StationStatus2 & pwr_mPbStationStatus2Mask_NewParamsRequested)) {
+	  sp->Status = PB__CONFIGERR;
+        } 
+	else if (sp->StationStatus1 & pwr_mPbStationStatus1Mask_MasterLock) {
+	  sp->Status = PB__MASTERLOCK;
+	}
+	else //if (sp->StationStatus1 & pwr_mPbStationStatus1Mask_NotReady) 
+	{
+	  sp->Status = PB__NOTREADY;
+	}
+	
 	
 	break;
       }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.2 2007-04-27 13:42:45 claes Exp $
+ * Proview   $Id: rt_io_m_siemens_diagrepeater.c,v 1.3 2007-04-30 09:40:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,9 +60,8 @@ static pwr_tStatus IoRackRead (
   sp = (pwr_sClass_Siemens_DiagRepeater *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
-  if ((sp->Super.Status == PB__NORMAL || sp->Super.Status == PB__NOCONN) && mp->Status == PB__NORMAL && sp->Super.DisableSlave != 1 && mp->DisableBus != 1) {
+  if (mp->Status == PB__NORMAL && sp->Super.DisableSlave != 1 && mp->DisableBus != 1) {
 
-    sp->Super.Status = PB__NORMAL;
     data_len = sp->Super.BytesOfDiag;
 
     if (data_len > 0) {
@@ -109,10 +108,29 @@ static pwr_tStatus IoRackRead (
   } else {
     memset(&sp->DP1, 0, sizeof(pwr_sClass_Siemens_DR_SegmStatus) * 4);
   }
-  
-  
-  if (sp->Super.DisableSlave == 1 || mp->DisableBus == 1) sp->Super.Status = PB__DISABLED;
 
+  if (sp->Super.DisableSlave != 1 && mp->DisableBus != 1) {
+  
+    if (sp->Super.Status == PB__NORMAL) {
+      sp->Super.ErrorCount = 0;
+    }
+    else {
+      sp->Super.ErrorCount++;
+    }
+
+    if (sp->Super.ErrorCount > sp->Super.ErrorSoftLimit && sp->Super.StallAction >= pwr_ePbStallAction_ResetInputs) {
+      memset(&sp->Super.Inputs, 0, sp->Super.BytesOfInput);
+    }
+
+    if (sp->Super.ErrorCount > sp->Super.ErrorHardLimit && sp->Super.StallAction >= pwr_ePbStallAction_EmergencyBreak) {
+      ctx->Node->EmergBreakTrue = 1;
+    }
+  }
+  else {
+    sp->Super.ErrorCount = 0;
+    sp->Super.Status = PB__DISABLED;
+  }
+  
   return IO__SUCCESS;
 }
 

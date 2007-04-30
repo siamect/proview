@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.6 2007-01-12 13:28:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.7 2007-04-30 09:41:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -335,32 +335,34 @@ static pwr_tStatus IoRackRead (
   sp = (pwr_sClass_Pb_DP_Slave *) rp->op;
   mp = (pwr_sClass_Pb_Profiboard *) ap->op;
 
-  if ((sp->Status == PB__NORMAL || sp->Status == PB__NOCONN) && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
+  if (sp->Status == PB__NORMAL && mp->Status == PB__NORMAL && sp->DisableSlave != 1 && mp->DisableBus != 1) {
 
     data_len = sp->BytesOfInput;
     sts = profi_get_data(hDevice, ID_DP_SLAVE_IO_IMAGE, sp->OffsetInputs, &data_len, &sp->Inputs );
-
-    if ((sts != E_OK)) {
-      sp->Status = PB__NOCONN;
-      sp->ErrorCount++;
-    }
-    else {
-      sp->Status = PB__NORMAL;
+  }
+  
+  if (sp->DisableSlave != 1 && mp->DisableBus != 1) {
+  
+    if (sp->Status == PB__NORMAL) {
       sp->ErrorCount = 0;
     }
-
-    // Stall handling
+    else {
+      sp->ErrorCount++;
+    }
 
     if (sp->ErrorCount > sp->ErrorSoftLimit && sp->StallAction >= pwr_ePbStallAction_ResetInputs) {
       memset(&sp->Inputs, 0, sp->BytesOfInput);
     }
 
-    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak)
+    if (sp->ErrorCount > sp->ErrorHardLimit && sp->StallAction >= pwr_ePbStallAction_EmergencyBreak) {
       ctx->Node->EmergBreakTrue = 1;
+    }
+  }
+  else {
+    sp->ErrorCount = 0;
+    sp->Status = PB__DISABLED;
   }
   
-  if (sp->DisableSlave == 1 || mp->DisableBus == 1) sp->Status = PB__DISABLED;
-
   return IO__SUCCESS;
 }
 
