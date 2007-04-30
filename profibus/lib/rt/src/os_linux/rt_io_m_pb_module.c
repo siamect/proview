@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.6 2007-01-12 13:28:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.7 2007-04-30 10:59:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -242,6 +242,28 @@ static pwr_tStatus IoCardRead (
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(udata16);
 		f_raw = (float) udata16;
 	        sig_ai->RawValue = udata16;
+	        break;
+
+              case pwr_eDataRepEnum_Int24:
+	        data32 = 0;
+	        memcpy(&data32, local->input_area + cp->offset + chanp->offset, 3);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+		  data32 = swap32(data32);
+		  data32 = data32 >> 8;
+		}
+		f_raw = (float) data32;
+	        sig_ai->RawValue = data32;
+	        break;
+		
+              case pwr_eDataRepEnum_UInt24:
+	        udata32 = 0;
+	        memcpy(&udata32, local->input_area + cp->offset + chanp->offset, 3);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+		  udata32 = swap32(udata32);
+		  udata32 = udata32 >> 8;
+		}
+		f_raw = (float) udata32;
+	        sig_ai->RawValue = udata32;
 	        break;
 
               case pwr_eDataRepEnum_Int32:
@@ -506,6 +528,20 @@ static pwr_tStatus IoCardWrite (
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata16, 2);
 	        break;
 
+              case pwr_eDataRepEnum_Int24:
+	        data32 = (pwr_tInt32) rawvalue;
+                sig_ao->RawValue = data32;
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32) << 8;
+	        memcpy(local->output_area + cp->offset + chanp->offset, &data32, 3);
+	        break;
+		
+              case pwr_eDataRepEnum_UInt24:
+	        udata32 = (pwr_tUInt32) rawvalue;
+                sig_ao->RawValue = udata32;
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32) << 8;
+	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 3);
+	        break;
+
               case pwr_eDataRepEnum_Int32:
 	        data32 = (pwr_tInt32) rawvalue;
                 sig_ao->RawValue = data32;
@@ -577,7 +613,8 @@ static pwr_tStatus IoCardWrite (
 	        break;
 		
               case pwr_eDataRepEnum_UInt24:
-		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32) << 8;
+	        udata32 = (pwr_tUInt32) data32;
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32) << 8;
 	        memcpy(local->output_area + cp->offset + chanp->offset, &udata32, 3);
 	        break;
 		
