@@ -1,0 +1,287 @@
+; SEWA6003.GSD 
+; GSD file for SEW drive inverters with DPV1 Profibus Firmware:
+;       - MOVIDRIVE 60 A + DFP21A 
+;       - MOVIDRIVE B + DFP21B
+;
+; Please read the pdf files readme_gsd_a6003_d.pdf (german) or
+; readme_gsd_a6003_e.pdf (english) to get more information about
+; this GSD file and the configuration in the DP Master (e.g. Simatic S7). 
+;
+;
+; Note!
+; This GSD file can only be used with the PROFIBUS DPV1 Firmware extensions
+; of the PROFIBUS Slave option p.c.b. DFP21 A/B.
+; You cannot use this GSD file with older versions of the PROFIBUS
+; option p.c.b. DFP21A without DPV1 firmware extensions.
+; Please use the GSD file SEW_6003.GSD to configure older
+; versions of DFP21A.
+;
+;
+; Version:       V3.00
+; Release Date:  10.12.2003
+;
+;
+; SEW-EURODRIVE
+; Technical support Electronics:
+;     Postbox 3023
+;     76642 Bruchsal
+;     Tel: +49 7251/75-1780..1787
+;     Fax: +49 7251/75-1769
+;
+;
+; This GSD file uses additional files:
+;          sew6003n.bmp
+;          sew6003s.bmp
+;          sew6003n.dib
+;          sew6003s.dib
+;
+;
+; GSD syntax is checked with 
+;     - GSD Editor V4.1 (Profibus User Group)
+;     - HWKonfig STEP7 Version 5.2 SP3 (Siemens)
+;     - ComProfibus V3.3 (Siemens)
+;     - SYCON System Configurator V2.6.3.8 (Hilscher)
+;     - TwinCat System Manager V2.8.0 (Beckhoff) 
+;
+;
+; File version history:
+; ---------------------
+;
+;  V3.00 / 10.12.2003
+;          Changes from version 1.50 to version 3.00:
+;          - DFP21 with DPV1 supported
+;          - New Revision "V1.1"
+;          - New Software_Release "11"
+;          - GSD_Revision changed from 1 to 3
+;          - Model_Name is changed to "MOVIDRIVE DFP21 (DPV1)"
+;          - new subdirectory DPV1 defined for Slave_Family (Drives/SEW/DPV1)              
+;          - Keyword "Order_Number" deleted
+;          - New Keyword "Info_Text" added
+;          - DPV1 entries added
+;          - MaxTsdr Values changed, according to Siemens ComDec recommendations
+;
+;
+;  V1.50 / 20.08.2002
+;          Changes from version 1.40 to version 1.50:
+;          - The keyword Model_Name was changed to "MOVIDRIVE DFP21/MCH41". This
+;            GSD file is used for MOVIDRIVE MCH41 with an integrated DFP21, too.
+;          - This GSD-Version implements two additional predefined modules. These modules 
+;            can be used with all versions of DFP21 and MCH41:  
+;            - Additional predefined module "4 PD   (4 words) " with consistency
+;              via total length;  
+;            - Additional predefined module "Param + 4 PD   (4+4 words) " with 
+;              consistency via total length;           
+;
+;   V1.40 / 12.03.2001
+;     1st Release
+;
+;------------------------------------------------------------------------------
+; The latest version of this GSD file can be downloaded from the SEW homepage,
+; URL http://www.SEW-EURODRIVE.de.
+;
+;===========================================================================
+;
+;
+#Profibus_DP
+;===============================================================================
+; General DP Key Words
+;===============================================================================
+GSD_Revision = 3
+Vendor_Name = "SEW-EURODRIVE"
+Model_Name = "MOVIDRIVE DFP21 (DPV1)"
+Revision = "V1.1"
+Ident_Number=0x6003
+Protocol_Ident=0
+Station_Type=0
+Hardware_Release="10"
+Software_Release="11"
+9.6_supp = 1
+19.2_supp = 1
+45.45_supp = 1
+93.75_supp = 1
+187.5_supp = 1
+500_supp = 1
+1.5M_supp = 1
+3M_supp = 1
+6M_supp = 1
+12M_supp = 1
+MaxTsdr_9.6 = 15
+MaxTsdr_19.2 = 15
+MaxTsdr_45.45 = 15
+MaxTsdr_93.75 = 15
+MaxTsdr_187.5 = 15
+MaxTsdr_500 = 15
+MaxTsdr_1.5M = 25
+MaxTsdr_3M = 50
+MaxTsdr_6M = 100
+MaxTsdr_12M = 200
+Repeater_Ctrl_Sig = 2
+Implementation_Type="DPC31"
+Bitmap_Device = "sew6003n"            ;
+Bitmap_Diag = "sew6003s"              ;
+
+;===============================================================================
+; Basic DP-Slave Related Key Words
+;===============================================================================
+Info_Text ="DPV1 GSD V3.0 (10.12.2003) for MOVIDRIVE + DFP21"  
+Freeze_Mode_supp=1
+Sync_Mode_supp = 1
+Auto_Baud_supp = 1
+Set_Slave_Add_supp = 0
+Min_Slave_Intervall=1
+Modular_Station = 1                   ;
+Fail_Safe=1
+Max_Diag_Data_Len=16
+Slave_Family=1@SEW@DPV1
+;
+;The Profibus-DP slave option DFP21 supports different modules.
+;You can choose ONE of the following DP configurations:
+;
+Max_Module = 1                    ;
+Max_Input_Len = 28                ;
+Max_Output_Len = 28               ;
+Max_Data_Len = 56                 ;
+;
+;
+;Configuration 1:  1 word process data
+;----------------  consistent via total length
+Module = "1 PD   (1 word)          " 0xF0  ;
+1
+EndModule
+;
+;Configuration 2:  2 words Process Data
+;----------------  consistent via total length
+Module = "2 PD   (2 words)         " 0xF1  ;
+2
+EndModule
+;
+;Configuration 3:  3 words process data
+;----------------  consistent via total length
+Module = "3 PD   (3 words)         " 0xF2  ;
+3
+EndModule
+;
+;Configuration 4:  4 words process data
+;----------------  consistent via total length
+Module = "4 PD   (4 words)         " 0x00, 0xF3 ;
+4
+EndModule
+;
+;Configuration 5:  6 words process data
+;----------------  consistent via total length
+Module = "6 PD   (6 words)         " 0x00, 0xF5 ;
+5
+EndModule
+;
+;Configuration 6:  10 words process data
+;----------------  consistent via total length
+Module = "10 PD   (10 words)         " 0x00, 0xF9 ;
+6
+EndModule
+;
+;=========================================================
+;
+;Configuration 7: 4 words parameter channel + 1 word process data
+;----------------  consistent via total length
+Module = "Param + 1 PD   (4+1 words)" 0xF3, 0xF0  ;
+7
+EndModule
+;
+;Configuration 8: 4 words parameter channel + 2 words process cata
+;----------------  consistent via total length
+Module = "Param + 2 PD   (4+2 words)" 0xF3, 0xF1  ;
+8
+EndModule
+;
+;Configuration 9: 4 words parameter channel + 3 words process data
+;----------------  consistent via total length
+Module = "Param + 3 PD   (4+3 words)" 0xF3, 0xF2  ;
+9
+EndModule
+;
+;Configuration 10: 4 words parameter channel + 4 words process data
+;----------------  consistent via total length
+Module = "Param + 4 PD   (4+4 words)" 0xF3, 0xF3  ;
+10
+EndModule
+;
+;Configuration 11: 4 words parameter channel + 6 words process data
+;-----------------  consistent via total length
+Module = "Param + 6 PD   (4+6 words)" 0xF3, 0xF5  ;
+11
+EndModule
+;
+;Configuration 12:  4 words parameter channel + 10 words process data
+;-----------------   consistent via total length
+Module = "Param + 10 PD   (4+10 words)" 0xF3, 0xF9  ;
+12
+EndModule
+;
+;
+;Extra definition of user-parameter
+;==================================
+;
+
+PrmText = 8                             ;Reference number 8
+Text(0) = "Enabled (on)"
+Text(1) = "Disabled (off)"
+EndPrmText
+;
+ExtUserPrmData = 1 "External Diagnosis (only DP)" ;Reference number 1
+Bit(0) 1 0-1                            ;Default = 1, Min = 0, Max = 1
+Prm_Text_Ref = 8                        ;Reference to PrmText 8
+EndExtUserPrmData
+;
+;
+Max_User_Prm_Data_Len = 9
+;
+Ext_User_Prm_Data_Const(0) = 0x00,0x00,0x00,0x06,0x81,0x00,0x00,0x01,0x01
+Ext_User_Prm_Data_Ref(8) = 1;  reference 1 for user prm byte 8
+
+; DPV1 definitions
+;==================================
+;
+DPV1_Slave = 1
+C1_Read_Write_supp = 1
+C2_Read_Write_supp = 1
+C1_Max_Data_Len = 240
+C2_Max_Data_Len = 240
+C1_Response_Timeout = 100
+C2_Response_Timeout = 100
+C1_Read_Write_required = 0
+C2_Read_Write_required = 0
+C2_Max_Count_Channels = 2
+Max_Initiate_PDU_Length = 64
+Diagnostic_Alarm_supp = 0     
+Process_Alarm_supp = 0
+Pull_Plug_Alarm_supp = 0
+Status_Alarm_supp = 0
+Update_Alarm_supp = 0
+Manufacturer_Specific_Alarm_supp = 0
+Extra_Alarm_SAP_supp = 0
+Alarm_Sequence_Mode_Count = 0
+Alarm_Type_Mode_supp = 0
+Diagnostic_Alarm_required = 0
+Process_Alarm_required = 0
+Pull_Plug_Alarm_required = 0
+Status_Alarm_required = 0
+Update_Alarm_required = 0
+Manufacturer_Specific_Alarm_required = 0
+DPV1_Data_Types = 0
+WD_Base_1ms_supp = 1
+Check_Cfg_Mode = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

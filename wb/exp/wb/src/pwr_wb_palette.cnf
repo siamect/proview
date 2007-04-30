@@ -801,6 +801,11 @@ palette PlcEditorPalette
       class ABB_DiffPressureSensor_265DSFo
       class ABB_FlowSensor_FXE4000Fo
     }
+    menu OtherManufacturer
+    {
+      class SEW_Movidrive_1Fo
+      class SEW_Movidrive_EPBFo
+    }
     menu Simulate
     {
       class ABB_ACS800_1Sim
@@ -812,6 +817,7 @@ palette PlcEditorPalette
       class BaseMotorAggrSim
       class BaseMotorIncrDecrAggrSim
       class BaseMotorSim
+      class SEW_Movidrive_1Sim
     }
   }
 }
