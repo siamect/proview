@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_pb_msg.msg,v 1.4 2006-04-12 12:18:12 claes Exp $
+!  Proview   $Id: rt_pb_msg.msg,v 1.5 2007-04-30 09:43:02 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -37,6 +37,9 @@ nomoduleclass	<Module class is missing>				/error
 stopped		<Stopped state>						/warning
 cleared		<Cleared state>						/warning
 notinit		<Not initialized>					/warning
+configerr	<Configuration error>					/error
+masterlock	<Slave is locked by other master>			/error
+notready	<Not ready>						/warning
 .end
 
 
