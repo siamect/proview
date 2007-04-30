@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.5 2006-09-05 12:03:01 claes Exp $
+ * Proview   $Id: rt_io_m_ai_ai32up.c,v 1.6 2007-04-30 12:14:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@ typedef struct {
 	int		Qbus_fp;
 	unsigned int	bfb_item;
 	int	ScanCount[IO_MAXCHAN];
+	pwr_tTime       ErrTime;
 } io_sLocal;
 
 static pwr_tStatus AiRangeToCoef( 
@@ -183,6 +184,7 @@ static pwr_tStatus IoCardRead (
   int			sts;
   qbus_io_read 		rb;
   int			bfb_error = 0;
+  pwr_tTime             now;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ai_AI32uP *) cp->op;
@@ -264,7 +266,16 @@ static pwr_tStatus IoCardRead (
           }
 #endif
           /* Increase error count and check error limits */
-          op->ErrorCount++;
+          clock_gettime(CLOCK_REALTIME, &now);
+
+          if (op->ErrorCount > op->ErrorSoftLimit) {
+            /* Ignore if some time has expired */
+            if (now.tv_sec - local->ErrTime.tv_sec < 600)
+              op->ErrorCount++;
+          }
+          else
+            op->ErrorCount++;
+          local->ErrTime = now;
 
           if ( op->ErrorCount == op->ErrorSoftLimit)
             errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
