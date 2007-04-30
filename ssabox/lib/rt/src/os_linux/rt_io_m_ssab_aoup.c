@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.4 2006-09-05 12:03:01 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_aoup.c,v 1.5 2007-04-30 12:08:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,6 +58,7 @@ typedef struct {
 	pwr_tFloat32	OldValue[IO_MAXCHAN];
 	pwr_tBoolean	OldTestOn[IO_MAXCHAN];
 	int		WriteFirst;
+	pwr_tTime       ErrTime;
 } io_sLocal;
 
 static pwr_tStatus AoRangeToCoef( 
@@ -194,6 +195,7 @@ static pwr_tStatus IoCardWrite (
   pwr_tFloat32		rawvalue;
   qbus_io_write		wb;
   int			sts;
+  pwr_tTime             now;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Ssab_BaseACard *) cp->op;
@@ -268,7 +270,16 @@ static pwr_tStatus IoCardWrite (
         }
 #endif
         /* Increase error count and check error limits */
-        op->ErrorCount++;
+        clock_gettime(CLOCK_REALTIME, &now);
+
+        if (op->ErrorCount > op->ErrorSoftLimit) {
+          /* Ignore if some time has expired */
+          if (now.tv_sec - local->ErrTime.tv_sec < 600)
+            op->ErrorCount++;
+        }
+        else
+          op->ErrorCount++;
+        local->ErrTime = now;
 
         if ( op->ErrorCount == op->ErrorSoftLimit)
           errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);

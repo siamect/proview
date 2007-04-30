@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.5 2006-09-05 12:03:01 claes Exp $
+ * Proview   $Id: rt_io_m_co_pi24bo.c,v 1.6 2007-04-30 12:08:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,6 +62,7 @@ typedef struct {
 	unsigned int	bfb_item;
 	pwr_tInt32	OldValue[IO_MAXCHAN];
 	int		FirstScan[IO_MAXCHAN];
+	pwr_tTime       ErrTime;
 } io_sLocal;
 
 static pwr_tStatus IoCardInit (
@@ -203,6 +204,7 @@ static pwr_tStatus IoCardRead (
   qbus_io_read 		rb;
   qbus_io_write		wb;
   io_sRackLocal		*r_local = (io_sRackLocal *)(rp->Local);
+  pwr_tTime             now;
 
   local = (io_sLocal *) cp->Local;
   op = (pwr_sClass_Co_PI24BO *) cp->op;
@@ -305,7 +307,16 @@ static pwr_tStatus IoCardRead (
       if ( sts1 == -1 || sts2 == -1)
       {
         /* Increase error count and check error limits */
-        op->ErrorCount++;
+        clock_gettime(CLOCK_REALTIME, &now);
+
+        if (op->ErrorCount > op->ErrorSoftLimit) {
+          /* Ignore if some time has expired */
+          if (now.tv_sec - local->ErrTime.tv_sec < 600)
+            op->ErrorCount++;
+        }
+        else
+          op->ErrorCount++;
+        local->ErrTime = now;
 
         if ( op->ErrorCount == op->ErrorSoftLimit)
           errh_Error( "IO Error soft limit reached on card '%s'", cp->Name);
