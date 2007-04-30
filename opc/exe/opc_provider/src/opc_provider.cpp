@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.12 2007-04-25 13:42:17 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.13 2007-04-30 07:29:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1280,7 +1280,7 @@ int main(int argc, char *argv[])
 
   opc_provider provider( pvd_eEnv_Rt);
   rt_procom procom( &provider,
-		    errh_eAnix_appl20, 	// Application index
+		    errh_eNAnix, 	// Application index
 		    "opc_provider", // Process name
 		    server_id,	       	// Sid
 		    opc_vid, 		// Vid
