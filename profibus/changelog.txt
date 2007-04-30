@@ -9,3 +9,5 @@
 070209 cs -           Bugfix in Ext_User_Prm_Data_Len.
 070219 cs -           Bugfix in ExtUserPrmDataConst.
 070426 rk -           Added gsd-file si0380a7.gsd, for Siemens Diagnostic Repeater.
+070430 rk -           Changed status handling of Profibus slaves so that correct
+                      view of the world is given.
