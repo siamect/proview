@@ -11,7 +11,7 @@ glibc: >= 2.3.6
 
 See specific package information below:
 
-1. PACKAGE PWR42
+1. PACKAGE PWR44
 ----------------
 
 Dependencies:
@@ -26,7 +26,7 @@ dpkg doesn't check any dependency, and all the depedencies package has to be ins
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwr43_4.3.0-x_i386.deb
+> dpkg -i pwr44_4.4.0-x_i386.deb
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -50,7 +50,7 @@ Update apt with the new packages
 
 > apt-get update
 
-Start aptitude, search the pwr43 package with '/pwr43', enter '+', 'g' and 'g' again to 
+Start aptitude, search the pwr44 package with '/pwr44', enter '+', 'g' and 'g' again to 
 start installation.
 
 Getting started:
@@ -76,15 +76,15 @@ Download:
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwrrt_4.3.0-x_i386.deb
+> dpkg -i pwrrt_4.4.0-x_i386.deb
 
 Information:
 
-The runtime package should be installed "stand-alone" without the pwr43-package.
+The runtime package should be installed "stand-alone" without the pwr44-package.
 A linux-system with the pwrrt-package is your control-system. Proview will be
 started automatically at boot-time.
 
-3. PACKAGE PWRDEMO43
+3. PACKAGE PWRDEMO44
 --------------------
 
 The proview demo project is under construction and contains so far
@@ -92,23 +92,23 @@ a demo of the dynamics and components of the HMI.
 
 Dependencies:
 
-pwr43 V4.3.0
+pwr44 V4.4.0
 
 Download:
 
 Download your selected debian-package and install it as:
 
-> dpkg -i pwrdemo43_4.3.0-x_i386.deb
+> dpkg -i pwrdemo44_4.4.0-x_i386.deb
 
 Getting started:
 
 Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
 'pwrp' a correct environment for working with Proview will be set up. 
 
-A demonstration project named pwrdemo43 is created. 
+A demonstration project named pwrdemo44 is created. 
 Attach to the project with
 
-> sdf pwrdemo43
+> sdf pwrdemo44
 
 Start proview runtime environment with
 

@@ -36,3 +36,4 @@
 070402 cs  ge        Dyntype invisible works also for attributes of type Float32.
 070425 cs  ge        Bit type added in DigColor to view bits in a bitmap.
 070426 cs  glow      Bugfix in imageobject, image was not always freed when graph was closed.
+070503 cs  xtt       Bugfix in command 'open graph /access'.

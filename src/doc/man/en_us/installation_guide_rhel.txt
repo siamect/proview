@@ -11,7 +11,7 @@ glibc: >= 2.3.4
 
 Specific package information follow below:
 
-1. PACKAGE PWR43
+1. PACKAGE PWR44
 ----------------
 
 Dependencies:
@@ -23,7 +23,7 @@ Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwr43_4.3.0-x.rhel4.i386.rpm
+rpm -Uvh pwr44_4.4.0-x.rhel4.i386.rpm
 
 During installation the files will be unpacked and a user named 'pwrp'
 belonging to a group with the same name 'pwrp' will be created.
@@ -50,15 +50,15 @@ Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrrt_4.3.0-x.rhel4.i386.rpm
+rpm -Uvh pwrrt_4.4.0-x.rhel4.i386.rpm
 
 Information:
 
-The runtime package should be installed "stand-alone" without the pwr43-package.
+The runtime package should be installed "stand-alone" without the pwr44-package.
 A linux-system with the pwrrt-package is your control-system. Proview will be
 started automatically at boot-time.
 
-3. PACKAGE PWRDEMO43
+3. PACKAGE PWRDEMO44
 --------------------
 
 The proview demo project contains demo of HMI functions, component objects, and some
@@ -72,23 +72,23 @@ glibc: >= 2.2.4
 
 Dependencies:
 
-pwr43 V4.3.0
+pwr44 V4.4.0
 
 Download:
 
 Download your selected rpm-package and install it as:
 
-rpm -Uvh pwrdemo43_4.3.0-x.rhel4.i386.deb
+rpm -Uvh pwrdemo44_4.4.0-x.rhel4.i386.deb
 
 Getting started:
 
 Log in as user 'pwrp' (or "su - pwrp") with password 'pwrp'. On the user 
 'pwrp' a correct environment for working with Proview will be set up. 
 
-A demonstration project named pwrdemo43 is created. 
+A demonstration project named pwrdemo44 is created. 
 Attach to the project with
 
-> sdf pwrdemo43
+> sdf pwrdemo44
 
 Start proview runtime environment with
 
