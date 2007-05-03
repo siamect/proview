@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_motif.cpp,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_graph_motif.cpp,v 1.2 2007-05-03 14:22:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -65,6 +65,7 @@ GraphMotif::GraphMotif(
   Graph( xn_parent_ctx, xn_name, xn_default_path, graph_mode, xn_gdh_init_done, xn_object_name,
 	 xn_use_default_access), parent_wid(xn_parent_wid)
 {
+  default_access = xn_default_access;
   if ( scrollbar)
     form_widget = ScrolledGrowCreate( parent_wid, name, NULL, 0, 
 	graph_init_grow_base_cb, this, (Widget *)&grow_widget);

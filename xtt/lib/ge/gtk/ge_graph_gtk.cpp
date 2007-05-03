@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_gtk.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_graph_gtk.cpp,v 1.3 2007-05-03 14:22:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,7 @@ GraphGtk::GraphGtk(
   Graph( xn_parent_ctx, xn_name, xn_default_path, graph_mode, xn_gdh_init_done, xn_object_name,
 	 xn_use_default_access), parent_wid(xn_parent_wid)
 {
+  default_access = xn_default_access;
   if ( scrollbar) {
     form_widget = scrolledgrowwidgetgtk_new( graph_init_grow_base_cb, this, &grow_widget);
   }

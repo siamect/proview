@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.3 2007-01-23 13:15:54 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.4 2007-05-03 14:22:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -336,7 +336,7 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, char *xg_name
   graph_form = gtk_vbox_new( FALSE, 0);
   graph = new GraphGtk( this, graph_form, "Plant", 
 		&grow_widget, &sts, "pwrp_exe:", graph_eMode_Runtime, 
-		scrollbar, 1, object_name, 0, 0);
+		scrollbar, 1, object_name, use_default_access, access);
   // graph->set_scantime( scan_time);
   graph->message_cb = &message_cb;
   graph->close_cb = &graph_close_cb;
