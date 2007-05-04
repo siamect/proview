@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_mrm_util.c,v 1.1 2007-02-07 15:37:44 claes Exp $
+ * Proview   $Id: co_mrm_util.c,v 1.2 2007-05-04 08:16:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -354,7 +354,61 @@ int mrm_IsIconicState( Widget W)
    }
    return Iconic;
 #else
-   return 0;
+
+#define WM_STATE_ELEMENTS 1
+
+   static Atom	    WmStateAtom = 0;
+   int		    sts;
+   int		    Iconic = 0;
+   unsigned long   *IconStateData = 0;
+   Atom		    atom_ret;
+   int		    format_ret;
+   unsigned long    nitems_ret, bytesleft;
+   Widget	    Shell;
+
+   if (W == NULL)
+      return FALSE;
+
+   Shell = W;
+   while(!XtIsShell(Shell))    
+      Shell = XtParent(Shell);
+
+   if (WmStateAtom == 0)
+   {
+      WmStateAtom = XInternAtom(XtDisplay(Shell), "WM_STATE", 1);
+   }
+
+   if (WmStateAtom)
+   {    
+      sts = XGetWindowProperty(
+	    XtDisplay(Shell), 
+	    XtWindow(Shell),
+	    WmStateAtom, 
+	    0L, 
+	    WM_STATE_ELEMENTS, 
+	    FALSE,
+	    WmStateAtom, 
+	    &atom_ret, 
+	    &format_ret, 
+	    &nitems_ret, 
+	    &bytesleft, 
+	    (unsigned char **)&IconStateData
+	    );
+
+      if ( !(sts == Success && 
+	     atom_ret == WmStateAtom &&
+	     nitems_ret == WM_STATE_ELEMENTS))
+      if (IconStateData != NULL)
+	XFree(IconStateData);
+
+      if ( IconStateData)
+	Iconic = TRUE;
+      else
+	Iconic = FALSE;
+
+   }
+   return Iconic;
+   //  return 0;
 #endif
 }
 
