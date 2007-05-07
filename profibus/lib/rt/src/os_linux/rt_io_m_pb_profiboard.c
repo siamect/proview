@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.9 2007-04-30 09:41:53 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.10 2007-05-07 12:19:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -581,6 +581,10 @@ static pwr_tStatus IoAgentInit (
 
   pwr_sClass_Pb_DP_Slave *sop;
   char name[196];
+
+  struct timespec rqtp = {0, 20000000}; // 20 ms  
+  
+  int retry;
     
   count=0;
 
@@ -598,6 +602,11 @@ static pwr_tStatus IoAgentInit (
 
   /* Initialize interface */
   
+  if (ctx->Node->Restarts > 0) {
+    nanosleep(&rqtp, NULL);
+  }
+  
+  errh_Info( "Initializing interface for Profibus DP Master %s", ap->Name);
   sts = profi_init(hDevice, (unsigned char) op->BusNumber - 1, 0, 0);
 
   if (sts != E_OK)
@@ -631,6 +640,7 @@ static pwr_tStatus IoAgentInit (
     
     if (ctx->Node->Restarts == 0) {
 
+      retry = 0;
       while (!ok) {
     
         op->Status = PB__NOTINIT;
@@ -641,6 +651,11 @@ static pwr_tStatus IoAgentInit (
         if (!sts) {
           op->Status = PB__INITFAIL;
           errh_Error( "ERROR config Profibus DP  Master %s - %s", ap->Name, "fmb set configuration");
+	  retry++;
+	  if (retry < 2) {
+            nanosleep(&rqtp, NULL);
+	    continue;
+	  } 
           return IO__ERRINIDEVICE;
         }
 
@@ -710,9 +725,9 @@ static pwr_tStatus IoAgentInit (
         ok = TRUE;
 	
       }  /* End - While !ok */
-    } /* End - Initialization only if not restart */   
-    else {
-      /* Move to STOP mode, this will fix the DPRAM layout */
+    }  /* End - Initialization only if not restart   */
+/*    else {
+       Move to STOP mode, this will fix the DPRAM layout 
 
       sts = dp_act_param_loc(hDevice, DP_OP_MODE_STOP);
       if (sts != E_OK) {
@@ -720,7 +735,7 @@ static pwr_tStatus IoAgentInit (
         errh_Error( "ERROR config Profibus DP Master %s - %s", ap->Name, "act param loc to STOPPED");
         return IO__ERRINIDEVICE;
       }
-    }
+    } */
   }    
   else
     op->Status = PB__DISABLED;
