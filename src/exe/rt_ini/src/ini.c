@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.27 2007-04-30 07:27:59 claes Exp $
+ * Proview   $Id: ini.c,v 1.28 2007-05-07 12:35:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -192,15 +192,17 @@ reloadObject (
     op = oidToObject(oh->oid);
     if (op != NULL) {
       op->u.n.flags.b.swapDelete = 0;
-
-      flags.b.father = op->g.f.poid.oix != oh->poid.oix;
-      flags.b.name   = strcmp(op->g.f.name.orig, oh->name) != 0;
-      flags.b.server = op->g.flags.m & net_mGo_isClient && cdh_ObjidIsNotEqual(op->g.soid, oh->soid);
-      flags.b.classid  = op->g.cid != oh->cid;
-      flags.b.size   = !op->g.flags.b.isAliasClient && op->g.size != oh->rbody.size;
-      flags.b.flags  = op->u.n.lflags.m != oh->flags.m;
-      flags.b.body   = time_Acomp(&op->u.n.time, &oh->rbody.time) != 0;
-
+      
+      if (op->g.oid.oix != 0) {
+        flags.b.father = op->g.f.poid.oix != oh->poid.oix;
+        flags.b.name   = strcmp(op->g.f.name.orig, oh->name) != 0;
+        flags.b.server = op->g.flags.m & net_mGo_isClient && cdh_ObjidIsNotEqual(op->g.soid, oh->soid);
+        flags.b.classid  = op->g.cid != oh->cid;
+        flags.b.size   = !op->g.flags.b.isAliasClient && op->g.size != oh->rbody.size;
+        flags.b.flags  = op->u.n.lflags.m != oh->flags.m;
+        // flags.b.body   = time_Acomp(&op->u.n.time, &oh->rbody.time) != 0;
+        flags.b.body   = time_Acomp(&op->u.n.time, &oh->time) != 0;
+      }
     } else {
       flags.b.created   = 1;
       op = ivol_LoadObject(sts, vp, oh, vol_mLink_swapLoad);
