@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.23 2007-01-17 10:31:20 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.24 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -492,7 +492,7 @@ extern "C" {
   void grow_AddText( grow_tNodeClass nc, char *name, 
 	char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
-	glow_mDisplayLevel display_level, void *user_data);
+	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data);
   void grow_AddAnnot( grow_tNodeClass nc, 
 	double x, double y, int annot_num, glow_eDrawType d_type, glow_eDrawType color_d_type,
 	int t_size, glow_eAnnotType a_type,
@@ -732,8 +732,8 @@ extern "C" {
     \param rows		Number of rows in text.
   */
   void grow_MeasureAnnotText( grow_tCtx ctx, char *text, glow_eDrawType draw_type,
-		int text_size, glow_eAnnotType annot_type,
-		double *width, double *height, int *rows);
+			      int text_size, glow_eAnnotType annot_type, glow_eFont font,
+			      double *width, double *height, int *rows);
 
   //! Get the group of a node.
   /*!
@@ -1119,7 +1119,7 @@ extern "C" {
   void grow_CreateGrowText( grow_tCtx ctx, char *name, 
 	char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
-	glow_mDisplayLevel display_level, void *user_data,
+	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data,
 	grow_tObject *text_object);
 
   //! Create an image object, i.e an object of class GrowImage.
@@ -1927,6 +1927,13 @@ extern "C" {
   */
   void grow_SetSelectTextBold( grow_tCtx ctx, int bold);
 
+  //! Set font on all selected objects.
+  /*!
+    \param ctx		Grow context.
+    \param font		Font.
+  */
+  void grow_SetSelectTextFont( grow_tCtx ctx, glow_eFont font);
+
   //! Set the value of a bar object.
   /*!
     \param object	A GrowBar object.
@@ -2456,13 +2463,14 @@ extern "C" {
     \param len		Lenght of text.
     \param draw_type	Text drawtype.
     \param text_size	Size of text.
+    \param font		Text font.
     \param width	Returned width of text.
     \param height	Returned height of text.
     \param descent	Returnd descent of text.
   */
   void grow_GetTextExtent( grow_tCtx ctx, char *text, int len, 
-			   glow_eDrawType draw_type, int text_size, double *width,
-			   double *height, double *descent);
+			   glow_eDrawType draw_type, int text_size, glow_eFont font,
+			   double *width, double *height, double *descent);
 
   //! Get the default window size
   /*!

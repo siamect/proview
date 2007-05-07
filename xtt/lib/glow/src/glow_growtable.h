@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.h,v 1.8 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growtable.h,v 1.9 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,6 +167,7 @@ class GrowTable : public GrowRect {
   int			input_focus;		//!< This object has input focus.
   int 			header_text_bold;	//!< Header text is bold.
   glow_mTableOptions	options;		//!< Options bitmask.
+  glow_eFont		font;			//!< Text font.
 
   //! Draw the object.
   /*!
@@ -287,6 +288,12 @@ class GrowTable : public GrowRect {
     \param bold		Text is bold.
   */
   void set_textbold( int bold);
+
+  //! Set text font
+  /*!
+    \param font		Text font.
+  */
+  void set_textfont( glow_eFont textfont);
 
   //! Set original text color.
   /*!

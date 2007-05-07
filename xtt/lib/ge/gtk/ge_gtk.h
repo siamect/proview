@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.3 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.4 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -210,6 +210,10 @@ class GeGtk : public Ge {
   static void activate_textsize_3( GtkWidget *w, gpointer gectx);
   static void activate_textsize_4( GtkWidget *w, gpointer gectx);
   static void activate_textsize_5( GtkWidget *w, gpointer gectx);
+  static void activate_textfont_1( GtkWidget *w, gpointer gectx);
+  static void activate_textfont_2( GtkWidget *w, gpointer gectx);
+  static void activate_textfont_3( GtkWidget *w, gpointer gectx);
+  static void activate_textfont_4( GtkWidget *w, gpointer gectx);
   static void activate_textbold( GtkWidget *w, gpointer gectx);
   static void activate_zoom_in( GtkWidget *w, gpointer gectx);
   static void activate_zoom_out( GtkWidget *w, gpointer gectx);

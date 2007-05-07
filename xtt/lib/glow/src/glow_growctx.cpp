@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.21 2007-03-27 08:27:22 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.22 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2846,6 +2846,16 @@ void GrowCtx::set_select_textbold( int bold)
   }
 }
 
+void GrowCtx::set_select_textfont( glow_eFont font)
+{
+  for ( int i = 0; i < a_sel.size(); i++) {
+    if ( a_sel[i]->type() == glow_eObjectType_GrowText)
+      ((GrowText *)a_sel[i])->set_textfont( font);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
+      ((GrowTable *)a_sel[i])->set_textfont( font);
+  }
+}
+
 void GrowCtx::set_move_restrictions( glow_eMoveRestriction restriction,
 	double max_limit, double min_limit, GlowArrayElem *object)
 {
@@ -3646,11 +3656,11 @@ void GrowCtx::restore_geometry()
 }
 
 void GrowCtx::get_text_extent( char *text, int len, glow_eDrawType draw_type,
-	int text_size, double *width, double *height, double *descent)
+	int text_size, glow_eFont font, double *width, double *height, double *descent)
 {
   int z_width, z_height, z_descent;
 
-  gdraw->get_text_extent( text, len, draw_type, text_size,
+  gdraw->get_text_extent( text, len, draw_type, text_size, font,
 	&z_width, &z_height, &z_descent);
 
   *width = double( z_width) / mw.zoom_factor_y;

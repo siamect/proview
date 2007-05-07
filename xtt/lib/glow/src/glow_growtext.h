@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.h,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growtext.h,v 1.6 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,6 +46,7 @@ class GrowText : public GlowText {
     \param border_d_type Text drawtype.
     \param color_d_type Color drawtype.
     \param t_size	Text size.
+    \param t_font	Text font.
     \param display_lev	Level when the object is visible.
     \param nodraw	Don't draw the object now.
   */
@@ -53,6 +54,7 @@ class GrowText : public GlowText {
 		glow_eDrawType border_d_type = glow_eDrawType_TextHelveticaBold,
 	        glow_eDrawType color_d_type = glow_eDrawType_Line,
 		int t_size = 2,
+	        glow_eFont t_font = glow_eFont_Helvetica,
 		glow_mDisplayLevel display_lev = glow_mDisplayLevel_1,
 		int nodraw = 0);
 
@@ -274,6 +276,12 @@ class GrowText : public GlowText {
   */
   void set_textbold( int bold);
 
+  //! Set text font
+  /*!
+    \param font		Text font.
+  */
+  void set_textfont( glow_eFont textfont);
+
   double	x_right;	//!< Right border of object.
   double	x_left;		//!< Left border of object.
   double	y_high;		//!< High border of object.
@@ -290,6 +298,7 @@ class GrowText : public GlowText {
   GlowTransform trf;		//!< Transformation matrix of object.
   char        	last_group[32];	//!< The last group the object was a member of.
   glow_eDrawType original_color_drawtype; //!< The original color, i.e. color drawn at edit time.
+  glow_eFont    font; 		//!< Text font
 
   //! Set user data.
   /*!

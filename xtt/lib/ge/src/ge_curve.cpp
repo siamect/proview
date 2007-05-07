@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_curve.cpp,v 1.16 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: ge_curve.cpp,v 1.17 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -607,22 +607,28 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
 			 glow_eDrawType_Color32, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("View"),
 		       0.8, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Cursor"),
 		       3, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Mark"),
 		       5.7, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Unit"),
 		       9.0, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Scale"),
 		       11, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Attribute"),
 		       14, 0.6, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &o1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &o1);
   
   for ( int i = 1; i < curve->cd->cols; i++) {
     // Draw shadowed frame
@@ -655,7 +661,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
     // Draw unit
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->unit[i],
 		       9.0, (i-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+			 glow_mDisplayLevel_1, NULL, &t1);
     // Draw button for scale
     grow_CreateGrowRect( curve->grownames_ctx, "", 11, (i-0.2)+0.1, 1.2, 0.7,
 			 glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
@@ -663,8 +670,9 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
     grow_SetObjectShadowWidth( curve->scale_rect[i], 20);
     // Draw attribute name
     grow_CreateGrowText( curve->grownames_ctx, "", curve->cd->name[i],
-		       14.0, (i-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+			 14.0, (i-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
+			 glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+			 glow_mDisplayLevel_1, NULL, &t1);
     grow_SetAnnotation( curve->cursor_annot[i], 0, "0", 1);
     grow_SetAnnotation( curve->mark_annot[i], 0, "0", 1);
   }
@@ -680,7 +688,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   // Draw unit
   grow_CreateGrowText( curve->grownames_ctx, "", "s",
 		       9.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelvetica, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &t1);
   // Draw button for scale
   grow_CreateGrowRect( curve->grownames_ctx, "", 11, (curve->cd->cols-0.2)+0.1, 1.2, 0.7,
 		       glow_eDrawType_Line, 1, 0, glow_mDisplayLevel_1, 1, 1, 1,
@@ -689,7 +698,8 @@ int GeCurve::init_grownames_cb( GlowCtx *fctx, void *client_data)
   // Draw attribute name
   grow_CreateGrowText( curve->grownames_ctx, "", Lng::translate("Time axis"),
 		       14.0, (curve->cd->cols-0.2) + 0.75, glow_eDrawType_TextHelveticaBold, 
-		       glow_eDrawType_Line, 2, glow_mDisplayLevel_1, NULL, &t1);
+		       glow_eDrawType_Line, 2, glow_eFont_Helvetica, 
+		       glow_mDisplayLevel_1, NULL, &t1);
   grow_SetAnnotation( curve->cursor_annot[0], 0, "0", 1);
   grow_SetAnnotation( curve->mark_annot[0], 0, "0", 1);
 

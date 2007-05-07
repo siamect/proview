@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.25 2007-01-17 10:31:54 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.26 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1569,6 +1569,12 @@ void Ge::activate_textsize( int size)
 {
   graph->set_textsize( size);
   graph->set_select_textsize( size);
+}
+
+void Ge::activate_textfont( glow_eFont font)
+{
+  graph->set_textfont( font);
+  graph->set_select_textfont( font);
 }
 
 void Ge::activate_textbold( int set)

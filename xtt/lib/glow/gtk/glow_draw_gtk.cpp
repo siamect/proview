@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.4 2007-02-06 15:13:34 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.5 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,27 +74,104 @@ typedef struct {
 	int	blue;
 	} draw_sColor;
 
-static char	font_names[glow_eDrawFont__][DRAW_FONT_SIZE][80] = { {	
-	"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1"
-	},{ 
-	"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1"
-	} };
+static char	font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = { 
+  { 
+    {	
+      "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1"
+    },
+    { 
+      "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    },
+    { 
+      "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    },
+    { 
+      "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--10-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--12-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--24-*-*-*-m-*-ISO8859-1"
+    },
+    { 
+      "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--10-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--12-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--24-*-*-*-m-*-ISO8859-1"
+    } 
+  }
+};
 
 
 static  GdkEvent	last_event;
@@ -172,7 +249,7 @@ static int glow_create_cursor( GlowDrawGtk *draw_ctx)
 
 static int draw_free_gc( GlowDrawGtk *draw_ctx)
 {
-  int i, j;
+  int i, j, k;
 
   for ( i = 1; i < glow_eDrawCursor__ ; i++)
     gdk_cursor_unref( draw_ctx->cursors[i]);
@@ -185,9 +262,12 @@ static int draw_free_gc( GlowDrawGtk *draw_ctx)
     }
   }  
 
-  for ( i = 0; i < glow_eDrawFont__; i++) {
-    for ( j = 0; j < DRAW_FONT_SIZE; j++) {
-      gdk_font_unref( draw_ctx->font[i][j]);
+  for ( i = 0; i < glow_eFont__; i++) {
+    for ( j = 0; j < glow_eDrawFont__; j++) {
+      for ( k = 0; k < DRAW_FONT_SIZE; k++) {
+	if ( draw_ctx->font[i][j][k])
+	  gdk_font_unref( draw_ctx->font[i][j][k]);
+      }
     }
   }
   return 1;
@@ -340,16 +420,16 @@ static int glow_create_gc( GlowDrawGtk *draw_ctx, GdkWindow *window)
   }
 
   for ( i = 0; i < DRAW_FONT_SIZE; i++) {
-    font = gdk_font_load( font_names[glow_eDrawFont_HelveticaBold][i]);
+    font = gdk_font_load( font_names[glow_eFont_Helvetica][glow_eDrawFont_HelveticaBold][i]);
     gdk_gc_set_font( draw_ctx->gcs[glow_eDrawType_TextHelveticaBold][i], font);
     gdk_gc_set_font( draw_ctx->gcs[glow_eDrawType_TextHelveticaEraseBold][i], font);
-    draw_ctx->font[glow_eDrawFont_HelveticaBold][i] = font;
+    draw_ctx->font[glow_eFont_Helvetica][glow_eDrawFont_HelveticaBold][i] = font;
   }
   for ( i = 0; i < DRAW_FONT_SIZE; i++) {
-    font = gdk_font_load( font_names[glow_eDrawFont_Helvetica][i]);
+    font = gdk_font_load( font_names[glow_eFont_Helvetica][glow_eDrawFont_Helvetica][i]);
     gdk_gc_set_font( draw_ctx->gcs[glow_eDrawType_TextHelvetica][i], font);
     gdk_gc_set_font( draw_ctx->gcs[glow_eDrawType_TextHelveticaErase][i], font);
-    draw_ctx->font[glow_eDrawFont_Helvetica][i] = font;
+    draw_ctx->font[glow_eFont_Helvetica][glow_eDrawFont_Helvetica][i] = font;
   }
 
   return 1;
@@ -1453,7 +1533,8 @@ int GlowDrawGtk::polyline_erase( GlowWind *wind, glow_sPointX *points, int point
 }
 
 int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int line)
+		       glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+		       int highlight, int line, glow_eFont font_idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
@@ -1461,8 +1542,13 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
 
-  int font_idx = get_font_idx( gc_type);
+  int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
 
+  if ( font_idx != glow_eFont_Helvetica)
+    gdk_gc_set_font( get_gc( this, gc_type, idx), 
+		     font[font_idx][font_type][idx]);
+  
   if ( color != glow_eDrawType_Line) {
     GdkGCValues 		xgcv;
 
@@ -1474,12 +1560,12 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
 
   if ( !w->draw_buffer_only)
     gdk_draw_text( w->window,
-		   font[font_idx][idx],
+		   font[font_idx][font_type][idx],
 		   get_gc( this, gc_type, idx), 
 		   x, y, text, len);
   if ( w->double_buffer_on)
     gdk_draw_text( w->buffer,
-		 font[font_idx][idx],
+		 font[font_idx][font_type][idx],
 		 get_gc( this, gc_type, idx), 
 		 x, y, text, len);
   if ( w->clip_on)
@@ -1494,20 +1580,24 @@ int GlowDrawGtk::text( GlowWind *wind, int x, int y, char *text, int len,
     gdk_gc_set_values( get_gc( this, gc_type, idx), &xgcv,
 	GDK_GC_FOREGROUND);
   }
+  if ( font_idx != glow_eFont_Helvetica)
+    gdk_gc_set_font( get_gc( this, gc_type, idx), 
+		     font[glow_eFont_Helvetica][font_type][idx]);
   return 1;
 }
 
 int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int pos)
+			      glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+			      int highlight, int pos, glow_eFont font)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
 
   int theight, tdescent, width, height, descent;
-  get_text_extent( "A", 1, gc_type, idx,
+  get_text_extent( "A", 1, gc_type, idx, font,
 			&width, &height, &descent);
   if ( pos != 0)
-    get_text_extent( text, pos, gc_type, idx,
+    get_text_extent( text, pos, gc_type, idx, font,
 		     &width, &theight, &tdescent);
   else
     width = 0;
@@ -1532,7 +1622,7 @@ int GlowDrawGtk::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
 }
 
 int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, int idx, int line)
+	glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
@@ -1542,22 +1632,32 @@ int GlowDrawGtk::text_erase( GlowWind *wind, int x, int y, char *text, int len,
   else if ( gc_type == glow_eDrawType_TextHelveticaBold)
     gc_type = glow_eDrawType_TextHelveticaEraseBold;
 
-  int font_idx = get_font_idx( gc_type);
+  int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
 
+  if ( font_idx != glow_eFont_Helvetica)
+    gdk_gc_set_font( get_gc( this, gc_type, idx), 
+		     font[font_idx][font_type][idx]);
+  
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
   if ( !w->draw_buffer_only)
     gdk_draw_text( w->window,
-		   font[font_idx][idx],
+		   font[font_idx][font_type][idx],
 		   get_gc( this, gc_type, idx), 
 		   x, y, text, len);
   if ( w->double_buffer_on)
     gdk_draw_text( w->buffer,
-		   font[font_idx][idx],
+		   font[font_idx][font_type][idx],
 		   get_gc( this, gc_type, idx), 
 		   x, y, text, len);
   if ( w->clip_on)
     reset_clip( w, get_gc( this, gc_type, idx));
+
+  if ( font_idx != glow_eFont_Helvetica)
+    gdk_gc_set_font( get_gc( this, gc_type, idx), 
+		     font[glow_eFont_Helvetica][font_type][idx]);
+  
   return 1;
 }
 
@@ -1769,14 +1869,15 @@ void GlowDrawGtk::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 }
 
 int GlowDrawGtk::get_text_extent( char *text, int len,
-				   glow_eDrawType gc_type, int idx,
-				   int *width, int *height, int *descent)
+				  glow_eDrawType gc_type, int idx, glow_eFont font_idx,
+				  int *width, int *height, int *descent)
 {
   int	text_width, text_ascent, text_descent, text_lbearing, text_rbearing;
 
-  int font_idx = get_font_idx( gc_type);
+  int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
 
-  gdk_text_extents( font[font_idx][idx], text, len,
+  gdk_text_extents( font[font_idx][font_type][idx], text, len,
 	&text_lbearing, &text_rbearing, &text_width, &text_ascent, 
 		    &text_descent);
   *height = text_ascent + text_descent;
@@ -2382,7 +2483,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.4 2007-02-06 15:13:34 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.5 2007-05-07 14:35:03 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
@@ -2484,21 +2585,28 @@ GdkPoint *GlowDrawGtk::points_to_gdk_points( glow_sPointX *points, int point_cnt
   return gpoints;
 }
 
-int GlowDrawGtk::get_font_idx( int gc_type)
+void GlowDrawGtk::load_font( glow_eFont font_idx, int font_type, int idx)
 {
-  int font_idx;
+  if ( !font[font_idx][font_type][idx])
+    font[font_idx][font_type][idx] = 
+      gdk_font_load( font_names[font_idx][font_type][idx]);
+}
+
+int GlowDrawGtk::get_font_type( int gc_type)
+{
+  int font_type;
 
   switch( gc_type) {
   case glow_eDrawType_TextHelveticaBold:
   case glow_eDrawType_TextHelveticaEraseBold:
-    font_idx = glow_eDrawFont_HelveticaBold;
+    font_type = glow_eDrawFont_HelveticaBold;
     break;
   default:
-    font_idx = glow_eDrawFont_Helvetica;
+    font_type = glow_eDrawFont_Helvetica;
     break;
   }
 
-  return font_idx;
+  return font_type;
 }
 
 // Image functions

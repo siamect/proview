@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.26 2007-01-17 10:31:20 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.27 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -446,11 +446,11 @@ void grow_AddArc( grow_tNodeClass nc, char *name,
 void grow_AddText( grow_tNodeClass nc, char *name, 
 	char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
-	glow_mDisplayLevel display_level, void *user_data)
+	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data)
 {
   GrowText *t1;
   t1 = new GrowText( ((GlowNodeClass *)nc)->ctx, name, text, x, y, draw_type, color,
-		     t_size, display_level);
+		     t_size, t_font, display_level);
   t1->set_user_data( user_data);
   ((GlowNodeClass *)nc)->insert( t1);
 }
@@ -750,10 +750,10 @@ void grow_GetNodePosition( grow_tNode node, double *x, double *y)
 }
 
 void grow_MeasureAnnotText( grow_tCtx ctx, char *text, glow_eDrawType draw_type,
-		int text_size, glow_eAnnotType annot_type,
-		double *width, double *height, int *rows)
+			    int text_size, glow_eAnnotType annot_type, glow_eFont font,
+			    double *width, double *height, int *rows)
 {
-  glow_measure_annot_text( ctx, text, draw_type, text_size, annot_type, 
+  glow_measure_annot_text( ctx, text, draw_type, text_size, annot_type, font,
 		width, height, rows);
 }
 
@@ -1021,11 +1021,12 @@ void grow_CreateGrowAnnot( grow_tCtx ctx, char *name,
 void grow_CreateGrowText( grow_tCtx ctx, char *name, 
 	char *text, double x, double y,
 	glow_eDrawType draw_type, glow_eDrawType color, int t_size, 
-	glow_mDisplayLevel display_level, void *user_data,
+	glow_eFont t_font, glow_mDisplayLevel display_level, void *user_data,
 	grow_tObject *text_object)
 {
   GrowText *t1;
-  t1 = new GrowText( ctx, name, text, x, y, draw_type, color, t_size, display_level);
+  t1 = new GrowText( ctx, name, text, x, y, draw_type, color, t_size, t_font,
+		     display_level);
   t1->set_user_data( user_data);
   ctx->insert( t1);
   ctx->nav_zoom();
@@ -1400,6 +1401,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->adjustment;
       attrinfo[i].type = glow_eType_Adjustment;
       attrinfo[i++].size = sizeof( op->adjustment);
+      
+      strcpy( attrinfo[i].name, "Font");
+      attrinfo[i].value_p = &op->font;
+      attrinfo[i].type = glow_eType_Font;
+      attrinfo[i++].size = sizeof( op->font);
       
       break;
     }
@@ -3723,6 +3729,11 @@ void grow_SetSelectTextBold( grow_tCtx ctx, int bold)
   ctx->set_select_textbold( bold);
 }
 
+void grow_SetSelectTextFont( grow_tCtx ctx, glow_eFont font)
+{
+  ctx->set_select_textfont( font);
+}
+
 void grow_SetBarValue( grow_tObject object, double value)
 {
   ((GrowBar *)object)->set_value( value);
@@ -4067,10 +4078,10 @@ void grow_MoveNode( grow_tNode node, double x, double y)
 }
 
 void grow_GetTextExtent( grow_tCtx ctx, char *text, int len, 
-	glow_eDrawType draw_type, int text_size, double *width,
+	glow_eDrawType draw_type, int text_size, glow_eFont font, double *width,
 	double *height, double *descent)
 {
-  ctx->get_text_extent( text, len, draw_type, text_size,
+  ctx->get_text_extent( text, len, draw_type, text_size, font,
 	width, height, descent);
 }
 

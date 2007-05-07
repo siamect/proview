@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_command.cpp,v 1.12 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: ge_graph_command.cpp,v 1.13 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2155,9 +2155,10 @@ static int	graph_create_func( void		*client_data,
       case 5: textsize = 8; break;
     }
     grow_CreateGrowText( graph->grow->ctx, "", text_str,
-	    x1, y1,
-	    drawtype, glow_eDrawType_Line, textsize, glow_mDisplayLevel_1,
-	    NULL, &graph->current_cmd_object);
+			 x1, y1,
+			 drawtype, glow_eDrawType_Line, textsize, 
+			 glow_eFont_Helvetica, glow_mDisplayLevel_1,
+			 NULL, &graph->current_cmd_object);
     grow_SetModified( graph->grow->ctx, 1);
   }
   else if ( strncmp( arg1_str, "OBJECT", strlen( arg1_str)) == 0)
@@ -2563,8 +2564,8 @@ static int graph_gettextextent_func(
     text_idx = 0;
   }
   grow_GetTextExtent( graph->grow->ctx, arg_list->value_string, 
-	strlen(arg_list->value_string), draw_type,
-	text_idx, &z_width, &z_height, &z_descent);
+		      strlen(arg_list->value_string), draw_type,
+		      text_idx, glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
 
   arg_p4->value_float = float(z_width);
   arg_p4->value_returned = 1;

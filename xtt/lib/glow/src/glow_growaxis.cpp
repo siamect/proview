@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growaxis.cpp,v 1.8 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growaxis.cpp,v 1.9 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -269,8 +269,9 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       for ( i = 0; i < lines; i++) {
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
-	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				max( 0, text_idx), &z_width, &z_height, &z_descent);
+	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype,
+				       max( 0, text_idx), glow_eFont_Helvetica, 
+				       &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
 	}
@@ -305,7 +306,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	  else
 	    y_text = y + (z_height-z_descent)/2;
 	  ctx->gdraw->text( w, ll_x, y_text,
-	       text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+			    text, strlen(text), text_drawtype, text_color_drawtype, 
+			    text_idx, highlight, 0, glow_eFont_Helvetica);
 	}
       }
     }
@@ -318,7 +320,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     // Calculate max value text height
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-			    max( 0, text_idx), &z_width, &z_height, &z_descent);
+				   max( 0, text_idx), glow_eFont_Helvetica, 
+				   &z_width, &z_height, &z_descent);
 
       line_length = ur_y - ll_y - z_height;
       if ( line_length < 3)
@@ -340,7 +343,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
         ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
+				     max( 0, text_idx), glow_eFont_Helvetica, 
+				     &z_width, &z_height, &z_descent);
 
         if ( text_idx >= 0 && z_height < ur_y - ll_y ) {
           if ( i == lines - 1)
@@ -350,7 +354,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
           else
             x_text = x - (z_width)/2;
           ctx->gdraw->text( w, x_text, ll_y + z_height - z_descent,
-		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+			    text, strlen(text), text_drawtype, text_color_drawtype, 
+			    text_idx, highlight, 0, glow_eFont_Helvetica);
         }
       }
     }
@@ -366,7 +371,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				max( 0, text_idx), &z_width, &z_height, &z_descent);
+				       max( 0, text_idx), glow_eFont_Helvetica, 
+				       &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
 	}
@@ -401,7 +407,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
         else
           y_text = y + (z_height-z_descent)/2;
         ctx->gdraw->text( w, x_text, y_text,
-		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+			  text, strlen(text), text_drawtype, text_color_drawtype, 
+			  text_idx, highlight, 0, glow_eFont_Helvetica);
       }
     }
   }
@@ -413,7 +420,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
     // Calculate max value text height
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-			    max( 0, text_idx), &z_width, &z_height, &z_descent);
+				   max( 0, text_idx), glow_eFont_Helvetica, 
+				   &z_width, &z_height, &z_descent);
 
       line_length = ur_y - ll_y - (z_height - z_descent);
       if ( line_length < 3)
@@ -434,7 +442,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       if ( draw_text && i % valuequotient == 0) {
         format_text( text, format, max_value - i * increment);
         ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
+				     max( 0, text_idx), glow_eFont_Helvetica, 
+				     &z_width, &z_height, &z_descent);
 
         if ( text_idx >= 0 && z_height - z_descent < ur_y - ll_y) {
           if ( i == lines - 1)
@@ -444,7 +453,8 @@ void GrowAxis::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
           else
             x_text = x - (z_width)/2;
           ctx->gdraw->text( w, x_text, ur_y,
-		    text, strlen(text), text_drawtype, text_color_drawtype, text_idx, highlight, 0);
+			    text, strlen(text), text_drawtype, text_color_drawtype, 
+			    text_idx, highlight, 0, glow_eFont_Helvetica);
         }
       }
     }
@@ -628,7 +638,8 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-				max( 0, idx), &z_width, &z_height, &z_descent);
+				       max( 0, idx), glow_eFont_Helvetica, 
+				       &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
 	}
@@ -642,7 +653,8 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   {
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-                max( 0, idx), &z_width, &z_height, &z_descent);
+				   max( 0, idx), glow_eFont_Helvetica, 
+				   &z_width, &z_height, &z_descent);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);
     }
@@ -656,7 +668,8 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
 	if ( i % valuequotient == 0) {
 	  format_text( text, format, max_value - i * increment);
 	  ctx->gdraw->get_text_extent( text, strlen(text), text_drawtype, 
-                max( 0, idx), &z_width, &z_height, &z_descent);
+				       max( 0, idx), glow_eFont_Helvetica, 
+				       &z_width, &z_height, &z_descent);
 	  if ( max_z_width < z_width)
 	    max_z_width = z_width;
 	}
@@ -670,7 +683,8 @@ void GrowAxis::export_javabean( GlowTransform *t, void *node,
   {
     if ( draw_text) {
       ctx->gdraw->get_text_extent( "0", 1, text_drawtype, 
-                max( 0, idx), &z_width, &z_height, &z_descent);
+				   max( 0, idx), glow_eFont_Helvetica, 
+				   &z_width, &z_height, &z_descent);
 
       line_length = int(ur_y - ll_y) - (z_height - z_descent);
     }

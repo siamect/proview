@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_text.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_text.cpp,v 1.6 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -96,7 +96,7 @@ void GlowText::draw( GlowWind *w, void *pos, int highlight, int hot, void *node)
   idx = min( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->text( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text, strlen(text),
-	draw_type, color_drawtype, idx, highlight, 0);
+	draw_type, color_drawtype, idx, highlight, 0, glow_eFont_Helvetica);
 }
 
 void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
@@ -107,7 +107,7 @@ void GlowText::erase( GlowWind *w, void *pos, int hot, void *node)
   idx = min( idx, DRAW_TYPE_SIZE-1);
   ctx->gdraw->text_erase( w, p.z_x + ((GlowPoint *)pos)->z_x - w->offset_x, 
 	p.z_y + ((GlowPoint *)pos)->z_y - w->offset_y, text,  strlen(text),
-	draw_type, idx, 0);
+	draw_type, idx, 0, glow_eFont_Helvetica);
 }
 
 int GlowText::event_handler( GlowWind *w, void *pos, glow_eEvent event, int x, int y,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.16 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.17 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -821,6 +821,13 @@ static attrnav_sEnumElement elem_adjustment[] = {
 	{ (int) glow_eAdjustment_Left, 	"Left"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_font[] = {
+	{ (int) glow_eFont_Helvetica, "Helvetica"},
+	{ (int) glow_eFont_Courier, "Times"},
+	{ (int) glow_eFont_Courier, "New Century Schoolbook"},
+	{ (int) glow_eFont_Courier, "Courier"},
+	{ 0, ""}};
+
 static attrnav_sEnumElement elem_access[] = {
 	{ (unsigned int) pwr_mPrv_RtRead, 	"RtRead"},
 	{ (unsigned int) pwr_mPrv_RtWrite, 	"RtWrite"},
@@ -910,6 +917,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_InputFocusMark, (attrnav_sEnumElement *) &elem_input_focus_mark},
 	{ (int) ge_eAttrType_ScaleType, (attrnav_sEnumElement *) &elem_scale_type},
 	{ (int) glow_eType_Adjustment, 	(attrnav_sEnumElement *) &elem_adjustment},
+	{ (int) glow_eType_Font, 	(attrnav_sEnumElement *) &elem_font},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -962,6 +970,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case glow_eType_Int:
     case glow_eType_Direction:
     case glow_eType_Adjustment:
+    case glow_eType_Font:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
@@ -1043,6 +1052,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     }
     case glow_eType_Direction:
     case glow_eType_Adjustment:
+    case glow_eType_Font:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:
@@ -2095,6 +2105,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
   {
     case glow_eType_Direction:
     case glow_eType_Adjustment:
+    case glow_eType_Font:
     case glow_eType_Color:
     case glow_eType_Tone:
     case glow_eType_ToneOrColor:

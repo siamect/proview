@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtable.cpp,v 1.12 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growtable.cpp,v 1.13 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -103,6 +103,7 @@ void GrowTable::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowTable_row_height) << FSPACE << row_height << endl;
   fp << int(glow_eSave_GrowTable_options) << FSPACE << options << endl;
   fp << int(glow_eSave_GrowTable_select_drawtype) << FSPACE << select_drawtype << endl;
+  fp << int(glow_eSave_GrowTable_font) << FSPACE << (int)font << endl;
   for ( int i = 0; i < TABLE_MAX_COL; i++) {
     fp << int(glow_eSave_GrowTable_column_width1)+2*i << FSPACE << column_width[i] << endl;
     fp << int(glow_eSave_GrowTable_header_text1)+2*i << FSPACE << header_text[i] << endl;
@@ -151,6 +152,7 @@ void GrowTable::open( ifstream& fp)
       case glow_eSave_GrowTable_row_height: fp >> row_height; break;
       case glow_eSave_GrowTable_options: fp >> tmp; options = (glow_mTableOptions)tmp; break;
       case glow_eSave_GrowTable_select_drawtype: fp >> tmp; select_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowTable_font: fp >> tmp; font = (glow_eFont)tmp; break;
       case glow_eSave_GrowTable_column_width1: fp >> column_width[0]; break;
       case glow_eSave_GrowTable_header_text1: fp.get(); fp.getline( header_text[0], sizeof(header_text[0])); break;
       case glow_eSave_GrowTable_column_width2: fp >> column_width[1]; break;
@@ -424,7 +426,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       if ( header_text_idx >= 0 && strcmp( header_text[i], "") != 0) {
 	ctx->gdraw->text( w, int(x + text_offs), int(y + header_h - 4),
 		    header_text[i], strlen(header_text[i]), header_text_drawtype, header_text_color,
-		    header_text_idx, highlight, 0);
+		    header_text_idx, highlight, 0, font);
       }
       x += column_width[i] * w->zoom_factor_x;
       if ( x > ur_x)
@@ -450,7 +452,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
       if ( header_text_idx >= 0 && strcmp( header_text[0], "") != 0)
 	ctx->gdraw->text( w, int(x + text_offs), int(y + header_h - 4),
 			header_text[0], strlen(header_text[0]), header_text_drawtype, header_text_color,
-			header_text_idx, highlight, 0);
+			header_text_idx, highlight, 0, font);
     }
   }
 
@@ -503,8 +505,8 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	       column_adjustment[0] == glow_eAdjustment_Center) {
 	    int width, height, descent;
 	    ctx->gdraw->get_text_extent( cell_value + offs, strlen(cell_value + offs),
-				  text_drawtype, text_idx,
-				  &width, &height, &descent);
+					 text_drawtype, text_idx, font,
+					 &width, &height, &descent);
 
 	    switch ( column_adjustment[0]) {
 	    case glow_eAdjustment_Left:
@@ -519,7 +521,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 	  }
 	  ctx->gdraw->text( w, text_x, int(y - 2),
 		    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
-		    text_idx, highlight, 0);
+		    text_idx, highlight, 0, font);
 	}
       }
     }
@@ -629,8 +631,8 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 		 column_adjustment[i] == glow_eAdjustment_Center) {
 	      int width, height, descent;
 	      ctx->gdraw->get_text_extent( cell_value + offs, strlen(cell_value + offs),
-				    text_drawtype, text_idx,
-				    &width, &height, &descent);
+					   text_drawtype, text_idx, font,
+					   &width, &height, &descent);
 
 	      switch ( column_adjustment[i]) {
 	      case glow_eAdjustment_Left:
@@ -646,7 +648,7 @@ void GrowTable::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, voi
 
 	    ctx->gdraw->text( w, text_x, int(y - 2),
 			    cell_value + offs, strlen(cell_value + offs), text_drawtype, text_color_drawtype,
-			    text_idx, highlight, 0);
+			    text_idx, highlight, 0, font);
 	  }
 	}
       }
@@ -1108,6 +1110,12 @@ void GrowTable::set_textbold( int bold)
     text_drawtype = glow_eDrawType_TextHelveticaBold;
   else
     text_drawtype = glow_eDrawType_TextHelvetica;
+  draw();
+}
+
+void GrowTable::set_textfont( glow_eFont textfont) 
+{ 
+  font = textfont;
   draw();
 }
 

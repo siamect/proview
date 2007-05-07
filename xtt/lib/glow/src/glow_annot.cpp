@@ -39,6 +39,7 @@ void GlowAnnot::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_Annot_p) << endl;
   p.save( fp, mode);
   fp << int(glow_eSave_Annot_annot_type) << FSPACE << int(annot_type) << endl;
+  fp << int(glow_eSave_Annot_font) << FSPACE << int(font) << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -62,6 +63,8 @@ void GlowAnnot::open( ifstream& fp)
       case glow_eSave_Annot_p: p.open( fp); break;
       case glow_eSave_Annot_annot_type: fp >> tmp; 
 	annot_type = (glow_eAnnotType)tmp; break;
+      case glow_eSave_Annot_font: fp >> tmp; 
+	font = (glow_eFont)tmp; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GlowAnnot:open syntax error" << endl;
@@ -74,15 +77,15 @@ void GlowAnnot::open( ifstream& fp)
 
 
 void glow_measure_annot_text( GrowCtx *ctx, char *text, glow_eDrawType draw_type, 
-		int text_size, glow_eAnnotType annot_type, 
-		double *width, double *height, int *rows)
+			      int text_size, glow_eAnnotType annot_type, glow_eFont font,
+			      double *width, double *height, int *rows)
 {
   int	z_width, z_height, z_descent;
 
   switch ( annot_type) {
     case glow_eAnnotType_OneLine:
       ctx->gdraw->get_text_extent( text, strlen(text), draw_type, text_size, 
-		&z_width, &z_height, &z_descent);
+				   font, &z_width, &z_height, &z_descent);
       *rows = 1;
       break;
     case glow_eAnnotType_MultiLine:
@@ -99,8 +102,8 @@ void glow_measure_annot_text( GrowCtx *ctx, char *text, glow_eDrawType draw_type
 	{
 	  if ( len)
 	  {
-            ctx->gdraw->get_text_extent( line, len, draw_type, text_size, 
-		&l_width, &l_height, &l_descent);
+            ctx->gdraw->get_text_extent( line, len, draw_type, text_size, font, 
+					 &l_width, &l_height, &l_descent);
 	    z_width = max( z_width, l_width);
 	  }
 	  len = 0;
@@ -113,7 +116,7 @@ void glow_measure_annot_text( GrowCtx *ctx, char *text, glow_eDrawType draw_type
       if ( len)
       {
         ctx->gdraw->get_text_extent( line, len, draw_type, text_size, 
-		&l_width, &l_height, &l_descent);
+				     font, &l_width, &l_height, &l_descent);
 	z_width = max( z_width, l_width);
         line_cnt++;
       }

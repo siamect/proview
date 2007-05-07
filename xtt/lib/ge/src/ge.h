@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.7 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge.h,v 1.8 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -217,6 +217,7 @@ class Ge {
   void activate_linetype7();
   void activate_gridsize( double size);
   void activate_textsize( int size);
+  void activate_textfont( glow_eFont font);
   void activate_textbold(int set);
   void activate_zoom_in();
   void activate_zoom_out();

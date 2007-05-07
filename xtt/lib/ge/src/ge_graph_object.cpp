@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.15 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.16 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1684,9 +1684,10 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 
   //  Zero text
   grow_CreateGrowText( graph->grow->ctx, "", "0",
-	    x0 + trend_width - 0.2, y0 - 0.2,
-	    glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, glow_mDisplayLevel_1,
-	    NULL, &t1);
+		       x0 + trend_width - 0.2, y0 - 0.2,
+		       glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, 
+		       glow_eFont_Helvetica, glow_mDisplayLevel_1,
+		       NULL, &t1);
 
   ap = alist;
   is_attrp = is_attr;
@@ -1750,12 +1751,13 @@ static int graph_object_collect_build( Graph *graph, pwr_sAttrRef *attrref)
 
           grow_GetTextExtent( graph->grow->ctx, name, 
 	    strlen(name), glow_eDrawType_TextHelveticaBold,
-	    2, &z_width, &z_height, &z_descent);
+	    2, glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
 
           grow_CreateGrowText( graph->grow->ctx, "", name,
-	    x1 + trend_width + 1, y1 + trend_height/2 + z_height/2,
-	    glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, glow_mDisplayLevel_1,
-	    NULL, &t1);
+			       x1 + trend_width + 1, y1 + trend_height/2 + z_height/2,
+			       glow_eDrawType_TextHelveticaBold, glow_eDrawType_Line, 2, 
+			       glow_eFont_Helvetica, glow_mDisplayLevel_1,
+			       NULL, &t1);
           if ( z_width > name_width)
             name_width = z_width;
 

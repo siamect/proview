@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.8 2007-02-06 10:06:41 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.9 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -167,9 +167,11 @@ void GeGtk::change_text_cb( void *ge_ctx, void *text_object, char *text)
   gectx->message( ' ', "");
   gtk_widget_grab_focus( gectx->cmd_input);
 
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(gectx->cmd_input), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), text, strlen(text), &pos);
+  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), textutf8, strlen(textutf8), &pos);
+  g_free( textutf8);
 
   // Select the text
   gtk_editable_set_position( GTK_EDITABLE(gectx->cmd_input), -1);
@@ -204,9 +206,11 @@ void GeGtk::change_name_cb( void *ge_ctx, void *text_object, char *text)
   gectx->message( ' ', "");
   gtk_widget_grab_focus( gectx->cmd_input);
 
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(gectx->cmd_input), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), text, strlen(text), &pos);
+  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), textutf8, strlen(textutf8), &pos);
+  g_free( textutf8);
 
   // Select the text
   gtk_editable_set_position( GTK_EDITABLE(gectx->cmd_input), -1);
@@ -240,9 +244,11 @@ void GeGtk::change_value_cb( void *ge_ctx, void *value_object, char *text)
   gectx->message( ' ', "");
   gtk_widget_grab_focus( gectx->cmd_input);
 
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(gectx->cmd_input), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), text, strlen(text), &pos);
+  gtk_editable_insert_text( GTK_EDITABLE(gectx->cmd_input), textutf8, strlen(textutf8), &pos);
+  g_free( textutf8);
 
   // Select the text
   // gtk_editable_set_position( GTK_EDITABLE(gectx->cmd_input), -1);
@@ -971,6 +977,23 @@ void GeGtk::activate_textsize_5(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_textsize( 5);
 }
 
+void GeGtk::activate_textfont_1(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_textfont( glow_eFont_Helvetica);
+}
+void GeGtk::activate_textfont_2(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_textfont( glow_eFont_Times);
+}
+void GeGtk::activate_textfont_3(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_textfont( glow_eFont_NewCenturySchoolbook);
+}
+void GeGtk::activate_textfont_4(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_textfont( glow_eFont_Courier);
+}
+
 void GeGtk::activate_textbold( GtkWidget *w, gpointer gectx)
 {
   int set = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(w));
@@ -1351,6 +1374,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkMenuBar *menu_bar = (GtkMenuBar *) g_object_new(GTK_TYPE_MENU_BAR, NULL);
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
   GtkToolbar *tools2 = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
+  GtkToolbar *tools3 = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);
 
   // File Entry
   GtkWidget *file_new = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);
@@ -2111,7 +2135,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_linewidth_omenu), 0);
   g_object_set( tools_linewidth_omenu, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools2, tools_linewidth_omenu, "Line Width", "");
+  gtk_toolbar_append_widget( tools3, tools_linewidth_omenu, "Line Width", "");
 
   // Line type option menu
   GtkWidget *tools_linetype_1 = gtk_image_menu_item_new_with_label( "Linetype 1");
@@ -2163,7 +2187,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_linetype_omenu), 0);
   g_object_set( tools_linetype_omenu, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools2, tools_linetype_omenu, "Line Type", "");
+  gtk_toolbar_append_widget( tools3, tools_linetype_omenu, "Line Type", "");
 
   // Text size options menu
   GtkWidget *tools_textsize_8 = gtk_image_menu_item_new_with_label( "Textsize 8");
@@ -2209,11 +2233,36 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textsize_omenu), 0);
   g_object_set( tools_textsize_omenu, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools2, tools_textsize_omenu, "Text Size", "");
+  gtk_toolbar_append_widget( tools3, tools_textsize_omenu, "Text Size", "");
+
+  // Text font options menu
+  GtkWidget *tools_textfont_1 = gtk_image_menu_item_new_with_label( "Helvetica");
+  g_signal_connect(tools_textfont_1, "activate", G_CALLBACK(activate_textfont_1), this);
+
+  GtkWidget *tools_textfont_2 = gtk_image_menu_item_new_with_label( "Times");
+  g_signal_connect(tools_textfont_2, "activate", G_CALLBACK(activate_textfont_2), this);
+
+  GtkWidget *tools_textfont_3 = gtk_image_menu_item_new_with_label( "New Century Schoolbook");
+  g_signal_connect(tools_textfont_3, "activate", G_CALLBACK(activate_textfont_3), this);
+
+  GtkWidget *tools_textfont_4 = gtk_image_menu_item_new_with_label( "Courier");
+  g_signal_connect(tools_textfont_4, "activate", G_CALLBACK(activate_textfont_4), this);
+
+  GtkMenu *textfont_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_1);
+  gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_2);
+  gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_3);
+  gtk_menu_shell_append( GTK_MENU_SHELL(textfont_menu), tools_textfont_4);
+  GtkWidget *tools_textfont_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
+								"menu", textfont_menu, NULL);
+
+  gtk_option_menu_set_history( GTK_OPTION_MENU(tools_textfont_omenu), 0);
+  g_object_set( tools_textfont_omenu, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools3, tools_textfont_omenu, "Font", "");
 
   // Bold checkbutton
   GtkWidget *tools_textbold = gtk_check_button_new_with_label( "Bold");
-  gtk_toolbar_append_widget( tools2, tools_textbold, "Set bold on selected text, and as default", "");
+  gtk_toolbar_append_widget( tools3, tools_textbold, "Set bold on selected text, and as default", "");
   g_signal_connect(tools_textbold, "toggled", G_CALLBACK(activate_textbold), this);
   g_object_set( tools_textbold, "can-focus", FALSE, NULL);
 
@@ -2395,6 +2444,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 
   GtkWidget *vbox = gtk_vbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(menu_bar), FALSE, FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools3), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools2), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(tools), FALSE, FALSE, 0);
   gtk_box_pack_start( GTK_BOX(vbox), GTK_WIDGET(hpaned), TRUE, TRUE, 0);

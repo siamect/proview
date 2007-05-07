@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.25 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.26 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -435,6 +435,7 @@ class Graph {
   glow_eLineType	linetype;		//!< Selected linetype.
   int			textsize;		//!< Selected text size.
   int			textbold;		//!< Text bold selected.
+  glow_eFont	       	textfont;		//!< Text font selected.
   int			border_color;		//!< Selected border color.
   int			fill_color;		//!< Selected fill color.
   int			fill;			//!< Fill selected.
@@ -553,6 +554,10 @@ class Graph {
   /*! \param bold	Bold text. */
   void set_textbold( int bold) { textbold = bold;};
 
+  //! Set text font.
+  /*! \param font	Text font. */
+  void set_textfont( glow_eFont font) { textfont = font;};
+
   //! Set border color.
   /*! \param color_idx	Border color. */
   void set_border_color( int color_idx) { border_color = color_idx;};
@@ -616,6 +621,10 @@ class Graph {
   //! Set text bold on all selected objects.
   /*! /param textbold	Text bold. */
   void set_select_textbold( int textbold);
+
+  //! Set text font on all selected objects.
+  /*! /param textfont	Text font. */
+  void set_select_textfont( glow_eFont textfont);
 
   //! Set fill on all selected objects.
   /*! /param fill 	Fill. */

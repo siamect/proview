@@ -37,3 +37,5 @@
 070425 cs  ge        Bit type added in DigColor to view bits in a bitmap.
 070426 cs  glow      Bugfix in imageobject, image was not always freed when graph was closed.
 070503 cs  xtt       Bugfix in command 'open graph /access'.
+070507 cs  ge        Support for fonts Times, NC Schoolbook and Courier.
+070507 cs  ge        Problems with national characters in ge text fixed.

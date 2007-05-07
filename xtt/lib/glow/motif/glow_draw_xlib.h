@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.h,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: glow_draw_xlib.h,v 1.3 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -99,8 +99,8 @@ class GlowDrawXLib : public GlowDraw {
 	GC	gc_erase;
 	GC	gc_inverse;
 	GC	gcs[glow_eDrawType__][DRAW_TYPE_SIZE];
-	XFontStruct	*font_struct[glow_eDrawFont__][DRAW_FONT_SIZE];
-	Font 	font[glow_eDrawFont__][DRAW_FONT_SIZE];
+	XFontStruct	*font_struct[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE];
+	Font 	font[glow_eFont][glow_eDrawFont__][DRAW_FONT_SIZE];
         int	cursors[glow_eDrawCursor__];
         int	ef;
 //        int	(*event_handler)(glow_eEvent event, int x, int y, int w, int h);
@@ -151,11 +151,13 @@ class GlowDrawXLib : public GlowDraw {
   virtual int polyline_erase( GlowWind *w, glow_sPointX *points, int point_cnt,
 		      int idx);
   virtual int text( GlowWind *w, int x, int y, char *text, int len,
-	    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int line);
+		    glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, 
+		    int line, glow_eFont font_idx);
   virtual int text_cursor( GlowWind *w, int x, int y, char *text, int len,
-		   glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int pos);
+			   glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+			   int highlight, int pos, glow_eFont font_idx);
   virtual int text_erase( GlowWind *w, int x, int y, char *text, int len,
-		  glow_eDrawType gc_type, int idx, int line);
+			  glow_eDrawType gc_type, int idx, int line, glow_eFont font_idx);
   virtual int fill_rect( GlowWind *w, int x, int y, int width, int height, 
 		 glow_eDrawType gc_type);
   virtual int pixmaps_create( GlowWind *w, glow_sPixmapData *pixmap_data,
@@ -172,8 +174,8 @@ class GlowDrawXLib : public GlowDraw {
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor);
   virtual int get_text_extent( char *text, int len,
-		       glow_eDrawType gc_type, int idx,
-		       int *width, int *height, int *descent);
+			       glow_eDrawType gc_type, int idx, int font_idx,
+			       int *width, int *height, int *descent);
   virtual void copy_area( GlowWind *w, int x, int y);
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y);
   virtual void set_inputfocus( GlowWind *w);
@@ -200,6 +202,8 @@ class GlowDrawXLib : public GlowDraw {
 		  void (*callback_func)( GlowCtx *ctx), void **id);
   virtual void remove_timer( void *id);
   int init_nav( Widget nav_widget);
+  int get_font_type( int gc_type);
+  void load_font( glow_eFont font_idx, int font_type, int idx);
 
   int image_get_width( glow_tImImage image);
   int image_get_height( glow_tImImage image);

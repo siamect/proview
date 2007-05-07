@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.38 2007-04-25 13:36:13 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.39 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,7 +150,8 @@ Graph::Graph(
 	message_dialog_cb(NULL), is_authorized_cb(NULL), 
 	traverse_focus_cb(NULL), set_focus_cb(NULL), get_ldhses_cb(NULL),
 	get_current_objects_cb(NULL), popup_menu_cb(NULL), call_method_cb(NULL),
-	sound_cb(0), linewidth(1), linetype(glow_eLineType_Solid), textsize(0), textbold(0), 
+	sound_cb(0), linewidth(1), linetype(glow_eLineType_Solid), textsize(0), 
+	textbold(0), textfont(glow_eFont_Helvetica),
 	border_color(1), fill_color(1), fill(0), border(1), shadow(0),
 	grid_size_x(1), grid_size_y(1), con_type(glow_eConType_Routed),
 	con_corner(glow_eCorner_Rounded),
@@ -925,6 +926,11 @@ void Graph::set_select_textsize( int size)
 void Graph::set_select_textbold( int bold)
 {
   grow_SetSelectTextBold( grow->ctx, bold);
+}
+
+void Graph::set_select_textfont( glow_eFont font)
+{
+  grow_SetSelectTextFont( grow->ctx, font);
 }
 
 void Graph::set_background_color()
@@ -2234,8 +2240,8 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
           }
           grow_CreateGrowText( graph->grow->ctx, "", "",
 	    event->create_grow_object.x, event->create_grow_object.y, 
-	    drawtype, graph->get_text_drawtype(), textsize, glow_mDisplayLevel_1,
-	    NULL, &t1);
+	    drawtype, graph->get_text_drawtype(), textsize, graph->textfont, 
+	    glow_mDisplayLevel_1, NULL, &t1);
           if ( graph->change_text_cb)
             (graph->change_text_cb)( graph->parent_ctx, t1, "");
           grow_SetModified( graph->grow->ctx, 1);

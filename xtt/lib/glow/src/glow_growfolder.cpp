@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growfolder.cpp,v 1.7 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growfolder.cpp,v 1.8 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -421,7 +421,7 @@ void GrowFolder::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, vo
     if ( text_idx >= 0) {
       ctx->gdraw->text( w, x + h/2, ll_y + h - 2,
 		    folder_text[i], strlen(folder_text[i]), text_drawtype, text_color_drawtype, 
-		    text_idx, highlight, 0);
+		    text_idx, highlight, 0, glow_eFont_Helvetica);
     }
     if ( i == current_folder)
       break;

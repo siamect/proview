@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.3 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,27 +100,104 @@ typedef struct {
 	int	blue;
 	} draw_sColor;
 
-static char	font_names[glow_eDrawFont__][DRAW_FONT_SIZE][80] = { {	
-	"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1"
-	},{ 
-	"-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
-	"-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1"
-	} };
+static char	font_names[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE][80] = { 
+  { 
+    {	
+      "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--10-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--12-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Bold-R-Normal--24-*-*-*-P-*-ISO8859-1"
+    },
+    { 
+      "-*-Helvetica-Medium-R-Normal--8-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--10-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--12-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--14-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--18-*-*-*-P-*-ISO8859-1", 
+      "-*-Helvetica-Medium-R-Normal--24-*-*-*-P-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    },
+    { 
+      "-*-times-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-times-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Bold-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    },
+    { 
+      "-*-new century schoolbook-Medium-R-Normal--8-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--10-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--12-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--14-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--18-*-*-*-*-*-ISO8859-1", 
+      "-*-new century schoolbook-Medium-R-Normal--24-*-*-*-*-*-ISO8859-1"
+    } 
+  },
+  { 
+    {	
+      "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--10-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--12-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Bold-R-Normal--24-*-*-*-m-*-ISO8859-1"
+    },
+    { 
+      "-*-courier-Medium-R-Normal--8-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--10-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--12-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--14-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--18-*-*-*-m-*-ISO8859-1", 
+      "-*-courier-Medium-R-Normal--24-*-*-*-m-*-ISO8859-1"
+    } 
+  }
+};
 
 
 static  XEvent	last_event;
@@ -212,12 +289,14 @@ static int draw_free_gc( GlowDrawXLib *draw_ctx)
     }
   }  
 
-  for ( i = 0; i < glow_eDrawFont__; i++)
-  {
-    for ( j = 0; j < DRAW_FONT_SIZE; j++)
-    {
-//      XUnloadFont( draw_ctx->display, draw_ctx->font[i][j]);
-      XFreeFont( draw_ctx->display, draw_ctx->font_struct[i][j]);
+  for ( i = 0; i < glow_eFont__; i++) {
+    for ( j = 0; j < glow_eDrawFont__; j++) {
+      for ( k = 0; k < DRAW_FONT_SIZE; k++) {
+	if ( draw_ctx->font[i][j][k]) {
+	  // XUnloadFont( draw_ctx->display, draw_ctx->font[i][j][k]);
+	  XFreeFont( draw_ctx->display, draw_ctx->font_struct[i][j][k]);
+	}
+      }
     }
   }
   return 1;
@@ -383,24 +462,24 @@ static int glow_create_gc( GlowDrawXLib *draw_ctx, Window window)
   for ( i = 0; i < DRAW_FONT_SIZE; i++)
   {
     font = XLoadFont( draw_ctx->display, 
-	font_names[glow_eDrawFont_HelveticaBold][i]);
+	font_names[glow_eFont_Helvetica][glow_eDrawFont_HelveticaBold][i]);
     XSetFont( draw_ctx->display, 
 	draw_ctx->gcs[glow_eDrawType_TextHelveticaBold][i], font);
     XSetFont( draw_ctx->display, 
 	draw_ctx->gcs[glow_eDrawType_TextHelveticaEraseBold][i], font);
-    draw_ctx->font[glow_eDrawFont_HelveticaBold][i] = font;
-    draw_ctx->font_struct[glow_eDrawFont_HelveticaBold][i] =
+    draw_ctx->font[glow_eFont_Helvetica][glow_eDrawFont_HelveticaBold][i] = font;
+    draw_ctx->font_struct[glow_eFont_Helvetica][glow_eDrawFont_HelveticaBold][i] =
 		XQueryFont( draw_ctx->display, font);
   }
   for ( i = 0; i < DRAW_FONT_SIZE; i++)
   {
-    font = XLoadFont( draw_ctx->display, font_names[glow_eDrawFont_Helvetica][i]);
+    font = XLoadFont( draw_ctx->display, font_names[glow_eFont_Helvetica][glow_eDrawFont_Helvetica][i]);
     XSetFont( draw_ctx->display, 
 	draw_ctx->gcs[glow_eDrawType_TextHelvetica][i], font);
     XSetFont( draw_ctx->display, 
 	draw_ctx->gcs[glow_eDrawType_TextHelveticaErase][i], font);
-    draw_ctx->font[glow_eDrawFont_Helvetica][i] = font;
-    draw_ctx->font_struct[glow_eDrawFont_Helvetica][i] =
+    draw_ctx->font[glow_eFont_Helvetica][glow_eDrawFont_Helvetica][i] = font;
+    draw_ctx->font_struct[glow_eFont_Helvetica][glow_eDrawFont_Helvetica][i] =
 		XQueryFont( draw_ctx->display, font);
   }
 
@@ -1552,13 +1631,21 @@ int GlowDrawXLib::polyline_erase( GlowWind *wind, glow_sPointX *points, int poin
 }
 
 int GlowDrawXLib::text( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int line)
+			glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+			int highlight, int line, glow_eFont font_idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
 
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
+
+  int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
+
+  if ( font_idx != glow_eFont_Helvetica)
+    XSetFont( display,  get_gc( this, gc_type, idx), 
+	      font[font_idx][font_type][idx]);
 
   if ( color != glow_eDrawType_Line) {
     XGCValues 		xgcv;
@@ -1590,17 +1677,21 @@ int GlowDrawXLib::text( GlowWind *wind, int x, int y, char *text, int len,
     XChangeGC( display, get_gc( this, gc_type, idx),
 	GCForeground, &xgcv);
   }
+  if ( font_idx != glow_eFont_Helvetica)
+    XSetFont( display, get_gc( this, gc_type, idx), 
+	      font[glow_eFont_Helvetica][font_type][idx]);
   return 1;
 }
 
 int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, glow_eDrawType color, int idx, int highlight, int pos)
+			       glow_eDrawType gc_type, glow_eDrawType color, int idx, 
+			       int highlight, int pos, glow_eFont font_idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
 
   int width, height, descent;
-  get_text_extent( text, pos, gc_type, idx,
+  get_text_extent( text, pos, gc_type, idx, font_idx,
 			&width, &height, &descent);
 
   if ( w->clip_on)
@@ -1623,7 +1714,8 @@ int GlowDrawXLib::text_cursor( GlowWind *wind, int x, int y, char *text, int len
 }
 
 int GlowDrawXLib::text_erase( GlowWind *wind, int x, int y, char *text, int len,
-	glow_eDrawType gc_type, int idx, int line)
+			      glow_eDrawType gc_type, int idx, int line,
+			      glow_eFont font_idx)
 {
   if ( ctx->nodraw) return 1;
   DrawWindXLib *w = (DrawWindXLib *) wind->window;
@@ -1633,6 +1725,13 @@ int GlowDrawXLib::text_erase( GlowWind *wind, int x, int y, char *text, int len,
   else if ( gc_type == glow_eDrawType_TextHelveticaBold)
     gc_type = glow_eDrawType_TextHelveticaEraseBold;
 
+  int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
+
+  if ( font_idx != glow_eFont_Helvetica)
+    XSetFont( display, get_gc( this, gc_type, idx), 
+	      font[font_idx][font_type][idx]);
+  
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, idx));
   if ( !w->draw_buffer_only)
@@ -1645,6 +1744,10 @@ int GlowDrawXLib::text_erase( GlowWind *wind, int x, int y, char *text, int len,
 	x, y, text, len);
   if ( w->clip_on)
     reset_clip( w, get_gc( this, gc_type, idx));
+
+  if ( font_idx != glow_eFont_Helvetica)
+    XSetFont( display, get_gc( this, gc_type, idx), 
+	      font[glow_eFont_Helvetica][font_type][idx]);
   return 1;
 }
 
@@ -1958,33 +2061,18 @@ void GlowDrawXLib::set_cursor( GlowWind *wind, glow_eDrawCursor cursor)
 }
 
 int GlowDrawXLib::get_text_extent( char *text, int len,
-				   glow_eDrawType gc_type, int idx,
+				   glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 				   int *width, int *height, int *descent)
 {
   int	text_direction, text_ascent, text_descent;
   XCharStruct char_struct;
-  glow_eDrawFont font_idx;
-
-  switch( gc_type) {
-    case glow_eDrawType_TextHelvetica:
-    case glow_eDrawType_TextHelveticaErase:
-      font_idx = glow_eDrawFont_Helvetica;
-      break;
-    case glow_eDrawType_TextHelveticaBold:
-    case glow_eDrawType_TextHelveticaEraseBold:
-      font_idx = glow_eDrawFont_HelveticaBold;
-      break;
-    default:
-      *width = 0;
-      *height = 0;
-      return 0;
-  }
+  int font_type = get_font_type( gc_type);
   
-  XTextExtents( font_struct[font_idx][idx], text, len,
-	&text_direction, &text_ascent, &text_descent, &char_struct);
-  *height = font_struct[font_idx][idx]->ascent + 
-  	font_struct[font_idx][idx]->descent;
-  *descent = font_struct[font_idx][idx]->descent;
+  XTextExtents( font_struct[font_idx][font_type][idx], text, len,
+		&text_direction, &text_ascent, &text_descent, &char_struct);
+  *height = font_struct[font_idx][font_type][idx]->ascent + 
+  	font_struct[font_idx][font_type][idx]->descent;
+  *descent = font_struct[font_idx][font_type][idx]->descent;
   *width = char_struct.width;
   return 1;
 }
@@ -2397,6 +2485,32 @@ int GlowDrawXLib::draw_points( GlowWind *wind, glow_sPointX *points, int point_n
   return 1;
 }
 
+void GlowDrawXLib::load_font( glow_eFont font_idx, int font_type, int idx)
+{
+  if ( !font[font_idx][font_type][idx]) {
+    Font font = XLoadFont( draw_ctx->display, font_names[font_idx][font_type][idx]);
+    draw_ctx->font[font_idx][font_type][idx] = font;
+    draw_ctx->font_struct[font_idx][font_type][idx] =
+      XQueryFont( draw_ctx->display, font);
+  }
+}
+
+int GlowDrawXLib::get_font_type( int gc_type)
+{
+  int font_type;
+
+  switch( gc_type) {
+  case glow_eDrawType_TextHelveticaBold:
+  case glow_eDrawType_TextHelveticaEraseBold:
+    font_type = glow_eDrawFont_HelveticaBold;
+    break;
+  default:
+    font_type = glow_eDrawFont_Helvetica;
+    break;
+  }
+
+  return font_type;
+}
 
 void GlowDrawXLib::set_click_sensitivity( GlowWind *wind, int value)
 {
@@ -2590,7 +2704,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.2 2007-01-11 11:40:31 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.3 2007-05-07 14:35:03 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

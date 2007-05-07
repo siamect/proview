@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growtext.cpp,v 1.6 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,10 +31,11 @@
 
 GrowText::GrowText( GrowCtx *glow_ctx, char *name, char *text1, double x, double y, 
 		glow_eDrawType d_type, glow_eDrawType color_d_type, int t_size, 
-		glow_mDisplayLevel display_lev, int nodraw) : 
+		glow_eFont t_font, glow_mDisplayLevel display_lev, int nodraw) : 
 		GlowText(glow_ctx,text1,x,y,d_type,color_d_type,t_size,display_lev), 
     		hot(0), pzero(ctx), highlight(0), inverse(0), user_data(NULL),
-		dynamic(0), dynamicsize(0), original_color_drawtype(glow_eDrawType_Line)
+		dynamic(0), dynamicsize(0), original_color_drawtype(glow_eDrawType_Line),
+		font(t_font)
 		
 { 
   strcpy( n_name, name);
@@ -246,6 +247,7 @@ void GrowText::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowText_y_low) << FSPACE << y_low << endl;
   fp << int(glow_eSave_GrowText_original_color_drawtype) << FSPACE 
 		<< int(original_color_drawtype) << endl;
+  fp << int(glow_eSave_GrowText_font) << FSPACE << int(font) << endl;
   fp << int(glow_eSave_GrowText_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowText_dynamic) << endl;
   if( dynamic)
@@ -291,6 +293,7 @@ void GrowText::open( ifstream& fp)
       case glow_eSave_GrowText_y_low: fp >> y_low; break;
       case glow_eSave_GrowText_original_color_drawtype: fp >> 
 		tmp; original_color_drawtype = (glow_eDrawType)tmp; break;
+      case glow_eSave_GrowText_font: fp >> tmp; font = (glow_eFont)tmp; break;
       case glow_eSave_GrowText_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowText_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -657,13 +660,13 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
 
   if ( strcmp( text, "")) {
     if ( highl) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), 
+      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), font,
 		&z_width, &z_height, &z_descent);
       ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_FillHighlight, max( 1, min( idx + hot, 2)), 0);
     }
     else if ( hot && !node) {
-      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), 
+      ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), font,
 		&z_width, &z_height, &z_descent);
       ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height,
 	glow_eDrawType_LineGray, max( min(idx,2), 1), 0);
@@ -672,11 +675,11 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
       glow_eDrawType color = ctx->get_drawtype( color_drawtype, glow_eDrawType_LineHighlight,
 		 highlight, (GrowNode *)colornode, 2);
       ctx->gdraw->text( w, x1, y1, text, strlen(text), draw_type, color, idx, highlight, 
-			0);
+			0, font);
     }
   }
   else {
-    ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, &z_width, &z_height,
+    ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, font, &z_width, &z_height,
 	&z_descent);
     ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_LineGray, idx, 0);
@@ -712,30 +715,30 @@ void GrowText::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     y1 = int( trf.y( t, p.x, p.y) * w->zoom_factor_y + 0.5) - w->offset_y;
   }
 
-  w->set_draw_buffer_only();
+  // w->set_draw_buffer_only();
   if ( strcmp( text, "")) {
     if ( highl) {
       ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx),
-		 &z_width, &z_height, &z_descent);
+		 font, &z_width, &z_height, &z_descent);
       ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 		max( 1, min( idx + hot, 2)));
     }
     else if ( hot && !node) {
       ctx->gdraw->get_text_extent( text, strlen(text), draw_type, max( 0, idx), 
-		&z_width, &z_height, &z_descent);
+		font, &z_width, &z_height, &z_descent);
       ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 		max (1, min(idx,2)));
     }
     if ( idx >= 0)
-      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), draw_type, idx, 0);
+      ctx->gdraw->text_erase( w, x1, y1, text, strlen(text), draw_type, idx, 0, font);
   }
   else
   {
-    ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, &z_width, &z_height, 
+    ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, font, &z_width, &z_height, 
 	&z_descent);
     ctx->gdraw->rect_erase( w, x1, y1 - (z_height-z_descent), z_width, z_height, idx);
   }
-  w->reset_draw_buffer_only();
+  // w->reset_draw_buffer_only();
 }
 
 void GrowText::draw()
@@ -766,14 +769,14 @@ void GrowText::get_borders( GlowTransform *t, double *x_right,
   }
 
   if ( strcmp( text, "") == 0)
-    ctx->gdraw->get_text_extent( "A", 1, draw_type, text_size,
+    ctx->gdraw->get_text_extent( "A", 1, draw_type, text_size, font,
 		&z_width, &z_height, &z_descent);
   else {
     double trf_scale = trf.vertical_scale( t);
     int idx = int( trf_scale * ctx->mw.zoom_factor_y / ctx->mw.base_zoom_factor * (text_size +4) - 4);
     idx = max( 0, min( idx, DRAW_TYPE_SIZE-1));
     
-    ctx->gdraw->get_text_extent( text, strlen(text), draw_type, idx,
+    ctx->gdraw->get_text_extent( text, strlen(text), draw_type, idx, font,
 		&z_width, &z_height, &z_descent);
   }
   ur_x = ll_x + double( z_width) / ctx->mw.zoom_factor_y;
@@ -847,6 +850,15 @@ void GrowText::set_textbold( int bold)
     draw_type = glow_eDrawType_TextHelveticaBold;
   else
     draw_type = glow_eDrawType_TextHelvetica;
+  get_node_borders();
+  draw();
+}
+
+void GrowText::set_textfont( glow_eFont textfont) 
+{ 
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  font = textfont;
   get_node_borders();
   draw();
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.9 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.10 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -374,6 +374,10 @@ class GrowCtx : public GlowCtx {
   /*! \param bold	Bold. */
   void set_select_textbold( int bold);
 
+  //! Set text font on all selected objects.
+  /*! \param font	Font. */
+  void set_select_textfont( glow_eFont font);
+
   //! Set background color of the window.
   /*! \param color	Background color. */
   void set_background( glow_eDrawType color);
@@ -659,7 +663,7 @@ class GrowCtx : public GlowCtx {
     \param descent	Returnd descent of text.
   */
   void get_text_extent( char *text, int len, glow_eDrawType draw_type,
-	int text_size, double *width, double *height, double *descent);
+	int text_size, glow_eFont font, double *width, double *height, double *descent);
 
   //! Get the default window size
   /*!

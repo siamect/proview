@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growmenu.cpp,v 1.11 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growmenu.cpp,v 1.12 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -162,7 +162,7 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   for ( i = 0; i < (int) (sizeof(info.item)/sizeof(info.item[0])); i++) {
     if ( info.item[i].occupied) {
       ctx->gdraw->get_text_extent( info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-                max( 0, text_idx), &z_width, &z_height, &z_descent);
+                max( 0, text_idx), glow_eFont_Helvetica, &z_width, &z_height, &z_descent);
       if ( z_width > max_z_width)
 	max_z_width = z_width;
       tot_z_height += int( 1.3 * z_height);
@@ -216,10 +216,10 @@ void GrowMenu::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
       }
       if ( info.item[i].type == glow_eMenuItem_ButtonDisabled)
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			text_color_disabled, text_idx, highlight, 0);
+			text_color_disabled, text_idx, highlight, 0, glow_eFont_Helvetica);
       else
 	ctx->gdraw->text( w, x_text, y_text, info.item[i].text, strlen(info.item[i].text), text_drawtype, 
-			text_color, text_idx, highlight, 0);
+			text_color, text_idx, highlight, 0, glow_eFont_Helvetica);
       if ( info.item[i].type == glow_eMenuItem_PulldownMenu) {
 	// Draw arrow
 	glow_sPointX p[4];

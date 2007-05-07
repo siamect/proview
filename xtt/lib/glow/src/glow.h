@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.17 2007-01-15 13:19:09 claes Exp $
+ * Proview   $Id: glow.h,v 1.18 2007-05-07 14:35:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,7 +78,8 @@ typedef enum {
   glow_eType_Relief,  		//!< Type is glow_eRelief
   glow_eType_InputFocusMark,  	//!< Type is glow_eInputFocusMark
   glow_eType_TextSize,	  	//!< Type is a text size, glow_eTextSize
-  glow_eType_Adjustment	  	//!< Type is glow_eAdjustment
+  glow_eType_Adjustment,  	//!< Type is glow_eAdjustment
+  glow_eType_Font	  	//!< Type is glow_eFont
 } glow_eType;
 
 //! Type of Ctx class
@@ -310,6 +311,15 @@ typedef enum {
   glow_eCorner_Rounded,  	//!< Rounded corners
   glow_eCorner_Right  		//!< Right corners
 } glow_eCorner;
+
+//! Text Fonts
+typedef enum {
+  glow_eFont_Helvetica,  	//!< Font Helvetica
+  glow_eFont_Times,  		//!< Font Times
+  glow_eFont_NewCenturySchoolbook, //!< Font New Century Schoolbook
+  glow_eFont_Courier,  		//!< Font Courier
+  glow_eFont__			//!< Number of defined fonts
+} glow_eFont;
 
 typedef enum {
 	glow_eDynamicType_Object,
@@ -1158,6 +1168,7 @@ typedef enum {
 	glow_eSave_Annot_annot_type		= 1304,
 	glow_eSave_Annot_display_level		= 1305,
 	glow_eSave_Annot_color_drawtype		= 1306,
+	glow_eSave_Annot_font			= 1307,
 	glow_eSave_Arrow_arrow_width		= 1400,
 	glow_eSave_Arrow_arrow_length		= 1401,
 	glow_eSave_Arrow_draw_type		= 1402,
@@ -1347,6 +1358,7 @@ typedef enum {
 	glow_eSave_GrowText_dynamicsize		= 3007,
 	glow_eSave_GrowText_original_color_drawtype = 3008,
 	glow_eSave_GrowText_trf 		= 3009,
+	glow_eSave_GrowText_font 		= 3010,
 	glow_eSave_GrowBar_max_value 		= 3100,
 	glow_eSave_GrowBar_min_value 		= 3101,
 	glow_eSave_GrowBar_bar_value 		= 3102,
@@ -1574,6 +1586,7 @@ typedef enum {
 	glow_eSave_GrowTable_header_text_color  = 4220,
 	glow_eSave_GrowTable_header_text_bold   = 4221,
 	glow_eSave_GrowTable_options		= 4222,
+	glow_eSave_GrowTable_font		= 4223,
 	glow_eSave_GrowTable_column_width1    	= 4240,
 	glow_eSave_GrowTable_header_text1    	= 4241,
 	glow_eSave_GrowTable_column_width2    	= 4242,
