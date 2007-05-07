@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.2 2007-01-17 06:18:11 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.3 2007-05-07 12:37:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -175,7 +175,7 @@ void Xtt::qcom_events( void *data)
   char mp[2000];
   qcom_sQid qid = qcom_cNQid;
   qcom_sGet get;
-  int swap = 0;
+  static int swap = 0;
   pwr_tStatus sts = 1;
 
   while ( ODD(sts)) {
