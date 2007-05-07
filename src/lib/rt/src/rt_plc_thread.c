@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_thread.c,v 1.12 2007-01-04 07:52:30 claes Exp $
+ * Proview   $Id: rt_plc_thread.c,v 1.13 2007-05-07 12:36:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -185,6 +185,8 @@ plc_thread (
       errh_Error("Cleaning up watchdog, %m", sts);
   }
 #endif
+
+//  sts = io_close(tp->plc_io_ctx);
 
   /* Tell main we are done.  */
   que_Put(&sts, &tp->q_out, &tp->event, (void *)5);
