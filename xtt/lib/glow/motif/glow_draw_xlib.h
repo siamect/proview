@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.h,v 1.3 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_draw_xlib.h,v 1.4 2007-05-07 15:45:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,7 +100,7 @@ class GlowDrawXLib : public GlowDraw {
 	GC	gc_inverse;
 	GC	gcs[glow_eDrawType__][DRAW_TYPE_SIZE];
 	XFontStruct	*font_struct[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE];
-	Font 	font[glow_eFont][glow_eDrawFont__][DRAW_FONT_SIZE];
+	Font 	font[glow_eFont__][glow_eDrawFont__][DRAW_FONT_SIZE];
         int	cursors[glow_eDrawCursor__];
         int	ef;
 //        int	(*event_handler)(glow_eEvent event, int x, int y, int w, int h);
@@ -174,7 +174,7 @@ class GlowDrawXLib : public GlowDraw {
   
   virtual void set_cursor( GlowWind *w, glow_eDrawCursor cursor);
   virtual int get_text_extent( char *text, int len,
-			       glow_eDrawType gc_type, int idx, int font_idx,
+			       glow_eDrawType gc_type, int idx, glow_eFont font_idx,
 			       int *width, int *height, int *descent);
   virtual void copy_area( GlowWind *w, int x, int y);
   virtual void clear_area( GlowWind *w, int ll_x, int ur_x, int ll_y, int ur_y);

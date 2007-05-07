@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.cpp,v 1.3 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_motif.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -950,6 +950,23 @@ void GeMotif::activate_textsize_5( Widget w, Ge *gectx, XmAnyCallbackStruct *dat
   gectx->activate_textsize( 5);
 }
 
+void GeMotif::activate_textfont_1( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
+{
+  gectx->activate_textfont( glow_eFont_Helvetica);
+}
+void GeMotif::activate_textfont_2( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
+{
+  gectx->activate_textfont( glow_eFont_Times);
+}
+void GeMotif::activate_textfont_3( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
+{
+  gectx->activate_textfont( glow_eFont_NewCenturySchoolbook);
+}
+void GeMotif::activate_textfont_4( Widget w, Ge *gectx, XmAnyCallbackStruct *data)
+{
+  gectx->activate_textfont( glow_eFont_Courier);
+}
+
 void GeMotif::activate_textbold( Widget w, Ge *gectx, XmToggleButtonCallbackStruct *data)
 {
   gectx->activate_textbold( data->set);
@@ -1412,6 +1429,10 @@ GeMotif::GeMotif( 	void 	*x_parent_ctx,
 	{"ge_activate_textsize_3",(caddr_t)GeMotif::activate_textsize_3 },
 	{"ge_activate_textsize_4",(caddr_t)GeMotif::activate_textsize_4 },
 	{"ge_activate_textsize_5",(caddr_t)GeMotif::activate_textsize_5 },
+	{"ge_activate_textfont_1",(caddr_t)GeMotif::activate_textfont_1 },
+	{"ge_activate_textfont_2",(caddr_t)GeMotif::activate_textfont_2 },
+	{"ge_activate_textfont_3",(caddr_t)GeMotif::activate_textfont_3 },
+	{"ge_activate_textfont_4",(caddr_t)GeMotif::activate_textfont_4 },
 	{"ge_activate_textbold",(caddr_t)GeMotif::activate_textbold },
 	{"ge_activate_gridsize_1",(caddr_t)GeMotif::activate_gridsize_1 },
 	{"ge_activate_gridsize_2",(caddr_t)GeMotif::activate_gridsize_2 },

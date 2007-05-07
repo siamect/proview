@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: ge.uil,v 1.1 2007-01-04 08:39:37 claes Exp $
+!  Proview   $Id: ge.uil,v 1.2 2007-05-07 15:45:18 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -498,11 +498,15 @@ procedure
 	ge_activate_linetype6(integer);
 	ge_activate_linetype7(integer);
 	ge_activate_textsize_0(integer);
-	ge_activate_textsize_1(integer);
+ 	ge_activate_textsize_1(integer);
 	ge_activate_textsize_2(integer);
 	ge_activate_textsize_3(integer);
 	ge_activate_textsize_4(integer);
 	ge_activate_textsize_5(integer);
+ 	ge_activate_textfont_1(integer);
+ 	ge_activate_textfont_2(integer);
+ 	ge_activate_textfont_3(integer);
+ 	ge_activate_textfont_4(integer);
 	ge_activate_textbold(integer);
 	ge_activate_gridsize_1(integer);
 	ge_activate_gridsize_2(integer);
@@ -1358,6 +1362,77 @@ object functions_entry : XmCascadeButton
             };
 	  };
         };
+      	XmCascadeButton
+     	{
+          arguments
+          {
+             XmNlabelString = compound_string("Font");
+             XmNmnemonic = keysym('f');
+             XmNfontList	    = menu_font;
+          };
+          controls
+          {
+            XmPulldownMenu
+            {
+	      arguments 
+	      { 
+	        XmNradioBehavior = true; 
+	        XmNradioAlwaysOne = true;
+              };
+              controls
+              {
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Helvetica");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_textfont_1(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Times");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_textfont_2(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("New Century Schoolbook");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_textfont_3(ge_ctx);
+	          };
+	        }; 
+		XmToggleButton
+		{
+	          arguments
+	          {
+	            XmNlabelString = compound_string("Courier");
+                    XmNfontList	    = menu_font;
+		  };
+	          callbacks
+	          {
+		    XmNvalueChangedCallback = procedure ge_activate_textfont_4(ge_ctx);
+	          };
+	        }; 
+	      }; 
+	    }; 
+	  }; 
+	}; 
         XmPushButton
         {
           arguments

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_motif.h,v 1.1 2007-01-04 08:22:16 claes Exp $
+ * Proview   $Id: ge_motif.h,v 1.2 2007-05-07 15:45:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -208,6 +208,10 @@ class GeMotif : public Ge {
   static void activate_textsize_3( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_textsize_4( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_textsize_5( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
+  static void activate_textfont_1( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
+  static void activate_textfont_2( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
+  static void activate_textfont_3( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
+  static void activate_textfont_4( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_textbold( Widget w, Ge *gectx, XmToggleButtonCallbackStruct *data);
   static void activate_zoom_in( Widget w, Ge *gectx, XmAnyCallbackStruct *data);
   static void activate_zoom_out( Widget w, Ge *gectx, XmAnyCallbackStruct *data);

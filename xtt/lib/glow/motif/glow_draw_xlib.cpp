@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.3 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -275,7 +275,7 @@ static int glow_create_cursor( GlowDrawXLib *draw_ctx)
 
 static int draw_free_gc( GlowDrawXLib *draw_ctx)
 {
-  int i, j;
+  int i, j, k;
 
   for ( i = 1; i < glow_eDrawCursor__ ; i++)
     XFreeCursor( draw_ctx->display, draw_ctx->cursors[i]);
@@ -2067,6 +2067,7 @@ int GlowDrawXLib::get_text_extent( char *text, int len,
   int	text_direction, text_ascent, text_descent;
   XCharStruct char_struct;
   int font_type = get_font_type( gc_type);
+  load_font( font_idx, font_type, idx);
   
   XTextExtents( font_struct[font_idx][font_type][idx], text, len,
 		&text_direction, &text_ascent, &text_descent, &char_struct);
@@ -2488,10 +2489,10 @@ int GlowDrawXLib::draw_points( GlowWind *wind, glow_sPointX *points, int point_n
 void GlowDrawXLib::load_font( glow_eFont font_idx, int font_type, int idx)
 {
   if ( !font[font_idx][font_type][idx]) {
-    Font font = XLoadFont( draw_ctx->display, font_names[font_idx][font_type][idx]);
-    draw_ctx->font[font_idx][font_type][idx] = font;
-    draw_ctx->font_struct[font_idx][font_type][idx] =
-      XQueryFont( draw_ctx->display, font);
+    Font fnt = XLoadFont( display, font_names[font_idx][font_type][idx]);
+    font[font_idx][font_type][idx] = fnt;
+    font_struct[font_idx][font_type][idx] =
+      XQueryFont( display, fnt);
   }
 }
 
@@ -2704,7 +2705,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.3 2007-05-07 14:35:03 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
