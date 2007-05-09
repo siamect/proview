@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ssabox_ssabutil.h,v 1.1 2006-01-12 05:54:27 claes Exp $
+ * Proview   $Id: ssabox_ssabutil.h,v 1.2 2007-05-09 14:00:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,6 +57,7 @@ int ssab_curve_2d( 	float x,
 #define SSAB_CURVE( x, y, table) ssab_curve( x, y, (float *)&table,\
 		sizeof(table)/sizeof(table[0]))
 
+pwr_tStatus sutl_sleep( float time);
 
 
 

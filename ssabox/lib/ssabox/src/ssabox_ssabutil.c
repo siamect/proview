@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ssabox_ssabutil.c,v 1.2 2006-01-13 06:38:27 claes Exp $
+ * Proview   $Id: ssabox_ssabutil.c,v 1.3 2007-05-09 14:00:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,6 +42,7 @@
 #include "pwr.h"
 #include "rt_gdh.h"
 #include "ssabox_ssabutil.h"
+#include "co_time.h"
 
 /* Nice functions */
 #define ODD(a)	(((int)(a) & 1) != 0)
@@ -190,3 +191,23 @@ pwr_tInt32 ssabutil_chksum_calculate(	pwr_tInt32 value,
 /* END_OF ssabutil_chksum_calculate  */
 
 
+pwr_tStatus sutl_sleep( float time)
+{
+#ifdef OS_VMS
+        int sts;
+        sts = lib$wait(&time);
+#elif OS_ELN
+        LARGE_INTEGER   l_time;
+
+        l_time.high = -1;
+        l_time.low = - time * 10000000;
+        ker$wait_any( NULL, NULL, &l_time);
+#elif defined(OS_LYNX) || defined (OS_LINUX)
+        pwr_tDeltaTime  p_time;
+
+        time_FloatToD( &p_time, time);
+        nanosleep( (pwr_tTime *)&p_time, NULL);
+#endif
+
+        return 1;
+}
