@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  
+-->
+<definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s0="http://www.proview.se/webservices/statussrv/1.0/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.proview.se/webservices/statussrv/1.0/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.proview.se/webservices/statussrv/1.0/">
+      <s:element name="GetStatus">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:sequence>
+            <s:element name="Version" type="s:string" />
+            <s:element name="SystemStatus" type="s:int" />
+            <s:element name="SystemStatusStr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SystemTime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BootTime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="RestartTime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Restarts" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatus1" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatus2" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatus3" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr3" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatus4" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr4" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatus5" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr5" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Restart">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="RestartResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </types>
+  <message name="GetStatusSoapIn">
+    <part name="parameters" element="s0:GetStatus" />
+  </message>
+  <message name="GetStatusSoapOut">
+    <part name="parameters" element="s0:GetStatusResponse" />
+  </message>
+  <message name="RestartSoapIn">
+    <part name="parameters" element="s0:Restart" />
+  </message>
+  <message name="RestartSoapOut">
+    <part name="parameters" element="s0:RestartResponse" />
+  </message>
+  <portType name="Service">
+    <operation name="GetStatus">
+      <input message="s0:GetStatusSoapIn" />
+      <output message="s0:GetStatusSoapOut" />
+    </operation>
+    <operation name="Restart">
+      <input message="s0:RestartSoapIn" />
+      <output message="s0:RestartSoapOut" />
+    </operation>
+  </portType>
+  <binding name="Service" type="s0:Service">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <operation name="GetStatus">
+      <soap:operation soapAction="s0:GetStatus" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="Restart">
+      <soap:operation soapAction="s0:Restart" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+</definitions>

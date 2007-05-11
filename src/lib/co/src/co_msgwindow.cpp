@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.11 2007-02-07 15:45:44 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.12 2007-05-11 15:12:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,7 +61,7 @@ void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid
   else {
     if ( (hide_info && severity == 'I') || severity == 'O')
       return;
-    if ( severity == 'E' || severity == 'W' || severity == 'F' || severity == 'I')
+    if ( severity == 'E' || severity == 'W' || severity == 'F' || severity == 'I' || severity == 'S')
       printf( "%c %s\n", severity, text);
     else
       printf( "%s\n", text);

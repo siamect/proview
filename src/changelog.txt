@@ -31,3 +31,5 @@
 070424 cs  rt        NULL argument for subid in gdh_RefObjectInfo allowed.
 070424 cs  wbl       New types Int64 and UInt64.
 070424 cs  wbl       New plc classes for Get end CSto of attributes in externvolumes. 
+070504 cs  co        Problems with input focus crash for iconified motif windows fixed.
+070508 cs  rt        Webservice handling system status requests implemented.
