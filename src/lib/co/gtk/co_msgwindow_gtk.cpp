@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow_gtk.cpp,v 1.1 2007-01-04 07:51:41 claes Exp $
+ * Proview   $Id: co_msgwindow_gtk.cpp,v 1.2 2007-05-11 15:11:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ MsgWindowGtk::MsgWindowGtk (
 	GtkWidget *msg_parent_wid,
 	char *msg_name,
 	pwr_tStatus *status) :
-  MsgWindow( parent_ctx, msg_name, status), parent_wid(msg_parent_wid)
+  MsgWindow( msg_parent_ctx, msg_name, status), parent_wid(msg_parent_wid)
 {
   const int	window_width = 800;
   const int    	window_height = 600;
