@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_pwr_msg.msg,v 1.3 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: rt_pwr_msg.msg,v 1.4 2007-05-11 15:10:47 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@ arun		<Application running>					/info
 applrestart	<Application restarting>				/info
 applterm	<Application terminated>				/fatal
 ptimeout	<Process timeout>					/fatal
+srvconnection	<No connection to server>				/fatal
 
 .end
 
