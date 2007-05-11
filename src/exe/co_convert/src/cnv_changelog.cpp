@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.6 2007-04-26 11:06:05 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.7 2007-05-11 15:14:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,6 +46,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
       from = 1;
   }
 
+  read( 0);
   read( "src");
   read( "xtt");
   read( "wb");
@@ -79,7 +80,10 @@ int CnvChangeLog::read( char *module)
   pwr_tFileName fname;
   char *s;
 
-  sprintf( fname, "$pwre_croot/%s/changelog.txt", module);
+  if ( !module)
+    sprintf( fname, "$pwre_croot/changelog.txt");
+  else
+    sprintf( fname, "$pwre_croot/%s/changelog.txt", module);
   dcli_translate_filename( fname, fname);
   fp = fopen( fname, "r");
   if ( !fp)
@@ -127,7 +131,10 @@ int CnvChangeLog::read( char *module)
 	for ( ; *s && (*s == 32 || *s == 9); s++) ;
 
 	strncpy( p.text, s, sizeof(p.text));
-	strncpy( p.module, module, sizeof(p.module));
+	if ( !module)
+	  strncpy( p.module, "", sizeof(p.module));
+	else
+	  strncpy( p.module, module, sizeof(p.module));
 
 	sprintf( timstr2, "20%c%c-%c%c-%c%c 00:00", timstr1[0], timstr1[1],
 		 timstr1[2], timstr1[3], timstr1[4], timstr1[5]);
