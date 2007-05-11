@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.6 2007-02-21 14:12:20 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.7 2007-05-11 15:11:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,7 +106,12 @@ void CoWowGtk::DisplayQuestion( void *ctx, char *title, char *text,
 						NULL);
   cbdata->question_widget = question_widget;
   g_signal_connect( question_widget, "delete_event", G_CALLBACK(question_delete_event), cbdata);
-  question_label = gtk_label_new(text);
+
+
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  question_label = gtk_label_new(textutf8);
+  g_free( textutf8);
+
   GtkWidget *question_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,
 				"icon-size", GTK_ICON_SIZE_DIALOG,
@@ -153,10 +158,18 @@ static void displayerror_ok_cb( GtkWidget *w, gint arg1, gpointer data)
 
 void CoWowGtk::DisplayError( char *title, char *text)
 {
-  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(m_parent),
+  GtkWidget *parent = m_parent;
+  if ( parent) {
+    while( !GTK_IS_WINDOW(parent))
+      parent = gtk_widget_get_parent( parent);
+  }
+
+  char *textutf8 = g_convert( text, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  GtkWidget *dialog = gtk_message_dialog_new( GTK_WINDOW(parent),
 					      GTK_DIALOG_MODAL, 
 					      GTK_MESSAGE_ERROR,
-					      GTK_BUTTONS_OK, text);
+					      GTK_BUTTONS_OK, textutf8);
+  g_free( textutf8);
   g_signal_connect( dialog, "response", 
  		    G_CALLBACK(displayerror_ok_cb), NULL);
   gtk_window_set_title( GTK_WINDOW(dialog), title);
