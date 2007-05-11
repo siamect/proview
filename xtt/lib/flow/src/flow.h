@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.11 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow.h,v 1.12 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,7 +151,9 @@ typedef enum {
 	flow_eDrawType_TextHelveticaEraseBold,
 	flow_eDrawType__,
 	flow_eDrawType_Green,
-	flow_eDrawType_Yellow
+	flow_eDrawType_Yellow,
+	flow_eDrawType_DarkGray,
+	flow_eDrawType_Inherit = 9999
 	} flow_eDrawType;
 
 typedef enum {

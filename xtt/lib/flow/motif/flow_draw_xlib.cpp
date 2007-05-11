@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.cpp,v 1.1 2007-01-04 07:57:00 claes Exp $
+ * Proview   $Id: flow_draw_xlib.cpp,v 1.2 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -139,6 +139,7 @@ static int draw_free_gc( FlowDrawXLib *draw_ctx)
 
   XFreeGC( draw_ctx->display, draw_ctx->gc_yellow);
   XFreeGC( draw_ctx->display, draw_ctx->gc_green);
+  XFreeGC( draw_ctx->display, draw_ctx->gc_drarkgray);
   XFreeGC( draw_ctx->display, draw_ctx->gc_inverse);
   for ( i = 0; i < flow_eDrawType__; i++)
   {
@@ -179,6 +180,12 @@ static int flow_create_gc( FlowDrawXLib *draw_ctx, Window window)
   xgcv.foreground = flow_allocate_color( draw_ctx, "green");
   xgcv.background = draw_ctx->background;
   draw_ctx->gc_green = XCreateGC( draw_ctx->display, 
+	window, GCForeground | GCBackground, &xgcv);
+
+  /* DarkGray gc */
+  xgcv.foreground = flow_allocate_color( draw_ctx, "gray20");
+  xgcv.background = draw_ctx->background;
+  draw_ctx->gc_darkgray = XCreateGC( draw_ctx->display, 
 	window, GCForeground | GCBackground, &xgcv);
 
   /* Black line gc */
@@ -1292,6 +1299,9 @@ int FlowDrawXLib::fill_rect( FlowCtx *ctx, int x, int y, int w, int h,
   else if ( gc_type == flow_eDrawType_Yellow)
     XFillPolygon( display, window,
 	gc_yellow, p, 5, Convex, CoordModeOrigin);
+  else if ( gc_type == flow_eDrawType_DarkGray)
+    XFillPolygon( display, window,
+	gc_darkgray, p, 5, Convex, CoordModeOrigin);
   else
     XFillPolygon( display, window,
 	gcs[gc_type][0], p, 5, Convex, CoordModeOrigin);

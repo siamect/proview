@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.h,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: flow_draw_gtk.h,v 1.3 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,7 @@ class FlowDrawGtk : public FlowDraw {
   GdkGC		*gc_inverse;
   GdkGC		*gc_yellow;
   GdkGC		*gc_green;
+  GdkGC		*gc_darkgray;
   GdkGC		*gcs[flow_eDrawType__][DRAW_TYPE_SIZE];
   // XFontStruct	*font_struct[draw_eFont__][DRAW_FONT_SIZE];
   GdkFont 	*font[draw_eFont__][DRAW_FONT_SIZE];

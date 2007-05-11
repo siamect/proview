@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browapi.cpp,v 1.9 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_browapi.cpp,v 1.10 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -749,4 +749,9 @@ void brow_SetClickSensitivity( brow_tCtx ctx, int value)
 void brow_SetWhiteBackground( brow_tCtx ctx)
 {
   ctx->fdraw->set_white_background( (FlowCtx *)ctx);
+}
+
+void brow_SetFillColor( brow_tNode node, flow_eDrawType color)
+{
+  ((FlowNode *)node)->set_fillcolor( color);  
 }

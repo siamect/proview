@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_gtk.cpp,v 1.8 2007-04-26 12:41:03 claes Exp $
+ * Proview   $Id: flow_draw_gtk.cpp,v 1.9 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,6 +120,7 @@ static int draw_free_gc( FlowDrawGtk *draw_ctx)
 
   gdk_gc_unref( draw_ctx->gc_yellow);
   gdk_gc_unref( draw_ctx->gc_green);
+  gdk_gc_unref( draw_ctx->gc_darkgray);
   gdk_gc_unref( draw_ctx->gc_inverse);
   for ( i = 0; i < flow_eDrawType__; i++) {
     for ( j = 0; j < DRAW_TYPE_SIZE; j++)
@@ -158,6 +159,12 @@ static int flow_create_gc( FlowDrawGtk *draw_ctx, GdkWindow *window)
   xgcv.foreground = flow_allocate_color( draw_ctx, "green");
   xgcv.background = draw_ctx->background;
   draw_ctx->gc_green = gdk_gc_new_with_values(
+	window, &xgcv, (GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND));
+
+  /* DarkGray gc */
+  xgcv.foreground = flow_allocate_color( draw_ctx, "gray28");
+  xgcv.background = draw_ctx->background;
+  draw_ctx->gc_darkgray = gdk_gc_new_with_values(
 	window, &xgcv, (GdkGCValuesMask)(GDK_GC_FOREGROUND | GDK_GC_BACKGROUND));
 
   /* Black line gc */
@@ -1309,6 +1316,8 @@ int FlowDrawGtk::fill_rect( FlowCtx *ctx, int x, int y, int w, int h,
     gdk_draw_rectangle( window, gc_green, 1, x, y, w, h);
   else if ( gc_type == flow_eDrawType_Yellow)
     gdk_draw_rectangle( window, gc_yellow, 1, x, y, w, h);
+  else if ( gc_type == flow_eDrawType_DarkGray)
+    gdk_draw_rectangle( window, gc_darkgray, 1, x, y, w, h);
   else
     gdk_draw_rectangle( window, gcs[gc_type][0], 1, x, y, w, h);
   return 1;

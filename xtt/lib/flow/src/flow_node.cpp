@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_node.cpp,v 1.8 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_node.cpp,v 1.9 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,7 +39,8 @@ FlowNode::FlowNode( FlowCtx *flow_ctx, char *name, FlowNodeClass *node_class,
 	highlight(0), inverse(0), trace_attr_type(flow_eTraceType_Boolean), 
 	trace_inverted(0), trace_p(NULL), user_data(0),
 	level(0), node_open(0),
-	relative_annot_pos(rel_annot_pos), relative_annot_x(0)
+	relative_annot_pos(rel_annot_pos), relative_annot_x(0), 
+	fill_color(flow_eDrawType_Inherit)
 {
   double x_grid, y_grid;
   strncpy( n_name, name, sizeof(n_name));
@@ -985,4 +986,17 @@ void FlowNode::get_borders()
     obst_y_low = y_low;
     obst_y_high = y_high;
   }
+}
+
+void FlowNode::set_fillcolor( flow_eDrawType color)
+{
+  fill_color = color;
+  ctx->draw( int(x_left * ctx->zoom_factor - ctx->offset_x - 20),
+	     int(y_low * ctx->zoom_factor - ctx->offset_y - 20),
+  	     int(x_right * ctx->zoom_factor - ctx->offset_x + 20),
+	     int(y_high * ctx->zoom_factor - ctx->offset_y + 20));
+  ctx->nav_draw( int(x_left * ctx->nav_zoom_factor - ctx->nav_offset_x - 1),
+	     int(y_low * ctx->nav_zoom_factor - ctx->nav_offset_y - 1),
+  	     int(x_right * ctx->nav_zoom_factor - ctx->nav_offset_x + 1),
+	     int(y_high * ctx->nav_zoom_factor - ctx->nav_offset_y + 1));
 }

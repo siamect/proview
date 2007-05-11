@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_rect.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_rect.cpp,v 1.7 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 #include <iostream.h>
 #include "flow_rect.h"
 #include "flow_draw.h"
+#include "flow_node.h"
 
 void FlowRect::zoom()
 {
@@ -112,6 +113,19 @@ void FlowRect::open( ifstream& fp)
   }
 }
 
+void FlowRect::draw_inverse( void *pos, int hot, void *node)
+{ 
+  if ( fill && 
+       ( draw_type == flow_eDrawType_LineGray ||
+	 draw_type == flow_eDrawType_LineRed ||
+	 draw_type == flow_eDrawType_Green ||
+	 draw_type == flow_eDrawType_DarkGray ||
+	 draw_type == flow_eDrawType_Yellow))
+    draw( pos, hot, 0, node);
+  else
+    erase( pos, hot, node);
+}
+
 void FlowRect::draw( void *pos, int highlight, int hot, void *node)
 {
   if ( !(display_level & ctx->display_level))
@@ -138,10 +152,16 @@ void FlowRect::draw( void *pos, int highlight, int hot, void *node)
     ctx->fdraw->rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 	((FlowPoint *)pos)->z_y - ctx->offset_y, 
 	ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type, idx, highlight);
-  else
+  else {
+    flow_eDrawType dtype;
+    if ( node && ((FlowNode *)node)->fill_color != flow_eDrawType_Inherit)
+      dtype = ((FlowNode *)node)->fill_color;
+    else
+      dtype = draw_type;
     ctx->fdraw->fill_rect( ctx, ll.z_x + ((FlowPoint *)pos)->z_x - ctx->offset_x, ll.z_y + 
 	((FlowPoint *)pos)->z_y - ctx->offset_y, 
-	ur.z_x - ll.z_x, ur.z_y - ll.z_y, draw_type);
+	ur.z_x - ll.z_x, ur.z_y - ll.z_y, dtype);
+  }
 }
 
 void FlowRect::erase( void *pos, int hot, void *node)

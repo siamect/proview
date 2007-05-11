@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.h,v 1.1 2007-01-04 07:57:00 claes Exp $
+ * Proview   $Id: flow_draw_xlib.h,v 1.2 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,7 @@ class FlowDrawXLib : public FlowDraw {
   GC	gc_inverse;
   GC	gc_yellow;
   GC	gc_green;
+  GC	gc_darkgray;
   GC	gcs[flow_eDrawType__][DRAW_TYPE_SIZE];
   XFontStruct	*font_struct[draw_eFont__][DRAW_FONT_SIZE];
   Font 	font[draw_eFont__][DRAW_FONT_SIZE];

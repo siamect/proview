@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_rect.h,v 1.3 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_rect.h,v 1.4 2007-05-11 15:07:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,8 +51,7 @@ class FlowRect : public FlowArrayElem {
     void open( ifstream& fp);
     void draw( void *pos, int hightlight, int hot, void *node);
     void nav_draw( void *pos, int highlight, void *node);
-    void draw_inverse( void *pos, int hot, void *node)
-	{ erase( pos, hot, node);};
+    void draw_inverse( void *pos, int hot, void *node);
     void erase( void *pos, int hot, void *node);
     void nav_erase( void *pos, void *node);
     void get_borders( double pos_x, double pos_y, double *x_right, 
