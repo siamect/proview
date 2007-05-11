@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_array.cpp,v 1.4 2005-09-01 14:56:12 claes Exp $
+ * Proview   $Id: flow_array.cpp,v 1.5 2007-05-11 15:07:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -308,7 +308,7 @@ int FlowArray::brow_insert( FlowArrayElem *element, FlowArrayElem *destination,
     case flow_eDest_After:
       for ( i = idx; i < a_size; i++)
       {
-        if ( ((FlowNode *)a[i])->get_level() >= destination_level)
+        if ( ((FlowNode *)a[i])->get_level() <= destination_level)
           break;
       }
       idx = i;
@@ -526,7 +526,7 @@ int FlowArray::brow_get_previous_sibling( FlowArrayElem *element,
 
   // Return previous element of the same level
   level = ((FlowNode *)a[idx])->get_level();
-  for ( i = idx - 1; i <= 0; i--)
+  for ( i = idx - 1; i >= 0; i--)
   { 
     if (((FlowNode *)a[i])->get_level() == level)
     {
