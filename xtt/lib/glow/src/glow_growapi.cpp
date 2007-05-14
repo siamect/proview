@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.27 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.28 2007-05-14 07:06:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -670,8 +670,10 @@ void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
   if ( mask & grow_eAttr_double_buffer_on) {
     if ( !ctx->mw.window->double_buffer_on)
       ctx->mw.window->double_buffer_on = attr->double_buffer_on;
-    if ( ctx->mw.window->double_buffer_on)
+    if ( ctx->mw.window->double_buffer_on) {
       ctx->gdraw->create_buffer( &ctx->mw);
+      ctx->mw.window->double_buffered = 1;
+    }
   }
   if ( mask & grow_eAttr_hot_mode) {
     ctx->default_hot_mode = attr->hot_mode;
