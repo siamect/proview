@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.7 2007-05-11 15:11:56 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.8 2007-05-14 07:07:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -213,6 +213,10 @@ void CoWowGtk::list_ok_cb (
     strcpy( selected_text, text);
   }
   if ( ctx->action_cb) {
+    char *textiso = g_convert( selected_text, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+    strcpy( selected_text, textiso);
+    g_free( textiso);
+
     (ctx->action_cb)( ctx->parent_ctx, selected_text);
   }
 
@@ -273,10 +277,13 @@ void *CoWowGtk::CreateList (
   name_p = texts;
   i = 0;
   while ( strcmp( name_p, "") != 0) {
+    char *nameutf8 = g_convert( name_p, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
     gtk_list_store_append( store, &iter);
-    gtk_list_store_set( store, &iter, 0, name_p, -1);
+    gtk_list_store_set( store, &iter, 0, nameutf8, -1);
     name_p += 80;
     i++;
+    g_free( nameutf8);
   }
 
   ctx->list = (GtkWidget *) g_object_new(GTK_TYPE_TREE_VIEW,
