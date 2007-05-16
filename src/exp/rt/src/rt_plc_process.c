@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_process.c,v 1.10 2005-09-01 14:57:49 claes Exp $
+ * Proview   $Id: rt_plc_process.c,v 1.11 2007-05-16 12:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -477,7 +477,7 @@ link_io_base_areas (
   dlink_area((plc_sDlink *)&pp->base.iv_a, "pwrNode-active-io-iv", pp->IOHandler->IvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.av_i, "pwrNode-active-io-av_init", pp->IOHandler->AvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.dv_i, "pwrNode-active-io-dv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
-  dlink_area((plc_sDlink *)&pp->base.iv_i, "pwrNode-active-io-iv_init", pp->IOHandler->DvCount * sizeof(pwr_tInt32));
+  dlink_area((plc_sDlink *)&pp->base.iv_i, "pwrNode-active-io-iv_init", pp->IOHandler->IvCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.ai_i, "pwrNode-active-io-ai_init", pp->IOHandler->AiCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.ao_i, "pwrNode-active-io-ao_init", pp->IOHandler->AoCount * sizeof(pwr_tInt32));
   dlink_area((plc_sDlink *)&pp->base.di_i, "pwrNode-active-io-di_init", pp->IOHandler->DiCount * sizeof(pwr_tInt32));
