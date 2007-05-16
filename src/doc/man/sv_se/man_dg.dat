@@ -1786,6 +1786,43 @@ runtime miljön.
 <h2>Distribuera
 ...
 </topic>
+
+<topic>runtime monitor
+Runtime Monitorn
+Ofta vill man starta runtime-miljön på utvecklings-noden, t ex om man har gjort en 
+ändring i systemet som man vill testa innan man skickar ner den till produktions-
+systemet.
+
+Runtime Monitorn används för att starta och stoppa runtime-miljön på utvecklingsnoden,
+ofta i samband med simulering och testning, men även vid små system där utvecklingsnod
+och process- eller operatörs nod är en och samma dator.
+
+<image>dg_fig67.gif
+
+Förutsättningen för att man ska kunna starta runtime-miljön är att utvecklingsnoden är
+
+- noden är konfigurerad med ett NodeConfig objekt i projektvolymen.
+
+- att rätt kommunikationsbuss är uppsatt. Det gör man genom att sätta omgivningsvariabeln
+  PWR_BUS_ID till den buss man har angivit i BusConfig objektet i projektvolymen. t ex
+<c>  export PWR_BUS_ID=999
+
+För att runtime monitorn ska fungera krävs dessutom att det finns ett StatusMontitorConfig
+objekt under $Node objektet i den volym som startas.
+
+Runtime Monitorn startas från Tools/Runtime Monitor i menyn. Här finns knappar för att
+starta och stoppa runtime-miljön ('Start Runtime' resp 'Stop Runtime'). I färgade rutan
+till höger visas om runtime är startat eller inte ('Running' resp 'Down'). Färgen indikerar
+status för systemet, rött för felstatus, gult för varning, och grönt för OK.
+
+Knappen 'Restart Runtime' gör en mjuk omstart, och kan användas om runtime redan är startad.
+Observera att vissa ändringar inte följer med vid en mjuk omstart, t ex ändrade värden på
+attribut i objekt som redan finns sedan tidigare.
+
+
+
+</topic>
+
 </chapter>
 
 <chapter>
