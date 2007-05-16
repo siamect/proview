@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.12 2007-04-23 11:45:43 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.13 2007-05-16 12:39:14 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,8 @@
 #include "wb_volume.h"
 #include "wb_env.h"
 #include "wb_wpkg_gtk.h"
+#include "co_rtmon_gtk.h"
+#include "co_statusmon_nodelist_gtk.h"
 #include "co_msgwindow.h"
 #include "wb_wnav_selformat.h"
 #include "wb_pwrs.h"
@@ -862,6 +864,32 @@ void WttGtk::activate_command( GtkWidget *w, gpointer data)
 
   gtk_editable_delete_text( GTK_EDITABLE(((WttGtk *)wtt)->cmd_input), 0, -1);
   wtt->command_open = 1;
+}
+
+static void wtt_help_cb( void *ctx, char *topic)
+{
+  pwr_tCmd cmd;
+  sprintf( cmd, "help %s", topic);
+  ((Wtt *)ctx)->wnav->command( cmd);
+}
+
+void WttGtk::activate_rtmon( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  pwr_tStatus sts;
+  
+  RtMon *rtmon = new RtMonGtk( wtt, ((WttGtk *)wtt)->toplevel, "Runtime Monitor", &sts);
+  rtmon->help_cb = wtt_help_cb;
+}
+
+void WttGtk::activate_statusmon( GtkWidget *w, gpointer data)
+{
+  Wtt *wtt = (Wtt *)data;
+  pwr_tStatus sts;
+  
+  Nodelist *nl = new NodelistGtk( wtt, ((WttGtk *)wtt)->toplevel, "Supervision Center", 0, &sts);
+  nl->set_scantime(3);
+  nl->help_cb = wtt_help_cb;
 }
 
 void WttGtk::activate_exit( GtkWidget *w, gpointer data)
@@ -2267,6 +2295,23 @@ WttGtk::WttGtk(
   GtkWidget *options = gtk_menu_item_new_with_mnemonic("_Options");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), options);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(options), GTK_WIDGET(options_menu));
+
+  // Tools menu
+  GtkWidget *mtools_rtmon = gtk_menu_item_new_with_mnemonic( "_Runtime Monitor");
+  g_signal_connect( mtools_rtmon, "activate", 
+		    G_CALLBACK(WttGtk::activate_rtmon), this);
+
+  GtkWidget *mtools_statusmon = gtk_menu_item_new_with_mnemonic( "_Supervision Center");
+  g_signal_connect( mtools_statusmon, "activate", 
+		    G_CALLBACK(WttGtk::activate_statusmon), this);
+
+  GtkMenu *mtools_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(mtools_menu), mtools_rtmon);
+  gtk_menu_shell_append(GTK_MENU_SHELL(mtools_menu), mtools_statusmon);
+
+  GtkWidget *mtools = gtk_menu_item_new_with_mnemonic("_Tools");
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), mtools);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(mtools), GTK_WIDGET(mtools_menu));
 
   // Menu Help
   GtkWidget *help_overview = gtk_image_menu_item_new_with_mnemonic("_Overview");
