@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_errh.h,v 1.7 2007-04-30 07:27:59 claes Exp $
+ * Proview   $Id: rt_errh.h,v 1.8 2007-05-16 12:34:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,7 +92,7 @@ typedef enum {
   errh_eAnix_plc 	= 17,
   errh_eAnix_remote 	= 18,
   errh_eAnix_opc_server	= 19,
-  errh_eAnix_nmps_bck   = 20,
+  errh_eAnix_statussrv  = 20,
   errh_eAnix_appl1	= 21,
   errh_eAnix_appl2	= 22,
   errh_eAnix_appl3	= 23,
