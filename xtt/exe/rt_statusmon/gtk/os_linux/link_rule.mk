@@ -3,8 +3,6 @@ link_rule_mk := 1
 
 link = $(ldxx) $(elinkflags) $(domap) -o $(pwr_exe)/rt_statusmon_gtk \
 	$(bld_dir)/rt_statusmon_gtk.o \
-	$(bld_dir)/statusmon_nodelist_gtk.o $(bld_dir)/statusmon_nodelistnav_gtk.o \
-	$(bld_dir)/statusmon_nodelist.o $(bld_dir)/statusmon_nodelistnav.o \
 	$(pwr_eobj)/stdsoap2.o \
 	$(wb_msg_eobjs) $(rt_msg_eobjs) \
          -L/usr/X11R6/lib \
