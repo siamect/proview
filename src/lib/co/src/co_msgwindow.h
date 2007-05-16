@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.h,v 1.7 2007-01-04 07:51:42 claes Exp $
+ * Proview   $Id: co_msgwindow.h,v 1.8 2007-05-16 12:32:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,6 +73,8 @@ class MsgWindow {
     void 	insert( int severity, const char *text, pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     void	set_nodraw() { msgnav->set_nodraw(); nodraw++;}
     void	reset_nodraw();
+    void 	msg( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
+			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);
     static void	set_default( MsgWindow *msgw) { default_window = msgw;}
     static void message( int severity, const char *text, msgw_ePop pop = msgw_ePop_Default, 
 			 pwr_tOid oid = pwr_cNOid, bool is_plc = false);

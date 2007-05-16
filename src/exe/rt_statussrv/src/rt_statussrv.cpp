@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.1 2007-05-11 15:01:23 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.2 2007-05-16 12:32:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,7 +62,7 @@ static status_server *statussrv;
 static void *statussrv_cyclic( void *arg);
 
 
-int main()
+int main(  int argc, char *argv[])
 {
   struct soap soap;
   int m,s;   // Master and slave sockets
@@ -71,14 +71,20 @@ int main()
   qcom_sQid qini;
   qcom_sQattr qAttr;
   qcom_sQid qid = qcom_cNQid;
-  int restarts;
+  int restarts = 10;
+  int ignore_config = 0;
+  
+  for ( int i = 1; i < argc; i++) {
+    if ( strcmp( argv[i], "-i") == 0)
+      ignore_config = 1;
+  }
 
   sts = gdh_Init("status_server");
   if ( EVEN(sts)) {
     exit(sts);
   }
 
-  errh_Init("status_server", errh_eNAnix /* errh_eAnix_status_server */);
+  errh_Init("status_server", errh_eAnix_statussrv);
   errh_SetStatus( PWR__SRVSTARTUP);
 
   if (!qcom_Init(&sts, 0, "status_server")) {
@@ -133,24 +139,24 @@ int main()
   }
 
 
-#if 0
-  // Get StatusServerConfig object
-  pwr_tOid config_oid;
-  sts = gdh_GetClassList( pwr_cClass_StatusServerConfig, &config_oid);
-  if ( EVEN(sts)) {
-    // Not configured
-    errh_SetStatus( 0);
-    exit(sts);
+  if ( !ignore_config) {
+    // Get StatusServerConfig object
+    pwr_tOid config_oid;
+    sts = gdh_GetClassList( pwr_cClass_StatusServerConfig, &config_oid);
+    if ( EVEN(sts)) {
+      // Not configured
+      errh_SetStatus( 0);
+      exit(sts);
+    }
+    
+    sts = gdh_ObjidToPointer( config_oid, (void **)&statussrv->m_config);
+    if ( EVEN(sts)) {
+      errh_SetStatus( sts);
+      exit(sts);
+    }
+    
+    aproc_RegisterObject( config_oid);
   }
-
-  sts = gdh_ObjidToPointer( config_oid, (void **)&statussrv->m_config);
-  if ( EVEN(sts)) {
-    errh_SetStatus( sts);
-    exit(sts);
-  }
-
-  aproc_RegisterObject( config_oid);
-#endif
 
   // Read version file
 

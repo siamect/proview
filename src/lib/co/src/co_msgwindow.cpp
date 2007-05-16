@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_msgwindow.cpp,v 1.12 2007-05-11 15:12:45 claes Exp $
+ * Proview   $Id: co_msgwindow.cpp,v 1.13 2007-05-16 12:32:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,6 +70,17 @@ void MsgWindow::message( int severity, const char *text, msgw_ePop pop, pwr_tOid
        (pop == msgw_ePop_Yes || 
 	(pop == msgw_ePop_Default && ( severity == 'E' || severity == 'F' || severity == 'W'))))
     default_window->map();
+}
+
+void MsgWindow::msg( int severity, const char *text, msgw_ePop pop, pwr_tOid oid, bool is_plc)
+{
+
+  if ( severity == 'O')
+    severity = 'I';
+  insert( severity, text, oid, is_plc);
+  if ( (pop == msgw_ePop_Yes || 
+	(pop == msgw_ePop_Default && ( severity == 'E' || severity == 'F' || severity == 'W'))))
+    map();
 }
 
 void MsgWindow::message( const co_error& e, const char *text1, const char *text2, pwr_tOid oid, bool is_plc)
