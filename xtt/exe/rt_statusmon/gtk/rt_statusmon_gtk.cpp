@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statusmon_gtk.cpp,v 1.1 2007-05-11 15:04:14 claes Exp $
+ * Proview   $Id: rt_statusmon_gtk.cpp,v 1.2 2007-05-16 12:36:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "pwr.h"
-#include "statusmon_nodelist_gtk.h"
+#include "co_statusmon_nodelist_gtk.h"
 
 static void usage()
 {
