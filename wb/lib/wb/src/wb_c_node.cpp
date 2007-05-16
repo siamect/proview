@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_node.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_node.cpp,v 1.2 2007-05-16 12:40:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,6 +56,9 @@ static pwr_tStatus PostCreate (
 
   sts = ldh_ClassNameToId(Session, &cid, "WebBrowserConfig");
   sts = ldh_CreateObject(Session, &oid, "WebBrowser", cid, Object, ldh_eDest_IntoLast); 
+
+  sts = ldh_ClassNameToId(Session, &cid, "StatusServerConfig");
+  sts = ldh_CreateObject(Session, &oid, "StatusServer", cid, Object, ldh_eDest_IntoLast); 
 
   return PWRS__SUCCESS;
 }

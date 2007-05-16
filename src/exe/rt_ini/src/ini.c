@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.28 2007-05-07 12:35:34 claes Exp $
+ * Proview   $Id: ini.c,v 1.29 2007-05-16 12:40:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -105,6 +105,7 @@
 # define cPrio_elog		(cPrio_base + 15)
 # define cPrio_sysmon		(cPrio_base + 16)
 # define cPrio_opc_server      	(cPrio_base + 15)
+# define cPrio_statussrv      	(cPrio_base + 15)
 # define cPrio_plc_init		(cPrio_base + 5)
 # define cPrio_remh		(cPrio_base + 5)
 # define cPrio_remotelogg	(cPrio_base + 5)
@@ -2057,6 +2058,9 @@ ini_ProcTable (
   pp->proc.flags.b.system = 1;
 
   pp = ini_ProcInsert(sts, cp, "opc_server", "opc_server_%d", 0, 1, "opc_server", cPrio_opc_server, 0, "");
+  pp->proc.flags.b.system = 1;
+
+  pp = ini_ProcInsert(sts, cp, "statussrv", "pwr_statussrv_%d", 0, 1, "rt_statussrv", cPrio_statussrv, 0, "");
   pp->proc.flags.b.system = 1;
 #endif
 
