@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_wnav_gtk.cpp,v 1.2 2007-05-16 07:42:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@ extern "C" {
 #include "ge_gtk.h"
 #include "wb_wda_gtk.h"
 #include "wb_foe_gtk.h"
+#include "wb_utl_gtk.h"
 
 #define max(Dragon,Eagle) ((Dragon) > (Eagle) ? (Dragon) : (Eagle))
 #define min(Dragon,Eagle) ((Dragon) < (Eagle) ? (Dragon) : (Eagle))
@@ -251,11 +252,8 @@ WGe *WNavGtk::wge_new( char *name, char *filename, char *object_name, int modal)
 
 wb_utl *WNavGtk::utl_new()
 {
-#if 0
-  wb_utl_motif *utl = new wb_utl_motif( parent_wid);
+  wb_utl_gtk *utl = new wb_utl_gtk( parent_wid);
   return utl;
-#endif
-  return 0;
 }
 
 void WNavGtk::sel_convert_cb( GtkWidget  *w, GtkSelectionData *selection_data,
