@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_main.cpp,v 1.3 2007-05-07 12:37:18 claes Exp $
+ * Proview   $Id: xtt_main.cpp,v 1.4 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -445,7 +445,7 @@ void Xtt::activate_help_proview()
 }
 
 Xtt::Xtt( int argc, char *argv[], int *return_sts) :
-  root_item(0), input_open(0), command_open(0), india_ok_cb(0), quiet(0), attach_audio(0)
+  root_item(0), input_open(0), command_open(0), india_ok_cb(0), quiet(0), attach_audio(0), select_opplace(0), op_close_button(0)
 {
   pwr_tStatus	sts;
   int		i;
@@ -493,6 +493,10 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
     }
     else if ( strcmp( argv[i], "-a") == 0)
       attach_audio = 1;
+    else if ( strcmp( argv[i], "-s") == 0)
+      select_opplace = 1;
+    else if ( strcmp( argv[i], "-c") == 0)
+      op_close_button = 1;
     else if ( strcmp( argv[i], "-u") == 0 && i + 1 < argc) {
       char oname[80];
 
@@ -539,9 +543,52 @@ Xtt::Xtt( int argc, char *argv[], int *return_sts) :
   }
 }
 
+void Xtt::opplace_selected_cb( void *ctx, char *text)
+{
+  Xtt *xtt = (Xtt *)ctx;
+  pwr_tCmd cmd;
 
+  sprintf( cmd, "open operator %s", text);  
+  if ( xtt->op_close_button)
+    strcat( cmd, " /closebutton");
+  xtt->xnav->command( cmd);
+}
 
+void Xtt::list_opplace()
+{
+  char texts[20][80];
+  pwr_tStatus sts;
+  pwr_tOid oid;
 
+  int i = 0;
+  for ( sts = gdh_GetClassList( pwr_cClass_OpPlace, &oid); 
+	ODD(sts);
+	sts = gdh_GetNextObject( oid, &oid)) {
+    sts = gdh_ObjidToName( oid, texts[i], sizeof(texts[0]), cdh_mNName);
+    if ( EVEN(sts)) continue;
+    
+    i++;
+    if ( i == (int)(sizeof(texts)/sizeof(texts[0]) - 2))
+      break;
+  }
+  strcpy( texts[i], "");
+
+  if ( i == 0) {
+    printf( "No opplace objects found\n");
+    exit(0);
+  }
+
+  if ( i == 1) {
+    // Only one opplace found, open it
+    pwr_tCmd cmd;
+
+    sprintf( cmd, "open operator %s", texts[0]);  
+    xnav->command( cmd);
+  }
+  else 
+    // Select oplace from list
+    wow->CreateList( "Select Operator Place", (char *)texts, opplace_selected_cb, this);
+}
 
 
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.30 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.31 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,7 +188,7 @@ dcli_tCmdTable	xnav_command_table[] = {
 			"/NAVIGATOR", "/CENTER", "/OBJECT", "/NEW", 
 			"/INSTANCE", "/COLLECT", "/FOCUS", "/INPUTEMPTY", 
                         "/ENTRY", "/TITLE", "/ACCESS", "/CLASSGRAPH", "/BYPASS", 
-			  ""}
+			"/CLOSEBUTTON", ""}
 		},
 		{
 			"CLOSE",
@@ -2586,6 +2586,8 @@ static int	xnav_open_func(	void		*client_data,
         return XNAV__HOLDCOMMAND;
       }
 
+      int closebutton = ODD( dcli_get_qualifier( "/CLOSEBUTTON", 0, 0));
+
       xnav->op = xnav->op_new( opplace_str, &sts);
       if ( EVEN(sts))
       {
@@ -2600,6 +2602,8 @@ static int	xnav_open_func(	void		*client_data,
       xnav->op->map_cb = xnav_op_map_cb;
       xnav->op->get_alarm_info_cb = xnav_op_get_alarm_info_cb;
       xnav->op->ack_last_cb = xnav_op_ack_last_cb;
+      if ( closebutton)
+	xnav->op->add_close_button();
     }
     else
     {

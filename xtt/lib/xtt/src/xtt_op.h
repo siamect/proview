@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op.h,v 1.3 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_op.h,v 1.4 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,6 +66,7 @@ class Op {
   virtual void	map() {}
   virtual int 	configure( char *opplace_str) {return 0;}
   virtual void 	update_alarm_info() {}
+  virtual void  add_close_button() {}
 
   void	set_jop_qid( int qix) { if ( jop) jop->set_jop_qid( qix);};
   void	scan();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_op_gtk.h,v 1.2 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,6 +51,7 @@ class OpGtk : public Op {
   GtkWidget		*eventlog_button;
   GtkWidget		*help_button;
   GtkWidget		*decr_button;
+  GtkWidget		*tools_close;
   int			a_height;
   int			a_exist[5];
   int			a_active[5];
@@ -59,6 +60,7 @@ class OpGtk : public Op {
   void	map();
   int 	configure( char *opplace_str);
   void 	update_alarm_info();
+  void  add_close_button();
 
   static void activate_exit( GtkWidget *w, gpointer data);
   static void activate_aalarm_ack( GtkWidget *w, gpointer data);

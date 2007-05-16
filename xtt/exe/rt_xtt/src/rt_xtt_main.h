@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_main.h,v 1.2 2007-01-17 06:18:11 claes Exp $
+ * Proview   $Id: rt_xtt_main.h,v 1.3 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -63,6 +63,8 @@ class Xtt {
     int 	quiet;
     int 	attach_audio;
     XttMethodToolbar *methodtoolbar;
+    int		select_opplace;
+    int		op_close_button;
 
     Xtt( int argc, char *argv[], int *return_sts);
     virtual ~Xtt() {}
@@ -72,6 +74,9 @@ class Xtt {
 				    void (*ok_cb)( Xtt *, char *)) {}
     virtual void set_prompt( char *prompt) {}
     virtual void open_change_value() {}
+
+    void list_opplace();
+    static void opplace_selected_cb( void *ctx, char *text);
 
     void hotkey_activate_command( char *cmdp);
     static void hotkey_activate_toggledig( char *namep);

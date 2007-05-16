@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.7 2007-04-17 13:58:13 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.8 2007-05-16 12:37:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -867,6 +867,9 @@ XttGtk::XttGtk( int argc, char *argv[], int *return_sts) :
     gdk_window_add_filter( root, xtt_hotkey_filter, hotkey);
   }
   methodtoolbar->set_sensitive();
+
+  if ( select_opplace)
+    list_opplace();
 
   xtt_mainloop();  
 
