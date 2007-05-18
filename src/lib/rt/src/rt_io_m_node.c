@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_node.c,v 1.2 2005-09-01 14:57:55 claes Exp $
+ * Proview   $Id: rt_io_m_node.c,v 1.3 2007-05-18 12:05:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,15 @@ static pwr_tStatus IoAgentInit (
   return 1;
 }
 
+static pwr_tStatus IoAgentSwap (
+  io_tCtx	ctx,
+  io_sAgent	*ap
+) 
+{
+
+  return 1;
+}
+
 
 /*----------------------------------------------------------------------------*\
   
@@ -52,5 +61,6 @@ static pwr_tStatus IoAgentInit (
 
 pwr_dExport pwr_BindIoMethods(Node) = {
   pwr_BindIoMethod(IoAgentInit),
+  pwr_BindIoMethod(IoAgentSwap),
   pwr_NullMethod
 };

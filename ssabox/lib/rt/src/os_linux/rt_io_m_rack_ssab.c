@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_rack_ssab.c,v 1.2 2006-04-12 10:14:49 claes Exp $
+ * Proview   $Id: rt_io_m_rack_ssab.c,v 1.3 2007-05-18 12:06:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,6 +64,31 @@ static pwr_tStatus IoRackInit (
   return 1;
 }
 
+static pwr_tStatus IoRackSwap (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp
+) 
+{
+  io_sRackLocal 	*local;
+
+  if (!rp->Local) {
+    /* Open Qbus driver */
+    local = calloc( 1, sizeof(*local));
+    rp->Local = local;
+
+    local->Qbus_fp = open("/dev/qbus", O_RDWR);
+    if ( local->Qbus_fp == -1)
+    {
+      errh_Error( "Qbus swap initialization error, IO rack %s", rp->Name);
+      return IO__ERRDEVICE;
+    }
+  
+    errh_Info( "Swap init of IO rack %s", rp->Name);
+  }
+  return 1;
+}
+
 static pwr_tStatus IoRackClose (
   io_tCtx	ctx,
   io_sAgent	*ap,
@@ -93,6 +118,7 @@ static pwr_tStatus IoRackClose (
 
 pwr_dExport pwr_BindIoMethods(Rack_SSAB) = {
   pwr_BindIoMethod(IoRackInit),
+  pwr_BindIoMethod(IoRackSwap),
   pwr_BindIoMethod(IoRackClose),
   pwr_NullMethod
 };

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.8 2006-06-30 12:17:12 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.9 2007-05-18 12:05:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,7 +68,8 @@ typedef enum {
 typedef enum {
 	io_mAction_None		= 0,
 	io_mAction_Read		= 1 << 0,
-	io_mAction_Write	= 1 << 1
+	io_mAction_Write	= 1 << 1,
+	io_mAction_Swap		= 1 << 2
 } io_mAction;
 
 typedef enum {
@@ -107,6 +108,7 @@ typedef struct s_Card {
 	pwr_tStatus	(* Close) ();	/* Close method */
 	pwr_tStatus	(* Read) ();	/* Read method */
 	pwr_tStatus	(* Write) ();	/* Write method */
+	pwr_tStatus	(* Swap) ();	/* Write method */
 	pwr_tAddress	*op;		/* Pointer to card object */
 	pwr_tDlid	Dlid;		/* Dlid for card object pointer */
 	pwr_tUInt32	size;		/* Size of card data area in byte */
@@ -130,6 +132,7 @@ typedef struct s_Rack {
 	pwr_tStatus	(* Close) ();	/* Close method */
 	pwr_tStatus	(* Read) ();	/* Read method */
 	pwr_tStatus	(* Write) ();	/* Write method */
+	pwr_tStatus	(* Swap) ();	/* Swap method */
 	void		*op;		/* Pointer to rack object */
 	pwr_tDlid	Dlid;		/* Dlid för rack object pointer */
 	pwr_tUInt32	size;		/* Size of rack data area in byte */
@@ -152,6 +155,7 @@ typedef struct s_Agent {
 	pwr_tStatus	(* Close) ();	/* Close method */
 	pwr_tStatus	(* Read) ();	/* Read method */
 	pwr_tStatus	(* Write) ();	/* Write method */
+	pwr_tStatus	(* Swap) ();	/* Write method */
 	void		*op;		/* Pointer to agent object */
 	pwr_tDlid	Dlid;		/* Dlid for agent object pointer */
 	int		scan_interval;	/* Interval between scans */
@@ -197,11 +201,23 @@ pwr_tStatus io_init(
   float		scan_time
 );
 
+pwr_tStatus io_init_swap( 
+  io_mProcess	process,
+  pwr_tObjid    thread,
+  io_tCtx 	*ctx,
+  int		relativ_vector,
+  float		scan_time
+);
+
 pwr_tStatus io_read(
   io_tCtx 	ctx
 );
 
 pwr_tStatus io_write(
+  io_tCtx 	ctx
+);
+
+pwr_tStatus io_swap(
   io_tCtx 	ctx
 );
 

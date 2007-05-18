@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.22 2007-01-30 07:02:32 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.23 2007-05-18 12:05:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -74,7 +74,8 @@ static pwr_tStatus io_trv_child(
   pwr_tStatus	(* func) (),
   void		*arg1,
   void		*arg2,
-  int		arg3);
+  int		arg3,
+  int           arg4);
 
 static pwr_tStatus io_replace_symbol( pwr_sAttrRef *chan, pwr_sAttrRef *sig)
 {
@@ -1256,7 +1257,8 @@ static pwr_tStatus io_FindMethods(
   pwr_tStatus 	(** Init) (),
   pwr_tStatus 	(** Close) (),
   pwr_tStatus 	(** Read) (),
-  pwr_tStatus 	(** Write) ()
+  pwr_tStatus 	(** Write) (),
+  pwr_tStatus 	(** Swap) ()
 )
 {
   int		found;
@@ -1279,9 +1281,11 @@ static pwr_tStatus io_FindMethods(
     *Read = 0;
   if ( Write)
     *Write = 0;
+  if ( Swap)
+    *Swap = 0;
 
-  for ( k = 0; k < 4; k++) {
-    // Init, Close, Read, Write loop
+  for ( k = 0; k < 5; k++) {
+    // Init, Close, Read, Write, Swap loop
     cid = class;
     next = 0;
     while ( 1) {
@@ -1317,6 +1321,9 @@ static pwr_tStatus io_FindMethods(
 	break;
       case 3:
 	strcat( methodobject, "Write");
+	break;
+      case 4:
+	strcat( methodobject, "Swap");
 	break;
       }
 
@@ -1397,6 +1404,10 @@ static pwr_tStatus io_FindMethods(
       if ( Write)
 	*Write = method;
       break;
+    case 4:
+      if ( Swap)
+	*Swap = method;
+      break;
     }
   }
   if ( !found)
@@ -1412,7 +1423,8 @@ static pwr_tStatus io_init_card(
   pwr_tObjid	objid, 
   io_tCtx	ctx,
   io_sRack	*rp,
-  int		agent_type)
+  int		agent_type,
+  int           swap)
 {
   pwr_tStatus 	sts;
   pwr_tClassId	class;  
@@ -1420,6 +1432,7 @@ static pwr_tStatus io_init_card(
   pwr_tStatus 	(* CardClose) ();
   pwr_tStatus 	(* CardRead) ();
   pwr_tStatus 	(* CardWrite) ();
+  pwr_tStatus 	(* CardSwap) ();
   pwr_tAName   	cname;
   pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
@@ -1450,9 +1463,9 @@ static pwr_tStatus io_init_card(
 
   if ( io_CheckClassIoType( io_eType_Card, class)) {
     sts = io_FindMethods( class, io_eType_Card, 
-			  &CardInit, &CardClose, &CardRead, &CardWrite);
+			  &CardInit, &CardClose, &CardRead, &CardWrite, &CardSwap);
     if ( ODD(sts)) {
-      if ( CardInit != NULL || CardClose != NULL || CardRead != NULL || CardWrite != NULL) {
+      if ( CardInit != NULL || CardClose != NULL || CardRead != NULL || CardWrite != NULL || CardSwap != NULL) {
 	/* This is a card object */
 	/* Check if the rack should be handled by this process */      
       
@@ -1464,8 +1477,8 @@ static pwr_tStatus io_init_card(
 	strcpy( attrname, cname);
 	strcat( attrname, ".Process");
 	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-	if ( (EVEN(sts) && ctx->Process == io_mProcess_User) ||
-	     (ODD(sts) && ctx->Process == (int) process)) {
+	if ( ((EVEN(sts) && ctx->Process == io_mProcess_User) ||
+	      (ODD(sts) && ctx->Process == (int) process)) && !swap) {
 	  if ( process == io_mProcess_Plc) {
 	    /* Check thread also */
 	    strcpy( attrname, cname);
@@ -1476,6 +1489,9 @@ static pwr_tStatus io_init_card(
 	  }
 	  else
 	    ok = 1;
+	}
+	else if (ODD(sts) && swap && CardSwap != NULL) {
+	  ok = 1;
 	}
 
 	if ( ok) {
@@ -1500,14 +1516,25 @@ static pwr_tStatus io_init_card(
 	  cp->Local = NULL;
 	  cp->Objid = objid;
 	  strcpy( cp->Name, cname);
-	  if ( CardRead != NULL)
-	    cp->Action |= io_mAction_Read;
-	  if ( CardWrite != NULL)
-	    cp->Action |= io_mAction_Write;
-	  cp->Init = CardInit;
-	  cp->Close = CardClose;
-	  cp->Read = CardRead;
-	  cp->Write = CardWrite;
+          if (!swap) {
+	    if ( CardRead != NULL)
+	      cp->Action |= io_mAction_Read;
+	    if ( CardWrite != NULL)
+	      cp->Action |= io_mAction_Write;
+	    cp->Init = CardInit;
+	    cp->Close = CardClose;
+	    cp->Read = CardRead;
+	    cp->Write = CardWrite;
+	    cp->Swap = CardSwap;
+	  } else {
+	    if ( CardSwap != NULL)
+	      cp->Action |= io_mAction_Swap;
+	    cp->Init = NULL;
+	    cp->Close = CardClose;
+	    cp->Read = NULL;
+	    cp->Write = NULL;
+	    cp->Swap = CardSwap;
+	  }
 	  if ( agent_type == io_eType_Agent)
 	    cp->AgentControlled = 1;
 	  memset( &attrref, 0, sizeof(attrref));
@@ -1531,335 +1558,337 @@ static pwr_tStatus io_init_card(
 	  }
 	  
 	  /* Fill in the channel and signal lists */
-
-	  /* Find children */
-	  sts = gdh_GetChild( objid, &chan);
-	  while( ODD(sts)) {
-	    memset( &attrref, 0, sizeof(attrref));
-	    attrref.Objid = chan;
-	    sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
-	    if ( EVEN(sts)) return sts;
-
-	    sts = gdh_GetObjectClass( chan, &class);
-	    if ( EVEN(sts)) return sts;
-
-	    switch ( class) {
-	    case pwr_cClass_ChanAi:
-	      sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanAi *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanAit:
-	      sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanAit *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanAo:
-	      sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanAo *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanDo:
-	      sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanDo *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanDi:
-	      sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanDi *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanIi:
-	      sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanIi *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanIo:
-	      sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanIo *) chan_op)->Number;
-	      break;
-	    case pwr_cClass_ChanCo:
-	      sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
-	      number = ((pwr_sClass_ChanCo *) chan_op)->Number;
-	      break;
-	    default:
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_GetNextSibling( chan, &chan);
-	      continue;
-	    }
-	    
-	    child_found = 1;
-	    chan_cnt++;
-	    if ( !fix_channels && chan_cnt > maxchan) {
-	      errh_Error( "IO init error: max number of channels exceeded %s, chan nr %d", 
-			 cp->Name, chan_cnt);
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      break;
-	    }
-
-	    if ( fix_channels && (int) number > maxchan-1) {
-	      /* Number out of range */
-	      errh_Error( "IO init error: number out of range %s, chan nr %d", 
-			  cp->Name, number);
-	      sts = gdh_DLUnrefObjectInfo( chandlid);
-	      sts = gdh_GetNextSibling( chan, &chan);
-	      continue;
-	    }
-
-	    /* Find signal */
-	    sig_found = 1;
-	    if ( cdh_ObjidIsNull( sigchancon.Objid)) {
-	      /* Not connected */
-	      sig_found = 0;
-	    }
-	    
-	    if ( sig_found) {
-	      sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
-	      if ( EVEN(sts))
-		sig_found = 0;
-	    }
-
-	    if ( sig_found) {
-	      sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
-	      if ( EVEN(sts))
-		sig_found = 0;
-	    }
 	  
-	    if ( fix_channels && !sig_found) {
+	  if (!swap) {
+
+	    /* Find children */
+	    sts = gdh_GetChild( objid, &chan);
+	    while( ODD(sts)) {
+	      memset( &attrref, 0, sizeof(attrref));
+	      attrref.Objid = chan;
+	      sts = gdh_DLRefObjectInfoAttrref( &attrref, (void *) &chan_op, &chandlid);
+	      if ( EVEN(sts)) return sts;
+
+	      sts = gdh_GetObjectClass( chan, &class);
+	      if ( EVEN(sts)) return sts;
+
+	      switch ( class) {
+	      case pwr_cClass_ChanAi:
+	        sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanAi *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanAit:
+	        sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanAit *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanAo:
+	        sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanAo *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanDo:
+	        sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanDo *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanDi:
+	        sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+	        number = ((pwr_sClass_ChanDi *) chan_op)->Number;
+	        break;
+	      case pwr_cClass_ChanIi:
+		sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+		number = ((pwr_sClass_ChanIi *) chan_op)->Number;
+		break;
+	      case pwr_cClass_ChanIo:
+		sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+		number = ((pwr_sClass_ChanIo *) chan_op)->Number;
+		break;
+	      case pwr_cClass_ChanCo:
+		sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+		number = ((pwr_sClass_ChanCo *) chan_op)->Number;
+		break;
+	      default:
 		sts = gdh_DLUnrefObjectInfo( chandlid);
 		sts = gdh_GetNextSibling( chan, &chan);
 		continue;
-	    }
-
-	    if ( fix_channels)
-	      idx = number;
-	    else
-	      idx = chan_cnt - 1;
-
-	    /* Insert */
-	    chanp = &cp->chanlist[idx];
-	    chanp->cop = chan_op;
-	    chanp->ChanDlid = chandlid;
-	    chanp->ChanAref = cdh_ObjidToAref(chan);
-	    chanp->ChanClass = class;
-	    if ( sig_found) {
-	      chanp->sop = sig_op;
-	      chanp->SigDlid = sigdlid;
-	      chanp->SigAref = sigchancon;
-	      chanp->SigClass = sigclass;
-	      switch( sigclass) {
-	      case pwr_cClass_Di:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		 (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Do:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Po:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Ai:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Ao:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Ii:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Io:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
-		break;
-	      case pwr_cClass_Co:
-		chanp->vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
-		chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		  (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
-		break;
-	      default:
-		errh_Error( 
-		  "IO init error: unknown signal class card  %, chan nr %d", 
-		  cp->Name, number);
-		sts = gdh_DLUnrefObjectInfo( chandlid);
-		sts = gdh_DLUnrefObjectInfo( sigdlid);
-		memset( chanp, 0, sizeof(*chanp));
 	      }
 
-	      /* If the signal has a Sup-object as a child, this will be inserted
-		 in the suplist */
-	      /* if ( process != io_mProcess_Plc) */
-	      io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon.Objid, sig_op);
-	    }
-	    sts = gdh_GetNextSibling( chan, &chan);
-	  }
+	      child_found = 1;
+	      chan_cnt++;
+	      if ( !fix_channels && chan_cnt > maxchan) {
+		errh_Error( "IO init error: max number of channels exceeded %s, chan nr %d", 
+			   cp->Name, chan_cnt);
+		sts = gdh_DLUnrefObjectInfo( chandlid);
+		break;
+	      }
 
-	  /* Look for internal object attributes */
-	  if ( !child_found) {
-	    gdh_sAttrDef *bd;
-	    int rows;
-	    int csize;
-	    int i, j;
-	    int elem;
-
-	    sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
-	    if ( EVEN(sts)) return sts;
-
-	    for ( i = 0; i < rows; i++) {
-	      switch ( bd[i].attr->Param.TypeRef) {
-	      case pwr_cClass_ChanAi:
-		csize = sizeof( pwr_sClass_ChanAi);
-		break;
-	      case pwr_cClass_ChanAit:
-		csize = sizeof( pwr_sClass_ChanAit);
-		break;
-	      case pwr_cClass_ChanAo:
-		csize = sizeof( pwr_sClass_ChanAo);
-		break;
-	      case pwr_cClass_ChanDi:
-		csize = sizeof( pwr_sClass_ChanDi);
-		break;
-	      case pwr_cClass_ChanDo:
-		csize = sizeof( pwr_sClass_ChanDo);
-		break;
-	      case pwr_cClass_ChanIi:
-		csize = sizeof( pwr_sClass_ChanIi);
-		break;
-	      case pwr_cClass_ChanIo:
-		csize = sizeof( pwr_sClass_ChanIo);
-		break;
-	      case pwr_cClass_ChanCo:
-		csize = sizeof( pwr_sClass_ChanCo);
-		break;
-	      default:
+	      if ( fix_channels && (int) number > maxchan-1) {
+		/* Number out of range */
+		errh_Error( "IO init error: number out of range %s, chan nr %d", 
+			    cp->Name, number);
+		sts = gdh_DLUnrefObjectInfo( chandlid);
+		sts = gdh_GetNextSibling( chan, &chan);
 		continue;
 	      }
 
-	      elem = 1;
-	      if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
-		elem = bd[i].attr->Param.Info.Elements;
-	      for ( j = 0; j < elem; j++) {
-		chan_op = ((char *)cp->op) + bd[i].attr->Param.Info.Offset + csize * j;
-
-		switch ( bd[i].attr->Param.TypeRef) {
-		case pwr_cClass_ChanAi:
-		  sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanAit:
-		  sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanAo:
-		  sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanDi:
-		  sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanDo:
-		  sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanIi:
-		  sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanIo:
-		  sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		case pwr_cClass_ChanCo:
-		  sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
-		  number = chan_cnt;
-		  break;
-		default:
-		  ;
-		}
-
-		chan_cnt++;
-
-		/* Find signal */
+	      /* Find signal */
+	      sig_found = 1;
+	      if ( cdh_ObjidIsNull( sigchancon.Objid)) {
+		/* Not connected */
 		sig_found = 0;
-		if ( cdh_ObjidIsNotNull( sigchancon.Objid)) {
-		  sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
-		  if ( ODD(sts)) {
-		    sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
-		    if ( ODD(sts)) 
-		      sig_found = 1;
-		  }
-		}
-		if ( !sig_found) {
-		  sig_op = 0;
-		  sigdlid = pwr_cNDlid;
-		  sigclass = 0;
-		}
-		/* Insert */
-		if ( elem > 1)
-		  sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
-		else
-		  sprintf( attrname, "%s.%s", cname, bd[i].attrName);
+	      }
 
-		chanp = &cp->chanlist[number];
-		chanp->cop = chan_op;
-		chanp->ChanDlid = pwr_cNDlid;
-		sts = gdh_NameToAttrref( pwr_cNObjid, attrname, &chanp->ChanAref);
-		if ( EVEN(sts)) return sts;
+	      if ( sig_found) {
+		sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+		if ( EVEN(sts))
+		  sig_found = 0;
+	      }
+
+	      if ( sig_found) {
+		sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+		if ( EVEN(sts))
+		  sig_found = 0;
+	      }
+
+	      if ( fix_channels && !sig_found) {
+		  sts = gdh_DLUnrefObjectInfo( chandlid);
+		  sts = gdh_GetNextSibling( chan, &chan);
+		  continue;
+	      }
+
+	      if ( fix_channels)
+		idx = number;
+	      else
+		idx = chan_cnt - 1;
+
+	      /* Insert */
+	      chanp = &cp->chanlist[idx];
+	      chanp->cop = chan_op;
+	      chanp->ChanDlid = chandlid;
+	      chanp->ChanAref = cdh_ObjidToAref(chan);
+	      chanp->ChanClass = class;
+	      if ( sig_found) {
 		chanp->sop = sig_op;
 		chanp->SigDlid = sigdlid;
 		chanp->SigAref = sigchancon;
-		chanp->ChanClass = bd[i].attr->Param.TypeRef;
 		chanp->SigClass = sigclass;
-		if ( sig_found) {
-		  switch( sigclass) {
-		  case pwr_cClass_Di:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		switch( sigclass) {
+		case pwr_cClass_Di:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		   (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Do:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Po:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ai:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ao:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Ii:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Io:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		  break;
+		case pwr_cClass_Co:
+		  chanp->vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		  chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		    (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		  break;
+		default:
+		  errh_Error( 
+		    "IO init error: unknown signal class card  %, chan nr %d", 
+		    cp->Name, number);
+		  sts = gdh_DLUnrefObjectInfo( chandlid);
+		  sts = gdh_DLUnrefObjectInfo( sigdlid);
+		  memset( chanp, 0, sizeof(*chanp));
+		}
+
+		/* If the signal has a Sup-object as a child, this will be inserted
+		   in the suplist */
+		/* if ( process != io_mProcess_Plc) */
+		io_ConnectToSupLst( ctx->SupCtx, sigclass, sigchancon.Objid, sig_op);
+	      }
+	      sts = gdh_GetNextSibling( chan, &chan);
+	    }
+
+	    /* Look for internal object attributes */
+	    if ( !child_found) {
+	      gdh_sAttrDef *bd;
+	      int rows;
+	      int csize;
+	      int i, j;
+	      int elem;
+
+	      sts = gdh_GetObjectBodyDef( cp->Class, &bd, &rows, pwr_cNObjid);
+	      if ( EVEN(sts)) return sts;
+
+	      for ( i = 0; i < rows; i++) {
+		switch ( bd[i].attr->Param.TypeRef) {
+		case pwr_cClass_ChanAi:
+		  csize = sizeof( pwr_sClass_ChanAi);
+		  break;
+		case pwr_cClass_ChanAit:
+		  csize = sizeof( pwr_sClass_ChanAit);
+		  break;
+		case pwr_cClass_ChanAo:
+		  csize = sizeof( pwr_sClass_ChanAo);
+		  break;
+		case pwr_cClass_ChanDi:
+		  csize = sizeof( pwr_sClass_ChanDi);
+		  break;
+		case pwr_cClass_ChanDo:
+		  csize = sizeof( pwr_sClass_ChanDo);
+		  break;
+		case pwr_cClass_ChanIi:
+		  csize = sizeof( pwr_sClass_ChanIi);
+		  break;
+		case pwr_cClass_ChanIo:
+		  csize = sizeof( pwr_sClass_ChanIo);
+		  break;
+		case pwr_cClass_ChanCo:
+		  csize = sizeof( pwr_sClass_ChanCo);
+		  break;
+		default:
+		  continue;
+		}
+
+		elem = 1;
+		if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY)
+		  elem = bd[i].attr->Param.Info.Elements;
+		for ( j = 0; j < elem; j++) {
+		  chan_op = ((char *)cp->op) + bd[i].attr->Param.Info.Offset + csize * j;
+
+		  switch ( bd[i].attr->Param.TypeRef) {
+		  case pwr_cClass_ChanAi:
+		    sigchancon = ((pwr_sClass_ChanAi *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Do:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-	             (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanAit:
+		    sigchancon = ((pwr_sClass_ChanAit *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Po:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanAo:
+		    sigchancon = ((pwr_sClass_ChanAo *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Ai:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanDi:
+		    sigchancon = ((pwr_sClass_ChanDi *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Ao:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanDo:
+		    sigchancon = ((pwr_sClass_ChanDo *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Ii:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanIi:
+		    sigchancon = ((pwr_sClass_ChanIi *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Io:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		  case pwr_cClass_ChanIo:
+		    sigchancon = ((pwr_sClass_ChanIo *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
-		  case pwr_cClass_Co:
-		    chanp->vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
-		    chanp->abs_vbp = gdh_TranslateRtdbPointer( 
-		     (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		  case pwr_cClass_ChanCo:
+		    sigchancon = ((pwr_sClass_ChanCo *) chan_op)->SigChanCon;
+		    number = chan_cnt;
 		    break;
 		  default:
-		    errh_Error( 
-		     "IO init error: unknown signal class card  %, chan nr %d", 
-		     cp->Name, number);
-		    sts = gdh_DLUnrefObjectInfo( sigdlid);
+		    ;
+		  }
+
+		  chan_cnt++;
+
+		  /* Find signal */
+		  sig_found = 0;
+		  if ( cdh_ObjidIsNotNull( sigchancon.Objid)) {
+		    sts = gdh_GetAttrRefTid( &sigchancon, &sigclass);
+		    if ( ODD(sts)) {
+		      sts = gdh_DLRefObjectInfoAttrref( &sigchancon, (void *) &sig_op, &sigdlid);
+		      if ( ODD(sts)) 
+			sig_found = 1;
+		    }
+		  }
+		  if ( !sig_found) {
 		    sig_op = 0;
 		    sigdlid = pwr_cNDlid;
+		    sigclass = 0;
+		  }
+		  /* Insert */
+		  if ( elem > 1)
+		    sprintf( attrname, "%s.%s[%d]", cname, bd[i].attrName, j);
+		  else
+		    sprintf( attrname, "%s.%s", cname, bd[i].attrName);
+
+		  chanp = &cp->chanlist[number];
+		  chanp->cop = chan_op;
+		  chanp->ChanDlid = pwr_cNDlid;
+		  sts = gdh_NameToAttrref( pwr_cNObjid, attrname, &chanp->ChanAref);
+		  if ( EVEN(sts)) return sts;
+		  chanp->sop = sig_op;
+		  chanp->SigDlid = sigdlid;
+		  chanp->SigAref = sigchancon;
+		  chanp->ChanClass = bd[i].attr->Param.TypeRef;
+		  chanp->SigClass = sigclass;
+		  if ( sig_found) {
+		    switch( sigclass) {
+		    case pwr_cClass_Di:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Di *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Do:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+	               (pwr_tUInt32) ((pwr_sClass_Do *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Po:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Po *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Ai:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Ai *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Ao:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Ao *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Ii:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Ii *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Io:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Io *)sig_op)->ActualValue);
+		      break;
+		    case pwr_cClass_Co:
+		      chanp->vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->RawValue);
+		      chanp->abs_vbp = gdh_TranslateRtdbPointer( 
+		       (pwr_tUInt32) ((pwr_sClass_Co *)sig_op)->AbsValue);
+		      break;
+		    default:
+		      errh_Error( 
+		       "IO init error: unknown signal class card  %, chan nr %d", 
+		       cp->Name, number);
+		      sts = gdh_DLUnrefObjectInfo( sigdlid);
+		      sig_op = 0;
+		      sigdlid = pwr_cNDlid;
+		    }
 		  }
 		}
 	      }
+	      free( (char *)bd);
 	    }
-	    free( (char *)bd);
 	  }
-	  
 	}
       }
     }
@@ -1875,7 +1904,8 @@ static pwr_tStatus io_init_rack(
   pwr_tObjid	objid,
   io_tCtx	ctx,
   io_sAgent	*ap,
-  int		agent_type)
+  int		agent_type,
+  int           swap)
 {
   pwr_tStatus	sts;
   pwr_tClassId	class;  
@@ -1883,6 +1913,7 @@ static pwr_tStatus io_init_rack(
   pwr_tStatus 	(* RackClose) ();
   pwr_tStatus 	(* RackRead) ();
   pwr_tStatus 	(* RackWrite) ();
+  pwr_tStatus 	(* RackSwap) ();
   pwr_tAName   	rname;
   pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
@@ -1903,9 +1934,9 @@ static pwr_tStatus io_init_rack(
   }
 
   if ( io_CheckClassIoType( io_eType_Rack, class)) {
-    sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite);
+    sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite, &RackSwap);
     if ( ODD(sts)) {
-      if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL) {
+      if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL || RackSwap != NULL) {
 	/* This is a rack object,  */
 	/* Check if the rack should be handled by this process */      
       
@@ -1918,8 +1949,8 @@ static pwr_tStatus io_init_rack(
 	strcat( attrname, ".Process");
 
 	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-	if ( EVEN(sts) ||
-	     (ODD(sts) && ctx->Process & process)) {
+	if ( (EVEN(sts) ||
+	     (ODD(sts) && ctx->Process & process)) && !swap) {
 	  if ( EVEN(sts))
 	    process = io_mProcess_All;
 
@@ -1936,6 +1967,9 @@ static pwr_tStatus io_init_rack(
 	  else
 	    ok = 1;
 	}
+	else if (ODD(sts) && swap && RackSwap != NULL) {
+	  ok = 1;
+	}
 
 	if ( ok) {
 
@@ -1946,14 +1980,25 @@ static pwr_tStatus io_init_rack(
 	  rp->Objid = objid;
 	  strcpy( rp->Name, rname);
 	  rp->Process = process;
-	  if ( RackRead != NULL)
-	    rp->Action |= io_mAction_Read;
-	  if ( RackWrite != NULL)
-	    rp->Action |= io_mAction_Write;
-	  rp->Init = RackInit;
-	  rp->Close = RackClose;
-	  rp->Read = RackRead;
-	  rp->Write = RackWrite;
+	  if (!swap) { 
+	    if ( RackRead != NULL)
+	      rp->Action |= io_mAction_Read;
+	    if ( RackWrite != NULL)
+	      rp->Action |= io_mAction_Write;
+	    rp->Init = RackInit;
+	    rp->Close = RackClose;
+	    rp->Read = RackRead;
+	    rp->Write = RackWrite;
+	    rp->Swap = RackSwap;
+	  } else {
+	    if ( RackSwap != NULL)
+	      rp->Action |= io_mAction_Swap;
+	    rp->Init = NULL;
+	    rp->Close = RackClose;
+	    rp->Read = NULL;
+	    rp->Write = NULL;
+	    rp->Swap = RackSwap;
+	  }
 	  if ( agent_type == io_eType_Agent)
 	    rp->AgentControlled = 1;
 	  memset( &attrref, 0, sizeof(attrref));
@@ -1976,7 +2021,7 @@ static pwr_tStatus io_init_rack(
 	    rlp->next = rp;
 	  }
 	  
-	  sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type);
+	  sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type, swap);
 	}
 	return IO__TRV_NEXT;
       }
@@ -1993,7 +2038,8 @@ static pwr_tStatus io_init_agent(
   pwr_tObjid	objid,
   io_tCtx	ctx,
   void		*dummy,
-  int		agent_type)
+  int		agent_type,
+  int           swap)
 {
   pwr_tStatus	sts;
   pwr_tClassId	class;  
@@ -2001,6 +2047,7 @@ static pwr_tStatus io_init_agent(
   pwr_tStatus 	(* AgentClose) ();
   pwr_tStatus 	(* AgentRead) ();
   pwr_tStatus 	(* AgentWrite) ();
+  pwr_tStatus 	(* AgentSwap) ();
   pwr_tAName   	aname;
   pwr_tAName   	attrname;
   pwr_tUInt32	process = 0;
@@ -2015,9 +2062,9 @@ static pwr_tStatus io_init_agent(
   if ( EVEN(sts)) return sts;
 
   if ( io_CheckClassIoType( io_eType_Agent, class)) {
-    sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, &AgentRead, &AgentWrite);
+    sts = io_FindMethods( class, io_eType_Agent, &AgentInit, &AgentClose, &AgentRead, &AgentWrite, &AgentSwap);
     if ( ODD(sts)) {
-      if ( AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL) {
+      if ( AgentInit != NULL || AgentClose != NULL || AgentRead != NULL || AgentWrite != NULL || AgentSwap != NULL) {
 	/* This is a agent object or the node object,  */
 	/* Check if the agent should be handled by this process */ 
       
@@ -2029,8 +2076,8 @@ static pwr_tStatus io_init_agent(
 	strcpy( attrname, aname);
 	strcat( attrname, ".Process");
 	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-	if ( EVEN(sts) ||
-	     (ODD(sts) && ctx->Process & process)) {
+	if (( EVEN(sts) ||
+	     (ODD(sts) && ctx->Process & process)) && !swap) {
 	  if ( EVEN(sts))
 	    process = io_mProcess_All;
 	  if ( ctx->Process == io_mProcess_Profibus)
@@ -2048,6 +2095,10 @@ static pwr_tStatus io_init_agent(
 	  else
 	    ok = 1;
 	}
+	else if (ODD(sts) && swap && AgentSwap != NULL) {
+	  /* IoComm-process should always handle the Swap-method */
+	  ok = 1;
+	}
 
 	if ( ok) {
 	       
@@ -2058,14 +2109,25 @@ static pwr_tStatus io_init_agent(
 	  ap->Objid = objid;
 	  strcpy( ap->Name, aname);
 	  ap->Process = process;
-	  if ( AgentRead != NULL)
-	    ap->Action |= io_mAction_Read;
-	  if ( AgentWrite != NULL)
-	    ap->Action |= io_mAction_Write;
-	  ap->Init = AgentInit;
-	  ap->Close = AgentClose;
-	  ap->Read = AgentRead;
-	  ap->Write = AgentWrite;
+          if (!swap) {
+	    if ( AgentRead != NULL)
+	      ap->Action |= io_mAction_Read;
+	    if ( AgentWrite != NULL)
+	      ap->Action |= io_mAction_Write;
+	    ap->Init = AgentInit;
+	    ap->Close = AgentClose;
+	    ap->Read = AgentRead;
+	    ap->Write = AgentWrite;
+	    ap->Swap = AgentSwap;
+	  } else {
+	    if ( AgentSwap != NULL)
+	      ap->Action |= io_mAction_Swap;
+	    ap->Init = NULL;
+	    ap->Close = AgentClose;
+	    ap->Read = NULL;
+	    ap->Write = NULL;
+	    ap->Swap = AgentSwap;
+	  }
 	  memset( &attrref, 0, sizeof(attrref));
 	  attrref.Objid = objid;
 	  sts = gdh_DLRefObjectInfoAttrref( &attrref, &ap->op, &ap->Dlid);
@@ -2086,7 +2148,7 @@ static pwr_tStatus io_init_agent(
 	    alp->next = ap;
 	  }
 	  
-	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type);
+	  sts = io_trv_child( objid, 0, io_init_rack, ctx, ap, agent_type, swap);
 	}
       }
     }
@@ -2104,7 +2166,8 @@ static pwr_tStatus io_trv_child(
   pwr_tStatus	(* func) (),
   void		*arg1,
   void		*arg2,
-  int		arg3)
+  int		arg3,
+  int           arg4)
 {
   pwr_tObjid	child;
   pwr_tStatus 	sts;
@@ -2112,12 +2175,12 @@ static pwr_tStatus io_trv_child(
   sts = gdh_GetChild( parent, &child);
   while ( ODD(sts))
   {
-    sts = (func) ( child, arg1, arg2, arg3);
+    sts = (func) ( child, arg1, arg2, arg3, arg4);
     if ( EVEN(sts)) return sts;
 
     if ( deep && sts != IO__TRV_NEXT)
     {
-      sts = io_trv_child( child, deep, func, arg1, arg2, arg3);
+      sts = io_trv_child( child, deep, func, arg1, arg2, arg3, arg4);
       if ( EVEN(sts)) return sts;
     }
     sts = gdh_GetNextSibling( child, &child);
@@ -2363,11 +2426,11 @@ pwr_tStatus io_init (
 
   /* Traverse all objects in the NodeHierarchy, find methods and build
      the io context tree for the local racks and cards. */
-  sts = io_init_agent( node, *ctx, NULL, io_eType_Node);
+  sts = io_init_agent( node, *ctx, NULL, io_eType_Node, 0);
   if ( EVEN(sts)) return sts;
 
   /* Build the io context tree for the remote racks and cards. */
-  sts = io_trv_child( node, 1, io_init_agent, *ctx, NULL, io_eType_Agent);
+  sts = io_trv_child( node, 1, io_init_agent, *ctx, NULL, io_eType_Agent, 0);
 
 /*
   sts = io_init_signals();
@@ -2419,6 +2482,69 @@ pwr_tStatus io_init (
     errh_Info("IO init: no read or write actions found for this process");
     return IO__NO_RWACTION;
   }
+  return IO__SUCCESS;
+}
+
+
+/*----------------------------------------------------------------------------*\
+  Initialize io racks and cards.
+\*----------------------------------------------------------------------------*/
+
+pwr_tStatus io_init_swap ( 
+  io_mProcess	process,
+  pwr_tObjid	thread,
+  io_tCtx 	*ctx,
+  int		relativ_vector,
+  float		scan_time)
+{
+  pwr_tObjid 	node;
+  pwr_sNode	*node_op;
+  pwr_sClass_IOHandler	*io_op;
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+
+  if ( scan_time <= 0)
+    return IO__TIMEINVALID;
+
+  sts = io_get_iohandler_object(&io_op, NULL);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_GetNodeObject( 0, &node);
+  if ( EVEN(sts)) return sts;
+
+  sts = gdh_ObjidToPointer( node, (void *) &node_op);
+  if ( EVEN(sts)) return sts;
+
+  *ctx = calloc( 1, sizeof(**ctx));
+  (*ctx)->Process = process;
+  (*ctx)->RelativVector = relativ_vector;
+  (*ctx)->Node = node_op;
+  (*ctx)->IOHandler = io_op;
+  (*ctx)->ScanTime = scan_time;
+  (*ctx)->Thread = thread;
+
+  if ( (*ctx)->Node->EmergBreakTrue || !(*ctx)->IOHandler->IOReadWriteFlag)
+    return IO__IS_STOPPED;
+
+  /* Traverse all objects in the NodeHierarchy, find methods and build
+     the io context tree for the local racks and cards. */
+  sts = io_init_agent( node, *ctx, NULL, io_eType_Node, 1);
+  if ( EVEN(sts)) return sts;
+
+  /* Build the io context tree for the remote racks and cards. */
+  sts = io_trv_child( node, 1, io_init_agent, *ctx, NULL, io_eType_Agent, 1);
+
+  /* Call the swap method for agents */
+
+  for ( ap = (*ctx)->agentlist; ap != NULL; ap = ap->next)
+  {
+    if (ap->Action & io_mAction_Swap)
+    {
+      sts = (ap->Swap) ( *ctx, ap);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+
   return IO__SUCCESS;
 }
 
@@ -2558,6 +2684,73 @@ pwr_tStatus io_write(
   return IO__SUCCESS;
 }
 
+
+/*----------------------------------------------------------------------------*\
+  Swap io racks and cards.
+\*----------------------------------------------------------------------------*/
+pwr_tStatus io_swap(
+  io_tCtx 	ctx)
+{
+  pwr_tStatus	sts;
+  io_sAgent	*ap;
+  io_sRack	*rp;
+  io_sCard	*cp;
+
+  if ( ctx->Node->EmergBreakTrue || !ctx->IOHandler->IOReadWriteFlag)
+    return IO__IS_STOPPED;
+
+  /* Call the read methods for agents, racks and cards */
+  for ( ap = ctx->agentlist; ap != NULL; ap = ap->next)
+  {
+    if (ap->Action & io_mAction_Swap)
+    {
+      if ( ap->scan_interval_cnt <= 1)
+      {
+        sts = (ap->Swap) ( ctx, ap);
+        if ( EVEN(sts)) return sts;
+        ap->scan_interval_cnt = ap->scan_interval;
+      }
+      else
+        ap->scan_interval_cnt--;
+    }
+
+    for ( rp = ap->racklist; rp != NULL; rp = rp->next)
+    {
+      if (rp->Action & io_mAction_Swap)
+      {
+        if ( rp->scan_interval_cnt <= 1)
+        {
+          sts = (rp->Swap) ( ctx, ap, rp);
+          if ( EVEN(sts)) return sts;
+          rp->scan_interval_cnt = rp->scan_interval;
+        }
+        else
+          rp->scan_interval_cnt--;
+      }
+
+      for ( cp = rp->cardlist; cp != NULL; cp = cp->next)
+      {
+        if (cp->Action & io_mAction_Swap)
+        {
+          if ( cp->scan_interval_cnt <= 1)
+          {
+            sts = (cp->Swap) ( ctx, ap, rp, cp);
+            if ( EVEN(sts)) return sts;
+            cp->scan_interval_cnt = cp->scan_interval;
+          }
+          else
+            cp->scan_interval_cnt--;
+	}
+      }
+    }
+  }
+
+  /* Scan the Sup lists */
+  /* if ( ctx->Process != io_mProcess_Plc) */
+  sts = io_ScanSupLst( ctx->SupCtx);
+
+  return IO__SUCCESS;
+}
 
 /*----------------------------------------------------------------------------*\
   Close Io.

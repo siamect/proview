@@ -1,6 +1,6 @@
 Volume SsabOx $ClassVolume 0.0.250.5 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X160"
+    Attr NextOix = "_X162"
     Attr NextCix = "_X30"
     Attr NextTix[0] = "_X5"
   EndBody
@@ -143,6 +143,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object IoRackClose $Method 147 30-DEC-2005 14:40:05.50
           Body SysBody 30-DEC-2005 14:40:05.50
             Attr MethodName = "Rack_SSAB-IoRackClose"
+          EndBody
+        EndObject
+        Object IoRackSwap $Method 161 18-MAY-2007 10:19:42.40
+          Body SysBody 18-MAY-2007 10:19:47.20
+            Attr MethodName = "Rack_SSAB-IoRackSwap"
           EndBody
         EndObject
       EndObject
@@ -3813,6 +3818,11 @@ Volume SsabOx $ClassVolume 0.0.250.5
         Object IoCardWrite $Method 49 06-OCT-2005 14:45:53.00
           Body SysBody 01-JAN-1970 01:00:00.00
             Attr MethodName = "Ssab_Do-IoCardWrite"
+          EndBody
+        EndObject
+        Object IoCardSwap $Method 162 18-MAY-2007 10:20:35.84
+          Body SysBody 18-MAY-2007 10:20:39.25
+            Attr MethodName = "Ssab_Do-IoCardSwap"
           EndBody
         EndObject
       EndObject
