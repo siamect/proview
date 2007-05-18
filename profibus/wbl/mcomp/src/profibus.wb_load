@@ -1,6 +1,6 @@
 Volume Profibus $ClassVolume 0.0.250.7 
   Body SysBody 05-SEP-2005 17:51:40.00
-    Attr NextOix = "_X108"
+    Attr NextOix = "_X109"
     Attr NextCix = "_X14"
     Attr NextTix[0] = "_X7"
   EndBody
@@ -1795,6 +1795,11 @@ Volume Profibus $ClassVolume 0.0.250.7
         Object IoAgentWrite $Method 52 16-JAN-2006 09:46:40.51
           Body SysBody 16-JAN-2006 09:46:40.51
             Attr MethodName = "Pb_Profiboard-IoAgentWrite"
+          EndBody
+        EndObject
+        Object IoAgentSwap $Method 109 18-MAY-2007 10:32:38.97
+          Body SysBody 18-MAY-2007 10:32:42.61
+            Attr MethodName = "Pb_Profiboard-IoAgentSwap"
           EndBody
         EndObject
       EndObject

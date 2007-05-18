@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.10 2007-05-07 12:19:44 claes Exp $
+ * Proview   $Id: rt_io_m_pb_profiboard.c,v 1.11 2007-05-18 12:00:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -72,6 +72,10 @@ static pwr_tStatus IoAgentWrite (
   io_sAgent	*ap
 );
 static pwr_tStatus IoAgentClose (
+  io_tCtx	ctx,
+  io_sAgent	*ap
+);
+static pwr_tStatus IoAgentSwap (
   io_tCtx	ctx,
   io_sAgent	*ap
 );
@@ -742,6 +746,44 @@ static pwr_tStatus IoAgentInit (
   
   return IO__SUCCESS;
 }
+
+/*----------------------------------------------------------------------------*\
+   Swap method for the Pb_profiboard agent  
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoAgentSwap (
+  io_tCtx	ctx,
+  io_sAgent	*ap
+) 
+{
+  pwr_sClass_Pb_Profiboard *op;
+  char DeviceName[64];
+  io_sAgentLocal *local;
+  
+  if (ap->Local == NULL) {
+    /* Allocate area for local data structure */
+    ap->Local = calloc(1, sizeof(io_sAgentLocal));
+    if (!ap->Local) {
+      errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "calloc");
+      return IO__ERRINIDEVICE;
+    }
+    
+    local = (io_sAgentLocal *) ap->Local;
+
+    errh_Info( "Swap init interface for Profibus DP Master %s", ap->Name);
+
+    op = (pwr_sClass_Pb_Profiboard *) ap->op;
+    
+    sprintf(DeviceName, "/dev/pbboard%u", op->BusNumber - 1);
+    local->hDpsBoardDevice = open(DeviceName, O_RDONLY | O_NONBLOCK);
+    
+    if (local->hDpsBoardDevice == -1) {
+      errh_Error( "ERROR swap init Profibus DP Master %s - %s", ap->Name, "open");
+      return IO__ERRINIDEVICE;
+    }
+  }
+      
+  return IO__SUCCESS;
+}
 
 
 /*----------------------------------------------------------------------------*\
@@ -1007,6 +1049,7 @@ static pwr_tStatus IoAgentClose (
   close(local->hDpDataDevice);
   close(local->hDpsInputDataDevice);
   close(local->hDpsOutputDataDevice);
+  close(local->hDpsBoardDevice);
 
   free( (char *)local);
 
@@ -1023,5 +1066,6 @@ pwr_dExport pwr_BindIoMethods(Pb_Profiboard) = {
   pwr_BindIoMethod(IoAgentRead),
   pwr_BindIoMethod(IoAgentWrite),
   pwr_BindIoMethod(IoAgentClose),
+  pwr_BindIoMethod(IoAgentSwap),
   pwr_NullMethod
 };

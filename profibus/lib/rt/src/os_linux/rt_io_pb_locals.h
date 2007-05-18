@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_pb_locals.h,v 1.4 2007-01-12 13:28:32 claes Exp $
+ * Proview   $Id: rt_io_pb_locals.h,v 1.5 2007-05-18 12:00:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,7 @@ typedef struct {
   int             hDpsOutputDataDevice;             // Handle for DP-Slave Output-Data device
   unsigned char   CurrentBoardNumber;
   int             slave_diag_requested;
+  int             hDpsBoardDevice;                  // Handle for DP-Slave Output-Data device
 } io_sAgentLocal;
 
 typedef struct {
