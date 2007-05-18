@@ -11,3 +11,4 @@
 070426 rk -           Added gsd-file si0380a7.gsd, for Siemens Diagnostic Repeater.
 070430 rk -           Changed status handling of Profibus slaves so that correct
                       view of the world is given.
+070518 rk -           Added io-method IoAgentSwap to keep driver initialized during warm restart.

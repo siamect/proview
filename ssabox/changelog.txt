@@ -1,3 +1,5 @@
 #060227 cs  -          Changelog created.
 070430 rk   rt         Changed error handling so that sporadic error are allowed 
                        and does not cause system to halt
+070518 rk   rt         Added i/o swap-method to avoid stall during warm restart.
+
