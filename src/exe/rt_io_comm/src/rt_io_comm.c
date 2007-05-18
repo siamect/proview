@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_comm.c,v 1.4 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: rt_io_comm.c,v 1.5 2007-05-18 12:04:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,6 +68,7 @@ int main (int argc, char **argv)
 {
   pwr_tStatus sts = 1;
   io_tCtx io_ctx;
+  io_tCtx io_ctx_swap;
   pwr_sClass_IOHandler *ihp;
   int swap_io;
   int close_io;
@@ -98,6 +99,9 @@ int main (int argc, char **argv)
 
   plc_UtlWaitForPlc();
 
+  /* Prepare the swap context */
+  sts = io_init_swap(io_mProcess_IoComm, pwr_cNObjid, &io_ctx_swap, 1, ihp->CycleTimeBus);
+
   for (close_io = swap_io = 0, init_io = 1;;) {
 
     if (init_io) {
@@ -123,8 +127,14 @@ int main (int argc, char **argv)
     get.data = mp;
     qcom_Get(&sts,&qid, &get, tmo);
     if (sts == QCOM__TMO || sts == QCOM__QEMPTY) {
+    
       sts = io_read(io_ctx);
       sts = io_write(io_ctx);
+
+      if (swap_io) 
+      {
+        sts = io_swap(io_ctx_swap);
+      }
       io_ScanSupLst( io_ctx->SupCtx);
 
       clock_gettime(CLOCK_REALTIME, &now);
