@@ -343,3 +343,68 @@ pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *res
 
   return sts;
 }
+
+pwr_tStatus statussrv_Restart( char *nodename)
+{
+  pwr_tStatus sts = PWR__SUCCESS;
+  char endpoint[80];
+
+  if ( !init_done) {
+    soap_init( &soap);
+    init_done = 1;
+  }
+
+  sprintf( endpoint, "http://%s:%d", nodename, port);
+
+  _s0__Restart restart;
+  _s0__RestartResponse restart_response;
+
+  restart.ClientRequestHandle = new std::string("StatusSrv Client");
+
+  if ( soap_call___s0__Restart( &soap, endpoint, NULL, &restart, &restart_response) ==
+       SOAP_OK) {
+  }
+  else {
+    sts = PWR__SRVCONNECTION;
+  }
+  soap_destroy( &soap);
+  soap_end( &soap);
+
+  return sts;
+}
+
+pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display)
+{
+  pwr_tStatus sts = PWR__SUCCESS;
+  char endpoint[80];
+
+  if ( !init_done) {
+    soap_init( &soap);
+    init_done = 1;
+  }
+
+  sprintf( endpoint, "http://%s:%d", nodename, port);
+
+  _s0__XttStart xtt_start;
+  _s0__XttStartResponse xtt_start_response;
+
+  xtt_start.ClientRequestHandle = new std::string("StatusSrv Client");
+  if ( opplace && strcmp( opplace, "") != 0)
+    xtt_start.OpPlace = new std::string(opplace);
+  if ( lang && strcmp( lang, "") != 0)
+    xtt_start.Language = new std::string(lang);
+  if ( display && strcmp( display, "") != 0)
+    xtt_start.Display = new std::string(display);
+
+  if ( soap_call___s0__XttStart( &soap, endpoint, NULL, &xtt_start, &xtt_start_response) ==
+       SOAP_OK) {
+  }
+  else {
+    sts = PWR__SRVCONNECTION;
+  }
+  soap_destroy( &soap);
+  soap_end( &soap);
+
+  return sts;
+}
+

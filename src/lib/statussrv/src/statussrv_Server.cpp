@@ -6,7 +6,7 @@
 */
 #include "statussrv_H.h"
 
-SOAP_SOURCE_STAMP("@(#) statussrv_Server.cpp ver 2.7.9d 2007-05-10 13:32:13 GMT")
+SOAP_SOURCE_STAMP("@(#) statussrv_Server.cpp ver 2.7.9d 2007-05-21 09:05:52 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap *soap)
@@ -77,6 +77,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap *soap)
 		return soap_serve___s0__GetExtStatus(soap);
 	if (!soap_match_tag(soap, soap->tag, "s0:Restart"))
 		return soap_serve___s0__Restart(soap);
+	if (!soap_match_tag(soap, soap->tag, "s0:XttStart"))
+		return soap_serve___s0__XttStart(soap);
 	return soap->error = SOAP_NO_METHOD;
 }
 #endif
@@ -197,6 +199,47 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Restart(struct soap *soap)
 	 || soap_putheader(soap)
 	 || soap_body_begin_out(soap)
 	 || s0__RestartResponse.soap_put(soap, "s0:RestartResponse", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap->error;
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__XttStart(struct soap *soap)
+{	struct __s0__XttStart soap_tmp___s0__XttStart;
+	_s0__XttStartResponse s0__XttStartResponse;
+	s0__XttStartResponse.soap_default(soap);
+	soap_default___s0__XttStart(soap, &soap_tmp___s0__XttStart);
+	soap->encodingStyle = NULL;
+	if (!soap_get___s0__XttStart(soap, &soap_tmp___s0__XttStart, "-s0:XttStart", NULL))
+		return soap->error;
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap->error;
+	soap->error = __s0__XttStart(soap, soap_tmp___s0__XttStart.s0__XttStart, &s0__XttStartResponse);
+	if (soap->error)
+		return soap->error;
+	soap_serializeheader(soap);
+	s0__XttStartResponse.soap_serialize(soap);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || s0__XttStartResponse.soap_put(soap, "s0:XttStartResponse", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	};
+	if (soap_end_count(soap)
+	 || soap_response(soap, SOAP_OK)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || s0__XttStartResponse.soap_put(soap, "s0:XttStartResponse", "")
 	 || soap_body_end_out(soap)
 	 || soap_envelope_end_out(soap)
 	 || soap_end_send(soap))

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.2 2007-05-16 12:32:55 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.3 2007-05-21 14:21:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -512,9 +512,42 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap *soap,
 					_s0__Restart *s0__Restart, 
 					_s0__RestartResponse *s0__RestartResponse)
 {
+  pwr_tCmd cmd = "rt_ini -r &";
+
   if ( s0__Restart->ClientRequestHandle)
     s0__RestartResponse->ClientRequestHandle = 
       new std::string( *s0__Restart->ClientRequestHandle);
+
+  system( cmd);
+  return SOAP_OK;
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap *soap, 
+					 _s0__XttStart *s0__XttStart, 
+					 _s0__XttStartResponse *s0__XttStartResponse)
+{
+  char lang[40] = "";
+  pwr_tOName opplace = "";
+  char display[80] = "";
+  pwr_tCmd cmd;
+
+  if ( s0__XttStart->ClientRequestHandle)
+    s0__XttStartResponse->ClientRequestHandle = 
+      new std::string( *s0__XttStart->ClientRequestHandle);
+  
+  if ( s0__XttStart->Language) {
+    sprintf( lang, "-l %s", s0__XttStart->Language->c_str());
+  }
+  if ( s0__XttStart->OpPlace) {
+    strcpy( opplace, s0__XttStart->OpPlace->c_str());
+  }
+  if ( s0__XttStart->Display) {
+    sprintf( display, "--display %s", s0__XttStart->Display->c_str());
+  }
+
+  sprintf( cmd, "rt_xtt %s -q -c %s %s &", opplace, display, lang);
+
+  system( cmd);
   return SOAP_OK;
 }
 

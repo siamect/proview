@@ -355,8 +355,53 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__s0__XttStart
+#define SOAP_TYPE__s0__XttStart (19)
+/* s0:XttStart */
+class SOAP_CMAC _s0__XttStart
+{
+public:
+	std::string *OpPlace;	/* optional element of type xsd:string */
+	std::string *Language;	/* optional element of type xsd:string */
+	std::string *Display;	/* optional element of type xsd:string */
+	std::string *ClientRequestHandle;	/* optional attribute */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE__s0__XttStart */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _s0__XttStart() : OpPlace(NULL), Language(NULL), Display(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	virtual ~_s0__XttStart() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__s0__XttStartResponse
+#define SOAP_TYPE__s0__XttStartResponse (20)
+/* s0:XttStartResponse */
+class SOAP_CMAC _s0__XttStartResponse
+{
+public:
+	std::string *ClientRequestHandle;	/* optional attribute */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 20; } /* = unique id SOAP_TYPE__s0__XttStartResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _s0__XttStartResponse() : ClientRequestHandle(NULL), soap(NULL) { }
+	virtual ~_s0__XttStartResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE___s0__GetStatus
-#define SOAP_TYPE___s0__GetStatus (24)
+#define SOAP_TYPE___s0__GetStatus (26)
 /* Operation wrapper: */
 struct __s0__GetStatus
 {
@@ -366,7 +411,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__GetExtStatus
-#define SOAP_TYPE___s0__GetExtStatus (28)
+#define SOAP_TYPE___s0__GetExtStatus (30)
 /* Operation wrapper: */
 struct __s0__GetExtStatus
 {
@@ -376,7 +421,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE___s0__Restart
-#define SOAP_TYPE___s0__Restart (32)
+#define SOAP_TYPE___s0__Restart (34)
 /* Operation wrapper: */
 struct __s0__Restart
 {
@@ -385,8 +430,18 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE___s0__XttStart
+#define SOAP_TYPE___s0__XttStart (38)
+/* Operation wrapper: */
+struct __s0__XttStart
+{
+public:
+	_s0__XttStart *s0__XttStart;	/* optional element of type s0:XttStart */
+};
+#endif
+
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (35)
+#define SOAP_TYPE_SOAP_ENV__Header (41)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -396,7 +451,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (36)
+#define SOAP_TYPE_SOAP_ENV__Code (42)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -407,7 +462,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (38)
+#define SOAP_TYPE_SOAP_ENV__Detail (44)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -419,7 +474,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Reason
-#define SOAP_TYPE_SOAP_ENV__Reason (39)
+#define SOAP_TYPE_SOAP_ENV__Reason (45)
 /* SOAP-ENV:Reason */
 struct SOAP_ENV__Reason
 {
@@ -429,7 +484,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (40)
+#define SOAP_TYPE_SOAP_ENV__Fault (46)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -497,6 +552,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*, _s0__GetExtStatus *s0
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
+
 /******************************************************************************\
  *                                                                            *
  * Stubs                                                                      *
@@ -509,6 +566,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap *soap, const cha
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetExtStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Restart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__XttStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
 
 /******************************************************************************\
  *                                                                            *
@@ -525,6 +584,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetStatus(struct soap*);
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__GetExtStatus(struct soap*);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__Restart(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___s0__XttStart(struct soap*);
 
 #endif
 

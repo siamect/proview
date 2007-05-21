@@ -6,7 +6,7 @@
 */
 #include "statussrv_H.h"
 
-SOAP_SOURCE_STAMP("@(#) statussrv_Client.cpp ver 2.7.9d 2007-05-10 13:32:13 GMT")
+SOAP_SOURCE_STAMP("@(#) statussrv_Client.cpp ver 2.7.9d 2007-05-21 09:05:52 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__GetStatus(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__GetStatus *s0__GetStatus, _s0__GetStatusResponse *s0__GetStatusResponse)
@@ -153,6 +153,58 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__Restart(struct soap *soap, const char 
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	s0__RestartResponse->soap_get(soap, "s0:RestartResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___s0__XttStart(struct soap *soap, const char *soap_endpoint, const char *soap_action, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse)
+{	struct __s0__XttStart soap_tmp___s0__XttStart;
+	if (!soap_action)
+		soap_action = "s0:XttStart";
+	soap->encodingStyle = NULL;
+	soap_tmp___s0__XttStart.s0__XttStart = s0__XttStart;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___s0__XttStart(soap, &soap_tmp___s0__XttStart);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	if (soap_envelope_begin_out(soap)
+		 || soap_putheader(soap)
+		 || soap_body_begin_out(soap)
+		 || soap_put___s0__XttStart(soap, &soap_tmp___s0__XttStart, "-s0:XttStart", "")
+		 || soap_body_end_out(soap)
+		 || soap_envelope_end_out(soap))
+			 return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___s0__XttStart(soap, &soap_tmp___s0__XttStart, "-s0:XttStart", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!s0__XttStartResponse)
+		return soap_closesock(soap);
+	s0__XttStartResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	s0__XttStartResponse->soap_get(soap, "s0:XttStartResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

@@ -34,12 +34,159 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetExtStatus">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="GetExtStatusResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:sequence>
+            <s:element name="ServerSts1" type="s:int" />
+            <s:element name="ServerSts1Str" type="s:string" />
+            <s:element name="ServerSts1Name" type="s:string" />
+            <s:element name="ServerSts2" type="s:int" />
+            <s:element name="ServerSts2Str" type="s:string" />
+            <s:element name="ServerSts2Name" type="s:string" />
+            <s:element name="ServerSts3" type="s:int" />
+            <s:element name="ServerSts3Str" type="s:string" />
+            <s:element name="ServerSts3Name" type="s:string" />
+            <s:element name="ServerSts4" type="s:int" />
+            <s:element name="ServerSts4Str" type="s:string" />
+            <s:element name="ServerSts4Name" type="s:string" />
+            <s:element name="ServerSts5" type="s:int" />
+            <s:element name="ServerSts5Str" type="s:string" />
+            <s:element name="ServerSts5Name" type="s:string" />
+            <s:element name="ServerSts6" type="s:int" />
+            <s:element name="ServerSts6Str" type="s:string" />
+            <s:element name="ServerSts6Name" type="s:string" />
+            <s:element name="ServerSts7" type="s:int" />
+            <s:element name="ServerSts7Str" type="s:string" />
+            <s:element name="ServerSts7Name" type="s:string" />
+            <s:element name="ServerSts8" type="s:int" />
+            <s:element name="ServerSts8Str" type="s:string" />
+            <s:element name="ServerSts8Name" type="s:string" />
+            <s:element name="ServerSts9" type="s:int" />
+            <s:element name="ServerSts9Str" type="s:string" />
+            <s:element name="ServerSts9Name" type="s:string" />
+            <s:element name="ServerSts10" type="s:int" />
+            <s:element name="ServerSts10Str" type="s:string" />
+            <s:element name="ServerSts10Name" type="s:string" />
+            <s:element name="ServerSts11" type="s:int" />
+            <s:element name="ServerSts11Str" type="s:string" />
+            <s:element name="ServerSts11Name" type="s:string" />
+            <s:element name="ServerSts12" type="s:int" />
+            <s:element name="ServerSts12Str" type="s:string" />
+            <s:element name="ServerSts12Name" type="s:string" />
+            <s:element name="ServerSts13" type="s:int" />
+            <s:element name="ServerSts13Str" type="s:string" />
+            <s:element name="ServerSts13Name" type="s:string" />
+            <s:element name="ServerSts14" type="s:int" />
+            <s:element name="ServerSts14Str" type="s:string" />
+            <s:element name="ServerSts14Name" type="s:string" />
+            <s:element name="ServerSts15" type="s:int" />
+            <s:element name="ServerSts15Str" type="s:string" />
+            <s:element name="ServerSts15Name" type="s:string" />
+            <s:element name="ServerSts16" type="s:int" />
+            <s:element name="ServerSts16Str" type="s:string" />
+            <s:element name="ServerSts16Name" type="s:string" />
+            <s:element name="ServerSts17" type="s:int" />
+            <s:element name="ServerSts17Str" type="s:string" />
+            <s:element name="ServerSts17Name" type="s:string" />
+            <s:element name="ServerSts18" type="s:int" />
+            <s:element name="ServerSts18Str" type="s:string" />
+            <s:element name="ServerSts18Name" type="s:string" />
+            <s:element name="ServerSts19" type="s:int" />
+            <s:element name="ServerSts19Str" type="s:string" />
+            <s:element name="ServerSts19Name" type="s:string" />
+            <s:element name="ServerSts20" type="s:int" />
+            <s:element name="ServerSts20Str" type="s:string" />
+            <s:element name="ServerSts20Name" type="s:string" />
+            <s:element name="ApplSts1" type="s:int" />
+            <s:element name="ApplSts1Str" type="s:string" />
+            <s:element name="ApplSts1Name" type="s:string" />
+            <s:element name="ApplSts2" type="s:int" />
+            <s:element name="ApplSts2Str" type="s:string" />
+            <s:element name="ApplSts2Name" type="s:string" />
+            <s:element name="ApplSts3" type="s:int" />
+            <s:element name="ApplSts3Str" type="s:string" />
+            <s:element name="ApplSts3Name" type="s:string" />
+            <s:element name="ApplSts4" type="s:int" />
+            <s:element name="ApplSts4Str" type="s:string" />
+            <s:element name="ApplSts4Name" type="s:string" />
+            <s:element name="ApplSts5" type="s:int" />
+            <s:element name="ApplSts5Str" type="s:string" />
+            <s:element name="ApplSts5Name" type="s:string" />
+            <s:element name="ApplSts6" type="s:int" />
+            <s:element name="ApplSts6Str" type="s:string" />
+            <s:element name="ApplSts6Name" type="s:string" />
+            <s:element name="ApplSts7" type="s:int" />
+            <s:element name="ApplSts7Str" type="s:string" />
+            <s:element name="ApplSts7Name" type="s:string" />
+            <s:element name="ApplSts8" type="s:int" />
+            <s:element name="ApplSts8Str" type="s:string" />
+            <s:element name="ApplSts8Name" type="s:string" />
+            <s:element name="ApplSts9" type="s:int" />
+            <s:element name="ApplSts9Str" type="s:string" />
+            <s:element name="ApplSts9Name" type="s:string" />
+            <s:element name="ApplSts10" type="s:int" />
+            <s:element name="ApplSts10Str" type="s:string" />
+            <s:element name="ApplSts10Name" type="s:string" />
+            <s:element name="ApplSts11" type="s:int" />
+            <s:element name="ApplSts11Str" type="s:string" />
+            <s:element name="ApplSts11Name" type="s:string" />
+            <s:element name="ApplSts12" type="s:int" />
+            <s:element name="ApplSts12Str" type="s:string" />
+            <s:element name="ApplSts12Name" type="s:string" />
+            <s:element name="ApplSts13" type="s:int" />
+            <s:element name="ApplSts13Str" type="s:string" />
+            <s:element name="ApplSts13Name" type="s:string" />
+            <s:element name="ApplSts14" type="s:int" />
+            <s:element name="ApplSts14Str" type="s:string" />
+            <s:element name="ApplSts14Name" type="s:string" />
+            <s:element name="ApplSts15" type="s:int" />
+            <s:element name="ApplSts15Str" type="s:string" />
+            <s:element name="ApplSts15Name" type="s:string" />
+            <s:element name="ApplSts16" type="s:int" />
+            <s:element name="ApplSts16Str" type="s:string" />
+            <s:element name="ApplSts16Name" type="s:string" />
+            <s:element name="ApplSts17" type="s:int" />
+            <s:element name="ApplSts17Str" type="s:string" />
+            <s:element name="ApplSts17Name" type="s:string" />
+            <s:element name="ApplSts18" type="s:int" />
+            <s:element name="ApplSts18Str" type="s:string" />
+            <s:element name="ApplSts18Name" type="s:string" />
+            <s:element name="ApplSts19" type="s:int" />
+            <s:element name="ApplSts19Str" type="s:string" />
+            <s:element name="ApplSts19Name" type="s:string" />
+            <s:element name="ApplSts20" type="s:int" />
+            <s:element name="ApplSts20Str" type="s:string" />
+            <s:element name="ApplSts20Name" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="Restart">
         <s:complexType>
           <s:attribute name="ClientRequestHandle" type="s:string" />
         </s:complexType>
       </s:element>
       <s:element name="RestartResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
+      <s:element name="XttStart">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:sequence>
+	    <s:element minOccurs="0" maxOccurs="1" name="OpPlace" type="s:string" />
+	    <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+	    <s:element minOccurs="0" maxOccurs="1" name="Display" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="XttStartResponse">
         <s:complexType>
           <s:attribute name="ClientRequestHandle" type="s:string" />
         </s:complexType>
@@ -52,20 +199,40 @@
   <message name="GetStatusSoapOut">
     <part name="parameters" element="s0:GetStatusResponse" />
   </message>
+  <message name="GetExtStatusSoapIn">
+    <part name="parameters" element="s0:GetExtStatus" />
+  </message>
+  <message name="GetExtStatusSoapOut">
+    <part name="parameters" element="s0:GetExtStatusResponse" />
+  </message>
   <message name="RestartSoapIn">
     <part name="parameters" element="s0:Restart" />
   </message>
   <message name="RestartSoapOut">
     <part name="parameters" element="s0:RestartResponse" />
   </message>
+  <message name="XttStartSoapIn">
+    <part name="parameters" element="s0:XttStart" />
+  </message>
+  <message name="XttStartSoapOut">
+    <part name="parameters" element="s0:XttStartResponse" />
+  </message>
   <portType name="Service">
     <operation name="GetStatus">
       <input message="s0:GetStatusSoapIn" />
       <output message="s0:GetStatusSoapOut" />
     </operation>
+    <operation name="GetExtStatus">
+      <input message="s0:GetExtStatusSoapIn" />
+      <output message="s0:GetExtStatusSoapOut" />
+    </operation>
     <operation name="Restart">
       <input message="s0:RestartSoapIn" />
       <output message="s0:RestartSoapOut" />
+    </operation>
+    <operation name="XttStart">
+      <input message="s0:XttStartSoapIn" />
+      <output message="s0:XttStartSoapOut" />
     </operation>
   </portType>
   <binding name="Service" type="s0:Service">
@@ -79,8 +246,26 @@
         <soap:body use="literal" />
       </output>
     </operation>
+    <operation name="GetExtStatus">
+      <soap:operation soapAction="s0:GetExtStatus" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
     <operation name="Restart">
       <soap:operation soapAction="s0:Restart" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="XttStart">
+      <soap:operation soapAction="s0:XttStart" style="document" />
       <input>
         <soap:body use="literal" />
       </input>

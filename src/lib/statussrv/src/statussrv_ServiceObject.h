@@ -47,4 +47,6 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetExtStatus(struct soap*, _s0__GetExtStatus *s0
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
+
 #endif
