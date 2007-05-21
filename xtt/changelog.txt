@@ -39,5 +39,6 @@
 070503 cs  xtt       Bugfix in command 'open graph /access'.
 070507 cs  ge        Support for fonts Times, NC Schoolbook and Courier.
 070507 cs  ge        Problems with national characters in ge text fixed.
-070508 cs  statusmon System status monitor implemented.
 070510 cs  flow      Colored rectangles are still colored at inverse drawing.
+070516 cs  xtt       Switch -s in rt_xtt (gtk only): an opplace can be choosen from a list.
+070521 cs  statusmon Xtt and operator place can be opened from from status monitor.
