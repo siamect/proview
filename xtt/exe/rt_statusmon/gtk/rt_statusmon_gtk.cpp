@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statusmon_gtk.cpp,v 1.2 2007-05-16 12:36:07 claes Exp $
+ * Proview   $Id: rt_statusmon_gtk.cpp,v 1.3 2007-05-21 14:26:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "pwr.h"
+#include "co_msgwindow.h"
 #include "co_statusmon_nodelist_gtk.h"
 
 static void usage()
@@ -51,7 +52,7 @@ int main( int argc, char *argv[])
 
   gtk_init( &argc, &argv);
 
-  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", &sts);
+  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", msgw_ePop_No, &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);
   
