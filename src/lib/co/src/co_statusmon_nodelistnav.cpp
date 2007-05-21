@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.2 2007-05-21 14:20:58 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.3 2007-05-21 15:29:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,6 @@
 #include "co_time.h"
 #include "co_wow.h"
 #include "co_msgwindow.h"
-#include "pwr_baseclasses.h"
 #include "rt_gdh.h"
 #include "rt_syi.h"
 
