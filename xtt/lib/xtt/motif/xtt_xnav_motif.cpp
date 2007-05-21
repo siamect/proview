@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_xnav_motif.cpp,v 1.2 2007-05-21 14:28:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -100,8 +100,9 @@ XNavMotif::XNavMotif( void *xn_parent_ctx,
 		      Widget *w,
 		      xnav_sStartMenu *root_menu,
 		      char *xn_opplace_name,
+		      int xn_op_close_button,
 		      pwr_tStatus *status) :
-  XNav( xn_parent_ctx, xn_name, root_menu, xn_opplace_name, status),
+  XNav( xn_parent_ctx, xn_name, root_menu, xn_opplace_name, xn_op_close_button, status),
   parent_wid(xn_parent_wid)
 {
 

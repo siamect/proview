@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_gtk.h,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_xnav_gtk.h,v 1.2 2007-05-21 14:28:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,7 @@ class XNavGtk : public XNav {
 	GtkWidget **w,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
+	int xn_op_close_button,
 	pwr_tStatus *status);
     ~XNavGtk();
 

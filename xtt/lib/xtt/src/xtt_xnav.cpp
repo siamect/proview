@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.cpp,v 1.33 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: xtt_xnav.cpp,v 1.34 2007-05-21 14:28:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1007,6 +1007,7 @@ XNav::XNav(
 	char *xn_name,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
+	int xn_op_close_button,
 	pwr_tStatus *status) :
 	parent_ctx(xn_parent_ctx),
 	brow_cnt(0), TraceList(NULL), trace_started(0),
@@ -1015,7 +1016,7 @@ XNav::XNav(
 	menu_tree(NULL), ev(0), op(0), clog(0), closing_down(0),
 	base_priv(pwr_mPrv_System), priv(pwr_mPrv_System), displayed(0),
         current_logging_index(-1), search_last_found(0), search_compiled(0), 
-	attach_audio(0), audio(0)
+	attach_audio(0), audio(0), op_close_button(xn_op_close_button)
 {
   strcpy( name, xn_name);
   strcpy( opplace_name, xn_opplace_name);
@@ -3383,6 +3384,8 @@ int XNav::init_brow_base_cb( FlowCtx *fctx, void *client_data)
     pwr_tCmd cmd;
     strcpy( cmd, "open op ");
     strcat( cmd, xnav->opplace_name);
+    if ( xnav->op_close_button)
+      strcat( cmd, " /closebutton");
     xnav->command( cmd);
 
     xnav->load_ev_from_opplace();

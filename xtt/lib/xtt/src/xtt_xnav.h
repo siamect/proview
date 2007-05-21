@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav.h,v 1.20 2007-01-17 06:19:57 claes Exp $
+ * Proview   $Id: xtt_xnav.h,v 1.21 2007-05-21 14:28:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -256,6 +256,7 @@ class XNav {
 	char *xn_name,
 	xnav_sStartMenu *root_menu,
 	char *xn_opplace_name,
+	int xn_op_close_button,
 	pwr_tStatus *status);
     virtual ~XNav();
 
@@ -304,6 +305,7 @@ class XNav {
     int			attach_audio;
     XttAudio		*audio;
     CoWow		*wow;
+    int			op_close_button;
     static xmenu_sMenuCall *mcp;
 
     virtual void set_inputfocus() {}

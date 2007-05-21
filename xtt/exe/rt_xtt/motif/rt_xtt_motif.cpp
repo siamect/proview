@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.cpp,v 1.2 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: rt_xtt_motif.cpp,v 1.3 2007-05-21 14:28:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -652,7 +652,7 @@ XttMotif::XttMotif( int argc, char *argv[], int *return_sts) :
 
   xnav = new XNavMotif( this, xnav_form, "Plant",
 		&brow_widget, (xnav_sStartMenu *)root_menu, 
-		opplace_str, &sts);
+		opplace_str, op_close_button, &sts);
   xnav->message_cb = &xtt_message_cb;
   xnav->close_cb = &close;
   xnav->map_cb = &map;
