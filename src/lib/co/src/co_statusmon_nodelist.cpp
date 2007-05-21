@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.2 2007-05-21 14:20:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -28,10 +28,12 @@
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
+#include "rt_syi.h"
 
 #include "co_lng.h"
 #include "co_wow.h"
 #include "co_statusmon_nodelist.h"
+#include "statussrv_utl.h"
 #include "rt_xnav_msg.h"
 
 Nodelist::Nodelist( void *nodelist_parent_ctx,
@@ -64,14 +66,14 @@ void Nodelist::find_node_cb( void *ctx, pwr_tOid oid)
     nodelist->pop();  
 }
 
-void Nodelist::add_node_ok( Nodelist *nodelist, char *node_name)
+void Nodelist::add_node_ok( Nodelist *nodelist, char *node_name, char *opplace)
 {
-  nodelist->nodelistnav->add_node( node_name);
+  nodelist->nodelistnav->add_node( node_name, opplace);
 }
 
 void Nodelist::activate_add_node()
 {
-  open_input_dialog( "Enter node name", "Add Node", "",
+  open_input_dialog( "Node name", "Operatorplace", "Add Node", "",
 		     add_node_ok);
 }
 
@@ -97,6 +99,59 @@ void Nodelist::activate_remove_node()
 
   nodelistnav->wow->DisplayQuestion( this, "Remove Node", msg, remove_node_ok,
 				     NULL, node_name);
+}
+
+static void get_display( char *disp)
+{
+  char display[80] = "";
+  char name[80];
+  pwr_tStatus sts;
+
+  char *val = getenv("DISPLAY");
+  if ( val)
+    strcpy( display, val);
+
+  if ( strcmp( display, "") == 0 ||
+       strcmp( display, ":0") == 0) {
+    syi_NodeName( &sts, name, sizeof(name));
+    strcpy( display, name);
+    strcat( display, ":0");
+  }
+  strcpy( disp, display);
+}
+
+void Nodelist::activate_open_xtt()
+{
+  char node_name[80];
+  int sts;
+  char display[80];
+
+  sts = nodelistnav->get_selected_node( node_name);
+  if ( EVEN(sts)) {
+    nodelistnav->wow->DisplayError( "Open Xtt", "Select a node");
+    return;
+  }
+
+  get_display( display);
+  statussrv_XttStart( node_name, "", "", display);
+}
+
+void Nodelist::activate_open_opplace()
+{
+  int sts;
+  char node_name[80];
+  pwr_tOName opplace;
+  char display[80];
+
+  sts = nodelistnav->get_selected_node( node_name);
+  if ( EVEN(sts)) {
+    nodelistnav->wow->DisplayError( "Open Xtt", "Select a node");
+    return;
+  }
+  sts = nodelistnav->get_selected_opplace( opplace);
+
+  get_display( display);
+  statussrv_XttStart( node_name, opplace, "", display);
 }
 
 void Nodelist::activate_save()

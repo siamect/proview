@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.2 2007-05-21 14:20:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include "rt_gdh.h"
 
 #include "co_lng.h"
+#include "co_dcli.h"
 #include "co_wow_gtk.h"
 #include "co_msgwindow_gtk.h"
 #include "co_statusmon_nodelist.h"
@@ -92,16 +93,24 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkWidget *file_remove_node = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Remove Node"));
   g_signal_connect(file_remove_node, "activate", G_CALLBACK(activate_remove_node), this);
 
+  GtkWidget *file_open_xtt = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Open _Runtime Navigator"));
+  g_signal_connect(file_open_xtt, "activate", G_CALLBACK(activate_open_xtt), this);
+
+  GtkWidget *file_open_opplace = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Operatorplace"));
+  g_signal_connect(file_open_opplace, "activate", G_CALLBACK(activate_open_opplace), this);
+
   GtkWidget *file_save = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Save Configuration"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_save), 
 				 gtk_image_new_from_stock( "gtk-save", GTK_ICON_SIZE_MENU));
   g_signal_connect(file_save, "activate", G_CALLBACK(activate_save), this);
 
   GtkMenu *file_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_add_node);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_remove_node);
-  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_save);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_xtt);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_opplace);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), file);
@@ -190,6 +199,23 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   g_signal_connect(tools_remove_node, "clicked", G_CALLBACK(activate_remove_node), this);
   g_object_set( tools_remove_node, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_remove_node,CoWowGtk::translate_utf8("Remove node"), "");
+
+  pwr_tFileName fname;
+  GtkWidget *tools_xtt = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_navigator.png");
+  gtk_container_add( GTK_CONTAINER(tools_xtt), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_xtt, "clicked", G_CALLBACK(activate_open_xtt), this);
+  g_object_set( tools_xtt, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_xtt,CoWowGtk::translate_utf8("Start Runtime Navigator on selected node"), "");
+
+  GtkWidget *tools_op = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_op.png");
+  gtk_container_add( GTK_CONTAINER(tools_op), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_op, "clicked", G_CALLBACK(activate_open_opplace), this);
+  g_object_set( tools_op, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_op,CoWowGtk::translate_utf8("Start Operatorplace on selected node"), "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
@@ -299,6 +325,20 @@ void NodelistGtk::activate_remove_node( GtkWidget *w, gpointer data)
   nodelist->activate_remove_node();
 }
 
+void NodelistGtk::activate_open_xtt( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+
+  nodelist->activate_open_xtt();
+}
+
+void NodelistGtk::activate_open_opplace( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+
+  nodelist->activate_open_opplace();
+}
+
 void NodelistGtk::activate_save( GtkWidget *w, gpointer data)
 {
   Nodelist *nodelist = (Nodelist *)data;
@@ -349,9 +389,9 @@ void NodelistGtk::activate_help( GtkWidget *w, gpointer data)
   nodelist->activate_help();
 }
 
-void NodelistGtk::open_input_dialog( char *text, char *title,
+void NodelistGtk::open_input_dialog( char *text, char *text2, char *title,
 			     char *init_text,
-			     void (*ok_cb)( Nodelist *, char *))
+			     void (*ok_cb)( Nodelist *, char *, char *))
 {
   create_input_dialog();
 
@@ -361,6 +401,7 @@ void NodelistGtk::open_input_dialog( char *text, char *title,
 		NULL);
 
   gtk_label_set_text( GTK_LABEL(india_label), text);
+  gtk_label_set_text( GTK_LABEL(india_label2), text2);
 
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(india_text), 0, -1);
@@ -373,17 +414,21 @@ void NodelistGtk::open_input_dialog( char *text, char *title,
 void NodelistGtk::activate_india_ok( GtkWidget *w, gpointer data)
 {
   Nodelist *nodelist = (Nodelist *)data;
-  char *text, *textutf8;
+  char *text, *text2, *textutf8;
 
   textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->india_text), 
 				 0, -1);
   text = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   g_free( textutf8);
 
+  textutf8 = gtk_editable_get_chars( GTK_EDITABLE(((NodelistGtk *)nodelist)->india_text2), 
+				 0, -1);
+  text2 = g_convert( textutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
+  g_free( textutf8);
+
   g_object_set( ((NodelistGtk *)nodelist)->india_widget, "visible", FALSE, NULL);
 
-  printf( "Add node %s\n", text);
-  (nodelist->india_ok_cb)( nodelist, text);
+  (nodelist->india_ok_cb)( nodelist, text, text2);
   g_free( text);
 }
 
@@ -418,7 +463,11 @@ void NodelistGtk::create_input_dialog()
   india_text = gtk_entry_new();
   g_signal_connect( india_text, "activate", 
   		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
+  india_text2 = gtk_entry_new();
+  g_signal_connect( india_text2, "activate", 
+  		    G_CALLBACK(NodelistGtk::activate_india_ok), this);
   india_label = gtk_label_new("");
+  india_label2 = gtk_label_new("");
   GtkWidget *india_image = (GtkWidget *)g_object_new( GTK_TYPE_IMAGE, 
 				"stock", GTK_STOCK_DIALOG_QUESTION,
 				"icon-size", GTK_ICON_SIZE_DIALOG,
@@ -435,10 +484,18 @@ void NodelistGtk::create_input_dialog()
   g_signal_connect( india_cancel, "clicked", 
   		    G_CALLBACK(NodelistGtk::activate_india_cancel), this);
 
+  GtkWidget *india_vboxtext = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(india_vboxtext), india_text, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(india_vboxtext), india_text2, FALSE, FALSE, 15);
+
+  GtkWidget *india_vboxlabel = gtk_vbox_new( FALSE, 0);
+  gtk_box_pack_start( GTK_BOX(india_vboxlabel), india_label, FALSE, FALSE, 15);
+  gtk_box_pack_start( GTK_BOX(india_vboxlabel), india_label2, FALSE, FALSE, 15);
+
   GtkWidget *india_hboxtext = gtk_hbox_new( FALSE, 0);
   gtk_box_pack_start( GTK_BOX(india_hboxtext), india_image, FALSE, FALSE, 15);
-  gtk_box_pack_start( GTK_BOX(india_hboxtext), india_label, FALSE, FALSE, 15);
-  gtk_box_pack_end( GTK_BOX(india_hboxtext), india_text, TRUE, TRUE, 30);
+  gtk_box_pack_start( GTK_BOX(india_hboxtext), india_vboxlabel, FALSE, FALSE, 15);
+  gtk_box_pack_end( GTK_BOX(india_hboxtext), india_vboxtext, TRUE, TRUE, 30);
 
   GtkWidget *india_hboxbuttons = gtk_hbox_new( TRUE, 40);
   gtk_box_pack_start( GTK_BOX(india_hboxbuttons), india_ok, FALSE, FALSE, 0);

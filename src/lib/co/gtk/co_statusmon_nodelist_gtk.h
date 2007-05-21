@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.2 2007-05-21 14:20:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,7 +46,9 @@ class NodelistGtk : public Nodelist {
     GdkCursor  		*clock_cursor;
     GtkWidget		*india_widget;
     GtkWidget		*india_label;
+    GtkWidget		*india_label2;
     GtkWidget		*india_text;
+    GtkWidget		*india_text2;
     CoWowFocusTimerGtk  focustimer;
 
     void pop();
@@ -54,14 +56,16 @@ class NodelistGtk : public Nodelist {
     void reset_cursor();
     void free_cursor();
     void create_input_dialog();
-    void open_input_dialog( char *text, char *title,
+    void open_input_dialog( char *text, char *text2, char *title,
 			    char *init_text,
-			    void (*ok_cb)( Nodelist *, char *));
+			    void (*ok_cb)( Nodelist *, char *, char *));
 
     static gboolean action_inputfocus( GtkWidget *w, GdkEvent *event, gpointer data);
     static void activate_exit( GtkWidget*w, gpointer data);
     static void activate_add_node( GtkWidget*w, gpointer data);
     static void activate_remove_node( GtkWidget*w, gpointer data);
+    static void activate_open_xtt( GtkWidget*w, gpointer data);
+    static void activate_open_opplace( GtkWidget*w, gpointer data);
     static void activate_save( GtkWidget*w, gpointer data);
     static void activate_show_events( GtkWidget *w, gpointer data);
     static void activate_pop_events( GtkWidget *w, gpointer data);

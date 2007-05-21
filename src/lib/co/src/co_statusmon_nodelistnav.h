@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.h,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.h,v 1.2 2007-05-21 14:20:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,8 +111,10 @@ class NodelistNode {
     item(0), connection_sts(0), init_done(0)
     { 
       strncpy( node_name, name, sizeof(node_name));
+      strcpy( opplace, "");
     }
   char			node_name[80];
+  pwr_tOName   		opplace;
   ItemNode		*item;
   pwr_tStatus		connection_sts;
   int			init_done;  
@@ -154,8 +156,9 @@ class NodelistNav {
   int select_node( int idx);
   void remove_node( char *name);
   int get_selected_node( char *name);
+  int get_selected_opplace( char *opplace);
   void save();
-  void add_node( char *name);
+  void add_node( char *name, char *opplace);
   void set_msgw_pop( int pop) { msgw_pop = pop;}
 
   static void attrvalue_to_string( int type_id, void *value_ptr, 

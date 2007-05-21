@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.2 2007-05-21 14:20:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,7 +237,7 @@ int NodelistNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   nodelistnav->brow->create_nodeclasses();
 
   if ( strcmp( nodelistnav->nodename, "") != 0) {
-    nodelistnav->add_node( nodelistnav->nodename);
+    nodelistnav->add_node( nodelistnav->nodename, "");
     nodelistnav->node_list[0].item->open_children( nodelistnav, 0, 0);
   }
   else
@@ -279,6 +279,7 @@ NodelistNavBrow::~NodelistNavBrow()
 void NodelistNav::read()
 {
   char line[400];
+  char line_part[2][256];
   int sts;
   FILE *fp;
   pwr_tFileName fname;
@@ -301,7 +302,12 @@ void NodelistNav::read()
     if ( line[0] == 0 || line[0] == '#' || line[0] == '!')
       continue;
 
-    NodelistNode node( line);
+    int num = dcli_parse( line, " ", "", (char *)line_part, 
+			  sizeof(line_part)/sizeof(line_part[0]), sizeof(line_part[0]), 0);
+
+    NodelistNode node( line_part[0]);
+    if ( num >= 2)
+      strcpy( node.opplace, line_part[1]);
     node_list.push_back( node);
   }
   fclose( fp);
@@ -923,7 +929,10 @@ void NodelistNav::save()
     return;
 
   for ( int i = 0; i < (int)node_list.size(); i++) {
-    fprintf( fp, "%s\n", node_list[i].node_name);
+    fprintf( fp, "%s", node_list[i].node_name);
+    if ( strcmp( node_list[i].opplace, "") != 0)
+      fprintf( fp, " %s", node_list[i].opplace);
+    fprintf( fp, "\n");
   }
 
   fclose( fp);
@@ -949,6 +958,31 @@ int NodelistNav::get_selected_node( char *name)
   return 1;
 }
 
+int NodelistNav::get_selected_opplace( char *opplace)
+{
+  brow_tNode	*nodelist;
+  int		node_count;
+  ItemNode     	*item;
+
+  brow_GetSelectedNodes( brow->ctx, &nodelist, &node_count);
+  if ( node_count != 1)
+    return 0;
+
+  brow_GetUserData( nodelist[0], (void **)&item);
+  free( nodelist);
+
+  if ( item->type != nodelistnav_eItemType_Node)
+    return 0;
+
+  for ( int i = 0; i < (int) node_list.size(); i++) {
+    if ( node_list[i].item == item) {
+      strcpy( opplace, node_list[i].opplace);
+      return 1;
+    }
+  }
+  return 0;
+}
+
 void NodelistNav::remove_node( char *name)
 {
   for ( int i = 0; i < (int) node_list.size(); i++) {
@@ -963,7 +997,7 @@ void NodelistNav::remove_node( char *name)
   }
 }
 
-void NodelistNav::add_node( char *name)
+void NodelistNav::add_node( char *name, char *opplace)
 {
   brow_tNode	*nodelist;
   int		node_count;
@@ -987,6 +1021,7 @@ void NodelistNav::add_node( char *name)
       return;
     
     NodelistNode node( name);
+    strcpy( node.opplace, opplace);
 
     if ( idx == (int)node_list.size())
       node_list.push_back( node);
@@ -1004,6 +1039,7 @@ void NodelistNav::add_node( char *name)
   else {
     // Nothing selected, insert last
     NodelistNode node( name);
+    strcpy( node.opplace, opplace);
     node_list.push_back( node);
 
     item = new ItemNode( this, name, 0, flow_eDest_IntoLast);
