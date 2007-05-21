@@ -551,6 +551,7 @@ sub build_all ()
       _build("lib", "co", "src", "init copy");
       _build("lib", "co", $flavour, "copy");
       _build("lib", "dtt", "src", "init copy");
+      _build("lib", "statussrv", "src", "init copy");
       _build("lib", "co", "src", "all");
       _build("lib", "co", $flavour, "all");
       _build("exe", "co*", "src", "all");
@@ -579,6 +580,8 @@ sub build_all ()
       _build("exe", "wb_rtt", "src", "all");
       _build("lib", "dtt", "src", "all");
       _build("exp", "rt", "src", "all");
+      _build("lib", "statussrv", "src", "all");
+      _build("exp", "stdsoap2", "src", "all");
     }
     if ( $exe == 1) {
       _build("exe", "rt*", "src", "all");
