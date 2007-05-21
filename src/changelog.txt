@@ -33,3 +33,6 @@
 070424 cs  wbl       New plc classes for Get end CSto of attributes in externvolumes. 
 070504 cs  co        Problems with input focus crash for iconified motif windows fixed.
 070508 cs  rt        Webservice handling system status requests implemented.
+070516 cs  co        New Runtime Monitor to start and monitor runtime env on local node.
+070516 cs  co        New Status Monitor to supervise status of stations via webservice. 
+070521 cs  statussrv New soap request to open xtt.
