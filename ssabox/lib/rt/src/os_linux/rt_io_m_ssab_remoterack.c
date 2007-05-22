@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.6 2007-05-18 12:06:05 claes Exp $
+ * Proview   $Id: rt_io_m_ssab_remoterack.c,v 1.7 2007-05-22 07:14:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,61 @@
 #include "rt_io_msg.h"
 
 
+/*----------------------------------------------------------------------------*\
+  
+\*----------------------------------------------------------------------------*/
+static pwr_tStatus IoRackInitSwap (
+  io_tCtx	ctx,
+  io_sAgent	*ap,
+  io_sRack	*rp
+) 
+{
+  io_sRackLocal *local;
+  pwr_sClass_Ssab_RemoteRack *op;
+  int sts;
+  
+  op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
+  local = calloc( 1, sizeof(*local));
+  rp->Local = local;
+
+  /* Create socket, store in local struct */
+
+  local->s = socket(AF_INET, SOCK_DGRAM, 0);
+  if (local->s < 0) { 
+    errh_Error( "Error creating socket for IO remote rack %s, %d", rp->Name, local->s);
+    op->Status = IO__INITFAIL;
+    return IO__ERRINIDEVICE;
+  }
+
+  /* Initialize remote address structure */
+
+  local->rem_addr.sin_family = AF_INET;
+  local->rem_addr.sin_port = htons(op->RemotePort);
+  local->rem_addr.sin_addr.s_addr = inet_addr((char *) &(op->Address));
+
+  /* Connect to remote address */
+
+  sts = connect(local->s, (struct sockaddr *) &local->rem_addr, sizeof(local->rem_addr)); 
+  if (sts != 0) { 
+    errh_Error( "Error binding remote socket for IO remote rack %s, %d", rp->Name, sts);
+    op->Status = IO__INITFAIL;
+    return IO__ERRINIDEVICE;
+  }
+
+  local->next_read_req_item = 0;
+  local->next_write_req_item = 0;
+
+  op->RX_packets = 0;
+  op->TX_packets = 0;
+
+  /* Log initialization */
+
+  errh_Info( "Init of IO remote rack %s/%s:%d",
+  	     rp->Name, inet_ntoa(local->rem_addr.sin_addr), ntohs(local->rem_addr.sin_port));
+  op->Status = IO__NORMAL;
+  return IO__SUCCESS;
+
+}
 /*----------------------------------------------------------------------------*\
   
 \*----------------------------------------------------------------------------*/
@@ -149,12 +204,12 @@ static pwr_tStatus IoRackSwap (
   int size;
 
   if (!rp->Local) {
-    sts = IoRackInit(ctx, ap, rp);
-    
+
+    sts = IoRackInitSwap(ctx, ap, rp);
     if (sts != IO__SUCCESS)
       return IO__ERRINIDEVICE;
   }
-
+  
   local = (io_sRackLocal *) rp->Local;
   op = (pwr_sClass_Ssab_RemoteRack *) rp->op;
 
