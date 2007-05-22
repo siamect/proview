@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.4 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.5 2007-05-22 08:16:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -581,7 +581,9 @@ int OpGtk::configure( char *opplace_str)
   // Create the application buttons
   GtkWidget *b[15];
   for ( i = 0; i < button_cnt; i++) {
-    b[i] = gtk_button_new_with_label(button_title[i]);
+    char *textutf8 = g_convert( button_title[i], -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    b[i] = gtk_button_new_with_label(textutf8);
+    g_free( textutf8);
     gtk_widget_set_size_request( b[i], -1, 25);
     switch ( i) {
     case 0:
