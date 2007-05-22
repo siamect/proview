@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_draw_xlib.cpp,v 1.2 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_draw_xlib.cpp,v 1.3 2007-05-22 08:17:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -139,7 +139,7 @@ static int draw_free_gc( FlowDrawXLib *draw_ctx)
 
   XFreeGC( draw_ctx->display, draw_ctx->gc_yellow);
   XFreeGC( draw_ctx->display, draw_ctx->gc_green);
-  XFreeGC( draw_ctx->display, draw_ctx->gc_drarkgray);
+  XFreeGC( draw_ctx->display, draw_ctx->gc_darkgray);
   XFreeGC( draw_ctx->display, draw_ctx->gc_inverse);
   for ( i = 0; i < flow_eDrawType__; i++)
   {

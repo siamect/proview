@@ -533,6 +533,7 @@ palette PlcEditorPalette
     class DataSend
     class DispLink
     class GetDap
+    class GetObjid
     class GetObjidp
     class Func
     class FuncExtend
