@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.15 2007-04-30 07:29:27 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.16 2007-05-22 08:21:17 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -164,6 +164,7 @@ int main()
   qcom_sQid qini;
   qcom_sQattr qAttr;
   qcom_sQid qid = qcom_cNQid;
+  int restarts = 10;
 
   sts = gdh_Init("opc_server");
   if ( EVEN(sts)) {
@@ -236,42 +237,45 @@ int main()
   errh_SetStatus( PWR__SRUN);
 
   soap_init( &soap);
-  m = soap_bind( &soap, NULL, 18083, 100);
-  if ( m < 0)
-    soap_print_fault( &soap, stderr);
-  else {
-    fprintf( stderr, "Socket connection successfull: master socket = %d\n", m);
 
-    for ( int i = 1;; i++) {
-      s = soap_accept( &soap);
-      if ( s < 0) {
-	soap_print_fault( &soap, stderr);
-	break;
-      }
-
-      fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
-	       (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
-
-      opcsrv->m_config->RequestCnt++;
-      opcsrv->m_client = opcsrv->find_client( soap.ip);
-      if ( !opcsrv->m_client)
-	opcsrv->m_client = opcsrv->new_client( soap.ip);
-
-      if ( !opcsrv->m_client->m_multi_threaded) {
-	if ( soap_serve( &soap) != SOAP_OK)         // Process RPC request
+  for ( int k = 0; k < restarts + 1; k++) {
+    m = soap_bind( &soap, NULL, 18083, 100);
+    if ( m < 0)
+      soap_print_fault( &soap, stderr);
+    else {
+      fprintf( stderr, "Socket connection successfull: master socket = %d\n", m);
+      
+      for ( int i = 1;; i++) {
+	s = soap_accept( &soap);
+	if ( s < 0) {
 	  soap_print_fault( &soap, stderr);
-	soap_destroy( &soap);   // Clean up class instances
-	soap_end( &soap);       // Clean up everything and close socket
-      }
-      else {
-	// Create a thread for every request
-	struct soap *tsoap;
-	pthread_t tid;
-
-	tsoap = soap_copy( &soap);
-	if ( !tsoap)
 	  break;
-	pthread_create( &tid, NULL, opcsrv_process_request, (void *)tsoap);
+	}
+	
+	fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
+		 (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
+	
+	opcsrv->m_config->RequestCnt++;
+	opcsrv->m_client = opcsrv->find_client( soap.ip);
+	if ( !opcsrv->m_client)
+	  opcsrv->m_client = opcsrv->new_client( soap.ip);
+	
+	if ( !opcsrv->m_client->m_multi_threaded) {
+	  if ( soap_serve( &soap) != SOAP_OK)         // Process RPC request
+	    soap_print_fault( &soap, stderr);
+	  soap_destroy( &soap);   // Clean up class instances
+	  soap_end( &soap);       // Clean up everything and close socket
+	}
+	else {
+	  // Create a thread for every request
+	  struct soap *tsoap;
+	  pthread_t tid;
+	  
+	  tsoap = soap_copy( &soap);
+	  if ( !tsoap)
+	    break;
+	  pthread_create( &tid, NULL, opcsrv_process_request, (void *)tsoap);
+	}
       }
     }
   }
