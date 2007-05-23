@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDyn.java,v 1.10 2007-01-30 06:51:17 claes Exp $
+ * Proview   $Id: GeDyn.java,v 1.11 2007-05-23 08:05:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -193,7 +193,10 @@ public class GeDyn {
 	        nix = 0;
 	    else {
 	        CdhrObjid cdhr_inst = en.gdh.nameToObjid( instance);
-	        nix = cdhr_inst.objid.vid;
+                if ( cdhr_inst.oddSts())
+                  nix = cdhr_inst.objid.vid;
+                else
+                  nix = 0;
 	    }
 	    CdhrObjid cdhr_node = en.gdh.getNodeObject(nix);
 	    if ( cdhr_node.evenSts()) return str;

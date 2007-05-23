@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynTable.java,v 1.6 2005-09-01 14:57:50 claes Exp $
+ * Proview   $Id: GeDynTable.java,v 1.7 2007-05-23 08:05:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -234,29 +234,33 @@ public class GeDynTable extends GeDynElem {
       else {
         if ( typeId[i] == Pwr.eType_Float32) {
           float[] value0 = dyn.en.gdh.getObjectRefInfoFloatArray( p[i], elements[i]);
-	  for ( int j = 0; j < value0.length; j++) {
-	    if (j >= rows)
-	      break;
-            if ( value0[j] != oldValueF[i][j] || firstScan) {
-	      sb = cFormat[i].format( value0[j], sb);
-	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-              // dyn.repaintNow = true;
-              oldValueF[i][j] = value0[j];
+	  if ( value0 != null) {
+	    for ( int j = 0; j < value0.length; j++) {
+	      if (j >= rows)
+	        break;
+              if ( value0[j] != oldValueF[i][j] || firstScan) {
+	        sb = cFormat[i].format( value0[j], sb);
+	        ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+                // dyn.repaintNow = true;
+                oldValueF[i][j] = value0[j];
+	      }
 	    }
           }
         }
         else if ( typeId[i] == Pwr.eType_Boolean) {
           boolean[] value0 = dyn.en.gdh.getObjectRefInfoBooleanArray( p[i], elements[i]);
-	  for ( int j = 0; j < value0.length; j++) {
-	    if (j >= rows)
-	      break;
-            if ( value0[j] != oldValueB[i][j] || firstScan) {
-	      if ( value0[j])
-	        ((GeTable)dyn.comp).setValueAt("1", j, i);
-	      else
-	        ((GeTable)dyn.comp).setValueAt("0", j, i);
-              // dyn.repaintNow = true;
-              oldValueB[i][j] = value0[j];
+	  if ( value0 != null) {
+	    for ( int j = 0; j < value0.length; j++) {
+	      if (j >= rows)
+	        break;
+              if ( value0[j] != oldValueB[i][j] || firstScan) {
+	        if ( value0[j])
+	          ((GeTable)dyn.comp).setValueAt("1", j, i);
+	        else
+	          ((GeTable)dyn.comp).setValueAt("0", j, i);
+                // dyn.repaintNow = true;
+                oldValueB[i][j] = value0[j];
+	      }
 	    }
           }
         }
@@ -267,15 +271,17 @@ public class GeDynTable extends GeDynElem {
                   typeId[i] == Pwr.eType_Int8 ||
 	          typeId[i] == Pwr.eType_UInt8) {
 	  int value0[] = dyn.en.gdh.getObjectRefInfoIntArray( p[i], elements[i]);
-	  for ( int j = 0; j < value0.length; j++) {
-	    if (j >= rows)
-	      break;
-	    if ( value0[j] != oldValueI[i][j] || firstScan) {
-	      sb = cFormat[i].format( value0[j], sb);
-	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-	      // dyn.repaintNow = true;
-	      oldValueI[i][j] = value0[j];
-	    }
+	  if ( value0 != null) {
+	    for ( int j = 0; j < value0.length; j++) {
+	      if (j >= rows)
+	        break;
+	      if ( value0[j] != oldValueI[i][j] || firstScan) {
+	        sb = cFormat[i].format( value0[j], sb);
+	        ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+	        // dyn.repaintNow = true;
+	        oldValueI[i][j] = value0[j];
+	      }
+            }
           }
         }
         else if ( typeId[i] == Pwr.eType_String || 
@@ -283,16 +289,18 @@ public class GeDynTable extends GeDynElem {
   		  typeId[i] == Pwr.eType_Time ||
 		  typeId[i] == Pwr.eType_DeltaTime) {
 	  String[] value0 = dyn.en.gdh.getObjectRefInfoStringArray( p[i], typeId[i], size[i], elements[i]);
-	  for ( int j = 0; j < value0.length; j++) {
-	    if (j >= rows)
-	      break;
-	    if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
-	      sb = cFormat[i].format( value0[j], sb);
-	      ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
-	      // dyn.repaintNow = true;
+	  if ( value0 != null) {
+	    for ( int j = 0; j < value0.length; j++) {
+	      if (j >= rows)
+	        break;
+	      if ( firstScan || value0[j].compareTo( oldValueS[i][j]) != 0) {
+	        sb = cFormat[i].format( value0[j], sb);
+	        ((GeTable)dyn.comp).setValueAt(new String(sb), j, i);
+	        // dyn.repaintNow = true;
 
-	      oldValueS[i][j] = value0[j];
-	    }
+	        oldValueS[i][j] = value0[j];
+	      }
+            }
 	  }
         }
       }
