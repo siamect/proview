@@ -558,6 +558,7 @@ sub build_all ()
       _build("wbl", "pwrs", "src", "copy");
       _build("wbl", "pwrb", "src", "copy");
       _build("exe", "*", "src", "copy");
+      _build("exp", "stdsoap2", "src", "copy");
     }
 
     if ( $lib == 1) {
