@@ -25,6 +25,8 @@ link =	g++ -shared -DHW_X86 -DOS_LINUX \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_mh.o \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_hist.o \
 	${pwre_broot}/${pwre_target}/bld/exe/jpwr_rt_gdh/jpwr_rt_gdh.o \
+	${pwre_broot}/${pwre_target}/bld/lib/statussrv/*.o \
+	${pwre_broot}/${pwre_target}/exp/obj/stdsoap2.o \
 	-o ${pwr_exe}/libjpwr_rt_gdh.so -lm -lpthread -lrt -lpwr_dtt \
 	`pkg-config --libs gtk+-2.0` \
 	-ldb
