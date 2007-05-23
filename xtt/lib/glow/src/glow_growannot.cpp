@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growannot.cpp,v 1.9 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growannot.cpp,v 1.10 2007-05-23 08:04:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -416,7 +416,7 @@ void GrowAnnot::export_javabean( GlowTransform *t, void *node,
   bold = (draw_type == glow_eDrawType_TextHelveticaBold);
 
   ((GrowCtx *)ctx)->export_jbean->annot( x1, y1, number,
-	draw_type, color_drawtype, bold, idx, pass, shape_cnt, node_cnt, fp);
+	draw_type, color_drawtype, bold, adjustment, idx, pass, shape_cnt, node_cnt, fp);
 //  (*shape_cnt)++;
 }
 

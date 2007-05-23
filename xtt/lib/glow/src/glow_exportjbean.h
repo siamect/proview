@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.9 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.10 2007-05-23 08:04:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,8 +68,9 @@ class GlowExportJBean {
 	glow_eDrawType drawtype, glow_eDrawType color_drawtype, int bold,
 	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
     void annot( int x0, int y0, int number,
-	glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold,
-	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+		glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold,
+		glow_eAdjustment adjustment, int idx, glow_eExportPass pass, 
+		int *shape_cnt, int node_cnt, ofstream& fp);
     void annot_font( int number, glow_eDrawType drawtype, 
 	glow_eDrawType background, int bold,
 	int idx, glow_eExportPass pass, ofstream& fp);

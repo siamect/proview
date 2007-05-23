@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.15 2006-06-14 05:04:10 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.16 2007-05-23 08:04:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -634,7 +634,7 @@ void GlowExportJBean::line( double x1, double y1, double x2, double y2,
         fp <<
 "    g.draw( shapes_p" << page << "[" << *shape_cnt << "]);" << endl;
 
-      if ( *shape_cnt / 1000 > func_cnt) {
+      if ( *shape_cnt / 500 > func_cnt) {
 	// Max number of bytes in a java function is ~65000
 	fp <<
 "    paintComponent" << func_cnt << "( g, save);" << endl <<
@@ -1283,8 +1283,9 @@ void GlowExportJBean::text( int x0, int y0, char *text,
 }
 
 void GlowExportJBean::annot( int x0, int y0, int number,
-	glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold,
-	int idx, glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+			     glow_eDrawType drawtype, glow_eDrawType text_drawtype, int bold, 
+			     glow_eAdjustment adjustment, int idx, glow_eExportPass pass, 
+			     int *shape_cnt, int node_cnt, ofstream& fp)
 {
   double dim_x0, dim_x1, dim_y0, dim_y1;
   int antialiasing_on = 0;
@@ -1363,6 +1364,21 @@ void GlowExportJBean::annot( int x0, int y0, int number,
     }
     case glow_eExportPass_Draw:
     {
+      char adjustmentstr[200];
+      switch ( adjustment) {
+      case glow_eAdjustment_Right:
+	fp << 
+"    FontRenderContext frc = g.getFontRenderContext();" << endl;
+	sprintf( adjustmentstr, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()", number);
+	break;
+      case glow_eAdjustment_Center:
+	fp <<
+"    FontRenderContext frc = g.getFontRenderContext();" << endl;
+	sprintf( adjustmentstr, "- (float)g.getFont().getStringBounds(annot%d, frc).getWidth()/2", number);
+	break;
+      default:
+	strcpy( adjustmentstr, "");
+      }
       if ( is_nodeclass)
         nc->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
       else
@@ -1380,7 +1396,7 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 "    if ( annot" << number << " != null)" << endl <<
 "      g.drawString( annot" << number << ", " << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << 
-	" * original_height / height * width / original_width, " << 
+	  " * original_height / height * width / original_width" << adjustmentstr << ", " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
       else
         fp <<
@@ -1390,7 +1406,7 @@ void GlowExportJBean::annot( int x0, int y0, int number,
 "    if ( annot" << number << " != null)" << endl <<
 "      g.drawString( annot" << number << ", " << 
 	x0 - int(dim_x0) + glow_cJBean_Offset << 
-	" * original_height / height * width / original_width, " << 
+	" * original_height / height * width / original_width" << adjustmentstr << ", " << 
 	y0 - int(dim_y0) + glow_cJBean_Offset << "F);" << endl;
       fp <<
 "    g.setTransform( save_tmp);" << endl;
