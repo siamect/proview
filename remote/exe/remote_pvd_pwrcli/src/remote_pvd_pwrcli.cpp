@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.2 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: remote_pvd_pwrcli.cpp,v 1.3 2007-05-24 07:02:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -120,13 +120,19 @@ void remote_pvd_pwrcli::objectOid( co_procom *pcom, pwr_tOix oix)
   if ( pvd_cLog) logg( "ObjOid", oix, "");
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
+  if ( pvd_cLog) logg( "Reply", sts, "");
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Object) {
     pcom->provideStatus( REM__DISORDER);
@@ -173,9 +179,14 @@ void remote_pvd_pwrcli::objectName( co_procom *pcom, char *name, pwr_tOix poix)
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Object) {
     pcom->provideStatus( REM__DISORDER);
@@ -264,9 +275,14 @@ void remote_pvd_pwrcli::writeAttribute( co_procom *pcom, pwr_tOix oix,
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Status) {
     pcom->provideStatus( REM__DISORDER);
@@ -312,13 +328,19 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
   if ( pvd_cLog) logg( "Read", aref.Objid.oix, aname);
 
   sts = udp_Request( (char *)&msg, sizeof(msg), (char **)&rmsg);
+  if ( pvd_cLog) logg( "Reply", sts, "");
   if ( EVEN(sts) || sts == REM__TIMEOUT) {
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Attribute) {
     pcom->provideStatus( REM__DISORDER);
@@ -349,6 +371,9 @@ void remote_pvd_pwrcli::readAttribute( co_procom *pcom, pwr_tOix oix,
       rndc_ConvertData(&sts, &n, cp, p, &rmsg->Value, (pwr_tUInt32 *)&size,
 		      ndc_eOp_encode, aref.Offset, 0);
       pcom->provideAttr( GDH__SUCCESS, oix, rmsg->Size, p);
+    }
+    else {
+      pcom->provideStatus( GDH__NOSUCHCLASS);
     }
   }
 
@@ -428,16 +453,25 @@ void remote_pvd_pwrcli::subAssociateBuffer( co_procom *pcom, void **buff, int oi
   pwr_tAttrRef aref;
   pwr_tOName aname;
   pwr_tCid cid;
+  pwr_tUInt32 osize;
 
   msg.Type = rpvd_eMsg_SubAdd;
   msg.Id = rpvd_id++;
   msg.Oid.oix = oix;
   msg.Oid.vid = rpvd_vid;
   
+  sts = gdh_GetObjectSize( msg.Oid, &osize);
+  if ( EVEN(sts)) {
+    pcom->provideStatus( sts);
+    return;
+  }
+
   memset( &aref, 0, sizeof(aref));
   aref.Objid = msg.Oid;
   aref.Offset = offset;
   aref.Size = size;
+  if ( (int) osize == size)
+    aref.Flags.b.Object = 1;
 
   sts = gdh_GetObjectClass( msg.Oid, &cid);
   if ( EVEN(sts)) {
@@ -445,12 +479,15 @@ void remote_pvd_pwrcli::subAssociateBuffer( co_procom *pcom, void **buff, int oi
     return;
   }
 
-  sts = gdh_ClassAttrrefToAttr( cid, &aref, aname, sizeof(aname));
-  if ( EVEN(sts)) {
-    pcom->provideStatus( sts);
-    return;
+  if ( aref.Flags.b.Object)
+    strcpy( aname, "");
+  else {
+    sts = gdh_ClassAttrrefToAttr( cid, &aref, aname, sizeof(aname));
+    if ( EVEN(sts)) {
+      pcom->provideStatus( sts);
+      return;
+    }
   }
-
   strcpy( msg.Attribute, aname);
   msg.Rix = subid.rix;
   msg.Size = size;
@@ -463,9 +500,14 @@ void remote_pvd_pwrcli::subAssociateBuffer( co_procom *pcom, void **buff, int oi
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Status) {
     pcom->provideStatus( REM__DISORDER);
@@ -508,9 +550,14 @@ void remote_pvd_pwrcli::subDisassociateBuffer( co_procom *pcom, pwr_tSubid subid
     pcom->provideStatus( sts);
     return;
   }
-  if ( rmsg->Id != msg.Id) {
+  while ( rmsg->Id != msg.Id) {
     dispatch( pcom, (rpvd_sMsg *)rmsg);
-    return;
+
+    sts = udp_Receive( (char **)&rmsg, 1000);
+    if ( sts == REM__TIMEOUT) {
+      pcom->provideStatus( REM__DISORDER);
+      return;
+    }
   }
   if ( rmsg->Type != rpvd_eMsg_Status) {
     pcom->provideStatus( REM__DISORDER);
@@ -538,9 +585,14 @@ void remote_pvd_pwrcli::subRequest( co_procom *pcom)
     sts = udp_Receive( (char **)&rmsg, 5000);
     if ( EVEN(sts) || sts == REM__TIMEOUT)
       return;
-    if ( rmsg->Id != msg.Id) {
+    while ( rmsg->Id != msg.Id) {
       dispatch( pcom, (rpvd_sMsg *)rmsg);
-      return;
+
+      sts = udp_Receive( (char **)&rmsg, 1000);
+      if ( sts == REM__TIMEOUT) {
+	pcom->provideStatus( REM__DISORDER);
+	return;
+      }
     }
 
     // Unpack the message
