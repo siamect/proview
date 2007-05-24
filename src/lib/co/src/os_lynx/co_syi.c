@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_syi.c,v 1.2 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: co_syi.c,v 1.1 2007-05-24 14:48:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,8 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/* rt_syi.c -- System information
-
+/* co_syi.c -- System information
    This module gives information about the system.  */
 
 #include <stdio.h>
@@ -30,8 +29,8 @@
 
 #include "pwr.h"
 #include "co_errno.h"
-#include "rt_syi.h"
-#include "rt_syi_msg.h"
+#include "co_syi.h"
+#include "co_syi_msg.h"
 
 
 char *

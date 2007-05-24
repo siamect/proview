@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav_gtk.cpp,v 1.2 2007-05-21 15:29:41 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav_gtk.cpp,v 1.3 2007-05-24 14:50:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include "co_time.h"
 #include "co_wow_gtk.h"
 #include "rt_gdh.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 #include "flow.h"
 #include "flow_browctx.h"
 #include "flow_browapi.h"

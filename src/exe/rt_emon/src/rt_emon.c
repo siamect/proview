@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_emon.c,v 1.11 2005-11-14 16:35:55 claes Exp $
+ * Proview   $Id: rt_emon.c,v 1.12 2007-05-24 14:50:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,7 +60,7 @@
 #include "rt_errh.h"
 #include "rt_qcom.h"
 #include "rt_qcom_msg.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 #include "rt_aproc.h"
 #include "rt_pwr_msg.h"
 #include "rt_c_node.h"

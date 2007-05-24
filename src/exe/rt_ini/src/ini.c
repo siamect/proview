@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.30 2007-05-24 11:21:01 claes Exp $
+ * Proview   $Id: ini.c,v 1.31 2007-05-24 14:50:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,7 +45,7 @@
 #include "rt_ini_msg.h"
 #include "rt_lst.h"
 #include "rt_errh.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 
 #if defined OS_VMS
 # define cPrio_neth		8

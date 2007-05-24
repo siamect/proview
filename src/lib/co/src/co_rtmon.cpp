@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon.cpp,v 1.2 2007-05-21 15:29:41 claes Exp $
+ * Proview   $Id: co_rtmon.cpp,v 1.3 2007-05-24 14:50:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,7 +31,7 @@
 #include "co_lng.h"
 #include "co_wow.h"
 #include "co_rtmon.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 #include "rt_xnav_msg.h"
 
 RtMon::RtMon( void *nodelist_parent_ctx,

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_syi_msg.msg,v 1.2 2005-09-01 14:58:00 claes Exp $
+!  Proview   $Id: co_syi_msg.msg,v 1.1 2007-05-24 14:49:24 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 

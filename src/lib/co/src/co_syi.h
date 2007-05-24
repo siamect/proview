@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_syi.h,v 1.3 2007-01-04 07:52:30 claes Exp $
+ * Proview   $Id: co_syi.h,v 1.1 2007-05-24 14:48:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,11 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/* rt_syi.h -- System information */
+/* co_syi.h -- System information */
 /* This module gives information about the system.  */
 
-#ifndef rt_syi_h
-#define rt_syi_h
+#ifndef co_syi_h
+#define co_syi_h
 
 #if defined __cplusplus
 extern "C" {
