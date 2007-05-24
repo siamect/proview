@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeCFormat.java,v 1.5 2005-09-12 10:48:00 claes Exp $
+ * Proview   $Id: GeCFormat.java,v 1.6 2007-05-24 12:26:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,6 +26,7 @@ public class GeCFormat {
       int f_idx, p_idx;
     
       try {
+/*
         if ( (f_idx = format.indexOf('f')) != -1) {
 	  format_type = FRM_F;
           p_idx = format.indexOf('.');
@@ -68,7 +69,8 @@ public class GeCFormat {
 	    h = Integer.valueOf(format.substring( 1+no_space, p_idx)).intValue();
           }
         }
-        else if ( (f_idx = format.indexOf('o')) != -1) {
+*/
+        if ( (f_idx = format.indexOf('o')) != -1) {
 	  if ( f_idx >= 1 && format.charAt(f_idx-1) == '1')
 	    format_type = FRM_1O;
 	  else if ( f_idx >= 1 && format.charAt(f_idx-1) == '2')
@@ -92,6 +94,8 @@ public class GeCFormat {
 	  else
 	    format_type = FRM_M;
 	}
+	else
+	  pfo = new PrintfFormat( format);
       }
       catch ( NumberFormatException e) {
         System.out.println( "NumberFormatException: " + format);
@@ -102,6 +106,7 @@ public class GeCFormat {
     int h;
     int no_space = 0;
     int format_type;
+    PrintfFormat pfo;
 
     public static final int FRM_S  = 0;  // String
     public static final int FRM_O  = 1;  // Objid object name
@@ -121,6 +126,11 @@ public class GeCFormat {
       return format_type;
     }
     public StringBuffer format( float value, StringBuffer buff) {
+      if ( pfo != null)
+        return pfo.sprintf( value, buff);
+      else 
+        return buff;
+/*
       int j, len;
       int t2 = (int) value;
       int m;
@@ -155,9 +165,15 @@ public class GeCFormat {
 	  buff.insert(0," ");
       }
       return buff;
+      }
     }
     
     public StringBuffer format( int value, StringBuffer buff) {
+      if ( pfo != null)
+        return pfo.sprintf( value, buff);
+      else 
+        return buff;
+/*
       int j, len;
       int t2 = value;
 
@@ -170,6 +186,7 @@ public class GeCFormat {
       for ( j = 0; j < h-len; j++)
         buff.insert(0," ");
       return buff;
+*/
     }
 
     public StringBuffer format( boolean value, StringBuffer buff) {
@@ -184,6 +201,11 @@ public class GeCFormat {
     public StringBuffer format( String value, StringBuffer buff) {
       switch( format_type) {
       case FRM_S: {
+      if ( pfo != null)
+        return pfo.sprintf( value, buff);
+      else 
+        return buff;
+/*
 	int j, len;
 
 	if ( h == -1)
@@ -196,6 +218,7 @@ public class GeCFormat {
 	for ( j = 0; j < len; j++)
 	  buff.append(value.charAt(j));
 	return buff;
+*/
       }
       case FRM_O: {
 	int idx, j, len;

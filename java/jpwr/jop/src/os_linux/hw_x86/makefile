@@ -3,6 +3,7 @@ include $(pwre_dir_symbols)
 local_java_sources := \
 	JopLog.java \
 	Ge.java \
+	PrintfFormat.java \
 	GeCFormat.java \
 	GeDyndata.java \
 	GeColor.java \
