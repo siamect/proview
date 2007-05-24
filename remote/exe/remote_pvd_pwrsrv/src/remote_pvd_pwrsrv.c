@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrsrv.c,v 1.2 2007-03-20 12:36:38 claes Exp $
+ * Proview   $Id: remote_pvd_pwrsrv.c,v 1.3 2007-05-24 07:03:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -283,14 +283,24 @@ static void pwrsrv_SubAdd( rpvd_sMsgSubAdd *msg)
     return;
   }
 
-  strcat( name, ".");
-  strcat( name, msg->Attribute);
+  if ( strcmp( msg->Attribute, "") != 0) {
+    strcat( name, ".");
+    strcat( name, msg->Attribute);
 
-  sts = gdh_GetAttributeCharacteristics( name, &atid, &asize, &aoffs, &aelem);
-  if ( EVEN(sts)) {
-    rmsg.Status = sts;
-    udp_Send( (char *)&rmsg, sizeof(rmsg));
-    return;
+    sts = gdh_GetAttributeCharacteristics( name, &atid, &asize, &aoffs, &aelem);
+    if ( EVEN(sts)) {
+      rmsg.Status = sts;
+      udp_Send( (char *)&rmsg, sizeof(rmsg));
+      return;
+    }
+  }
+  else {
+    sts = gdh_GetObjectSize( msg->Oid, &asize);
+    if ( EVEN(sts)) {
+      rmsg.Status = sts;
+      udp_Send( (char *)&rmsg, sizeof(rmsg));
+      return;
+    }
   }
 
   /* Direct link to atttribute */
