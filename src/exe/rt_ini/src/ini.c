@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ini.c,v 1.29 2007-05-16 12:40:49 claes Exp $
+ * Proview   $Id: ini.c,v 1.30 2007-05-24 11:21:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2254,7 +2254,7 @@ create_active_io ()
     4000 * sizeof(((pwr_sClass_CoArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
   sts = gdh_CreateObject("pwrNode-active-io-di", pwr_cClass_DiArea,
-    5000 * sizeof(((pwr_sClass_DiArea*)0)->Value[0]),
+    6000 * sizeof(((pwr_sClass_DiArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
   sts = gdh_CreateObject("pwrNode-active-io-do", pwr_cClass_DoArea,
     4000 * sizeof(((pwr_sClass_DoArea*)0)->Value[0]),
@@ -2287,7 +2287,7 @@ create_active_io ()
     4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
   sts = gdh_CreateObject("pwrNode-active-io-di_init", pwr_cClass_IvArea,
-    5000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
+    6000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
     &oid, pwr_cNObjid, 0, pwr_cNObjid);
   sts = gdh_CreateObject("pwrNode-active-io-do_init", pwr_cClass_IvArea,
     4000 * sizeof(((pwr_sClass_IvArea*)0)->Value[0]),
