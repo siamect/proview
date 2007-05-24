@@ -1,5 +1,5 @@
 Package: pwr44
-Version: 4.4.0-1
+Version: 4.4.1-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -9,4 +9,11 @@ Maintainer: Proview <postmaster@proview.se>
 Description: Proview development and runtime environment package
  Proview development and runtime environment
  4.4.0-1 Base release 
+ 4.4.0-2
+  - Proview restart improved. Works with profibus.
+  - Ge: New fonts, Times, NC Schoolbook and Courier.
+ 4.4.1-1
+  - Proview profibus restart improved.
+  - Statusmonitor to view status of remote nodes implemented.
+  - Runtime monitor to start and stop runtime in development environment implemented.
 
