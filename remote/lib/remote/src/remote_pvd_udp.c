@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_udp.c,v 1.1 2006-09-14 14:17:44 claes Exp $
+ * Proview   $Id: remote_pvd_udp.c,v 1.2 2007-05-24 07:04:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -172,7 +172,7 @@ pwr_tStatus udp_Request( char *sendbuf, int sendbuf_size,
 {
   int i;
   pwr_tStatus sts;
-  int tmo = 100;
+  int tmo = 400;
 
   if (udp_ctx->Disable) return REM__DISABLED;
 
