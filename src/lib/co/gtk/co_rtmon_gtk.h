@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon_gtk.h,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_rtmon_gtk.h,v 1.2 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,9 +29,10 @@
 class RtMonGtk : public RtMon {
   public:
     RtMonGtk( void *rtmon_parent_ctx,
-	     GtkWidget *rtmon_parent_wid,
-	     char *rtmon_name,
-	     pwr_tStatus *status);
+	      GtkWidget *rtmon_parent_wid,
+	      char *rtmon_name,
+	      char *rtmon_display,
+	      pwr_tStatus *status);
     ~RtMonGtk();
 
     GtkWidget		*parent_wid;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.4 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.5 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -151,6 +151,22 @@ void Nodelist::activate_open_opplace()
 
   get_display( display);
   statussrv_XttStart( node_name, opplace, "", display);
+}
+
+void Nodelist::activate_open_rtmon()
+{
+  char node_name[80];
+  int sts;
+  char display[80];
+
+  sts = nodelistnav->get_selected_node( node_name);
+  if ( EVEN(sts)) {
+    nodelistnav->wow->DisplayError( "Open Xtt", "Select a node");
+    return;
+  }
+
+  get_display( display);
+  statussrv_RtMonStart( node_name, "", display);
 }
 
 void Nodelist::activate_save()

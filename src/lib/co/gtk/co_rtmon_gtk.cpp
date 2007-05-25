@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon_gtk.cpp,v 1.2 2007-05-21 15:29:41 claes Exp $
+ * Proview   $Id: co_rtmon_gtk.cpp,v 1.3 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_syi.h"
 #include "rt_gdh.h"
 
 #include "co_lng.h"
@@ -51,17 +52,26 @@ static void destroy_event( GtkWidget *w, gpointer data)
 }
 
 RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
-		  GtkWidget *rtmon_parent_wid,
-		  char *rtmon_name,
-		  pwr_tStatus *status) :
-  RtMon( rtmon_parent_ctx, rtmon_name, status), parent_wid(rtmon_parent_wid),
+		    GtkWidget *rtmon_parent_wid,
+		    char *rtmon_name,
+		    char *rtmon_display,
+		    pwr_tStatus *status) :
+  RtMon( rtmon_parent_ctx, rtmon_name, rtmon_display, status), parent_wid(rtmon_parent_wid),
   clock_cursor(0), timerid(0), old_status(9999)
 {
+  char nodename[80];
+  char title[200];
+  pwr_tStatus sts;
  
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  strcpy( title, nodename);
+  strcat( title, " ");
+  strcat( title, rtmon_name);
+
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 			   "default-height", 330,
 			   "default-width", 480,
-			   "title", rtmon_name,
+			   "title", title,
 			   NULL);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
@@ -215,16 +225,19 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
 
   bbox_start = gtk_button_new_with_label( "Start Runtime");
   gtk_widget_set_size_request( bbox_start, 170, 25);
+  g_object_set( bbox_start, "can-focus", FALSE, NULL);
   g_signal_connect( bbox_start, "clicked", 
   		    G_CALLBACK(activate_start), this);
 
   bbox_restart = gtk_button_new_with_label( "Restart Runtime");
   gtk_widget_set_size_request( bbox_restart, 170, 25);
+  g_object_set( bbox_restart, "can-focus", FALSE, NULL);
   g_signal_connect( bbox_restart, "clicked", 
   		    G_CALLBACK(activate_restart), this);
 
   bbox_stop = gtk_button_new_with_label( "Stop Runtime");
   gtk_widget_set_size_request( bbox_stop, 170, 25);
+  g_object_set( bbox_stop, "can-focus", FALSE, NULL);
   g_signal_connect( bbox_stop, "clicked", 
   		    G_CALLBACK(activate_stop), this);
 

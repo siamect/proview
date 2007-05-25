@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.3 2007-05-21 15:29:41 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.4 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,6 +98,9 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkWidget *file_open_opplace = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Operatorplace"));
   g_signal_connect(file_open_opplace, "activate", G_CALLBACK(activate_open_opplace), this);
 
+  GtkWidget *file_open_rtmon = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Open Runtime Monitor"));
+  g_signal_connect(file_open_rtmon, "activate", G_CALLBACK(activate_open_rtmon), this);
+
   GtkWidget *file_save = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Save Configuration"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(file_save), 
 				 gtk_image_new_from_stock( "gtk-save", GTK_ICON_SIZE_MENU));
@@ -109,6 +112,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_remove_node);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_xtt);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_opplace);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_open_rtmon);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_menu), file_close);
 
   GtkWidget *file = gtk_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_File"));
@@ -215,6 +219,14 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   g_signal_connect(tools_op, "clicked", G_CALLBACK(activate_open_opplace), this);
   g_object_set( tools_op, "can-focus", FALSE, NULL);
   gtk_toolbar_append_widget( tools, tools_op,CoWowGtk::translate_utf8("Start Operatorplace on selected node"), "");
+
+  GtkWidget *tools_rtmon = gtk_button_new();
+  dcli_translate_filename( fname, "$pwr_exe/xtt_rtmon.png");
+  gtk_container_add( GTK_CONTAINER(tools_rtmon), 
+		     gtk_image_new_from_file( fname));
+  g_signal_connect(tools_rtmon, "clicked", G_CALLBACK(activate_open_rtmon), this);
+  g_object_set( tools_rtmon, "can-focus", FALSE, NULL);
+  gtk_toolbar_append_widget( tools, tools_rtmon,CoWowGtk::translate_utf8("Start Runtime Monitor on selected node"), "");
 
   GtkWidget *tools_zoom_in = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_zoom_in), 
@@ -336,6 +348,13 @@ void NodelistGtk::activate_open_opplace( GtkWidget *w, gpointer data)
   Nodelist *nodelist = (Nodelist *)data;
 
   nodelist->activate_open_opplace();
+}
+
+void NodelistGtk::activate_open_rtmon( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+
+  nodelist->activate_open_rtmon();
 }
 
 void NodelistGtk::activate_save( GtkWidget *w, gpointer data)

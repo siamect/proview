@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.h,v 1.2 2007-05-21 14:20:58 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.h,v 1.3 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,6 +64,7 @@ class Nodelist {
     void activate_remove_node();
     void activate_open_xtt();
     void activate_open_opplace();
+    void activate_open_rtmon();
     void activate_save();
     static void find_node_cb( void *ctx, pwr_tOid oid);
     static void add_node_ok( Nodelist *nodelist, char *node_name, char *opplace);

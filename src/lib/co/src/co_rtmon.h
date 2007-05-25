@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon.h,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_rtmon.h,v 1.2 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,8 +36,9 @@ class MsgWindow;
 class RtMon {
   public:
     RtMon( void *rtmon_parent_ctx,
-	  char *rtmon_name,
-	  pwr_tStatus *status);
+	   char *rtmon_name,
+	   char *rtmon_display,
+	   pwr_tStatus *status);
     virtual ~RtMon();
 
     void 		*parent_ctx;
@@ -49,6 +50,7 @@ class RtMon {
     void 		(*india_ok_cb)( RtMon *, char *);
     CoWow		*wow;
     char		nodename[40];
+    char		display[80];
 
     virtual void pop() {}
     virtual void set_clock_cursor() {}
@@ -63,6 +65,7 @@ class RtMon {
     void activate_reset();
     void activate_xtt();
     void activate_op();
+    static void stop_ok_cb( void *ctx, void *data);
 };
 
 #endif

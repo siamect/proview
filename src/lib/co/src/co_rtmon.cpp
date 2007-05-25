@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon.cpp,v 1.3 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: co_rtmon.cpp,v 1.4 2007-05-25 13:39:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,14 +34,19 @@
 #include "co_syi.h"
 #include "rt_xnav_msg.h"
 
-RtMon::RtMon( void *nodelist_parent_ctx,
-	      char *nodelist_name,
+RtMon::RtMon( void *rtmon_parent_ctx,
+	      char *rtmon_name,
+	      char *rtmon_display,
 	      pwr_tStatus *status) :
-  parent_ctx(nodelist_parent_ctx),
+  parent_ctx(rtmon_parent_ctx),
   nodelistnav(NULL), rtmon_displayed(0), help_cb(0), close_cb(0)
 {
   pwr_tStatus sts;
 
+  if ( rtmon_display)
+    strcpy( display, rtmon_display);
+  else
+    strcpy( display, "");
   syi_NodeName( &sts, nodename, sizeof(nodename));  
 
   *status = 1;
@@ -77,6 +82,18 @@ void RtMon::activate_restart()
 
 void RtMon::activate_stop()
 {
+  char nodename[40];
+  char text[80] = "Do you want to stop Runtime Environment on ";
+  pwr_tStatus sts;
+
+  syi_NodeName( &sts, nodename, sizeof(nodename));
+  strcat( text, nodename);
+
+  wow->DisplayQuestion( this, "Stop Runtime", text, stop_ok_cb, 0, 0);
+}
+
+void RtMon::stop_ok_cb( void *ctx, void *data)
+{
   char cmd[] = "rt_ini -s";
 
   system( cmd);
@@ -91,14 +108,25 @@ void RtMon::activate_reset()
 
 void RtMon::activate_xtt()
 {
-  char cmd[] = "rt_xtt -q &";
+  pwr_tCmd cmd;
+  char displaystr[120] = "";
 
+  if ( strcmp( display, "") != 0)
+    sprintf( displaystr, "--display %s", display);
+
+  sprintf( cmd, "rt_xtt -q %s &", displaystr);
   system( cmd);
 }
 
 void RtMon::activate_op()
 {
-  char cmd[] = "rt_xtt -q -s -c &";
+  pwr_tCmd cmd;
+  char displaystr[120] = "";
+
+  if ( strcmp( display, "") != 0)
+    sprintf( displaystr, "--display %s", display);
+
+  sprintf( cmd, "rt_xtt -q -s -c %s &", displaystr);
 
   system( cmd);
 }
