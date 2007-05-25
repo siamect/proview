@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.13 2007-05-16 12:39:14 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.14 2007-05-25 13:59:03 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -878,7 +878,7 @@ void WttGtk::activate_rtmon( GtkWidget *w, gpointer data)
   Wtt *wtt = (Wtt *)data;
   pwr_tStatus sts;
   
-  RtMon *rtmon = new RtMonGtk( wtt, ((WttGtk *)wtt)->toplevel, "Runtime Monitor", &sts);
+  RtMon *rtmon = new RtMonGtk( wtt, ((WttGtk *)wtt)->toplevel, "Runtime Monitor", 0, &sts);
   rtmon->help_cb = wtt_help_cb;
 }
 
