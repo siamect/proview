@@ -408,3 +408,36 @@ pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char 
   return sts;
 }
 
+pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display)
+{
+  pwr_tStatus sts = PWR__SUCCESS;
+  char endpoint[80];
+
+  if ( !init_done) {
+    soap_init( &soap);
+    init_done = 1;
+  }
+
+  sprintf( endpoint, "http://%s:%d", nodename, port);
+
+  _s0__RtMonStart rtmon_start;
+  _s0__RtMonStartResponse rtmon_start_response;
+
+  rtmon_start.ClientRequestHandle = new std::string("StatusSrv Client");
+  if ( lang && strcmp( lang, "") != 0)
+    rtmon_start.Language = new std::string(lang);
+  if ( display && strcmp( display, "") != 0)
+    rtmon_start.Display = new std::string(display);
+
+  if ( soap_call___s0__RtMonStart( &soap, endpoint, NULL, &rtmon_start, &rtmon_start_response) ==
+       SOAP_OK) {
+  }
+  else {
+    sts = PWR__SRVCONNECTION;
+  }
+  soap_destroy( &soap);
+  soap_end( &soap);
+
+  return sts;
+}
+

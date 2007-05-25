@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.3 2007-05-21 14:21:39 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.4 2007-05-25 13:38:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -23,6 +23,7 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "pwr.h"
 #include "pwr_version.h"
@@ -529,25 +530,105 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap *soap,
   char lang[40] = "";
   pwr_tOName opplace = "";
   char display[80] = "";
-  pwr_tCmd cmd;
+  char *argv[] = {"rt_xtt", 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  char sw_l[] = "-l";
+  char sw_d[] = "--display";
+  char sw_q[] = "-q";
+  char sw_c[] = "-c";
 
   if ( s0__XttStart->ClientRequestHandle)
     s0__XttStartResponse->ClientRequestHandle = 
       new std::string( *s0__XttStart->ClientRequestHandle);
   
-  if ( s0__XttStart->Language) {
-    sprintf( lang, "-l %s", s0__XttStart->Language->c_str());
+  if ( s0__XttStart->Language)
+    strncpy( lang, s0__XttStart->Language->c_str(), sizeof(lang));
+
+  if ( s0__XttStart->OpPlace)
+    strncpy( opplace, s0__XttStart->OpPlace->c_str(), sizeof(opplace));
+
+  if ( s0__XttStart->Display)
+    strncpy( display, s0__XttStart->Display->c_str(), sizeof(display));
+
+  int i = 1;
+  if ( strcmp( opplace, "") != 0)
+    argv[i++] = opplace;
+  argv[i++] = sw_q;
+  argv[i++] = sw_c;
+  if ( strcmp( display, "") != 0) {
+    argv[i++] = sw_d;
+    argv[i++] = display;    
   }
-  if ( s0__XttStart->OpPlace) {
-    strcpy( opplace, s0__XttStart->OpPlace->c_str());
-  }
-  if ( s0__XttStart->Display) {
-    sprintf( display, "--display %s", s0__XttStart->Display->c_str());
+  if ( strcmp( lang, "") != 0) {
+    argv[i++] = sw_l;
+    argv[i++] = lang;    
   }
 
-  sprintf( cmd, "rt_xtt %s -q -c %s %s &", opplace, display, lang);
+  pid_t pid = fork();
+  switch ( pid) {
+  case -1:
+    printf( "rt_statussrv: fork failed\n");
+    break;
+  case 0: {
+    // Child process
 
-  system( cmd);
+    // Socket open after fork, close
+    soap->fclosesocket(soap, (SOAP_SOCKET)soap->master);
+
+    execvp( "rt_xtt", argv);
+    break;
+  }
+  default: ;    
+  }
+  return SOAP_OK;
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap *soap, 
+					   _s0__RtMonStart *s0__RtMonStart, 
+					   _s0__RtMonStartResponse *s0__RtMonStartResponse)
+{
+  char lang[40] = "";
+  char display[80] = "";
+  char *argv[] = {"pwr_rtmon", "--display", 0, 0, 0};
+  char sw_l[] = "-l";
+  char sw_d[] = "--display";
+
+  if ( s0__RtMonStart->ClientRequestHandle)
+    s0__RtMonStartResponse->ClientRequestHandle = 
+      new std::string( *s0__RtMonStart->ClientRequestHandle);
+  
+  if ( s0__RtMonStart->Language)
+    strncpy( lang, s0__RtMonStart->Language->c_str(), sizeof(lang));
+  
+  if ( s0__RtMonStart->Display)
+    strncpy( display, s0__RtMonStart->Display->c_str(), sizeof(display));
+
+
+  int i = 1;
+  if ( strcmp( display, "") != 0) {
+    argv[i++] = sw_d;
+    argv[i++] = display;    
+  }
+  if ( strcmp( lang, "") != 0) {
+    argv[i++] = sw_l;
+    argv[i++] = lang;    
+  }
+
+  pid_t pid = fork();
+  switch ( pid) {
+  case -1:
+    printf( "rt_statussrv: fork failed\n");
+    break;
+  case 0: {
+    // Child process
+
+    // Socket open after fork, close
+    soap->fclosesocket(soap, (SOAP_SOCKET)soap->master);
+
+    execvp( "pwr_rtmon", argv);
+    break;
+  }
+  default: ;    
+  }
   return SOAP_OK;
 }
 

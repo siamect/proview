@@ -28,5 +28,6 @@ class Service
 	virtual int __s0__GetExtStatus(_s0__GetExtStatus *s0__GetExtStatus, _s0__GetExtStatusResponse *s0__GetExtStatusResponse) { return soap ? soap_call___s0__GetExtStatus(soap, endpoint, NULL, s0__GetExtStatus, s0__GetExtStatusResponse) : SOAP_EOM; };
 	virtual int __s0__Restart(_s0__Restart *s0__Restart, _s0__RestartResponse *s0__RestartResponse) { return soap ? soap_call___s0__Restart(soap, endpoint, NULL, s0__Restart, s0__RestartResponse) : SOAP_EOM; };
 	virtual int __s0__XttStart(_s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse) { return soap ? soap_call___s0__XttStart(soap, endpoint, NULL, s0__XttStart, s0__XttStartResponse) : SOAP_EOM; };
+	virtual int __s0__RtMonStart(_s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse) { return soap ? soap_call___s0__RtMonStart(soap, endpoint, NULL, s0__RtMonStart, s0__RtMonStartResponse) : SOAP_EOM; };
 };
 #endif

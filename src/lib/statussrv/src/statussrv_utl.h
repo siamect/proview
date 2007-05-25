@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: statussrv_utl.h,v 1.2 2007-05-21 14:20:04 claes Exp $
+ * Proview   $Id: statussrv_utl.h,v 1.3 2007-05-25 13:38:07 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,6 +55,7 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result);
 pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *result);
 pwr_tStatus statussrv_Restart( char *nodename);
 pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display);
+pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display);
 
 #ifdef __cplusplus
 }

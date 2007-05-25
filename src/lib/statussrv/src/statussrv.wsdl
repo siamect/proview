@@ -191,6 +191,20 @@
           <s:attribute name="ClientRequestHandle" type="s:string" />
         </s:complexType>
       </s:element>
+      <s:element name="RtMonStart">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+          <s:sequence>
+	    <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+	    <s:element minOccurs="0" maxOccurs="1" name="Display" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RtMonStartResponse">
+        <s:complexType>
+          <s:attribute name="ClientRequestHandle" type="s:string" />
+        </s:complexType>
+      </s:element>
     </s:schema>
   </types>
   <message name="GetStatusSoapIn">
@@ -217,6 +231,12 @@
   <message name="XttStartSoapOut">
     <part name="parameters" element="s0:XttStartResponse" />
   </message>
+  <message name="RtMonStartSoapIn">
+    <part name="parameters" element="s0:RtMonStart" />
+  </message>
+  <message name="RtMonStartSoapOut">
+    <part name="parameters" element="s0:RtMonStartResponse" />
+  </message>
   <portType name="Service">
     <operation name="GetStatus">
       <input message="s0:GetStatusSoapIn" />
@@ -233,6 +253,10 @@
     <operation name="XttStart">
       <input message="s0:XttStartSoapIn" />
       <output message="s0:XttStartSoapOut" />
+    </operation>
+    <operation name="RtMonStart">
+      <input message="s0:RtMonStartSoapIn" />
+      <output message="s0:RtMonStartSoapOut" />
     </operation>
   </portType>
   <binding name="Service" type="s0:Service">
@@ -266,6 +290,15 @@
     </operation>
     <operation name="XttStart">
       <soap:operation soapAction="s0:XttStart" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="RtMonStart">
+      <soap:operation soapAction="s0:RtMonStart" style="document" />
       <input>
         <soap:body use="literal" />
       </input>

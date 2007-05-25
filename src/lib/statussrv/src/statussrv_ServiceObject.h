@@ -49,4 +49,6 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Restart(struct soap*, _s0__Restart *s0__Restart,
 
 SOAP_FMAC5 int SOAP_FMAC6 __s0__XttStart(struct soap*, _s0__XttStart *s0__XttStart, _s0__XttStartResponse *s0__XttStartResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 __s0__RtMonStart(struct soap*, _s0__RtMonStart *s0__RtMonStart, _s0__RtMonStartResponse *s0__RtMonStartResponse);
+
 #endif
