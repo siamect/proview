@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.9 2007-05-21 14:28:32 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.10 2007-05-25 13:36:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,7 +52,7 @@
 #include "co_xhelp_gtk.h"
 #include "co_wow_gtk.h"
 #include "rt_xnav_msg.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 #include "xtt_methodtoolbar_gtk.h"
 
 void XttGtk::hotkey_Command( char *arg, void *userdata)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav_motif.cpp,v 1.1 2007-01-04 08:30:03 claes Exp $
+ * Proview   $Id: xtt_clognav_motif.cpp,v 1.2 2007-05-25 13:36:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>

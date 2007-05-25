@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.7 2007-01-11 11:40:31 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.8 2007-05-25 13:36:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,7 +30,7 @@
 #include "co_time.h"
 #include "pwr_baseclasses.h"
 #include "rt_gdh.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 
 #include "flow.h"
 #include "flow_browctx.h"

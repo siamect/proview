@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_motif.cpp,v 1.3 2007-05-21 14:28:32 claes Exp $
+ * Proview   $Id: rt_xtt_motif.cpp,v 1.4 2007-05-25 13:36:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -66,7 +66,7 @@ extern "C" {
 #include "co_xhelp_motif.h"
 #include "co_wow_motif.h"
 #include "rt_xnav_msg.h"
-#include "rt_syi.h"
+#include "co_syi.h"
 
 // Static variables
 static String   fbr[] = {
