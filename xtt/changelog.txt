@@ -42,3 +42,4 @@
 070510 cs  flow      Colored rectangles are still colored at inverse drawing.
 070516 cs  xtt       Switch -s in rt_xtt (gtk only): an opplace can be choosen from a list.
 070521 cs  statusmon Xtt and operator place can be opened from from status monitor.
+070522 cs  glow      Support for center and right alignment of texts also in java.
