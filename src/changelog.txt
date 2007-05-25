@@ -36,3 +36,4 @@
 070516 cs  co        New Runtime Monitor to start and monitor runtime env on local node.
 070516 cs  co        New Status Monitor to supervise status of stations via webservice. 
 070521 cs  statussrv New soap request to open xtt.
+070525 cs  statussrv New soap request to open runtime monitor.
