@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_nmps_bck.c,v 1.5 2006-01-12 05:57:42 claes Exp $
+ * Proview   $Id: rs_nmps_bck.c,v 1.6 2007-05-28 11:38:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -275,7 +275,7 @@ int	nmpsbck_get_filename(
 	char	*s;
 	char	*s2;
 
-	strcpy( outname, inname);
+	dcli_translate_filename( outname, inname);
 
 	/* Look for extention in filename */
 	if ( ext != NULL)
@@ -1104,7 +1104,7 @@ static pwr_tStatus	nmpsbck_open_file( 	bck_ctx	bckctx)
 {
 	nmpsbck_t_fileheader	fileheader;
 	pwr_tUInt32		csts;
-	char			filename[200];
+	pwr_tFileName	       	filename;
 	float			reopen_time = 10;
 	int			first_time;
 	int			wait_some_time;
@@ -1567,7 +1567,7 @@ static pwr_tStatus	nmpsbck_read( bck_ctx	bckctx)
 	nmpsbck_t_data_list	*data_ptr;
 	nmpsbck_t_data_list	*next_ptr;
 	char			*objectp;
-	char			filename[200];
+	pwr_tFileName  		filename;
 	int			file_num = 1;
 	int			record_count;
 	pwr_tUInt32		cellarea_start[NMPSBCK_MAX_RECORDS];

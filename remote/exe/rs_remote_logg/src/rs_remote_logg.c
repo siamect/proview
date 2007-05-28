@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_logg.c,v 1.1 2006-01-12 06:39:33 claes Exp $
+ * Proview   $Id: rs_remote_logg.c,v 1.2 2007-05-28 11:37:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -80,6 +80,7 @@
 #include "pwr_baseclasses.h"
 #include "pwr_remoteclasses.h"
 #include "co_time.h"
+#include "co_dcli.h"
 #include "rt_gdh.h"
 #include "rt_errh.h"
 #include "rt_gdh_msg.h"
@@ -293,13 +294,13 @@ static int	logg_get_filename(
 {
 	char	*s;
 	char	*s2;
-	char	timestr[80];
+	pwr_tFileName	timestr;
 	char	comp_timestr[80];
 	pwr_tTime time;
 
-	strcpy( outname, inname);
+	dcli_translate_filename( outname, inname);
 
-	/* Look for extention in filename */
+	/* Look for extension in filename */
 	if ( ext != NULL)
 	{
 	  s = strrchr( outname, ':');
