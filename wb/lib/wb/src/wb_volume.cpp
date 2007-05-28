@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.35 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.36 2007-05-28 09:23:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -369,7 +369,8 @@ wb_attribute wb_volume::attribute(const pwr_sAttrRef* arp) const
   }
 
   // Check if we shall reference the whole object
-  if (arp->Size == 0 || (arp->Offset == 0 && arp->Size == bdrep->size())) {
+  if (arp->Size == 0 || 
+      (arp->Offset == 0 && arp->Size == bdrep->size() && bdrep->nAttribute() != 1)) {
     wb_attribute a(sts, orep);
     orep->unref();
     delete bdrep;
