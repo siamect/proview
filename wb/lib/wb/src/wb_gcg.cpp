@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.2 2007-04-25 07:28:00 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.3 2007-05-28 14:52:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -548,12 +548,6 @@ static pwr_tStatus gcg_replace_ref(
     pwr_sAttrRef *attrref, 
     vldh_t_node output_node
 );
-
-static int gcg_is_window( 
-    gcg_ctx gcgctx, 
-    pwr_tOid oid
-);
-
 
 static int gcg_set_cmanager( 
     vldh_t_wind wind);
@@ -8883,7 +8877,6 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 	ldh_sParDef 		output_bodydef;
 	pwr_sAttrRef 		*a_ptr;
 	pwr_sAttrRef 		aref;
-	pwr_tOid 		parent;
 	int 			keep = 0;
 	int			size;
 	gcg_t_nocondef		nocondef[2];
@@ -8949,6 +8942,9 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 		  if ( EVEN(sts)) return sts;
 		}
 		else {
+#if 0		  
+		  // Removed 2007-05-28 cs, Attribute is not updated if connection is changed !!
+		  pwr_tOid 		parent;
 		  sts = ldh_GetParent( gcgctx->ldhses, aref.Objid, &parent);
 		  if ( ODD(sts)) {
 		    if ( !gcg_is_window( gcgctx, parent)) {
@@ -8956,6 +8952,7 @@ int	gcg_comp_m25( gcg_ctx gcgctx, vldh_t_node node)
 		      keep = 1;
 		    }
 		  }
+#endif
 		}
 	      }
 	      if ( !keep) {
@@ -15650,6 +15647,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
   return GSX__SUCCESS;
 }
 
+#if 0 // Not used any mord
 static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
 {
   pwr_sPlcWindow *windbuffer;
@@ -15666,6 +15664,7 @@ static int gcg_is_window( gcg_ctx gcgctx, pwr_tOid oid)
   }
   return 0;
 }
+#endif
 
 
 /*************************************************************************
