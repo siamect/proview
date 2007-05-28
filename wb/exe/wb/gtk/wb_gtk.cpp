@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gtk.cpp,v 1.2 2007-02-06 15:14:08 claes Exp $
+ * Proview   $Id: wb_gtk.cpp,v 1.3 2007-05-28 14:51:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,6 +145,13 @@ WbGtk::WbGtk( int argc, char *argv[])
 	  exit(0);
 	}
 	Lng::set( argv[i+1]);
+	i++;
+	break;
+      case 'f':
+	if ( i+1 >= argc) {
+	  usage();
+	  exit(0);
+	}
 	i++;
 	break;
       case 'c':

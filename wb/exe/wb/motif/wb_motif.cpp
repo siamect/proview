@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_motif.cpp,v 1.2 2007-03-26 06:30:40 claes Exp $
+ * Proview   $Id: wb_motif.cpp,v 1.3 2007-05-28 14:51:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -173,6 +173,13 @@ WbMotif::WbMotif( int argc, char *argv[])
 	  exit(0);
 	}
 	Lng::set( argv[i+1]);
+	i++;
+	break;
+      case 'f':
+	if ( i+1 >= argc) {
+	  usage();
+	  exit(0);
+	}
 	i++;
 	break;
       case 'c':
