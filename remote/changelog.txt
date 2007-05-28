@@ -1,1 +1,2 @@
 #060227 cs  -          Changelog created.
+070528 cs  logg      Env variable allowed in remotelogg filename.

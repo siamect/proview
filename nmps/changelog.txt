@@ -1,1 +1,2 @@
 #060227 cs  -          Changelog created.
+070528 cs  bck       Env variable allowed in backup filename.
