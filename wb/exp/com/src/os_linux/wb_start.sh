@@ -1,5 +1,5 @@
 #
-# Proview   $Id: wb_start.sh,v 1.1 2006-01-23 08:44:30 claes Exp $
+# Proview   $Id: wb_start.sh,v 1.2 2007-05-28 14:50:48 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@ username=$1
 password=$2
 volume=$3
 
-wb $username $password $volume
+wb $username $password $volume $4 $5 $6 $7
 
 
 
