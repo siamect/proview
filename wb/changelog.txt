@@ -56,3 +56,4 @@
 070417 cs  wtt       Bugfix in plc connect, attribute reference to an object in a mounted voume had incorrect size. 
 070419 cs  wtt       Script functions GetClassList and GetNextObject added.
 070516 cs  wtt       New tools menu with Runtime Monitor and Supervision Center (gtk only).
+070528 cs  plc       Bugfix, DSup and ASup attribute wasn't updated if the connection was changed.
