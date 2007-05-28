@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_t_volumeid.wb_load,v 1.5 2005-09-01 14:58:03 claes Exp $
+!  Proview   $Id: pwrs_t_volumeid.wb_load,v 1.6 2007-05-28 14:53:58 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -25,7 +25,7 @@ SObject pwrs:Type
 !  @Group BasicTypes,Types
 !  Volume identity. Basic type.
 !
-!  Every volume has a unic identity, a 32-bit word usually specified in the for
+!  Every volume has a unic identity, a 32-bit word usually specified in the form
 !  v1.v2.v3.v4 where v1, v2, v3 and v4 are numbers in the interval 0-255.
 !  Dependent of the class of the volume, the numbers is choosen in separate
 !  intervals:
