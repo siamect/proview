@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.17 2007-05-30 12:00:25 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.18 2007-05-30 13:19:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -239,7 +239,7 @@ int main()
   soap_init( &soap);
 
   for ( int k = 0; k < restarts + 1; k++) {
-    m = soap_bind( &soap, NULL, 18083, 100);
+    m = soap_bind( &soap, NULL, opcsrv->m_config->Port, 100);
     if ( m < 0) {
       if ( k == restarts) {
 	soap_print_fault( &soap, stderr);
