@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.15 2007-04-05 13:32:03 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.16 2007-05-30 12:00:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,3 +133,6 @@ bool opc_propertynames_to_mask( std::vector<std::string>& pnames, unsigned int *
 bool opc_quality_to_string( int quality, char **str);
 
 bool opc_cmp_pwr( void *p1, void *p2, int size, int type, float deadband);
+
+char *cnv_utf8_to_iso8859( char *utf8, size_t utf8_size);
+char *cnv_iso8859_to_utf8( char *iso, size_t iso_size);

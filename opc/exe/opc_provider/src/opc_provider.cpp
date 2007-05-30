@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.13 2007-04-30 07:29:53 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.14 2007-05-30 12:00:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <iostream.h>
 #include <fstream.h>
+#include <iconv.h>
 #include "pwr.h"
 #include "pwr_class.h"
 #include "pwr_baseclasses.h"
@@ -451,7 +452,8 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
     _s0__Browse browse;
     _s0__BrowseResponse browse_response;
 
-    browse.ItemName = new std::string( o->item_name);
+    browse.ItemName = new std::string( cnv_iso8859_to_utf8( o->item_name, 
+				       strlen(o->item_name)+1));
     opc_mask_to_propertynames( browse.PropertyNames, 
 			       opc_mProperty_DataType | opc_mProperty_Description |
 			       opc_mProperty_EuType);
@@ -540,7 +542,8 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
       _s0__Browse browse;
       _s0__BrowseResponse browse_response;
 
-      browse.ItemName = new std::string( m_list[oix]->item_name);
+      browse.ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name, 
+					 strlen(m_list[oix]->item_name)+1));
       opc_mask_to_propertynames( browse.PropertyNames, 
 				 opc_mProperty_DataType | opc_mProperty_Description |
 				 opc_mProperty_EuType);
@@ -654,7 +657,8 @@ void opc_provider::objectName( co_procom *pcom, char *name, pwr_tOix poix)
       _s0__Browse browse;
       _s0__BrowseResponse browse_response;
 
-      browse.ItemName = new std::string( m_list[oix]->item_name);
+      browse.ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name, 
+					 strlen(m_list[oix]->item_name)+1));
       opc_mask_to_propertynames( browse.PropertyNames, 
 				 opc_mProperty_DataType | opc_mProperty_Description |
 				 opc_mProperty_EuType);
@@ -794,7 +798,8 @@ void opc_provider::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int o
       int opc_type;
 
       s0__ItemValue *item = new s0__ItemValue();
-      item->ItemName = new std::string( m_list[oix]->item_name);
+      item->ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name,
+							     strlen(m_list[oix]->item_name)+1));
       opc_pwrtype_to_opctype( m_list[oix]->type, &opc_type);
       opc_convert_pwrtype_to_opctype( buffer, opc_buffer, sizeof(opc_buffer), opc_type, 
 				      m_list[oix]->type);
@@ -860,7 +865,8 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
       _s0__ReadResponse read_response;
 
       s0__ReadRequestItem *item = new s0__ReadRequestItem();
-      item->ItemName = new std::string( m_list[oix]->item_name);
+      item->ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name,
+							     strlen(m_list[oix]->item_name)+1));
       read.ItemList = new s0__ReadRequestItemList;
       read.ItemList->Items.push_back( item);
 
@@ -929,7 +935,8 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 
       subscribe.ItemList = new s0__SubscribeRequestItemList();
       s0__SubscribeRequestItem *ritem = new s0__SubscribeRequestItem();
-      ritem->ItemName = new std::string( m_list[oix]->item_name);
+      ritem->ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name,
+							      strlen(m_list[oix]->item_name)+1));
       sprintf( handle, "%d", oix);
       ritem->ClientItemHandle = new std::string( handle);
       ritem->RequestedSamplingRate = (int *) malloc( sizeof(int));
@@ -1066,7 +1073,8 @@ void opc_provider::cyclic( co_procom *pcom)
 		  
 		  subscribe.ItemList = new s0__SubscribeRequestItemList();
 		  s0__SubscribeRequestItem *ritem = new s0__SubscribeRequestItem();
-		  ritem->ItemName = new std::string( m_list[oix]->item_name);
+		  ritem->ItemName = new std::string( cnv_iso8859_to_utf8( m_list[oix]->item_name,
+									  strlen(m_list[oix]->item_name)+1));
 		  ritem->ClientItemHandle = new std::string( it->second.handle);
 		  ritem->RequestedSamplingRate = (int *) malloc( sizeof(int));
 		  *ritem->RequestedSamplingRate = 1000;

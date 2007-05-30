@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.16 2007-05-22 08:21:17 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.17 2007-05-30 12:00:25 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -240,8 +240,14 @@ int main()
 
   for ( int k = 0; k < restarts + 1; k++) {
     m = soap_bind( &soap, NULL, 18083, 100);
-    if ( m < 0)
-      soap_print_fault( &soap, stderr);
+    if ( m < 0) {
+      if ( k == restarts) {
+	soap_print_fault( &soap, stderr);
+	break;
+      }
+      printf( "Soap bind failed, retrying...\n");
+      sleep( 10);
+    }
     else {
       fprintf( stderr, "Socket connection successfull: master socket = %d\n", m);
       
@@ -463,7 +469,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
       iv->ClientItemHandle =
 	new std::string(*s0__Read->ItemList->Items[ii]->ClientItemHandle);
 
-    sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);
+    sts = gdh_NameToAttrref(pwr_cNObjid, cnv_utf8_to_iso8859( itemname, strlen(itemname)+1), &ar);
     
     if (EVEN(sts)) {
       opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
@@ -591,7 +597,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
     if (options & opc_mRequestOption_ReturnDiagnosticInfo)
       iv->DiagnosticInfo = new std::string(""); // ToDo !!
 
-    sts = gdh_NameToAttrref(pwr_cNObjid, itemname, &ar);    
+    sts = gdh_NameToAttrref(pwr_cNObjid, cnv_utf8_to_iso8859(itemname, strlen(itemname)+1), &ar);    
     if (EVEN(sts)) {
       opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
       s0__WriteResponse->RItemList->Items.push_back(iv);
@@ -666,7 +672,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 
       while (1) {
       
-	strcpy( aname, s0__Subscribe->ItemList->Items[i]->ItemName->c_str());
+	strcpy( aname, 
+		cnv_utf8_to_iso8859( (char *)s0__Subscribe->ItemList->Items[i]->ItemName->c_str(),
+				     s0__Subscribe->ItemList->Items[i]->ItemName->size()+1));
 	sts = gdh_GetAttributeCharacteristics( aname, &a_tid, &a_size, &a_offs, &a_elem);
 	if ( EVEN(sts)) {
 	  resultid = opc_eResultCode_E_UNKNOWNITEMNAME;
@@ -800,6 +808,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 	client->m_sublist[*s0__SubscribeResponse->ServerSubHandle].push_back( sub);
 	break;
       }
+
       if ( resultid || s0__Subscribe->ReturnValuesOnReply) {
 	if ( !s0__SubscribeResponse->RItemList)
 	  s0__SubscribeResponse->RItemList = new s0__SubscribeReplyItemList();
@@ -807,7 +816,9 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 	s0__SubscribeItemValue *iv = new s0__SubscribeItemValue();
 	iv->ItemValue = new s0__ItemValue();
 
-	iv->ItemValue->ItemName = new std::string( *s0__Subscribe->ItemList->Items[i]->ItemName);
+	iv->ItemValue->ItemName = new std::string( 
+              cnv_utf8_to_iso8859( (char *)s0__Subscribe->ItemList->Items[i]->ItemName->c_str(), 
+				   s0__Subscribe->ItemList->Items[i]->ItemName->size()+1));
 	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle)
 	  iv->ItemValue->ClientItemHandle =
 	    new std::string(*s0__Subscribe->ItemList->Items[i]->ClientItemHandle);
@@ -1553,6 +1564,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
     else
       strncpy( pname, s0__Browse->ItemName->c_str(), sizeof(pname));
 
+    strcpy( pname, cnv_utf8_to_iso8859( pname, strlen(pname)+1));
+
     sts = gdh_NameToAttrref( pwr_cNOid, pname, &paref);
     if ( EVEN(sts))
       return opcsrv->fault( soap, opc_eResultCode_E_UNKNOWNITEMNAME);
@@ -1833,17 +1846,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
     else
       path = s0__GetProperties->ItemPath;
 
-    plist->ItemPath = path;
-    plist->ItemName = new std::string(*s0__GetProperties->ItemIDs[i]->ItemName);
-
+    if ( path)
+      plist->ItemPath = new std::string( cnv_utf8_to_iso8859( (char *)path, path->size()+1));
+    plist->ItemName = new std::string( 
+         cnv_utf8_to_iso8859( (char *)s0__GetProperties->ItemIDs[i]->ItemName->c_str(), 
+			      s0__GetProperties->ItemIDs[i]->ItemName->size()+1));
+    
     if ( path) {
       strcpy( iname, path->c_str());
-      strcat( iname, plist->ItemName->c_str());
+      strcat( iname, s0__GetProperties->ItemIDs[i]->ItemName->c_str());
     }
     else
-      strcpy( iname, plist->ItemName->c_str());
+      strcpy( iname, s0__GetProperties->ItemIDs[i]->ItemName->c_str());
 
-    sts = gdh_NameToAttrref( pwr_cNOid, iname, &aref);
+    sts = gdh_NameToAttrref( pwr_cNOid, cnv_utf8_to_iso8859( iname, strlen(iname)+1), &aref);
     if ( EVEN(sts)) {
       opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_UNKNOWNITEMNAME, 0);
