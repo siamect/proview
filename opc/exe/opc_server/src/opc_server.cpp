@@ -1,5 +1,6 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.18 2007-05-30 13:19:04 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.19 2007-05-30 13:22:12 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.19 2007-05-30 13:22:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -21,6 +22,7 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <pthread.h>
+#include <float.h>
 
 #include "pwr.h"
 #include "pwr_version.h"
@@ -883,13 +885,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
   bool has_waittime = false;
   int waited_time = 0;
   pwr_tFloat32 wait_scan = 0.5;
-  pwr_tDeltaTime dwait_scan;
+  pwr_tFloat32 min_hold = 0.5;
+  pwr_tDeltaTime dwait_scan, dmin_hold;
 
   if ( s0__SubscriptionPolledRefresh->HoldTime) {
     if ( !client->m_multi_threaded)
       client->m_multi_threaded = true;
     else {
       has_holdtime = true;
+      time_FloatToD( &dmin_hold, min_hold);
       opc_time_OPCAsciiToA( (char *)s0__SubscriptionPolledRefresh->HoldTime->c_str(), 
 			    &hold_time);
       if ( s0__SubscriptionPolledRefresh->WaitTime) {
@@ -903,16 +907,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
   if ( has_holdtime) {
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-    pwr_tTime current_time;
-    char str1[80], str2[80];
+    pwr_tTime current_time, next_time;
 
-    clock_gettime( CLOCK_REALTIME, &current_time);
-    time_AtoAscii( &current_time, time_eFormat_DateAndTime, str1, sizeof(str1));
-    time_AtoAscii( &hold_time, time_eFormat_DateAndTime, str2, sizeof(str2));
-		   
-    printf( "TimedWait %s  %s\n", str1, str2);
-
-    pthread_cond_timedwait( &cond, &mutex, &hold_time);
+    if ( min_hold > FLT_EPSILON) {
+      clock_gettime( CLOCK_REALTIME, &current_time);
+      time_Aadd( &next_time, &current_time, &dmin_hold);
+      if ( time_Acomp( &next_time, &hold_time) == -1)
+	next_time = hold_time;
+      pthread_cond_timedwait( &cond, &mutex, &next_time);
+    }
+    else
+      pthread_cond_timedwait( &cond, &mutex, &hold_time);
   }
 
   if ( has_waittime) {
