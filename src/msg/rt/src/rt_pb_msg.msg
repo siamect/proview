@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: rt_pb_msg.msg,v 1.5 2007-04-30 09:43:02 claes Exp $
+!  Proview   $Id: rt_pb_msg.msg,v 1.6 2007-06-01 13:46:29 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -40,6 +40,7 @@ notinit		<Not initialized>					/warning
 configerr	<Configuration error>					/error
 masterlock	<Slave is locked by other master>			/error
 notready	<Not ready>						/warning
+gsdattr		<Gsdfile attibute is empty>				/error
 .end
 
 
