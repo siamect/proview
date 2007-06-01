@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: pwrp_env.sh,v 1.10 2006-01-31 09:10:21 claes Exp $
+# Proview   $Id: pwrp_env.sh,v 1.11 2007-06-01 11:30:01 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -487,7 +487,6 @@ pwrc_create_func()
     bname=$3
     proot=$4
 
-
     if [ $argc -lt 4 ]; then
       echo "Argument is missing"
       pwrc_status=$pwrc__syntax
@@ -581,6 +580,26 @@ fi
 EOF
 
     chmod a+x $proot/login/login.sh
+
+    # Create a xtt_help.dat
+    cat > $proot/$platform/exe/xtt_help.dat << EOF
+<topic> index
+
+<image> pwr_logga.gif
+
+<h1>Welcome to $pname
+<h2>Description
+Edit file $pwrp_exe/xtt_help.dat to write this description.
+</topic>
+
+<include> $pwr_lang/profibus_xtthelp.dat
+<include> $pwr_lang/opc_xtthelp.dat
+<include> $pwr_lang/basecomponent_xtthelp.dat
+<include> $pwr_lang/othermanufacturer_xtthelp.dat
+<include> $pwr_lang/abb_xtthelp.dat
+<include> $pwr_lang/siemens_xtthelp.dat
+<include> $pwr_lang/ssabox_xtthelp.dat
+EOF
 
     # Set ownership to user and group pwrp
     user_pwrp=`eval cat /etc/passwd | grep "\bpwrp:"`
