@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.20 2007-06-01 11:07:06 claes Exp $
- * Proview   $Id: opc_server.cpp,v 1.20 2007-06-01 11:07:06 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.21 2007-06-01 12:52:40 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.21 2007-06-01 12:52:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -30,6 +30,7 @@
 #include "pwr_opcclasses.h"
 #include "co_cdh.h"
 #include "co_time.h"
+#include "co_cnv.h"
 #include "rt_gdh.h"
 #include "opc_utl.h"
 #include "opc_soap_H.h"

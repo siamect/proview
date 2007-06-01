@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.15 2007-06-01 11:07:06 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.16 2007-06-01 12:52:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -33,6 +33,7 @@
 #include "wb_ldh_msg.h"
 #include "rt_gdh_msg.h"
 #include "co_cdh.h"
+#include "co_cnv.h"
 #include "co_dcli.h"
 #include "pwr_opcclasses.h"
 #include "opc_utl.h"

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.19 2007-06-01 11:07:06 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.20 2007-06-01 12:52:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1961,34 +1961,3 @@ bool opc_cmp_pwr( void *p1, void *p2, int size, int type, float deadband)
   return false;
 }
 
-char *cnv_iso8859_to_utf8( char *iso, size_t iso_size)
-{
-  static iconv_t cd = 0;
-  static char utf8[2048];
-  char *utf8p = utf8;
-  size_t utf8_size = sizeof(utf8);
-  
-  if ( !cd)
-    cd = iconv_open( "UTF-8", "ISO8859-1");
-
-  if ( iconv( cd, &iso, &iso_size, &utf8p, &utf8_size) == (size_t)(-1))
-    strcpy( utf8, "");
-
-  return utf8;
-}
-
-char *cnv_utf8_to_iso8859( char *utf8, size_t utf8_size)
-{
-  static iconv_t cd = 0;
-  static char iso[2048];
-  char *isop = iso;
-  size_t iso_size = sizeof(iso);
-  
-  if ( !cd)
-    cd = iconv_open( "ISO8859-1", "UTF-8");
-
-  if ( iconv( cd, &utf8, &utf8_size, &isop, &iso_size) == (size_t)(-1))
-    strcpy( iso, "");
-
-  return iso;
-}
