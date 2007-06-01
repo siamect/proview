@@ -364,6 +364,7 @@ public:
 	std::string *OpPlace;	/* optional element of type xsd:string */
 	std::string *Language;	/* optional element of type xsd:string */
 	std::string *Display;	/* optional element of type xsd:string */
+	std::string *GUI;	/* optional element of type xsd:string */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
@@ -374,7 +375,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__XttStart() : OpPlace(NULL), Language(NULL), Display(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	         _s0__XttStart() : OpPlace(NULL), Language(NULL), Display(NULL), GUI(NULL), ClientRequestHandle(NULL), soap(NULL) { }
 	virtual ~_s0__XttStart() { }
 };
 #endif
@@ -408,6 +409,7 @@ class SOAP_CMAC _s0__RtMonStart
 public:
 	std::string *Language;	/* optional element of type xsd:string */
 	std::string *Display;	/* optional element of type xsd:string */
+	std::string *GUI;	/* optional element of type xsd:string */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
@@ -418,7 +420,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__RtMonStart() : Language(NULL), Display(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	         _s0__RtMonStart() : Language(NULL), Display(NULL), GUI(NULL), ClientRequestHandle(NULL), soap(NULL) { }
 	virtual ~_s0__RtMonStart() { }
 };
 #endif

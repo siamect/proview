@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.3 2007-05-25 13:39:28 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.4 2007-06-01 11:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -70,6 +70,8 @@ class NodelistGtk : public Nodelist {
     static void activate_save( GtkWidget*w, gpointer data);
     static void activate_show_events( GtkWidget *w, gpointer data);
     static void activate_pop_events( GtkWidget *w, gpointer data);
+    static void activate_gui_motif( GtkWidget *w, gpointer data);
+    static void activate_gui_gtk( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget*w, gpointer data);
     static void activate_zoom_out( GtkWidget*w, gpointer data);
     static void activate_zoom_reset( GtkWidget*w, gpointer data);

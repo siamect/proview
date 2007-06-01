@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.5 2007-05-25 13:39:28 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.6 2007-06-01 11:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,7 @@ Nodelist::Nodelist( void *nodelist_parent_ctx,
   parent_ctx(nodelist_parent_ctx),
   nodelistnav(NULL), nodelist_displayed(0), help_cb(0), close_cb(0)
 {
+  strcpy( remote_gui, "");
   *status = 1;
 }
 
@@ -132,7 +133,7 @@ void Nodelist::activate_open_xtt()
   }
 
   get_display( display);
-  statussrv_XttStart( node_name, "", "", display);
+  statussrv_XttStart( node_name, "", "", display, remote_gui);
 }
 
 void Nodelist::activate_open_opplace()
@@ -150,7 +151,7 @@ void Nodelist::activate_open_opplace()
   sts = nodelistnav->get_selected_opplace( opplace);
 
   get_display( display);
-  statussrv_XttStart( node_name, opplace, "", display);
+  statussrv_XttStart( node_name, opplace, "", display, remote_gui);
 }
 
 void Nodelist::activate_open_rtmon()
@@ -166,7 +167,7 @@ void Nodelist::activate_open_rtmon()
   }
 
   get_display( display);
-  statussrv_RtMonStart( node_name, "", display);
+  statussrv_RtMonStart( node_name, "", display, remote_gui);
 }
 
 void Nodelist::activate_save()

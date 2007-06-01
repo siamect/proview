@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.4 2007-05-25 13:39:28 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.5 2007-06-01 11:29:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -126,6 +126,28 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkWidget *view_pop_events = gtk_check_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("_Pop Events"));
   g_signal_connect(view_pop_events, "activate", G_CALLBACK(activate_pop_events), this);
 
+  // Submenu Remote GUI
+  GSList *rg_group = NULL;
+  GtkWidget *view_gui_gtk = gtk_radio_menu_item_new_with_mnemonic( rg_group, "_GTK");
+  rg_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_gui_gtk));
+  g_signal_connect( view_gui_gtk, "activate", 
+		    G_CALLBACK(activate_gui_gtk), this);
+
+  GtkWidget *view_gui_motif = gtk_radio_menu_item_new_with_mnemonic( rg_group, "_Motif");
+  rg_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_gui_motif));
+  g_signal_connect( view_gui_motif, "activate", 
+		    G_CALLBACK(activate_gui_motif), this);
+
+
+  GtkWidget *view_gui = gtk_menu_item_new_with_mnemonic( "_Remote GUI");
+  GtkMenu *view_gui_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_gui_menu), view_gui_gtk);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_gui_menu), view_gui_motif);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(view_gui),
+			    GTK_WIDGET(view_gui_menu));
+
+
   GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_in), 
 				 gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_MENU));
@@ -148,6 +170,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   GtkMenu *view_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_show_events);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_pop_events);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_gui);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
@@ -377,6 +400,26 @@ void NodelistGtk::activate_pop_events( GtkWidget *w, gpointer data)
   int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
 
   nodelist->nodelistnav->set_msgw_pop( set);
+}
+
+void NodelistGtk::activate_gui_motif( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    strcpy( nodelist->remote_gui, "motif");
+  else
+    strcpy( nodelist->remote_gui, "");
+}
+
+void NodelistGtk::activate_gui_gtk( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    strcpy( nodelist->remote_gui, "");
 }
 
 void NodelistGtk::activate_zoom_in( GtkWidget *w, gpointer data)

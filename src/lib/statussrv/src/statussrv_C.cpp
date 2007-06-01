@@ -7,7 +7,7 @@
 
 #include "statussrv_H.h"
 
-SOAP_SOURCE_STAMP("@(#) statussrv_C.cpp ver 2.7.9d 2007-05-25 06:59:31 GMT")
+SOAP_SOURCE_STAMP("@(#) statussrv_C.cpp ver 2.7.9d 2007-05-30 13:46:12 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -978,6 +978,7 @@ void _s0__RtMonStart::soap_default(struct soap *soap)
 	this->soap = soap;
 	((_s0__RtMonStart*)this)->Language = NULL;
 	((_s0__RtMonStart*)this)->Display = NULL;
+	((_s0__RtMonStart*)this)->GUI = NULL;
 	((_s0__RtMonStart*)this)->ClientRequestHandle = NULL;
 	/* transient soap skipped */
 }
@@ -987,6 +988,7 @@ void _s0__RtMonStart::soap_serialize(struct soap *soap) const
 	(void)soap; /* appease -Wall -Werror */
 	soap_serialize_PointerTostd__string(soap, &((_s0__RtMonStart*)this)->Language);
 	soap_serialize_PointerTostd__string(soap, &((_s0__RtMonStart*)this)->Display);
+	soap_serialize_PointerTostd__string(soap, &((_s0__RtMonStart*)this)->GUI);
 	/* transient soap skipped */
 }
 
@@ -1010,6 +1012,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__s0__RtMonStart(struct soap *soap, const char
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__s0__RtMonStart), type);
 	soap_out_PointerTostd__string(soap, "s0:Language", -1, &(((_s0__RtMonStart*)a)->Language), "");
 	soap_out_PointerTostd__string(soap, "s0:Display", -1, &(((_s0__RtMonStart*)a)->Display), "");
+	soap_out_PointerTostd__string(soap, "s0:GUI", -1, &(((_s0__RtMonStart*)a)->GUI), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -1061,7 +1064,7 @@ SOAP_FMAC3 _s0__RtMonStart * SOAP_FMAC4 soap_in__s0__RtMonStart(struct soap *soa
 		}
 		}
 	}
-	short soap_flag_Language1 = 1, soap_flag_Display1 = 1;
+	short soap_flag_Language1 = 1, soap_flag_Display1 = 1, soap_flag_GUI1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -1074,6 +1077,11 @@ SOAP_FMAC3 _s0__RtMonStart * SOAP_FMAC4 soap_in__s0__RtMonStart(struct soap *soa
 			if (soap_flag_Display1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "s0:Display", &(((_s0__RtMonStart*)a)->Display), "xsd:string"))
 				{	soap_flag_Display1--;
+					continue;
+				}
+			if (soap_flag_GUI1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "s0:GUI", &(((_s0__RtMonStart*)a)->GUI), "xsd:string"))
+				{	soap_flag_GUI1--;
 					continue;
 				}
 			/* transient soap skipped */
@@ -1300,6 +1308,7 @@ void _s0__XttStart::soap_default(struct soap *soap)
 	((_s0__XttStart*)this)->OpPlace = NULL;
 	((_s0__XttStart*)this)->Language = NULL;
 	((_s0__XttStart*)this)->Display = NULL;
+	((_s0__XttStart*)this)->GUI = NULL;
 	((_s0__XttStart*)this)->ClientRequestHandle = NULL;
 	/* transient soap skipped */
 }
@@ -1310,6 +1319,7 @@ void _s0__XttStart::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((_s0__XttStart*)this)->OpPlace);
 	soap_serialize_PointerTostd__string(soap, &((_s0__XttStart*)this)->Language);
 	soap_serialize_PointerTostd__string(soap, &((_s0__XttStart*)this)->Display);
+	soap_serialize_PointerTostd__string(soap, &((_s0__XttStart*)this)->GUI);
 	/* transient soap skipped */
 }
 
@@ -1334,6 +1344,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__s0__XttStart(struct soap *soap, const char *
 	soap_out_PointerTostd__string(soap, "s0:OpPlace", -1, &(((_s0__XttStart*)a)->OpPlace), "");
 	soap_out_PointerTostd__string(soap, "s0:Language", -1, &(((_s0__XttStart*)a)->Language), "");
 	soap_out_PointerTostd__string(soap, "s0:Display", -1, &(((_s0__XttStart*)a)->Display), "");
+	soap_out_PointerTostd__string(soap, "s0:GUI", -1, &(((_s0__XttStart*)a)->GUI), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -1385,7 +1396,7 @@ SOAP_FMAC3 _s0__XttStart * SOAP_FMAC4 soap_in__s0__XttStart(struct soap *soap, c
 		}
 		}
 	}
-	short soap_flag_OpPlace1 = 1, soap_flag_Language1 = 1, soap_flag_Display1 = 1;
+	short soap_flag_OpPlace1 = 1, soap_flag_Language1 = 1, soap_flag_Display1 = 1, soap_flag_GUI1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -1403,6 +1414,11 @@ SOAP_FMAC3 _s0__XttStart * SOAP_FMAC4 soap_in__s0__XttStart(struct soap *soap, c
 			if (soap_flag_Display1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "s0:Display", &(((_s0__XttStart*)a)->Display), "xsd:string"))
 				{	soap_flag_Display1--;
+					continue;
+				}
+			if (soap_flag_GUI1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "s0:GUI", &(((_s0__XttStart*)a)->GUI), "xsd:string"))
+				{	soap_flag_GUI1--;
 					continue;
 				}
 			/* transient soap skipped */

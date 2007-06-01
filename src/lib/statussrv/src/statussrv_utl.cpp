@@ -65,6 +65,8 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
     result->SystemStatus = sts;
     strcpy( result->SystemStatusStr, "Connection down to server");
   }
+
+  delete get_status.ClientRequestHandle;
   soap_destroy( &soap);
   soap_end( &soap);
   // soap_done( &soap);
@@ -337,6 +339,7 @@ pwr_tStatus statussrv_GetExtStatus( char *nodename, statussrv_sGetExtStatus *res
     sts = PWR__SRVCONNECTION;
     memset( result, 0, sizeof(*result));
   }
+  delete get_status.ClientRequestHandle;
   soap_destroy( &soap);
   soap_end( &soap);
   // soap_done( &soap);
@@ -373,7 +376,8 @@ pwr_tStatus statussrv_Restart( char *nodename)
   return sts;
 }
 
-pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display)
+pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char *display,
+				char *gui)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -395,6 +399,8 @@ pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char 
     xtt_start.Language = new std::string(lang);
   if ( display && strcmp( display, "") != 0)
     xtt_start.Display = new std::string(display);
+  if ( gui && strcmp( gui, "") != 0)
+    xtt_start.GUI = new std::string(gui);
 
   if ( soap_call___s0__XttStart( &soap, endpoint, NULL, &xtt_start, &xtt_start_response) ==
        SOAP_OK) {
@@ -402,13 +408,23 @@ pwr_tStatus statussrv_XttStart( char *nodename, char *opplace, char *lang, char 
   else {
     sts = PWR__SRVCONNECTION;
   }
+
+  delete xtt_start.ClientRequestHandle;
+  if ( xtt_start.OpPlace)
+    delete xtt_start.OpPlace;
+  if ( xtt_start.Language)
+    delete xtt_start.Language;
+  if ( xtt_start.Display)
+    delete xtt_start.Display;
+  if ( xtt_start.GUI)
+    delete xtt_start.GUI;
   soap_destroy( &soap);
   soap_end( &soap);
 
   return sts;
 }
 
-pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display)
+pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display, char *gui)
 {
   pwr_tStatus sts = PWR__SUCCESS;
   char endpoint[80];
@@ -426,8 +442,10 @@ pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display)
   rtmon_start.ClientRequestHandle = new std::string("StatusSrv Client");
   if ( lang && strcmp( lang, "") != 0)
     rtmon_start.Language = new std::string(lang);
-  if ( display && strcmp( display, "") != 0)
+   if ( display && strcmp( display, "") != 0)
     rtmon_start.Display = new std::string(display);
+   if ( gui && strcmp( gui, "") != 0)
+    rtmon_start.GUI = new std::string(gui);
 
   if ( soap_call___s0__RtMonStart( &soap, endpoint, NULL, &rtmon_start, &rtmon_start_response) ==
        SOAP_OK) {
@@ -435,6 +453,13 @@ pwr_tStatus statussrv_RtMonStart( char *nodename, char *lang, char *display)
   else {
     sts = PWR__SRVCONNECTION;
   }
+  delete rtmon_start.ClientRequestHandle;
+  if ( rtmon_start.Language)
+    delete rtmon_start.Language;
+  if ( rtmon_start.Display)
+    delete rtmon_start.Display;
+  if ( rtmon_start.GUI)
+    delete rtmon_start.GUI;
   soap_destroy( &soap);
   soap_end( &soap);
 
