@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_cnv.h,v 1.1 2007-06-01 11:26:06 claes Exp $
+ * Proview   $Id: co_cnv.h,v 1.2 2007-06-01 13:36:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -16,6 +16,17 @@
  * along with the program, if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+#ifndef co_cnv_h
+#define co_cnv_h
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 char *cnv_utf8_to_iso8859( char *utf8, size_t utf8_size);
 char *cnv_iso8859_to_utf8( char *iso, size_t iso_size);
+
+#if defined __cplusplus
+}
+#endif
+#endif
