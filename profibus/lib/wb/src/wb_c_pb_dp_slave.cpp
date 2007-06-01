@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.8 2007-01-04 08:44:02 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.9 2007-06-01 12:53:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -481,7 +481,7 @@ pwr_tStatus pb_dp_slave_create_ctx( ldh_tSession ldhses, pwr_tAttrRef aref,
   if ( EVEN(sts)) return sts;
   if ( strcmp( gsdfile, "") == 0) {
     free( gsdfile);  
-    return 1;
+    return PB__GSDATTR;
   }
 
   slave_sCtx *ctx = (slave_sCtx *) calloc( 1, sizeof(slave_sCtx));

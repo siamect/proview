@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.4 2007-01-04 08:44:40 claes Exp $
+ * Proview   $Id: xtt_c_pb_dp_slave.cpp,v 1.5 2007-06-01 12:53:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@
 #include "rt_pb_gsd.h"
 #include "rt_pb_gsd_attr.h"
 #include "xtt_c_pb_dp_slave.h"
+#include "rt_pb_msg.h"
 
 int xtt_pb_dp_slave_help_cb( void *sctx, char *text)
 {
@@ -175,7 +176,7 @@ pwr_tStatus xtt_pb_dp_slave_create_ctx( pwr_tAttrRef aref, void *editor_ctx,
   sts = gdh_GetObjectInfoAttrref( &aaref, gsdfile, sizeof(gsdfile));
   if ( EVEN(sts)) return sts;
   if ( strcmp( gsdfile, "") == 0) {
-    return 1;
+    return PB__GSDATTR;
   }
 
   xtt_slave_sCtx *ctx = (xtt_slave_sCtx *) calloc( 1, sizeof(xtt_slave_sCtx));
