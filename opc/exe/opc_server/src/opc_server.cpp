@@ -1,6 +1,6 @@
 /* 
- * Proview   $Id: opc_server.cpp,v 1.19 2007-05-30 13:22:12 claes Exp $
- * Proview   $Id: opc_server.cpp,v 1.19 2007-05-30 13:22:12 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.20 2007-06-01 11:07:06 claes Exp $
+ * Proview   $Id: opc_server.cpp,v 1.20 2007-06-01 11:07:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -147,8 +147,8 @@ opcsrv_client *opc_server::new_client( int sid)
   m_clientlist[sid].m_multi_threaded = false;
   clock_gettime( CLOCK_REALTIME, &m_clientlist[sid].m_last_time);
 
-  fprintf( stderr, "New client IP=%d.%d.%d.%d\n",
-	   (sid>>24)&0xFF,(sid>>16)&0xFF,(sid>>8)&0xFF,sid&0xFF);
+  //fprintf( stderr, "New client IP=%d.%d.%d.%d\n",
+  //	   (sid>>24)&0xFF,(sid>>16)&0xFF,(sid>>8)&0xFF,sid&0xFF);
 
   m_config->ClientCnt++;
 
@@ -260,8 +260,8 @@ int main()
 	  break;
 	}
 	
-	fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
-		 (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
+	//fprintf( stderr, "%d: request from IP=%lu.%lu.%lu.%lu socket=%d\n", i,
+	//	 (soap.ip>>24)&0xFF,(soap.ip>>16)&0xFF,(soap.ip>>8)&0xFF,soap.ip&0xFF, s);
 	
 	opcsrv->m_config->RequestCnt++;
 	opcsrv->m_client = opcsrv->find_client( soap.ip);
@@ -326,8 +326,8 @@ static void *opcsrv_cyclic( void *arg)
       for ( client_iterator it = opcsrv->m_clientlist.begin(); it != opcsrv->m_clientlist.end(); it++) {
 	time_Adiff( &diff, &current_time, &it->second.m_last_time);
 	if ( diff.tv_sec > 600) {
-	  fprintf( stderr, "Client erased IP=%d.%d.%d.%d\n",
-		   (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
+	  //fprintf( stderr, "Client erased IP=%d.%d.%d.%d\n",
+	  //	   (it->first>>24)&0xFF,(it->first>>16)&0xFF,(it->first>>8)&0xFF,it->first&0xFF);
 	  opcsrv->m_clientlist.erase( it);
 	  opcsrv->m_config->ClientCnt--;
 	}
@@ -370,22 +370,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
 
   clock_gettime( CLOCK_REALTIME, &current_time);
 
-  s0__GetStatusResponse->GetStatusResult = new s0__ReplyBase();
-  s0__GetStatusResponse->GetStatusResult->RcvTime = opc_datetime(0);
-  s0__GetStatusResponse->GetStatusResult->ReplyTime = opc_datetime(0);
-  s0__GetStatusResponse->GetStatusResult->RevisedLocaleID = new std::string( "en");
+  s0__GetStatusResponse->GetStatusResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__GetStatusResponse->GetStatusResult->RcvTime.assign( opc_datetime(0));
+  s0__GetStatusResponse->GetStatusResult->ReplyTime.assign( opc_datetime(0));
+  s0__GetStatusResponse->GetStatusResult->RevisedLocaleID = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->GetStatusResult->RevisedLocaleID->assign( "en");
   s0__GetStatusResponse->GetStatusResult->ServerState = s0__serverState__running;
-  if ( s0__GetStatus->ClientRequestHandle)
+  if ( s0__GetStatus->ClientRequestHandle) {
     s0__GetStatusResponse->GetStatusResult->ClientRequestHandle = 
-      new std::string( *s0__GetStatus->ClientRequestHandle);
-
-  s0__GetStatusResponse->Status = new s0__ServerStatus();
-  s0__GetStatusResponse->Status->VendorInfo = new std::string("Proview - Open Source Process Control");
+      soap_new_std__string( soap, -1);
+    s0__GetStatusResponse->GetStatusResult->ClientRequestHandle->assign( *s0__GetStatus->ClientRequestHandle);
+  }
+  s0__GetStatusResponse->Status = soap_new_s0__ServerStatus( soap, -1);
+  s0__GetStatusResponse->Status->VendorInfo = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->Status->VendorInfo->assign( "Proview - Open Source Process Control");
   s0__GetStatusResponse->Status->SupportedInterfaceVersions.push_back( s0__interfaceVersion__XML_USCOREDA_USCOREVersion_USCORE1_USCORE0);
   s0__GetStatusResponse->Status->SupportedLocaleIDs.push_back( std::string("en"));
   s0__GetStatusResponse->Status->SupportedLocaleIDs.push_back( std::string("en-US"));
-  s0__GetStatusResponse->Status->StartTime = opc_datetime( &opcsrv->m_start_time);
-  s0__GetStatusResponse->Status->ProductVersion = new std::string( pwrv_cPwrVersionStr);
+  s0__GetStatusResponse->Status->StartTime.assign( opc_datetime( &opcsrv->m_start_time));
+  s0__GetStatusResponse->Status->ProductVersion = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->Status->ProductVersion->assign( pwrv_cPwrVersionStr);
 
   return SOAP_OK;
 }
@@ -421,11 +425,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  s0__ReadResponse->ReadResult = new s0__ReplyBase();
-  s0__ReadResponse->ReadResult->RcvTime = opc_datetime(0);
-  s0__ReadResponse->ReadResult->ReplyTime = opc_datetime(0);
-  if (s0__Read->Options && s0__Read->Options->ClientRequestHandle)
-    s0__ReadResponse->ReadResult->ClientRequestHandle = new std::string(*s0__Read->Options->ClientRequestHandle);
+  s0__ReadResponse->ReadResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__ReadResponse->ReadResult->RcvTime.assign( opc_datetime(0));
+  s0__ReadResponse->ReadResult->ReplyTime.assign( opc_datetime(0));
+  if (s0__Read->Options && s0__Read->Options->ClientRequestHandle) {
+    s0__ReadResponse->ReadResult->ClientRequestHandle = soap_new_std__string( soap, -1);
+    s0__ReadResponse->ReadResult->ClientRequestHandle->assign( *s0__Read->Options->ClientRequestHandle);
+  }
   s0__ReadResponse->ReadResult->ServerState = s0__serverState__running;
 
   if (!s0__Read->ItemList)
@@ -443,10 +449,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
   
   for (ii = 0; ii < (int) s0__Read->ItemList->Items.size(); ii++) {
 
-    s0__ItemValue *iv = new s0__ItemValue();
+    s0__ItemValue *iv = soap_new_s0__ItemValue( soap, -1);
       
     if (!s0__ReadResponse->RItemList)
-      s0__ReadResponse->RItemList = new s0__ReplyItemList();
+      s0__ReadResponse->RItemList = soap_new_s0__ReplyItemList( soap, -1);
 
     item = s0__Read->ItemList->Items[ii];
     
@@ -458,23 +464,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
     strncpy(itemname, itempath, sizeof(itemname));
     strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
 
-    if (options & opc_mRequestOption_ReturnItemPath)
-      iv->ItemPath = new std::string(itempath);
-
-    if (options & opc_mRequestOption_ReturnItemName)
-      iv->ItemName = new std::string(itemname);
-
-    if (options & opc_mRequestOption_ReturnDiagnosticInfo)
-      iv->DiagnosticInfo = new std::string(""); // ToDo !!
-
-    if ( s0__Read->ItemList->Items[ii]->ClientItemHandle)
-      iv->ClientItemHandle =
-	new std::string(*s0__Read->ItemList->Items[ii]->ClientItemHandle);
-
+    if (options & opc_mRequestOption_ReturnItemPath) {
+      iv->ItemPath = soap_new_std__string( soap, -1);
+      iv->ItemPath->assign( itempath);
+    }
+    if (options & opc_mRequestOption_ReturnItemName) {
+      iv->ItemName = soap_new_std__string( soap, -1);
+      iv->ItemName->assign(itemname);
+    }
+    if (options & opc_mRequestOption_ReturnDiagnosticInfo) {
+      iv->DiagnosticInfo = soap_new_std__string( soap, -1);
+      iv->DiagnosticInfo->assign(""); // ToDo !!
+    }
+    if ( s0__Read->ItemList->Items[ii]->ClientItemHandle) {
+      iv->ClientItemHandle = soap_new_std__string( soap, -1);
+      iv->ClientItemHandle->assign( *s0__Read->ItemList->Items[ii]->ClientItemHandle);
+    }
     sts = gdh_NameToAttrref(pwr_cNObjid, cnv_utf8_to_iso8859( itemname, strlen(itemname)+1), &ar);
     
     if (EVEN(sts)) {
-      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      opcsrv_returnerror( soap, s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
       s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
@@ -492,7 +501,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
     gdh_GetAttributeCharAttrref(&ar, &tid, NULL, NULL, &elem);
     
     if (cdh_tidIsCid(tid) || elem > 1) {
-      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror( soap, s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
@@ -504,19 +513,19 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Read(struct soap *soap,
       if (reqType < 0) opc_pwrtype_to_opctype(tid, &reqType);
       
       if (opc_convert_pwrtype_to_opctype(buf, 0, sizeof(buf), reqType, tid)) {
-      	iv->Value = opc_opctype_to_value(buf, sizeof(buf), reqType);
+      	iv->Value = opc_opctype_to_value( soap, buf, sizeof(buf), reqType);
 	if (options & opc_mRequestOption_ReturnItemTime) {
 	  // ToDo !!!
 	}
         s0__ReadResponse->RItemList->Items.push_back(iv);
 
       } else {
-        opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+        opcsrv_returnerror( soap, s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
         s0__ReadResponse->RItemList->Items.push_back(iv);
         continue;
       }
     } else {
-      opcsrv_returnerror(s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror( soap, s0__ReadResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       s0__ReadResponse->RItemList->Items.push_back(iv);
       continue;
     }
@@ -553,11 +562,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  s0__WriteResponse->WriteResult = new s0__ReplyBase();
-  s0__WriteResponse->WriteResult->RcvTime = opc_datetime(0);
-  s0__WriteResponse->WriteResult->ReplyTime = opc_datetime(0);
-  if (s0__Write->Options && s0__Write->Options->ClientRequestHandle)
-    s0__WriteResponse->WriteResult->ClientRequestHandle = new std::string(*s0__Write->Options->ClientRequestHandle);
+  s0__WriteResponse->WriteResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__WriteResponse->WriteResult->RcvTime.assign( opc_datetime(0));
+  s0__WriteResponse->WriteResult->ReplyTime.assign( opc_datetime(0));
+  if (s0__Write->Options && s0__Write->Options->ClientRequestHandle) {
+    s0__WriteResponse->WriteResult->ClientRequestHandle = soap_new_std__string( soap, -1);
+    s0__WriteResponse->WriteResult->ClientRequestHandle->assign( *s0__Write->Options->ClientRequestHandle);
+  }
   s0__WriteResponse->WriteResult->ServerState = s0__serverState__running;
 
   if (!s0__Write->ItemList)
@@ -578,7 +589,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
     s0__ItemValue *iv = new s0__ItemValue();
       
     if (!s0__WriteResponse->RItemList)
-      s0__WriteResponse->RItemList = new s0__ReplyItemList();
+      s0__WriteResponse->RItemList = soap_new_s0__ReplyItemList( soap, -1);
 
     item = s0__Write->ItemList->Items[ii];
     
@@ -590,18 +601,21 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
     strncpy(itemname, itempath, sizeof(itemname));
     strncat(itemname, item->ItemName->c_str(), sizeof(itemname));
 
-    if (options & opc_mRequestOption_ReturnItemPath)
-      iv->ItemPath = new std::string(itempath);
-
-    if (options & opc_mRequestOption_ReturnItemName)
-      iv->ItemName = new std::string(itemname);
-
-    if (options & opc_mRequestOption_ReturnDiagnosticInfo)
-      iv->DiagnosticInfo = new std::string(""); // ToDo !!
-
+    if (options & opc_mRequestOption_ReturnItemPath) {
+      iv->ItemPath = soap_new_std__string( soap, -1);
+      iv->ItemPath->assign( itempath);
+    }
+    if (options & opc_mRequestOption_ReturnItemName) {
+      iv->ItemName = soap_new_std__string( soap, -1);
+      iv->ItemName->assign(itemname);
+    }
+    if (options & opc_mRequestOption_ReturnDiagnosticInfo) {
+      iv->DiagnosticInfo = soap_new_std__string( soap, -1);
+      iv->DiagnosticInfo->assign(""); // ToDo !!
+    }
     sts = gdh_NameToAttrref(pwr_cNObjid, cnv_utf8_to_iso8859(itemname, strlen(itemname)+1), &ar);    
     if (EVEN(sts)) {
-      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
+      opcsrv_returnerror( soap, s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_INVALIDITEMNAME, options);
       s0__WriteResponse->RItemList->Items.push_back(iv);
       continue;
     }
@@ -609,20 +623,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Write(struct soap* soap,
     gdh_GetAttributeCharAttrref(&ar, &a_type, &a_size, NULL, &a_elem);
     
     if (cdh_tidIsCid(a_type) || a_elem > 1) {
-      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror( soap, s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       s0__WriteResponse->RItemList->Items.push_back(iv);
       continue;
     }          
 
     if ( !opc_convert_opctype_to_pwrtype( buf, a_size, item->Value, (pwr_eType) a_type)) {
-      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror( soap, s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       s0__WriteResponse->RItemList->Items.push_back(iv);
       continue;
     }
 
     sts = gdh_SetObjectInfoAttrref(&ar, buf, a_size);
     if ( EVEN(sts)) {
-      opcsrv_returnerror(s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
+      opcsrv_returnerror( soap, s0__WriteResponse->Errors, &iv->ResultID, opc_eResultCode_E_BADTYPE, options);
       s0__WriteResponse->RItemList->Items.push_back(iv);
     }
   }
@@ -646,15 +660,17 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
     client = opcsrv->new_client( soap->ip);
   opcsrv->m_current_access = client->access;
 
-  s0__SubscribeResponse->SubscribeResult = new s0__ReplyBase();
-  s0__SubscribeResponse->SubscribeResult->RcvTime = opc_datetime(0);
-  s0__SubscribeResponse->SubscribeResult->ReplyTime = opc_datetime(0);
+  s0__SubscribeResponse->SubscribeResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__SubscribeResponse->SubscribeResult->RcvTime.assign( opc_datetime(0));
+  s0__SubscribeResponse->SubscribeResult->ReplyTime.assign( opc_datetime(0));
   s0__SubscribeResponse->SubscribeResult->ServerState = s0__serverState__running;
 
-  if ( s0__Subscribe->Options && s0__Subscribe->Options->ClientRequestHandle)
+  if ( s0__Subscribe->Options && s0__Subscribe->Options->ClientRequestHandle) {
     s0__SubscribeResponse->SubscribeResult->ClientRequestHandle = 
-      new std::string( *s0__Subscribe->Options->ClientRequestHandle);
-
+      soap_new_std__string( soap, -1);
+    s0__SubscribeResponse->SubscribeResult->ClientRequestHandle->assign(
+      *s0__Subscribe->Options->ClientRequestHandle);
+  }
   switch ( opcsrv->m_current_access) {
   case pwr_eOpc_AccessEnum_ReadOnly:
   case pwr_eOpc_AccessEnum_ReadWrite:
@@ -795,15 +811,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 	}
 
 	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle)
-	  sub.client_handle = *s0__Subscribe->ItemList->Items[i]->ClientItemHandle;
+	  sub.client_handle.assign( *s0__Subscribe->ItemList->Items[i]->ClientItemHandle);
 	else
-	  sub.client_handle = std::string("");
+	  sub.client_handle.assign("");
 
 	if ( !s0__SubscribeResponse->ServerSubHandle) {
 	  vector<opcsrv_sub> subv;
 	
-	  s0__SubscribeResponse->ServerSubHandle = 
-	    new std::string( cdh_SubidToString( 0, sub.subid, 0));
+	  s0__SubscribeResponse->ServerSubHandle = soap_new_std__string( soap, -1);
+	  s0__SubscribeResponse->ServerSubHandle->assign( cdh_SubidToString( 0, sub.subid, 0));
 	
 	  client->m_sublist[*s0__SubscribeResponse->ServerSubHandle] = subv;
 	}
@@ -815,17 +831,20 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 	if ( !s0__SubscribeResponse->RItemList)
 	  s0__SubscribeResponse->RItemList = new s0__SubscribeReplyItemList();
 
-	s0__SubscribeItemValue *iv = new s0__SubscribeItemValue();
-	iv->ItemValue = new s0__ItemValue();
+	s0__SubscribeItemValue *iv = soap_new_s0__SubscribeItemValue( soap, -1);
+	iv->ItemValue = soap_new_s0__ItemValue( soap, -1);
 
-	iv->ItemValue->ItemName = new std::string( 
+	iv->ItemValue->ItemName = soap_new_std__string( soap, -1);
+	iv->ItemValue->ItemName->assign( 
               cnv_utf8_to_iso8859( (char *)s0__Subscribe->ItemList->Items[i]->ItemName->c_str(), 
 				   s0__Subscribe->ItemList->Items[i]->ItemName->size()+1));
-	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle)
-	  iv->ItemValue->ClientItemHandle =
-	    new std::string(*s0__Subscribe->ItemList->Items[i]->ClientItemHandle);
+	if ( s0__Subscribe->ItemList->Items[i]->ClientItemHandle) {
+	  iv->ItemValue->ClientItemHandle = soap_new_std__string( soap, -1);
+	  iv->ItemValue->ClientItemHandle->assign(
+	    *s0__Subscribe->ItemList->Items[i]->ClientItemHandle);
+	}
 	if ( resultid) {
-	  opcsrv_returnerror( s0__SubscribeResponse->Errors, 
+	  opcsrv_returnerror( soap, s0__SubscribeResponse->Errors, 
 			      &iv->ItemValue->ResultID, resultid, 0);
 	}
 	else if ( s0__Subscribe->ReturnValuesOnReply) {
@@ -834,10 +853,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Subscribe(struct soap* soap,
 
 	  opc_pwrtype_to_opctype( a_tid, &reqType);
 	  if (opc_convert_pwrtype_to_opctype( sub.p, buf, sizeof(buf), reqType, a_tid)) {
-	    iv->ItemValue->Value = opc_opctype_to_value( buf, sizeof(buf), reqType);
+	    iv->ItemValue->Value = opc_opctype_to_value( soap, buf, sizeof(buf), reqType);
 	  }
 	  else
-	    opcsrv_returnerror( s0__SubscribeResponse->Errors, 
+	    opcsrv_returnerror( soap, s0__SubscribeResponse->Errors, 
 				&iv->ItemValue->ResultID, opc_eResultCode_E_BADTYPE, 0);
 	}
 	s0__SubscribeResponse->RItemList->Items.push_back( iv);
@@ -851,6 +870,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 							   _s0__SubscriptionPolledRefresh *s0__SubscriptionPolledRefresh, 
 							   _s0__SubscriptionPolledRefreshResponse *s0__SubscriptionPolledRefreshResponse)
 {
+
   // Check access for the connection
   opcsrv_client *client = opcsrv->find_client( soap->ip);
   if ( !client)
@@ -864,20 +884,18 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
   default:
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
-
   s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult = 
-    new s0__ReplyBase();
-  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->RcvTime = 
-    opc_datetime(0);
-  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ReplyTime = 
-    opc_datetime(0);
+    soap_new_s0__ReplyBase( soap, -1); 
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->RcvTime.assign( opc_datetime(0));
+  s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ReplyTime.assign( opc_datetime(0));
   s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ServerState = 
     s0__serverState__running;
 
   if ( s0__SubscriptionPolledRefresh->Options && 
-       s0__SubscriptionPolledRefresh->Options->ClientRequestHandle)
-    s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ClientRequestHandle = 
-      new std::string( *s0__SubscriptionPolledRefresh->Options->ClientRequestHandle);
+       s0__SubscriptionPolledRefresh->Options->ClientRequestHandle) {
+    s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ClientRequestHandle = soap_new_std__string( soap, -1);
+    s0__SubscriptionPolledRefreshResponse->SubscriptionPolledRefreshResult->ClientRequestHandle->assign( *s0__SubscriptionPolledRefresh->Options->ClientRequestHandle);
+  }
 
   pwr_tTime hold_time;
   int wait_time;
@@ -963,27 +981,32 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
 
       // Test
       for ( int jj = 0; jj < (int) it->second.size(); jj++) {
-	printf( "%d sub: p %d size %d opc_type %d pwr_type %d subid %d,%d\n", jj, (int)it->second[jj].p,
-		it->second[jj].size, it->second[jj].opc_type, it->second[jj].pwr_type, it->second[jj].subid.nid,
-		it->second[jj].subid.rix);
+	//printf( "%d sub: p %d size %d opc_type %d pwr_type %d subid %d,%d\n", jj, (int)it->second[jj].p,
+	//	it->second[jj].size, it->second[jj].opc_type, it->second[jj].pwr_type, it->second[jj].subid.nid,
+	//	it->second[jj].subid.rix);
 	jj++;
       }
 
 
-      s0__SubscribePolledRefreshReplyItemList *rlist = new s0__SubscribePolledRefreshReplyItemList();
+      s0__SubscribePolledRefreshReplyItemList *rlist = 
+	soap_new_s0__SubscribePolledRefreshReplyItemList( soap, -1);
 
-      rlist->SubscriptionHandle = new std::string(s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      rlist->SubscriptionHandle = soap_new_std__string( soap, -1);
+      rlist->SubscriptionHandle->assign( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
       for ( int j = 0; j < (int)it->second.size(); j++) {
-	s0__ItemValue *ritem = new s0__ItemValue();
+	s0__ItemValue *ritem = soap_new_s0__ItemValue( soap, -1);
 	
 	// TODO
 
-	ritem->Value = opc_opctype_to_value( it->second[j].p, it->second[j].size, 
+	ritem->Value = opc_opctype_to_value( soap, it->second[j].p, it->second[j].size, 
 					     it->second[j].opc_type);
 	memcpy( &it->second[j].old_value, it->second[j].p, it->second[j].size);
-	ritem->Timestamp = new std::string( opc_datetime(0));
-	if ( !it->second[j].client_handle.empty())
-	  ritem->ClientItemHandle = new std::string( it->second[j].client_handle);
+       	ritem->Timestamp = soap_new_std__string( soap, -1);
+	ritem->Timestamp->assign( opc_datetime(0));
+	if ( !it->second[j].client_handle.empty()) {
+	  ritem->ClientItemHandle = soap_new_std__string( soap, -1);
+	  ritem->ClientItemHandle->assign( it->second[j].client_handle.c_str());
+	}
 
 	rlist->Items.push_back( ritem);
       }
@@ -991,12 +1014,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionPolledRefresh(struct soap* soap,
     }
     else {
       // Subscription not found
-      s0__SubscribePolledRefreshReplyItemList *rlist = new s0__SubscribePolledRefreshReplyItemList();
+      s0__SubscribePolledRefreshReplyItemList *rlist = soap_new_s0__SubscribePolledRefreshReplyItemList( soap, -1);
 
-      rlist->SubscriptionHandle = new std::string(s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
+      rlist->SubscriptionHandle = soap_new_std__string( soap, -1);
+      rlist->SubscriptionHandle->assign( s0__SubscriptionPolledRefresh->ServerSubHandles[i]);
 
-      s0__ItemValue *ritem = new s0__ItemValue();
-      opcsrv_returnerror( s0__SubscriptionPolledRefreshResponse->Errors, &ritem->ResultID, 
+      s0__ItemValue *ritem = soap_new_s0__ItemValue( soap, -1);
+      opcsrv_returnerror( soap, s0__SubscriptionPolledRefreshResponse->Errors, &ritem->ResultID, 
 			  opc_eResultCode_E_NOSUBSCRIPTION, 0);
       rlist->Items.push_back( ritem);
       s0__SubscriptionPolledRefreshResponse->RItemList.push_back( rlist);
@@ -1039,13 +1063,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__SubscriptionCancel(struct soap* soap,
     return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
   }
 
-  if ( s0__SubscriptionCancel->ClientRequestHandle)
-    s0__SubscriptionCancelResponse->ClientRequestHandle = 
-      new std::string( *s0__SubscriptionCancel->ClientRequestHandle);
+  if ( s0__SubscriptionCancel->ClientRequestHandle) {
+    s0__SubscriptionCancelResponse->ClientRequestHandle = soap_new_std__string( soap, -1);
+    s0__SubscriptionCancelResponse->ClientRequestHandle->assign(
+      *s0__SubscriptionCancel->ClientRequestHandle);
+  }
   return SOAP_OK;
 }
 
-bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp, 
+bool opcsrv_get_properties( struct soap *soap, bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp, 
 			    pwr_tAttrRef *arp, unsigned int propmask, gdh_sAttrDef *bd,
 			    std::vector<s0__ItemProperty *>& properties)
 {
@@ -1060,17 +1086,17 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
       if ( ODD(sts)) {
 	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
 	if ( ODD(sts)) {
-	  s0__ItemProperty *ip = new s0__ItemProperty();
-	  ip->Name = std::string("description");
-	  ip->Value = new xsd__string();
-	  ((xsd__string *)ip->Value)->__item = std::string(desc);
+	  s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	  ip->Name.assign("description");
+	  ip->Value = soap_new_xsd__string( soap, -1);
+	  ((xsd__string *)ip->Value)->__item.assign(desc);
 	  properties.push_back( ip);
 	}
       }
       if ( EVEN(sts)) {
-	s0__ItemProperty *ip = new s0__ItemProperty();
-	ip->Name = std::string("description");
-	ip->Value = new xsd__string();
+	s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	ip->Name.assign( "description");
+	ip->Value = soap_new_xsd__string( soap, -1);
 	properties.push_back( ip);
       }
     }
@@ -1104,17 +1130,17 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	sts = gdh_GetObjectInfoAttrref( &aaref, desc, sizeof(desc));
 	if ( EVEN(sts)) break;
 	
-	s0__ItemProperty *ip = new s0__ItemProperty();
-	ip->Name = std::string("description");
-	ip->Value = new xsd__string();
-	((xsd__string *)ip->Value)->__item = std::string( desc);
+	s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	ip->Name.assign( "description");
+	ip->Value = soap_new_xsd__string( soap, -1);
+	((xsd__string *)ip->Value)->__item.assign( desc);
 	properties.push_back( ip);
 	break;
       }
       default: {
-	s0__ItemProperty *ip = new s0__ItemProperty();
-	ip->Name = std::string("description");
-	ip->Value = new xsd__string();
+	s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	ip->Name.assign( "description");
+	ip->Value = soap_new_xsd__string( soap, -1);
 	properties.push_back( ip);
       }
       }
@@ -1124,12 +1150,12 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     // DataType
     if ( propmask & opc_mProperty_DataType) {
       char *type_p;
-      s0__ItemProperty *ip = new s0__ItemProperty();
+      s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
 
       if ( opc_pwrtype_to_string( bd->attr->Param.Info.Type, &type_p)) {
-	ip->Name = std::string("dataType");
-	ip->Value = new xsd__QName_();
-	((xsd__QName_ *)ip->Value)->__item = std::string(type_p);
+	ip->Name.assign( "dataType");
+	ip->Value = soap_new_xsd__QName_( soap, -1);
+	((xsd__QName_ *)ip->Value)->__item.assign(type_p);
 	properties.push_back( ip);
       }
       else {
@@ -1140,12 +1166,12 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     // Quality
     if ( propmask & opc_mProperty_Quality) {
       char *qual_p;
-      s0__ItemProperty *ip = new s0__ItemProperty();
+      s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
 
       if ( opc_quality_to_string( s0__qualityBits__good, &qual_p)) {
-	ip->Name = std::string("quality");
-	ip->Value = new xsd__string();
-	((xsd__string *)ip->Value)->__item = std::string(qual_p);
+	ip->Name.assign( "quality");
+	ip->Value = soap_new_xsd__string( soap, -1);
+	((xsd__string *)ip->Value)->__item.assign( qual_p);
 	properties.push_back( ip);
       }
     }
@@ -1157,24 +1183,24 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 
     // Access Rights
     if ( propmask & opc_mProperty_AccessRights) {
-      s0__ItemProperty *ip = new s0__ItemProperty();
+      s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
 
-      ip->Name = std::string("accessRights");
-      ip->Value = new xsd__string();
+      ip->Name.assign( "accessRights");
+      ip->Value = soap_new_xsd__string( soap, -1);
 
       switch ( opcsrv->m_current_access) {
       case pwr_eOpc_AccessEnum_ReadOnly:
-	((xsd__string *)ip->Value)->__item = std::string("readable");
+	((xsd__string *)ip->Value)->__item.assign( "readable");
 	break;
       case pwr_eOpc_AccessEnum_ReadWrite:
 	if ( bd->attr->Param.Info.Flags & PWR_MASK_RTVIRTUAL ||
 	     bd->attr->Param.Info.Flags & PWR_MASK_PRIVATE)
-	  ((xsd__string *)ip->Value)->__item = std::string("readable");
+	  ((xsd__string *)ip->Value)->__item.assign( "readable");
 	else
-	  ((xsd__string *)ip->Value)->__item = std::string("readWritable");
+	  ((xsd__string *)ip->Value)->__item.assign( "readWritable");
 	break;
       default:
-	((xsd__string *)ip->Value)->__item = std::string("unknown");
+	((xsd__string *)ip->Value)->__item.assign( "unknown");
 	break;
       }
       properties.push_back( ip);
@@ -1201,10 +1227,10 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &unit, sizeof(unit));
 	  if ( EVEN(sts)) break;
 
-	  s0__ItemProperty *ip = new s0__ItemProperty();
-	  ip->Name = std::string("engineeringUnits");
-	  ip->Value = new xsd__string();
-	  ((xsd__string *)ip->Value)->__item = std::string(unit);
+	  s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	  ip->Name.assign( "engineeringUnits");
+	  ip->Value = soap_new_xsd__string( soap, -1);
+	  ((xsd__string *)ip->Value)->__item.assign( unit);
 	  properties.push_back( ip);
 	  break;
 	}
@@ -1217,18 +1243,18 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
     if ( propmask & opc_mProperty_EuType) {
       switch( bd->attr->Param.Info.Type) {
       case pwr_eType_Float32: {
-	s0__ItemProperty *ip = new s0__ItemProperty();
-	ip->Name = std::string("euType");
-	ip->Value = new xsd__string();
-	((xsd__string *)ip->Value)->__item = std::string("analog");
+	s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	ip->Name.assign( "euType");
+	ip->Value = soap_new_xsd__string( soap, -1);
+	((xsd__string *)ip->Value)->__item.assign( "analog");
 	properties.push_back( ip);
 	break;
       }
       default: {
-	s0__ItemProperty *ip = new s0__ItemProperty();
-	ip->Name = std::string("euType");
-	ip->Value = new xsd__string();
-	((xsd__string *)ip->Value)->__item = std::string("noEnum");
+	s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	ip->Name.assign( "euType");
+	ip->Value = soap_new_xsd__string( soap, -1);
+	((xsd__string *)ip->Value)->__item.assign( "noEnum");
 	properties.push_back( ip);
 	break;
       }
@@ -1249,9 +1275,9 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  if ( ODD(sts)) {
 	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	    if ( ODD(sts)) {
-	      s0__ItemProperty *ip = new s0__ItemProperty();
-	      ip->Name = std::string("highEU");
-	      ip->Value = new xsd__double();
+	      s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	      ip->Name.assign( "highEU");
+	      ip->Value = soap_new_xsd__double( soap, -1);
 	      ((xsd__double *)ip->Value)->__item = fval;
 	      properties.push_back( ip);
 	    }
@@ -1276,9 +1302,9 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  if ( ODD(sts)) {
 	    sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	    if ( ODD(sts)) {
-	      s0__ItemProperty *ip = new s0__ItemProperty();
-	      ip->Name = std::string("lowEU");
-	      ip->Value = new xsd__double();
+	      s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	      ip->Name.assign( "lowEU");
+	      ip->Value = soap_new_xsd__double( soap, -1);
 	      ((xsd__double *)ip->Value)->__item = fval;
 	      properties.push_back( ip);
 	    }
@@ -1321,9 +1347,9 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	  if ( EVEN(sts)) break;
 
-	  s0__ItemProperty *ip = new s0__ItemProperty();
-	  ip->Name = std::string("highIR");
-	  ip->Value = new xsd__double();
+	  s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	  ip->Name.assign( "highIR");
+	  ip->Value = soap_new_xsd__double( soap, -1);
 	  ((xsd__double *)ip->Value)->__item = fval;
 	  properties.push_back( ip);
 	  break;
@@ -1365,9 +1391,9 @@ bool opcsrv_get_properties( bool is_item, pwr_tCid pcid, pwr_tAttrRef *parp,
 	  sts = gdh_GetObjectInfoAttrref( &aaref, &fval, sizeof(fval));
 	  if ( EVEN(sts)) break;
 
-	  s0__ItemProperty *ip = new s0__ItemProperty();
-	  ip->Name = std::string("lowIR");
-	  ip->Value = new xsd__double();
+	  s0__ItemProperty *ip = soap_new_s0__ItemProperty( soap, -1);
+	  ip->Name.assign( "lowIR");
+	  ip->Value = soap_new_xsd__double( soap, -1);
 	  ((xsd__double *)ip->Value)->__item = fval;
 	  properties.push_back( ip);
 	  break;
@@ -1429,14 +1455,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
     has_max_elem = true;
     max_elem = *s0__Browse->MaxElementsReturned;
   }
-  s0__BrowseResponse->BrowseResult = new s0__ReplyBase();
-  s0__BrowseResponse->BrowseResult->RcvTime = opc_datetime(0);
-  s0__BrowseResponse->BrowseResult->ReplyTime = opc_datetime(0);
-  if ( s0__Browse->ClientRequestHandle)
-    s0__BrowseResponse->BrowseResult->ClientRequestHandle = 
-      new std::string( *s0__Browse->ClientRequestHandle);
+  s0__BrowseResponse->BrowseResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__BrowseResponse->BrowseResult->RcvTime.assign( opc_datetime(0));
+  s0__BrowseResponse->BrowseResult->ReplyTime.assign( opc_datetime(0));
+  if ( s0__Browse->ClientRequestHandle) {
+    s0__BrowseResponse->BrowseResult->ClientRequestHandle = soap_new_std__string( soap, -1);
+    s0__BrowseResponse->BrowseResult->ClientRequestHandle->assign(
+      *s0__Browse->ClientRequestHandle);
+  }
   s0__BrowseResponse->BrowseResult->ServerState = s0__serverState__running;
-  s0__BrowseResponse->MoreElements = (bool *) malloc( sizeof(bool));
+  s0__BrowseResponse->MoreElements = (bool *) soap_malloc( soap, sizeof(bool));
   *s0__BrowseResponse->MoreElements = false;
 
 
@@ -1463,8 +1491,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
       if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
 	// Max elements reached, return current oid as continuation point
 
-	s0__BrowseResponse->ContinuationPoint = 
-	  new std::string( cdh_ObjidToString( 0, child, 1));
+	s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
+	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, child, 1));
 	*s0__BrowseResponse->MoreElements = true;
 	break;
       }
@@ -1475,13 +1503,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
       sts = gdh_GetObjectClass( child, &cid);
       if ( EVEN(sts)) continue;
       
-      s0__BrowseElement *element = new s0__BrowseElement();
+      s0__BrowseElement *element = soap_new_s0__BrowseElement( soap, -1);
 	
-      element->Name = new std::string( name);
+      element->Name = soap_new_std__string( soap, -1);
+      element->Name->assign( name);
       strcpy( itemname, pname);
       strcat( itemname, "-");
       strcat( itemname, name);
-      element->ItemName = new std::string( itemname);
+      element->ItemName = soap_new_std__string( soap, -1);
+      element->ItemName->assign( itemname);
       element->IsItem = false;
       if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
 	element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
@@ -1495,7 +1525,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 
       if ( property_mask) {
 	aref = cdh_ObjidToAref( child);
-	opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+	opcsrv_get_properties( soap, element->IsItem, cid, &paref, &aref, 
 			       property_mask, 0,
 			       element->Properties);
       }
@@ -1514,8 +1544,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
       if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
 	// Max elements reached, return current oid as continuation point
 
-	s0__BrowseResponse->ContinuationPoint = 
-	  new std::string( cdh_ObjidToString( 0, oid, 1));
+	s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
+	s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, oid, 1));
 	*s0__BrowseResponse->MoreElements = true;
 	break;
       }
@@ -1529,7 +1559,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
       
       s0__BrowseElement *element = new s0__BrowseElement();
-      element->Name = new std::string( name);
+      element->Name = soap_new_std__string( soap, -1);
+      element->Name->assign( name);
       element->ItemName = element->Name;
       element->IsItem = false;
       if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
@@ -1543,7 +1574,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
       pwr_tAttrRef aref = cdh_ObjidToAref( oid);
-      opcsrv_get_properties( false, cid, 0, &aref, 
+      opcsrv_get_properties( soap, false, cid, 0, &aref, 
 			     property_mask, 0,
 			     element->Properties);
 
@@ -1626,7 +1657,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
       }
 
       for ( int i = 0; i < (int)a_dim; i++) {
-	s0__BrowseElement *element = new s0__BrowseElement();
+	s0__BrowseElement *element = soap_new_s0__BrowseElement( soap, -1);
 
 	sprintf( itemname, "%s[%d]", pname, i);
 	s = strrchr( itemname, '.');
@@ -1635,8 +1666,10 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	else
 	  return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 
-	element->Name = new std::string( aname);
-	element->ItemName = new std::string( itemname);
+	element->Name = soap_new_std__string( soap, -1);
+	element->Name->assign( aname);
+	element->ItemName = soap_new_std__string( soap, -1);
+	element->ItemName->assign( itemname);
 	element->IsItem = true;
 	element->HasChildren = false;
 
@@ -1650,7 +1683,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	  if ( EVEN(sts))
 	    return opcsrv->fault( soap, opc_eResultCode_E_FAIL);
 	  
-	  opcsrv_get_properties( true, cid, &paref, &aref,
+	  opcsrv_get_properties( soap, true, cid, &paref, &aref,
 				 property_mask, &bd[bd_idx],
 				 element->Properties);
 
@@ -1697,14 +1730,16 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	
 	if ( bd[i].attr->Param.Info.Flags & PWR_MASK_ARRAY ||
 	     bd[i].attr->Param.Info.Flags & PWR_MASK_CLASS ) {
-	  s0__BrowseElement *element = new s0__BrowseElement();
+	  s0__BrowseElement *element = soap_new_s0__BrowseElement( soap, -1);
 	  
 	  cdh_SuppressSuper( aname, bd[i].attrName);
-	  element->Name = new std::string( aname);
+	  element->Name = soap_new_std__string( soap, -1);
+	  element->Name->assign( aname);
 	  strcpy( itemname, pname);
 	  strcat( itemname, ".");
 	  strcat( itemname, bd[i].attrName);
-	  element->ItemName = new std::string( itemname);
+	  element->ItemName = soap_new_std__string( soap, -1);
+	  element->ItemName->assign( itemname);
 	  element->IsItem = false;
 	  element->HasChildren = true;
 
@@ -1714,21 +1749,23 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	    opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	  if ( property_mask)
-	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+	    opcsrv_get_properties( soap, element->IsItem, cid, &paref, &aref, 
 				   property_mask, &bd[i],
 				   element->Properties);
 
 	  s0__BrowseResponse->Elements.push_back( element);
 	}
 	else {
-	  s0__BrowseElement *element = new s0__BrowseElement();
+	  s0__BrowseElement *element = soap_new_s0__BrowseElement( soap, -1);
 	  
 	  cdh_SuppressSuper( aname, bd[i].attrName);
-	  element->Name = new std::string( aname);
+	  element->Name = soap_new_std__string( soap, -1);
+	  element->Name->assign( aname);
 	  strcpy( itemname, pname);
 	  strcat( itemname, ".");
 	  strcat( itemname, bd[i].attrName);
-	  element->ItemName = new std::string( itemname);
+	  element->ItemName = soap_new_std__string( soap, -1);
+	  element->ItemName->assign( itemname);
 	  element->IsItem = true;
 	  element->HasChildren = false;
 
@@ -1738,7 +1775,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	    opc_propertynames_to_mask( s0__Browse->PropertyNames, &property_mask);
 
 	  if ( property_mask)
-	    opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+	    opcsrv_get_properties( soap, element->IsItem, cid, &paref, &aref, 
 				   property_mask, &bd[i],
 				   element->Properties);
 
@@ -1757,8 +1794,8 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	if ( has_max_elem && (int)s0__BrowseResponse->Elements.size() > max_elem) {
 	  // Max elements reached, return current oid as continuation point
 
-	  s0__BrowseResponse->ContinuationPoint = 
-	    new std::string( cdh_ObjidToString( 0, child, 1));
+	  s0__BrowseResponse->ContinuationPoint = soap_new_std__string( soap, -1);
+	  s0__BrowseResponse->ContinuationPoint->assign( cdh_ObjidToString( 0, child, 1));
 	  *s0__BrowseResponse->MoreElements = true;
 	  break;
 	}
@@ -1769,13 +1806,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 	sts = gdh_GetObjectClass( child, &cid);
 	if ( EVEN(sts)) continue;
       
-	s0__BrowseElement *element = new s0__BrowseElement();
+	s0__BrowseElement *element = soap_new_s0__BrowseElement( soap, -1);
 	
-	element->Name = new std::string( name);
+	element->Name = soap_new_std__string( soap, -1);
+	element->Name->assign( name);
 	strcpy( itemname, pname);
 	strcat( itemname, "-");
 	strcat( itemname, name);
-	element->ItemName = new std::string( itemname);
+	element->ItemName = soap_new_std__string( soap, -1);
+	element->ItemName->assign( itemname);
 	element->IsItem = false;
 	if ( cid == pwr_eClass_PlantHier || cid == pwr_eClass_NodeHier)
 	  element->HasChildren = ODD( gdh_GetChild( child, &ch)) ? true : false;
@@ -1789,7 +1828,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__Browse(struct soap *soap, _s0__Browse *s0__Brows
 
 	if ( property_mask) {
 	  aref = cdh_ObjidToAref( child);
-	  opcsrv_get_properties( element->IsItem, cid, &paref, &aref, 
+	  opcsrv_get_properties( soap, element->IsItem, cid, &paref, &aref, 
 				 property_mask, 0,
 				 element->Properties);
 	}
@@ -1828,13 +1867,15 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
     return opcsrv->fault( soap, opc_eResultCode_E_ACCESS_DENIED);
   }
 
-  s0__GetPropertiesResponse->GetPropertiesResult = new s0__ReplyBase();
-  s0__GetPropertiesResponse->GetPropertiesResult = new s0__ReplyBase();
-  s0__GetPropertiesResponse->GetPropertiesResult->RcvTime = opc_datetime(0);
-  s0__GetPropertiesResponse->GetPropertiesResult->ReplyTime = opc_datetime(0);
-  if ( s0__GetProperties->ClientRequestHandle)
+  s0__GetPropertiesResponse->GetPropertiesResult = soap_new_s0__ReplyBase( soap, -1);
+  s0__GetPropertiesResponse->GetPropertiesResult->RcvTime.assign( opc_datetime(0));
+  s0__GetPropertiesResponse->GetPropertiesResult->ReplyTime.assign( opc_datetime(0));
+  if ( s0__GetProperties->ClientRequestHandle) {
     s0__GetPropertiesResponse->GetPropertiesResult->ClientRequestHandle = 
-      new std::string( *s0__GetProperties->ClientRequestHandle);
+      soap_new_std__string( soap, -1);
+    s0__GetPropertiesResponse->GetPropertiesResult->ClientRequestHandle->assign( 
+      *s0__GetProperties->ClientRequestHandle);
+  }
   s0__GetPropertiesResponse->GetPropertiesResult->ServerState = s0__serverState__running;
 
   if ( s0__GetProperties->ReturnAllProperties && *s0__GetProperties->ReturnAllProperties)
@@ -1843,7 +1884,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
     opc_propertynames_to_mask( s0__GetProperties->PropertyNames, &property_mask);
 
   for ( int i = 0; i < (int)s0__GetProperties->ItemIDs.size(); i++) {
-    s0__PropertyReplyList *plist = new s0__PropertyReplyList();
+    s0__PropertyReplyList *plist = soap_new_s0__PropertyReplyList( soap, -1);
     std::string *path;
 
     if ( s0__GetProperties->ItemIDs[i]->ItemPath)
@@ -1851,9 +1892,12 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
     else
       path = s0__GetProperties->ItemPath;
 
-    if ( path)
-      plist->ItemPath = new std::string( cnv_utf8_to_iso8859( (char *)path, path->size()+1));
-    plist->ItemName = new std::string( 
+    if ( path) {
+      plist->ItemPath = soap_new_std__string( soap, -1);
+      plist->ItemPath->assign( cnv_utf8_to_iso8859( (char *)path, path->size()+1));
+    }
+    plist->ItemName = soap_new_std__string( soap, -1);
+    plist->ItemName->assign( 
          cnv_utf8_to_iso8859( (char *)s0__GetProperties->ItemIDs[i]->ItemName->c_str(), 
 			      s0__GetProperties->ItemIDs[i]->ItemName->size()+1));
     
@@ -1866,7 +1910,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
 
     sts = gdh_NameToAttrref( pwr_cNOid, cnv_utf8_to_iso8859( iname, strlen(iname)+1), &aref);
     if ( EVEN(sts)) {
-      opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+      opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_UNKNOWNITEMNAME, 0);
       s0__GetPropertiesResponse->PropertyLists.push_back( plist);
       continue;
@@ -1876,26 +1920,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
       // This is an object
       sts = gdh_GetAttrRefTid( &aref, &cid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
       }
       if ( !cdh_tidIsCid( cid)) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
       }
 
-      opcsrv_get_properties( false, cid, 0, &aref, 
+      opcsrv_get_properties( soap, false, cid, 0, &aref, 
 			     property_mask, 0,
 			     plist->Properties);
     }
     else {
       // Get the object attrref and class for this attribute
       if ( !( aname = strrchr( iname, '.'))) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_INVALIDITEMNAME, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
@@ -1904,7 +1948,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
       
       sts = gdh_AttrArefToObjectAref( &aref, &paref);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
@@ -1912,7 +1956,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
 
       sts = gdh_GetAttrRefTid( &paref, &cid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
@@ -1921,7 +1965,7 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
       // Get body definition
       sts = gdh_GetObjectBodyDef( cid, &bd, &rows, pwr_cNOid);
       if ( EVEN(sts)) {
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
@@ -1935,13 +1979,13 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetProperties(struct soap *soap,
       }
       if ( bd_idx == -1) {
 	free( (char *)bd);
-	opcsrv_returnerror( s0__GetPropertiesResponse->Errors, &plist->ResultID, 
+	opcsrv_returnerror( soap, s0__GetPropertiesResponse->Errors, &plist->ResultID, 
 			  opc_eResultCode_E_FAIL, 0);
 	s0__GetPropertiesResponse->PropertyLists.push_back( plist);
 	continue;
       }
 
-      opcsrv_get_properties( true, cid, &paref, &aref,
+      opcsrv_get_properties( soap, true, cid, &paref, &aref,
 			     property_mask, &bd[bd_idx],
 			     plist->Properties);
       free( (char *)bd);

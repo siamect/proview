@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_provider.cpp,v 1.14 2007-05-30 12:00:25 claes Exp $
+ * Proview   $Id: opc_provider.cpp,v 1.15 2007-06-01 11:07:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -445,6 +445,9 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
       server_state->RequestCnt++;
       fault();
     }
+
+    free( (char *)get_properties.ReturnPropertyValues);
+    delete id.ItemName;
   }
 
 
@@ -476,6 +479,7 @@ void opc_provider::insert_object( pwr_tOix fth, pwr_tOix bws, s0__BrowseElement 
       server_state->RequestCnt++;
       fault();
     }
+    delete browse.ItemName;
   }
 }
 
@@ -570,6 +574,7 @@ void opc_provider::objectOid( co_procom *pcom, pwr_tOix oix)
 	server_state->RequestCnt++;
 	fault();
       }
+      delete browse.ItemName;
     }
   }
 
@@ -687,6 +692,7 @@ void opc_provider::objectName( co_procom *pcom, char *name, pwr_tOix poix)
 	sts = GDH__NOSUCHOBJ;
 	break;
       }
+      delete browse.ItemName;
     }
 
     for ( coix = m_list[oix]->po.fchoix; ;
@@ -803,7 +809,7 @@ void opc_provider::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int o
       opc_pwrtype_to_opctype( m_list[oix]->type, &opc_type);
       opc_convert_pwrtype_to_opctype( buffer, opc_buffer, sizeof(opc_buffer), opc_type, 
 				      m_list[oix]->type);
-      item->Value = opc_opctype_to_value( opc_buffer, sizeof(opc_buffer), opc_type);
+      item->Value = opc_opctype_to_value( &soap, opc_buffer, sizeof(opc_buffer), opc_type);
       write.ItemList = new s0__WriteRequestItemList;
       write.ItemList->Items.push_back( item);
 
@@ -817,6 +823,9 @@ void opc_provider::writeAttribute( co_procom *pcom, pwr_tOix oix, unsigned int o
 	server_state->RequestCnt++;
 	fault();
       }
+      delete write.ItemList;
+      delete item->Value;
+      delete item;
     }
     break;
   }
@@ -884,6 +893,9 @@ void opc_provider::readAttribute( co_procom *pcom, pwr_tOix oix, unsigned int of
 	server_state->RequestCnt++;
 	fault();
       }
+      delete read.ItemList;
+      delete item->ItemName;
+      delete item;
     }
     break;
   }
@@ -964,6 +976,11 @@ void opc_provider::subAssociateBuffer( co_procom *pcom, void **buff, int oix, in
 	server_state->RequestCnt++;
 	fault();
       }
+      free( (char *) subscribe.Options->ReturnItemTime);
+      delete subscribe.ItemList;
+      delete ritem->ItemName;
+      free( (char *)ritem->RequestedSamplingRate);
+      delete ritem;
     }
     break;
   default: ;
@@ -992,6 +1009,7 @@ void opc_provider::subDisassociateBuffer( co_procom *pcom, pwr_tSubid sid)
     }
 
     m_sublist.erase( it);
+    delete subcancel.ServerSubHandle;
   }
 }
 
@@ -1109,6 +1127,13 @@ void opc_provider::cyclic( co_procom *pcom)
 		    server_state->RequestCnt++;
 		    fault();
 		  }
+		  free( (char *)subscribe.Options->ReturnItemTime);
+		  delete subscribe.Options;
+		  delete subscribe.ItemList;
+		  delete ritem->ItemName;
+		  delete ritem->ClientItemHandle;
+		  free( (char *)ritem->RequestedSamplingRate);
+		  delete ritem;
 		}
 	      }
 	    }
@@ -1214,6 +1239,7 @@ void opc_provider::get_server_state()
     server_state->ServerState = s0__serverState__commFault;
     fault();
   }
+  delete get_status.ClientRequestHandle;
 }
 
 //

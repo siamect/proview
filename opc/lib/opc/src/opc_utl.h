@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.h,v 1.16 2007-05-30 12:00:25 claes Exp $
+ * Proview   $Id: opc_utl.h,v 1.17 2007-06-01 11:07:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -106,15 +106,16 @@ typedef enum {
   opc_eResultCode__
 } opc_eResultCode;
 
-void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options);
+void opcsrv_returnerror( struct soap *soap, std::vector<s0__OPCError *>& errors, 
+			 std::string **rc, int err_code, unsigned int options);
 bool opc_requestoptions_to_mask( s0__RequestOptions *options, unsigned int *mask);
-std::string& opc_datetime( pwr_tTime *tp);
+char *opc_datetime( pwr_tTime *tp);
 pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize);
 pwr_tStatus opc_time_OPCAsciiToA( char *tstr, pwr_tTime *ts);
 const char *opc_resultcode_to_string( int code);
 const char *opc_resultcode_to_text( int code);
 bool opc_string_to_resultcode(char *str, int *code);
-xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type);
+xsd__anyType* opc_opctype_to_value( struct soap *soap, void *bufp, int size, int opc_type);
 bool opc_convert_pwrtype_to_opctype(void *bufin, void *bufout, int size, int opc_type, int pwr_type);
 bool opc_convert_opctype_to_pwrtype(void *bufp, int size, xsd__anyType *value, pwr_eType pwr_type);
 bool opc_string_to_opctype(const char *str, int *type);

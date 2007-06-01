@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: opc_utl.cpp,v 1.18 2007-05-30 12:00:25 claes Exp $
+ * Proview   $Id: opc_utl.cpp,v 1.19 2007-06-01 11:07:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -25,6 +25,7 @@
 #include "co_time_msg.h"
 #include "opc_utl.h"
 #include "opc_soap_Stub.h"
+#include "opc_soap_H.h"
 
 const char nullstr[] = "";
 
@@ -117,14 +118,17 @@ static char opc_ResultTexts[23][140] = {
   "The value is write-only and may not be read from or returned as part of a write response.",
   "The type is not valid."};
 
-void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, int err_code, unsigned int options)
+void opcsrv_returnerror( struct soap *soap, std::vector<s0__OPCError *>& errors, 
+			 std::string **rc, int err_code, unsigned int options)
 {
   int ii;
   bool exists = false;
 
 	
-  if ( rc)
-    *rc = new std::string( opc_resultcode_to_string( err_code));
+  if ( rc) {
+    *rc = soap_new_std__string( soap, -1);
+    (*rc)->assign( opc_resultcode_to_string( err_code));
+  }
   
   for (ii = 0; ii < (int) errors.size(); ii++) {
     if (strcmp( errors[ii]->ID.c_str(), opc_resultcode_to_string( err_code)) == 0) {
@@ -133,11 +137,12 @@ void opcsrv_returnerror(std::vector<s0__OPCError *>& errors, std::string **rc, i
   }
   
   if (!exists) {
-    s0__OPCError *oe = new s0__OPCError();
-    oe->ID = std::string(opc_resultcode_to_string( err_code));
+    s0__OPCError *oe = soap_new_s0__OPCError( soap, -1);
+    oe->ID.assign( opc_resultcode_to_string( err_code));
     
     if (options & opc_mRequestOption_ReturnErrorText) {
-      oe->Text = new std::string( opc_resultcode_to_text( err_code));
+      oe->Text = soap_new_std__string( soap, -1);
+      oe->Text->assign( opc_resultcode_to_text( err_code));
     }
 	
     errors.push_back(oe);
@@ -204,14 +209,12 @@ bool opc_string_to_resultcode(char *str, int *code)
 // Return the corresponding opc type string for a pwr_eType
 //
 
-std::string& opc_datetime( pwr_tTime *tp)
+char *opc_datetime( pwr_tTime *tp)
 {
-  static std::string timstr;
-  char str[40];
+  static char str[40];
 
   time_AtoOPCAscii( tp, str, sizeof(str));
-  timstr = std::string( str);
-  return timstr;
+  return str;
 }
 
 pwr_tStatus opc_time_OPCAsciiToA( char *tstr, pwr_tTime *ts)
@@ -270,90 +273,91 @@ pwr_tStatus time_AtoOPCAscii (pwr_tTime *tp, char *buf, int bufsize)
 //
 // Return the corresponding opc type for a opc type string
 //
-xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type)
+xsd__anyType* opc_opctype_to_value( struct soap *soap, void *bufp, int size, 
+				    int opc_type)
 {
   switch (opc_type) {
   case opc_eDataType_string: {
-    xsd__string *val = new xsd__string();
+    xsd__string *val = soap_new_xsd__string( soap, -1);
     val->__item = std::string( (char *)bufp);
     return val;
     break;
   }
   case opc_eDataType_boolean: {
-    xsd__boolean *val = new xsd__boolean();
-    val->__item = bool (*(char *) bufp);
+    xsd__boolean *val = soap_new_xsd__boolean( soap, -1);
+    val->__item = (bool)(*(char *) bufp);
     return val;
     break;
   }
   case opc_eDataType_float: {
-    xsd__float *val = new xsd__float();
+    xsd__float *val = soap_new_xsd__float( soap, -1);
     val->__item =  *(pwr_tFloat32 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_decimal: {
-    xsd__decimal_ *val = new xsd__decimal_();
+    xsd__decimal_ *val = soap_new_xsd__decimal_( soap, -1);
     sprintf((char *) bufp, "%f", *(pwr_tFloat64 *) bufp);
     val->__item = std::string((char *) bufp);
     return val;
     break;
   }
   case opc_eDataType_double: {
-    xsd__double *val = new xsd__double();
+    xsd__double *val = soap_new_xsd__double( soap, -1);
     val->__item = *(pwr_tFloat64 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_long: {
-    xsd__long *val = new xsd__long();
+    xsd__long *val = soap_new_xsd__long( soap, -1);
     val->__item = *(pwr_tInt64 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_int: {
-    xsd__int *val = new xsd__int();
+    xsd__int *val = soap_new_xsd__int( soap, -1);
     val->__item = *(pwr_tInt32 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_short: {
-    xsd__short *val = new xsd__short();
+    xsd__short *val = soap_new_xsd__short( soap, -1);
     val->__item = *(pwr_tInt16 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_byte: {
-    xsd__byte *val = new xsd__byte();
+    xsd__byte *val = soap_new_xsd__byte( soap, -1);
     val->__item = *(pwr_tChar *) bufp;
     return val;
     break;
   }
   case opc_eDataType_unsignedLong: {
-    xsd__unsignedLong *val = new xsd__unsignedLong();
+    xsd__unsignedLong *val = soap_new_xsd__unsignedLong( soap, -1);
     val->__item = *(pwr_tUInt64 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_unsignedInt: {
-    xsd__unsignedInt *val = new xsd__unsignedInt();
+    xsd__unsignedInt *val = soap_new_xsd__unsignedInt( soap, -1);
     val->__item = *(pwr_tInt32 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_unsignedShort: {
-    xsd__unsignedShort *val = new xsd__unsignedShort();
+    xsd__unsignedShort *val = soap_new_xsd__unsignedShort( soap, -1);
     val->__item = *(pwr_tUInt16 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_unsignedByte: {
-    xsd__unsignedByte *val = new xsd__unsignedByte();
+    xsd__unsignedByte *val = soap_new_xsd__unsignedByte( soap, -1);
     val->__item = *(pwr_tUInt8 *) bufp;
     return val;
     break;
   }
   case opc_eDataType_dateTime: {
-    xsd__dateTime *val = new xsd__dateTime();
+    xsd__dateTime *val = soap_new_xsd__dateTime( soap, -1);
     char timstr[40];
 
     time_AtoOPCAscii( (pwr_tTime *)bufp, timstr, sizeof(timstr));
@@ -362,7 +366,7 @@ xsd__anyType* opc_opctype_to_value(void *bufp, int size, int opc_type)
     break;
   }
   case opc_eDataType_duration: {
-    xsd__duration *val = new xsd__duration();
+    xsd__duration *val = soap_new_xsd__duration( soap, -1);
     // TODO
     // char timstr[40];
 
