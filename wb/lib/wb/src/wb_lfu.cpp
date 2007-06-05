@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.5 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.6 2007-06-05 12:21:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -626,6 +626,7 @@ pwr_tStatus lfu_SaveDirectoryVolume(
   pwr_tObjid	nodeobjid;
   pwr_tObjid	busobjid;
   char		*nodename_ptr;
+  char		*bootnode_ptr;
   pwr_tUInt32	*os_ptr;
   pwr_tUInt32	os;
   pwr_tUInt32	*bus_number_ptr;
@@ -1713,6 +1714,16 @@ pwr_tStatus lfu_SaveDirectoryVolume(
             nodename_ptr = null_nodename;
           }
 
+          /* Check BootNode attribute */
+          sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
+			"BootNode", &bootnode_ptr, &size);
+          if (EVEN(sts)) return sts;
+
+          if ( !strcmp( bootnode_ptr, "") || !strcmp( bootnode_ptr, "-")) {
+            free( bootnode_ptr);
+            bootnode_ptr = null_nodename;
+          }
+
           /* Check OperatingSystem attribute */
           sts = ldh_GetObjectPar( ldhses, nodeobjid, "RtBody",
 			"OperatingSystem", (char **)&os_ptr, &size);
@@ -1738,11 +1749,12 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  if ( !found)  
 	    distr_status = (lfu_eDistrSts)((int)distr_status | lfu_eDistrSts_NoRootVolume);
 
-	  fprintf( file, "node %s %s %d %d\n",
+	  fprintf( file, "node %s %s %d %d %s\n",
 		   nodename_ptr,
 		   os_str,
 		   *bus_number_ptr,
-		   distr_status);
+		   distr_status,
+		   bootnode_ptr);
 
 	  /* Find the applications for this node */
 	  class_vect[0] = pwr_cClass_Distribute;
@@ -1870,6 +1882,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	  }
 	  if ( nodename_ptr != null_nodename)
 	    free( nodename_ptr);
+	  if ( bootnode_ptr != null_nodename)
+	    free( bootnode_ptr);
 	  free( (char *) os_ptr);
 	  utl_objidlist_free( objlist);
 	}
