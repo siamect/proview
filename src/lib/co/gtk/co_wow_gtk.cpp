@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.8 2007-05-14 07:07:31 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.9 2007-06-08 08:36:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -641,9 +641,10 @@ void CoWowGtk::CreateFileSelDia( char *title, void *parent_ctx,
     if ( filename)
       strcpy( fname, filename);
     g_free( filename);
+
+    if ( file_selected_cb)
+      (file_selected_cb)( parent_ctx, fname, file_type);
   }
-  if ( file_selected_cb)
-    (file_selected_cb)( parent_ctx, fname, file_type);
   gtk_widget_destroy( dialog);
 }
 
