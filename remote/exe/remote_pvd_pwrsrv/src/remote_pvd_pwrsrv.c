@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: remote_pvd_pwrsrv.c,v 1.3 2007-05-24 07:03:22 claes Exp $
+ * Proview   $Id: remote_pvd_pwrsrv.c,v 1.4 2007-06-13 14:35:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -396,7 +396,8 @@ static void pwrsrv_SubSend( rpvd_sMsgAny *m)
     subp += 4;
     *(int *)subp = si->size;
     subp += 4;
-    memcpy( subp, si->p, si->size);
+    if ( si->p)
+      memcpy( subp, si->p, si->size);
     subp += si->size;
   }
   *(int *)subp = -1;
