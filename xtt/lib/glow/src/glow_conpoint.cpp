@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_conpoint.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_conpoint.cpp,v 1.5 2007-06-15 12:09:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -203,14 +203,14 @@ int GlowConPoint::get_conpoint( GlowTransform *t, int num, bool flip_horizontal,
     }
     
     if ( flip_horizontal) {
-      switch ( direction) {
+      switch ( *dir) {
         case glow_eDirection_Up: 	*dir = glow_eDirection_Down; break;
         case glow_eDirection_Down: 	*dir = glow_eDirection_Up; break;
         default: ;
       }
     }
     if ( flip_vertical) {
-      switch ( direction) {
+      switch ( *dir) {
         case glow_eDirection_Right: 	*dir = glow_eDirection_Left; break;
         case glow_eDirection_Left: 	*dir = glow_eDirection_Right; break;
         default: ;
