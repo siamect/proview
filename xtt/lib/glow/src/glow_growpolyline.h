@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.h,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growpolyline.h,v 1.6 2007-06-15 11:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -356,6 +356,7 @@ class GrowPolyLine : public GlowPolyLine {
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
   int		fill_eq_light;	//!< Fill is drawn with light shadow color.
   int		fill_eq_shadow;	//!< Fill is drawn with dark shadow color.
+  int		fixcolor;	//!< Color independent of node color.
 
   //! Set user data.
   /*!

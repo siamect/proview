@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.18 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow.h,v 1.19 2007-06-15 11:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1313,6 +1313,7 @@ typedef enum {
 	glow_eSave_GrowPolyLine_disable_shadow  = 2618,
 	glow_eSave_GrowPolyLine_fill_eq_light   = 2619,
 	glow_eSave_GrowPolyLine_fill_eq_shadow  = 2620,
+	glow_eSave_GrowPolyLine_fixcolor  	= 2621,
 	glow_eSave_GrowNode_node_part		= 2700,
 	glow_eSave_GrowNode_dynamic		= 2701,
 	glow_eSave_GrowNode_dynamicsize		= 2702,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.28 2007-05-14 07:06:42 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.29 2007-06-15 11:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1283,6 +1283,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->fill_eq_shadow;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fill_eq_shadow);
+      
+      strcpy( attrinfo[i].name, "fixcolor");
+      attrinfo[i].value_p = &op->fixcolor;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixcolor);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);

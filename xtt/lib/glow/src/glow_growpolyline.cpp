@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.cpp,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growpolyline.cpp,v 1.6 2007-06-15 11:33:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,7 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, char *name,
 		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
 		border(display_border), fill_eq_border(0), current_point(0),
 		shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), fill_eq_shadow(0)
+		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), fill_eq_shadow(0), fixcolor(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -329,6 +329,10 @@ void GrowPolyLine::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
   int i;
   glow_eDrawType drawtype;
   int idx;
+
+  if ( fixcolor)
+    colornode = 0;
+
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 
 		((GrowNode *)node)->line_width - 1);
@@ -806,6 +810,7 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowPolyLine_fill_eq_border) << FSPACE << fill_eq_border << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_eq_light) << FSPACE << fill_eq_light << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_eq_shadow) << FSPACE << fill_eq_shadow << endl;
+  fp << int(glow_eSave_GrowPolyLine_fixcolor) << FSPACE << fixcolor << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -875,6 +880,7 @@ void GrowPolyLine::open( ifstream& fp)
       case glow_eSave_GrowPolyLine_fill_eq_border: fp >> fill_eq_border; break;
       case glow_eSave_GrowPolyLine_fill_eq_light: fp >> fill_eq_light; break;
       case glow_eSave_GrowPolyLine_fill_eq_shadow: fp >> fill_eq_shadow; break;
+      case glow_eSave_GrowPolyLine_fixcolor: fp >> fixcolor; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowPolyLine:open syntax error" << endl;
