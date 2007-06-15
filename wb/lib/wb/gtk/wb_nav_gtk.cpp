@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_nav_gtk.cpp,v 1.2 2007-06-15 10:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -64,8 +64,8 @@ NavGtk::NavGtk(
 			    GDK_SELECTION_TYPE_STRING, 1);
   g_signal_connect( selection_widget, "selection-get", 
 		    G_CALLBACK( nav_sel_convert_cb), this);
-  g_signal_connect( selection_widget, "selection-clear-event", 
-		    G_CALLBACK( nav_sel_lose_cb), this);
+  sel_lose_id = g_signal_connect( selection_widget, "selection-clear-event", 
+				  G_CALLBACK( nav_sel_lose_cb), this);
   gtk_widget_show_all( brow_widget);
 
   set_inputfocus(0);
@@ -79,6 +79,8 @@ NavGtk::NavGtk(
 //
 NavGtk::~NavGtk()
 {
+  g_signal_handler_disconnect( selection_widget, sel_lose_id);
+
   PalFile::config_tree_free( menu);
   free_pixmaps();
   gtk_widget_destroy( form_widget);

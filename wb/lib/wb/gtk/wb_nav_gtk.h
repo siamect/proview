@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav_gtk.h,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_nav_gtk.h,v 1.2 2007-06-15 10:53:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,6 +44,7 @@ class NavGtk : public Nav {
   GtkWidget	*form_widget;
   GtkWidget	*toplevel;
   GtkWidget	*selection_widget;
+  gulong       	sel_lose_id;
 
   void set_inputfocus( int focus);
   void set_selection_owner();
