@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.22 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.23 2007-06-15 11:34:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2843,6 +2843,8 @@ void GrowCtx::set_select_textbold( int bold)
       ((GrowFolder *)a_sel[i])->set_textbold( bold);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
       ((GrowTable *)a_sel[i])->set_textbold( bold);
+    else if ( a_sel[i]->type() == glow_eObjectType_GrowSubAnnot)
+      ((GrowSubAnnot *)a_sel[i])->set_textbold( bold);
   }
 }
 

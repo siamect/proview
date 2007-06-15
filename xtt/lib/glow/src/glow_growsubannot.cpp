@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.cpp,v 1.6 2007-05-23 08:04:09 claes Exp $
+ * Proview   $Id: glow_growsubannot.cpp,v 1.7 2007-06-15 11:34:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -568,3 +568,20 @@ void GrowSubAnnot::draw()
   	     x_right * ctx->navw.zoom_factor_x - ctx->navw.offset_x + 1,
 	     y_high * ctx->navw.zoom_factor_y - ctx->navw.offset_y + 1);
 }
+
+void GrowSubAnnot::set_textbold( int bold) 
+{ 
+  if ( ( bold && draw_type == glow_eDrawType_TextHelveticaBold) ||
+       ( !bold && draw_type == glow_eDrawType_TextHelvetica))
+    return;
+
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  if ( bold)
+    draw_type = glow_eDrawType_TextHelveticaBold;
+  else
+    draw_type = glow_eDrawType_TextHelvetica;
+  get_node_borders();
+  draw();
+}
+
