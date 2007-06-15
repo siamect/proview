@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.8 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.9 2007-06-15 11:27:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -136,6 +136,13 @@
 #include "ge_bitmap_button95.h"
 #include "ge_bitmap_notebutton96.h"
 #include "ge_bitmap_pump97.h"
+#include "ge_bitmap_damper98.h"
+#include "ge_bitmap_3wayvalve99.h"
+#include "ge_bitmap_aircooler100.h"
+#include "ge_bitmap_airheater101.h"
+#include "ge_bitmap_elheater102.h"
+#include "ge_bitmap_3wayvalvecontrol103.h"
+#include "ge_bitmap_dampercontrol104.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -306,6 +313,13 @@ void SubPaletteBrow::allocate_pixmaps()
   ALLOC_PIXMAP( ge_bitmap_button95, 95);
   ALLOC_PIXMAP( ge_bitmap_notebutton96, 96);
   ALLOC_PIXMAP( ge_bitmap_pump97, 97);
+  ALLOC_PIXMAP( ge_bitmap_damper98, 98);
+  ALLOC_PIXMAP( ge_bitmap_3wayvalve99, 99);
+  ALLOC_PIXMAP( ge_bitmap_aircooler100, 100);
+  ALLOC_PIXMAP( ge_bitmap_airheater101, 101);
+  ALLOC_PIXMAP( ge_bitmap_elheater102, 102);
+  ALLOC_PIXMAP( ge_bitmap_3wayvalvecontrol103, 103);
+  ALLOC_PIXMAP( ge_bitmap_dampercontrol104, 104);
 }
 
 

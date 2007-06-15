@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.8 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.9 2007-06-15 11:28:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@
 /*! \addtogroup Ge */
 /*@{*/
 
-#define SUBP_PIXMAPS_SIZE	100
+#define SUBP_PIXMAPS_SIZE	140
 
 typedef struct subpalette_s_Menu {
 	char				title[80];
