@@ -765,10 +765,12 @@ palette PlcEditorPalette
     menu BaseComponent
     {
       class BaseActuatorAFo
+      class BaseCDamperFo
       class BaseCircuitBreakerFo
       class BaseContactorFo
       class BaseCValveFo
       class BaseDirValveFo
+      class BaseFilterFo
       class BaseManValveFo
       class BaseMotorFo
       class BaseMValveFo
@@ -812,6 +814,7 @@ palette PlcEditorPalette
       class ABB_ACS800_1Sim
       class ABB_ACS800MotorAggrSim
       class BaseContactorSim
+      class BaseCDamperSim
       class BaseCValveSim
       class BaseMValveSim
       class BaseSensorSim

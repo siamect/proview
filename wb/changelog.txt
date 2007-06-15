@@ -60,3 +60,5 @@
 070528 cs  wb        Bugfix in attrref conversion, attrref to single attribute objects 
 070528 cs  plc       Bugfix, DSup and ASup attribute wasn't updated if the connection was changed.
 070605 cs  distr     Bugfix, distribute to specified bootnode didn't work.
+070615 cs  wb        Bugfix, remaining selection clear event after in palette and plant navigator
+		     could cause segfault.

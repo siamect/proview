@@ -1,2 +1,4 @@
 070301 cs  -       New module opc.
 070424 cs  -       Opc XML/DA server and client.
+070601 cs  -       Problems with national characters fixed.
+070601 cs  -       Problems with memory leakage fixed.
