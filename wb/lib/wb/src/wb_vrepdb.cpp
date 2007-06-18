@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.51 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.52 2007-06-18 06:23:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1478,9 +1478,18 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
       m_destination.foid = m_ohead.oid();
       m_destination.loid = m_ohead.aoid();
       break;
+    case ldh_eDest_Before:
+      m_destination.poid = m_ohead.poid();
+      m_destination.foid = m_ohead.boid();
+      m_destination.loid = m_ohead.oid();
+      break;
     case ldh_eDest_IntoFirst:
       m_destination.poid = m_ohead.oid();
       m_destination.loid = m_ohead.foid();
+      break;
+    case ldh_eDest_IntoLast:
+      m_destination.poid = m_ohead.oid();
+      m_destination.foid = m_ohead.loid();
       break;
     default:
       throw wb_error(LDH__NYI);
