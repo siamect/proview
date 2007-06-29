@@ -62,3 +62,4 @@
 070605 cs  distr     Bugfix, distribute to specified bootnode didn't work.
 070615 cs  wb        Bugfix, remaining selection clear event after in palette and plant navigator
 		     could cause segfault.
+070618 cs  wb        'Copy Selected Tree'->'Before' and 'Last Child' didn't work.

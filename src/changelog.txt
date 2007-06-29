@@ -38,3 +38,5 @@
 070521 cs  statussrv New soap request to open xtt.
 070525 cs  statussrv New soap request to open runtime monitor.
 070601 cs  com       Stub for Xtt helpfile is created when project a is created.
+070629 cs  convert   Generation of xtthelp file from pwg files.
+070629 cs  doc       Subgraph documentation (Graphic Symbol Library) in xtthelp, pdf and html.

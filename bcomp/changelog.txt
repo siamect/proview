@@ -7,3 +7,4 @@
 060627 cs  bcomp      Hysteresis in object graph for BaseSensor and subclasses displayed wrong value.
 060727 cs  bcomp      Defaultvalue for BasePressureSensor.Trend.DataName corrected.
 070130 cs  bcomp      New components for On/Off burner control, CompOnOffBurner and CompOnOffZone.
+070615 cs  bcomp      New components for filter, damper and three way valve.
