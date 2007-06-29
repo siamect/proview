@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.14 2007-05-25 13:59:03 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.15 2007-06-29 10:12:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -581,7 +581,9 @@ void WttGtk::set_twowindows( int two, int display_wnav, int display_wnavnode)
 
 void WttGtk::message( char severity, char *message)
 {
-  gtk_label_set_text( GTK_LABEL(msg_label), message);
+  char *messageutf8 = g_convert( message, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
+  g_free( messageutf8);
 }
 
 
@@ -820,7 +822,9 @@ void WttGtk::open_change_name()
 
   gint pos = 0;
   gtk_editable_delete_text( GTK_EDITABLE(cmd_input), 0, -1);
-  gtk_editable_insert_text( GTK_EDITABLE(cmd_input), name, strlen(name), &pos);
+  char *nameutf8 = g_convert( name, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_editable_insert_text( GTK_EDITABLE(cmd_input), nameutf8, strlen(nameutf8), &pos);
+  g_free( nameutf8);
 
   // Select the text
   gtk_editable_set_position( GTK_EDITABLE(cmd_input), -1);
