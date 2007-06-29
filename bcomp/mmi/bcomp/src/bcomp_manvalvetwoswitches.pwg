@@ -1,3 +1,33 @@
+199
+!/**
+! ManValveSwitchTwoSwitches
+! Group Components/BaseComponent
+!
+! <image> bcomp_manvalve_gs.gif
+!
+! <h1>Description
+! Manuel valve. Graphic symbol for basecomponent BaseManValve.
+! Should be connected to an instance of BaseManValve, or a 
+! subclass to this class.
+!
+! Optimized for a BaseManValve with two switches.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when an error occurs.
+! - colored white when the valve is closed.
+! - colored gray when the valve is neither closed nor open.
+! - popupmenu with the method of the connected object.
+!
+! DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigColor <t>$hostobject.SwichClosed.ActualValue <link>GeDynDigColor, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.SwichOpen.ActualValue <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 69.1696
 135 69.1696

@@ -1,3 +1,35 @@
+199
+!/**
+! MValveNoSwitches
+! Group Components/BaseComponent
+!
+! <image> bcomp_mvalve_gs.gif
+!
+! <h1>Description
+! Solenoid valve. Graphic symbol for basecomponent BaseMValve.
+! Should be connected to an instance of BaseMValve, or a 
+! subclass to this class.
+!
+! This subgraph is used when the valve doesn't have any switches.
+! If the valve has switches use
+! MValve <link>bcomp_mvalve
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored yellow when a warning occurs.
+! - the mode (manual or local) is displayed with a M or L.
+! - colored white when the valve is closed.
+! - popupmenu with the method of the connected object.
+!
+! DigColor2 <t>$hostobject.IndWarning <link>GeDynDigColor, ,$pwr_lang/man_geref.dat
+! DigColor <t>!$hostobject.Order.ActualValue <link>GeDynDigColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 69.1696
 135 69.1696

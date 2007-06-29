@@ -1,3 +1,31 @@
+199
+!/**
+! ManValveNoSwitches
+! Group Components/BaseComponent
+!
+! <image> bcomp_manvalve_gs.gif
+!
+! <h1>Description
+! Manuel valve without switches.
+! This subgraph is used when the open/closed state can 
+! be set by the operator from the object graph.
+!
+! Graphic symbol for basecomponent BaseManValve.
+! Should be connected to an instance of BaseManValve, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored white when close indiation is set by the operator.
+! - popupmenu with the method of the connected object.
+!
+! DigLowColor <t>!$hostobject.IndClosed <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 69.1696
 135 69.1696

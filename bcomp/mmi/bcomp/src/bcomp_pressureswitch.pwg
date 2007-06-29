@@ -1,3 +1,27 @@
+199
+!/**
+! PressureSwitch
+! Group Components/BaseComponent
+!
+! <image> bcomp_pressureswitch_gs.gif
+!
+! <h1>Description
+! Pressure switch. Graphic symbol for basecomponent BasePressureSwitch.
+! Should be connected to an instance of BasePressureSwitch, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red at alarm status.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.AlarmStatus <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 52.1224
 135 52.1224

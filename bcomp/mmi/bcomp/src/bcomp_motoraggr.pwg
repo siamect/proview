@@ -1,3 +1,33 @@
+199
+!/**
+! MotorAggr
+! Group Components/BaseComponent
+!
+! <image> bcomp_motoraggr_gs.gif
+!
+! <h1>Description
+! Motor aggregate. Graphic symbol for basecomponent BaseMotorAggr.
+! Should be connected to an instance of BaseMotorAggr, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the motor is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 20
 135 20

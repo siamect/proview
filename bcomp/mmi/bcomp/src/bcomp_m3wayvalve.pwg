@@ -1,3 +1,38 @@
+199
+!/**
+! M3WayValve
+! Group Components/BaseComponent
+!
+! <image> bcomp_m3wayvalve_gs.gif
+!
+! <h1>Description
+! Solenoid three way valve. Graphic symbol for basecomponent BaseM3WayValve.
+! Should be connected to an instance of BaseM3WayValve, or a 
+! subclass to this class.
+!
+! Subgraph with three pages, both closable ports partly open (page 1),
+! first closable port closed (page 2) and second closable port
+! closed (page 3).
+! <image> bcomp_m3wayvalve_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when an error occurs.
+! - colored yellow when a warning occurs.
+! - the mode (manual or local) is displayed with a M or L.
+! - shifting page when a port is closed.
+! - popupmenu with the method of the connected object.
+!
+! DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! AnalogShift <t>$hostobject.PosEnum <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 129.797
 135 129.797

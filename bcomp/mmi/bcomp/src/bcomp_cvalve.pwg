@@ -1,3 +1,32 @@
+199
+!/**
+! CValve
+! Group Components/BaseComponent
+!
+! <image> bcomp_cvalve_gs.gif
+!
+! <h1>Description
+! Control valve. Graphic symbol for basecomponent BaseCValve.
+! Should be connected to an instance of BaseCValve, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when an error occurs.
+! - colored yellow when a warning occurs.
+! - the mode (manual or local) is displayed with a M or L.
+! - colored white when the valve is closed.
+! - popupmenu with the method of the connected object.
+!
+! DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Actuator.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 69.1696
 135 69.1696

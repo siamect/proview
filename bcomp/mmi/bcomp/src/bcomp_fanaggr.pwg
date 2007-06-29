@@ -1,3 +1,38 @@
+199
+!/**
+! FanAggr
+! Group Components/BaseComponent
+!
+! <image> bcomp_fanaggr_gs.gif
+!
+! <h1>Description
+! Fan aggregate. Graphic symbol for basecomponent BaseFanAggr.
+! Should be connected to an instance of BaseFanAggr, or a 
+! subclass to this class.
+!
+! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! <image> bcomp_fanaggr_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when an error occurs.
+! - colored yellow when a warning occurs.
+! - colored darkgray when the fan is off.
+! - the mode (manual or local) is displayed with a M or L.
+! - fan on and off is displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.IndError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigLowColor <t>$hostobject.Contactor.IndFeedback <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <t>$hostobject.Contactor.IndFeedback <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 98.5671
 135 98.5671

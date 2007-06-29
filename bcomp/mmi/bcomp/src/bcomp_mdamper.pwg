@@ -1,3 +1,34 @@
+199
+!/**
+! MDamper
+! Group Components/BaseComponent
+!
+! <image> bcomp_mdamper_gs.gif
+!
+! <h1>Description
+! Solenoid damper. Graphic symbol for basecomponent BaseMDamper.
+! Should be connected to an instance of BaseMDamper, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when an error occurs.
+! - colored yellow when a warning occurs.
+! - the mode (manual or local) is displayed with a M or L.
+! - colored white when the damper is closed.
+! - colored gray when the damper is neither closed nor open.
+! - popupmenu with the method of the connected object.
+!
+! DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! AnalogColor <t>$hostobject.PosEnum <link>GeDynAnalogColor, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 103.196
 135 103.196

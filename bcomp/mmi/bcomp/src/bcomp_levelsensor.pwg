@@ -1,3 +1,29 @@
+199
+!/**
+! LevelSensor
+! Group Components/BaseComponent
+!
+! <image> bcomp_levelsensor_gs.gif
+!
+! <h1>Description
+! Level sensor. Graphic symbol for basecomponent BaseLevelSensor.
+! Should be connected to an instance of BaseLevelSensor, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when the high-high or low-low limits are exceeded.
+! - colored yellow when the high or low limits are exceeded.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 87.5654
 135 87.5654

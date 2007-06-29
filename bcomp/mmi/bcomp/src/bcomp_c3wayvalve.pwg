@@ -1,3 +1,38 @@
+199
+!/**
+! C3WayValve
+! Group Components/BaseComponent
+!
+! <image> bcomp_c3wayvalve_gs.gif
+!
+! <h1>Description
+! Three way control valve. Graphic symbol for basecomponent BaseC3WayValve.
+! Should be connected to an instance of BaseC3WayValve, or a 
+! subclass to this class.
+!
+! Subgraph with three pages, both regulatable ports partly open (page 1),
+! first regulatable port closed (page 2) and second regulatable port
+! closed (page 3).
+! <image> bcomp_c3wayvalve_ags.gif
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - flashing red when an error occurs.
+! - colored yellow when a warning occurs.
+! - the mode (manual or local) is displayed with a M or L.
+! - any port closed displayed with different pages.
+! - popupmenu with the methods of the connected object.
+!
+! DigFlash <t>$hostobject.Actuator.IndError <link>GeDynDigFlash, ,$pwr_lang/man_geref.dat
+! DigWarning <t>$hostobject.Actuator.IndWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! Value <t>$hostobject.Mode.Actuator.IndMode <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! AnalogShift <t>$hostobject.Actuator.PosEnum <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 69.1696
 135 69.1696

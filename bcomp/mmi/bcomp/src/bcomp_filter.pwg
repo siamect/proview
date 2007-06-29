@@ -1,3 +1,27 @@
+199
+!/**
+! Filter
+! Group Components/BaseComponent
+!
+! <image> bcomp_filter_gs.gif
+!
+! <h1>Description
+! Filter. Graphic symbol for basecomponent BaseFilter.
+! Should be connected to an instance of BaseFilter, or a 
+! subclass to this class.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! Dynamics for the symbol
+! - colored red when the filter is clogged.
+! - popupmenu with the methods of the connected object.
+!
+! DigError <t>$hostobject.AlarmStatus <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! PopupMenu <t>$hostobject <link>GeDynPopupMenu, ,$pwr_lang/man_geref.dat
+!
+! Default Cycle Slow 
+!*/
 1
 100 85.9963
 135 85.9963
