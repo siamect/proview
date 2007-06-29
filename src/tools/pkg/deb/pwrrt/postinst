@@ -85,11 +85,11 @@ if ! grep -q "\bb55:" /etc/passwd; then
 
   # Check if group audio exist
   if grep -q "\baudio:" /etc/group; then
-    audio="-G audio"
+    groups="pwrp,audio"
   else
-    audio=""
+    groups="pwrp"
   fi
-  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G pwrp -d /home/b55 $audio b55
+  useradd -s /bin/bash -p aaQPClsglxJP6 -g b55 -G $groups -d /home/b55 b55
   if [ ! -e /home/b55 ]; then
     mkdir /home/b55
     cp /usr/pwrrt/cnf/op/.bashrc /home/b55
@@ -103,7 +103,7 @@ if ! grep -q "\bb55:" /etc/passwd; then
 
     chown -R b55 /home/b55
     chgrp -R pwrp /home/b55
-    chmod a+rwx /home/b55
+    chmod g+rwx /home/b55
   fi
 fi
 
@@ -117,7 +117,7 @@ if ! grep -q "\bb66:" /etc/passwd; then
   else
     audio=""
   fi
-  useradd -s /bin/bash -p aae.nHgHbfUpw -g b66 -G pwrp -d /home/b66 $audio b66
+  useradd -s /bin/bash -p aae.nHgHbfUpw -g b66 -G $groups -d /home/b66 b66
   if [ ! -e /home/b66 ]; then
     mkdir /home/b66
     cp /usr/pwrrt/cnf/op/.bashrc /home/b66
@@ -131,7 +131,7 @@ if ! grep -q "\bb66:" /etc/passwd; then
 
     chown -R b66 /home/b66
     chgrp -R pwrp /home/b66
-    chmod a+rwx /home/b66
+    chmod g+rwx /home/b66
   fi
 fi
 
