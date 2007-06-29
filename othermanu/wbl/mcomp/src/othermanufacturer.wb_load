@@ -1,6 +1,6 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X807"
+    Attr NextOix = "_X809"
     Attr NextCix = "_X31"
   EndBody
   Object Class $ClassHier 1 06-OCT-2005 09:28:20.00
@@ -15943,16 +15943,18 @@ SW bit:
           Attr parameters[1] = 9
           Attr parameters[2] = 0
           Attr parameters[3] = 0
+          Attr subwindows = 1
+          Attr subwindow_class[0] = "pwrb:Class-WindowPlc"
           Attr graphmethod = 0
           Attr graphindex = 0
           Attr default_mask[0] = 0
           Attr default_mask[1] = 0
           Attr segname_annotation = 1
-          Attr compmethod = 35
+          Attr compmethod = 58
           Attr compindex = 0
           Attr tracemethod = 0
           Attr traceindex = 0
-          Attr connectmethod = 10
+          Attr connectmethod = 26
           Attr executeordermethod = 2
           Attr objname = "Movidrive_1Sim"
           Attr graphname = "Movidrive_1Sim"
@@ -15969,7 +15971,7 @@ SW bit:
       Object Code PlcTemplate 263 27-MAR-2007 10:50:02.59
         Body RtBody 27-MAR-2007 10:50:02.59
         EndBody
-        Body DevBody 27-MAR-2007 11:21:36.78
+        Body DevBody 26-JUN-2007 15:47:11.29
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -15987,18 +15989,18 @@ SW bit:
             Attr defnamecount[140] = 2
             Attr defnamecount[141] = 1
             Attr defnamecount[143] = 2
-            Attr defnamecount[144] = 2
+            Attr defnamecount[144] = 3
             Attr defnamecount[146] = 1
             Attr defnamecount[256] = 7
             Attr defnamecount[258] = 1
-            Attr connamecount = 48
+            Attr connamecount = 49
           EndBuffer
         EndBody
         Object W WindowPlc 264 27-MAR-2007 10:50:28.32
           Body RtBody 27-MAR-2007 10:50:28.32
           EndBody
-          Body DevBody 27-MAR-2007 11:21:36.78
-            Attr Modified = "27-MAR-2007 11:21:36.78"
+          Body DevBody 26-JUN-2007 15:47:11.29
+            Attr Modified = "26-JUN-2007 15:47:11.29"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -16008,6 +16010,44 @@ SW bit:
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn48 ConAnalog 809 26-JUN-2007 15:47:10.09
+            Body DevBody 26-JUN-2007 15:47:11.29
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-cn48"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-GetIo2"
+                Attr dest_oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-RunActiv"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.320000e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.256444e+00
+                  Attr y = 1.950000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn47 ConAnalog 368 27-MAR-2007 11:21:26.56
             Body DevBody 27-MAR-2007 11:21:36.78
               Buffer PlcConnection
@@ -16072,44 +16112,6 @@ SW bit:
                 Buffer point[3]
                   Attr x = 2.470000e+00
                   Attr y = 1.550000e+00
-                EndBuffer
-                Buffer point[4]
-                EndBuffer
-                Buffer point[5]
-                EndBuffer
-                Buffer point[6]
-                EndBuffer
-                Buffer point[7]
-                EndBuffer
-                Buffer point[8]
-                EndBuffer
-                Buffer point[9]
-                EndBuffer
-                Attr woid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
-              EndBuffer
-            EndBody
-          EndObject
-          Object cn42 ConAnalog 353 27-MAR-2007 11:12:18.69
-            Body DevBody 27-MAR-2007 11:21:36.78
-              Buffer PlcConnection
-                Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-cn42"
-                Attr object_type = 24
-                Attr cid = "pwrb:Class-ConAnalog"
-                Attr attributes = 90
-                Attr source_oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-RunActiv"
-                Attr dest_oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-GetIi0"
-                Attr point_count = 2
-                Buffer point[0]
-                  Attr x = 1.256444e+00
-                  Attr y = 1.950000e+00
-                EndBuffer
-                Buffer point[1]
-                  Attr x = 1.320000e+00
-                  Attr y = 1.950000e+00
-                EndBuffer
-                Buffer point[2]
-                EndBuffer
-                Buffer point[3]
                 EndBuffer
                 Buffer point[4]
                 EndBuffer
@@ -17474,7 +17476,7 @@ Low = 0"
           Object RunActiv MaskToD 335 27-MAR-2007 11:10:52.11
             Body RtBody 27-MAR-2007 11:10:43.22
             EndBody
-            Body DevBody 27-MAR-2007 11:21:36.78
+            Body DevBody 26-JUN-2007 15:47:11.29
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-MaskToD"
@@ -17543,24 +17545,6 @@ Low = 0"
               EndBuffer
             EndBody
           EndObject
-          Object GetIi0 GetIi 352 27-MAR-2007 11:12:18.69
-            Body RtBody 27-MAR-2007 11:12:18.69
-            EndBody
-            Body DevBody 27-MAR-2007 11:21:36.78
-              Attr IiObject = "$PlcMain:OtherManufacturer-Class-SEW_Movidrive_1.ControlWordCW"
-              Buffer PlcNode
-                Attr object_type = 143
-                Attr cid = "pwrb:Class-GetIi"
-                Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-GetIi0"
-                Attr x = 7.500000e-01
-                Attr y = -9.250001e-01
-                Attr width = 4.564444e-01
-                Attr heigth = 5.000000e-02
-                Attr woid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
-                Attr mask[1] = 1
-              EndBuffer
-            EndBody
-          EndObject
           Object ResDp0 ResDp 354 27-MAR-2007 11:13:25.70
             Body RtBody 27-MAR-2007 11:13:25.70
             EndBody
@@ -17608,6 +17592,24 @@ Low = 0"
                 Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-GetIo1"
                 Attr x = 8.000000e-01
                 Attr y = -4.750000e-01
+                Attr width = 4.564444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetIo2 GetIo 808 26-JUN-2007 15:47:00.91
+            Body RtBody 26-JUN-2007 15:47:00.91
+            EndBody
+            Body DevBody 26-JUN-2007 15:47:11.29
+              Attr IoObject = "$PlcMain:OtherManufacturer-Class-SEW_Movidrive_1.ControlWordCW"
+              Buffer PlcNode
+                Attr object_type = 144
+                Attr cid = "pwrb:Class-GetIo"
+                Attr oid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W-GetIo2"
+                Attr x = 7.500000e-01
+                Attr y = -9.250001e-01
                 Attr width = 4.564444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-SEW_Movidrive_1Sim-Code-W"
