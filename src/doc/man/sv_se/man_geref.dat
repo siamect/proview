@@ -150,7 +150,7 @@ Arbeta med editorn
 Det här avsnittet är avsett som en introduktion för att snabbt komma igång och editera bilder 
 i Ge.
 
-<option> printenable
+<option> printdisable
 Rita basobjekt 	<link>geref_work,baseobjects
 Objektseditorn 	<link>geref_work,objecteditor
 Bakgrund 	<link>geref_work,background
@@ -177,6 +177,7 @@ Till bas-objekten räknas rektangel, linje, polylinje, cirkel och text. De ritas 
 klickar på symbolen för dem i verktygs-panelen, och drar eller klickar med MB1 i arbetsarean.
 
 <h2>Hot
+<image> geref_fig4.gif
 Ett objekt är hot när markören är placerad på objektet. Detta markeras dels med att markören 
 ändras till ett hårkors, dels med att det objekt som är hot ritas med något större linjebredd.
 
@@ -213,6 +214,7 @@ Texter lägger man in genom att välja Text i verktygspanelen och klicka med MB1 i
 Ett inmatningsfält öppnas där man kan mata in textsträngen. Man kan välja textstorlek med 
 TextSize, och fet eller normal text med Bold i vertygspanelen. Om man vill ändra på texten 
 aktiverar man Edit/Change text (Ctrl+T) i menyn. Textfärgen väljs i paletten med Shift MB1.
+<image> geref_fig1.gif
 
 <h2>Polylinjer
 Man ritar polylinjer genom att dra upprepade gånger med MB1 i arbetsarean. När sista linjen 
@@ -221,6 +223,7 @@ man ut den och aktiverar Edit/Edit polyline i menyn. Bryt-punkterna i polylinjen
 känsliga för Drag MB1. När markören ändras till ett hårkors har man fått träff på en 
 bryt-punkt och kan nu dra den till önskad position. När editeringen av polylinjen är klar, 
 avslutar man med MB3.
+<image> geref_fig2.gif
 
 <h2>Cirkelsegment
 En cirkel ritar man genom att välja cirkel i verktygspanelen och dra med MB1 i arbetsarean.
@@ -228,6 +231,7 @@ Om man vill rita ett cirkel-segment ritar man först en cirkel, och öppnar däreft
 objekt-editorn för cirkeln (genom att dubbelklicka med MB1 på den). Här finns attributen 
 angel1 och angel2, där Angel1 anger start-vinkeln för segmentet och angel2 storleken på 
 segmentet.
+<image> geref_fig3.gif
 
 <h2>Färg
 När man ska skapa ett objekt med en viss färg kan man göra på två olika sätt. Antingen 
@@ -247,6 +251,7 @@ Ett objekt kan ges ett tredimensionellt, relief-artat utseende genom att det rit
 ljusare färgton längs den övre kanten och med en mörkare längs den undre. Detta väljs med 
 3D i verktygspanelen. Bredden på 3D-skuggan bestäms av attributet ShadowWidth som kan ändras 
 från objekts-editorn.
+<image> geref_fig5.gif
 
 <h2>Dynamik
 Om man vill sätta dynamik på ett basobjekt måste man låta den ingå i en grupp eller subgraf. 
@@ -1972,8 +1977,46 @@ number).
 <b>Attribut <t><t>Beskrivning
 Value.Attribute <t><t>Signal i rtdb av av valfri typ, som ska visas i 
                 <t><t>textfältet.
-Value.Format    <t><t>Format i c-syntax.
+Value.Format    <t><t>Format i c-printf syntax.
 Value.Instances <t><t>Anger vilka instanser som ska skapas.
+
+<h2>Format
+För följande attribut typer finns ytterligare format definierade.
+
+<b>pwr_tTime
+%t<t>Datum och tid. Ex 24-MAY-2007 11:33:43.91
+%1t<t>Enbart tid, inga hundradelar. Ex 11:33:43
+%2t<t>Enbart tid med hundradelar. Ex 11:33:43:91
+%3t<t>Komprimerad datum och tid. Ex 07-05-24 11:33:43
+
+<b>pwr_tDeltaTime
+%t<t>Tid med hundradelar. Ex 1:23:45
+%1t<t>Tid utan hundradelar. Ex 1:23:45.43
+
+<b>pwr_tEnum
+%d<t>Uppräkningsvärdet visas som en UInt32.
+%s<t>Uppräkningsvärdet konverteras till motsvarande sträng.
+
+<b>pwr_tObjid
+%o<t>Objektsnamn (sista segmentet).
+%1o<t>Hierarki och objektsnamn.
+%2o<t>Volym, hierarki och objektsnamn.
+
+<b>pwr_tAttrRef
+%o<t>Objektsnamn (sista segmentet) och attributnamn.
+%1o<t>Hierarki, objektsnamn och attributnamn.
+%2o<t>Volym, hieraki, objektsnamn och attributnamn .
+
+<b>pwr_tStatus och pwr_tNetStatus
+%m<t>Statusvärdet konverteras till motsvarande sträng. 
+  <t>Ex "GDH-E-NOSUCHOBJ, No such object".
+%1m<t>Enbart textdelen av strängen visas. Ex "No such object".
+
+<b>pwr_tMask
+%d<t>Masken visas som en UInt32.
+%b<t>Masken visas som ett 32-bitars binärt värde.
+%16b<t>Masken visas com ett 16-bitars binärt värde. Ex 001111100011001.
+
 </topic>
 
 <topic>GeDynRotate <style>function

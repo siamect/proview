@@ -137,7 +137,7 @@ The Proview realtime database.
 
 <chapter>
 <topic>geref_work
-Work with the editor
+Working with the editor
 
 This chapter is an introduction to quickly get started and edit process graphics in Ge.
 
@@ -1890,7 +1890,7 @@ is move upwards with increasing value, if Down downwards, if Left to the left an
 the right.
 
 <b>Attribute <t><t>Description
-FillLevel.Attribute <t><t>Signal in rtdb or type Float32.
+FillLevel.Attribute <t><t>Signal in rtdb of type Float32.
 FillLevel.BackgroundColor <t><t>Background color.
 FillLevel.Direction <t><t>Direction Up, Down, Left or Right.
 FillLevel.MinValue <t><t>Min value. When the signal value equals 
@@ -1981,8 +1981,47 @@ with the corresponding number.
 <b>Attribute <t><t>Description
 Value.Attribute <t><t>Signal in rtdb or arbitrary type, that is written out in 
                 <t><t>the text field.
-Value.Format    <t><t>Format in c-syntax.
+Value.Format    <t><t>Format in c-printf syntax.
 Value.Instances <t><t>States the instances that is created.
+
+<h2>Format
+For the following attributes types, some additional format strings are defined.
+
+<b>pwr_tTime
+%t<t>Date and time. Ex 24-MAY-2007 11:33:43.91
+%1t<t>Only time, no hundredth. Ex 11:33:43
+%2t<t>Only time, with hundredth. Ex 11:33:43:91
+%3t<t>Compressed data and time. Ex 07-05-24 11:33:43
+
+<b>pwr_tDeltaTime
+%t<t>Time with hundredth. Ex 1:23:45
+%1t<t>Time without hundredth. Ex 1:23:45.43
+
+<b>pwr_tEnum
+%d<t>The enumeration value is displayed as in UInt32.
+%s<t>The enumeration value will be converted to the corresponding string.
+
+<b>pwr_tObjid
+%o<t>Object name (last segment).
+%1o<t>Path and object name.
+%2o<t>Volume, path and object name.
+
+<b>pwr_tAttrRef
+%o<t>Object name (last segment) and attribute name.
+%1o<t>Path, object name and attribute name.
+%2o<t>Volume, path, object name and attribute name.
+
+<b>pwr_tStatus and pwr_tNetStatus
+%m<t>The status value will be converted to the corresponding string.
+  <t> Ex "GDH-E-NOSUCHOBJ, No such object".
+%1m<t>Only the text part of the string is displayed. Ex "No such object".
+
+<b>pwr_tMask
+%d<t>The mask is displayed as an UInt32.
+%b<t>The mask is displayed as a 32-bit binary value.
+%16b<t>The mask is displayed as a 16-bit binary value. Ex 001111100011001.
+
+
 </topic>
 
 <topic>GeDynRotate <style>function

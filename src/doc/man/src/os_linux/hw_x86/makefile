@@ -203,6 +203,9 @@ copy : $(export_pdf) $(export_pdf_en_us) $(export_pdf_sv_se) \
        $(doc_dir)/en_us/man_geref_index.html $(doc_dir)/sv_se/man_geref_index.html \
        $(doc_dir)/en_us/man_geref.pdf $(doc_dir)/sv_se/man_geref.pdf \
        $(doc_dir)/en_us/man_geref.ps $(doc_dir)/sv_se/man_geref.ps \
+       $(exe_dir)/man_subgraph.dat \
+       $(doc_dir)/en_us/man_subgraph_index.html \
+       $(doc_dir)/en_us/man_subgraph.pdf \
        $(mediatargets) $(csstargets) \
        $(export_html) $(export_html_en_us) $(export_html_sv_se)
 
@@ -240,6 +243,10 @@ $(exe_dir)/en_us/man_dg.dat : $(pwre_sroot)/doc/man/en_us/man_dg.dat
 	@ $(cp) $(cpflags) $(source) $(target)
 
 $(exe_dir)/sv_se/man_dg.dat : $(pwre_sroot)/doc/man/sv_se/man_dg.dat
+	@ $(log_h_h)
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(exe_dir)/man_subgraph.dat : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
 	@ $(log_h_h)
 	@ $(cp) $(cpflags) $(source) $(target)
 
@@ -298,6 +305,14 @@ $(doc_dir)/en_us/man_geref.ps : $(pwre_sroot)/doc/man/en_us/man_geref.dat
 $(doc_dir)/sv_se/man_geref.ps : $(pwre_sroot)/doc/man/sv_se/man_geref.dat
 	@ echo "Generating postscript for sv_se/man_geref"
 	@ co_convert -n -d $(doc_dir)/sv_se $(source)
+
+$(doc_dir)/en_us/man_subgraph_index.html : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
+	@ echo "Generating html for en_us/man_subgraph"
+	@ co_convert -t -d $(doc_dir)/en_us $(source)
+
+$(doc_dir)/en_us/man_subgraph.pdf : $(pwre_sroot)/doc/man/en_us/man_subgraph.dat
+	@ echo "Generating pdf for en_us/man_subgraph"
+	@ co_convert -f -d $(doc_dir)/en_us $(source)
 
 
 # implicit rules, docbook-related, added by jonas_h 2006-04-nn
