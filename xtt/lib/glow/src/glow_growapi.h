@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.24 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.25 2007-06-29 09:32:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2842,6 +2842,8 @@ extern "C" {
   void grow_GetOwner( grow_tCtx ctx, char *owner);
   void grow_SetOwner( grow_tCtx ctx, char *owner);
   int grow_GetNodeClassAnnotBackground( grow_tNodeClass nodeclass, glow_eDrawType *background);
+  void grow_SetSelectScale( grow_tCtx ctx, double scale_x, double scale_y,
+			    glow_eScaleType type);
 
 /*@}*/
 #if defined __cplusplus

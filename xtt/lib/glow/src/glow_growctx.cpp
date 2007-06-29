@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.23 2007-06-15 11:34:43 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.24 2007-06-29 09:32:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2855,6 +2855,14 @@ void GrowCtx::set_select_textfont( glow_eFont font)
       ((GrowText *)a_sel[i])->set_textfont( font);
     else if ( a_sel[i]->type() == glow_eObjectType_GrowTable)
       ((GrowTable *)a_sel[i])->set_textfont( font);
+  }
+}
+
+void GrowCtx::set_select_scale( double scale_x, double scale_y, glow_eScaleType type)
+{
+  for ( int i = 0; i < a_sel.size(); i++) {
+    ((GrowText *)a_sel[i])->store_transform();
+    ((GrowText *)a_sel[i])->set_scale( scale_x, scale_y, 0, 0, type);
   }
 }
 

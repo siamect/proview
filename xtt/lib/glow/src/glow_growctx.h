@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.10 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.11 2007-06-29 09:32:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -378,6 +378,8 @@ class GrowCtx : public GlowCtx {
   /*! \param font	Font. */
   void set_select_textfont( glow_eFont font);
 
+  void set_select_scale( double scale_x, double scale_y, glow_eScaleType type);
+  
   //! Set background color of the window.
   /*! \param color	Background color. */
   void set_background( glow_eDrawType color);
