@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_ge_gtk.cpp,v 1.4 2007-05-03 14:22:13 claes Exp $
+ * Proview   $Id: xtt_ge_gtk.cpp,v 1.5 2007-06-29 12:52:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -263,13 +263,15 @@ XttGeGtk::XttGeGtk( GtkWidget *xg_parent_wid, void *xg_parent_ctx, char *xg_name
     window_height = xg_height;
   }
   cdh_StrncpyCutOff( title, name, sizeof(title), 1);
+  char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
 
   // Gtk
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
 					 "default-height", window_height,
 					 "default-width", window_width,
-					 "title", title,
+					 "title", titleutf8,
 					 NULL);
+  g_free( titleutf8);
 
   geometry.min_aspect = geometry.max_aspect = gdouble(window_width)/window_height;
   gtk_window_set_geometry_hints( GTK_WINDOW(toplevel), GTK_WIDGET(toplevel),
