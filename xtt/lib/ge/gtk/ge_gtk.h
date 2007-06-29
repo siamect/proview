@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.4 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.5 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -184,6 +184,8 @@ class GeGtk : public Ge {
   static void activate_incr_shift( GtkWidget *w, gpointer gectx);
   static void activate_decr_shift( GtkWidget *w, gpointer gectx);
   static void activate_scale( GtkWidget *w, gpointer gectx);
+  static void activate_scale_double( GtkWidget *w, gpointer gectx);
+  static void activate_scale_half( GtkWidget *w, gpointer gectx);
   static void activate_grid( GtkWidget *w, gpointer gectx);
   static void activate_linewidth_1( GtkWidget *w, gpointer gectx);
   static void activate_linewidth_2( GtkWidget *w, gpointer gectx);
@@ -240,6 +242,7 @@ class GeGtk : public Ge {
   static void activate_condir_down( GtkWidget *w, gpointer gectx);
   static void activate_background_color( GtkWidget *w, gpointer gectx);
   static void activate_help( GtkWidget *w, gpointer gectx);
+  static void activate_help_subgraph( GtkWidget *w, gpointer gectx);
   static void activate_india_ok( GtkWidget *w, gpointer gectx);
   static void activate_india_cancel( GtkWidget *w, gpointer gectx);
   static void activate_yesnodia_yes( GtkWidget *w, gpointer gectx);

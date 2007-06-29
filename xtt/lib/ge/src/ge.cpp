@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.26 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.27 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1507,6 +1507,11 @@ void Ge::activate_scale()
   status_msg( this, 0, 0);
 }
 
+void Ge::activate_scale( double factor)
+{
+  graph->scale( factor, factor);
+}
+
 void Ge::activate_grid( int set)
 {
   graph->set_grid( set);
@@ -1687,6 +1692,11 @@ void Ge::activate_background_color()
 void Ge::activate_help()
 {
   CoXHelp::dhelp( "index", "", navh_eHelpFile_Other, "$pwr_lang/man_geref.dat", false);  
+}
+
+void Ge::activate_help_subgraph()
+{
+  CoXHelp::dhelp( "index", "", navh_eHelpFile_Other, "$pwr_exe/man_subgraph.dat", false);  
 }
 
 void Ge::activate_india_ok( char *value)
@@ -1896,6 +1906,11 @@ void Ge::message( pwr_tStatus sts)
 void Ge::message_cb( void *ctx, char severity, char *message)
 {
   ((Ge *)ctx)->message( severity, message);
+}
+
+void Ge::help_cb( void *ctx, char *topic, char *helpfile)
+{
+  CoXHelp::dhelp( topic, "", navh_eHelpFile_Other, helpfile, false);  
 }
 
 Ge::~Ge()

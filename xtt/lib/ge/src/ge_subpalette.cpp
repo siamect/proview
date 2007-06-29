@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.9 2007-06-15 11:27:56 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.10 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <vector.h>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -151,6 +152,24 @@
 #define SUBPALETTE__SUCCESS 1
 
 static char null_str[] = "";
+
+class LocalFile {
+ public:
+  pwr_tFileName name;
+};
+
+void subpalette_sort( vector<LocalFile>& fvect)
+{
+  for ( int i = fvect.size() - 1; i > 0; i--) {
+    for ( int j = 0; j < i; j++) {
+      if ( strcmp( fvect[i].name, fvect[j].name) < 0) {
+	LocalFile tmp = fvect[i];
+	fvect[i] = fvect[j];
+	fvect[j] = tmp;
+      }
+    }
+  }
+}
 
 //
 // Convert attribute string to value
@@ -333,7 +352,7 @@ SubPalette::SubPalette(
 	parent_ctx(xn_parent_ctx),
 	trace_started(0),
 	message_cb(NULL), traverse_focus_cb(NULL), set_focus_cb(NULL),
-	menu_tree(NULL), path_cnt(0), displayed(0)
+	help_cb(NULL), menu_tree(NULL), path_cnt(0), displayed(0)
 {
   strcpy( name, xn_name);
   *status = 1;
@@ -533,6 +552,22 @@ static int subpalette_brow_cb( FlowCtx *ctx, flow_tEvent event)
           brow_SelectClear( subpalette->brow->ctx);
       }
       break;
+    case flow_eEvent_MB3Press: {            
+      switch ( event->object.object_type) {
+        case flow_eObjectType_Node:
+	  ItemFile 	*item;
+          brow_GetUserData( event->object.object, (void **)&item);
+          if ( item->type != subpalette_eItemType_File)
+            break;
+
+	  subpalette->create_popup_menu( item->filename,
+					 event->any.x_pixel, event->any.y_pixel);
+          break;
+        default:
+          ;
+      }
+      break;
+    }
     case flow_eEvent_Key_Return:
     case flow_eEvent_Key_Right:
     {
@@ -1054,6 +1089,8 @@ void SubPaletteBrow::brow_setup()
 	subpalette_brow_cb);
   brow_EnableEvent( ctx, flow_eEvent_Map, flow_eEventType_CallBack, 
 	subpalette_brow_cb);
+  brow_EnableEvent( ctx, flow_eEvent_MB3Press, flow_eEventType_CallBack, 
+	subpalette_brow_cb);
 }
 
 //
@@ -1148,6 +1185,7 @@ int ItemLocalSubGraphs::open_children( SubPalette *subpalette, double x, double 
     char		file_str[5][80];
     int		        nr;
     int                 i;
+    vector<LocalFile> fvect;
 
     // Create some children
     brow_SetNodraw( subpalette->brow->ctx);
@@ -1156,41 +1194,39 @@ int ItemLocalSubGraphs::open_children( SubPalette *subpalette, double x, double 
 
     nr = dcli_parse( filename, ",", "", (char *)file_str,
 		sizeof( file_str) / sizeof( file_str[0]), sizeof( file_str[0]), 0);
-    for ( i = 0; i < nr; i++)
-    {
+    for ( i = 0; i < nr; i++) {
       dcli_translate_filename( fname, file_str[i]);
       sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_INIT);
-      if ( ODD(sts))
-      {
-        dcli_parse_filename( found_file, dev, dir, file, type, &version);
-        cdh_ToLower( text, file);
-        text[0] = toupper( text[0]);
-
-        // Skip next pages in animations
-        if ( !((s = strstr( text, "__p")) && sscanf( s+3, "%d", &idx)))
-        {
-          new ItemFile( subpalette, text, found_file, 0, node, flow_eDest_IntoLast);
-          child_exist = 1;
-        }
+      if ( ODD(sts)) {
+	LocalFile f;
+	strcpy( f.name, found_file);
+	fvect.push_back( f);
       }
-      while ( ODD(sts))
-      {
+      while ( ODD(sts)) {
         sts = dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_NEXT);
-        if ( ODD(sts))
-        {
-          dcli_parse_filename( found_file, dev, dir, file, type, &version);
-          cdh_ToLower( text, file);
-          text[0] = toupper( text[0]);
-
-          if ( !((s = strstr( text, "__p")) && sscanf( s+3, "%d", &idx)))
-          {
-            new ItemFile( subpalette, text, found_file, 0, node, flow_eDest_IntoLast);
-            child_exist = 1;
-          }
-        }
+        if ( ODD(sts)) {
+	  LocalFile f;
+	  strcpy( f.name, found_file);
+	  fvect.push_back( f);
+	}
       }
       dcli_search_file( fname, found_file, DCLI_DIR_SEARCH_END);
     }
+
+    subpalette_sort( fvect);
+
+    for ( i = 0; i < (int) fvect.size(); i++) {
+      dcli_parse_filename( fvect[i].name, dev, dir, file, type, &version);
+      cdh_ToLower( text, file);
+      text[0] = toupper( text[0]);
+      
+      // Skip next pages in animations
+      if ( !((s = strstr( text, "__p")) && sscanf( s+3, "%d", &idx))) {
+	new ItemFile( subpalette, text, fvect[i].name, 0, node, flow_eDest_IntoLast);
+	child_exist = 1;
+      }
+    }
+
     if ( child_exist)
     {
       brow_SetOpen( node, subpalette_mOpen_Children);

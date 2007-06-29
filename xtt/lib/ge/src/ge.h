@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.8 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge.h,v 1.9 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -206,6 +206,7 @@ class Ge {
   void activate_incr_shift();
   void activate_decr_shift();
   void activate_scale();
+  void activate_scale( double factor);
   void activate_grid(int set);
   void activate_linewidth( int width);
   void activate_linetype1();
@@ -239,6 +240,7 @@ class Ge {
   void activate_condir_down();
   void activate_background_color();
   void activate_help();
+  void activate_help_subgraph();
   void activate_india_ok( char *value);
   void activate_india_cancel();
   void activate_yesnodia_yes();
@@ -279,6 +281,7 @@ class Ge {
   static int traverse_focus( void *ctx, void *component);
   static int set_focus_cb( void *ctx, void *component);
   static void message_cb( void *ctx, char severity, char *message);
+  static void help_cb( void *ctx, char *topic, char *helpfile);
 };
 
 #endif

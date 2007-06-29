@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette_gtk.h,v 1.1 2007-01-04 08:21:58 claes Exp $
+ * Proview   $Id: ge_subpalette_gtk.h,v 1.2 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,8 +41,15 @@ class SubPaletteGtk : public SubPalette {
     GtkWidget		*brow_widget;
     GtkWidget		*form_widget;
     GtkWidget		*toplevel;
+    int			popupmenu_x;
+    int			popupmenu_y;
+    char		popup_help_filename[200];
 
     void set_inputfocus( int focus);
+    void create_popup_menu( char *filename, int x, int y);
+    static void menu_position_func( GtkMenu *menu, gint *x, gint *y, gboolean *push_in,
+				    gpointer data);
+    static void activate_help( GtkWidget *w, gpointer data);
 };
 
 /*@}*/

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.26 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.27 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -864,6 +864,8 @@ class Graph {
   //! Continue execution of an action after a confirm.
   /*! /param object	Object for thet current action execution. */
   void confirm_ok( grow_tObject object);
+
+  void scale( double scalex, double scaley);
 
   //! Restrict movement of moved objects.
   /*! \param restriction	Type of restriction. */

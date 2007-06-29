@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.39 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.40 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -219,6 +219,23 @@ void Graph::push_select()
 void Graph::pop_select()
 {
   grow_PopSelectedObjects( grow->ctx);
+}
+
+//! Scale selected objects.
+/*! \param scalex	Scale factor in x direction. */
+/*! \param scaley	Scale factor in y direction. */
+void Graph::scale( double scalex, double scaley)
+{
+  switch ( grow_GetMoveRestrictions( grow->ctx)) {
+  case glow_eMoveRestriction_Horizontal:
+    grow_SetSelectScale( grow->ctx, scalex, 1, glow_eScaleType_UpperLeft);
+    break;
+  case glow_eMoveRestriction_Vertical:
+    grow_SetSelectScale( grow->ctx, 1, scaley, glow_eScaleType_UpperLeft);
+    break;
+  default:
+    grow_SetSelectScale( grow->ctx, scalex, scaley, glow_eScaleType_UpperLeft);
+  }
 }
 
 void Graph::set_move_restriction( glow_eMoveRestriction restriction)
@@ -3819,6 +3836,8 @@ graph_eDatabase Graph::parse_attr_name( char *name, char *parsed_name,
 
   if ( (s = strstr( str, "##")))
     string_to_type( s + 2, (pwr_eType *)type, size, &elements);
+  else
+    *type = pwr_eType__;
 
   if ( (s = strchr( str, '#'))) {
     *s = 0;

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.9 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.10 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -138,7 +138,9 @@ void GeGtk::open_input_dialog( char *text, char *title,
 
 void GeGtk::message( char severity, char *message)
 {
-  gtk_label_set_text( GTK_LABEL(msg_label), message);
+  char *messageutf8 = g_convert( message, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
+  g_free( messageutf8);
 }
 
 void GeGtk::status_msg( char *pos_str)
@@ -852,6 +854,16 @@ void GeGtk::activate_scale(GtkWidget *w, gpointer gectx)
   ((Ge *)gectx)->activate_scale();
 }
 
+void GeGtk::activate_scale_double(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_scale( 2.0);
+}
+
+void GeGtk::activate_scale_half(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_scale( 0.5);
+}
+
 void GeGtk::activate_grid( GtkWidget *w, gpointer gectx)
 {
   int set = (int) gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(w));
@@ -940,7 +952,7 @@ void GeGtk::activate_gridsize_3(GtkWidget *w, gpointer gectx)
 
 void GeGtk::activate_gridsize_2(GtkWidget *w, gpointer gectx)
 {
-  ((Ge *)gectx)->activate_gridsize( 0.2);
+  ((Ge *)gectx)->activate_gridsize( 0.25);
 }
 
 void GeGtk::activate_gridsize_1(GtkWidget *w, gpointer gectx)
@@ -1149,6 +1161,11 @@ void GeGtk::activate_background_color(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_help(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_help();
+}
+
+void GeGtk::activate_help_subgraph(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_help_subgraph();
 }
 
 void GeGtk::activate_india_ok(GtkWidget *w, gpointer gectx)
@@ -1868,8 +1885,12 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *help_help = gtk_image_menu_item_new_from_stock(GTK_STOCK_HELP, accel_g);
   g_signal_connect(help_help, "activate", G_CALLBACK(activate_help), this);
 
+  GtkWidget *help_help_subgraph = gtk_menu_item_new_with_mnemonic( "H_elp on Subgraphs");
+  g_signal_connect(help_help_subgraph, "activate", G_CALLBACK(activate_help_subgraph), this);
+
   GtkMenu *help_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help);
+  gtk_menu_shell_append(GTK_MENU_SHELL(help_menu), help_help_subgraph);
 
   GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), help);
@@ -2049,6 +2070,16 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   GtkWidget *tools_scale = image_button( "$pwr_exe/ge_scale.png");
   g_signal_connect(tools_scale, "clicked", G_CALLBACK(activate_scale), this);
   gtk_toolbar_append_widget( tools2, tools_scale, "Scale selected objects", "");
+
+  // Scale double button
+  GtkWidget *tools_scale_double = image_button( "$pwr_exe/ge_scale_double.png");
+  g_signal_connect(tools_scale_double, "clicked", G_CALLBACK(activate_scale_double), this);
+  gtk_toolbar_append_widget( tools2, tools_scale_double, "Scale selected objects to double size", "");
+
+  // Scale half button
+  GtkWidget *tools_scale_half = image_button( "$pwr_exe/ge_scale_half.png");
+  g_signal_connect(tools_scale_half, "clicked", G_CALLBACK(activate_scale_half), this);
+  gtk_toolbar_append_widget( tools2, tools_scale_half, "Scale selected objects to half size", "");
 
   // Rotate 90 button
   GtkWidget *tools_rotate90 = image_button( "$pwr_exe/ge_flip.png");
@@ -2271,7 +2302,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   g_signal_connect(tools_gridsize_4, "activate", G_CALLBACK(activate_gridsize_4), this);
   GtkWidget *tools_gridsize_3 = gtk_menu_item_new_with_label( "Gridsize 0.5");
   g_signal_connect(tools_gridsize_3, "activate", G_CALLBACK(activate_gridsize_3), this);
-  GtkWidget *tools_gridsize_2 = gtk_menu_item_new_with_label( "Gridsize 0.2");
+  GtkWidget *tools_gridsize_2 = gtk_menu_item_new_with_label( "Gridsize 0.25");
   g_signal_connect(tools_gridsize_2, "activate", G_CALLBACK(activate_gridsize_2), this);
   GtkWidget *tools_gridsize_1 = gtk_menu_item_new_with_label( "Gridsize 0.1");
   g_signal_connect(tools_gridsize_1, "activate", G_CALLBACK(activate_gridsize_1), this);
@@ -2407,6 +2438,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   subpalette->message_cb = &Ge::message_cb;
   subpalette->set_focus_cb = &Ge::set_focus_cb;
   subpalette->traverse_focus_cb = &Ge::traverse_focus;
+  subpalette->help_cb = help_cb;
   gtk_box_pack_start( GTK_BOX(palbox), subpalette_widget, TRUE, TRUE, 0);
   gtk_widget_show( subpalette_widget);
   subpalette_mapped = 1;

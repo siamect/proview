@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.9 2007-06-15 11:28:21 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.10 2007-06-29 09:45:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -102,6 +102,7 @@ class SubPalette {
     void 		(*message_cb)( void *, char, char *);
     int 		(*traverse_focus_cb)( void *, void *);
     int 		(*set_focus_cb)( void *, void *);
+    void 		(*help_cb)( void *, char *, char *);
     void		*root_item;
     subpalette_sMenu	*menu_tree;
     char		path[10][80];
@@ -109,6 +110,7 @@ class SubPalette {
     int			displayed;
 
     virtual void set_inputfocus( int focus) {}
+    virtual void create_popup_menu( char *filename, int x, int y) {}
 
     void message( char sev, char *text);
     int get_select( pwr_sAttrRef *attrref, int *is_attr);
