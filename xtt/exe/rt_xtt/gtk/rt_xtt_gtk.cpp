@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_xtt_gtk.cpp,v 1.10 2007-05-25 13:36:08 claes Exp $
+ * Proview   $Id: rt_xtt_gtk.cpp,v 1.11 2007-06-29 09:51:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -133,7 +133,9 @@ void XttGtk::open_input_dialog( char *text, char *title,
 
 void XttGtk::message( char severity, char *msg)
 {
-  gtk_label_set_text( GTK_LABEL(msg_label), msg);
+  char *messageutf8 = g_convert( msg, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_label_set_text( GTK_LABEL(msg_label), messageutf8);
+  g_free( messageutf8);
 }
 
 void XttGtk::close( void *ctx, int terminate)
