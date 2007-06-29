@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statussrv.cpp,v 1.5 2007-06-01 11:28:33 claes Exp $
+ * Proview   $Id: rt_statussrv.cpp,v 1.6 2007-06-29 12:50:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class status_server {
   status_server() : m_grant_all(true), m_config(0), m_node(0), qid(qcom_cNQid) {}
 
   bool m_grant_all;
-  pwr_sNode *m_config;
+  pwr_sClass_StatusServerConfig *m_config;
   pwr_sNode *m_node;
   qcom_sQid qid;
   char version[20];
@@ -297,6 +297,26 @@ SOAP_FMAC5 int SOAP_FMAC6 __s0__GetStatus(struct soap *soap,
   s0__GetStatusResponse->RestartTime->assign( timstr);
   s0__GetStatusResponse->Restarts = (int *) soap_malloc( soap, sizeof(s0__GetStatusResponse->Restarts));
   *s0__GetStatusResponse->Restarts = statussrv->m_node->Restarts;
+
+  s0__GetStatusResponse->UserStatus1 = statussrv->m_config->UserStatus[0];
+  s0__GetStatusResponse->UserStatusStr1 = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->UserStatusStr1->assign( statussrv->m_config->UserStatusStr[0]);
+
+  s0__GetStatusResponse->UserStatus2 = statussrv->m_config->UserStatus[1];
+  s0__GetStatusResponse->UserStatusStr2 = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->UserStatusStr2->assign( statussrv->m_config->UserStatusStr[1]);
+
+  s0__GetStatusResponse->UserStatus3 = statussrv->m_config->UserStatus[2];
+  s0__GetStatusResponse->UserStatusStr3 = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->UserStatusStr3->assign( statussrv->m_config->UserStatusStr[2]);
+
+  s0__GetStatusResponse->UserStatus4 = statussrv->m_config->UserStatus[3];
+  s0__GetStatusResponse->UserStatusStr4 = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->UserStatusStr4->assign( statussrv->m_config->UserStatusStr[3]);
+
+  s0__GetStatusResponse->UserStatus5 = statussrv->m_config->UserStatus[4];
+  s0__GetStatusResponse->UserStatusStr5 = soap_new_std__string( soap, -1);
+  s0__GetStatusResponse->UserStatusStr5->assign( statussrv->m_config->UserStatusStr[4]);
   return SOAP_OK;
 }
 

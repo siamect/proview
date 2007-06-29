@@ -58,6 +58,41 @@ pwr_tStatus statussrv_GetStatus( char *nodename, statussrv_sGetStatus *result)
     else
       result->Restarts = -1;
 
+    if ( get_status_response.UserStatus1)
+      result->UserStatus[0] = get_status_response.UserStatus1;
+    if ( get_status_response.UserStatusStr1)
+      strncpy( result->UserStatusStr[0], get_status_response.UserStatusStr1->c_str(), sizeof(result->UserStatusStr[0]));
+    else
+      strcpy( result->UserStatusStr[0], "");
+
+    if ( get_status_response.UserStatus2)
+      result->UserStatus[1] = get_status_response.UserStatus2;
+    if ( get_status_response.UserStatusStr2)
+      strncpy( result->UserStatusStr[1], get_status_response.UserStatusStr2->c_str(), sizeof(result->UserStatusStr[0]));
+    else
+      strcpy( result->UserStatusStr[1], "");
+
+    if ( get_status_response.UserStatus3)
+      result->UserStatus[2] = get_status_response.UserStatus3;
+    if ( get_status_response.UserStatusStr3)
+      strncpy( result->UserStatusStr[2], get_status_response.UserStatusStr3->c_str(), sizeof(result->UserStatusStr[0]));
+    else
+      strcpy( result->UserStatusStr[2], "");
+
+    if ( get_status_response.UserStatus4)
+      result->UserStatus[3] = get_status_response.UserStatus4;
+    if ( get_status_response.UserStatusStr4)
+      strncpy( result->UserStatusStr[3], get_status_response.UserStatusStr4->c_str(), sizeof(result->UserStatusStr[0]));
+    else
+      strcpy( result->UserStatusStr[3], "");
+
+    if ( get_status_response.UserStatus5)
+      result->UserStatus[4] = get_status_response.UserStatus5;
+    if ( get_status_response.UserStatusStr5)
+      strncpy( result->UserStatusStr[4], get_status_response.UserStatusStr5->c_str(), sizeof(result->UserStatusStr[0]));
+    else
+      strcpy( result->UserStatusStr[4], "");
+
   }
   else {
     sts = PWR__SRVCONNECTION;

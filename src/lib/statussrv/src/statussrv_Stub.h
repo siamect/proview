@@ -126,15 +126,15 @@ public:
 	std::string *BootTime;	/* optional element of type xsd:string */
 	std::string *RestartTime;	/* optional element of type xsd:string */
 	int *Restarts;	/* optional element of type xsd:int */
-	int *UserStatus1;	/* optional element of type xsd:int */
+	int UserStatus1;	/* required element of type xsd:int */
 	std::string *UserStatusStr1;	/* optional element of type xsd:string */
-	int *UserStatus2;	/* optional element of type xsd:int */
+	int UserStatus2;	/* required element of type xsd:int */
 	std::string *UserStatusStr2;	/* optional element of type xsd:string */
-	int *UserStatus3;	/* optional element of type xsd:int */
+	int UserStatus3;	/* required element of type xsd:int */
 	std::string *UserStatusStr3;	/* optional element of type xsd:string */
-	int *UserStatus4;	/* optional element of type xsd:int */
+	int UserStatus4;	/* required element of type xsd:int */
 	std::string *UserStatusStr4;	/* optional element of type xsd:string */
-	int *UserStatus5;	/* optional element of type xsd:int */
+	int UserStatus5;	/* required element of type xsd:int */
 	std::string *UserStatusStr5;	/* optional element of type xsd:string */
 	std::string *ClientRequestHandle;	/* optional attribute */
 	struct soap *soap;	/* transient */
@@ -146,7 +146,7 @@ public:
 	virtual int soap_out(struct soap*, const char*, int, const char*) const;
 	virtual void *soap_get(struct soap*, const char*, const char*);
 	virtual void *soap_in(struct soap*, const char*, const char*);
-	         _s0__GetStatusResponse() : Description(NULL), SystemTime(NULL), BootTime(NULL), RestartTime(NULL), Restarts(NULL), UserStatus1(NULL), UserStatusStr1(NULL), UserStatus2(NULL), UserStatusStr2(NULL), UserStatus3(NULL), UserStatusStr3(NULL), UserStatus4(NULL), UserStatusStr4(NULL), UserStatus5(NULL), UserStatusStr5(NULL), ClientRequestHandle(NULL), soap(NULL) { }
+	         _s0__GetStatusResponse() : Description(NULL), SystemTime(NULL), BootTime(NULL), RestartTime(NULL), Restarts(NULL), UserStatusStr1(NULL), UserStatusStr2(NULL), UserStatusStr3(NULL), UserStatusStr4(NULL), UserStatusStr5(NULL), ClientRequestHandle(NULL), soap(NULL) { }
 	virtual ~_s0__GetStatusResponse() { }
 };
 #endif

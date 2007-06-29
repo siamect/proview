@@ -21,15 +21,15 @@
             <s:element minOccurs="0" maxOccurs="1" name="BootTime" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="RestartTime" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="Restarts" type="s:int" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserStatus1" type="s:int" />
+            <s:element name="UserStatus1" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr1" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserStatus2" type="s:int" />
+            <s:element name="UserStatus2" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr2" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserStatus3" type="s:int" />
+            <s:element name="UserStatus3" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr3" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserStatus4" type="s:int" />
+            <s:element name="UserStatus4" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr4" type="s:string" />
-            <s:element minOccurs="0" maxOccurs="1" name="UserStatus5" type="s:int" />
+            <s:element name="UserStatus5" type="s:int" />
             <s:element minOccurs="0" maxOccurs="1" name="UserStatusStr5" type="s:string" />
           </s:sequence>
         </s:complexType>

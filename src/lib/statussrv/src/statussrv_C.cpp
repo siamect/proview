@@ -7,7 +7,7 @@
 
 #include "statussrv_H.h"
 
-SOAP_SOURCE_STAMP("@(#) statussrv_C.cpp ver 2.7.9d 2007-05-30 13:46:12 GMT")
+SOAP_SOURCE_STAMP("@(#) statussrv_C.cpp ver 2.7.9d 2007-06-29 12:20:02 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -3153,15 +3153,15 @@ void _s0__GetStatusResponse::soap_default(struct soap *soap)
 	((_s0__GetStatusResponse*)this)->BootTime = NULL;
 	((_s0__GetStatusResponse*)this)->RestartTime = NULL;
 	((_s0__GetStatusResponse*)this)->Restarts = NULL;
-	((_s0__GetStatusResponse*)this)->UserStatus1 = NULL;
+	soap_default_int(soap, &((_s0__GetStatusResponse*)this)->UserStatus1);
 	((_s0__GetStatusResponse*)this)->UserStatusStr1 = NULL;
-	((_s0__GetStatusResponse*)this)->UserStatus2 = NULL;
+	soap_default_int(soap, &((_s0__GetStatusResponse*)this)->UserStatus2);
 	((_s0__GetStatusResponse*)this)->UserStatusStr2 = NULL;
-	((_s0__GetStatusResponse*)this)->UserStatus3 = NULL;
+	soap_default_int(soap, &((_s0__GetStatusResponse*)this)->UserStatus3);
 	((_s0__GetStatusResponse*)this)->UserStatusStr3 = NULL;
-	((_s0__GetStatusResponse*)this)->UserStatus4 = NULL;
+	soap_default_int(soap, &((_s0__GetStatusResponse*)this)->UserStatus4);
 	((_s0__GetStatusResponse*)this)->UserStatusStr4 = NULL;
-	((_s0__GetStatusResponse*)this)->UserStatus5 = NULL;
+	soap_default_int(soap, &((_s0__GetStatusResponse*)this)->UserStatus5);
 	((_s0__GetStatusResponse*)this)->UserStatusStr5 = NULL;
 	((_s0__GetStatusResponse*)this)->ClientRequestHandle = NULL;
 	/* transient soap skipped */
@@ -3180,15 +3180,15 @@ void _s0__GetStatusResponse::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->BootTime);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->RestartTime);
 	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->Restarts);
-	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->UserStatus1);
+	soap_embedded(soap, &((_s0__GetStatusResponse*)this)->UserStatus1, SOAP_TYPE_int);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->UserStatusStr1);
-	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->UserStatus2);
+	soap_embedded(soap, &((_s0__GetStatusResponse*)this)->UserStatus2, SOAP_TYPE_int);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->UserStatusStr2);
-	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->UserStatus3);
+	soap_embedded(soap, &((_s0__GetStatusResponse*)this)->UserStatus3, SOAP_TYPE_int);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->UserStatusStr3);
-	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->UserStatus4);
+	soap_embedded(soap, &((_s0__GetStatusResponse*)this)->UserStatus4, SOAP_TYPE_int);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->UserStatusStr4);
-	soap_serialize_PointerToint(soap, &((_s0__GetStatusResponse*)this)->UserStatus5);
+	soap_embedded(soap, &((_s0__GetStatusResponse*)this)->UserStatus5, SOAP_TYPE_int);
 	soap_serialize_PointerTostd__string(soap, &((_s0__GetStatusResponse*)this)->UserStatusStr5);
 	/* transient soap skipped */
 }
@@ -3220,15 +3220,15 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__s0__GetStatusResponse(struct soap *soap, con
 	soap_out_PointerTostd__string(soap, "s0:BootTime", -1, &(((_s0__GetStatusResponse*)a)->BootTime), "");
 	soap_out_PointerTostd__string(soap, "s0:RestartTime", -1, &(((_s0__GetStatusResponse*)a)->RestartTime), "");
 	soap_out_PointerToint(soap, "s0:Restarts", -1, &(((_s0__GetStatusResponse*)a)->Restarts), "");
-	soap_out_PointerToint(soap, "s0:UserStatus1", -1, &(((_s0__GetStatusResponse*)a)->UserStatus1), "");
+	soap_out_int(soap, "s0:UserStatus1", -1, &(((_s0__GetStatusResponse*)a)->UserStatus1), "");
 	soap_out_PointerTostd__string(soap, "s0:UserStatusStr1", -1, &(((_s0__GetStatusResponse*)a)->UserStatusStr1), "");
-	soap_out_PointerToint(soap, "s0:UserStatus2", -1, &(((_s0__GetStatusResponse*)a)->UserStatus2), "");
+	soap_out_int(soap, "s0:UserStatus2", -1, &(((_s0__GetStatusResponse*)a)->UserStatus2), "");
 	soap_out_PointerTostd__string(soap, "s0:UserStatusStr2", -1, &(((_s0__GetStatusResponse*)a)->UserStatusStr2), "");
-	soap_out_PointerToint(soap, "s0:UserStatus3", -1, &(((_s0__GetStatusResponse*)a)->UserStatus3), "");
+	soap_out_int(soap, "s0:UserStatus3", -1, &(((_s0__GetStatusResponse*)a)->UserStatus3), "");
 	soap_out_PointerTostd__string(soap, "s0:UserStatusStr3", -1, &(((_s0__GetStatusResponse*)a)->UserStatusStr3), "");
-	soap_out_PointerToint(soap, "s0:UserStatus4", -1, &(((_s0__GetStatusResponse*)a)->UserStatus4), "");
+	soap_out_int(soap, "s0:UserStatus4", -1, &(((_s0__GetStatusResponse*)a)->UserStatus4), "");
 	soap_out_PointerTostd__string(soap, "s0:UserStatusStr4", -1, &(((_s0__GetStatusResponse*)a)->UserStatusStr4), "");
-	soap_out_PointerToint(soap, "s0:UserStatus5", -1, &(((_s0__GetStatusResponse*)a)->UserStatus5), "");
+	soap_out_int(soap, "s0:UserStatus5", -1, &(((_s0__GetStatusResponse*)a)->UserStatus5), "");
 	soap_out_PointerTostd__string(soap, "s0:UserStatusStr5", -1, &(((_s0__GetStatusResponse*)a)->UserStatusStr5), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -3327,7 +3327,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 					continue;
 				}
 			if (soap_flag_UserStatus11 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToint(soap, "s0:UserStatus1", &(((_s0__GetStatusResponse*)a)->UserStatus1), "xsd:int"))
+				if (soap_in_int(soap, "s0:UserStatus1", &(((_s0__GetStatusResponse*)a)->UserStatus1), "xsd:int"))
 				{	soap_flag_UserStatus11--;
 					continue;
 				}
@@ -3337,7 +3337,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 					continue;
 				}
 			if (soap_flag_UserStatus21 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToint(soap, "s0:UserStatus2", &(((_s0__GetStatusResponse*)a)->UserStatus2), "xsd:int"))
+				if (soap_in_int(soap, "s0:UserStatus2", &(((_s0__GetStatusResponse*)a)->UserStatus2), "xsd:int"))
 				{	soap_flag_UserStatus21--;
 					continue;
 				}
@@ -3347,7 +3347,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 					continue;
 				}
 			if (soap_flag_UserStatus31 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToint(soap, "s0:UserStatus3", &(((_s0__GetStatusResponse*)a)->UserStatus3), "xsd:int"))
+				if (soap_in_int(soap, "s0:UserStatus3", &(((_s0__GetStatusResponse*)a)->UserStatus3), "xsd:int"))
 				{	soap_flag_UserStatus31--;
 					continue;
 				}
@@ -3357,7 +3357,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 					continue;
 				}
 			if (soap_flag_UserStatus41 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToint(soap, "s0:UserStatus4", &(((_s0__GetStatusResponse*)a)->UserStatus4), "xsd:int"))
+				if (soap_in_int(soap, "s0:UserStatus4", &(((_s0__GetStatusResponse*)a)->UserStatus4), "xsd:int"))
 				{	soap_flag_UserStatus41--;
 					continue;
 				}
@@ -3367,7 +3367,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 					continue;
 				}
 			if (soap_flag_UserStatus51 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerToint(soap, "s0:UserStatus5", &(((_s0__GetStatusResponse*)a)->UserStatus5), "xsd:int"))
+				if (soap_in_int(soap, "s0:UserStatus5", &(((_s0__GetStatusResponse*)a)->UserStatus5), "xsd:int"))
 				{	soap_flag_UserStatus51--;
 					continue;
 				}
@@ -3385,7 +3385,7 @@ SOAP_FMAC3 _s0__GetStatusResponse * SOAP_FMAC4 soap_in__s0__GetStatusResponse(st
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_Version1 > 0 || soap_flag_SystemStatus1 > 0 || soap_flag_SystemStatusStr1 > 0))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_Version1 > 0 || soap_flag_SystemStatus1 > 0 || soap_flag_SystemStatusStr1 > 0 || soap_flag_UserStatus11 > 0 || soap_flag_UserStatus21 > 0 || soap_flag_UserStatus31 > 0 || soap_flag_UserStatus41 > 0 || soap_flag_UserStatus51 > 0))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}

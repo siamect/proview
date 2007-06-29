@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: statussrv_utl.h,v 1.4 2007-06-01 11:27:58 claes Exp $
+ * Proview   $Id: statussrv_utl.h,v 1.5 2007-06-29 12:51:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -39,6 +39,8 @@ typedef struct {
   pwr_tTime BootTime;
   pwr_tTime RestartTime;
   int Restarts;
+  pwr_tStatus UserStatus[5];
+  char UserStatusStr[5][120];
 } statussrv_sGetStatus;
 
 typedef struct {
