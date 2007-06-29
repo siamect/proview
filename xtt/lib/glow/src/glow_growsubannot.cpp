@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growsubannot.cpp,v 1.7 2007-06-15 11:34:43 claes Exp $
+ * Proview   $Id: glow_growsubannot.cpp,v 1.8 2007-06-29 09:31:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -405,9 +405,7 @@ void GrowSubAnnot::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
 			 void *colornode)
 {
   if ( w == &ctx->navw) {
-    if ( ctx->no_nav)
-      return;
-    hot = 0;
+    return;
   }
   if ( t) {
     GlowPoint p1(p);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconpoint.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growconpoint.cpp,v 1.5 2007-06-29 09:31:24 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -369,9 +369,7 @@ void GrowConPoint::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, 
 			 void *colornode)
 {
   if ( w == &ctx->navw) {
-    if ( ctx->no_nav)
-      return;
-    hot = 0;
+    return;
   }
 
   GlowPoint p1(p);
