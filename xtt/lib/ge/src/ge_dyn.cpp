@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.51 2007-04-25 13:36:13 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.52 2007-06-29 09:46:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3271,6 +3271,8 @@ int GeValue::connect( grow_tObject object, glow_sTraceData *trace_data)
   size = attr_size;
   switch ( db) {
   case graph_eDatabase_Gdh:
+    if ( attr_type == pwr_eType__)
+      printf( "Warning GeValue::connect, type is missing in  %s\n", attribute);
 
     switch ( attr_type) {
     case pwr_eType_Enum:
