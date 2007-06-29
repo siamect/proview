@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace_gtk.cpp,v 1.3 2007-01-12 07:58:06 claes Exp $
+ * Proview   $Id: rt_trace_gtk.cpp,v 1.4 2007-06-29 12:51:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -338,11 +338,15 @@ RtTraceGtk::RtTraceGtk( void *tr_parent_ctx, GtkWidget *tr_parent_wid, pwr_tObji
     strcpy( m_plcconnect, plcconnect);
   }
 
+  char *titleutf8 = g_convert( title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+
   // Gtk
   toplevel = (GtkWidget *) g_object_new( GTK_TYPE_WINDOW, 
-			   "default-height", window_height,
-			   "default-width", window_width,
-			   NULL);
+					 "default-height", window_height,
+					 "default-width", window_width,
+					 "title", titleutf8,
+					 NULL);
+  g_free( titleutf8);
 
   g_signal_connect( toplevel, "delete_event", G_CALLBACK(delete_event), this);
   g_signal_connect( toplevel, "destroy", G_CALLBACK(destroy_event), this);
