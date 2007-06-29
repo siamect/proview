@@ -1,3 +1,16 @@
+199
+!/**
+! CheckValve
+! Group Hydraulics
+!
+! <image> pwr_checkvalve_gs.gif
+!
+! <h1>Description
+! Checkvalve
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 207.982
 135 207.982

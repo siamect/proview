@@ -1,3 +1,16 @@
+199
+!/**
+! Base3WayValve
+! Group Process
+!
+! <image> pwr_base3wayvalve_gs.gif
+!
+! <h1>Description
+! Three way valve.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 111.516
 135 111.516

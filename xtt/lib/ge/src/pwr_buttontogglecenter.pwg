@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonToggleCenter
+! Group Pushbuttons
+!
+! <image> pwr_buttonxcenter_gs.gif
+!
+! <h1>Description
+! Button to toggle a digital signal. Center aligned text.
+!
+! <h1>Default dynamics
+! ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 65.2393
 135 65.2393

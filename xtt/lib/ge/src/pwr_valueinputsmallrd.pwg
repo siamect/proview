@@ -1,3 +1,22 @@
+199
+!/**
+! ValueInputSmallRd
+! Group Values
+!
+! <image> pwr_valueinputsmallrd_gs.gif
+!
+! <h1>Description
+! Small value input field with left aligned text.
+!
+! The field has a frame that can be matched to the background.
+! Use the tone choises in the color palette, and the
+! button for lightness, intensity and colorshift in the toolpanel, 
+! to match the frame to the background.
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 313.041
 135 313.041

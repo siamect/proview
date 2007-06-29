@@ -1,3 +1,22 @@
+199
+!/**
+! DamperControl2
+! Group Process
+!
+! <image> pwr_dampercontrol2_gs.gif
+!
+! <h1>Description
+! Controldamper with three pages, damper partly open (page 1), 
+! damper closed (page 2) and damper open (page 3).
+! Annotation for display of manual or local mode.
+!
+! <image> pwr_dampercontrol2_ags.gif
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
 1
 100 62.9551
 135 62.9551
@@ -15,7 +34,7 @@
 111 -1.5
 116 0
 117 0
-118 140
+118 168
 119 128
 120 1
 121 Claes context
@@ -540,7 +559,7 @@ pwr_exe:
 2303 -0.5868
 2305
 9
-900 0
+900 2
 901 303
 904 0
 902 A1
@@ -572,7 +591,7 @@ pwr_exe:
 1300 1
 1301 304
 1306 0
-1302 0
+1302 2
 1305 1
 1303
 7

@@ -1,3 +1,19 @@
+199
+!/**
+! Smiley
+! Group Other
+!
+! <image> pwr_smiley_gs.gif
+!
+! <h1>Description
+! Smiley.
+!
+! Subgraph with six pages, diplaying different mental states.
+! <image> pwr_smiley_ags.gif
+!
+! <h1>Default dynamics
+! AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

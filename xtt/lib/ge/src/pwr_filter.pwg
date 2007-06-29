@@ -1,3 +1,17 @@
+199
+!/**
+! Filter
+! Group Process
+!
+! <image> pwr_filter_gs.gif
+!
+! <h1>Description
+! Filter.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! with red color when signal is low.
+!*/
 1
 100 85.9963
 135 85.9963

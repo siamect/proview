@@ -1,3 +1,16 @@
+199
+!/**
+! PulldownMenu
+! Group Other
+!
+! <image> pwr_pulldownmenu_gs.gif
+!
+! <h1>Description
+! Pulldown menu. Place the pulldown menu on a menu bar.
+!
+! <h1>Default dynamics
+! PulldownMenu <link>GeDynPulldownMenu, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 168.661
 135 168.661

@@ -1,3 +1,16 @@
+199
+!/**
+! FrequencyConverter
+! Group Electric
+!
+! <image> pwr_frequencyconverter_gs.gif
+!
+! <h1>Description
+! Frequence converter.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 70.3162
 135 70.3162

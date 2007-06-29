@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonInfo
+! Group Pushbuttons
+!
+! <image> pwr_buttoninfo_gs.gif
+!
+! <h1>Description
+! Information button.
+!
+! <h1>Default dynamics
+! Help <link>GeDynHelp, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 18.7844
 135 18.7844

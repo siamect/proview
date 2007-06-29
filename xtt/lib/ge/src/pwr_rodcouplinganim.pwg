@@ -1,3 +1,20 @@
+199
+!/**
+! RodCouplingAnim
+! Group Process
+!
+! <image> pwr_rodcouplinganim_gs.gif
+!
+! <h1>Description
+! Animated rodcoupling.
+!
+! Subgraph with eight pages, animating a rotation of the rodcoupling.
+! <image> pwr_rodcouplinganim_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
+!*/
 1
 100 238.033
 135 238.033

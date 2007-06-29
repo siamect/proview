@@ -1,3 +1,21 @@
+199
+!/**
+! SliderBackground1_2
+! Group Sliders
+!
+! <image> pwr_sliderbackground1_2_gs.gif
+!
+! <h1>Description
+! Background to a slider. 
+! Defines the moving range for the slider. See also
+! Slider1 <link>pwr_slider1
+!
+! Note! If you want to rotate the slider, rotate the slider
+! and the background together.
+! 
+! <h1>Default dynamics
+! SliderBackground <link>GeDynSliderBackground, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 63.6631
 135 63.6631

@@ -1,3 +1,19 @@
+199
+!/**
+! Fan3
+! Group Process
+!
+! <image> pwr_fan3_gs.gif
+!
+! <h1>Description
+! Fan.
+!
+! Subgraph with five pages, animating a rotating fan.
+! <image> pwr_fan3_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
 1
 100 110.538
 135 110.538

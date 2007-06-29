@@ -1,3 +1,17 @@
+199
+!/**
+! Valve
+! Group Process
+!
+! <image> pwr_valve_gs.gif
+!
+! <h1>Description
+! Valve.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonSet
+! Group Pushbuttons
+!
+! <image> pwr_buttonx_gs.gif
+!
+! <h1>Description
+! Button to set a digital signal.
+!
+! <h1>Default dynamics
+! SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 65.2393
 135 65.2393

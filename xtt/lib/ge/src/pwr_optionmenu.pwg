@@ -1,3 +1,16 @@
+199
+!/**
+! OptionMenu
+! Group Other
+!
+! <image> pwr_optionmenu_gs.gif
+!
+! <h1>Description
+! Optionmenu. Select an alternativ in a list of alternatives.
+!
+! <h1>Default dynamics
+! OptionMenu <link>GeDynOptionMenu, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 111.39
 135 111.39

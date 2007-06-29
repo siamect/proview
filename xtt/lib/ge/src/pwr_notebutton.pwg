@@ -1,3 +1,19 @@
+199
+!/**
+! NoteButton
+! Group Pushbuttons
+!
+! <image> pwr_notebutton_gs.gif
+!
+! <h1>Description
+! Button to display the current note for the connected object.
+!
+! <h1>Default dynamics
+! HostObject <link>GeDynHostObject, ,$pwr_lang/man_geref.dat
+!
+! The button is visible if a note for the object is present,
+! and the note is displayed when the button is activated.
+!*/
 1
 100 20
 135 20

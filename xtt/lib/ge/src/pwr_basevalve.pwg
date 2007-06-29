@@ -1,3 +1,20 @@
+199
+!/**
+! BaseValve
+! Group Process
+!
+! <image> pwr_basevalve_gs.gif
+!
+! <h1>Description
+! Valve.
+!
+! Subgraph with three pages, valve partly open (page 1),
+! valve closed (page 2) and valve open (page 3).
+! <image> pwr_basevalve_ags.gif
+!
+! <h1>Default dynamics
+! No default dynamics.
+!
 1
 100 92.9304
 135 92.9304

@@ -1,3 +1,16 @@
+199
+!/**
+! M3WayValve
+! Group Process
+!
+! <image> pwr_m3wayvalve_gs.gif
+!
+! <h1>Description
+! Solenoid three way valve.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 141.229
 135 141.229

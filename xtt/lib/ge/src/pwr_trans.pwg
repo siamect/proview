@@ -1,3 +1,16 @@
+199
+!/**
+! Trans
+! Group Grafcet
+!
+! <image> pwr_trans_gs.gif
+!
+! <h1>Description
+! Displays the state of a grafcet transition object.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 94.9871
 135 94.9871

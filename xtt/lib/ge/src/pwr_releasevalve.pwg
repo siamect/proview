@@ -1,3 +1,16 @@
+199
+!/**
+! ReleaseValve
+! Group Hydraulics
+!
+! <image> pwr_releasevalve_gs.gif
+!
+! <h1>Description
+! Release valve.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 63.1488
 135 63.1488

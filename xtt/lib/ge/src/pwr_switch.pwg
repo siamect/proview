@@ -1,3 +1,19 @@
+199
+!/**
+! Switch
+! Group Process
+!
+! <image> pwr_switch_gs.gif
+!
+! <h1>Description
+! Switch or sensor.
+! Annotation where the type of switch or sensor can be displayed,
+! e.g. T (temperature), P (pressure), F (flow), L (level), S (speed) 
+! or X (other)
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 48.2374
 135 48.2374

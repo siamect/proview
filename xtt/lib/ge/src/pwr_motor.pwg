@@ -1,3 +1,17 @@
+199
+!/**
+! Motor
+! Group Process
+!
+! <image> pwr_motor_gs.gif
+!
+! <h1>Description
+! Motor.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynError, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 96.6293
 135 96.6293

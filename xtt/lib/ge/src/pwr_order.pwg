@@ -1,3 +1,17 @@
+199
+!/**
+! Order
+! Group Grafcet
+!
+! <image> pwr_order_gs.gif
+!
+! <h1>Description
+! Displays the state of a grafcet order.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Gray when signal is low.
+!*/
 1
 100 64.4489
 135 64.4489

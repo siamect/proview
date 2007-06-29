@@ -1,3 +1,20 @@
+199
+!/**
+! DamperAnim2
+! Group Process
+!
+! <image> pwr_damperanim2_gs.gif
+!
+! <h1>Description
+! Animated damper with annotation for local or manual mode.
+!
+! Subgraph with seven pages, where the damper is rotated from open
+! to closed position.
+! <image> pwr_damperanim2_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Dig.
 1
 100 71.6636
 135 71.6636

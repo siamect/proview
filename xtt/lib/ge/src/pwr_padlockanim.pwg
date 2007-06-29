@@ -1,3 +1,20 @@
+199
+!/**
+! PadlockAnim
+! Group Process
+!
+! <image> pwr_padlockanim_gs.gif
+!
+! <h1>Description
+! Animated padlock.
+!
+! Subgraph with seven pages, animating the opening
+! of the padlock.
+! <image> pwr_padlockanim_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Dig.
 1
 100 143.848
 135 143.848

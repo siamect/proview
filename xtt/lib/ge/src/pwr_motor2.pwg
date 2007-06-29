@@ -1,3 +1,16 @@
+199
+!/**
+! Motor2
+! Group Process
+!
+! <image> pwr_motor2_gs.gif
+!
+! <h1>Description
+! Motor.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 20
 135 20

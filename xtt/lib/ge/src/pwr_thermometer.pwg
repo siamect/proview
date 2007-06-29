@@ -1,3 +1,16 @@
+199
+!/**
+! Thermometer
+! Group Process
+!
+! <image> pwr_thermometer_gs.gif
+!
+! <h1>Description
+! Thermometer. Displays the value of a temperature sensor.
+!
+! <h1>Default dynamics
+! FillLevel <link>GeDynFillLevel, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 51.1879
 135 51.1879

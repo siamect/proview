@@ -1,3 +1,16 @@
+199
+!/**
+! MDamper
+! Group Process
+!
+! <image> pwr_mdamper_gs.gif
+!
+! <h1>Description
+! Solenoid damper.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 141.229
 135 141.229

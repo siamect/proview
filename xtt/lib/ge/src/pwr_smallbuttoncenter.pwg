@@ -1,3 +1,16 @@
+199
+!/**
+! SmallButtonCenter
+! Group Pushbuttons
+!
+! <image> pwr_smallbuttoncenter_gs.gif
+!
+! <h1>Description
+! Small pushbutton with center aligned text.
+!
+! <h1>Default dynamics
+! ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 43.1252
 135 43.1252

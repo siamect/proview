@@ -1,3 +1,22 @@
+199
+!/**
+! ValveAnim
+! Group Process
+!
+! <image> pwr_valveanim_gs.gif
+!
+! <h1>Description
+! Valve.
+!
+! Subgraph with seven pages, animating the valve switch from
+! open to closed.
+!
+! <image> pwr_valveanim_ags.gif
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

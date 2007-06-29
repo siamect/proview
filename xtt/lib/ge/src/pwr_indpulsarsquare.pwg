@@ -1,3 +1,19 @@
+199
+!/**
+! IndPulsarSquare
+! Group Indicators
+!
+! <image> pwr_indpulsarsquare_gs.gif
+!
+! <h1>Description
+! Round indicator with animated on state.
+!
+! Subgraph with seven pages, with a pulsating animation.
+! <image> pwr_indpulsarsquare_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
 1
 100 177.768
 135 177.768

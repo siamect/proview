@@ -1,3 +1,16 @@
+199
+!/**
+! ValueMedium
+! Group Values
+!
+! <image> pwr_valuemedium_gs.gif
+!
+! <h1>Description
+! Value field, medium sized with left aligned text.
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

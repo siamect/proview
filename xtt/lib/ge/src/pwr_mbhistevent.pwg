@@ -1,3 +1,28 @@
+199
+!/**
+! MbHistEvent
+! Group Pushbuttons/Methodbuttons
+!
+! <image> pwr_mbhistevent_gs.gif
+!
+! <h1>Description
+! Method button for object graphs, to activate method 'Hist Event...'.
+!
+! Used in object graphs with the following settings. 
+!
+! Invisible.Attribute <t><t>$cmd(check method/method="Hist Event..."/object=$object)
+! Invisible.Dimmed <t><t>1
+! Command.Command  <t><t>call method/method="Hist Event..."/object=$object
+! ToolTip.Text <t><t>Hist Event
+!    
+! The method is executed on activation of the button, and the button is dimmed
+! if the method is not present for the current object.
+!
+! <h1>Default dynamics
+! Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+! Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

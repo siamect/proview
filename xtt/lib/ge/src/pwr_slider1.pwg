@@ -1,3 +1,23 @@
+199
+!/**
+! Slider1
+! Group Sliders
+!
+! <image> pwr_slider1_gs.gif
+!
+! <h1>Description
+! The mobile part of a slider. 
+! Should be placed on a slider background, which defines
+! the moving range for the slider. See also
+! SliderBackground1 <link>pwr_sliderbackground1
+! SliderBackground1_2 <link>pwr_sliderbackground1_2
+!
+! Note! If you want to rotate the slider, rotate the slider
+! and the background together.
+! 
+! <h1>Default dynamics
+! Slider <link>GeDynSlider, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 76.9826
 135 76.9826

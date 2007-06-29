@@ -1,3 +1,19 @@
+199
+!/**
+! ControlSwitch
+! Group Electric
+!
+! <image> pwr_controlswitch_gs.gif
+!
+! <h1>Description
+! Controlswitch.
+!
+! Subgraph with two pages, controlswitch on (page 1) and
+! off (page 2).
+! <image> pwr_controlswitch_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 1
 100 20
 135 20

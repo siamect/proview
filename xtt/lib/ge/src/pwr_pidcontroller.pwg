@@ -1,3 +1,16 @@
+199
+!/**
+! PidController
+! Group Process
+!
+! <image> pwr_pidcontroller_gs.gif
+!
+! <h1>Description
+! PID controller.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 70.3162
 135 70.3162

@@ -1,3 +1,16 @@
+199
+!/**
+! ValueSmallRight
+! Group Values
+!
+! <image> pwr_valuesmallright_gs.gif
+!
+! <h1>Description
+! Small value field with right aligned text.
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

@@ -1,3 +1,20 @@
+199
+!/**
+! IndAnimSquare
+! Group Indicators
+!
+! <image> pwr_indanimsquare_gs.gif
+!
+! <h1>Description
+! Square indicator with animated switching operation.
+!
+! Subgraph with six pages, where the indicator is switched from
+! on to off.
+! <image> pwr_indanimsquare_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Dig.
 1
 100 20
 135 20

@@ -1,3 +1,16 @@
+199
+!/**
+! RoundButton
+! Group Pushbuttons
+!
+! <image> pwr_roundbutton_gs.gif
+!
+! <h1>Description
+! A round pushbutton.
+!
+! <h1>Default dynamics
+! SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 50.9107
 135 50.9107

@@ -1,3 +1,16 @@
+199
+!/**
+! Rack
+! Group Other
+!
+! <image> pwr_rack_gs.gif
+!
+! <h1>Description
+! Rack with I/O cards.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 40.7065
 135 40.7065

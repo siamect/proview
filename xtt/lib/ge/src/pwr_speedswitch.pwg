@@ -1,3 +1,16 @@
+199
+!/**
+! SpeedSwitch
+! Group Process
+!
+! <image> pwr_speedswitch_gs.gif
+!
+! <h1>Description
+! Speedswitch.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 36.9431
 135 36.9431

@@ -1,3 +1,20 @@
+199
+!/**
+! SafetySwitch
+! Group Electric
+!
+! <image> pwr_safetyswitch_gs.gif
+!
+! <h1>Description
+! Safetyswitch.
+!
+! Subgraph with two pages, safetyswitch on (page 1) and
+! safety switch off and locked (page 2).
+! <image> pwr_safetyswitch_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 101.205
 135 101.205

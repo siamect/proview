@@ -1,3 +1,17 @@
+199
+!/**
+! HydraulicPump
+! Group Hydraulics
+!
+! <image> pwr_hydraulicpump_gs.gif
+!
+! <h1>Description
+! Hydraulic pump.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 34.9254
 135 34.9254

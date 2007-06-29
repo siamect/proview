@@ -1,3 +1,19 @@
+199
+!/**
+! Contactor2
+! Group Electric
+!
+! <image> pwr_contactor2_gs.gif
+!
+! <h1>Description
+! Contactor.
+!
+! Subgraph with two pages, contactor off (page 1) and
+! on (page 2).
+! <image> pwr_contactor2_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 1
 100 88.7204
 135 88.7204

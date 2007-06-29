@@ -1,3 +1,21 @@
+199
+!/**
+! Base3WayValve2
+! Group Process
+!
+! <image> pwr_base3wayvalve2_gs.gif
+!
+! <h1>Description
+! Three way control valve.
+!
+! Subgraph with three pages, both regulatable ports partly open (page 1),
+! first regulatable port closed (page 2) and second regulatable port
+! closed (page 3).
+! <image> pwr_base3wayvalve2_ags.gif
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 111.516
 135 111.516

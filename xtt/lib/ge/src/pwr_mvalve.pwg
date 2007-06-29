@@ -1,3 +1,16 @@
+199
+!/**
+! MValve
+! Group Process
+!
+! <image> pwr_mvalve_gs.gif
+!
+! <h1>Description
+! Solenoid valve.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 141.229
 135 141.229

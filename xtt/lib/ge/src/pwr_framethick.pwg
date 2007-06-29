@@ -1,3 +1,11 @@
+199
+!/**
+! FrameThick
+! Group Layout
+!
+! Obsolete. 
+! Use a rectangle with 3D and without border and fillcolor instead.
+!*/
 1
 100 20
 135 20

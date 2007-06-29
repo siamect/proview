@@ -1,3 +1,18 @@
+199
+!/**
+! MotorMan
+! Group Process
+!
+! <image> pwr_motorman_gs.gif
+!
+! <h1>Description
+! Motor.
+! Annotation to display manual or local mode.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

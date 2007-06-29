@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonCommand
+! Group Pushbuttons
+!
+! <image> pwr_buttonx_gs.gif
+!
+! <h1>Description
+! Button to execute a xtt command.
+!
+! <h1>Default dynamics
+! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 65.2393
 135 65.2393

@@ -1,3 +1,23 @@
+199
+!/**
+! Valve3Way2
+! Group Process
+!
+! <image> pwr_valve3way2_gs.gif
+!
+! <h1>Description
+! Three way valve.
+!
+! Subgraph with three pages, both regulatable ports partly open (page 1),
+! first regulatable port closed (page 2) and second regulatable port
+! closed (page 3).
+! Annotation for display of manual and local mode.
+! <image> pwr_valve3way2_ags.gif
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 129.797
 135 129.797

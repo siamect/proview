@@ -1,3 +1,16 @@
+199
+!/**
+! Needle
+! Group Other
+!
+! <image> pwr_needle_gs.gif
+!
+! <h1>Description
+! Needle.
+!
+! <h1>Default dynamics
+! Rotate <link>GeDynRotate, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 59.7197
 135 59.7197

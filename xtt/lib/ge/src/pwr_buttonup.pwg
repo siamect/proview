@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonUp
+! Group Pushbuttons
+!
+! <image> pwr_buttonup_gs.gif
+!
+! <h1>Description
+! Button marked with arrow up.
+!
+! <h1>Default dynamics
+! SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 50.3538
 135 50.3538

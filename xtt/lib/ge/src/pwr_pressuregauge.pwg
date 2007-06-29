@@ -1,3 +1,16 @@
+199
+!/**
+! PressureGauge
+! Group Hydraulics
+!
+! <image> pwr_pressuregauge_gs.gif
+!
+! <h1>Description
+! Pressure gauge.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 152.285
 135 152.285

@@ -1,3 +1,19 @@
+199
+!/**
+! TrafficLight
+! Group Process
+!
+! <image> pwr_trafficlight_gs.gif
+!
+! <h1>Description
+! Trafficlight with the colors green for OK, yellow for
+! warning and red for fault.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigWarning <link>GeDynDigWarning, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 128.017
 135 128.017

@@ -1,3 +1,17 @@
+199
+!/**
+! ValueInputLargeCenter
+! Group Values
+!
+! <image> pwr_valuelargecenter_gs.gif
+!
+! <h1>Description
+! Large value input field with center aligned text.
+!
+! <h1>Default dynamics
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! ValueInput <link>GeDynValueInput, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

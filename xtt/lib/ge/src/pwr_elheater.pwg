@@ -1,3 +1,16 @@
+199
+!/**
+! ElHeater
+! Group Ventilation
+!
+! <image> pwr_elheater_gs.gif
+!
+! <h1>Description
+! Electrical heater.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 100.091
 135 100.091

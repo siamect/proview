@@ -1,3 +1,16 @@
+199
+!/**
+! VideoCamera
+! Group Other
+!
+! <image> pwr_videocamera_gs.gif
+!
+! <h1>Description
+! Video camera.
+!
+! <h1>Default dynamics
+! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 211.22
 135 211.22

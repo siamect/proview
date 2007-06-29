@@ -1,3 +1,20 @@
+199
+!/**
+! CheckBoxRelief
+! Group Pushbuttons
+!
+! <image> pwr_checkboxrelief_gs.gif
+!
+! <h1>Description
+! Checkbox.
+!
+! Subgraph with two pages, checkbox unmarked (page 1) and
+! checkbox marked (page 2).
+! <image> pwr_checkboxrelief_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+! ToggleDig <link>GeDynToggleDig, ,$pwr_lang/man_geref.dat
 1
 100 96.3823
 135 96.3823

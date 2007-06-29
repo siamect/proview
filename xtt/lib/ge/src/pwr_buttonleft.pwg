@@ -1,3 +1,16 @@
+199
+!/**
+! ButtonLeft
+! Group Pushbuttons
+!
+! <image> pwr_buttonleft_gs.gif
+!
+! <h1>Description
+! Button marked with arrow left.
+!
+! <h1>Default dynamics
+! SetDig <link>GeDynSetDig, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 49.7664
 135 49.7664

@@ -1,3 +1,19 @@
+199
+!/**
+! MotorAnim
+! Group Electric
+!
+! <image> pwr_motoranim_gs.gif
+!
+! <h1>Description
+! Animation electric motor.
+!
+! Subgraph with nine pages, with an rotating animation.
+! <image> pwr_motoranim_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
 1
 100 82.2786
 135 82.2786

@@ -1,3 +1,16 @@
+199
+!/**
+! Burner
+! Group Process
+!
+! <image> pwr_burner_gs.gif
+!
+! <h1>Description
+! Burner.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

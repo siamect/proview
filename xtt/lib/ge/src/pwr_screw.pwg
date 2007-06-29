@@ -1,3 +1,20 @@
+199
+!/**
+! Screw
+! Group Process
+!
+! <image> pwr_screw_gs.gif
+!
+! <h1>Description
+! Animated screw.
+!
+! Subgraph with eight pages, animating a rotating screw.
+! <image> pwr_screw_ags.gif
+!
+! <h1>Default dynamics
+! Animation <link>GeDynAnimation, ,$pwr_lang/man_geref.dat
+! with AnimationSequence Cyclic.
+!*/
 1
 100 71.1466
 135 71.1466

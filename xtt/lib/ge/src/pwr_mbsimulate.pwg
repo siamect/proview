@@ -1,3 +1,29 @@
+199
+!/**
+! MbSimulate
+! Group Pushbuttons/Methodbuttons
+!
+! <image> pwr_mbsimulate_gs.gif
+!
+! <h1>Description
+! Method button for object graphs, to activate method 'Simulate'.
+!
+! Used in object graphs with the following settings. 
+!
+! Invisible.Attribute <t><t>$cmd(check method/method="Simulate"/object=$object)
+! Invisible.Dimmed <t><t>0
+! Command.Command  <t><t>call method/method="Simulate"/object=$object
+! ToolTip.Text <t><t>Simulate
+!    
+! The method is executed on activation of the button, and the button is invisible
+! if the method is not present for the current object or in the current
+! environment.
+!
+! <h1>Default dynamics
+! Invisible <link>GeDynInvisible, ,$pwr_lang/man_geref.dat
+! Command <link>GeDynCommand, ,$pwr_lang/man_geref.dat
+! Tooltip <link>GeDynTooltip, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 141.516
 135 141.516

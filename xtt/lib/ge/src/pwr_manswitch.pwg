@@ -1,3 +1,16 @@
+199
+!/**
+! ManSwitch
+! Group Electric
+!
+! <image> pwr_manswitch_gs.gif
+!
+! <h1>Description
+! Manual electrical switch.
+!
+! <h1>Default dynamics
+! No default dynamics.
+!*/
 1
 100 133.882
 135 133.882

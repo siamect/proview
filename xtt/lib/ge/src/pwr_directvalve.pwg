@@ -1,3 +1,18 @@
+199
+!/**
+! DirectValve
+! Group Process
+!
+! <image> pwr_directvalve_gs.gif
+!
+! <h1>Description
+! Directional valve.
+!
+! Subgraph with three pages.
+! <image> pwr_directvalve_ags.gif
+!
+! <h1>Default dynamics
+! AnalogShift <link>GeDynAnalogShift, ,$pwr_lang/man_geref.dat
 1
 100 20
 135 20

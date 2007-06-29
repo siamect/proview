@@ -1,3 +1,19 @@
+199
+!/**
+! Fuse
+! Group Electric
+!
+! <image> pwr_fuse_gs.gif
+!
+! <h1>Description
+! Fuse.
+!
+! Subgraph with two pages, fuse tripped (page 1) and not 
+! tripped (page 2).
+! <image> pwr_fuse_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 1
 100 176.611
 135 176.611

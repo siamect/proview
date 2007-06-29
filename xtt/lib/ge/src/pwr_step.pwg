@@ -1,3 +1,17 @@
+199
+!/**
+! Step
+! Group Grafcet
+!
+! <image> pwr_step_gs.gif
+!
+! <h1>Description
+! Displays the state of a grafcet step.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Gray when signal is low.
+!*/
 1
 100 82.341
 135 82.341

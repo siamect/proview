@@ -1,3 +1,19 @@
+199
+!/**
+! DamperControl
+! Group Process
+!
+! <image> pwr_dampercontrol_gs.gif
+!
+! <h1>Description
+! Control damper.
+! Annotation to display manuel or local mode.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! DigError <link>GeDynError, ,$pwr_lang/man_geref.dat
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 90.6554
 135 90.6554

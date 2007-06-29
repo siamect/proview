@@ -1,3 +1,20 @@
+199
+!/**
+! CircuitBreaker
+! Group Electric
+!
+! <image> pwr_circuitbreaker_gs.gif
+!
+! <h1>Description
+! Circuitbreaker.
+!
+! Subgraph with two pages, circuitbreaker on (page 1) and
+! off (page 2).
+! <image> pwr_circuitbreaker_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 20
 135 20

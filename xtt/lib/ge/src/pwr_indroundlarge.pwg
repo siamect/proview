@@ -1,3 +1,17 @@
+199
+!/**
+! IndRoundLarge
+! Group Indicators
+!
+! <image> pwr_indroundlarge_gs.gif
+!
+! <h1>Description
+! Large round indicator.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Darkgray when signal is low.
+!*/
 1
 100 20.6701
 135 20.6701

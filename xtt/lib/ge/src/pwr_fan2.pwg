@@ -1,3 +1,22 @@
+199
+!/**
+! Fan2
+! Group Process
+!
+! <image> pwr_fan2_gs.gif
+!
+! <h1>Description
+! Fan.
+!
+! Subgraph with two pages, fan off (page 1) and fan on (page 2).
+! Annotation for display of manual or local mode.
+! <image> pwr_fan2_ags.gif
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Value <link>GeDynValue, ,$pwr_lang/man_geref.dat
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+!*/
 1
 100 98.5671
 135 98.5671

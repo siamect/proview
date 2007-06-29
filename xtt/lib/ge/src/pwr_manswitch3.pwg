@@ -1,3 +1,19 @@
+199
+!/**
+! ManSwitch3
+! Group Electric
+!
+! <image> pwr_manswitch3_gs.gif
+!
+! <h1>Description
+! Manual switch.
+!
+! Subgraph with two pages, switch off (page 1) and
+! on (page 2).
+! <image> pwr_manswitch3_ags.gif
+!
+! <h1>Default dynamics
+! DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
 1
 100 72.0298
 135 72.0298

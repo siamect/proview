@@ -1,3 +1,17 @@
+199
+!/**
+! IndRoundTextFront
+! Group Indicators
+!
+! <image> pwr_indroundtextfront_gs.gif
+!
+! <h1>Description
+! Round indicator with annotation in front of the indicator.
+!
+! <h1>Default dynamics
+! DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
+! Darkgray when signal is low.
+!*/
 1
 100 20
 135 20

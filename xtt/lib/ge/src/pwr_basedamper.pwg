@@ -1,3 +1,20 @@
+199
+!/**
+! BaseDamper
+! Group Process
+!
+! <image> pwr_basedamper_gs.gif
+!
+! <h1>Description
+! Damper.
+!
+! Subgraph with three pages, damper partly open (page 1),
+! damper open (page 2) and damper closed (page 3).
+! <image> pwr_basedamper_ags.gif
+!
+! <h1>Default dynamics
+! No default dynamics.
+!
 1
 100 92.9304
 135 92.9304
