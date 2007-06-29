@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.14 2007-02-01 07:09:32 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.15 2007-06-29 09:29:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,7 +78,7 @@ GlowCtx::GlowCtx( char *ctx_name, double zoom_fact, int offs_x, int offs_y)
     hot_mode(glow_eHotMode_Default), 
     default_hot_mode(glow_eHotMode_SingleObject), hot_found(0),
     userdata_save_callback(0), userdata_open_callback(0), userdata_copy_callback(0),
-    version(GLOW_VERSION), inputfocus_object(0), is_component(0)
+    version(GLOW_VERSION), inputfocus_object(0), is_component(0), comment(0)
 { 
   strcpy(name, ctx_name);
   memset( (void *)event_callback, 0, sizeof(event_callback));
@@ -102,6 +102,8 @@ GlowCtx::~GlowCtx()
     delete element;
     i--;
   }
+  if ( comment)
+    free( comment);
 }
 
 void GlowCtx::delete_all()
@@ -147,6 +149,8 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
 #endif
 
   version = GLOW_VERSION;
+
+  save_comment( fp);
 
   fp << int(glow_eSave_Ctx) << endl;
 
@@ -203,6 +207,54 @@ int GlowCtx::save( char *filename, glow_eSaveMode mode)
 
   fp.close();
   return 1;
+}
+
+int GlowCtx::open_comment( ifstream& fp)
+{
+  char line[200];
+  int incomment = 0;
+  int i = 0;
+
+  comment = new CtxComment();
+
+  fp.getline( line, sizeof(line));
+  for (;;) {
+    fp.getline( line, sizeof(line));
+    if ( strstr( line, "!*/") != 0)
+      break;
+    else if ( line[0] != '!')
+      break;
+
+    if ( incomment) {
+      if ( i < (int) (sizeof(comment->text)/sizeof(comment->text[0])))
+	strncpy( comment->text[i], &line[1], sizeof(comment->text[0]));
+      i++;
+    }
+    if ( strstr( line, "!/**") != 0)
+      incomment = 1;
+  }
+  return 1;
+}
+
+void GlowCtx::save_comment( ofstream& fp)
+{
+  bool last_blank = false;
+
+  if ( !comment)
+    return;
+  fp << int(glow_eSave_Ctx_comment) << endl;
+  fp << "!/**" << endl;
+  for ( int i = 0; i < (int) (sizeof(comment->text)/sizeof(comment->text[0])); i++) {
+    if ( strcmp( comment->text[i], "") == 0) {
+      if ( last_blank)
+	continue;
+      last_blank = true;
+    }
+    else
+      last_blank = false;
+    fp << "!" << comment->text[i] << endl;
+  }
+  fp << "!*/" << endl;
 }
 
 int GlowCtx::open( char *filename, glow_eSaveMode mode)
@@ -280,6 +332,9 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
       case glow_eSave_Ctx_a_nc: a_nc.open( (GrowCtx *)this, fp); break;
       case glow_eSave_Ctx_a_cc: a_cc.open( (GrowCtx *)this, fp); break;
       case glow_eSave_Ctx_a: a.open( (GrowCtx *)this, fp); break;
+      case glow_eSave_Ctx_comment: 
+	open_comment( fp);
+	break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "Ctx:open syntax error" << endl;

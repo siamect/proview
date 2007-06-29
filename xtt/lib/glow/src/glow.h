@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.19 2007-06-15 11:33:55 claes Exp $
+ * Proview   $Id: glow.h,v 1.20 2007-06-29 09:29:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1030,6 +1030,7 @@ typedef enum {
 	glow_eSave_Ctx_zoom_factor_y	        = 135,
 	glow_eSave_Ctx_nav_zoom_factor_y	= 136,
 	glow_eSave_Ctx_version			= 137,
+	glow_eSave_Ctx_comment			= 199,
 	glow_eSave_Array_a			= 200,
 	glow_eSave_NodeClass_nc_name		= 300,
 	glow_eSave_NodeClass_a			= 301,

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.h,v 1.11 2007-01-17 10:31:20 claes Exp $
+ * Proview   $Id: glow_ctx.h,v 1.12 2007-06-29 09:29:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,6 +36,15 @@
 
 class DrawWind;
 class GlowDraw;
+
+//! Comment storage
+class CtxComment {
+ public:
+  CtxComment() {
+    memset( text, 0, sizeof(text));
+  }
+  char text[100][200];
+};
 
 //! Main or navigation window
 class GlowWind {
@@ -143,6 +152,9 @@ class GlowCtx {
     \return		1 if success, else even return.
   */
   int open( char *filename, glow_eSaveMode mode);
+
+  int open_comment( ifstream& fp);
+  void save_comment( ofstream& fp);
 
   //! Insert an object.
   /*!
@@ -800,6 +812,7 @@ class GlowCtx {
   GlowTipText *tiptext;		//!< Tip text object.
   GlowArrayElem *inputfocus_object; //!< Object that has input focus.
   int is_component;		//!< Ctx is a window component.
+  CtxComment *comment;
 
   //! Register scrollbar callback function
   /*!
