@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.10 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.11 2007-07-04 13:31:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -903,6 +903,10 @@ void GeGtk::activate_linewidth_7(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_linewidth_8(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_linewidth( 8);
+}
+void GeGtk::activate_linewidth_16(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_linewidth( 16);
 }
 
 void GeGtk::activate_linetype1(GtkWidget *w, gpointer gectx)
@@ -2152,6 +2156,13 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
 				 gtk_image_new_from_file( fname));
   g_signal_connect(tools_linewidth_8, "activate", G_CALLBACK(activate_linewidth_8), this);
 
+  // Test
+  GtkWidget *tools_linewidth_16 = gtk_image_menu_item_new_with_label( "Linewidth 16");
+  dcli_translate_filename( fname, "$pwr_exe/ge_linewidth_8.png");
+  gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(tools_linewidth_16), 
+				 gtk_image_new_from_file( fname));
+  g_signal_connect(tools_linewidth_16, "activate", G_CALLBACK(activate_linewidth_16), this);
+
   GtkMenu *linewidth_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_1);
   gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_2);
@@ -2161,6 +2172,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_6);
   gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_7);
   gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_8);
+  //  gtk_menu_shell_append( GTK_MENU_SHELL(linewidth_menu), tools_linewidth_16);
   GtkWidget *tools_linewidth_omenu = (GtkWidget *)g_object_new( GTK_TYPE_OPTION_MENU, 
 								"menu", linewidth_menu, NULL);
 

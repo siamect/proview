@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.5 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.6 2007-07-04 13:31:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,6 +195,7 @@ class GeGtk : public Ge {
   static void activate_linewidth_6( GtkWidget *w, gpointer gectx);
   static void activate_linewidth_7( GtkWidget *w, gpointer gectx);
   static void activate_linewidth_8( GtkWidget *w, gpointer gectx);
+  static void activate_linewidth_16( GtkWidget *w, gpointer gectx);
   static void activate_linetype1( GtkWidget *w, gpointer gectx);
   static void activate_linetype2( GtkWidget *w, gpointer gectx);
   static void activate_linetype3( GtkWidget *w, gpointer gectx);
