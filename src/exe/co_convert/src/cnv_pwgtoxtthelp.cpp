@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_pwgtoxtthelp.cpp,v 1.1 2007-06-29 10:01:06 claes Exp $
+ * Proview   $Id: cnv_pwgtoxtthelp.cpp,v 1.2 2007-07-04 13:24:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,12 +61,14 @@ CnvPwgToXtthelp::CnvPwgToXtthelp( CnvCtx *cnv_ctx) :
   static pwr_tFileName filenames[10] = {
     "$pwre_croot/xtt/lib/ge/src/pwr_*.pwg", 
     "$pwre_croot/xtt/mmi/sis/src/sis*.pwg", 
+    "$pwre_croot/xtt/mmi/ssg/src/ssg*.pwg", 
     "$pwre_croot/bcomp/mmi/bcomp/src/bcomp*.pwg", 
     "$pwre_croot/abb/mmi/mcomp/src/mcomp*.pwg", 
     ""};
   static pwr_tFileName titles[10] = {
     "General", 
     "Ventilation", 
+    "CircuitDiagram", 
     "BaseComponent", 
     "ABB", 
     ""};
