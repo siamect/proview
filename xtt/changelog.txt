@@ -46,6 +46,8 @@
 070612 cs  glow      Fixcolor added to polyline properties.
 070615 cs  glow      Bug fix in connection direction for objects both rotated and mirrored.
 070629 cs  ge        New buttons in tools panel for scale double size and half size.
-070629 cs  ge        New ventilation subgraphs.
+070629 cs  ge        New ventilation subgraphs added.
 070629 cs  ge        New helpentry for subgraphs and help popup menu in subgraph palette.
 070629 cs  glow      Documentation block added to pwg file.
+070704 cs  glow      Subgraph name size increased from 32 to 80 characters.
+070704 cs  ge        Circuitdiagram symbols added.
