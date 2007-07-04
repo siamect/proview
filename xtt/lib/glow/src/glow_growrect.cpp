@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.8 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.9 2007-07-04 13:29:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -779,6 +779,8 @@ void GrowRect::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
 
 void GrowRect::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 {
+  if ( invisible && ctx->trace_started)
+    return;
   if ( !(display_level & ctx->display_level))
     return;
   if ( w == &ctx->navw) {
