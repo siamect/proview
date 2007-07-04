@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_nodeclass.h,v 1.5 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_nodeclass.h,v 1.6 2007-07-04 13:28:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -371,7 +371,7 @@ class GlowNodeClass : public GlowArrayElem {
 
   GrowCtx	*ctx;		//!< Glow context.
   GlowArray 	a;		//!< Array of nodeclass elements.
-  char		nc_name[32];	//!< Name of nodeclass.
+  char		nc_name[80];	//!< Name of nodeclass.
   glow_eNodeGroup group;	//!< Group the nodeclass belongs to.
   char 		*dynamic;	//!< Dynamic code.
   int 		dynamicsize;	//!< Size of dynamic code.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.9 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.10 2007-07-04 13:32:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -780,7 +780,7 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
       }
       case glow_eSave_NodeClass: 
       {
-        char name[32];
+        char name[80];
 	GlowArrayElem *element;       
 
         GlowNodeClass *n = new GlowNodeClass( ctx, "");
@@ -796,7 +796,7 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
       }
       case glow_eSave_ConClass: 
       {
-        char name[32];
+        char name[80];
 	GlowArrayElem *element;       
 
         GlowConClass *n = new GlowConClass( ctx, "", 
@@ -1124,7 +1124,7 @@ int GlowArray::find( GlowArrayElem *element)
 int GlowArray::find_by_name( char *name, GlowArrayElem **element) 
 {
   int i;
-  char object_name[32];
+  char object_name[80];
 
   for ( i = 0; i < a_size; i++)
   {

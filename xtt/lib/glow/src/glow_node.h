@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_node.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_node.h,v 1.5 2007-07-04 13:28:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -129,7 +129,7 @@ class GlowNode : public GlowArrayElem {
   GlowNodeClass 	*nc_root;	//!< Root nodeclass, i.e. the nodeclass of the first page.
   GlowPoint		pos;
   GlowPoint		stored_pos;
-  char			n_name[32];	//!< Name of the object.
+  char			n_name[80];	//!< Name of the object.
   int			highlight;	//!< The object is drawn with highlight color.
   int			inverse;
   char			*annotv[10];	//!< Array with pointers to annotation texts.
