@@ -1,0 +1,20 @@
+199
+!
+! Documentation for FastCurve
+!
+!/**
+! FastCurve
+! Group Analog
+!
+! <image> pwr_fastcurve_gs.gif
+!
+! <h1>Description
+! Shows one or two curves in a DsFastCurve object.
+!
+! <h1>Default dynamics
+! Bar is a complex object.
+! See FastCurve in Ge Reference Manual<link>geref_fastcurve, ,$pwr_lang/man_geref.dat
+!
+!*/
+1
+99

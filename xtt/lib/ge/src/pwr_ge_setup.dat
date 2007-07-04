@@ -289,6 +289,113 @@ menu Ventilation
   }
   subgraph 	ElHeater	pwr_exe:pwr_elheater.pwsg		101
 }
+menu CircuitDiagram
+{
+  menu Contacts
+  {
+    subgraph 	2WayContactor	pwr_exe:ssg5271_2waycontactor.pwsg		48
+    subgraph 	BreakContactDelayedClose pwr_exe:ssg5271_breakcontact_dc.pwsg	48
+    subgraph 	BreakContactDelayedOpen	pwr_exe:ssg5271_breakcontact_do.pwsg	48
+    subgraph 	BreakContact	pwr_exe:ssg5271_breakcontact.pwsg		48
+    subgraph 	ChangeOverBrakeContact	pwr_exe:ssg5271_cobreakcontact.pwsg	48
+    subgraph 	MakeContact	pwr_exe:ssg5271_makecontact.pwsg		48
+    subgraph 	MakeContactDelayedOpen pwr_exe:ssg5271_makecontact_do.pwsg	48
+    subgraph 	MakeContactDelayedClose	pwr_exe:ssg5271_makecontact_dc.pwsg	48
+  }
+  menu Earth
+  {
+    subgraph 	Chassis		pwr_exe:ssg5271_chassis.pwsg			48
+    subgraph 	Earth		pwr_exe:ssg5271_earth.pwsg			48
+    subgraph 	Equipotentiality pwr_exe:ssg5271_equipotentiality.pwsg		48
+    subgraph 	NoiselessEarth	pwr_exe:ssg5271_noiseless_earth.pwsg		48
+    subgraph 	ProtectiveEarch	pwr_exe:ssg5271_protective_earth.pwsg		48
+  }
+  menu Electric
+  {
+    subgraph 	Accumulator	pwr_exe:ssg5271_accumulator.pwsg		48
+    subgraph 	Capacitor	pwr_exe:ssg5271_capacitor.pwsg			48
+    subgraph 	Diode		pwr_exe:ssg5271_diod.pwsg			48
+    subgraph 	LED 		pwr_exe:ssg5271_diod_le.pwsg			48
+    subgraph 	Resistor	pwr_exe:ssg5271_resistor.pwsg			48
+    subgraph 	TriodThyristor	pwr_exe:ssg5271_triodthyristor.pwsg		48
+  }
+  menu FunctionSymbols
+  {
+    subgraph 	Adder 		pwr_exe:ssg5271_adder.pwsg	48
+    subgraph 	And 		pwr_exe:ssg5271_and.pwsg	48
+    subgraph 	Controller 	pwr_exe:ssg5271_controller.pwsg	48
+    subgraph 	Delay 		pwr_exe:ssg5271_delay.pwsg	48
+    subgraph 	Division 	pwr_exe:ssg5271_division.pwsg	48
+    subgraph 	ExclusiveOr 	pwr_exe:ssg5271_exclusiveor.pwsg 48
+    subgraph 	Filter 		pwr_exe:ssg5271_filter.pwsg	48
+    subgraph 	Max 		pwr_exe:ssg5271_max.pwsg	48
+    subgraph 	Min 		pwr_exe:ssg5271_min.pwsg	48
+    subgraph 	Multiplication 	pwr_exe:ssg5271_multiplicator.pwsg 48
+    subgraph 	Negator 	pwr_exe:ssg5271_negator.pwsg	48
+    subgraph 	Or 		pwr_exe:ssg5271_or.pwsg		48
+    subgraph 	Pulse 		pwr_exe:ssg5271_pulse.pwsg	48
+    subgraph 	RampDown	pwr_exe:ssg5271_rampdown.pwsg	48
+    subgraph 	RampUp 		pwr_exe:ssg5271_rampup.pwsg	48
+    subgraph 	Root 		pwr_exe:ssg5271_root.pwsg	48
+    subgraph 	RS 		pwr_exe:ssg5271_rs.pwsg		48
+  }
+  menu Fuses/FuseSwitches
+  {
+    subgraph 	CircuitBreakerAuto pwr_exe:ssg5271_circuitbreaker_auto.pwsg	48
+    subgraph 	Fuse		pwr_exe:ssg5271_fuse.pwsg			48
+    subgraph 	FuseDisconnector pwr_exe:ssg5271_fuse_disconnector.pwsg		48
+    subgraph 	FuseSupplySide	pwr_exe:ssg5271_fuse_supplyside.pwsg		48
+    subgraph 	FuseSwitch	pwr_exe:ssg5271_fuse_switch.pwsg		48
+    subgraph 	FuseSwitchDisconnector pwr_exe:ssg5271_fuse_switchdisconnector.pwsg 48
+  }
+  menu Machines/Converters
+  {
+    subgraph 	Converter	pwr_exe:ssg5271_converter.pwsg			48
+    subgraph 	ConverterAcAc	pwr_exe:ssg5271_converter_ac_ac.pwsg		48
+    subgraph 	ConverterAcDc	pwr_exe:ssg5271_converter_ac_dc.pwsg		48
+    subgraph 	ConverterDcAc	pwr_exe:ssg5271_converter_dc_ac.pwsg		48
+    subgraph 	ConverterDcDc	pwr_exe:ssg5271_converter_dc_dc.pwsg		48
+    subgraph 	Machine		pwr_exe:ssg5271_machine.pwsg			48
+    subgraph 	MachineAc	pwr_exe:ssg5271_machine_ac.pwsg			48
+    subgraph 	MachineDc	pwr_exe:ssg5271_machine_dc.pwsg			48
+  }
+  menu SignallingDevices
+  {
+    subgraph 	Bell		pwr_exe:ssg5271_bell.pwsg			48
+    subgraph 	Horn		pwr_exe:ssg5271_horn.pwsg			48
+    subgraph 	Lamp		pwr_exe:ssg5271_lamp.pwsg			48
+    subgraph 	Siren		pwr_exe:ssg5271_siren.pwsg			48
+  }
+  menu Switches
+  {
+    subgraph 	AuxContactThermal pwr_exe:ssg5271_auxcontact_thermal.pwsg	48
+    subgraph 	BreakContactThermal pwr_exe:ssg5271_breakcontact_thermal.pwsg	48
+    subgraph 	CircuitBreaker	pwr_exe:ssg5271_circuitbreaker.pwsg		48
+    subgraph 	CircuitBreakerRem	pwr_exe:ssg5271_circuitbreaker_rem.pwsg 48
+    subgraph 	CircuitBreakerRemFuse	pwr_exe:ssg5271_circuitbreaker_fuserem.pwsg 48
+    subgraph 	Disconnector	pwr_exe:ssg5271_disconnector.pwsg		48
+    subgraph 	EmergencyControlSwitch	pwr_exe:ssg5271_emergcontrolswitch.pwsg	48
+    subgraph 	ManSwitchBreak	pwr_exe:ssg5271_manswitchbreak.pwsg		48
+    subgraph 	ManSwitchBreakNoReturn pwr_exe:ssg5271_manswitchbreak_noret.pwsg 48
+    subgraph 	ManSwitchMake	pwr_exe:ssg5271_manswitchmake.pwsg		48
+    subgraph 	ManSwitchMakeNoReturn pwr_exe:ssg5271_manswitchmake_noret.pwsg	48
+    subgraph 	MechanicalLimitSwitchBreak pwr_exe:ssg5271_mlimitswitchbreak.pwsg 48
+    subgraph 	MechanicalLimitSwitchMake pwr_exe:ssg5271_mlimitswitchmake.pwsg	48
+    subgraph 	Photocell	pwr_exe:ssg5271_photocell.pwsg			48
+    subgraph 	ProximitySwitchBreak pwr_exe:ssg5271_proxswitchbreak.pwsg		48
+    subgraph 	ProximitySwitchMake pwr_exe:ssg5271_proxswitchmake.pwsg		48
+    subgraph 	Switch		pwr_exe:ssg5271_switch.pwsg			48
+    subgraph 	SwitchDisconnector pwr_exe:ssg5271_switchdisconnector.pwsg	48
+  }
+  menu Transformers
+  {
+    subgraph 	CurrentTransformer pwr_exe:ssg5271_currenttransformer.pwsg	48
+    subgraph 	CurrentTransformer2 pwr_exe:ssg5271_currenttransformer2.pwsg	48
+    subgraph 	VoltageTransformer pwr_exe:ssg5271_voltagetransformer.pwsg	48
+    subgraph 	VoltageTransformer2 pwr_exe:ssg5271_voltagetransformer2.pwsg	48
+    subgraph 	VoltageTransformer2Windings pwr_exe:ssg5271_voltagetransformer2wnd.pwsg 48
+  }
+}
 menu Grafcet
 {
   subgraph 	InitStep 	pwr_exe:pwr_initstep.pwsg		5

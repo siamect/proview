@@ -1,0 +1,20 @@
+199
+!
+! Documentation for bar
+!
+!/**
+! Bar
+! Group Analog
+!
+! <image> pwr_bar_gs.gif
+!
+! <h1>Description
+! A bar displaying an analog value.
+!
+! <h1>Default dynamics
+! Bar is a complex object.
+! See Bar in Ge Reference Manual<link>geref_bar, ,$pwr_lang/man_geref.dat
+!
+!*/
+1
+99

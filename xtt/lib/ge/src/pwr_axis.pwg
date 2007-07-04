@@ -1,0 +1,20 @@
+199
+!
+! Documentation for axis
+!
+!/**
+! Axis
+! Group Analog
+!
+! <image> pwr_axis_gs.gif
+!
+! <h1>Description
+! Axis.
+!
+! <h1>Default dynamics
+! Axis is a complex object.
+! See Axis in Ge Reference Manual <link>geref_axis, ,$pwr_lang/man_geref.dat
+!
+!*/
+1
+99

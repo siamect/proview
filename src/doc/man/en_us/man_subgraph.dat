@@ -34,7 +34,7 @@
 
 
 <hr>
-2007-06-29
+2007-07-04
 Version V4.4.1
 <hr>
 </topic>
@@ -55,6 +55,7 @@ Texts.
 Subgraph documentation
 <b>General <link>General
 <b>Ventilation <link>Ventilation
+<b>CircuitDiagram <link>CircuitDiagram
 <b>BaseComponent <link>BaseComponent
 <b>ABB <link>ABB
 </topic>
@@ -63,6 +64,7 @@ Subgraph documentation
 <topic> General
 General
 <option> printdisable
+<b>Group Analog <link>General_Analog
 <b>Group Electric <link>General_Electric
 <b>Group Grafcet <link>General_Grafcet
 <b>Group Hydraulics <link>General_Hydraulics
@@ -75,6 +77,14 @@ General
 <b>Group Sliders <link>General_Sliders
 <b>Group Values <link>General_Values
 <b>Group Ventilation <link>General_Ventilation
+</topic>
+
+<topic> General_Analog
+Group Analog
+Axis <link>pwr_axis
+Bar <link>pwr_bar
+FastCurve <link>pwr_fastcurve
+Trend <link>pwr_trend
 </topic>
 
 <topic> General_Electric
@@ -326,6 +336,70 @@ ElHeater <link>pwr_elheater
 
 <option> printenable
 <headerlevel>
+<topic>Analog__dummy <style> function
+Group Analog
+</topic>
+<headerlevel>
+<topic> pwr_axis <style> function
+ Axis
+ Group Analog
+
+ <image> pwr_axis_gs.gif
+
+ <h1>Description
+ Axis.
+
+ <h1>Default dynamics
+ Axis is a complex object.
+ See Axis in Ge Reference Manual <link>geref_axis, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_bar <style> function
+ Bar
+ Group Analog
+
+ <image> pwr_bar_gs.gif
+
+ <h1>Description
+ A bar displaying an analog value.
+
+ <h1>Default dynamics
+ Bar is a complex object.
+ See Bar in Ge Reference Manual<link>geref_bar, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_fastcurve <style> function
+ FastCurve
+ Group Analog
+
+ <image> pwr_fastcurve_gs.gif
+
+ <h1>Description
+ Shows one or two curves in a DsFastCurve object.
+
+ <h1>Default dynamics
+ Bar is a complex object.
+ See FastCurve in Ge Reference Manual<link>geref_fastcurve, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> pwr_trend <style> function
+ Trend
+ Group Analog
+
+ <image> pwr_trend_gs.gif
+
+ <h1>Description
+ Trend with one or two curves.
+
+ <h1>Default dynamics
+ Trend is a complex object. 
+ See Trend in Ge Reference manual <link>geref_trend, ,$pwr_lang/man_geref.dat
+</topic>
+
+</headerlevel>
 <topic>Electric__dummy <style> function
 Group Electric
 </topic>
@@ -3795,6 +3869,7 @@ Group Ventilation
 
  <h1>Default dynamics
  No default dynamics.
+
 </topic>
 
 <topic> sis032260_airgrill <style> function
@@ -4569,6 +4644,1356 @@ Group Ventilation/Cooling
 
  <h1>Default dynamics
  No default dynamics.
+</topic>
+
+</headerlevel>
+</headerlevel>
+</chapter>
+<chapter>
+<topic> CircuitDiagram
+CircuitDiagram
+<option> printdisable
+<b>Group Contacts <link>CircuitDiagram_Contacts
+<b>Group Earth <link>CircuitDiagram_Earth
+<b>Group Electric <link>CircuitDiagram_Electric
+<b>Group FunctionSymbols <link>CircuitDiagram_FunctionSymbols
+<b>Group Fuses/FuseSwitches <link>CircuitDiagram_Fuses_FuseSwitches
+<b>Group Machines/Converters <link>CircuitDiagram_Machines_Converters
+<b>Group SignallingDevices <link>CircuitDiagram_SignallingDevices
+<b>Group Switches <link>CircuitDiagram_Switches
+<b>Group Transformers <link>CircuitDiagram_Transformers
+</topic>
+
+<topic> CircuitDiagram_Contacts
+Group Contacts
+2WayContact <link>ssg5271_2waycontact
+BreakContact <link>ssg5271_breakcontact
+BreakContactDelayedClose <link>ssg5271_breakcontact_dc
+BreakContactDelayedOpen <link>ssg5271_breakcontact_do
+ChangeOverBreakContact <link>ssg5271_cobreakcontact
+MakeContact <link>ssg5271_makecontact
+MakeContactDelayedClose <link>ssg5271_makecontact_dc
+MakeContactDelayedOpen <link>ssg5271_makecontact_do
+</topic>
+
+<topic> CircuitDiagram_Earth
+Group Earth
+Chassis <link>ssg5271_chassis
+Earth <link>ssg5271_earth
+Equipotentiality <link>ssg5271_equipotentiality
+NoiseLessEarth <link>ssg5271_noiseless_earth
+ProtectiveEarth <link>ssg5271_protective_earth
+</topic>
+
+<topic> CircuitDiagram_Electric
+Group Electric
+Accumulator <link>ssg5271_accumulator
+Capacitor <link>ssg5271_capacitor
+Diode <link>ssg5271_diod
+LED <link>ssg5271_diod_le
+Resistor <link>ssg5271_resistor
+TriodThyristor <link>ssg5271_triodthyristor
+</topic>
+
+<topic> CircuitDiagram_FunctionSymbols
+Group FunctionSymbols
+Adder <link>ssg5271_adder
+And <link>ssg5271_and
+Controller <link>ssg5271_controller
+Delay <link>ssg5271_delay
+Division <link>ssg5271_division
+ExclusiveOr <link>ssg5271_exclusiveor
+Filter <link>ssg5271_filter
+Max <link>ssg5271_max
+Min <link>ssg5271_min
+Multiplication <link>ssg5271_multiplication
+Negator <link>ssg5271_negator
+Or <link>ssg5271_or
+Pulse <link>ssg5271_pulse
+RampDown <link>ssg5271_rampdown
+RampUp <link>ssg5271_rampup
+Root <link>ssg5271_root
+Rs <link>ssg5271_rs
+</topic>
+
+<topic> CircuitDiagram_Fuses_FuseSwitches
+Group Fuses/FuseSwitches
+CircuitBreakerAuto <link>ssg5271_circuitbreaker_auto
+Fuse <link>ssg5271_fuse
+FuseDisconnector <link>ssg5271_fuse_disconnector
+FuseSupplySide <link>ssg5271_fuse_supplyside
+FuseSwitch <link>ssg5271_fuse_switch
+FuseSwitchDisconnector <link>ssg5271_fuse_switchdisconnector
+</topic>
+
+<topic> CircuitDiagram_Machines_Converters
+Group Machines/Converters
+Converter <link>ssg5271_converter
+ConverterAcAc <link>ssg5271_converter_ac_ac
+ConverterAcDc <link>ssg5271_converter_ac_dc
+ConverterDcAc <link>ssg5271_converter_dc_ac
+ConverterDcDc <link>ssg5271_converter_dc_dc
+Machine <link>ssg5271_machine
+MachineAc <link>ssg5271_machine_ac
+MachineDc <link>ssg5271_machine_dc
+</topic>
+
+<topic> CircuitDiagram_SignallingDevices
+Group SignallingDevices
+Bell <link>ssg5271_bell
+Horn <link>ssg5271_horn
+Lamp <link>ssg5271_lamp
+Siren <link>ssg5271_siren
+</topic>
+
+<topic> CircuitDiagram_Switches
+Group Switches
+AuxContactThermal <link>ssg5271_auxcontact_thermal
+BreakContactThermal <link>ssg5271_breakcontact_thermal
+CircuitBreaker <link>ssg5271_circuitbreaker
+CircuitBreakerRem <link>ssg5271_circuitbreaker_rem
+CircuitBreakerRemFuse <link>ssg5271_circuitbreaker_fuserem
+Disconnector <link>ssg5271_disconnector
+EmergencyControlSwitch <link>ssg5271_emergcontrolswitch
+ManSwitchBreak <link>ssg5271_manswitchbreak
+ManSwitchBreakNoRet <link>ssg5271_manswitchbreak_noret
+ManSwitchMake <link>ssg5271_manswitchmake
+ManSwitchMakeNoRet <link>ssg5271_manswitchmake_noret
+MechanicalLimitSwitchBreak <link>ssg5271_mlimitswitchbreak
+MechanicalLimitSwitchMake <link>ssg5271_mlimitswitchmake
+Photocell <link>ssg5271_photocell
+ProximitySwitchBreak <link>ssg5271_proxswitchbreak
+ProximitySwitchMake <link>ssg5271_proxswitchmake
+Switch <link>ssg5271_switch
+SwitchDisconnector <link>ssg5271_switchdisconnector
+</topic>
+
+<topic> CircuitDiagram_Transformers
+Group Transformers
+CurrentTransformer <link>ssg5271_currenttransformer
+CurrentTransformer2 <link>ssg5271_currenttransformer2
+VoltageTransformer <link>ssg5271_voltagetransformer
+VoltageTransformer2 <link>ssg5271_voltagetransformer2
+VoltageTransformer2Windings <link>ssg5271_voltagetransformer2wnd
+</topic>
+
+<option> printenable
+<headerlevel>
+<topic>Contacts__dummy <style> function
+Group Contacts
+</topic>
+<headerlevel>
+<topic> ssg5271_2waycontact <style> function
+ 2WayContact
+ Group Contacts
+
+ <image> ssg5271_2waycontact_gs.gif
+
+ <h1>Description
+ Two-way contact with center-off position.
+
+ Subgraph with three pages.
+
+ <image> ssg5271_2waycontact_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_breakcontact <style> function
+ BreakContact
+ Group Contacts
+
+ <image> ssg5271_breakcontact_gs.gif
+
+ <h1>Description
+ Break contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_breakcontact_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_breakcontact_dc <style> function
+ BreakContactDelayedClose
+ Group Contacts
+
+ <image> ssg5271_breakcontact_dc_gs.gif
+
+ <h1>Description
+ Break contact delayed when closing.
+
+ Subgraph with two pages.
+ <image> ssg5271_breakcontact_dc_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_breakcontact_do <style> function
+ BreakContactDelayedOpen
+ Group Contacts
+
+ <image> ssg5271_breakcontact_do_gs.gif
+
+ <h1>Description
+ Break contact delayed when opening.
+
+ Subgraph with two pages.
+ <image> ssg5271_breakcontact_do_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_cobreakcontact <style> function
+ ChangeOverBreakContact
+ Group Contacts
+
+ <image> ssg5271_cobreakcontact_gs.gif
+
+ <h1>Description
+ Change-over break before make contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_cobreakcontact_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_makecontact <style> function
+ MakeContact
+ Group Contacts
+
+ <image> ssg5271_makecontact_gs.gif
+
+ <h1>Description
+ Make contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_makecontact_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_makecontact_dc <style> function
+ MakeContactDelayedClose
+ Group Contacts
+
+ <image> ssg5271_makecontact_dc_gs.gif
+
+ <h1>Description
+ Make contact delayed when closing.
+
+ Subgraph with two pages.
+ <image> ssg5271_makecontact_dc_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_makecontact_do <style> function
+ MakeContactDelayedOpen
+ Group Contacts
+
+ <image> ssg5271_makecontact_do_gs.gif
+
+ <h1>Description
+ Make contact delayed when opening.
+
+ Subgraph with two pages.
+ <image> ssg5271_makecontact_do_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Earth__dummy <style> function
+Group Earth
+</topic>
+<headerlevel>
+<topic> ssg5271_chassis <style> function
+ Chassis
+ Group Earth
+
+ <image> ssg5271_chassis_gs.gif
+
+ <h1>Description
+ Frame, chassis.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_earth <style> function
+ Earth
+ Group Earth
+
+ <image> ssg5271_earth_gs.gif
+
+ <h1>Description
+ Earth.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_equipotentiality <style> function
+ Equipotentiality
+ Group Earth
+
+ <image> ssg5271_equipotentiality_gs.gif
+
+ <h1>Description
+ Equipotentiality.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_noiseless_earth <style> function
+ NoiseLessEarth
+ Group Earth
+
+ <image> ssg5271_noiseless_earth_gs.gif
+
+ <h1>Description
+ Noiseless earth.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_protective_earth <style> function
+ ProtectiveEarth
+ Group Earth
+
+ <image> ssg5271_protective_earth_gs.gif
+
+ <h1>Description
+ Protective earth.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+<topic>Electric__dummy <style> function
+Group Electric
+</topic>
+<headerlevel>
+<topic> ssg5271_accumulator <style> function
+ Accumulator
+ Group Electric
+
+ <image> ssg5271_accumulator_gs.gif
+
+ <h1>Description
+ Accumulator (battery).
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_capacitor <style> function
+ Capacitor
+ Group Electric
+
+ <image> ssg5271_capacitor_gs.gif
+
+ <h1>Description
+ Capacitor.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_diod <style> function
+ Diode
+ Group Electric
+
+ <image> ssg5271_diod_gs.gif
+
+ <h1>Description
+ Semiconductor diode.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_diod_le <style> function
+ LED
+ Group Electric
+
+ <image> ssg5271_diod_le_gs.gif
+
+ <h1>Description
+ Light emitting diode.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_resistor <style> function
+ Resistor
+ Group Electric
+
+ <image> ssg5271_resistor_gs.gif
+
+ <h1>Description
+ Resistor.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_triodthyristor <style> function
+ TriodThyristor
+ Group Electric
+
+ <image> ssg5271_triodthyristor_gs.gif
+
+ <h1>Description
+ Triod thyristor.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+<topic>FunctionSymbols__dummy <style> function
+Group FunctionSymbols
+</topic>
+<headerlevel>
+<topic> ssg5271_adder <style> function
+ Adder
+ Group FunctionSymbols
+
+ <image> ssg5271_adder_gs.gif
+
+ <h1>Description
+ Adder.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_and <style> function
+ And
+ Group FunctionSymbols
+
+ <image> ssg5271_and_gs.gif
+
+ <h1>Description
+ And element.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_controller <style> function
+ Controller
+ Group FunctionSymbols
+
+ <image> ssg5271_controller_gs.gif
+
+ <h1>Description
+ Controller.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_delay <style> function
+ Delay
+ Group FunctionSymbols
+
+ <image> ssg5271_delay_gs.gif
+
+ <h1>Description
+ Delay element.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_division <style> function
+ Division
+ Group FunctionSymbols
+
+ <image> ssg5271_division_gs.gif
+
+ <h1>Description
+ Division, Quota.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_exclusiveor <style> function
+ ExclusiveOr
+ Group FunctionSymbols
+
+ <image> ssg5271_exclusiveor_gs.gif
+
+ <h1>Description
+ Exclusive or element.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_filter <style> function
+ Filter
+ Group FunctionSymbols
+
+ <image> ssg5271_filter_gs.gif
+
+ <h1>Description
+ Filter with specified time constant.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_max <style> function
+ Max
+ Group FunctionSymbols
+
+ <image> ssg5271_max_gs.gif
+
+ <h1>Description
+ Max selector.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_min <style> function
+ Min
+ Group FunctionSymbols
+
+ <image> ssg5271_min_gs.gif
+
+ <h1>Description
+ Min selector.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_multiplication <style> function
+ Multiplication
+ Group FunctionSymbols
+
+ <image> ssg5271_multiplication_gs.gif
+
+ <h1>Description
+ Multiplication.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_negator <style> function
+ Negator
+ Group FunctionSymbols
+
+ <image> ssg5271_negator_gs.gif
+
+ <h1>Description
+ Negator (inverter).
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_or <style> function
+ Or
+ Group FunctionSymbols
+
+ <image> ssg5271_or_gs.gif
+
+ <h1>Description
+ Or element.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_pulse <style> function
+ Pulse
+ Group FunctionSymbols
+
+ <image> ssg5271_pulse_gs.gif
+
+ <h1>Description
+ Pulse element with specified times.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_rampdown <style> function
+ RampDown
+ Group FunctionSymbols
+
+ <image> ssg5271_rampdown_gs.gif
+
+ <h1>Description
+ Ramp down.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_rampup <style> function
+ RampUp
+ Group FunctionSymbols
+
+ <image> ssg5271_rampup_gs.gif
+
+ <h1>Description
+ Ramp up.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_root <style> function
+ Root
+ Group FunctionSymbols
+
+ <image> ssg5271_root_gs.gif
+
+ <h1>Description
+ Extraction of roots.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_rs <style> function
+ Rs
+ Group FunctionSymbols
+
+ <image> ssg5271_rs_gs.gif
+
+ <h1>Description
+ RS bistable.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+<topic>Fuses_FuseSwitches__dummy <style> function
+Group Fuses/FuseSwitches
+</topic>
+<headerlevel>
+<topic> ssg5271_circuitbreaker_auto <style> function
+ CircuitBreakerAuto
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_circuitbreaker_auto_gs.gif
+
+ <h1>Description
+ Automatic circuit breaker.
+
+ Subgraph with two pages.
+ <image> ssg5271_circuitbreaker_auto_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_fuse <style> function
+ Fuse
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_fuse_gs.gif
+
+ <h1>Description
+ Fuse.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_fuse_disconnector <style> function
+ FuseDisconnector
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_fuse_disconnector_gs.gif
+
+ <h1>Description
+ Fuse disconnector (fuse isolator).
+
+ Subgraph with two pages.
+ <image> ssg5271_fuse_disconnector_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_fuse_supplyside <style> function
+ FuseSupplySide
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_fuse_supplyside_gs.gif
+
+ <h1>Description
+ Fuse. The supply side is indicated by a thick line.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_fuse_switch <style> function
+ FuseSwitch
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_fuse_switch_gs.gif
+
+ <h1>Description
+ Fuse-switch.
+
+ Subgraph with two pages.
+ <image> ssg5271_fuse_switch_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_fuse_switchdisconnector <style> function
+ FuseSwitchDisconnector
+ Group Fuses/FuseSwitches
+
+ <image> ssg5271_fuse_switchdisconnector_gs.gif
+
+ <h1>Description
+ Fuse switch-disconnector (on-load isolating fuse switch).
+
+ Subgraph with two pages.
+ <image> ssg5271_fuse_switchdisconnector_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Machines_Converters__dummy <style> function
+Group Machines/Converters
+</topic>
+<headerlevel>
+<topic> ssg5271_converter <style> function
+ Converter
+ Group Machines/Converters
+
+ <image> ssg5271_converter_gs.gif
+
+ <h1>Description
+ Converter.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_converter_ac_ac <style> function
+ ConverterAcAc
+ Group Machines/Converters
+
+ <image> ssg5271_converter_ac_ac_gs.gif
+
+ <h1>Description
+ Converter AC to AC.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_converter_ac_dc <style> function
+ ConverterAcDc
+ Group Machines/Converters
+
+ <image> ssg5271_converter_ac_dc_gs.gif
+
+ <h1>Description
+ Converter AC to DC.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_converter_dc_ac <style> function
+ ConverterDcAc
+ Group Machines/Converters
+
+ <image> ssg5271_converter_dc_ac_gs.gif
+
+ <h1>Description
+ Converter DC to AC.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_converter_dc_dc <style> function
+ ConverterDcDc
+ Group Machines/Converters
+
+ <image> ssg5271_converter_dc_dc_gs.gif
+
+ <h1>Description
+ Converter DC to DC.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_machine <style> function
+ Machine
+ Group Machines/Converters
+
+ <image> ssg5271_machine_gs.gif
+
+ <h1>Description
+ Machine.
+ Annotation for type of machine, e.g. M (Motor) or G (Generator).
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_machine_ac <style> function
+ MachineAc
+ Group Machines/Converters
+
+ <image> ssg5271_machine_ac_gs.gif
+
+ <h1>Description
+ Machine, alternating current (AC).
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_machine_dc <style> function
+ MachineDc
+ Group Machines/Converters
+
+ <image> ssg5271_machine_dc_gs.gif
+
+ <h1>Description
+ Machine, direct current (DC).
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+<topic>SignallingDevices__dummy <style> function
+Group SignallingDevices
+</topic>
+<headerlevel>
+<topic> ssg5271_bell <style> function
+ Bell
+ Group SignallingDevices
+
+ <image> ssg5271_bell_gs.gif
+
+ <h1>Description
+ Bell.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_horn <style> function
+ Horn
+ Group SignallingDevices
+
+ <image> ssg5271_horn_gs.gif
+
+ <h1>Description
+ Horn.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_lamp <style> function
+ Lamp
+ Group SignallingDevices
+
+ <image> ssg5271_lamp_gs.gif
+
+ <h1>Description
+ Lamp, signal lamp, LED used as signal lamp.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_siren <style> function
+ Siren
+ Group SignallingDevices
+
+ <image> ssg5271_siren_gs.gif
+
+ <h1>Description
+ Siren.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+</headerlevel>
+<topic>Switches__dummy <style> function
+Group Switches
+</topic>
+<headerlevel>
+<topic> ssg5271_auxcontact_thermal <style> function
+ AuxContactThermal
+ Group Switches
+
+ <image> ssg5271_auxcontact_thermal_gs.gif
+
+ <h1>Description
+ Auxilary contact in thermal relay.
+
+ Subgraph with two pages.
+
+ <image> ssg5271_auxcontact_thermal_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_breakcontact_thermal <style> function
+ BreakContactThermal
+ Group Switches
+
+ <image> ssg5271_breakcontact_thermal_gs.gif
+
+ <h1>Description
+ Self-operating thermal break contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_breakcontact_thermal_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_circuitbreaker <style> function
+ CircuitBreaker
+ Group Switches
+
+ <image> ssg5271_circuitbreaker_gs.gif
+
+ <h1>Description
+ Circuit breaker.
+
+ Subgraph with two pages.
+ <image> ssg5271_circuitbreaker_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_circuitbreaker_rem <style> function
+ CircuitBreakerRem
+ Group Switches
+
+ <image> ssg5271_circuitbreaker_rem_gs.gif
+
+ <h1>Description
+ Circuitbreaker, removable type.
+
+ Subgraph with two pages.
+ <image> ssg5271_circuitbreaker_rem_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_circuitbreaker_fuserem <style> function
+ CircuitBreakerRemFuse
+ Group Switches
+
+ <image> ssg5271_circuitbreaker_fuserem_gs.gif
+
+ <h1>Description
+ Circuitbreaker, removable type with fuse.
+
+ Subgraph with two pages.
+ <image> ssg5271_circuitbreaker_fuserem_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_disconnector <style> function
+ Disconnector
+ Group Switches
+
+ <image> ssg5271_disconnector_gs.gif
+
+ <h1>Description
+ Disconnector( isolator).
+
+ Subgraph with two pages.
+ <image> ssg5271_disconnector_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_emergcontrolswitch <style> function
+ EmergencyControlSwitch
+ Group Switches
+
+ <image> ssg5271_emergcontrolswitch_gs.gif
+
+ <h1>Description
+ Emergency control switch.
+
+ Subgraph with two pages.
+ <image> ssg5271_emergcontrolswitch_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_manswitchbreak <style> function
+ ManSwitchBreak
+ Group Switches
+
+ <image> ssg5271_manswitchbreak_gs.gif
+
+ <h1>Description
+ Manually operated switch with break contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_manswitchbreak_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_manswitchbreak_noret <style> function
+ ManSwitchBreakNoRet
+ Group Switches
+
+ <image> ssg5271_manswitchbreak_noret_gs.gif
+
+ <h1>Description
+ Manually operated switch with break contact non-automatic
+ return.
+
+ Subgraph with two pages.
+ <image> ssg5271_manswitchbreak_noret_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_manswitchmake <style> function
+ ManSwitchMake
+ Group Switches
+
+ <image> ssg5271_manswitchmake_gs.gif
+
+ <h1>Description
+ Manually operated switch with make contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_manswitchmake_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_manswitchmake_noret <style> function
+ ManSwitchMakeNoRet
+ Group Switches
+
+ <image> ssg5271_manswitchmake_noret_gs.gif
+
+ <h1>Description
+ Manually operated switch with make contact non-automatic
+ return.
+
+ Subgraph with two pages.
+ <image> ssg5271_manswitchmake_noret_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_mlimitswitchbreak <style> function
+ MechanicalLimitSwitchBreak
+ Group Switches
+
+ <image> ssg5271_mlimitswitchbreak_gs.gif
+
+ <h1>Description
+ Mechanical limit-switch break contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_mlimitswitchbreak_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_mlimitswitchmake <style> function
+ MechanicalLimitSwitchMake
+ Group Switches
+
+ <image> ssg5271_mlimitswitchmake_gs.gif
+
+ <h1>Description
+ Mechanical limit-switch make contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_mlimitswitchmake_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_photocell <style> function
+ Photocell
+ Group Switches
+
+ <image> ssg5271_photocell_gs.gif
+
+ <h1>Description
+ Photocell.
+
+ Subgraph with two pages.
+ <image> ssg5271_photocell_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_proxswitchbreak <style> function
+ ProximitySwitchBreak
+ Group Switches
+
+ <image> ssg5271_proxswitchbreak_gs.gif
+
+ <h1>Description
+ Proximity switch break contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_proxswitchbreak_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_proxswitchmake <style> function
+ ProximitySwitchMake
+ Group Switches
+
+ <image> ssg5271_proxswitchmake_gs.gif
+
+ <h1>Description
+ Proximity switch make contact.
+
+ Subgraph with two pages.
+ <image> ssg5271_proxswitchmake_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_switch <style> function
+ Switch
+ Group Switches
+
+ <image> ssg5271_switch_gs.gif
+
+ <h1>Description
+ Switch (mechanical).
+
+ Subgraph with two pages.
+ <image> ssg5271_switch_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+<topic> ssg5271_switchdisconnector <style> function
+ SwitchDisconnector
+ Group Switches
+
+ <image> ssg5271_switchdisconnector_gs.gif
+
+ <h1>Description
+ Switch-disconnector.
+
+ Subgraph with two pages.
+ <image> ssg5271_switchdisconnector_ags.gif
+
+ <h1>Default dynamics
+ DigShift <link>GeDynDigShift, ,$pwr_lang/man_geref.dat
+
+</topic>
+
+</headerlevel>
+<topic>Transformers__dummy <style> function
+Group Transformers
+</topic>
+<headerlevel>
+<topic> ssg5271_currenttransformer <style> function
+ CurrentTransformer
+ Group Transformers
+
+ <image> ssg5271_currenttransformer_gs.gif
+
+ <h1>Description
+ Current transformer.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_currenttransformer2 <style> function
+ CurrentTransformer2
+ Group Transformers
+
+ <image> ssg5271_currenttransformer2_gs.gif
+
+ <h1>Description
+ Current transformer.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_voltagetransformer <style> function
+ VoltageTransformer
+ Group Transformers
+
+ <image> ssg5271_voltagetransformer_gs.gif
+
+ <h1>Description
+ Voltage transformer.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_voltagetransformer2 <style> function
+ VoltageTransformer2
+ Group Transformers
+
+ <image> ssg5271_voltagetransformer2_gs.gif
+
+ <h1>Description
+ Voltage transformer.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_voltagetransformer2wnd <style> function
+ VoltageTransformer2Windings
+ Group Transformers
+
+ <image> ssg5271_voltagetransformer2wnd_gs.gif
+
+ <h1>Description
+ Voltage transformer with two windings.
+
+ <h1>Default dynamics
+ No default dynamics.
+
 </topic>
 
 </headerlevel>

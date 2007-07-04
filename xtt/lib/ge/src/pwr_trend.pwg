@@ -1,0 +1,19 @@
+199
+!
+! Documentation for trend
+!
+!/**
+! Trend
+! Group Analog
+!
+! <image> pwr_trend_gs.gif
+!
+! <h1>Description
+! Trend with one or two curves.
+!
+! <h1>Default dynamics
+! Trend is a complex object. 
+! See Trend in Ge Reference manual <link>geref_trend, ,$pwr_lang/man_geref.dat
+!*/
+1
+99
