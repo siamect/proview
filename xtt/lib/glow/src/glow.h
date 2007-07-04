@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.20 2007-06-29 09:29:19 claes Exp $
+ * Proview   $Id: glow.h,v 1.21 2007-07-04 13:28:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1340,6 +1340,8 @@ typedef enum {
 	glow_eSave_GrowNode_original_text_drawtype = 2722,
 	glow_eSave_GrowNode_text_drawtype 	= 2723,
 	glow_eSave_GrowNode_shadow 		= 2724,
+	glow_eSave_GrowNode_flip_horizontal    	= 2725,
+	glow_eSave_GrowNode_flip_vertical      	= 2726,
 	glow_eSave_Transform_a11		= 2800,
 	glow_eSave_Transform_a12		= 2801,
 	glow_eSave_Transform_a13		= 2802,

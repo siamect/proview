@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.13 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.14 2007-07-04 13:28:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,6 +130,8 @@ void GrowNode::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowNode_original_color_shift) << FSPACE << original_color_shift << endl;
   fp << int(glow_eSave_GrowNode_color_shift) << FSPACE << color_shift << endl;
   fp << int(glow_eSave_GrowNode_invisible) << FSPACE << invisible << endl;
+  fp << int(glow_eSave_GrowNode_flip_horizontal) << FSPACE << flip_horizontal << endl;
+  fp << int(glow_eSave_GrowNode_flip_vertical) << FSPACE << flip_vertical << endl;
   fp << int(glow_eSave_GrowNode_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowNode_dynamic) << endl;
   if( dynamic)
@@ -216,6 +218,8 @@ void GrowNode::open( ifstream& fp)
       case glow_eSave_GrowNode_original_color_shift: fp >> original_color_shift; break;
       case glow_eSave_GrowNode_color_shift: fp >> color_shift; break;
       case glow_eSave_GrowNode_invisible: fp >> invisible; break;
+      case glow_eSave_GrowNode_flip_horizontal: fp >> flip_horizontal; break;
+      case glow_eSave_GrowNode_flip_vertical: fp >> flip_vertical; break;
       case glow_eSave_GrowNode_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowNode_dynamic:
         fp.getline( dummy, sizeof(dummy));
