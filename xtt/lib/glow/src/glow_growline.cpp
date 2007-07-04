@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growline.cpp,v 1.5 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growline.cpp,v 1.6 2007-07-04 13:30:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -722,8 +722,6 @@ void GrowLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
       return;
     hot = 0;
   }
-  if ( p1.z_x == p2.z_x && p1.z_y == p2.z_y)
-    return;
   int idx;
   if ( node && ((GrowNode *)node)->line_width)
     idx = int( w->zoom_factor_y / w->base_zoom_factor * 
@@ -747,6 +745,9 @@ void GrowLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
     x2 = int( trf.x( t, p2.x, p2.y) * w->zoom_factor_x + 0.5) - w->offset_x;
     y2 = int( trf.y( t, p2.x, p2.y) * w->zoom_factor_y + 0.5) - w->offset_y;
   }
+  if ( x1 == x2 && y1 == y2)
+    return;
+
   w->set_draw_buffer_only();
   ctx->gdraw->line_erase( w, x1, y1, x2, y2, idx);
   w->reset_draw_buffer_only();
