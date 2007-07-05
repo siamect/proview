@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_uted_gtk.cpp,v 1.1 2007-01-04 07:29:02 claes Exp $
+ * Proview   $Id: wb_uted_gtk.cpp,v 1.2 2007-07-05 13:37:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -706,10 +706,12 @@ WUtedGtk::~WUtedGtk()
 //
 void WUtedGtk::get_value( int idx, char *str, int len)
 {
-  char *value;
+  char *value, *valueutf8;
 
-  value = gtk_editable_get_chars( GTK_EDITABLE(widgets.value[idx]), 0, -1);
+  valueutf8 = gtk_editable_get_chars( GTK_EDITABLE(widgets.value[idx]), 0, -1);
+  value = g_convert( valueutf8, -1, "ISO8859-1", "UTF-8", NULL, NULL, NULL);
   strncpy( str, value, len);
+  g_free( valueutf8);
   g_free( value);
 }
 
