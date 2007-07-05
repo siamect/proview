@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.2 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.3 2007-07-05 13:38:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2819,6 +2819,8 @@ int utl_show_modules (
 	pwr_tClassId	class_vect[5];
 	int		single_object = 0;
 	int		sts, size;
+	pwr_tStatus	mod_sts = 0;
+	pwr_tStatus	comp_sts = 0;
 	pwr_tClassId	*classp;
 	pwr_tObjid	hierobjdid;
 	utl_ctx		utlctx;
@@ -2933,9 +2935,9 @@ int utl_show_modules (
           sts = gcg_wind_to_operating_system( ldhses, objdid, &os);
 
 	  /* Get modification time in parameter Modified */
-	  sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
-			"Compiled", (char **)&comp_time_ptr, &size); 
-	  if ( ODD(sts))
+	  comp_sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
+				       "Compiled", (char **)&comp_time_ptr, &size); 
+	  if ( ODD(comp_sts))
 	  {
 	    memcpy( &comp_time, comp_time_ptr, sizeof( comp_time));
 	    /* Convert to ascii */
@@ -2956,9 +2958,9 @@ int utl_show_modules (
 	  }
 
 	  /* Get modification time in parameter Modified */
-	  sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
+	  mod_sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
 			"Modified", (char **)&mod_time_ptr, &size); 
-	  if ( ODD(sts))
+	  if ( ODD(mod_sts))
 	  {
 	    memcpy( &mod_time, mod_time_ptr, sizeof( mod_time));
 	    /* Convert to ascii */
@@ -2979,7 +2981,8 @@ int utl_show_modules (
 	  }
 
 	  /* Check if modified after compiled */
-	  if (time_Acomp(&mod_time, &comp_time) > 0)
+	  if ( ODD(mod_sts) && ODD(comp_sts) &&
+	       time_Acomp(&mod_time, &comp_time) > 0)
 	    modification = 1;
 	  else
 	    modification = 0;
