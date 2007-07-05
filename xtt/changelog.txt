@@ -51,3 +51,5 @@
 070629 cs  glow      Documentation block added to pwg file.
 070704 cs  glow      Subgraph name size increased from 32 to 80 characters.
 070704 cs  ge        Circuitdiagram symbols added.
+070705 cs  glow      Bugfix in connections, ConGlue wasn't snapped to grid and connection wasn't drawn when created.
+070705 cs  xtt       Bugfix in logging, parameters with array index couldn't be restored  from saved entry.

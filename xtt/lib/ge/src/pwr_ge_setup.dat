@@ -293,7 +293,7 @@ menu CircuitDiagram
 {
   menu Contacts
   {
-    subgraph 	2WayContactor	pwr_exe:ssg5271_2waycontactor.pwsg		48
+    subgraph 	2WayContact	pwr_exe:ssg5271_2waycontact.pwsg		48
     subgraph 	BreakContactDelayedClose pwr_exe:ssg5271_breakcontact_dc.pwsg	48
     subgraph 	BreakContactDelayedOpen	pwr_exe:ssg5271_breakcontact_do.pwsg	48
     subgraph 	BreakContact	pwr_exe:ssg5271_breakcontact.pwsg		48
@@ -328,9 +328,10 @@ menu CircuitDiagram
     subgraph 	Division 	pwr_exe:ssg5271_division.pwsg	48
     subgraph 	ExclusiveOr 	pwr_exe:ssg5271_exclusiveor.pwsg 48
     subgraph 	Filter 		pwr_exe:ssg5271_filter.pwsg	48
+    subgraph 	Invert 		pwr_exe:ssg5271_invert.pwsg	47
     subgraph 	Max 		pwr_exe:ssg5271_max.pwsg	48
     subgraph 	Min 		pwr_exe:ssg5271_min.pwsg	48
-    subgraph 	Multiplication 	pwr_exe:ssg5271_multiplicator.pwsg 48
+    subgraph 	Multiplication 	pwr_exe:ssg5271_multiplication.pwsg 48
     subgraph 	Negator 	pwr_exe:ssg5271_negator.pwsg	48
     subgraph 	Or 		pwr_exe:ssg5271_or.pwsg		48
     subgraph 	Pulse 		pwr_exe:ssg5271_pulse.pwsg	48

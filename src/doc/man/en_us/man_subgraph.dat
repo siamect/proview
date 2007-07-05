@@ -34,7 +34,7 @@
 
 
 <hr>
-2007-07-04
+2007-07-05
 Version V4.4.1
 <hr>
 </topic>
@@ -2022,6 +2022,7 @@ Group Process
  <h1>Default dynamics
  DigLowColor <link>GeDynDigLowColor, ,$pwr_lang/man_geref.dat
  DigError <link>GeDynDigError, ,$pwr_lang/man_geref.dat
+
 </topic>
 
 <topic> pwr_valve3way <style> function
@@ -4704,6 +4705,7 @@ Delay <link>ssg5271_delay
 Division <link>ssg5271_division
 ExclusiveOr <link>ssg5271_exclusiveor
 Filter <link>ssg5271_filter
+Invert <link>ssg5271_invert
 Max <link>ssg5271_max
 Min <link>ssg5271_min
 Multiplication <link>ssg5271_multiplication
@@ -5181,6 +5183,22 @@ Group FunctionSymbols
 
  <h1>Description
  Filter with specified time constant.
+
+ <h1>Default dynamics
+ No default dynamics.
+
+</topic>
+
+<topic> ssg5271_invert <style> function
+ Invert
+ Group FunctionSymbols
+
+ <image> ssg5271_invert_gs.gif
+
+ <h1>Description
+ Input or output inverter.
+ Placed on a function symbols logical input or output to
+ indicate inverted signal.
 
  <h1>Default dynamics
  No default dynamics.
