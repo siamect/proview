@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconglue.h,v 1.3 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growconglue.h,v 1.4 2007-07-05 07:23:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,8 @@ class GrowConGlue : public GrowNode {
 
   //! Noargs constructor
   GrowConGlue() {}
+
+  ~GrowConGlue();
 
   //! Save the content of the object to file.
   /*!

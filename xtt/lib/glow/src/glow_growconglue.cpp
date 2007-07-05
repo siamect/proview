@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growconglue.cpp,v 1.3 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growconglue.cpp,v 1.4 2007-07-05 07:23:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,6 +35,8 @@ GrowConGlue::GrowConGlue( GrowCtx *glow_ctx, char *name, double x1, double y1, i
 		GrowNode(glow_ctx,name,0,x1,y1,1,0),
 		line_width_up(-1), line_width_down(-1), line_width_left(-1), line_width_right(-1)
 {
+  double x_grid, y_grid;
+
   // Get nodeclass
   nc = (GlowNodeClass *) ctx->get_nodeclass_from_name( "pwr_conglue");
   if ( !nc) {
@@ -63,12 +65,21 @@ GrowConGlue::GrowConGlue( GrowCtx *glow_ctx, char *name, double x1, double y1, i
   }
   draw_type = glow_eDrawType_Line;
 
+  if ( ctx->grid_on) {
+    ctx->find_grid( x1, y1, &x_grid, &y_grid);
+    trf.move( x_grid - x1,  y_grid - y1);
+  }
   get_node_borders();
   if ( !nodraw)
     draw( &ctx->mw, (GlowTransform *)NULL, highlight, hot, NULL, NULL);
 
 }
 
+GrowConGlue::~GrowConGlue()
+{
+  erase( &ctx->mw, (GlowTransform *)NULL, hot, NULL);
+  erase( &ctx->navw, (GlowTransform *)NULL, hot, NULL);
+}
 
 void GrowConGlue::configure( GlowCon *con) 
 {
@@ -980,7 +991,7 @@ void GrowConGlue::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
   ll_y = int( min( y1, y2) + 0.5);
   ur_y = int( max( y1, y2) + 0.5);
 
-  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x, ur_y - ll_y, glow_eDrawType_LineErase);
+  ctx->gdraw->fill_rect( w, ll_x, ll_y, ur_x - ll_x + 1, ur_y - ll_y + 1, glow_eDrawType_LineErase);
 }
 
 void GrowConGlue::draw()
