@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.9 2007-05-18 12:05:12 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.10 2007-07-05 07:28:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -101,7 +101,7 @@ typedef struct {
 typedef struct s_Card {
 	pwr_tClassId	Class;		/* Class of card object */
 	pwr_tObjid	Objid;		/* Objid of card object */
-	pwr_tString80	Name;		/* Full name of card object */
+	pwr_tOName	Name;		/* Full name of card object */
 	io_mAction	Action;		/* Type of method defined (Read/Write)*/
 	io_mProcess	Process;	/* Process number */
 	pwr_tStatus	(* Init) ();	/* Init method */
@@ -125,7 +125,7 @@ typedef struct s_Card {
 typedef struct s_Rack {
 	pwr_tClassId	Class;		/* Class of rack object */
 	pwr_tObjid	Objid;		/* Objid of rack object */
-	pwr_tString80	Name;		/* Full name of rack object */
+	pwr_tOName	Name;		/* Full name of rack object */
 	io_mAction	Action;		/* Type of method defined (Read/Write)*/
 	io_mProcess	Process;	/* Process number */
 	pwr_tStatus	(* Init) ();	/* Init method */
@@ -148,7 +148,7 @@ typedef struct s_Rack {
 typedef struct s_Agent {
 	pwr_tClassId	Class;		/* Class of agent object */
 	pwr_tObjid	Objid;		/* Objid of agent object */
-	pwr_tString80	Name;		/* Full name of agent object */ 
+	pwr_tOName	Name;		/* Full name of agent object */ 
 	io_mAction	Action;		/* Type of method defined (Read/Write)*/
 	io_mProcess	Process;	/* Process number */
 	pwr_tStatus	(* Init) ();	/* Init method */
