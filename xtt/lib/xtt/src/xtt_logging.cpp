@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_logging.cpp,v 1.7 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: xtt_logging.cpp,v 1.8 2007-07-05 07:24:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1375,6 +1375,7 @@ int  XttLogging::get_parinfo(
 	pwr_tClassId	classid;
 	pwr_tAName     	objname;
 	pwr_tObjName   	classname;
+	char 		*s;
 
 	/* Get object name */
 	/* Parse the parameter name into a object and a parameter name */
@@ -1420,6 +1421,9 @@ int  XttLogging::get_parinfo(
 	    return 0;
 	  }
 	}
+
+	if ( (s = strrchr( parname, '[')))
+	  *s = 0;
 
 	strcat( hiername, "-");
 	strcat( hiername, parname);
