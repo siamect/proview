@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_rtt_logging.c,v 1.5 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: rt_rtt_logging.c,v 1.6 2007-07-05 07:28:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1911,6 +1911,7 @@ static int	rtt_get_parinfo(
 	pwr_tClassId	class;
 	pwr_tOName     	objname;
 	char		classname[80];
+	char 		*s;
 
 	/* Get object name */
 	/* Parse the parameter name into a object and a parameter name */
@@ -1954,6 +1955,9 @@ static int	rtt_get_parinfo(
 	    return RTT__NOPICTURE;
 	  }
 	}
+
+	if ( (s = strrchr( parname, '[')))
+	  *s = 0;
 
 	strcat( hiername, "-");
 	strcat( hiername, parname);
