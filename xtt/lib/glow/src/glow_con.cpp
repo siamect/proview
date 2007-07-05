@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.cpp,v 1.7 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_con.cpp,v 1.8 2007-07-05 07:24:19 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -148,6 +148,7 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
   GlowArrow *arrow;
   int i;
   int sts;
+  bool created = false;
 
   if ( !cc)
     return;
@@ -277,6 +278,7 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
       }
       else
       {
+	created = true;
         sts = con_route( src_x, src_y, source_direction, dest_x, dest_y,
 		dest_direction);
         if ( EVEN(sts) && sts != 0)
@@ -382,6 +384,8 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
 
   strcpy( c_name, name);
   get_con_borders();
+  if ( created)
+    draw();
   con_modified();
 }
 
