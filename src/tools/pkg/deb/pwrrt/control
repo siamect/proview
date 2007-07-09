@@ -1,5 +1,5 @@
 Package: pwrrt
-Version: 4.4.1-1
+Version: 4.4.2-1
 Section: base
 Priority: optional
 Architecture: i386
@@ -16,3 +16,10 @@ Description:
   - Proview profibus restart improved.
   - Statusmonitor to view status of remote nodes implemented.
   - Runtime monitor to start and stop runtime in development environment implemented.
+  - Env variables allowed in filenames for remotelogg and nmpsbackup.
+ 4.4.1-2
+  - Problems with national characters in opc_server fixed.
+  - Problems with memory leakage in opc_server fixed.
+ 4.4.2-1
+  - Subgraphs for ventilation and circuit diagrams added.
+  - Baseobjects for threewayvalves, filters and dampers added.
