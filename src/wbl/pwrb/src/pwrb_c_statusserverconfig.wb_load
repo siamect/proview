@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_statusserverconfig.wb_load,v 1.2 2007-07-04 13:24:46 claes Exp $
+!  Proview   $Id: pwrb_c_statusserverconfig.wb_load,v 1.3 2007-07-09 05:22:15 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -48,7 +48,7 @@ SObject pwrb:Class
       !/**
       ! User Status.
       !*/
-      Object UserStatus $Attribute 1
+      Object UserStatus $Attribute 2
         Body SysBody
           Attr TypeRef = "pwrs:Type-$Status"
 	  Attr Flags |= PWR_MASK_ARRAY
@@ -58,7 +58,7 @@ SObject pwrb:Class
       !/**
       ! User Status string.
       !*/
-      Object UserStatusStr $Attribute 1
+      Object UserStatusStr $Attribute 3
         Body SysBody
           Attr TypeRef = "pwrs:Type-$String80"
 	  Attr Flags |= PWR_MASK_ARRAY

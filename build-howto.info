@@ -16,9 +16,37 @@ gcc v3.3.3
 gcc v3.4.3
 gcc v4.0.2
 
+1. Preparation
+--------------
+
+1.1. Ubuntu
+-----------
+
+Install the following packages
+
+make
+flex
+gcc
+g++
+libgtk2.0-dev
+cpp
+libasound2-dev
+libdb4.3-dev
+doxygen
+
+antlr: Download and build source package antlr-2.7.7 from www.antlr.org
+       copy includefiles from antlr-2.7.7/lib/cpp/antlr/* 
+       to /usr/include/antlr/
+
+java:  Download jdk-6u2-linux-i586.bin from java.sun.com. Define the 
+       environment variable jdk to the path where the package is 
+       extracted (e.g. /usr/local) and put $jdk/bin in the PATH.
+
+	export jdk=/usr/local/jdk1.6.0_02
+	export PATH=$PATH:$jdk/bin
 
 
-1. Easy way
+2. Easy way
 -----------
 Unpack the source package
 
@@ -35,14 +63,14 @@ Execute the makefile
 Follow the instructions to insert three lines in your .bashrc file.
 
 
-2. Thorough way
+3. Thorough way
 ---------------
 
 This is a more thorough way to install the development environment, which
 is recommended if you will make a lots of changes in the source code and
 handle different version of proview.
 
-2.1 Setting up the environment
+3.1 Setting up the environment
 ------------------------------
 
 The first thing to do is to set up your environment properly. Add the 
@@ -55,7 +83,7 @@ source $pwre_bin/pwre_function
 export pwre_env_db="/home/robert/pwre_new"
 
 
-2.2 Creating the environment
+3.2 Creating the environment
 ----------------------------
 
 Creating and handling your environment is done with the pwre-function (added
@@ -95,7 +123,7 @@ Now, create the build tree
 
 Finally the environment is set up and we can start the build procedure.
 
-2.3 Building Proview
+3.3 Building Proview
 --------------------
 
 To build Proview from scratch 
