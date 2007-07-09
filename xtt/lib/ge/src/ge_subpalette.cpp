@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.cpp,v 1.10 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_subpalette.cpp,v 1.11 2007-07-09 12:51:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -144,6 +144,142 @@
 #include "ge_bitmap_elheater102.h"
 #include "ge_bitmap_3wayvalvecontrol103.h"
 #include "ge_bitmap_dampercontrol104.h"
+#include "ge_bitmap_4wayvalve105.h"
+#include "ge_bitmap_actuator106.h"
+#include "ge_bitmap_actuatordia107.h"
+#include "ge_bitmap_actuatorfailclose108.h"
+#include "ge_bitmap_actuatorfailopen109.h"
+#include "ge_bitmap_actuatormotor110.h"
+#include "ge_bitmap_actuatorsensing111.h"
+#include "ge_bitmap_actuatorspring112.h"
+#include "ge_bitmap_actuatorsolenoid113.h"
+#include "ge_bitmap_actuatorpiston114.h"
+#include "ge_bitmap_actuatorwithman115.h"
+#include "ge_bitmap_aircoolerheater116.h"
+#include "ge_bitmap_airfilter117.h"
+#include "ge_bitmap_airgrill118.h"
+#include "ge_bitmap_airpurgingdevice119.h"
+#include "ge_bitmap_auxiliaryunitman120.h"
+#include "ge_bitmap_drawoffpoint121.h"
+#include "ge_bitmap_gully122.h"
+#include "ge_bitmap_gullywithtrap123.h"
+#include "ge_bitmap_firedamper124.h"
+#include "ge_bitmap_heatingexchanger125.h"
+#include "ge_bitmap_heatingexchanger126.h"
+#include "ge_bitmap_humidifier127.h"
+#include "ge_bitmap_hydrant128.h"
+#include "ge_bitmap_noreturnvalve129.h"
+#include "ge_bitmap_pressuresource130.h"
+#include "ge_bitmap_pump131.h"
+#include "ge_bitmap_recorder132.h"
+#include "ge_bitmap_restrictionunit133.h"
+#include "ge_bitmap_safetyvalve134.h"
+#include "ge_bitmap_separator135.h"
+#include "ge_bitmap_shower136.h"
+#include "ge_bitmap_silencer137.h"
+#include "ge_bitmap_sprinklerhead138.h"
+#include "ge_bitmap_steamtrap139.h"
+#include "ge_bitmap_strainer140.h"
+#include "ge_bitmap_thermometer141.h"
+#include "ge_bitmap_transmitter142.h"
+#include "ge_bitmap_trap143.h"
+#include "ge_bitmap_vacuumbreaker144.h"
+#include "ge_bitmap_valve145.h"
+#include "ge_bitmap_valveel146.h"
+#include "ge_bitmap_valvepiston147.h"
+#include "ge_bitmap_valvesensing148.h"
+#include "ge_bitmap_valvesolenoid149.h"
+#include "ge_bitmap_aircooledcondenser150.h"
+#include "ge_bitmap_compressor151.h"
+#include "ge_bitmap_compressor2step152.h"
+#include "ge_bitmap_compressor2stepaggr153.h"
+#include "ge_bitmap_compressoraggr154.h"
+#include "ge_bitmap_coolingmediumtank155.h"
+#include "ge_bitmap_coolingtower156.h"
+#include "ge_bitmap_dryingfilter157.h"
+#include "ge_bitmap_evaporativecondenser158.h"
+#include "ge_bitmap_evaporator159.h"
+#include "ge_bitmap_fan160.h"
+#include "ge_bitmap_fancondenser161.h"
+#include "ge_bitmap_fluidcooledcondenser162.h"
+#include "ge_bitmap_sightglass163.h"
+#include "ge_bitmap_2waycontact164.h"
+#include "ge_bitmap_breakcontact165.h"
+#include "ge_bitmap_breakcontactdelayedclose166.h"
+#include "ge_bitmap_breakcontactdelayedopen167.h"
+#include "ge_bitmap_makecontactdelayedclose168.h"
+#include "ge_bitmap_makecontactdelayedopen169.h"
+#include "ge_bitmap_chassis170.h"
+#include "ge_bitmap_earth171.h"
+#include "ge_bitmap_equipotentiality172.h"
+#include "ge_bitmap_noiselessearth173.h"
+#include "ge_bitmap_protectiveearth174.h"
+#include "ge_bitmap_accumulator175.h"
+#include "ge_bitmap_capacitor176.h"
+#include "ge_bitmap_diode177.h"
+#include "ge_bitmap_led178.h"
+#include "ge_bitmap_resistor179.h"
+#include "ge_bitmap_triodthyristor180.h"
+#include "ge_bitmap_changeoverbreakcontact181.h"
+#include "ge_bitmap_makecontact182.h"
+#include "ge_bitmap_adder183.h"
+#include "ge_bitmap_and184.h"
+#include "ge_bitmap_controller185.h"
+#include "ge_bitmap_delay186.h"
+#include "ge_bitmap_division187.h"
+#include "ge_bitmap_exclusiveor188.h"
+#include "ge_bitmap_filter189.h"
+#include "ge_bitmap_max190.h"
+#include "ge_bitmap_min191.h"
+#include "ge_bitmap_multiplication192.h"
+#include "ge_bitmap_negator193.h"
+#include "ge_bitmap_or194.h"
+#include "ge_bitmap_pulse195.h"
+#include "ge_bitmap_rampdown196.h"
+#include "ge_bitmap_rampup197.h"
+#include "ge_bitmap_root198.h"
+#include "ge_bitmap_rs199.h"
+#include "ge_bitmap_circuitbreakerauto200.h"
+#include "ge_bitmap_fuse201.h"
+#include "ge_bitmap_fusedisconnector202.h"
+#include "ge_bitmap_fusesupplyside203.h"
+#include "ge_bitmap_fuseswitch204.h"
+#include "ge_bitmap_fuseswitchdisconnector205.h"
+#include "ge_bitmap_converter206.h"
+#include "ge_bitmap_converter_ac_ac207.h"
+#include "ge_bitmap_converter_ac_dc208.h"
+#include "ge_bitmap_converter_dc_ac209.h"
+#include "ge_bitmap_converter_dc_dc210.h"
+#include "ge_bitmap_machine211.h"
+#include "ge_bitmap_machineac212.h"
+#include "ge_bitmap_machinedc213.h"
+#include "ge_bitmap_bell214.h"
+#include "ge_bitmap_horn215.h"
+#include "ge_bitmap_lamp216.h"
+#include "ge_bitmap_siren217.h"
+#include "ge_bitmap_auxcontactthermal218.h"
+#include "ge_bitmap_breakcontactthermal219.h"
+#include "ge_bitmap_circuitbreaker220.h"
+#include "ge_bitmap_circuitbreakerrem221.h"
+#include "ge_bitmap_circuitbreakerremfuse222.h"
+#include "ge_bitmap_disconnector223.h"
+#include "ge_bitmap_emergencycontrolswitch224.h"
+#include "ge_bitmap_manswitchbreak225.h"
+#include "ge_bitmap_manswitchbreaknoret226.h"
+#include "ge_bitmap_manswitchmake227.h"
+#include "ge_bitmap_manswitchmakenoret228.h"
+#include "ge_bitmap_mlimitswitchbreak229.h"
+#include "ge_bitmap_mlimitswitchmake230.h"
+#include "ge_bitmap_photocell231.h"
+#include "ge_bitmap_proximityswitchbreak232.h"
+#include "ge_bitmap_proximityswitchmake233.h"
+#include "ge_bitmap_switchdisconnector234.h"
+#include "ge_bitmap_currenttransformer235.h"
+#include "ge_bitmap_currenttransformer236.h"
+#include "ge_bitmap_voltagetransformer237.h"
+#include "ge_bitmap_voltagetransformer238.h"
+#include "ge_bitmap_voltagetransformer2wnd239.h"
+#include "ge_bitmap_actuatorfailkeep240.h"
 
 #define SUBPALETTE__INPUT_SYNTAX 2
 #define SUBPALETTE__OBJNOTFOUND 4
@@ -339,6 +475,142 @@ void SubPaletteBrow::allocate_pixmaps()
   ALLOC_PIXMAP( ge_bitmap_elheater102, 102);
   ALLOC_PIXMAP( ge_bitmap_3wayvalvecontrol103, 103);
   ALLOC_PIXMAP( ge_bitmap_dampercontrol104, 104);
+  ALLOC_PIXMAP( ge_bitmap_4wayvalve105, 105);
+  ALLOC_PIXMAP( ge_bitmap_actuator106, 106);
+  ALLOC_PIXMAP( ge_bitmap_actuatordia107, 107);
+  ALLOC_PIXMAP( ge_bitmap_actuatorfailclose108, 108);
+  ALLOC_PIXMAP( ge_bitmap_actuatorfailopen109, 109);
+  ALLOC_PIXMAP( ge_bitmap_actuatormotor110, 110);
+  ALLOC_PIXMAP( ge_bitmap_actuatorsensing111, 111);
+  ALLOC_PIXMAP( ge_bitmap_actuatorspring112, 112);
+  ALLOC_PIXMAP( ge_bitmap_actuatorsolenoid113, 113);
+  ALLOC_PIXMAP( ge_bitmap_actuatorpiston114, 114);
+  ALLOC_PIXMAP( ge_bitmap_actuatorwithman115, 115);
+  ALLOC_PIXMAP( ge_bitmap_aircoolerheater116, 116);
+  ALLOC_PIXMAP( ge_bitmap_airfilter117, 117);
+  ALLOC_PIXMAP( ge_bitmap_airgrill118, 118);
+  ALLOC_PIXMAP( ge_bitmap_airpurgingdevice119, 119);
+  ALLOC_PIXMAP( ge_bitmap_auxiliaryunitman120, 120);
+  ALLOC_PIXMAP( ge_bitmap_drawoffpoint121, 121);
+  ALLOC_PIXMAP( ge_bitmap_gully122, 122);
+  ALLOC_PIXMAP( ge_bitmap_gullywithtrap123, 123);
+  ALLOC_PIXMAP( ge_bitmap_firedamper124, 124);
+  ALLOC_PIXMAP( ge_bitmap_heatingexchanger125, 125);
+  ALLOC_PIXMAP( ge_bitmap_heatingexchanger126, 126);
+  ALLOC_PIXMAP( ge_bitmap_humidifier127, 127);
+  ALLOC_PIXMAP( ge_bitmap_hydrant128, 128);
+  ALLOC_PIXMAP( ge_bitmap_noreturnvalve129, 129);
+  ALLOC_PIXMAP( ge_bitmap_pressuresource130, 130);
+  ALLOC_PIXMAP( ge_bitmap_pump131, 131);
+  ALLOC_PIXMAP( ge_bitmap_recorder132, 132);
+  ALLOC_PIXMAP( ge_bitmap_restrictionunit133, 133);
+  ALLOC_PIXMAP( ge_bitmap_safetyvalve134, 134);
+  ALLOC_PIXMAP( ge_bitmap_separator135, 135);
+  ALLOC_PIXMAP( ge_bitmap_shower136, 136);
+  ALLOC_PIXMAP( ge_bitmap_silencer137, 137);
+  ALLOC_PIXMAP( ge_bitmap_sprinklerhead138, 138);
+  ALLOC_PIXMAP( ge_bitmap_steamtrap139, 139);
+  ALLOC_PIXMAP( ge_bitmap_strainer140, 140);
+  ALLOC_PIXMAP( ge_bitmap_thermometer141, 141);
+  ALLOC_PIXMAP( ge_bitmap_transmitter142, 142);
+  ALLOC_PIXMAP( ge_bitmap_trap143, 143);
+  ALLOC_PIXMAP( ge_bitmap_vacuumbreaker144, 144);
+  ALLOC_PIXMAP( ge_bitmap_valve145, 145);
+  ALLOC_PIXMAP( ge_bitmap_valveel146, 146);
+  ALLOC_PIXMAP( ge_bitmap_valvepiston147, 147);
+  ALLOC_PIXMAP( ge_bitmap_valvesensing148, 148);
+  ALLOC_PIXMAP( ge_bitmap_valvesolenoid149, 149);
+  ALLOC_PIXMAP( ge_bitmap_aircooledcondenser150, 150);
+  ALLOC_PIXMAP( ge_bitmap_compressor151, 151);
+  ALLOC_PIXMAP( ge_bitmap_compressor2step152, 152);
+  ALLOC_PIXMAP( ge_bitmap_compressor2stepaggr153, 153);
+  ALLOC_PIXMAP( ge_bitmap_compressoraggr154, 154);
+  ALLOC_PIXMAP( ge_bitmap_coolingmediumtank155, 155);
+  ALLOC_PIXMAP( ge_bitmap_coolingtower156, 156);
+  ALLOC_PIXMAP( ge_bitmap_dryingfilter157, 157);
+  ALLOC_PIXMAP( ge_bitmap_evaporativecondenser158, 158);
+  ALLOC_PIXMAP( ge_bitmap_evaporator159, 159);
+  ALLOC_PIXMAP( ge_bitmap_fan160, 160);
+  ALLOC_PIXMAP( ge_bitmap_fancondenser161, 161);
+  ALLOC_PIXMAP( ge_bitmap_fluidcooledcondenser162, 162);
+  ALLOC_PIXMAP( ge_bitmap_sightglass163, 163);
+  ALLOC_PIXMAP( ge_bitmap_2waycontact164, 164);
+  ALLOC_PIXMAP( ge_bitmap_breakcontact165, 165);
+  ALLOC_PIXMAP( ge_bitmap_breakcontactdelayedclose166, 166);
+  ALLOC_PIXMAP( ge_bitmap_breakcontactdelayedopen167, 167);
+  ALLOC_PIXMAP( ge_bitmap_makecontactdelayedclose168, 168);
+  ALLOC_PIXMAP( ge_bitmap_makecontactdelayedopen169, 169);
+  ALLOC_PIXMAP( ge_bitmap_chassis170, 170);
+  ALLOC_PIXMAP( ge_bitmap_earth171, 171);
+  ALLOC_PIXMAP( ge_bitmap_equipotentiality172, 172);
+  ALLOC_PIXMAP( ge_bitmap_noiselessearth173, 173);
+  ALLOC_PIXMAP( ge_bitmap_protectiveearth174, 174);
+  ALLOC_PIXMAP( ge_bitmap_accumulator175, 175);
+  ALLOC_PIXMAP( ge_bitmap_capacitor176, 176);
+  ALLOC_PIXMAP( ge_bitmap_diode177, 177);
+  ALLOC_PIXMAP( ge_bitmap_led178, 178);
+  ALLOC_PIXMAP( ge_bitmap_resistor179, 179);
+  ALLOC_PIXMAP( ge_bitmap_triodthyristor180, 180);
+  ALLOC_PIXMAP( ge_bitmap_changeoverbreakcontact181, 181);
+  ALLOC_PIXMAP( ge_bitmap_makecontact182, 182);
+  ALLOC_PIXMAP( ge_bitmap_adder183, 183);
+  ALLOC_PIXMAP( ge_bitmap_and184, 184);
+  ALLOC_PIXMAP( ge_bitmap_controller185, 185);
+  ALLOC_PIXMAP( ge_bitmap_delay186, 186);
+  ALLOC_PIXMAP( ge_bitmap_division187, 187);
+  ALLOC_PIXMAP( ge_bitmap_exclusiveor188, 188);
+  ALLOC_PIXMAP( ge_bitmap_filter189, 189);
+  ALLOC_PIXMAP( ge_bitmap_max190, 190);
+  ALLOC_PIXMAP( ge_bitmap_min191, 191);
+  ALLOC_PIXMAP( ge_bitmap_multiplication192, 192);
+  ALLOC_PIXMAP( ge_bitmap_negator193, 193);
+  ALLOC_PIXMAP( ge_bitmap_or194, 194);
+  ALLOC_PIXMAP( ge_bitmap_pulse195, 195);
+  ALLOC_PIXMAP( ge_bitmap_rampdown196, 196);
+  ALLOC_PIXMAP( ge_bitmap_rampup197, 197);
+  ALLOC_PIXMAP( ge_bitmap_root198, 198);
+  ALLOC_PIXMAP( ge_bitmap_rs199, 199);
+  ALLOC_PIXMAP( ge_bitmap_circuitbreakerauto200, 200);
+  ALLOC_PIXMAP( ge_bitmap_fuse201, 201);
+  ALLOC_PIXMAP( ge_bitmap_fusedisconnector202, 202);
+  ALLOC_PIXMAP( ge_bitmap_fusesupplyside203, 203);
+  ALLOC_PIXMAP( ge_bitmap_fuseswitch204, 204);
+  ALLOC_PIXMAP( ge_bitmap_fuseswitchdisconnector205, 205);
+  ALLOC_PIXMAP( ge_bitmap_converter206, 206);
+  ALLOC_PIXMAP( ge_bitmap_converter_ac_ac207, 207);
+  ALLOC_PIXMAP( ge_bitmap_converter_ac_dc208, 208);
+  ALLOC_PIXMAP( ge_bitmap_converter_dc_ac209, 209);
+  ALLOC_PIXMAP( ge_bitmap_converter_dc_dc210, 210);
+  ALLOC_PIXMAP( ge_bitmap_machine211, 211);
+  ALLOC_PIXMAP( ge_bitmap_machineac212, 212);
+  ALLOC_PIXMAP( ge_bitmap_machinedc213, 213);
+  ALLOC_PIXMAP( ge_bitmap_bell214, 214);
+  ALLOC_PIXMAP( ge_bitmap_horn215, 215);
+  ALLOC_PIXMAP( ge_bitmap_lamp216, 216);
+  ALLOC_PIXMAP( ge_bitmap_siren217, 217);
+  ALLOC_PIXMAP( ge_bitmap_auxcontactthermal218, 218);
+  ALLOC_PIXMAP( ge_bitmap_breakcontactthermal219, 219);
+  ALLOC_PIXMAP( ge_bitmap_circuitbreaker220, 220);
+  ALLOC_PIXMAP( ge_bitmap_circuitbreakerrem221, 221);
+  ALLOC_PIXMAP( ge_bitmap_circuitbreakerremfuse222, 222);
+  ALLOC_PIXMAP( ge_bitmap_disconnector223, 223);
+  ALLOC_PIXMAP( ge_bitmap_emergencycontrolswitch224, 224);
+  ALLOC_PIXMAP( ge_bitmap_manswitchbreak225, 225);
+  ALLOC_PIXMAP( ge_bitmap_manswitchbreaknoret226, 226);
+  ALLOC_PIXMAP( ge_bitmap_manswitchmake227, 227);
+  ALLOC_PIXMAP( ge_bitmap_manswitchmakenoret228, 228);
+  ALLOC_PIXMAP( ge_bitmap_mlimitswitchbreak229, 229);
+  ALLOC_PIXMAP( ge_bitmap_mlimitswitchmake230, 230);
+  ALLOC_PIXMAP( ge_bitmap_photocell231, 231);
+  ALLOC_PIXMAP( ge_bitmap_proximityswitchbreak232, 232);
+  ALLOC_PIXMAP( ge_bitmap_proximityswitchmake233, 233);
+  ALLOC_PIXMAP( ge_bitmap_switchdisconnector234, 234);
+  ALLOC_PIXMAP( ge_bitmap_currenttransformer235, 235);
+  ALLOC_PIXMAP( ge_bitmap_currenttransformer236, 236);
+  ALLOC_PIXMAP( ge_bitmap_voltagetransformer237, 237);
+  ALLOC_PIXMAP( ge_bitmap_voltagetransformer238, 238);
+  ALLOC_PIXMAP( ge_bitmap_voltagetransformer2wnd239, 239);
+  ALLOC_PIXMAP( ge_bitmap_actuatorfailkeep240, 240);
 }
 
 
@@ -666,106 +938,17 @@ void SubPaletteBrow::create_nodeclasses()
 		0);
   brow_AddAnnotPixmap( nc_object, 1, 7.8, 0.1, flow_eDrawType_Line, 2, 0);
 
-  // Create attribute nodeclass
+  // Create subgraph-class
 
-  brow_CreateNodeClass( ctx, "NavigatorAttr", 
-		flow_eNodeGroup_Common, &nc_attr);
-  brow_AddFrame( nc_attr, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
-  brow_AddAnnotPixmap( nc_attr, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_attr, 2, 0.6, 0,
+  brow_CreateNodeClass( ctx, "NavigatorSubgraph", 
+		flow_eNodeGroup_Common, &nc_sub);
+  brow_AddFrame( nc_sub, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
+  brow_AddAnnotPixmap( nc_sub, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnotPixmap( nc_sub, 1, 1.4, 0.1, flow_eDrawType_Line, 2, 0);
+  brow_AddAnnot( nc_sub, 2.7, 0.6, 0,
 		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
 		0);
-  brow_AddAnnot( nc_attr, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
 
-  // Create table nodeclass
-
-  brow_CreateNodeClass( ctx, "NavigatorTable", 
-		flow_eNodeGroup_Common, &nc_table);
-  brow_AddFrame( nc_table, 0, 0, 20, 0.8, flow_eDrawType_Line, -1, 1);
-  brow_AddAnnotPixmap( nc_table, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnotPixmap( nc_table, 1, 1.1, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_table, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 12, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 16, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 20, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 24, 0.6, 5,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 28, 0.6, 6,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 32, 0.6, 7,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 35, 0.6, 8,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-  brow_AddAnnot( nc_table, 38, 0.6, 9,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-
-  // Create Header
-
-  brow_CreateNodeClass( ctx, "NavigatorHead", 
-		flow_eNodeGroup_Common, &nc_header);
-  brow_AddFrame( nc_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
-  brow_AddAnnotPixmap( nc_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_header, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_header, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		1);
-
-  // Create TableHeader
-
-  brow_CreateNodeClass( ctx, "NavigatorTableHead", 
-		flow_eNodeGroup_Common, &nc_table_header);
-  brow_AddFrame( nc_table_header, 0, 0, 20, 0.8, flow_eDrawType_LineGray, 2, 1);
-  brow_AddAnnotPixmap( nc_table_header, 0, 0.2, 0.1, flow_eDrawType_Line, 2, 0);
-  brow_AddAnnot( nc_table_header, 2, 0.6, 0,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 8, 0.6, 1,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 12, 0.6, 2,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 16, 0.6, 3,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 20, 0.6, 4,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 24, 0.6, 5,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 28, 0.6, 6,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 32, 0.6, 7,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 35, 0.6, 8,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
-  brow_AddAnnot( nc_table_header, 38, 0.6, 9,
-		flow_eDrawType_TextHelveticaBold, 2, flow_eAnnotType_OneLine, 
-		0);
 }
 
 int	SubPalette::object_attr()
@@ -1141,7 +1324,7 @@ ItemFile::ItemFile( SubPalette *subpalette,
   strcpy( filename, item_filename);
 
   brow_CreateNode( subpalette->brow->ctx, item_name, 
-		subpalette->brow->nc_object, 
+		subpalette->brow->nc_sub, 
 		dest, dest_code, (void *) this, 1, &node);
 
   brow_SetAnnotPixmap( node, 0, subpalette->brow->pixmap_leaf);

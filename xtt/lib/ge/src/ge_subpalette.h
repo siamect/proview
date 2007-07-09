@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_subpalette.h,v 1.10 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_subpalette.h,v 1.11 2007-07-09 12:51:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,7 +36,7 @@
 /*! \addtogroup Ge */
 /*@{*/
 
-#define SUBP_PIXMAPS_SIZE	140
+#define SUBP_PIXMAPS_SIZE	250
 
 typedef struct subpalette_s_Menu {
 	char				title[80];
@@ -70,10 +70,7 @@ class SubPaletteBrow {
     BrowCtx		*ctx;
     void		*subpalette;
     brow_tNodeClass 	nc_object;
-    brow_tNodeClass 	nc_attr;
-    brow_tNodeClass 	nc_table;
-    brow_tNodeClass 	nc_header;
-    brow_tNodeClass 	nc_table_header;
+    brow_tNodeClass 	nc_sub;
     flow_sAnnotPixmap 	*pixmap_leaf;
     flow_sAnnotPixmap 	*pixmap_map;
     flow_sAnnotPixmap 	*pixmap_openmap;
