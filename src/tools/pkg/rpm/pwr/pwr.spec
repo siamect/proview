@@ -10,7 +10,7 @@
 
 Name: pwr44
 Summary: Proview/R development and runtime environment
-Version: 4.4.0
+Version: 4.4.2
 Release: 1
 Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
 #License: GPL
@@ -180,3 +180,13 @@ fi
 %changelog
 * Mon Apr 30 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.0-1
 - Base release 
+* Tue May 01 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.0-2
+ - Proview restart improved. Works with profibus.
+ - Ge: New fonts, Times, NC Schoolbook and Courier.
+* Mon May 21 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.1-1
+ - Proview profibus restart improved.
+ - Statusmonitor to view status of remote nodes implemented.
+ - Runtime monitor to start and stop runtime in development environment implemented.
+* Fri Jul 06 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.2-1
+ - Subgraphs for ventilation and circuitdiagrams added.
+ - Baseobjects for threewayvalves, filters and dampers added.
