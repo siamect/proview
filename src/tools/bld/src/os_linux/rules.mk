@@ -184,7 +184,7 @@ $(inc_dir)/%.hpp : %.hpp
 
 $(bld_dir)/%.class : %.java
 	@ $(log_java_class)
-	@ $(javac) -d $(pwre_broot)/$(pwre_target)/bld $(source)
+	@ $(javac) -encoding Latin1 -d $(pwre_broot)/$(pwre_target)/bld $(source)
 #	@ $(javac) -Xlint:unchecked,deprecation -d $(pwre_broot)/$(pwre_target)/bld $(source)
 
 

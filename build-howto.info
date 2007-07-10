@@ -16,7 +16,7 @@ gcc v3.3.3
 gcc v3.4.3
 gcc v4.0.2
 
-1. Preparation
+1. Preparations
 --------------
 
 1.1. Ubuntu
@@ -45,6 +45,7 @@ java:  Download jdk-6u2-linux-i586.bin from java.sun.com. Define the
 	export jdk=/usr/local/jdk1.6.0_02
 	export PATH=$PATH:$jdk/bin
 
+There has to be a valid display.
 
 2. Easy way
 -----------
