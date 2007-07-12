@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.52 2007-06-18 06:23:06 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.53 2007-07-12 12:20:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -78,6 +78,8 @@ typedef struct sClass
   pwr_tObjName name;
   pwr_tTime    o_time;
   pwr_tTime    n_time;
+  size_t       o_rbsize;
+  size_t       n_rbsize;
   pwr_tUInt32  count;
 } sClass;
 
@@ -1776,6 +1778,7 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
 {
   pwr_tStatus sts;
   sArefKey ak;
+
   int nAref[2] = {0, 0};
   int rbSize = 0;
   int dbSize = 0;
@@ -1835,37 +1838,51 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
         if (EVEN(sts)) printf("n_cdrep sts %d", sts);
         
         wb_bdrep *n_bdrep = n_cdrep->bdrep(&sts, ap->key.bix);
-        if (EVEN(sts)) printf("n_bdrep sts %d", sts);
+        if (EVEN(sts)) {
+	  ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
+	  continue;
+	}
 
-        sAttributeKey k;
-        k.cid = aohead.cid();
-        k.bix = ap->key.bix;
-        k.oStart = arp->Offset;
-        k.oEnd = arp->Offset + arp->Size - 1;
-        
-        sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
-        if (cap != 0) {
-          nAref[ap->key.bix - 1]++;
-          if (arp->Size > cap->o.aref.Size) {
-            arp->Offset = 0;
-            arp->Size = n_bdrep->size();
-          } else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
-            arp->Offset = cap->n.aref.Offset;
-            arp->Size = cap->n.aref.Size;
-          } else if (cap->o.aref.Flags.b.Array) {
-            pwr_tUInt32 oElementSize = cap->o.aref.Size / cap->o.nElement;
-            pwr_tUInt32 oOffset = arp->Offset - cap->o.aref.Offset;
-            pwr_tUInt32 index = oOffset / oElementSize;
-            pwr_tUInt32 nElementSize = cap->n.aref.Size / cap->n.nElement;
+	if ( arp->Flags.b.Object) {
+	  // Check if rbody size of changed
+	  pwr_tCid cid = aohead.cid();
+	  sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
 
-            if (index >= cap->n.nElement) {
-              index = cap->n.nElement - 1;
-            }
-            arp->Offset = cap->n.aref.Offset + (index * nElementSize);
-            arp->Size = nElementSize;
-          }          
-        }
+	  if ( cp && cp->n_rbsize != cp->o_rbsize) {
+	    arp->Size = cp->n_rbsize;
+	    nAref[ap->key.bix - 1]++;
+	  }
+	}
+	else {
+	  sAttributeKey k;
+	  k.cid = aohead.cid();
+	  k.bix = ap->key.bix;
+	  k.oStart = arp->Offset;
+	  k.oEnd = arp->Offset + arp->Size - 1;
         
+	  sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
+	  if (cap != 0) {
+	    nAref[ap->key.bix - 1]++;
+	    if (arp->Size > cap->o.aref.Size) {
+	      arp->Offset = 0;
+	      arp->Size = n_bdrep->size();
+	    } else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
+	      arp->Offset = cap->n.aref.Offset;
+	      arp->Size = cap->n.aref.Size;
+	    } else if (cap->o.aref.Flags.b.Array) {
+	      pwr_tUInt32 oElementSize = cap->o.aref.Size / cap->o.nElement;
+	      pwr_tUInt32 oOffset = arp->Offset - cap->o.aref.Offset;
+	      pwr_tUInt32 index = oOffset / oElementSize;
+	      pwr_tUInt32 nElementSize = cap->n.aref.Size / cap->n.nElement;
+	      
+	      if (index >= cap->n.nElement) {
+		index = cap->n.nElement - 1;
+	      }
+	      arp->Offset = cap->n.aref.Offset + (index * nElementSize);
+	      arp->Size = nElementSize;
+	    }          
+	  }
+	}        
       } catch (DbException &e) {
         //printf("DbException vrepdb updateArefs 2: %s, oid: %d.%d, cid: %d \n", e.what(), oid.vid, oid.oix, cid);
       } catch (wb_error &e) {
@@ -1928,6 +1945,8 @@ pwr_tStatus wb_vrepdb::updateMeta()
       pwr_tCid cid = ip.cid();
       sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
 
+      nAref   += updateArefs(ip.oid(), ip.cid());
+
       if (!cp)
         continue;
       
@@ -1936,7 +1955,6 @@ pwr_tStatus wb_vrepdb::updateMeta()
       if (time_IsNull(&cp->n_time))
         continue;
 
-      nAref   += updateArefs(ip.oid(), ip.cid());
       nObject += updateObject(ip.oid(), ip.cid());
     }
   } catch (DbException &e) {
@@ -2043,6 +2061,8 @@ wb_vrepdb::checkClass(pwr_tCid cid)
     sClass *ccp = (sClass *)tree_Insert(&sts, m_class_th, &cid);
     ccp->o_time = o_time;
     ccp->n_time = n_time;
+    ccp->o_rbsize = o_crep->size( pwr_eBix_rt);
+    ccp->n_rbsize = n_crep->size( pwr_eBix_rt);
     strcpy(ccp->name, o_crep->name());
 
     return 1;
