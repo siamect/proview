@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_merep.cpp,v 1.37 2006-07-27 10:14:01 claes Exp $
+ * Proview   $Id: wb_merep.cpp,v 1.38 2007-07-13 12:09:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -615,8 +615,9 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
   }
   else {
     // Insert all offsets in the array
+    pwr_tStatus tsts = 0;
     for ( j = 0; j < adp->nElement(); j++) {
-      if ( ODD(*sts) && item->numOffset < merep_cCattOffsetSize) {
+      if ( ODD(tsts) && item->numOffset < merep_cCattOffsetSize) {
         // Insert in current item
 	item->offset[item->numOffset] = offset + adp->offset() +
           j * adp->size() / adp->nElement();
@@ -624,9 +625,9 @@ void wb_merep::insertCattObject( pwr_tStatus *sts, pwr_tCid cid,
       }
       else {
         // Insert a new item
-        if ( ODD(*sts))
+        if ( ODD(tsts))
           key.idx++;
-        item = (merep_sClassAttr *) tree_Insert( sts, m_catt_tt, &key);
+        item = (merep_sClassAttr *) tree_Insert( &tsts, m_catt_tt, &key);
 	item->offset[item->numOffset] = offset + adp->offset() +
           j * adp->size() / adp->nElement();
 	item->flags[item->numOffset++] = adp->flags();
