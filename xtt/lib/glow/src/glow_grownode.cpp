@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.cpp,v 1.14 2007-07-04 13:28:05 claes Exp $
+ * Proview   $Id: glow_grownode.cpp,v 1.15 2007-07-17 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1076,7 +1076,7 @@ void GrowNode::draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void
   }
   else {
     int x1, x2, y1, y2, x_level, y_level;
-    int clip_sts;
+    int clip_sts = 0;
     glow_eDrawTone old_color_tone;
     glow_eDrawType old_fill_drawtype;
 

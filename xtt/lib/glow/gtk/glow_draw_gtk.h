@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.h,v 1.3 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_draw_gtk.h,v 1.4 2007-07-17 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -162,6 +162,7 @@ class GlowDrawGtk : public GlowDraw {
   virtual void set_click_sensitivity( GlowWind *w, int value);
   virtual void draw_background( GlowWind *w, int x, int y, int w, int h);
   virtual int create_buffer( GlowWind *w);
+  virtual void delete_buffer( GlowWind *w);
   virtual void buffer_background( DrawWind *w);
   virtual int print( char *filename, double x0, double x1, int end);
   void set_clip( DrawWind *w, GdkGC *gc);

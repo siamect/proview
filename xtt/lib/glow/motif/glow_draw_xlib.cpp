@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.5 2007-07-17 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2560,6 +2560,17 @@ int GlowDrawXLib::create_buffer( GlowWind *wind)
   return 1;
 }
 
+void GlowDrawGtk::delete_buffer( GlowWind *wind)
+{
+  DrawWindXLib *w = (DrawWindXLib *) wind->window;
+
+  if ( w->buffer)
+    XFreePixmap( display, w->buffer);
+  w->buffer = 0;
+  w->buffer_width = 0;
+  w->buffer_height = 0;
+}
+
 void GlowDrawXLib::buffer_background( DrawWind *wind)
 {
   DrawWindXLib *w = (DrawWindXLib *) wind;
@@ -2705,7 +2716,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.4 2007-05-07 15:45:18 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.5 2007-07-17 12:43:42 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else

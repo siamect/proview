@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.5 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.6 2007-07-17 12:43:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -506,6 +506,7 @@ GlowDrawGtk::GlowDrawGtk(
   memset( gcs, 0, sizeof(gcs));
   memset( font, 0, sizeof(font));
   memset( cursors, 0, sizeof(cursors));
+  nav_wind.is_nav = 1;
 
   if ( type == glow_eCtxType_Brow)
     ctx = (GlowCtx *) new BrowCtx("Claes context", 20);
@@ -1772,6 +1773,15 @@ void GlowDrawGtk::copy_buffer( GlowWind *wind,
   int y0 = min( ll_y, ur_y);
   int y1 = max( ll_y, ur_y);
 
+  if ( w->clip_cnt) {
+    x0 = max(x0, w->clip_rectangle[w->clip_cnt-1].x);
+    y0 = max(y0, w->clip_rectangle[w->clip_cnt-1].y);
+    x1 = min(x1, w->clip_rectangle[w->clip_cnt-1].x + 
+	     w->clip_rectangle[w->clip_cnt-1].width);
+    y1 = min(y1, w->clip_rectangle[w->clip_cnt-1].y + 
+	     w->clip_rectangle[w->clip_cnt-1].height);
+  }
+
   gdk_draw_drawable( w->window,
 		     get_gc( this, glow_eDrawType_Line, 0), 
 		     w->buffer,
@@ -2309,7 +2319,7 @@ int GlowDrawGtk::create_buffer( GlowWind *wind)
   DrawWindGtk *w = (DrawWindGtk *) wind->window;
   int window_width, window_height;
 
-  if ( &ctx->mw == wind) {
+  if ( !w->is_nav) {
     window_width = ctx->mw.window_width;
     window_height = ctx->mw.window_height;
   }
@@ -2336,6 +2346,17 @@ int GlowDrawGtk::create_buffer( GlowWind *wind)
 
   buffer_background( w);
   return 1;
+}
+
+void GlowDrawGtk::delete_buffer( GlowWind *wind)
+{
+  DrawWindGtk *w = (DrawWindGtk *) wind->window;
+
+  if ( w->buffer)
+    g_object_unref( w->buffer);
+  w->buffer = 0;
+  w->buffer_width = 0;
+  w->buffer_height = 0;
 }
 
 void GlowDrawGtk::buffer_background( DrawWind *wind)
@@ -2483,7 +2504,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.5 2007-05-07 14:35:03 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.6 2007-07-17 12:43:42 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
