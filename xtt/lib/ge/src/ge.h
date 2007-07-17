@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.h,v 1.9 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge.h,v 1.10 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -162,6 +162,7 @@ class Ge {
   void activate_equid_horiz_center();
   void activate_select_cons();
   void activate_select_objects();
+  void activate_select_nextobject( glow_eDirection dir);
   void activate_group();
   void activate_ungroup();
   void activate_connect();

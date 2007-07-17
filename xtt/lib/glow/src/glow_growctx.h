@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.11 2007-06-29 09:32:16 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.12 2007-07-17 12:43:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -775,6 +775,10 @@ class GrowCtx : public GlowCtx {
   //! Get owner.
   /*! \param o		Owner string. */
   void set_owner( char *o) { strcpy( owner, o);}
+
+  //! Get next object. */
+  int get_next_object( GlowArrayElem *object, glow_eDirection dir,
+		       GlowArrayElem **next);
 
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.

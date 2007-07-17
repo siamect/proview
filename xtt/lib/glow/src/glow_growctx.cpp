@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.24 2007-06-29 09:32:16 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.25 2007-07-17 12:43:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,6 +20,7 @@
 #include "glow_std.h"
 
 #include <fstream.h>
+#include <vector.h>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -59,6 +60,14 @@
 extern "C" {
 #include "co_dcli.h"
 }
+
+class NextElem {
+ public:
+  GlowArrayElem *elem;
+  double distance;
+  double angle;
+  double rank;
+};
 
 GrowCtx::~GrowCtx()
 {
@@ -2022,11 +2031,20 @@ void GrowCtx::open_grow( ifstream& fp)
     mw.set_double_buffer_on(1);
     gdraw->create_buffer( &mw);
   }
+  else if ( !double_buffered && mw.window && mw.double_buffer_on()) {
+    mw.set_double_buffer_on(0);
+    gdraw->delete_buffer( &mw);
+  }
   if ( double_buffered && navw.window && ! navw.double_buffer_on()) {
     navw.set_double_buffer_on(1);
     if ( !gdraw->create_buffer( &navw))
       navw.set_double_buffer_on(0);
   }
+  else if ( !double_buffered && navw.window && navw.double_buffer_on()) {
+    navw.set_double_buffer_on(0);
+    gdraw->delete_buffer( &navw);
+  }
+
   if ( gdraw)
     set_background( background_color);
 }
@@ -2468,7 +2486,7 @@ void GrowCtx::scale_select( double scale_x, double scale_y,
   redraw_defered();
 }
 
-void GrowCtx::rotate_select( double angel, glow_eRotationPoint type)
+void GrowCtx::rotate_select( double angle, glow_eRotationPoint type)
 {
   double ll_x, ll_y, ur_x, ur_y;
   double x0, y0;
@@ -2503,7 +2521,7 @@ void GrowCtx::rotate_select( double angel, glow_eRotationPoint type)
     default:
       ;
   }
-  t.rotate( angel, x0, y0);
+  t.rotate( angle, x0, y0);
   a_sel.erase( &mw, (GlowTransform *)NULL, 0, NULL);
   a_sel.erase( &navw, (GlowTransform *)NULL, 0, NULL);
   set_defered_redraw();
@@ -3875,3 +3893,100 @@ void GrowCtx::delete_menu_child( GlowArrayElem *parent)
   }
 }
 
+int GrowCtx::get_next_object( GlowArrayElem *object, glow_eDirection dir,
+			      GlowArrayElem **next)
+{
+  if ( !(object->type() == glow_eObjectType_GrowNode ||
+	 object->type() == glow_eObjectType_GrowSlider ||
+	 object->type() == glow_eObjectType_GrowGroup ||
+	 object->type() == glow_eObjectType_GrowTrend ||
+	 object->type() == glow_eObjectType_GrowBar)) {
+    return 0;
+  }
+
+  double ll_x, ll_y, ur_x, ur_y;
+  double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
+  double x, y, a_x, a_y;
+  double dir_angle;
+
+  object->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  x = (ll_x + ur_x) / 2;
+  y = (ll_y + ur_y) / 2;
+
+  switch ( dir) {
+  case glow_eDirection_Left:
+    dir_angle = M_PI;
+    break;
+  case glow_eDirection_Right:
+    dir_angle = 0;
+    break;
+  case glow_eDirection_Up:
+    dir_angle = -M_PI/2;
+    break;
+  case glow_eDirection_Down:
+    dir_angle = M_PI/2;
+	break;
+  default: ;
+  }
+
+  vector<NextElem> a0;
+  for ( int i = 0; i < a.size(); i++) {
+    if ( a[i] == object)
+      continue;
+
+    if ( a[i]->type() == glow_eObjectType_GrowNode ||
+	 a[i]->type() == glow_eObjectType_GrowSlider ||
+	 a[i]->type() == glow_eObjectType_GrowGroup ||
+	 a[i]->type() == glow_eObjectType_GrowTrend ||
+	 a[i]->type() == glow_eObjectType_GrowBar) {
+
+      a[i]->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
+      if ( ll_x >= a_ll_x && ur_x <= a_ur_x &&
+	   ll_y >= a_ll_y && ur_y <= a_ur_y)
+	continue;
+      a_x = (a_ll_x + a_ur_x) / 2;
+      a_y = (a_ll_y + a_ur_y) / 2;
+      
+      NextElem n;
+      n.elem = a[i];
+      n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
+      if ( fabs( a_y - y) < DBL_EPSILON) {
+	if ( a_x > x)
+	  n.angle = 0;
+	else
+	  n.angle = M_PI;
+      }
+      else {
+	n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
+	if ( (a_y - y) > 0)
+	  n.angle -= M_PI;
+      }
+
+      double rank_angel = n.angle + dir_angle;
+      double rank_distance = n.distance / (x_right - x_left);
+      if ( rank_angel > M_PI)
+	rank_angel -= 2 * M_PI;
+      rank_angel = fabs( rank_angel) / M_PI;
+      if ( rank_angel > 0.5)
+	continue;
+      n.rank = rank_angel + ( 0.3 + rank_distance);
+      a0.push_back( n);
+    }
+  }
+  if ( a0.size() == 0)
+    return 0;
+
+  double rank_min = 1E37;
+  GlowArrayElem *rank_elem = 0;
+  for ( int i = 0; i < (int)a0.size(); i++) {
+
+    if ( a0[i].rank < rank_min) {
+      rank_min = a0[i].rank;
+      rank_elem = a0[i].elem;
+    }
+  }
+  if ( !rank_elem)
+    return 0;
+  *next = rank_elem;
+  return 1;
+}

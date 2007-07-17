@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.12 2007-01-24 12:37:07 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.13 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -203,6 +203,7 @@ class WFoe : public WUtility {
   void activate_cut();
   void activate_copy();
   void activate_paste();
+  void activate_select_nextobject( flow_eDirection dir);
   void activate_attribute();
   void activate_subwindow();
   void activate_undelete();

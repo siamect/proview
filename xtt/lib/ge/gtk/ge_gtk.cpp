@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.cpp,v 1.11 2007-07-04 13:31:46 claes Exp $
+ * Proview   $Id: ge_gtk.cpp,v 1.12 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -31,6 +31,7 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "co_cdh.h"
 #include "co_time.h"
@@ -527,6 +528,26 @@ void GeGtk::activate_select_cons(GtkWidget *w, gpointer gectx)
 void GeGtk::activate_select_objects(GtkWidget *w, gpointer gectx)
 {
   ((Ge *)gectx)->activate_select_objects();
+}
+
+void GeGtk::activate_select_nextright(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_select_nextobject( glow_eDirection_Right);
+}
+
+void GeGtk::activate_select_nextleft(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_select_nextobject( glow_eDirection_Left);
+}
+
+void GeGtk::activate_select_nextup(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_select_nextobject( glow_eDirection_Up);
+}
+
+void GeGtk::activate_select_nextdown(GtkWidget *w, gpointer gectx)
+{
+  ((Ge *)gectx)->activate_select_nextobject( glow_eDirection_Down);
 }
 
 void GeGtk::activate_group(GtkWidget *w, gpointer gectx)
@@ -1679,13 +1700,55 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_equid),
 			    GTK_WIDGET(functions_equid_menu));
 
-  GtkWidget *functions_select_cons = gtk_menu_item_new_with_mnemonic( "Select All _Connections");
+  // Submenu Select
+  GtkWidget *functions_select_cons = gtk_menu_item_new_with_mnemonic( "All _Connections");
   g_signal_connect( functions_select_cons, "activate",
 		    G_CALLBACK(activate_select_cons), this);
 
-  GtkWidget *functions_select_objects = gtk_menu_item_new_with_mnemonic( "Select All _Objects");
+  GtkWidget *functions_select_objects = gtk_menu_item_new_with_mnemonic( "All _Objects");
   g_signal_connect( functions_select_objects, "activate",
 		    G_CALLBACK(activate_select_objects), this);
+
+  GtkWidget *functions_select_nextright = gtk_menu_item_new_with_mnemonic( "Next Right");
+  g_signal_connect( functions_select_nextright, "activate",
+		    G_CALLBACK(activate_select_nextright), this);
+  gtk_widget_add_accelerator( functions_select_nextright, "activate", accel_g,
+			      GDK_Right, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *functions_select_nextleft = gtk_menu_item_new_with_mnemonic( "Next Left");
+  g_signal_connect( functions_select_nextleft, "activate",
+		    G_CALLBACK(activate_select_nextleft), this);
+  gtk_widget_add_accelerator( functions_select_nextleft, "activate", accel_g,
+			      GDK_Left, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *functions_select_nextup = gtk_menu_item_new_with_mnemonic( "Next Up");
+  g_signal_connect( functions_select_nextup, "activate",
+		    G_CALLBACK(activate_select_nextup), this);
+  gtk_widget_add_accelerator( functions_select_nextup, "activate", accel_g,
+			      GDK_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *functions_select_nextdown = gtk_menu_item_new_with_mnemonic( "Next Down");
+  g_signal_connect( functions_select_nextdown, "activate",
+		    G_CALLBACK(activate_select_nextdown), this);
+  gtk_widget_add_accelerator( functions_select_nextdown, "activate", accel_g,
+			      GDK_Down, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *functions_select = gtk_menu_item_new_with_mnemonic( "Select");
+  GtkMenu *functions_select_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_cons);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_objects);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_nextright);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_nextleft);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_nextup);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_select_menu), functions_select_nextdown);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions_select),
+			    GTK_WIDGET(functions_select_menu));
+
 
   GtkWidget *functions_group = gtk_menu_item_new_with_mnemonic( "_Group");
   g_signal_connect( functions_group, "activate",
@@ -1725,8 +1788,7 @@ GeGtk::GeGtk( 	void 	*x_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_move_restrictions);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_align);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_equid);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_select_cons);
-  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_select_objects);
+  gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_select);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_group);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_ungroup);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_connect);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.3 2007-01-24 12:37:07 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.4 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -736,6 +736,11 @@ void WFoe::activate_paste()
   enable_ldh_cb();
 }
 
+void WFoe::activate_select_nextobject( flow_eDirection dir)
+{
+  gre->select_nextobject( dir);
+}
+
 //
 //	Callback from the menu.
 //	Creates a attribute editor for the selected object
@@ -768,7 +773,7 @@ void WFoe::activate_attribute()
       attr_create( object);
       normal_cursor();
     }
-    gre->unselect();
+    // gre->unselect();
   }
   
   if ( node_count > 0) free((char *) nodelist);

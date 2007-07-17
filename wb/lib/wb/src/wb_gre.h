@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.7 2007-01-24 12:37:07 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.8 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -226,6 +226,8 @@ class WGre {
   int get_conclass( pwr_tClassId cid, ldh_tSesContext ldhses, unsigned long con_type,
 		    flow_tConClass *con_class);
   void pixel_to_position( int pix_x, int pix_y, double *x, double *y);
+
+  void select_nextobject( flow_eDirection dir);
 
   static int get_annot_width( flow_tNodeClass nodeclass,
 			      float *annot_width, char *annot_str, int annot_count,

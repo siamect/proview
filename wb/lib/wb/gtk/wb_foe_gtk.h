@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.h,v 1.2 2007-01-24 12:42:44 claes Exp $
+ * Proview   $Id: wb_foe_gtk.h,v 1.3 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -178,6 +178,10 @@ class WFoeGtk : public WFoe {
   static void activate_cut( GtkWidget *w, gpointer data);
   static void activate_copy( GtkWidget *w, gpointer data);
   static void activate_paste( GtkWidget *w, gpointer data);
+  static void activate_select_nextright(GtkWidget *w, gpointer foe);
+  static void activate_select_nextleft(GtkWidget *w, gpointer foe);
+  static void activate_select_nextup(GtkWidget *w, gpointer foe);
+  static void activate_select_nextdown(GtkWidget *w, gpointer foe);
   static void activate_attribute( GtkWidget *w, gpointer data);
   static void activate_subwindow( GtkWidget *w, gpointer data);
   static void activate_undelete( GtkWidget *w, gpointer data);

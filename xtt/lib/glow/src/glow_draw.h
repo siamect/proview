@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw.h,v 1.8 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_draw.h,v 1.9 2007-07-17 12:43:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,6 +122,7 @@ class GlowDraw {
   virtual void set_click_sensitivity( GlowWind *w, int value) {}
   virtual void draw_background( GlowWind *wind, int x, int y, int w, int h) {}
   virtual int create_buffer( GlowWind *w) {return 1;}
+  virtual void delete_buffer( GlowWind *w) {}
   virtual void buffer_background( GlowWind *w) {}
   virtual int print( char *filename, double x0, double x1, int end) { return 1;};
   //virtual void set_clip( DrawWind *w, GC gc) {}
@@ -153,11 +154,13 @@ class GlowDraw {
 
 class DrawWind {
  public:
-  DrawWind() : double_buffered(0), double_buffer_on(0), draw_buffer_only(0) {}
+  DrawWind() : double_buffered(0), double_buffer_on(0), draw_buffer_only(0),
+    is_nav(0) {}
   int 		type;
   int 		double_buffered;       	//!< Double buffering is configured.
   int 		double_buffer_on;      	//!< Double buffering is on.
   int 		draw_buffer_only;      	//!< Draw in double buffering buffer only.
+  int		is_nav;			//!< Is navigator window.
 };
 
 #endif

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.6 2007-02-06 10:06:40 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.7 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -182,6 +182,27 @@ void WFoeGtk::activate_paste( GtkWidget *w, gpointer data)
 
   foe->activate_paste();
 }
+
+void WFoeGtk::activate_select_nextright(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextobject( flow_eDirection_Right);
+}
+
+void WFoeGtk::activate_select_nextleft(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextobject( flow_eDirection_Left);
+}
+
+void WFoeGtk::activate_select_nextup(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextobject( flow_eDirection_Up);
+}
+
+void WFoeGtk::activate_select_nextdown(GtkWidget *w, gpointer foe)
+{
+  ((WFoe *)foe)->activate_select_nextobject( flow_eDirection_Down);
+}
+
 
 //	Callback from the menu.
 void WFoeGtk::activate_attribute( GtkWidget *w, gpointer data)
@@ -1067,6 +1088,44 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   widgets.paste = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, accel_g);
   g_signal_connect(widgets.paste, "activate", G_CALLBACK(WFoeGtk::activate_paste), this);
 
+  GtkWidget *edit_select_nextright = gtk_menu_item_new_with_mnemonic( "Next Right");
+  g_signal_connect( edit_select_nextright, "activate",
+		    G_CALLBACK(activate_select_nextright), this);
+  gtk_widget_add_accelerator( edit_select_nextright, "activate", accel_g,
+			      GDK_Right, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_select_nextleft = gtk_menu_item_new_with_mnemonic( "Next Left");
+  g_signal_connect( edit_select_nextleft, "activate",
+		    G_CALLBACK(activate_select_nextleft), this);
+  gtk_widget_add_accelerator( edit_select_nextleft, "activate", accel_g,
+			      GDK_Left, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_select_nextup = gtk_menu_item_new_with_mnemonic( "Next Up");
+  g_signal_connect( edit_select_nextup, "activate",
+		    G_CALLBACK(activate_select_nextup), this);
+  gtk_widget_add_accelerator( edit_select_nextup, "activate", accel_g,
+			      GDK_Up, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_select_nextdown = gtk_menu_item_new_with_mnemonic( "Next Down");
+  g_signal_connect( edit_select_nextdown, "activate",
+		    G_CALLBACK(activate_select_nextdown), this);
+  gtk_widget_add_accelerator( edit_select_nextdown, "activate", accel_g,
+			      GDK_Down, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
+
+  GtkWidget *edit_select = gtk_menu_item_new_with_mnemonic( "Select");
+  GtkMenu *edit_select_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextright);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextleft);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextup);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_select_menu), edit_select_nextdown);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(edit_select),
+			    GTK_WIDGET(edit_select_menu));
+
   widgets.connect = gtk_menu_item_new_with_mnemonic( "C_onnect");
   g_signal_connect( widgets.connect, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_getobj), this);
@@ -1088,14 +1147,14 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( widgets.expand, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_expand), this);
   gtk_widget_add_accelerator( widgets.expand, "activate", accel_g,
-  			      GDK_Right, GdkModifierType(GDK_CONTROL_MASK), 
+  			      GDK_Right, GdkModifierType(GDK_SHIFT_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
   widgets.compress = gtk_menu_item_new_with_mnemonic( "C_ompress Object");
   g_signal_connect( widgets.compress, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_compress), this);
   gtk_widget_add_accelerator( widgets.compress, "activate", accel_g,
-  			      GDK_Left, GdkModifierType(GDK_CONTROL_MASK), 
+  			      GDK_Left, GdkModifierType(GDK_SHIFT_MASK), 
   			      GTK_ACCEL_VISIBLE);
 
   GtkMenu *edit_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
@@ -1105,6 +1164,7 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.copy);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.paste);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.del);
+  gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), edit_select);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.expand);
   gtk_menu_shell_append(GTK_MENU_SHELL(edit_menu), widgets.compress);
 

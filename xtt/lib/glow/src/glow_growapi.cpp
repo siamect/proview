@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.30 2007-06-29 09:32:16 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.31 2007-07-17 12:43:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -672,7 +672,7 @@ void grow_SetAttributes( grow_tCtx ctx, grow_sAttributes *attr,
       ctx->mw.window->double_buffer_on = attr->double_buffer_on;
     if ( ctx->mw.window->double_buffer_on) {
       ctx->gdraw->create_buffer( &ctx->mw);
-      ctx->mw.window->double_buffered = 1;
+      // ctx->mw.window->double_buffered = 1;
     }
   }
   if ( mask & grow_eAttr_hot_mode) {
@@ -4402,6 +4402,12 @@ void grow_SetSelectScale( grow_tCtx ctx, double scale_x, double scale_y,
 			  glow_eScaleType type)
 {
   ctx->set_select_scale( scale_x, scale_y, type);
+}
+
+int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
+			 grow_tObject *next)
+{
+  return ctx->get_next_object( (GlowArrayElem *)object, dir, (GlowArrayElem **)next);
 }
 
 

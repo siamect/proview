@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.40 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.41 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1051,6 +1051,32 @@ void Graph::select_all_objects()
     }
     object_p++;
   }
+}
+
+void Graph::select_nextobject( glow_eDirection dir)
+{
+  grow_tObject	sel, next;
+  int		sts;
+
+  sts = get_selected_object( &sel);
+  if ( EVEN(sts)) {
+    message( 'E', "No object is selected");
+    return;
+  }
+  if ( grow_GetObjectType( sel) == glow_eObjectType_Con) {
+    message( 'E', "Select an object");
+    return;
+  }
+
+  sts = grow_GetNextObject( grow->ctx, sel, dir, &next);
+  if ( EVEN(sts)) {
+    message( 'E', "Unable to find next object");
+    return;
+  }
+       
+  grow_SelectClear( grow->ctx);
+  grow_SetHighlight( next, 1);
+  grow_SelectInsert( grow->ctx, next);
 }
 
 int Graph::get_selected_object( grow_tObject *object)

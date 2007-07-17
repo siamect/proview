@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.9 2007-02-01 07:09:32 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.10 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,6 +22,7 @@
 
 #include <iostream.h>
 #include <fstream.h>
+#include <vector.h>
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
@@ -41,6 +42,14 @@
 #include "flow_draw.h"
 #include "flow_browctx.h"
 #include "flow_msg.h"
+
+class NextElem {
+ public:
+  FlowArrayElem *elem;
+  double distance;
+  double angle;
+  double rank;
+};
 
 FlowCtx::~FlowCtx()
 {
@@ -1647,6 +1656,97 @@ int FlowCtx::radiobutton_cb( FlowArrayElem *object, int number,
   }
   return 1;
 }
+
+
+int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
+			      FlowArrayElem **next)
+{
+  if ( object->type() != flow_eObjectType_Node)
+    return 0;
+
+  double ll_x, ll_y, ur_x, ur_y;
+  double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
+  double x, y, a_x, a_y;
+  double dir_angle;
+
+  ((FlowNode *)object)->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  x = (ll_x + ur_x) / 2;
+  y = (ll_y + ur_y) / 2;
+
+  switch ( dir) {
+  case flow_eDirection_Left:
+    dir_angle = M_PI;
+    break;
+  case flow_eDirection_Right:
+    dir_angle = 0;
+    break;
+  case flow_eDirection_Up:
+    dir_angle = -M_PI/2;
+    break;
+  case flow_eDirection_Down:
+    dir_angle = M_PI/2;
+	break;
+  default: ;
+  }
+
+  vector<NextElem> a0;
+  for ( int i = 0; i < a.size(); i++) {
+    if ( a[i] == object)
+      continue;
+
+    if ( a[i]->type() == flow_eObjectType_Node) {
+
+      ((FlowNode *)a[i])->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
+      if ( ll_x >= a_ll_x && ur_x <= a_ur_x &&
+	   ll_y >= a_ll_y && ur_y <= a_ur_y)
+	continue;
+      a_x = (a_ll_x + a_ur_x) / 2;
+      a_y = (a_ll_y + a_ur_y) / 2;
+      
+      NextElem n;
+      n.elem = a[i];
+      n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
+      if ( fabs( a_y - y) < DBL_EPSILON) {
+	if ( a_x > x)
+	  n.angle = 0;
+	else
+	  n.angle = M_PI;
+      }
+      else {
+	n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
+	if ( (a_y - y) > 0)
+	  n.angle -= M_PI;
+      }
+
+      double rank_angel = n.angle + dir_angle;
+      double rank_distance = n.distance / (x_right - x_left);
+      if ( rank_angel > M_PI)
+	rank_angel -= 2 * M_PI;
+      rank_angel = fabs( rank_angel) / M_PI;
+      if ( rank_angel > 0.5)
+	continue;
+      n.rank = rank_angel + ( 0.3 + rank_distance);
+      a0.push_back( n);
+    }
+  }
+  if ( a0.size() == 0)
+    return 0;
+
+  double rank_min = 1E37;
+  FlowArrayElem *rank_elem = 0;
+  for ( int i = 0; i < (int)a0.size(); i++) {
+
+    if ( a0[i].rank < rank_min) {
+      rank_min = a0[i].rank;
+      rank_elem = a0[i].elem;
+    }
+  }
+  if ( !rank_elem)
+    return 0;
+  *next = rank_elem;
+  return 1;
+}
+
 
 void FlowCtx::change_scrollbar()
 {

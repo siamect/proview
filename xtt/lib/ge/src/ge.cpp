@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge.cpp,v 1.27 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge.cpp,v 1.28 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -820,6 +820,11 @@ void Ge::activate_select_cons()
 void Ge::activate_select_objects()
 {
   graph->select_all_objects();
+}
+
+void Ge::activate_select_nextobject( glow_eDirection dir)
+{
+  graph->select_nextobject( dir);
 }
 
 void Ge::activate_group()

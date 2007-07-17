@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.3 2007-01-24 12:37:07 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.4 2007-07-17 12:44:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3000,6 +3000,7 @@ int WGre::save( char *filename)
   return sts;
 }
 
+
 //
 // Set gridsize
 //
@@ -3021,4 +3022,29 @@ void WGre::set_grid_size( double size)
 void WGre::pixel_to_position( int pix_x, int pix_y, double *x, double *y)
 { 
   flow_PixelToPosition( flow_ctx, pix_x, pix_y, x, y);
+}
+
+void WGre::select_nextobject( flow_eDirection dir)
+{
+  flow_tNode 	sel, next;
+  flow_tNode	*fnode_list;
+  int		fnode_count;
+  int		sts;
+
+  flow_GetSelectedNodes( flow_ctx, &fnode_list, &fnode_count);
+  if ( fnode_count != 1) {
+    message( "Select one object");
+    return;
+  }
+  sel = fnode_list[0];
+
+  sts = flow_GetNextObject( flow_ctx, sel, dir, &next);
+  if ( EVEN(sts)) {
+    message( "Unable to find next object");
+    return;
+  }
+
+  flow_SelectClear( flow_ctx);
+  flow_SetHighlight( next, 1);
+  flow_SelectInsert( flow_ctx, next);
 }

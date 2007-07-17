@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.27 2007-06-29 09:45:19 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.28 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -831,6 +831,9 @@ class Graph {
   //! Select all objects.
   /*! Select all objects in the graph. */
   void select_all_objects();
+
+  //! Select next object. */
+  void select_nextobject( glow_eDirection dir);
 
   //! Change the text of a text object.
   /*!

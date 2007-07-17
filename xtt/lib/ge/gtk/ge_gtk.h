@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_gtk.h,v 1.6 2007-07-04 13:31:46 claes Exp $
+ * Proview   $Id: ge_gtk.h,v 1.7 2007-07-17 12:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -138,6 +138,10 @@ class GeGtk : public Ge {
   static void activate_equid_horiz_center( GtkWidget *w, gpointer gectx);
   static void activate_select_cons( GtkWidget *w, gpointer gectx);
   static void activate_select_objects( GtkWidget *w, gpointer gectx);
+  static void activate_select_nextright( GtkWidget *w, gpointer gectx);
+  static void activate_select_nextleft( GtkWidget *w, gpointer gectx);
+  static void activate_select_nextup( GtkWidget *w, gpointer gectx);
+  static void activate_select_nextdown( GtkWidget *w, gpointer gectx);
   static void activate_group( GtkWidget *w, gpointer gectx);
   static void activate_ungroup( GtkWidget *w, gpointer gectx);
   static void activate_connect( GtkWidget *w, gpointer gectx);
