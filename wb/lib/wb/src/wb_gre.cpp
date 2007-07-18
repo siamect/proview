@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.4 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.5 2007-07-18 09:27:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3032,19 +3032,34 @@ void WGre::select_nextobject( flow_eDirection dir)
   int		sts;
 
   flow_GetSelectedNodes( flow_ctx, &fnode_list, &fnode_count);
-  if ( fnode_count != 1) {
-    message( "Select one object");
-    return;
-  }
-  sel = fnode_list[0];
+  if ( fnode_count == 0)
+    sel = 0;
+  else
+    sel = fnode_list[0];
 
-  sts = flow_GetNextObject( flow_ctx, sel, dir, &next);
-  if ( EVEN(sts)) {
-    message( "Unable to find next object");
-    return;
-  }
+  if ( !sel || !flow_IsVisible( flow_ctx, sel, flow_eVisible_Partial)) {
+    sts = flow_GetNextObject( flow_ctx, 0, dir, &next);
+    if ( EVEN(sts)) {
+      message( "Unable to find a visible object");
+      return;
+    }
 
-  flow_SelectClear( flow_ctx);
-  flow_SetHighlight( next, 1);
-  flow_SelectInsert( flow_ctx, next);
+    flow_SelectClear( flow_ctx);
+    flow_SetHighlight( next, 1);
+    flow_SelectInsert( flow_ctx, next);
+  }
+  else {
+    sts = flow_GetNextObject( flow_ctx, sel, dir, &next);
+    if ( EVEN(sts)) {
+      message( "Unable to find next object");
+      return;
+    }
+
+    flow_SelectClear( flow_ctx);
+    flow_SetHighlight( next, 1);
+    flow_SelectInsert( flow_ctx, next);
+
+    if ( !flow_IsVisible( flow_ctx, next, flow_eVisible_Full))
+      flow_CenterObject( flow_ctx, next);
+  }
 }

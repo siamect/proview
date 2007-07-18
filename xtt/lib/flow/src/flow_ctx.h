@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.6 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.7 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -323,8 +323,9 @@ class FlowCtx {
     int find_by_name_no_case( char *name, FlowArrayElem **element)
 		{ return a.find_by_name_no_case( name, element);};
     void get_zoom( double *zoom) { *zoom = zoom_factor;};
-    int FlowCtx::get_next_object( FlowArrayElem *object, flow_eDirection dir,
-				  FlowArrayElem **next);
+    int get_next_object( FlowArrayElem *object, flow_eDirection dir,
+			 FlowArrayElem **next);
+    int is_visible( FlowArrayElem *element, flow_eVisible type);
     ~FlowCtx();
 };
 

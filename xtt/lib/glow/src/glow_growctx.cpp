@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.25 2007-07-17 12:43:54 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.26 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3896,11 +3896,13 @@ void GrowCtx::delete_menu_child( GlowArrayElem *parent)
 int GrowCtx::get_next_object( GlowArrayElem *object, glow_eDirection dir,
 			      GlowArrayElem **next)
 {
-  if ( !(object->type() == glow_eObjectType_GrowNode ||
+  if ( object &&
+       !(object->type() == glow_eObjectType_GrowNode ||
 	 object->type() == glow_eObjectType_GrowSlider ||
 	 object->type() == glow_eObjectType_GrowGroup ||
 	 object->type() == glow_eObjectType_GrowTrend ||
-	 object->type() == glow_eObjectType_GrowBar)) {
+	 object->type() == glow_eObjectType_GrowBar ||
+	 object->type() == glow_eObjectType_GrowText)) {
     return 0;
   }
 
@@ -3908,73 +3910,158 @@ int GrowCtx::get_next_object( GlowArrayElem *object, glow_eDirection dir,
   double a_ll_x, a_ll_y, a_ur_x, a_ur_y;
   double x, y, a_x, a_y;
   double dir_angle;
-
-  object->measure( &ll_x, &ll_y, &ur_x, &ur_y);
-  x = (ll_x + ur_x) / 2;
-  y = (ll_y + ur_y) / 2;
-
-  switch ( dir) {
-  case glow_eDirection_Left:
-    dir_angle = M_PI;
-    break;
-  case glow_eDirection_Right:
-    dir_angle = 0;
-    break;
-  case glow_eDirection_Up:
-    dir_angle = -M_PI/2;
-    break;
-  case glow_eDirection_Down:
-    dir_angle = M_PI/2;
-	break;
-  default: ;
-  }
-
   vector<NextElem> a0;
-  for ( int i = 0; i < a.size(); i++) {
-    if ( a[i] == object)
-      continue;
 
-    if ( a[i]->type() == glow_eObjectType_GrowNode ||
-	 a[i]->type() == glow_eObjectType_GrowSlider ||
-	 a[i]->type() == glow_eObjectType_GrowGroup ||
-	 a[i]->type() == glow_eObjectType_GrowTrend ||
-	 a[i]->type() == glow_eObjectType_GrowBar) {
+  if ( !object) {
+    // Chose a visible object
+    double window_x_low, window_x_high;
+    double window_y_low, window_y_high;
 
-      a[i]->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
-      if ( ll_x >= a_ll_x && ur_x <= a_ur_x &&
-	   ll_y >= a_ll_y && ur_y <= a_ur_y)
-	continue;
-      a_x = (a_ll_x + a_ur_x) / 2;
-      a_y = (a_ll_y + a_ur_y) / 2;
-      
-      NextElem n;
-      n.elem = a[i];
-      n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
-      if ( fabs( a_y - y) < DBL_EPSILON) {
-	if ( a_x > x)
-	  n.angle = 0;
-	else
-	  n.angle = M_PI;
+    window_x_low = double(mw.offset_x) / mw.zoom_factor_x;
+    window_x_high = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+    window_y_low = double(mw.offset_y) / mw.zoom_factor_y;
+    window_y_high = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
+
+    for ( int i = 0; i < a.size(); i++) {
+
+      if ( a[i]->type() == glow_eObjectType_GrowNode ||
+	   a[i]->type() == glow_eObjectType_GrowSlider ||
+	   a[i]->type() == glow_eObjectType_GrowGroup ||
+	   a[i]->type() == glow_eObjectType_GrowTrend ||
+	   a[i]->type() == glow_eObjectType_GrowBar ||
+	   a[i]->type() == glow_eObjectType_GrowText) {
+	NextElem n;
+	
+	a[i]->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
+
+	if ( a_ll_x >= window_x_low && a_ur_x <= window_x_high &&
+	     a_ll_y >= window_y_low && a_ur_y <= window_y_high ) {
+	  // Fully visible
+	  switch ( dir) {
+	  case glow_eDirection_Left:
+	    n.rank = (window_x_high - a_ur_x)/
+	      (window_x_high - window_x_low);
+	    break;
+	  case glow_eDirection_Right:
+	    n.rank = (a_ll_x - window_x_low)/
+	      (window_x_high - window_x_low);
+	    break;
+	  case glow_eDirection_Up:
+	    n.rank = (window_y_high - a_ur_y)/
+	      (window_y_high - window_y_low);
+	    break;
+	  case glow_eDirection_Down:
+	    n.rank = (a_ll_y - window_y_low)/
+	      (window_y_high - window_y_low);
+	    break;
+	  default: ;
+	  }
+	  n.elem = a[i];
+	  a0.push_back( n);
+	}
+	else if ( ((a_ll_y >= window_y_low && a_ll_y <= window_y_high) ||
+		   (a_ur_y >= window_y_low && a_ur_y <= window_y_high) ||
+		   (a_ll_y <= window_y_low && a_ur_y >= window_y_high)) &&
+		  ((a_ll_x >= window_x_low && a_ll_x <= window_x_high) ||
+		   (a_ur_x >= window_x_low && a_ur_x <= window_x_high) ||
+		   (a_ll_x <= window_x_low && a_ur_x >= window_x_high))) {
+	  // Partially visible
+	  switch ( dir) {
+	  case glow_eDirection_Left:
+	    n.rank = (window_x_high - a_ur_x)/
+	      (window_x_high - window_x_low) + 10;
+	    break;
+	  case glow_eDirection_Right:
+	    n.rank = (a_ll_x - window_x_low)/
+	      (window_x_high - window_x_low) + 10;
+	    break;
+	  case glow_eDirection_Up:
+	    n.rank = (window_y_high - a_ur_y)/
+	      (window_y_high - window_y_low) + 10;
+	    break;
+	  case glow_eDirection_Down:
+	    n.rank = (a_ll_y - window_y_low)/
+	      (window_y_high - window_y_low) + 10;
+	    break;
+	  default: ;
+	  }
+	  n.elem = a[i];
+	  a0.push_back( n);
+	}
       }
-      else {
-	n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
-	if ( (a_y - y) > 0)
-	  n.angle -= M_PI;
-      }
-
-      double rank_angel = n.angle + dir_angle;
-      double rank_distance = n.distance / (x_right - x_left);
-      if ( rank_angel > M_PI)
-	rank_angel -= 2 * M_PI;
-      rank_angel = fabs( rank_angel) / M_PI;
-      if ( rank_angel > 0.5)
-	continue;
-      n.rank = rank_angel + ( 0.3 + rank_distance);
-      a0.push_back( n);
     }
+    if ( a0.size() == 0)
+      return 0;
   }
-  if ( a0.size() == 0)
-    return 0;
+  else { 
+
+    object->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+    x = (ll_x + ur_x) / 2;
+    y = (ll_y + ur_y) / 2;
+
+    switch ( dir) {
+    case glow_eDirection_Left:
+      dir_angle = M_PI;
+      break;
+    case glow_eDirection_Right:
+      dir_angle = 0;
+      break;
+    case glow_eDirection_Up:
+      dir_angle = -M_PI/2;
+      break;
+    case glow_eDirection_Down:
+      dir_angle = M_PI/2;
+      break;
+    default: ;
+    }
+
+    for ( int i = 0; i < a.size(); i++) {
+      if ( a[i] == object)
+	continue;
+
+      if ( a[i]->type() == glow_eObjectType_GrowNode ||
+	   a[i]->type() == glow_eObjectType_GrowSlider ||
+	   a[i]->type() == glow_eObjectType_GrowGroup ||
+	   a[i]->type() == glow_eObjectType_GrowTrend ||
+	   a[i]->type() == glow_eObjectType_GrowBar ||
+	   a[i]->type() == glow_eObjectType_GrowText) {
+	
+	a[i]->measure( &a_ll_x, &a_ll_y, &a_ur_x, &a_ur_y);
+	if ( ll_x >= a_ll_x && ur_x <= a_ur_x &&
+	     ll_y >= a_ll_y && ur_y <= a_ur_y)
+	  continue;
+	a_x = (a_ll_x + a_ur_x) / 2;
+	a_y = (a_ll_y + a_ur_y) / 2;
+      
+	NextElem n;
+	n.elem = a[i];
+	n.distance = sqrt((a_x - x)*(a_x - x) + (a_y - y)*(a_y - y));
+	if ( fabs( a_y - y) < DBL_EPSILON) {
+	  if ( a_x > x)
+	    n.angle = 0;
+	  else
+	    n.angle = M_PI;
+	}
+	else {
+	  n.angle = atan((a_x - x)/(a_y - y)) + M_PI / 2;
+	  if ( (a_y - y) > 0)
+	    n.angle -= M_PI;
+	}
+	
+	double rank_angel = n.angle + dir_angle;
+	double rank_distance = n.distance / (x_right - x_left);
+	if ( rank_angel > M_PI)
+	  rank_angel -= 2 * M_PI;
+	rank_angel = fabs( rank_angel) / M_PI;
+	if ( rank_angel > 0.5)
+	  continue;
+	n.rank = rank_angel + ( 0.3 + rank_distance);
+	a0.push_back( n);
+      }
+    }
+    if ( a0.size() == 0)
+      return 0;
+  }
 
   double rank_min = 1E37;
   GlowArrayElem *rank_elem = 0;
@@ -3989,4 +4076,69 @@ int GrowCtx::get_next_object( GlowArrayElem *object, glow_eDirection dir,
     return 0;
   *next = rank_elem;
   return 1;
+}
+
+int GrowCtx::is_visible( GlowArrayElem *element, glow_eVisible type)
+{
+  double ll_x, ll_y, ur_x, ur_y;
+  double window_x_low, window_x_high;
+  double window_y_low, window_y_high;
+
+  element->measure( &ll_x, &ll_y, &ur_x, &ur_y);
+  window_x_low = double(mw.offset_x) / mw.zoom_factor_x;
+  window_x_high = double(mw.offset_x + mw.window_width) / mw.zoom_factor_x;
+  window_y_low = double(mw.offset_y) / mw.zoom_factor_y;
+  window_y_high = double(mw.offset_y + mw.window_height) / mw.zoom_factor_y;
+  switch ( type) {
+  case glow_eVisible_Full:
+    if ( ll_x >= window_x_low && ur_x <= window_x_high &&
+	 ll_y >= window_y_low && ur_y <= window_y_high )
+      return 1;
+    else
+      return 0;
+  case glow_eVisible_Partial:
+    if ( ((ll_y >= window_y_low && ll_y <= window_y_high) ||
+	  (ur_y >= window_y_low && ur_y <= window_y_high) ||
+	  (ll_y <= window_y_low && ur_y >= window_y_high)) &&
+	 ((ll_x >= window_x_low && ll_x <= window_x_high) ||
+	  (ur_x >= window_x_low && ur_x <= window_x_high) ||
+	  (ll_x <= window_x_low && ur_x >= window_x_high)))
+      return 1;
+    else
+      return 0;
+  case glow_eVisible_Top:
+    if ( ur_y >= window_y_low && ur_y <= window_y_high &&
+	 ((ll_x >= window_x_low && ll_x <= window_x_high) ||
+	  (ur_x >= window_x_low && ur_x <= window_x_high) ||
+	  (ll_x <= window_x_low && ur_x >= window_x_high)))
+      return 1;
+    else
+      return 0;
+  case glow_eVisible_Bottom:
+    if ( ll_y >= window_y_low && ll_y <= window_y_high &&
+	 ((ll_x >= window_x_low && ll_x <= window_x_high) ||
+	  (ur_x >= window_x_low && ur_x <= window_x_high) ||
+	  (ll_x <= window_x_low && ur_x >= window_x_high)))
+      return 1;
+    else
+      return 0;
+  case glow_eVisible_Right:
+    if ( ur_x >= window_x_low && ur_y <= window_x_high &&
+	 ((ll_y >= window_y_low && ll_y <= window_y_high) ||
+	  (ur_y >= window_y_low && ur_y <= window_y_high) ||
+	  (ll_y <= window_y_low && ur_y >= window_y_high)))
+      return 1;
+    else
+      return 0;
+  case glow_eVisible_Left:
+    if ( ll_x >= window_x_low && ll_x <= window_x_high &&
+	 ((ll_y >= window_y_low && ll_y <= window_y_high) ||
+	  (ur_y >= window_y_low && ur_y <= window_y_high) ||
+	  (ll_y <= window_y_low && ur_y >= window_y_high)))
+      return 1;
+    else
+      return 0;
+  default: ;
+  }
+  return 0;
 }

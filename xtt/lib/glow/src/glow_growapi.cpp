@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.31 2007-07-17 12:43:54 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.32 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4408,6 +4408,11 @@ int grow_GetNextObject( grow_tCtx ctx, grow_tObject object, glow_eDirection dir,
 			 grow_tObject *next)
 {
   return ctx->get_next_object( (GlowArrayElem *)object, dir, (GlowArrayElem **)next);
+}
+
+int grow_IsVisible( grow_tCtx ctx, grow_tObject object, glow_eVisible type)
+{
+  return ctx->is_visible( (GlowArrayElem *)object, type);
 }
 
 

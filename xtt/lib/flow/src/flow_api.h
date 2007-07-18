@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.9 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.10 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,6 +237,7 @@ void flow_SetClickSensitivity( flow_tCtx ctx, int value);
 void flow_SetNoConObstacle( flow_tNodeClass nc, int no_obstacle);
 int flow_GetNextObject( flow_tCtx ctx, flow_tNode object, flow_eDirection dir,
 			flow_tNode *next);
+int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type);
 
 #if defined __cplusplus
 }

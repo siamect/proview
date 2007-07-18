@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.9 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.10 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -697,4 +697,9 @@ int flow_GetNextObject( flow_tCtx ctx, flow_tNode object, flow_eDirection dir,
 {
   return ctx->get_next_object( (FlowArrayElem *)object, dir,
 			       (FlowArrayElem **)next);
+}
+
+int flow_IsVisible( flow_tCtx ctx, flow_tObject object, flow_eVisible type)
+{
+  return ctx->is_visible( (FlowArrayElem *)object, type);
 }

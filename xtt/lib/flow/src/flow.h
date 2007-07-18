@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow.h,v 1.12 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow.h,v 1.13 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,7 +73,9 @@ typedef enum {
      	flow_eVisible_Full,
 	flow_eVisible_Partial,
 	flow_eVisible_Top,
-	flow_eVisible_Bottom
+	flow_eVisible_Bottom,
+	flow_eVisible_Right,
+	flow_eVisible_Left
 	} flow_eVisible;
 
 typedef enum {

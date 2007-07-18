@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.21 2007-07-04 13:28:05 claes Exp $
+ * Proview   $Id: glow.h,v 1.22 2007-07-18 09:26:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -312,6 +312,15 @@ typedef enum {
   glow_eCorner_Right  		//!< Right corners
 } glow_eCorner;
 
+typedef enum {
+  glow_eVisible_Full,
+  glow_eVisible_Partial,
+  glow_eVisible_Top,
+  glow_eVisible_Bottom,
+  glow_eVisible_Left,
+  glow_eVisible_Right
+} glow_eVisible;
+
 //! Text Fonts
 typedef enum {
   glow_eFont_Helvetica,  	//!< Font Helvetica
@@ -322,10 +331,10 @@ typedef enum {
 } glow_eFont;
 
 typedef enum {
-	glow_eDynamicType_Object,
-	glow_eDynamicType_SubGraph,
-	glow_eDynamicType_SubGraphEnd
-	} glow_eDynamicType;
+  glow_eDynamicType_Object,
+  glow_eDynamicType_SubGraph,
+  glow_eDynamicType_SubGraphEnd
+} glow_eDynamicType;
 
 //! Type of shadow drawn for an object
 typedef enum {
