@@ -11,11 +11,11 @@
 Name: pwrrt
 Summary: Proview/R runtime environment
 Version: 4.4.2
-Release: 1
+Release: 2
 Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
 #License: GPL
 BuildArch: i386
-Packager: robert.karlsson@ssabox.com
+Packager: claes.sjofors@proview.se
 Group: Applications/System
 Url: http://www.proview.se
 
@@ -458,7 +458,7 @@ fi
 #%postun
 
 %changelog
-* Fri Jul 06 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.2-1
+* Fri Jul 06 2007 Claes Sjofors <claes.sjofors@ssabox.com> 4.4.2-2
  - Proview restart improved. Works with profibus.
  - Ge: New fonts, Times, NC Schoolbook and Courier.
  - Proview profibus restart improved.
@@ -466,3 +466,4 @@ fi
  - Runtime monitor to start and stop runtime in development environment implemented.
  - Subgraphs for ventilation and circuitdiagrams added.
  - Baseobjects for threewayvalves, filters and dampers added.
+ - Bugfix in update classes, all attribute references wasn't updated.

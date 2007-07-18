@@ -11,11 +11,11 @@
 Name: pwr44
 Summary: Proview/R development and runtime environment
 Version: 4.4.2
-Release: 1
+Release: 2
 Copyright: (c) 2007 SSAB Oxelösund AB, Sweden
 #License: GPL
 BuildArch: i386
-Packager: robert.karlsson@ssabox.com
+Packager: claes.sjofors@proview.se
 Group: Development/Tools/Other
 Url: http://www.proview.se
 
@@ -186,3 +186,4 @@ fi
  - Runtime monitor to start and stop runtime in development environment implemented.
  - Subgraphs for ventilation and circuitdiagrams added.
  - Baseobjects for threewayvalves, filters and dampers added.
+ - Bugfix in update classes, all attribute references wasn't updated.

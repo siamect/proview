@@ -11,11 +11,11 @@
 Name:		pwrdemo44
 Summary: 	Proview/R demo project
 Version:        4.4.2
-Release: 	1
+Release: 	2
 Copyright:	(c) 2007 SSAB Oxelosund AB, Sweden
 #License:        GPL
 BuildArch:      i386
-Packager: 	robert.karlsson@ssabox.com
+Packager: 	claes.sjofors@proview.se
 Group: 		Development/Tools/Other
 Url:            http://www.proview.se
 
