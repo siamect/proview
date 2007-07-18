@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.16 2007-07-17 12:43:54 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.17 2007-07-18 13:16:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -278,7 +278,8 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
   version = 0;
 
   set_nodraw();
-  gdraw->ctx->set_nodraw();    // Needed for growwindows
+  if ( gdraw)
+    gdraw->ctx->set_nodraw();    // Needed for growwindows
 
   for (;;)
   {
@@ -358,7 +359,8 @@ int GlowCtx::open( char *filename, glow_eSaveMode mode)
   fp.close();
   get_borders();
   reset_nodraw();
-  gdraw->ctx->reset_nodraw();
+  if ( gdraw)
+    gdraw->ctx->reset_nodraw();
   a.zoom();
   clear( &mw);
   draw( &mw, 0, 0, mw.window_width, mw.window_height);
