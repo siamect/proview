@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: HistServer.java,v 1.3 2006-04-24 13:21:46 claes Exp $
+ * Proview   $Id: HistServer.java,v 1.4 2007-07-20 08:44:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -146,16 +146,15 @@ public class HistServer
     //    errh.setStatus( Errh.PWR__SRUN);
 
 
-    //    Qcom qcom = new Qcom();
-    //    QcomrCreateQ qque = qcom.createIniEventQ("MhServer");
-    //    if(qque.evenSts())
-    //    {
-    //      System.out.println("MH:Error during qreateque");
-    //      errh.fatal("MH:Error during qcom.createIniEventQ");
-    //      return;
-    //    }
+    Qcom qcom = new Qcom();
+    QcomrCreateQ qque = qcom.createIniEventQ("HistServer");
+    if(qque.evenSts()) {
+	System.out.println("Hist:Error during qreateque");
+	// errh.fatal("Hist:Error during qcom.createIniEventQ");
+	return;
+    }
 
-    //    QcomrGetIniEvent qrGetIniEv;
+    QcomrGetIniEvent qrGetIniEv;
 
     while(keepRunning)
     {
@@ -170,28 +169,26 @@ public class HistServer
       }
       catch(InterruptedIOException e)
       {
-        continue;
-/*
-      qrGetIniEv = qcom.getIniEvent(qque.qix, qque.nid, 0);
-      if(qrGetIniEv.timeout)
-      {
-        //do nothing
-        continue;
-      }
-      else if(qrGetIniEv.terminate)
-      {
-        //Time to die
-        System.out.println("MhServer received killmess from QCom");
-        return;
-      }
-      else 
-      {
-        //All other messages is qurrently ignored
-        //But perhaps we should reinitialize when we get
-        //swapdone
-        continue;
-      }
-*/
+	  
+	  //        continue;
+	  /* Test*/
+	  qrGetIniEv = qcom.getIniEvent(qque.qix, qque.nid, 0);
+	  if(qrGetIniEv.timeout) {
+	      //do nothing
+	      continue;
+	  }
+	  else if(qrGetIniEv.terminate) {
+	      //Time to die
+	      System.out.println("HistServer received killmess from QCom");
+	      return;
+	  }
+	  else  {
+	      //All other messages is qurrently ignored
+	      //But perhaps we should reinitialize when we get
+	      //swapdone
+	      continue;
+	  }
+	  /* End Test */
       }
       catch(IOException e)
       {
