@@ -587,6 +587,7 @@ sub build_all ()
     if ( $exe == 1) {
       _build("exe", "rt*", "src", "all");
       _build("exe", "pwr_user", "src", "all");
+      _build("exe", "pwr_rtmon", "src", "all");
       _build("exp", "ge", "src", "all");
       _build("mmi", "*", "src", "copy");
       _build("mmi", "*", $flavour, "copy");
