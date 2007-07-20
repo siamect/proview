@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: MhServer.java,v 1.6 2007-01-30 06:49:38 claes Exp $
+ * Proview   $Id: MhServer.java,v 1.7 2007-07-20 08:45:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -364,9 +364,11 @@ public class MhServer
   {
       super.finalize();
     
+      /* Qcom might no be alive...
       System.out.println("innan disconnect");
       PwrtStatus stsM = mh.outunitDisConnect();
       System.out.println("Status disconnect " + stsM.getSts());
+      */
   }
     
   private class MhSendThread extends Thread
