@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.h,v 1.7 2007-04-17 13:55:58 claes Exp $
+ * Proview   $Id: co_lng.h,v 1.8 2007-07-20 11:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,8 @@ typedef enum {
   lng_eLanguage_,
   lng_eLanguage_en_us,
   lng_eLanguage_sv_se,
-  lng_eLanguage_de_de
+  lng_eLanguage_de_de,
+  lng_eLanguage_fr_fr
 } lng_eLanguage;
 
 typedef struct {

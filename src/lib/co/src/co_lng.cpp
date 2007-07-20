@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.12 2007-04-17 13:55:58 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.13 2007-07-20 11:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,8 @@ lng_eLanguage Lng::str_to_lang( char *str)
     return lng_eLanguage_sv_se;
   if ( strcmp( str, "de_de") == 0)
     return lng_eLanguage_de_de;
+  if ( strcmp( str, "fr_fr") == 0)
+    return lng_eLanguage_fr_fr;
 
   return lng_eLanguage_;
 }
@@ -59,6 +61,9 @@ char *Lng::lang_to_str( lng_eLanguage language)
       break;
     case lng_eLanguage_de_de:
       strcpy( result, "de_de");
+      break;
+    case lng_eLanguage_fr_fr:
+      strcpy( result, "fr_fr");
       break;
     default:
       strcpy( result, "en_us");
@@ -76,6 +81,9 @@ char *Lng::lang_to_locale( lng_eLanguage language)
       break;
     case lng_eLanguage_de_de:
       strcpy( result, "de_DE");
+      break;
+    case lng_eLanguage_fr_fr:
+      strcpy( result, "fr_FR");
       break;
     default:
       strcpy( result, "en_US");
