@@ -1,4 +1,7 @@
 #060227 cs  -          Changelog created.
 070129 cs  web       Bugfix in dynamic HostObject in web interface.
 070130 cs  web       Button for Eventlog in operators menu added.
-070130 cs  jop       Default background color in GeTextField changed from Inherit to lightgrey.070524 cs  jop       More c-printf compatible output format implemented.
+070130 cs  jop       Default background color in GeTextField changed from Inherit to lightgrey.
+070524 cs  jop       More c-printf compatible output format implemented.
+070720 cs  rt        HistServer didn't listen to qcom termination message.
+070720 cs  rt        MhServer didn't terminate at qcom termination message.
