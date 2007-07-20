@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.2 2007-01-17 10:27:06 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.3 2007-07-20 11:35:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,6 +122,10 @@ class CoWowGtk : public CoWow {
   static void question_help_cb( Widget dialog,XtPointer data, 
 				XmAnyCallbackStruct *cbs);
 #endif
+  static void list_row_activated_cb( GtkTreeView *tree_view, 
+				     GtkTreePath *path,
+				     GtkTreeViewColumn *column,
+				     gpointer data);
   static void list_ok_cb( GtkWidget *w, gpointer data);
   static void list_cancel_cb( GtkWidget *w, gpointer data);
 };

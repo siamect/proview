@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.9 2007-06-08 08:36:39 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.10 2007-07-20 11:35:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -192,6 +192,14 @@ class WowListCtx {
   void      *parent_ctx;
 };
 
+void CoWowGtk::list_row_activated_cb( GtkTreeView *tree_view, 
+				      GtkTreePath *path,
+				      GtkTreeViewColumn *column,
+				      gpointer data)
+{
+  list_ok_cb( 0, data);
+}
+
 void CoWowGtk::list_ok_cb (
   GtkWidget *w, 
   gpointer data
@@ -306,6 +314,8 @@ void *CoWowGtk::CreateList (
 		NULL);
 
   gtk_tree_view_append_column( GTK_TREE_VIEW(ctx->list), name_column);
+  g_signal_connect( ctx->list, "row-activated", 
+ 		    G_CALLBACK(CoWowGtk::list_row_activated_cb), ctx);
 
   GtkWidget *ok_button = gtk_button_new_with_label( translate_utf8("Ok"));
   gtk_widget_set_size_request( ok_button, 70, 25);
