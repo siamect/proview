@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_xlib.cpp,v 1.7 2007-08-20 08:23:16 claes Exp $
+ * Proview   $Id: glow_draw_xlib.cpp,v 1.8 2007-08-20 08:32:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2477,9 +2477,10 @@ int GlowDrawXLib::draw_points( GlowWind *wind, glow_sPointX *points, int point_n
   if ( w->clip_on)
     set_clip( w, get_gc( this, gc_type, 0));
 
-  XDrawPoints( display, w->window,
-	get_gc( this, gc_type, 0), 
-	(XPoint *) points, point_num, CoordModeOrigin);
+  if ( !w->draw_buffer_only)
+    XDrawPoints( display, w->window,
+		 get_gc( this, gc_type, 0), 
+		 (XPoint *) points, point_num, CoordModeOrigin);
   if ( w->double_buffer_on)
     XDrawPoints( display, w->buffer,
 		 get_gc( this, gc_type, 0), 
@@ -2720,7 +2721,7 @@ int GlowDrawXLib::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.7 2007-08-20 08:23:16 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_xlib.cpp,v 1.8 2007-08-20 08:32:54 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
