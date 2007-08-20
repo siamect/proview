@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_ctx.cpp,v 1.17 2007-07-18 13:16:58 claes Exp $
+ * Proview   $Id: glow_ctx.cpp,v 1.18 2007-08-20 08:23:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2061,7 +2061,7 @@ void GlowCtx::scroll( int delta_x, int delta_y)
 
 void GlowCtx::draw_grid( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
 {
-  int x, y, x0, x1, y0, y1, i, j;
+  int x0, x1, y0, y1, i, j;
   int point_num;
 
   x0 = int( (ll_x + mw.offset_x) / mw.zoom_factor_x / grid_size_x);
@@ -2078,13 +2078,17 @@ void GlowCtx::draw_grid( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y)
   if ( point_num <= 0 || point_num >= 250000)
     return;
 
+  glow_sPointX *p = (glow_sPointX *)calloc( point_num, sizeof(glow_sPointX));
+  int idx = 0;
   for ( i = x0; i <= x1; i++) {
     for ( j = y0; j <= y1; j++) {
-      x = int( grid_size_x * i * mw.zoom_factor_x) - mw.offset_x;
-      y = int( grid_size_y * j * mw.zoom_factor_y) - mw.offset_y;
-      gdraw->draw_point( &mw, x, y, glow_eDrawType_Line);
+      p[idx].x = int( grid_size_x * i * mw.zoom_factor_x) - mw.offset_x;
+      p[idx].y = int( grid_size_y * j * mw.zoom_factor_y) - mw.offset_y;
+      idx++;
     }
   }
+  gdraw->draw_points( &mw, p, point_num, glow_eDrawType_Line);
+  free( p);
 }
 
 void GlowCtx::set_show_grid( int show)

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_draw_gtk.cpp,v 1.6 2007-07-17 12:43:42 claes Exp $
+ * Proview   $Id: glow_draw_gtk.cpp,v 1.7 2007-08-20 08:23:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2295,6 +2295,10 @@ int GlowDrawGtk::draw_points( GlowWind *wind, glow_sPointX *points, int point_nu
   gdk_draw_points( w->window,
 	get_gc( this, gc_type, 0), 
 	gpoints, point_num);
+  if ( w->double_buffer_on)
+    gdk_draw_points( w->buffer,
+	get_gc( this, gc_type, 0), 
+	gpoints, point_num);
   free( gpoints);
 
   if ( w->clip_on)
@@ -2504,7 +2508,7 @@ int GlowDrawGtk::print( char *filename, double x0, double x1, int end)
   if ( new_file) {
     ps->fp <<
 "%!PS-Adobe-2.0 EPSF-1.2" << endl <<
-"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.6 2007-07-17 12:43:42 claes Exp $ Glow" << endl <<
+"%%Creator: Proview   $Id: glow_draw_gtk.cpp,v 1.7 2007-08-20 08:23:16 claes Exp $ Glow" << endl <<
 "%%EndComments" << endl << endl;
   }
   else
