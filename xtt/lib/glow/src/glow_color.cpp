@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_color.cpp,v 1.6 2005-09-01 14:57:53 claes Exp $
+ * Proview   $Id: glow_color.cpp,v 1.7 2007-08-20 14:39:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -128,6 +128,14 @@ void GlowColor::rgb_color( int idx, double *r, double *g, double *b)
   
   if ( idx == 3) // White
     *r = *g = *b = 1.0;
+  else if ( idx == 2) // Gray
+    *r = *g = *b = 0.75;
+  else if ( idx == 1) { // Red
+    *r = 1.0;
+    *g = *b = 0;
+  }
+  else if ( idx == 0) // Black
+    *r = *g = *b = 0;
   else if ( idx < 20) {
     // Sixteen colors of different hue
     h1 = 360. * (idx - 4) / 16;
