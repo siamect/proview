@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.7 2007-02-21 14:08:57 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.8 2007-08-21 15:12:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -562,7 +562,7 @@ int pb_gsd::read( char *filename)
     case gsd_UserPrmData:
     case gsd_OString: {
       char *s = strchr( line, '=');
-      str_to_ostring( (unsigned char **)&datap->data, s+1, 256, 0);
+      str_to_ostring( (unsigned char **)&datap->data, s+1, 256, &datap->len);
       datap->found = 1;
       break;
     }
@@ -1520,6 +1520,11 @@ int pb_gsd::get_svalue( char *key, char *value, int size)
       case gsd_SlaveFamily:
 	strncpy( value, (char *)datap->data, size);
 	return 1;
+      case gsd_UserPrmData: {
+	int len = size < datap->len ? size : datap->len;
+	memcpy( value, (char *)datap->data, len);
+	return 1;
+      }
       default:
 	return 0;
       }
@@ -2075,6 +2080,25 @@ void pb_gsd::pack_ext_user_prm_data( char *data, int *len)
     data_idx += module_conf[i].module->Ext_Module_Prm_Data_Len;
   }
   *len = data_idx;
+}
+
+int pb_gsd::get_user_prm_data( char *data, int *len, int size)
+{
+  int sts;
+
+  sts = get_ivalue( "User_Prm_Data_Len", len);
+  if ( EVEN(sts)) {
+    *len = 0;
+    return 0;
+  }
+
+  sts = get_svalue( "User_Prm_Data", data, size);
+  if ( EVEN(sts)) {
+    *len = 0;
+    return 0;
+  }
+
+  return 1;
 }
 
 int pb_gsd::unpack_ext_user_prm_data( char *data, int len)

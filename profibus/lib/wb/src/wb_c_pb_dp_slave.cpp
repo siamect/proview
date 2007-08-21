@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.9 2007-06-01 12:53:51 claes Exp $
+ * Proview   $Id: wb_c_pb_dp_slave.cpp,v 1.10 2007-08-21 15:12:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -190,7 +190,14 @@ int pb_dp_slave_save_cb( void *sctx)
   int len;
 
   memset( user_prm_data, 0, sizeof(user_prm_data));
+  // Get ExtUserPrmData
   ctx->gsd->pack_ext_user_prm_data( (char *)user_prm_data, &len);
+
+  if ( !len) {
+    // Get UserPrmData instead
+    ctx->gsd->get_user_prm_data( (char *)user_prm_data, &len, 
+				 sizeof(user_prm_data));
+  }
 
   sts = ldh_ArefANameToAref( ctx->ldhses, &ctx->aref, "PrmUserData", &aaref);
   if ( EVEN(sts)) return sts;

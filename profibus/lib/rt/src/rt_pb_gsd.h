@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.h,v 1.5 2007-02-21 14:09:02 claes Exp $
+ * Proview   $Id: rt_pb_gsd.h,v 1.6 2007-08-21 15:12:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -86,6 +86,7 @@ typedef struct {
   unsigned int value;
   void *data;
   int found;
+  int len;
 } gsd_sData;
 
 typedef struct sArea {
@@ -232,6 +233,7 @@ class pb_gsd {
   int cut_module_conf( gsd_sModuleConf *m);
   int paste_module_conf( gsd_sModuleConf *m);
   void pack_config( char *config, int *len);
+  int get_user_prm_data( char *data, int *len, int size);
   int unpack_ext_user_prm_data( char *data, int len);
   void pack_ext_user_prm_data( char *data, int *len);
   void compress( char *line);
