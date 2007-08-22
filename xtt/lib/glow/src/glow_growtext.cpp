@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtext.cpp,v 1.6 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: glow_growtext.cpp,v 1.7 2007-08-22 06:43:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -679,7 +679,7 @@ void GrowText::draw( GlowWind *w,  GlowTransform *t, int highlight, int hot, voi
     }
   }
   else {
-    ctx->gdraw->get_text_extent( "A", 1, draw_type, idx, font, &z_width, &z_height,
+    ctx->gdraw->get_text_extent( "A", 1, draw_type, max( 0, idx), font, &z_width, &z_height,
 	&z_descent);
     ctx->gdraw->rect( w, x1, y1 - (z_height-z_descent), z_width, z_height, 
 	glow_eDrawType_LineGray, idx, 0);
