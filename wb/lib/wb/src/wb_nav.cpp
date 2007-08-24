@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.11 2007-02-05 09:33:49 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.12 2007-08-24 13:40:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -194,7 +194,7 @@ ItemObject::ItemObject( Nav *nav, pwr_tObjid item_objid,
 		     dest, dest_code, NULL, 1, &node);
 
     // Set pixmap
-    sts = ldh_GetChild( nav->ldhses, objid, &child);
+    sts = ldh_GetChildMnt( nav->ldhses, objid, &child);
     if( ODD(sts))
       brow_SetAnnotPixmap( node, 0, nav->pixmap_map);
     else
@@ -277,7 +277,7 @@ int ItemObject::open_children( Nav *nav, double x, double y)
       brow_SetNodraw( nav->brow_ctx);
 
       child_exist = 0;
-      sts = ldh_GetChild( nav->ldhses, objid, &child);
+      sts = ldh_GetChildMnt( nav->ldhses, objid, &child);
       while ( ODD(sts)) {
 	child_exist = 1;
 	sts = nav_create_object_item( nav, child, node, flow_eDest_IntoLast,
