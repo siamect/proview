@@ -19,9 +19,6 @@ gcc v4.0.2
 1. Preparations
 --------------
 
-1.1. Ubuntu
------------
-
 Install the following packages
 
 make
@@ -51,11 +48,11 @@ There has to be a valid display.
 -----------
 Unpack the source package
 
-> tar -xzvf pwrsrc_4.3.0.tar.gz
+> tar -xzvf pwrsrc_4.4.2.tar.gz
 
 Enter the sourcecode root directory
 
-> cd pwr_4.3.0
+> cd pwr_4.4.2
 
 Execute the makefile
 
@@ -77,8 +74,8 @@ handle different version of proview.
 The first thing to do is to set up your environment properly. Add the 
 following lines to .bashrc:
 
-# Where /home/robert/x4-3-0 is replaced with wherever you unpacked the sources.
-export pwre_bin="/home/robert/x4-3-0/pwr/src/tools/pwre/src/os_linux"
+# Where /home/robert/x4-4-2 is replaced with wherever you unpacked the sources.
+export pwre_bin="/home/robert/x4-4-2/pwr/src/tools/pwre/src/os_linux"
 export pwre_dir_symbols="$pwre_bin/dir_symbols.mk"
 source $pwre_bin/pwre_function
 export pwre_env_db="/home/robert/pwre_new"
@@ -94,13 +91,13 @@ by sourcing $pwre_bin/pwre_function).
 
 shows all possibilites with the pwre function.
 
-Add environment named 'x430x86' (choose any name you like).
+Add environment named 'x442x86' (choose any name you like).
 
-> pwre add x430x86
+> pwre add x442x86
 
-Source root [...] ? /home/robert/x4-3-0/pwr/src  (where /home/robert/x4-3-0 is
+Source root [...] ? /home/robert/x4-4-2/pwr/src  (where /home/robert/x4-4-2 is
 replaced with wherever you unpacked the sources)
-Build root [...] ? /home/robert/pwr/x4-3-0/rls_dbg  (choose typically .../pwr/version/rls_dbg)
+Build root [...] ? /home/robert/pwr/x4-4-2/rls_dbg  (choose typically .../pwr/version/rls_dbg)
 Build type [dbg] ? 
 OS [linux] ? 
 Hardware [x86] ?
@@ -110,13 +107,13 @@ list all existing environments:
 
 > pwre list
 -- Defined environments:
-   x430x86
+   x442x86
 --
 himBh
 
 Initiate your new environment:
 
-> pwre init x430x86
+> pwre init x442x86
 
 Now, create the build tree
 
@@ -197,7 +194,7 @@ Copy some files to this directory (if they do not already exist)
 Create a file name pwr_projectlist.dat in this directory and add the following
 line to this file:
 
-%base X4.3.0	/home/robert/pwr/X4-3-0/rls_dbg
+%base X4.4.2	/home/robert/pwr/X4-4-2/rls_dbg
 
 where the path is your build-root ($pwre_broot).
 
