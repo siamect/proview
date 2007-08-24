@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: nmps_plc_display.c,v 1.2 2006-01-26 08:15:12 claes Exp $
+ * Proview   $Id: nmps_plc_display.c,v 1.3 2007-08-24 13:58:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -164,12 +164,23 @@ void CellDisp_init( pwr_sClass_CellDisp  *object)
 	{
 	  if ( object->IntAttr[i][0] != 0)
 	  {
+	    int b16 = 0;
+	    char *s;
+
 	    strcpy( attr_str, ".");
 	    strcat( attr_str, object->IntAttr[i]);
+	    if ( (s = strchr( attr_str, '#'))) {
+	      if ( cdh_NoCaseStrcmp( s, "##int16") == 0)
+		b16 = 1;
+	      *s = 0;
+	    }
 	    sts = gdh_ClassAttrToAttrref( object->DataClass,
 		attr_str, &attr_ref);			
-	    if ( ODD(sts))
+	    if ( ODD(sts)) {
 	      object->IntAttrOffs[i] = attr_ref.Offset;
+	      if ( b16) 
+		object->IntAttrOffs[i] |= (1 << 31);
+	    }
 	    else
 	    {
 	      object->IntAttrOffs[i] = -1;
@@ -275,16 +286,36 @@ void CellDisp_exec(
 	          object->B4[i] = *(pwr_tBoolean *)(datap + object->BooleanAttrOffs[3]);
 	        if ( object->BooleanAttrOffs[4] >= 0)
 	          object->B5[i] = *(pwr_tBoolean *)(datap + object->BooleanAttrOffs[4]);
-	        if ( object->IntAttrOffs[0] >= 0)
-	          object->I1[i] = *(pwr_tInt32 *)(datap + object->IntAttrOffs[0]);
-	        if ( object->IntAttrOffs[1] >= 0)
-	          object->I2[i] = *(pwr_tInt32 *)(datap + object->IntAttrOffs[1]);
-	        if ( object->IntAttrOffs[2] >= 0)
-	          object->I3[i] = *(pwr_tInt32 *)(datap + object->IntAttrOffs[2]);
-	        if ( object->IntAttrOffs[3] >= 0)
-	          object->I4[i] = *(pwr_tInt32 *)(datap + object->IntAttrOffs[3]);
-	        if ( object->IntAttrOffs[4] >= 0)
-	          object->I5[i] = *(pwr_tInt32 *)(datap + object->IntAttrOffs[4]);
+	        if ( object->IntAttrOffs[0] != -1) {
+		  if ( object->IntAttrOffs[0] & (1 << 31))
+		    object->I1[i] = *(pwr_tInt16 *)(datap + (object->IntAttrOffs[0] & 0x3fffffff));
+		  else
+		    object->I1[i] = *(pwr_tInt32 *)(datap + (object->IntAttrOffs[0] & 0x3fffffff));
+		}
+	        if ( object->IntAttrOffs[1] != -1) {
+		  if ( object->IntAttrOffs[1] & (1 << 31))
+		    object->I2[i] = *(pwr_tInt16 *)(datap + (object->IntAttrOffs[1] & 0x3fffffff));
+		  else
+		    object->I2[i] = *(pwr_tInt32 *)(datap + (object->IntAttrOffs[1] & 0x3fffffff));
+		}
+	        if ( object->IntAttrOffs[2] != -1) {
+		  if ( object->IntAttrOffs[2] & (1 << 31))
+		    object->I3[i] = *(pwr_tInt16 *)(datap + (object->IntAttrOffs[2] & 0x3fffffff));
+		  else
+		    object->I3[i] = *(pwr_tInt32 *)(datap + (object->IntAttrOffs[2] & 0x3fffffff));
+		}
+	        if ( object->IntAttrOffs[3] != -1) {
+		  if ( object->IntAttrOffs[3] & (1 << 31))
+		    object->I4[i] = *(pwr_tInt16 *)(datap + (object->IntAttrOffs[3] & 0x3fffffff));
+		  else
+		    object->I4[i] = *(pwr_tInt32 *)(datap + (object->IntAttrOffs[3] & 0x3fffffff));
+		}
+	        if ( object->IntAttrOffs[4] != -1) {
+		  if ( object->IntAttrOffs[4] & (1 << 31))
+		    object->I5[i] = *(pwr_tInt16 *)(datap + (object->IntAttrOffs[4] & 0x3fffffff));
+		  else
+		    object->I5[i] = *(pwr_tInt32 *)(datap + (object->IntAttrOffs[4] & 0x3fffffff));
+		}
 	      }
 	      if ( i == max_size - 1)
 	      {
@@ -333,15 +364,15 @@ void CellDisp_exec(
 	    memset( &object->B4[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tBoolean));
 	  if ( object->BooleanAttrOffs[4] >= 0)
 	    memset( &object->B5[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tBoolean));
-	  if ( object->IntAttrOffs[0] >= 0)
+	  if ( object->IntAttrOffs[0] != -1)
 	    memset( &object->I1[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tInt32));
-	  if ( object->IntAttrOffs[1] >= 0)
+	  if ( object->IntAttrOffs[1] != -1)
 	    memset( &object->I2[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tInt32));
-	  if ( object->IntAttrOffs[2] >= 0)
+	  if ( object->IntAttrOffs[2] != -1)
 	    memset( &object->I3[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tInt32));
-	  if ( object->IntAttrOffs[3] >= 0)
+	  if ( object->IntAttrOffs[3] != -1)
 	    memset( &object->I4[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tInt32));
-	  if ( object->IntAttrOffs[4] >= 0)
+	  if ( object->IntAttrOffs[4] != -1)
 	    memset( &object->I5[num], 0, (object->OldLastIndex - num ) * sizeof(pwr_tInt32));
 	}
 
