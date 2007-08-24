@@ -63,3 +63,8 @@
 070615 cs  wb        Bugfix, remaining selection clear event after in palette and plant navigator
 		     could cause segfault.
 070618 cs  wb        'Copy Selected Tree'->'Before' and 'Last Child' didn't work.
+070712 cs  wb        Bugfix in Update Classes. All attribute references wasn't updated.
+070713 cs  wb        Bugfix in rttfiles generation. Arrays of attributeobjects larger than 20 elements caused segfault.
+070717 cs  plc       Select next object with Ctrl/Arrow keys. Expand/Compress object moved to Shift/Up and Shift/Down.
+070823 cs  nav       Mounted volumes wasn't displayed in the Ge plant navigator.
+070824 cs  wb        Bugfix in WbEnvironment object, only the first nine pathes were used.

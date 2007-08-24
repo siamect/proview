@@ -617,7 +617,7 @@ Notera också systemobjektet med attributet SystemGroup som tilldelas värdet
 
 <topic> plant_configuration
 Konfigurering av anläggninghierarkin
-När konfigureringen av projektet är klar, kan vi börja änga oss åt själva anläggningen.
+När konfigureringen av projektet är klar, kan vi börja ägna oss åt själva anläggningen.
 Konfigureringen av anläggningen görs i Konfiguratören. Anläggningshierarkin är en logisk
 beskrivning av verkligheten som ska styras och övervakas.
 

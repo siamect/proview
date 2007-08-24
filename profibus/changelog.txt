@@ -12,4 +12,4 @@
 070430 rk -           Changed status handling of Profibus slaves so that correct
                       view of the world is given.
 070518 rk -           Added io-method IoAgentSwap to keep driver initialized during warm restart.
-070601 cs -           Buxfix, opening Profibus Configurator with empty gsdfile attribute caused segfault.
+070601 cs -           Bugfix, opening Profibus Configurator with empty gsdfile attribute caused segfault.

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: nmps_c_celldisp.wb_load,v 1.5 2006-01-26 08:15:12 claes Exp $
+!  Proview   $Id: nmps_c_celldisp.wb_load,v 1.6 2007-08-24 13:58:46 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -311,6 +311,8 @@ SObject NMps:Class
       ! The name of attributes of type integer in the data object, that
       ! should be displayed in the table. Up to 5 integer attributes can be specified.
       ! The attribute in IntAttr[0] is copied to I1, IntAttr[1] to I2, etc.
+      ! If the attributes is of type Int16, add the suffix ##Int16 to the
+      ! attributename.
       !*/
       Object IntAttr $Intern 20
         Body SysBody
