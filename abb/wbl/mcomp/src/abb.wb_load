@@ -299,6 +299,9 @@ Volume ABB $ClassVolume 0.0.250.2
     !  @b Object Graph
     !  @image orm_abb_acs800_1_og.gif
     ! 
+    !  @b More Graph
+    !  @image orm_abb_acs800_1_og_more.gif
+    !
     !  @b Plc coding
     !  For plc coding the function object ABB_ACS800_1Fo is used.
     !  @image orm_abb_acs800_1fo_fo.gif
