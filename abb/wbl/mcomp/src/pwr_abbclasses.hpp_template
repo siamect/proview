@@ -1,0 +1,7 @@
+#ifndef pwr_basecomponentclasses_hpp
+#include "pwr_basecomponentclasses.hpp"
+#endif
+
+#ifndef pwr_profibusclasses_hpp
+#include "pwr_profibusclasses.hpp"
+#endif
