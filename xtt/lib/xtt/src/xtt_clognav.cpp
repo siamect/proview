@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_clognav.cpp,v 1.8 2007-05-25 13:36:08 claes Exp $
+ * Proview   $Id: xtt_clognav.cpp,v 1.9 2007-08-24 13:42:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -288,6 +288,15 @@ int CLogNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 
   clognav->get_files();
   clognav->read( &start_idx, 1);
+
+  // View last items
+  brow_tObject last;
+  int sts;
+
+  sts = brow_GetLast( clognav->brow->ctx, &last);
+  if ( ODD(sts))
+    brow_CenterObject( clognav->brow->ctx, last, 0.9);
+  
   return 1;
 }
 
