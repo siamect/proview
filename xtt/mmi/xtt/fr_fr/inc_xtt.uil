@@ -1,0 +1,167 @@
+! 
+!  Proview   $Id: inc_xtt.uil,v 1.1 2007-08-24 13:41:43 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  This module defines english texts for xtt.
+!
+value
+
+c_File    		: compound_string("File");
+c_Close     		: compound_string("Close");
+c_Print   		: compound_string("Print");
+c_Edit   		: compound_string("Edit");
+c_Search   		: compound_string("Search");
+c_Find_Object   	: compound_string("Find Object");
+c_Find_Regular_expression : compound_string("Find Regular expression");
+c_Find_Next   		: compound_string("Find Next");
+c_Collapse   		: compound_string("Collapse");
+c_Functions   		: compound_string("Functions");
+c_Open_Object   	: compound_string("Open Object");
+c_Open_Plc   		: compound_string("Open Plc");
+c_Open_ClassGraph   	: compound_string("Open ClassGraph");
+c_Show_Crossreferences  : compound_string("Show Crossreferences");
+c_Change_Value   	: compound_string("Change Value");
+c_Command   		: compound_string("Command");
+c_Collect   		: compound_string("Collect");
+c_Collect_insert   	: compound_string("Collect Insert");
+c_Show   		: compound_string("Show");
+c_Insert   		: compound_string("Insert");
+c_Remove   		: compound_string("Remove");
+c_Clear   		: compound_string("Clear");
+c_Advanced_user  	: compound_string("Advanced user");
+c_View   		: compound_string("View");
+c_Zoom_in   		: compound_string("Zoom in");
+c_Zoom_out   		: compound_string("Zoom out");
+c_Zoom_reset   		: compound_string("Zoom reset");
+c_Help   		: compound_string("Help");
+c_Overview   		: compound_string("Overview");
+c_Project   		: compound_string("Project");
+c_About_Proview   	: compound_string("About Proview");
+
+! module xtt_op.uil
+
+c_Alarmlist		: compound_string("Alarmlist");
+c_Eventlist		: compound_string("Eventlist");
+c_Blocklist		: compound_string("Blocklist");
+c_Eventlog		: compound_string("Eventlog");
+c_Histlist		: compound_string("Historical Eventlist");
+c_Navigator		: compound_string("Navigator");
+
+! module xtt_xatt.uil
+
+c_Close_change_value	: compound_string("Close change value");
+c_Display_object_in_navigator : compound_string("Display object in navigator");
+c_Ok			: compound_string("Ok");
+c_Cancel		: compound_string("Cancel");
+
+! module xtt_block
+c_Apply			: compound_string("Apply");
+c_Aalarm		: compound_string("A Alarm");
+c_Balarm		: compound_string("B Alarm");
+c_Calarm		: compound_string("C Alarm");
+c_Dalarm		: compound_string("D Alarm");
+c_NoBlock		: compound_string("No Blocking");
+c_BlockRemove		: compound_string("Remove Blocking");
+
+! module xtt_eve.uil
+
+c_Acknowledge		: compound_string("Acknowledge");
+c_Display_hundredth	: compound_string("Display hundredth");
+c_Hide_event_name	: compound_string("Hide event name");
+c_Hide_event_text	: compound_string("Hide event text");
+c_Help_on_selected_event : compound_string("Help on selected event");
+
+! module xtt_clog.uil
+
+c_Update         	: compound_string("Update");
+c_NextFile         	: compound_string("Next File");
+c_PreviousFile         	: compound_string("Previous File");
+c_SelectFile         	: compound_string("Select File");
+c_Filter         	: compound_string("Filter");
+c_Consolelog         	: compound_string("ConsoleLog");
+c_Help_on_selected_msg  : compound_string("Help on selected message");
+
+! module xtt_trace.uil
+
+c_PrintSelect   	: compound_string("PrintSelected");
+c_SaveTrace		: compound_string("SaveTrace");
+c_RestoreTrace		: compound_string("RestoreTrace");
+c_ClearTrace		: compound_string("ClearTrace");
+c_Mode			: compound_string("Mode");
+c_Trace			: compound_string("Trace");
+c_Simulate		: compound_string("Simulate");
+c_Plc			: compound_string("Plc");
+
+! module xtt_curve.uil
+
+c_Refresh		: compound_string("Refresh");
+c_Bright_background	: compound_string("Bright background");
+c_Show_names		: compound_string("Show names");
+c_Filled_curves		: compound_string("Filled curves");
+c_X_axis_limits		: compound_string("X-axis limits");
+k_Min_Max_value		: "Min Max value";
+k_MinValue		: "MinValue";
+k_MaxValue		: "MaxValue";
+
+! module xtt_ge.uil
+
+k_Ok			: "Ok";
+k_Yes			: "Yes";
+k_Cancel		: "Cancel";
+k_No			: "No";
+k_Help			: "Help";
+k_Confirm		: "Confirm";
+k_Enter_Value		: "Enter Value";
+k_Message		: "Message";
+k_Value_input		: "Value input";
+
+! module xhelp
+
+c_SearchNext		: "SearchNext";
+c_SearchPrevious	: "SearchPrevious";
+
+! module xtt_hist.uil
+    histformtitle	: "Historical Event List: Search Condition";
+    Search		: "Search";
+    Exit		: "Exit";
+    starttime		: "Start time";
+    priority		: "Priority";
+    stoptime		: "Stop time";
+    eventtype		: "Event type";
+    eventtext		: "Event text";
+    eventname		: "Event name";
+    a_alarm		: "A-Alarm";
+    b_alarm		: "B-Alarm";
+    c_alarm		: "C-Alarm";
+    d_alarm		: "D-Alarm";
+    message		: "Message";
+    active		: "Active";
+    acknowledge		: "Ack";
+    return		: "Return";
+    nrOfEvents		: "Number of events:";
+    
+    today		: "Today";
+    yesterday		: "Yesterday";
+    thisweek		: "This Week";
+    lastweek		: "Last Week";
+    thismonth		: "This Month";
+    lastmonth		: "Last Month";
+    all			: "All";
+    time		: "Time";
+    searchcondition     : "Searchcondition:";
+    mnemonic_FILE       : 'F';
+
