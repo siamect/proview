@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.7 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.8 2007-08-24 14:01:08 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -782,14 +782,18 @@ void WFoeGtk::set_title()
     strcpy( new_title, "*** ");
     cdh_StrncpyCutOff( &new_title[4], name, sizeof(new_title)-4, 0);
 
-    gtk_window_set_title( GTK_WINDOW(toplevel), new_title);
+    char *titleutf8 = g_convert( new_title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    gtk_window_set_title( GTK_WINDOW(toplevel), titleutf8);
+    g_free( titleutf8);
   }
   else if ( function == VIEW) {
     pwr_tOName new_title;
 
     strcpy( new_title, name);
 
-    gtk_window_set_title( GTK_WINDOW(toplevel), new_title);
+    char *titleutf8 = g_convert( new_title, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+    gtk_window_set_title( GTK_WINDOW(toplevel), titleutf8);
+    g_free( titleutf8);
   }
 }
 
