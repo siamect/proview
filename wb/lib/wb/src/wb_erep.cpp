@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.50 2007-04-25 13:40:20 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.51 2007-08-24 13:39:43 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -610,6 +610,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
       }
       else {
         // Imported loadfile
+	bool found = false;
         for ( i = 0; i < m_dir_cnt; i++) {
           strcpy( vname, m_dir_list[i]);
           strcat( vname, vol_array[0]);
@@ -618,6 +619,7 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
           dcli_search_file( vname, found_file, DCLI_DIR_SEARCH_END);
           if ( ODD(sts)) {
             // Load...
+	    found = true;
             try {
               vrep = new wb_vrepdbs( this, vname);
               vrep->load();
@@ -634,6 +636,8 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
             break;
           }
         }
+	if ( !found)
+	  MsgWindow::message( 'E', "Volume snapshotfile not found", vname);
       }
     }
     else {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.h,v 1.23 2006-02-08 13:53:57 claes Exp $
+ * Proview   $Id: wb_erep.h,v 1.24 2007-08-24 13:39:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -49,7 +49,7 @@ class wb_erep
   vector<wb_vrep*> m_vrepbuffer;
   map< string, wb_tMethod> m_methods;
 
-  char m_dir_list[10][200];
+  char m_dir_list[25][200];
   int m_dir_cnt;
   int m_volatile_idx;
   int m_buffer_max;
