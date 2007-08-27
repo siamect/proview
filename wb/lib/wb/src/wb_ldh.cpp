@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.58 2007-04-26 12:39:50 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.59 2007-08-27 09:32:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2164,6 +2164,27 @@ ldh_AttributeDisabled(ldh_tSession session, pwr_sAttrRef *arp, pwr_tDisableAttr 
   return LDH__SUCCESS;
 }
 
+int 
+ldh_ExternObject(ldh_tSession session, pwr_tOid oid)
+{
+  return oid.vid != ((wb_session *)session)->vid();
+}
+
+pwr_tStatus
+ldh_OpenMntSession(ldh_tSession session, pwr_tOid oid, ldh_tSession *mntses)
+{
+  wb_session *sp = (wb_session*)session;
+  
+  wb_object o = sp->object(oid);
+  if (!o) return o.sts();
+
+  wb_vrep *vrep = ((wb_orep *)o)->vrep();
+  wb_volume *v = new wb_volume( vrep);
+  wb_session *s = new wb_session( *v);
+
+  *mntses = (ldh_tSession) s;
+  return LDH__SUCCESS;
+}
 #endif
 
 

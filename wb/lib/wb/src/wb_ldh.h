@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.37 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.38 2007-08-27 09:32:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1224,6 +1224,20 @@ ldh_AttributeDisabled(
   pwr_sAttrRef *arp,
   pwr_tDisableAttr *disabled
 );
+
+int 
+ldh_ExternObject(
+  ldh_tSession session, 
+  pwr_tOid oid
+);
+
+pwr_tStatus
+ldh_OpenMntSession(
+  ldh_tSession session,
+  pwr_tOid oid,
+  ldh_tSession *mntses
+);
+
 
 #ifdef __cplusplus
 }

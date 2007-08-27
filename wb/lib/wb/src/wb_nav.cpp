@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.12 2007-08-24 13:40:27 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.13 2007-08-27 09:32:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -184,6 +184,7 @@ ItemObject::ItemObject( Nav *nav, pwr_tObjid item_objid,
   pwr_tObjid child;
   pwr_tClassId classid;
   char	*descr;
+  ldh_tSession ldhses;
 
   type = nav_eItemType_Object;
   if ( !is_root) {
@@ -204,8 +205,19 @@ ItemObject::ItemObject( Nav *nav, pwr_tObjid item_objid,
 
     // Set class annotation
     sts = ldh_GetObjectClass( nav->ldhses, objid, &classid);
-    sts = ldh_ObjidToName( nav->ldhses, cdh_ClassIdToObjid( classid),
+
+    // Objects in mounted volumes has to use its own metavolumes.
+    if ( ldh_ExternObject( nav->ldhses, objid))
+      ldh_OpenMntSession( nav->ldhses, objid, &ldhses);
+    else
+      ldhses = nav->ldhses;
+
+    sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( classid),
 			   ldh_eName_Object, name, sizeof(name), &size);
+
+    if ( ldhses != nav->ldhses)
+      ldh_CloseSession( ldhses);
+
     brow_SetAnnotation( node, 1, name, strlen(name));
     brow_SetUserData( node, (void *)this);
 
@@ -321,6 +333,7 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
     pwr_tClassId classid;
     char	body[20];
     char parname[40];
+    ldh_tSession ldhses;
     pwr_tAttrRef aref = cdh_ObjidToAref( objid);
 
     if ( brow_IsOpen( node) & nav_mOpen_Children) {
@@ -336,7 +349,13 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
     // Create some attributes
     brow_SetNodraw( nav->brow_ctx);
 
-    sts = ldh_GetObjectClass( nav->ldhses, objid, &classid);
+    // Objects in mounted volumes has to use its own metavolumes.
+    if ( ldh_ExternObject( nav->ldhses, objid))
+      ldh_OpenMntSession( nav->ldhses, objid, &ldhses);
+    else
+      ldhses = nav->ldhses;
+
+    sts = ldh_GetObjectClass( ldhses, objid, &classid);
     if ( EVEN(sts)) return sts;
 
     attr_exist = 0;
@@ -348,7 +367,7 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
       else
 	strcpy( body, "SysBody");
 
-      sts = ldh_GetObjectBodyDef( nav->ldhses, classid, body, 1, 
+      sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1, 
 				  &bodydef, &rows);
       if ( EVEN(sts) ) continue;
 
@@ -371,10 +390,10 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
 	  pwr_sAttrRef aar;
 	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
 	 
-	  sts = ldh_ArefANameToAref( nav->ldhses, &ar, parname, &aar);
+	  sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = ldh_AttributeDisabled( nav->ldhses, &aar, &disabled);
+	  sts = ldh_AttributeDisabled( ldhses, &aar, &disabled);
 	  if ( EVEN(sts)) return sts;
 	
 	  if ( disabled)
@@ -398,6 +417,9 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
       }
       free( (char *)bodydef);
     }
+
+    if ( ldhses != nav->ldhses)
+      ldh_CloseSession( ldhses);
 
     if ( attr_exist && !is_root) {
       brow_SetOpen( node, nav_mOpen_Attributes);
