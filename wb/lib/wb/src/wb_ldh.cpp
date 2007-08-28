@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.59 2007-08-27 09:32:45 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.60 2007-08-28 07:23:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1328,7 +1328,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
     }
 
     try {
-      char name[200];
+      pwr_tOName name;
       strcpy( name, o.name());
       *size = strlen( name);
       if ( *size > maxsize - 1) {
@@ -1368,7 +1368,7 @@ ldh_ObjidToName(ldh_tSession session, pwr_tOid oid, int type, char *buf, int max
       return LDH__SUCCESS;
     }
     try {
-      char name[200];
+      pwr_tOName name;
       strcpy( name, o.longName().name( type));
       *size = strlen( name);
       if ( *size > maxsize - 1) {
