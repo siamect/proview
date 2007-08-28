@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.h,v 1.6 2007-01-05 10:40:31 claes Exp $
+ * Proview   $Id: wb_nav.h,v 1.7 2007-08-28 07:30:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -67,6 +67,7 @@ class Nav {
   flow_sAnnotPixmap *pixmap_attr;
   flow_sAnnotPixmap *pixmap_attrarray;
   flow_sAnnotPixmap *pixmap_attrarrayelem;
+  flow_sAnnotPixmap *pixmap_attrobject;
   int 		(*get_plant_select_cb)( void *, char *);
   int 		(*set_focus_cb)( void *, void *);
   int 		(*traverse_focus_cb)( void *, void *);

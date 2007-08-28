@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_selformat.cpp,v 1.6 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: wb_wnav_selformat.cpp,v 1.7 2007-08-28 07:30:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,32 +90,40 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
   char	*name_ptr;
   pwr_tObjid object = attrref.Objid;
   char	*name_p;
+  ldh_tSession lses;
+
+  // Objects in mounted volumes has to use its own metavolumes.
+  if ( ldh_ExternObject( ldhses, attrref.Objid))
+    ldh_OpenMntSession( ldhses, attrref.Objid, &lses);
+  else
+    lses = ldhses;
 
   if ( select_syntax == wnav_eSelectionMode_Extern && !select_attr) {
     sts = ldh_ObjidToName( ldhses, object, ldh_eName_Objid, 
-					   name, sizeof(name), &ret_len); 
+			   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
 
     strcpy( buff, name);
     return TRUE;
   }
   else if ( select_syntax == wnav_eSelectionMode_Extern && select_attr) {
-    sts = ldh_ObjidToName( ldhses, object, ldh_eName_Default,
+    sts = ldh_ObjidToName( lses, object, ldh_eName_Default,
 					   name, sizeof(name), &ret_len); 
     if (EVEN(sts)) return FALSE;
   }
   else if ( select_volume) {
-    sts = ldh_AttrRefToName(ldhses, &attrref, 
+    sts = ldh_AttrRefToName(lses, &attrref, 
 			    cdh_mName_volume | cdh_mName_object | cdh_mName_attribute, 
 			    &name_p, &ret_len); 
     if (EVEN(sts)) return FALSE;
     strcpy( name, name_p);
   }
   else {
-    sts = ldh_AttrRefToName(ldhses, &attrref, 
+    sts = ldh_AttrRefToName(lses, &attrref, 
 			    cdh_mName_path | cdh_mName_object | cdh_mName_attribute, 
 			    &name_p, &ret_len); 
     if (EVEN(sts)) return FALSE;
+
     strcpy( name, name_p);
   }
 
@@ -152,13 +160,13 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
 
   aref = attrref;
   if (select_attr && !is_class) {
-    sts = ldh_GetAttrRefTid( ldhses, &attrref, &classid);
+    sts = ldh_GetAttrRefTid( lses, &attrref, &classid);
     if ( EVEN(sts)) return FALSE;
 
     if ( !is_attr || (cdh_tidIsCid(classid) && !attrref.Flags.b.Array)) {
       // Get the debugparameter if there is one, else add ActualValue  
 
-      sts = ldh_GetClassBody(ldhses, classid, 
+      sts = ldh_GetClassBody(lses, classid, 
 	    "GraphPlcNode", &body_class, (char **)&graph_body, &size);
       if ( ODD(sts))
         strcpy(attr_name, graph_body->debugpar);
@@ -169,13 +177,13 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
       strcat(name, attr_name);
 
       // Check if attribute exists
-      sts = ldh_NameToAttrRef(ldhses, name, &aref);
+      sts = ldh_NameToAttrRef(lses, name, &aref);
       if (ODD(sts)) {
-	sts = ldh_GetAttrRefTid( ldhses, &aref, &classid);
+	sts = ldh_GetAttrRefTid( lses, &aref, &classid);
 	if ( EVEN(sts)) return FALSE;
 
         if (select_syntax == wnav_eSelectionMode_Extern && select_attr) {
-           sts = ldh_AttrRefToName(ldhses, &aref, 
+           sts = ldh_AttrRefToName(lses, &aref, 
 				ldh_eName_ArefExport,
 				&name_ptr, &ret_len); 
            if (EVEN(sts)) return FALSE;
@@ -192,7 +200,7 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
       ldh_sAttrRefInfo info;
       int idx;
  
-      ldh_GetAttrRefInfo( ldhses, &aref, &info);
+      ldh_GetAttrRefInfo( lses, &aref, &info);
       if ( ODD(sts) && 
 	   wnav_type_to_string( info.type, type_buff, NULL)) {
         char num[8];
@@ -206,9 +214,9 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
           *p2 = 0;
 
 	  // Get attrref info for array
-	  sts = ldh_NameToAttrRef(ldhses, buff, &aref);
+	  sts = ldh_NameToAttrRef(lses, buff, &aref);
 	  if (ODD(sts))
-	    sts = ldh_GetAttrRefInfo( ldhses, &aref, &info);
+	    sts = ldh_GetAttrRefInfo( lses, &aref, &info);
 	}
         if ( info.type == pwr_eType_String) {
           sprintf(num, "%d", info.size/info.nElement);  
@@ -228,13 +236,16 @@ pwr_tBoolean wnav_format_selection( ldh_tSesContext ldhses, pwr_sAttrRef attrref
     }
   }
   if ( select_syntax == wnav_eSelectionMode_Extern && select_attr) {
-    sts = ldh_NameToAttrRef(ldhses, buff, &aref);
+    sts = ldh_NameToAttrRef(lses, buff, &aref);
     if (EVEN(sts)) return FALSE;
-    sts = ldh_AttrRefToName( ldhses, &aref, 
+    sts = ldh_AttrRefToName( lses, &aref, 
 			ldh_eName_ArefExport, &p1, &size);
     if (EVEN(sts)) return FALSE;
     strcpy( buff, p1);
   }
+
+  if ( lses != ldhses)
+    ldh_CloseSession( lses);
 
   return TRUE;
 }

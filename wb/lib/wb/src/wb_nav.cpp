@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.13 2007-08-27 09:32:45 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.14 2007-08-28 07:30:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,6 +82,7 @@
 #include "xnav_bitmap_attr12.h"
 #include "xnav_bitmap_attrarra12.h"
 #include "xnav_bitmap_attrarel12.h"
+#include "xnav_bitmap_object12.h"
 
 typedef enum {
   nav_mOpen_All		= ~0,
@@ -101,7 +102,8 @@ typedef enum {
   nav_eItemType_Object,
   nav_eItemType_Attr,
   nav_eItemType_AttrArray,
-  nav_eItemType_AttrArrayElem
+  nav_eItemType_AttrArrayElem,
+  nav_eItemType_AttrObject
 } nav_eItemType;
 
 class Item {
@@ -134,9 +136,11 @@ public:
   int	body;
   int attr_idx;
   int type_id;
+  pwr_tOName aname;
   ItemAttr( Nav *nav, pwr_tObjid item_objid,
 	    brow_tNode dest, flow_eDest dest_code, int attr_body,
-	    int idx, char *attr_name, int attr_type_id, int item_is_root);
+	    int idx, char *attr_name, char *attr_aname, int attr_type_id, 
+	    int item_is_root);
 };
 
 class ItemAttrArray : public Item {
@@ -145,9 +149,11 @@ public:
   int attr_idx;
   int elements;
   int type_id;
+  pwr_tOName aname;
   ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 		 brow_tNode dest, flow_eDest dest_code, int attr_body,
-		 int idx, char *attr_name, int attr_elements, int attr_type_id, 
+		 int idx, char *attr_name, char *attr_aname, int attr_elements, 
+		 int attr_type_id, 
 		 int item_is_root);
   int     open_children( Nav *nav, double x, double y);
   int     open_attributes( Nav *nav, double x, double y);
@@ -160,10 +166,30 @@ public:
   int attr_idx;
   int element;
   int type_id;
+  pwr_tOName aname;
   ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 		     brow_tNode dest, flow_eDest dest_code, int attr_body,
-		     int idx, char *attr_name, int attr_element, int attr_type_id,
-		     int item_is_root);
+		     int idx, char *attr_name, char *attr_aname, int attr_element, 
+		     int attr_type_id, int item_is_root);
+};
+
+class ItemAttrObject : public Item {
+public:
+  int type_id;
+  bool is_elem;
+  int idx;
+  int element;
+  int flags;
+  int size;
+  int body;
+  pwr_tOName aname;
+  ItemAttrObject( Nav *nav, pwr_tObjid item_objid,
+		  brow_tNode dest, flow_eDest dest_code,
+		  char *attr_name, char *attr_aname, int attr_type_id, int attr_size,
+		  bool attr_is_elem, int attr_idx, int attr_flags, int attr_body,
+		  int item_is_root);
+  int open_attributes( Nav *nav, double x, double y);
+  int	    close( Nav *nav, double x, double y);
 };
 
 // Prototypes of local functions
@@ -404,14 +430,24 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
 	  attr_exist = 1;
 	  item = (Item *) new ItemAttrArray( nav, objid, node, 
 					     flow_eDest_IntoLast,
-					     j, i, bodydef[i].ParName,
+					     j, i, bodydef[i].ParName, 0,
 					     bodydef[i].Par->Param.Info.Elements, 
 					     bodydef[i].Par->Param.Info.Type, is_root);
+	}
+	else if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
+	  attr_exist = 1;
+	  item = (Item *) new ItemAttrObject( nav, objid, node, 
+					      flow_eDest_IntoLast, 
+					      bodydef[i].ParName, 0,
+					      bodydef[i].Par->Param.Info.Type, 
+					      bodydef[i].Par->Param.Info.Size, false, 0,
+					      bodydef[i].Par->Param.Info.Flags, j,
+					      is_root);
 	}
 	else {
 	  attr_exist = 1;
 	  item = (Item *) new ItemAttr( nav, objid, node, 
-					flow_eDest_IntoLast, j, i, bodydef[i].ParName,
+					flow_eDest_IntoLast, j, i, bodydef[i].ParName, 0,
 					bodydef[i].Par->Param.Info.Type, is_root);
 	} 
       }
@@ -432,6 +468,222 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
   return 1;
 }
 
+ItemAttrObject::ItemAttrObject( Nav *nav,
+				pwr_tObjid item_objid,
+				brow_tNode dest, flow_eDest dest_code,
+				char *attr_name, char *attr_aname, int attr_type_id,
+				int attr_size, bool attr_is_elem, int attr_idx,
+				int attr_flags, int attr_body, int item_is_root) :
+  Item( item_objid, item_is_root), type_id(attr_type_id),
+  is_elem(attr_is_elem), idx(attr_idx), flags( attr_flags), body(attr_body)
+{
+  pwr_tOName annot;
+  int psize;
+  int sts;
+  char *s;
+  ldh_tSession ldhses;
+
+  type = nav_eItemType_AttrObject;
+
+  if ( !is_elem)
+    strcpy( name, attr_name);
+  else
+    sprintf( name, "%s[%d]", attr_name, idx);
+
+  if ( attr_aname && strcmp( attr_aname, "") != 0) {
+    strcpy( aname, attr_aname);
+    strcat( aname, ".");
+    strcat( aname, name);
+  }
+  else
+    strcpy( aname, name);
+
+  brow_CreateNode( nav->brow_ctx, attr_name, nav->nc_object, 
+		dest, dest_code, this, 1, &node);
+
+  // Objects in mounted volumes has to use its own metavolumes.
+  if ( ldh_ExternObject( nav->ldhses, objid))
+    ldh_OpenMntSession( nav->ldhses, objid, &ldhses);
+  else
+    ldhses = nav->ldhses;
+
+  brow_SetAnnotPixmap( node, 0, nav->pixmap_attrobject);
+
+  if ( flags & PWR_MASK_CASTATTR) {
+    // Replace tid from class definition to tid from actual attribute, TODO...
+  }
+
+  s = strrchr( name, '.');
+  if ( s)
+    strcpy( annot, s+1);
+  else
+    strcpy( annot, name);
+
+  brow_SetAnnotation( node, 0, annot, strlen(annot));
+
+  // Set class annotation
+  sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( type_id), ldh_eName_Object,
+			 annot, sizeof(annot), &psize);
+  if ( ODD(sts))
+    brow_SetAnnotation( node, 1, annot, strlen(annot));
+
+  if ( ldhses != nav->ldhses)
+    ldh_CloseSession( ldhses);
+
+}
+
+int ItemAttrObject::open_attributes( Nav *nav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node) & nav_mOpen_Attributes) {
+    // Attributes is open, close
+    brow_SetNodraw( nav->brow_ctx);
+    brow_CloseNode( nav->brow_ctx, node);
+    brow_ResetOpen( node, nav_mOpen_Attributes);
+    brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetNodraw( nav->brow_ctx);
+    brow_Redraw( nav->brow_ctx, node_y);
+  }
+  else {
+    Item *item;
+    int		attr_exist;
+    int		sts;
+    int		i, j;
+    ldh_sParDef *bodydef;
+    int 	rows;
+    pwr_tClassId classid;
+    char	body[20];
+    char parname[40];
+    ldh_tSession ldhses;
+    pwr_tAttrRef aref = cdh_ObjidToAref( objid);
+
+    if ( brow_IsOpen( node) & nav_mOpen_Children) {
+      // Close children first
+      brow_SetNodraw( nav->brow_ctx);
+      brow_CloseNode( nav->brow_ctx, node);
+      brow_ResetOpen( node, nav_mOpen_Children);
+      brow_SetAnnotPixmap( node, 0, nav->pixmap_map);
+      brow_ResetNodraw( nav->brow_ctx);
+      brow_Redraw( nav->brow_ctx, node_y);
+    }
+
+    // Create some attributes
+    brow_SetNodraw( nav->brow_ctx);
+
+    // Objects in mounted volumes has to use its own metavolumes.
+    if ( ldh_ExternObject( nav->ldhses, objid))
+      ldh_OpenMntSession( nav->ldhses, objid, &ldhses);
+    else
+      ldhses = nav->ldhses;
+
+    classid = type_id;
+
+    attr_exist = 0;
+    for ( j = 0; j < 3; j++) {
+      if ( j == 0)
+	strcpy( body, "DevBody");
+      else if ( j == 1)
+	strcpy( body, "RtBody");
+      else
+	strcpy( body, "SysBody");
+
+      sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1, 
+				  &bodydef, &rows);
+      if ( EVEN(sts) ) continue;
+
+      for ( i = 0; i < rows; i++) {
+	if ( aref.Flags.b.Object)
+	  strcpy( parname, bodydef[i].ParName);
+	else {
+	  strcpy( parname, name);
+	  strcat( parname, ".");
+	  strcat( parname, bodydef[i].ParName);
+	}
+
+	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_INVISIBLE ||
+	     bodydef[i].Par->Param.Info.Flags & PWR_MASK_RTVIRTUAL)
+	  continue;
+
+	if ( bodydef[i].Par->Output.Info.Flags & PWR_MASK_DISABLEATTR && 
+	     i > 0) {
+	  pwr_tDisableAttr disabled;
+	  pwr_sAttrRef aar;
+	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
+	 
+	  sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_AttributeDisabled( ldhses, &aar, &disabled);
+	  if ( EVEN(sts)) return sts;
+	
+	  if ( disabled)
+	    continue;
+	}
+
+	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_ARRAY) {
+	  attr_exist = 1;
+	  item = (Item *) new ItemAttrArray( nav, objid, node, 
+					     flow_eDest_IntoLast,
+					     j, i, bodydef[i].ParName, aname,
+					     bodydef[i].Par->Param.Info.Elements, 
+					     bodydef[i].Par->Param.Info.Type, is_root);
+	}
+	else if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
+	  attr_exist = 1;
+	  item = (Item *) new ItemAttrObject( nav, objid, node, 
+					      flow_eDest_IntoLast, 
+					      bodydef[i].ParName, aname,
+					      bodydef[i].Par->Param.Info.Type, 
+					      bodydef[i].Par->Param.Info.Size, false, 0,
+					      bodydef[i].Par->Param.Info.Flags, j,
+					      is_root);
+	}
+	else {
+	  attr_exist = 1;
+	  item = (Item *) new ItemAttr( nav, objid, node, 
+					flow_eDest_IntoLast, j, i, bodydef[i].ParName,
+					aname, bodydef[i].Par->Param.Info.Type, is_root);
+	} 
+      }
+      free( (char *)bodydef);
+    }
+
+    if ( ldhses != nav->ldhses)
+      ldh_CloseSession( ldhses);
+
+    if ( attr_exist && !is_root) {
+      brow_SetOpen( node, nav_mOpen_Attributes);
+      brow_SetAnnotPixmap( node, 1, nav->pixmap_openattr);
+    }
+    brow_ResetNodraw( nav->brow_ctx);
+    if ( attr_exist)
+      brow_Redraw( nav->brow_ctx, node_y);
+  }
+  return 1;
+}
+
+int ItemAttrObject::close( Nav *nav, double x, double y)
+{
+  double	node_x, node_y;
+
+  brow_GetNodePosition( node, &node_x, &node_y);
+
+  if ( brow_IsOpen( node) & nav_mOpen_Attributes) {
+    // Attributes is open, close
+    brow_SetNodraw( nav->brow_ctx);
+    brow_CloseNode( nav->brow_ctx, node);
+    brow_RemoveAnnotPixmap( node, 1);
+    brow_ResetOpen( node, nav_mOpen_All);
+    brow_ResetNodraw( nav->brow_ctx);
+    brow_Redraw( nav->brow_ctx, node_y);
+  }
+  return 1;
+}
+
+
 int ItemAttrArray::close( Nav *nav, double x, double y)
 {
   double	node_x, node_y;
@@ -448,6 +700,7 @@ int ItemAttrArray::close( Nav *nav, double x, double y)
   }
   return 1;
 }
+
 
 int ItemAttrArray::open_children( Nav *nav, double x, double y)
 {
@@ -490,7 +743,8 @@ int ItemAttrArray::open_attributes( Nav *nav, double x, double y)
     for ( i = 0; i < elements; i++)
       {
 	item = (Item *) new ItemAttrArrayElem( nav, objid, node, 
-					       flow_eDest_IntoLast, body, attr_idx, name, i, type_id, is_root);
+					       flow_eDest_IntoLast, body, attr_idx, name, 
+					       aname, i, type_id, is_root);
       }
 
     if ( !is_root) {
@@ -504,7 +758,8 @@ int ItemAttrArray::open_attributes( Nav *nav, double x, double y)
 
 ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
 		    brow_tNode dest, flow_eDest dest_code, int attr_body,
-		    int idx, char *attr_name, int attr_type_id, int item_is_root) :
+		    int idx, char *attr_name, char *attr_aname, int attr_type_id, 
+		    int item_is_root) :
   Item( item_objid, item_is_root), body(attr_body),
   attr_idx(idx), type_id(attr_type_id)
 {
@@ -513,6 +768,14 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
   type = nav_eItemType_Attr;
 
   strcpy( name, attr_name);
+  if ( attr_aname && strcmp( attr_aname, "") != 0) {
+    strcpy( aname, attr_aname);
+    strcat( aname, ".");
+    strcat( aname, name);
+  }
+  else
+    strcpy( aname, name);
+
   if ( !is_root) {
     brow_CreateNode( nav->brow_ctx, attr_name, nav->nc_object, 
 		     dest, dest_code, NULL, 1, &node);
@@ -534,8 +797,8 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
 
 ItemAttrArray::ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 			      brow_tNode dest, flow_eDest dest_code, int attr_body,
-			      int idx, char *attr_name, int attr_elements, int attr_type_id,
-			      int item_is_root) :
+			      int idx, char *attr_name, char *attr_aname, 
+			      int attr_elements, int attr_type_id, int item_is_root) :
   Item( item_objid, item_is_root), body(attr_body),
   attr_idx(idx), elements(attr_elements), type_id(attr_type_id)
 {
@@ -544,6 +807,15 @@ ItemAttrArray::ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
   type = nav_eItemType_AttrArray;
 
   strcpy( name, attr_name);
+
+  if ( attr_aname && strcmp( attr_aname, "") != 0) {
+    strcpy( aname, attr_aname);
+    strcat( aname, ".");
+    strcat( aname, name);
+  }
+  else
+    strcpy( aname, name);
+
   if ( !is_root) {
     brow_CreateNode( nav->brow_ctx, attr_name, nav->nc_object, 
 		     dest, dest_code, NULL, 1, &node);
@@ -558,7 +830,8 @@ ItemAttrArray::ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 
 ItemAttrArrayElem::ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 				      brow_tNode dest, flow_eDest dest_code, int attr_body,
-				      int idx, char *attr_name, int attr_element, int attr_type_id,
+				      int idx, char *attr_name, char *attr_aname, 
+				      int attr_element, int attr_type_id,
 				      int item_is_root) :
   Item( item_objid, item_is_root), body(attr_body),
   attr_idx(idx), element(attr_element), type_id(attr_type_id)
@@ -569,6 +842,14 @@ ItemAttrArrayElem::ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 
   sprintf( name, "%s[%d]", attr_name, element);
   
+  if ( attr_aname && strcmp( attr_aname, "") != 0) {
+    strcpy( aname, attr_aname);
+    strcat( aname, ".");
+    strcat( aname, name);
+  }
+  else
+    strcpy( aname, name);
+
   if ( !is_root) {
     brow_CreateNode( nav->brow_ctx, name, nav->nc_object, 
 		     dest, dest_code, NULL, 1, &node);
@@ -926,6 +1207,38 @@ void Nav::allocate_pixmaps()
   brow_AllocAnnotPixmap( brow_ctx, &pixmap_data, 
 			 &pixmap_attrarrayelem);
 
+  i = 0;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+  pixmap_data[i].width =xnav_bitmap_object12_width;
+  pixmap_data[i].height =xnav_bitmap_object12_height;
+  pixmap_data[i++].bits = (char *)xnav_bitmap_object12_bits;
+
+  brow_AllocAnnotPixmap( brow_ctx, &pixmap_data, 
+			 &pixmap_attrobject);
+
 }
 
 
@@ -1075,6 +1388,9 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     case nav_eItemType_Object: 
       ((ItemObject *)item)->open_attributes( nav, 0, 0);
       break;
+    case nav_eItemType_AttrObject: 
+      ((ItemAttrObject *)item)->open_attributes( nav, 0, 0);
+      break;
     case nav_eItemType_AttrArray: 
       ((ItemAttrArray *)item)->open_attributes( nav, 0, 0);
       break;
@@ -1109,6 +1425,9 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     case nav_eItemType_Object: 
       ((ItemObject *)item)->close( nav, 0, 0);
       break;
+    case nav_eItemType_AttrObject: 
+      ((ItemAttrObject *)item)->close( nav, 0, 0);
+      break;
     case nav_eItemType_AttrArray: 
       ((ItemAttrArray *)item)->close( nav, 0, 0);
       break;
@@ -1142,6 +1461,10 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
 	((ItemAttrArray *)item)->open_children( nav,
 						event->object.x, event->object.y);
 	break;
+      case nav_eItemType_AttrObject: 
+	((ItemAttrObject *)item)->open_attributes( nav,
+						  event->object.x, event->object.y);
+	break;
       default:
 	;
       }
@@ -1158,6 +1481,10 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
       case nav_eItemType_Object: 
 	((ItemObject *)item)->open_attributes( nav,
 					       event->object.x, event->object.y);
+	break;
+      case nav_eItemType_AttrObject: 
+	((ItemAttrObject *)item)->open_attributes( nav,
+						  event->object.x, event->object.y);
 	break;
       case nav_eItemType_AttrArray: 
 	((ItemAttrArray *)item)->open_attributes( nav,
@@ -1435,10 +1762,22 @@ int Nav::get_select( pwr_sAttrRef *attrref, int *is_attr)
   memset( attrref, 0, sizeof(*attrref));
   switch( item->type) {
   case nav_eItemType_Attr:
+    strcat( attr_str, ".");
+    strcat( attr_str, ((ItemAttr *)item)->aname);
+    sts = ldh_NameToAttrRef( ldhses, attr_str, attrref);
+    if ( EVEN(sts)) return sts;
+    *is_attr = 1;
+    break;
   case nav_eItemType_AttrArray:
+    strcat( attr_str, ".");
+    strcat( attr_str, ((ItemAttrArray *)item)->aname);
+    sts = ldh_NameToAttrRef( ldhses, attr_str, attrref);
+    if ( EVEN(sts)) return sts;
+    *is_attr = 1;
+    break;
   case nav_eItemType_AttrArrayElem:
     strcat( attr_str, ".");
-    strcat( attr_str, item->name);
+    strcat( attr_str, ((ItemAttrArrayElem *)item)->aname);
     sts = ldh_NameToAttrRef( ldhses, attr_str, attrref);
     if ( EVEN(sts)) return sts;
     *is_attr = 1;

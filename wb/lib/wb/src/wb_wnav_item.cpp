@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_item.cpp,v 1.23 2007-08-27 09:32:45 claes Exp $
+ * Proview   $Id: wb_wnav_item.cpp,v 1.24 2007-08-28 07:30:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -419,7 +419,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 
           if ( bodydef[j].ParClass == pwr_eClass_Output)
           {
-            new WItemAttrArrayOutput( wnav->brow, ldhses, objid, node, 
+            new WItemAttrArrayOutput( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast,
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
@@ -431,7 +431,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
              output_cnt++;
           }
           else
-            new WItemAttrArray( wnav->brow, ldhses, objid, node, 
+            new WItemAttrArray( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast,
 		parname,
 		bodydef[j].Par->Output.Info.Elements, 
@@ -448,7 +448,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
           {
 	    if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE &&
 	         bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOINVERT)
-              new WItemAttr( wnav->brow, ldhses, objid, node, 
+              new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -456,7 +456,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
 	    else if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)
-              new WItemAttrInputInv( wnav->brow, ldhses, objid, node, 
+              new WItemAttrInputInv( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -464,7 +464,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
 	    else if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOINVERT)
-              new WItemAttrInputF( wnav->brow, ldhses, objid, node, 
+              new WItemAttrInputF( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -472,7 +472,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		bodydef[j].Par->Input.Info.Flags,
 		body, input_cnt);
 	   else
-              new WItemAttrInput( wnav->brow, ldhses, objid, node,
+              new WItemAttrInput( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -483,7 +483,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
           else
           {
 	    if ( bodydef[j].Par->Input.Info.Flags & PWR_MASK_NOREMOVE)
-              new WItemAttr( wnav->brow, ldhses, objid, node,
+              new WItemAttr( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -491,7 +491,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		bodydef[j].Par->Input.Info.Flags,
 		body, 0);
 	    else
-              new WItemAttrInputF( wnav->brow, ldhses, objid, node,
+              new WItemAttrInputF( wnav->brow, wnav->ldhses, objid, node,
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Input.Info.Type, 
 		bodydef[j].Par->Input.TypeRef, 
@@ -505,7 +505,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
         else if ( bodydef[j].ParClass == pwr_eClass_Output)
         {
 	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_NOREMOVE)
-            new WItemAttr( wnav->brow, ldhses, objid, node, 
+            new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.TypeRef, 
@@ -513,7 +513,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
           else
-            new WItemAttrOutput( wnav->brow, ldhses, objid, node, 
+            new WItemAttrOutput( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.TypeRef, 
@@ -526,14 +526,14 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
         else
         {
 	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_CLASS)
-            new WItemAttrObject( wnav->brow, ldhses, objid, node, 
+            new WItemAttrObject( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.Info.Size, false, 0,
 		bodydef[j].Par->Output.Info.Flags,
 		body, 0);
 	  else
-	    new WItemAttr( wnav->brow, ldhses, objid, node, 
+	    new WItemAttr( wnav->brow, wnav->ldhses, objid, node, 
 		flow_eDest_IntoLast, parname,
 		bodydef[j].Par->Output.Info.Type, 
 		bodydef[j].Par->Output.TypeRef, 
@@ -547,7 +547,7 @@ int WItemBaseObject::open_attributes( WNav *wnav, double x, double y)
 
       sts = ldh_GetDocBlock( ldhses, objid, &block, &size);
       if ( ODD(sts)) {
-	new WItemDocBlock( wnav->brow, ldhses, objid, block, size,
+	new WItemDocBlock( wnav->brow, wnav->ldhses, objid, block, size,
 			   node, flow_eDest_IntoLast);
 	attr_exist = 1;
       }
@@ -2206,10 +2206,21 @@ WItemAttrObject::WItemAttrObject(
 
   // Set class annotation
   if ( ((WNav *)brow->userdata)->gbl.show_class) {
-    sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( type_id), ldh_eName_Object,
+    ldh_tSession lses;
+
+    // Objects in mounted volumes has to use its own metavolumes.
+    if ( ldh_ExternObject( ldhses, objid))
+      ldh_OpenMntSession( ldhses, objid, &lses);
+    else
+      lses = ldhses;
+
+    sts = ldh_ObjidToName( lses, cdh_ClassIdToObjid( type_id), ldh_eName_Object,
 			   annot, sizeof(annot), &psize);
     if ( ODD(sts))
       brow_SetAnnotation( node, next_annot++, annot, strlen(annot));
+
+    if ( lses != ldhses)
+      ldh_CloseSession( lses);
   }
 
   // Set description annotation
@@ -2291,18 +2302,25 @@ int WItemAttrObject::open_attributes( double x, double y)
     int			input_cnt = 0;
     int			output_cnt = 0;
     int			is_casted = 0;
+    ldh_tSession 	lses;
 
     classid = type_id;
+
+    // Objects in mounted volumes has to use its own metavolumes.
+    if ( ldh_ExternObject( ldhses, objid))
+      ldh_OpenMntSession( ldhses, objid, &lses);
+    else
+      lses = ldhses;
 
     // Check if attrobject is casted
     if ( flags & PWR_MASK_CASTATTR) {
       pwr_sAttrRef ar = cdh_ObjidToAref( objid);
       pwr_sAttrRef aar;
       
-      sts = ldh_ArefANameToAref( ldhses, &ar, name, &aar);
+      sts = ldh_ArefANameToAref( lses, &ar, name, &aar);
       if ( EVEN(sts)) return sts;
 
-      sts = ldh_GetAttrRefOrigTid( ldhses, &aar, &orig_classid);
+      sts = ldh_GetAttrRefOrigTid( lses, &aar, &orig_classid);
       if ( EVEN(sts)) return sts;
 
       if ( orig_classid != classid) {
@@ -2324,10 +2342,10 @@ int WItemAttrObject::open_attributes( double x, double y)
         strcpy( body, "SysBody");
 
       if ( ((WNav *)brow->userdata)->gbl.show_truedb)
-	sts = ldh_GetTrueObjectBodyDef( ldhses, classid, body, 1,
+	sts = ldh_GetTrueObjectBodyDef( lses, classid, body, 1,
 		&bodydef, &rows);
       else
-	sts = ldh_GetObjectBodyDef( ldhses, classid, body, 1,
+	sts = ldh_GetObjectBodyDef( lses, classid, body, 1,
 		&bodydef, &rows);
       if ( EVEN(sts))
         continue;
@@ -2360,10 +2378,10 @@ int WItemAttrObject::open_attributes( double x, double y)
 	  pwr_sAttrRef aar;
 	  pwr_sAttrRef ar = cdh_ObjidToAref( objid);
 
-	  sts = ldh_ArefANameToAref( ldhses, &ar, parname, &aar);
+	  sts = ldh_ArefANameToAref( lses, &ar, parname, &aar);
 	  if ( EVEN(sts)) return sts;
 
-	  sts = ldh_AttributeDisabled( ldhses, &aar, &disabled);
+	  sts = ldh_AttributeDisabled( lses, &aar, &disabled);
 	  if ( EVEN(sts)) return sts;
 
 	  if ( disabled)
@@ -2496,6 +2514,9 @@ int WItemAttrObject::open_attributes( double x, double y)
       free((char *) bodydef);	
 
     }
+
+    if ( lses != ldhses)
+      ldh_CloseSession( lses);
 
     if ( attr_exist && !is_root) {
       brow_SetOpen( node, wnav_mOpen_Attributes);
