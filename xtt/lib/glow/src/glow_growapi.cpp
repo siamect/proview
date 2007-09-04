@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.32 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.33 2007-09-04 07:23:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1178,6 +1178,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->disable_shadow);
       
+      strcpy( attrinfo[i].name, "fixposition");
+      attrinfo[i].value_p = &op->fixposition;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixposition);
+      
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);
       attrinfo[i].value_p = malloc( 1024);
@@ -1288,6 +1293,11 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       attrinfo[i].value_p = &op->fixcolor;
       attrinfo[i].type = glow_eType_Boolean;
       attrinfo[i++].size = sizeof( op->fixcolor);
+      
+      strcpy( attrinfo[i].name, "fixposition");
+      attrinfo[i].value_p = &op->fixposition;
+      attrinfo[i].type = glow_eType_Boolean;
+      attrinfo[i++].size = sizeof( op->fixposition);
       
       strcpy( attrinfo[i].name, "Dynamic");
       op->get_dynamic( &dynamic, &dynsize);

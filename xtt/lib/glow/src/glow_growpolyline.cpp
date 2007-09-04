@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growpolyline.cpp,v 1.6 2007-06-15 11:33:55 claes Exp $
+ * Proview   $Id: glow_growpolyline.cpp,v 1.7 2007-09-04 07:23:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -43,7 +43,8 @@ GrowPolyLine::GrowPolyLine( GrowCtx *glow_ctx, char *name,
 		original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
 		border(display_border), fill_eq_border(0), current_point(0),
 		shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), fill_eq_shadow(0), fixcolor(0)
+		shadow_contrast(2), disable_shadow(0), fill_eq_light(0), 
+		fill_eq_shadow(0), fixcolor(0), fixposition(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -463,6 +464,8 @@ void GrowPolyLine::erase( GlowWind *w, GlowTransform *t, int hot, void *node)
 
 void GrowPolyLine::move( double delta_x, double delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   ctx->set_defered_redraw();
   ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - 2*DRAW_MP,
 	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - 2*DRAW_MP,
@@ -585,8 +588,10 @@ GrowPolyLine::~GrowPolyLine()
 
 void GrowPolyLine::move_noerase( int delta_x, int delta_y, int grid)
 {
-  if ( grid)
-  {
+  if ( fixposition)
+    return;
+
+  if ( grid) {
     double x_grid, y_grid;
 
     /* Move to closest grid point */
@@ -595,8 +600,7 @@ void GrowPolyLine::move_noerase( int delta_x, int delta_y, int grid)
     trf.move( x_grid - x_left, y_grid - y_low);
     get_node_borders();
   }
-  else
-  {
+  else {
     double dx, dy;
 
     dx = double( delta_x) / ctx->mw.zoom_factor_x;
@@ -811,6 +815,7 @@ void GrowPolyLine::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowPolyLine_fill_eq_light) << FSPACE << fill_eq_light << endl;
   fp << int(glow_eSave_GrowPolyLine_fill_eq_shadow) << FSPACE << fill_eq_shadow << endl;
   fp << int(glow_eSave_GrowPolyLine_fixcolor) << FSPACE << fixcolor << endl;
+  fp << int(glow_eSave_GrowPolyLine_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_End) << endl;
 }
 
@@ -881,6 +886,7 @@ void GrowPolyLine::open( ifstream& fp)
       case glow_eSave_GrowPolyLine_fill_eq_light: fp >> fill_eq_light; break;
       case glow_eSave_GrowPolyLine_fill_eq_shadow: fp >> fill_eq_shadow; break;
       case glow_eSave_GrowPolyLine_fixcolor: fp >> fixcolor; break;
+      case glow_eSave_GrowPolyLine_fixposition: fp >> fixposition; break;
       case glow_eSave_End: end_found = 1; break;
       default:
         cout << "GrowPolyLine:open syntax error" << endl;
@@ -1329,51 +1335,53 @@ void GrowPolyLine::add_and_shift_y_value_filled( double value)
 
 void GrowPolyLine::align( double x, double y, glow_eAlignDirection direction)
 {
-    double dx, dy;
+  double dx, dy;
 
-    erase( &ctx->mw);
-    erase( &ctx->navw);
-    ctx->set_defered_redraw();
-    draw();
-    switch ( direction)
-    {
-      case glow_eAlignDirection_CenterVert:
-        dx = x - (x_right + x_left) / 2;
-        dy = 0;
-        break;        
-      case glow_eAlignDirection_CenterHoriz:
-        dx = 0;
-        dy = y - (y_high + y_low) / 2;
-        break;        
-      case glow_eAlignDirection_CenterCenter:
-        dx = x - (x_right + x_left) / 2;
-        dy = y - (y_high + y_low) / 2;
-        break;        
-      case glow_eAlignDirection_Right:
-        dx = x - x_right;
-        dy = 0;
-        break;        
-      case glow_eAlignDirection_Left:
-        dx = x - x_left;
-        dy = 0;
-        break;        
-      case glow_eAlignDirection_Up:
-        dx = 0;
-        dy = y - y_high;
-        break;        
-      case glow_eAlignDirection_Down:
-        dx = 0;
-        dy = y - y_low;
-        break;        
-    }
-    trf.move( dx, dy);
-    x_right += dx;
-    x_left += dx;
-    y_high += dy;
-    y_low += dy;
+  if ( fixposition)
+    return;
 
-    draw();
-    ctx->redraw_defered();
+  erase( &ctx->mw);
+  erase( &ctx->navw);
+  ctx->set_defered_redraw();
+  draw();
+  switch ( direction) {
+  case glow_eAlignDirection_CenterVert:
+    dx = x - (x_right + x_left) / 2;
+    dy = 0;
+    break;        
+  case glow_eAlignDirection_CenterHoriz:
+    dx = 0;
+    dy = y - (y_high + y_low) / 2;
+    break;        
+  case glow_eAlignDirection_CenterCenter:
+    dx = x - (x_right + x_left) / 2;
+    dy = y - (y_high + y_low) / 2;
+    break;        
+  case glow_eAlignDirection_Right:
+    dx = x - x_right;
+    dy = 0;
+    break;        
+  case glow_eAlignDirection_Left:
+    dx = x - x_left;
+    dy = 0;
+    break;        
+  case glow_eAlignDirection_Up:
+    dx = 0;
+    dy = y - y_high;
+    break;        
+  case glow_eAlignDirection_Down:
+    dx = 0;
+    dy = y - y_low;
+    break;        
+  }
+  trf.move( dx, dy);
+  x_right += dx;
+  x_left += dx;
+  y_high += dy;
+  y_low += dy;
+  
+  draw();
+  ctx->redraw_defered();
 }
 
 

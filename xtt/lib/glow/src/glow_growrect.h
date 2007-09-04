@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.h,v 1.7 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growrect.h,v 1.8 2007-09-04 07:23:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -285,6 +285,7 @@ class GrowRect : public GlowRect {
   int		disable_shadow;	//!< Disable shadow, even if parent node has shadow.
   int		invisible;	//!< Invisible if not highlighted.
   int		fixcolor;	//!< Color independent of node color.
+  int		fixposition;	//!< Can't be moved.
 
   //! Set user data.
   /*!

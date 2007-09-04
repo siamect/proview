@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growrect.cpp,v 1.9 2007-07-04 13:29:54 claes Exp $
+ * Proview   $Id: glow_growrect.cpp,v 1.10 2007-09-04 07:23:06 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,7 @@ GrowRect::GrowRect( GrowCtx *glow_ctx, char *name, double x, double y,
   original_fill_drawtype(fill_d_type), fill_drawtype(fill_d_type),
   border(display_border),
   dynamic(0), dynamicsize(0), shadow(display_shadow), shadow_width(5), relief(glow_eRelief_Up),
-  shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0)
+  shadow_contrast(2), disable_shadow(0), invisible(0), fixcolor(0), fixposition(0)
 { 
   strcpy( n_name, name);
   pzero.nav_zoom();
@@ -82,6 +82,8 @@ GrowRect::~GrowRect()
 
 void GrowRect::move( double delta_x, double delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   ctx->set_defered_redraw();
   ctx->draw( &ctx->mw, x_left * ctx->mw.zoom_factor_x - ctx->mw.offset_x - DRAW_MP,
 	     y_low * ctx->mw.zoom_factor_y - ctx->mw.offset_y - DRAW_MP,
@@ -127,6 +129,8 @@ void GrowRect::move( double delta_x, double delta_y, int grid)
 
 void GrowRect::move_noerase( int delta_x, int delta_y, int grid)
 {
+  if ( fixposition)
+    return;
   if ( grid)
   {
     double x_grid, y_grid;
@@ -278,6 +282,7 @@ void GrowRect::save( ofstream& fp, glow_eSaveMode mode)
   fp << int(glow_eSave_GrowRect_relief) << FSPACE << int(relief) << endl;
   fp << int(glow_eSave_GrowRect_invisible) << FSPACE << invisible << endl;
   fp << int(glow_eSave_GrowRect_fixcolor) << FSPACE << fixcolor << endl;
+  fp << int(glow_eSave_GrowRect_fixposition) << FSPACE << fixposition << endl;
   fp << int(glow_eSave_GrowRect_disable_shadow) << FSPACE << disable_shadow << endl;
   fp << int(glow_eSave_GrowRect_dynamicsize) << FSPACE << dynamicsize << endl;
   fp << int(glow_eSave_GrowRect_dynamic) << endl;
@@ -335,6 +340,7 @@ void GrowRect::open( ifstream& fp)
       case glow_eSave_GrowRect_disable_shadow: fp >> disable_shadow; break;
       case glow_eSave_GrowRect_invisible: fp >> invisible; break;
       case glow_eSave_GrowRect_fixcolor: fp >> fixcolor; break;
+      case glow_eSave_GrowRect_fixposition: fp >> fixposition; break;
       case glow_eSave_GrowRect_dynamicsize: fp >> dynamicsize; break;
       case glow_eSave_GrowRect_dynamic:
         fp.getline( dummy, sizeof(dummy));
@@ -937,6 +943,9 @@ int GrowRect::get_annot_background( GlowTransform *t, void *node,
 void GrowRect::align( double x, double y, glow_eAlignDirection direction)
 {
     double dx, dy;
+
+    if ( fixposition)
+      return;
 
     erase( &ctx->mw);
     erase( &ctx->navw);
