@@ -59,3 +59,4 @@
 070820 cs  glow      Problems with the three first colors of the palette as backgroundcolor fixed.
 070821 cs  xtt       Console log viewing last page when opened.
 070822 cs  glow      Bugfix in text drawing. Minimal text size could cause segfault.
+070904 cs  glow      Property Fix position added to rectangles and polylines.

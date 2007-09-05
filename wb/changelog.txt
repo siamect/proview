@@ -68,3 +68,5 @@
 070717 cs  plc       Select next object with Ctrl/Arrow keys. Expand/Compress object moved to Shift/Up and Shift/Down.
 070823 cs  nav       Mounted volumes wasn't displayed in the Ge plant navigator.
 070824 cs  wb        Bugfix in WbEnvironment object, only the first nine pathes were used.
+070827 cs  wtt       Objects in the navigator beneath a MountObject are viewed with classes from their dbs-file.
+070905 cs  utl       Bugfix in listdescriptor. Superclass attributes where not printed.
