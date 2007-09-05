@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.36 2007-05-28 09:23:49 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.37 2007-09-05 13:02:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -951,8 +951,12 @@ void wb_volume::aref(pwr_tCid cid, pwr_sAttrRef *arp)
     key.hostCid = 0;
     key.idx = 0;
     for (item = (merep_sClassAttr*) tree_FindSuccessor(&m_sts, catt_tt, &key);
-	  item && item->key.subCid == cid;
+	  item;
 	  item = (merep_sClassAttr*) tree_FindSuccessor(&m_sts, catt_tt, &item->key)) {
+      if ( item->key.subCid != cid) {
+	m_sts = LDH__CLASSLIST;
+	break;
+      }
       if (hostCid && item->key.hostCid == hostCid)
 	// Same class with other index
 	continue;
