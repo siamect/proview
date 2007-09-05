@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.3 2007-07-05 13:38:39 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.4 2007-09-05 08:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -8655,13 +8655,11 @@ static int utl_list_get_parvalue (
 	ldh_sParDef 	*bodydef;
 	int		rows;
 	char		body[20];	
-	char		parname[32];
+	pwr_tOName     	parname;
 	char		*object_par;
 	char		*object_element;
 	int		elements;
 	int		found;
-	char		upper_name[80];
-	char		inupper_name[80];
 	pwr_tBoolean	*p_Boolean;	
 	pwr_tFloat32	*p_Float32;
 	pwr_tFloat64	*p_Float64;
@@ -8733,11 +8731,9 @@ static int utl_list_get_parvalue (
 
 	    for ( j = 0; j < rows; j++)
 	    {
-	      /* Convert parname to upper case */
-	      utl_toupper( upper_name, bodydef[j].ParName);
-	      utl_toupper( inupper_name, parameter);
+	      cdh_SuppressSuper( parname, bodydef[j].ParName);
 
-	      if (strcmp( inupper_name, upper_name) == 0)
+	      if (cdh_NoCaseStrcmp( parameter, parname) == 0)
 	      {
 	        found = 1;
 	        break;
@@ -8753,7 +8749,7 @@ static int utl_list_get_parvalue (
 	    return FOE__NOPAR;
 	  }
 
-	  strcpy( parname, bodydef[j].ParName);
+	  // strcpy( parname, bodydef[j].ParName);
 
 	  if ( bodydef[j].Par->Output.Info.Flags & PWR_MASK_ARRAY )
 	    elements = bodydef[j].Par->Output.Info.Elements;
