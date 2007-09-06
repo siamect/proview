@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.h,v 1.4 2007-06-01 11:29:02 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.h,v 1.5 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@ class Nodelist {
   public:
     Nodelist( void *nodelist_parent_ctx,
 	      char *nodelist_name,
+	      int nodelist_mode,
 	      pwr_tStatus *status);
     virtual ~Nodelist();
 
@@ -50,6 +51,7 @@ class Nodelist {
     CoWow		*wow;
     MsgWindow		*msg_window;
     char		remote_gui[20];
+    int			mode;
 
     virtual void pop() {}
     virtual void set_clock_cursor() {}

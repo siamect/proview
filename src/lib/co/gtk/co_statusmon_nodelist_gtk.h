@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.4 2007-06-01 11:29:02 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.h,v 1.5 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,7 +34,7 @@ class NodelistGtk : public Nodelist {
   public:
     NodelistGtk( void *nodelist_parent_ctx,
 		 GtkWidget *nodelist_parent_wid,
-		 char *nodelist_name, int msgw_pop,
+		 char *nodelist_name, int nodelist_mode, int msgw_pop,
 		 pwr_tStatus *status);
     ~NodelistGtk();
 
@@ -72,6 +72,12 @@ class NodelistGtk : public Nodelist {
     static void activate_pop_events( GtkWidget *w, gpointer data);
     static void activate_gui_motif( GtkWidget *w, gpointer data);
     static void activate_gui_gtk( GtkWidget *w, gpointer data);
+    static void activate_mode_systemstatus( GtkWidget *w, gpointer data);
+    static void activate_mode_userstatus1( GtkWidget *w, gpointer data);
+    static void activate_mode_userstatus2( GtkWidget *w, gpointer data);
+    static void activate_mode_userstatus3( GtkWidget *w, gpointer data);
+    static void activate_mode_userstatus4( GtkWidget *w, gpointer data);
+    static void activate_mode_userstatus5( GtkWidget *w, gpointer data);
     static void activate_zoom_in( GtkWidget*w, gpointer data);
     static void activate_zoom_out( GtkWidget*w, gpointer data);
     static void activate_zoom_reset( GtkWidget*w, gpointer data);

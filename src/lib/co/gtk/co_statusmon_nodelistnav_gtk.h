@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav_gtk.h,v 1.1 2007-05-16 12:32:26 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav_gtk.h,v 1.2 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ class NodelistNavGtk : public NodelistNav {
 		    GtkWidget *nodelistnav_parent_wid,
 		    MsgWindow *nodelistnav_msg_window,
 		    char *nodelistnav_msg_nodename,
-		    int nodelist_msgw_pop,
+		    int nodelistnav_mode, int nodelist_msgw_pop,
 		    GtkWidget **w);
     ~NodelistNavGtk();
 

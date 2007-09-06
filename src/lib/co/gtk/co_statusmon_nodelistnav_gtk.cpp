@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav_gtk.cpp,v 1.3 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav_gtk.cpp,v 1.4 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,10 +42,11 @@ NodelistNavGtk::NodelistNavGtk( void *nodelist_parent_ctx,
 				GtkWidget *nodelist_parent_wid,
 				MsgWindow *nodelist_msg_window,
 				char *nodelist_nodename,
+				int nodelist_mode,
 				int nodelist_msgw_pop,
 				GtkWidget **w) :
   NodelistNav( nodelist_parent_ctx, nodelist_msg_window, nodelist_nodename,
-	       nodelist_msgw_pop), 
+	       nodelist_mode, nodelist_msgw_pop), 
   parent_wid(nodelist_parent_wid)
 {
   form_widget = scrolledbrowwidgetgtk_new( init_brow_cb, this, &brow_widget);

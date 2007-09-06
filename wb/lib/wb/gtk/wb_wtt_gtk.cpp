@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.15 2007-06-29 10:12:38 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.16 2007-09-06 11:22:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -891,7 +891,8 @@ void WttGtk::activate_statusmon( GtkWidget *w, gpointer data)
   Wtt *wtt = (Wtt *)data;
   pwr_tStatus sts;
   
-  Nodelist *nl = new NodelistGtk( wtt, ((WttGtk *)wtt)->toplevel, "Supervision Center", 0, &sts);
+  Nodelist *nl = new NodelistGtk( wtt, ((WttGtk *)wtt)->toplevel, "Supervision Center", 
+				  nodelist_eMode_SystemStatus, 0, &sts);
   nl->set_scantime(3);
   nl->help_cb = wtt_help_cb;
 }

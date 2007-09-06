@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.h,v 1.2 2007-05-21 14:20:58 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.h,v 1.3 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -53,6 +53,15 @@ using namespace std;
 class MsgWindow;
 
 typedef enum {
+  nodelist_eMode_SystemStatus,
+  nodelist_eMode_Status1,
+  nodelist_eMode_Status2,
+  nodelist_eMode_Status3,
+  nodelist_eMode_Status4,
+  nodelist_eMode_Status5
+} nodelist_eMode;
+
+typedef enum {
   nodelistnav_eItemType_Node,
   nodelistnav_eItemType_Attr,
   nodelistnav_eItemType_AttrSts,
@@ -86,12 +95,16 @@ class NodelistNavBrow {
 class NodeData {
  public:
   NodeData() :
-    SystemStatus(0), SystemTime(pwr_cNTime), BootTime(pwr_cNTime), RestartTime(pwr_cNTime),
+    CurrentStatus(0), SystemStatus(0), SystemTime(pwr_cNTime), 
+    BootTime(pwr_cNTime), RestartTime(pwr_cNTime),
     Restarts(0)
     { 
       strcpy( Description, "");
+      strcpy( CurrentStatusStr, "");
       strcpy( SystemStatusStr, "");
     }
+  pwr_tStatus		CurrentStatus;
+  char			CurrentStatusStr[120];
   pwr_tStatus		SystemStatus;
   char			SystemStatusStr[120];
   pwr_tString80		Description;
@@ -123,7 +136,8 @@ class NodelistNode {
 class NodelistNav {
  public:
   NodelistNav( void *ev_parent_ctx, MsgWindow *nodelistnav_msg_window,
-	       char *nodelistnav_nodename, int nodelistnav_msgw_pop);
+	       char *nodelistnav_nodename, int nodelistnav_mode, 
+	       int nodelistnav_msgw_pop);
   virtual ~NodelistNav();
 
   void 			*parent_ctx;
@@ -139,6 +153,7 @@ class NodelistNav {
   char			nodename[40];
   static const char 	config_file[40];
   int			msgw_pop;
+  int			mode;
 
   virtual void set_input_focus() {}
   virtual void trace_start() {}
@@ -146,6 +161,7 @@ class NodelistNav {
 
   void zoom( double zoom_factor);
   void unzoom();
+  void set_mode( int nodelist_mode);
   void set_nodraw();
   void reset_nodraw();
   void read();

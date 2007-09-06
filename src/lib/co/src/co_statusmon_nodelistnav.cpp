@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.4 2007-05-24 14:50:13 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.5 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@
 #include "flow_browapi.h"
 #include "co_statusmon_nodelistnav.h"
 #include "statussrv_utl.h"
+#include "rt_pwr_msg.h"
 
 #include "xnav_bitmap_leaf12.h"
 #include "xnav_bitmap_map12.h"
@@ -251,10 +252,12 @@ int NodelistNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   return 1;
 }
 
-NodelistNav::NodelistNav( void *nodelist_parent_ctx, MsgWindow *nodelistnav_msg_window, char *nodelistnav_nodename, int nodelistnav_msgw_pop) :
+NodelistNav::NodelistNav( void *nodelist_parent_ctx, MsgWindow *nodelistnav_msg_window, 
+			  char *nodelistnav_nodename, int nodelistnav_mode, int nodelistnav_msgw_pop) :
   parent_ctx(nodelist_parent_ctx),
   nodelist_size(0), trace_started(0), scantime(4000), first_scan(1),
-  msg_window(nodelistnav_msg_window), msgw_pop(nodelistnav_msgw_pop)
+  msg_window(nodelistnav_msg_window), msgw_pop(nodelistnav_msgw_pop),
+  mode(nodelistnav_mode)
 {
   if ( nodelistnav_nodename)
     strcpy( nodename, nodelistnav_nodename);
@@ -340,6 +343,11 @@ void NodelistNav::zoom( double zoom_factor)
 void NodelistNav::unzoom()
 {
   brow_UnZoom( brow->ctx);
+}
+
+void NodelistNav::set_mode( int nodelist_mode)
+{
+  mode = nodelist_mode;
 }
 
 void NodelistNav::set_nodraw()
@@ -814,6 +822,8 @@ int NodelistNav::update_nodes()
   pwr_tStatus sts;
   statussrv_sGetStatus response;
   int nodraw = 0;
+  pwr_tStatus current_status;
+  char current_status_str[120];
 
   for ( int i = 0; i < (int) node_list.size(); i++) {
     sts = statussrv_GetStatus( node_list[i].node_name, &response);
@@ -838,50 +848,63 @@ int NodelistNav::update_nodes()
       }
     }
 
-    if ( node_list[i].item->data.SystemStatus != response.SystemStatus) {
+    if ( EVEN(sts)) {
+      current_status = response.SystemStatus;
+      strncpy( current_status_str, response.SystemStatusStr, sizeof(current_status_str));
+    }
+    else {
+      switch ( mode) {
+      case nodelist_eMode_SystemStatus:
+	current_status = response.SystemStatus;
+	strncpy( current_status_str, response.SystemStatusStr, sizeof(current_status_str));
+	break;
+      case nodelist_eMode_Status1:
+	current_status = response.UserStatus[0];
+	strncpy( current_status_str, response.UserStatusStr[0], sizeof(current_status_str));
+	break;
+      case nodelist_eMode_Status2:
+	current_status = response.UserStatus[1];
+	strncpy( current_status_str, response.UserStatusStr[1], sizeof(current_status_str));
+	break;
+      case nodelist_eMode_Status3:
+	current_status = response.UserStatus[2];
+	strncpy( current_status_str, response.UserStatusStr[2], sizeof(current_status_str));
+	break;
+      case nodelist_eMode_Status4:
+	current_status = response.UserStatus[3];
+	strncpy( current_status_str, response.UserStatusStr[3], sizeof(current_status_str));
+	break;
+      case nodelist_eMode_Status5:
+	current_status = response.UserStatus[4];
+	strncpy( current_status_str, response.UserStatusStr[4], sizeof(current_status_str));
+	break;
+      }
+    }
+    if ( node_list[i].item->data.CurrentStatus != current_status) {
       // Change color
       if ( !nodraw) {
 	brow_SetNodraw( brow->ctx);
 	nodraw = 1;
       }
 
-      node_list[i].item->update_color( this, response.SystemStatus);
+      node_list[i].item->update_color( this, current_status);
 
       // Message if switch to error
       if ( !first_scan && ODD(sts)) {
-	message( response.SystemStatus, node_list[i].node_name, i, response.SystemStatusStr);
-
-#if 0
-	switch ( node_list[i].item->data.SystemStatus & 7) {
-	case 3:
-	case 1:
-	case 0: {
-	  switch ( response.SystemStatus & 7) {
-	  case 2:
-	  case 4: {
-	  // From Info or Warning to Error or Fatal
-	    char msg[200];
-	    
-	    sprintf( msg, "Error status on %s\n\n%s", node_list[i].node_name, 
-		     response.SystemStatusStr);
-	    wow->DisplayError( "System Status", msg);
-	    beep();
-	    break;
-	  }
-	  }
-	  break;
-	}
-	}
-#endif
+	message( current_status, node_list[i].node_name, i, current_status_str);
       }
-      else if ( EVEN(response.SystemStatus) && ODD(sts))
+      else if ( EVEN(current_status) && ODD(sts))
 	// Message even status first scan
-	message( response.SystemStatus, node_list[i].node_name, i, response.SystemStatusStr);
+	message( current_status, node_list[i].node_name, i, current_status_str);
     }
       
-    if ( strcmp( node_list[i].item->data.SystemStatusStr, response.SystemStatusStr) != 0)
-      brow_SetAnnotation( node_list[i].item->node, 2, response.SystemStatusStr, 
-			  strlen(response.SystemStatusStr));
+    if ( strcmp( node_list[i].item->data.CurrentStatusStr, current_status_str) != 0)
+      brow_SetAnnotation( node_list[i].item->node, 2, current_status_str, 
+			  strlen(current_status_str));
+
+    node_list[i].item->data.CurrentStatus = current_status;
+    strncpy( node_list[i].item->data.CurrentStatusStr, current_status_str, 
+	     sizeof(node_list[i].item->data.SystemStatusStr));
 
     node_list[i].item->data.SystemStatus = response.SystemStatus;
     strncpy( node_list[i].item->data.SystemStatusStr, response.SystemStatusStr, 

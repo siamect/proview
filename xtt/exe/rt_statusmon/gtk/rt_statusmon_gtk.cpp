@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statusmon_gtk.cpp,v 1.3 2007-05-21 14:26:54 claes Exp $
+ * Proview   $Id: rt_statusmon_gtk.cpp,v 1.4 2007-09-06 11:23:29 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,6 +40,7 @@ static void statusmon_close( void *ctx)
 int main( int argc, char *argv[])
 {
   int sts;
+  int mode = nodelist_eMode_SystemStatus;
 
   if ( argc > 1) {
     for ( int i = 1; i < argc; i++) {
@@ -47,12 +48,32 @@ int main( int argc, char *argv[])
 	usage();
 	exit(0);
       }
+      else if ( strcmp( argv[i], "-m") == 0) {
+	if ( argc == i) {
+	  usage();
+	  exit(0);
+	}
+	if ( strcmp( argv[i+1], "1") == 0)
+	  mode = nodelist_eMode_Status1;
+	else if ( strcmp( argv[i+1], "2") == 0)
+	  mode = nodelist_eMode_Status2;
+	else if ( strcmp( argv[i+1], "3") == 0)
+	  mode = nodelist_eMode_Status3;
+	else if ( strcmp( argv[i+1], "4") == 0)
+	  mode = nodelist_eMode_Status4;
+	else if ( strcmp( argv[i+1], "5") == 0)
+	  mode = nodelist_eMode_Status5;
+	else {
+	  usage();
+	  exit(0);
+	}
+      }
     }
   }
 
   gtk_init( &argc, &argv);
 
-  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", msgw_ePop_No, &sts);
+  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", mode, msgw_ePop_No, &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);
   

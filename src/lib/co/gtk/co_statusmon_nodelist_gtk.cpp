@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.5 2007-06-01 11:29:02 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist_gtk.cpp,v 1.6 2007-09-06 11:22:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,10 +50,10 @@ static void destroy_event( GtkWidget *w, gpointer data)
 
 NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
 			  GtkWidget *nodelist_parent_wid,
-			  char *nodelist_name, int msgw_pop,
-			  pwr_tStatus *status) :
-  Nodelist( nodelist_parent_ctx, nodelist_name, status), parent_wid(nodelist_parent_wid),
-  clock_cursor(0), india_widget(0)
+			  char *nodelist_name, int nodelist_mode, 
+			  int msgw_pop, pwr_tStatus *status) :
+  Nodelist( nodelist_parent_ctx, nodelist_name, nodelist_mode, status), 
+  parent_wid(nodelist_parent_wid), clock_cursor(0), india_widget(0)
 {
   pwr_tStatus sts;
 
@@ -148,6 +148,52 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
 			    GTK_WIDGET(view_gui_menu));
 
 
+  // Submenu Mode
+  GSList *mode_group = NULL;
+  GtkWidget *view_mode_systemstatus = gtk_radio_menu_item_new_with_mnemonic( mode_group, "_SystemStatus");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_systemstatus));
+  g_signal_connect( view_mode_systemstatus, "activate", 
+		    G_CALLBACK(activate_mode_systemstatus), this);
+
+  GtkWidget *view_mode_userstatus1 = gtk_radio_menu_item_new_with_mnemonic( mode_group, "UserStatus_1");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_userstatus1));
+  g_signal_connect( view_mode_userstatus1, "activate", 
+		    G_CALLBACK(activate_mode_userstatus1), this);
+
+  GtkWidget *view_mode_userstatus2 = gtk_radio_menu_item_new_with_mnemonic( mode_group, "UserStatus_2");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_userstatus2));
+  g_signal_connect( view_mode_userstatus2, "activate", 
+		    G_CALLBACK(activate_mode_userstatus2), this);
+
+  GtkWidget *view_mode_userstatus3 = gtk_radio_menu_item_new_with_mnemonic( mode_group, "UserStatus_3");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_userstatus3));
+  g_signal_connect( view_mode_userstatus3, "activate", 
+		    G_CALLBACK(activate_mode_userstatus3), this);
+
+  GtkWidget *view_mode_userstatus4 = gtk_radio_menu_item_new_with_mnemonic( mode_group, "UserStatus_4");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_userstatus4));
+  g_signal_connect( view_mode_userstatus4, "activate", 
+		    G_CALLBACK(activate_mode_userstatus4), this);
+
+  GtkWidget *view_mode_userstatus5 = gtk_radio_menu_item_new_with_mnemonic( mode_group, "UserStatus_5");
+  mode_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM(view_mode_userstatus5));
+  g_signal_connect( view_mode_userstatus5, "activate", 
+		    G_CALLBACK(activate_mode_userstatus5), this);
+
+
+  GtkWidget *view_mode = gtk_menu_item_new_with_mnemonic( "_Mode");
+  GtkMenu *view_mode_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_systemstatus);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_userstatus1);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_userstatus2);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_userstatus3);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_userstatus4);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_mode_menu), view_mode_userstatus5);
+
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(view_mode),
+			    GTK_WIDGET(view_mode_menu));
+
+
   GtkWidget *view_zoom_in = gtk_image_menu_item_new_with_mnemonic(CoWowGtk::translate_utf8("Zoom _In"));
   gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM(view_zoom_in), 
 				 gtk_image_new_from_stock( "gtk-zoom-in", GTK_ICON_SIZE_MENU));
@@ -171,6 +217,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_show_events);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_pop_events);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_gui);
+  gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_mode);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_in);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_out);
   gtk_menu_shell_append(GTK_MENU_SHELL(view_menu), view_zoom_reset);
@@ -199,7 +246,7 @@ NodelistGtk::NodelistGtk( void *nodelist_parent_ctx,
   msg_window->find_wnav_cb = find_node_cb;
   msg_window->msg( 'I', "Status Montitor started");
   
-  nodelistnav = new NodelistNavGtk( this, vbox, msg_window, 0, msgw_pop,
+  nodelistnav = new NodelistNavGtk( this, vbox, msg_window, 0, mode, msgw_pop,
 				    &nodelistnav_widget);
 
   // Toolbar
@@ -420,6 +467,60 @@ void NodelistGtk::activate_gui_gtk( GtkWidget *w, gpointer data)
 
   if ( set)
     strcpy( nodelist->remote_gui, "");
+}
+
+void NodelistGtk::activate_mode_systemstatus( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_SystemStatus);
+}
+
+void NodelistGtk::activate_mode_userstatus1( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_Status1);
+}
+
+void NodelistGtk::activate_mode_userstatus2( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_Status2);
+}
+
+void NodelistGtk::activate_mode_userstatus3( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_Status3);
+}
+
+void NodelistGtk::activate_mode_userstatus4( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_Status4);
+}
+
+void NodelistGtk::activate_mode_userstatus5( GtkWidget *w, gpointer data)
+{
+  Nodelist *nodelist = (Nodelist *)data;
+  int set = gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM(w)) ? 1 : 0;
+
+  if ( set)
+    nodelist->nodelistnav->set_mode( nodelist_eMode_Status5);
 }
 
 void NodelistGtk::activate_zoom_in( GtkWidget *w, gpointer data)
