@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statusmon_gtk.cpp,v 1.4 2007-09-06 11:23:29 claes Exp $
+ * Proview   $Id: rt_statusmon_gtk.cpp,v 1.5 2007-09-07 06:26:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -29,7 +29,11 @@
 
 static void usage()
 {
-  printf("\nUsage: rt_statusmonitor\n\n $HOME/rt_statusmon.dat : file with reqested nodes");
+  printf("\n\
+  Proview Status Monitor\n\n\
+  rt_statusmon [-m 'n']\n\n\
+  -m 'n'  Mode display UserStatus 'n', where 1 <= n <= 5.\n\
+  $HOME/rt_statusmon.dat : file with reqested nodes\n");
 }
 
 static void statusmon_close( void *ctx)
