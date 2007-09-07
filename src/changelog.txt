@@ -42,3 +42,4 @@
 070629 cs  doc       Subgraph documentation (Graphic Symbol Library) in xtthelp, pdf and html.
 070720 cs  co        Listwidgets: Doubleclick and Enter activates a row.
 070821 cs  convert   Template with includes inserted at structfile generation.
+070906 cs  statussrv Functionality to view userstatus added.

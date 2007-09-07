@@ -4063,7 +4063,7 @@ filen på 'pwrp_obj'.
 Ända skillnaden mellan å ena sidan Document och å andra sidan DocUser1 och 
 DocUser2 är att de senare objekten saknar PROVIEW logon. 
 
-Med pwr_plc kommandona: 
+Med pwrc kommandona: 
 
 document /repage -- sidnumreras Document objekten på formen x.y. Första 
 siffran anger PlcPgm inom PROVIEW-systemet och andra siffran anger 
@@ -8124,7 +8124,7 @@ Största tillåtna värde vid operatörsändring av Min.
 Beskriver innehåll i och utseende på enskild lista. 
 
 
-Hjälpprogrammet PWR_PLC innehåller olika funktioner för att operera på 
+Hjälpprogrammet pwrc innehåller olika funktioner för att operera på 
 arbetsbänken, t.ex för att skapa listor. En given lista innehåller namnet på de 
 objekt i arbetsbänken som uppfyller ett bestämt sökvillkor angivet i 
 ListDescriptor objekt. 
@@ -8133,25 +8133,23 @@ Information om olika av typer standardlistor finns PROVIEW/R Designer's
 Guide . De flesta standardlistor är sammansatta av flera listor, var och en 
 bestämd av sitt ListDescriptor objekt. 
 
-Genom att välja 'Utilities...' i Navigatörens Function-meny kan PWR_PLC 
-startas. Genom att därefter välja 'on pwr_plc' i Help-menyn i 'Utilities'-fönstret 
-erhålls bl. a. en sammanställning av aktuella kommandon. Hjälpprogrammet 
-PWR_PLC kan också startas direkt från DCL prompten: 
+Genom att välja 'Utilities...' i Navigatörens Function-meny kan pwrc 
+startas. Hjälpprogrammet pwrc kan också startas direkt från prompten: 
 
-> pwr_plc ... och hjälpprogrammet svarar med prompten: 
+> pwrc ... och hjälpprogrammet svarar med prompten: 
 
-pwr_plc > 
+pwrc > 
 
 PROVIEW/R distributionen levereras med några för-konfigurerade 
 ListDescriptor objekt (strukturer) för standardlistor. De återfinns i 
 Konfigurationseditorns 'Node Configuration' under hierarkin Layout-Lists. 
-Kommandon för att skapa listor, vare sig man kör PWR_PLC direkt eller 
+Kommandon för att skapa listor, vare sig man kör pwrc direkt eller 
 indirekt via 'Utilities'-fönstret, använder dessa för-konfigurerade ListDescriptor 
 objekt. 
 
 Om något för-konfigurerat ListDescriptor objekt ska ändras bör hierarki 
 objektet 'Lists' och hela hierarkin därunder först flyttas så att $System objektet 
-blir det nya förälder objektet istället för $Layout objektet. PWR_PLC 
+blir det nya förälder objektet istället för $Layout objektet. pwrc 
 programmet söker nämligen först efter objekt med namnet 'Lists', under 
 $System objektet och först om inget hittats fortsätter sökningen efter 'Lists' 
 under $Layout objektet. Dessutom, skulle vid nästa byte av PROVIEW/R 
@@ -15237,7 +15235,7 @@ en viss storhet ständigt antar visst värde.
 <attr>Modified 
 Då 'Save' väljs i motsvarande fönster fylls aktuell tid i av utvecklingsmiljön. På 
 så sätt kommer attributet att ange när fönstret senast sparades.
-Attributet används internt av hjälpprogrammet pwr_plc i bl. a. följande fall: 
+Attributet används internt av hjälpprogrammet pwrc i bl. a. följande fall: 
 
 Kommandot ShowModules i 'Utilities...' används för att visa när aktuella 
 fönster sparades resp. kompilerades. Därigenom är det möjligt att kontrollera 
@@ -15280,7 +15278,7 @@ raderas fönstrets alla objekt i rtdb liksom själva fönstret.
 <attr>Modified 
 Då 'Save' väljs i motsvarande fönster fylls aktuell tid i av utvecklingsmiljön. På 
 så sätt kommer attributet att ange när fönstret senast sparades.
-Attributet används internt av hjälpprogrammet pwr_plc i bl. a. följande fall: 
+Attributet används internt av hjälpprogrammet pwrc i bl. a. följande fall: 
 
 Kommandot ShowModules i 'Utilities...' används för att visa när aktuella 
 fönster sparades resp. kompilerades. Därigenom är det möjligt att kontrollera 

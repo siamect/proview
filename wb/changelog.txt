@@ -70,3 +70,4 @@
 070824 cs  wb        Bugfix in WbEnvironment object, only the first nine pathes were used.
 070827 cs  wtt       Objects in the navigator beneath a MountObject are viewed with classes from their dbs-file.
 070905 cs  utl       Bugfix in listdescriptor. Superclass attributes where not printed.
+070905 cs  wb        Bugfix in ldh_GetClassListAttrRef, success status was returned though list was empty.

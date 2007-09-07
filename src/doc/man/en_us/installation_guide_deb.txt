@@ -50,8 +50,14 @@ Update apt with the new packages
 
 > apt-get update
 
-Start aptitude, search the pwr44 package with '/pwr44', enter '+', 'g' and 'g' again to 
-start installation.
+Check that the packages are found
+
+> apt-cache search pwr
+pwr44 - Proview development and runtime environment package
+pwrdemo44 - Proview Demo Project package
+
+Install
+> apt-get install pwr44
 
 Getting started:
 
@@ -96,9 +102,13 @@ pwr44 V4.4.0
 
 Download:
 
-Download your selected debian-package and install it as:
+Download your selected debian-package and install with dpkg
 
 > dpkg -i pwrdemo44_4.4.0-x_i386.deb
+
+or install with apt (see section 1)
+
+> apt-get install pwrdemo44
 
 Getting started:
 
@@ -118,7 +128,10 @@ Start the operator environment with
 
 > rt_xtt -u op
 
-Press the 'PwrDemo' button in the operator window and
+Press the 'PwrDemo' button in the operator window.
+
+Stop and reset the environment with
+> . pwr_stop.sh
 
 
 

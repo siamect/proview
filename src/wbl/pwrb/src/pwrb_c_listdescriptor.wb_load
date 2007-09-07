@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_listdescriptor.wb_load,v 1.5 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_listdescriptor.wb_load,v 1.6 2007-09-07 06:25:49 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -24,7 +24,7 @@ SObject pwrb:Class
 !  @Summary Describes the contents and appearance of a single list.
 !  Describes the contents and appearance of a single list.
 !  
-!  The utility pwr_plc contains functions to handle the
+!  The utility pwrc contains functions to handle the
 !  work-bench database, e.g. to create lists, i.e. a set
 !  of object names in the work-bench database, which
 !  satisfies some searching criteria specified in
