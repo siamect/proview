@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ge_motif.cpp,v 1.1 2007-01-04 08:40:55 claes Exp $
+ * Proview   $Id: wb_ge_motif.cpp,v 1.2 2007-09-07 06:26:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -117,7 +117,6 @@ int main( int argc, char *argv[])
   CoXHelpMotif *xhelp = new CoXHelpMotif( mainwindow, 0, xhelp_eUtility_Wtt, (int *)&sts);
   CoXHelp::set_default( xhelp);
 
-  printf( "Argc: %d\n", argc);
   if ( argc > 1) {
 
     for ( i = 1; i < argc; i++) {

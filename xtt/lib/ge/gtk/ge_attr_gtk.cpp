@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attr_gtk.cpp,v 1.4 2007-03-27 08:28:28 claes Exp $
+ * Proview   $Id: ge_attr_gtk.cpp,v 1.5 2007-09-07 06:26:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -196,7 +196,6 @@ static gboolean attr_focus_in_event( GtkWidget *w, GdkEvent *event, gpointer dat
   AttrGtk *attr = (AttrGtk *)data;
   gboolean scrolledinput_visible;
   gboolean input_visible;
-  printf("Focus event\n");
 
   g_object_get( attr->cmd_scrolledinput, "visible", &scrolledinput_visible, NULL);
   g_object_get( attr->cmd_input, "visible", &input_visible, NULL);

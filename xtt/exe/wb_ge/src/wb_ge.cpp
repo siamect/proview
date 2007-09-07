@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ge.cpp,v 1.3 2007-01-04 08:40:48 claes Exp $
+ * Proview   $Id: wb_ge.cpp,v 1.4 2007-09-07 06:26:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,6 @@ int main( int argc, char *argv[])
   char wmg[80];
   pwr_tFileName file;
   
-  printf( "Argc: %d\n", argc);
   if ( argc > 1) {
 
     for ( i = 1; i < argc; i++) {
