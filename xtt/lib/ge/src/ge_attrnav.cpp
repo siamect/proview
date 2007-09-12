@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_attrnav.cpp,v 1.17 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_attrnav.cpp,v 1.18 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,6 +81,7 @@ static attrnav_sEnumElement elem_dyn_type[] = {
 	{ (int) ge_mDynType_Bar			, "Bar"},
 	{ (int) ge_mDynType_Trend		, "Trend"},
 	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType_XY_Curve		, "XY_Curve"},
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
@@ -112,6 +113,7 @@ static attrnav_sEnumElement elem_dyn_type_tone[] = {
 	{ (int) ge_mDynType_Bar			, "Bar"},
 	{ (int) ge_mDynType_Trend		, "Trend"},
 	{ (int) ge_mDynType_FastCurve		, "FastCurve"},
+	{ (int) ge_mDynType_XY_Curve		, "XY_Curve"},
 	{ (int) ge_mDynType_SliderBackground   	, "SliderBackground"},
 	{ (int) ge_mDynType_Video		, "Video"},
 	{ (int) ge_mDynType_Table		, "Table"},
@@ -903,6 +905,12 @@ static attrnav_sEnumElement elem_scale_type[] = {
 	{ (int) glow_eScaleType_Center, 	"Center"},
 	{ 0, ""}};
 
+static attrnav_sEnumElement elem_curve_datatype[] = {
+	{ (int) ge_eCurveDataType_XYArrays, 	"XYArrays"},
+	{ (int) ge_eCurveDataType_PointArray, 	"PointArray"},
+	{ (int) ge_eCurveDataType_TableObject, 	"TableObject"},
+	{ 0, ""}};
+
 static attrnav_sEnum enum_types[] = {
 	{ (int) glow_eType_Direction, 	(attrnav_sEnumElement *) &elem_direction},
 	{ (int) glow_eType_Color, 	(attrnav_sEnumElement *) &elem_color},
@@ -918,6 +926,7 @@ static attrnav_sEnum enum_types[] = {
 	{ (int) ge_eAttrType_ScaleType, (attrnav_sEnumElement *) &elem_scale_type},
 	{ (int) glow_eType_Adjustment, 	(attrnav_sEnumElement *) &elem_adjustment},
 	{ (int) glow_eType_Font, 	(attrnav_sEnumElement *) &elem_font},
+	{ (int) ge_eAttrType_CurveDataType, (attrnav_sEnumElement *) &elem_curve_datatype},
 	{ 0, NULL}};
 
 static attrnav_sEnum mask_types[] = {
@@ -988,6 +997,7 @@ int  attrnav_attr_string_to_value( int type_id, char *value_str,
     case ge_eAttrType_InstanceMask:
     case ge_eAttrType_InputFocus:
     case ge_eAttrType_ScaleType:
+    case ge_eAttrType_CurveDataType:
     {
       if ( sscanf( value_str, "%u", (int *)buffer_ptr) != 1)
         return ATTRNAV__INPUT_SYNTAX;
@@ -1064,6 +1074,7 @@ void  attrnav_attrvalue_to_string( int type_id, void *value_ptr,
     case ge_eAttrType_AnimSequence:
     case ge_eAttrType_LimitType:
     case ge_eAttrType_ScaleType:
+    case ge_eAttrType_CurveDataType:
     {
       attrnav_sEnumElement	*elem_p;
       attrnav_sEnum		*enum_p;
@@ -2123,6 +2134,7 @@ ItemLocal::ItemLocal( AttrNav *attrnav, char *item_name, char *attr,
     case ge_eAttrType_InstanceMask:
     case ge_eAttrType_InputFocus:
     case ge_eAttrType_ScaleType:
+    case ge_eAttrType_CurveDataType:
       if ( !noedit)
       {
         brow_SetAnnotPixmap( node, 0, attrnav->brow->pixmap_attrarray);

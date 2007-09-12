@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.33 2007-09-04 07:23:06 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.34 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1604,17 +1604,17 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       if ( (name = growapi_translate( transtab, "MaxValue1")))
       {
         strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->max_value[0];
+        attrinfo[i].value_p = &op->y_max_value[0];
         attrinfo[i].type = glow_eType_Double;
-        attrinfo[i++].size = sizeof( op->max_value[0]);
+        attrinfo[i++].size = sizeof( op->y_max_value[0]);
       }
 
       if ( (name = growapi_translate( transtab, "MinValue1")))
       {
         strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->min_value[0];
+        attrinfo[i].value_p = &op->y_min_value[0];
         attrinfo[i].type = glow_eType_Double;
-        attrinfo[i++].size = sizeof( op->min_value[0]);
+        attrinfo[i++].size = sizeof( op->y_min_value[0]);
       }
       
       if ( (name = growapi_translate( transtab, "CurveColor1")))
@@ -1636,17 +1636,17 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       if ( (name = growapi_translate( transtab, "MaxValue2")))
       {
         strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->max_value[1];
+        attrinfo[i].value_p = &op->y_max_value[1];
         attrinfo[i].type = glow_eType_Double;
-        attrinfo[i++].size = sizeof( op->max_value[1]);
+        attrinfo[i++].size = sizeof( op->y_max_value[1]);
       }
 
       if ( (name = growapi_translate( transtab, "MinValue2")))
       {
         strcpy( attrinfo[i].name, name);
-        attrinfo[i].value_p = &op->min_value[1];
+        attrinfo[i].value_p = &op->y_min_value[1];
         attrinfo[i].type = glow_eType_Double;
-        attrinfo[i++].size = sizeof( op->min_value[1]);
+        attrinfo[i++].size = sizeof( op->y_min_value[1]);
       }
       
       if ( (name = growapi_translate( transtab, "CurveColor2")))
@@ -3864,10 +3864,27 @@ void grow_SetBarRange( grow_tObject object, double min, double max)
   ((GrowBar *)object)->set_range( min, max);
 }
 
-void grow_SetTrendRange( grow_tObject object, int curve, 
+void grow_SetTrendRangeY( grow_tObject object, int curve, 
 	double min, double max)
 {
-  ((GrowTrend *)object)->set_range( curve, min, max);
+  ((GrowTrend *)object)->set_range_y( curve, min, max);
+}
+
+void grow_SetTrendXYRangeY( grow_tObject object, int curve, 
+	double min, double max)
+{
+  ((GrowTrend *)object)->set_xy_range_y( curve, min, max);
+}
+
+void grow_SetTrendXYRangeX( grow_tObject object, int curve, 
+	double min, double max)
+{
+  ((GrowTrend *)object)->set_xy_range_x( curve, min, max);
+}
+
+void grow_SetTrendXYNoOfCurves( grow_tObject object, int noofcurves)
+{
+  ((GrowTrend *)object)->set_xy_noofcurves( noofcurves);
 }
 
 void grow_SetTrendFillCurve( grow_tObject object, int fill)
@@ -4311,9 +4328,26 @@ void grow_InputFocusInitEvent( grow_tCtx ctx)
   ((GrowCtx *)ctx)->inputfocus_init_event();
 }
 
+int grow_GetTrendNoOfPoints( grow_tObject object)
+{
+  return ((GrowTrend *)object)->get_no_of_points();
+}
+
 void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points)
 {
  ((GrowTrend *)object)->set_data( data, data_curves, data_points);
+}
+
+void grow_SetTrendXYCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
+				glow_eDrawType fill_color)
+{
+  ((GrowTrend *)object)->set_xy_curve_color( curve, curve_color, fill_color);
+}
+
+void grow_SetTrendXYData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
+			  int data_points)
+{
+  ((GrowTrend *)object)->set_xy_data( y_data, x_data, curve_idx, data_points);
 }
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,

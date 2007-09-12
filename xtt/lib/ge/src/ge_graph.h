@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.28 2007-07-17 12:40:50 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.29 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,7 +75,8 @@ typedef enum {
   ge_eAttrType_InstanceMask    	= 1005,				//!< Instance mask.
   ge_eAttrType_InputFocus 	= 1006,				//!< Initial input focus mask.
   ge_eAttrType_Dyn	 	= 1007,				//!< Dynamic data.
-  ge_eAttrType_ScaleType      	= 1008				//!< Scale type.
+  ge_eAttrType_ScaleType      	= 1008,				//!< Scale type.
+  ge_eAttrType_CurveDataType   	= 1009				//!< Data type for XY_Curve.
 } ge_eAttrType;
 
 //! Graph mode.

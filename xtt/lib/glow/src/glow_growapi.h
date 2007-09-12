@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.27 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.28 2007-09-12 08:56:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2114,8 +2114,35 @@ extern "C" {
     \param min		Minimum value of range.
     \param max		Maximum value of range.
   */
-  void grow_SetTrendRange( grow_tObject object, int curve,
+  void grow_SetTrendRangeY( grow_tObject object, int curve,
 			   double min, double max);
+
+  //! Set the range of a xy curve object.
+  /*!
+    \param object	Trend object.
+    \param curve	Curve number.
+    \param min		Minimum value of range.
+    \param max		Maximum value of range.
+  */
+  void grow_SetTrendXYRangeY( grow_tObject object, int curve, 
+			      double min, double max);
+
+  //! Set the range of a xy curve object.
+  /*!
+    \param object	Trend object.
+    \param curve	Curve number.
+    \param min		Minimum value of range.
+    \param max		Maximum value of range.
+  */
+  void grow_SetTrendXYRangeX( grow_tObject object, int curve, 
+			      double min, double max);
+
+  //! Set number of curves a xy curve object.
+  /*!
+    \param object	Trend object.
+    \param noofcurve	Number of curves.
+  */
+  void grow_SetTrendXYNoOfCurves( grow_tObject object, int noofcurves);
 
   //! Get the scantime of a trend object.
   /*!
@@ -2792,6 +2819,8 @@ extern "C" {
   /*! \param ctx	Grow context. */
   void grow_InputFocusInitEvent( grow_tCtx ctx);
 
+  int grow_GetTrendNoOfPoints( grow_tObject object);
+
   //! Set fast curve data for a GrowTrend object.
   /*!
     \param object	GrowTrend object. 
@@ -2800,6 +2829,10 @@ extern "C" {
     \param data_points	Number of points in each curve.
   */
   void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points);
+  void grow_SetTrendXYCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
+				  glow_eDrawType fill_color);
+  void grow_SetTrendXYData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
+			    int data_points);
 
   //! Get text size and color for an annotation.
   /*!

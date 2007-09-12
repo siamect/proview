@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.23 2007-09-04 07:23:06 claes Exp $
+ * Proview   $Id: glow.h,v 1.24 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -341,6 +341,12 @@ typedef enum {
   glow_eRelief_Up,   //!< The shadow is lighter on the left-upper side, and darker on the right-lower side  
   glow_eRelief_Down  //!< The shadow is darker on the left-upper side, and lighter on the left-lower side
 } glow_eRelief;
+
+//! Trend modes
+typedef enum {
+  glow_eTrendMode_Trend,  	//!< Trend with time x-axis
+  glow_eTrendMode_XY_Curve     	//!< Curve of (x,y) points
+} glow_eTrendMode;
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
@@ -1398,8 +1404,8 @@ typedef enum {
 	glow_eSave_GrowBar_cycle		= 3121,
 	glow_eSave_GrowBar_ref_object		= 3122,
 	glow_eSave_GrowBar_userdata_cb		= 3123,
-	glow_eSave_GrowTrend_max_value_0 	= 3200,
-	glow_eSave_GrowTrend_min_value_0 	= 3201,
+	glow_eSave_GrowTrend_y_max_value_0 	= 3200,
+	glow_eSave_GrowTrend_y_min_value_0 	= 3201,
 	glow_eSave_GrowTrend_curve_drawtype_0 	= 3202,
 	glow_eSave_GrowTrend_rect_part 		= 3203,
 	glow_eSave_GrowTrend_trace_data1	= 3204,
@@ -1413,8 +1419,8 @@ typedef enum {
 	glow_eSave_GrowTrend_no_of_points 	= 3212,
 	glow_eSave_GrowTrend_curve_width 	= 3213,
 	glow_eSave_GrowTrend_scan_time 		= 3214,
-	glow_eSave_GrowTrend_max_value_1 	= 3215,
-	glow_eSave_GrowTrend_min_value_1 	= 3216,
+	glow_eSave_GrowTrend_y_max_value_1 	= 3215,
+	glow_eSave_GrowTrend_y_min_value_1 	= 3216,
 	glow_eSave_GrowTrend_curve_drawtype_1 	= 3217,
 	glow_eSave_GrowTrend_curve_fill_drawtype_1 = 3218,
 	glow_eSave_GrowTrend_trace_data3	= 3219,
@@ -1429,6 +1435,11 @@ typedef enum {
 	glow_eSave_GrowTrend_cycle		= 3228,
 	glow_eSave_GrowTrend_ref_object		= 3229,
 	glow_eSave_GrowTrend_userdata_cb	= 3230,
+	glow_eSave_GrowTrend_x_max_value_0 	= 3231,
+	glow_eSave_GrowTrend_x_min_value_0 	= 3232,
+	glow_eSave_GrowTrend_x_max_value_1 	= 3233,
+	glow_eSave_GrowTrend_x_min_value_1 	= 3234,
+	glow_eSave_GrowTrend_mode 		= 3235,
 	glow_eSave_GrowSlider_grownode_part	= 3300,
 	glow_eSave_GrowSlider_direction		= 3301,
 	glow_eSave_GrowSlider_max_value		= 3302,
@@ -1906,8 +1917,11 @@ typedef struct {
 
 //! Data for a GrowTrend object
 typedef struct {
-  double		max_value[TREND_MAX_CURVES];
-  double		min_value[TREND_MAX_CURVES];
+  glow_eTrendMode	mode;
+  double		y_max_value[TREND_MAX_CURVES];
+  double		y_min_value[TREND_MAX_CURVES];
+  double		x_max_value[TREND_MAX_CURVES];
+  double		x_min_value[TREND_MAX_CURVES];
   double		scan_time;
   int			horizontal_lines;
   int			vertical_lines;

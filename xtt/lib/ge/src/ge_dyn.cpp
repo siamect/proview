@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.52 2007-06-29 09:46:26 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.53 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,8 @@
 // Until xtt_menu.h i unavailable...
 #define xmenu_mUtility_Ge        (1 << 5)
 #define xmenu_eItemType_Object   1
+
+static int pdummy;
 
 static int dyn_get_typeid( char *format)
 {
@@ -195,6 +197,8 @@ GeDyn::GeDyn( const GeDyn& x) :
       e = new GeHostObject((const GeHostObject&) *elem); break;
     case ge_mDynType_DigSound:
       e = new GeDigSound((const GeDigSound&) *elem); break;
+    case ge_mDynType_XY_Curve:
+      e = new GeXY_Curve((const GeXY_Curve&) *elem); break;
     default: ;
     }
     switch( elem->action_type) {
@@ -306,6 +310,7 @@ void GeDyn::open( ifstream& fp)
       case ge_eSave_StatusColor: e = (GeDynElem *) new GeStatusColor(this); break;
       case ge_eSave_HostObject: e = (GeDynElem *) new GeHostObject(this); break;
       case ge_eSave_DigSound: e = (GeDynElem *) new GeDigSound(this); break;
+      case ge_eSave_XY_Curve: e = (GeDynElem *) new GeXY_Curve(this); break;
       case ge_eSave_PopupMenu: e = (GeDynElem *) new GePopupMenu(this); break;
       case ge_eSave_SetDig: e = (GeDynElem *) new GeSetDig(this); break;
       case ge_eSave_ResetDig: e = (GeDynElem *) new GeResetDig(this); break;
@@ -444,10 +449,11 @@ void GeDyn::get_attributes( grow_tObject object, attr_sItem *itemlist, int *item
     if ( total_dyn_type & ge_mDynType_Bar ||
 	 total_dyn_type & ge_mDynType_Trend ||
 	 total_dyn_type & ge_mDynType_Table ||
-	 total_dyn_type & ge_mDynType_FastCurve)
+	 total_dyn_type & ge_mDynType_FastCurve ||
+	 total_dyn_type & ge_mDynType_XY_Curve)
       attrinfo[i].noedit = 1;
     attrinfo[i].mask = ~(ge_mDynType_Bar | ge_mDynType_Trend | ge_mDynType_Table | 
-			 ge_mDynType_FastCurve | ge_mDynType_SliderBackground);
+			 ge_mDynType_FastCurve | ge_mDynType_XY_Curve | ge_mDynType_SliderBackground);
     attrinfo[i++].size = sizeof( dyn_type);
   }
   else {
@@ -1024,6 +1030,9 @@ GeDynElem *GeDyn::create_dyn_element( int mask, int instance)
   case ge_mDynType_DigSound:
     e = (GeDynElem *) new GeDigSound(this, (ge_mInstance)instance);
     break;
+  case ge_mDynType_XY_Curve:
+    e = (GeDynElem *) new GeXY_Curve(this, (ge_mInstance)instance);
+    break;
   default: ;
   }
   return e;
@@ -1153,6 +1162,9 @@ GeDynElem *GeDyn::copy_element( GeDynElem& x)
       break;
     case ge_mDynType_Trend:
       e = (GeDynElem *) new GeTrend((GeTrend&) x);
+      break;
+    case ge_mDynType_XY_Curve:
+      e = (GeDynElem *) new GeXY_Curve((GeXY_Curve&) x);
       break;
     case ge_mDynType_FillLevel:
       e = (GeDynElem *) new GeFillLevel((GeFillLevel&) x);
@@ -5992,7 +6004,7 @@ int GeTrend::scan( grow_tObject object)
        ( *max_value1_p != old_max_value1 ||
 	 *min_value1_p != old_min_value1)) {
     if ( fabsf( *max_value1_p - *min_value1_p) > FLT_EPSILON) {
-      grow_SetTrendRange( object, 0, double(*min_value1_p), 
+      grow_SetTrendRangeY( object, 0, double(*min_value1_p), 
 		double(*max_value1_p));
     }
     old_min_value1 = *min_value1_p;
@@ -6003,7 +6015,7 @@ int GeTrend::scan( grow_tObject object)
        ( *max_value2_p != old_max_value2 ||
 	 *min_value2_p != old_min_value2)) {
     if ( fabsf( *max_value2_p - *min_value2_p) > FLT_EPSILON) {
-      grow_SetTrendRange( object, 1, double(*min_value2_p), 
+      grow_SetTrendRangeY( object, 1, double(*min_value2_p), 
 		double(*max_value2_p));
     }
     old_min_value2 = *min_value2_p;
@@ -6053,6 +6065,696 @@ int GeTrend::scan( grow_tObject object)
   }
   return 1;
 }
+
+// XY_Curve
+void GeXY_Curve::get_attributes( attr_sItem *attrinfo, int *item_count)
+{
+  int i = *item_count;
+
+  if ( instance == ge_mInstance_1) {
+    strcpy( attrinfo[i].name, "XY_Curve.DataType");
+    attrinfo[i].value = &datatype;
+    attrinfo[i].type = ge_eAttrType_CurveDataType;
+    attrinfo[i++].size = sizeof( datatype);
+
+    strcpy( attrinfo[i].name, "XY_Curve.XAttr");
+    attrinfo[i].value = x_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.YAttr");
+    attrinfo[i].value = y_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.UpdateAttr");
+    attrinfo[i].value = update_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( update_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.XMinValue");
+    attrinfo[i].value = &x_min_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( x_min_value);
+
+    strcpy( attrinfo[i].name, "XY_Curve.XMaxValue");
+    attrinfo[i].value = &x_max_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( x_max_value);
+
+    strcpy( attrinfo[i].name, "XY_Curve.YMinValue");
+    attrinfo[i].value = &y_min_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( y_min_value);
+
+    strcpy( attrinfo[i].name, "XY_Curve.YMaxValue");
+    attrinfo[i].value = &y_max_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( y_max_value);
+
+    strcpy( attrinfo[i].name, "XY_Curve.XMinValueAttr");
+    attrinfo[i].value = x_minvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_minvalue_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.XMaxValueAttr");
+    attrinfo[i].value = x_maxvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_maxvalue_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.YMinValueAttr");
+    attrinfo[i].value = y_minvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_minvalue_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.YMaxValueAttr");
+    attrinfo[i].value = y_maxvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_maxvalue_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.NoOfPointsAttr");
+    attrinfo[i].value = noofpoints_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( noofpoints_attr);
+
+    strcpy( attrinfo[i].name, "XY_Curve.CurveColor");
+    attrinfo[i].value = &curve_color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( curve_color);
+
+    strcpy( attrinfo[i].name, "XY_Curve.FillColor");
+    attrinfo[i].value = &fill_color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( fill_color);
+
+    strcpy( attrinfo[i].name, "XY_Curve.Instances");
+    attrinfo[i].value = &instance_mask;
+    attrinfo[i].type = ge_eAttrType_InstanceMask;
+    attrinfo[i].mask = 1023;
+    attrinfo[i++].size = sizeof( instance_mask);
+  }
+  else {
+    // Get instance number
+    int inst = 1;
+    unsigned int m = instance;
+    while( m > 1) {
+      m = m >> 1;
+      inst++;
+    }
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.DataType", inst);
+    attrinfo[i].value = &datatype;
+    attrinfo[i].type = ge_eAttrType_CurveDataType;
+    attrinfo[i++].size = sizeof( datatype);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.XAttr", inst);
+    attrinfo[i].value = x_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.YAttr", inst);
+    attrinfo[i].value = y_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.UpdateAttr", inst);
+    attrinfo[i].value = update_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( update_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.XMinValue", inst);
+    attrinfo[i].value = &x_min_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( x_min_value);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.XMaxValue", inst);
+    attrinfo[i].value = &x_max_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( x_max_value);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.YMinValue", inst);
+    attrinfo[i].value = &y_min_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( y_min_value);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.YMaxValue", inst);
+    attrinfo[i].value = &y_max_value;
+    attrinfo[i].type = glow_eType_Double;
+    attrinfo[i++].size = sizeof( y_max_value);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.XMinValueAttr", inst);
+    attrinfo[i].value = x_minvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_minvalue_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.XMaxValueAttr", inst);
+    attrinfo[i].value = x_maxvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( x_maxvalue_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.YMinValueAttr", inst);
+    attrinfo[i].value = y_minvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_minvalue_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.YMaxValueAttr", inst);
+    attrinfo[i].value = y_maxvalue_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( y_maxvalue_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.NoOfPointsAttr", inst);
+    attrinfo[i].value = noofpoints_attr;
+    attrinfo[i].type = glow_eType_String;
+    attrinfo[i++].size = sizeof( noofpoints_attr);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.CurveColor", inst);
+    attrinfo[i].value = &curve_color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( curve_color);
+
+    sprintf( attrinfo[i].name, "XY_Curve%d.FillColor", inst);
+    attrinfo[i].value = &fill_color;
+    attrinfo[i].type = glow_eType_Color;
+    attrinfo[i++].size = sizeof( fill_color);
+
+  }
+  *item_count = i;
+}
+
+void GeXY_Curve::set_attribute( grow_tObject object, char *attr_name, int *cnt)
+{
+  (*cnt)--;
+  if ( *cnt == 0) {
+    char msg[200];
+
+    strncpy( x_attr, attr_name, sizeof( x_attr));
+    sprintf( msg, "XY_Curve.XAttr = %s", attr_name);
+    dyn->graph->message( 'I', msg);
+  }
+  else if ( *cnt == 1) {
+    char msg[200];
+
+    strncpy( y_attr, attr_name, sizeof( y_attr));
+    sprintf( msg, "XY_Curve.YAttr = %s", attr_name);
+    dyn->graph->message( 'I', msg);
+    (*cnt)--;
+  }
+}
+
+void GeXY_Curve::replace_attribute( char *from, char *to, int *cnt, int strict)
+{
+  GeDyn::replace_attribute( x_attr, sizeof(x_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( y_attr, sizeof(y_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( update_attr, sizeof(update_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( noofpoints_attr, sizeof(noofpoints_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( y_minvalue_attr, sizeof(y_minvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( y_maxvalue_attr, sizeof(y_maxvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( x_minvalue_attr, sizeof(x_minvalue_attr), from, to, cnt, strict);
+  GeDyn::replace_attribute( x_maxvalue_attr, sizeof(x_maxvalue_attr), from, to, cnt, strict);
+}
+
+void GeXY_Curve::save( ofstream& fp)
+{
+  fp << int(ge_eSave_XY_Curve) << endl;
+  fp << int(ge_eSave_XY_Curve_x_attr) << FSPACE << x_attr << endl;
+  fp << int(ge_eSave_XY_Curve_y_attr) << FSPACE << y_attr << endl;
+  fp << int(ge_eSave_XY_Curve_y_minvalue_attr) << FSPACE << y_minvalue_attr << endl;
+  fp << int(ge_eSave_XY_Curve_y_maxvalue_attr) << FSPACE << y_maxvalue_attr << endl;
+  fp << int(ge_eSave_XY_Curve_x_minvalue_attr) << FSPACE << x_minvalue_attr << endl;
+  fp << int(ge_eSave_XY_Curve_x_maxvalue_attr) << FSPACE << x_maxvalue_attr << endl;
+  fp << int(ge_eSave_XY_Curve_noofpoints_attr) << FSPACE << noofpoints_attr << endl;
+  fp << int(ge_eSave_XY_Curve_update_attr) << FSPACE << update_attr << endl;
+  fp << int(ge_eSave_XY_Curve_y_min_value) << FSPACE << y_min_value << endl;
+  fp << int(ge_eSave_XY_Curve_y_max_value) << FSPACE << y_max_value << endl;
+  fp << int(ge_eSave_XY_Curve_x_min_value) << FSPACE << x_min_value << endl;
+  fp << int(ge_eSave_XY_Curve_x_max_value) << FSPACE << x_max_value << endl;
+  fp << int(ge_eSave_XY_Curve_datatype) << FSPACE << datatype << endl;
+  fp << int(ge_eSave_XY_Curve_instance) << FSPACE << int(instance) << endl;
+  fp << int(ge_eSave_XY_Curve_instance_mask) << FSPACE << int(instance_mask) << endl;
+  fp << int(ge_eSave_XY_Curve_curve_color) << FSPACE << int(curve_color) << endl;
+  fp << int(ge_eSave_XY_Curve_fill_color) << FSPACE << int(fill_color) << endl;
+  fp << int(ge_eSave_End) << endl;
+}
+
+void GeXY_Curve::open( ifstream& fp)
+{
+  int		type;
+  int 		end_found = 0;
+  int		tmp;
+  char		dummy[40];
+
+  for (;;)
+  {
+    fp >> type;
+    switch( type) {
+      case ge_eSave_XY_Curve: break;
+      case ge_eSave_XY_Curve_x_attr:
+        fp.get();
+        fp.getline( x_attr, sizeof(x_attr));
+        break;
+      case ge_eSave_XY_Curve_y_attr:
+        fp.get();
+        fp.getline( y_attr, sizeof(y_attr));
+        break;
+      case ge_eSave_XY_Curve_y_minvalue_attr:
+        fp.get();
+        fp.getline( y_minvalue_attr, sizeof(y_minvalue_attr));
+        break;
+      case ge_eSave_XY_Curve_y_maxvalue_attr:
+        fp.get();
+        fp.getline( y_maxvalue_attr, sizeof(y_maxvalue_attr));
+        break;
+      case ge_eSave_XY_Curve_x_minvalue_attr:
+        fp.get();
+        fp.getline( x_minvalue_attr, sizeof(x_minvalue_attr));
+        break;
+      case ge_eSave_XY_Curve_x_maxvalue_attr:
+        fp.get();
+        fp.getline( x_maxvalue_attr, sizeof(x_maxvalue_attr));
+        break;
+      case ge_eSave_XY_Curve_noofpoints_attr:
+        fp.get();
+        fp.getline( noofpoints_attr, sizeof(noofpoints_attr));
+        break;
+      case ge_eSave_XY_Curve_update_attr:
+        fp.get();
+        fp.getline( update_attr, sizeof(update_attr));
+        break;
+      case ge_eSave_XY_Curve_y_min_value: fp >> y_min_value; break;
+      case ge_eSave_XY_Curve_y_max_value: fp >> y_max_value; break;
+      case ge_eSave_XY_Curve_x_min_value: fp >> x_min_value; break;
+      case ge_eSave_XY_Curve_x_max_value: fp >> x_max_value; break;
+      case ge_eSave_XY_Curve_datatype: fp >> datatype; break;
+      case ge_eSave_XY_Curve_instance: fp >> tmp; instance = (ge_mInstance)tmp; break;
+      case ge_eSave_XY_Curve_instance_mask: fp >> tmp; instance_mask = (ge_mInstance)tmp; break;
+      case ge_eSave_XY_Curve_curve_color: fp >> tmp; curve_color = (glow_eDrawType)tmp; break;
+      case ge_eSave_XY_Curve_fill_color: fp >> tmp; fill_color = (glow_eDrawType)tmp; break;
+      case ge_eSave_End: end_found = 1; break;
+      default:
+        cout << "GeXY_Curve:open syntax error" << endl;
+        fp.getline( dummy, sizeof(dummy));
+    }
+    if ( end_found)
+      break;
+  }
+}
+
+int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
+{
+  int		attr_type, attr_size;
+  pwr_tAName   	parsed_name;
+  int		sts;
+  int		inverted;
+
+  update_p = 0;
+  dyn->parse_attr_name( update_attr, parsed_name,
+				    &inverted, &attr_type, &attr_size);
+  if ( strcmp( parsed_name,"") != 0) {
+
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&update_p, 
+				       &update_subid, attr_size);
+    if ( EVEN(sts)) return sts;
+  }
+
+  noofpoints_p = 0;
+  dyn->parse_attr_name( noofpoints_attr, parsed_name,
+			&inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       (attr_type == pwr_eType_Int32 || attr_type == pwr_eType_UInt32)) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&noofpoints_p, 
+				       &noofpoints_subid, attr_size);
+  }
+
+  x_min_value_p = 0;
+  dyn->parse_attr_name( x_minvalue_attr, parsed_name,
+			&inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_min_value_p, 
+				       &x_min_value_subid, attr_size);
+  }
+  x_max_value_p = 0;
+  dyn->parse_attr_name( x_maxvalue_attr, parsed_name,
+			&inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&x_max_value_p, 
+				       &x_max_value_subid, attr_size);
+  }
+
+  y_min_value_p = 0;
+  dyn->parse_attr_name( y_minvalue_attr, parsed_name,
+			&inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_min_value_p, 
+				       &y_min_value_subid, attr_size);
+  }
+  y_max_value_p = 0;
+  dyn->parse_attr_name( y_maxvalue_attr, parsed_name,
+			&inverted, &attr_type, &attr_size);
+  if ( strcmp(parsed_name, "") != 0 && 
+       attr_type == pwr_eType_Float32) {
+    sts = dyn->graph->ref_object_info( dyn->cycle, parsed_name, (void **)&y_max_value_p, 
+				       &y_max_value_subid, attr_size);
+  }
+
+  if ( update_p)
+    trace_data->p = update_p;
+  else
+    trace_data->p = &pdummy;
+  first_scan = true;
+
+  // Get curve number
+  curve_number = 0;
+  unsigned int m = instance;
+  while( m) {
+    m = m >> 1;
+    curve_number++;
+  }
+
+  // Get number of curves
+  if ( instance == ge_mInstance_1) {
+    unsigned int m = instance_mask;
+    int noofcurves = 0;
+    while( m) {
+      m = m >> 1;
+      noofcurves++;
+    }
+    grow_SetTrendXYNoOfCurves( object, noofcurves);
+  }
+
+  // Set default colors
+  if ( curve_color == glow_eDrawType_Inherit) {
+    switch ( instance) {
+    case ge_mInstance_1:
+      curve_color = glow_eDrawType_Color145; // OrangeHigh5
+      break;
+    case ge_mInstance_2:
+      curve_color = glow_eDrawType_Color295; // GreenHigh5
+      break;
+    case ge_mInstance_3:
+      curve_color = glow_eDrawType_Color235; // BlueHigh5
+      break;
+    case ge_mInstance_4:
+      curve_color = glow_eDrawType_Color115; // YellowHigh5
+      break;
+    case ge_mInstance_5:
+      curve_color = glow_eDrawType_Color175; // RedHigh5
+      break;
+    case ge_mInstance_6:
+      curve_color = glow_eDrawType_Color205; // MagentaHigh5
+      break;
+    case ge_mInstance_7:
+      curve_color = glow_eDrawType_Color85; // YellowGreenHigh5
+      break;
+    case ge_mInstance_8:
+      curve_color = glow_eDrawType_Color265; // SeaBlueHigh5
+      break;
+    default: ;
+    }
+  }
+  if ( fill_color == glow_eDrawType_Inherit) {
+    switch ( instance) {
+    case ge_mInstance_1:
+      fill_color = glow_eDrawType_Color139; // OrangeMedium9
+      break;
+    case ge_mInstance_2:
+      fill_color = glow_eDrawType_Color289; // GreenMedium9
+      break;
+    case ge_mInstance_3:
+      fill_color = glow_eDrawType_Color229; // BlueMedium9
+      break;
+    case ge_mInstance_4:
+      fill_color = glow_eDrawType_Color109; // YellowMedium9
+      break;
+    case ge_mInstance_5:
+      fill_color = glow_eDrawType_Color169; // RedMedium9
+      break;
+    case ge_mInstance_6:
+      fill_color = glow_eDrawType_Color199; // MagentaMedium9
+      break;
+    case ge_mInstance_7:
+      fill_color = glow_eDrawType_Color79; // YellowGreenMedium9
+      break;
+    case ge_mInstance_8:
+      fill_color = glow_eDrawType_Color259; // SeaBlueMedium9
+      break;
+    default: ;
+    }
+  }
+  grow_SetTrendXYCurveColor( object, curve_number - 1, curve_color, fill_color);
+  noofpoints = grow_GetTrendNoOfPoints( object);
+
+  return 1;
+}
+
+int GeXY_Curve::disconnect( grow_tObject object)
+{
+  if ( update_p) {
+    gdh_UnrefObjectInfo( update_subid);
+    update_p = 0;
+  }
+  if ( noofpoints_p) {
+    gdh_UnrefObjectInfo( noofpoints_subid);
+    noofpoints_p = 0;
+  }
+  if ( x_min_value_p) {
+    gdh_UnrefObjectInfo( x_min_value_subid);
+    x_min_value_p = 0;
+  }
+  if ( x_max_value_p) {
+    gdh_UnrefObjectInfo( x_max_value_subid);
+    x_max_value_p = 0;
+  }
+  if ( y_min_value_p) {
+    gdh_UnrefObjectInfo( y_min_value_subid);
+    y_min_value_p = 0;
+  }
+  if ( y_max_value_p) {
+    gdh_UnrefObjectInfo( y_max_value_subid);
+    y_max_value_p = 0;
+  }
+  return 1;
+}
+
+int GeXY_Curve::scan( grow_tObject object)
+{
+  bool redraw = false;
+
+  if ( !update_p)
+    // Update every scan...
+    redraw = true;
+
+  if ( first_scan && !(x_max_value_p && x_min_value_p) &&
+       fabsf( x_max_value - x_min_value) > FLT_EPSILON)
+    grow_SetTrendXYRangeX( object, curve_number - 1, x_min_value, x_max_value);
+  if ( first_scan && !(y_max_value_p && y_min_value_p) &&
+       fabsf( y_max_value - y_min_value) > FLT_EPSILON)
+    grow_SetTrendXYRangeY( object, curve_number - 1, y_min_value, y_max_value);
+
+  if ( x_max_value_p && x_min_value_p && 
+       ( *x_max_value_p != old_x_max_value ||
+	 *x_min_value_p != old_x_min_value)) {
+    if ( fabsf( *x_max_value_p - *x_min_value_p) > FLT_EPSILON) {
+      grow_SetTrendXYRangeX( object, curve_number - 1, double(*x_min_value_p), 
+		double(*x_max_value_p));
+      redraw = true;
+    }
+    old_x_min_value = *x_min_value_p;
+    old_x_max_value = *x_max_value_p;
+  }      
+
+  if ( y_max_value_p && y_min_value_p && 
+       ( *y_max_value_p != old_y_max_value ||
+	 *y_min_value_p != old_y_min_value)) {
+    if ( fabsf( *y_max_value_p - *y_min_value_p) > FLT_EPSILON) {
+      grow_SetTrendXYRangeY( object, curve_number - 1, double(*y_min_value_p), 
+		double(*y_max_value_p));
+      redraw = true;
+    }
+    old_y_min_value = *y_min_value_p;
+    old_y_max_value = *y_max_value_p;
+  }      
+
+  if ( noofpoints_p && *noofpoints_p != old_noofpoints) {
+    redraw = true;
+    old_noofpoints = *noofpoints_p;
+  }
+
+  if ( update_p) {
+    if ( *update_p && !old_update)
+      redraw = true;
+    old_update = *update_p;
+  }
+
+  if ( first_scan || redraw) {
+    int		attr_type_x;
+    int		attr_type_y;
+    int		attr_size;
+    pwr_tAName  parsed_name;
+    int		sts;
+    int		inverted;
+    void 	*x_value = 0;
+    void 	*y_value = 0;
+    double 	*x_trendvalue;
+    double 	*y_trendvalue;
+    int 	no_of_points;
+
+    if ( noofpoints_p)
+      no_of_points = MIN( noofpoints, *noofpoints_p);
+    else
+      no_of_points = noofpoints;
+
+    dyn->parse_attr_name( x_attr, parsed_name,
+			  &inverted, &attr_type_x, &attr_size);
+    x_value = calloc( no_of_points, attr_size);
+    sts = gdh_GetObjectInfo( parsed_name, x_value, attr_size);
+    if ( EVEN(sts)) return 1;
+
+    switch ( datatype) {
+    case ge_eCurveDataType_XYArrays:
+      dyn->parse_attr_name( y_attr, parsed_name,
+			  &inverted, &attr_type_y, &attr_size);
+      y_value = calloc( no_of_points, attr_size);
+      sts = gdh_GetObjectInfo( parsed_name, y_value, attr_size);
+      if ( EVEN(sts)) return 1;
+      break;
+    case ge_eCurveDataType_TableObject:
+      no_of_points = (int)(((pwr_tFloat32 *)x_value)[0] + FLT_EPSILON);
+      no_of_points = MIN( noofpoints, no_of_points);
+    default: ;
+    }
+
+    x_trendvalue = (double *) malloc( no_of_points * sizeof(double));
+    y_trendvalue = (double *) malloc( no_of_points * sizeof(double));
+    
+    switch ( datatype) {
+    case ge_eCurveDataType_XYArrays:
+      for ( int i = 0; i < no_of_points; i++) {
+	switch ( attr_type_x) {
+	case pwr_eType_Float32:
+	  x_trendvalue[i] = ((pwr_tFloat32 *)x_value)[i];
+	  break;
+	case pwr_eType_Float64:
+	  x_trendvalue[i] = ((pwr_tFloat64 *)x_value)[i];
+	  break;
+	case pwr_eType_Int32:
+	  x_trendvalue[i] = ((pwr_tInt32 *)x_value)[i];
+	  break;
+	case pwr_eType_Int16:
+	  x_trendvalue[i] = ((pwr_tInt16 *)x_value)[i];
+	  break;
+	case pwr_eType_Int8:
+	  x_trendvalue[i] = ((pwr_tInt8 *)x_value)[i];
+	  break;
+	case pwr_eType_UInt32:
+	  x_trendvalue[i] = ((pwr_tUInt32 *)x_value)[i];
+	  break;
+	case pwr_eType_UInt16:
+	  x_trendvalue[i] = ((pwr_tUInt16 *)x_value)[i];
+	  break;
+	case pwr_eType_UInt8:
+	  x_trendvalue[i] = ((pwr_tUInt8 *)x_value)[i];
+	  break;
+	default: ;
+	}
+	switch ( attr_type_y) {
+	case pwr_eType_Float32:
+	  y_trendvalue[i] = ((pwr_tFloat32 *)y_value)[i];
+	  break;
+	case pwr_eType_Float64:
+	  y_trendvalue[i] = ((pwr_tFloat64 *)y_value)[i];
+	  break;
+	case pwr_eType_Int32:
+	  y_trendvalue[i] = ((pwr_tInt32 *)y_value)[i];
+	  break;
+	case pwr_eType_Int16:
+	  y_trendvalue[i] = ((pwr_tInt16 *)y_value)[i];
+	  break;
+	case pwr_eType_Int8:
+	  y_trendvalue[i] = ((pwr_tInt8 *)y_value)[i];
+	  break;
+	case pwr_eType_UInt32:
+	  y_trendvalue[i] = ((pwr_tUInt32 *)y_value)[i];
+	  break;
+	case pwr_eType_UInt16:
+	  y_trendvalue[i] = ((pwr_tUInt16 *)y_value)[i];
+	  break;
+	case pwr_eType_UInt8:
+	  y_trendvalue[i] = ((pwr_tUInt8 *)y_value)[i];
+	  break;
+	default: ;
+	}	
+      }
+      free( y_value);
+      free( x_value);
+      break;
+    case ge_eCurveDataType_PointArray:
+      for ( int i = 0; i < no_of_points; i++) {
+	switch ( attr_type_x) {
+	case pwr_eType_Float32:
+	  x_trendvalue[i] = ((pwr_tFloat32 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tFloat32 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_Float64:
+	  x_trendvalue[i] = ((pwr_tFloat64 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tFloat64 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_Int32:
+	  x_trendvalue[i] = ((pwr_tInt32 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tInt32 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_Int16:
+	  x_trendvalue[i] = ((pwr_tInt16 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tInt16 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_Int8:
+	  x_trendvalue[i] = ((pwr_tInt8 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tInt8 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_UInt32:
+	  x_trendvalue[i] = ((pwr_tUInt32 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tUInt32 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_UInt16:
+	  x_trendvalue[i] = ((pwr_tUInt16 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tUInt16 *)x_value)[2*i+1];
+	  break;
+	case pwr_eType_UInt8:
+	  x_trendvalue[i] = ((pwr_tUInt8 *)x_value)[2*i];
+	  y_trendvalue[i] = ((pwr_tUInt8 *)x_value)[2*i+1];
+	  break;
+	default: ;
+	}
+      }
+      free( x_value);
+      break;
+    case ge_eCurveDataType_TableObject:
+      for ( int i = 0; i < no_of_points; i++) {
+	switch ( attr_type_x) {
+	case pwr_eType_Float32:
+	  x_trendvalue[i] = ((pwr_tFloat32 *)x_value)[2*i+1];
+	  y_trendvalue[i] = ((pwr_tFloat32 *)x_value)[2*i+2];
+	  break;
+	default: ;
+	}
+      }
+      free( x_value);
+      break;
+    }
+
+    grow_SetTrendXYData( object, y_trendvalue, x_trendvalue, curve_number - 1, no_of_points);
+    free( y_trendvalue);
+    free( x_trendvalue);
+  }
+
+  if ( first_scan)
+    first_scan = false;
+
+  return 1;
+}
+
 
 void GeTable::get_attributes( attr_sItem *attrinfo, int *item_count)
 {

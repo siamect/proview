@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.42 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.43 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1133,7 +1133,7 @@ int Graph::is_authorized( unsigned int access)
 int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 	int *item_cnt, void **client_data)
 {
-  static attr_sItem	items[100];
+  static attr_sItem	items[200];
   int			i;
   grow_sAttrInfo	*grow_info, *grow_info_p;
   int			grow_info_cnt;
@@ -1400,6 +1400,29 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 					"MinValue2",		"FastCurve.MinValue2",
 					"CurveColor2",		"FastCurve.CurveColor2",
 					"CurveFillColor2",	"FastCurve.CurveFillColor2",
+					"Dynamic",		"",
+					""};
+      grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
+		&grow_info_cnt);
+
+      *item_cnt = 0;
+      dyn->get_attributes( object, items, item_cnt);
+    }
+    if ( dyn->dyn_type & ge_mDynType_XY_Curve) {
+      char transtab[][32] = {	 	"NoOfPoints",		"XY_Curve.NoOfPoints",
+					"ScanTime",		"",
+					"CurveWidth",		"XY_Curve.CurveLineWidth",
+					"FillCurve",		"XY_Curve.FillCurve",
+					"HorizontalLines",	"XY_Curve.HorizontalLines",
+					"VerticalLines",	"XY_Curve.VerticalLines",
+					"MaxValue1",		"",
+					"MinValue1",		"",
+					"CurveColor1",		"",
+					"CurveFillColor1",	"",
+					"MaxValue2",		"",
+					"MinValue2",		"",
+					"CurveColor2",		"",
+					"CurveFillColor2",	"",
 					"Dynamic",		"",
 					""};
       grow_GetObjectAttrInfo( object, (char *)transtab, &grow_info, 
@@ -2192,6 +2215,12 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	  graph->create_trend( &t1, event->create_grow_object.x, 
 			       event->create_grow_object.y, 
 			       (unsigned int)ge_mDynType_FastCurve);
+	}
+	if ( strcmp( sub_name, "pwr_xycurve") == 0) {
+	  grow_tObject t1;
+	  graph->create_trend( &t1, event->create_grow_object.x, 
+			       event->create_grow_object.y, 
+			       (unsigned int)ge_mDynType_XY_Curve);
 	}
 	else if ( strcmp( sub_name, "pwr_bar") == 0) {
 	  grow_tObject t1;
@@ -4122,16 +4151,17 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
+  info.mode = glow_eTrendMode_Trend;
   info.no_of_points = 100;
   info.scan_time = 0.5;
   info.fill_curve = 0;
   info.curve_width = 1;
   info.horizontal_lines = 4;
   info.vertical_lines = 4;
-  info.min_value[0] = 0;
-  info.min_value[1] = 0;
-  info.max_value[0] = 100;
-  info.max_value[1] = 100;
+  info.y_min_value[0] = 0;
+  info.y_min_value[1] = 0;
+  info.y_max_value[0] = 100;
+  info.y_max_value[1] = 100;
   info.curve_drawtype[0] = glow_eDrawType_Color145;
   info.curve_drawtype[1] = glow_eDrawType_Color295;
   info.curve_fill_drawtype[0] = glow_eDrawType_Color139;

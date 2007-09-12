@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growcurve.cpp,v 1.4 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_growcurve.cpp,v 1.5 2007-09-12 08:56:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -68,8 +68,8 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
   no_of_points = data->rows;
 
   for ( i = 0; i < curve_cnt; i++) {
-    max_value[i] = data->max_value[i+1];
-    min_value[i] = data->min_value[i+1];
+    y_max_value[i] = data->max_value[i+1];
+    y_min_value[i] = data->min_value[i+1];
     curve_drawtype[i] = data->color[i+1];
     curve_fill_drawtype[i] = data->fillcolor[i+1];
   }
@@ -94,8 +94,8 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 
         x_value = max( ll.x, min( x_value, ur.x));
 
-        y_value = ur.y - (data->data[idx+1][i] - min_value[idx]) / 
-	        (max_value[idx] - min_value[idx]) * (ur.y - ll.y);
+        y_value = ur.y - (data->data[idx+1][i] - y_min_value[idx]) / 
+	        (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
         y_value = max( ll.y, min( y_value, ur.y));
 
@@ -134,8 +134,8 @@ void GrowCurve::configure_curves( glow_sCurveData *data)
 
           x_value = max( ll.x, min( x_value, ur.x));
 
-          y_value = ur.y - (data->data[idx+1][i-1] - min_value[idx]) / 
-	        (max_value[idx] - min_value[idx]) * (ur.y - ll.y);
+          y_value = ur.y - (data->data[idx+1][i-1] - y_min_value[idx]) / 
+	        (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
           y_value = max( ll.y, min( y_value, ur.y));
 
@@ -176,8 +176,8 @@ void GrowCurve::add_points( glow_sCurveData *data)
   // Remove old curves
   ctx->nodraw++;
   for ( idx = 0; idx < curve_cnt; idx++) {
-    y_value = ur.y - (data->data[idx+1][0] - min_value[idx]) / 
-	        (max_value[idx] - min_value[idx]) * (ur.y - ll.y);
+    y_value = ur.y - (data->data[idx+1][0] - y_min_value[idx]) / 
+	        (y_max_value[idx] - y_min_value[idx]) * (ur.y - ll.y);
 
     y_value = max( ll.y, min( y_value, ur.y));
 

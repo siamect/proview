@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.32 2007-04-25 13:36:13 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.33 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -71,6 +71,13 @@
     ge_mInputFocus_LastVertical 	= 1 << 5 	//!< Last vertical input focus.
   } ge_mInputFocus;
 
+  //! Types of animation sequences.
+  typedef enum {
+    ge_eCurveDataType_XYArrays,		//!< One x array and one y array.
+    ge_eCurveDataType_PointArray, 	//!< One point array.
+    ge_eCurveDataType_TableObject      	//!< Table object syntax.
+  } ge_eCurveDataType;
+
   //! Dyn attributes displayed in attribute editor
   typedef enum {
     ge_eDynAttr_All,
@@ -111,6 +118,7 @@
     ge_eDynPrio_Bar,
     ge_eDynPrio_Trend,
     ge_eDynPrio_FastCurve,
+    ge_eDynPrio_XY_Curve,
     ge_eDynPrio_AnalogText,
     ge_eDynPrio_Table,
     ge_eDynPrio_SliderBackground,
@@ -169,7 +177,8 @@
     ge_mDynType_Table		= 1 << 24,
     ge_mDynType_StatusColor    	= 1 << 25,
     ge_mDynType_HostObject    	= 1 << 26,
-    ge_mDynType_DigSound    	= 1 << 27
+    ge_mDynType_DigSound    	= 1 << 27,
+    ge_mDynType_XY_Curve    	= 1 << 28
   } ge_mDynType;
 
   //! Action types.
@@ -266,6 +275,7 @@
     ge_eSave_StatusColor             	= 31,
     ge_eSave_HostObject             	= 32,
     ge_eSave_DigSound	             	= 33,
+    ge_eSave_XY_Curve	             	= 34,
     ge_eSave_PopupMenu			= 50,
     ge_eSave_SetDig			= 51,
     ge_eSave_ResetDig			= 52,
@@ -410,6 +420,24 @@
     ge_eSave_DigSound_interval     	= 3303,
     ge_eSave_DigSound_instance		= 3304,
     ge_eSave_DigSound_instance_mask    	= 3305,
+    ge_eSave_XY_Curve_x_attr      	= 3400,
+    ge_eSave_XY_Curve_y_attr      	= 3401,
+    ge_eSave_XY_Curve_y_min_value 	= 3402,
+    ge_eSave_XY_Curve_y_max_value 	= 3403,
+    ge_eSave_XY_Curve_x_min_value 	= 3404,
+    ge_eSave_XY_Curve_x_max_value 	= 3405,
+    ge_eSave_XY_Curve_y_minvalue_attr 	= 3406,
+    ge_eSave_XY_Curve_y_maxvalue_attr 	= 3407,
+    ge_eSave_XY_Curve_x_minvalue_attr 	= 3408,
+    ge_eSave_XY_Curve_x_maxvalue_attr 	= 3409,
+    ge_eSave_XY_Curve_noofpoints 	= 3410,
+    ge_eSave_XY_Curve_noofpoints_attr 	= 3411,
+    ge_eSave_XY_Curve_update_attr 	= 3412,
+    ge_eSave_XY_Curve_datatype 		= 3413,
+    ge_eSave_XY_Curve_instance		= 3414,
+    ge_eSave_XY_Curve_instance_mask    	= 3415,
+    ge_eSave_XY_Curve_curve_color    	= 3416,
+    ge_eSave_XY_Curve_fill_color    	= 3417,
     ge_eSave_PopupMenu_ref_object      	= 5000,
     ge_eSave_SetDig_attribute		= 5100,
     ge_eSave_SetDig_instance		= 5101,
@@ -2066,6 +2094,81 @@ class GeTrend : public GeDynElem {
     { strcpy( attribute1, x.attribute1); strcpy( attribute2, x.attribute2); 
     strcpy( minvalue_attr1, x.minvalue_attr1); strcpy( maxvalue_attr1, x.maxvalue_attr1); 
     strcpy( minvalue_attr2, x.minvalue_attr2); strcpy( maxvalue_attr2, x.maxvalue_attr2);}
+  void get_attributes( attr_sItem *attrinfo, int *item_count);
+  void save( ofstream& fp);
+  void open( ifstream& fp);
+  int connect( grow_tObject object, glow_sTraceData *trace_data);
+  int disconnect( grow_tObject object);
+  int scan( grow_tObject object);
+  void set_attribute( grow_tObject object, char *attr_name, int *cnt);
+  void replace_attribute( char *from, char *to, int *cnt, int strict);
+};
+
+//! Dynamics for a xy curve object.
+class GeXY_Curve : public GeDynElem {
+ public:
+  pwr_tAName x_attr;
+  pwr_tAName y_attr;
+  pwr_tAName y_minvalue_attr;
+  pwr_tAName y_maxvalue_attr;
+  pwr_tAName x_minvalue_attr;
+  pwr_tAName x_maxvalue_attr;
+  pwr_tAName noofpoints_attr;
+  pwr_tAName update_attr;
+  double y_min_value;
+  double y_max_value;
+  double x_min_value;
+  double x_max_value;
+  int noofpoints;
+  int datatype;
+  glow_eDrawType curve_color;
+  glow_eDrawType fill_color;
+  
+  bool first_scan;
+  pwr_tBoolean *update_p;
+  pwr_tSubid update_subid;
+  pwr_tBoolean old_update;
+  pwr_tInt32 *noofpoints_p;
+  pwr_tSubid noofpoints_subid;
+  pwr_tInt32 old_noofpoints;
+  int curve_typeid;
+  pwr_tFloat32 *y_min_value_p;
+  pwr_tFloat32 *y_max_value_p;
+  pwr_tFloat32 *x_min_value_p;
+  pwr_tFloat32 *x_max_value_p;
+  pwr_tFloat32 old_y_min_value;
+  pwr_tFloat32 old_y_max_value;
+  pwr_tFloat32 old_x_min_value;
+  pwr_tFloat32 old_x_max_value;
+  pwr_tSubid y_min_value_subid;
+  pwr_tSubid y_max_value_subid;
+  pwr_tSubid x_min_value_subid;
+  pwr_tSubid x_max_value_subid;
+  int curve_number;  
+
+  GeXY_Curve( GeDyn *e_dyn, ge_mInstance e_instance = ge_mInstance_1) : 
+    GeDynElem(e_dyn, ge_mDynType_XY_Curve, (ge_mActionType) 0, ge_eDynPrio_XY_Curve),
+    y_min_value(0), y_max_value(100), x_min_value(0), x_max_value(100),
+    noofpoints(100), datatype(0), curve_color(glow_eDrawType_Inherit),
+    fill_color(glow_eDrawType_Inherit), update_p(0), old_update(0), 
+    noofpoints_p(0), old_noofpoints(0),
+    y_min_value_p(0), y_max_value_p(0), x_min_value_p(0), x_max_value_p(0), 
+    old_y_min_value(0), old_y_max_value(0), old_x_min_value(0), old_x_max_value(0)
+    { instance = e_instance; strcpy( x_attr, ""); strcpy( y_attr, "");
+    strcpy( y_minvalue_attr, ""); strcpy( y_maxvalue_attr, "");
+    strcpy( x_minvalue_attr, ""); strcpy( x_maxvalue_attr, "");
+    strcpy( noofpoints_attr, ""); strcpy( update_attr, "");}
+  GeXY_Curve( const GeXY_Curve& x) : 
+    GeDynElem(x.dyn,x.dyn_type,x.action_type,x.prio), 
+    y_min_value(x.y_min_value), y_max_value(x.y_max_value),
+    x_min_value(x.x_min_value), x_max_value(x.x_max_value),
+    noofpoints(x.noofpoints), datatype(x.datatype), curve_color(x.curve_color),
+    fill_color(x.fill_color)
+    { instance = x.instance; instance_mask = x.instance_mask;
+    strcpy( x_attr, x.x_attr); strcpy( y_attr, x.y_attr); 
+    strcpy( y_minvalue_attr, x.y_minvalue_attr); strcpy( y_maxvalue_attr, x.y_maxvalue_attr); 
+    strcpy( x_minvalue_attr, x.x_minvalue_attr); strcpy( x_maxvalue_attr, x.x_maxvalue_attr);
+    strcpy( noofpoints_attr, x.noofpoints_attr); strcpy( update_attr, x.update_attr);}
   void get_attributes( attr_sItem *attrinfo, int *item_count);
   void save( ofstream& fp);
   void open( ifstream& fp);

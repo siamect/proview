@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.h,v 1.4 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_growtrend.h,v 1.5 2007-09-12 08:56:37 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -42,22 +42,6 @@
 class GrowTrend : public GrowRect {
  public:
 
-  //! Constuctor
-  /*!
-    \param glow_ctx 	The glow context.
-    \param name		Name (max 31 char).
-    \param x		x coordinate for position.
-    \param y		y coordinate for position.
-    \param w		Width.
-    \param h		Height.
-    \param border_d_type Border color.
-    \param line_w	Linewidth of border.
-    \param display_lev	Displaylevel when this object is visible.
-    \param fill_rect	Rectangle is filled.
-    \param display_border Border is visible.
-    \param fill_d_type	Fill color.
-    \param nodraw	Don't draw the object now.
-  */
   GrowTrend( GrowCtx *glow_ctx, char *name, double x = 0, double y = 0, 
 		double w = 0, double h = 0, 
 		glow_eDrawType border_d_type = glow_eDrawType_Line, 
@@ -66,53 +50,20 @@ class GrowTrend : public GrowRect {
 		int fill_rect = 0, int display_border = 1, 
 		glow_eDrawType fill_d_type = glow_eDrawType_Line, int nodraw = 0);
 
-  //! Destructor
-  /*! Remove the object from context, and erase it from the screen.
-   */
   ~GrowTrend();
 
-  //! Save the content of the object to file.
-  /*!
-    \param fp	Ouput file.
-    \param mode	Not used.
-  */
   void save( ofstream& fp, glow_eSaveMode mode);
 
-  //! Read the content of the object from file.
-  /*!
-    \param fp	Input file.
-  */
   void open( ifstream& fp);
 
   //! Erase the object
   void erase( GlowWind *w)
 	{ erase( w, (GlowTransform *)NULL, hot, NULL);};
 
-  //! Draw the objects if any part is inside the drawing area.
-  /*!
-    \param ll_x		Lower left x coordinate of drawing area.
-    \param ll_y		Lower left y coordinate of drawing area.
-    \param ur_x		Upper right x coordinate of drawing area.
-    \param ur_y		Upper right y coordinate of drawing area.
-  */
   void draw( GlowWind *w, int ll_x, int ll_y, int ur_x, int ur_y);
 
-  //! Draw the objects if any part is inside the drawing area, and extends the drawing area.
-  /*!
-    \param ll_x		Lower left x coordinate of drawing area.
-    \param ll_y		Lower left y coordinate of drawing area.
-    \param ur_x		Upper right x coordinate of drawing area.
-    \param ur_y		Upper right y coordinate of drawing area.
-
-    If some part of object is inside the drawing area, and also outside the drawing area,
-    the drawingarea is extended so it contains the whole objects.
-  */
   void draw( GlowWind *w, int *ll_x, int *ll_y, int *ur_x, int *ur_y);
 
-  //! Set object highlight.
-  /*!
-    \param on	If 1, set highlight. If 0, reset highlight.
-  */
   void set_highlight( int on);
 
   //! Get the object type
@@ -131,8 +82,10 @@ class GrowTrend : public GrowRect {
   */
   void set_lines( int v, int h) { vertical_lines = v; horizontal_lines = h;};
 
-  double		max_value[TREND_MAX_CURVES];	//!< Max values of the curves.
-  double		min_value[TREND_MAX_CURVES];	//!< Min values of the curves.
+  double		y_max_value[TREND_MAX_CURVES];	//!< Max y values of the curves.
+  double		y_min_value[TREND_MAX_CURVES];	//!< Min y values of the curves.
+  double		x_max_value[TREND_MAX_CURVES];	//!< Max x values of the curves.
+  double		x_min_value[TREND_MAX_CURVES];	//!< Min x values of the curves.
   int			horizontal_lines;		//!< Number of horizontal lines.
   int			vertical_lines;			//!< Number of vertical lines.
   int			fill_curve;			//!< The curves are filled.
@@ -145,72 +98,26 @@ class GrowTrend : public GrowRect {
   int			curve_cnt;			//!< Number of curves.
   double		scan_time;			//!< Scantime. Time interval between two points.
   void 			*user_data;			//!< User data.
+  glow_eTrendMode	mode;				//!< Type of curve.
 
-  //! Draw the object.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param highlight	Draw with highlight colors.
-    \param hot		Draw as hot, with larger line width.
-    \param node		Parent node. Can be zero.
-    \param colornode	The node that controls the color of the object. Can be zero.
-
-    The object is drawn with border, fill and shadow. If t is not zero, the current tranform is
-    multiplied with the parentnodes transform, to give the appropriate coordinates for the drawing.
-  */
   void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
-  //! Erase the object.
-  /*!
-    \param t		Transform of parent node.
-    \param hot		Draw as hot, with larger line width.
-    \param node		Parent node. Can be zero.
-  */
   void erase( GlowWind *w, GlowTransform *t, int hot, void *node);
 
-  //! Redraw the area inside the objects border.
   void draw();
 
-  //! Scan trace
-  /*! Calls the trace scan callback for the object.
-   */
   void trace_scan();
 
-  //! Init trace
-  /*! Calls the trace connect callback for the object.
-   */
   int trace_init();
 
-  //! Close trace
-  /*! Calls the trace disconnect callback for the object.
-   */
   void trace_close();
 
-  //! Add a new value to the specified curve
-  /*!
-    \param value	New value.
-    \param idx		Curve number.
-
-    Add the new value first in the curve, and shift the other values one step forward.
-  */
   void add_value( double value, int idx);
 
-  //! Configure the curves
-  /*! Calculate position of the points of the curves and create a polyline for each curve.
-   */
   void configure_curves();
 
-  //! Moves object to alignment line or point.
-  /*!
-    \param x	x coordinate of alignment point.
-    \param y	y coordinate of alignment point.
-    \param direction Type of alignment.
-  */
   void align( double x, double y, glow_eAlignDirection direction);
 
-  //! Set scantime
-  /*!
-    \param time		Scantime in seconds.
-  */
   void set_scan_time( double time);
 
   //! Get scantime
@@ -219,13 +126,7 @@ class GrowTrend : public GrowRect {
   */
   void get_scan_time( double *time) { *time = scan_time;};
 
-  //! Set the range for the specified curve.
-  /*!
-    \param curve	Number of curve.
-    \param min		Min value.
-    \param max		Max value.
-  */
-  void set_range( int curve, double min, double max);
+  void set_range_y( int curve, double min, double max);
 
   //! Set fill for curves.
   /*!
@@ -245,35 +146,22 @@ class GrowTrend : public GrowRect {
   */
   void get_user_data( void **data) { *data = user_data;};
 
-  //! Set parameters for the trend.
-  /*!
-    \param info		Info struct.
-  */
   void set_trend_info( glow_sTrendInfo *info);
 
-  //! Export the object as a javabean.
-  /*!
-    \param t		Transform of parent node. Can be zero.
-    \param node		Parent node. Can be zero.
-    \param pass		Export pass.
-    \param shape_cnt	Current index in a shape vector.
-    \param node_cnt	Counter used for javabean name. Not used for this kind of object.
-    \param in_nc	Member of a nodeclass. Not used for this kind of object.
-    \param fp		Output file.
-
-    The object is transformed to the current zoom factor, and GlowExportJBean is used to generate
-    java code for the bean.
-  */
   void export_javabean( GlowTransform *t, void *node,
 	glow_eExportPass pass, int *shape_cnt, int node_cnt, int in_nc, ofstream &fp);
 
-  //! Conversion between different versions of Glow
-  /*!
-    \param version	Version to convert to.
-  */
   void convert( glow_eConvert version);
 
   void set_data( double *data[3], int data_curves, int data_points);
+  int get_no_of_points() { return no_of_points;}
+
+  void set_xy_range_x( int curve, double min, double max);
+  void set_xy_range_y( int curve, double min, double max);
+  void set_xy_noofcurves( int noofcurves);
+  void set_xy_curve_color( int curve, glow_eDrawType curve_color,
+			   glow_eDrawType fill_color);
+  void set_xy_data( double *y_data, double *x_data, int curve_idx, int data_points);
 };
 
 

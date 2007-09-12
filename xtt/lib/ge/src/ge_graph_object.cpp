@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_object.cpp,v 1.16 2007-05-07 14:35:03 claes Exp $
+ * Proview   $Id: ge_graph_object.cpp,v 1.17 2007-09-12 08:56:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -709,9 +709,9 @@ static void graph_object_PID_scan( Graph *graph)
 		double(*od->set_max_show_p));
       grow_SetBarRange( od->proc_bar_object, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
-      grow_SetTrendRange( od->set_trend_object, 0, double(*od->set_min_show_p), 
+      grow_SetTrendRangeY( od->set_trend_object, 0, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
-      grow_SetTrendRange( od->set_trend_object, 1, double(*od->set_min_show_p), 
+      grow_SetTrendRangeY( od->set_trend_object, 1, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
     }
     od->set_min_show_old = *od->set_min_show_p;
@@ -726,7 +726,7 @@ static void graph_object_PID_scan( Graph *graph)
     {
       grow_SetBarRange( od->out_bar_object, double(*od->out_min_show_p), 
 		double(*od->out_max_show_p));
-      grow_SetTrendRange( od->out_trend_object, 0, double(*od->out_min_show_p), 
+      grow_SetTrendRangeY( od->out_trend_object, 0, double(*od->out_min_show_p), 
 		double(*od->out_max_show_p));
     }
     od->out_min_show_old = *od->out_min_show_p;
@@ -845,8 +845,8 @@ static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
 
   if ( min_limit != max_limit)
   {
-    grow_SetTrendRange( od->set_trend_object, 0, double(min_limit), double(max_limit));
-    grow_SetTrendRange( od->set_trend_object, 1, double(min_limit), double(max_limit));
+    grow_SetTrendRangeY( od->set_trend_object, 0, double(min_limit), double(max_limit));
+    grow_SetTrendRangeY( od->set_trend_object, 1, double(min_limit), double(max_limit));
   }
 
   // Get values for OutMinShow and OutMaxShow
@@ -894,7 +894,7 @@ static int graph_object_PID( Graph *graph, pwr_sAttrRef *arp)
   if ( EVEN(sts)) return sts;
 
   if ( min_limit != max_limit)
-    grow_SetTrendRange( od->out_trend_object, 0, double(min_limit), double(max_limit));
+    grow_SetTrendRangeY( od->out_trend_object, 0, double(min_limit), double(max_limit));
 
   // Set scantime variable in local database
   grow_GetTrendScanTime( od->set_trend_object, &scan_time);
@@ -1362,7 +1362,7 @@ void Graph::trend_scan( graph_sObjectTrend *td)
         grow_GetUserData( td->slider_object, (void **)&dyn);
         dyn->update();
       }
-      grow_SetTrendRange( td->trend_object, 0, double(*td->pres_min_limit_p), 
+      grow_SetTrendRangeY( td->trend_object, 0, double(*td->pres_min_limit_p), 
 		double(*td->pres_max_limit_p));
     }
     td->pres_min_limit_old = *td->pres_min_limit_p;
@@ -1486,7 +1486,7 @@ int Graph::trend_init( graph_sObjectTrend *td, pwr_sAttrRef *arp)
   if ( td->pres_min_limit_p && td->pres_max_limit_p)
   {
     if ( min_limit != max_limit)
-      grow_SetTrendRange( td->trend_object, 0, double(min_limit), double(max_limit));
+      grow_SetTrendRangeY( td->trend_object, 0, double(min_limit), double(max_limit));
   }
 
   // Configure slider
@@ -1903,9 +1903,9 @@ static void graph_object_PlcThread_scan( Graph *graph)
     if ( *od->set_max_show_p != *od->set_min_show_p) {
       grow_SetBarRange( od->set_bar_object, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
-      grow_SetTrendRange( od->set_trend_object, 0, double(*od->set_min_show_p), 
+      grow_SetTrendRangeY( od->set_trend_object, 0, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
-      grow_SetTrendRange( od->set_trend_object, 1, double(*od->set_min_show_p), 
+      grow_SetTrendRangeY( od->set_trend_object, 1, double(*od->set_min_show_p), 
 		double(*od->set_max_show_p));
     }
     od->set_min_show_old = *od->set_min_show_p;
@@ -1997,8 +1997,8 @@ static int graph_object_PlcThread( Graph *graph, pwr_sAttrRef *arp)
   if ( EVEN(sts)) return sts;
 
   if ( min_limit != max_limit) {
-    grow_SetTrendRange( od->set_trend_object, 0, double(min_limit), double(max_limit));
-    grow_SetTrendRange( od->set_trend_object, 1, double(min_limit), double(max_limit));
+    grow_SetTrendRangeY( od->set_trend_object, 0, double(min_limit), double(max_limit));
+    grow_SetTrendRangeY( od->set_trend_object, 1, double(min_limit), double(max_limit));
   }
 
   // Set scantime variable in local database
