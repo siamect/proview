@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.16 2007-09-17 12:25:31 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.17 2007-09-17 14:06:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -859,12 +859,12 @@ ItemAttrArrayElem::ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 {
   char type_id_name[80];
 
-  type = nav_eItemType_AttrArray;
+  type = nav_eItemType_AttrArrayElem;
 
   sprintf( name, "%s[%d]", attr_name, element);
   
   if ( attr_aname && strcmp( attr_aname, "") != 0) {
-    sprintf( aname, "%s[%d]", attr_aname, idx);
+    sprintf( aname, "%s[%d]", attr_aname, element);
   }
   else
     strcpy( aname, name);
