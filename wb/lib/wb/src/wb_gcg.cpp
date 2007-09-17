@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.3 2007-05-28 14:52:13 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.4 2007-09-17 07:09:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4769,7 +4769,7 @@ static int	gcg_get_rtnode_plcthread(
 	  if ( EVEN(sts)) return sts;
 
 	  /* Check that the class of the node object is correct */
-	  if ( cid == pwr_cClass_NodeHier) {
+	  if ( cid == pwr_cClass_NodeHier || cid == pwr_cClass_Node) {
 	    /* Check if the children is a thread */
 	    sts = gcg_get_child_plcthread( gcgctx, objdid, rtnode, os,
 	    		thread_count, threadlist);
@@ -5331,7 +5331,7 @@ int	gcg_comp_rtnode(
 
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
-	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", nodename, bus);
+	    sprintf( fullfilename,"%splc_%s_%4.4d.opt", "pwrp_tmp:", cdh_Low(nodename), bus);
 	    dcli_translate_filename( fullfilename, fullfilename);
 	    if ((files[1] = fopen( fullfilename,"w")) == NULL) 
 	    {
@@ -5448,7 +5448,7 @@ int	gcg_comp_rtnode(
 	  if (IS_VMS_OR_ELN(os)) 
 	  {
 	    sprintf( plcfilename, "pwrp_exe:plc_%s_%4.4d_%5.5ld.exe",
-		nodename, bus, plc_version);
+		cdh_Low(nodename), bus, plc_version);
 	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, NULL, os,
 	          GCG_NOSPAWN);
@@ -5456,7 +5456,7 @@ int	gcg_comp_rtnode(
 	  else
 	  {
 	    sprintf( plcfilename, "plc_%s_%4.4d_%5.5ld",
-		nodename, bus, plc_version);
+		cdh_Low(nodename), bus, plc_version);
 	    sprintf( fullfilename,"%s%s_%4.4d", gcgmn_filenames[0], nodename, bus);
 	    gcg_cc( GCG_RTNODE, fullfilename, plcfilename, 
 	        plclib_frozen, os, GCG_NOSPAWN);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.6 2007-06-05 12:21:45 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.7 2007-09-17 07:09:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -298,7 +298,7 @@ pwr_tStatus lfu_create_bootfile(
 	    sts = lfu_IncrementAndGetVersion( filename, &plc_version);
 	    if ( EVEN(sts)) return sts;
 
-	    sprintf( plcname, load_cNamePlc, "", nodename, bus, (int)plc_version);
+	    sprintf( plcname, load_cNamePlc, "", cdh_Low(nodename), bus, (int)plc_version);
 	    printf( "      %s\n", plcname);
 
 	    sts = gcg_comp_rtnode( nodename, os,
@@ -310,7 +310,7 @@ pwr_tStatus lfu_create_bootfile(
 
 	    /* Open the file and print boot data */
 	    sprintf( filename, load_cNameBoot, 
-			load_cDirectory, nodename, bus);
+			load_cDirectory, cdh_Low(nodename), bus);
 	    dcli_translate_filename( filename, filename);
 	    file = fopen( filename, "w");
 	    if ( !file) {
@@ -1332,7 +1332,8 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	if ( !found)
 	  return 0;
 
-	sprintf( filename, load_cNameNode, load_cDirectory, nodevect[idx].nodename, bus_number);
+	sprintf( filename, load_cNameNode, load_cDirectory, cdh_Low(nodevect[idx].nodename), 
+		 bus_number);
 	dcli_translate_filename( fname, filename);
         fp = fopen( fname, "w");
 	if ( fp == 0) {
