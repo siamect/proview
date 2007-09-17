@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.15 2007-09-17 11:18:15 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.16 2007-09-17 12:25:31 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -864,9 +864,7 @@ ItemAttrArrayElem::ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
   sprintf( name, "%s[%d]", attr_name, element);
   
   if ( attr_aname && strcmp( attr_aname, "") != 0) {
-    strcpy( aname, attr_aname);
-    strcat( aname, ".");
-    strcat( aname, name);
+    sprintf( aname, "%s[%d]", attr_aname, idx);
   }
   else
     strcpy( aname, name);
