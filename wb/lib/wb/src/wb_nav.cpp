@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.14 2007-08-28 07:30:36 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.15 2007-09-17 11:18:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -150,10 +150,12 @@ public:
   int elements;
   int type_id;
   pwr_tOName aname;
+  int flags;
+  int size;
   ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 		 brow_tNode dest, flow_eDest dest_code, int attr_body,
 		 int idx, char *attr_name, char *attr_aname, int attr_elements, 
-		 int attr_type_id, 
+		 int attr_type_id, int attr_flags, int attr_size,
 		 int item_is_root);
   int     open_children( Nav *nav, double x, double y);
   int     open_attributes( Nav *nav, double x, double y);
@@ -167,10 +169,12 @@ public:
   int element;
   int type_id;
   pwr_tOName aname;
+  int flags;
+  int size;
   ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 		     brow_tNode dest, flow_eDest dest_code, int attr_body,
 		     int idx, char *attr_name, char *attr_aname, int attr_element, 
-		     int attr_type_id, int item_is_root);
+		     int attr_type_id, int attr_flags, int attr_size, int item_is_root);
 };
 
 class ItemAttrObject : public Item {
@@ -432,7 +436,10 @@ int ItemObject::open_attributes( Nav *nav, double x, double y)
 					     flow_eDest_IntoLast,
 					     j, i, bodydef[i].ParName, 0,
 					     bodydef[i].Par->Param.Info.Elements, 
-					     bodydef[i].Par->Param.Info.Type, is_root);
+					     bodydef[i].Par->Param.Info.Type, 
+					     bodydef[i].Par->Param.Info.Flags, 
+					     bodydef[i].Par->Param.Info.Size, 
+					     is_root);
 	}
 	else if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
 	  attr_exist = 1;
@@ -492,8 +499,12 @@ ItemAttrObject::ItemAttrObject( Nav *nav,
 
   if ( attr_aname && strcmp( attr_aname, "") != 0) {
     strcpy( aname, attr_aname);
-    strcat( aname, ".");
-    strcat( aname, name);
+    if ( !is_elem) {
+      strcat( aname, ".");
+      strcat( aname, name);
+    }
+    else
+      sprintf( &aname[strlen(aname)], "[%d]", idx);
   }
   else
     strcpy( aname, name);
@@ -629,7 +640,10 @@ int ItemAttrObject::open_attributes( Nav *nav, double x, double y)
 					     flow_eDest_IntoLast,
 					     j, i, bodydef[i].ParName, aname,
 					     bodydef[i].Par->Param.Info.Elements, 
-					     bodydef[i].Par->Param.Info.Type, is_root);
+					     bodydef[i].Par->Param.Info.Type, 
+					     bodydef[i].Par->Param.Info.Flags, 
+					     bodydef[i].Par->Param.Info.Size, 
+					     is_root);
 	}
 	else if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_CLASS) {
 	  attr_exist = 1;
@@ -740,12 +754,18 @@ int ItemAttrArray::open_attributes( Nav *nav, double x, double y)
     // Create some elements
     brow_SetNodraw( nav->brow_ctx);
 
-    for ( i = 0; i < elements; i++)
-      {
+    for ( i = 0; i < elements; i++) {
+      if ( flags & PWR_MASK_CLASS)
+	item = (Item *) new ItemAttrObject( nav, objid, node, 
+					    flow_eDest_IntoLast, name, aname, type_id, 
+					    size/elements,
+					    1, i, flags, body, is_root);
+      else
 	item = (Item *) new ItemAttrArrayElem( nav, objid, node, 
 					       flow_eDest_IntoLast, body, attr_idx, name, 
-					       aname, i, type_id, is_root);
-      }
+					       aname, i, type_id, flags, size/elements, is_root);
+
+    }
 
     if ( !is_root) {
       brow_SetOpen( node, nav_mOpen_Attributes);
@@ -798,9 +818,10 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
 ItemAttrArray::ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 			      brow_tNode dest, flow_eDest dest_code, int attr_body,
 			      int idx, char *attr_name, char *attr_aname, 
-			      int attr_elements, int attr_type_id, int item_is_root) :
+			      int attr_elements, int attr_type_id, int attr_flags, 
+			      int attr_size, int item_is_root) :
   Item( item_objid, item_is_root), body(attr_body),
-  attr_idx(idx), elements(attr_elements), type_id(attr_type_id)
+  attr_idx(idx), elements(attr_elements), type_id(attr_type_id), flags(attr_flags), size(attr_size)
 {
   char type_id_name[80];
 
@@ -831,10 +852,10 @@ ItemAttrArray::ItemAttrArray( Nav *nav, pwr_tObjid item_objid,
 ItemAttrArrayElem::ItemAttrArrayElem( Nav *nav, pwr_tObjid item_objid,
 				      brow_tNode dest, flow_eDest dest_code, int attr_body,
 				      int idx, char *attr_name, char *attr_aname, 
-				      int attr_element, int attr_type_id,
-				      int item_is_root) :
+				      int attr_element, int attr_type_id, int attr_flags,
+				      int attr_size, int item_is_root) :
   Item( item_objid, item_is_root), body(attr_body),
-  attr_idx(idx), element(attr_element), type_id(attr_type_id)
+  attr_idx(idx), element(attr_element), type_id(attr_type_id), flags(attr_flags), size(attr_size)
 {
   char type_id_name[80];
 
