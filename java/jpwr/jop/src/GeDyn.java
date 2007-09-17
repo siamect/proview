@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDyn.java,v 1.11 2007-05-23 08:05:19 claes Exp $
+ * Proview   $Id: GeDyn.java,v 1.12 2007-09-17 15:35:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,8 @@ public class GeDyn {
     public static final int mDynType_Table		= 1 << 24;
     public static final int mDynType_StatusColor       	= 1 << 25;
     public static final int mDynType_HostObject       	= 1 << 26;
+    public static final int mDynType_DigSound       	= 1 << 27;
+    public static final int mDynType_XY_Curve       	= 1 << 28;
 
     public static final int mActionType_No		= 0;
     public static final int mActionType_Inherit		= 1 << 0;
@@ -87,6 +89,10 @@ public class GeDyn {
     public static final int eEvent_SliderMoved		= 4;
     public static final int eEvent_ValueChanged		= 5;
     public static final int eEvent_FocusLost		= 6;
+
+    public static final int eCurveDataType_XYArrays    	= 0;
+    public static final int eCurveDataType_PointArray  = 1;
+    public static final int eCurveDataType_TableObject  = 2;
 
     public static final int eType_Bit 			= (1 << 15) + 1;
 
@@ -264,7 +270,9 @@ public class GeDyn {
         String suffix;
 	int idx1 = s.indexOf("##");
 	if ( idx1 != -1) {
-	    int idx2 = s.indexOf('[');
+	    int idx2 = s.indexOf('#', idx1+2);
+	    if ( idx2 == -1)
+		idx2 = s.indexOf('[');
 	    if ( idx2 != -1)
 		suffix = s.substring( idx1+2, idx2);
 	    else
@@ -305,6 +313,29 @@ public class GeDyn {
 	     return Pwr.eType_AttrRef;
 	else if ( suffix.equalsIgnoreCase("Bit"))
 	     return GeDyn.eType_Bit;
+	return -1;
+    }
+    static public int getAttrSize( String s) {
+        String sizestr;
+	int idx1 = s.indexOf("##");
+	if ( idx1 == -1) 
+	    return -1;
+
+	int idx2 = s.indexOf('#', idx1+2);
+	if ( idx2 == -1)
+	    return -1;
+	int idx3 = s.indexOf('[');
+	if ( idx3 != -1)
+	    sizestr = s.substring( idx2+1, idx2);
+	else
+	    sizestr = s.substring( idx2+1);
+	
+	try {
+	    Integer i = new Integer(sizestr);
+	    return i.intValue();
+	}
+	catch( Exception e) {
+	}
 	return -1;
     }
 

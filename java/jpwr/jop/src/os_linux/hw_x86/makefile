@@ -67,6 +67,8 @@ local_java_sources := \
 	GeDynAnalogText.java \
 	GeDynTable.java \
 	GeDynHostObject.java \
+	GeDynXYCurve.java \
+	JopXYCurve.java \
 	Proportion.java\
 	RatioLayout.java \
 	AspectRatioListener.java \

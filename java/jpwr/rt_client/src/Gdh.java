@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.11 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.12 2007-09-17 15:35:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -81,6 +81,8 @@ public class Gdh
   public final static int GET_ATTRREF_TID = 54;
   public final static int GET_SUPER_CLASS = 55;
   public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
+  public final static int GET_OBJECT_INFO_FLOAT_ARRAY = 57;
+  public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
 
 
 
@@ -301,6 +303,31 @@ public class Gdh
     }
   }
 
+  public CdhrIntArray getObjectInfoIntArray(String attributeName, int size)
+  {
+    try
+    {
+      out.writeInt(GET_OBJECT_INFO_INT_ARRAY);
+      out.writeUTF(attributeName);
+      out.writeInt(size);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrIntArray(null, sts);
+      }
+
+      int[] value = new int[size];
+      for ( int i = 0; i < size; i++)
+	value[i] = in.readInt();
+      return new CdhrIntArray(value, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrIntArray(null, __IO_EXCEPTION);
+    }
+  }
+
 
   public CdhrFloat getObjectInfoFloat(String attributeName)
   {
@@ -321,6 +348,31 @@ public class Gdh
     catch(IOException e)
     {
       return new CdhrFloat(0.0F, __IO_EXCEPTION);
+    }
+  }
+
+  public CdhrFloatArray getObjectInfoFloatArray(String attributeName, int size)
+  {
+    try
+    {
+      out.writeInt(GET_OBJECT_INFO_FLOAT_ARRAY);
+      out.writeUTF(attributeName);
+      out.writeInt(size);
+      out.flush();
+      int sts = in.readInt();
+      if(sts % 2 == 0)
+      {
+        return new CdhrFloatArray(null, sts);
+      }
+
+      float[] value = new float[size];
+      for ( int i = 0; i < size; i++)
+	value[i] = in.readFloat();
+      return new CdhrFloatArray(value, sts);
+    }
+    catch(IOException e)
+    {
+      return new CdhrFloatArray(null, __IO_EXCEPTION);
     }
   }
 

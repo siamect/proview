@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GdhServer.java,v 1.15 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: GdhServer.java,v 1.16 2007-09-17 15:35:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -92,6 +92,8 @@ public class GdhServer
   public final static int GET_ATTRREF_TID = 54;
   public final static int GET_SUPER_CLASS = 55;
   public final static int GET_ALL_CLASS_ATTRIBUTES_STRING = 56;
+  public final static int GET_OBJECT_INFO_FLOAT_ARRAY = 57;
+  public final static int GET_OBJECT_INFO_INT_ARRAY = 58;
 
   public final static int PORT = 4445;
 
@@ -123,6 +125,7 @@ public class GdhServer
    */
   public static void main(String[] args)
   {
+      System.out.println( "java.library.path = " + System.getProperty("java.library.path"));
     for(int i = 0; i < args.length; i++)
     {
       if(args[i].equals("-i"))
@@ -474,7 +477,7 @@ public class GdhServer
               }
               catch(IOException e)
               {
-                System.out.println("setObjectInfoBoolean: IO exception");
+                System.out.println("getObjectInfoBoolean: IO exception");
               }
               break;
             case GET_OBJECT_INFO_INT:
@@ -493,7 +496,26 @@ public class GdhServer
               }
               catch(IOException e)
               {
-                System.out.println("setObjectInfoInt: IO exception");
+                System.out.println("getObjectInfoInt: IO exception");
+              }
+              break;
+            case GET_OBJECT_INFO_INT_ARRAY:
+              try
+              {
+                String attrName = in.readUTF();
+                int size = in.readInt();
+                CdhrIntArray ret = gdh.getObjectInfoIntArray(attrName, size);
+                out.writeInt(ret.sts);
+                //out.flush();
+                if ( ret.oddSts()) {
+		  for ( int j = 0; j < size; j++)
+                    out.writeInt(ret.value[j]);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectInfoIntArray: IO exception");
               }
               break;
             case GET_OBJECT_INFO_FLOAT:
@@ -503,7 +525,7 @@ public class GdhServer
                 CdhrFloat ret = gdh.getObjectInfoFloat(attrName);
                 out.writeInt(ret.sts);
                 //out.flush();
-                if(ret.oddSts())
+                if ( ret.oddSts())
                 {
                   out.writeFloat(ret.value);
                   //out.flush();
@@ -512,7 +534,26 @@ public class GdhServer
               }
               catch(IOException e)
               {
-                System.out.println("setObjectInfoBoolean: IO exception");
+                System.out.println("getObjectInfoFloat: IO exception");
+              }
+              break;
+            case GET_OBJECT_INFO_FLOAT_ARRAY:
+              try
+              {
+                String attrName = in.readUTF();
+                int size = in.readInt();
+                CdhrFloatArray ret = gdh.getObjectInfoFloatArray(attrName, size);
+                out.writeInt(ret.sts);
+                //out.flush();
+                if ( ret.oddSts()) {
+		  for ( int j = 0; j < size; j++)
+                    out.writeFloat(ret.value[j]);
+                }
+		out.flush();
+              }
+              catch(IOException e)
+              {
+                System.out.println("getObjectInfoFloatArray: IO exception");
               }
               break;
             case GET_OBJECT_INFO_STRING:
@@ -602,6 +643,7 @@ public class GdhServer
                   String attrName = in.readUTF();
 
                   Sub ret = this.refObjectInfo(attrName, threadNumber);
+
                   thSub.add(ret);
                   out.writeInt(ret.sts);
                   //out.flush();

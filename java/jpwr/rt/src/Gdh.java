@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: Gdh.java,v 1.9 2006-06-16 05:09:38 claes Exp $
+ * Proview   $Id: Gdh.java,v 1.10 2007-09-17 15:35:28 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -395,6 +395,8 @@ public class Gdh {
   public native CdhrBoolean getObjectInfoBoolean( String attributeName);
   public native CdhrString getObjectInfoString( String attributeName);
   public native CdhrObjid getObjectInfoObjid( String attributeName);
+  public native CdhrFloatArray getObjectInfoFloatArray( String attributeName, int size);
+  public native CdhrIntArray getObjectInfoIntArray( String attributeName, int size);
   public native PwrtStatus toggleObjectInfo( String attributeName);
   public native GdhrRefObjectInfo refObjectInfo( String attributeName);
 

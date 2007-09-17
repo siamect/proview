@@ -16,6 +16,8 @@ local_java_sources = \
 	CdhrObjid.java \
 	CdhrAttrRef.java \
 	CdhrString.java \
+	CdhrFloatArray.java \
+	CdhrIntArray.java \
 	Cdh.java \
 	CliTable.java \
 	Cli.java \
