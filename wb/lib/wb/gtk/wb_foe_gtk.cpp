@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.8 2007-08-24 14:01:08 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.9 2007-09-17 12:27:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1235,7 +1235,10 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(view_pal),
 			    GTK_WIDGET(view_pal_menu));
 
-  GtkWidget *view_refcon = gtk_menu_item_new_with_mnemonic( "_Referece Connections");
+  GtkWidget *view_refcon = gtk_check_menu_item_new_with_mnemonic( "_Reference Connections");
+  gtk_widget_add_accelerator( view_refcon, "activate", accel_g,
+			      'r', GdkModifierType(GDK_CONTROL_MASK), 
+			      GTK_ACCEL_VISIBLE);
   g_signal_connect( view_refcon, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_refcon), this);
 
