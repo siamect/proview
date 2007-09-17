@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_trv.cpp,v 1.2 2007-09-17 07:08:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -334,6 +334,7 @@ int trv_get_rtnodes (
 
   *rtnode_count = 0;
   *rtnodelist = NULL;
+  pwr_tObjid		*rtnodelist_pointer;	
 
 
   sts = ldh_GetRootList( ldhses, &objdid);
@@ -348,6 +349,18 @@ int trv_get_rtnodes (
 				  rtnodelist);
       if ( EVEN(sts)) return sts;
     }
+    else if ( cid == pwr_eClass_Node) {
+      /* Yes, this is a rtnode, insert in list */
+      sts = utl_realloc( (char **)rtnodelist, 
+			 *rtnode_count * sizeof(pwr_tObjid), 
+			 (*rtnode_count + 1) * sizeof(pwr_tObjid));
+      if (EVEN(sts)) return sts;
+
+      rtnodelist_pointer = *rtnodelist;
+      *(rtnodelist_pointer + *rtnode_count) = objdid;
+      (*rtnode_count)++;
+    }
+
     sts = ldh_GetNextSibling( ldhses, objdid, &objdid);
   }
   return GSX__SUCCESS;
