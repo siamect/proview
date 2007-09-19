@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.16 2007-09-06 11:22:55 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.17 2007-09-19 15:10:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -218,7 +218,7 @@ void WttGtk::menu_setup()
       gtk_widget_set_sensitive( menu_copykeep_w, TRUE);
       gtk_widget_set_sensitive( menu_rename_w, TRUE);
       gtk_widget_set_sensitive( menu_utilities_w, TRUE);
-      gtk_widget_set_sensitive( menu_openplc_w, FALSE);
+      gtk_widget_set_sensitive( menu_openplc_w, TRUE);
       gtk_widget_set_sensitive( menu_buildobject_w, FALSE);
       gtk_widget_set_sensitive( menu_buildvolume_w, FALSE);
       gtk_widget_set_sensitive( menu_buildnode_w, FALSE);
@@ -2219,7 +2219,7 @@ WttGtk::WttGtk(
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), menu_change_value_w);
   gtk_menu_shell_append(GTK_MENU_SHELL(functions_menu), functions_command);
 
-  GtkWidget *functions = gtk_menu_item_new_with_mnemonic("_Functions");
+  GtkWidget *functions = gtk_menu_item_new_with_mnemonic("F_unctions");
   gtk_menu_shell_append(GTK_MENU_SHELL(menu_bar), functions);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(functions), GTK_WIDGET(functions_menu));
 
