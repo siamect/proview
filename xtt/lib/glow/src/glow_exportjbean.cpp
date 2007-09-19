@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.cpp,v 1.16 2007-05-23 08:04:09 claes Exp $
+ * Proview   $Id: glow_exportjbean.cpp,v 1.17 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1828,6 +1828,85 @@ void GlowExportJBean::trend( double x1, double y1, double x2, double y2,
 "    " << var_name << ".setMaxValue1(" << max_value1 << "F);" << endl <<
 "    " << var_name << ".setMinValue2(" << min_value2 << "F);" << endl <<
 "    " << var_name << ".setMaxValue2(" << max_value2 << "F);" << endl <<
+"    " << var_name << ".setNoOfPoints(" << no_of_points << ");" << endl <<
+"    " << var_name << ".setHorizontalLines(" << horizontal_lines << ");" << endl <<
+"    " << var_name << ".setVerticalLines(" << vertical_lines << ");" << endl <<
+"    " << var_name << ".setRotate(" << rotate << ");" << endl;
+      if ( is_nodeclass)
+	fp <<
+"    add(" << var_name << ");" << endl;
+      else
+	fp <<
+"    localPanel.add(" << var_name << ", new Proportion(" << var_name << ".getBounds(), dsize));" << endl;
+      break;
+    }
+    case glow_eExportPass_Draw:
+      break;
+    default:
+      ;
+  }
+}
+
+void GlowExportJBean::xycurve( double x1, double y1, double x2, double y2,
+    	glow_eDrawType border_drawtype,
+    	glow_eDrawType	fill_drawtype,
+    	int		fill,
+	int		border,
+	int		curve_width,
+	int		no_of_points,
+	int		horizontal_lines,
+	int		vertical_lines,
+    	int		line_width,
+	double		rotate,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp)
+{
+  double dim_x0, dim_x1, dim_y0, dim_y1;
+  char var_name[40];
+  char class_name[] = "JopXYCurve";
+
+  strcpy( var_name, class_name);
+  var_name[0] = _tolower(var_name[0]);
+  sprintf( &var_name[strlen(var_name)], "%d", node_cnt);
+
+  switch ( pass)
+  {
+    case glow_eExportPass_Shape:
+      break;
+    case glow_eExportPass_Declare:
+    {
+      fp <<
+"  " << class_name << "	" << var_name << ";" << endl;
+      break;
+    }
+    case glow_eExportPass_Attributes:
+    {
+      ((GrowCtx *)ctx)->measure_javabean( &dim_x1, &dim_x0, &dim_y1, &dim_y0);
+
+      fp <<
+"    " << var_name << " = new " << class_name << "( session);" << endl <<
+"    " << var_name << ".setBounds(new Rectangle(" << 
+	(int)(x1 - dim_x0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(y1 - dim_y0 /* - glow_cJBean_Offset) */) << "," << 
+	(int)(x2 - x1 + 2 * glow_cJBean_Offset) << "," << 
+        (int)(y2 - y1 + 2 * glow_cJBean_Offset) << "));" << endl;
+      if ( fill_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setFillColor(" << (int)fill_drawtype << ");" << endl;
+      if ( border_drawtype != glow_eDrawType_No)
+        fp <<
+"    " << var_name << ".setBorderColor(" << (int)border_drawtype << ");" << endl;
+      else
+        fp <<
+"    " << var_name << ".setBorderColor( 0);" << endl;
+      if ( fill)
+        fp <<
+"    " << var_name << ".setDrawFill(1);" << endl;
+      if ( border)
+	fp <<
+"    " << var_name << ".setDrawBorder(1);" << endl;
+      fp <<
+"    " << var_name << ".setTrendBorderWidth(" << curve_width << ");" << endl <<
+"    " << var_name << ".setLineWidth(" << line_width << ");" << endl <<
 "    " << var_name << ".setNoOfPoints(" << no_of_points << ");" << endl <<
 "    " << var_name << ".setHorizontalLines(" << horizontal_lines << ");" << endl <<
 "    " << var_name << ".setVerticalLines(" << vertical_lines << ");" << endl <<

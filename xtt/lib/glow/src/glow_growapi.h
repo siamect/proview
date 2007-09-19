@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.h,v 1.28 2007-09-12 08:56:37 claes Exp $
+ * Proview   $Id: glow_growapi.h,v 1.29 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -903,6 +903,30 @@ extern "C" {
 	glow_mDisplayLevel display_level, int fill_rect, 
 	int border, glow_eDrawType fill_draw_type, void *user_data,
 	grow_tObject *trend);
+
+  //! Create a xy-curve object, i.e an object of class GrowXYCurve.
+  /*!
+    \param ctx		Grow context.
+    \param name		Object name (max 31 char).
+    \param x		x coordinate for position of lower left corner of the rectangle.
+    \param y		y coordinate for position of lower left corner of the rectangle.
+    \param width	Width of the rectangle.
+    \param height	Height of the rectangle.
+    \param draw_type	Border color.
+    \param line_width	Line width of border.
+    \param display_level Display levels when the object is visible.
+    \param fill_rect	Rectangle is filled.
+    \param border	Border is visible.
+    \param fill_draw_type Fill color.
+    \param user_data	User data.
+    \param xycurve      Created GrowXYCurve object.
+  */
+  void grow_CreateGrowXYCurve( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	glow_mDisplayLevel display_level, int fill_rect, 
+	int border, glow_eDrawType fill_draw_type, void *user_data,
+	grow_tObject *xycurve);
 
   //! Create a curve object, i.e an object of class GrowCurve.
   /*!
@@ -2124,7 +2148,7 @@ extern "C" {
     \param min		Minimum value of range.
     \param max		Maximum value of range.
   */
-  void grow_SetTrendXYRangeY( grow_tObject object, int curve, 
+  void grow_SetXYCurveRangeY( grow_tObject object, int curve, 
 			      double min, double max);
 
   //! Set the range of a xy curve object.
@@ -2134,7 +2158,7 @@ extern "C" {
     \param min		Minimum value of range.
     \param max		Maximum value of range.
   */
-  void grow_SetTrendXYRangeX( grow_tObject object, int curve, 
+  void grow_SetXYCurveRangeX( grow_tObject object, int curve, 
 			      double min, double max);
 
   //! Set number of curves a xy curve object.
@@ -2821,6 +2845,8 @@ extern "C" {
 
   int grow_GetTrendNoOfPoints( grow_tObject object);
 
+  int grow_GetTrendFillCurve( grow_tObject object);
+
   //! Set fast curve data for a GrowTrend object.
   /*!
     \param object	GrowTrend object. 
@@ -2829,9 +2855,9 @@ extern "C" {
     \param data_points	Number of points in each curve.
   */
   void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points);
-  void grow_SetTrendXYCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
+  void grow_SetXYCurveCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
 				  glow_eDrawType fill_color);
-  void grow_SetTrendXYData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
+  void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
 			    int data_points);
 
   //! Get text size and color for an annotation.

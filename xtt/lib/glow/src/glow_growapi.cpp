@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growapi.cpp,v 1.34 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: glow_growapi.cpp,v 1.35 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,6 +54,7 @@
 #include "glow_growtext.h"
 #include "glow_growbar.h"
 #include "glow_growtrend.h"
+#include "glow_growxycurve.h"
 #include "glow_growwindow.h"
 #include "glow_growtable.h"
 #include "glow_growfolder.h"
@@ -883,6 +884,22 @@ void grow_CreateGrowTrend( grow_tCtx ctx, char *name,
   *trend = (grow_tObject) r1;
 }
 
+void grow_CreateGrowXYCurve( grow_tCtx ctx, char *name, 
+	double x, double y, double width, double height,
+	glow_eDrawType draw_type, int line_width,
+	glow_mDisplayLevel display_level, int fill_rect, 
+	int border, glow_eDrawType fill_draw_type, void *user_data,
+	grow_tObject *xycurve)
+{
+  GrowXYCurve *r1;
+  r1 = new GrowXYCurve( ctx, name, x, y, width, height, draw_type, line_width,
+	display_level, fill_rect, border, fill_draw_type);
+  r1->set_user_data( user_data);
+  ctx->insert( r1);
+  ctx->nav_zoom();
+  *xycurve = (grow_tObject) r1;
+}
+
 void grow_CreateGrowCurve( grow_tCtx ctx, char *name, glow_sCurveData *data,
 	double x, double y, double width, double height,
 	glow_eDrawType draw_type, int line_width,
@@ -1547,6 +1564,7 @@ int grow_GetObjectAttrInfo( grow_tObject object, char *transtab,
       break;
     }
     case glow_eObjectType_GrowTrend:
+    case glow_eObjectType_GrowXYCurve:
     {
       GrowTrend *op = (GrowTrend *)object;
       char *name;
@@ -2999,6 +3017,7 @@ void grow_UpdateObject(  grow_tCtx ctx, grow_tObject object,
       ((GrowBar *)object)->draw( &ctx->mw, INT_MIN, INT_MIN, INT_MAX, INT_MAX);
       break;
     case glow_eObjectType_GrowTrend:
+    case glow_eObjectType_GrowXYCurve:
       // Set changed dynamic
       info_p = info;
       while ( info_p->info_type != grow_eInfoType_End)
@@ -3870,21 +3889,21 @@ void grow_SetTrendRangeY( grow_tObject object, int curve,
   ((GrowTrend *)object)->set_range_y( curve, min, max);
 }
 
-void grow_SetTrendXYRangeY( grow_tObject object, int curve, 
+void grow_SetXYCurveRangeY( grow_tObject object, int curve, 
 	double min, double max)
 {
-  ((GrowTrend *)object)->set_xy_range_y( curve, min, max);
+  ((GrowXYCurve *)object)->set_xy_range_y( curve, min, max);
 }
 
-void grow_SetTrendXYRangeX( grow_tObject object, int curve, 
+void grow_SetXYCurveRangeX( grow_tObject object, int curve, 
 	double min, double max)
 {
-  ((GrowTrend *)object)->set_xy_range_x( curve, min, max);
+  ((GrowXYCurve *)object)->set_xy_range_x( curve, min, max);
 }
 
 void grow_SetTrendXYNoOfCurves( grow_tObject object, int noofcurves)
 {
-  ((GrowTrend *)object)->set_xy_noofcurves( noofcurves);
+  ((GrowXYCurve *)object)->set_xy_noofcurves( noofcurves);
 }
 
 void grow_SetTrendFillCurve( grow_tObject object, int fill)
@@ -3978,7 +3997,7 @@ int grow_IsJavaApplication( grow_tCtx ctx)
 
 int grow_GetObjectClassJavaName( grow_tObject object, char *name)
 {
-  return ((GrowNode *)object)->nc->get_java_name( name);
+  return ((GlowArrayElem *)object)->get_java_name( name);
 }
 
 int grow_GetNodeClassJavaName( grow_tNodeClass nodeclass, char *name)
@@ -4333,21 +4352,26 @@ int grow_GetTrendNoOfPoints( grow_tObject object)
   return ((GrowTrend *)object)->get_no_of_points();
 }
 
+int grow_GetTrendFillCurve( grow_tObject object)
+{
+  return ((GrowTrend *)object)->get_fill_curve();
+}
+
 void grow_SetTrendData( grow_tObject object, double *data[3], int data_curves, int data_points)
 {
  ((GrowTrend *)object)->set_data( data, data_curves, data_points);
 }
 
-void grow_SetTrendXYCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
+void grow_SetXYCurveCurveColor( grow_tObject object, int curve, glow_eDrawType curve_color,
 				glow_eDrawType fill_color)
 {
-  ((GrowTrend *)object)->set_xy_curve_color( curve, curve_color, fill_color);
+  ((GrowXYCurve *)object)->set_xy_curve_color( curve, curve_color, fill_color);
 }
 
-void grow_SetTrendXYData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
+void grow_SetXYCurveData( grow_tObject object, double *y_data, double *x_data, int curve_idx, 
 			  int data_points)
 {
-  ((GrowTrend *)object)->set_xy_data( y_data, x_data, curve_idx, data_points);
+  ((GrowXYCurve *)object)->set_xy_data( y_data, x_data, curve_idx, data_points);
 }
 
 int grow_GetObjectAnnotInfo( grow_tObject object, int num, int *text_size, glow_eDrawType *text_drawtype,

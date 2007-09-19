@@ -1,0 +1,155 @@
+! 
+!  Proview   $Id: pwrb_c_xycurve.wb_load,v 1.1 2007-09-19 15:04:38 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_xycurve.wb_load -- Defines the class XyCurve.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Summary Object to display a xy-curve.
+!  Object to display a curve of points with x and y coordinates.
+!
+!  To view a curve in a Ge graph, use a XYCurve component, and set
+!
+!  XY_Curve.DataType <t> XYArrays
+!  XY_Curve.XAttr <t>o.XValue##Float32#100
+!  XY_Curve.YAttr <t>o.XValue##Float32#100
+!  XY_Curve.UpdateAttr <t>o.UpdateAttr##Boolean
+!  XY_Curve.XMinValueAttr <t>o.XMinValue##Float32
+!  XY_Curve.XMaxValueAttr <t>o.XMaxValue##Float32
+!  XY_Curve.YMinValueAttr <t>o.YMinValue##Float32
+!  XY_Curve.YMaxValueAttr <t>o.YMaxValue##Float32
+!  XY_Curve.YMaxValueAttr <t>o.YMaxValue##Float32
+!  XY_Curve.NoOfPointsAttr <t>o.NoOfPoints##UInt32
+!  XY_Curve.NoOfPoints <t>100
+!
+!  where x should be replaced by the name of the XyCurve object.
+!*/
+  Object XyCurve $ClassDef 509
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Standard
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "XyCurve"
+      EndBody
+      !/**
+      ! Optional description.
+      !*/
+      Object Description $Attribute 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$String80"
+        EndBody
+      EndObject
+      !/**
+      ! Array containing the x coordinates of the curve.
+      !*/
+      Object XValue $Attribute 2 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 100
+        EndBody
+      EndObject
+      !/**
+      ! Array containing the y coordinates of the curve.
+      !*/
+      Object YValue $Attribute 3 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+          Attr Flags |= PWR_MASK_ARRAY
+          Attr Elements = 100
+        EndBody
+      EndObject
+      !/**
+      ! Low x-axis limit.
+      !*/
+      Object XMinValue $Attribute 4 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! High x-axis limit.
+      !*/
+      Object XMaxValue $Attribute 5 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! Low y-axis limit.
+      !*/
+      Object YMinValue $Attribute 6 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! High y-axis limit.
+      !*/
+      Object YMaxValue $Attribute 7 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+        EndBody
+      EndObject
+      !/**
+      ! Number of points.
+      !*/
+      Object NoOfPoints $Attribute 8 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$UInt32"
+        EndBody
+      EndObject
+      !/**
+      ! Indicates that the curve display should be updated.
+      ! Should be set for about a second when new curve values are supplied.
+      !*/
+      Object Update $Attribute 9 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Boolean"
+          Attr Flags |= PWR_MASK_STATE
+          Attr Flags |= PWR_MASK_NOEDIT
+        EndBody
+      EndObject
+    EndObject
+    Object Template XyCurve
+      Body RtBody
+        Attr XMaxValue = 100
+        Attr YMaxValue = 100
+        Attr NoOfPoints = 100
+      EndBody
+    EndObject
+  EndObject
+EndSObject
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

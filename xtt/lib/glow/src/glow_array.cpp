@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array.cpp,v 1.10 2007-07-04 13:32:26 claes Exp $
+ * Proview   $Id: glow_array.cpp,v 1.11 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -61,6 +61,7 @@
 #include "glow_growwindow.h"
 #include "glow_growfolder.h"
 #include "glow_growtable.h"
+#include "glow_growxycurve.h"
 #include "glow_msg.h"
 #include "co_cdh.h"
 
@@ -353,6 +354,21 @@ void GlowArray::copy_from( const GlowArray& array)
 	n->cell_value = 0;
 	n->configure();
 	n->configure_scrollbars();
+        insert( n);
+        break;
+      }
+      case glow_eObjectType_GrowXYCurve:
+      {
+        GrowXYCurve *n = new GrowXYCurve(*(GrowXYCurve *)array.a[i]);
+        n->highlight = 0;
+        n->hot = 0;
+	// Fix, This should be done in the copy constructor !!!
+	n->curve[0] = NULL;
+	n->curve[1] = NULL;
+        n->configure_curves();
+	if ( n->ctx->userdata_copy_callback)
+	  (n->ctx->userdata_copy_callback)( n, 
+	     ((GrowXYCurve *)(array.a[i]))->user_data, &n->user_data, glow_eUserdataCbType_Node);
         insert( n);
         break;
       }
@@ -1002,6 +1018,13 @@ void GlowArray::open( GrowCtx *ctx, ifstream& fp)
           insert( n);
         else
           delete n;
+        break;
+      }
+      case glow_eSave_GrowXYCurve: 
+      {
+        GrowXYCurve *n = new GrowXYCurve( ctx, "");
+	n->open( fp);
+        insert( n);
         break;
       }
       case glow_eSave_End: end_found = 1; break;

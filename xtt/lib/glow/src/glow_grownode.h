@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_grownode.h,v 1.10 2007-01-04 07:57:39 claes Exp $
+ * Proview   $Id: glow_grownode.h,v 1.11 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -898,6 +898,7 @@ class GrowNode : public GlowNode {
   */
   int get_annotation_info( int num, int *t_size, glow_eDrawType *t_drawtype, glow_eDrawType *t_color,
 				 glow_eDrawType *bg_color, double *scale);
+  int get_java_name( char *name) { return nc->get_java_name( name);}
 
   //! Destructor
   /*! Remove the object from the context and erase it from the screen.

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.43 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.44 2007-09-19 15:07:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1379,7 +1379,8 @@ int Graph::get_attr_items( grow_tObject object, attr_sItem **itemlist,
 
     *client_data = 0;
   }
-  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowTrend)
+  else if ( grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+	    grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve)
   {
     GeDyn *dyn;
 
@@ -1633,6 +1634,7 @@ static int graph_attr_recall_cb( void *g, grow_tObject object, int idx,
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBar) {
     sts = graph->recall.get( &dyn, idx);
@@ -2218,7 +2220,7 @@ static int graph_grow_cb( GlowCtx *ctx, glow_tEvent event)
 	}
 	if ( strcmp( sub_name, "pwr_xycurve") == 0) {
 	  grow_tObject t1;
-	  graph->create_trend( &t1, event->create_grow_object.x, 
+	  graph->create_xycurve( &t1, event->create_grow_object.x, 
 			       event->create_grow_object.y, 
 			       (unsigned int)ge_mDynType_XY_Curve);
 	}
@@ -3135,6 +3137,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowSlider ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend ||
+            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
             grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar))
       {
@@ -3155,6 +3158,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowGroup ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTrend ||
+           grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowXYCurve ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowTable ||
            grow_GetObjectType( graph->current_mb1_down) == glow_eObjectType_GrowBar)
       {
@@ -3310,6 +3314,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
+              grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
               grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend))
         break;
       if ( graph->mode != graph_eMode_Runtime)
@@ -3374,6 +3379,7 @@ static int graph_trace_grow_cb( GlowCtx *ctx, glow_tEvent event)
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowWindow ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowBar ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTable ||
+           grow_GetObjectType( event->object.object) == glow_eObjectType_GrowXYCurve ||
            grow_GetObjectType( event->object.object) == glow_eObjectType_GrowTrend)
       {
 
@@ -4151,7 +4157,44 @@ void Graph::create_trend( grow_tObject *object, double x, double y,
   dyn->update_elements();
   grow_SetUserData( *object, (void *)dyn);
 
-  info.mode = glow_eTrendMode_Trend;
+  info.no_of_points = 100;
+  info.scan_time = 0.5;
+  info.fill_curve = 0;
+  info.curve_width = 1;
+  info.horizontal_lines = 4;
+  info.vertical_lines = 4;
+  info.y_min_value[0] = 0;
+  info.y_min_value[1] = 0;
+  info.y_max_value[0] = 100;
+  info.y_max_value[1] = 100;
+  info.curve_drawtype[0] = glow_eDrawType_Color145;
+  info.curve_drawtype[1] = glow_eDrawType_Color295;
+  info.curve_fill_drawtype[0] = glow_eDrawType_Color139;
+  info.curve_fill_drawtype[1] = glow_eDrawType_Color289;
+  grow_SetTrendInfo( *object, &info);
+
+  grow_Redraw( grow->ctx);
+}
+
+void Graph::create_xycurve( grow_tObject *object, double x, double y,
+			    unsigned int dyn_type)
+{
+  double width = 7;
+  double height = 5;
+  GeDyn *dyn;
+  glow_sTrendInfo info;
+
+  grow_CreateGrowXYCurve( grow->ctx, "", 
+			  x, y, width, height,
+			  glow_eDrawType_Color37,
+			  1, glow_mDisplayLevel_1, 1, 1,
+			  glow_eDrawType_Color40, NULL, 
+			  object);
+  dyn = new GeDyn( this);
+  dyn->dyn_type = dyn->total_dyn_type = (ge_mDynType) dyn_type;
+  dyn->update_elements();
+  grow_SetUserData( *object, (void *)dyn);
+
   info.no_of_points = 100;
   info.scan_time = 0.5;
   info.fill_curve = 0;
@@ -4303,6 +4346,7 @@ static void graph_free_dyn( grow_tObject object)
        grow_GetObjectType( object) == glow_eObjectType_GrowGroup ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowBar ||
        grow_GetObjectType( object) == glow_eObjectType_NodeClass) {

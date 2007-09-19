@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow.h,v 1.24 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: glow.h,v 1.25 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -186,7 +186,8 @@ typedef enum {
         glow_eObjectType_GrowWindow,
         glow_eObjectType_GrowScrollBar,
         glow_eObjectType_GrowTable,
-        glow_eObjectType_GrowFolder
+        glow_eObjectType_GrowFolder,
+        glow_eObjectType_GrowXYCurve
 	} glow_eObjectType;
 
 //! Direction of a connection points, sliders etc
@@ -341,12 +342,6 @@ typedef enum {
   glow_eRelief_Up,   //!< The shadow is lighter on the left-upper side, and darker on the right-lower side  
   glow_eRelief_Down  //!< The shadow is darker on the left-upper side, and lighter on the left-lower side
 } glow_eRelief;
-
-//! Trend modes
-typedef enum {
-  glow_eTrendMode_Trend,  	//!< Trend with time x-axis
-  glow_eTrendMode_XY_Curve     	//!< Curve of (x,y) points
-} glow_eTrendMode;
 
 //! Color index for a color
 /*! The drawtype is index in an array that contains the gc for colors in the color palette. 
@@ -1006,6 +1001,7 @@ typedef enum {
 	glow_eSave_GrowWindow		      	= 40,
 	glow_eSave_GrowFolder		      	= 41,
 	glow_eSave_GrowTable		      	= 42,
+	glow_eSave_GrowXYCurve		      	= 43,
 	glow_eSave_End				= 99,
 	glow_eSave_Ctx_zoom_factor_x		= 100,
 	glow_eSave_Ctx_base_zoom_factor		= 101,
@@ -1649,7 +1645,8 @@ typedef enum {
 	glow_eSave_GrowTable_column_adjustment9 = 4273,
 	glow_eSave_GrowTable_column_adjustment10 = 4274,
 	glow_eSave_GrowTable_column_adjustment11 = 4275,
-	glow_eSave_GrowTable_column_adjustment12 = 4276
+	glow_eSave_GrowTable_column_adjustment12 = 4276,
+	glow_eSave_GrowXYCurve_trend_part 	= 4300
 	} glow_eSave;
 
 //! Relative or absolute position for an annotation
@@ -1917,7 +1914,6 @@ typedef struct {
 
 //! Data for a GrowTrend object
 typedef struct {
-  glow_eTrendMode	mode;
   double		y_max_value[TREND_MAX_CURVES];
   double		y_min_value[TREND_MAX_CURVES];
   double		x_max_value[TREND_MAX_CURVES];

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.h,v 1.33 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_dyn.h,v 1.34 2007-09-19 15:07:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2177,6 +2177,7 @@ class GeXY_Curve : public GeDynElem {
   int scan( grow_tObject object);
   void set_attribute( grow_tObject object, char *attr_name, int *cnt);
   void replace_attribute( char *from, char *to, int *cnt, int strict);
+  int export_java( grow_tObject object, ofstream& fp, bool first, char *var_name);
 };
 
 //! Dynamics for a trend object.

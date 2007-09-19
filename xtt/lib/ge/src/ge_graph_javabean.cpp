@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph_javabean.cpp,v 1.12 2007-01-04 08:18:35 claes Exp $
+ * Proview   $Id: ge_graph_javabean.cpp,v 1.13 2007-09-19 15:07:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1459,7 +1459,8 @@ int Graph::export_gejava_nodeclass( ofstream& fp, grow_tNodeClass nodeclass)
     for ( i = 0; i < object_cnt; i++)
     {
       if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode ||
-           grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( *object_p) == glow_eObjectType_GrowXYCurve)
         export_GejavaObjectTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowBar)
         export_BarTraceAttr( fp, *object_p, i);
@@ -1849,7 +1850,8 @@ int Graph::export_gejava( char *filename, char *bean_name, int applet, int html)
     for ( i = 0; i < object_cnt; i++)
     {
       if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowNode ||
-           grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup)
+           grow_GetObjectType( *object_p) == glow_eObjectType_GrowGroup ||
+           grow_GetObjectType( *object_p) == glow_eObjectType_GrowXYCurve)
         export_GejavaObjectTraceAttr( fp, *object_p, i);
       else if ( grow_GetObjectType( *object_p) == glow_eObjectType_GrowBar)
         export_BarTraceAttr( fp, *object_p, i);

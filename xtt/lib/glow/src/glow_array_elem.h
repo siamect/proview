@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_array_elem.h,v 1.8 2007-01-04 07:57:38 claes Exp $
+ * Proview   $Id: glow_array_elem.h,v 1.9 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -190,6 +190,7 @@ class GlowArrayElem {
     virtual void set_rootnode( void *node) {};
     virtual void set_linetype( glow_eLineType type) {};
     virtual void set_input_focus( int focus) {};
+    virtual int get_java_name( char *name) { return 0;}
 
     virtual ~GlowArrayElem() {};
 };

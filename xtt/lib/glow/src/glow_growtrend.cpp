@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.cpp,v 1.7 2007-09-12 08:56:37 claes Exp $
+ * Proview   $Id: glow_growtrend.cpp,v 1.8 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ GrowTrend::GrowTrend( GrowCtx *glow_ctx, char *name, double x, double y,
 		display_lev,fill_rect,display_border,0,fill_d_type,nodraw),
 		horizontal_lines(0), vertical_lines(0), fill_curve(0),
 		no_of_points(100), curve_width(1),
-		curve_cnt(0), scan_time(1), user_data(0), mode(glow_eTrendMode_Trend)
+		curve_cnt(0), scan_time(1), user_data(0)
 {
   for ( int i = 0; i < TREND_MAX_CURVES; i++) { 
     y_min_value[i] = 0;
@@ -823,7 +823,6 @@ void GrowTrend::export_javabean( GlowTransform *t, void *node,
 */
 void GrowTrend::set_trend_info( glow_sTrendInfo *info)
 {
-  mode = info->mode;
   horizontal_lines = info->horizontal_lines;
   vertical_lines = info->vertical_lines;
   fill_curve = info->fill_curve;
@@ -940,146 +939,6 @@ void GrowTrend::set_data( double *data[3], int data_curves, int data_points)
 				 0, fill_curve, 1, 0, dt_fill);
     ctx->nodraw--;
   }
-  free( (char *) pointarray);
-  draw();
-}
-
-//! Set the range for the specified xy_curve in x direction.
-/*!
-  \param curve	Number of curve.
-  \param min		Min value.
-  \param max		Max value.
-*/
-void GrowTrend::set_xy_range_x( int curve, double min, double max)
-{
-  if ( curve > TREND_MAX_CURVES)
-    return;
-  x_max_value[curve] = max;
-  x_min_value[curve] = min;
-}
-
-//! Set the range for the specified xy_curve in x direction.
-/*!
-  \param curve	Number of curve.
-  \param min		Min value.
-  \param max		Max value.
-*/
-void GrowTrend::set_xy_range_y( int curve, double min, double max)
-{
-  if ( curve > TREND_MAX_CURVES)
-    return;
-  y_max_value[curve] = max;
-  y_min_value[curve] = min;
-}
-
-void GrowTrend::set_xy_noofcurves( int noofcurves)
-{
-  curve_cnt = noofcurves;
-}
-
-void GrowTrend::set_xy_curve_color( int curve, glow_eDrawType curve_color,
-				    glow_eDrawType fill_color)
-{
-  if ( curve > TREND_MAX_CURVES)
-    return;
-  curve_drawtype[curve] = curve_color;
-  curve_fill_drawtype[curve] = fill_color;
-}
-
-void GrowTrend::set_xy_data( double *y_data, double *x_data, int curve_idx, int data_points)
-{
-  glow_eDrawType dt, dt_fill;
-  int points;
-  int cpoints;
-  glow_sPoint *pointarray;
-  glow_sPoint *point_p;
-  int	i, j, idx;
-
-  if ( curve_idx > TREND_MAX_CURVES)
-    return;
-
-  no_of_points = max( 2, no_of_points);
-  points = cpoints = min( no_of_points, data_points);
-  if ( fill_curve)
-    cpoints += 2;
-  
-  curve_width = min( DRAW_TYPE_SIZE, max( 1, curve_width));
-
-  pointarray = (glow_sPoint *) calloc( cpoints, sizeof(glow_sPoint));
-  point_p = pointarray;
-  j = curve_idx;
-  for ( i = 0, idx = 0; i < cpoints; i++, idx++) {
-
-    if ( !fill_curve) {
-      idx = i;
-      if ( y_max_value[j] != y_min_value[j])
-	point_p->y = ur.y - (y_data[idx] - y_min_value[j]) / 
-	  (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
-      
-      point_p->y = max( ll.y, min( point_p->y, ur.y));	
-
-      if ( x_max_value[j] != x_min_value[j])
-	point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
-	  (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
-
-      point_p->x = max( ll.x, min( point_p->x, ur.x));	
-    }
-    else {
-      
-      if ( i == 0) {
-	if ( x_max_value[j] != x_min_value[j])
-	  point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
-	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
-	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
-	point_p->y = ur.y;
-	idx--;
-      }
-      else if ( i == cpoints - 1) {
-	if ( x_max_value[j] != x_min_value[j])
-	  point_p->x = ll.x + (x_data[idx-1] - x_min_value[j]) / 
-	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
-	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
-	point_p->y = ur.y;
-      }
-      else {
-	if ( y_max_value[j] != y_min_value[j])
-	  point_p->y = ur.y - (y_data[idx] - y_min_value[j]) / 
-	    (y_max_value[j] - y_min_value[j]) * (ur.y - ll.y);
-	
-	point_p->y = max( ll.y, min( point_p->y, ur.y));	
-	
-	if ( x_max_value[j] != x_min_value[j])
-	  point_p->x = ll.x + (x_data[idx] - x_min_value[j]) / 
-	    (x_max_value[j] - x_min_value[j]) * (ur.x - ll.x);
-	
-	point_p->x = max( ll.x, min( point_p->x, ur.x));	
-      }
-    }
-    point_p++;
-  }
-
-  ctx->nodraw++;
-  if ( curve[j])
-    delete curve[j];
-  ctx->nodraw--;
-
-  if ( curve_drawtype[j] != glow_eDrawType_Inherit)
-    dt = curve_drawtype[j];
-  else
-    dt = draw_type;
-
-  if ( curve_fill_drawtype[j] != glow_eDrawType_Inherit)
-    dt_fill = curve_fill_drawtype[j];
-  else
-    dt_fill = draw_type;
-
-  ctx->nodraw++;
-  curve[j] = new GrowPolyLine( ctx, "", pointarray, cpoints, dt, 
-			       curve_width,
-			       0, fill_curve, 1, 0, dt_fill);
-  ctx->nodraw--;
   free( (char *) pointarray);
   draw();
 }

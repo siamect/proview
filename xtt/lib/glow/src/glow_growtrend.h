@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growtrend.h,v 1.5 2007-09-12 08:56:37 claes Exp $
+ * Proview   $Id: glow_growtrend.h,v 1.6 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -98,7 +98,6 @@ class GrowTrend : public GrowRect {
   int			curve_cnt;			//!< Number of curves.
   double		scan_time;			//!< Scantime. Time interval between two points.
   void 			*user_data;			//!< User data.
-  glow_eTrendMode	mode;				//!< Type of curve.
 
   void draw( GlowWind *w, GlowTransform *t, int highlight, int hot, void *node, void *colornode);
 
@@ -155,13 +154,7 @@ class GrowTrend : public GrowRect {
 
   void set_data( double *data[3], int data_curves, int data_points);
   int get_no_of_points() { return no_of_points;}
-
-  void set_xy_range_x( int curve, double min, double max);
-  void set_xy_range_y( int curve, double min, double max);
-  void set_xy_noofcurves( int noofcurves);
-  void set_xy_curve_color( int curve, glow_eDrawType curve_color,
-			   glow_eDrawType fill_color);
-  void set_xy_data( double *y_data, double *x_data, int curve_idx, int data_points);
+  int get_fill_curve() { return fill_curve;}
 };
 
 

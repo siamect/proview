@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_exportjbean.h,v 1.10 2007-05-23 08:04:09 claes Exp $
+ * Proview   $Id: glow_exportjbean.h,v 1.11 2007-09-19 15:07:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -124,6 +124,18 @@ class GlowExportJBean {
 	int		curve_width,
 	int		no_of_points,
 	double		scan_time,
+	int		horizontal_lines,
+	int		vertical_lines,
+    	int		line_width,
+	double		rotate,
+	glow_eExportPass pass, int *shape_cnt, int node_cnt, ofstream& fp);
+    void xycurve( double x1, double y1, double x2, double y2,
+    	glow_eDrawType border_drawtype,
+    	glow_eDrawType	fill_drawtype,
+    	int		fill,
+	int		border,
+	int		curve_width,
+	int		no_of_points,
 	int		horizontal_lines,
 	int		vertical_lines,
     	int		line_width,

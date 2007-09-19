@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.29 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.30 2007-09-19 15:07:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1159,6 +1159,15 @@ class Graph {
     \param dyn_type	Dyntype of the created object.
   */
   void create_trend( grow_tObject *object, double x, double y, unsigned int dyn_type);
+
+  //! Create a xy curve object.
+  /*!
+    \param object	Created xy curve object.
+    \param x		x coordinate for object.
+    \param y		y coordinate for object.
+    \param dyn_type	Dyntype of the created object.
+  */
+  void create_xycurve( grow_tObject *object, double x, double y, unsigned int dyn_type);
 
   //! Create a bar object.
   /*!

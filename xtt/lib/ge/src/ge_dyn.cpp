@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.53 2007-09-12 08:56:36 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.54 2007-09-19 15:07:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,69 @@
 #define xmenu_eItemType_Object   1
 
 static int pdummy;
+
+static void set_curve_default_color( int instance, 
+				     glow_eDrawType *curve_color, glow_eDrawType *fill_color)
+{
+  if ( *curve_color == glow_eDrawType_Inherit) {
+    switch ( instance) {
+    case ge_mInstance_1:
+      *curve_color = glow_eDrawType_Color145; // OrangeHigh5
+      break;
+    case ge_mInstance_2:
+      *curve_color = glow_eDrawType_Color295; // GreenHigh5
+      break;
+    case ge_mInstance_3:
+      *curve_color = glow_eDrawType_Color235; // BlueHigh5
+      break;
+    case ge_mInstance_4:
+      *curve_color = glow_eDrawType_Color115; // YellowHigh5
+      break;
+    case ge_mInstance_5:
+      *curve_color = glow_eDrawType_Color175; // RedHigh5
+      break;
+    case ge_mInstance_6:
+      *curve_color = glow_eDrawType_Color205; // MagentaHigh5
+      break;
+    case ge_mInstance_7:
+      *curve_color = glow_eDrawType_Color85; // YellowGreenHigh5
+      break;
+    case ge_mInstance_8:
+      *curve_color = glow_eDrawType_Color265; // SeaBlueHigh5
+      break;
+    default: ;
+    }
+  }
+  if ( *fill_color == glow_eDrawType_Inherit) {
+    switch ( instance) {
+    case ge_mInstance_1:
+      *fill_color = glow_eDrawType_Color139; // OrangeMedium9
+      break;
+    case ge_mInstance_2:
+      *fill_color = glow_eDrawType_Color289; // GreenMedium9
+      break;
+    case ge_mInstance_3:
+      *fill_color = glow_eDrawType_Color229; // BlueMedium9
+      break;
+    case ge_mInstance_4:
+      *fill_color = glow_eDrawType_Color109; // YellowMedium9
+      break;
+    case ge_mInstance_5:
+      *fill_color = glow_eDrawType_Color169; // RedMedium9
+      break;
+    case ge_mInstance_6:
+      *fill_color = glow_eDrawType_Color199; // MagentaMedium9
+      break;
+    case ge_mInstance_7:
+      *fill_color = glow_eDrawType_Color79; // YellowGreenMedium9
+      break;
+    case ge_mInstance_8:
+      *fill_color = glow_eDrawType_Color259; // SeaBlueMedium9
+      break;
+    default: ;
+    }
+  }
+}
 
 static int dyn_get_typeid( char *format)
 {
@@ -1271,6 +1334,7 @@ int GeDyn::connect( grow_tObject object, glow_sTraceData *trace_data)
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
@@ -1352,6 +1416,7 @@ void GeDyn::export_java( grow_tObject object, ofstream& fp, char *var_name)
   if ( grow_GetObjectType( object) == glow_eObjectType_GrowBar || 
        grow_GetObjectType( object) == glow_eObjectType_GrowTable ||
        grow_GetObjectType( object) == glow_eObjectType_GrowWindow ||
+       grow_GetObjectType( object) == glow_eObjectType_GrowXYCurve ||
        grow_GetObjectType( object) == glow_eObjectType_GrowTrend) {
     if ( cycle == glow_eCycle_Inherit)
       cycle = glow_eCycle_Slow;
@@ -6445,65 +6510,8 @@ int GeXY_Curve::connect( grow_tObject object, glow_sTraceData *trace_data)
   }
 
   // Set default colors
-  if ( curve_color == glow_eDrawType_Inherit) {
-    switch ( instance) {
-    case ge_mInstance_1:
-      curve_color = glow_eDrawType_Color145; // OrangeHigh5
-      break;
-    case ge_mInstance_2:
-      curve_color = glow_eDrawType_Color295; // GreenHigh5
-      break;
-    case ge_mInstance_3:
-      curve_color = glow_eDrawType_Color235; // BlueHigh5
-      break;
-    case ge_mInstance_4:
-      curve_color = glow_eDrawType_Color115; // YellowHigh5
-      break;
-    case ge_mInstance_5:
-      curve_color = glow_eDrawType_Color175; // RedHigh5
-      break;
-    case ge_mInstance_6:
-      curve_color = glow_eDrawType_Color205; // MagentaHigh5
-      break;
-    case ge_mInstance_7:
-      curve_color = glow_eDrawType_Color85; // YellowGreenHigh5
-      break;
-    case ge_mInstance_8:
-      curve_color = glow_eDrawType_Color265; // SeaBlueHigh5
-      break;
-    default: ;
-    }
-  }
-  if ( fill_color == glow_eDrawType_Inherit) {
-    switch ( instance) {
-    case ge_mInstance_1:
-      fill_color = glow_eDrawType_Color139; // OrangeMedium9
-      break;
-    case ge_mInstance_2:
-      fill_color = glow_eDrawType_Color289; // GreenMedium9
-      break;
-    case ge_mInstance_3:
-      fill_color = glow_eDrawType_Color229; // BlueMedium9
-      break;
-    case ge_mInstance_4:
-      fill_color = glow_eDrawType_Color109; // YellowMedium9
-      break;
-    case ge_mInstance_5:
-      fill_color = glow_eDrawType_Color169; // RedMedium9
-      break;
-    case ge_mInstance_6:
-      fill_color = glow_eDrawType_Color199; // MagentaMedium9
-      break;
-    case ge_mInstance_7:
-      fill_color = glow_eDrawType_Color79; // YellowGreenMedium9
-      break;
-    case ge_mInstance_8:
-      fill_color = glow_eDrawType_Color259; // SeaBlueMedium9
-      break;
-    default: ;
-    }
-  }
-  grow_SetTrendXYCurveColor( object, curve_number - 1, curve_color, fill_color);
+  set_curve_default_color( instance, &curve_color, &fill_color);
+  grow_SetXYCurveCurveColor( object, curve_number - 1, curve_color, fill_color);
   noofpoints = grow_GetTrendNoOfPoints( object);
 
   return 1;
@@ -6548,16 +6556,16 @@ int GeXY_Curve::scan( grow_tObject object)
 
   if ( first_scan && !(x_max_value_p && x_min_value_p) &&
        fabsf( x_max_value - x_min_value) > FLT_EPSILON)
-    grow_SetTrendXYRangeX( object, curve_number - 1, x_min_value, x_max_value);
+    grow_SetXYCurveRangeX( object, curve_number - 1, x_min_value, x_max_value);
   if ( first_scan && !(y_max_value_p && y_min_value_p) &&
        fabsf( y_max_value - y_min_value) > FLT_EPSILON)
-    grow_SetTrendXYRangeY( object, curve_number - 1, y_min_value, y_max_value);
+    grow_SetXYCurveRangeY( object, curve_number - 1, y_min_value, y_max_value);
 
   if ( x_max_value_p && x_min_value_p && 
        ( *x_max_value_p != old_x_max_value ||
 	 *x_min_value_p != old_x_min_value)) {
     if ( fabsf( *x_max_value_p - *x_min_value_p) > FLT_EPSILON) {
-      grow_SetTrendXYRangeX( object, curve_number - 1, double(*x_min_value_p), 
+      grow_SetXYCurveRangeX( object, curve_number - 1, double(*x_min_value_p), 
 		double(*x_max_value_p));
       redraw = true;
     }
@@ -6569,7 +6577,7 @@ int GeXY_Curve::scan( grow_tObject object)
        ( *y_max_value_p != old_y_max_value ||
 	 *y_min_value_p != old_y_min_value)) {
     if ( fabsf( *y_max_value_p - *y_min_value_p) > FLT_EPSILON) {
-      grow_SetTrendXYRangeY( object, curve_number - 1, double(*y_min_value_p), 
+      grow_SetXYCurveRangeY( object, curve_number - 1, double(*y_min_value_p), 
 		double(*y_max_value_p));
       redraw = true;
     }
@@ -6744,7 +6752,7 @@ int GeXY_Curve::scan( grow_tObject object)
       break;
     }
 
-    grow_SetTrendXYData( object, y_trendvalue, x_trendvalue, curve_number - 1, no_of_points);
+    grow_SetXYCurveData( object, y_trendvalue, x_trendvalue, curve_number - 1, no_of_points);
     free( y_trendvalue);
     free( x_trendvalue);
   }
@@ -6752,6 +6760,29 @@ int GeXY_Curve::scan( grow_tObject object)
   if ( first_scan)
     first_scan = false;
 
+  return 1;
+}
+
+int GeXY_Curve::export_java( grow_tObject object, ofstream& fp, bool first, char *var_name)
+{
+  glow_eDrawType ccolor = curve_color;
+  glow_eDrawType fcolor = fill_color;
+  noofpoints = grow_GetTrendNoOfPoints( object);
+  int fill_curve = grow_GetTrendFillCurve( object);
+
+  set_curve_default_color( instance, &ccolor, &fcolor);
+
+  if ( first)
+    fp << "      ";
+  else
+    fp << "      ,";
+  fp << "new GeDynXYCurve(" << var_name << ".dd, \"" << x_attr <<  "\",\"" << y_attr <<
+    "\",\"" << y_minvalue_attr << "\",\"" << y_maxvalue_attr <<
+    "\",\"" << x_minvalue_attr << "\",\"" << x_maxvalue_attr <<
+    "\",\"" << noofpoints_attr << "\",\"" << update_attr << "\"," <<
+    y_min_value << "," << y_max_value << "," << x_min_value << "," << x_max_value << "," <<
+    noofpoints << "," << (int)datatype << "," << (int)ccolor << "," << (int)fcolor <<
+    "," << fill_curve << ")" << endl;
   return 1;
 }
 
