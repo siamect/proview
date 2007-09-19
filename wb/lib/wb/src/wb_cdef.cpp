@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdef.cpp,v 1.15 2005-09-06 10:43:31 claes Exp $
+ * Proview   $Id: wb_cdef.cpp,v 1.16 2007-09-19 15:12:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +35,7 @@ wb_cdef::wb_cdef( wb_cdrep *cdrep) : wb_status(LDH__SUCCESS), m_cdrep(cdrep)
     cdrep->ref();
 }
 
-wb_cdef::wb_cdef( wb_adef& a)
+wb_cdef::wb_cdef( wb_adef& a) : m_cdrep(0)
 {
   wb_adrep *adrep = a;
   try {
@@ -48,7 +48,7 @@ wb_cdef::wb_cdef( wb_adef& a)
   }
 }
 
-wb_cdef::wb_cdef(const wb_orep& x)
+wb_cdef::wb_cdef(const wb_orep& x) : m_cdrep(0)
 {
   try {
     m_cdrep = new wb_cdrep( x);
@@ -60,7 +60,7 @@ wb_cdef::wb_cdef(const wb_orep& x)
   }
 }
 
-wb_cdef::wb_cdef(wb_mvrep *mvrep, pwr_tCid cid)
+wb_cdef::wb_cdef(wb_mvrep *mvrep, pwr_tCid cid) : m_cdrep(0)
 {
   try {
     m_cdrep = new wb_cdrep( mvrep, cid);
