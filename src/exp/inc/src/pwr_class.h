@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: pwr_class.h,v 1.23 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: pwr_class.h,v 1.24 2007-09-19 15:09:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -289,6 +289,7 @@ typedef enum {
   pwr_eCix_RtMethod		=  64,
   pwr_eCix_ExternVolume		=  65,
   pwr_eCix_Hier			=  66,
+  pwr_eCix_ClassLost   		=  67,
   pwr_eCix_
 } pwr_eCix;
     
@@ -359,6 +360,7 @@ typedef enum {
   pwr_eClass_RtMethod		= pwr_ClassId(pwr_eCix_RtMethod),
   pwr_eClass_ExternVolume	= pwr_ClassId(pwr_eCix_ExternVolume),
   pwr_eClass_Hier		= pwr_ClassId(pwr_eCix_Hier),
+  pwr_eClass_ClassLost		= pwr_ClassId(pwr_eCix_ClassLost),
   pwr_eClass_			
 } pwr_eClass;
     
@@ -676,7 +678,8 @@ union pwr_m_Adef {
     pwr_Bits( buffer    , 1),  
     pwr_Bits( nowbl     , 1),  
     pwr_Bits( alwayswbl , 1), 
-    pwr_Bits( fill_0	, 2),,
+    pwr_Bits( newattribute , 1), 
+    pwr_Bits( fill_0	, 1),
 
     pwr_Bits( fill_1	, 8),,,,,,,
   ) b;
@@ -705,6 +708,7 @@ union pwr_m_Adef {
 #define pwr_mAdef_alwayswbl	pwr_Bit(21)		/* Always print to wbl file */		
 #define pwr_mAdef_disableattr	pwr_Bit(22)		/* Can be disabled */
 #define pwr_mAdef_rthide	pwr_Bit(23)		/* Hide in runtime */
+#define pwr_mAdef_newattribute 	pwr_Bit(24)		/* New attribute */
 };
 
 #define PWR_MASK_POINTER	pwr_mAdef_pointer
@@ -732,6 +736,7 @@ union pwr_m_Adef {
 #define PWR_MASK_ALWAYSWBL      pwr_mAdef_alwayswbl
 #define PWR_MASK_DISABLEATTR    pwr_mAdef_disableattr
 #define PWR_MASK_RTHIDE    	pwr_mAdef_rthide
+#define PWR_MASK_NEWATTRIBUTE  	pwr_mAdef_newattribute
 
 struct pwr_s_Param
     {
