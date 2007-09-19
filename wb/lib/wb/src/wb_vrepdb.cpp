@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.53 2007-07-12 12:20:15 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.54 2007-09-19 15:17:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1835,9 +1835,11 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
         pwr_sAttrRef *arp = (pwr_sAttrRef *)(p + ap->key.offset);        
         wb_db_ohead aohead(m_db, m_db->m_txn, arp->Objid);
         wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, aohead.cid());
-        if (EVEN(sts)) printf("n_cdrep sts %d", sts);
-        
-        wb_bdrep *n_bdrep = n_cdrep->bdrep(&sts, ap->key.bix);
+	wb_bdrep *n_bdrep;
+        if (EVEN(sts))
+	  printf("cdrep sts %d", sts);
+	else
+	  n_bdrep = n_cdrep->bdrep(&sts, ap->key.bix);
         if (EVEN(sts)) {
 	  ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
 	  continue;
@@ -1938,8 +1940,12 @@ pwr_tStatus wb_vrepdb::updateMeta()
     wb_db_class_iterator ip(m_db);
   
     for (ip.first(); !ip.atEnd(); ip.succClass()) {
-      nClass += checkClass(ip.cid());
-      checkAttributes(ip.cid());
+      try {
+	nClass += checkClass(ip.cid());
+	checkAttributes(ip.cid());
+      } catch (wb_error &e) {
+	printf("vrepdb::updateMeta: %s\n", e.what().c_str());	
+      }
     }
     for (ip.first(); !ip.atEnd(); ip.succObject()) {
       pwr_tCid cid = ip.cid();
@@ -2054,8 +2060,10 @@ wb_vrepdb::checkClass(pwr_tCid cid)
   o_time = o_crep->ohTime();
 
   n_crep = m_erep->merep()->cdrep(&sts, cid);      	
-  if (n_crep != 0)
-    n_time = n_crep->ohTime();
+  if (n_crep == 0)
+    throw wb_error( LDH__NOSUCHCLASS);
+
+  n_time = n_crep->ohTime();
 
   if (time_Acomp(&o_time, &n_time) != 0) {
     sClass *ccp = (sClass *)tree_Insert(&sts, m_class_th, &cid);
