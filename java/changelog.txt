@@ -5,3 +5,5 @@
 070524 cs  jop       More c-printf compatible output format implemented.
 070720 cs  rt        HistServer didn't listen to qcom termination message.
 070720 cs  rt        MhServer didn't terminate at qcom termination message.
+070917 cs  rt        Gdh functions GetObjectInfoFloatArray and GetObjectInfoIntArray added.
+070917 cs  jop       Support for XY-curves.
