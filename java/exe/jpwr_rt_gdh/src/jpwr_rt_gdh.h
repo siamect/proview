@@ -7,11 +7,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* Inaccessible static: initDone */
-/* Inaccessible static: currentSystemGroup */
-/* Inaccessible static: currentUser */
-/* Inaccessible static: currentPassword */
-/* Inaccessible static: currentPrivilege */
 /*
  * Class:     jpwr_rt_Gdh
  * Method:    init
@@ -91,6 +86,22 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoString
  */
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoObjid
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectInfoFloatArray
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrFloatArray;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoFloatArray
+  (JNIEnv *, jobject, jstring, jint);
+
+/*
+ * Class:     jpwr_rt_Gdh
+ * Method:    getObjectInfoIntArray
+ * Signature: (Ljava/lang/String;)Ljpwr/rt/CdhrIntArray;
+ */
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoIntArray
+  (JNIEnv *, jobject, jstring, jint);
 
 /*
  * Class:     jpwr_rt_Gdh

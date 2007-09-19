@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: jpwr_rt_gdh.c,v 1.14 2007-04-26 11:26:16 claes Exp $
+ * Proview   $Id: jpwr_rt_gdh.c,v 1.15 2007-09-19 15:08:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -876,7 +876,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getParent
     	  "<init>", "(II)V");
     PwrtObjid_getOix = (*env)->GetMethodID( env, PwrtObjid_id, "getOix", "()I");
     PwrtObjid_getVid = (*env)->GetMethodID( env, PwrtObjid_id, "getVid", "()I");
-    //printf("PwrtObjid_xxx initierade\n");
+    //printf("PwrtObjid_yyy initierade\n");
   }
 
   objid.oix = (*env)->CallIntMethod( env, objid_obj, PwrtObjid_getOix);
@@ -1019,7 +1019,7 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectClass
     	  "<init>", "(II)V");
     pwrtObjid_getOix = (*env)->GetMethodID( env, pwrtObjid_id, "getOix", "()I");
     pwrtObjid_getVid = (*env)->GetMethodID( env, pwrtObjid_id, "getVid", "()I");
-    //printf("pwrtObjid_xxx initierade\n");
+    //printf("pwrtObjid_yyy initierade\n");
   }
 
   objid.oix = (*env)->CallIntMethod( env, objid_obj, pwrtObjid_getOix);
@@ -1239,6 +1239,46 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoFloat
   return return_obj; 
 }
 
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoFloatArray
+  (JNIEnv *env, jclass obj, jstring name, jint size)
+{
+  int sts;
+  const char *str;
+  char *cstr;
+  jclass cdhrFloatArray_id;
+  jmethodID cdhrFloatArray_cid;
+  jobject return_obj;
+  jint jsts;
+  jfloatArray jvalue = 0;
+  pwr_tFloat32 *value;
+  char 		*s;
+
+  cdhrFloatArray_id = (*env)->FindClass( env, "jpwr/rt/CdhrFloatArray");
+  cdhrFloatArray_cid = (*env)->GetMethodID( env, cdhrFloatArray_id,
+    	"<init>", "([FI)V");
+
+  str = (*env)->GetStringUTFChars( env, name, 0);
+  cstr = (char *)str;
+  gdh_ConvertUTFstring( cstr, cstr);
+  if ( (s = (char *)strchr( cstr, '#')))
+    *s = 0;
+
+  value = (pwr_tFloat32 *)calloc( size, sizeof(pwr_tFloat32));
+  sts = gdh_GetObjectInfo( cstr, value, size * 4);
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
+  
+  jsts = (jint) sts;
+  if ( ODD(sts)) {
+    jvalue = (*env)->NewFloatArray( env, size);
+    (*env)->SetFloatArrayRegion( env, jvalue, 0, (int)size, value);
+  }
+  free( value);
+  
+  return_obj = (*env)->NewObject( env, cdhrFloatArray_id,
+  	cdhrFloatArray_cid, jvalue, jsts);
+  return return_obj; 
+}
+
 JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoInt
   (JNIEnv *env, jclass obj, jstring name)
 {
@@ -1269,6 +1309,46 @@ JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoInt
   jvalue = value;
   return_obj = (*env)->NewObject( env, cdhrInt_id,
   	cdhrInt_cid, jvalue, jsts);
+  return return_obj; 
+}
+
+JNIEXPORT jobject JNICALL Java_jpwr_rt_Gdh_getObjectInfoIntArray
+  (JNIEnv *env, jclass obj, jstring name, jint size)
+{
+  int sts;
+  const char *str;
+  char *cstr;
+  jclass cdhrIntArray_id;
+  jmethodID cdhrIntArray_cid;
+  jobject return_obj;
+  jint jsts;
+  jintArray jvalue = 0;
+  pwr_tInt32 *value;
+  char 		*s;
+
+  cdhrIntArray_id = (*env)->FindClass( env, "jpwr/rt/CdhrIntArray");
+  cdhrIntArray_cid = (*env)->GetMethodID( env, cdhrIntArray_id,
+    	"<init>", "([FI)V");
+
+  str = (*env)->GetStringUTFChars( env, name, 0);
+  cstr = (char *)str;
+  gdh_ConvertUTFstring( cstr, cstr);
+  if ( (s = (char *)strchr( cstr, '#')))
+    *s = 0;
+
+  value = (pwr_tInt32 *)calloc( size, sizeof(pwr_tInt32));
+  sts = gdh_GetObjectInfo( cstr, value, size * 4);
+  (*env)->ReleaseStringUTFChars( env, name, cstr);
+  
+  jsts = (jint) sts;
+  if ( ODD(sts)) {
+    jvalue = (*env)->NewIntArray( env, size);
+    (*env)->SetIntArrayRegion( env, jvalue, 0, (int)size, value);
+  }
+  free( value);
+  
+  return_obj = (*env)->NewObject( env, cdhrIntArray_id,
+  	cdhrIntArray_cid, jvalue, jsts);
   return return_obj; 
 }
 
