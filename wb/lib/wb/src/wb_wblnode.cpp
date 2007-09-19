@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.57 2007-04-25 07:29:02 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.58 2007-09-19 15:19:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -248,6 +248,8 @@ static wbl_sSym classes[] =
   ,{ "pwr_eCix_RtMethod", pwr_eCix_RtMethod }
   ,{ "pwr_eClass_Hier", pwr_eClass_Hier }
   ,{ "pwr_eCix_Hier", pwr_eCix_Hier }
+  ,{ "pwr_eClass_ClassLost", pwr_eClass_ClassLost }
+  ,{ "pwr_eCix_ClassLost", pwr_eCix_ClassLost }
   ,{ 0, 0 }
 };
 
@@ -772,38 +774,74 @@ void wb_wblnode::postBuild()
       ((pwr_sGraphPlcNode *)o->rbody)->default_mask[1] = mask;
     }
   }
-  else if ( isTemplate() && o->templ.created) {
-    // New template object, insert template values of attribute objects into body
-    size_t size;
-    void *body;
+  else if ( isTemplate()) {
+    if ( o->templ.created) {
+      // New template object, insert template values of attribute objects into body
+      size_t size;
+      void *body;
 
-    ch = o->fth->o->fch;
-    while ( ch) {
-      if ( ch->isObjBodyDef() && ch->o->b.bix == pwr_eBix_rt) {
-	wb_wblnode *attr = ch->o->fch;
-	while ( attr) {
-	  if ( attr->isAttribute()) {
-	    if ( cdh_tidIsCid( attr->o->a.tid)) {
-	      // Copy template for this object to offset of the attribute
-	      if ( m_vrep->getTemplateBody( attr->o->a.tid, pwr_eBix_sys, &size, &body)) {
-		if ( size * attr->o->a.elements != attr->o->a.size ||
-		     attr->o->a.offset + size * attr->o->a.elements > o->rbody_size) 
-		  m_vrep->error( "AttrObject size mismatch", getFileName(), line_number);
-		else
-		  for ( int i = 0; i < attr->o->a.elements; i++)
-		    memcpy( (char *)o->rbody + attr->o->a.offset + i * size, body, size);
-		free( body);
+      ch = o->fth->o->fch;
+      while ( ch) {
+	if ( ch->isObjBodyDef() && ch->o->b.bix == pwr_eBix_rt) {
+	  wb_wblnode *attr = ch->o->fch;
+	  while ( attr) {
+	    if ( attr->isAttribute()) {
+	      if ( cdh_tidIsCid( attr->o->a.tid)) {
+		// Copy template for this object to offset of the attribute
+		if ( m_vrep->getTemplateBody( attr->o->a.tid, pwr_eBix_sys, &size, &body)) {
+		  if ( size * attr->o->a.elements != attr->o->a.size ||
+		       attr->o->a.offset + size * attr->o->a.elements > o->rbody_size) 
+		    m_vrep->error( "AttrObject size mismatch", getFileName(), line_number);
+		  else
+		    for ( int i = 0; i < attr->o->a.elements; i++)
+		      memcpy( (char *)o->rbody + attr->o->a.offset + i * size, body, size);
+		  free( body);
+		}
 	      }
 	    }
+	    attr = attr->o->fws;
 	  }
-	  attr = attr->o->fws;
-	}
 	
-	break;
-      }
-      ch = ch->o->fws;
+	  break;
+	}
+	ch = ch->o->fws;
+      }    
     }
-    
+    else {
+      // Check if any new attribute is created
+      size_t size;
+      void *body;
+
+      ch = o->fth->o->fch;
+      while ( ch) {
+	if ( ch->isObjBodyDef() && ch->o->b.bix == pwr_eBix_rt) {
+	  wb_wblnode *attr = ch->o->fch;
+	  while ( attr) {
+	    if ( attr->isAttribute()) {
+	      if ( cdh_tidIsCid( attr->o->a.tid) &&
+		   ((pwr_sParam *)attr->o->rbody)->Info.Flags & PWR_MASK_NEWATTRIBUTE) {
+
+		// Copy template for this object to offset of the attribute
+		if ( m_vrep->getTemplateBody( attr->o->a.tid, pwr_eBix_sys, &size, &body)) {
+		  if ( size * attr->o->a.elements != attr->o->a.size ||
+		       attr->o->a.offset + size * attr->o->a.elements > o->rbody_size) 
+		    m_vrep->error( "AttrObject size mismatch", getFileName(), line_number);
+		  else
+		    for ( int i = 0; i < attr->o->a.elements; i++)
+		      memcpy( (char *)o->rbody + attr->o->a.offset + i * size, body, size);
+		  free( body);
+		}
+		((pwr_sParam *)attr->o->rbody)->Info.Flags &= ~PWR_MASK_NEWATTRIBUTE;
+	      }
+	    }
+	    attr = attr->o->fws;
+	  }
+	
+	  break;
+	}
+	ch = ch->o->fws;
+      }    
+    }
   }
 }
 
