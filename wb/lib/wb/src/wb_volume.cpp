@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.37 2007-09-05 13:02:13 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.38 2007-09-19 15:16:01 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,12 +195,16 @@ wb_cdef wb_volume::cdef(wb_object o)
   pwr_tStatus sts;
   wb_orep *orep = o;
   wb_cdrep *cdrep;
-  if (orep->vrep() == m_vrep)
-    // Object in this volume
-    cdrep = m_vrep->merep()->cdrep(&sts, *orep);
-  else
-    // Object in other volume, get class info from this volume's meta environment
-    cdrep = m_vrep->erep()->cdrep(&sts, *orep);
+  try {
+    if (orep->vrep() == m_vrep)
+      // Object in this volume
+      cdrep = m_vrep->merep()->cdrep(&sts, *orep);
+    else
+      // Object in other volume, get class info from this volume's meta environment
+      cdrep = m_vrep->erep()->cdrep(&sts, *orep);
+  } catch ( wb_error &e) {
+    return wb_cdef();
+  }
   return wb_cdef(cdrep);
 }
 
