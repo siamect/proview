@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.54 2007-09-19 15:07:22 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.55 2007-09-19 15:27:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -7416,6 +7416,56 @@ int GeTable::scan( grow_tObject object)
 	  if ( EVEN(sts))
 	    strcpy( name, "");
 	  len = sprintf( buf, "%s", name);
+	  break;
+	}
+	case pwr_eType_Time: {
+	  int sts;
+	  char timstr[40];
+
+	  switch ( format[i][1]) {
+	  case '1': 
+	    // Format %1t, only time, no hundredth
+	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time, 
+				 timstr, sizeof(timstr));
+	    timstr[8] = 0;
+	    break;
+	  case '2': 
+	    // Format %2t, only time, with hundredth
+	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_Time,
+				 timstr, sizeof(timstr));
+	    break;
+	  case '3': 
+	    // Format %3t, compressed date and time, no hundredth
+	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_ComprDateAndTime,
+				 timstr, sizeof(timstr));
+	    timstr[17] = 0;
+	    break;
+	  default:
+	    sts = time_AtoAscii( (pwr_tTime *)(p[i] + offs), time_eFormat_DateAndTime, 
+			   timstr, sizeof(timstr));
+	  }
+	  if ( EVEN(sts))
+	    strcpy( timstr, "-");
+	  len = sprintf( buf, "%s", timstr);
+	  break;
+	}
+	case pwr_eType_DeltaTime: {
+	  int sts;
+	  char timstr[40];
+	  
+	  switch ( format[i][1]) {
+	  case '1':
+	    // Format %1t, only time, no hundredth
+	    sts = time_DtoAscii( (pwr_tDeltaTime *)(p[i] + offs), 0, 
+				 timstr, sizeof(timstr));
+	    break;
+	  default:
+	    sts = time_DtoAscii( (pwr_tDeltaTime *)(p[i] + offs), 1, 
+				 timstr, sizeof(timstr));
+	  }
+	  if ( EVEN(sts))
+	    strcpy( timstr, "-");
+	  len = sprintf( buf, "%s", timstr);
 	  break;
 	}
 	default: {
