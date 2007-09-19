@@ -71,3 +71,6 @@
 070827 cs  wtt       Objects in the navigator beneath a MountObject are viewed with classes from their dbs-file.
 070905 cs  utl       Bugfix in listdescriptor. Superclass attributes where not printed.
 070905 cs  wb        Bugfix in ldh_GetClassListAttrRef, success status was returned though list was empty.
+070917 cs  plc       Bugfix, reference connections could not be set in gtk.
+070918 cs  wb        Lost classes replaced with $ClassLost when reading wb_load file.
+070919 cs  wb        Defaultvalues inserted into template objects when new attribute objects are added to a class.

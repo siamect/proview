@@ -44,3 +44,5 @@
 070821 cs  convert   Template with includes inserted at structfile generation.
 070905 cs  doc       New Guide to I/O Systems.
 070906 cs  statussrv Functionality to view userstatus added.
+070918 cs  wbl       New systemclass $ClassLost to replace lost classes.
+070919 cs  wbl       New class XyCurve to view a curve of points with x,y coordiantes.

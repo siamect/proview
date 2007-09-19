@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: GeDynXYCurve.java,v 1.1 2007-09-17 15:35:28 claes Exp $
+ * Proview   $Id: GeDynXYCurve.java,v 1.2 2007-09-19 15:08:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,8 @@ public class GeDynXYCurve extends GeDynElem {
   int noofpoints;
   int noOfPoints;
 
+  int xAttrType;
+  int yAttrType;
   public float[] curveX;
   public float[] curveY;
   boolean updateAttrFound;
@@ -96,6 +98,13 @@ public class GeDynXYCurve extends GeDynElem {
     this.fill_curve = fill_curve;
   }
   public void connect() {
+    xAttrType = GeDyn.getTypeId( x_attr);
+    switch ( datatype) {
+    case GeDyn.eCurveDataType_XYArrays:
+      yAttrType = GeDyn.getTypeId( y_attr);
+      break;
+    }
+
     String attrName = dyn.getAttrName( update_attr);
     if ( attrName.compareTo("") != 0) {
       GdhrRefObjectInfo ret = dyn.en.gdh.refObjectInfo( attrName);
@@ -260,11 +269,93 @@ public class GeDynXYCurve extends GeDynElem {
 	size = noOfPoints * 2 + 1;
 	break;
       }
+      
+      // Read x-array
+      CdhrFloatArray rxf;
+      CdhrIntArray rxi;
+      switch ( xAttrType) {
+      case Pwr.eType_Float32:
+	rxf = dyn.en.gdh.getObjectInfoFloatArray( attrName, size);
+	if ( rxf.evenSts())
+	  return;
 
-      CdhrFloatArray rx = dyn.en.gdh.getObjectInfoFloatArray( attrName, size);
-      if ( rx.evenSts())
+	switch ( datatype) {
+	case GeDyn.eCurveDataType_XYArrays:
+	  curveX = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++)
+	    curveX[i] = (rxf.value[i] - x_min_value) / ( x_max_value - x_min_value);
+	  break;
+	case GeDyn.eCurveDataType_PointArray:
+	  curveX = new float[noOfPoints];
+	  curveY = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++) {
+	    curveX[i] = (rxf.value[2*i] - x_min_value) / ( x_max_value - x_min_value);
+	    curveY[i] = (rxf.value[2*i+1] - y_min_value) / ( y_max_value - y_min_value);
+	  }
+	  dyn.repaintNow = true;
+	  break;
+	case GeDyn.eCurveDataType_TableObject:
+	  noOfPoints = (int)rxf.value[0];
+	  if ( noOfPoints > noofpoints)
+	    noOfPoints = noofpoints;
+	  if ( attrSize < noOfPoints)
+	    noOfPoints = attrSize;
+	  curveY = new float[noOfPoints];
+	  curveX = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++) {
+	    curveX[i] = (rxf.value[2*i+1] - x_min_value) / ( x_max_value - x_min_value);
+	    curveY[i] = (rxf.value[2*i+2] - y_min_value) / ( y_max_value - y_min_value);
+	  }
+	  dyn.repaintNow = true;
+	  break;
+	}
+	break;
+      case Pwr.eType_Int32:
+      case Pwr.eType_Int16:
+      case Pwr.eType_Int8:
+      case Pwr.eType_UInt32:
+      case Pwr.eType_UInt16:
+      case Pwr.eType_UInt8:
+	rxi = dyn.en.gdh.getObjectInfoIntArray( attrName, size);
+	if ( rxi.evenSts())
+	  return;
+
+	switch ( datatype) {
+	case GeDyn.eCurveDataType_XYArrays:
+	  curveX = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++)
+	    curveX[i] = ((float)rxi.value[i] - x_min_value) / ( x_max_value - x_min_value);
+	  break;
+	case GeDyn.eCurveDataType_PointArray:
+	  curveX = new float[noOfPoints];
+	  curveY = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++) {
+	    curveX[i] = ((float)rxi.value[2*i] - x_min_value) / ( x_max_value - x_min_value);
+	    curveY[i] = ((float)rxi.value[2*i+1] - y_min_value) / ( y_max_value - y_min_value);
+	  }
+	  dyn.repaintNow = true;
+	  break;
+	case GeDyn.eCurveDataType_TableObject:
+	  noOfPoints = (int)rxi.value[0];
+	  if ( noOfPoints > noofpoints)
+	    noOfPoints = noofpoints;
+	  if ( attrSize < noOfPoints)
+	    noOfPoints = attrSize;
+	  curveY = new float[noOfPoints];
+	  curveX = new float[noOfPoints];
+	  for ( int i = 0; i < noOfPoints; i++) {
+	    curveX[i] = ((float)rxi.value[2*i+1] - x_min_value) / ( x_max_value - x_min_value);
+	    curveY[i] = ((float)rxi.value[2*i+2] - y_min_value) / ( y_max_value - y_min_value);
+	  }
+	  dyn.repaintNow = true;
+	  break;
+	}
+	break;
+      default:
 	return;
+      }
 
+      // Read y-array
       switch ( datatype) {
       case GeDyn.eCurveDataType_XYArrays:
 	attrName = dyn.getAttrName( y_attr);
@@ -272,39 +363,39 @@ public class GeDynXYCurve extends GeDynElem {
 	if ( attrSize < noOfPoints)
 	  noOfPoints = attrSize;
 
-	CdhrFloatArray ry = dyn.en.gdh.getObjectInfoFloatArray( attrName, noOfPoints);
-	if ( ry.evenSts())
+	curveY = new float[noOfPoints];
+
+	CdhrFloatArray ryf;
+	CdhrIntArray ryi;
+	switch ( yAttrType) {
+	case Pwr.eType_Float32:
+	  ryf = dyn.en.gdh.getObjectInfoFloatArray( attrName, noOfPoints);
+	  if ( ryf.evenSts())
+	    return;
+
+	  for ( int i = 0; i < noOfPoints; i++)
+	    curveY[i] = (ryf.value[i] - y_min_value) / ( y_max_value - y_min_value);
+	  dyn.repaintNow = true;
+	  break;
+	case Pwr.eType_Int32:
+	case Pwr.eType_Int16:
+	case Pwr.eType_Int8:
+	case Pwr.eType_UInt32:
+	case Pwr.eType_UInt16:
+	case Pwr.eType_UInt8:
+	  ryi = dyn.en.gdh.getObjectInfoIntArray( attrName, noOfPoints);
+	  if ( ryi.evenSts())
+	    return;
+
+	  for ( int i = 0; i < noOfPoints; i++)
+	    curveY[i] = ((float)ryi.value[i] - y_min_value) / ( y_max_value - y_min_value);
+	  
+	  dyn.repaintNow = true;
+
+	  break;
+	default:
 	  return;
-	curveY = new float[noOfPoints];
-	curveX = new float[noOfPoints];
-	for ( int i = 0; i < noOfPoints; i++) {
-	  curveY[i] = (ry.value[i] - y_min_value) / ( y_max_value - y_min_value);
-	  curveX[i] = (rx.value[i] - x_min_value) / ( x_max_value - x_min_value);
 	}
-	dyn.repaintNow = true;
-	break;
-      case GeDyn.eCurveDataType_PointArray:
-	curveY = new float[noOfPoints];
-	curveX = new float[noOfPoints];
-	for ( int i = 0; i < noOfPoints; i++) {
-	  curveX[i] = (rx.value[2*i] - x_min_value) / ( x_max_value - x_min_value);
-	  curveY[i] = (rx.value[2*i+1] - y_min_value) / ( y_max_value - y_min_value);
-	}
-	dyn.repaintNow = true;
-	break;
-      case GeDyn.eCurveDataType_TableObject:
-	noOfPoints = (int)rx.value[0];
-	if ( noOfPoints > noofpoints)
-	  noOfPoints = noofpoints;
-	if ( attrSize < noOfPoints)
-	  noOfPoints = attrSize;
-	curveY = new float[noOfPoints];
-	curveX = new float[noOfPoints];
-	for ( int i = 0; i < noOfPoints; i++) {
-	  curveX[i] = (rx.value[2*i+1] - x_min_value) / ( x_max_value - x_min_value);
-	  curveY[i] = (rx.value[2*i+2] - y_min_value) / ( y_max_value - y_min_value);
-	}
-	dyn.repaintNow = true;
 	break;
       }
 
