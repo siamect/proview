@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav.cpp,v 1.38 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: wb_wnav.cpp,v 1.39 2007-09-19 15:19:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1007,7 +1007,7 @@ int WNav::open_plc()
       sts = ldh_GetObjectClass( ldhses, item->objid, &classid);
       if ( EVEN(sts)) return sts;
 
-      if ( classid == pwr_cClass_plc)
+      if ( classid == pwr_cClass_plc || classid == pwr_cClass_PlcTemplate)
         sts = open_foe( "PlcProgram1", item->objid, &foectx, 1, 
 			ldh_eAccess_ReadOnly, pwr_cNOid);
       break;
