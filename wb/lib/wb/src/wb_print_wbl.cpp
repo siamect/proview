@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_print_wbl.cpp,v 1.19 2007-04-25 13:39:21 claes Exp $
+ * Proview   $Id: wb_print_wbl.cpp,v 1.20 2007-09-19 15:13:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -404,7 +404,8 @@ void wb_print_wbl::printObject(wb_volume& v, wb_object& o, bool recursive)
   if ( !cdef) {
     m_os << "! %WBDUMP-E-Error Failed to get object class" << endl;
     m_errCnt++;
-    return;
+    // return;
+    cdef = v.cdef( pwr_eClass_ClassLost);
   }
   const char* cname = cdef.name();
   char *block;
@@ -762,11 +763,17 @@ bool wb_print_wbl::printValue (wb_volume& v,
     if (cdh_ObjidIsNull(((pwr_sAttrRef*)val)->Objid))
       sprintf(sval, "\"_O0.0.0.0:0\"");
     else {
-      wb_attribute a = v.attribute((pwr_sAttrRef*)val);
-      if (a)
-        sprintf(sval, "\"%s\"", a.longName().c_str());
-      else {
-        sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+      try {
+	wb_attribute a = v.attribute((pwr_sAttrRef*)val);
+	if (a)
+	  sprintf(sval, "\"%s\"", a.longName().c_str());
+	else {
+	  sprintf(sval, "\"%s\"", cdh_ArefToString(NULL, (pwr_sAttrRef*)val, 1));
+	}
+      } catch ( wb_error &e) {
+	sprintf(sval, "Unknown attribute reference");
+	m_errCnt++;
+	retval = FALSE;
       }
     }
 #if 0      
@@ -920,6 +927,8 @@ bool wb_print_wbl::isFoCodeObject( wb_volume& v, wb_object& o)
 
   // Check if object has GraphPlcNode body and compmethod 58
   wb_cdef cd = v.cdef( o);
+  if ( !cd)
+    return false;
 
   wb_object go = cd.classBody( "GraphPlcNode");
   if ( !go) 
