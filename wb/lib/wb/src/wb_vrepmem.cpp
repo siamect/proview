@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.23 2006-05-24 15:00:41 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.24 2007-09-19 15:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -742,6 +742,7 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   memo->m_cid = cdef.cid();
   memo->m_flags = cdef.flags();
   memo->m_ohtime = time;
+  memo->m_created = 1;
   memo->rbody_size = cdef.size( pwr_eBix_rt);
   if ( memo->rbody_size) {
     memo->m_rbtime = time;
@@ -896,6 +897,7 @@ wb_orep *wb_vrepmem::copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destin
   memo->m_oid.vid = m_vid;
   memo->m_cid = orep->cid();
   memo->m_ohtime = time;
+  memo->m_created = 1;
 
   wb_attribute rbody;
   rbody = wb_attribute( LDH__SUCCESS, (wb_orep *)orep, "RtBody");
@@ -1880,6 +1882,10 @@ bool wb_vrepmem::commit(pwr_tStatus *sts)
 {
   pwr_tCmd cmd;
 
+  if ( m_classeditor) {
+    classeditorCommit();
+  }
+
   // Play safe and save the previous file...
   sprintf( cmd, "pwrp_env.sh save file %s", m_filename);
   system( cmd);
@@ -1946,6 +1952,73 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
     break;
   default: 
     return false;
+  }
+
+  if ( fth) {
+    switch ( fth->m_cid) {
+    case pwr_eClass_ObjBodyDef:
+      switch ( cid) {
+      case pwr_eClass_Param:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Input:
+      case pwr_eClass_Output:
+      case pwr_eClass_ObjXRef:
+      case pwr_eClass_AttrXRef:
+      case pwr_eClass_Buffer:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_ClassDef:
+      switch ( cid) {
+      case pwr_eClass_ObjBodyDef:
+      case pwr_eClass_GraphPlcNode:
+      case pwr_eClass_GraphPlcConnection:
+      case pwr_eClass_GraphPlcWindow:
+      case pwr_eClass_GraphPlcProgram:
+      case pwr_eClass_RtMenu:
+      case pwr_eClass_Menu:
+      case pwr_eClass_DbCallBack:
+      case pwr_cClass_PlcTemplate:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_ClassHier:
+      switch ( cid) {
+      case pwr_eClass_ClassDef:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_TypeHier:
+      switch ( cid) {
+      case pwr_eClass_Type:
+      case pwr_eClass_TypeDef:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_TypeDef:
+      switch ( cid) {
+      case pwr_eClass_Bit:
+      case pwr_eClass_Value:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    default: ;
+    }
   }
 
   switch ( cid) {
@@ -2164,6 +2237,73 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
     return false;
   }
 
+  if ( fth) {
+    switch ( fth->m_cid) {
+    case pwr_eClass_ObjBodyDef:
+      switch ( memo->m_cid) {
+      case pwr_eClass_Param:
+      case pwr_eClass_Intern:
+      case pwr_eClass_Input:
+      case pwr_eClass_Output:
+      case pwr_eClass_ObjXRef:
+      case pwr_eClass_AttrXRef:
+      case pwr_eClass_Buffer:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_ClassDef:
+      switch ( memo->m_cid) {
+      case pwr_eClass_ObjBodyDef:
+      case pwr_eClass_GraphPlcNode:
+      case pwr_eClass_GraphPlcConnection:
+      case pwr_eClass_GraphPlcWindow:
+      case pwr_eClass_GraphPlcProgram:
+      case pwr_eClass_RtMenu:
+      case pwr_eClass_Menu:
+      case pwr_eClass_DbCallBack:
+      case pwr_cClass_PlcTemplate:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_ClassHier:
+      switch ( memo->m_cid) {
+      case pwr_eClass_ClassDef:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_TypeHier:
+      switch ( memo->m_cid) {
+      case pwr_eClass_Type:
+      case pwr_eClass_TypeDef:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    case pwr_eClass_TypeDef:
+      switch ( memo->m_cid) {
+      case pwr_eClass_Bit:
+      case pwr_eClass_Value:
+	break;
+      default:
+	*sts = LDH__CLASSMISPLACED;
+	return false;
+      }
+      break;
+    default: ;
+    }
+  }
+
   switch ( memo->m_cid) {
   case pwr_eClass_ClassHier:
   case pwr_eClass_TypeHier: {
@@ -2201,6 +2341,36 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
   }
   *sts = LDH__SUCCESS;
   return true;
+}
+
+void wb_vrepmem::classeditorCommit()
+{
+  // Set 'newattribute' bit in flag in $Attribute objects to indicate that 
+  // template object should be updated with defaultvalues.
+  if ( !root_object)
+    return;
+
+  for ( mem_object *o1 = root_object->fch; o1; o1 = o1->fws) {
+    for ( mem_object *o2 = o1->fch; o2; o2 = o2->fws) {
+      for ( mem_object *o3 = o2->fch; o3; o3 = o3->fws) {
+	switch ( o3->m_cid) {
+	case pwr_eClass_Param:
+	  if ( o3->m_created)
+	    ((pwr_sParam *)o3->rbody)->Info.Flags |= PWR_MASK_NEWATTRIBUTE;
+	  else
+	    ((pwr_sParam *)o3->rbody)->Info.Flags &= ~PWR_MASK_NEWATTRIBUTE;
+	  break;
+	case pwr_eClass_Intern:
+	  if ( o3->m_created)
+	    ((pwr_sIntern *)o3->rbody)->Info.Flags |= PWR_MASK_NEWATTRIBUTE;
+	  else
+	    ((pwr_sIntern *)o3->rbody)->Info.Flags &= ~PWR_MASK_NEWATTRIBUTE;
+	  break;
+	default: ;
+	}
+      }
+    }
+  }
 }
 
 void wb_vrepmem::printPaletteFile()

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.18 2006-05-11 07:12:20 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.19 2007-09-19 15:18:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,7 +38,7 @@ class mem_object
  public:
   mem_object() : rbody_size(0), dbody_size(0), docblock_size(0), rbody(0), dbody(0),
     docblock(0), m_cid(0), m_tid(0), fth(0), bws(0), fws(0), fch(0),
-    is_built(0) 
+    is_built(0), m_created(0)
     { 
       strcpy( m_name, "");
       strcpy( cname, ""); 
@@ -186,6 +186,7 @@ class mem_object
   pwr_tOid fwsoid;
   pwr_tOid fchoid;
   int is_built;
+  int m_created;
   pwr_tTime m_ohtime;
   pwr_tTime m_rbtime;
   pwr_tTime m_dbtime;
@@ -372,6 +373,7 @@ public:
 			 pwr_tOix *oix, char *name, pwr_tStatus *sts, bool import_paste);
   bool classeditorCheckMove( mem_object *memo, ldh_eDest dest_code, 
 			     mem_object *dest, pwr_tStatus *sts);
+  void classeditorCommit();
 
  private:
   bool nameCheck( mem_object *memo);
