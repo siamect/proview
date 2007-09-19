@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.21 2006-05-21 22:30:50 lw Exp $
+ * Proview   $Id: wb_session.cpp,v 1.22 2007-09-19 15:14:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -112,6 +112,7 @@ wb_object wb_session::createObject(wb_cdef cdef, wb_destination d, wb_name name)
   if (evenSts()) throw wb_error(sts());
 
   orep = m_vrep->createObject(&m_sts, cdef, d, name);
+  if (evenSts()) throw wb_error(sts());
   m_srep->update();
 
   wb_object o = wb_object(m_sts, orep);
