@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tdrep.cpp,v 1.9 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_tdrep.cpp,v 1.10 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -46,7 +46,7 @@ wb_tdrep::wb_tdrep() : m_nRef(0), m_orep(0), m_sts(LDH__NOCLASS)
 wb_tdrep::wb_tdrep( wb_mvrep *mvrep, pwr_tTid tid) : m_nRef(0)
 {
   pwr_tOid oid = cdh_TypeIdToObjid( tid);
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
+  m_orep = mvrep->object( &m_sts, oid);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -60,7 +60,7 @@ wb_tdrep::wb_tdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
   strcpy( str, "Type-");
   strcat( str, name.object());
   wb_name n = wb_name( str);
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, n);
+  m_orep = mvrep->object( &m_sts, n);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -71,7 +71,7 @@ wb_tdrep::wb_tdrep( wb_mvrep *mvrep, wb_name name) : m_nRef(0)
 wb_tdrep::wb_tdrep( wb_mvrep *mvrep, const wb_adrep& a) : m_nRef(0)
 {
   pwr_tOid oid = cdh_TypeIdToObjid( a.type());
-  m_orep = (wb_orepdbs *) mvrep->object( &m_sts, oid);
+  m_orep = mvrep->object( &m_sts, oid);
   if ( EVEN(m_sts)) throw wb_error( m_sts);
 
   m_orep->ref();
@@ -105,7 +105,7 @@ void wb_tdrep::init()
   {
     pwr_sTypeDef body;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
     if ( EVEN(sts)) throw wb_error(sts);
 
     m_size = body.Size;
@@ -118,7 +118,7 @@ void wb_tdrep::init()
   {
     pwr_sTypeDef body;
 
-    m_orep->m_vrep->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
+    m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, (void *) &body);
     if ( EVEN(sts)) throw wb_error(sts);
 
     m_size = body.Size;
@@ -142,3 +142,7 @@ wb_name wb_tdrep::longName()
   return m_orep->longName();
 }
 
+bool wb_tdrep::renameType( pwr_tStatus *sts, wb_name &name)
+{
+  return m_orep->vrep()->renameObject( sts, m_orep, name);
+}

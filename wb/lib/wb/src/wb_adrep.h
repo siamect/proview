@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_adrep.h,v 1.18 2005-09-06 10:43:30 claes Exp $
+ * Proview   $Id: wb_adrep.h,v 1.19 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -90,6 +90,7 @@ public:
   const char *subName() const;
   wb_name longName();
   void *body( void *p = 0);
+  bool renameAttribute( pwr_tStatus *sts, wb_name &name);
 
   wb_vrep *vrep() const;
 };

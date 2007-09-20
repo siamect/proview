@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.24 2007-09-19 15:18:34 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.25 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1171,15 +1171,8 @@ bool wb_vrepmem::renameObject(pwr_tStatus *sts, wb_orep *orep, wb_name &name)
     return LDH__NAMALREXI;
   }
 
-  if ( m_classeditor && memo->m_cid == pwr_eClass_ClassDef) {
-    pwr_tCid cid = cdh_ClassObjidToId( memo->m_oid);
-
-    wb_cdrep *cdrep = m_merep->cdrep( sts, cid);
-    if ( cdrep) {
-      cdrep->renameClass( sts, name);
-      printf( "cdrep: %s\n", cdrep->name());
-    }
-  }
+  if ( m_classeditor)
+    classeditorRenameObject( memo, old_name, name);
 
   memo->m_ohtime = time;
 
@@ -1933,6 +1926,74 @@ bool wb_vrepmem::abort(pwr_tStatus *sts)
   return true;
 }
 
+
+void wb_vrepmem::classeditorRenameObject( mem_object *memo, char *oldname, 
+					  wb_name &name)
+{
+  pwr_tStatus sts;
+
+  switch ( memo->m_cid) {
+  case pwr_eClass_ClassDef: {
+    pwr_tCid cid = cdh_ClassObjidToId( memo->m_oid);
+    
+    try {
+      wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+      if ( cdrep) {
+	cdrep->renameClass( &sts, name);
+	delete cdrep;
+      }
+    } catch ( wb_error &e) {
+    }
+    break;
+  }
+  case pwr_eClass_Param:
+  case pwr_eClass_Intern:
+  case pwr_eClass_Input:
+  case pwr_eClass_Output:
+  case pwr_eClass_ObjXRef:
+  case pwr_eClass_AttrXRef:
+  case pwr_eClass_Buffer: {
+    if ( !memo->fth || !memo->fth->fth)
+      break;
+    pwr_tCid cid = cdh_ClassObjidToId( memo->fth->fth->m_oid);
+    
+    try {
+      wb_cdrep *cdrep = m_merep->cdrep( &sts, cid);
+      if ( !cdrep)
+	break;
+
+      wb_bdrep *bdrep = cdrep->bdrep( &sts, memo->fth->m_name);
+      delete cdrep;
+      if ( !bdrep)
+	break;
+
+      wb_adrep *adrep = bdrep->adrep( &sts, oldname);
+      delete bdrep;
+      if ( !adrep)
+	break;
+      
+      adrep->renameAttribute( &sts, name);
+      delete adrep;
+    } catch ( wb_error &e) {
+    }
+    break;
+  }
+  case pwr_eClass_TypeDef: {
+    pwr_tTid tid = cdh_TypeObjidToId( memo->m_oid);
+    
+    try {
+      wb_tdrep *tdrep = m_merep->tdrep( &sts, tid);
+      if ( tdrep) {
+	tdrep->renameType( &sts, name);
+	delete tdrep;
+      }
+    } catch ( wb_error &e) {
+    }
+    break;    
+  }
+  default: ;
+  }
+}
 
 bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tCid cid,
 				   pwr_tOix *oix, char *name, pwr_tStatus *sts, 

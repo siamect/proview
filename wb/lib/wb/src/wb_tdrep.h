@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tdrep.h,v 1.8 2005-09-06 10:43:32 claes Exp $
+ * Proview   $Id: wb_tdrep.h,v 1.9 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,13 +26,13 @@
 
 class wb_adrep;
 class wb_mrepdbs;
-class wb_orepdbs;
+class wb_orep;
 class wb_mvrep;
 
 class wb_tdrep
 {
   int m_nRef;
-  wb_orepdbs *m_orep;
+  wb_orep *m_orep;
   int m_sts;
 
   pwr_eType m_type;
@@ -58,6 +58,7 @@ public:
 
   const char *name() const;
   wb_name longName();
+  bool renameType( pwr_tStatus *sts, wb_name &name);
 
   pwr_tStatus sts() { return m_sts;}    
 

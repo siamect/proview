@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.h,v 1.19 2007-09-19 15:18:34 claes Exp $
+ * Proview   $Id: wb_vrepmem.h,v 1.20 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -374,6 +374,8 @@ public:
   bool classeditorCheckMove( mem_object *memo, ldh_eDest dest_code, 
 			     mem_object *dest, pwr_tStatus *sts);
   void classeditorCommit();
+  void classeditorRenameObject( mem_object *memo, char *oldname, 
+				wb_name &name);
 
  private:
   bool nameCheck( mem_object *memo);

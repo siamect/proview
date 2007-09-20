@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_adrep.cpp,v 1.19 2005-10-07 05:57:28 claes Exp $
+ * Proview   $Id: wb_adrep.cpp,v 1.20 2007-09-20 15:09:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -340,4 +340,9 @@ void *wb_adrep::body( void *p)
   }
 
   return m_orep->vrep()->readBody( &sts, m_orep, pwr_eBix_sys, p);
+}
+
+bool wb_adrep::renameAttribute( pwr_tStatus *sts, wb_name &name)
+{
+  return m_orep->vrep()->renameObject( sts, m_orep, name);
 }
