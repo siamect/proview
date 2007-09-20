@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_volume.cpp,v 1.38 2007-09-19 15:16:01 claes Exp $
+ * Proview   $Id: wb_volume.cpp,v 1.39 2007-09-20 11:04:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -324,6 +324,8 @@ wb_attribute wb_volume::attribute(pwr_tOid oid, const char *bname) const
   if (oid.vid == m_vrep->vid())
     // This volume
     orep = m_vrep->object(&sts, oid);
+  else if (oid.vid < 65536)
+    orep = m_vrep->merep()->object(&sts, oid);
   else
     // Other volume
     orep = m_vrep->erep()->object(&sts, oid);
