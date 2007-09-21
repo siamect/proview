@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.4 2007-09-17 07:09:23 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.5 2007-09-21 08:10:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2253,6 +2253,7 @@ int	gcg_wind_comp_all(
 	int		*loaded_list;
 	int		loaded_windcount;		
 	pwr_tObjid	parent;
+	bool		force = false;
 	pwr_tStatus	sumsts = GSX__SUCCESS;
 
 	sts = trv_get_window_windows( ldhses, window, &wind_count, 
@@ -2280,9 +2281,27 @@ int	gcg_wind_comp_all(
 	  else if ( EVEN(sts)) return sts;
 
 	  /* Check if this window is modified */
-	  if ( modified) {
+	  if ( modified && !force) {
 	    sts = gcg_wind_check_modification( ldhses, *windlist_ptr);
-	    if (ODD(sts)) {
+	    if (sts == GSX__COMPILEPARENT) {
+	      // Rewind to parent, and force parent to compile
+	      pwr_tOid parent_window;
+
+	      sts = ldh_GetParent( ldhses, parent, &parent_window);
+	      if ( EVEN(sts)) return sts;
+
+	      for ( int k = 0; k < j; k++) {
+		if ( cdh_ObjidIsEqual( windlist[k], parent_window)) {
+		  j = k - 1;
+		  windlist_ptr = &windlist[k];
+		  force = true;
+		  break;
+		}
+	      }
+	      if ( force)
+		continue;
+	    }
+	    else if (ODD(sts)) {
 	      /* This object is ok, take the next one */
 	      windlist_ptr++;
 	      continue;
@@ -2420,6 +2439,7 @@ int	gcg_wind_comp_all(
 	    wind_compiled = 1;
 
 	  windlist_ptr++;
+	  force = false;
 	}
 
 	/* Compile the plc */
@@ -15378,7 +15398,7 @@ int	gcg_comp_m65( gcg_ctx gcgctx, vldh_t_node node)
 
 int gcg_wind_check_modification (
   ldh_tSesContext ldhses,
-  pwr_tObjid	objdid
+  pwr_tOid	oid
 )
 {
 	pwr_tTime		comp_time;
@@ -15387,30 +15407,99 @@ int gcg_wind_check_modification (
 	pwr_tTime		*comp_time_ptr;
 	int			sts, size;
 	int			modification;
+	pwr_sGraphPlcNode 	*graphbody;
+	pwr_tCid		bodyclass;
+	bool			has_templateplc = false;
+	pwr_tOid		parent;
+	pwr_tCid 		parent_cid;
 
 	modification = 0;
 
-	/* Get compilation time in parameter Compiled */
-        sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
-			"Compiled", (char **)&comp_time_ptr, &size); 
-	if (EVEN(sts)) return sts;
+	// See if there is a template plc that should be checked
+	sts = ldh_GetParent( ldhses, oid, &parent);
+	if ( EVEN(sts)) return sts;
 
-        memcpy( &comp_time, comp_time_ptr, sizeof(comp_time));
- 	free((char *) comp_time_ptr);
+	sts = ldh_GetObjectClass( ldhses, parent, &parent_cid);
+	if ( EVEN(sts)) return sts;
 
-	/* Get modification time in parameter Modified */
-        sts = ldh_GetObjectPar( ldhses, objdid, "DevBody",   
-			"Modified", (char **)&mod_time_ptr, &size); 
-        if (EVEN(sts)) return sts;
+	sts = ldh_GetClassBody( ldhses, parent_cid, 
+			       "GraphPlcNode", &bodyclass, 
+			       (char **)&graphbody, &size);
+	if ( ODD(sts) && graphbody->compmethod == 58)
+	  has_templateplc = true;
+	
+	if ( !has_templateplc) {
+	  /* Get compilation time in parameter Compiled */
+	  sts = ldh_GetObjectPar( ldhses, oid, "DevBody",   
+				  "Compiled", (char **)&comp_time_ptr, &size); 
+	  if (EVEN(sts)) return sts;
 
-        memcpy( &mod_time, mod_time_ptr, sizeof(mod_time));
- 	free((char *) mod_time_ptr);
+	  memcpy( &comp_time, comp_time_ptr, sizeof(comp_time));
+	  free((char *) comp_time_ptr);
 
-	/* Check if modified after compiled */
-	if (time_Acomp(&mod_time, &comp_time) > 0)
-	  modification = 1;
-	else
-	  modification = 0;
+	  /* Get modification time in parameter Modified */
+	  sts = ldh_GetObjectPar( ldhses, oid, "DevBody",   
+				  "Modified", (char **)&mod_time_ptr, &size); 
+	  if (EVEN(sts)) return sts;
+
+	  memcpy( &mod_time, mod_time_ptr, sizeof(mod_time));
+	  free((char *) mod_time_ptr);
+
+	  /* Check if modified after compiled */
+	  if (time_Acomp(&mod_time, &comp_time) > 0)
+	    modification = 1;
+	  else
+	    modification = 0;
+	}
+	else {
+	  // Check template plc
+	  pwr_tOName 	oname;
+	  pwr_tTime  	*template_time;
+	  pwr_tOid   	template_plc;
+	  pwr_tOid   	template_window;
+	  pwr_tCid	cid;
+
+	  /* Get modification time in parameter Modified */
+	  sts = ldh_GetObjectPar( ldhses, oid, "DevBody",   
+				  "Modified", (char **)&mod_time_ptr, &size); 
+	  if (EVEN(sts)) return sts;
+
+	  memcpy( &mod_time, mod_time_ptr, sizeof(mod_time));
+	  free((char *) mod_time_ptr);
+
+	  // Find the template plc
+	  sts = ldh_ObjidToName( ldhses, cdh_ClassIdToObjid( parent_cid),
+				 ldh_eName_VolPath, oname, sizeof( oname), &size);
+	  if( EVEN(sts)) return sts;
+
+	  strcat( oname, "-Code");
+	  sts = ldh_NameToObjid( ldhses, &template_plc, oname);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_GetChild( ldhses, template_plc, &template_window);
+	  if ( EVEN(sts)) return sts;
+
+	  sts = ldh_GetObjectClass( ldhses, template_window, &cid);
+	  if ( EVEN(sts)) return sts;
+
+	  if ( cid != pwr_cClass_windowplc)
+	    return GSX__TEMPLATEPLC;
+
+	  // Get modification time
+	  sts = ldh_GetObjectPar( ldhses, template_window, 
+				  "DevBody", "Modified",
+				  (char **)&template_time, &size); 
+	  if ( EVEN(sts)) return sts;
+	  
+	  if ( template_time->tv_sec != mod_time.tv_sec)
+	    modification = 1;
+	  else
+	    modification = 0;
+	  
+	  free( template_time);
+	  if ( modification)
+	    return GSX__COMPILEPARENT;
+	}
 
 	if ( modification)
 	  return 0;
@@ -15627,7 +15716,7 @@ static pwr_tStatus gcg_replace_ref( gcg_ctx gcgctx, pwr_sAttrRef *attrref,
       return GSX__NEXTNODE;
     }
 
-    /* Check class of this objdid */
+    /* Check class of this objid */
     sts = ldh_GetObjectClass( gcgctx->ldhses, host_oid, &host_cid);
     if ( EVEN(sts))  {
       gcg_error_msg( gcgctx, GSX__REFOBJ, node);
