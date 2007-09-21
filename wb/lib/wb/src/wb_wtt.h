@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt.h,v 1.17 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wtt.h,v 1.18 2007-09-21 10:49:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -276,6 +276,7 @@ class Wtt : public WUtility {
     virtual void update_options_form() {}
     virtual void set_options() {}
     virtual void pop() {}
+    virtual void disable_focus() {}
 
 
     static int format_selection( void *ctx, pwr_sAttrRef attrref, 

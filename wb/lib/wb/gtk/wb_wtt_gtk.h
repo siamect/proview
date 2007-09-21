@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.h,v 1.5 2007-05-16 12:39:14 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.h,v 1.6 2007-09-21 10:49:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -156,6 +156,7 @@ class WttGtk : public Wtt {
     virtual void update_options_form();
     virtual void set_options();
     virtual void pop();
+    virtual void disable_focus();
 
     void create_options_dialog();
     void create_confirm_dialog();

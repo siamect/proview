@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_object.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_c_object.cpp,v 1.2 2007-09-21 10:49:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -319,6 +319,7 @@ static pwr_tStatus DeleteObject (
     mc = (ldh_sMenuCall *) malloc (sizeof(*mc));
     *mc = *ip;
     
+    ip->wtt->disable_focus();
     ip->wnav->wow->DisplayQuestion( ip->wnav, "Delete Object", msg,
 				    DeleteObjectYesCb, DeleteObjectNoCb, (void *)mc);
     //dutl_MessageDialog (ip->WindowContext, dutl_eDialogType_Question,
@@ -368,6 +369,7 @@ static pwr_tStatus DeleteObjects (
   mc->Selected = (pwr_sAttrRef *)malloc((ip->SelectCount + 1) * sizeof(pwr_sAttrRef));
   memcpy(mc->Selected, ip->Selected, (ip->SelectCount + 1) * sizeof(pwr_sAttrRef));
 
+  ip->wtt->disable_focus();
   ip->wnav->wow->DisplayQuestion( ip->wnav, "Delete Selected Object", msg,
 				  DeleteObjectsYesCb, DeleteObjectsNoCb, (void *)mc);
   //dutl_MessageDialog (ip->WindowContext, dutl_eDialogType_Question,

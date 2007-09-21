@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.17 2007-09-19 15:10:33 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.18 2007-09-21 10:49:39 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2967,4 +2967,10 @@ void WttGtk::popup_button_cb( GtkWidget *w, gpointer data)
   if (EVEN(sts))
     wtt->message( 'E', wnav_get_message(sts));
   wtt->reset_cursor();
+}
+
+void WttGtk::disable_focus()
+{
+  focustimer.disable( 400);
+  focustimer.disabled();
 }
