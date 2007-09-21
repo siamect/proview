@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qos.c,v 1.8 2005-09-01 14:57:57 claes Exp $
+ * Proview   $Id: rt_qos.c,v 1.9 2007-09-21 09:05:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,6 +113,7 @@ qos_WaitQue (
 )
 {
   pwr_tDeltaTime	dtime;
+  pwr_tTime             atime;
   int			ok;
   pwr_tBoolean		signal = FALSE;
   pwr_dStatus		(sts, status, QCOM__SUCCESS);
@@ -122,27 +123,23 @@ qos_WaitQue (
   if (tmo == qcom_cTmoNone)
     return FALSE;
 
+  pthread_mutex_lock(&qp->lock.mutex);
+
   qp->lock.waiting = TRUE;
   qp->lock.pid     = 0;
 
   qdb_Unlock;
 
-  if (qp->lock.waiting) {
-    if (tmo != qcom_cTmoEternal) {
-      ok = futex_timed_wait(&(qp->lock.pid), 0, (struct timespec *) time_MsToD(&dtime, tmo));
-    } else {
-      for (;;) {
-        ok = futex_wait(&(qp->lock.pid), 0);
-        if (ok == EINTR)
-          continue;
-        break;
-      }
-    }
-    
-    if (ok == EWOULDBLOCK) {
-      errh_Error("waitQue - Deadlock would occur");
-    }
+  if (tmo != qcom_cTmoEternal) {
+    clock_gettime(CLOCK_REALTIME, &atime);
+    time_MsToD(&dtime, tmo);
+    time_Aadd(&atime, &atime, &dtime);
+    ok = pthread_cond_timedwait(&qp->lock.cond, &qp->lock.mutex, (struct timespec *) &atime);
+  } else {
+    ok = pthread_cond_wait(&qp->lock.cond, &qp->lock.mutex);
   }
+      
+  pthread_mutex_unlock(&qp->lock.mutex);
   
   qdb_Lock;
 
@@ -189,17 +186,17 @@ qos_SignalQue (
   qdb_sQue	*qp
 )
 {
-  int		ok;
   pwr_dStatus	(sts, status, QCOM__SUCCESS);
 
   qdb_AssumeLocked;
 
-  // if (qp->lock.waiting) {
-    qp->lock.waiting = FALSE;
+  pthread_mutex_lock(&qp->lock.mutex);
 
-    ok = futex_wake(&(qp->lock.pid), INT_MAX);
+  qp->lock.waiting = FALSE;
 
-  // }
+  pthread_cond_signal(&qp->lock.cond);
+  
+  pthread_mutex_unlock(&qp->lock.mutex);
 
   return TRUE;
 }

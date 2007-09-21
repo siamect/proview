@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.c,v 1.10 2006-02-14 05:27:43 claes Exp $
+ * Proview   $Id: rt_qdb.c,v 1.11 2007-09-21 09:05:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1220,6 +1220,8 @@ qdb_AddQue (
 {
   qdb_sQue	*qp;
   pwr_dStatus	(sts, status, QCOM__SUCCESS);
+  pthread_condattr_t   condattr;
+  pthread_mutexattr_t  mutexattr;
 
   qdb_AssumeLocked;
 
@@ -1246,6 +1248,14 @@ qdb_AddQue (
   pool_Qinit(NULL, &qdb->pool, &qp->rep_lh);
   pool_Qinit(NULL, &qdb->pool, &qp->read_lh);
   qp->qix = qix;
+  
+  pthread_condattr_init(&condattr);
+  pthread_condattr_setpshared(&condattr, PTHREAD_PROCESS_SHARED);
+  pthread_mutexattr_init(&mutexattr);
+  pthread_mutexattr_setpshared(&mutexattr, PTHREAD_PROCESS_SHARED);
+  pthread_mutex_init(&qp->lock.mutex, &mutexattr);
+  pthread_cond_init(&qp->lock.cond, &condattr);
+  
   qp = hash_Insert(sts, &qdb->qix_ht, qp);
     
   return qp;

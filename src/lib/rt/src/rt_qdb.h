@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.h,v 1.9 2006-03-20 07:17:01 claes Exp $
+ * Proview   $Id: rt_qdb.h,v 1.10 2007-09-21 09:05:41 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -474,6 +474,8 @@ typedef struct {
   typedef struct {
     int			pid;
     int			waiting;
+    pthread_mutex_t     mutex;
+    pthread_cond_t      cond;
   } qdb_sQlock;
 
 #endif
