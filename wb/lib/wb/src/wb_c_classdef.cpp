@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_c_classdef.cpp,v 1.2 2007-04-26 12:36:53 claes Exp $
+ * Proview   $Id: wb_c_classdef.cpp,v 1.3 2007-09-21 10:51:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -188,7 +188,9 @@ static pwr_tStatus ConfigFc (
 			  ip->Pointed.Objid, ldh_eDest_IntoLast);
   if ( ODD(sts)) {
     if ( plctemplate) {
-      cid = pwr_cClass_windowplc;
+      pwr_tCid scid[2];
+      scid[0] = pwr_cClass_windowplc;
+      scid[1] = 0;
       int_val = 1;
 
       sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindows", 
@@ -196,7 +198,7 @@ static pwr_tStatus ConfigFc (
       if ( EVEN(sts)) return sts;
 
       sts = ldh_SetObjectPar(ip->PointedSession, oid, "SysBody", "subwindow_class[0]", 
-			     (char *)&cid, sizeof(cid));
+			     (char *)scid, sizeof(scid));
       if ( EVEN(sts)) return sts;
     }
 
