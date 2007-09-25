@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_changelog.cpp,v 1.7 2007-05-11 15:14:04 claes Exp $
+ * Proview   $Id: cnv_changelog.cpp,v 1.8 2007-09-25 13:06:58 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -44,7 +44,7 @@ CnvChangeLog::CnvChangeLog( CnvCtx *cnv_ctx, char *from_str) :
     sts = time_AsciiToA( from_str, &from_time);
     if ( ODD( sts))
       from = 1;
-  }
+  } 
 
   read( 0);
   read( "src");
