@@ -48,3 +48,4 @@
 070918 cs  wbl       New systemclass $ClassLost to replace lost classes.
 070919 cs  wbl       New class XyCurve to view a curve of points with x,y coordiantes.>>>>>>> 1.25
 070921 rk  rt        Changed qcom synch-mechanism from futex to interprocess mutex/cond-var.
+070925 cs  convert   Convert modules moved to new archive cnv.
