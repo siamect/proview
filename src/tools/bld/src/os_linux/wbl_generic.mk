@@ -47,10 +47,22 @@ flwsources := $(sort \
              ) \
            )
 
+pdfsources := $(sort \
+             $(foreach file, \
+               $(foreach dir, \
+                 $(source_dirs), \
+                 $(wildcard $(dir)/*.pdf) \
+               ), $(notdir $(file)) \
+             ) \
+           )
+
 wbl_sources := $(filter %.wb_load,$(wblsources))
 flw_sources := $(filter %.flw,$(flwsources))
+pdf_sources := $(filter %.pdf,$(pdfsources))
 export_wbl := $(addprefix $(load_dir)/, $(patsubst %.wb_load, %.dbs, $(wbl_sources)))
 export_flw := $(patsubst %.flw,$(load_dir)/%.flw,$(flw_sources))
+export_pdf_en_us := $(patsubst %.pdf,$(doc_dir)/en_us/orm/%.pdf,$(pdf_sources))
+export_pdf_sv_se := $(patsubst %.pdf,$(doc_dir)/sv_se/orm/%.pdf,$(pdf_sources))
 export_wbl_dbs := $(patsubst %.wb_load,$(load_dir)/%.dbs,$(wbl_sources))
 export_wbl_h := $(patsubst %.wb_load,$(inc_dir)/pwr_%classes.h,$(wbl_sources))
 export_wbl_hpp := $(patsubst %.wb_load,$(inc_dir)/pwr_%classes.hpp,$(wbl_sources))
@@ -86,6 +98,14 @@ $(inc_dir)/pwr_%classes.h : ../../%.wb_load
 $(inc_dir)/pwr_%classes.hpp : ../../%.wb_load
 	@ echo "Generating hpp files for $(source) classes..."
 	@ co_convert -po -d $(inc_dir) "$(source)"
+
+$(doc_dir)/en_us/orm/%.pdf : ../../%.pdf
+	@ echo "Copy en_us $(source)"
+	@ $(cp) $(cpflags) $(source) $(target)
+
+$(doc_dir)/sv_se/orm/%.pdf : ../../%.pdf
+	@ echo "Copy sv_se $(source)"
+	@ $(cp) $(cpflags) $(source) $(target)
 
 $(doc_dir)/en_us/orm/%_allclasses.html : ../../%.wb_load
 	@ echo "Generating html files for $(source) classes en_us..."
@@ -149,7 +169,9 @@ exe:   $(export_wbl_xtthelp_en_us) \
        $(export_wbl_html_en_us) \
        $(export_wbl_html_sv_se) \
        $(export_wbl_ps_en_us) \
-       $(export_wbl_ps_sv_se)
+       $(export_wbl_ps_sv_se) \
+       $(export_pdf_en_us) \
+       $(export_pdf_sv_se)
 
 clean : \
        $(clean_xtthelp_sv_se) $(clean_xtthelp_en_us) \
