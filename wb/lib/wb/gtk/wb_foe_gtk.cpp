@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.9 2007-09-17 12:27:26 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.10 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,6 +116,14 @@ void WFoeGtk::activate_printselect( GtkWidget *w, gpointer data)
   WFoe *foe = (WFoe *)data;
 
   foe->activate_printselect();
+}
+
+//	Callback from the menu.
+void WFoeGtk::activate_printpdf( GtkWidget *w, gpointer data)
+{
+  WFoe *foe = (WFoe *)data;
+
+  foe->activate_printpdf();
 }
 
 //	Callback from the menu.
@@ -1021,11 +1029,16 @@ pwr_tStatus WFoeGtk::create_window( int x_top,
   g_signal_connect( file_print_select, "activate", 
 		    G_CALLBACK(WFoeGtk::activate_printselect), this);
 
+  GtkWidget *file_print_pdf = gtk_menu_item_new_with_mnemonic( "To Pdf _File");
+  g_signal_connect( file_print_pdf, "activate", 
+		    G_CALLBACK(WFoeGtk::activate_printpdf), this);
+
   GtkWidget *file_print = gtk_menu_item_new_with_mnemonic( "_Print");
   GtkMenu *file_print_menu = (GtkMenu *) g_object_new( GTK_TYPE_MENU, NULL);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_documents);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_overv);
   gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_select);
+  gtk_menu_shell_append(GTK_MENU_SHELL(file_print_menu), file_print_pdf);
 
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(file_print),
 			    GTK_WIDGET(file_print_menu));

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.13 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.14 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -195,6 +195,7 @@ class WFoe : public WUtility {
   void activate_print();
   void activate_printoverv();
   void activate_printselect();
+  void activate_printpdf();
   void activate_syntax();
   void activate_compile();
   void activate_delete();
@@ -251,6 +252,7 @@ class WFoe : public WUtility {
   int print_overview();
   int print_document();
   int print_selected_document();
+  int print_pdf_overview();
   int change_mode( int new_mode);
   int redraw_and_save();
 

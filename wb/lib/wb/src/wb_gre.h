@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.h,v 1.8 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_gre.h,v 1.9 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -199,6 +199,8 @@ class WGre {
 		      float *width, float *height);
   int print_rectangle( float ll_x, float ll_y, float ur_x, float ur_y,
 		       char *file_id);
+  int print_pdf_rectangle( float ll_x, float ll_y, float ur_x, float ur_y,
+			   char *file_id);
   void paste( float cursor_x, float cursor_y, int paste_type);
   int subwindow_mark( vldh_t_node object);
   pwr_tStatus node_update_points( vldh_t_node node,

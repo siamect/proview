@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.h,v 1.3 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_foe_gtk.h,v 1.4 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -169,6 +169,7 @@ class WFoeGtk : public WFoe {
   static void activate_print( GtkWidget *w, gpointer data);
   static void activate_printoverv( GtkWidget *w, gpointer data);
   static void activate_printselect( GtkWidget *w, gpointer data);
+  static void activate_printpdf( GtkWidget *w, gpointer data);
   static void activate_syntax( GtkWidget *w, gpointer data);
   static void activate_compile( GtkWidget *w, gpointer data);
   static void delete_subwindow_ok_cb( void *ctx, void *data);

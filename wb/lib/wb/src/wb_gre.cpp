@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.5 2007-07-18 09:27:16 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.6 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2157,6 +2157,50 @@ int WGre::print_rectangle( float ll_x, float ll_y, float ur_x, float ur_y,
   strcat( cmd, " ");
   strcat( cmd, filename);
   system( cmd);
+
+  return GRE__SUCCESS;
+}
+
+//
+//	Prints as pdf an area described by the coordinates.
+//
+int WGre::print_pdf_rectangle( float ll_x, float ll_y, float ur_x, float ur_y,
+			       char *file_id)
+{
+  pwr_tFileName filename;
+  vldh_t_plc plc = wind->hw.plc;
+
+  if ( plc->lp.cid == pwr_cClass_PlcTemplate) {
+    pwr_tOid parent;
+    pwr_tOName name;
+    pwr_tObjName vname;
+    int size;
+    pwr_tStatus sts;
+
+    sts = ldh_GetParent( wind->hw.ldhses, plc->lp.oid, &parent);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_VolumeIdToName( ldh_SessionToWB( wind->hw.ldhses), parent.vid, 
+			      vname, sizeof(vname), &size);
+    if ( EVEN(sts)) return sts;
+
+    sts = ldh_ObjidToName( wind->hw.ldhses, 
+			   parent, ldh_eName_Object,
+			   name, sizeof( name), &size);
+    if( EVEN(sts)) return sts;
+    
+    if ( parent.vid >= cdh_cUserVolMin)
+      sprintf( filename, "$pwrp_web/%s_%s.pdf", vname, name);
+    else
+      sprintf( filename, "./%s_%s.pdf", vname, name);
+    cdh_ToLower( filename, filename);
+  }
+  else {
+    sprintf( filename, "$pwrp_tmp/pssdoc%s.pdf", file_id);
+  }
+  dcli_translate_filename( filename, filename);
+  printf( "Export pdf to %s\n", filename);
+  flow_PrintPdfRegion( flow_ctx, ll_x, ll_y, ur_x, ur_y, filename);
 
   return GRE__SUCCESS;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.cpp,v 1.4 2007-07-17 12:44:44 claes Exp $
+ * Proview   $Id: wb_foe.cpp,v 1.5 2007-09-25 13:36:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -353,6 +353,26 @@ void WFoe::activate_printoverv()
   sts = print_overview();
   if ( sts == FOE__NOOBJFOUND) {
     message( "Less than two documents, no overview printed");
+  }
+}
+
+//
+//	Callback from the menu.
+//	This function finds all document objects in the window
+//	prints an overview of them to pdf.
+//
+void WFoe::activate_printpdf()
+{
+  int		sts;
+  vldh_t_wind	wind;
+
+  wind = gre->wind;
+
+  if ( msg_label_id != 0 ) message( ""); 
+
+  sts = print_pdf_overview();
+  if ( sts == FOE__NOOBJFOUND) {
+    message( "No documents found");
   }
 }
 
@@ -3067,6 +3087,72 @@ int WFoe::print_overview()
   if ( node_count > 0) free((char *) nodelist);
 
   if ( doc_count <= 1)
+    return FOE__NOOBJFOUND;
+	
+  return FOE__SUCCESS;
+}
+
+//
+//  	Prints an overview as pdf.
+//
+int WFoe::print_pdf_overview()
+{
+  unsigned long		node_count;
+  vldh_t_node		*nodelist;
+  vldh_t_node		*node_ptr;
+  int			i, sts;
+  float		ll_x_min;
+  float		ll_y_min;
+  float		ur_x_max;
+  float		ur_y_max;
+  float		ll_x;
+  float		ll_y;
+  float		width;
+  float		height;
+  int		doc_count;
+  vldh_t_wind	wind;
+  char		file_id[80];
+
+  ll_x_min = 10000.;
+  ll_y_min = 10000.;
+  ur_x_max = -10000.;
+  ur_y_max = -10000.;
+
+  wind = gre->wind;
+
+  sts = vldh_get_nodes( wind, &node_count, &nodelist);
+  if ( EVEN(sts)) return sts;
+  
+  /* Init the document objects */
+  //	gre_init_docobjects( gre);
+
+  doc_count = 0;
+  node_ptr = nodelist;
+  for ( i = 0; i < (int)node_count; i++) {
+    if ( vldh_check_document( wind->hw.ldhses, 
+			      (*node_ptr)->ln.oid)) {
+      /* Calculate coordinates for an overview */
+      gre->measure_object( *node_ptr, &ll_x, &ll_y, &width, &height);
+      ll_x_min = co_min( ll_x_min, ll_x);
+      ll_y_min = co_min( ll_y_min, ll_y);
+      ur_x_max = co_max( ur_x_max, ll_x + width);
+      ur_y_max = co_max( ur_y_max, ll_y + height);
+      
+      doc_count++;	  
+    }
+    node_ptr++;
+  }
+
+  if ( doc_count >= 1) {
+    /* Print the overview */
+    strcpy( file_id, vldh_IdToStr(0, wind->lw.oid)); 
+    gre->print_pdf_rectangle( ll_x_min, ll_y_min, ur_x_max, 
+			      ur_y_max, file_id);
+  }
+
+  if ( node_count > 0) free((char *) nodelist);
+
+  if ( doc_count <= 0)
     return FOE__NOOBJFOUND;
 	
   return FOE__SUCCESS;
