@@ -550,12 +550,10 @@ sub build_all ()
       _build("lib", "rt", $flavour, "copy");
       _build("lib", "co", "src", "init copy");
       _build("lib", "co", $flavour, "copy");
-      _build("lib", "cnv", "src", "init copy");
       _build("lib", "dtt", "src", "init copy");
       _build("lib", "statussrv", "src", "init copy");
       _build("lib", "co", "src", "all");
       _build("lib", "co", $flavour, "all");
-      _build("lib", "cnv", "src", "all");
       _build("exe", "co*", "src", "all");
       _build("wbl", "pwrs", "src", "copy");
       _build("wbl", "pwrb", "src", "copy");
