@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.cpp,v 1.4 2007-01-11 11:40:30 claes Exp $
+ * Proview   $Id: cnv_topdf.cpp,v 1.5 2007-09-25 13:07:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 
 #include <iostream.h>
 #include <fstream.h>
+#include <iomanip.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -62,8 +63,13 @@ void CnvPdfObj::print_begin()
 number <<  " 0 obj" << endl <<
 "  << /Type /Catalog" << endl <<
 "     /Outlines 2 0 R" << endl <<
-"     /Pages " << number + topdf->v_outline.size() << " 0 R" << endl <<
-"     /PageMode /UseOutlines" << endl <<
+"     /Pages " << number + topdf->v_outline.size() << " 0 R" << endl;
+
+    if ( topdf->use_outlines)
+      topdf->fp[topdf->cf] <<
+"     /PageMode /UseOutlines" << endl;
+
+    topdf->fp[topdf->cf] <<
 "  >>" << endl <<
 "endobj" << endl << endl;
     break;
@@ -441,6 +447,108 @@ void CnvToPdf::print_text( char *text, CnvStyle& style, int mode)
   y -= style.bottom_offset;
 }
 
+void CnvToPdf::draw_rect( double lw, double x, double y, double w, double h)
+{
+      fp[cf] <<
+"  " << lw << " w" << endl <<
+"  " << x << " " << y << " " << w << " " << h << " re S" << endl;
+}
+
+void CnvToPdf::draw_arc( double lw, double x, double y, double w, double h,
+			  int angel1, int angel2)
+{
+      fp[cf] <<
+"  " << lw << " w" << endl;
+      if ( (angel1 == 0 && angel2 >= 90) ||
+	   (angel1 == 90 && angel2 >= 360) ||
+	   (angel1 == 180 && angel2 >= 270) ||
+	   (angel1 == 270 && angel2 >= 180))
+	fp[cf] <<
+"  " << x + w << " " << y + h/2 << " m" <<
+"  " << x + w << " " << y + h << " " << x + w << " " << y + h << " " << x + w/2 << " " << y + h << " " << " c" << endl;
+      if ( (angel1 == 0 && angel2 >= 180) ||
+	   (angel1 == 90 && angel2 >= 90) ||
+	   (angel1 == 180 && angel2 >= 360) ||
+	   (angel1 == 270 && angel2 >= 270))
+	fp[cf] <<
+"  " << x + w/2 << " " << y + h << " m" <<
+"  " << x << " " << y + h << " " << x << " " << y + h << " " << x << " " << y + h/2 << " " << " c" << endl;
+      if ( (angel1 == 0 && angel2 >= 270) ||
+	   (angel1 == 90 && angel2 >= 180) ||
+	   (angel1 == 180 && angel2 >= 90) ||
+	   (angel1 == 270 && angel2 >= 360))
+	fp[cf] <<
+"  " << x  << " " << y + h/2 << " m" <<
+"  " << x << " " << y << " " << x << " " << y << " " << x + w/2 << " " << y << " " << " c" << endl;
+      if ( (angel1 == 0 && angel2 >= 360) ||
+	   (angel1 == 90 && angel2 >= 270) ||
+	   (angel1 == 180 && angel2 >= 180) ||
+	   (angel1 == 270 && angel2 >= 90))
+	fp[cf] <<
+"  " << x + w/2  << " " << y << " m" <<
+"  " << x + w << " " << y << " " << x + w << " " << y << " " << x + w << " " << y + h/2 << " " << " c" << endl;
+      fp[cf] <<
+"  S" << endl;
+}
+
+void CnvToPdf::draw_line( double lw, double x1, double y1, double x2, double y2,
+ 			  int dashed, int gray)
+{
+      fp[cf] <<
+"  " << lw << " w" << endl;
+      if ( dashed)
+	fp[cf] <<
+"  [2 3] 1 d" << endl;
+      if ( gray)
+	fp[cf] <<
+" 0.7 G" << endl;
+      fp[cf] <<
+"  " << x1 << " " << y1 << " m" << endl <<
+"  " << x2 << " " << y2 << " l S" << endl;
+      if ( dashed)
+	fp[cf] <<
+"  [] 0 d" << endl;
+      if ( gray)
+	fp[cf] <<
+"  0 G" << endl;
+
+}
+void CnvToPdf::draw_arrow( double x1, double y1, double x2, double y2, double x3, double y3,
+			   int gray)
+{
+      if ( gray)
+	fp[cf] <<
+" 0.7 G" << endl <<
+" 0.7 g" << endl;
+      fp[cf] <<
+"  " << x1 << " " << y1 << " m" << endl <<
+"  " << x2 << " " << y2 << " l" << endl <<
+"  " << x3 << " " << y3 << " l" << endl <<
+"  " << x1 << " " << y1 << " l" << endl <<
+"  B" << endl;
+      if ( gray)
+	fp[cf] <<
+"  0 G" << endl <<
+"  0 g" << endl;
+}
+
+void CnvToPdf::draw_text( double x, double y, char *text, int bold, double size)
+{
+  char fontname[20];
+
+  if ( bold)
+    strcpy( fontname, "/F2");
+  else
+    strcpy( fontname, "/F1");
+    
+  fp[cf] <<
+"  BT" << endl <<
+"    " << fontname << " "  << size << " Tf" << endl <<
+"    " << x << " " << y << " Td" << endl <<
+"    (" << text << ") Tj" << endl <<
+"  ET"  << endl;
+}
+
 void CnvToPdf::print_pagebreak( int last)
 {
   if ( page_number[cf] == 0)
@@ -470,7 +578,7 @@ void CnvToPdf::print_pagebreak( int last)
 "  ET" << endl;
     }
 
-    if ( page_number[cf] > 1)
+    if ( page_number[cf] > 1 && v_content.size() > 0)
       v_content[page_number[cf]-2].print_end();
   }  
 
@@ -485,7 +593,8 @@ void CnvToPdf::print_pagebreak( int last)
     v_content.push_back( o2);
   }
   
-  v_content[page_number[cf]-1].print_begin();
+  if ( (int)v_content.size() > page_number[cf] - 1)
+    v_content[page_number[cf]-1].print_begin();
 
   page_number[cf]++;
 
@@ -501,6 +610,9 @@ void CnvToPdf::print_content()
   int root = 1;
   int parent[4] = {0,0,0,0};
   int offset = current;
+
+  if ( !current)
+    return;
 
   v_outline[root].first = current;
   v_outline[root].last = current + size - 1;
@@ -926,6 +1038,7 @@ void CnvToPdf::open()
 
   if ( conf_pass) {
     fp[pdf_eFile_Body].open( filename[pdf_eFile_Body]);
+    fp[pdf_eFile_Body] << setiosflags( ios::fixed) << setprecision(6);
     start_offset = fp[pdf_eFile_Body].tellp();
   }
   else {
@@ -979,7 +1092,7 @@ void CnvToPdf::open()
     v_font.push_back( o8);
 
     CnvPdfObj o9 = CnvPdfObj( this, pdf_eObjType_Font, v_font.size()+1);
-    strcpy( o9.fontname, "TimesNewRoman-Bold");
+    strcpy( o9.fontname, "TimesNewRoman,Bold");
     v_font.push_back( o9);
 
     CnvPdfObj o10 = CnvPdfObj( this, pdf_eObjType_Font, v_font.size()+1);

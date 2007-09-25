@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_topdf.h,v 1.3 2005-12-21 08:30:25 claes Exp $
+ * Proview   $Id: cnv_topdf.h,v 1.4 2007-09-25 13:07:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,7 +119,8 @@ class CnvPdfObj {
 class CnvToPdf  {
  public:
   CnvToPdf() :
-    cf(0), ci(0), prev_ci(0), conf_pass(false), xref_offset(0), im_cnt(0)
+    cf(0), ci(0), prev_ci(0), conf_pass(false), xref_offset(0), im_cnt(0),
+    use_outlines(1)
     {
       for ( int i = 0; i < pdf_cMaxLevel; i++)
 	header_number[i] = 0;
@@ -173,6 +174,14 @@ class CnvToPdf  {
 
   void close();
   void print_text( char *text, CnvStyle& style, int mode = pdf_mPrintMode_Pos);
+  void draw_rect( double lw, double x, double y, double w, double h);
+  void draw_arc( double lw, double x, double y, double w, double h,
+		  int angel1, int angel2);
+  void draw_line( double lw, double x1, double y1, double x2, double y2,
+		  int dashed, int gray);
+  void draw_text( double x, double y, char *text, int bold, double size);
+  void draw_arrow( double x1, double y1, double x2, double y2, double x3, double y3,
+		   int gray);
   void print_pagebreak( int print_num);
   void print_content();
   void print_h1( char *text, int hlevel, char *subject);
@@ -204,6 +213,7 @@ class CnvToPdf  {
   void decr_headerlevel();
   void reset_headernumbers( int level);
   void set_pageheader( char *text);
+  void set_useoutlines( int u) { use_outlines = u;}
   char *fontname( CnvStyle& style);
 
   vector<CnvPdfObj> v_pages;
@@ -229,6 +239,7 @@ class CnvToPdf  {
   int start_offset;
   int xref_offset;
   int im_cnt;
+  int use_outlines;
 };
 
 #endif
