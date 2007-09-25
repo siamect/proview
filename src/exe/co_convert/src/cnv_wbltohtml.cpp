@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: cnv_wbltohtml.cpp,v 1.13 2007-05-24 14:51:19 claes Exp $
+ * Proview   $Id: cnv_wbltohtml.cpp,v 1.14 2007-09-25 11:15:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -541,9 +541,16 @@ endl <<
 "&nbsp;|&nbsp<A HREF=\"" << hpp_file << "#" << ctx->rw->class_name << "\">Class</A>" << endl;
 
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0) {
-    CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
-    html_clf->f <<
+    if ( strstr( ctx->rw->doc_code, ".pdf") != 0) {
+      strcpy( ref_name, ctx->rw->doc_code);
+      html_clf->f <<
+"&nbsp;|&nbsp;<A HREF=\"" << ref_name << "\">Code</A>" << endl;
+    }
+    else {
+      CnvReadSrc::filename_to_html( ref_name, ctx->rw->doc_code);
+      html_clf->f <<
 "&nbsp;|&nbsp;<A HREF=\"" << ref_name << "#" << low_class_name << "\">Code</A>" << endl;
+    }
   }
   html_clf->f <<
 "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<A HREF=\"" << ctree_file << "\">ClassTree</A>" << endl;
@@ -582,8 +589,14 @@ endl <<
   }
   if ( ctx->rw->doc_fresh && strcmp( ctx->rw->doc_code, "") != 0)
   {
-    html_clf->f <<
+    if ( strstr( ctx->rw->doc_code, ".pdf") != 0) {
+      html_clf->f <<
+"<DT><B>" << Lng::translate("Code") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "\"><FONT size=\"-1\">PlcTemplate</FONT></A><DT>" << endl;
+    }
+    else {
+      html_clf->f <<
 "<DT><B>" << Lng::translate("Code") << "</B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF=\"" << ref_name << "#" << low_class_name << "\"><FONT size=\"-1\">" << ctx->rw->doc_code << "</FONT></A><DT>" << endl;
+    }
   }
 
   html_clf->f <<
