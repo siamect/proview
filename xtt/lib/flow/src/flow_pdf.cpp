@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pdf.cpp,v 1.1 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_pdf.cpp,v 1.2 2007-09-25 14:23:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@
 #include <float.h>
 #include "flow_ctx.h"
 #include "flow_pdf.h"
-#include "cnv_topdf.h"
+#include "flow_topdf.h"
 
 FlowPdf::FlowPdf( char *filename, void *flow_ctx, int page_border,
 			  int *sts) :
