@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.cpp,v 1.5 2007-01-24 12:35:54 claes Exp $
+ * Proview   $Id: flow_pscript.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -111,7 +111,7 @@ int FlowPscript::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
     fprintf( file, "stroke\n");
   fprintf( file, "newpath\n");
 
-  ((FlowCtx *)ctx)->print_ps = this;
+  ((FlowCtx *)ctx)->current_print = this;
   ((FlowCtx *)ctx)->print( ll_x, ll_y, ur_x, ur_y);
 
   fprintf( file, "showpage\n\n");
@@ -261,7 +261,7 @@ int FlowPscript::line( double x1, double y1, double x2, double y2, flow_eDrawTyp
 }
 
 int FlowPscript::text( double x, double y, char *text, int len, flow_eDrawType type, 
-	int size)
+	double size)
 {
   char font[40];
   char c;
@@ -280,7 +280,7 @@ int FlowPscript::text( double x, double y, char *text, int len, flow_eDrawType t
   }
 
   fprintf( file, "/%s findfont\n", font);
-  fprintf( file, "%d scalefont\n", size);
+  fprintf( file, "%d scalefont\n", (int)size);
   fprintf( file, "setfont\n");
   fprintf( file, "newpath\n");
   fprintf( file, "%f %f moveto\n", x-offset_x, offset_y-y);

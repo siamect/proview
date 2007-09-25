@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_browctx.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_browctx.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -178,10 +178,10 @@ int BrowCtx::print( char *filename)
     width = height / 0.70;
   }
 
-  print_ps = new FlowPscript( filename, this, 1, &sts);
+  current_print = new FlowPscript( filename, this, 1, &sts);
   if ( EVEN(sts))
   {
-    delete print_ps;
+    delete current_print;
     return 0;
   }
 
@@ -194,9 +194,9 @@ int BrowCtx::print( char *filename)
     if (  ll_y > y_high)
       break;
 
-    print_ps->print_page( ll_x, ll_y, ur_x, ur_y);
+    current_print->print_page( ll_x, ll_y, ur_x, ur_y);
   }
-  delete print_ps;
+  delete current_print;
 
   return 1;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_text.cpp,v 1.5 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_text.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -48,12 +48,12 @@ void FlowText::print( void *pos, void *node, int highlight)
 {
   int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		(text_size +4) - 4);
-  int size = int( 8.0 + 6.0/3*idx);
+  double size = 8.0 + 6.0/3*idx;
 
   if ( size <= 0)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  ctx->print_ps->text( p.print_z_x + ((FlowPoint *)pos)->print_z_x , 
+  ctx->current_print->text( p.print_z_x + ((FlowPoint *)pos)->print_z_x , 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y, text, strlen(text),
 	draw_type, size);
 }

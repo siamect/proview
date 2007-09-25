@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.cpp,v 1.11 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: flow_ctx.cpp,v 1.12 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -592,17 +592,33 @@ void FlowCtx::print_zoom()
 }
 
 int FlowCtx::print_region( double ll_x, double ll_y, double ur_x, 
-	double ur_y, char *filename)
+			   double ur_y, char *filename)
 {
   int sts;
 
-  print_ps = new FlowPscript( filename, this, 0, &sts);
+  current_print = new FlowPscript( filename, this, 0, &sts);
   if ( ODD(sts)) {
     if ( trace_started)
-      print_ps->set_showred(1);
-    print_ps->print_page( ll_x, ll_y, ur_x, ur_y);
+      current_print->set_showred(1);
+    current_print->print_page( ll_x, ll_y, ur_x, ur_y);
   }
-  delete print_ps;
+  delete current_print;
+
+  return sts;
+}
+
+int FlowCtx::print_pdf_region( double ll_x, double ll_y, double ur_x, 
+			       double ur_y, char *filename)
+{
+  int sts;
+
+  current_print = new FlowPdf( filename, this, 0, &sts);
+  if ( ODD(sts)) {
+    if ( trace_started)
+      current_print->set_showred(1);
+    current_print->print_page( ll_x, ll_y, ur_x, ur_y);
+  }
+  delete current_print;
 
   return sts;
 }

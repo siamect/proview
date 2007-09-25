@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_rect.cpp,v 1.7 2007-05-11 15:07:21 claes Exp $
+ * Proview   $Id: flow_rect.cpp,v 1.8 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -62,12 +62,12 @@ void FlowRect::print( void *pos, void *node, int highlight)
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   if ( !fill)
-    ctx->print_ps->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
+    ctx->current_print->rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
 	draw_type, idx, highlight);
   else
-    ctx->print_ps->filled_rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
+    ctx->current_print->filled_rect( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, 
 	draw_type, idx);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.h,v 1.5 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_pdf.h,v 1.1 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -17,17 +17,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  **/
 
-#ifndef flow_pscript_h
-#define flow_pscript_h
+#ifndef flow_pdf_h
+#define flow_pdf_h
 
 #include <stdio.h>
 #include "flow.h"
 #include "flow_print.h"
 
-class FlowPscript : public FlowPrint {
+class CnvToPdf;
+
+class FlowPdf : public FlowPrint {
   public:
-    FlowPscript( char *filename, void *flow_ctx, int page_border, int *sts);
-    ~FlowPscript();
+    FlowPdf( char *filename, void *flow_ctx, int page_border, int *sts);
+    ~FlowPdf();
      int print_page( double ll_x, double ll_y, double ur_x, double ur_y);
      int rect( double x, double y, double width, double height, flow_eDrawType type, double idx, int highlight);
      int filled_rect( double x, double y, double width, double height, flow_eDrawType type, double idx);
@@ -49,6 +51,7 @@ class FlowPscript : public FlowPrint {
      int border;
      void *ctx;
      int show_red;
+     CnvToPdf *topdf;
 };
 
 #endif

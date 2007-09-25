@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_line.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_line.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,7 +55,7 @@ void FlowLine::print( void *pos, void *node, int highlight)
 	line_width;
   idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  ctx->print_ps->line( p1.print_z_x + ((FlowPoint *)pos)->print_z_x, 
+  ctx->current_print->line( p1.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p1.print_z_y + ((FlowPoint *)pos)->print_z_y, 
 	p2.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p2.print_z_y + ((FlowPoint *)pos)->print_z_y,

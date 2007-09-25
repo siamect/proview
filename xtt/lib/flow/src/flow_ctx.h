@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_ctx.h,v 1.7 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: flow_ctx.h,v 1.8 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -24,6 +24,7 @@
 
 #include "flow.h"
 #include "flow_pscript.h"
+#include "flow_pdf.h"
 #include "flow_array.h"
 
 class FlowDraw;
@@ -250,9 +251,11 @@ class FlowCtx {
     double	grid_size_x;
     double	grid_size_y;
     int		grid_on;
-    FlowPscript *print_ps;
+    FlowPrint 	*current_print;
     int		print_region( double ll_x, double ll_y, double ur_x, 
-	double ur_y, char *filename);
+			      double ur_y, char *filename);
+    int		print_pdf_region( double ll_x, double ll_y, double ur_x, 
+				  double ur_y, char *filename);
     double	draw_delta;
     double	grafcet_con_delta;
     int		refcon_cnt;

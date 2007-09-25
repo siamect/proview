@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.10 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.11 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -183,6 +183,8 @@ void flow_MeasureNode( flow_tNode node, double *ll_x, double *ll_y,
 	double *ur_x, double *ur_y);
 int flow_PrintRegion( flow_tCtx ctx, double ll_x, double ll_y,
 	double ur_x, double ur_y, char *filename);
+int flow_PrintPdfRegion( flow_tCtx ctx, double ll_x, double ll_y,
+			 double ur_x, double ur_y, char *filename);
 void flow_GetUserData( flow_tObject object, void **user_data);
 void flow_SetUserData( flow_tObject object, void *user_data);
 void flow_GetCtxUserData( flow_tCtx ctx, void **user_data);

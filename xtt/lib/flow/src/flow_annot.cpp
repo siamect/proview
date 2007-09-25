@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_annot.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -73,7 +73,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
       }
       else
         x = p.print_z_x + ((FlowPoint *)pos)->print_z_x;
-      ctx->print_ps->text( x, 
+      ctx->current_print->text( x, 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y, 
 	((FlowNode *) node)->annotv[number], 
 	strlen(((FlowNode *) node)->annotv[number]), draw_type, size);
@@ -94,7 +94,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
         if ( *s == 10)
 	{
 	  if ( len)
-            ctx->print_ps->text( z_x, z_y + line_cnt * z_height, line, len, 
+            ctx->current_print->text( z_x, z_y + line_cnt * z_height, line, len, 
 		draw_type, size);
 	  len = 0;
 	  line = s+1;
@@ -104,7 +104,7 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
 	  len++;
       }
       if ( len)
-        ctx->print_ps->text( z_x, z_y + line_cnt * z_height, line, 
+        ctx->current_print->text( z_x, z_y + line_cnt * z_height, line, 
 		len, draw_type, size);
       break;
     }

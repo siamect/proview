@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_arc.cpp,v 1.6 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_arc.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -54,7 +54,7 @@ void FlowArc::print( void *pos, void *node, int highlight)
 		line_width;
   idx = MAX( 0.5, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
-  ctx->print_ps->arc( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
+  ctx->current_print->arc( ll.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	ll.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	ur.print_z_x - ll.print_z_x, ur.print_z_y - ll.print_z_y, angel1, angel2,
 	draw_type, idx, highlight);

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annotpixmap.cpp,v 1.5 2007-01-04 07:53:34 claes Exp $
+ * Proview   $Id: flow_annotpixmap.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,7 +82,7 @@ void FlowAnnotPixmap::print( void *pos, void *node, int highlight)
   }
   else
     x = p.print_z_x + ((FlowPoint *)pos)->print_z_x;
-  ctx->print_ps->pixmap( x, 
+  ctx->current_print->pixmap( x, 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	&((FlowNode *)node)->annotpixmapv[number]->pixmap_data[pixmap_size],
 	draw_type);

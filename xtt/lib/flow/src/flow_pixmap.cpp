@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pixmap.cpp,v 1.5 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_pixmap.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -75,7 +75,7 @@ void FlowPixmap::print( void *pos, void *node, int highlight)
     return;
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
-  ctx->print_ps->pixmap( p.print_z_x + ((FlowPoint *)pos)->print_z_x, 
+  ctx->current_print->pixmap( p.print_z_x + ((FlowPoint *)pos)->print_z_x, 
 	p.print_z_y + ((FlowPoint *)pos)->print_z_y,
 	&pixmap_data[pixmap_size],
 	draw_type);

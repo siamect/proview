@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_radiobutton.cpp,v 1.4 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_radiobutton.cpp,v 1.5 2007-09-25 13:11:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -60,30 +60,30 @@ void FlowRadiobutton::print( void *pos, void *node, int highlight)
   ll_y = int( ll.print_z_y + ((FlowPoint *)pos)->print_z_y);
   ur_x = int( ll_x + ur.print_z_x - ll.print_z_x);
   ur_y = int( ll_y + ur.print_z_y - ll.print_z_y);
-  ctx->print_ps->rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
+  ctx->current_print->rect( ll_x, ll_y, ur_x - ll_x, ur_y - ll_y,
 	draw_type, idx, 0);
   if ( ((FlowNode *)node)->rbuttonv[number])
   {
-    ctx->print_ps->line( ll_x + sc*1, ll_y + sc*1, ur_x - sc*1, ll_y + sc*1,
+    ctx->current_print->line( ll_x + sc*1, ll_y + sc*1, ur_x - sc*1, ll_y + sc*1,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ll_x + sc*2, ll_y + sc*2, ur_x - sc*2, ll_y + sc*2,
+    ctx->current_print->line( ll_x + sc*2, ll_y + sc*2, ur_x - sc*2, ll_y + sc*2,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ll_x + sc*1, ll_y + sc*1, ll_x + sc*1, ur_y - sc*1,
+    ctx->current_print->line( ll_x + sc*1, ll_y + sc*1, ll_x + sc*1, ur_y - sc*1,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ll_x + sc*2, ll_y + sc*2, ll_x + sc*2, ur_y - sc*2,
+    ctx->current_print->line( ll_x + sc*2, ll_y + sc*2, ll_x + sc*2, ur_y - sc*2,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->filled_rect( ll_x + sc*3, ll_y + sc*3, ur_x - ll_x - sc*5, 
+    ctx->current_print->filled_rect( ll_x + sc*3, ll_y + sc*3, ur_x - ll_x - sc*5, 
 	ur_y - ll_y - sc*5, flow_eDrawType_Line, idx);
   }
   else
   {
-    ctx->print_ps->line( ur_x - sc*1, ur_y - sc*1, ll_x + sc*1, ur_y - sc*1,
+    ctx->current_print->line( ur_x - sc*1, ur_y - sc*1, ll_x + sc*1, ur_y - sc*1,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ur_x - sc*2, ur_y - sc*2, ll_x + sc*2, ur_y - sc*2,
+    ctx->current_print->line( ur_x - sc*2, ur_y - sc*2, ll_x + sc*2, ur_y - sc*2,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ur_x - sc*1, ur_y - sc*1, ur_x - sc*1, ll_y + sc*1,
+    ctx->current_print->line( ur_x - sc*1, ur_y - sc*1, ur_x - sc*1, ll_y + sc*1,
 	flow_eDrawType_LineGray, idx, 0);
-    ctx->print_ps->line( ur_x - sc*2, ur_y - sc*2, ur_x - sc*2, ll_y + sc*2,
+    ctx->current_print->line( ur_x - sc*2, ur_y - sc*2, ur_x - sc*2, ll_y + sc*2,
 	flow_eDrawType_LineGray, idx, 0);
   }
 }
