@@ -1,0 +1,329 @@
+%PDF-1.4
+1 0 obj
+  << /Type /Catalog
+     /Outlines 2 0 R
+     /Pages 3 0 R
+  >>
+endobj
+
+2 0 obj
+  << /Type /Outlines
+     /First 3 0 R
+     /Last 2 0 R
+     /Count 0
+  >>
+endobj
+
+3 0 obj
+  << /Type /Pages
+     /Kids [
+              4 0 R
+           ]
+     /Count 1
+  >>
+endobj
+
+4 0 obj
+  << /Type /Page
+     /Parent 3 0 R
+     /Mediabox [0 0 535 790]
+     /Contents 5 0 R
+     /Resources << /Procset 6 0 R
+                   /Font <<
+                         /F1 7 0 R
+                         /F2 8 0 R
+                         /F3 9 0 R
+                         /F4 10 0 R
+                         /F5 11 0 R
+                         /F6 12 0 R
+                          >>
+                >>
+  >>
+endobj
+
+5 0 obj
+  << /Length 2846 >>
+stream
+  1.29778 w
+  248.2 562.1 94.316 87.6 re s
+  1.29778 w
+  248.2 635.1 m
+  342.516 635.1 l s
+  BT
+    /F2 6.96 Tf
+    258.128 639.042 Td
+    (BaseActuatorAFo) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    250.682 624.442 Td
+    (Ord) Tj
+  ET
+  1.29778 w
+  248.2 627.8 m
+  239.44 627.8 l s
+  BT
+    /F1 6.96 Tf
+    250.682 609.842 Td
+    (loc) Tj
+  ET
+  1.29778 w
+  248.2 613.2 m
+  239.44 613.2 l s
+  BT
+    /F1 6.96 Tf
+    250.682 595.242 Td
+    (err) Tj
+  ET
+  1.29778 w
+  248.2 598.6 m
+  239.44 598.6 l s
+  BT
+    /F1 6.96 Tf
+    250.682 580.642 Td
+    (warn) Tj
+  ET
+  1.29778 w
+  248.2 584 m
+  239.44 584 l s
+  BT
+    /F2 6.96 Tf
+    278.811 566.042 Td
+    (Actuator) Tj
+  ET
+  1.29778 w
+  87.6 576.7 87.5351 14.6 re s
+  1.29778 w
+  107.456 591.3 m
+  107.456 576.7 l s
+  BT
+    /F2 6.96 Tf
+    92.564 580.642 Td
+    (Dp) Tj
+  ET
+  1.29778 w
+  175.135 584 m
+  183.895 584 l s
+  BT
+    /F2 6.96 Tf
+    112.42 580.642 Td
+    ($PlcFo.Warning) Tj
+  ET
+  1.29778 w
+  87.6 591.3 77.1529 14.6 re s
+  1.29778 w
+  107.456 605.9 m
+  107.456 591.3 l s
+  BT
+    /F2 6.96 Tf
+    92.564 595.242 Td
+    (Dp) Tj
+  ET
+  1.29778 w
+  164.753 598.6 m
+  173.513 598.6 l s
+  BT
+    /F2 6.96 Tf
+    112.42 595.242 Td
+    ($PlcFo.Error) Tj
+  ET
+  1.29778 w
+  87.6 605.9 98.5662 14.6 re s
+  1.29778 w
+  107.456 620.5 m
+  107.456 605.9 l s
+  BT
+    /F2 6.96 Tf
+    92.564 609.842 Td
+    (Dp) Tj
+  ET
+  1.29778 w
+  186.166 613.2 m
+  194.926 613.2 l s
+  BT
+    /F2 6.96 Tf
+    112.42 609.842 Td
+    ($PlcFo.LocalMode) Tj
+  ET
+  1.29778 w
+  87.6 620.5 92.7262 14.6 re s
+  1.29778 w
+  107.456 635.1 m
+  107.456 620.5 l s
+  BT
+    /F2 6.96 Tf
+    92.564 624.442 Td
+    (Ap) Tj
+  ET
+  1.29778 w
+  180.326 627.8 m
+  189.086 627.8 l s
+  BT
+    /F2 6.96 Tf
+    112.42 624.442 Td
+    ($PlcFo.ExtOrder) Tj
+  ET
+  1.29778 w
+  0 737.3 m
+  496.4 737.3 l s
+  1.29778 w
+  496.4 737.3 m
+  496.4 7.3 l s
+  1.29778 w
+  496.4 7.3 m
+  0 7.3 l s
+  1.29778 w
+  0 7.3 m
+  0 737.3 l s
+  1.29778 w
+  131.4 7.3 365 43.8 re s
+  1.29778 w
+  262.8 36.5 m
+  262.8 7.3 l s
+  1.29778 w
+  379.6 36.5 m
+  379.6 7.3 l s
+  1.29778 w
+  438 21.9 m
+  438 7.3 l s
+  1.29778 w
+  131.4 36.5 m
+  496.4 36.5 l s
+  1.29778 w
+  131.4 21.9 m
+  262.8 21.9 l s
+  1.29778 w
+  379.6 21.9 m
+  496.4 21.9 l s
+  BT
+    /F1 6.96 Tf
+    153.3 39.42 Td
+    (Class-BaseCDamperFo-Code) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    153.3 24.82 Td
+    (W) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    153.3 10.22 Td
+    (15-JUN-2007 11:09) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    386.9 24.82 Td
+    () Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    386.9 10.22 Td
+    () Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    445.3 10.22 Td
+    () Tj
+  ET
+  BT
+    /F2 13.92 Tf
+    277.4 14.6 Td
+    (Proview) Tj
+  ET
+  1.29778 w
+  239.44 627.8 m
+  189.086 627.8 l s
+  0.648889 w
+  239.44 613.2 m
+  194.926 613.2 l s
+  0.648889 w
+  239.44 598.6 m
+  173.513 598.6 l s
+  0.648889 w
+  239.44 584 m
+  183.895 584 l s
+endstream
+endobj
+
+6 0 obj
+  [/PDF /Text]
+endobj
+
+7 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F1
+     /BaseFont /Helvetica
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+8 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F2
+     /BaseFont /Helvetica-Bold
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+9 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F3
+     /BaseFont /Helvetica-Oblique
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+10 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F4
+     /BaseFont /TimesNewRoman
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+11 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F5
+     /BaseFont /TimesNewRoman
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+12 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F6
+     /BaseFont /Courier
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000089 00000 n 
+0000000180 00000 n 
+0000000279 00000 n 
+0000000709 00000 n 
+0000003609 00000 n 
+0000003640 00000 n 
+0000003772 00000 n 
+0000003909 00000 n 
+0000004049 00000 n 
+0000004186 00000 n 
+0000004323 00000 n 
+
+trailer
+  << /Size 12
+     /Root 1 0 R
+  >>
+startxref
+4454
+%%EOF

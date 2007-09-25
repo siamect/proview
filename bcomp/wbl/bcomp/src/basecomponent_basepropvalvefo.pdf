@@ -1,0 +1,378 @@
+%PDF-1.4
+1 0 obj
+  << /Type /Catalog
+     /Outlines 2 0 R
+     /Pages 3 0 R
+  >>
+endobj
+
+2 0 obj
+  << /Type /Outlines
+     /First 3 0 R
+     /Last 2 0 R
+     /Count 0
+  >>
+endobj
+
+3 0 obj
+  << /Type /Pages
+     /Kids [
+              4 0 R
+           ]
+     /Count 1
+  >>
+endobj
+
+4 0 obj
+  << /Type /Page
+     /Parent 3 0 R
+     /Mediabox [0 0 535 790]
+     /Contents 5 0 R
+     /Resources << /Procset 6 0 R
+                   /Font <<
+                         /F1 7 0 R
+                         /F2 8 0 R
+                         /F3 9 0 R
+                         /F4 10 0 R
+                         /F5 11 0 R
+                         /F6 12 0 R
+                          >>
+                >>
+  >>
+endobj
+
+5 0 obj
+  << /Length 3986 >>
+stream
+  0.954248 w
+  171.765 531.397 90.582 10.7353 re s
+  0.954248 w
+  197.315 542.132 m
+  197.315 531.397 l s
+  BT
+    /F2 5.22 Tf
+    175.415 534.296 Td
+    (StoDp) Tj
+  ET
+  0.954248 w
+  165.324 536.765 m
+  171.765 536.765 l s
+  BT
+    /F2 5.22 Tf
+    200.965 534.296 Td
+    ($PlcMain.IndWarning) Tj
+  ET
+  0.954248 w
+  171.765 542.132 82.948 10.7353 re s
+  0.954248 w
+  197.315 552.868 m
+  197.315 542.132 l s
+  BT
+    /F2 5.22 Tf
+    175.415 545.031 Td
+    (StoDp) Tj
+  ET
+  0.954248 w
+  165.324 547.5 m
+  171.765 547.5 l s
+  BT
+    /F2 5.22 Tf
+    200.965 545.031 Td
+    ($PlcMain.IndError) Tj
+  ET
+  0.954248 w
+  42.9412 531.397 64.3641 10.7353 re s
+  0.954248 w
+  57.5412 542.132 m
+  57.5412 531.397 l s
+  BT
+    /F2 5.22 Tf
+    46.5912 534.296 Td
+    (Dp) Tj
+  ET
+  0.954248 w
+  107.305 536.765 m
+  113.746 536.765 l s
+  BT
+    /F2 5.22 Tf
+    61.1912 534.296 Td
+    ($PlcFo.Warning) Tj
+  ET
+  0.954248 w
+  42.9412 542.132 56.7301 10.7353 re s
+  0.954248 w
+  57.5412 552.868 m
+  57.5412 542.132 l s
+  BT
+    /F2 5.22 Tf
+    46.5912 545.031 Td
+    (Dp) Tj
+  ET
+  0.954248 w
+  99.6712 547.5 m
+  106.112 547.5 l s
+  BT
+    /F2 5.22 Tf
+    61.1912 545.031 Td
+    ($PlcFo.Error) Tj
+  ET
+  0.954248 w
+  289.853 606.544 76.2683 10.7353 re s
+  0.954248 w
+  315.403 617.279 m
+  315.403 606.544 l s
+  BT
+    /F2 5.22 Tf
+    293.503 609.443 Td
+    (StoAo) Tj
+  ET
+  0.954248 w
+  283.412 611.912 m
+  289.853 611.912 l s
+  BT
+    /F2 5.22 Tf
+    319.053 609.443 Td
+    ($PlcMain.Order) Tj
+  ET
+  0.954248 w
+  42.9412 595.809 72.4752 10.7353 re s
+  0.954248 w
+  57.5412 606.544 m
+  57.5412 595.809 l s
+  BT
+    /F2 5.22 Tf
+    46.5912 598.707 Td
+    (Dp) Tj
+  ET
+  0.954248 w
+  115.416 601.176 m
+  121.858 601.176 l s
+  BT
+    /F2 5.22 Tf
+    61.1912 598.707 Td
+    ($PlcFo.LocalMode) Tj
+  ET
+  0.954248 w
+  42.9412 606.544 68.181 10.7353 re s
+  0.954248 w
+  57.5412 617.279 m
+  57.5412 606.544 l s
+  BT
+    /F2 5.22 Tf
+    46.5912 609.443 Td
+    (Ap) Tj
+  ET
+  0.954248 w
+  111.122 611.912 m
+  117.563 611.912 l s
+  BT
+    /F2 5.22 Tf
+    61.1912 609.443 Td
+    ($PlcFo.ExtOrder) Tj
+  ET
+  0.954248 w
+  171.765 585.074 64.698 42.9412 re s
+  0.954248 w
+  171.765 617.279 m
+  236.463 617.279 l s
+  BT
+    /F2 5.22 Tf
+    182.214 620.178 Td
+    (CompModeAMFo) Tj
+  ET
+  BT
+    /F1 5.22 Tf
+    173.59 609.443 Td
+    (REA) Tj
+  ET
+  0.954248 w
+  171.765 611.912 m
+  165.324 611.912 l s
+  BT
+    /F1 5.22 Tf
+    173.59 598.707 Td
+    (loc) Tj
+  ET
+  0.954248 w
+  171.765 601.176 m
+  165.324 601.176 l s
+  BT
+    /F1 5.22 Tf
+    223.688 609.443 Td
+    (REF) Tj
+  ET
+  0.954248 w
+  236.463 611.912 m
+  242.904 611.912 l s
+  BT
+    /F2 5.22 Tf
+    179.065 587.972 Td
+    (CompModeAMFo0) Tj
+  ET
+  0.954248 w
+  0 735.368 m
+  493.824 735.368 l s
+  0.954248 w
+  493.824 735.368 m
+  493.824 5.36765 l s
+  0.954248 w
+  493.824 5.36765 m
+  0 5.36765 l s
+  0.954248 w
+  0 5.36765 m
+  0 735.368 l s
+  0.954248 w
+  225.441 5.36765 268.382 32.2059 re s
+  0.954248 w
+  322.059 26.8382 m
+  322.059 5.36765 l s
+  0.954248 w
+  407.941 26.8382 m
+  407.941 5.36765 l s
+  0.954248 w
+  450.882 16.1029 m
+  450.882 5.36765 l s
+  0.954248 w
+  225.441 26.8382 m
+  493.824 26.8382 l s
+  0.954248 w
+  225.441 16.1029 m
+  322.059 16.1029 l s
+  0.954248 w
+  407.941 16.1029 m
+  493.824 16.1029 l s
+  BT
+    /F1 6.96 Tf
+    241.544 28.9853 Td
+    (Class-BasePropValveFo-Code) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    241.544 18.25 Td
+    (W) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    241.544 7.51471 Td
+    (18-OCT-2005 08:43) Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    413.309 18.25 Td
+    () Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    413.309 7.51471 Td
+    () Tj
+  ET
+  BT
+    /F1 6.96 Tf
+    456.25 7.51471 Td
+    () Tj
+  ET
+  BT
+    /F2 10.44 Tf
+    332.794 10.7353 Td
+    (Proview) Tj
+  ET
+  0.954248 w
+  117.563 611.912 m
+  165.324 611.912 l s
+  0.477124 w
+  121.858 601.176 m
+  165.324 601.176 l s
+  0.954248 w
+  283.412 611.912 m
+  242.904 611.912 l s
+  0.477124 w
+  165.324 547.5 m
+  106.112 547.5 l s
+  0.477124 w
+  165.324 536.765 m
+  113.746 536.765 l s
+endstream
+endobj
+
+6 0 obj
+  [/PDF /Text]
+endobj
+
+7 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F1
+     /BaseFont /Helvetica
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+8 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F2
+     /BaseFont /Helvetica-Bold
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+9 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F3
+     /BaseFont /Helvetica-Oblique
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+10 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F4
+     /BaseFont /TimesNewRoman
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+11 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F5
+     /BaseFont /TimesNewRoman
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+12 0 obj
+  << /Type /Font
+     /Subtype /Type1
+     /Name /F6
+     /BaseFont /Courier
+     /Encoding /WinAnsiEncoding
+  >>
+endobj
+
+
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000089 00000 n 
+0000000180 00000 n 
+0000000279 00000 n 
+0000000709 00000 n 
+0000004749 00000 n 
+0000004780 00000 n 
+0000004912 00000 n 
+0000005049 00000 n 
+0000005189 00000 n 
+0000005326 00000 n 
+0000005463 00000 n 
+
+trailer
+  << /Size 12
+     /Root 1 0 R
+  >>
+startxref
+5594
+%%EOF
