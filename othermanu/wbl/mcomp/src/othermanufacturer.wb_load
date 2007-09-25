@@ -1752,6 +1752,20 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         EndObject
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Code othermanufacturer_sew_movidrive_1fo.pdf
+    !  @Summary Plc function object to SEW_Movidrive_1.
+    !  Plc function object to SEW_Movidrive_1.
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  SEW_Movidrive_1
+    ! 
+    !  @b See also
+    !  @classlink SEW_Movidrive othermanufacturer_sew_movidrive_1.html
+    ! 
+    !*/
     Object SEW_Movidrive_1Fo $ClassDef 23 26-MAR-2007 09:27:12.98
       Body SysBody 26-MAR-2007 09:26:43.02
         Attr Editor = 0
@@ -8241,6 +8255,20 @@ SW bit:
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Process
+    !  @Code othermanufacturer_sew_movidrive_epbfo.pdf
+    !  @Summary Plc function object to SEW_Movidrive_EPB.
+    !  Plc function object to SEW_Movidrive_EPB.
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  SEW_Movidrive_EPB
+    ! 
+    !  @b See also
+    !  @classlink SEW_Movidrive_EPB othermanufacturer_sew_movidrive_epb.html
+    ! 
+    !*/
     Object SEW_Movidrive_EPBFo $ClassDef 30 30-MAR-2007 14:42:06.44
       Body SysBody 19-APR-2007 09:17:04.90
         Attr Editor = 0
@@ -15851,6 +15879,19 @@ SW bit:
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Simulate
+    !  @Code othermanufacturer_sew_movidrive_1sim.pdf
+    !  @Summary Plc simulation object to ABB_ACC800.
+    !  Plc simulation object to ABB_ACC800.
+    ! 
+    !  Connect the function object to an object of class or subclass of
+    !  SEW_Movidrive_1.
+    ! 
+    !  @b See also
+    !  @classlink SEW_Movidrive_1 othermanufacturer_sew_movidrive_1.html
+    !*/
     Object SEW_Movidrive_1Sim $ClassDef 24 27-MAR-2007 10:37:47.89
       Body SysBody 27-MAR-2007 10:37:20.11
         Attr Editor = 0
