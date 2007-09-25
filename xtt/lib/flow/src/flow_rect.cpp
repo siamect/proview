@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_rect.cpp,v 1.8 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_rect.cpp,v 1.9 2007-09-25 16:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -58,7 +58,7 @@ void FlowRect::print( void *pos, void *node, int highlight)
   if ( draw_type == flow_eDrawType_LineErase)
     return;
   double idx = ctx->print_zoom_factor / ctx->base_zoom_factor * line_width;
-  idx = MAX( 0.5, idx);
+  idx = MAX( 0, idx);
   idx = MIN( idx, DRAW_TYPE_SIZE-1);
 
   if ( !fill)

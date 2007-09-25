@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_annot.cpp,v 1.7 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_annot.cpp,v 1.8 2007-09-25 16:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -55,9 +55,9 @@ void FlowAnnot::print( void *pos, void *node, int highlight)
     return;
   if ( !((FlowNode *) node)->annotv[number])
     return;
-  int idx = int( ctx->print_zoom_factor / ctx->base_zoom_factor * 
+  double idx = ( ctx->print_zoom_factor / ctx->base_zoom_factor * 
 		(text_size +4) - 4);
-  int size = int( 8.0 + 6.0/3*idx);
+  double size = 8.0 + 6.0/3*idx;
   double x;
 
   if ( size <= 0)

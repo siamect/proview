@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pscript.cpp,v 1.6 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_pscript.cpp,v 1.7 2007-09-25 16:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -121,6 +121,8 @@ int FlowPscript::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
 int FlowPscript::rect( double x, double y, double width, double height, flow_eDrawType type, 
 	double idx, int highlight)
 {
+  idx = MAX( 0.5, idx);
+
   if ( type == flow_eDrawType_LineDashed)
   {
     fprintf( file, "gsave\n");
@@ -184,6 +186,8 @@ int FlowPscript::arc( double x, double y, double width, double height, int angel
 {
   double r = 0.5*width;
   double pi = 3.14159;
+
+  idx = MAX( 0.5, idx);
 
   if ( type == flow_eDrawType_LineDashed)
   {
@@ -351,6 +355,7 @@ int FlowPscript::pixmap( double x, double y, flow_sPixmapDataElem *data,
 int FlowPscript::arrow( double x1, double y1, double x2, double y2, 
 	double x3, double y3, flow_eDrawType type, double idx)
 {
+  idx = MAX( 0.5, idx);
 
   if ( type == flow_eDrawType_LineGray)
   {

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pdf.cpp,v 1.2 2007-09-25 14:23:51 claes Exp $
+ * Proview   $Id: flow_pdf.cpp,v 1.3 2007-09-25 16:36:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -132,7 +132,7 @@ int FlowPdf::text( double x, double y, char *text, int len, flow_eDrawType type,
   t[tlen] = 0;
   int bold = (type == flow_eDrawType_TextHelveticaBold);
 
-  topdf->draw_text( x - offset_x , offset_y - y, t, bold, 0.87 * size);
+  topdf->draw_text( x - offset_x , offset_y - y, t, bold, size);
   return 1;
 }
 
