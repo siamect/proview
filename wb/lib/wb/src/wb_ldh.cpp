@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.60 2007-08-28 07:23:48 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.61 2007-09-26 11:52:34 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -956,12 +956,13 @@ ldh_GetAttrObjectPar(ldh_tSession session, pwr_sAttrRef *arp, char *bname, char 
     return a.sts();
   }
   else if ( arp->Flags.b.ObjectAttr) {
-    char name[240];
+    pwr_tAName name;
 
     wb_attribute aarp = sp->attribute( arp);
     if ( !aarp) return aarp.sts();
 
-    strcpy( name, aarp.attrName());
+    strcpy( name, aarp.longName().name( cdh_mName_volume | cdh_mName_attribute));
+    //strcpy( name, aarp.attrName());
     strcat( name, ".");
     strcat( name, aname);
 
