@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wattnav.cpp,v 1.18 2007-04-25 07:28:13 claes Exp $
+ * Proview   $Id: wb_wattnav.cpp,v 1.19 2007-09-26 11:56:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -122,7 +122,11 @@ int WAttNav::check_attr( int *multiline, brow_tObject *node,
       if ( cdh_tidIsCid( item->type_id))
         return WATT__FLAGNOEDIT;
 
-      sts = item->get_value( (char **)&p);
+      if ( base_item->type == wnav_eItemType_AttrArrayElem)
+	sts = ((WItemAttrArrayElem *)item)->get_value( (char **)&p);
+      else
+	sts = item->get_value( (char **)&p);
+
       wnav_attrvalue_to_string( ldhses, item->type_id, p, init_value, 
 				  &len);
       free( p);
