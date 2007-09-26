@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.h,v 1.7 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_trv.h,v 1.8 2007-09-26 11:53:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -204,5 +204,14 @@ int trv_get_attrobjects (
   void		*arg5
 );
 
+int trv_aobject_search(
+  trv_tCtx	trvctx,
+  trv_tBcFunc	backcall,
+  void		*arg1,
+  void		*arg2,
+  void		*arg3,
+  void		*arg4,
+  void		*arg5
+);
 #endif
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.4 2007-09-05 08:22:18 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.5 2007-09-26 11:53:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -7557,7 +7557,7 @@ int utl_list (
 		volume_p);
 	    if ( EVEN(sts)) return sts;
 
-	    sts = trv_object_search( trvctx,
+	    sts = trv_aobject_search( trvctx,
 		(trv_tBcFunc) utl_ctxlist_insert,
 		&(utlctx->list[0]), &(utlctx->listcount[0]), 0, 0, 0);
 	    if ( EVEN (sts)) return sts;
@@ -11579,7 +11579,7 @@ static int cross_crosslist_load( ldh_tSesContext ldhses)
 		volume_p);
 	if ( EVEN(sts)) return sts;
 
-	sts = trv_object_search( trvctx,
+	sts = trv_aobject_search( trvctx,
 		(trv_tBcFunc) cross_crosslist_object_insert, ldhses, 0,0,0,0);
 	if (EVEN(sts)) return sts;
 	

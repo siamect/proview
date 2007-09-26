@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.cpp,v 1.2 2007-09-17 07:08:59 claes Exp $
+ * Proview   $Id: wb_trv.cpp,v 1.3 2007-09-26 11:53:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2192,6 +2192,84 @@ int trv_object_search(
 	/* Check if the children */
 	sts = trv_get_child_object_search( trvctx, objdid,
 					   backcall, arg1, arg2, arg3, arg4, arg5);
+	if ( EVEN(sts)) return sts;
+      }
+      sts = ldh_GetNextSibling( trvctx->ldhses, objdid, &objdid);
+    }
+  }
+  return GSX__SUCCESS;
+}
+
+// Get all objects and attribute objects matching the search criteria.
+// Call the backcall function for found objects and attribute objects.
+
+int trv_aobject_search(
+  trv_tCtx	trvctx,
+  trv_tBcFunc	backcall,
+  void		*arg1,
+  void		*arg2,
+  void		*arg3,
+  void		*arg4,
+  void		*arg5
+)
+{
+  int		sts;
+  pwr_tObjid	objdid;
+  pwr_tClassId	obj_class;
+  pwr_tVolumeId	*volume_ptr;
+
+  if ( cdh_ObjidIsNotNull( trvctx->hierobjid)) {
+    sts = ldh_GetObjectClass( trvctx->ldhses, trvctx->hierobjid, 
+			      &obj_class);
+    if ( EVEN(sts)) return sts;
+    if ( !( obj_class == pwr_eClass_ClassHier ||
+	    obj_class == pwr_eClass_TypeHier ||
+	    obj_class == pwr_eClass_MountObject ||
+	    obj_class == pwr_eClass_LibHier)) {
+      /* Hierarchy object is supplied. Check if the children */
+      sts = trv_get_attrobjects( trvctx->ldhses, trvctx->hierobjid, trvctx->classid, 
+				 trvctx->name, trv_eDepth_Deep,				 
+				 backcall, arg1, arg2, arg3, arg4, arg5);
+      if ( EVEN(sts)) return sts;
+    }
+  }
+  else if ( trvctx->volume) {
+    volume_ptr = trvctx->volume;
+    while( *volume_ptr) {
+      sts = ldh_GetVolumeRootList( trvctx->ldhses, *volume_ptr, &objdid);
+      while ( ODD(sts)) {
+	sts = ldh_GetObjectClass( trvctx->ldhses, objdid, &obj_class);
+	if ( EVEN(sts)) return sts;
+
+	/* Check that the class of the object is correct */
+	if ( !( obj_class == pwr_eClass_ClassHier ||
+		obj_class == pwr_eClass_TypeHier ||
+		obj_class == pwr_eClass_MountObject ||
+		obj_class == pwr_eClass_LibHier)) {
+	  /* Check if the children */
+	  sts = trv_get_attrobjects( trvctx->ldhses, objdid, trvctx->classid, trvctx->name,
+				     trv_eDepth_Deep,				 
+				     backcall, arg1, arg2, arg3, arg4, arg5);
+	  if ( EVEN(sts)) return sts;
+	}
+	sts = ldh_GetNextSibling( trvctx->ldhses, objdid, &objdid);
+      }
+      volume_ptr++;
+    }
+  }
+  else {
+    sts = ldh_GetRootList( trvctx->ldhses, &objdid);
+    while ( ODD(sts)) {
+      sts = ldh_GetObjectClass( trvctx->ldhses, objdid, &obj_class);
+      if ( EVEN(sts)) return sts;
+
+      /* Check that the class of the node object is correct */
+      if ( !( obj_class == pwr_eClass_ClassHier ||
+	      obj_class == pwr_eClass_TypeHier)) {
+	/* Check if the children */
+	sts = trv_get_attrobjects( trvctx->ldhses, objdid, trvctx->classid, trvctx->name,
+				   trv_eDepth_Deep,				 
+				   backcall, arg1, arg2, arg3, arg4, arg5);
 	if ( EVEN(sts)) return sts;
       }
       sts = ldh_GetNextSibling( trvctx->ldhses, objdid, &objdid);
