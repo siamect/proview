@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe_gtk.cpp,v 1.10 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_foe_gtk.cpp,v 1.11 2007-09-26 11:51:46 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -842,7 +842,9 @@ void WFoeGtk::message( char *new_label)
   l= strlen (new_label);
   msg_label_id = ( l !=0 );
   if ( l == 0 ) new_label = " " ;
-  gtk_label_set_text( GTK_LABEL(widgets.label), new_label);
+  char *new_labelutf8 = g_convert( new_label, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  gtk_label_set_text( GTK_LABEL(widgets.label), new_labelutf8);
+  g_free( new_labelutf8);
 }
 
 //
@@ -869,7 +871,9 @@ void WFoeGtk::popupmsg( char *new_label, void (* yes_procedure)(WFoe *),
 			void (* cancel_procedure)(WFoe *)) 
 {
   create_confirm_dialog();
-  g_object_set( widgets.caution_label, "label", new_label, NULL);
+  char *new_labelutf8 = g_convert( new_label, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  g_object_set( widgets.caution_label, "label", new_labelutf8, NULL);
+  g_free( new_labelutf8);
 
   popupmsg_yes_p = yes_procedure ;        
   popupmsg_no_p = no_procedure ;        
