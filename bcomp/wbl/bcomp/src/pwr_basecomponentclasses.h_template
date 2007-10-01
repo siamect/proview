@@ -1,0 +1,3 @@
+#ifndef pwr_baseclasses_h
+#include "pwr_baseclasses.h"
+#endif

@@ -1,0 +1,3 @@
+#ifndef pwr_baseclasses_hpp
+#include "pwr_baseclasses.hpp"
+#endif

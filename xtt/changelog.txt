@@ -61,3 +61,4 @@
 070822 cs  glow      Bugfix in text drawing. Minimal text size could cause segfault.
 070904 cs  glow      Property Fix position added to rectangles and polylines.
 070912 cs  ge        Component and dynamic for xy-curve added.
+070925 cs  flow      Functionallity to print pdf-files added.

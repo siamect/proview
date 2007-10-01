@@ -76,3 +76,4 @@
 070918 cs  wb        More syntax control added to class editor.
 070919 cs  wb        Defaultvalues inserted into template objects when new attribute objects are added to a class.
 070921 cs  plc       Change of template plc wasn't always detected at compilation.
+070926 cs  utl       Listdescriptor search also searches for attribute objects.
