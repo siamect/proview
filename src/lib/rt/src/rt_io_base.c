@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.c,v 1.23 2007-05-18 12:05:12 claes Exp $
+ * Proview   $Id: rt_io_base.c,v 1.24 2007-10-01 14:39:38 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1495,7 +1495,7 @@ static pwr_tStatus io_init_card(
 	}
 
 	if ( ok) {
-	  /* Tread this card in this process */
+	  /* Treat this card in this process */
 	  strcpy( attrname, cname);
 	  strcat( attrname, ".MaxNoOfChannels");
 	  sts = gdh_GetObjectInfo( attrname, &maxchan, sizeof(maxchan));
@@ -1934,98 +1934,96 @@ static pwr_tStatus io_init_rack(
   }
 
   if ( io_CheckClassIoType( io_eType_Rack, class)) {
+    /* This is a rack object,  */
+
     sts = io_FindMethods( class, io_eType_Rack, &RackInit, &RackClose, &RackRead, &RackWrite, &RackSwap);
-    if ( ODD(sts)) {
-      if ( RackInit != NULL || RackClose != NULL || RackRead != NULL || RackWrite != NULL || RackSwap != NULL) {
-	/* This is a rack object,  */
-	/* Check if the rack should be handled by this process */      
+
+    /* Check if the rack should be handled by this process */      
       
-	sts = gdh_ObjidToName( objid, rname, sizeof(rname),
-			       cdh_mName_volumeStrict);
-	if ( EVEN(sts)) return sts;
+    sts = gdh_ObjidToName( objid, rname, sizeof(rname),
+			   cdh_mName_volumeStrict);
+    if ( EVEN(sts)) return sts;
+    
+    ok = 0;
+    strcpy( attrname, rname);
+    strcat( attrname, ".Process");
 
-	ok = 0;
+    sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
+    if ( (EVEN(sts) ||
+	  (ODD(sts) && ctx->Process & process)) && !swap) {
+      if ( EVEN(sts))
+	process = io_mProcess_All;
+
+      if ( process & io_mProcess_Plc) {
+	/* Check thread also */
 	strcpy( attrname, rname);
-	strcat( attrname, ".Process");
-
-	sts = gdh_GetObjectInfo( attrname, &process, sizeof(process));
-	if ( (EVEN(sts) ||
-	     (ODD(sts) && ctx->Process & process)) && !swap) {
-	  if ( EVEN(sts))
-	    process = io_mProcess_All;
-
-	  if ( process & io_mProcess_Plc) {
-	    /* Check thread also */
-	    strcpy( attrname, rname);
-	    strcat( attrname, ".ThreadObject");
-	    sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
-	    if ( EVEN(sts))
-	      ok = 1;
-	    else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
-	      ok = 1;
-	  }
-	  else
-	    ok = 1;
-	}
-	else if (ODD(sts) && swap && RackSwap != NULL) {
+	strcat( attrname, ".ThreadObject");
+	sts = gdh_GetObjectInfo( attrname, &thread, sizeof(thread));
+	if ( EVEN(sts))
 	  ok = 1;
-	}
-
-	if ( ok) {
-
-	  /* Treat this rack in this process */
-	  rp = calloc( 1, sizeof(io_sRack));
-	  rp->Local = NULL;
-	  rp->Class = class;
-	  rp->Objid = objid;
-	  strcpy( rp->Name, rname);
-	  rp->Process = process;
-	  if (!swap) { 
-	    if ( RackRead != NULL)
-	      rp->Action |= io_mAction_Read;
-	    if ( RackWrite != NULL)
-	      rp->Action |= io_mAction_Write;
-	    rp->Init = RackInit;
-	    rp->Close = RackClose;
-	    rp->Read = RackRead;
-	    rp->Write = RackWrite;
-	    rp->Swap = RackSwap;
-	  } else {
-	    if ( RackSwap != NULL)
-	      rp->Action |= io_mAction_Swap;
-	    rp->Init = NULL;
-	    rp->Close = RackClose;
-	    rp->Read = NULL;
-	    rp->Write = NULL;
-	    rp->Swap = RackSwap;
-	  }
-	  if ( agent_type == io_eType_Agent)
-	    rp->AgentControlled = 1;
-	  memset( &attrref, 0, sizeof(attrref));
-	  attrref.Objid = objid;
-	  sts = gdh_DLRefObjectInfoAttrref( &attrref, &rp->op, &rp->Dlid);
-	  if ( EVEN(sts)) return sts;
-	  strcpy( attrname, rname);
-	  strcat( attrname, ".ScanTime");
-	  sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
-	  if (ODD(sts)) 
-	    rp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
-	  else
-	    rp->scan_interval = 1;
- 
-	  /* Insert last in racklist */
-	  if ( ap->racklist == NULL)
-	    ap->racklist = rp;
-	  else {
-	    for ( rlp = ap->racklist; rlp->next != NULL; rlp = rlp->next) ;
-	    rlp->next = rp;
-	  }
-	  
-	  sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type, swap);
-	}
-	return IO__TRV_NEXT;
+	else if ( ODD(sts) && cdh_ObjidIsEqual( thread, ctx->Thread))
+	  ok = 1;
       }
+      else
+	ok = 1;
     }
+    else if (ODD(sts) && swap && RackSwap != NULL) {
+      ok = 1;
+    }
+
+    if ( ok) {
+
+      /* Treat this rack in this process */
+      rp = calloc( 1, sizeof(io_sRack));
+      rp->Local = NULL;
+      rp->Class = class;
+      rp->Objid = objid;
+      strcpy( rp->Name, rname);
+      rp->Process = process;
+      if (!swap) { 
+	if ( RackRead != NULL)
+	  rp->Action |= io_mAction_Read;
+	if ( RackWrite != NULL)
+	  rp->Action |= io_mAction_Write;
+	rp->Init = RackInit;
+	rp->Close = RackClose;
+	rp->Read = RackRead;
+	rp->Write = RackWrite;
+	rp->Swap = RackSwap;
+      } else {
+	if ( RackSwap != NULL)
+	  rp->Action |= io_mAction_Swap;
+	rp->Init = NULL;
+	rp->Close = RackClose;
+	rp->Read = NULL;
+	rp->Write = NULL;
+	rp->Swap = RackSwap;
+      }
+      if ( agent_type == io_eType_Agent)
+	rp->AgentControlled = 1;
+      memset( &attrref, 0, sizeof(attrref));
+      attrref.Objid = objid;
+      sts = gdh_DLRefObjectInfoAttrref( &attrref, &rp->op, &rp->Dlid);
+      if ( EVEN(sts)) return sts;
+      strcpy( attrname, rname);
+      strcat( attrname, ".ScanTime");
+      sts = gdh_GetObjectInfo( attrname, &scantime, sizeof(scantime));
+      if (ODD(sts)) 
+	rp->scan_interval = scantime / ctx->ScanTime + FLT_EPSILON;
+      else
+	rp->scan_interval = 1;
+      
+      /* Insert last in racklist */
+      if ( ap->racklist == NULL)
+	ap->racklist = rp;
+      else {
+	for ( rlp = ap->racklist; rlp->next != NULL; rlp = rlp->next) ;
+	rlp->next = rp;
+      }
+	  
+      sts = io_trv_child( objid, 0, io_init_card, ctx, rp, agent_type, swap);
+    }
+    return IO__TRV_NEXT;
   }
   return IO__SUCCESS;
 }
