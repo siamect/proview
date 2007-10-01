@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_pdf.cpp,v 1.3 2007-09-25 16:36:21 claes Exp $
+ * Proview   $Id: flow_pdf.cpp,v 1.4 2007-10-01 14:38:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -51,10 +51,10 @@ int FlowPdf::print_page( double ll_x, double ll_y, double ur_x, double ur_y)
 {
   FlowCtx *cx = (FlowCtx *) ctx;
 
-  if ( ur_x - ll_x > ur_y - ll_y)
-    cx->print_zoom_factor = 730 / (ur_x - ll_x);
+  if ( 1.4 * (ur_x - ll_x) > ur_y - ll_y)
+    cx->print_zoom_factor = 780 / (ur_x - ll_x) / 1.4;
   else
-    cx->print_zoom_factor = 730 / (ur_y - ll_y);
+    cx->print_zoom_factor = 780 / (ur_y - ll_y);
   cx->print_zoom();
 
   offset_x = ll_x * cx->print_zoom_factor;
