@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.25 2007-09-20 15:09:18 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.26 2007-10-01 14:36:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2041,6 +2041,8 @@ bool wb_vrepmem::classeditorCheck( ldh_eDest dest_code, mem_object *dest, pwr_tC
       case pwr_eClass_GraphPlcProgram:
       case pwr_eClass_RtMenu:
       case pwr_eClass_Menu:
+      case pwr_eClass_RtMethod:
+      case pwr_eClass_Method:
       case pwr_eClass_DbCallBack:
       case pwr_cClass_PlcTemplate:
 	break;
@@ -2324,6 +2326,8 @@ bool wb_vrepmem::classeditorCheckMove( mem_object *memo, ldh_eDest dest_code,
       case pwr_eClass_GraphPlcProgram:
       case pwr_eClass_RtMenu:
       case pwr_eClass_Menu:
+      case pwr_eClass_RtMethod:
+      case pwr_eClass_Method:
       case pwr_eClass_DbCallBack:
       case pwr_cClass_PlcTemplate:
 	break;
