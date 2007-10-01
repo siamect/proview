@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.38 2007-08-27 09:32:45 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.39 2007-10-01 14:37:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -325,6 +325,7 @@ struct ldh_s_MenuItem {
   pwr_tObjid		MenuObject;
 };
 
+#ifdef __cplusplus
 class Wtt;
 class WNav;
 
@@ -343,6 +344,7 @@ struct ldh_s_MenuCall {
   pwr_tUInt32		ChosenItem;
   void			(*message_cb)( void *, char, char *);
 };
+#endif
 
 struct ldh_s_SessInfo {
   ldh_eAccess		Access;
