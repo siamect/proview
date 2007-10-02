@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.h,v 1.3 2007-09-06 11:22:18 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.h,v 1.4 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -125,8 +125,10 @@ class NodelistNode {
     { 
       strncpy( node_name, name, sizeof(node_name));
       strcpy( opplace, "");
+      strcpy( description, "");
     }
   char			node_name[80];
+  char			description[80];
   pwr_tOName   		opplace;
   ItemNode		*item;
   pwr_tStatus		connection_sts;
@@ -137,7 +139,7 @@ class NodelistNav {
  public:
   NodelistNav( void *ev_parent_ctx, MsgWindow *nodelistnav_msg_window,
 	       char *nodelistnav_nodename, int nodelistnav_mode, 
-	       int nodelistnav_msgw_pop);
+	       int nodelistnav_view_node_descr, int nodelistnav_msgw_pop);
   virtual ~NodelistNav();
 
   void 			*parent_ctx;
@@ -154,6 +156,7 @@ class NodelistNav {
   static const char 	config_file[40];
   int			msgw_pop;
   int			mode;
+  int			view_node_descr;
 
   virtual void set_input_focus() {}
   virtual void trace_start() {}
@@ -174,7 +177,7 @@ class NodelistNav {
   int get_selected_node( char *name);
   int get_selected_opplace( char *opplace);
   void save();
-  void add_node( char *name, char *opplace);
+  void add_node( char *name, char *description, char *opplace);
   void set_msgw_pop( int pop) { msgw_pop = pop;}
 
   static void attrvalue_to_string( int type_id, void *value_ptr, 
@@ -207,12 +210,13 @@ class ItemBase {
 
 class ItemNode : public ItemBase {
  public:
-  ItemNode( NodelistNav *item_nodelistnav, char *item_name, 
+  ItemNode( NodelistNav *item_nodelistnav, char *item_name, char *item_node_descr,
 	    brow_tNode dest, flow_eDest dest_code);
   
   NodeData     	data;
   statussrv_sGetExtStatus xdata;
   int		syssts_open;
+  char		node_descr[80];
 
   int	       	open_children( NodelistNav *nodelistnav, double x, double y);
   int		close( NodelistNav *nodelistnav, double x, double y);

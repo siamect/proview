@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.h,v 1.5 2007-09-06 11:22:18 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.h,v 1.6 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -38,6 +38,7 @@ class Nodelist {
     Nodelist( void *nodelist_parent_ctx,
 	      char *nodelist_name,
 	      int nodelist_mode,
+	      int nodelist_view_node_descr,
 	      pwr_tStatus *status);
     virtual ~Nodelist();
 
@@ -47,19 +48,20 @@ class Nodelist {
     int			nodelist_displayed;
     void 		(*help_cb)( void *, char *);
     void 		(*close_cb)( void *);
-    void 		(*india_ok_cb)( Nodelist *, char *, char *);
+    void 		(*india_ok_cb)( Nodelist *, char *, char *, char *);
     CoWow		*wow;
     MsgWindow		*msg_window;
     char		remote_gui[20];
     int			mode;
+    int			view_node_descr;
 
     virtual void pop() {}
     virtual void set_clock_cursor() {}
     virtual void reset_cursor() {}
     virtual void free_cursor() {}
-    virtual void open_input_dialog( char *text, char *text2, char *title,
+    virtual void open_input_dialog( char *text, char *text2, char *text3, char *title,
 				    char *init_text,
-				    void (*ok_cb)( Nodelist *, char *, char *)) {}
+				    void (*ok_cb)( Nodelist *, char *, char *, char *)) {}
 
     void set_scantime( float scantime) { nodelistnav->scantime = int(scantime * 1000);}
     void activate_help();
@@ -70,7 +72,8 @@ class Nodelist {
     void activate_open_rtmon();
     void activate_save();
     static void find_node_cb( void *ctx, pwr_tOid oid);
-    static void add_node_ok( Nodelist *nodelist, char *node_name, char *opplace);
+    static void add_node_ok( Nodelist *nodelist, char *node_name, char *description,
+			     char *opplace);
 };
 
 #endif

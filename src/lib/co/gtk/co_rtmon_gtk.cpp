@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_rtmon_gtk.cpp,v 1.4 2007-09-06 11:22:18 claes Exp $
+ * Proview   $Id: co_rtmon_gtk.cpp,v 1.5 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -162,7 +162,7 @@ RtMonGtk::RtMonGtk( void *rtmon_parent_ctx,
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), GTK_WIDGET(help_menu));
 
   nodelistnav = new NodelistNavGtk( this, vbox, 0, nodename, nodelist_eMode_SystemStatus,
-				    0, &nodelistnav_widget);
+				    0, 0, &nodelistnav_widget);
 
   // Toolbar
   GtkToolbar *tools = (GtkToolbar *) g_object_new(GTK_TYPE_TOOLBAR, NULL);

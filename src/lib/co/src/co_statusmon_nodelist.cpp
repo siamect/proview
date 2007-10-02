@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelist.cpp,v 1.7 2007-09-06 11:22:18 claes Exp $
+ * Proview   $Id: co_statusmon_nodelist.cpp,v 1.8 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -36,9 +36,11 @@
 #include "rt_xnav_msg.h"
 
 Nodelist::Nodelist( void *nodelist_parent_ctx,
-	    char *nodelist_name, int nodelist_mode, pwr_tStatus *status) :
+		    char *nodelist_name, int nodelist_mode, 
+		    int nodelist_view_node_descr, pwr_tStatus *status) :
   parent_ctx(nodelist_parent_ctx),
-  nodelistnav(NULL), nodelist_displayed(0), help_cb(0), close_cb(0), mode(nodelist_mode)
+  nodelistnav(NULL), nodelist_displayed(0), help_cb(0), close_cb(0), mode(nodelist_mode),
+  view_node_descr(nodelist_view_node_descr)
 {
   strcpy( remote_gui, "");
   *status = 1;
@@ -66,14 +68,15 @@ void Nodelist::find_node_cb( void *ctx, pwr_tOid oid)
     nodelist->pop();  
 }
 
-void Nodelist::add_node_ok( Nodelist *nodelist, char *node_name, char *opplace)
+void Nodelist::add_node_ok( Nodelist *nodelist, char *node_name, 
+			    char *description, char *opplace)
 {
-  nodelist->nodelistnav->add_node( node_name, opplace);
+  nodelist->nodelistnav->add_node( node_name, description, opplace);
 }
 
 void Nodelist::activate_add_node()
 {
-  open_input_dialog( "Node name", "Operatorplace", "Add Node", "",
+  open_input_dialog( "Node name", "Description", "Operatorplace", "Add Node", "",
 		     add_node_ok);
 }
 

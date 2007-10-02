@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.5 2007-09-06 11:22:18 claes Exp $
+ * Proview   $Id: co_statusmon_nodelistnav.cpp,v 1.6 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,7 +237,7 @@ int NodelistNav::init_brow_cb( FlowCtx *fctx, void *client_data)
   nodelistnav->brow->create_nodeclasses();
 
   if ( strcmp( nodelistnav->nodename, "") != 0) {
-    nodelistnav->add_node( nodelistnav->nodename, "");
+    nodelistnav->add_node( nodelistnav->nodename, "", "");
     nodelistnav->node_list[0].item->open_children( nodelistnav, 0, 0);
   }
   else
@@ -253,11 +253,12 @@ int NodelistNav::init_brow_cb( FlowCtx *fctx, void *client_data)
 }
 
 NodelistNav::NodelistNav( void *nodelist_parent_ctx, MsgWindow *nodelistnav_msg_window, 
-			  char *nodelistnav_nodename, int nodelistnav_mode, int nodelistnav_msgw_pop) :
+			  char *nodelistnav_nodename, int nodelistnav_mode, 
+			  int nodelistnav_view_node_descr, int nodelistnav_msgw_pop) :
   parent_ctx(nodelist_parent_ctx),
   nodelist_size(0), trace_started(0), scantime(4000), first_scan(1),
   msg_window(nodelistnav_msg_window), msgw_pop(nodelistnav_msgw_pop),
-  mode(nodelistnav_mode)
+  mode(nodelistnav_mode), view_node_descr(nodelistnav_view_node_descr)
 {
   if ( nodelistnav_nodename)
     strcpy( nodename, nodelistnav_nodename);
@@ -281,7 +282,7 @@ NodelistNavBrow::~NodelistNavBrow()
 void NodelistNav::read()
 {
   char line[400];
-  char line_part[2][256];
+  char line_part[3][256];
   int sts;
   FILE *fp;
   pwr_tFileName fname;
@@ -309,7 +310,10 @@ void NodelistNav::read()
 
     NodelistNode node( line_part[0]);
     if ( num >= 2)
-      strcpy( node.opplace, line_part[1]);
+      strncpy( node.opplace, line_part[1], sizeof(node.opplace));
+    if ( num >= 3)
+      strncpy( node.description, line_part[2], sizeof(node.description));
+
     node_list.push_back( node);
   }
   fclose( fp);
@@ -320,7 +324,7 @@ void NodelistNav::read()
 
   for ( int i = 0; i < (int)node_list.size(); i++) {
     
-    item = new ItemNode( this, node_list[i].node_name, dest, flow_eDest_After);
+    item = new ItemNode( this, node_list[i].node_name, node_list[i].description, dest, flow_eDest_After);
     dest = item->node;
     node_list[i].item = item;
   }
@@ -911,7 +915,8 @@ int NodelistNav::update_nodes()
 	     sizeof(node_list[i].item->data.SystemStatusStr));
 
     if ( ODD(sts)) {
-      if ( strcmp( node_list[i].item->data.Description, response.Description) != 0)
+      if ( strcmp( node_list[i].item->data.Description, response.Description) != 0 &&
+	   view_node_descr == 0)
 	brow_SetAnnotation( node_list[i].item->node, 1, response.Description, 
 			    strlen(response.Description));
 
@@ -951,10 +956,8 @@ void NodelistNav::save()
     return;
 
   for ( int i = 0; i < (int)node_list.size(); i++) {
-    fprintf( fp, "%s", node_list[i].node_name);
-    if ( strcmp( node_list[i].opplace, "") != 0)
-      fprintf( fp, " %s", node_list[i].opplace);
-    fprintf( fp, "\n");
+    fprintf( fp, "%s \"%s\" \"%s\"\n", node_list[i].node_name, node_list[i].opplace, 
+	     node_list[i].description);
   }
 
   fclose( fp);
@@ -1019,7 +1022,7 @@ void NodelistNav::remove_node( char *name)
   }
 }
 
-void NodelistNav::add_node( char *name, char *opplace)
+void NodelistNav::add_node( char *name, char *description, char *opplace)
 {
   brow_tNode	*nodelist;
   int		node_count;
@@ -1044,6 +1047,7 @@ void NodelistNav::add_node( char *name, char *opplace)
     
     NodelistNode node( name);
     strcpy( node.opplace, opplace);
+    strcpy( node.description, description);
 
     if ( idx == (int)node_list.size())
       node_list.push_back( node);
@@ -1055,16 +1059,19 @@ void NodelistNav::add_node( char *name, char *opplace)
       
       node_list[idx] = node;
     }    
-    item = new ItemNode( this, name, nodelist[0], flow_eDest_After);
+
+    item = new ItemNode( this, name, node_list[idx].description, nodelist[0], 
+			 flow_eDest_After);
     node_list[idx].item = item;
   }
   else {
     // Nothing selected, insert last
     NodelistNode node( name);
     strcpy( node.opplace, opplace);
+    strcpy( node.description, description);
     node_list.push_back( node);
 
-    item = new ItemNode( this, name, 0, flow_eDest_IntoLast);
+    item = new ItemNode( this, name, node.description, 0, flow_eDest_IntoLast);
     node_list[node_list.size()-1].item = item;
   }
 }
@@ -1124,19 +1131,23 @@ void NodelistNav::attrvalue_to_string( int type_id, void *value_ptr,
   }
 }
 
-ItemNode::ItemNode( NodelistNav *item_nodelistnav, char *item_name,
+ItemNode::ItemNode( NodelistNav *item_nodelistnav, char *item_name, char *item_node_descr,
 		    brow_tNode dest, flow_eDest dest_code):
   ItemBase( item_nodelistnav, item_name), syssts_open(0)
 {
   type = nodelistnav_eItemType_Node;
   strcpy( name, item_name);
+  strcpy( node_descr, item_node_descr);
   memset( &xdata, 0, sizeof(xdata));
 
   brow_CreateNode( nodelistnav->brow->ctx, item_name, nodelistnav->brow->nc_node,
 		dest, dest_code, (void *) this, 1, &node);
 
   brow_SetAnnotation( node, 0, name, strlen(name));
-  brow_SetAnnotation( node, 1, data.Description, strlen(data.Description));
+  if ( nodelistnav->view_node_descr)
+    brow_SetAnnotation( node, 1, node_descr, strlen(node_descr));
+  else
+    brow_SetAnnotation( node, 1, data.Description, strlen(data.Description));
   brow_SetAnnotPixmap( node, 0, nodelistnav->brow->pixmap_map);
 }
 

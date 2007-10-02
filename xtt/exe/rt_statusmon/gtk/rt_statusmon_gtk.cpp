@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_statusmon_gtk.cpp,v 1.5 2007-09-07 06:26:50 claes Exp $
+ * Proview   $Id: rt_statusmon_gtk.cpp,v 1.6 2007-10-02 15:53:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -45,6 +45,7 @@ int main( int argc, char *argv[])
 {
   int sts;
   int mode = nodelist_eMode_SystemStatus;
+  int view_descr = 0;
 
   if ( argc > 1) {
     for ( int i = 1; i < argc; i++) {
@@ -71,13 +72,18 @@ int main( int argc, char *argv[])
 	  usage();
 	  exit(0);
 	}
+	i++;
+      }
+      else if ( strcmp( argv[i], "-e") == 0) {
+	view_descr = 1;
       }
     }
   }
 
   gtk_init( &argc, &argv);
 
-  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", mode, msgw_ePop_No, &sts);
+  Nodelist *nl = new NodelistGtk( NULL, NULL, "Status Monitor", mode, view_descr,
+				  msgw_ePop_No, &sts);
   nl->close_cb = statusmon_close;
   nl->set_scantime(3);
   
