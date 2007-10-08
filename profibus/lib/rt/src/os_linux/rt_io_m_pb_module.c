@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_module.c,v 1.7 2007-04-30 10:59:56 claes Exp $
+ * Proview   $Id: rt_io_m_pb_module.c,v 1.8 2007-10-08 13:43:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -307,7 +307,9 @@ static pwr_tStatus IoCardRead (
 	  chan_ii = (pwr_sClass_ChanIi *) chanp->cop;
 	  sig_ii = (pwr_sClass_Ii *) chanp->sop;
 	  if (chan_ii && sig_ii) {
-	    switch (chan_ii->Representation) {
+	    if ( (chanp->udata & PB_UDATA_DIAG) == 0) {
+	      /* Fetch data from input area */
+	      switch (chan_ii->Representation) {
 
               case pwr_eDataRepEnum_Int8:
 	        memcpy(&data8, local->input_area + cp->offset + chanp->offset, 1);
@@ -318,7 +320,7 @@ static pwr_tStatus IoCardRead (
 	        memcpy(&udata8, local->input_area + cp->offset + chanp->offset, 1);
             	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
 	        break;
-
+		
               case pwr_eDataRepEnum_Int16:
 	        memcpy(&data16, local->input_area + cp->offset + chanp->offset, 2);
 		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
@@ -363,7 +365,70 @@ static pwr_tStatus IoCardRead (
             	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
 	        break;
 				
-            }
+	      }
+	    }
+	    else {
+	      /* Fetch value from diagnostic area */
+	      pwr_tUInt8 *diag_area = ((pwr_sClass_Pb_DP_Slave *)rp->op)->Diag;
+	      
+	      switch (chan_ii->Representation) {
+
+              case pwr_eDataRepEnum_Int8:
+	        memcpy(&data8, diag_area + chanp->offset, 1);
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data8;
+	        break;
+		
+              case pwr_eDataRepEnum_UInt8:
+	        memcpy(&udata8, diag_area + chanp->offset, 1);
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata8;
+	        break;
+		
+              case pwr_eDataRepEnum_Int16:
+	        memcpy(&data16, diag_area + chanp->offset, 2);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data16 = swap16(data16);
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data16;
+	        break;
+		
+              case pwr_eDataRepEnum_UInt16:
+	        memcpy(&udata16, diag_area + chanp->offset, 2);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata16 = swap16(udata16);
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata16;
+	        break;
+
+              case pwr_eDataRepEnum_Int24:
+	        data32 = 0;
+	        memcpy(&data32, diag_area + chanp->offset, 3);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+		  data32 = swap32(data32);
+		  data32 = data32 >> 8;
+		}
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) data32;
+	        break;
+		
+              case pwr_eDataRepEnum_UInt24:
+	        udata32 = 0;
+	        memcpy(&udata32, diag_area + chanp->offset, 3);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) {
+		  udata32 = swap32(udata32);
+		  udata32 = udata32 >> 8;
+		}
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	        break;
+
+              case pwr_eDataRepEnum_Int32:
+	        memcpy(&data32, diag_area + chanp->offset, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) data32 = swap32(data32);
+            	*(pwr_tInt32 *) chanp->vbp = data32;
+	        break;
+		
+              case pwr_eDataRepEnum_UInt32:
+	        memcpy(&udata32, diag_area + chanp->offset, 4);
+		if (slave->ByteOrdering == pwr_eByteOrdering_BigEndian) udata32 = swap32(udata32);
+            	*(pwr_tInt32 *) chanp->vbp = (pwr_tInt32) udata32;
+	        break;
+				
+	      }
+	    }
 	  }
 	  break;
       }

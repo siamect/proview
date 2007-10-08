@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_pb_locals.h,v 1.5 2007-05-18 12:00:52 claes Exp $
+ * Proview   $Id: rt_io_pb_locals.h,v 1.6 2007-10-08 13:43:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,8 @@
 #define PB_ORIENTATION_BYTE	8
 #define PB_ORIENTATION_WORD	16
 #define PB_ORIENTATION_DWORD	32
+
+#define PB_UDATA_DIAG 		1
 
 typedef struct {
   int             hServiceReadDevice;               // Handle for Service device

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.7 2007-04-30 09:41:31 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.8 2007-10-08 13:43:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -50,6 +50,29 @@
 #include "rt_io_profiboard.h"
 #include "rt_pb_msg.h"
 
+/* Check if channel should be fetched from diagnostic area, 
+   i.e. channel name starts with "Diag_" */
+
+static int is_diag( pwr_tAttrRef *aref)
+{
+  pwr_tStatus sts;
+  pwr_tOName name;
+  char *s;
+  
+  sts = gdh_AttrrefToName( aref, name, sizeof(name), 
+			   cdh_mName_object | cdh_mName_attribute);
+  if ( EVEN(sts)) return 0;
+
+  if ( (s = strrchr( name, '.'))) {
+    if ( strncmp( s+1, "Diag_", 5) == 0)
+      return 1;
+  }
+  else if ( strncmp( name, "Diag_", 5) == 0)
+    return 1;
+
+  return 0;
+}
+
 pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
 {
   switch (rep) {
@@ -82,6 +105,7 @@ pwr_tInt32 GetChanSize(pwr_eDataRepEnum rep)
 /*----------------------------------------------------------------------------*\
    Init method for the Pb DP slave 
 \*----------------------------------------------------------------------------*/
+
 static pwr_tStatus IoRackInit (
   io_tCtx	ctx,
   io_sAgent	*ap,
@@ -203,7 +227,20 @@ static pwr_tStatus IoRackInit (
 	cardp->offset = 0;
         for (i=0; i<cardp->ChanListSize; i++) {
           chanp = &cardp->chanlist[i];
-      
+
+	  if ( is_diag( &chanp->ChanAref)) {
+	    chanp->udata |= PB_UDATA_DIAG;
+	    switch (chanp->ChanClass) {	    
+            case pwr_cClass_ChanIi:
+	      chanp->offset = ((pwr_sClass_ChanIi *)chanp)->Number;
+	      chanp->size = GetChanSize( ((pwr_sClass_ChanIi *)chanp)->Representation);
+	      break;
+	    default:
+	      errh_Error( "Diagnostic channel class, card %s", cardp->Name);
+	    }
+	    continue;
+	  }
+
           if (chanp->ChanClass != pwr_cClass_ChanDi) {
             input_counter += latent_input_count;
 	    latent_input_count = 0;
