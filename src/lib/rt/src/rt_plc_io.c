@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_io.c,v 1.3 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_io.c,v 1.4 2007-10-08 13:39:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -192,8 +192,8 @@ void bcddo_exec	(
 
 void dibcd_exec (
   plc_sThread	    *tp,
-  pwr_sClass_dibcd  *object
-) {
+  pwr_sClass_dibcd  *object) 
+{
   int           val;    /* One digit */
   int           i;      /* Loop index*/
   int           j;      /* Loop index*/
@@ -277,8 +277,8 @@ Signal  0 1 2 3  4 5 6 7  8 9 A B  C D E F      ActVal
 
 void gray_exec (
   plc_sThread	    *tp,
-  pwr_sClass_gray *object
-) {
+  pwr_sClass_gray *object) 
+{
   int		i;      /* Loopcounter */
   pwr_tBoolean  in;     /* Digital in after invert */
   pwr_tBoolean  odd;    /* Convert flag */
@@ -307,3 +307,149 @@ void gray_exec (
   /* Result */
   object->ActVal = sum;
 }
+
+
+/*_*
+  GETDPPTR
+  @aref getdpptr GETDPPTR
+*/
+
+void GetDpPtr_init( pwr_sClass_GetDpPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->DpPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void GetDpPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_GetDpPtr *o) 
+{
+  if ( o->Ptr)
+    o->Value = *o->Ptr;
+}
+
+/*_*
+  GETAPPTR
+  @aref getapptr GETAPPTR
+*/
+
+void GetApPtr_init( pwr_sClass_GetApPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->ApPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void GetApPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_GetApPtr *o) 
+{
+  if ( o->Ptr)
+    o->Value = *o->Ptr;
+}
+
+/*_*
+  GETIPPTR
+  @aref getipptr GETIPPTR
+*/
+
+void GetIpPtr_init( pwr_sClass_GetIpPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->IpPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void GetIpPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_GetIpPtr *o) 
+{
+  if ( o->Ptr)
+    o->Value = *o->Ptr;
+}
+
+/*_*
+  STODPPTR
+  @aref stodpptr STODPPTR
+*/
+
+void StoDpPtr_init( pwr_sClass_StoDpPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->DpPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void StoDpPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_StoDpPtr *o) 
+{
+  if ( o->Ptr)
+    *o->Ptr = *o->InP;
+}
+
+/*_*
+  STOAPPTR
+  @aref stoapptr STOAPPTR
+*/
+
+void StoApPtr_init( pwr_sClass_StoApPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->ApPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void StoApPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_StoApPtr *o) 
+{
+  if ( o->Ptr)
+    *o->Ptr = *o->InP;
+}
+
+/*_*
+  STOIPPTR
+  @aref stoipptr STOIPPTR
+*/
+
+void StoIpPtr_init( pwr_sClass_StoIpPtr *o) 
+{
+  pwr_tUInt32 p;
+  pwr_tAttrRef aref = o->IpPtrObject;
+
+  /* Reset the indirect bit to fetch the pointer, not the value */
+  aref.Flags.b.Indirect = 0;
+
+  if ( ODD( gdh_GetObjectInfoAttrref( &aref, &p, sizeof(p))))
+    o->Ptr = gdh_TranslateRtdbPointer( p);
+}
+
+void StoIpPtr_exec( plc_sThread	*tp,
+		    pwr_sClass_StoIpPtr *o) 
+{
+  if ( o->Ptr)
+    *o->Ptr = *o->InP;
+}
+
