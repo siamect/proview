@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_base.h,v 1.10 2007-07-05 07:28:00 claes Exp $
+ * Proview   $Id: rt_io_base.h,v 1.11 2007-10-08 13:40:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -95,6 +95,7 @@ typedef struct {
 	pwr_tUInt32	size;		/* Size of channel in byte */
 	pwr_tUInt32	offset;		/* Offset to channel in card */
 	pwr_tUInt32	mask;		/* Mask for bit oriented channels */
+        pwr_tUInt32     udata;		/* User defined data */
 } io_sChannel;
 	
 
