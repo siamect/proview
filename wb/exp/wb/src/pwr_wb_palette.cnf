@@ -573,9 +573,11 @@ palette PlcEditorPalette
       class GetAi
       class GetAo
       class GetAp
+      class GetApPtr
       class GetAv
       class StoAo
       class StoAp
+      class StoApPtr
       class StoAtoIp
       class StoAv
     }
@@ -586,6 +588,7 @@ palette PlcEditorPalette
       class GetDi
       class GetDo
       class GetDp
+      class GetDpPtr
       class GetDv
       class ResDo
       class ResDp
@@ -595,6 +598,7 @@ palette PlcEditorPalette
       class SetDv
       class StoDo
       class StoDp
+      class StoDpPtr
       class StoDv
     }
     menu Extern
@@ -634,10 +638,14 @@ palette PlcEditorPalette
       class GetIi
       class GetIo
       class GetIp
+      class GetIpPtr
       class GetIpToA
       class GetIv
+      class IpCollect
+      class IpDistribute
       class StoIo
       class StoIp
+      class StoIpPtr
       class StoIv
       class GetPi
       class PiPos
@@ -770,6 +778,7 @@ palette PlcEditorPalette
       class BaseContactorFo
       class BaseCValveFo
       class BaseDirValveFo
+      class BaseElHeaterFo
       class BaseFilterFo
       class BaseManValveFo
       class BaseMotorFo
@@ -806,6 +815,8 @@ palette PlcEditorPalette
     }
     menu OtherManufacturer
     {
+      class Eurotherm_TC3001Fo
+      class Eurotherm_TC3001AggrFo
       class SEW_Movidrive_1Fo
       class SEW_Movidrive_EPBFo
     }
@@ -816,11 +827,14 @@ palette PlcEditorPalette
       class BaseContactorSim
       class BaseCDamperSim
       class BaseCValveSim
+      class BaseElHeaterSim
       class BaseMValveSim
       class BaseSensorSim
       class BaseMotorAggrSim
       class BaseMotorIncrDecrAggrSim
       class BaseMotorSim
+      class Eurotherm_TC3001Sim
+      class Eurotherm_TC3001AggrSim
       class SEW_Movidrive_1Sim
     }
   }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.h,v 1.9 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_utl.h,v 1.10 2007-10-15 12:15:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -56,7 +56,7 @@ class wb_utl {
   int print_document( pwr_tOid Objdid, ldh_tSesContext ldhses,
 		      ldh_tWBContext ldhwb, unsigned long document,
 		      unsigned long overview);
-  int wb_utl::redraw_windows( pwr_tObjid Objdid, ldh_tSesContext ldhses,
+  int redraw_windows( pwr_tObjid Objdid, ldh_tSesContext ldhses,
 			      ldh_tWBContext ldhwb);
 };
 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_foe.h,v 1.14 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_foe.h,v 1.15 2007-10-15 12:15:04 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,14 +119,14 @@ class WFoe : public WUtility {
   CoWow		*wow;
 
   
-  WFoe::WFoe( void *f_parent_ctx,
-	      char *f_name,
-	      pwr_tObjid plcprogram,
-	      ldh_tWBContext ldhwbctx,
-	      ldh_tSesContext ldhsesctx,
-	      int f_map_window,
-	      ldh_eAccess f_access,
-	      pwr_tStatus *sts);
+  WFoe( void *f_parent_ctx,
+	char *f_name,
+	pwr_tObjid plcprogram,
+	ldh_tWBContext ldhwbctx,
+	ldh_tSesContext ldhsesctx,
+	int f_map_window,
+	ldh_eAccess f_access,
+	pwr_tStatus *sts);
   WFoe( void		*f_parent_ctx,
 	char		*f_name,
 	pwr_tObjid     	plcprogram,
