@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wtt_gtk.cpp,v 1.19 2007-10-02 15:53:20 claes Exp $
+ * Proview   $Id: wb_wtt_gtk.cpp,v 1.20 2007-10-15 12:14:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2364,9 +2364,15 @@ WttGtk::WttGtk(
   GtkWidget *tools_buildnode = gtk_button_new();
   gtk_container_add( GTK_CONTAINER(tools_buildnode), 
 	  gtk_image_new_from_stock( "gtk-execute", GTK_ICON_SIZE_SMALL_TOOLBAR));
-  g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
+  if ( wb_type != wb_eType_ClassEditor) {
+    g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildnode), this);
+    gtk_toolbar_append_widget( tools, tools_buildnode, "Build Node", "");
+  }
+  else {
+    g_signal_connect(tools_buildnode, "clicked", G_CALLBACK(WttGtk::activate_buildvolume), this);
+    gtk_toolbar_append_widget( tools, tools_buildnode, "Build Volume", "");
+  }
   g_object_set( tools_buildnode, "can-focus", FALSE, NULL);
-  gtk_toolbar_append_widget( tools, tools_buildnode, "Build Node", "");
 
   GtkWidget *tools_distribute = gtk_button_new();
   dcli_translate_filename( fname, "$pwr_exe/wpkg_distribute.png");
