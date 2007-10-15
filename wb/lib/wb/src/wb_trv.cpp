@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_trv.cpp,v 1.3 2007-09-26 11:53:15 claes Exp $
+ * Proview   $Id: wb_trv.cpp,v 1.4 2007-10-15 12:18:36 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1210,7 +1210,9 @@ int trv_get_attrobjects (
   switch ( depth) {
   case trv_eDepth_Deep:
     if ( !cid) {
-      /* TODO */
+      /* TODO Doesn't find attribute objects... */
+      return trv_get_objects_hier_class_name( ldhses, oid, cid, name,
+		       backcall, arg1, arg2, arg3, arg4, arg5);
     }
     else {
       for ( i = 0; cid[i]; i++) {
@@ -1298,7 +1300,7 @@ int trv_get_attrobjects (
       }
       else {
 	// No class
-	aref = cdh_ObjidToAref( oid);
+	aref = cdh_ObjidToAref( child);
 
 	if ( name) {
 	  /* Get the name of the object */
