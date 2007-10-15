@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gcg.cpp,v 1.5 2007-09-21 08:10:49 claes Exp $
+ * Proview   $Id: wb_gcg.cpp,v 1.6 2007-10-15 12:17:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -565,6 +565,10 @@ static int gcg_cmanager_comp(
 static int gcg_reset_cmanager( 
     gcg_ctx	gcgctx);
 
+static int gcg_check_attrref( 
+    gcg_ctx gcgctx, 
+    vldh_t_node node, 
+    char *attr);
 
 
 /*_Methods defined for this module_______________________________________*/
@@ -10791,34 +10795,41 @@ int	gcg_comp_m35( gcg_ctx gcgctx, vldh_t_node node)
 	char			output_prefix;
 	char			output_par[80];
 	char			*name;
-	pwr_sAttrRef		*connect_aref;
-	int			size;
-	pwr_tCid		cid;
 
 	/* Check if there is a PlcConnected */
-	sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
-				"PlcConnect", (char **)&connect_aref, &size);
-	if ( ODD(sts)) {
-	  pwr_sAttrRef aref = *connect_aref;
-	  free( (char *)connect_aref);
-	  sts = gcg_replace_ref( gcgctx, &aref, node);
-	  if ( ODD(sts)) {
-	    /* Store the converted aref */
-	    sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
-				"PlcConnect", (char *)&aref, sizeof(aref));
-	  }
+	sts = gcg_check_attrref( gcgctx, node, "PlcConnect");
+	if ( EVEN(sts)) {
+	  gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	  return GSX__NEXTNODE;
+	}
 
-	  if ( cdh_ObjidIsNull( aref.Objid)) {
-	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
-	    return GSX__NEXTNODE;
-	  }
-
-	  // Check that object exist
-	  sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &aref, &cid);
+	/* Check special attrref's for som classes */
+	switch ( node->ln.cid) {
+	case pwr_cClass_GetApPtr:
+	case pwr_cClass_StoApPtr:
+	  sts = gcg_check_attrref( gcgctx, node, "ApPtrObject");
 	  if ( EVEN(sts)) {
-	    gcg_error_msg( gcgctx, GSX__NOCONNECT, node);
+	    gcg_error_msg( gcgctx, sts, node);
 	    return GSX__NEXTNODE;
 	  }
+	  break;
+	case pwr_cClass_GetDpPtr:
+	case pwr_cClass_StoDpPtr:
+	  sts = gcg_check_attrref( gcgctx, node, "DpPtrObject");
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, sts, node);
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	case pwr_cClass_GetIpPtr:
+	case pwr_cClass_StoIpPtr:
+	  sts = gcg_check_attrref( gcgctx, node, "IpPtrObject");
+	  if ( EVEN(sts)) {
+	    gcg_error_msg( gcgctx, sts, node);
+	    return GSX__NEXTNODE;
+	  }
+	  break;
+	default:;
 	}
 
 	sts = gcg_ref_insert( gcgctx, node->ln.oid, GCG_PREFIX_REF);
@@ -15813,10 +15824,11 @@ static int gcg_cmanager_find_nodes( vldh_t_wind wind, vldh_t_node mgr,
       continue;
     switch ( n->ln.cid) {
     case pwr_cClass_CArea: {
-      if ( mgr->ln.x <= n->ln.x + n->ln.width/2 &&
-	   mgr->ln.x + mgr->ln.width >= n->ln.x + n->ln.width/2 &&
-	   mgr->ln.y <= n->ln.y + n->ln.height/2 &&
-	   mgr->ln.y + mgr->ln.height >= n->ln.y + n->ln.height/2) {
+      if ( (mgr->ln.x <= n->ln.x && n->ln.x <= mgr->ln.x + mgr->ln.width) &&
+	   (mgr->ln.x <= n->ln.x + n->ln.width && n->ln.x + n->ln.width <= mgr->ln.x + mgr->ln.width) &&
+	   (mgr->ln.y <= n->ln.y && n->ln.y <= mgr->ln.y + mgr->ln.height) &&
+	   (mgr->ln.y <= n->ln.y + n->ln.height && n->ln.y + n->ln.height <= mgr->ln.y + mgr->ln.height)) {
+	// Whole n inside mgr
 	sts = gcg_cmanager_find_nodes( wind, n, nodelist, node_count);
 	if ( EVEN(sts)) return sts;
 	if ( n->hn.comp_manager == 0)
@@ -15894,6 +15906,37 @@ static int gcg_reset_cmanager(
 		 "}\n");
   return GSX__SUCCESS;
 }	
+
+static int gcg_check_attrref( gcg_ctx gcgctx, vldh_t_node node, char *attr) 
+{
+  pwr_tStatus sts;
+  int size;
+  pwr_tAttrRef *arefp;
+  pwr_tAttrRef aref;
+  pwr_tCid cid;
+
+  sts = ldh_GetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+			  attr, (char **)&arefp, &size);
+  if ( ODD(sts)) {
+    aref = *arefp;
+    free( (char *)arefp);
+    sts = gcg_replace_ref( gcgctx, &aref, node);
+    if ( ODD(sts)) {
+      /* Store the converted aref */
+      sts = ldh_SetObjectPar( gcgctx->ldhses, node->ln.oid, "RtBody", 
+			      attr, (char *)&aref, sizeof(aref));
+    }
+
+    if ( cdh_ObjidIsNull( aref.Objid))
+      return GSX__REFOBJ;
+
+    // Check that object exist
+    sts = ldh_GetAttrRefOrigTid( gcgctx->ldhses, &aref, &cid);
+    if ( EVEN(sts))
+      return GSX__REFOBJ;
+  }
+  return GSX__SUCCESS;
+}
 
 
 
