@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.54 2007-09-19 15:17:32 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.55 2007-10-15 12:15:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2216,7 +2216,7 @@ void wb_vrepdb::checkAttributes(pwr_tCid cid)
                 ap->n.nElement = n_adrep->nElement();
               }
             if (o_adrep->isClass() && n_adrep->subClass() == o_adrep->subClass()) {
-              checkSubClass(o_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
+              checkSubClass( cid, o_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
             }
             delete n_adrep;
           }
@@ -2232,12 +2232,12 @@ void wb_vrepdb::checkAttributes(pwr_tCid cid)
   }
 }
 
-void wb_vrepdb::checkSubClass(pwr_tCid cid, unsigned int o_offset, unsigned int n_offset)
+void wb_vrepdb::checkSubClass(pwr_tCid cid, pwr_tCid subcid, unsigned int o_offset, unsigned int n_offset)
 {
   pwr_tStatus sts;
-  wb_cdrep *o_cdrep = m_merep->cdrep(&sts, cid);
+  wb_cdrep *o_cdrep = m_merep->cdrep(&sts, subcid);
   if (EVEN(sts)) throw wb_error(sts);
-  wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, cid);
+  wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, subcid);
   if (EVEN(sts)) return;
 
   pwr_eBix bix = pwr_eBix_rt;
@@ -2287,11 +2287,11 @@ void wb_vrepdb::checkSubClass(pwr_tCid cid, unsigned int o_offset, unsigned int 
         ap->n.nElement = n_adrep->nElement();
       }
       if (o_adrep->isClass() && o_adrep->subClass() == n_adrep->subClass()) {
-        checkSubClass(n_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
+        checkSubClass( cid, n_adrep->subClass(), o_adrep->offset(), n_adrep->offset());
       } else if (o_adrep->type() == pwr_eType_AttrRef) {
         sArefKey a;
 
-        a.cid = cid;
+        a.cid = subcid;
         a.bix = bix;
         a.offset = o_adrep->offset();
         tree_Insert(&sts, m_aref_th, &a);        
