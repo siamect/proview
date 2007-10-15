@@ -1,0 +1,365 @@
+! 
+!  Proview   $Id: pwrb_c_ipdistribute.wb_load,v 1.1 2007-10-15 12:09:57 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_ipdistribute.wb_load -- Defines the class IpDistribute.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_data.c
+!  @Group Plc,PlcIO
+!  @Summary Expands the number of integer outputs that can be handled in a DataArithm.
+!  The IpDistribute expands the number of integer outputs that can be
+!  handled in a DataArithm object.
+!  @image orm_ipdistribute_fo.gif
+!
+!  The IpDistribute has 24 integer outputs, which values can be set from
+!  an array of Int32 declared in the code of a DataArithm. By connecting
+!  the data input of the IpDistribute to an data output of a DataArithm, 
+!  and placing the address of the integer array in the data output, the
+!  values of the array will be copied to the Ip output of the IpDistribute
+!  object. This expands the number of integer outputs from the DataArithm
+!  from ordinary 9 to 96, if all four data outputs are connected to IpDistribute
+!  objects.
+!
+!  Another advantage of IpDistribute is that its sometimes convenient to have
+!  the values arranged in an array, for example to handle in an for or
+!  while loop.
+!
+!  MaxIndex should be assigned the number of used outputs in the IpDistribute
+!  object. The value can be set at runtime or in the configurator.
+!
+!  The array should be a static declared array of pwr_tInt32, with size
+!  greater or equal to the value in MaxIndex. Use the type pwr_sIpDistribute
+!  defined in $pwr_inc/rt_plc_data.h.
+!
+! @b Example 
+!
+!  This is the code in a DataArithm witch has a IpDistribute object connected
+!  to the ODa1 output.
+!
+!        static pwr_sIpDistribute vect;
+!        int i;
+!
+!        ODa1 = vect;
+!        for ( i = 0; i < 24; i++)
+!          vect[i] = 0.1 * i;
+! 
+! @b See also
+!  @classlink DataArithm pwrb_dataarithm.html
+!  @classlink IpCollect pwrb_apcollect.html
+!*/
+!
+  Object IpDistribute $ClassDef 517
+    Body SysBody
+      Attr Editor = pwr_eEditor_PlcEd
+      Attr Method = pwr_eMethod_Connections
+    EndBody
+    !
+    ! IPDISTRIBUTE Runtime Body
+    !
+    Object RtBody $ObjBodyDef 1
+      Body SysBody
+        Attr StructName = "IpDistribute"
+      EndBody
+      !/**
+      !  @Summary Data input connected to a data output of a DataArithm object.
+      !  Data input connected to a data output of a DataArithm object.
+      !  In the DataAritm code, the address of en array should be placed in
+      !  the connected data output.
+      !*/
+      Object DataIn $Input 1
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Float32"
+	  Attr Flags |= PWR_MASK_POINTER
+	  Attr Flags |= PWR_MASK_NOEDIT
+	  Attr Flags |= PWR_MASK_NOREMOVE
+	  Attr Flags |= PWR_MASK_NOINVERT
+	  Attr Flags |= PWR_MASK_STATE
+          Attr GraphName = "Da"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the first element in the array.
+      !*/
+      Object IpOut1 $Output 2
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip1"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the second element in the array.
+      !*/
+      Object IpOut2 $Output 3
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip2"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the third element in the array.
+      !*/
+      Object IpOut3 $Output 4
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip3"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut4 $Output 5
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip4"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut5 $Output 6
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip5"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut6 $Output 7
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip6"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut7 $Output 8
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip7"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut8 $Output 9
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip8"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut9 $Output 10
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip9"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut10 $Output 11
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip10"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut11 $Output 12
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip11"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut12 $Output 13
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip12"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut13 $Output 14
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip13"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut14 $Output 15
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip14"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut15 $Output 16
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip15"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut16 $Output 17
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip16"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut17 $Output 18
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip17"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut18 $Output 19
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip18"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut19 $Output 20
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip19"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut20 $Output 21
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip20"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut21 $Output 22
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip21"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut22 $Output 23
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip22"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut23 $Output 24
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip23"
+        EndBody
+      EndObject
+      !/**
+      !  The value of the corresponding element in the array.
+      !*/
+      Object IpOut24 $Output 25
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Ip24"
+        EndBody
+      EndObject
+      !/**
+      !  Number of used outputs. This value has to be supplied by the user.
+      !*/
+      Object MaxIndex $Intern 26
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+        EndBody
+      EndObject
+    EndObject
+    !
+    ! IPDISTRIBUTE Development Body
+    !
+    Object DevBody $ObjBodyDef 2
+      Object PlcNode $Buffer 1
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 1
+        Attr parameters[1] = 2
+        Attr parameters[2] = 24
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 16
+        Attr graphindex = 0
+        Attr default_mask[0] = 1
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "IpDistr"
+        Attr graphname = "IpDistr"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    !
+    ! Template object 
+    !
+    Object Template IpDistribute
+      Body RtBody
+        Attr MaxIndex = 2
+      EndBody
+    EndObject
+  EndObject
+EndSObject
