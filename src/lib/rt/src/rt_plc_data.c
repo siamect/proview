@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_data.c,v 1.5 2005-10-18 05:10:56 claes Exp $
+ * Proview   $Id: rt_plc_data.c,v 1.6 2007-10-15 12:12:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -79,6 +79,24 @@ void ApCollect_exec(
 }
 
 /*_*
+  @aref ipcollect IpCollect
+*/
+void IpCollect_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IpCollect  *object)
+{
+	int		i;
+	pwr_tInt32	**InP;
+
+	for (  i = 0; i < object->MaxIndex; i++)
+	{
+	  InP = (pwr_tInt32 **) ((char *) &object->IpIn1P +
+		i * (sizeof(object->IpIn1) + sizeof(object->IpIn1P)));
+	  object->Ip[i] = **InP;
+	}
+}
+
+/*_*
   @aref dpdistribute DpDistribute
 */
 void DpDistribute_exec(
@@ -100,6 +118,18 @@ void ApDistribute_exec(
 	if ( *object->DataInP)
 	  memcpy(  &object->ApOut1, *object->DataInP, 
 		min( object->MaxIndex, 24) * sizeof(pwr_tFloat32));
+}
+
+/*_*
+  @aref ipdistribute IpDistribute
+*/
+void IpDistribute_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IpDistribute  *object)
+{
+	if ( *object->DataInP)
+	  memcpy(  &object->IpOut1, *object->DataInP, 
+		min( object->MaxIndex, 24) * sizeof(pwr_tInt32));
 }
 
 /*_*
