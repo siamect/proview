@@ -112,7 +112,7 @@ pwr_exe:
 800 $hostobject.IndWarning##Boolean
 99
 2
-200 $hostobject.On##Boolean
+200 $hostobject.TC3001.On##Boolean
 201 35
 99
 12
