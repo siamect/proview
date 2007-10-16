@@ -77,3 +77,6 @@
 070919 cs  wb        Defaultvalues inserted into template objects when new attribute objects are added to a class.
 070921 cs  plc       Change of template plc wasn't always detected at compilation.
 070926 cs  utl       Listdescriptor search also searches for attribute objects.
+071007 cs  wb        Build button in class editor toolbar builds volume instead of node.
+071012 cs  plc       Bugfix, CArea function object inside CArea could segfault.
+071015 cs  wb        Bugfix in UpdateClasses, references to attributes in attribute objects wasn't updated.

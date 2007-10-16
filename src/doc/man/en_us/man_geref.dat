@@ -1991,7 +1991,9 @@ For the following attributes types, some additional format strings are defined.
 %t<t>Date and time. Ex 24-MAY-2007 11:33:43.91
 %1t<t>Only time, no hundredth. Ex 11:33:43
 %2t<t>Only time, with hundredth. Ex 11:33:43:91
-%3t<t>Compressed data and time. Ex 07-05-24 11:33:43
+%3t<t>Compressed date and time. Ex 07-05-24 11:33:43
+%4t<t>Date only. Ex 24-MAY-2007
+%5t<t>Compressed date. Ex 07-05-24
 
 <b>pwr_tDeltaTime
 %t<t>Time with hundredth. Ex 1:23:45

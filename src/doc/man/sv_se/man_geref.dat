@@ -1988,6 +1988,8 @@ För följande attribut typer finns ytterligare format definierade.
 %1t<t>Enbart tid, inga hundradelar. Ex 11:33:43
 %2t<t>Enbart tid med hundradelar. Ex 11:33:43:91
 %3t<t>Komprimerad datum och tid. Ex 07-05-24 11:33:43
+%4t<t>Enbart datum. Ex 24-MAY-2007
+%5t<t>Komprimerat datum. Ex 07-05-24
 
 <b>pwr_tDeltaTime
 %t<t>Tid med hundradelar. Ex 1:23:45

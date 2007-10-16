@@ -397,6 +397,7 @@ palette PlcEditorPalette
     class Curve
     class DArithm
     class DataArithm
+    class Demux
     class Div
     class Equal
     class Filter
@@ -485,6 +486,7 @@ palette PlcEditorPalette
     class Even
     class IAbs
     class IAdd
+    class IDemux
     class IDiv
     class IEqual
     class IGreaterEqual

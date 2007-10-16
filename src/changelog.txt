@@ -46,6 +46,9 @@
 070905 cs  doc       New Guide to I/O Systems.
 070906 cs  statussrv Functionality to view userstatus added.
 070918 cs  wbl       New systemclass $ClassLost to replace lost classes.
-070919 cs  wbl       New class XyCurve to view a curve of points with x,y coordiantes.>>>>>>> 1.25
+070919 cs  wbl       New class XyCurve to view a curve of points with x,y coordiantes.
 070921 rk  rt        Changed qcom synch-mechanism from futex to interprocess mutex/cond-var.
-070925 cs  convert   Convert modules moved to new archive cnv.
+070925 cs  doc       Template plc-code for base components viewed as pdf-files in object reference manual.
+071009 cs  wbl       Plc classes to get and store indirect data added.
+071009 cs  wbl       Plc classes IpDistribute and IpCollect added.
+071015 cs  wbl       Plc classes Demux and IDemux added (demultiplexers).

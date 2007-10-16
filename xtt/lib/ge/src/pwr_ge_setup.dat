@@ -482,6 +482,7 @@ menu Components
   menu OtherManufacturer
   {
     subgraph	Eurotherm_TC3001  pwr_exe:mcomp_eurotherm_tc3001.pwsg 180
+    subgraph	Eurotherm_TC3001Aggr  pwr_exe:mcomp_eurotherm_tc3001aggr.pwsg 180
   }
 }
 localsubgraphs Ssab ssab_exe:*.pwsg

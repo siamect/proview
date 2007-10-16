@@ -13,3 +13,4 @@
                       view of the world is given.
 070518 rk -           Added io-method IoAgentSwap to keep driver initialized during warm restart.
 070601 cs -           Bugfix, opening Profibus Configurator with empty gsdfile attribute caused segfault.
+071008 cs -           ChanIi with name starting with Diag_ fetches value from diagnostic area.
