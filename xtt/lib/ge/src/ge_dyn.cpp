@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_dyn.cpp,v 1.55 2007-09-19 15:27:33 claes Exp $
+ * Proview   $Id: ge_dyn.cpp,v 1.56 2007-10-16 07:57:20 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3563,6 +3563,18 @@ int GeValue::scan( grow_tObject object)
 			   timstr, sizeof(timstr));
       timstr[17] = 0;
       break;
+    case '4':
+      // Format %4t, date only
+      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_DateAndTime, 
+			   timstr, sizeof(timstr));
+      timstr[11] = 0;
+      break;
+    case '5':
+      // Format %5t, compressed date only
+      sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_ComprDateAndTime, 
+			   timstr, sizeof(timstr));
+      timstr[8] = 0;
+      break;
     default:
       sts = time_AtoAscii( (pwr_tTime *) p, time_eFormat_DateAndTime, 
 			   timstr, sizeof(timstr));
@@ -6614,6 +6626,9 @@ int GeXY_Curve::scan( grow_tObject object)
     else
       no_of_points = noofpoints;
 
+    if ( !no_of_points)
+      return 1;
+
     dyn->parse_attr_name( x_attr, parsed_name,
 			  &inverted, &attr_type_x, &attr_size);
     x_value = calloc( no_of_points, attr_size);
@@ -7342,6 +7357,18 @@ int GeTable::scan( grow_tObject object)
 	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime,
 				 timstr, sizeof(timstr));
 	    timstr[17] = 0;
+	    break;
+	  case '4':
+	    // Format %4t, date only
+	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
+				 timstr, sizeof(timstr));
+	    timstr[11] = 0;
+	    break;
+	  case '5':
+	    // Format %5t, compressed date only
+	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_ComprDateAndTime, 
+				 timstr, sizeof(timstr));
+	    timstr[8] = 0;
 	    break;
 	  default:
 	    sts = time_AtoAscii( (pwr_tTime *) headerref_p[i][j], time_eFormat_DateAndTime, 
