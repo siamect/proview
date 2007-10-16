@@ -1,0 +1,368 @@
+! 
+!  Proview   $Id: pwrb_c_idemux.wb_load,v 1.1 2007-10-16 06:39:09 claes Exp $
+!  Copyright (C) 2005 SSAB Oxelösund AB.
+!
+!  This program is free software; you can redistribute it and/or 
+!  modify it under the terms of the GNU General Public License as 
+!  published by the Free Software Foundation, either version 2 of 
+!  the License, or (at your option) any later version.
+!
+!  This program is distributed in the hope that it will be useful 
+!  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+!  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+!  GNU General Public License for more details.
+!
+!  You should have received a copy of the GNU General Public License 
+!  along with the program, if not, write to the Free Software 
+!  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+!
+!  pwrb_c_idemux.wb_load -- Defines the class IDemux.
+!
+SObject pwrb:Class
+!/**
+!  @Version 1.0
+!  @Code rt_plc_arithm.c
+!  @Group Plc,PlcInteger
+!  @Summary Integer demultiplexer
+!  Integer demultiplexer.
+!  @image orm_idemux_fo.gif
+!
+!  Transfer the integer input to one of the 24 outputs, depending on Idx.
+!  The index attributes states which output the input value is
+!  tranfered to.
+!  The other outputs are set to zero.
+!  If index is less than zero or greater than 23, all outputs are 
+!  set to zero.
+!  
+!*/
+  Object IDemux $ClassDef 519
+    Body SysBody
+      Attr Editor = pwr_eEditor_AttrEd
+      Attr Method = pwr_eMethod_Connections
+      Attr PopEditor = 2
+    EndBody
+    Object RtBody $ObjBodyDef 1 
+      Body SysBody
+        Attr StructName = "IDemux"
+      EndBody
+      !/**
+      !  Value of input signal 0, input signal 1, ...
+      !*/
+      Object In $Input 1 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "In"
+        EndBody
+      EndObject
+      !/**
+      !  Index for selected output.
+      !  First output has index 0.
+      !*/
+      Object Index $Input 26 
+        Body SysBody
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Idx"
+        EndBody
+      EndObject
+      !/**
+      !  Output 0.
+      !*/
+      Object Out0 $Output 2
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out0"
+        EndBody
+      EndObject
+      !/**
+      !  Output 1.
+      !*/
+      Object Out1 $Output 3
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out1"
+        EndBody
+      EndObject
+      !/**
+      !  Output 2.
+      !*/
+      Object Out2 $Output 4
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out2"
+        EndBody
+      EndObject
+      !/**
+      !  Output 3.
+      !*/
+      Object Out3 $Output 5
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out3"
+        EndBody
+      EndObject
+      !/**
+      !  Output 4.
+      !*/
+      Object Out4 $Output 6
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out4"
+        EndBody
+      EndObject
+      !/**
+      !  Output 5.
+      !*/
+      Object Out5 $Output 7
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out5"
+        EndBody
+      EndObject
+      !/**
+      !  Output 6.
+      !*/
+      Object Out6 $Output 8
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out6"
+        EndBody
+      EndObject
+      !/**
+      !  Output 7.
+      !*/
+      Object Out7 $Output 9
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out7"
+        EndBody
+      EndObject
+      !/**
+      !  Output 8.
+      !*/
+      Object Out8 $Output 10
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out8"
+        EndBody
+      EndObject
+      !/**
+      !  Output 9.
+      !*/
+      Object Out9 $Output 11
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out9"
+        EndBody
+      EndObject
+      !/**
+      !  Output 10.
+      !*/
+      Object Out10 $Output 12
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out10"
+        EndBody
+      EndObject
+      !/**
+      !  Output 11.
+      !*/
+      Object Out11 $Output 13
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out11"
+        EndBody
+      EndObject
+      !/**
+      !  Output 12.
+      !*/
+      Object Out12 $Output 14
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out12"
+        EndBody
+      EndObject
+      !/**
+      !  Output 13.
+      !*/
+      Object Out13 $Output 15
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out13"
+        EndBody
+      EndObject
+      !/**
+      !  Output 14.
+      !*/
+      Object Out14 $Output 16
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out14"
+        EndBody
+      EndObject
+      !/**
+      !  Output 15.
+      !*/
+      Object Out15 $Output 17
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out15"
+        EndBody
+      EndObject
+      !/**
+      !  Output 16.
+      !*/
+      Object Out16 $Output 18
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out16"
+        EndBody
+      EndObject
+      !/**
+      !  Output 17.
+      !*/
+      Object Out17 $Output 19
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out17"
+        EndBody
+      EndObject
+      !/**
+      !  Output 18.
+      !*/
+      Object Out18 $Output 20
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out18"
+        EndBody
+      EndObject
+      !/**
+      !  Output 19.
+      !*/
+      Object Out19 $Output 21
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out19"
+        EndBody
+      EndObject
+      !/**
+      !  Output 20.
+      !*/
+      Object Out20 $Output 22
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out20"
+        EndBody
+      EndObject
+      !/**
+      !  Output 21.
+      !*/
+      Object Out21 $Output 23
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out21"
+        EndBody
+      EndObject
+      !/**
+      !  Output 22.
+      !*/
+      Object Out22 $Output 24
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out22"
+        EndBody
+      EndObject
+      !/**
+      !  Output 23.
+      !*/
+      Object Out23 $Output 25
+        Body SysBody
+	  Attr Flags |= PWR_MASK_STATE
+	  Attr Flags |= PWR_MASK_NOEDIT
+          Attr TypeRef = "pwrs:Type-$Int32"
+          Attr GraphName = "Out23"
+        EndBody
+      EndObject
+    EndObject
+    Object DevBody $ObjBodyDef 2 
+      Object PlcNode $Buffer 1 
+        Body SysBody
+          Attr Class = pwr_eClass_PlcNode
+	  Attr Flags |= PWR_MASK_INVISIBLE
+        EndBody
+      EndObject
+    EndObject
+    Object GraphPlcNode $GraphPlcNode
+      Body SysBody
+        Attr object_type = 11
+        Attr parameters[0] = 2
+        Attr parameters[1] = 0
+        Attr parameters[2] = 24
+        Attr parameters[3] = 0
+        Attr subwindows = 0
+        Attr graphmethod = 0
+        Attr graphindex = 0
+        Attr default_mask[0] = 3
+        Attr default_mask[1] = 3
+        Attr segname_annotation = 1
+        Attr compmethod = 4
+        Attr compindex = 0
+        Attr tracemethod = 0
+        Attr traceindex = 0
+	Attr executeordermethod = 2
+        Attr objname = "IDemux"
+        Attr graphname = "IDemux"
+        Attr debugpar = ""
+      EndBody
+    EndObject
+    Object Template IDemux
+      Body RtBody
+      EndBody
+    EndObject
+  EndObject
+EndSObject

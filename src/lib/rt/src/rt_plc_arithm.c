@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_arithm.c,v 1.7 2005-09-01 14:57:56 claes Exp $
+ * Proview   $Id: rt_plc_arithm.c,v 1.8 2007-10-16 06:39:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1030,9 +1030,53 @@ void Mux_exec(
   pwr_tFloat32	**inp = &o->In0P;
 
   idx = o->Index = *o->IndexP;
-  idx = idx < 0 ? 0 : ( idx > IMUX_SIZE - 1 ? IMUX_SIZE - 1 : idx);
+  idx = idx < 0 ? 0 : ( idx > MUX_SIZE - 1 ? MUX_SIZE - 1 : idx);
   inp = (pwr_tFloat32 **)((char *)inp + idx * offset);
   o->ActVal = **inp;
+}
+
+/*_*
+  Demux Analog demultiplexer.
+  @aref demux Demux
+*/
+void Demux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_Demux	*o)
+{
+#define DEMUX_SIZE 24
+  int     	idx, i;
+  pwr_tFloat32	*outp = &o->Out0;
+
+  idx = o->Index = *o->IndexP;
+  for ( i = 0; i < DEMUX_SIZE; i++) {
+    if ( i == idx)
+      *outp = *o->InP;
+    else
+      *outp = 0;
+    outp++;
+  }
+}
+
+/*_*
+  IDemux Integer demultiplexer.
+  @aref idemux IDemux
+*/
+void IDemux_exec(
+  plc_sThread		*tp,
+  pwr_sClass_IDemux	*o)
+{
+#define IDEMUX_SIZE 24
+  int     	idx, i;
+  pwr_tInt32	*outp = &o->Out0;
+
+  idx = o->Index = *o->IndexP;
+  for ( i = 0; i < IDEMUX_SIZE; i++) {
+    if ( i == idx)
+      *outp = *o->InP;
+    else
+      *outp = 0;
+    outp++;
+  }
 }
 
 /*_*
