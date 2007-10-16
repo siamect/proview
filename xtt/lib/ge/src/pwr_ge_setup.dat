@@ -33,6 +33,9 @@ menu Process
   subgraph	DamperAnim2	pwr_exe:pwr_damperanim2.pwsg		98
   subgraph	DamperControl	pwr_exe:pwr_dampercontrol.pwsg	       104
   subgraph	DamperControl2	pwr_exe:pwr_dampercontrol2.pwsg	       104
+  subgraph 	ElHeater1	pwr_exe:pwr_elheater1.pwsg	       179
+  subgraph 	ElHeater2	pwr_exe:pwr_elheater2.pwsg	       179
+  subgraph 	ElHeater3	pwr_exe:pwr_elheater3.pwsg	         5
   subgraph	Fan		pwr_exe:pwr_fan.pwsg			69
   subgraph	Fan2		pwr_exe:pwr_fan2.pwsg			71
   subgraph	Fan3		pwr_exe:pwr_fan3.pwsg			70
@@ -475,6 +478,10 @@ menu Components
     subgraph	ABB_ACS800FanAggr  pwr_exe:mcomp_abb_acs800fanaggr.pwsg 71
     subgraph	ABB_ACS800MotorAggr  pwr_exe:mcomp_abb_acs800motoraggr.pwsg 23
     subgraph	ABB_ACS800PumpAggr  pwr_exe:mcomp_abb_acs800pumpaggr.pwsg 72
+  }
+  menu OtherManufacturer
+  {
+    subgraph	Eurotherm_TC3001  pwr_exe:mcomp_eurotherm_tc3001.pwsg 180
   }
 }
 localsubgraphs Ssab ssab_exe:*.pwsg
