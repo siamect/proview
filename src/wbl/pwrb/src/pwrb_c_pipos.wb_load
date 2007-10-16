@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_pipos.wb_load,v 1.7 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_pipos.wb_load,v 1.8 2007-10-16 06:39:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -26,7 +26,7 @@ SObject pwrb:Class
 !  @Summary Translates a pulse counter value into an engineering value
 !  Translates a pulse counter value into an engineering
 !  value, e.g. position, volume etc.
-!  @image orm_en1-162.gif
+!  @image orm_pipos_fo.gif
 !
 !  Suppose the engineering value is a position. The actual
 !  position is then calculated at every scanning by means

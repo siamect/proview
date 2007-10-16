@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_out2p.wb_load,v 1.6 2005-09-01 14:58:02 claes Exp $
+!  Proview   $Id: pwrb_c_out2p.wb_load,v 1.7 2007-10-16 06:39:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -28,7 +28,7 @@ SObject pwrb:Class
 !  varies in the time. The binary output has a
 !  pulse-proportional relay action in the dead zone, if
 !  MinOut < MaxOut, else on/off-action with hysteresis.
-!  @image orm_en1-135.gif
+!  @image orm_out2p_fo.gif
 ! 
 !  The digit 2 in the object name comes from the output
 !  which may have two distinct values with a two-step

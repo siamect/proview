@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_xycurve.wb_load,v 1.1 2007-09-19 15:04:38 claes Exp $
+!  Proview   $Id: pwrb_c_xycurve.wb_load,v 1.2 2007-10-16 06:39:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -24,21 +24,25 @@ SObject pwrb:Class
 !  @Summary Object to display a xy-curve.
 !  Object to display a curve of points with x and y coordinates.
 !
+! @b Object Graph
+! @image orm_xycurve_og.gif
+!
+!  The object contains 
 !  To view a curve in a Ge graph, use a XYCurve component, and set
 !
-!  XY_Curve.DataType <t> XYArrays
-!  XY_Curve.XAttr <t>o.XValue##Float32#100
-!  XY_Curve.YAttr <t>o.XValue##Float32#100
-!  XY_Curve.UpdateAttr <t>o.UpdateAttr##Boolean
-!  XY_Curve.XMinValueAttr <t>o.XMinValue##Float32
-!  XY_Curve.XMaxValueAttr <t>o.XMaxValue##Float32
-!  XY_Curve.YMinValueAttr <t>o.YMinValue##Float32
-!  XY_Curve.YMaxValueAttr <t>o.YMaxValue##Float32
-!  XY_Curve.YMaxValueAttr <t>o.YMaxValue##Float32
-!  XY_Curve.NoOfPointsAttr <t>o.NoOfPoints##UInt32
-!  XY_Curve.NoOfPoints <t>100
+!  XY_Curve.DataType       XYArrays
+!  XY_Curve.XAttr          o.XValue##Float32#100
+!  XY_Curve.YAttr          o.XValue##Float32#100
+!  XY_Curve.UpdateAttr     o.UpdateAttr##Boolean
+!  XY_Curve.XMinValueAttr  o.XMinValue##Float32
+!  XY_Curve.XMaxValueAttr  o.XMaxValue##Float32
+!  XY_Curve.YMinValueAttr  o.YMinValue##Float32
+!  XY_Curve.YMaxValueAttr  o.YMaxValue##Float32
+!  XY_Curve.YMaxValueAttr  o.YMaxValue##Float32
+!  XY_Curve.NoOfPointsAttr o.NoOfPoints##UInt32
+!  XY_Curve.NoOfPoints     100
 !
-!  where x should be replaced by the name of the XyCurve object.
+!  where o should be replaced by the name of the XyCurve object.
 !*/
   Object XyCurve $ClassDef 509
     Body SysBody

@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrb_c_disabled.wb_load,v 1.2 2005-10-21 16:11:24 claes Exp $
+!  Proview   $Id: pwrb_c_disabled.wb_load,v 1.3 2007-10-16 06:39:59 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -23,8 +23,9 @@ SObject pwrb:Class
 !  @Version 1.0
 !  @Group Plc,PlcIO
 !  @Summary Check if an attribute is disabled.
-!  Check if an attributes is disabled.
+!  Check if an attribute is disabled.
 !  @image orm_disabled_fo.gif
+!
 !*/
   Object Disabled $ClassDef 434 
     Body SysBody

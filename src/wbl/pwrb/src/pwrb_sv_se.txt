@@ -6333,7 +6333,7 @@ projektet.
 FriendNodeConfig objektet skapas i projekt volymen som barn till ett
 BusConfig objekt i nod-hierarkin.
 
-@Se även
+@b Se även
 <attr>Description
 Beskrivning av noden.
 </attr>
@@ -10246,7 +10246,7 @@ Anger värdet på Status [0] i associerat Order-objekt.
 Två-punktsutgång med till/från styrning. En analog insignal konverteras till en 
 binär signal. Styrningen utförs antingen som proportionell till/från styrning 
 med dödzon eller som till/från styrning med hysteres. 
-@image orm_en1-135.gif
+@image orm_out2p_fo.gif
 
 Siffran 2 i objektnamnet syftar på objektets utgång som har 2-lägesverkan. Två 
 diskreta order kan ges med innebörden höger/vänster, upp/ner, öka/minska etc.
@@ -10869,7 +10869,7 @@ begrgänsning vid tvångsstyrning.
 <class> PiPos
 @Summary Översätter pulsräknarvärde till ingenjörsvärde
 Översätter pulsräknarvärde till ingenjörsvärde (position, volym etc.). 
-@image orm_en1-162.gif
+@image orm_pipos_fo.gif
 
 Antag att ingenjörsvärdet är en position. Den aktuell positionen, ActVal , 
 beräknas vid varje exekvering med hjälp av den linjära ekvationen 

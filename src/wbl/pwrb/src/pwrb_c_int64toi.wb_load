@@ -25,7 +25,7 @@ SObject pwrb:Class
 !  @Group Plc,PlcConversion
 !  @Summary Convert Int64 value to integer (Int32)
 !  Convert Int64 value to integer (Int32).
-!  @image orm_Int64toi_fo.gif
+!  @image orm_int64toi_fo.gif
 !
 !  The Int64toI object converts the value of the Int64 input to
 !  an integer value (Int32) stored in ActVal.
