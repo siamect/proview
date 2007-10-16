@@ -2,21 +2,21 @@
 100 20
 135 20
 101 20
-102 -18
-103 106
-104 3.66999
-136 3.66999
+102 -13
+103 5
+104 3.79705
+136 3.79705
 105 100
-106 -3
-107 4
+106 -2
+107 0
 108 23.068
 109 2.8
 110 34.2237
 111 1.2
 116 0
-117 15
-118 123
-119 129
+117 0
+118 128
+119 118
 120 0
 121 Claes context
 122 0
@@ -10868,10 +10868,10 @@ pwr_exe:
 124
 2
 4
-400 cc_3_1_0_5
+400 cc_3_1_2_5
 401 3
 402 0
-403 0
+403 2
 404 1
 405 0.4
 406 0.6
@@ -10879,10 +10879,10 @@ pwr_exe:
 408 0
 99
 4
-400 cc_3_1_2_5
+400 cc_3_1_0_5
 401 3
 402 0
-403 2
+403 0
 404 1
 405 0.4
 406 0.6
@@ -13882,7 +13882,7 @@ pwr_exe:
 102 65532
 103 0
 2
-200 $object.Ready##Boolean
+200 $object.AggrReady##Boolean
 201 9999
 99
 99
@@ -14920,7 +14920,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.Contactor.Feedback
 99
 99
-6804 Motor.TempSwitch.Switch Di
+6804 Heater.TempSwitch.Switch Di
 6836
 1
 100 129
@@ -14937,7 +14937,7 @@ pwr_exe:
 5500 open graph /class /inst=$object.Heater.TempSwitch.Switch
 99
 99
-6805 Motor.TempSensor.Value Ai
+6805 Heater.TempSensor.Value Ai
 6837
 1
 100 129
@@ -19179,13 +19179,13 @@ pwr_exe:
 0
 0
 0
-1006 12.7268
+1006 12.7267
 1007 7.8
-1008 7.85
+1008 7.84999
 1009 5.68851
-1013 12.7268
+1013 12.7267
 1014 7.8
-1015 7.85
+1015 7.84999
 1016 5.68851
 1003
 0
@@ -19249,7 +19249,7 @@ pwr_exe:
 800 $object.IndWarning##Boolean
 99
 2
-200 $object.TC3001.PowerOn##Boolean
+200 $object.TC3001.On##Boolean
 201 37
 99
 12

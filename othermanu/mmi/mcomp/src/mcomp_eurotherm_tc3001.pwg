@@ -92,7 +92,7 @@ pwr_exe:
 800 $hostobject.IndWarning##Boolean
 99
 2
-200 $hostobject.PowerOn##Boolean
+200 $hostobject.On##Boolean
 201 33
 99
 50

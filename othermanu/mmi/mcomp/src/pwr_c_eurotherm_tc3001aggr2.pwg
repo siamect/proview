@@ -2,21 +2,21 @@
 100 20
 135 20
 101 20
-102 56
-103 166
-104 3.38139
-136 3.38139
+102 31
+103 -13
+104 3.90038
+136 3.90038
 105 100
-106 9
-107 4
+106 6
+107 -2
 108 23.068
 109 2.8
 110 32.4237
 111 1.2
 116 0
-117 24
-118 114
-119 129
+117 0
+118 132
+119 120
 120 0
 121 Claes context
 122 0
@@ -11947,7 +11947,7 @@ pwr_exe:
 102 65532
 103 0
 2
-200 $object.Ready##Boolean
+200 $object.AggrReady##Boolean
 201 9999
 99
 99
@@ -12814,20 +12814,9 @@ pwr_exe:
 102 65535
 103 0
 68
-6800 31
-6801 CircuitBreaker.NotTripped Di
+6800 15
+6801 Contactor.Order Do
 6833
-1
-100 1
-101 65
-102 65535
-103 0
-55
-5500 open graph /class /inst=$object.CircuitBreaker.NotTripped
-99
-99
-6802 Contactor.Order Do
-6834
 1
 100 1
 101 65
@@ -12837,25 +12826,19 @@ pwr_exe:
 5500 open graph /class /inst=$object.Contactor.Order
 99
 99
-6803 Contactor.Feedback Di
-6835
+6802 Contactor.Feedback Di
+6834
 1
-100 129
+100 1
 101 65
 102 65535
 103 0
-9
-900 $object.Contactor.DisableFeedback##Boolean
-901 0
-902 1
-903 1
-99
 55
-5500 open graph /class /inst=$object.Contactor.Feedback
+5500 $object.Contactor.DisableFeedback##Boolean
 99
 99
-6804 Motor.TempSwitch.Switch Di
-6836
+6803 Heater.TempSwitch.Switch Di
+6835
 1
 100 129
 101 65
@@ -12871,8 +12854,8 @@ pwr_exe:
 5500 open graph /class /inst=$object.Heater.TempSwitch.Switch
 99
 99
-6805 Motor.TempSensor.Value Ai
-6837
+6804 Heater.TempSensor.Value Ai
+6836
 1
 100 129
 101 65
@@ -13360,20 +13343,9 @@ pwr_exe:
 102 65535
 103 0
 68
-6800 15
-6801 CircuitBreaker
+6800 7
+6801 Contactor
 6833
-1
-100 1
-101 65
-102 65535
-103 0
-55
-5500 open graph /class /inst=$object.CircuitBreaker
-99
-99
-6802 Contactor
-6834
 1
 100 1
 101 65
@@ -13383,8 +13355,8 @@ pwr_exe:
 5500 open graph /class /inst=$object.Contactor
 99
 99
-6803 TC3001
-6835
+6802 TC3001
+6834
 1
 100 1
 101 65
@@ -13394,8 +13366,8 @@ pwr_exe:
 5500 open graph /class /inst=$object.TC3001
 99
 99
-6804 Heater
-6836
+6803 Heater
+6835
 1
 100 1
 101 65
@@ -16381,13 +16353,13 @@ pwr_exe:
 2724 1
 2721
 1
-100 2049
-101 67
+100 2048
+101 66
 102 33619964
 103 0
 61
 6100 
-6101 80
+6101 90
 6102 0
 6103 173
 6104 16
@@ -16397,7 +16369,7 @@ pwr_exe:
 6100 
 6101 60
 6102 0
-6103 143
+6103 144
 6104 8
 6105 1
 99
@@ -16405,7 +16377,7 @@ pwr_exe:
 6100 
 6101 40
 6102 0
-6103 141
+6103 134
 6104 4
 6105 1
 99
@@ -16413,7 +16385,7 @@ pwr_exe:
 6100 
 6101 20
 6102 0
-6103 201
+6103 153
 6104 2
 6105 1
 99
@@ -16421,7 +16393,7 @@ pwr_exe:
 6100 $object.TC3001.ProcessValue##Float32
 6101 1
 6102 0
-6103 232
+6103 213
 6104 1
 6105 31
 99
@@ -17113,13 +17085,13 @@ pwr_exe:
 0
 0
 0
-1006 12.7268
+1006 12.7267
 1007 7.8
-1008 7.85
+1008 7.84999
 1009 5.68851
-1013 12.7268
+1013 12.7267
 1014 7.8
-1015 7.85
+1015 7.84999
 1016 5.68851
 1003
 0
@@ -17183,7 +17155,7 @@ pwr_exe:
 800 $object.IndWarning##Boolean
 99
 2
-200 $object.TC3001.PowerOn##Boolean
+200 $object.TC3001.On##Boolean
 201 37
 99
 12

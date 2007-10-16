@@ -5,3 +5,39 @@
 Basklass
 </attr>
 </class>
+
+<class>Eurotherm_TC3001Aggr
+
+ @Summary Mode for analog components.
+ Mode for analog components.
+
+
+ @b Objektsymbol
+ @image orm_eurotherm_tc3001aggr_gs.gif
+ 
+ 
+ @b Object Graph
+ @image orm_eurotherm_tc3001aggr_og.gif
+  
+ @h1 Konfigurering
+ @b Plc coding
+ For plc coding the function object CompModeAFo is used.
+ @image orm_eurotherm_tc3001aggrfo_fo.gif
+ Create a function object in the plc editor and connect it to the current
+ object with the connect function.
+ 
+ @h2 Exempel
+ 
+ @b See also
+ @classlink CompModeAFo basecomponent_compmodeafo.html
+
+ <attr>Super
+  Superklass.
+ </attr>
+ <attr>GraphConfiguration
+  @Summary Grafisk konfiguration. Sätts av komponentkonfigurations metoden.
+  Grafisk konfiguration. Sätts av komponentkonfigurations metoden.
+  Enumeration ...
+ </attr>  
+
+</class>
