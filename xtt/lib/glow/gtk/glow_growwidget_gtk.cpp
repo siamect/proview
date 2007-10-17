@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growwidget_gtk.cpp,v 1.4 2007-02-06 15:13:34 claes Exp $
+ * Proview   $Id: glow_growwidget_gtk.cpp,v 1.5 2007-10-17 07:19:57 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,12 @@ struct _GrowWidgetGtk {
   int		scroll_v_ignore;
   gdouble       scroll_h_value;
   gdouble       scroll_v_value;
+  int       	scroll_h_pagesize;
+  int       	scroll_v_pagesize;
+  int       	scroll_h_upper;
+  int       	scroll_v_upper;
+  gint 		scroll_timerid;
+  glow_sScroll  scroll_data;
 };
 
 struct _GrowWidgetGtkClass {
@@ -66,12 +72,27 @@ struct _GrowWidgetGtkClass {
 };
 
 G_DEFINE_TYPE( GrowWidgetGtk, growwidgetgtk, GTK_TYPE_DRAWING_AREA);
+static gboolean scroll_callback_cb( void *d);
 
 static void scroll_callback( glow_sScroll *data)
 {
-  growwidget_sScroll *scroll_data;
+  growwidget_sScroll *scroll_data = (growwidget_sScroll *) data->scroll_data;
 
-  scroll_data = (growwidget_sScroll *) data->scroll_data;
+  if ( ((GrowWidgetGtk *)scroll_data->grow)->scroll_timerid) 
+    g_source_remove( ((GrowWidgetGtk *)scroll_data->grow)->scroll_timerid);
+
+  ((GrowWidgetGtk *)scroll_data->grow)->scroll_timerid = 
+    g_timeout_add( 200, scroll_callback_cb, scroll_data->grow);
+  ((GrowWidgetGtk *)scroll_data->grow)->scroll_data = *data;
+}
+
+
+static gboolean scroll_callback_cb( void *d)
+{
+  glow_sScroll *data = &((GrowWidgetGtk *)d)->scroll_data;
+  growwidget_sScroll *scroll_data = (growwidget_sScroll *) data->scroll_data;
+
+  ((GrowWidgetGtk *)scroll_data->grow)->scroll_timerid = 0;
 
   if ( data->total_width <= data->window_width) {
     if ( data->offset_x == 0)
@@ -117,6 +138,48 @@ static void scroll_callback( glow_sScroll *data)
 
   if ( scroll_data->scroll_h_managed) {
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_ignore = 1;
+    if ( data->window_width != ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_pagesize ||
+	 data->total_width != ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper) {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
+		    "upper", (gdouble)data->total_width,
+		    "page-size", (gdouble)data->window_width,
+		    "value", (gdouble)data->offset_x,
+		    NULL);
+      gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
+    }
+    else {
+      gtk_range_set_value( GTK_RANGE(scroll_data->scroll_v), (gdouble)data->offset_y);
+    }
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_value = (gdouble)data->offset_x;
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_pagesize = data->window_width;
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper = data->total_width;
+  }
+
+  if ( scroll_data->scroll_v_managed) {
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_ignore = 1;
+    if ( data->window_height != ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_pagesize ||
+	 data->total_height != ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_upper) {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "upper", (gdouble)data->total_height,
+		    "page-size", (gdouble)data->window_height,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    else {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_value_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_value = (gdouble)data->offset_y;
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_pagesize = data->window_width;
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_upper = data->total_width;
+  }
+  return FALSE;
+#if 0
+  if ( scroll_data->scroll_h_managed) {
+    ((GrowWidgetGtk *)scroll_data->grow)->scroll_h_ignore = 1;
     g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
 		 "upper", (gdouble)data->total_width,
 		 "page-size", (gdouble)data->window_width,
@@ -138,6 +201,7 @@ static void scroll_callback( glow_sScroll *data)
         ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
     ((GrowWidgetGtk *)scroll_data->grow)->scroll_v_value = (gdouble)data->offset_y;
   }
+#endif
 }
 
 static void scroll_h_action( 	GtkWidget      	*w,
@@ -226,6 +290,8 @@ static void growwidgetgtk_destroy( GtkObject *object)
 {
   GrowWidgetGtk *grow = (GrowWidgetGtk *)object;
 
+  if ( grow->scroll_timerid)
+    g_source_remove( grow->scroll_timerid);
   if ( grow->is_navigator) {
     ((GrowCtx *)grow->grow_ctx)->no_nav = 1;
   }
