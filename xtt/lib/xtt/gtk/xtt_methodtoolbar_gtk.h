@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_methodtoolbar_gtk.h,v 1.1 2007-01-17 06:18:10 claes Exp $
+ * Proview   $Id: xtt_methodtoolbar_gtk.h,v 1.2 2007-10-18 12:46:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,12 +34,16 @@ class XttMethodToolbarGtk : public  XttMethodToolbar {
   GtkWidget *m_toolbar_w;
   GtkWidget *m_button_w[m_size];
   xtt_sMethodButtonCb m_cb[m_size];
+  gint 	    m_timerid;
 
   XttMethodToolbarGtk( XNav *xnav);
+  ~XttMethodToolbarGtk();
   GtkWidget *build();
   void set_sensitive();
+  void set_current_sensitive();
 
   static void activate_button( GtkWidget *w, gpointer data);
+  static gboolean set_sensitive_cb( void *data);
 
 };
 

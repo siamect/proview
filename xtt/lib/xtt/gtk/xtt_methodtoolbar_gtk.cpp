@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.2 2007-03-20 12:39:15 claes Exp $
+ * Proview   $Id: xtt_methodtoolbar_gtk.cpp,v 1.3 2007-10-18 12:46:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -34,6 +34,12 @@ XttMethodToolbarGtk::XttMethodToolbarGtk( XNav *xnav) :
     m_cb[i].mt = this;
     m_cb[i].idx = i;
   }
+}
+
+XttMethodToolbarGtk::~XttMethodToolbarGtk()
+{
+  if ( m_timerid)
+    g_source_remove( m_timerid);
 }
 
 void XttMethodToolbarGtk::activate_button( GtkWidget *w, gpointer data)
@@ -84,6 +90,23 @@ GtkWidget *XttMethodToolbarGtk::build()
 }
 
 void XttMethodToolbarGtk::set_sensitive()
+{
+  if ( m_timerid)
+    g_source_remove( m_timerid);
+
+  m_timerid = g_timeout_add( 400, set_sensitive_cb, this);
+}
+
+gboolean XttMethodToolbarGtk::set_sensitive_cb( void *data)
+{
+  XttMethodToolbarGtk *toolbar = (XttMethodToolbarGtk *)data;
+
+  toolbar->m_timerid = 0;
+  toolbar->set_current_sensitive();
+  return FALSE;
+} 
+
+void XttMethodToolbarGtk::set_current_sensitive()
 {
   int		is_attr;
   pwr_sAttrRef	aref;
