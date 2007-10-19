@@ -1,43 +1,436 @@
-<class>Omron_Contactor_J7KN
-  Funktion och attribut är ärvda av basklassen Contactor. Se 
+
+
+
+
+<class>Eurotherm_TC3001
+ Komponent tyristorstyrning via Profibus med Eurotherm TC3001 tyristorenhet.
+ @b Grafisk symbol
+ Symbolbilden för aggregatet heter/finner du under Components/OtherManufacturer/Eurotherm_TC3001
+ @image orm_eurotherm_tc3001_gs.gif
+ Dynamik:
+ - Tyristorsymbolen är fylld med originalfärg när tyristorenheten styr ut
+ - färg grå när tyristorn inte styr ut men är beredd att göra det
+ - färg röd vid fel
+ - färg gul vid varning
+
+ Aktivering:
+ Popup meny metoder aktiveras via musknapp 3 "MB3"
+
+ @b Objektsbild
+ @image orm_eurotherm_tc3001_og.gif
+
+ - Status indikator:
+   Grå, redo för on
+   Grön, on 
+   Gul, varning (kontaktor från)
+   Röd, Fel
+ - Resetknappen har bara funktion om tyristorenheten inte har byglad "acknowledge".
+ - LinePower indikator betyder att kontaktorn är tillslagen
+ - Interlock indikator är grå när utstyrning tillåts.
+
+
+ Larm status:
+ - "Partial load failure phase 1,2,3" indikerar impedansfel i fasen
+   (resistans från uppmätt mätning drivit iväg)
+ 
+ - "Phase 1 failure or thyristor overheated" är dubbeltydigt!
+   Om detta larm kommer ska man kontrollera skåpets ventilation
+   (kylning) där tyristorenheten är placerad. Trolig orsak kan vara
+   intern kylfläkt i tyristorenheten.
+ 
+ @image orm_eurotherm_tc3001_og_more.gif
+ Mer build för att läsa och skriva parametrar.
+
+ @h1 Konfiguering
+ @b Plc kodning
+ För plc kodning används funktionsobjektet Eurotherm_TC3001Fo.
+ @image orm_eurotherm_tc3001fo_fo.gif
+ Skapa ett funktionsobjekt i plc editorn och koppla denna till objektet
+ i databasen med hjälp av "connect function".
+ 
+ Mer hjälp om funktionsobjektet hittar du under "Se även"
+
+ @b Komponent konfiguration
+ Komponenten har ingen konfiguration för inbyggda komponenter.
+ 
+ @b Attribut konfiguration
+  Attribut som ska datasättas.
+  
+  Profibusattribut: 
+  - ConfMaxCurrent Ange amperetalet som står på tyristorenehet
+  - ConfMaxVoltage Ange kalibrerad volttal som står på tyristorenehet
+  
+    Skalning av ström och spänning sker automatiskt i aggregatet baserat 
+    på dessa värden.
+
+ 
+ @b IO signaler
+ Signaler som ska kopplas till kanaler i objektet:
+ 
+ - Enable  Do (valbart) Denna Do bör styra digital ingång enable på tyristoreneheten.
+   
+ @b Profibus
+ För att konfiguera profibus behövs ett modul och slav objekt i nodehierarkin som kopplas (connect)
+ tll aggregatobjekt Eurotherm_TC3001Aggr i planthierarkin.
+ 
+ GSD filen är specialgjord för detta aggregat. Outputdata kan inte defineras i GSD filen
+ utan är fast satt till 8 bytes (4ord).
+ 
+ Skrivning sker med hjälp av 4 ord (command word CW). Status avges i två läsbara ord
+ 16bitar var:
+ 
+ - SW som är driftindikering
+ - XS som visar larm
+
+ OBS! Att Eurotherm TC3001 inte har en egen "watchdog" som stänger av utstyrningen om
+      den tappar profibuskommunikation. dvs. det är upp till styrssystemet/objektet att
+      avgöra vad som ska hända (stäng av huvudkontaktor om inte profibus är ok).
+
+ @b Simulering
+ Vid simulering använd funktionsobjektet Eurotherm_TC3001Sim
+
+ @h1 Exempel
+ Exempel 1 nedan är exempel från en reglerkrets kallad Zon1.
+ 
+ @b Exempel 1: Objektsbilder 
+ Visar tyristorenhetens objektgraf och objektsymbol i en opertörsbild samt
+ ett exempel på plc kod där tyristoreneheten ingår i ett aggregat (Eurotherm_TC3001Aggr).
+ @image orm_eurotherm_tc3001_ex1.gif
+
+ @h1 Övrigt
+ @b Tyristorenhet
+
+ Eurothermtyristorns har en hel del egenheter för sig:
+ 
+  Efter nättillslag: 
+  - Startar alltid upp för analogt börvärde
+  - Funktionsätt enligt bygelinställningar och potentiometrar
+  - Digitalt börvärde = 0
+  
+  För uppstyrning via profibus krävs:
+  
+  - Omkoppling till digitalt börvärde
+  - inskrivning digitalt börvärde (SetValue)
+  
+  Inställningarna justeras automatiskt av objektet så fort profibuskommunikation
+  kommit igång.
+  
+  
+  På fronten tyristorenheten sitter några justerbara potentiometrar:
+  
+  - Med potentiometer 2 (20varvig) ställer man in pulseringssekvensen. Läses av på
+    diagnostikenheten under punkt 10.
+    
+  - Med potentiometer 3 kan man alltid reducera börvärdet med en faktor 0-1,0. Läses
+    av på diagnostikenheten under punkt 9.
+    
+  - Med potentiometer 5 ställer man in strömgränsen, max = enhetens nominella maxström.
+    Läses av på diagnostikenheten under punkt 19.
+  
+ 
+  Om ingång "acknowledgement" är byglad har återställning av tyristorenehten från
+  objektsbilden ingen verkan, dvs enheten återställer sig själv så fort felet försvinner.
+ 
+  Fel (error) som alltid slår ifrån kontaktor:
+  - fel på Profibuskommunikation
+  - tyristorkortslutning
+  - överström
+ 
+  Om tyristorer blir överhettade i tyristorenheten stryper den automatiskt strömmen själv,
+  men när temperaturen sjunker börjar den att styra ut igen om inte man i egen kod ger
+  stoppkommando. Larm som aktiveras om detta händer är tyvärr dubbeltydigt (kan vara fasfel också).
+
+ @b Se även
+ @classlink Eurotherm_TC3001Fo othermanufacturer_eurotherm_tc3001fo.html
+ @classlink Eurotherm_TC3001Aggr othermanufacturer_eurotherm_tc3001aggr.html
+ @classlink Eurotherm_TC3001_PbSlave othermanufacturer_eurotherm_tc3001_pbslave.html
+ @classlink Eurotherm_TC3001_PbModule othermanufacturer_eurotherm_tc3001_pbmodule.html
+ @classlink Eurotherm_TC3001Sim othermanufacturer_eurotherm_tc3001sim.html
 
 <attr>Super
-Basklass
-</attr>
+  Superklass.
+ <attr>ConfMaxCurrent
+  @Summary skalningskonstant = Tyristorenhetens märkström, se märkskylt
+ </attr>
+ <attr>ConfMaxVoltage
+  @Summary skalningskonstant = Tyristorenhetens kalibrerade spänning, se märkskylt.
+ </attr>
+
 </class>
+
+
+
+
+
+<class>Eurotherm_TC3001Fo
+ Funktionsobjekt för tyristorstyrning via Profibus med Eurotherm TC3001 tyristorenhet.
+ @b Plc koding
+ För plc kodning används funktionsobjektet TC3001Fo.
+ @image orm_eurotherm_tc3001fo_fo.gif
+ Skapa ett funktionsobjekt i plc editorn och koppla denna
+ till objektet i databasen med hjälp av "connect function".
+
+ @b Se även
+ @classlink Eurotherm_TC3001 othermanufacturer_eurotherm_tc3001_og.html
+
+ <attr>Reference
+  Referens 0-100% till tyristorenhet.
+ </attr>  
+ <attr>Power
+  Huvudspänning till tyristorenhet tillslagen.
+ </attr>  
+ <attr>ExtInterlock
+  Förregling utstyrning referens till tyristorenhet (till/från).
+ </attr>
+ <attr>DisableSup
+  Förreglar alla larmhantering från objektet.
+ </attr>  
+ <attr>On
+  @Summary Utstyrning till tyristorenhet aktiverad (referens mellan 0-100%)
+  Utstyrning till tyristorenhet aktiverad (referens mellan 0-100%)
+  OBS! Kan betyda 0% referens  
+ </attr>  
+ <attr>Error
+  Fel i enhet, profibuskommunikation, tyristorkortslutning eller överström
+ </attr> 
+ <attr>Warning
+  Varning i enhet, bl.a fasbortfall, underspänning mm
+ </attr> 
+ <attr>SetValue
+  Börvärde/referens till tyristorenheten. Används som återkopplingsignal.
+ </attr> 
+ <attr>TerminalDi
+  Status på digtal ingång Di2 på tyristorenheten
+ </attr> 
+</class>
+
+
+
+
+
 
 <class>Eurotherm_TC3001Aggr
 
- @Summary Mode for analog components.
- Mode for analog components.
+ Aggregat för tyristorstyrning via Profibus med Eurotherm TC3001 tyristorenhet
 
+ @b OBS!
+  Läs under rubrik "Övrigt" längre ned i beskrivningen innan du
+  börjar använda detta aggregat.
+ 
+  Under rubrik "Exempel" finns det extra hjälp om plc programmering mm. 
 
- @b Objektsymbol
+ @b Grafisk symbol
+ Symbolbilden för aggregatet heter/finner du under Components/OtherManufacturer/Eurotherm_TC3001Aggr
  @image orm_eurotherm_tc3001aggr_gs.gif
- 
- 
- @b Object Graph
- @image orm_eurotherm_tc3001aggr_og.gif
+ Dynamik:
+ - Värmeelementet är fylld med originalfärg när tyristorenheten styr ut
+ - färg grå när tyristorn inte styr ut men är beredd att göra det (uppstartad)
+ - färg röd vid fel
+ - färg gul vid varning
+ - indikator för aktuell mod:
+   M: Manuell mod
+   Ingen indikator: Automod
+   
+ Aktivering:
+ Popup meny metoder aktiveras via musknapp 3 "MB3"
   
+ @b Objektsbild
+ Aggregatets objektsbild. Denna bild går att konfiguera på många olika sätt, se under
+ rubrik "Exempel".
+ @image orm_eurotherm_tc3001aggr_og.gif
+ 
+ - Knapp "on"/"Till" har toggelfunktion i objektsbilden.
+ - Lokal mod i mod objektet används ej (ej tillåtet) i detta aggregat.
+ - Innan kontaktorn slås ifrån rekomenderas att först slå från utstyrningen (förregla "ilk"),
+   kontrollerad nedstyrning sker bara vid intern "err" i aggregatet innan kontaktor går
+   ifrån.
+ - Resetknappen har bara funktion om tyristorenheten inte har byglad "acknowledge".
+ - Interlock överst högra hörnet är alltid i funktion oavsett manuell eller auto mod.
+ 
  @h1 Konfigurering
- @b Plc coding
- For plc coding the function object CompModeAFo is used.
+ @b Plc koding
+ För plc kodning används funktionsobjektet TC3001AggrFo.
  @image orm_eurotherm_tc3001aggrfo_fo.gif
- Create a function object in the plc editor and connect it to the current
- object with the connect function.
+ Skapa ett funktionsobjekt i plc editorn och koppla denna
+ till objektet i databasen med hjälp av "connect function".
  
- @h2 Exempel
+ Mer hjälp om funktionsobjektet hittar du under "Se även"
  
- @b See also
- @classlink CompModeAFo basecomponent_compmodeafo.html
+ @b Komponent konfiguration
+ Objektet kan konfigueras på fyra olika sätt.
 
+ - CbCoTc   Allt, dvs. Säkringsskydd MCCB, Kontaktor och tyristor
+ - CbTc     Säkringsskydd och tyristor
+ - CoTc     Kontaktor och tyristor
+ - Tc       endast tyristor
+ 
+ Mer info om detta hittar du under exempel 1 nedan.
+
+ 
+ Enskilda komponent konfigurationer i objektet.
+ 
+ - Contactor
+ - Heater
+ - TC3001.Enable
+ 
+ 
+ @b Mod konfiguration
+ Komponentens körmod kan konfigueras på fyra olika sätt. Förinställd mod
+ är internt auto/man med knappar on/off, dom andra sätten är:
+ 
+ - endast intern styrning
+ - endast extern styrning
+ - extern auto/man med interna knappar on/off
+ 
+ Att ändra till någon av dessa görs genom att ettställa "Op" attribut
+ i modobjektet i aggregatet. Se under exempel 5 vilka attribut som menas.
+ 
+ Körsätt med Lokal körmod används/tillåts ej i detta aggregat.
+ 
+ Se klasshjälp om modeobjektet för info om övriga Op attribut. 
+
+ @b IO signaler
+ Signaler som ska kopplas till kanaler i objektet:
+ 
+ - TC3001.Enable               Do (valbart)
+ - Contactor.Order             Do (valbart)
+ - Contactor.Feedback          Di (valbart)
+ - CircuitBreaker.NotTripped   Di (valbart)
+ - Heater.TempSwitch.Switch    Di (valbart) 
+ - Heater.TempSensor.Value     Ai (valbart)  
+ 
+ Komponent TC3001 ska kopplas (IO connect) till profibus modulobjekt.
+
+ @b Simulering
+ Vid simulering använd funktionsobjektet Eurotherm_TC3001AggrSim
+
+ @h1 Exempel
+ Exempel 2,3,4 och 5 nedan är exempel från en komplett reglerkrets kallad Zon1.
+ 
+ @b Exempel 1: Objektsbilder 
+ Visar tre av fyra möjliga komponentkonfigurationer. Den fjärde som
+ inte visas är effekbrytare ihop med tyristorn.
+ @image orm_eurotherm_tc3001aggr_hmi.gif
+ 
+ 
+ @b Exempel 2: Att använda aggregatobjektet i operatörsbild
+ Visar en processoperatörsbild i påhittat projekt värmereglering "Zon1". Alla bilder utom
+ själva processbilden är objektsbilder. Dessutom är alla symboler i processbilden
+ objektssymboler. Dvs. bilden är nästa helt och hållet automatiskt gjord!
+ 
+ Aggregatet visas med sin objektsymbol och objektsbild längst ner högerkant bild.
+ @image orm_eurotherm_tc3001aggr_op.gif
+
+ @b Exempel 3: Plc kod värmereglering "Zon1"
+ Visar enkel reglerkrets innehållande tyristoraggregatet, en regulator och
+ temperaturgivare.
+ 
+ Eftersom aggregatet kan ställas i manuell mod behövs en
+ återkoppling till regulatorn så att börvärdet till tyristorn uppdateras i
+ regulatorn. Detta för att regulatorn ska börja reglera lugnt och fint när
+ aggregatet övergår till automod!
+ 
+ @image orm_eurotherm_tc3001aggr_plcpgm.gif
+
+ 
+ @b Exempel 4: Objekt och attribut i värmereglering "Zon1"
+ Visar alla objekt i databasen för zon 1 och funktionsobjektet för aggregatet.
+ 
+ Funktionsobjektets status visas när regulatorn styr tyristorn. dvs "ExtOn" 1:a
+ och aggregatet i automod.
+  
+ @image orm_eurotherm_tc3001aggr_plant.gif
+
+ @b Exempel 5: Aggregatets olika moder
+ Visar alla fyra moder aggregatet kan konfigueras på. Dvs. inställningar på "Op"
+ attributen i mode objektet i aggregatet.
+ 
+ No1. = Defaultvärde man/auto och till/från (on/off)
+ No2. = Styrning man/auto utanför aggregatet (inga knappar man/auto)
+ No3. = Styrning helt utanför aggregatet
+ No4. = Styrning helt innanför aggregatet
+ 
+ OBS! No.2 och No.3 förutsätter att man använder "ExtControl" för att aktivera
+ styrning utanför aggregatet. Detta innebär också att man måste tänka på egen
+ startåterställning vid fel för att förhindra återstart (till).
+ 
+ @image orm_eurotherm_tc3001aggr_mode.gif
+
+ 
+ @h1 Övrigt
+ 
+ @b Inställningar i objektet
+    Attribut som börjar ned "Op" är normalt inställningsalternativ som man ska välja genom
+    att ett/nollställa attributet.
+    
+    Aggregatets mod är förinställt (default) för "OpNoAutoToMa" och "OpNoLocal"
+ 
+ @b Bra programmering!
+ Om man konfigurerat modobjektet till ej återgång "auto to man" (default) bör man tänka på
+ att externa styrningen (via eon)inte är flandetekterad utan att så fort alla förreglingsvillkor
+ är inaktiva går aggregatet igång.  
+
+ @b Se även
+
+ @classlink Eurotherm_TC3001AggrFo othermanufacturer_eurotherm_tc3001aggrfo.html
+ @classlink Eurotherm_TC3001AggrSim othermanufacturer_eurotherm_tc3001aggrsim.html
+ @classlink Eurotherm_TC3001_pbslave othermanufacturer_eurotherm_tc3001_pbslave.html
+ @classlink Eurotherm_TC3001_pbmodule othermanufacturer_eurotherm_tc3001_pbmodule.html
+ @classlink Eurotherm_TC3001Fo othermanufacturer_eurotherm_tc3001fo.html
+ @classlink CompModeAFo basecomponent_compmodeafo.html
+ 
  <attr>Super
   Superklass.
  </attr>
- <attr>GraphConfiguration
-  @Summary Grafisk konfiguration. Sätts av komponentkonfigurations metoden.
-  Grafisk konfiguration. Sätts av komponentkonfigurations metoden.
-  Enumeration ...
- </attr>  
-
 </class>
+
+
+
+
+
+<class>Eurotherm_TC3001AggrFo
+ Funktionsobjekt för aggregat tyristorstyrning via Profibus med
+ Eurotherm TC3001 tyristorenhet.
+
+ @b Plc koding
+ För plc kodning används funktionsobjektet TC3001AggrFo.
+ @image orm_eurotherm_tc3001aggrfo_fo.gif
+ Skapa ett funktionsobjekt i plc editorn och koppla denna
+ till objektet i databasen med hjälp av "connect function".
+
+ @b Se även
+ @classlink Eurotherm_TC3001aggr othermanufacturer_eurotherm_tc3001aggr.html
+ @classlink Eurotherm_TC3001 othermanufacturer_eurotherm_tc3001.html
+
+ <attr>ReferenceExt
+  Börvärde 0-100% som styr tyristorenheten.
+ </attr>
+ <attr>PowerInterlock
+  Förreglar/slår alltid ifrån kontakorn (syns i objektbild).
+ </attr>
+ <attr>ExtControl
+  Används bara om modobjektet är inställt utan intern auto/man funktion.
+ </attr>
+ <attr>ExtOn
+  Aktiverar utstyrning, OBS! ej flankdetekterad.
+ </attr>
+ <attr>ExtInterlock
+  Förreglar utstyrning i alla moder.
+ <attr>DisableSup
+  Förreglingar all larmhantering från objektet att generera larm.
+ </attr>  
+ <attr>On
+  Utstyrning till tyristorenhet aktiverad (referens mellan 0-100%).
+  OBS! Kan betyda 0% referens  
+ </attr>  
+ <attr>Err
+  Fel i enhet, profibuskommunikation, tyristorkortslutning eller överström.
+ </attr> 
+ <attr>AutoMode
+  Aggregat i automatikmod (extern styrning aktiverad).
+ </attr>  
+ <attr>SetValue
+  Börvärde/referens till tyristorenheten, används som återkopplingsignal.
+ </attr> 
+</class>
+

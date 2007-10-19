@@ -259,14 +259,21 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     ! 
     !  @image orm_eurotherm_tc3001_gs.gif
     !  Default dynamics:
-    !  - the symbol is filled with the original color when power is on.
+    !  - the symbol is filled with the original color when thyristor is on.
     !  - colored gray when the power is off.
     !  - colored red when an error occurs.
     !  - colored yellow when a warning occurs.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
     ! 
     !  @b Object Graph
     !  @image orm_eurotherm_tc3001_og.gif
-    ! 
+    !  - The status indicator is green when the thyristor is on, gray when it off,
+    !    red indicates error and yellow warning.
+    !  - The Reset button is valid when the thyristor unit is not strapped 'acknowledge'.
+    !  - LinePower indicator views that the contactor is on.
+    !
     !  @image orm_eurotherm_tc3001_og_more.gif
     !  More graph to read and write parameters.
     ! 
@@ -276,22 +283,86 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  Create a function object in the plc editor and connect it to the current
     !  object with the connect function.
     ! 
+    !  @b Component configuration
+    !  The Enable Do can be removed (disabled). Activate 'Disable' in the popup menu
+    !  for the Do to remove it.
+    !  
+    !  @b Attribute configuration
+    !  - ConfMaxCurrent 
+    !  - ConfMaxVoltage
+    !
+    !  @b Signals
+    !  Signals that should be connected to channel objects:
+    !  - Enable  Do (optional)
+    !
     !  @b Profibus
     !  The Profibus Slave object for this class i Eurotherm_TC30001_PbSlave and
     !  the Profibus Module class Eurotherm_TC3001_PbModule.
-    ! 
+    !  
+    !  The profibus module object should be connected to the TC3001 object by the 
+    !  IoConnect method in the popup menu.
+    !
     !  The six integer input signals In1 - In6 and the four integer output
     !  signals Out1 - Out4 are used to transmit and receive data from the 
     !  thyristor unit.
     ! 
     !  Statusword for configuration data and alarm info are fetched from 
     !  the profibus diagnostic area an put into DiagSW and DiagXS.
-    !  
+    !
+    !  Note that the TC3001 doesn't shut off the power if the profibus communication
+    !  is lost. This has to be handle by the control system.
+    !
     !  @b Simulate
     !  The simulate function object to this class is Eurotherm_TC3001Sim.
     ! 
+    !  @h1 Example
+    !  The example below describes a control loop with a PID controller and a 
+    !  Eurotherm TCe3001 aggregate.
+    !
+    !  @b Object graph
+    !  Displayes the object graph of the thyristor unit and the grahic symbol in an
+    !  HMI graph. Also the plc coding for the thyristor unit is viewed.
+    !  @image orm_eurotherm_tc3001_ex1.gif
+    !
+    !  @h1 Miscellaneous
+    !  @b Thyristor unit
+    !
+    !  Some behavior of the thyristor unit that can be useful.
+    !  
+    !  After power up: 
+    !  - the unit is always staring with analog setpoint selected.
+    !  - digital setpoint is zero
+    !  - settings from straps and potentiometers.
+    ! 
+    !  To control via profibus you need to:
+    !  - reconfigure to digital setpoint.
+    !  - set digital setpoint value.
+    !
+    !  These setting are made by the object as soon as the profibus
+    !  communication is established.
+    !  
+    !  On the front plate for the thyristor unit there are some adjustable
+    !  potentiometers:
+    !  - With potentiometer 2 you adjust the pulsing sequence.
+    !  - With potentiometer 3 you can reduce the set point with a factor 0-1.
+    !  - With potentiometer 5 you adjust the current limit. Maximum value is
+    !    the nominal max current of the unit.
+    !
+    !  If input 'acknowledgement' is linked, the reset button in the object graph
+    !  has no effect. The unit is automatically reset as soon as the failure 
+    !  disappears.
+    !  
+    !  Error status that will turn off the contactor:
+    !  - profibus communication error.
+    !  - thyristor shortcut.
+    !  - overcurrent.
+    !
+    !  If thyristors in the thyristor unit are overheated, the unit will block the
+    !  current itself, though when the temperature decreases it will turn it on again.
+    !   
     !  @b See also
     !  @classlink Eurotherm_TC3001Fo othermanufacturer_eurotherm_tc3001fo.html
+    !  @classlink Eurotherm_TC3001Aggr othermanufacturer_eurotherm_tc3001aggr.html
     !  @classlink Eurotherm_TC3001_PbSlave othermanufacturer_eurotherm_tc3001_pbslave.html
     !  @classlink Eurotherm_TC3001_PbModule othermanufacturer_eurotherm_tc3001_pbmodule.html
     !  @classlink Eurotherm_TC3001Sim othermanufacturer_eurotherm_tc3001sim.html
@@ -834,6 +905,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           Attr StructName = "Eurotherm_TC3001Fo"
           Attr NextAix = "_X11"
         EndBody
+        !/**
+        !  Reference (set point) to thyristor unit in the range 0-100 %.
+        !*/
         Object Reference $Input 2 03-OCT-2007 10:49:01.74
           Body SysBody 03-OCT-2007 10:49:21.28
             Attr PgmName = "Reference"
@@ -841,6 +915,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "REF"
           EndBody
         EndObject
+        !/**
+        !  Line voltage to thyristor unit is energized.
+        !*/
         Object Power $Input 3 03-OCT-2007 10:54:43.94
           Body SysBody 15-OCT-2007 15:09:49.57
             Attr PgmName = "Power"
@@ -849,6 +926,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "pow"
           EndBody
         EndObject
+        !/**
+        !  Extern interlock. Reference output to unit is blocked.
+        !*/
         Object ExtInterlock $Input 10 15-OCT-2007 14:55:17.92
           Body SysBody 15-OCT-2007 15:09:56.94
             Attr PgmName = "ExtInterlock"
@@ -857,6 +937,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "ilk"
           EndBody
         EndObject
+        !/**
+        !  Disable supervision. No alarms are sent from the unit.
+        !*/
         Object DisableSup $Input 9 12-OCT-2007 16:03:30.27
           Body SysBody 12-OCT-2007 16:03:30.27
             Attr PgmName = "DisableSup"
@@ -865,12 +948,21 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "dis"
           EndBody
         EndObject
+        !/**
+        !  @Summary The main object connected to this object.
+        !  The main object of class Eurotherm_TC3001.
+        !  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 1 03-OCT-2007 10:48:24.39
           Body SysBody 03-OCT-2007 10:48:24.39
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Output to thyristor unit activated.
+        !*/
         Object On $Output 6 11-OCT-2007 15:00:31.27
           Body SysBody 11-OCT-2007 15:00:43.07
             Attr PgmName = "On"
@@ -878,6 +970,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "on"
           EndBody
         EndObject
+        !/**
+        !  An error is detected. Profibus down, thyristor shortcut or overcurrent.
+        !*/
         Object Error $Output 4 03-OCT-2007 10:55:16.75
           Body SysBody 03-OCT-2007 10:55:23.60
             Attr PgmName = "Error"
@@ -885,6 +980,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "err"
           EndBody
         EndObject
+        !/**
+        !  A warning is detected.
+        !*/
         Object Warning $Output 5 03-OCT-2007 10:55:33.60
           Body SysBody 03-OCT-2007 10:55:37.46
             Attr PgmName = "Warning"
@@ -892,6 +990,10 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "warn"
           EndBody
         EndObject
+        !/**
+        ! The output transfered to the thyristor unit. 
+        ! Can be used as a feedback to a PID controller.
+        !*/
         Object SetValue $Output 7 11-OCT-2007 15:01:07.33
           Body SysBody 11-OCT-2007 15:01:35.43
             Attr PgmName = "SetValue"
@@ -899,6 +1001,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr GraphName = "SV"
           EndBody
         EndObject
+        !/**
+        ! Status of digital input Di2 on the thyristor unit. 
+        !*/
         Object TerminalDi $Output 8 11-OCT-2007 15:02:09.08
           Body SysBody 11-OCT-2007 15:02:27.27
             Attr PgmName = "TerminalDi"
@@ -13315,6 +13420,132 @@ else
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Summary Thyristor Eurotherm TC3001 aggregate.
+    !  Thyristor Eurotherm TC3001 aggregate.
+    ! 
+    !  @b Graphical Symbol
+    !  The graphical symbol for this object is 
+    !  OtherManufacturer/Eurotherm_TC3001Aggr.
+    ! 
+    !  @image orm_eurotherm_tc3001aggr_gs.gif
+    !  Default dynamics:
+    !  - the symbol is filled with the original color when aggregate is on.
+    !  - colored gray when the aggregate off.
+    !  - colored red when an error occurs.
+    !  - colored yellow when a warning occurs.
+    !  - indicating the current mode:
+    !    M: Manual mode.
+    !    No indication: auto mode.
+    !
+    !  Default action:
+    !  - the methods menu is opened with MB3.
+    ! 
+    !  @b Object Graph
+    !  @image orm_eurotherm_tc3001aggr_og.gif
+    !
+    !  @h1 Configuration
+    !  @b Plc coding
+    !  For plc coding the function object Eurotherm_TC3001AggrFo is used.
+    !  @image orm_eurotherm_tc3001aggrfo_fo.gif
+    !  Create a function object in the plc editor and connect it to the current
+    !  object with the connect function.
+    ! 
+    !  @b Component configuration
+    !  There are four configuration alternatives
+    !
+    !  - CbCoTc   CircuitBreaker, Contactor and Thyristor unit.
+    !  - CbTc     CircuitBreaker and Thyristor unit.
+    !  - CoTc     Contactor and Thyristor unit.
+    !  - Tc       Thyristor unit only.
+    !  
+    !  Separate components that can be configured in the aggregate
+    !  - Contactor.
+    !  - Heater.
+    !  - TC3001.Enable
+    !
+    !  @b Mode configuration
+    !  The mode of the aggragate can be configured in four different ways:
+    !  - intern auto/manual with on/off buttons. Default mode.
+    !  - intern control only, i.e. control from object graph.
+    !  - extern control only, i.e. control from function object inputs.
+    !  - extern auto/manual with intern on/off buttons.
+    !
+    !  See the mode object how to configure these alternatives.
+    !
+    !  Local mode is not supported in this aggregate.
+    !
+    !  @b Signals
+    !  Signals that should be conntected to channel objects.
+    !  - TC3001.Enable               Do (optional)
+    !  - Contactor.Order             Do (optional)
+    !  - Contactor.Feedback          Di (optional)
+    !  - CircuitBreaker.NotTripped   Di (optional)
+    !  - Heater.TempSwitch.Switch    Di (optional)
+    !  - Heater.TempSensor.Value     Ai (optional)
+    !
+    !  The component TC3001 should be connected (by the IoConnect method) to
+    !  a profibus module object.
+    !
+    !  @b Simulate
+    !  The simulate function object to this class is Eurotherm_TC3001AggrSim.
+    ! 
+    !  @h1 Examples
+    !  The example below describes a control loop with a PID controller and a 
+    !  Eurotherm TCe3001 aggregate.
+    !
+    !  @b Example 1 Object graphs
+    !  Views three of four possible component configurations. 
+    !  @image orm_eurotherm_tc3001aggr_hmi.gif
+    !
+    !  @b Example 2 to view the aggregate in a process graph. 
+    !  Displays an operator picture for a temperatur control loop. All graphs,
+    !  except the process graph, are object graphs. The aggregate is viewed
+    !  with its graphic symbol and with the object graph in the lower left corner.
+    !  @image orm_eurotherm_tc3001aggr_op.gif
+    !
+    !  @b Example 3 Plc coding
+    !  Views the plc coding of the control loop, containing the thyristor unit, 
+    !  a PID controler and a temperature sensor.
+    !
+    !  The feedback of the SetValue from the thyristor to the PID controller
+    !  gives a smooth switching from thyristor aggregate manual mode to auto mode.
+    !
+    !  @image orm_eurotherm_tc3001aggr_plcpgm.gif
+    !
+    !  @b Example 4 Object and attributes
+    !  Displayes all the objects in the Zon1 example and the function object for the 
+    !  aggregate.
+    !
+    !  The status of the function object is viewed when the thyristor is on, i.e.
+    !  ExtOn is true and the aggregate is i auto mode.
+    !
+    !  @image orm_eurotherm_tc3001aggr_plant.gif
+    !
+    !  @b Example 5 Mode alternatives for the aggregate
+    !  Displays the four mode alternatives for the aggregate.
+    !
+    !  1: intern auto/manual with on/off buttons. Default mode.
+    !  2: extern auto/manual with intern on/off buttons.
+    !  3: extern control only, i.e. control from function object inputs.
+    !  4: intern control only, i.e. control from object graph.
+    !
+    !  Note, 1 and 3 implies that ExtControl is used to activate extern
+    !  control of the aggregate. This also implies that you have to consider
+    !  action to reset the on signal at failure to prevent restart.
+    !
+    !  @image orm_eurotherm_tc3001aggr_mode.gif
+    !
+    !   
+    !  @b See also
+    !  @classlink Eurotherm_TC3001AggrFo othermanufacturer_eurotherm_tc3001aggrfo.html
+    !  @classlink Eurotherm_TC3001AggrSim othermanufacturer_eurotherm_tc3001aggrsim.html
+    !  @classlink Eurotherm_TC3001_pbslave othermanufacturer_eurotherm_tc3001_pbslave.html
+    !  @classlink Eurotherm_TC3001_pbmodule othermanufacturer_eurotherm_tc3001_pbmodule.html
+    !  @classlink Eurotherm_TC3001Fo othermanufacturer_eurotherm_tc3001fo.html
+    !  @classlink CompModeAFo basecomponent_compmodeafo.html
+    !*/
     Object Eurotherm_TC3001Aggr $ClassDef 36 09-OCT-2007 10:49:33.93
       Body SysBody 09-OCT-2007 10:48:51.56
         Attr Editor = 0
@@ -13621,6 +13852,19 @@ else
         EndBody
       EndObject
     EndObject
+    !/**
+    !  @Version 1.0
+    !  @Code othermanufacturer_eurotherm_tc3001aggrfo.pdf
+    !  @Summary Plc function object to Eurotherm_TC3001Aggr.
+    !  Plc function object fo Eurotherm_TC3001Aggr.
+    ! 
+    !  @image orm_eurotherm_tc3001aggrfo_fo.gif
+    ! 
+    !  Connect the function object to an object of class Eurotherm_TC3001Aggr.
+    ! 
+    !  @b See also
+    !  @classlink Eurotherm_TC3001Aggr othermanufacturer_eurotherm_tc3001aggr.html
+    !*/
     Object Eurotherm_TC3001AggrFo $ClassDef 37 09-OCT-2007 10:49:59.48
       Body SysBody 09-OCT-2007 10:48:51.56
         Attr Editor = 0
@@ -13632,6 +13876,9 @@ else
           Attr StructName = "Eurotherm_TC3001AggrFo"
           Attr NextAix = "_X47"
         EndBody
+        !/**
+        !  Reference (set point) to the thyristor unit, in range 0-100 %.
+        !*/
         Object ReferenceExt $Input 25 15-OCT-2007 07:55:10.11
           Body SysBody 15-OCT-2007 07:55:00.84
             Attr PgmName = "ReferenceExt"
@@ -13640,6 +13887,9 @@ else
             Attr GraphName = "REX"
           EndBody
         EndObject
+        !/**
+        !  Line power interlock.
+        !*/
         Object PowerInterlock $Input 27 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "PowerInterlock"
@@ -13648,6 +13898,10 @@ else
             Attr GraphName = "pil"
           EndBody
         EndObject
+        !/**
+        !  Extern control. Used only if the mode object is configured without
+        !  intern auto/manual function.
+        !*/
         Object ExtControl $Input 28 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "ExtControl"
@@ -13656,6 +13910,9 @@ else
             Attr GraphName = "eco"
           EndBody
         EndObject
+        !/**
+        !  Activates reference output to thyristor unit.
+        !*/
         Object ExtOn $Input 29 15-OCT-2007 07:55:40.87
           Body SysBody 15-OCT-2007 07:55:50.87
             Attr PgmName = "ExtOn"
@@ -13664,6 +13921,9 @@ else
             Attr GraphName = "eon"
           EndBody
         EndObject
+        !/**
+        !  Interlock of refrence output to thyristor unit.
+        !*/
         Object ExtInterlock $Input 30 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "ExtInterlock"
@@ -13672,6 +13932,9 @@ else
             Attr GraphName = "ilk"
           EndBody
         EndObject
+        !/**
+        !  Disable supervision. No alarms are sent from the aggregate.
+        !*/
         Object DisableSup $Input 34 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "DisableSup"
@@ -13680,12 +13943,21 @@ else
             Attr GraphName = "dis"
           EndBody
         EndObject
+        !/**
+        !  @Summary The main object connected to this object.
+        !  The main object of class Eurotherm_TC3001.
+        !  This attribute is set when the object is conntected to the main object
+        !  with the connect function in the plc editor.
+        !*/
         Object PlcConnect $Intern 35 09-OCT-2007 10:48:51.56
           Body SysBody 09-OCT-2007 10:48:51.56
             Attr PgmName = "PlcConnect"
             Attr TypeRef = "pwrs:Type-$AttrRef"
           EndBody
         EndObject
+        !/**
+        !  Reference output to thyristor unit is activated.
+        !*/
         Object On $Output 36 09-OCT-2007 10:48:51.56
           Body SysBody 11-OCT-2007 15:16:11.17
             Attr PgmName = "On"
@@ -13693,6 +13965,9 @@ else
             Attr GraphName = "on"
           EndBody
         EndObject
+        !/**
+        !  An error is detected.
+        !*/
         Object Err $Output 37 09-OCT-2007 10:48:51.56
           Body SysBody 11-OCT-2007 15:16:00.21
             Attr PgmName = "Err"
@@ -13700,6 +13975,9 @@ else
             Attr GraphName = "err"
           EndBody
         EndObject
+        !/**
+        !  The aggregate is in auto mode.
+        !*/
         Object AutoMode $Output 45 11-OCT-2007 15:15:21.37
           Body SysBody 11-OCT-2007 15:15:50.74
             Attr PgmName = "AutoMode"
@@ -13707,6 +13985,10 @@ else
             Attr GraphName = "aut"
           EndBody
         EndObject
+        !/**
+        !  Reference (set point) transfered to the thyristor unit.
+        !  Can be used as feedback signal to PID controller.
+        !*/
         Object SetValue $Output 46 11-OCT-2007 15:29:44.04
           Body SysBody 11-OCT-2007 15:29:55.29
             Attr PgmName = "SetValue"
