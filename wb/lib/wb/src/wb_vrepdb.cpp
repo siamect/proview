@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.55 2007-10-15 12:15:47 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.56 2007-10-19 07:00:02 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,6 +82,12 @@ typedef struct sClass
   size_t       n_rbsize;
   pwr_tUInt32  count;
 } sClass;
+
+typedef struct sClassChk
+{
+  tree_sNode   node;
+  pwr_tCid     cid;
+} sClassChk;
 
 static int comp_attribute(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
 static int comp_aref(tree_sTable *tp, tree_sNode *x, tree_sNode *y);
@@ -1637,6 +1643,7 @@ pwr_tStatus wb_vrepdb::checkMeta()
   int nClass = 0;
   
   m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClass, cid), sizeof(sClass), 1000, tree_Comp_cid);
+  m_classchk_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClassChk, cid), sizeof(sClassChk), 1000, tree_Comp_cid);
   m_aref_th = tree_CreateTable(&sts, sizeof(sArefKey), offsetof(sAref, key), sizeof(sAref), 1000, comp_aref);
   m_attribute_th = tree_CreateTable(&sts, sizeof(sAttributeKey), offsetof(sAttribute, key), sizeof(sAttribute), 1000, comp_attribute);
   
@@ -1713,6 +1720,7 @@ pwr_tStatus wb_vrepdb::checkMeta()
 
   tree_DeleteTable(&sts, m_attribute_th);
   tree_DeleteTable(&sts, m_aref_th);
+  tree_DeleteTable(&sts, m_classchk_th);
   tree_DeleteTable(&sts, m_class_th);
 
   return sts;
@@ -1933,6 +1941,7 @@ pwr_tStatus wb_vrepdb::updateMeta()
   
   m_aref_th = tree_CreateTable(&sts, sizeof(sArefKey), offsetof(sAref, key), sizeof(sAref), 1000, comp_aref);
   m_class_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClass, cid), sizeof(sClass), 1000, tree_Comp_cid);
+  m_classchk_th = tree_CreateTable(&sts, sizeof(pwr_tCid), offsetof(sClassChk, cid), sizeof(sClassChk), 1000, tree_Comp_cid);
   m_attribute_th = tree_CreateTable(&sts, sizeof(sAttributeKey), offsetof(sAttribute, key), sizeof(sAttribute), 1000, comp_attribute);
   
 
@@ -2036,6 +2045,7 @@ pwr_tStatus wb_vrepdb::updateMeta()
   
   tree_DeleteTable(&sts, m_attribute_th);
   tree_DeleteTable(&sts, m_aref_th);
+  tree_DeleteTable(&sts, m_classchk_th);
   tree_DeleteTable(&sts, m_class_th);
 
   return sts;
@@ -2045,12 +2055,16 @@ pwr_tStatus wb_vrepdb::updateMeta()
 int
 wb_vrepdb::checkClass(pwr_tCid cid)
 {
-  static wb_cdrep *o_crep = 0;
-  static wb_cdrep *n_crep = 0;
+  wb_cdrep *o_crep = 0;
+  wb_cdrep *n_crep = 0;
   pwr_tTime o_time = {0, 0};
   pwr_tTime n_time = {0, 0};
   pwr_tStatus sts;
+  int n = 0;
   
+  // Insert in check class table
+  tree_Insert(&sts, m_classchk_th, &cid);
+
   o_crep = m_merep->cdrep(&sts, cid);
   if (o_crep == 0) {
     // Class does not exist
@@ -2066,14 +2080,46 @@ wb_vrepdb::checkClass(pwr_tCid cid)
   n_time = n_crep->ohTime();
 
   if (time_Acomp(&o_time, &n_time) != 0) {
+    n = 1;
+  }
+  else {
+    pwr_tCid *cidlist;
+    pwr_tAttrRef *arlist;
+    int cidcnt;
+
+    // Check all classes this class is built of
+    m_erep->merep()->classDependency( &sts, cid, &cidlist, &arlist, &cidcnt);
+    for ( int i = 0; i < cidcnt; i++) {
+      sClassChk *cpchk = (sClassChk *)tree_Find(&sts, m_classchk_th, &cidlist[i]);
+      if ( !cpchk) {
+	// Class is not yet checked
+	int nc = checkClass( cidlist[i]);
+	if ( nc) {
+	  n = nc + 1;
+	  break;
+	}
+      }      
+      else {
+	// Class is checked previously, see if class is modified
+	sClassChk *cp = (sClassChk *)tree_Find(&sts, m_class_th, &cidlist[i]);
+	if ( cp) {
+	  n = 1;
+	  break;
+	}
+      }
+    }
+    free( cidlist);
+    free( arlist);
+  }
+  if ( n) {
+    // Class is modified, insert in modified class table
     sClass *ccp = (sClass *)tree_Insert(&sts, m_class_th, &cid);
     ccp->o_time = o_time;
     ccp->n_time = n_time;
     ccp->o_rbsize = o_crep->size( pwr_eBix_rt);
     ccp->n_rbsize = n_crep->size( pwr_eBix_rt);
     strcpy(ccp->name, o_crep->name());
-
-    return 1;
+    return n;
   }
   return 0;
 }

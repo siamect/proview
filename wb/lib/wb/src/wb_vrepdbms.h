@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbms.h,v 1.1 2007-10-18 09:11:01 claes Exp $
+ * Proview   $Id: wb_vrepdbms.h,v 1.2 2007-10-19 07:00:02 claes Exp $
  * Copyright (C) 2007 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -84,6 +84,7 @@ protected:
   tree_sTable *m_attribute_th;
   tree_sTable *m_aref_th;
   tree_sTable *m_class_th;
+  tree_sTable *m_classchk_th;
 
 public:
   wb_dbms *m_db;
