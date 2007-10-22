@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.8 2007-10-08 13:43:10 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.9 2007-10-22 14:50:40 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,9 @@ static int is_diag( pwr_tAttrRef *aref)
   pwr_tOName name;
   char *s;
   
+  if ( aref->Objid.oix == 0)
+    return 0;
+
   sts = gdh_AttrrefToName( aref, name, sizeof(name), 
 			   cdh_mName_object | cdh_mName_attribute);
   if ( EVEN(sts)) return 0;
