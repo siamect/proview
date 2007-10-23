@@ -1,6 +1,6 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X2078"
+    Attr NextOix = "_X2134"
     Attr NextCix = "_X39"
     Attr NextTix[0] = "_X2"
   EndBody
@@ -263,7 +263,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  - colored gray when the power is off.
     !  - colored red when an error occurs.
     !  - colored yellow when a warning occurs.
-    !
+    ! 
     !  Default action:
     !  - the methods menu is opened with MB3.
     ! 
@@ -273,7 +273,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !    red indicates error and yellow warning.
     !  - The Reset button is valid when the thyristor unit is not strapped 'acknowledge'.
     !  - LinePower indicator views that the contactor is on.
-    !
+    ! 
     !  @image orm_eurotherm_tc3001_og_more.gif
     !  More graph to read and write parameters.
     ! 
@@ -290,43 +290,43 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  @b Attribute configuration
     !  - ConfMaxCurrent 
     !  - ConfMaxVoltage
-    !
+    ! 
     !  @b Signals
     !  Signals that should be connected to channel objects:
     !  - Enable  Do (optional)
-    !
+    ! 
     !  @b Profibus
     !  The Profibus Slave object for this class i Eurotherm_TC30001_PbSlave and
     !  the Profibus Module class Eurotherm_TC3001_PbModule.
     !  
     !  The profibus module object should be connected to the TC3001 object by the 
     !  IoConnect method in the popup menu.
-    !
+    ! 
     !  The six integer input signals In1 - In6 and the four integer output
     !  signals Out1 - Out4 are used to transmit and receive data from the 
     !  thyristor unit.
     ! 
     !  Statusword for configuration data and alarm info are fetched from 
     !  the profibus diagnostic area an put into DiagSW and DiagXS.
-    !
+    ! 
     !  Note that the TC3001 doesn't shut off the power if the profibus communication
     !  is lost. This has to be handle by the control system.
-    !
+    ! 
     !  @b Simulate
     !  The simulate function object to this class is Eurotherm_TC3001Sim.
     ! 
     !  @h1 Example
     !  The example below describes a control loop with a PID controller and a 
     !  Eurotherm TCe3001 aggregate.
-    !
+    ! 
     !  @b Object graph
     !  Displayes the object graph of the thyristor unit and the grahic symbol in an
     !  HMI graph. Also the plc coding for the thyristor unit is viewed.
     !  @image orm_eurotherm_tc3001_ex1.gif
-    !
+    ! 
     !  @h1 Miscellaneous
     !  @b Thyristor unit
-    !
+    ! 
     !  Some behavior of the thyristor unit that can be useful.
     !  
     !  After power up: 
@@ -337,7 +337,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  To control via profibus you need to:
     !  - reconfigure to digital setpoint.
     !  - set digital setpoint value.
-    !
+    ! 
     !  These setting are made by the object as soon as the profibus
     !  communication is established.
     !  
@@ -347,7 +347,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  - With potentiometer 3 you can reduce the set point with a factor 0-1.
     !  - With potentiometer 5 you adjust the current limit. Maximum value is
     !    the nominal max current of the unit.
-    !
+    ! 
     !  If input 'acknowledgement' is linked, the reset button in the object graph
     !  has no effect. The unit is automatically reset as soon as the failure 
     !  disappears.
@@ -356,7 +356,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
     !  - profibus communication error.
     !  - thyristor shortcut.
     !  - overcurrent.
-    !
+    ! 
     !  If thyristors in the thyristor unit are overheated, the unit will block the
     !  current itself, though when the temperature decreases it will turn it on again.
     !   
@@ -376,7 +376,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object RtBody $ObjBodyDef 1 03-OCT-2007 10:28:40.07
         Body SysBody 03-OCT-2007 10:28:40.07
           Attr StructName = "Eurotherm_TC3001"
-          Attr NextAix = "_X48"
+          Attr NextAix = "_X51"
         EndBody
         !/**
         ! Superclass.
@@ -802,6 +802,27 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr TypeRef = "pwrs:Type-$Boolean"
           EndBody
         EndObject
+        Object Resistance1 $Attribute 48 23-OCT-2007 09:45:34.34
+          Body SysBody 23-OCT-2007 09:45:36.01
+            Attr PgmName = "Resistance1"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Resistance2 $Attribute 50 23-OCT-2007 09:45:49.52
+          Body SysBody 23-OCT-2007 09:45:51.15
+            Attr PgmName = "Resistance2"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+        Object Resistance3 $Attribute 49 23-OCT-2007 09:45:58.31
+          Body SysBody 23-OCT-2007 09:45:59.63
+            Attr PgmName = "Resistance3"
+            Attr Flags = 1040
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
         !/**
         !  @Summary The plc function object connected to this object.
         !  The plc function object connected to this object.
@@ -1058,12 +1079,12 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Code PlcTemplate 813 03-OCT-2007 10:48:24.39
         Body RtBody 03-OCT-2007 10:48:24.39
         EndBody
-        Body DevBody 16-OCT-2007 13:54:16.22
+        Body DevBody 23-OCT-2007 10:51:38.10
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
-            Attr defnamecount[2] = 6
-            Attr defnamecount[11] = 52
+            Attr defnamecount[2] = 7
+            Attr defnamecount[11] = 54
             Attr defnamecount[62] = 5
             Attr defnamecount[66] = 3
             Attr defnamecount[70] = 1
@@ -1075,10 +1096,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr defnamecount[97] = 3
             Attr defnamecount[99] = 27
             Attr defnamecount[102] = 1
-            Attr defnamecount[125] = 1
-            Attr defnamecount[136] = 3
-            Attr defnamecount[137] = 11
-            Attr defnamecount[138] = 10
+            Attr defnamecount[125] = 4
+            Attr defnamecount[127] = 3
+            Attr defnamecount[136] = 8
+            Attr defnamecount[137] = 12
+            Attr defnamecount[138] = 12
             Attr defnamecount[139] = 17
             Attr defnamecount[140] = 11
             Attr defnamecount[141] = 4
@@ -1089,9 +1111,9 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr defnamecount[224] = 1
             Attr defnamecount[225] = 1
             Attr defnamecount[252] = 3
-            Attr defnamecount[253] = 4
+            Attr defnamecount[253] = 11
             Attr defnamecount[255] = 19
-            Attr defnamecount[256] = 26
+            Attr defnamecount[256] = 30
             Attr defnamecount[257] = 1
             Attr defnamecount[258] = 4
             Attr defnamecount[263] = 14
@@ -1100,14 +1122,14 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             Attr defnamecount[267] = 1
             Attr defnamecount[269] = 1
             Attr defnamecount[270] = 2
-            Attr connamecount = 320
+            Attr connamecount = 348
           EndBuffer
         EndBody
         Object W WindowPlc 814 03-OCT-2007 10:59:54.84
           Body RtBody 03-OCT-2007 10:59:54.84
           EndBody
-          Body DevBody 16-OCT-2007 13:54:16.22
-            Attr Modified = "16-OCT-2007 13:54:16.22"
+          Body DevBody 23-OCT-2007 10:51:38.10
+            Attr Modified = "23-OCT-2007 10:51:38.10"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -1117,6 +1139,848 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
               Attr refconcount = 1
             EndBuffer
           EndBody
+          Object cn347 ConDigital 2133 23-OCT-2007 09:59:16.61
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn347"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 10
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_point = 2
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select3"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.850000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.835486e+00
+                  Attr y = 9.850000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.835486e+00
+                  Attr y = 1.010000e+01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.870000e+00
+                  Attr y = 1.010000e+01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn346 ConAnalog 2132 23-OCT-2007 09:59:13.73
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn346"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 7
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select3"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.720444e+00
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.720444e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.870000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn345 ConDigital 2131 23-OCT-2007 09:59:11.27
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn345"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 9
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_point = 2
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select2"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.846583e+00
+                  Attr y = 9.800000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.846583e+00
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn344 ConAnalog 2130 23-OCT-2007 09:59:07.52
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn344"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 6
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.545222e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.570000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn343 ConAnalog 2129 23-OCT-2007 09:58:57.78
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn343"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select3"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter2"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.170000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.100000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.710000e+00
+                  Attr y = 9.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.970000e+00
+                  Attr y = 9.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn342 ConAnalog 2128 23-OCT-2007 09:58:57.78
+            Body DevBody 23-OCT-2007 10:05:55.88
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn342"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter2"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp29"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.470000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.400000e+00
+                  Attr y = 1.000000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 3.150000e+00
+                  Attr y = 9.950000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 3.370000e+00
+                  Attr y = 9.950000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn341 ConAnalog 2127 23-OCT-2007 09:58:57.78
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn341"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select3"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp10"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.870000e+00
+                  Attr y = 1.005000e+01
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.595514e+00
+                  Attr y = 1.005000e+01
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.595514e+00
+                  Attr y = 9.450000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.570889e+00
+                  Attr y = 9.450000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn340 ConAnalog 2122 23-OCT-2007 09:58:51.23
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn340"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select2"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter1"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.170000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.100000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.940000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.970000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn339 ConAnalog 2121 23-OCT-2007 09:58:51.23
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn339"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter1"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp28"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.470000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.400000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn338 ConAnalog 2120 23-OCT-2007 09:58:51.23
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn338"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select2"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp9"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.737500e+00
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.737500e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.570889e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[4]
+                  Attr x = 1.630422e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[5]
+                  Attr x = 1.570889e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn337 ConAnalog 2115 23-OCT-2007 09:58:20.11
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn337"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select1"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp8"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.570889e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.443764e+00
+                  Attr y = 9.200000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.370889e+00
+                  Attr y = 9.200000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn335 ConAnalog 2111 23-OCT-2007 09:58:08.61
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn335"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter0"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp27"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.470000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.400000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 3.060000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 3.370000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn333 ConAnalog 2107 23-OCT-2007 09:57:51.27
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn333"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select1"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter0"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 2.170000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 2.100000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 2.710000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 2.970000e+00
+                  Attr y = 9.350000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn331 ConDigital 2103 23-OCT-2007 09:57:20.88
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn331"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 8
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_point = 2
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select1"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.800972e+00
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.800972e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.400000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn330 ConAnalog 2102 23-OCT-2007 09:57:13.67
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn330"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 5
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select1"
+                Attr point_count = 4
+                Buffer point[0]
+                  Attr x = 1.494000e+00
+                  Attr y = 9.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.697028e+00
+                  Attr y = 9.600000e+00
+                EndBuffer
+                Buffer point[2]
+                  Attr x = 1.697028e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[3]
+                  Attr x = 1.870000e+00
+                  Attr y = 9.300000e+00
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn329 ConDigital 2100 23-OCT-2007 09:56:25.94
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn329"
+                Attr object_type = 23
+                Attr cid = "pwrb:Class-ConDigital"
+                Attr attributes = 90
+                Attr source_point = 4
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp26"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 8.964444e-01
+                  Attr y = 9.800000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 9.800000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn328 ConAnalog 2098 23-OCT-2007 09:56:14.75
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn328"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 3
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp7"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 9.720000e-01
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 9.750000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn327 ConAnalog 2096 23-OCT-2007 09:56:09.12
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn327"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 2
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp6"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 9.720000e-01
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 9.700000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn326 ConAnalog 2094 23-OCT-2007 09:56:03.99
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn326"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_point = 1
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp5"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 9.720000e-01
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 9.650000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
+          Object cn325 ConAnalog 2092 23-OCT-2007 09:55:57.14
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcConnection
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn325"
+                Attr object_type = 24
+                Attr cid = "pwrb:Class-ConAnalog"
+                Attr attributes = 90
+                Attr source_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr dest_oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp4"
+                Attr point_count = 2
+                Buffer point[0]
+                  Attr x = 1.018667e+00
+                  Attr y = 9.600000e+00
+                EndBuffer
+                Buffer point[1]
+                  Attr x = 1.120000e+00
+                  Attr y = 9.600000e+00
+                EndBuffer
+                Buffer point[2]
+                EndBuffer
+                Buffer point[3]
+                EndBuffer
+                Buffer point[4]
+                EndBuffer
+                Buffer point[5]
+                EndBuffer
+                Buffer point[6]
+                EndBuffer
+                Buffer point[7]
+                EndBuffer
+                Buffer point[8]
+                EndBuffer
+                Buffer point[9]
+                EndBuffer
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+              EndBuffer
+            EndBody
+          EndObject
           Object cn319 ConDigital 2076 15-OCT-2007 17:11:43.75
             Body DevBody 15-OCT-2007 17:12:03.23
               Buffer PlcConnection
@@ -3241,7 +4105,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn261 ConDigital 1950 15-OCT-2007 14:56:51.50
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn261"
                 Attr object_type = 23
@@ -3252,11 +4116,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 9.050000e+00
+                  Attr y = 1.115000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 9.875556e-01
-                  Attr y = 9.050000e+00
+                  Attr y = 1.115000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3532,7 +4396,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn244 ConDigital 1802 11-OCT-2007 15:12:15.33
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn244"
                 Attr object_type = 23
@@ -3543,11 +4407,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 9.000000e+00
+                  Attr y = 1.110000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 9.986667e-01
-                  Attr y = 9.000000e+00
+                  Attr y = 1.110000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3613,7 +4477,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn240 ConDigital 1793 11-OCT-2007 15:06:43.44
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn240"
                 Attr object_type = 23
@@ -3624,11 +4488,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 8.653333e-01
-                  Attr y = 8.950000e+00
+                  Attr y = 1.105000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 1.170000e+00
-                  Attr y = 8.950000e+00
+                  Attr y = 1.105000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3813,7 +4677,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn225 ConDigital 1257 03-OCT-2007 15:54:47.87
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn225"
                 Attr object_type = 23
@@ -3824,11 +4688,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 8.900000e+00
+                  Attr y = 1.100000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 9.297778e-01
-                  Attr y = 8.900000e+00
+                  Attr y = 1.100000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3851,7 +4715,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn224 ConDigital 1255 03-OCT-2007 15:54:41.34
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn224"
                 Attr object_type = 23
@@ -3862,11 +4726,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 8.850000e+00
+                  Attr y = 1.095000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 8.942223e-01
-                  Attr y = 8.850000e+00
+                  Attr y = 1.095000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3889,7 +4753,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn221 ConDigital 1247 03-OCT-2007 15:53:36.75
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn221"
                 Attr object_type = 23
@@ -3900,11 +4764,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 8.800000e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 9.120000e-01
-                  Attr y = 8.800000e+00
+                  Attr y = 1.090000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -3927,7 +4791,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
             EndBody
           EndObject
           Object cn219 ConAnalog 1242 03-OCT-2007 15:53:00.66
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Buffer PlcConnection
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-cn219"
                 Attr object_type = 24
@@ -3938,11 +4802,11 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
                 Attr point_count = 2
                 Buffer point[0]
                   Attr x = 1.170000e+00
-                  Attr y = 8.750000e+00
+                  Attr y = 1.085000e+01
                 EndBuffer
                 Buffer point[1]
                   Attr x = 9.631111e-01
-                  Attr y = 8.750000e+00
+                  Attr y = 1.085000e+01
                 EndBuffer
                 Buffer point[2]
                 EndBuffer
@@ -9780,14 +10644,14 @@ XS : activa alarms
           Object GetAp3 GetAp 1238 03-OCT-2007 15:52:48.06
             Body RtBody 03-OCT-2007 15:52:48.06
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr ApObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.Reference"
               Buffer PlcNode
                 Attr object_type = 253
                 Attr cid = "pwrb:Class-GetAp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp3"
                 Attr x = 6.000000e-01
-                Attr y = -7.775000e+00
+                Attr y = -9.875000e+00
                 Attr width = 3.631111e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9798,14 +10662,14 @@ XS : activa alarms
           Object StoAp12 StoAp 1241 03-OCT-2007 15:53:00.66
             Body RtBody 03-OCT-2007 15:53:00.66
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.SetValue"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-StoAp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp12"
                 Attr x = 1.150000e+00
-                Attr y = -7.775000e+00
+                Attr y = -9.875000e+00
                 Attr width = 4.274445e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9816,14 +10680,14 @@ XS : activa alarms
           Object GetDp13 GetDp 1243 03-OCT-2007 15:53:19.58
             Body RtBody 03-OCT-2007 15:53:19.58
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.Power"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp13"
                 Attr x = 6.000000e-01
-                Attr y = -7.825000e+00
+                Attr y = -9.924999e+00
                 Attr width = 3.120000e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9834,14 +10698,14 @@ XS : activa alarms
           Object StoDp10 StoDp 1246 03-OCT-2007 15:53:36.75
             Body RtBody 03-OCT-2007 15:53:36.75
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.PowerOn"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp10"
                 Attr x = 1.150000e+00
-                Attr y = -7.825000e+00
+                Attr y = -9.924999e+00
                 Attr width = 4.318889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9852,14 +10716,14 @@ XS : activa alarms
           Object GetDp14 GetDp 1248 03-OCT-2007 15:53:57.96
             Body RtBody 03-OCT-2007 15:53:57.96
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.Error"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp14"
                 Attr x = 6.000000e-01
-                Attr y = -7.875000e+00
+                Attr y = -9.974999e+00
                 Attr width = 2.942222e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9870,14 +10734,14 @@ XS : activa alarms
           Object GetDp15 GetDp 1249 03-OCT-2007 15:54:00.14
             Body RtBody 03-OCT-2007 15:54:00.14
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.Warning"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp15"
                 Attr x = 6.000000e-01
-                Attr y = -7.925000e+00
+                Attr y = -1.002500e+01
                 Attr width = 3.297778e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9888,14 +10752,14 @@ XS : activa alarms
           Object StoDp11 StoDp 1254 03-OCT-2007 15:54:41.34
             Body RtBody 03-OCT-2007 15:54:41.34
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IndError"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp11"
                 Attr x = 1.150000e+00
-                Attr y = -7.875000e+00
+                Attr y = -9.974999e+00
                 Attr width = 4.163333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -9906,14 +10770,14 @@ XS : activa alarms
           Object StoDp12 StoDp 1256 03-OCT-2007 15:54:47.87
             Body RtBody 03-OCT-2007 15:54:47.87
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.IndWarning"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp12"
                 Attr x = 1.150000e+00
-                Attr y = -7.925000e+00
+                Attr y = -1.002500e+01
                 Attr width = 4.518889e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10138,14 +11002,14 @@ XS : activa alarms
           Object StoDp14 StoDp 1789 11-OCT-2007 15:06:33.54
             Body RtBody 11-OCT-2007 15:06:33.54
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.On"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp14"
                 Attr x = 1.150000e+00
-                Attr y = -7.975000e+00
+                Attr y = -1.007500e+01
                 Attr width = 3.474444e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10156,14 +11020,14 @@ XS : activa alarms
           Object GetDp16 GetDp 1792 11-OCT-2007 15:06:43.44
             Body RtBody 11-OCT-2007 15:06:43.44
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.On"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp16"
                 Attr x = 6.000000e-01
-                Attr y = -7.975000e+00
+                Attr y = -1.007500e+01
                 Attr width = 2.653333e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10192,14 +11056,14 @@ XS : activa alarms
           Object GetDp18 GetDp 1798 11-OCT-2007 15:11:47.80
             Body RtBody 11-OCT-2007 15:11:47.80
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.TerminalDi"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp18"
                 Attr x = 6.000000e-01
-                Attr y = -8.025000e+00
+                Attr y = -1.012500e+01
                 Attr width = 3.986667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10210,14 +11074,14 @@ XS : activa alarms
           Object StoDp15 StoDp 1801 11-OCT-2007 15:12:15.33
             Body RtBody 11-OCT-2007 15:12:15.33
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.TerminalDi"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp15"
                 Attr x = 1.150000e+00
-                Attr y = -8.025000e+00
+                Attr y = -1.012500e+01
                 Attr width = 4.185556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10397,14 +11261,14 @@ XS : activa alarms
           Object GetDp22 GetDp 1948 15-OCT-2007 14:56:51.50
             Body RtBody 15-OCT-2007 14:56:51.50
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001Fo.ExtInterlock"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp22"
                 Attr x = 6.000000e-01
-                Attr y = -8.075000e+00
+                Attr y = -1.017500e+01
                 Attr width = 3.875556e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -10415,14 +11279,14 @@ XS : activa alarms
           Object StoDp16 StoDp 1949 15-OCT-2007 14:56:51.50
             Body RtBody 15-OCT-2007 14:56:51.50
             EndBody
-            Body DevBody 15-OCT-2007 15:33:37.29
+            Body DevBody 23-OCT-2007 10:05:03.12
               Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.ExtInterlock"
               Buffer PlcNode
                 Attr object_type = 255
                 Attr cid = "pwrb:Class-StoDp"
                 Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoDp16"
                 Attr x = 1.150000e+00
-                Attr y = -8.075000e+00
+                Attr y = -1.017500e+01
                 Attr width = 4.696667e-01
                 Attr heigth = 5.000000e-02
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
@@ -11039,6 +11903,380 @@ SetValue = SV"
                 Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
                 Attr mask[0] = 3
                 Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object CArit52 CArithm 2079 23-OCT-2007 09:47:08.84
+            Body RtBody 23-OCT-2007 09:47:08.84
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-CArithm"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-CArit52"
+                Attr x = 1.100000e+00
+                Attr y = -9.425000e+00
+                Attr width = 3.740000e-01
+                Attr heigth = 9.000000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 271
+                Attr mask[1] = 1799
+              EndBuffer
+              Attr Code = "od1 = od2 = od3 = d1;
+if ( A2 > 0.01)
+  OA1 = A1 / A2;
+else
+  od1 = 0;
+if ( A3 > 0.01)
+  OA2 = A1 / A3;
+else
+  od2 = 0;
+if ( A4 > 0.01)
+  OA3 = A1 / A4;
+else
+  od3 = 0;"
+            EndBody
+          EndObject
+          Object Document6 Document 2080 23-OCT-2007 09:53:40.50
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcNode
+                Attr object_type = 2
+                Attr cid = "pwrb:Class-Document"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Document6"
+                Attr x = 4.500000e-01
+                Attr y = -1.042500e+01
+                Attr width = 3.400000e+00
+                Attr heigth = 2.300000e+00
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 4
+              EndBuffer
+              Attr Page = "5"
+              Attr Signature = "HW"
+              Attr DocumentOrientation = 1
+              Attr DocumentSize = 3
+            EndBody
+          EndObject
+          Object GetAp4 GetAp 2091 23-OCT-2007 09:55:57.14
+            Body RtBody 23-OCT-2007 09:55:57.14
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.LoadVoltage"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp4"
+                Attr x = 6.000000e-01
+                Attr y = -8.625000e+00
+                Attr width = 4.186667e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp5 GetAp 2093 23-OCT-2007 09:56:03.99
+            Body RtBody 23-OCT-2007 09:56:03.99
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Current1"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp5"
+                Attr x = 6.000000e-01
+                Attr y = -8.674999e+00
+                Attr width = 3.720000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp6 GetAp 2095 23-OCT-2007 09:56:09.12
+            Body RtBody 23-OCT-2007 09:56:09.12
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Current2"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp6"
+                Attr x = 6.000000e-01
+                Attr y = -8.724999e+00
+                Attr width = 3.720000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp7 GetAp 2097 23-OCT-2007 09:56:14.75
+            Body RtBody 23-OCT-2007 09:56:14.75
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Current3"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp7"
+                Attr x = 6.000000e-01
+                Attr y = -8.775000e+00
+                Attr width = 3.720000e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetDp26 GetDp 2099 23-OCT-2007 09:56:25.94
+            Body RtBody 23-OCT-2007 09:56:25.94
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr DpObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.On"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-GetDp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetDp26"
+                Attr x = 6.000000e-01
+                Attr y = -8.825000e+00
+                Attr width = 2.964444e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Select1 Select 2101 23-OCT-2007 09:57:00.67
+            Body RtBody 23-OCT-2007 09:57:00.67
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcNode
+                Attr object_type = 125
+                Attr cid = "pwrb:Class-Select"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select1"
+                Attr x = 1.850000e+00
+                Attr y = -8.475000e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 2.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 7
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Filter0 Filter 2106 23-OCT-2007 09:57:49.28
+            Body RtBody 23-OCT-2007 10:51:15.98
+              Attr FiltCon = 1.000000e+01
+            EndBody
+            Body DevBody 23-OCT-2007 10:51:38.10
+              Buffer PlcNode
+                Attr object_type = 127
+                Attr cid = "pwrb:Class-Filter"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter0"
+                Attr x = 2.150000e+00
+                Attr y = -8.375000e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 1.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoAp27 StoAp 2110 23-OCT-2007 09:58:08.61
+            Body RtBody 23-OCT-2007 09:58:08.61
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance1"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-StoAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp27"
+                Attr x = 2.450000e+00
+                Attr y = -8.325000e+00
+                Attr width = 4.718889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp8 GetAp 2114 23-OCT-2007 09:58:20.11
+            Body RtBody 23-OCT-2007 09:58:20.11
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance1"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp8"
+                Attr x = 1.150000e+00
+                Attr y = -8.375000e+00
+                Attr width = 4.208889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp9 GetAp 2116 23-OCT-2007 09:58:51.22
+            Body RtBody 23-OCT-2007 09:58:51.22
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:55.88
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance2"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp9"
+                Attr x = 1.150000e+00
+                Attr y = -8.424999e+00
+                Attr width = 4.208889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoAp28 StoAp 2117 23-OCT-2007 09:58:51.23
+            Body RtBody 23-OCT-2007 09:58:51.23
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:55.88
+              Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance2"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-StoAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp28"
+                Attr x = 2.450000e+00
+                Attr y = -8.674999e+00
+                Attr width = 4.718889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Filter1 Filter 2118 23-OCT-2007 09:58:51.23
+            Body RtBody 23-OCT-2007 10:51:22.75
+              Attr FiltCon = 1.000000e+01
+            EndBody
+            Body DevBody 23-OCT-2007 10:51:38.10
+              Buffer PlcNode
+                Attr object_type = 127
+                Attr cid = "pwrb:Class-Filter"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter1"
+                Attr x = 2.150000e+00
+                Attr y = -8.724999e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 1.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Select2 Select 2119 23-OCT-2007 09:58:51.23
+            Body RtBody 23-OCT-2007 09:58:51.23
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcNode
+                Attr object_type = 125
+                Attr cid = "pwrb:Class-Select"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select2"
+                Attr x = 1.850000e+00
+                Attr y = -8.825000e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 2.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 7
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object GetAp10 GetAp 2123 23-OCT-2007 09:58:57.78
+            Body RtBody 23-OCT-2007 09:58:57.78
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:55.88
+              Attr ApObject = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance3"
+              Buffer PlcNode
+                Attr object_type = 253
+                Attr cid = "pwrb:Class-GetAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-GetAp10"
+                Attr x = 1.150000e+00
+                Attr y = -8.474999e+00
+                Attr width = 4.208889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object StoAp29 StoAp 2124 23-OCT-2007 09:58:57.78
+            Body RtBody 23-OCT-2007 09:58:57.78
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:55.88
+              Attr Object = "$PlcMain:OtherManufacturer-Class-Eurotherm_TC3001.Resistance3"
+              Buffer PlcNode
+                Attr object_type = 256
+                Attr cid = "pwrb:Class-StoAp"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-StoAp29"
+                Attr x = 2.450000e+00
+                Attr y = -9.025000e+00
+                Attr width = 4.718889e-01
+                Attr heigth = 5.000000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Filter2 Filter 2125 23-OCT-2007 09:58:57.78
+            Body RtBody 23-OCT-2007 10:51:29.22
+              Attr FiltCon = 1.000000e+01
+            EndBody
+            Body DevBody 23-OCT-2007 10:51:38.10
+              Buffer PlcNode
+                Attr object_type = 127
+                Attr cid = "pwrb:Class-Filter"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Filter2"
+                Attr x = 2.150000e+00
+                Attr y = -9.075000e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 1.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 1
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Select3 Select 2126 23-OCT-2007 09:58:57.78
+            Body RtBody 23-OCT-2007 09:58:57.78
+            EndBody
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Buffer PlcNode
+                Attr object_type = 125
+                Attr cid = "pwrb:Class-Select"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Select3"
+                Attr x = 1.850000e+00
+                Attr y = -9.175000e+00
+                Attr width = 2.300000e-01
+                Attr heigth = 2.500000e-01
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
+                Attr mask[0] = 7
+                Attr mask[1] = 1
+              EndBuffer
+            EndBody
+          EndObject
+          Object Head53 Head 2134 23-OCT-2007 10:02:21.09
+            Body DevBody 23-OCT-2007 10:05:03.12
+              Attr Text = "Resistance calculation"
+              Buffer PlcNode
+                Attr object_type = 11
+                Attr cid = "pwrb:Class-Head"
+                Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W-Head53"
+                Attr x = 5.500000e-01
+                Attr y = -8.219000e+00
+                Attr width = 4.657778e-01
+                Attr heigth = 4.400000e-02
+                Attr woid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
               EndBuffer
             EndBody
           EndObject
@@ -13438,13 +14676,13 @@ else
     !  - indicating the current mode:
     !    M: Manual mode.
     !    No indication: auto mode.
-    !
+    ! 
     !  Default action:
     !  - the methods menu is opened with MB3.
     ! 
     !  @b Object Graph
     !  @image orm_eurotherm_tc3001aggr_og.gif
-    !
+    ! 
     !  @h1 Configuration
     !  @b Plc coding
     !  For plc coding the function object Eurotherm_TC3001AggrFo is used.
@@ -13454,7 +14692,7 @@ else
     ! 
     !  @b Component configuration
     !  There are four configuration alternatives
-    !
+    ! 
     !  - CbCoTc   CircuitBreaker, Contactor and Thyristor unit.
     !  - CbTc     CircuitBreaker and Thyristor unit.
     !  - CoTc     Contactor and Thyristor unit.
@@ -13464,18 +14702,18 @@ else
     !  - Contactor.
     !  - Heater.
     !  - TC3001.Enable
-    !
+    ! 
     !  @b Mode configuration
     !  The mode of the aggragate can be configured in four different ways:
     !  - intern auto/manual with on/off buttons. Default mode.
     !  - intern control only, i.e. control from object graph.
     !  - extern control only, i.e. control from function object inputs.
     !  - extern auto/manual with intern on/off buttons.
-    !
+    ! 
     !  See the mode object how to configure these alternatives.
-    !
+    ! 
     !  Local mode is not supported in this aggregate.
-    !
+    ! 
     !  @b Signals
     !  Signals that should be conntected to channel objects.
     !  - TC3001.Enable               Do (optional)
@@ -13484,59 +14722,59 @@ else
     !  - CircuitBreaker.NotTripped   Di (optional)
     !  - Heater.TempSwitch.Switch    Di (optional)
     !  - Heater.TempSensor.Value     Ai (optional)
-    !
+    ! 
     !  The component TC3001 should be connected (by the IoConnect method) to
     !  a profibus module object.
-    !
+    ! 
     !  @b Simulate
     !  The simulate function object to this class is Eurotherm_TC3001AggrSim.
     ! 
     !  @h1 Examples
     !  The example below describes a control loop with a PID controller and a 
     !  Eurotherm TCe3001 aggregate.
-    !
+    ! 
     !  @b Example 1 Object graphs
     !  Views three of four possible component configurations. 
     !  @image orm_eurotherm_tc3001aggr_hmi.gif
-    !
+    ! 
     !  @b Example 2 to view the aggregate in a process graph. 
     !  Displays an operator picture for a temperatur control loop. All graphs,
     !  except the process graph, are object graphs. The aggregate is viewed
     !  with its graphic symbol and with the object graph in the lower left corner.
     !  @image orm_eurotherm_tc3001aggr_op.gif
-    !
+    ! 
     !  @b Example 3 Plc coding
     !  Views the plc coding of the control loop, containing the thyristor unit, 
     !  a PID controler and a temperature sensor.
-    !
+    ! 
     !  The feedback of the SetValue from the thyristor to the PID controller
     !  gives a smooth switching from thyristor aggregate manual mode to auto mode.
-    !
+    ! 
     !  @image orm_eurotherm_tc3001aggr_plcpgm.gif
-    !
+    ! 
     !  @b Example 4 Object and attributes
     !  Displayes all the objects in the Zon1 example and the function object for the 
     !  aggregate.
-    !
+    ! 
     !  The status of the function object is viewed when the thyristor is on, i.e.
     !  ExtOn is true and the aggregate is i auto mode.
-    !
+    ! 
     !  @image orm_eurotherm_tc3001aggr_plant.gif
-    !
+    ! 
     !  @b Example 5 Mode alternatives for the aggregate
     !  Displays the four mode alternatives for the aggregate.
-    !
+    ! 
     !  1: intern auto/manual with on/off buttons. Default mode.
     !  2: extern auto/manual with intern on/off buttons.
     !  3: extern control only, i.e. control from function object inputs.
     !  4: intern control only, i.e. control from object graph.
-    !
+    ! 
     !  Note, 1 and 3 implies that ExtControl is used to activate extern
     !  control of the aggregate. This also implies that you have to consider
     !  action to reset the on signal at failure to prevent restart.
-    !
+    ! 
     !  @image orm_eurotherm_tc3001aggr_mode.gif
-    !
+    ! 
     !   
     !  @b See also
     !  @classlink Eurotherm_TC3001AggrFo othermanufacturer_eurotherm_tc3001aggrfo.html
