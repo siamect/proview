@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.h,v 1.37 2006-05-24 15:00:41 claes Exp $
+ * Proview   $Id: wb_vrepwbl.h,v 1.38 2007-10-23 08:54:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -40,7 +40,6 @@ class wb_vrepwbl : public wb_vrep
   wb_erep *m_erep;
   wb_merep *m_merep;
   unsigned int m_nRef;
-  bool m_ignore_oix;
 
   map<string, ref_wblnode> m_type_list;
   map<pwr_tTid, ref_wblnode> m_tid_list;
@@ -74,6 +73,7 @@ public:
   int load_files( const char *file_spec);
   void info();
 
+  bool m_ignore_oix;
   wb_wblfile *file[WBL_FILEMAX];
   wb_wblnode *root_object;
 

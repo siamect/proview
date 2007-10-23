@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wblnode.cpp,v 1.58 2007-09-19 15:19:10 claes Exp $
+ * Proview   $Id: wb_wblnode.cpp,v 1.59 2007-10-23 08:54:16 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1657,7 +1657,7 @@ void wb_wblnode::registerNode( wb_vrepwbl *vol)
         if ((second_child->getType() == tokens.VALUE) ||
             (second_child->getType() == tokens.INT)) {
           string oixstr = second_child->getText();
-          if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix)) {
+          if ( !stringToOix( oixstr.c_str(), &o->m_oid.oix) || m_vrep->m_ignore_oix) {
             o->m_oid.oix = m_vrep->nextOix();
           }
 	  if ( third_child && third_child->getType() == tokens.ASC_TIME) {
