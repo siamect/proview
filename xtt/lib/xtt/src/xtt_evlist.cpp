@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.16 2007-01-30 06:54:59 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.17 2007-10-24 14:00:59 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1507,8 +1507,10 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_A:
                   if ( a_cnt >= ALARM_INFO_A_SIZE)
                     break;
-                  strcpy( info->a_alarm_text[a_cnt], object_item->eventtext);
-                  strcpy( info->a_alarm_alias[a_cnt], object_item->alias);
+                  strncpy( info->a_alarm_text[a_cnt], object_item->eventtext, 
+			   sizeof(info->a_alarm_text[0]));
+                  strncpy( info->a_alarm_alias[a_cnt], object_item->alias, 
+			  sizeof(info->a_alarm_alias[0]));
                   info->a_alarm_active[a_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->a_alarm_exist[a_cnt] = 1;
                   a_cnt++;
@@ -1516,8 +1518,10 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_B:
                   if ( b_cnt >= ALARM_INFO_B_SIZE)
                     break;
-                  strcpy( info->b_alarm_text[b_cnt], object_item->eventtext);
-                  strcpy( info->b_alarm_alias[b_cnt], object_item->alias);
+                  strncpy( info->b_alarm_text[b_cnt], object_item->eventtext,
+			   sizeof(info->b_alarm_text[0]));
+                  strncpy( info->b_alarm_alias[b_cnt], object_item->alias,
+			   sizeof(info->b_alarm_alias[0]));
                   info->b_alarm_active[b_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->b_alarm_exist[b_cnt] = 1;
                   b_cnt++;
@@ -1525,8 +1529,10 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_C:
                   if ( c_cnt >= ALARM_INFO_C_SIZE)
                     break;
-                  strcpy( info->c_alarm_text[c_cnt], object_item->eventtext);
-                  strcpy( info->c_alarm_alias[c_cnt], object_item->alias);
+                  strncpy( info->c_alarm_text[c_cnt], object_item->eventtext,
+			   sizeof(info->c_alarm_text[0]));
+                  strncpy( info->c_alarm_alias[c_cnt], object_item->alias,
+			   sizeof(info->c_alarm_alias[0]));
                   info->c_alarm_active[c_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->c_alarm_exist[c_cnt] = 1;
                   c_cnt++;
@@ -1534,8 +1540,10 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
                 case mh_eEventPrio_D:
                   if ( d_cnt >= ALARM_INFO_D_SIZE)
                     break;
-                  strcpy( info->d_alarm_text[d_cnt], object_item->eventtext);
-                  strcpy( info->d_alarm_alias[d_cnt], object_item->alias);
+                  strncpy( info->d_alarm_text[d_cnt], object_item->eventtext,
+			   sizeof(info->d_alarm_text[0]));
+                  strncpy( info->d_alarm_alias[d_cnt], object_item->alias,
+			   sizeof(info->d_alarm_alias[0]));
                   info->d_alarm_active[d_cnt] = object_item->status & mh_mEventStatus_NotRet;
                   info->d_alarm_exist[d_cnt] = 1;
                   d_cnt++;
@@ -1551,8 +1559,10 @@ int EvList::get_alarm_info( evlist_sAlarmInfo *info)
             {
               if ( i_cnt >= ALARM_INFO_I_SIZE)
                 break;
-              strcpy( info->i_alarm_text[i_cnt], object_item->eventtext);
-              strcpy( info->i_alarm_alias[i_cnt], object_item->alias);
+              strncpy( info->i_alarm_text[i_cnt], object_item->eventtext,
+		       sizeof(info->i_alarm_text[0]));
+              strncpy( info->i_alarm_alias[i_cnt], object_item->alias,
+		       sizeof(info->i_alarm_alias[0]));
               info->i_alarm_active[i_cnt] = object_item->status & mh_mEventStatus_NotRet;
               info->i_alarm_exist[i_cnt] = 1;
               i_cnt++;
