@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_evlist.cpp,v 1.17 2007-10-24 14:00:59 claes Exp $
+ * Proview   $Id: xtt_evlist.cpp,v 1.18 2007-10-24 15:11:30 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1299,20 +1299,21 @@ void ItemAlarm::update_text()
       break;
     case evlist_eEventType_Block:
     case evlist_eEventType_Alarm:
-      switch ( eventprio)
-      {
-        case mh_eEventPrio_A:
-          strcpy( type_str, "A");
-          break;
-        case mh_eEventPrio_B:
-          strcpy( type_str, "B");
-          break;
-        case mh_eEventPrio_C:
-          strcpy( type_str, "C");
-          break;
-        case mh_eEventPrio_D:
-          strcpy( type_str, "D");
-          break;
+      switch ( eventprio) {
+      case mh_eEventPrio_A:
+	strcpy( type_str, "A");
+	break;
+      case mh_eEventPrio_B:
+	strcpy( type_str, "B");
+	break;
+      case mh_eEventPrio_C:
+	strcpy( type_str, "C");
+	break;
+      case mh_eEventPrio_D:
+	strcpy( type_str, "D");
+	break;
+      default:
+	strcpy( type_str, "Unkw");
       }
       brow_SetAnnotation( node, 0, type_str, strlen(type_str));
       break;
