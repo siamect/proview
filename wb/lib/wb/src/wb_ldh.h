@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.39 2007-10-01 14:37:23 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.40 2007-10-25 11:07:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -351,6 +351,7 @@ struct ldh_s_SessInfo {
   ldh_eDId		DidRange;
   ldh_eUtility		Utility;
   pwr_tBoolean		Empty;
+  pwr_tVid		Vid;
 };
 
 struct ldh_s_ObjContext {

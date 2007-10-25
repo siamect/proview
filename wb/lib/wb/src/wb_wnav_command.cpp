@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_wnav_command.cpp,v 1.45 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_wnav_command.cpp,v 1.46 2007-10-25 11:07:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,7 +237,8 @@ dcli_tCmdTable	wnav_command_table[] = {
 		{
 			"PASTE",
 			&wnav_paste_func,
-			{ "dcli_arg1", "/INTO", "/BUFFER", "/KEEPOID", ""}
+			{ "dcli_arg1", "/INTO", "/BUFFER", "/KEEPOID", 
+			  "/TOPLEVEL", ""}
 		},
 		{
 			"MOVE",
@@ -3273,6 +3274,27 @@ static int	wnav_paste_func(	void		*client_data,
   if ( wnav->window_type == wnav_eWindowType_No)
     return WNAV__CMDMODE;
 
+  int keepoid = ODD( dcli_get_qualifier( "/KEEPOID", 0, 0));
+
+  if ( ODD( dcli_get_qualifier( "/TOPLEVEL", 0, 0))) {
+    ldh_sSessInfo info;
+    pwr_tOid destoid;
+
+    sts = ldh_GetSessionInfo( wnav->ldhses, &info);
+    if ( EVEN(sts)) return sts;
+    
+    dest = ldh_eDest_IntoFirst;
+    destoid.oix = 0;
+    destoid.vid = info.Vid;
+      
+    sts = ldh_Paste( wnav->ldhses, destoid, dest, keepoid, buffer_ptr);
+    if ( EVEN(sts)) {
+      wnav->message(' ', wnav_get_message(sts));
+      return sts;
+    }
+    return WNAV__SUCCESS;
+  }
+
   sts = wnav->get_select( &sel_list, &sel_is_attr, &sel_cnt);
   if ( EVEN(sts)) {
     wnav->message('E', "Nothing is selected in the current window");
@@ -3283,7 +3305,6 @@ static int	wnav_paste_func(	void		*client_data,
     return WNAV__SELTOMANY;
   }
 
-  int keepoid = ODD( dcli_get_qualifier( "/KEEPOID", 0, 0));
   if ( ODD( dcli_get_qualifier( "/INTO", 0, 0)))
     dest = ldh_eDest_IntoFirst;
   else

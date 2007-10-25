@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.61 2007-09-26 11:52:34 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.62 2007-10-25 11:07:12 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1142,6 +1142,7 @@ ldh_GetSessionInfo(ldh_tSession session, ldh_sSessInfo *ip)
   ip->Access   = sp->access();
   ip->Utility = sp->utility();
   ip->Empty   = sp->isEmpty() ? 1 : 0;
+  ip->Vid     = sp->vid();
     
   return LDH__SUCCESS;
 }
@@ -1472,6 +1473,9 @@ ldh_AttrRefToName(ldh_tSession session, pwr_sAttrRef *arp, int nametype, char **
     break;
   }
   default: {
+    if ( arp->Objid.vid == 0 && arp->Objid.oix == 0)
+      return LDH__NOSUCHOBJ;
+
     wb_attribute a = sp->attribute(arp);
     if (!a) return a.sts();
     
