@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.26 2007-10-01 14:36:15 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.27 2007-10-25 16:05:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1089,6 +1089,9 @@ bool wb_vrepmem::deleteObject(pwr_tStatus *sts, wb_orep *orep)
     return false;
   }
 
+  if ( m_classeditor)
+    classeditorDeleteObject( memo);
+
   if ( memo == root_object)
     root_object = memo->fws;
      
@@ -1990,6 +1993,32 @@ void wb_vrepmem::classeditorRenameObject( mem_object *memo, char *oldname,
     } catch ( wb_error &e) {
     }
     break;    
+  }
+  default: ;
+  }
+}
+
+void wb_vrepmem::classeditorDeleteObject( mem_object *memo)
+{
+
+  switch ( memo->m_cid) {
+  case pwr_eClass_ObjBodyDef:
+  case pwr_eClass_Param:
+  case pwr_eClass_Intern:
+  case pwr_eClass_Input:
+  case pwr_eClass_Output:
+  case pwr_eClass_ObjXRef:
+  case pwr_eClass_AttrXRef:
+  case pwr_eClass_Buffer: {
+    // Change ohtime in parent to get new class version
+    if ( !memo->fth)
+      break;
+
+    pwr_tTime time;
+
+    clock_gettime(CLOCK_REALTIME, &time);
+    memo->fth->m_ohtime = time;
+    break;
   }
   default: ;
   }
