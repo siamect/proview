@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.1 2007-10-18 09:11:01 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.2 2007-10-25 11:13:22 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -333,6 +333,21 @@ pwr_tOid wb_dbms::new_oid(wb_dbms_txn *txn, pwr_tOid oid)
   try {
     wb_dbms_ohead o(this, txn, woid);
   } catch (wb_dbms_error &e) {
+    pwr_tOix nextoix;
+    int rc = 0;
+    pwr_tOid oid = pwr_cNOid;
+    oid.vid = m_vid;
+    wb_dbms_rbody b(this, oid);
+
+    rc = b.get(txn, offsetof(pwr_sRootVolume, NextOix), sizeof(pwr_tOix), &nextoix);
+    if (rc)
+      printf("wb_db::new_oid, b.get, rc %d\n", rc);
+    if ( nextoix < woid.oix + 1)
+      nextoix = woid.oix + 1;
+    rc = b.upd(txn, offsetof(pwr_sRootVolume, NextOix), sizeof(pwr_tOix), &nextoix);
+    if (rc)
+      printf("wb_dbms::new_oid, b.upd, rc %d\n", rc);
+
     return woid;
   }
   cout << " Old oix found, force new " << woid.oix << " !\n";
