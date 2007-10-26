@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbs.cpp,v 1.27 2007-02-08 12:45:07 claes Exp $
+ * Proview   $Id: wb_dbs.cpp,v 1.28 2007-10-26 06:26:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1064,8 +1064,13 @@ wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **c
 	wb_attribute a = v.attribute( &cast_aref);
 	if ( a) {
 	  a.value( &cast_cid);
-	  if ( cast_cid != pwr_cNCid)
-	    cidInsert(&lsts, cast_cid, 0, &entry);
+	  if ( cast_cid != pwr_cNCid) {
+	    wb_cdef cd = v.cdef( cast_cid);
+	    if ( cd)
+	      cidInsert(&lsts, cast_cid, 0, &entry);
+	    else
+	      printf("** Invalid cast class %s\n", cdh_ObjidToString( 0, aref.Objid, 1));
+	  }
 	}
       }
     }
@@ -1094,8 +1099,13 @@ wb_dbs::cidInsert(pwr_tStatus *sts, pwr_tCid cid, pwr_sAttrRef *arp, sCentry **c
 	wb_attribute a = v.attribute( &cast_aref);
 	if ( a) {
 	  a.value( &cast_cid);
-	  if ( cast_cid != pwr_cNCid)
-	    cidInsert(&lsts, cast_cid, 0, &entry);
+	  if ( cast_cid != pwr_cNCid) {
+	    wb_cdef cd = v.cdef( cast_cid);
+	    if ( cd)
+	      cidInsert(&lsts, cast_cid, 0, &entry);
+	    else
+	      printf("** Invalid cast class %s\n", cdh_ObjidToString( 0, aref.Objid, 1));
+	  }
 	}
       }
     }
