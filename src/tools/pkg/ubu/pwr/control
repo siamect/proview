@@ -1,0 +1,22 @@
+Package: pwr44
+Version: 4.4.2-1
+Section: base
+Priority: optional
+Architecture: i386
+Depends: libc6 (>= 2.3.6), libgtk2.0-0 (>= 2.8.16-0ubuntu1.1), libasound2 (>= 1.0.10-2ubuntu4), libdb4.3 (>=4.3.29)
+Replaces: pwrrt,pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44
+Maintainer: Proview <postmaster@proview.se>
+Description: Proview development and runtime environment package
+ Proview development and runtime environment
+ 4.4.0-1 Base release 
+ 4.4.0-2
+  - Proview restart improved. Works with profibus.
+  - Ge: New fonts, Times, NC Schoolbook and Courier.
+ 4.4.1-1
+  - Proview profibus restart improved.
+  - Statusmonitor to view status of remote nodes implemented.
+  - Runtime monitor to start and stop runtime in development environment implemented.
+ 4.4.2-1
+  - Subgraphs for ventilation and circuitdiagrams added.
+  - Baseobjects for threewayvalves, filters and dampers added.
+

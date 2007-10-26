@@ -1,0 +1,3 @@
+#!/bin/sh
+ource /etc/pwrp_profile
+$pwr_exe/rt_rtt
