@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_op_gtk.cpp,v 1.6 2007-10-24 13:03:55 claes Exp $
+ * Proview   $Id: xtt_op_gtk.cpp,v 1.7 2007-10-30 07:45:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -407,9 +407,10 @@ void  OpGtk::update_alarm_info()
       a_exist[i] = info.a_alarm_exist[i];
       a_active[i] = info.a_alarm_active[i];
       if ( info.a_alarm_exist[i]) {
+	
 	snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 		 fsize, info.a_alarm_alias[i], info.a_alarm_text[i]);
-	gtk_label_set_markup( GTK_LABEL(aalarm_label[i]), CoWowGtk::translate_utf8(text));
+	gtk_label_set_markup( GTK_LABEL(aalarm_label[i]), CoWowGtk::convert_utf8(text));
 	// gtk_widget_modify_bg( aalarm_box[i], GTK_STATE_NORMAL, &red_color);
 	if ( i < a_height) {
 	  g_object_set( aalarm_box[i], "visible", TRUE, NULL);
@@ -437,7 +438,7 @@ void  OpGtk::update_alarm_info()
       balarm_prio = mh_eEventPrio_B;
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 	       fsize, info.b_alarm_alias[0], info.b_alarm_text[0]);
-      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::translate_utf8(text));
+      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &yellow_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
@@ -458,7 +459,7 @@ void  OpGtk::update_alarm_info()
       balarm_prio = mh_eEventPrio_C;
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 	       fsize, info.c_alarm_alias[0], info.c_alarm_text[0]);
-      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::translate_utf8(text));
+      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &blue_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
@@ -480,7 +481,7 @@ void  OpGtk::update_alarm_info()
       balarm_prio = mh_eEventPrio_D;
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 	       fsize, info.d_alarm_alias[0], info.d_alarm_text[0]);
-      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::translate_utf8(text));
+      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &violet_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
@@ -501,7 +502,7 @@ void  OpGtk::update_alarm_info()
       balarm_type = evlist_eEventType_Info;
       snprintf( text, sizeof(text), "<span size=\"%d\">%s  %s</span>", 
 	       fsize, info.i_alarm_alias[0], info.i_alarm_text[0]);
-      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::translate_utf8(text));
+      gtk_label_set_markup( GTK_LABEL(balarm_label), CoWowGtk::convert_utf8(text));
       gtk_widget_modify_bg( balarm_ebox, GTK_STATE_NORMAL, &green_color);
       g_object_set( balarm_box, "visible", TRUE, NULL);
 
