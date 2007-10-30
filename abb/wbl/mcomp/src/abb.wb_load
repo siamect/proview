@@ -1,6 +1,6 @@
 Volume ABB $ClassVolume 0.0.250.2 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X3682"
+    Attr NextOix = "_X3726"
     Attr NextCix = "_X36"
     Attr NextTix[0] = "_X3"
   EndBody
@@ -940,10 +940,21 @@ Volume ABB $ClassVolume 0.0.250.2
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPoson $Menu 525 12-OCT-2005 12:58:20.00
+      Object ConfiguratorPosos $Menu 525 29-OCT-2007 16:44:51.40
         Object Pointed $Menu 526 12-OCT-2005 12:58:20.00
           Object IoConnect $MenuButton 527 12-OCT-2005 12:58:20.00
             Body SysBody 01-JAN-1970 01:00:00.00
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 3683 29-OCT-2007 16:44:30.37
+        Object Pointed $Menu 3684 29-OCT-2007 16:43:40.10
+          Object IoConnect $MenuButton 3685 29-OCT-2007 16:43:40.10
+            Body SysBody 29-OCT-2007 16:43:40.10
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -11935,10 +11946,21 @@ ABB ACS800 Typ 1"
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPoson $Menu 2449 13-MAR-2006 09:34:22.38
+      Object ConfiguratorPosos $Menu 2449 29-OCT-2007 16:45:30.63
         Object Pointed $Menu 2450 13-MAR-2006 09:34:22.38
           Object IoConnect $MenuButton 2451 13-MAR-2006 09:34:22.38
             Body SysBody 13-MAR-2006 09:34:22.38
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 3690 29-OCT-2007 16:45:37.10
+        Object Pointed $Menu 3692 29-OCT-2007 16:45:23.98
+          Object IoConnect $MenuButton 3693 29-OCT-2007 16:45:23.98
+            Body SysBody 29-OCT-2007 16:45:23.98
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -24271,6 +24293,255 @@ ABB ACC800"
             EndObject
             Object FuFc $MenuButton 2038 01-DEC-2005 18:36:50.95
               Body SysBody 06-DEC-2005 10:06:20.43
+                Attr ButtonName = "FuFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1"
+                Attr MethodArguments[1] = "23"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 3694 29-OCT-2007 16:45:56.11
+        Object Pointed $Menu 3695 29-OCT-2007 16:45:51.62
+          Object ConfigureComponent $MenuCascade 3696 29-OCT-2007 16:45:51.62
+            Body SysBody 29-OCT-2007 16:45:51.62
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object CbCoFcSs $MenuButton 3697 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "0"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFcSl $MenuButton 3698 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "1"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbCoFc $MenuButton 3699 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1"
+                Attr MethodArguments[1] = "2"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSs $MenuButton 3700 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3"
+                Attr MethodArguments[1] = "3"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFcSl $MenuButton 3701 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3"
+                Attr MethodArguments[1] = "4"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbFc $MenuButton 3702 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1"
+                Attr MethodArguments[1] = "5"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSs $MenuButton 3703 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                Attr MethodArguments[1] = "6"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFcSl $MenuButton 3704 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                Attr MethodArguments[1] = "7"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoFc $MenuButton 3705 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "CoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1"
+                Attr MethodArguments[1] = "8"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSs $MenuButton 3706 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3"
+                Attr MethodArguments[1] = "9"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FcSl $MenuButton 3707 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3"
+                Attr MethodArguments[1] = "10"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object Fc $MenuButton 3708 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "Fc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1"
+                Attr MethodArguments[1] = "11"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSs $MenuButton 3709 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "12"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFcSl $MenuButton 3710 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "13"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbCoFc $MenuButton 3711 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "4, SafetySwitch 1"
+                Attr MethodArguments[1] = "14"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSs $MenuButton 3712 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3"
+                Attr MethodArguments[1] = "15"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFcSl $MenuButton 3713 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3"
+                Attr MethodArguments[1] = "16"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCbFc $MenuButton 3714 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCbFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "6, Contactor 3, SafetySwitch 1"
+                Attr MethodArguments[1] = "17"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSs $MenuButton 3715 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCoFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                Attr MethodArguments[1] = "18"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFcSl $MenuButton 3716 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCoFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                Attr MethodArguments[1] = "19"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuCoFc $MenuButton 3717 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuCoFc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "5, CircuitBreaker 1, SafetySwitch 1"
+                Attr MethodArguments[1] = "20"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSs $MenuButton 3718 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuFcSs"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3"
+                Attr MethodArguments[1] = "21"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFcSl $MenuButton 3719 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
+                Attr ButtonName = "FuFcSl"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3"
+                Attr MethodArguments[1] = "22"
+                Attr MethodArguments[2] = "Motor"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object FuFc $MenuButton 3720 29-OCT-2007 16:45:51.62
+              Body SysBody 29-OCT-2007 16:45:51.62
                 Attr ButtonName = "FuFc"
                 Attr MethodName = "$Object-ConfigureComponent"
                 Attr MethodArguments[0] = "7, CircuitBreaker 1, Contactor 3, SafetySwitch 1"
@@ -47134,7 +47405,7 @@ if (I1 >= 0 && I1 <= 9) {
           EndBody
         EndObject
       EndObject
-      Object ConfiguratorPoson $Menu 2434 10-MAR-2006 10:02:42.96
+      Object ConfiguratorPosos $Menu 2434 29-OCT-2007 16:46:32.90
         Object Pointed $Menu 2435 10-MAR-2006 10:02:42.96
           Object ConfigureComponent $MenuCascade 2437 10-MAR-2006 10:02:42.96
             Body SysBody 10-MAR-2006 10:02:42.96
@@ -47160,6 +47431,42 @@ if (I1 >= 0 && I1 <= 9) {
             EndObject
             Object ThreeSensors $MenuButton 2440 10-MAR-2006 10:02:42.96
               Body SysBody 10-MAR-2006 10:03:41.69
+                Attr ButtonName = "ThreeSensors"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "0"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 3721 29-OCT-2007 16:46:26.87
+        Object Pointed $Menu 3722 29-OCT-2007 16:46:16.07
+          Object ConfigureComponent $MenuCascade 3723 29-OCT-2007 16:46:16.07
+            Body SysBody 29-OCT-2007 16:46:16.07
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object OneSensor $MenuButton 3724 29-OCT-2007 16:46:16.07
+              Body SysBody 29-OCT-2007 16:46:16.07
+                Attr ButtonName = "OneSensor"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "15"
+                Attr MethodArguments[1] = "0"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object TwoSensors $MenuButton 3725 29-OCT-2007 16:46:16.07
+              Body SysBody 29-OCT-2007 16:46:16.07
+                Attr ButtonName = "TwoSensors"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "12"
+                Attr MethodArguments[1] = "0"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object ThreeSensors $MenuButton 3726 29-OCT-2007 16:46:16.07
+              Body SysBody 29-OCT-2007 16:46:16.07
                 Attr ButtonName = "ThreeSensors"
                 Attr MethodName = "$Object-ConfigureComponent"
                 Attr MethodArguments[0] = "0"

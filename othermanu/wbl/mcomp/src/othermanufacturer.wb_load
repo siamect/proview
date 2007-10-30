@@ -1,6 +1,6 @@
 Volume OtherManufacturer $ClassVolume 0.0.250.1 
   Body SysBody 01-JAN-1970 01:00:00.00
-    Attr NextOix = "_X2134"
+    Attr NextOix = "_X2150"
     Attr NextCix = "_X39"
     Attr NextTix[0] = "_X2"
   EndBody
@@ -872,10 +872,21 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
           EndBody
         EndObject
       EndObject
-      Object ConfiguratorPoson $Menu 1326 05-OCT-2007 11:05:31.85
+      Object ConfiguratorPosos $Menu 1326 29-OCT-2007 16:50:27.49
         Object Pointed $Menu 1327 05-OCT-2007 11:05:31.85
           Object IoConnect $MenuButton 1328 05-OCT-2007 11:05:31.85
             Body SysBody 05-OCT-2007 11:05:31.85
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 2135 29-OCT-2007 16:50:20.25
+        Object Pointed $Menu 2136 29-OCT-2007 16:50:05.17
+          Object IoConnect $MenuButton 2137 29-OCT-2007 16:50:05.17
+            Body SysBody 29-OCT-2007 16:50:05.17
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -15028,6 +15039,55 @@ else
           EndObject
         EndObject
       EndObject
+      Object ConfiguratorPosnn $Menu 2138 29-OCT-2007 16:50:42.57
+        Object Pointed $Menu 2139 29-OCT-2007 16:50:36.78
+          Object ConfigureComponent $MenuCascade 2140 29-OCT-2007 16:50:36.78
+            Body SysBody 29-OCT-2007 16:50:36.78
+              Attr ButtonName = "ConfigureComponent"
+            EndBody
+            Object CbCoTc $MenuButton 2141 29-OCT-2007 16:50:36.78
+              Body SysBody 29-OCT-2007 16:50:36.78
+                Attr ButtonName = "CbCoTc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "0"
+                Attr MethodArguments[1] = "0"
+                Attr MethodArguments[2] = "Heater"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CbTc $MenuButton 2142 29-OCT-2007 16:50:36.78
+              Body SysBody 29-OCT-2007 16:50:36.78
+                Attr ButtonName = "CbTc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "2, Contactor 3"
+                Attr MethodArguments[1] = "1"
+                Attr MethodArguments[2] = "Heater"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object CoTc $MenuButton 2143 29-OCT-2007 16:50:36.78
+              Body SysBody 29-OCT-2007 16:50:36.78
+                Attr ButtonName = "CoTc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "1, CircuitBreaker 1"
+                Attr MethodArguments[1] = "2"
+                Attr MethodArguments[2] = "Heater"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+            Object Tc $MenuButton 2144 29-OCT-2007 16:50:36.78
+              Body SysBody 29-OCT-2007 16:50:36.78
+                Attr ButtonName = "Tc"
+                Attr MethodName = "$Object-ConfigureComponent"
+                Attr MethodArguments[0] = "3, CircuitBreaker 1, Contactor 3"
+                Attr MethodArguments[1] = "3"
+                Attr MethodArguments[2] = "Heater"
+                Attr FilterName = "$Object-ConfigureComponentFilter"
+              EndBody
+            EndObject
+          EndObject
+        EndObject
+      EndObject
       Object Template Eurotherm_TC3001Aggr 2157150208 01-JAN-1970 01:00:00.00
         Body RtBody 16-OCT-2007 11:31:05.55
           Attr CircuitBreaker.AlarmText = "Circuit breaker tripped, "
@@ -23296,10 +23356,21 @@ Eurotherm TC3001 Aggregate
           Attr PlotGroup.NumPoints = 478
         EndBody
       EndObject
-      Object ConfiguratorPoson $Menu 5 30-MAR-2007 11:37:33.31
+      Object ConfiguratorPosos $Menu 5 29-OCT-2007 16:51:14.13
         Object Pointed $Menu 6 26-MAR-2007 09:09:47.97
           Object IoConnect $MenuButton 7 26-MAR-2007 09:10:14.82
             Body SysBody 26-MAR-2007 09:11:19.15
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 2145 29-OCT-2007 16:51:08.64
+        Object Pointed $Menu 2146 29-OCT-2007 16:51:00.63
+          Object IoConnect $MenuButton 2147 29-OCT-2007 16:51:00.63
+            Body SysBody 29-OCT-2007 16:51:00.63
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
@@ -23677,10 +23748,21 @@ Eurotherm TC3001 Aggregate
           Attr PlotGroup.YObjectName[2] = "OtherManufacturer:Class-SEW_Movidrive_EPB-Template.TrendRefSpeed"
         EndBody
       EndObject
-      Object ConfiguratorPoson $Menu 375 30-MAR-2007 14:40:32.43
+      Object ConfiguratorPosos $Menu 375 29-OCT-2007 16:51:31.21
         Object Pointed $Menu 376 30-MAR-2007 14:40:32.43
           Object IoConnect $MenuButton 377 30-MAR-2007 14:40:32.43
             Body SysBody 30-MAR-2007 14:40:32.43
+              Attr ButtonName = "Connect IO"
+              Attr MethodName = "$AttrRef-IoConnect"
+              Attr FilterName = "$AttrRef-IoConnectFilter"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object ConfiguratorPosnn $Menu 2148 29-OCT-2007 16:51:27.45
+        Object Pointed $Menu 2149 29-OCT-2007 16:51:23.53
+          Object IoConnect $MenuButton 2150 29-OCT-2007 16:51:23.53
+            Body SysBody 29-OCT-2007 16:51:23.53
               Attr ButtonName = "Connect IO"
               Attr MethodName = "$AttrRef-IoConnect"
               Attr FilterName = "$AttrRef-IoConnectFilter"
