@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_arithm.c,v 1.8 2007-10-16 06:39:09 claes Exp $
+ * Proview   $Id: rt_plc_arithm.c,v 1.9 2007-10-30 07:29:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1186,6 +1186,52 @@ void Min_exec(
     inp = (pwr_tFloat32 **)((char *)inp + offset);
   }
   o->ActVal = result;
+}
+
+/*_*
+  BwShiftLeft Bitwise shift left.
+  @aref bwshiftleft BwShiftLeft
+*/
+void BwShiftLeft_exec(
+  plc_sThread			*tp,
+  pwr_sClass_BwShiftLeft	*o)
+{
+  o->Out = (*o->InP) << (*o->NumP);
+}
+
+/*_*
+  BwShiftRight Bitwise shift right.
+  @aref bwshiftright BwShiftRight
+*/
+void BwShiftRight_exec(
+  plc_sThread			*tp,
+  pwr_sClass_BwShiftRight	*o)
+{
+  o->Out = (*o->InP) >> (*o->NumP);
+}
+
+/*_*
+  BwRotateRight Bitwise rotate right.
+  @aref bwrotateright BwRotateRight
+*/
+void BwRotateRight_exec(
+  plc_sThread			*tp,
+  pwr_sClass_BwRotateRight	*o)
+{
+  o->Out = ((unsigned int)(*o->InP) << (32 - *o->NumP)) | 
+	((unsigned int)(*o->InP) >> (*o->NumP));
+}
+
+/*_*
+  BwRotateLeft Bitwise rotate left.
+  @aref bwrotateleft BwRotateLeft
+*/
+void BwRotateLeft_exec(
+  plc_sThread			*tp,
+  pwr_sClass_BwRotateLeft	*o)
+{
+  o->Out = ((unsigned int)(*o->InP) >> (32 - *o->NumP)) | 
+	((unsigned int)(*o->InP) << (*o->NumP));
 }
 
 
