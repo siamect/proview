@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trend.c,v 1.9 2005-12-20 11:54:31 claes Exp $
+ * Proview   $Id: rt_trend.c,v 1.10 2007-10-30 07:29:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -237,9 +237,11 @@ InitTrendList (
   pwr_tUInt32	    Dummy;
   pwr_tTypeId	    Type;
   int		    Tix;
-  pwr_sAttrRef	    Aref;
+  pwr_tAttrRef	    Aref;
+  pwr_tAttrRef	    OAref;
   pwr_tAName   	    Name;
   pwr_sClass_DsTrend  *Trend;
+  pwr_tDisableAttr  disabled;
 
   sts = gdh_GetClassListAttrRef(pwr_cClass_DsTrend, &Aref);
   if (EVEN(sts)) return DS__NOOBJECT;
@@ -251,6 +253,14 @@ InitTrendList (
     sts = gdh_AttrrefToName( &Aref, Name, sizeof(Name), cdh_mNName);  
     if (EVEN(sts))
       continue;
+
+    /* Check if parent object is disabled */
+    sts = gdh_AttrArefToObjectAref( &Aref, &OAref);
+    if ( ODD(sts)) {
+      sts = gdh_ArefDisabled( &OAref, &disabled);
+      if ( disabled)
+	continue;
+    }
 
     LstNode = calloc(1, sizeof(*LstNode));
     if (LstNode == NULL) {
