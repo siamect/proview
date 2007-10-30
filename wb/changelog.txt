@@ -82,3 +82,5 @@
 071015 cs  wb        Bugfix in UpdateClasses, references to attributes in attribute objects wasn't updated.
 071019 cs  wb        Bugfix in UpdateClasses, modified object attributes classes wasn't detected if modification date of the main class was later.
 071019 cs  wb        Command 'wb load/noindex' wasn't implemented in V4.
+071025 cs  wb        Command paste/toplevel, to paste a buffer when wb is empty, added.
+071025 cs  wb        Bugfix in paste/keepoid. Nextoix in volumeobject wasn't updated.
