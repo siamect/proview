@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_lng.cpp,v 1.13 2007-07-20 11:36:21 claes Exp $
+ * Proview   $Id: co_lng.cpp,v 1.14 2007-10-30 07:46:45 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -130,7 +130,7 @@ char *Lng::translate( char *text)
   for ( in_p = text; *in_p == ' ' && *in_p; in_p++)
     ;
 
-  strcpy( key.text, text);
+  strncpy( key.text, text, sizeof(key.text));
   key.type = 0;
   record = (lang_sRecord *) tree_Find( &sts, tree, &key);
   if ( ODD(sts)) {
@@ -180,7 +180,7 @@ int Lng::translate( char *text, char *out)
   for ( in_p = text; *in_p == ' ' && *in_p; in_p++)
     ;
 
-  strcpy( key.text, text);
+  strncpy( key.text, text, sizeof(key.text));
   key.type = 0;
   record = (lang_sRecord *) tree_Find( &sts, tree, &key);
   if ( ODD(sts)) {
