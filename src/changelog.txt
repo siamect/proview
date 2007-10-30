@@ -52,3 +52,6 @@
 071009 cs  wbl       Plc classes to get and store indirect data added.
 071009 cs  wbl       Plc classes IpDistribute and IpCollect added.
 071015 cs  wbl       Plc classes Demux and IDemux added (demultiplexers).
+071030 cs  wbl       Plc classes for bitwise shift, rotate and invert added.
+071029 cs  gdh       gdh_ArefDisabled checks if there is a disable attribute.
+071029 cs  trend     DsTrend object attributes with disabled parent wasn't ignored.

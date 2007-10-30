@@ -80,3 +80,5 @@
 071007 cs  wb        Build button in class editor toolbar builds volume instead of node.
 071012 cs  plc       Bugfix, CArea function object inside CArea could segfault.
 071015 cs  wb        Bugfix in UpdateClasses, references to attributes in attribute objects wasn't updated.
+071019 cs  wb        Bugfix in UpdateClasses, modified object attributes classes wasn't detected if modification date of the main class was later.
+071019 cs  wb        Command 'wb load/noindex' wasn't implemented in V4.

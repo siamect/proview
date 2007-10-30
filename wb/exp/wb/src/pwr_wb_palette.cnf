@@ -482,7 +482,12 @@ palette PlcEditorPalette
   menu Integer
   {
     class BwAnd
+    class BwInv
     class BwOr
+    class BwRotateLeft
+    class BwRotateRight
+    class BwShiftLeft
+    class BwShiftRight
     class Even
     class IAbs
     class IAdd
