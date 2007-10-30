@@ -1,7 +1,7 @@
 Volume Siemens $ClassVolume 0.0.250.3 
   Body SysBody 01-JAN-1970 01:00:00.00
     Attr NextOix = "_X36"
-    Attr NextCix = "_X24"
+    Attr NextCix = "_X25"
     Attr NextTix[0] = "_X3"
   EndBody
   Object Type $TypeHier 5 25-APR-2007 13:44:05.44
@@ -1046,6 +1046,325 @@ Volume Siemens $ClassVolume 0.0.250.3
     !/**
     !  @Version 1.0
     !  @Group Profibus
+    !  @Summary Profibus module ET200M with 16 Di + 16 Do.
+    !  Profibus module ET200M with 16 digital inputs and 16 digital outputs.
+    ! 
+    !  See also
+    !  @classlink Pb_Module profibus_pb_module.html
+    !*/
+    Object Siemens_ET200M_Dx16 $ClassDef 24 19-OCT-2007 09:00:24.39
+      Body SysBody 19-OCT-2007 08:59:54.72
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 19-OCT-2007 08:59:54.72
+        Body SysBody 19-OCT-2007 08:59:54.72
+          Attr StructName = "Siemens_ET200M_Di16"
+          Attr NextAix = "_X58"
+        EndBody
+        Object Super $Attribute 25 19-OCT-2007 08:59:54.72
+          Body SysBody 19-OCT-2007 08:59:54.72
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "Profibus:Class-Pb_Module"
+          EndBody
+        EndObject
+        Object ChDi00 $Attribute 26 19-OCT-2007 09:03:51.06
+          Body SysBody 19-OCT-2007 09:03:52.82
+            Attr PgmName = "ChDi00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi01 $Attribute 27 19-OCT-2007 09:04:01.13
+          Body SysBody 19-OCT-2007 09:04:02.37
+            Attr PgmName = "ChDi01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi02 $Attribute 28 19-OCT-2007 09:04:07.57
+          Body SysBody 19-OCT-2007 09:04:09.56
+            Attr PgmName = "ChDi02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi03 $Attribute 29 19-OCT-2007 09:04:14.37
+          Body SysBody 19-OCT-2007 09:04:15.62
+            Attr PgmName = "ChDi03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi04 $Attribute 30 19-OCT-2007 09:04:19.19
+          Body SysBody 19-OCT-2007 09:04:20.52
+            Attr PgmName = "ChDi04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi05 $Attribute 31 19-OCT-2007 09:04:24.80
+          Body SysBody 19-OCT-2007 09:04:26.08
+            Attr PgmName = "ChDi05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi06 $Attribute 32 19-OCT-2007 09:04:29.99
+          Body SysBody 19-OCT-2007 09:04:32.12
+            Attr PgmName = "ChDi06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi07 $Attribute 33 19-OCT-2007 09:04:35.26
+          Body SysBody 19-OCT-2007 09:04:37.05
+            Attr PgmName = "ChDi07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi10 $Attribute 34 19-OCT-2007 09:04:41.64
+          Body SysBody 19-OCT-2007 09:04:43.75
+            Attr PgmName = "ChDi10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi11 $Attribute 35 19-OCT-2007 09:06:49.65
+          Body SysBody 19-OCT-2007 09:06:50.87
+            Attr PgmName = "ChDi11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi12 $Attribute 36 19-OCT-2007 09:06:55.07
+          Body SysBody 19-OCT-2007 09:06:56.23
+            Attr PgmName = "ChDi12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi13 $Attribute 37 19-OCT-2007 09:06:59.69
+          Body SysBody 19-OCT-2007 09:07:00.75
+            Attr PgmName = "ChDi13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi14 $Attribute 38 19-OCT-2007 09:07:04.02
+          Body SysBody 19-OCT-2007 09:07:05.06
+            Attr PgmName = "ChDi14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi15 $Attribute 39 19-OCT-2007 09:07:08.28
+          Body SysBody 19-OCT-2007 09:07:10.15
+            Attr PgmName = "ChDi15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi16 $Attribute 40 19-OCT-2007 09:07:25.67
+          Body SysBody 19-OCT-2007 09:07:26.77
+            Attr PgmName = "ChDi16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDi17 $Attribute 41 19-OCT-2007 09:07:33.21
+          Body SysBody 19-OCT-2007 09:07:34.73
+            Attr PgmName = "ChDi17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDi"
+          EndBody
+        EndObject
+        Object ChDo00 $Attribute 42 19-OCT-2007 09:08:13.28
+          Body SysBody 19-OCT-2007 09:08:19.08
+            Attr PgmName = "ChDo00"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo01 $Attribute 43 19-OCT-2007 09:08:47.38
+          Body SysBody 19-OCT-2007 09:08:48.44
+            Attr PgmName = "ChDo01"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo02 $Attribute 44 19-OCT-2007 09:08:52.74
+          Body SysBody 19-OCT-2007 09:08:53.94
+            Attr PgmName = "ChDo02"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo03 $Attribute 45 19-OCT-2007 09:08:56.69
+          Body SysBody 19-OCT-2007 09:08:58.14
+            Attr PgmName = "ChDo03"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo04 $Attribute 46 19-OCT-2007 09:09:01.00
+          Body SysBody 19-OCT-2007 09:09:04.25
+            Attr PgmName = "ChDo04"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo05 $Attribute 47 19-OCT-2007 09:09:08.43
+          Body SysBody 19-OCT-2007 09:09:09.67
+            Attr PgmName = "ChDo05"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo06 $Attribute 48 19-OCT-2007 09:09:12.54
+          Body SysBody 19-OCT-2007 09:09:13.81
+            Attr PgmName = "ChDo06"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo07 $Attribute 49 19-OCT-2007 09:09:16.79
+          Body SysBody 19-OCT-2007 09:09:18.29
+            Attr PgmName = "ChDo07"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo10 $Attribute 50 19-OCT-2007 09:09:29.72
+          Body SysBody 19-OCT-2007 09:09:46.52
+            Attr PgmName = "ChDo10"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo11 $Attribute 51 19-OCT-2007 09:09:35.38
+          Body SysBody 19-OCT-2007 09:09:39.18
+            Attr PgmName = "ChDo11"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo12 $Attribute 52 19-OCT-2007 09:09:58.21
+          Body SysBody 19-OCT-2007 09:09:59.22
+            Attr PgmName = "ChDo12"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo13 $Attribute 53 19-OCT-2007 09:10:02.17
+          Body SysBody 19-OCT-2007 09:10:03.22
+            Attr PgmName = "ChDo13"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo14 $Attribute 54 19-OCT-2007 09:10:06.17
+          Body SysBody 19-OCT-2007 09:10:07.41
+            Attr PgmName = "ChDo14"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo15 $Attribute 55 19-OCT-2007 09:10:10.33
+          Body SysBody 19-OCT-2007 09:10:11.37
+            Attr PgmName = "ChDo15"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo16 $Attribute 56 19-OCT-2007 09:10:14.25
+          Body SysBody 19-OCT-2007 09:10:15.44
+            Attr PgmName = "ChDo16"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+        Object ChDo17 $Attribute 57 19-OCT-2007 09:10:18.17
+          Body SysBody 19-OCT-2007 09:10:19.28
+            Attr PgmName = "ChDo17"
+            Attr Flags = 131072
+            Attr TypeRef = "pwrb:Class-ChanDo"
+          EndBody
+        EndObject
+      EndObject
+      Object Template Siemens_ET200M_Dx16 2154004480 01-JAN-1970 01:00:00.00
+        Body RtBody 19-OCT-2007 09:15:37.34
+          Attr Super.Specification = "Siemens ET200M 16 Di + 16 Do"
+          Attr Super.Process = 1
+          Attr ChDi00.Representation = 8
+          Attr ChDi01.Number = 1
+          Attr ChDi01.Representation = 8
+          Attr ChDi02.Number = 2
+          Attr ChDi02.Representation = 8
+          Attr ChDi03.Number = 3
+          Attr ChDi03.Representation = 8
+          Attr ChDi04.Number = 4
+          Attr ChDi04.Representation = 8
+          Attr ChDi05.Number = 5
+          Attr ChDi05.Representation = 8
+          Attr ChDi06.Number = 6
+          Attr ChDi06.Representation = 8
+          Attr ChDi07.Number = 7
+          Attr ChDi07.Representation = 8
+          Attr ChDi10.Representation = 8
+          Attr ChDi11.Number = 1
+          Attr ChDi11.Representation = 8
+          Attr ChDi12.Number = 2
+          Attr ChDi12.Representation = 8
+          Attr ChDi13.Number = 3
+          Attr ChDi13.Representation = 8
+          Attr ChDi14.Number = 4
+          Attr ChDi14.Representation = 8
+          Attr ChDi15.Number = 5
+          Attr ChDi15.Representation = 8
+          Attr ChDi16.Number = 6
+          Attr ChDi16.Representation = 8
+          Attr ChDi17.Number = 7
+          Attr ChDi17.Representation = 8
+          Attr ChDo00.Representation = 8
+          Attr ChDo01.Number = 1
+          Attr ChDo01.Representation = 8
+          Attr ChDo02.Number = 2
+          Attr ChDo02.Representation = 8
+          Attr ChDo03.Number = 3
+          Attr ChDo03.Representation = 8
+          Attr ChDo04.Number = 4
+          Attr ChDo04.Representation = 8
+          Attr ChDo05.Number = 5
+          Attr ChDo05.Representation = 8
+          Attr ChDo06.Number = 6
+          Attr ChDo06.Representation = 8
+          Attr ChDo07.Number = 7
+          Attr ChDo07.Representation = 8
+          Attr ChDo10.Representation = 8
+          Attr ChDo11.Number = 1
+          Attr ChDo11.Representation = 8
+          Attr ChDo12.Number = 2
+          Attr ChDo12.Representation = 8
+          Attr ChDo13.Number = 3
+          Attr ChDo13.Representation = 8
+          Attr ChDo14.Number = 4
+          Attr ChDo14.Representation = 8
+          Attr ChDo15.Number = 5
+          Attr ChDo15.Representation = 8
+          Attr ChDo16.Number = 6
+          Attr ChDo16.Representation = 8
+          Attr ChDo17.Number = 7
+          Attr ChDo17.Representation = 8
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group Profibus
     !  @Summary Profibus module ET200M with 8 Di.
     !  Profibus module ET200M with 8 digital inputs.
     ! 
@@ -1080,7 +1399,7 @@ Volume Siemens $ClassVolume 0.0.250.3
         EndObject
       EndObject
       Object Template Siemens_ET200M_Di8 2150072320 01-JAN-1970 01:00:00.00
-        Body RtBody 02-MAY-2006 13:51:46.05
+        Body RtBody 19-OCT-2007 09:10:54.46
           Attr Super.Specification = "Siemens ET200M 8 Di"
           Attr Super.Process = 1
           Attr Ch[0].Representation = 8
