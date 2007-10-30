@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.cpp,v 1.10 2007-07-20 11:35:58 claes Exp $
+ * Proview   $Id: co_wow_gtk.cpp,v 1.11 2007-10-30 07:47:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -863,6 +863,21 @@ char *CoWowGtk::translate_utf8( char *str)
   gchar *s;
 
   s = g_convert( Lng::translate( str), -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
+  if ( s) {
+    strncpy( result, s, sizeof(result));
+    g_free( s);
+  }
+  else 
+    strcpy( result, "");
+  return result;
+}
+
+char *CoWowGtk::convert_utf8( char *str)
+{
+  static char result[400];
+  gchar *s;
+
+  s = g_convert( str, -1, "UTF-8", "ISO8859-1", NULL, NULL, NULL);
   if ( s) {
     strncpy( result, s, sizeof(result));
     g_free( s);

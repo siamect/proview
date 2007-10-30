@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_wow_gtk.h,v 1.3 2007-07-20 11:35:58 claes Exp $
+ * Proview   $Id: co_wow_gtk.h,v 1.4 2007-10-30 07:47:33 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,6 +116,7 @@ class CoWowGtk : public CoWow {
   static void warranty_cb( GtkWidget *w, gint response, gpointer data);
   static void license_cb( GtkWidget *w, gint response, gpointer data);
   static char *translate_utf8( char *str);
+  static char *convert_utf8( char *str);
 
 #if 0
   static void error_ok_cb(Widget w);
