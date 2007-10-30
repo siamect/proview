@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_gdh.c,v 1.30 2007-04-25 07:20:30 claes Exp $
+ * Proview   $Id: rt_gdh.c,v 1.31 2007-10-30 07:28:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3705,10 +3705,25 @@ pwr_tStatus gdh_ArefDisabled( pwr_sAttrRef *arp,
 {
   pwr_tStatus sts;
   pwr_sAttrRef		daref;
+  mvol_sAttribute	*ap;
+  mvol_sAttribute	attribute;
 
-  daref = cdh_ArefToDisableAref( arp);
-  sts = gdh_GetObjectInfoAttrref( &daref, disabled, sizeof(*disabled));
-  return sts;
+  gdh_ScopeLock {
+
+    memset(&attribute, 0, sizeof(attribute));
+
+    ap = vol_ArefToAttribute(&sts, &attribute, arp, gdb_mLo_global, vol_mTrans_all);
+    if (ap != NULL) touchObject(ap->op);
+    
+  } gdh_ScopeUnlock;
+
+  if (ap != 0 && ap->adef != 0 && ap->adef->Info.Flags & PWR_MASK_DISABLEATTR) {
+    daref = cdh_ArefToDisableAref( arp);
+    sts = gdh_GetObjectInfoAttrref( &daref, disabled, sizeof(*disabled));
+    return sts;
+  }
+  else 
+    return GDH__NOATTR;
 }
 
 
