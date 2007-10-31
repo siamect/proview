@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_item.h,v 1.13 2007-01-04 08:22:47 claes Exp $
+ * Proview   $Id: xtt_item.h,v 1.14 2007-10-31 11:52:15 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -141,7 +141,7 @@ class ItemBaseAttr : public Item {
     pwr_tSubid subid;
     char old_value[80];
     int first_scan;
-    char attr[40];
+    pwr_tOName attr;
     item_eDisplayType display_type;
 };
 
