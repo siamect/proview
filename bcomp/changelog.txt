@@ -10,3 +10,4 @@
 070615 cs  bcomp      New components for filter, damper and three way valve.
 071001 cs  bcomp      Attribute DisableSup added to most Fo object to suppress alarm messages.
 071030 cs  bcomp      ConfigureComponent method also viewed for pointed but not selected object.
+071031 cs  bcomp      Bugfix in object graphs for CompPID and CompModePID. Linkage to user and local removed.
