@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_menu.cpp,v 1.13 2007-01-17 06:19:57 claes Exp $
+ * Proview   $Id: xtt_menu.cpp,v 1.14 2007-10-31 11:54:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -284,6 +284,10 @@ int XNav::GetObjectMenu( xmenu_sMenuCall	*ip,
   pwr_tOName  		classname;
   pwr_sAttrRef		currentar = pwr_cNAttrRef;
   pwr_tCid		supercid;
+
+
+  if ( !cdh_tidIsCid( classid))
+    return XNAV__SUCCESS;
 
   if ( cdh_ObjidIsNotNull( CurrentObject->Objid))
     currentar = *CurrentObject;
