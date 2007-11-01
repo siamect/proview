@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.h,v 1.30 2007-09-19 15:07:22 claes Exp $
+ * Proview   $Id: ge_graph.h,v 1.31 2007-11-01 08:46:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1135,6 +1135,13 @@ class Graph {
   //! Check if graph is configured to be exported as a java frame.
   /*! \return		1 if graph can be exported as a java frame, else 0. */
   int is_javaapplication();
+
+  //! Translate a reference name.
+  /*!
+    \param name		Attribute name.
+    \param tname	Converted name.
+  */
+  int get_reference_name( char *name, char *tname);
 
   //! Subscribe or link to an attribute in rtdb.
   /*!

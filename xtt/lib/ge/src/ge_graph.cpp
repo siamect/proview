@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.44 2007-09-19 15:07:22 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.45 2007-11-01 08:46:27 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -4093,16 +4093,14 @@ int Graph::ccm_get_variable( char *name, int type, void *data)
 
 }
 
-int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
-			    pwr_tSubid *subid, unsigned int size)
+int Graph::get_reference_name( char *name, char *tname)
 {
-  int dt;
-  pwr_tAName aname;
   pwr_tStatus sts;
 
   if ( name[0] == '&') {
     // Name contains a reference, get the reference
     pwr_tAName refname;
+    pwr_tAName aname;
     pwr_tAName refattrname = "";
     char *s;
     pwr_sAttrRef aref;
@@ -4124,6 +4122,25 @@ int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
     if ( EVEN(sts)) return sts;
 
     strcat( aname, refattrname);
+    strcpy( tname, aname);
+  }
+  else
+    strcpy( tname, name);
+
+  return 1;
+}
+
+int Graph::ref_object_info( glow_eCycle cycle, char *name, void **data,
+			    pwr_tSubid *subid, unsigned int size)
+{
+  int dt;
+  pwr_tAName aname;
+  pwr_tStatus sts;
+
+  
+  if ( name[0] == '&') {
+    sts = get_reference_name( name, aname);
+    if ( EVEN(sts)) return sts;
   }
   else
     strcpy( aname, name);
