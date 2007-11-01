@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trend.c,v 1.10 2007-10-30 07:29:21 claes Exp $
+ * Proview   $Id: rt_trend.c,v 1.11 2007-11-01 15:30:13 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -258,7 +258,7 @@ InitTrendList (
     sts = gdh_AttrArefToObjectAref( &Aref, &OAref);
     if ( ODD(sts)) {
       sts = gdh_ArefDisabled( &OAref, &disabled);
-      if ( disabled)
+      if ( ODD(sts) && disabled)
 	continue;
     }
 
