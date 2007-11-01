@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_trend_gtk.cpp,v 1.1 2007-01-04 08:29:32 claes Exp $
+ * Proview   $Id: xtt_trend_gtk.cpp,v 1.2 2007-11-01 15:36:05 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -52,6 +52,8 @@ XttTrendGtk::XttTrendGtk( void *parent_ctx,
 			  int *sts) :
   XttTrend( parent_ctx, name, trend_list, plotgroup, sts), parent_widget(parent_wid)
 {
+  if ( EVEN(*sts))
+    return;
   *sts = XNAV__SUCCESS;
 
   curve = new GeCurveGtk( this, parent_widget, name, NULL, gcd, 1);
