@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_arithm.c,v 1.9 2007-10-30 07:29:48 claes Exp $
+ * Proview   $Id: rt_plc_arithm.c,v 1.10 2007-11-01 15:34:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1196,7 +1196,7 @@ void BwShiftLeft_exec(
   plc_sThread			*tp,
   pwr_sClass_BwShiftLeft	*o)
 {
-  o->Out = (*o->InP) << (*o->NumP);
+  o->Out = ((unsigned int)*o->InP) << (*o->NumP);
 }
 
 /*_*
@@ -1207,7 +1207,7 @@ void BwShiftRight_exec(
   plc_sThread			*tp,
   pwr_sClass_BwShiftRight	*o)
 {
-  o->Out = (*o->InP) >> (*o->NumP);
+  o->Out = ((unsigned int)*o->InP) >> (*o->NumP);
 }
 
 /*_*
