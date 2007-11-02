@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: xtt_xnav_command.cpp,v 1.31 2007-05-16 12:37:39 claes Exp $
+ * Proview   $Id: xtt_xnav_command.cpp,v 1.32 2007-11-02 07:10:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2247,15 +2247,47 @@ static int	xnav_open_func(	void		*client_data,
       instance_p = instance_str;
 
       if ( instance_str[0] == '&') {
-	pwr_tOid oid;
 	pwr_tStatus sts;
-
-	// Objid attribute the contains the instance
-        sts = gdh_GetObjectInfo( &instance_str[1], &oid, sizeof(oid));
-	if ( ODD(sts))
-	  sts = gdh_ObjidToName( oid, instance_str, sizeof(instance_str),
-			       cdh_mName_volumeStrict);
+	pwr_tTid tid;
+	pwr_tUInt32 size, offs, elem;
+	
+	sts = gdh_GetAttributeCharacteristics( &instance_str[1], &tid, &size,
+					       &offs, &elem);
 	if ( EVEN(sts)) {
+	  xnav->message('E', "Instance object not found");
+	  return XNAV__HOLDCOMMAND;
+	}
+
+	switch ( tid) {
+	case pwr_eType_Objid: {
+	  pwr_tOid oid;
+
+	  // Objid attribute the contains the instance
+	  sts = gdh_GetObjectInfo( &instance_str[1], &oid, sizeof(oid));
+	  if ( ODD(sts))
+	    sts = gdh_ObjidToName( oid, instance_str, sizeof(instance_str),
+			       cdh_mName_volumeStrict);
+	  if ( EVEN(sts)) {
+	    xnav->message('E', "Instance object not found");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	  break;
+	}
+	case pwr_eType_AttrRef: {
+	  pwr_tAttrRef aref;
+
+	  // Objid attribute the contains the instance
+	  sts = gdh_GetObjectInfo( &instance_str[1], &aref, sizeof(aref));
+	  if ( ODD(sts))
+	    sts = gdh_AttrrefToName( &aref, instance_str, sizeof(instance_str),
+				     cdh_mName_volumeStrict);
+	  if ( EVEN(sts)) {
+	    xnav->message('E', "Instance object not found");
+	    return XNAV__HOLDCOMMAND;
+	  }
+	  break;
+	}
+	default:
 	  xnav->message('E', "Instance object not found");
 	  return XNAV__HOLDCOMMAND;
 	}
