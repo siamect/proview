@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.cpp,v 1.28 2007-08-29 11:43:22 claes Exp $
+ * Proview   $Id: glow_growctx.cpp,v 1.29 2007-11-02 08:35:48 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2027,25 +2027,27 @@ void GrowCtx::open_grow( ifstream& fp)
     if ( end_found)
       break;
   }
-  if ( double_buffered && mw.window && ! mw.double_buffer_on()) {
-    mw.set_double_buffer_on(1);
-    gdraw->create_buffer( &mw);
-  }
-  else if ( !double_buffered && mw.window && mw.double_buffer_on()) {
-    mw.set_double_buffer_on(0);
-    gdraw->delete_buffer( &mw);
-  }
-  if ( double_buffered && navw.window && ! navw.double_buffer_on()) {
-    navw.set_double_buffer_on(1);
-    if ( !gdraw->create_buffer( &navw))
+  if ( !is_component) {
+    if ( double_buffered && mw.window && ! mw.double_buffer_on()) {
+      mw.set_double_buffer_on(1);
+      gdraw->create_buffer( &mw);
+    }
+    else if ( !double_buffered && mw.window && mw.double_buffer_on()) {
+      mw.set_double_buffer_on(0);
+      gdraw->delete_buffer( &mw);
+    }
+    if ( double_buffered && navw.window && ! navw.double_buffer_on()) {
+      navw.set_double_buffer_on(1);
+      if ( !gdraw->create_buffer( &navw))
+	navw.set_double_buffer_on(0);
+    }
+    else if ( !double_buffered && navw.window && navw.double_buffer_on()) {
       navw.set_double_buffer_on(0);
+      gdraw->delete_buffer( &navw);
+    }
+    if ( mw.window)
+      mw.set_double_buffered( double_buffered);
   }
-  else if ( !double_buffered && navw.window && navw.double_buffer_on()) {
-    navw.set_double_buffer_on(0);
-    gdraw->delete_buffer( &navw);
-  }
-  if ( mw.window)
-    mw.set_double_buffered( double_buffered);
 
   if ( gdraw)
     set_background( background_color);
