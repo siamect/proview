@@ -393,7 +393,7 @@
 201 35
 99
 12
-1200 $hostobject.Mode.IntMode##String8
+1200 $hostobject.Mode.IndMode##String8
 1201 %s
 1202 1
 1203 1
