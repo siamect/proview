@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_cdrep.cpp,v 1.33 2006-05-31 08:12:31 claes Exp $
+ * Proview   $Id: wb_cdrep.cpp,v 1.34 2007-11-06 16:56:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -536,9 +536,20 @@ void wb_cdrep::convertSubClass( pwr_tCid cid, wb_merep *merep,
 	}
 
 	// Convert subclass
-	convertSubClass( adrep_target->subClass(), merep, 
-			(char *)body_source + adrep_source->offset(),
-			(char *)body_target + adrep_target->offset());
+	if ( adrep_source->isArray()) {
+	  for ( int j = 0; j < MIN(adrep_source->nElement(), adrep_target->nElement()); j++) {
+	    convertSubClass( adrep_target->subClass(), merep, 
+			     (char *)body_source + adrep_source->offset() + 
+			     j * adrep_source->size() / adrep_source->nElement(),
+			     (char *)body_target + adrep_target->offset() + 
+			     j * adrep_target->size() / adrep_target->nElement());
+	  }
+	}
+	else {
+	  convertSubClass( adrep_target->subClass(), merep,
+			   (char *)body_source + adrep_source->offset(),
+			   (char *)body_target + adrep_target->offset());
+	}
       }
       else {
 	// Convert attribute
@@ -702,9 +713,20 @@ void wb_cdrep::convertObject( wb_merep *merep, void *rbody, void *dbody,
 		continue;
 	      }
 	      // Convert subclass
-	      convertSubClass( adrep_target->subClass(), merep, 
-			(char *)body_source + adrep_source->offset(),
-			(char *)body_target + adrep_target->offset());
+	      if ( adrep_source->isArray()) {
+		for ( int j = 0; j < MIN(adrep_source->nElement(), adrep_target->nElement()); j++) {
+		  convertSubClass( adrep_target->subClass(), merep, 
+				 (char *)body_source + adrep_source->offset() + 
+				   j * adrep_source->size() / adrep_source->nElement(),
+				 (char *)body_target + adrep_target->offset() + 
+				   j * adrep_target->size() / adrep_target->nElement());
+		}
+	      }
+	      else {
+		convertSubClass( adrep_target->subClass(), merep, 
+				 (char *)body_source + adrep_source->offset(),
+				 (char *)body_target + adrep_target->offset());
+	      }
 
 	      // Convert input and output mask
 	      if ( bix == pwr_eBix_dev &&
