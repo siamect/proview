@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.27 2007-10-25 16:05:10 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.28 2007-11-06 13:26:53 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1233,7 +1233,10 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
 	      oidp->vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref && 
+		      !(oidp->vid == ldh_cPlcMainVolume || 
+			oidp->vid == ldh_cPlcFoVolume || 
+			oidp->vid == ldh_cIoConnectVolume))
 	      *oidp = pwr_cNOid;
 	    oidp++;
 	  }
@@ -1245,7 +1248,10 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
 	      arp->Objid.vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref && 
+		      !(arp->Objid.vid == ldh_cPlcMainVolume || 
+			arp->Objid.vid == ldh_cPlcFoVolume || 
+			arp->Objid.vid == ldh_cIoConnectVolume))
 	      arp->Objid = pwr_cNOid;
 	    arp++;
 	  }
@@ -1257,7 +1263,10 @@ bool wb_vrepmem::updateSubClass( wb_adrep *subattr, char *body, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
 	      drp->Aref.Objid.vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref && 
+		      !(drp->Aref.Objid.vid == ldh_cPlcMainVolume || 
+			drp->Aref.Objid.vid == ldh_cPlcFoVolume || 
+			drp->Aref.Objid.vid == ldh_cIoConnectVolume))
 	      drp->Aref.Objid = pwr_cNOid;
 	    drp++;
 	  }
@@ -1305,8 +1314,12 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	  pwr_tOid *oidp = (pwr_tOid *)(body + adrep->offset());
 	  for ( int j = 0; j < elements; j++) {
 	    if ( oidp->vid == m_source_vid && findObject( oidp->oix))
+	      // Intern reference
 	      oidp->vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref &&
+		      !(oidp->vid == ldh_cPlcMainVolume || 
+			oidp->vid == ldh_cPlcFoVolume || 
+			oidp->vid == ldh_cIoConnectVolume))
 	      *oidp = pwr_cNOid;
 	    oidp++;
 	  }
@@ -1317,7 +1330,10 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( arp->Objid.vid == m_source_vid && findObject( arp->Objid.oix))
 	      arp->Objid.vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref && 
+		      !(arp->Objid.vid == ldh_cPlcMainVolume || 
+			arp->Objid.vid == ldh_cPlcFoVolume || 
+			arp->Objid.vid == ldh_cIoConnectVolume))
 	      arp->Objid = pwr_cNOid;
 	    arp++;
 	  }
@@ -1328,7 +1344,10 @@ bool wb_vrepmem::updateObject( wb_orep *o, bool keepref)
 	  for ( int j = 0; j < elements; j++) {
 	    if ( drp->Aref.Objid.vid == m_source_vid && findObject( drp->Aref.Objid.oix))
 	      drp->Aref.Objid.vid = m_vid;
-	    else if ( !keepref)
+	    else if ( !keepref && 
+		      !(drp->Aref.Objid.vid == ldh_cPlcMainVolume || 
+			drp->Aref.Objid.vid == ldh_cPlcFoVolume || 
+			drp->Aref.Objid.vid == ldh_cIoConnectVolume))
 	      drp->Aref.Objid = pwr_cNOid;
 	    drp++;
 	  }
@@ -1371,24 +1390,32 @@ bool wb_vrepmem::importTreeObject(wb_merep *merep, pwr_tOid oid, pwr_tCid cid, p
   memo->m_cid = cid;
   memo->m_flags = flags;
 
+  bool class_error = false;
   bool convert = false;
   if ( merep && merep != m_merep) {
     // Check if class version differs
     wb_cdrep *cdrep_import = m_merep->cdrep( &sts, cid);
     if ( EVEN(sts)) {
-      if ( m_ignore)
-	return true;
-      throw wb_error (sts);
+      if ( m_ignore) {
+	memo->m_cid = pwr_eClass_ClassLost;
+	class_error = true;
+      }
+      else
+	throw wb_error (sts);
     }
 
-    wb_cdrep *cdrep_export = merep->cdrep( &sts, cid);
+    wb_cdrep *cdrep_export = merep->cdrep( &sts, memo->m_cid);
     if ( EVEN(sts)) {
-      if ( m_ignore)
-	return true;
-      throw wb_error (sts);
+      if ( m_ignore) {
+	memo->m_cid = pwr_eClass_ClassLost;
+	class_error = true;
+      }
+      else
+	throw wb_error (sts);
     }
 
-    if ( cdrep_import->ohTime().tv_sec != cdrep_export->ohTime().tv_sec) {
+    if ( !class_error &&
+	 cdrep_import->ohTime().tv_sec != cdrep_export->ohTime().tv_sec) {
       convert = true;
 
       cdrep_import->convertObject( merep, rbody, dbody, 
