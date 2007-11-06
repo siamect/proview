@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.57 2007-11-06 13:29:38 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.58 2007-11-06 16:57:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1868,45 +1868,23 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
 	  continue;
 	}
 
-	if ( arp->Flags.b.Object) {
-	  // Check if rbody size of changed
-	  pwr_tCid cid = aohead.cid();
-	  sClass *cp = (sClass *)tree_Find(&sts, m_class_th, &cid);
-
-	  if ( cp && cp->n_rbsize != cp->o_rbsize) {
-	    arp->Size = cp->n_rbsize;
-	    nAref[ap->key.bix - 1]++;
-	  }
-	}
-	else {
-	  sAttributeKey k;
-	  k.cid = aohead.cid();
-	  k.bix = bix;
-	  k.oStart = arp->Offset;
-	  k.oEnd = arp->Offset + arp->Size - 1;
+	sAttributeKey k;
+	k.cid = aohead.cid();
+	k.bix = bix;
+	k.oStart = arp->Offset;
+	k.oEnd = arp->Offset + arp->Size - 1;
         
-	  sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
+	sAttribute *cap = (sAttribute *)tree_Find(&sts, m_attribute_th, &k);
 
-	  if (cap != 0) {
-	    nAref[ap->key.bix - 1]++;
-	    if (arp->Size > cap->o.aref.Size) {
-	      arp->Offset = 0;
-	      arp->Size = n_bdrep->size();
-	    } else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
-	      arp->Offset = cap->n.aref.Offset;
-	      arp->Size = cap->n.aref.Size;
-	    } else if (cap->o.aref.Flags.b.Array) {
-	      pwr_tUInt32 oElementSize = cap->o.aref.Size / cap->o.nElement;
-	      pwr_tUInt32 oOffset = arp->Offset - cap->o.aref.Offset;
-	      pwr_tUInt32 index = oOffset / oElementSize;
-	      pwr_tUInt32 nElementSize = cap->n.aref.Size / cap->n.nElement;
-	      
-	      if (index >= cap->n.nElement) {
-		index = cap->n.nElement - 1;
-	      }
-	      arp->Offset = cap->n.aref.Offset + (index * nElementSize);
-	      arp->Size = nElementSize;
-	    }          
+	if (cap != 0) {
+	  nAref[ap->key.bix - 1]++;
+	  if (arp->Size > cap->o.aref.Size) {
+	    arp->Offset = 0;
+	    arp->Size = n_bdrep->size();
+	  }
+	  else if (arp->Offset == cap->o.aref.Offset && arp->Size == cap->o.aref.Size) {  
+	    arp->Offset = cap->n.aref.Offset;
+	    arp->Size = cap->n.aref.Size;
 	  }
 	}        
       } catch (DbException &e) {
@@ -2228,6 +2206,25 @@ void wb_vrepdb::checkAttributes(pwr_tCid cid)
       wb_bdrep *o_bdrep = o_cdrep->bdrep(&sts, bix);
       if (ODD(sts)) {
 	pwr_tCid body = o_cdrep->cid() | o_bdrep->bix();
+
+	if ( o_bdrep->size() != n_bdrep->size()) {
+	  sAttributeKey ak;
+	  sAttribute *ap;
+                  
+	  ak.cid = cid;
+	  ak.bix = bix;
+	  ak.oStart = 0;
+	  ak.oEnd = o_bdrep->size() - 1;
+	  ap = (sAttribute *) tree_Insert(&sts, m_attribute_th, &ak);
+	  ap->o.aref.Size = o_bdrep->size();
+	  ap->o.aref.Offset = 0;
+	  ap->o.aref.Body = bix;
+	  ap->o.aref.Flags.b.Object = 1;
+	  ap->n.aref.Size = n_bdrep->size();
+	  ap->n.aref.Offset = 0;
+	  ap->n.aref.Body = bix;
+	  ap->n.aref.Flags.b.Object = 1;
+	}
         wb_adrep *o_adrep = o_bdrep->adrep(&sts);
 
         while (ODD(sts)) {
