@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nav.cpp,v 1.17 2007-09-17 14:06:00 claes Exp $
+ * Proview   $Id: wb_nav.cpp,v 1.18 2007-11-06 13:28:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@
 #include "flow_browctx.h"
 #include "flow_browapi.h"
 #include "wb_nav.h"
+#include "wb_wnav_msg.h"
 
 #include "xnav_bitmap_leaf8.h"
 #include "xnav_bitmap_leaf10.h"
@@ -311,30 +312,31 @@ int ItemObject::open_children( Nav *nav, double x, double y)
     brow_ResetNodraw( nav->brow_ctx);
     brow_Redraw( nav->brow_ctx, node_y);
   }
-  else
-    {
-      Item *item;
+  else {
+    Item *item;
 
-      // Create some children
-      brow_SetNodraw( nav->brow_ctx);
+    // Create some children
+    brow_SetNodraw( nav->brow_ctx);
 
-      child_exist = 0;
-      sts = ldh_GetChildMnt( nav->ldhses, objid, &child);
-      while ( ODD(sts)) {
-	child_exist = 1;
-	sts = nav_create_object_item( nav, child, node, flow_eDest_IntoLast,
-				      &item, 0);
-	sts = ldh_GetNextSibling( nav->ldhses, child, &child);
-      }
-
-      if ( child_exist && !is_root) {
-	brow_SetOpen( node, nav_mOpen_Children);
-	brow_SetAnnotPixmap( node, 0, nav->pixmap_openmap);
-      }
-      brow_ResetNodraw( nav->brow_ctx);
-      if ( child_exist)
-	brow_Redraw( nav->brow_ctx, node_y);
+    child_exist = 0;
+    sts = ldh_GetChildMnt( nav->ldhses, objid, &child);
+    while ( ODD(sts)) {
+      child_exist = 1;
+      sts = nav_create_object_item( nav, child, node, flow_eDest_IntoLast,
+				    &item, 0);
+      sts = ldh_GetNextSibling( nav->ldhses, child, &child);
     }
+
+    if ( child_exist && !is_root) {
+      brow_SetOpen( node, nav_mOpen_Children);
+      brow_SetAnnotPixmap( node, 0, nav->pixmap_openmap);
+    }
+    brow_ResetNodraw( nav->brow_ctx);
+    if ( child_exist)
+      brow_Redraw( nav->brow_ctx, node_y);
+    else
+      return WNAV__NOCHILD;
+  }
   return 1;
 }
 
@@ -606,13 +608,9 @@ int ItemAttrObject::open_attributes( Nav *nav, double x, double y)
       if ( EVEN(sts) ) continue;
 
       for ( i = 0; i < rows; i++) {
-	if ( aref.Flags.b.Object)
-	  strcpy( parname, bodydef[i].ParName);
-	else {
-	  strcpy( parname, name);
-	  strcat( parname, ".");
-	  strcat( parname, bodydef[i].ParName);
-	}
+	strcpy( parname, name);
+	strcat( parname, ".");
+	strcat( parname, bodydef[i].ParName);
 
 	if ( bodydef[i].Par->Param.Info.Flags & PWR_MASK_INVISIBLE ||
 	     bodydef[i].Par->Param.Info.Flags & PWR_MASK_RTVIRTUAL)
@@ -784,6 +782,7 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
   attr_idx(idx), type_id(attr_type_id)
 {
   char type_id_name[80];
+  pwr_tOName aname;
 
   type = nav_eItemType_Attr;
 
@@ -801,15 +800,16 @@ ItemAttr::ItemAttr( Nav *nav, pwr_tObjid item_objid,
 		     dest, dest_code, NULL, 1, &node);
 
     nav->type_id_to_name( type_id, type_id_name);
-    switch( type_id)
-      {
-      case pwr_eType_Objid:
-	brow_SetAnnotPixmap( node, 0, nav->pixmap_ref);
-	break;
-      default:
-	brow_SetAnnotPixmap( node, 0, nav->pixmap_attr);
-      }
-    brow_SetAnnotation( node, 0, attr_name, strlen(attr_name));
+    switch( type_id) {
+    case pwr_eType_Objid:
+      brow_SetAnnotPixmap( node, 0, nav->pixmap_ref);
+      break;
+    default:
+      brow_SetAnnotPixmap( node, 0, nav->pixmap_attr);
+    }
+
+    cdh_SuppressSuper( aname, attr_name);
+    brow_SetAnnotation( node, 0, aname, strlen(aname));
     brow_SetAnnotation( node, 1, type_id_name, strlen(type_id_name));
     brow_SetUserData( node, (void *)this);
   }
@@ -1376,6 +1376,7 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
   case flow_eEvent_Key_Right: {
     brow_tNode	*node_list;
     int		node_count;
+    int 	sts;
 
     brow_GetSelectedNodes( nav->brow_ctx, &node_list, &node_count);
     if ( !node_count)
@@ -1384,10 +1385,15 @@ int Nav::brow_cb( FlowCtx *ctx, flow_tEvent event)
     free( node_list);
     switch( item->type) {
     case nav_eItemType_Object: 
-      ((ItemObject *)item)->open_children( nav, 0, 0);
+      sts =((ItemObject *)item)->open_children( nav, 0, 0);
+      if ( sts == WNAV__NOCHILD)
+	((ItemObject *)item)->open_attributes( nav, 0, 0);
       break;
     case nav_eItemType_AttrArray: 
-      ((ItemAttrArray *)item)->open_children( nav, 0, 0);
+      ((ItemAttrArray *)item)->open_attributes( nav, 0, 0);
+      break;
+    case nav_eItemType_AttrObject: 
+      ((ItemAttrObject *)item)->open_attributes( nav, 0, 0);
       break;
     default:
       ;
