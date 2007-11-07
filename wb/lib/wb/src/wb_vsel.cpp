@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vsel.cpp,v 1.15 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_vsel.cpp,v 1.16 2007-11-07 18:05:43 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -171,6 +171,9 @@ pwr_tStatus WVsel::load_volumelist()
       break;
     case ldh_eVolRep_Ext: 
       strcat( str, "Ext    ");
+      break;
+    case ldh_eVolRep_Ced: 
+      strcat( str, "Ced    ");
       break;
     }
     

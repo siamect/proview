@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_utl.cpp,v 1.5 2007-09-26 11:53:15 claes Exp $
+ * Proview   $Id: wb_utl.cpp,v 1.6 2007-11-07 18:05:42 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3818,6 +3818,9 @@ pwr_tStatus	utl_show_volumes(
 	    break;
 	  case ldh_eVolRep_Ext:
 	    u_print( utlctx, " Ext");
+	    break;
+	  case ldh_eVolRep_Ced:
+	    u_print( utlctx, " Ced");
 	    break;
 	  }
 	  u_print( utlctx, " %s", class_name);
