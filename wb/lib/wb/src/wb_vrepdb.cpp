@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.58 2007-11-06 16:57:55 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.59 2007-11-07 18:07:51 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -37,6 +37,7 @@
 #include "wb_dblock.h"
 #include "co_msgwindow.h"
 #include "wb_vrepwbl.h"
+#include "wb_volume.h"
 
 typedef struct sArefKey
 {
@@ -1847,16 +1848,36 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
       try {
           
         pwr_sAttrRef *arp = (pwr_sAttrRef *)(p + ap->key.offset);        
+	pwr_tCid arp_cid;
+
 	if ( cdh_ObjidIsEqual( arp->Objid, pwr_cNObjid)) {
 	  ap = (sAref *)tree_FindSuccessor(&sts, m_aref_th, &ap->key);
 	  continue;
 	}
-        wb_db_ohead aohead(m_db, m_db->m_txn, arp->Objid);
-        wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, aohead.cid());
+	if ( arp->Objid.vid == m_vid) {
+	  wb_db_ohead aohead(m_db, m_db->m_txn, arp->Objid);
+	  arp_cid = aohead.cid();
+	}
+	else if ( ldh_isSymbolicVid( arp->Objid.vid))
+	  arp_cid = arp->Objid.oix;
+	else
+	  arp_cid = arp->Body & ~7;
+
+        wb_cdrep *n_cdrep = m_erep->merep()->cdrep(&sts, arp_cid);
 	wb_bdrep *n_bdrep;
 	pwr_eBix bix = pwr_eBix_rt;
-        if (EVEN(sts))
-	  printf("cdrep sts %d", sts);
+        if (EVEN(sts)) {
+	  pwr_tAttrRef a;
+	  a.Objid = oid;
+	  a.Offset = ap->key.offset;
+	  a.Size = sizeof(pwr_tAttrRef);
+	  a.Body = cid | bix;
+	  
+	  wb_volume v(this);
+	  wb_attribute attr = v.attribute( &a);
+	  if ( attr)
+	    printf("** Corrupt reference in %s\n", attr.longName().c_str());
+	}
 	else {
 	  bix = (pwr_eBix)(arp->Body & 7);
 	  if ( bix != pwr_eBix_dev)
@@ -1869,7 +1890,7 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
 	}
 
 	sAttributeKey k;
-	k.cid = aohead.cid();
+	k.cid = arp_cid;
 	k.bix = bix;
 	k.oStart = arp->Offset;
 	k.oEnd = arp->Offset + arp->Size - 1;
