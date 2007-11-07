@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.h,v 1.40 2007-10-25 11:07:12 claes Exp $
+ * Proview   $Id: wb_ldh.h,v 1.41 2007-11-07 18:08:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -41,7 +41,6 @@ extern "C" {
 #define ldh_cWBVolLocal  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 252) 
 #define ldh_cDirectoryVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 253)
 #define ldh_cPlcMainVolume (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 251)
-
 #define ldh_cPlcFoVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 250)
 #define ldh_cIoConnectVolume  cdh_cIoConnectVolume
 #define ldh_cProjectListVolume  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 248)
@@ -50,6 +49,8 @@ extern "C" {
 #define ldh_cRtVolume  cdh_cRtVolume
 #define ldh_cVolatileVolMin  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 0)
 #define ldh_cVolatileVolMax  (0 + ((pwr_tVolumeId)254 << 24) + (254 << 16) + (254 << 8) + 100)
+
+#define ldh_isSymbolicVid(vid) ((vid) == ldh_cPlcMainVolume || (vid) == ldh_cPlcFoVolume || (vid) == ldh_cIoConnectVolume)
 
 #if 0
 #ifndef 0
@@ -97,7 +98,8 @@ typedef enum {
   ldh_eVolRep_Mem,
   ldh_eVolRep_Ref,
   ldh_eVolRep_Ext,
-  ldh_eVolRep_Dbms
+  ldh_eVolRep_Dbms,
+  ldh_eVolRep_Ced
 } ldh_eVolRep;
 
 typedef enum {
