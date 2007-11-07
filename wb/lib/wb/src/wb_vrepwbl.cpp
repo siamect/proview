@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepwbl.cpp,v 1.54 2006-06-08 13:38:04 claes Exp $
+ * Proview   $Id: wb_vrepwbl.cpp,v 1.55 2007-11-07 18:06:32 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1192,7 +1192,7 @@ int wb_vrepwbl::nameToAttrRef( const char *name, pwr_sAttrRef *attrref)
     attrref->Objid = oid;
     attrref->Offset = a_offset;
     attrref->Size = a_size;
-    attrref->Body = a_tid;
+    attrref->Body = cid | bix;
     attrref->Flags.m = 0;
     if ( a_flags & pwr_mAdef_pointer && !(a_flags & pwr_mAdef_private))
       attrref->Flags.b.Indirect = 1;
