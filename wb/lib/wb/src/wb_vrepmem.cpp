@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.28 2007-11-06 13:26:53 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.29 2007-11-07 08:48:56 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1579,6 +1579,7 @@ bool wb_vrepmem::importPasteObject(pwr_tOid destination, ldh_eDest destcode,
   memo->m_oid.vid = m_vid;
   memo->m_cid = cid;
   memo->m_flags = flags;
+  memo->m_created = 1;
   memo->m_ohtime = time;
   memo->rbody_size = rbSize;
   if ( memo->rbody_size) {
@@ -2471,7 +2472,15 @@ void wb_vrepmem::classeditorCommit()
   if ( !root_object)
     return;
 
-  for ( mem_object *o1 = root_object->fch; o1; o1 = o1->fws) {
+  mem_object *class_hier;
+
+  for ( class_hier = root_object; 
+	class_hier && class_hier->m_cid != pwr_eClass_ClassHier; 
+	class_hier = class_hier->fws) ;
+  if ( !class_hier || class_hier->m_cid != pwr_eClass_ClassHier)
+    return;
+
+  for ( mem_object *o1 = class_hier->fch; o1; o1 = o1->fws) {
     for ( mem_object *o2 = o1->fch; o2; o2 = o2->fws) {
       for ( mem_object *o3 = o2->fch; o3; o3 = o3->fws) {
 	switch ( o3->m_cid) {
