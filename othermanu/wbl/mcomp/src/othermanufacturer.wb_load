@@ -14518,10 +14518,10 @@ else
       EndObject
     EndObject
     Object Eurotherm_TC3001_PbSlave $ClassDef 33 04-OCT-2007 14:04:16.62
-      Body SysBody 04-OCT-2007 14:03:49.56
+      Body SysBody 08-NOV-2007 08:37:49.66
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16
+        Attr Flags = 10256
       EndBody
       Object RtBody $ObjBodyDef 1 04-OCT-2007 14:04:42.67
         Body SysBody 04-OCT-2007 14:04:42.67
@@ -14549,10 +14549,10 @@ else
       EndObject
     EndObject
     Object Eurotherm_TC3001_PbModule $ClassDef 34 04-OCT-2007 14:07:11.39
-      Body SysBody 04-OCT-2007 14:06:40.88
+      Body SysBody 08-NOV-2007 08:37:39.62
         Attr Editor = 0
         Attr Method = 0
-        Attr Flags = 16
+        Attr Flags = 18448
       EndBody
       Object RtBody $ObjBodyDef 1 04-OCT-2007 14:07:16.72
         Body SysBody 04-OCT-2007 14:07:16.72
@@ -14652,20 +14652,30 @@ else
         EndObject
       EndObject
       Object Template Eurotherm_TC3001_PbModule 2156625920 01-JAN-1970 01:00:00.00
-        Body RtBody 04-OCT-2007 14:12:30.87
+        Body RtBody 08-NOV-2007 08:37:21.97
           Attr Super.Process = 1
           Attr In1.ConversionOn = 1
+          Attr In1.Representation = 2
           Attr In2.ConversionOn = 1
+          Attr In2.Representation = 2
           Attr In3.ConversionOn = 1
+          Attr In3.Representation = 2
           Attr In4.ConversionOn = 1
+          Attr In4.Representation = 2
           Attr In5.ConversionOn = 1
+          Attr In5.Representation = 2
           Attr In6.ConversionOn = 1
+          Attr In6.Representation = 2
           Attr Diag_SW.Number = 1
           Attr Diag_SW.ConversionOn = 1
           Attr Diag_SW.Representation = 3
           Attr Diag_XS.Number = 3
           Attr Diag_XS.ConversionOn = 1
           Attr Diag_XS.Representation = 3
+          Attr Out1.Representation = 2
+          Attr Out2.Representation = 2
+          Attr Out3.Representation = 2
+          Attr Out4.Representation = 2
         EndBody
       EndObject
     EndObject
