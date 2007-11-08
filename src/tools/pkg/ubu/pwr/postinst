@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # ver=""
 # pwre_target=""
 
-echo "Here in postinst..."
+echo "Executing postinst"
 # Automatically added by dh_installdocs
 if [ "$1" = "configure" ]; then
         if [ -d /usr/doc -a ! -e /usr/doc/pwrtest -a -d /usr/share/doc/pwrtest ]; then
@@ -14,6 +14,9 @@ fi
 # End automatically added section
 
 aroot="/usr/pwrp/adm"
+vermajor=${ver:0:1}
+verminor=${ver:1:1}
+verstr="V$vermajor.$verminor"
 
 # Create group pwrp
 if ! grep -q "\bpwrp:" /etc/group; then
@@ -30,12 +33,12 @@ if ! grep -q "\bpwrp:" /etc/passwd; then
   fi
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc /home/pwrp
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.bash_profile /home/pwrp
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
+#  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.mwmrc /home/pwrp
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.rtt_start /home/pwrp
   chmod a+x /home/pwrp/.rtt_start
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xtt_start /home/pwrp
   chmod a+x /home/pwrp/.xtt_start
-  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
+#  cp /usr/pwr$ver/$pwre_target/exp/cnf/user/.xsession /home/pwrp
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init.pwr_com /home/pwrp
   cp /usr/pwr$ver/$pwre_target/exp/cnf/user/wtt_init1.pwr_com /home/pwrp
 
@@ -84,13 +87,13 @@ fi
 
 # Insert base in projectlist
 if [ ! -e $aroot/db/pwr_projectlist.dat ]; then
-  echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
+  echo "%base $verstr /usr/pwr$ver" > $aroot/db/pwr_projectlist.dat
 else
   set +e
-  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\bV${ver:0:1}.${ver:1:1}\b"`
+  ptst=`eval grep "^%base" $aroot/db/pwr_projectlist.dat | grep "\b$verstr\b"`
   set -e
   if [ "$ptst" = "" ]; then
-    echo "%base V${ver:0:1}.${ver:1:1} /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
+    echo "%base $verstr /usr/pwr$ver" >> $aroot/db/pwr_projectlist.dat
   fi
 fi
 

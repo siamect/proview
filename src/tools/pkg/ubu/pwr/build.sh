@@ -1,6 +1,8 @@
 #!/bin/bash
 
 aroot="/usr/pwrp/adm"
+pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwr$ver
+pkgsrc=$pwre_sroot/tools/pkg/ubu/pwr
 
 # Get version
 if [ -e $pwr_inc/pwr_version.h ]; then
@@ -15,11 +17,11 @@ fi
 
 # Generate version help file
 {
-  if [ ! -e $pwre_sroot/tools/pkg/deb/pwr/control ]; then
+  if [ ! -e $pkgsrc/control ]; then
     echo "Controlfile not found"
     exit 1
   fi
-  datfile=$pwre_sroot/tools/pkg/deb/pwr/control
+  datfile=$pkgsrc/control
 
   echo "<topic> version"
   d=`eval date +\"%F %X\"`
@@ -84,9 +86,6 @@ if [ "$1" == "-v" ]; then
   exit
 fi
 
-pkgroot=$pwre_broot/$pwre_target/bld/pkg/pwr$ver
-pkgsrc=$pwre_sroot/tools/pkg/deb/pwr
-
 echo "-- Building pwr$ver"
 
 # Create directories
@@ -99,7 +98,7 @@ find $pkgroot -type d | xargs chmod 755
 
 # control
 cp $pkgsrc/control $pkgroot/DEBIAN
-echo "#!/bin/sh" > $pkgroot/DEBIAN/postinst
+echo "#!/bin/bash" > $pkgroot/DEBIAN/postinst
 echo "ver=\"$ver\"" >> $pkgroot/DEBIAN/postinst
 echo "pwre_target=\"$pwre_target\"" >> $pkgroot/DEBIAN/postinst
 cat $pkgsrc/postinst >> $pkgroot/DEBIAN/postinst
@@ -161,10 +160,10 @@ mkdir $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.bashrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 echo "source $aroot/db/pwr_setup.sh" >> $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user/.bashrc
 cp $pwre_sroot/tools/pkg/deb/user/.bash_profile $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.mwmrc $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.rtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/.xtt_start $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
-cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
+#cp $pwre_sroot/tools/pkg/deb/user/.xsession $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/wtt_init.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 cp $pwre_sroot/tools/pkg/deb/user/wtt_init1.pwr_com $pkgroot/usr/pwr$ver/$pwre_target/exp/cnf/user
 

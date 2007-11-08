@@ -1,9 +1,9 @@
 Package: pwrrt
-Version: 4.4.2-1
+Version: 4.4.4-2
 Section: base
 Priority: optional
 Architecture: i386
-Depends: libc6 (>= 2.3.6), libgtk2.0-0 (>= 2.8.29-0ubuntu1.1), libasound2 (>= 1.0.10-2ubuntu4), libdb4.3 (>=4.3.29)
+Depends: libc6 (>= 2.5-0ubuntu14), libgtk2.0-0 (>= 2.10.11-0ubuntu3), libasound2 (>= 1.0.13-1ubuntu5), libdb4.4 (>=4.4.20-8ubuntu2)
 Replaces: pwr34,pwr39,pwr40,pwr41,pwr42,pwr43,pwr44
 Maintainer: Proview <postmaster@proview.se>
 Description:
@@ -23,3 +23,9 @@ Description:
  4.4.2-1
   - Subgraphs for ventilation and circuit diagrams added.
   - Baseobjects for threewayvalves, filters and dampers added.
+ 4.4.4-1
+  - Function to suppress alarms in basecomponents added.
+  - Classes IpDistribute, IpCollect, Demux, IDemux, GetDpPtr, StoDpPtr,
+    Eurotherm_TC3001, Eurotherm_TC3001Aggr and more added.
+ 4.4.4-2
+  - Bugfix in gtk operatorwindow, long alarmtext could cause segfault
