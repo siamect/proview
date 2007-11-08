@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: ge_graph.cpp,v 1.45 2007-11-01 08:46:27 claes Exp $
+ * Proview   $Id: ge_graph.cpp,v 1.46 2007-11-08 09:13:52 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -3677,12 +3677,28 @@ void Graph::get_command( char *in, char *out, GeDyn *dyn)
   char *s0 = in;
   char str[500];
 
-  char oname[256];
+  pwr_tOName oname;
   if ( grow->stack_cnt == 0)
     strcpy( oname, object_name);
-  else
+  else {
     grow_GetOwner( grow->ctx, oname);
 
+    if ( strcmp( object_name, "") != 0) {
+      pwr_tOName n;
+      t0 = n;
+      s0 = oname;
+      while ( (s = strstr( s0, "$object"))) {
+	strncpy( t0, s0, s-s0);
+	t0 += s - s0;
+	strcpy( t0, object_name); 
+	t0 += strlen(object_name);
+	s0 = s + strlen("$object");
+      }
+      strcpy( t0, s0);
+      strcpy( oname, n);
+    }
+  }
+  s0 = in;
   if ( dyn && dyn->total_dyn_type & ge_mDynType_HostObject) {
     pwr_tAName hostobject;
 
