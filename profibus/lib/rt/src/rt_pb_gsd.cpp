@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.8 2007-08-21 15:12:40 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.9 2007-11-15 16:59:47 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -829,33 +829,60 @@ int pb_gsd::read( char *filename)
       gsd_sExtUserPrmDataConst *e;
       unsigned char *t;
       char *s;
+      int new_data = 0;
+      int const_offset;
+      int data_len;
       
-      e = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
+      if ( status & gsd_mSts_Module) {	
+	// Addition module data
+	if ( current_module->extuserprmdataconst)
+	  e = current_module->extuserprmdataconst;
+      }
+      else if ( extuserprmdataconst)
+	// Additiona slave data
+	e = extuserprmdataconst;
+      else {
+	// New data
+	e = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
+	new_data = 1;
+      }
 
       dcli_remove_blank( idx_str, idx_str);
       if ( idx_str[0] == '0' && idx_str[1] == 'x')
-	sts = sscanf( idx_str, "%x", &e->Const_Offset);
+	sts = sscanf( idx_str, "%x", &const_offset);
       else
-	sts = sscanf( idx_str, "%d", &e->Const_Offset);
+	sts = sscanf( idx_str, "%d", &const_offset);
       if ( sts != 1)
 	printf( "Syntax error, line %d (%s)\n", line_cnt, line_part[0]);
       
+      if ( new_data) {
+	e->Const_Offset = const_offset;
       
-      if ( (s = strchr( line, '='))) {
-	str_to_ostring( &t, s+1, sizeof(e->Const_Prm_Data), &e->len);
-	if ( e->len + e->Const_Offset > (int) sizeof(e->Const_Prm_Data))
-	  printf( "Const length too large, line %d (%s)\n", line_cnt, line_part[0]);
-	memcpy( (char *)e->Const_Prm_Data + e->Const_Offset, (char *)t, 
-		sizeof(e->Const_Prm_Data) - e->Const_Offset);
-	free( t);
-      }
-      
-      if ( status & gsd_mSts_Module) {
-	current_module->extuserprmdataconst = e;
+	if ( (s = strchr( line, '='))) {
+	  str_to_ostring( &t, s+1, sizeof(e->Const_Prm_Data), &e->len);
+	  if ( e->len + e->Const_Offset > (int) sizeof(e->Const_Prm_Data))
+	    printf( "Const length too large, line %d (%s)\n", line_cnt, line_part[0]);
+	  memcpy( (char *)e->Const_Prm_Data + e->Const_Offset, (char *)t, 
+		  sizeof(e->Const_Prm_Data) - e->Const_Offset);
+	  free( t);
+	}
       }
       else {
-	extuserprmdataconst = e;
+	if ( (s = strchr( line, '='))) {
+	  str_to_ostring( &t, s+1, sizeof(e->Const_Prm_Data), &data_len);
+	  memcpy( (char *)e->Const_Prm_Data + const_offset, (char *)t, data_len);
+	  e->len = const_offset + data_len - e->Const_Offset;
+	  if ( e->len + e->Const_Offset > (int) sizeof(e->Const_Prm_Data))
+	    printf( "Const length too large, line %d (%s)\n", line_cnt, line_part[0]);
+	  free( t);
+	}
       }
+
+      if ( status & gsd_mSts_Module)
+	current_module->extuserprmdataconst = e;
+      else
+	extuserprmdataconst = e;
+
       break;
     }
     case gsd_ProfibusDP:
