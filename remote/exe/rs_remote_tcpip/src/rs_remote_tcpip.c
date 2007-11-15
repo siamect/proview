@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rs_remote_tcpip.c,v 1.3 2006-04-24 13:22:24 claes Exp $
+ * Proview   $Id: rs_remote_tcpip.c,v 1.4 2007-11-15 14:57:44 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -310,11 +310,12 @@ void Shutdown()
 {
   int sts;
 
-  sts = shutdown(c_socket, 2);
-  if (debug) printf("shutdown: %d\n", sts);
-  if (debug && (sts < 0)) perror("shutdown");
-
-  if (cs_mode == TCP_CLIENT) {
+  if (cs_mode == TCP_SERVER) {
+    sts = close(c_socket);
+  } else {
+    sts = shutdown(c_socket, 2);
+    if (debug) printf("shutdown: %d\n", sts);
+    if (debug && (sts < 0)) perror("shutdown");
     sts = close(c_socket);
     if (debug) printf("close: %d\n", sts);
     if (debug && (sts < 0)) perror("close");
@@ -325,7 +326,7 @@ void Shutdown()
 /*************************************************************************
 **************************************************************************
 *
-* Namn : TreatRemtrans
+* Namn : TreatRemtrans1
 *
 * Typ  : unsigned int
 *
@@ -336,7 +337,7 @@ void Shutdown()
 **************************************************************************
 **************************************************************************/
 
-void TreatRemtrans(char *buf)
+void TreatRemtrans1(char *buf)
 {
   remtrans_item *remtrans;
   unsigned char search_remtrans;
@@ -365,6 +366,43 @@ void TreatRemtrans(char *buf)
       search_remtrans = false;
       sts = RemTrans_Receive(remtrans, buf + sizeof(remote_tcp_header), 
 			     header.msg_size-sizeof(remote_tcp_header));
+    }
+    remtrans = (remtrans_item *) remtrans->next;
+  }
+  if (search_remtrans) rn_tcp->ErrCount++;
+  return;
+}
+/*************************************************************************
+**************************************************************************
+*
+* Namn : TreatRemtrans2
+*
+* Typ  : unsigned int
+*
+* Typ		Parameter	       IOGF	Beskrivning
+*
+* Beskrivning : 
+*
+**************************************************************************
+**************************************************************************/
+
+void TreatRemtrans2(char *buf, int size)
+{
+  remtrans_item *remtrans;
+  unsigned char search_remtrans;
+  unsigned int sts;
+
+  /* Start searching remtrans */
+
+  remtrans = rn.remtrans;
+  search_remtrans = true;
+  while(remtrans && search_remtrans)
+  {
+    /* Match? */
+    if (remtrans->objp->Direction == REMTRANS_IN)
+    {
+      search_remtrans = false;
+      sts = RemTrans_Receive(remtrans, buf, size);
     }
     remtrans = (remtrans_item *) remtrans->next;
   }
@@ -431,7 +469,7 @@ unsigned int Receive()
     {
       memcpy(&saved_buffer[saved_size], &receive_buffer, expected_rest);
 
-      TreatRemtrans(saved_buffer);
+      TreatRemtrans1(saved_buffer);
 
       /* Set position in data buffer */
 
@@ -444,7 +482,13 @@ unsigned int Receive()
 
   while (more_messages)
   {
-    if (data_size >= sizeof(remote_tcp_header))
+    if (data_size > 0 && rn_tcp->DisableHeader) {
+      /* Header disabled, take the first receive remtrans object */ 
+      
+      TreatRemtrans2(receive_buffer, data_size);
+
+    }
+    else if (data_size >= sizeof(remote_tcp_header))
     {
       memcpy(&header, &receive_buffer[buf_ix], sizeof(remote_tcp_header));
 
@@ -461,7 +505,7 @@ unsigned int Receive()
         {
 	  if (header.msg_size > sizeof(header))	/* Not keepalive buffer */
 	  {
-	    TreatRemtrans(&receive_buffer[buf_ix]);
+	    TreatRemtrans1(&receive_buffer[buf_ix]);
 	  }
           else if (header.msg_size == sizeof(header))	/* Keepalive buffer */
 	    rn_tcp->KeepaliveDiff--;
@@ -483,7 +527,7 @@ unsigned int Receive()
     else						/* Too short */
       rn_tcp->ErrCount++;
 
-    if (header.msg_size > 0 && !saved_fl)
+    if (!rn_tcp->DisableHeader && header.msg_size > 0 && !saved_fl)
     {
       data_size -= header.msg_size;
       buf_ix += header.msg_size;
