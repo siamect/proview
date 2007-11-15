@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.9 2007-11-15 16:59:47 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.10 2007-11-15 17:28:18 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -837,15 +837,20 @@ int pb_gsd::read( char *filename)
 	// Addition module data
 	if ( current_module->extuserprmdataconst)
 	  e = current_module->extuserprmdataconst;
+	else
+	  new_data = 1;
       }
-      else if ( extuserprmdataconst)
-	// Additiona slave data
-	e = extuserprmdataconst;
       else {
-	// New data
-	e = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
-	new_data = 1;
+	if ( extuserprmdataconst)
+	  // Additional slave data
+	  e = extuserprmdataconst;
+	else
+	  new_data = 1;
       }
+
+      if ( new_data)
+	e = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
+ 
 
       dcli_remove_blank( idx_str, idx_str);
       if ( idx_str[0] == '0' && idx_str[1] == 'x')
@@ -869,6 +874,11 @@ int pb_gsd::read( char *filename)
       }
       else {
 	if ( (s = strchr( line, '='))) {
+	  // Pad with zero
+	  for ( int i = e->Const_Offset + e->len; i < const_offset - e->Const_Offset; i++) {
+	    if ( i < (int)sizeof( e->Const_Prm_Data))
+	      e->Const_Prm_Data[i] = '0';
+	  }
 	  str_to_ostring( &t, s+1, sizeof(e->Const_Prm_Data), &data_len);
 	  memcpy( (char *)e->Const_Prm_Data + const_offset, (char *)t, data_len);
 	  e->len = const_offset + data_len - e->Const_Offset;
