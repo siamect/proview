@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_session.cpp,v 1.22 2007-09-19 15:14:55 claes Exp $
+ * Proview   $Id: wb_session.cpp,v 1.23 2007-11-16 10:10:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -155,6 +155,8 @@ wb_object wb_session::copyObject(wb_object o, wb_destination d, wb_name name)
 
   if ( m_vrep->vid() == o.vid()) {
     orep = m_vrep->copyObject(&m_sts, (wb_orep*)o, d, name);
+    if (evenSts()) throw wb_error(sts());
+    
     orep->ref();
   }
   else {
