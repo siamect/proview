@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_pb_gsd.cpp,v 1.10 2007-11-15 17:28:18 claes Exp $
+ * Proview   $Id: rt_pb_gsd.cpp,v 1.11 2007-11-16 07:52:54 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -874,11 +874,6 @@ int pb_gsd::read( char *filename)
       }
       else {
 	if ( (s = strchr( line, '='))) {
-	  // Pad with zero
-	  for ( int i = e->Const_Offset + e->len; i < const_offset - e->Const_Offset; i++) {
-	    if ( i < (int)sizeof( e->Const_Prm_Data))
-	      e->Const_Prm_Data[i] = '0';
-	  }
 	  str_to_ostring( &t, s+1, sizeof(e->Const_Prm_Data), &data_len);
 	  memcpy( (char *)e->Const_Prm_Data + const_offset, (char *)t, data_len);
 	  e->len = const_offset + data_len - e->Const_Offset;
@@ -1106,6 +1101,10 @@ int pb_gsd::build()
 
   if ( !extuserprmdataconst)
     extuserprmdataconst = (gsd_sExtUserPrmDataConst *) calloc( 1, sizeof(gsd_sExtUserPrmDataConst));
+
+  // Set default values to items
+  prm_items_set_default_data( prm_dataitems, prm_dataitems_cnt);
+
   return 1;
 }
 
@@ -1142,6 +1141,30 @@ int pb_gsd::prm_len( gsd_sPrmDataItem *item, int item_size)
   }
   return len;
 }
+
+int pb_gsd::prm_items_set_default_data( gsd_sPrmDataItem *item, int item_size)
+{
+  gsd_sExtUserPrmData *pd;
+
+  for ( int i = 0; i < item_size; i++) {
+    pd = item[i].ref->prm_data;
+
+    switch ( pd->data_type) {
+    case gsd_BitArea:
+    case gsd_Unsigned8:
+    case gsd_Signed8:
+    case gsd_Unsigned16:
+    case gsd_Signed16:
+    case gsd_Unsigned32:
+    case gsd_Signed32:
+      item[i].value = pd->Default_Value;
+      break;
+    default: ;
+    }
+  }
+  return 1;
+}
+
 
 int pb_gsd::prm_items_to_data( gsd_sPrmDataItem *item, int item_size, 
 			       unsigned char *data, int data_size)
@@ -2042,7 +2065,7 @@ int pb_gsd::configure_module( gsd_sModuleConf *m)
       if ( m->module->extuserprmdataconst) {
 	memcpy( m->prm_data, m->module->extuserprmdataconst->Const_Prm_Data,
 		m->module->extuserprmdataconst->len);
-	prm_data_to_items( m->prm_dataitems, m->prm_dataitems_cnt, 
+ 	prm_data_to_items( m->prm_dataitems, m->prm_dataitems_cnt, 
 			   m->prm_data,
 			   m->module->Ext_Module_Prm_Data_Len, 1);
 	// Test Remove this !!!
