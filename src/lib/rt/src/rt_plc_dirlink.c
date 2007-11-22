@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_plc_dirlink.c,v 1.5 2007-11-21 08:23:26 claes Exp $
+ * Proview   $Id: rt_plc_dirlink.c,v 1.6 2007-11-22 08:49:26 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -293,7 +293,7 @@ plc_rtdbref (
 
 	sts1 = gdh_ArefDisabled( &la->AttrRef, &disabled);
 	if ( EVEN(sts1) || !disabled) 
-	  errh_Error("plc_RefObjidAttr(oid:%s,aname:%s) , %m", cdh_ObjidToString(NULL, la->AttrRef.Objid, 0), aname, sts);
+	  errh_Error("plc_RefObjidAttr(oid:%s,aname:%s) , %m", cdh_ArefToString(NULL, &la->AttrRef, 0), aname, sts);
 	GUARD_DL( la->Pointer, la->Size );
  	continue;
       }
