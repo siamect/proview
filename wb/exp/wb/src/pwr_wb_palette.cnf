@@ -192,6 +192,7 @@ palette NavigatorPalette
     classvolume BaseComponent BaseComponent
     classvolume Inor Inor
     classvolume OtherManufacturer OtherManufacturer
+    classvolume OtherIO OtherIO
     classvolume ABB ABB
     classvolume KlocknerMoeller KlocknerMoeller
     classvolume Siemens Siemens
@@ -261,6 +262,7 @@ palette ClassNavigatorPalette
     classvolume Remote Remote
     classvolume BaseComponent BaseComponent
     classvolume OtherManufacturer OtherManufacturer
+    classvolume OtherIO OtherIO
     classvolume ABB ABB
     classvolume Siemens Siemens
     classvolume Telemecanique Telemecanique
