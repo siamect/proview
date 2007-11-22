@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_con.cpp,v 1.8 2007-07-05 07:24:19 claes Exp $
+ * Proview   $Id: glow_con.cpp,v 1.9 2007-11-22 09:02:49 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -119,8 +119,16 @@ GlowCon::GlowCon( GrowCtx *glow_ctx, char *name, GlowConClass *con_class,
   if ( !cc)
     return;
   strcpy( trace_object, "");
-  source->get_conpoint( source_cp, &x1, &y1, &source_direction);
-  dest->get_conpoint( dest_cp, &x2, &y2, &dest_direction);
+  sts = source->get_conpoint( source_cp, &x1, &y1, &source_direction);
+  if ( EVEN(sts)) {
+    cout << "GlowCon:no such conpoint" << endl;
+    return;
+  }
+  sts = dest->get_conpoint( dest_cp, &x2, &y2, &dest_direction);
+  if ( EVEN(sts)) {
+    cout << "GlowCon:no such conpoint" << endl;
+    return;
+  }
   l1 = new GlowLine( ctx, x1, y1, x2, y2, cc->draw_type, cc->line_width);
   line_a.insert( l1);
   strcpy( c_name, name);
