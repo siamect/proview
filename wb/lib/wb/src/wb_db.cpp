@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.38 2007-10-26 06:27:42 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.39 2007-11-22 15:10:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -981,8 +981,10 @@ static void printstat(DbEnv *ep, char *s)
   printf("  maxnobjects..: %d\n", lp->st_maxnobjects);
   printf("  nrequests....: %d\n", lp->st_nrequests);
   printf("  nreleases....: %d\n", lp->st_nreleases);
+#if DB_VERSION_MAJOR == 4 && DB_VERSION_MINOR == 0    
   printf("  nnowaits.....: %d\n", lp->st_nnowaits);
   printf("  nconflicts...: %d\n", lp->st_nconflicts);
+#endif
   printf("  ndeadlocks...: %d\n", lp->st_ndeadlocks);
   printf("  regsize......: %d\n", lp->st_regsize);
   printf("  region_wait..: %d\n", lp->st_region_wait);

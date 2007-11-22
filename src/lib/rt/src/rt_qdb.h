@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_qdb.h,v 1.10 2007-09-21 09:05:41 claes Exp $
+ * Proview   $Id: rt_qdb.h,v 1.11 2007-11-22 15:10:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -379,7 +379,7 @@ typedef struct {
   int			version		pwr_dPacked;	/* Qcom protocol version */
   pwr_tNodeId		nid		pwr_dPacked;	/* node index */
   int			birth		pwr_dPacked;
-  char			name[80]	pwr_dPacked;    /* node name  */
+  char			name[80];    			/* node name  */
   struct sockaddr_in	sa		pwr_dPacked;
   qcom_tBus		bus		pwr_dPacked;	/* buss number */
   co_eOS		os		pwr_dPacked;	/* operating system */

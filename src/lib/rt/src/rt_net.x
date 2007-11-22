@@ -1,6 +1,6 @@
 #ifdef RPC_HDR
 %/* 
-% * Proview   $Id: rt_net.x,v 1.11 2006-09-14 14:16:07 claes Exp $
+% * Proview   $Id: rt_net.x,v 1.12 2007-11-22 15:10:23 claes Exp $
 % * Copyright (C) 2005 SSAB Oxelösund AB.
 % *
 % * This program is free software; you can redistribute it and/or 
@@ -243,7 +243,7 @@ struct net_sSubSpec {
 %typedef struct {
 %  net_sMessage		hdr 	pwr_dPacked;	/* Header */
 %  pwr_tUInt32		count 	pwr_dPacked;	/* # of entries */
-%  net_sSubSpec		spec[1] pwr_dPacked;	/* Specifications (dynamic) */
+%  net_sSubSpec		spec[1];		/* Specifications (dynamic) */
 %} net_sSubAdd;
 %
 %bool_t
@@ -326,7 +326,7 @@ struct net_sSubSpec {
 %  pwr_tSubid		sid 	pwr_dPacked;	/* Tag */
 %  pwr_tStatus		sts 	pwr_dPacked;	/* Status */
 %  pwr_tUInt32		size 	pwr_dPacked;	/* Size of data */
-%  char			data[1] pwr_dPacked;	/* Dynamic */
+%  char			data[1];		/* Dynamic */
 %} net_sSubData;
 %bool_t xdr_net_sSubData();
 %
@@ -372,7 +372,7 @@ struct net_sSubSpec {
 %typedef struct {
 %  net_sMessage		hdr 	pwr_dPacked;		/* Header when used as message */
 %  pwr_tUInt32		count 	pwr_dPacked;		/* # of subdata entries in msg */
-%  net_sSubData		subdata[1] pwr_dPacked;	/* Dynamic */
+%  net_sSubData		subdata[1];			/* Dynamic */
 %} net_sSubMessage;
 %
 %bool_t xdr_net_sSubMessage();
@@ -560,7 +560,7 @@ struct net_sSanData {
 %  pwr_tUInt32		lcount	pwr_dPacked;	/* Number of left siblings wanted. */
 %  pwr_tUInt32		rcount	pwr_dPacked;	/* Number of lright siblings wanted. */
 %  pwr_tUInt32		len	pwr_dPacked;	/* name buffer length */
-%  char			name[1]	pwr_dPacked;	/* name buffer */
+%  char			name[1];		/* name buffer */
 %} net_sNameToObject;
 %
 %bool_t xdr_net_sNameToObject();
@@ -732,7 +732,7 @@ struct net_sGetObjectInfo {
 %  pwr_tUInt32		sts	pwr_dPacked;	/* Status code */
 %  pwr_sAttrRef		aref	pwr_dPacked;	/* Copy of requested info */
 %  pwr_tUInt32		size	pwr_dPacked;	/* Size of requested data, same as aref.size, in bytes.  */
-%  char			info[1]	pwr_dPacked;	/* Data requested.  */
+%  char			info[1];		/* Data requested.  */
 %} net_sGetObjectInfoR;
 %
 %bool_t xdr_net_sGetObjectInfoR();
@@ -777,7 +777,7 @@ struct net_sGetObjectInfo {
 %  net_sMessage		hdr	pwr_dPacked;	/* Header */
 %  pwr_sAttrRef		aref	pwr_dPacked;	/* Data reference */
 %  pwr_tUInt32		size	pwr_dPacked;	/* Size of requested data, same as aref.size, in bytes.  */
-%  char			info[1]	pwr_dPacked;	/* Data to write (size bytes) */
+%  char			info[1];		/* Data to write (size bytes) */
 %} net_sSetObjectInfo;
 %
 %bool_t xdr_net_sSetObjectInfo();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_ini_alias.c,v 1.4 2005-10-25 15:28:10 claes Exp $
+ * Proview   $Id: rt_ini_alias.c,v 1.5 2007-11-22 15:10:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -116,7 +116,7 @@ ini_SetAttributeAfterPlc (
 {
   pwr_tStatus		sts;
   int			elements;
-  char			codeword[16];
+  char			codeword[80];
   pwr_tString132	*data_ptr;
   pwr_tString132	*attribute_ptr;
   pwr_tString132	*value_ptr;
@@ -179,7 +179,7 @@ ini_SetAttribute (
 {
 	pwr_tStatus	sts;
 	int		elements;
-	char		codeword[16];
+	char		codeword[80];
 	pwr_tString132	*data_ptr;
 	pwr_tString132	*attribute_ptr;
 	pwr_tString132	*value_ptr;

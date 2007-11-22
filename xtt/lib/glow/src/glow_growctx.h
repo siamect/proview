@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_growctx.h,v 1.13 2007-07-18 09:26:43 claes Exp $
+ * Proview   $Id: glow_growctx.h,v 1.14 2007-11-22 15:10:23 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -781,7 +781,7 @@ class GrowCtx : public GlowCtx {
 		       GlowArrayElem **next);
 
   //! Check if object is visible. */
-  int GrowCtx::is_visible( GlowArrayElem *element, glow_eVisible type);
+  int is_visible( GlowArrayElem *element, glow_eVisible type);
 
   char		name[40];		//!< Name of the context.
   grow_eMode	edit_mode;		//!< Current edit mode.
