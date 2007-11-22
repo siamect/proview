@@ -144,6 +144,12 @@ set_env()
 	else
 	  export pwre_conf_mq=0
         fi
+# Mysql
+	if [ -e /usr/lib/mysql/libmysqlclient.a ]; then
+          export pwre_conf_mysql=1
+	else
+	  export pwre_conf_mysql=0
+        fi
 }
 
 pwre_get_variables()
