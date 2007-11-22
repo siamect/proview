@@ -251,6 +251,9 @@ sub build_all_modules ()
   _module("othermanu");
   build_all( $flavour);
   merge();
+  _module("otherio");
+  build_all( $flavour);
+  merge();
   _module("abb");
   build_all( $flavour);
   merge();
@@ -372,6 +375,11 @@ sub build_all_wbl ()
   system( "rm $load_dir/*.dbs");
   _build("wbl", "mcomp", "src", "lib");
   merge();
+  _module("otherio");
+  my($load_dir) = $ENV{"pwr_load"};
+  system( "rm $load_dir/*.dbs");
+  _build("wbl", "mcomp", "src", "lib");
+  merge();
   _module("rt");
 }  
 
@@ -471,6 +479,8 @@ sub create_all_modules ()
   _module("ssabox");
   create();
   _module("othermanu");
+  create();
+  _module("otherio");
   create();
   _module("abb");
   create();
