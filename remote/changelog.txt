@@ -1,2 +1,3 @@
 #060227 cs  -          Changelog created.
 070528 cs  logg      Env variable allowed in remotelogg filename.
+071115 rk  tcpip     Fixed several bugs when acting as server.

@@ -11317,7 +11317,7 @@ pwr_exe:
 102 65532
 103 0
 51
-5100 $object.ACS800.OpReset##Boolean
+5100 $object.TC3001.OpReset##Boolean
 5101 1
 5102 1
 99
