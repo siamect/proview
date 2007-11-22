@@ -1,0 +1,390 @@
+Volume OtherIO $ClassVolume 0.0.250.10 
+  Body SysBody 01-JAN-1970 01:00:00.00
+    Attr NextOix = "_X31"
+    Attr NextCix = "_X3"
+    Attr NextTix[0] = "_X2"
+  EndBody
+  Object Type $TypeHier 1 15-NOV-2007 14:35:37.90
+    Object MotionControl_StatusEnum $TypeDef 1 15-NOV-2007 14:36:24.17
+      Body SysBody 15-NOV-2007 14:36:24.17
+        Attr TypeRef = "pwrs:Type-$Enum"
+        Attr Elements = 1
+      EndBody
+      Object Success $Value 3 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Success"
+          Attr PgmName = "Success"
+        EndBody
+      EndObject
+      Object FindDevice $Value 4 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to find device"
+          Attr PgmName = "FindDevice"
+          Attr Value = 1
+        EndBody
+      EndObject
+      Object ConnectDevice $Value 5 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to connect to device"
+          Attr PgmName = "ConnectDevice"
+          Attr Value = 2
+        EndBody
+      EndObject
+      Object NotConnected $Value 6 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Device not connected"
+          Attr PgmName = "NotConnected"
+          Attr Value = 8
+        EndBody
+      EndObject
+      Object Write $Value 7 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to write to device"
+          Attr PgmName = "Write"
+          Attr Value = 10
+        EndBody
+      EndObject
+      Object WriteFind $Value 8 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to find device at write"
+          Attr PgmName = "WriteFind"
+          Attr Value = 11
+        EndBody
+      EndObject
+      Object Read $Value 9 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to read device"
+          Attr PgmName = "Read"
+          Attr Value = 12
+        EndBody
+      EndObject
+      Object ReadTimeout $Value 10 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Read timeout"
+          Attr PgmName = "ReadTimeout"
+          Attr Value = 13
+        EndBody
+      EndObject
+      Object CommandReply $Value 11 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Error in command reply"
+          Attr PgmName = "CommandReply"
+          Attr Value = 14
+        EndBody
+      EndObject
+      Object Command $Value 12 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "No such command (USBIO)"
+          Attr PgmName = "Command"
+          Attr Value = 15
+        EndBody
+      EndObject
+      Object Parameter $Value 13 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Parameter error"
+          Attr PgmName = "Parameter"
+          Attr Value = 16
+        EndBody
+      EndObject
+      Object Function $Value 14 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unable to activate function"
+          Attr PgmName = "Function"
+          Attr Value = 17
+        EndBody
+      EndObject
+      Object NotActivated $Value 15 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Not activated, execute configuration"
+          Attr PgmName = "NotActivated"
+          Attr Value = 18
+        EndBody
+      EndObject
+      Object Checksum $Value 16 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Checksum error"
+          Attr PgmName = "Checksum"
+          Attr Value = 19
+        EndBody
+      EndObject
+      Object SPI $Value 17 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "SPI error"
+          Attr PgmName = "SPI"
+          Attr Value = 21
+        EndBody
+      EndObject
+      Object ADSwitch $Value 18 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "AD switch error"
+          Attr PgmName = "ADSwitch"
+          Attr Value = 22
+        EndBody
+      EndObject
+      Object Hardware $Value 19 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Not working in this hardware"
+          Attr PgmName = "Hardware"
+          Attr Value = 23
+        EndBody
+      EndObject
+      Object Unknown $Value 20 15-NOV-2007 14:36:24.17
+        Body SysBody 15-NOV-2007 14:36:24.17
+          Attr Text = "Unknown error"
+          Attr PgmName = "Unknown"
+          Attr Value = 30
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+  Object Class $ClassHier 2 15-NOV-2007 14:35:40.72
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Rack object for Motion Control USB I/O.
+    !  Rack object for Motion Control USB I/O.
+    ! 	
+    !  @classlink MotionControl_USBIO otherio_motioncontrol_usbio.html
+    !  @link Datasheet ../dsh/motioncontrol_usbio.pdf
+    !*/
+    Object MotionControl_USB $ClassDef 1 15-NOV-2007 14:36:42.44
+      Body SysBody 21-NOV-2007 14:53:31.69
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 10320
+      EndBody
+      Object RtBody $ObjBodyDef 1 15-NOV-2007 14:36:42.44
+        Body SysBody 15-NOV-2007 14:36:42.44
+          Attr StructName = "MotionControl_USB"
+          Attr NextAix = "_X13"
+        EndBody
+        !/**
+        ! Optional description.
+        !*/
+        Object Description $Attribute 9 15-NOV-2007 14:36:42.44
+          Body SysBody 15-NOV-2007 14:36:42.44
+            Attr PgmName = "Description"
+            Attr TypeRef = "pwrs:Type-$String80"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Process that handles the card. Plc(1), rt_io_comm(2) or application process(4).
+        ! Process that handles the card.
+        ! 
+        ! 1: The card is read by the plc process, and is handled by a specific
+        !    thread in the plc, which is specified in the ThreadObject attribute.
+        ! 2: The card is read by the rt_io_comm process.
+        ! 4: The card is handled by an application program.
+        !*/
+        Object Process $Attribute 10 15-NOV-2007 14:36:42.44
+          Body SysBody 15-NOV-2007 14:36:42.44
+            Attr PgmName = "Process"
+            Attr TypeRef = "pwrs:Type-$UInt32"
+          EndBody
+        EndObject
+        !/**
+        ! @Summary Plc thread that handles the card.
+        ! The PlcThread object of the plc thread that handles the card.
+        ! The card is read with the scantime of the thread.
+        !*/
+        Object ThreadObject $Attribute 11 15-NOV-2007 14:36:42.44
+          Body SysBody 15-NOV-2007 14:36:42.44
+            Attr PgmName = "ThreadObject"
+            Attr TypeRef = "pwrs:Type-$Objid"
+          EndBody
+        EndObject
+        !/**
+        ! Status from the USB I/O driver.
+        !*/
+        Object Status $Attribute 12 15-NOV-2007 14:36:42.44
+          Body SysBody 15-NOV-2007 14:37:27.63
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-MotionControl_StatusEnum"
+          EndBody
+        EndObject
+      EndObject
+      Object ConfiguratorPoson $Menu 21 15-NOV-2007 14:36:42.44
+        Object Pointed $Menu 22 15-NOV-2007 14:36:42.44
+          Object Connect $MenuButton 23 15-NOV-2007 14:36:42.44
+            Body SysBody 15-NOV-2007 14:36:42.44
+              Attr ButtonName = "Connect PlcThread"
+              Attr MethodName = "$Objid-Connect"
+              Attr MethodArguments[0] = "ThreadObject"
+              Attr MethodArguments[1] = "PlcThread"
+              Attr FilterName = "$Objid-IsOkConnect"
+              Attr FilterArguments[0] = "ThreadObject"
+              Attr FilterArguments[1] = "PlcThread"
+            EndBody
+          EndObject
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 24 15-NOV-2007 14:36:42.44
+        Object IoRackInit $Method 25 15-NOV-2007 14:36:42.44
+          Body SysBody 15-NOV-2007 14:36:42.44
+            Attr MethodName = "MotionControl_USB-IoRackInit"
+          EndBody
+        EndObject
+        Object IoRackClose $Method 26 15-NOV-2007 14:36:42.44
+          Body SysBody 21-NOV-2007 14:50:39.55
+            Attr MethodName = "MotionControl_USB-IoRackClose"
+          EndBody
+        EndObject
+      EndObject
+      Object Template MotionControl_USB 2147975168 01-JAN-1970 01:00:00.00
+        Body RtBody 15-NOV-2007 14:37:52.21
+          Attr Process = 1
+        EndBody
+      EndObject
+    EndObject
+    !/**
+    !  @Version 1.0
+    !  @Group IO
+    !  @Summary Card object for Motion Control USB I/O.
+    !  Card object for Motion Control USB I/O.
+    ! 	
+    !  Motion Control USB I/O is an I/O connected to the USB bus.
+    !  The device has 21 channels, divided in ports A, B and C.
+    !  The channels are configured by placing channel objects under the
+    !  card object. The Number attribute in the channel object states which
+    !  channel it represents. Below is a list of how the channels can be 
+    !  configured.
+    ! 
+    !  Channel    Type                     Number
+    !  ------------------------------------------
+    !  A1         ChanDo                     0
+    !  A2         ChanDo                     1
+    !  A3         ChanDo                     2
+    !  A4         ChanDo                     3
+    !  A5         ChanDi                     4
+    !  A6         ChanDi                     5
+    !  A7         ChanDi                     6
+    !  A8         ChanDi                     7
+    !  B1         ChanDi, ChanDo or ChanAi   8
+    !  B2         ChanDi, ChanDo or ChanAi   9
+    !  B3         ChanDi, ChanDo or ChanAi  10
+    !  B4         ChanDi, ChanDo or ChanAi  11
+    !  B5         ChanDi, ChanDo or ChanAi  12
+    !  B6         ChanDi, ChanDo or ChanAi  13
+    !  B7         ChanDi, ChanDo or ChanAi  14
+    !  B8         ChanDi, ChanDo or ChanAi  15
+    !  C1         ChanDi, ChanDo            16
+    !  C2         ChanDi, ChanDo            17
+    !  C3         ChanDi, ChanDo            18
+    !  C4         ChanDi, ChanDo or ChanAo  19
+    !  C5         ChanDi, ChanDo or ChanAo  20
+    ! 
+    !  @b Ai configuration
+    !  The Ai channels has the rawvalue range 0-1023, and the signal value 
+    !  range 0 - 5 V, i.e. the RawValRange and ChannelSigValRange should
+    !  be set to:
+    ! 
+    !  RawValRangeLow             0
+    !  RawValRangeHigh         1023
+    !  ChannelSigValRangeLow      0
+    !  ChannelSigValRangeHigh     5
+    !  
+    !  For example to get ActualValue range to 0 - 100 set
+    !  SensorSigValRangeLow       0
+    !  SensorSigValRangeHigh      5
+    !  ActValRangeLow             0
+    !  ActValRangeHigh          100
+    ! 
+    !  @b Ao configuration
+    !  The Ao channels has the rawvalue range 0 - 5, and the signal value 
+    !  range 0 - 5 V, i.e. the RawValRange and ChannelSigValRange should
+    !  be set to:
+    ! 
+    !  RawValRangeLow             0
+    !  RawValRangeHigh            5
+    !  ChannelSigValRangeLow      0
+    !  ChannelSigValRangeHigh     5
+    !  
+    !  For example to get ActualValue range to 0 - 100 set
+    !  SensorSigValRangeLow       0
+    !  SensorSigValRangeHigh      5
+    !  ActValRangeLow             0
+    !  ActValRangeHigh          100
+    ! 
+    !  @classlink MotionControl_USB otherui_motioncontrol_usb.html
+    !  @link Datasheet ../dsh/motioncontrol_usbio.pdf
+    !*/
+    Object MotionControl_USBIO $ClassDef 2 15-NOV-2007 14:36:59.65
+      Body SysBody 21-NOV-2007 14:53:39.42
+        Attr Editor = 0
+        Attr Method = 0
+        Attr Flags = 18448
+      EndBody
+      Object RtBody $ObjBodyDef 1 15-NOV-2007 14:36:59.65
+        Body SysBody 15-NOV-2007 14:36:59.65
+          Attr StructName = "MotionControl_USBIO"
+          Attr NextAix = "_X10"
+        EndBody
+        !/**
+        ! Super class.
+        !*/
+        Object Super $Attribute 7 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr PgmName = "Super"
+            Attr Flags = 393216
+            Attr TypeRef = "BaseComponent:Class-BaseIOCard"
+          EndBody
+        EndObject
+        !/**
+        ! Status from the USB I/O driver.
+        !*/
+        Object Status $Attribute 8 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:37:35.55
+            Attr PgmName = "Status"
+            Attr Flags = 1040
+            Attr TypeRef = "OtherIO:Type-MotionControl_StatusEnum"
+          EndBody
+        EndObject
+        !/**
+        ! Watchdog time in seconds.
+        ! If the device is not written to within this time, the device will be reset.
+        ! If WatchdogTime is zero, the watchdog is not activated.
+        !*/
+        Object WatchdogTime $Attribute 9 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr PgmName = "WatchdogTime"
+            Attr TypeRef = "pwrs:Type-$Float32"
+          EndBody
+        EndObject
+      EndObject
+      Object IoMethods $RtMethod 27 15-NOV-2007 14:36:59.65
+        Object IoCardInit $Method 28 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr MethodName = "MotionControl_USBIO-IoCardInit"
+          EndBody
+        EndObject
+        Object IoCardClose $Method 29 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr MethodName = "MotionControl_USBIO-IoCardClose"
+          EndBody
+        EndObject
+        Object IoCardRead $Method 30 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr MethodName = "MotionControl_USBIO-IoCardRead"
+          EndBody
+        EndObject
+        Object IoCardWrite $Method 31 15-NOV-2007 14:36:59.65
+          Body SysBody 15-NOV-2007 14:36:59.65
+            Attr MethodName = "MotionControl_USBIO-IoCardWrite"
+          EndBody
+        EndObject
+      EndObject
+      Object Template MotionControl_USBIO 2148237312 01-JAN-1970 01:00:00.00
+        Body RtBody 15-NOV-2007 14:38:59.75
+          Attr Super.Specification = "Motion Control USB I/O"
+          Attr Super.DataSheet = "../dsh/motioncontrol_usbio.pdf"
+          Attr Super.Process = 1
+          Attr Super.ErrorSoftLimit = 50
+          Attr Super.ErrorHardLimit = 100
+          Attr Super.MaxNoOfChannels = 21
+          Attr WatchdogTime = 2.000000e+00
+        EndBody
+      EndObject
+    EndObject
+  EndObject
+EndVolume
