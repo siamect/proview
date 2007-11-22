@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.cpp,v 1.6 2007-01-04 07:53:35 claes Exp $
+ * Proview   $Id: flow_con.cpp,v 1.7 2007-11-22 08:51:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -32,6 +32,7 @@
 #include "flow_arrow.h"
 #include "flow_text.h"
 #include "flow_utils.h"
+#include "flow_msg.h"
 
 #define LINE_TABLE_SIZE 500
 #define HV_LINE_ARRAY_SIZE 500
@@ -129,7 +130,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
 
 FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
 	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp, 
-	int nodraw, int point_num, double *x_vect, double *y_vect) :
+	int *rsts, int nodraw, int point_num, double *x_vect, double *y_vect) :
 	ctx(flow_ctx), cc(con_class),
 	dest_node(dest), source_node(source), dest_conpoint(dest_cp), source_conpoint(source_cp),
 	p_num(point_num), l_num(0), a_num(0), arrow_num(0), ref_num(0),
@@ -144,7 +145,6 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
   FlowArc *a1;
   FlowArrow *arrow;
   int i;
-  int sts;
 
   if ( !cc)
     return;
@@ -159,8 +159,11 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
       point_y[i] = y_vect[i];
     }
   }
-  source->get_conpoint( source_cp, &src_x, &src_y, &source_direction);
-  dest->get_conpoint( dest_cp, &dest_x, &dest_y, &dest_direction);
+  *rsts = source->get_conpoint( source_cp, &src_x, &src_y, &source_direction);
+  if ( EVEN(*rsts)) return;
+  *rsts = dest->get_conpoint( dest_cp, &dest_x, &dest_y, &dest_direction);
+  if ( EVEN(*rsts)) return;
+
   switch ( cc->con_type)
   {
     case flow_eConType_Straight:
@@ -274,14 +277,10 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
       }
       else
       {
-        sts = con_route( src_x, src_y, source_direction, dest_x, dest_y,
-		dest_direction);
-        if ( EVEN(sts) && sts != 0)
-        {
-          cout << "FlowCon:no such conpoint" << endl;
-	  return;
-        }
-        if ( sts == 0)
+        *rsts = con_route( src_x, src_y, source_direction, dest_x, dest_y,
+			   dest_direction);
+        if ( EVEN(*rsts) && *rsts != 0) return;
+        if ( *rsts == 0)
           temporary_ref  = 1;
         else
           temporary_ref  = 0;
@@ -372,7 +371,7 @@ FlowCon::FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
 
   strcpy( c_name, name);
   get_con_borders();
-
+  *rsts = FLOW__SUCCESS;
 }
 
 FlowCon::~FlowCon()

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.h,v 1.11 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_api.h,v 1.12 2007-11-22 08:51:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -108,13 +108,13 @@ void flow_CreateNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
 void flow_CreateCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, flow_tCon *con, 
-	int point_num, double *x_vect, double *y_vect);
+	int point_num, double *x_vect, double *y_vect, int *rsts);
 void flow_CreatePasteNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
 	double x, double y, void *user_data, flow_tNode *node);
 void flow_CreatePasteCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, flow_tCon *con, 
-	int point_num, double *x_vect, double *y_vect);
+	int point_num, double *x_vect, double *y_vect, int *rsts);
 void flow_SetAnnotation( flow_tNode node, int number, char *text, int size);
 void flow_SetPasteNodeAnnotation( flow_tNode node, int number, char *text, 
 	int size);

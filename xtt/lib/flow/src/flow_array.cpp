@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_array.cpp,v 1.5 2007-05-11 15:07:50 claes Exp $
+ * Proview   $Id: flow_array.cpp,v 1.6 2007-11-22 08:51:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -725,8 +725,10 @@ void FlowArray::open( void *ctx, ifstream& fp)
       }
       case flow_eSave_Con: 
       {
+	int sts;
+
         FlowCon *n = new FlowCon( (FlowCtx *) ctx, "", (FlowConClass *)0, 
- 		(FlowNode *)0, (FlowNode *)0, 0, 0);
+ 		(FlowNode *)0, (FlowNode *)0, 0, 0, &sts);
 	n->open( fp);
         insert( n);
         break;

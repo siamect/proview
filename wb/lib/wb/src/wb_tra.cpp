@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_tra.cpp,v 1.1 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_tra.cpp,v 1.2 2007-11-22 08:50:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1038,7 +1038,8 @@ int trace_create_analyse( 	WGre *gre,
 
     flow_CreateCon( gre->flow_ctx, name, gre->trace_con_cc, 
 	  	source->hn.node_id, n1, source_conpoint, 0, NULL, &c1,
-		0, NULL, NULL);
+		0, NULL, NULL, &sts);
+    if ( EVEN(sts)) return sts;
   }
   return TRA__SUCCESS;
 }

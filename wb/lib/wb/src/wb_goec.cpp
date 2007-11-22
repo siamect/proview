@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_goec.cpp,v 1.1 2007-01-04 07:29:03 claes Exp $
+ * Proview   $Id: wb_goec.cpp,v 1.2 2007-11-22 08:50:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -113,7 +113,13 @@ int	goec_con_draw(
 		    con->hc.source_node->hn.node_id,
 		    con->hc.dest_node->hn.node_id,
 		    con->lc.source_point, con->lc.dest_point,
-		    con, &con->hc.con_id, 0, NULL, NULL);
+		    con, &con->hc.con_id, 0, NULL, NULL, &sts);
+    if ( EVEN(sts)) {
+      printf( "** Corrupt connection deleted: source %s, destination %s\n",
+	      con->hc.source_node->hn.name, con->hc.dest_node->hn.name);
+      vldh_con_delete( con);
+      return sts;
+    }
     flow_GetConPosition( con->hc.con_id, &x_arr, &y_arr, &num);
     for ( i = 0; i < num; i++) {
       con->lc.point[i].x = x_arr[i];
@@ -135,7 +141,13 @@ int	goec_con_draw(
 		    con->hc.dest_node->hn.node_id,
 		    con->lc.source_point, con->lc.dest_point,
 		    con, &con->hc.con_id, con->lc.point_count,
-		    x, y);
+		    x, y, &sts);
+    if ( EVEN(sts)) {
+      printf( "** Corrupt connection deleted: source %s, destination %s\n",
+	      con->hc.source_node->hn.name, con->hc.dest_node->hn.name);
+      vldh_con_delete( con);
+      return sts;
+    }
   }
   return GRE__SUCCESS;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_api.cpp,v 1.11 2007-09-25 13:11:00 claes Exp $
+ * Proview   $Id: flow_api.cpp,v 1.12 2007-11-22 08:51:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -166,12 +166,14 @@ void flow_CreateNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
 void flow_CreateCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, flow_tCon *con, 
-	int point_num, double *x_vect, double *y_vect)
+	int point_num, double *x_vect, double *y_vect, int *rsts)
 {
   FlowCon *c1;
   c1 = new FlowCon( ctx, name, (FlowConClass *)cc, (FlowNode *)source,
-	(FlowNode *)dest, source_conpoint, dest_conpoint, 0, point_num,
+	(FlowNode *)dest, source_conpoint, dest_conpoint, rsts, 0, point_num,
 	x_vect, y_vect);
+  if ( EVEN(*rsts)) return;
+
   c1->set_user_data( user_data);
   ctx->insert( c1);
   ctx->nav_zoom();
@@ -191,12 +193,14 @@ void flow_CreatePasteNode( flow_tCtx ctx, char *name, flow_tNodeClass nc,
 void flow_CreatePasteCon( flow_tCtx ctx, char *name, flow_tConClass cc,
 	flow_tNode source, flow_tNode dest, int source_conpoint, 
 	int dest_conpoint, void *user_data, flow_tCon *con, 
-	int point_num, double *x_vect, double *y_vect)
+	int point_num, double *x_vect, double *y_vect, int *rsts)
 {
   FlowCon *c1;
   c1 = new FlowCon( ctx, name, (FlowConClass *)cc, (FlowNode *)source,
-	(FlowNode *)dest, source_conpoint, dest_conpoint, 1, point_num,
+	(FlowNode *)dest, source_conpoint, dest_conpoint, rsts, 1, point_num,
 	x_vect, y_vect);
+  if ( EVEN(*rsts)) return;
+
   c1->set_user_data( user_data);
   ctx->paste_insert( c1);
   *con = (flow_tCon) c1;

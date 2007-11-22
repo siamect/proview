@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_gre.cpp,v 1.6 2007-09-25 13:36:32 claes Exp $
+ * Proview   $Id: wb_gre.cpp,v 1.7 2007-11-22 08:50:55 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -2288,7 +2288,7 @@ void WGre::paste( float cursor_x, float cursor_y, int paste_type)
 			 (*con_ptr)->hc.dest_node->hn.node_id,
 			 (*con_ptr)->lc.source_point, (*con_ptr)->lc.dest_point,
 			 *con_ptr, &(*con_ptr)->hc.con_id, (*con_ptr)->lc.point_count,
-			 x, y);
+			 x, y, &sts);
     con_ptr++;
   }
   

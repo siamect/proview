@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_con.h,v 1.3 2005-10-21 16:11:22 claes Exp $
+ * Proview   $Id: flow_con.h,v 1.4 2007-11-22 08:51:50 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -57,9 +57,9 @@ class FlowCon : public FlowArrayElem {
 	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp);
 #endif
     FlowCon( FlowCtx *flow_ctx, char *name, FlowConClass *con_class,
-	FlowNode *source, FlowNode *dest, int source_cp, int dest_cp,
-	int nodraw = 0, int point_num = 0, double *x_vect = 0,
-	double *y_vect = 0);
+	     FlowNode *source, FlowNode *dest, int source_cp, int dest_cp, 
+	     int *rsts, int nodraw = 0, int point_num = 0, 
+	     double *x_vect = 0, double *y_vect = 0);
     ~FlowCon();
     FlowCon() {};
     FlowCon( const FlowCon& c, FlowNode *source, FlowNode *dest);

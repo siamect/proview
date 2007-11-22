@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_trace.cpp,v 1.2 2007-01-17 06:22:47 claes Exp $
+ * Proview   $Id: rt_trace.cpp,v 1.3 2007-11-22 08:50:11 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -603,7 +603,7 @@ int RtTrace::flow_cb( FlowCtx *ctx, flow_tEvent event)
       flow_CreateCon( ctx, name, tractx->trace_con_cc, 
 	  	event->con_create.source_object, n1,
 	  	event->con_create.source_conpoint, 0,
-	  	NULL, &c1, 0, NULL, NULL);
+	  	NULL, &c1, 0, NULL, NULL, &sts);
     }
   }
   switch ( event->event) {
