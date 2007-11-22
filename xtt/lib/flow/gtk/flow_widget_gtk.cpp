@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: flow_widget_gtk.cpp,v 1.5 2007-10-17 07:19:57 claes Exp $
+ * Proview   $Id: flow_widget_gtk.cpp,v 1.6 2007-11-22 09:02:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -145,7 +145,7 @@ static gboolean scroll_callback_cb( void *d)
       gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment);
     }
     else {
-      gtk_range_set_value( GTK_RANGE(scroll_data->scroll_v), (gdouble)data->offset_y);
+      gtk_range_set_value( GTK_RANGE(scroll_data->scroll_h), (gdouble)data->offset_x);
     }
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_value = (gdouble)data->offset_x;
     ((FlowWidgetGtk *)scroll_data->flow)->scroll_h_pagesize = data->window_width;

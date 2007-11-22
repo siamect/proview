@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.3 2007-02-06 15:13:34 claes Exp $
+ * Proview   $Id: glow_curvewidget_gtk.cpp,v 1.4 2007-11-22 09:02:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -59,6 +59,14 @@ struct _CurveWidgetGtk {
   GtkWidget    	*form;
   int		scroll_h_ignore;
   int		scroll_v_ignore;
+  gdouble       scroll_h_value;
+  gdouble       scroll_v_value;
+  int       	scroll_h_pagesize;
+  int       	scroll_v_pagesize;
+  int       	scroll_h_upper;
+  int       	scroll_v_upper;
+  gint 		scroll_timerid;
+  glow_sScroll  scroll_data;
 };
 
 struct _CurveWidgetGtkClass {
@@ -66,12 +74,24 @@ struct _CurveWidgetGtkClass {
 };
 
 G_DEFINE_TYPE( CurveWidgetGtk, curvewidgetgtk, GTK_TYPE_DRAWING_AREA);
+static gboolean scroll_callback_cb( void *d);
 
 static void scroll_callback( glow_sScroll *data)
 {
-  curvewidget_sScroll *scroll_data;
+  curvewidget_sScroll *scroll_data = (curvewidget_sScroll *) data->scroll_data;
 
-  scroll_data = (curvewidget_sScroll *) data->scroll_data;
+  if ( ((CurveWidgetGtk *)scroll_data->curve)->scroll_timerid) 
+    g_source_remove( ((CurveWidgetGtk *)scroll_data->curve)->scroll_timerid);
+
+  ((CurveWidgetGtk *)scroll_data->curve)->scroll_timerid = 
+    g_timeout_add( 200, scroll_callback_cb, scroll_data->curve);
+  ((CurveWidgetGtk *)scroll_data->curve)->scroll_data = *data;
+}
+
+static gboolean scroll_callback_cb( void *d)
+{
+  glow_sScroll *data = &((CurveWidgetGtk *)d)->scroll_data;
+  curvewidget_sScroll *scroll_data = (curvewidget_sScroll *) data->scroll_data;
 
   if ( data->total_width <= data->window_width) {
     if ( data->offset_x == 0)
@@ -115,6 +135,29 @@ static void scroll_callback( glow_sScroll *data)
   if ( data->window_height < 1)
     data->window_height = 1;
 
+  if ( scroll_data->scroll_v_managed) {
+    ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_ignore = 1;
+    if ( data->window_height != ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_pagesize ||
+	 data->total_height != ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_upper) {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "upper", (gdouble)data->total_height,
+		    "page-size", (gdouble)data->window_height,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    else {
+      g_object_set( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment,
+		    "value", (gdouble)data->offset_y,
+		    NULL);
+      gtk_adjustment_value_changed( ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
+    }
+    ((CurveWidgetGtk *)scroll_data->curve)->scroll_v_value = (gdouble)data->offset_y;
+    ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_pagesize = data->window_width;
+    ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_upper = data->total_width;
+  }
+  return FALSE;
+#if 0
   if ( scroll_data->scroll_h_managed) {
     ((CurveWidgetGtk *)scroll_data->curve)->scroll_h_ignore = 1;
     g_object_set( ((GtkScrollbar *)scroll_data->scroll_h)->range.adjustment,
@@ -136,6 +179,7 @@ static void scroll_callback( glow_sScroll *data)
     gtk_adjustment_changed( 
         ((GtkScrollbar *)scroll_data->scroll_v)->range.adjustment);
   }
+#endif
 }
 
 static void scroll_h_action( 	GtkWidget      	*w,
