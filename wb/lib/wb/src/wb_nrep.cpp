@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_nrep.cpp,v 1.15 2007-01-04 07:29:04 claes Exp $
+ * Proview   $Id: wb_nrep.cpp,v 1.16 2007-11-22 13:11:21 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -411,8 +411,8 @@ void wb_nrep::parse () throw (wb_error)
           seg[num_seg].len = seg[num_seg+1].offs - seg[num_seg].offs - 1;
           num_seg++;
         } else if ( *s == '.') {
-          if ( nameDiff( s, oname) == seg[num_seg].offs)
-            throw wb_error(LDH__BADNAME);
+          // if ( nameDiff( s, oname) == seg[num_seg].offs) // Could be volume object !!
+          //   throw wb_error(LDH__BADNAME);
           attr[0].offs = nameDiff( s+1, oname);
           seg[num_seg].len = attr[0].offs - seg[num_seg].offs - 1;
           num_seg++;
