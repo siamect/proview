@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.9 2007-10-22 14:50:40 claes Exp $
+ * Proview   $Id: rt_io_m_pb_dp_slave.c,v 1.10 2007-11-23 10:07:10 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -235,8 +235,8 @@ static pwr_tStatus IoRackInit (
 	    chanp->udata |= PB_UDATA_DIAG;
 	    switch (chanp->ChanClass) {	    
             case pwr_cClass_ChanIi:
-	      chanp->offset = ((pwr_sClass_ChanIi *)chanp)->Number;
-	      chanp->size = GetChanSize( ((pwr_sClass_ChanIi *)chanp)->Representation);
+	      chanp->offset = ((pwr_sClass_ChanIi *)chanp->cop)->Number;
+	      chanp->size = GetChanSize( ((pwr_sClass_ChanIi *)chanp->cop)->Representation);
 	      break;
 	    default:
 	      errh_Error( "Diagnostic channel class, card %s", cardp->Name);
