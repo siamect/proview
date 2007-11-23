@@ -35225,11 +35225,12 @@ ABB ACS800 Aggregate
         EndObject
       EndObject
       Object Template ABB_ACS_Pb_Slave 2156888064 01-JAN-1970 01:00:00.00
-        Body RtBody 02-MAY-2006 14:34:46.00
+        Body RtBody 08-NOV-2007 17:33:02.02
           Attr Super.Specification = "ABB ACS800 Profibus slave"
           Attr Super.DataSheet = "$pwr_lang/dsh/abb_acs800.html"
           Attr Super.GSDfile = "$pwr_exe/abb_acs_pb_slave.gsd"
           Attr Super.Process = 1
+          Attr Super.ByteOrdering = 1
           Attr Super.StallAction = 1
           Attr Super.ErrorSoftLimit = 15
           Attr Super.ErrorHardLimit = 50
