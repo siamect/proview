@@ -140,7 +140,7 @@ chgrp -R pwrp /usr/pwrrt
 
 chmod u+s /usr/pwrrt/exe/rt_ini
 chmod u+s /usr/pwrrt/exe/rt_rtt
-chmod u+s /usr/pwrrt/exe/rt_xtt
+#chmod u+s /usr/pwrrt/exe/rt_xtt
 chmod u+s /usr/pwrrt/exe/rt_bck
 chmod u+s /usr/pwrrt/exe/rt_gdhget
 chown root /usr/pwrrt/exe/rs_remote_alcm
