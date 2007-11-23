@@ -1,5 +1,5 @@
 /** 
- * Proview   $Id: co_cdh.h,v 1.25 2007-01-18 07:49:00 claes Exp $
+ * Proview   $Id: co_cdh.h,v 1.26 2007-11-23 14:34:00 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -82,21 +82,23 @@ typedef enum {
 //! Get volume identity for type identity.
 #define cdh_TidToVid(tid) ((tid) >> 16)
 //! Get class identity for class index
-#define cdh_cixToCid( Vid, Cix) (0 + (Vid << 16) +  (Cix << 3))
+#define cdh_cixToCid( Vid, Cix) (0 + ((Vid) << 16) +  ((Cix) << 3))
+//! Get class index from class identity.
+#define cdh_cidToCix( Cid) (((Cid) >> 3) & 0xfff)
 //! Get type identity for type index.
-#define cdh_tixToTid( Vid, Tyg, Tix) (0 + (Vid << 16) + (1 << 15) + (Tyg << 11) +  Tix)
+#define cdh_tixToTid( Vid, Tyg, Tix) (0 + ((Vid) << 16) + (1 << 15) + ((Tyg) << 11) +  (Tix))
 //! Get object index for class index.
-#define cdh_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + (Cix << 18) + (Bix << 15) + Aix)
+#define cdh_cixToOix( Cix, Bix, Aix) (0 + (1 << 31) + ((Cix) << 18) + ((Bix) << 15) + (Aix))
 //! Get object index for type index.
-#define cdh_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + (Tyg << 26) + (Tix << 15))
+#define cdh_tixToOix( Tyg, Tix) (0 + (1 << 31) + (1 << 30) + ((Tyg) << 26) + ((Tix) << 15))
 //! Get object index for body index.
-#define cdh_oixToBix( Oix) ((pwr_eBix)((Oix >> 15) & 7))
+#define cdh_oixToBix( Oix) ((pwr_eBix)(((Oix) >> 15) & 7))
 //! Get class index for object index.
-#define cdh_oixToCix( Oix) ((Oix >> 18) & 0xfff)
+#define cdh_oixToCix( Oix) (((Oix) >> 18) & 0xfff)
 //! Get attribute index for object index.
-#define cdh_oixToAix( Oix) (Oix & 0xfff)
+#define cdh_oixToAix( Oix) ((Oix) & 0xfff)
 //! Check if type id is a class id
-#define cdh_tidIsCid( Tid) ((Tid & (1 << 15)) == 0)
+#define cdh_tidIsCid( Tid) (((Tid) & (1 << 15)) == 0)
 
 //! Smallest value of volume identity for user volumes
 #define cdh_cUserVolMin  (0 + ((pwr_tVolumeId)0 << 24) + (1 << 16) + (1 << 8) + 1)
