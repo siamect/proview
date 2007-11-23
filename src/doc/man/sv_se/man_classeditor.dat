@@ -1,0 +1,654 @@
+<chapter>
+<topic> classeditor
+Klasseditor
+
+Det här avsnittet beskriver hur man skapar nya klasser i Proview. 
+Det finns ett antal olika fall när det kan vara idé att skapa en ny klass
+
+<h2>Data objekt
+Man vill lagra en mängd data i en datastruktur, t ex för att smidigare kunna få tillgång till
+datamängden från applikationer. Man kan även skapa dataobjekt som beskriver material som
+passerar genom en anläggning, där ett dataobjekt innehåller egenskaper för ett material, t ex
+längd, bredd, vikt etc. Material objekt kan flyttas runt i NMps celler för att beskriva läget
+av ett material i anläggningen, och låta detta styra processen.
+
+<h2>Plc funktionsobjekt
+Funktionsobjekt som används i plc programmeringen består av en klass som definierar in- och
+utgångs pinnar på funktionsobjektet samt eventuella interna attribut. Det här typen av objekt
+består även av kod, som exekveras av plcprogrammet, den här koden kan man välja att skapa i
+form av plc-kod eller c-kod.
+
+<h2>Komponenter
+Ett komponent-objekt speglar en komponent i anläggningen och är ofta uppdelad i två eller tre
+olika klasser, ett huvudobjekt, ett funktionsobjekt och ett busobjekt, ibland även ett 
+simuleringsobjekt. Huvudobjektet läggs i anläggningshierarkin och innehåller de signaler som
+är kopplade till komponenten, jämte andra konfigureringsdata. I ett plcprogram läggs ett 
+funktionsobjekt som kopplas till huvudobjektet och som arbetar dels med data från sina egna 
+ingångar, och dels med signaler och andra parametrar som finns i huvudobjektet. Om 
+signalutbytet med komponenten sker via Profibus, kan man även skapa ett speciellt Profibus
+modulobjekt som innehåller kanalobjekt för de data som transporteras på Profbus. Här räcker
+det med att göra en koppling mellan huvudobjekt och modulobjekt, för att koppla ihop alla
+kanaler och signaler. Simuleringsobjektet är ett funktionsobjekt som kopplas till 
+huvudobjektet och som simulerar komponenten när systemet körs i simuleringsmod.
+
+<h2>Subklasser av komponenter
+Proview innehåller ett antal baskomponent-klasser för ventiler, motorer mm. Dessa är byggda
+mycket generalla för att täcka in ett stort antal komponenter. Ofta gör man en subklass som
+är anpassad till en specifik komponent, och som t ex innehåller länk till datablad, 
+hjälptext mm. för just denna komponent. Genom att göra en subklass av en baskomponent ärver
+man alla metoder och attribut från denna, men har även möjligheten att utöka 
+funktionaliteten med fler attribut och mer plc-kod.
+
+<h2>Aggregat
+Ett aggregat speglar ett anläggnigsdel som består av ett antal komponenter. Här kan man göra
+en aggregats-klass som innehåller de olika komponenterna i form av attributobjekt. 
+Till aggregatet finns även ett funktionsobjekt anropar funktionsobjekten för ingående 
+komponenter. Aggregat kan även inehålla andra aggregat och ge upphov till ganska omfattande
+objektsstrukturer. I princip skulle man kunna bygga en anläggning i form att ett enda
+aggregatsobjekt, men praktiken är det lämpligt att hålla objektsstrukturen på en ganska låg
+nivå. Det är framför allt när man har flera identiska aggragat som man har nytta av att göra
+ett aggregatsobjekt av anläggningsdelen.
+</topic>
+
+<headerlevel>
+<topic>ced_databasestructure
+Databasstruktur
+<h1>Objekt
+I avsnittet Databas struktur ges en beskrivning av hur objekt är uppbyggda. Här finns 
+anledning att gå lite djupare i det ämnet.
+
+Ett objekt består av ett objektshuvud och en objektskropp. Objekshuvudet innehåller 
+information om objektets namn, klass och relation till andra objekt. Objektskroppen innehåller
+objektets datamängd.
+
+<h2>Objektshuvud
+Ett objekt har ett namn på maximalt 31 tecken som finns lagrat i objekthuvudet. 
+
+I objektshuvudet finns även en länk till objekts klassbeskrivning. I klassbeskrivningen finns 
+information som gör att man kan tolka objektets datamängd, hur den är uppdela i olika 
+attribut och vilken typ de olika attributen har. Vidare finns här även de olika metoder som
+kan verka på objektet.
+
+Ett objekt ligger i en trädstruktur och i objektshuvudet finns pekare till närmsta anhöriga:
+förälder, föregående syskon, nästa syskon och första barn.
+
+Strukturen på ett objekthuvud är gemensamt för alla olika typer av objekt.
+
+<h2>Objektskropp
+Ett objekt kan ha två olika kroppar, en kropp som innehåller den datamänd som behövs i 
+runtime, dessutom kan ett objekt ha ytterligare en kropp med en datamängd som enbart finns
+i utvecklingsmiljön.
+
+En kropp är uppdelad i attribut som innehåller data av en viss typ, det kan t ex vara en 
+Boolean, Float32 eller Int32. Men det kan även vara en mer komplex datatyp, som en vektor 
+eller en klass.
+
+<b>RtBody
+RtBody är den kropp som finns i runtimedatabasen. Kroppen finns även i utvecklingsmiljön så
+att man där kan datasätta olika attribut i kroppen.
+
+<b>DevBody
+Vissa objekt har även en DevBody, en kropp som enbart finns i utvecklingsdatabase, men som 
+inte laddas in i runtimedatabasen. Detta används främst av plcobjekt, där devbody t ex 
+innehåller grafisk data från plceditor.
+</topic>
+
+<topic>ced_classdescription
+Klassbeskrivning
+
+Hur ett objekts kropp ser ut finns beskrivet i objektets klassbeskrivning. Här finns även
+de metoder som kan verka på ett objekt beskrivna och alla övriga egenskaper hos instanser
+av klassen. Klassbeskrivningen byggs upp av speciella klassdefinitionsobjekt som ligger i
+en klassvolym. Klassvolymen har en strikt syntax över hur klassbeskrivningarna ska var 
+uppbyggda. Här följer en presentation av de olika objekt som ingår in en klassbeskrivning.
+
+<h2>Klassvolym
+Klassbeskrivningar ligger i en speciell typ av volym, ClassVolume. Dessa kan innehålla två
+olika hierarkier, en hieraki med klassbeskrivningar och en med typbeskrivningar.
+
+<h2>$ClassHier
+Klassbeskrivningar ligger under rotobjektet 'Class' av  klassen $ClassHier. Under $ClassHier
+objektet ligger objekt som beskriver olika klasser i form av $ClassDef objekt.
+
+<h2>$ClassDef
+Ett $ClassDef objekt med underliggande objekt beskriver en klass. Namnet på objeketet ger
+namnet på klassen. Under $ClassDef objektet kan det finnas
+
+- ett $ObjBodyDef objekt, 'RtBody', som beskriver runtimekroppen.
+- ett $ObjBodyDef objekt, 'DevBody', som beskriver kroppen i utvecklingsmiljön.
+- ett Template objekt, dvs ett objekt av den aktuella klassen som innehåller defaultvärden
+  för instanser av klassen.
+- ett eller flera body objekt som innehåller data för specifika funktioner.
+- ett PlcTemplate objekt, som kan öppnas av plceditorn, och som innehåller plc-kod för 
+  klassen.
+- Menyobjekt som beskriver popupmenyn i navigatören, konfiguratören och xtt.
+- Metodobjekt som knyter till metoder som anropas när objekt skapas eller flyttas i
+  utvecklingsmiljön.
+
+<h2>$ObjBodyDef
+Ett $ObjBodyDef kan ha antingen namnet 'RtBody' och beskriver då runtimekroppen, eller
+namnet 'DevBody' som bekriver utvecklingsmiljö kroppen. I attributet 'StructName' ligger
+namnet på c-structen i den include-fil som genereras för volymen. Under $ObjBodyDef objektet
+ligger ett objekt för varje attribut som finns i objektskroppen. För dataobjekt använder man
+$Attribute objekt, för funktionsobjekt $Input, $Output och $Intern.
+
+<h2>$Attribute
+Ett $Attribute objekt beskriver ett attribut i en kropp. Attributet kan vara av följande
+typ:
+- en bastyp, t ex Boolean, Float32, Time, Int16.
+- en härledd typ, t ex String80, Text1024, URL.
+- en vektor av bastyp eller härledd typ.
+- en annan klass.
+- en vektor av en klass.
+- en rtdb pekare, dvs en pekare som kan tolkas av alla processer.
+- en privat pekare, dvs en pekare som endast kan tolkas av en process.
+
+Typen anges i attributet 'TypeRef'. I attributet 'Flags' anges om objektet beskriver en
+vektor, pekare, klass mm. Om objektet beskriver en vektor anges antalet element i 'Elements'.
+
+<h2>$Input
+$Input beskriver en ingång till ett funktionsobjekt i plcprogrammet. Ingången kan vara av
+typen Boolean, Float32, Int32, String80, Time, DeltaTime eller av datatyp (pekare till 
+Float32). $Input ger upphov till ett attribut med två element, ett element av den angivna
+typen, och ett element med en pekare till den angivna typen. Om ingången är kopplad pekar
+pekaren på det kopplade utgångsattributet, om ingången ej är kopplad pekare den på sitt
+första element, där man kan då kan datasätta ett värde på ingången.
+Attributet 'PgmName' anger namnet i c-structen för attributet, och 'GraphName' den textsträng
+som skrivs i funktionsobjektet vi ingången.
+
+<h2>$Intern
+Ger uphov till ett internt attribut i ett funktionsobjekt, dvs ett attribut som varken är en
+ingång eller utgång.
+
+<h2>$Output
+$Output beskriver en utgång i ett funktionsobjekt. Samma datatyper gäller för $Output som för
+$Input.
+
+<h2>$Buffer
+$Buffer skapar ett attribut som innehåller en datamängd av en viss storlek som endast någon 
+enstaka funktion behöver kunna tolka. Datamängden beskrivs av en klass, men går ej att
+öppna i t ex xtt. PlcNode som återfinns i alla plc objekt är ett exempel på $Buffer. Där
+återfinns grafiska information som enbart är av intresse för plc-editorn.
+
+<h2>Klass kropp
+Ett klass kan innehålla ett klass kropp objekt. Klass kroppobjektet innehåller data som är
+gemensam för alla instanser av klassen. Exempel på klass kropp objekt är $GraphPlcNode som
+återfinns i all plc-klasser. $GraphPlcNode innehåller data för kodgenerering och grafisk 
+layout av funktionsobjektet.
+
+<h2>Menyer
+Menyobjekt används för att definiera popup-menyer för objekt i utvecklingsmiljön och i 
+operatörsmiljön. $Menu definierar en popupmeny i utvecklingsmiljön, och $RtMenu in 
+operatörsmiljön. Under menuobjektet definieras menyalternativ med $MenuButton objekt, och
+undermenyer med $MenuCascade objekt. Meny-objekten läggs under $ClassDef objektet.
+
+Menyobjekten anropar metoder, dvs c-funktioner som byggs med utvecklingsmiljön resp
+operatörsmiljön. Det finns fn inte någon möjliget att göra detta från ett projekt, utan
+bygget måste ske från källkodsträdet.
+
+<b>$Menu
+$Menu objekt beskriver popupmenyer i utvecklingsmiljön. Namnet specificerar funktionen,
+första delen anger verktyget (Navigator/Configurator). De fem sista bokstäverna bestämmer
+att menyn gäller för ett fall beroende på vilket eller vilka objekt som är utvalda.
+1. P står för pointed, dvs det objekt som markören pekar på.
+2. anger vad pointed är: 'o' ett objekt, 'a' ett attribut, 'c' en klass i paletten.
+3. s står för selected, dvs det objekt som är utvalt.
+4. anger vad selected är: 'o' ett objekt, 'a' ett attribute, 'c' en klass i paletten,
+   'm' flera objekt utvalda, 'n' inget objekt utvalt.
+5. anger om selected och pointed är samma objekt: 's' samma objekt, 'n' olika objekt.
+
+Exempel ConfiguratorPosos: 'Po' markören pekar på ett objekt, 'so' ett objekt är utvalt,
+'s' det objekt markören pekar på och det utvalda är samma objekt.
+
+<b>$RtMenu
+Menyobjekt som beskriver popupmenyer i operatörsmiljön.
+
+<b>$MenuButton
+Definerar ett menyalternativ i en popupmeny.
+<h2>Metoder
+</topic>
+
+<topic>ced_typedescription
+Typbeskrivning
+
+Typbeskrivningar ligger liksom klassbeskrivningar i en klassvolym. De är placerade i en egen
+hierarki under ett $TypeHier objekt. Typer är uppdelade i två kategorier, bastyper och
+härledda typer.
+
+<h2>Bastyper
+Bastyperna ligger definierade i systemvolymen pwrs. Exempel på bastyper är Boolean, Float32
+Int32, String, Enum och Mask.
+
+<h2>Härledda typer
+Härledda typer kan definieras i vilken klassvolym som helst. De utgörs av 
+- vektorer av bastyper, t ex String80.
+- uppräkningstyper, Enum, med definerade texter för olika värden.
+- bitmasker, Mask, med definerade texter för olika bitar.
+
+<b>$TypeHier
+Typbeskrivningar ligger under rotobjektet 'Type' av klassen $TypeHier. $TypeHier objektet har
+$Type och $TypeDef objekt som barn.
+
+<b>$Type
+Beskrivning av en bastyp. Detta objekt är reserverat för systemvolymen pwrs.
+
+<b>$TypeDef
+Beskrivning av en härledd typ. Attributet 'TypeRef' innehåller bastypen. Den vanligaste 
+användningen är strängar och texter med specifika längder, och uppräkningstyper och bitmaskar.
+
+För en uppräkningstyp ska bastypen vara $Enum. Under $TypeDef objektet definerar man texter
+för olika värden med $Value objekt. När ett attribut av typen ska visas den text som motsvara
+aktuellt värde. När attributet ska datasättas visas de olika de olika texterna med checkboxar
+och man väljer ut ett alternativ.
+
+För bitmaskar används bastypen $Mask. Under $TypeDef objektet defineras texter för olika
+bitar med $Bit objekt. Vid datasättning väljer man liksom för uppräkningstyper, alternativ 
+med checkboxar. För bitmaskar kan man välja flera alternativ.
+
+<b>$Value
+Används för att definiera ett värde i en uppräkningstyp. Värdet kopplas till ett text som 
+visas i konfiguratören och xtt när ett attribut av typen öppnas. I include-filen för volymen
+skapas en enum deklaration som kan användas i eventuell c-kod.
+
+<b>$Bit
+Används för att definiera en bit i en bitmask. Biten kopplas till ett text som visas i 
+konfiguratören och xtt när ett attribut av typen öppnas. I include-filen för volymen skapas 
+en enum deklaration som kan användas i eventuell c-kod.
+</topic>
+
+<topic>ced_createclasses
+Skapa klasser
+
+<option> printdisable
+Skapa en klassvolym <link> ced_createclassvolume
+Dataklasser <link> ced_dataclasses
+Funktionsobject <link>ced_foclasses
+Komponenter <link>ced_components
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>ced_createclassvolume
+Skapa en klassvolym
+
+Klassdefinition objekten ligger i en klassvolym, och först måste klassvolymen registreras
+och skapas.
+
+Registreringen sker i globala volymslistan som öppnas från File/Open/GlobalVolumeList i 
+navigatorns meny. Här skapar man ett VolumeReg objekt med lämpligt volymsnamn och 
+volymsidentitet. Volymsidentiteten för användar-klassvolymer ska ligga i intervallet
+0.0.2-249.1-254. Använd gärna prefixet CVol i namnet för att makera att det är en klassvolym.
+Ange även aktuellt projekt.
+
+<image>ced_fig11.gif
+Konfiguration av klassvolymen i GlobalVolumeList
+
+Därefter ska klassvolymen konfigureras i directory volymen med ett ClassVolumeConfig
+objekt. Öppna Directory volymen med
+
+<c>$ pwrs
+
+och lägg ett ClassVolumeConfig objekt i det högra fönstret. Objektet ska ha samma namn
+som klassvolymen. När man har sparat och lämnat edit mod, kan man öppna klassvolymen
+genom att högerklicka på ClassVolumeConfig objektet och aktivera 'Open ClassEditor...'.
+
+<image>ced_fig10.gif
+Konfiguration av klassvolymen i Directory volymen
+
+Nu öppnas klasseditorn, där man kan skapa klassdefinitions objekt. Genom att gå in i 
+editerings mod visas en palett, med de klass och typ definitions klasser som används
+för att bygga en klass eller typ.
+Börja med att skapa ett objekt av typen $ClassHier på rotnivå. Det får automatiska namnet
+'Class'. Under $ClassHier objektet lägger man sedan ett $ClassDef objekt för varje klass
+som ska defineras.
+</topic>
+
+<topic>ced_dataclasses
+Data klasser
+
+Data klasser är den enklaste typen av klasser, och används normalt för att lagra data i.
+Klasserna består av en RtBody med attribut.
+
+För att skapa en klass lägger man ett $ClassDef objekt under 'Class' objektet.
+Namnet på $ClassDef objektet kommer att bli klassens namn.
+
+Under $ClassDef objektet skapar man ett $ObjBodyDef object som automatiskt får
+namnet RtBody.
+
+Under RtBody objektet skapas ett $Attribute objekt som definierar ett attribut i klassen.
+Namnet på $Attribut-objektet ger attribut-namnet. I objektet måste anges följande:
+
+- attributets typ anges i TypeRef. Ett 32-bitars heltal anges t ex med pwrs:Type-$Int32,
+     ett 32-bitars flyttal med pwrs:Type-$Float32 och en boolean med pwrs:Type-$Boolean.
+     Det som läggs in är egentligen namnet på ett typdefinitions-objekt. Se i objekts
+     handboken pwrs/Types, vilka typer som finns definierade. 
+- om attributnamnet innehåller nationella tecken måste man ange ett namn utan nationella
+     tecken som godkänns av c-kompilatorn. Detta anges i PgmName.
+
+<image> ced_fig1.gif
+Definition av ett attribut
+
+När man spara skapas under $ClassDef objektet en instans av den aktuella klassen med namnet
+Template. Här kan man set hur ett objekt av klassen ser ut. I Template objektet kan man
+också lägga in default-värden på attributen. När instanser av klassen skapas, tas en kopia av
+Template objektet.
+
+<image> ced_fig2.gif
+Template objekt med defaultvärden
+
+<b>Vektorer
+Ett vektor-attribut definieras med ett $Attribute objekt på samma som övriga
+attribut. Här sätter man Flags biten Array, och anger antalet element i vektorn
+i Elements.
+
+<image> ced_fig3.gif
+Definition av vektor attribut med 50 element
+
+<b>Attribute objekt
+Med attribut objekt avses attribut som beskrivs av en datastruktur. Orsaken kan vara att
+man vill samla ett antal data i objektet under en mapp, eller att datastrukturen upprepas,
+i det här fallet gör man ett attribut objekt i form av en vektor.
+
+Datastrukturen för attributet måste defineras av en egen klass. Klassen ska enbart innehålla
+en runtime body, inte en development body. 
+
+Attributobjektet definieras med ett $Attribute objekt. Som TypeRef anges den klass som 
+beskriver datastrukturen, och i Flags sätts biten Class.
+
+Man kan även göra en array av attributet genom att sätta Array biten i Flags, och ange
+antalet element i Elements.
+
+Attributobjekt kan i sin tur ha attribut som är attribut objekt. Antalet nivåer är dock 
+begränsat till 20, och längden på det sammanlagda attribut-namnet får maximalt vara 255 tecken.
+
+Ett attribut i ett attributobjekt refereras med punkt som avgränsare, dvs attributet
+Description i attributobjektet Pump i objektet o, refereras med namnet 'o.Pump.Description'.
+Om pump dessutom är en vektor av pumpobjekt blir namet på Description attributet i det
+första pumpobjektet 'o.Pump[0].Description'.
+
+<image> ced_fig4.gif
+Definition av ett attributobjekt av klassen Table.
+
+<b>Subklass
+Man kan även definiera en klass som en subklass till en annan klass. Subklassen kommer att
+ärva attribut och metoder av den andra klassen, som kallas för superklass.
+
+En subklass definieras genom att det första $Attribute objektet i klassen har
+namnet 'Super', och bitarna Class och SuperClass satta i Flags ordet. Superklassen anges
+i TypeRef.
+
+Alla attribut som finns i superklassen kommer även att finnas i subklassen. Subklassen kan
+byggas ut med fler attribut som defineras på normalt sätt med $Attribute objekt.
+
+En superklass får enbart innehålla en runtime body, ej någon dev body.
+
+<image> ced_fig5.gif
+Super attributet gör MyDataClass till en subklass till MySuperDataClass
+
+</topic>
+
+<topic>ced_foclasses
+Funktionsobjekts klasser
+
+Funktionsobjekt används i plc editorn för att programmera plc-programmet. Även ett 
+funktions-objekt beskrivs av en klass, vanligvis lite med komplex än en data-klass, eftersom 
+den, förutom en datastruktur, även ska definera ett grafiskt utseende med in och utgångar, 
+och den kod som ska exekveras av plc-programmet.
+
+Koden kan defineras antingen med c-kod, eller med grafiskt programmering i plc-editorn.
+
+<option> printdisable
+Funktions-object med c-kod <link> ced_ccodefo
+Funktions-object med plc-kod <link> ced_plccodefo
+<option> printenable
+</topic>
+
+<headerlevel>
+<topic>ced_ccodefo
+Funktions-objekt med c-kod
+
+Funktionsobjekt klassen defineras med ett $ClassDef objekt under 'Class' objektet. Namnge
+objektet och aktivera Configure-CCodeFo från popup-menyn för objektet. Nu skapas 
+
+- ett RtBody objekt. 
+- ett DevBody objekt med ett PlcNode objekt som definierar ett buffert för  grafisk 
+  information i instanserna.
+- ett GraphPlcNode objekt som innehåller diverse information om grafik och kodgenerering 
+  för klassen.
+
+Nästa steg är att definiera attribut för klassen. Attributen indelas i ingångar, interna 
+attribut och utgångar.
+
+<b>Ingångar
+Ingångsattributen definierar ingångarna på funktions-objektet, dvs värden som hämtas från 
+utgångar på andra funktionsobjekt. Ingångarna definieras med $Input objekt som läggs under
+RtBody objektet. 
+
+I TypeRef anges datatypen för ingången, de datatyper man kan välja är pwrs:Type-$Boolean, 
+pwrs:Type-$Float32, pwrs:Type-Int32 eller pwrs:Type-String80.
+
+I GraphName anges texten på ingången i funktionsobjektet, normalt brukar man använda 2 - 4
+bokstäver. Man brukar använda stora bokstäver för analoga signaler, små för digitala och
+stor första bokstav för övriga signaltyper.
+
+Ett ingångsattribut i en instans innehåller både en pekare till den utgång den är kopplad
+till, och ett värde som kan datasättas. Det gör att man kan välja om en ingång ska kopplas, 
+eller datasättas. Det här valet görs med en checkbox (Used), och om man väljer att inte
+markera Used, visas inte ingångs pinnen på funktionsobjektet. I Template objektet kan man
+sätta defaultvärde på ingången, i det fall ingången inte kopplas.
+
+<b>Interna attribut
+Interna attribut är attribut som ej är ut eller ingångar. Det kan vara beräknade värden som
+behöver lagras i objektet, eller värden som används för att konfigurera objektet.
+
+Alla vanliga datatyper är tillgängliga för interna attribut.
+
+<b>Utgångar
+Utgångsattributen definierar utgångarna på funktions-objektet, dvs värden som lagras i
+objeketet, och som därifrån kan hämtas till ingångar på andra funktionsobjekt. Utgångarna
+definieras med $Output objekt som läggs under RtBody objektet.
+
+I TypeRef anges datatypen för utgången, liksom för $Input objekt kan Boolean, Float32, Int32
+och String80 anges, och i GraphName anges texten vid utgångspinnen i funktionsobjektet.
+
+<b>OBS !
+$Input, $Intern och $Output måste ligga i följande ordning under RtBody: $Input först,
+därefter $Intern och därefter $Output.
+
+<b>Default värden
+Defaultvärden på attribut kan anges i Template objektet.
+Om man vill ange vilka in och utgångar som ska visas som default, finns det en mask i
+GraphPlcNode objektet, default_mask. default_mask[0] anger ingångar och default_mask[1]
+utgångar. Om biten som motsvarar en in eller utgång sätts visas denna som default.
+
+<image> ced_fig6.gif
+Funktionsobjekt med två ingångar, ett internt attribut, och en utgång
+
+<image> ced_fig7.gif
+Funktionsobjektet för klassen
+
+<b>Kod
+När klassvolymen byggs genereras en h-fil med en c-struct för klassen. Namnet på structen
+blir 
+
+<c>pwr_sClass_'StructName' 
+
+där StructName hämtas från StructName attributet i RtBody. Default är det samma som klassnamnet, 
+men t ex om klassnamnet innehåller nationella tecken, kan ett annat namn anges.
+
+Här visas ett exempel på structen för klassen MyFo som innehåller två ingångar In1 och In2,
+ett internt attribut Factor, och en utgång Out, alla av typen Float32.
+
+<c>typedef struct {
+<c>  pwr_tFloat32           *In1P;
+<c>  pwr_tFloat32           In1;
+<c>  pwr_tFloat32           *In2P;
+<c>  pwr_tFloat32           In2;
+<c>  pwr_tFloat32           Factor;
+<c>  pwr_tFloat32           Out;
+<c>} pwr_sClass_MyFo;
+
+Notera att varje ingång består av två element, en pekare med suffixet 'P', och
+ett element som kan datasättas om ingången inte kopplas. Om ingången är kopplad
+kommer pekar-elementet att peka på den utgång den är kopplad till, annars 
+pekar den på datasättnings-elementet. I koden ska man därför använda pekar-elementet
+för att hämta upp värde på ingången.
+
+Koden för klassen ska vara en funktion med följande utseende
+
+<c>void 'StructName'_exec( plc_sThread *tp,
+<c>                        pwr_sClass_'StructName' *o) {
+<c>}
+
+I koden hämtas data från ingångarna, och beräknade värden läggs ut på utgångarna. Även
+interna attribut kan användas för att lagra information till nästa scan, eller för
+att hämta upp konfigureringsdata.
+
+I kod exemplet nedan är In1 och In1 ingångar, Factor ett internt attribut och Out en utgång.
+
+<c>  o->Out = o->Factor * (*o->In1P + *o->In2P);
+
+Observera att pekar-elementet för ingångarna In1 och In2 används i koden.
+
+Modulen för c-koden kompileras och länkas ihop med plc-programmet genom att
+en länk-fil skapas på $pwrp_exe. Filen ska namnges plc_'nodenamn'_'busnr'.opt.
+Innehållet i filen skickas med som indata till länkaren, ld, och man lägger
+även in modulerna för plc-koden. I exemplet nedan antas att dessa moduler
+ligger i arkivet $pwrp_lib/libpwrp.a.
+
+<c>$pwr_obj/rt_io_user.o -lpwrp
+</topic>
+
+<topic>ced_plccodefo
+Funktions-objekt med plc-kod
+
+Ett funktions-objekt där koden skrivs in form av plc-kod i plc-editor, definieras på 
+liknande sätt som funktions-objeketet med c-kod ovan.
+
+Funktionsobjekt klassen defineras med ett $ClassDef objekt under 'Class' objektet. Namnge
+objektet och aktivera Configure-Fo från popup-menyn för objektet. Nu skapas, förutom
+de objekt som även skapas för c-kods funktionsobjektet, ett Code objekt av klassen PlcTemplate.
+Det här objektet kan öppnas med plc-editorn, och här defineras koden för klassen.
+
+Ingångar, interna attribute och utgångar i funktionsobjektet definieras, på samma sätt som
+för funktionsobjket med c-kod, med $Input, $Intern och $Output attribut.
+
+<image> ced_fig8.gif
+Definition av funktionsobject med plc-kod.
+
+<b>Kod
+Genom att aktivera 'Open Program...' i popupmeny för Code objektet öppas plc-editorn.
+Här kan man nu skriva koden med funktions-objekts programmering. Koden skapas på samma
+sätt som ett vanligt program. Det som tillkommer är att hämta upp värden från ingångar
+och interna attribut, och att tilldela värden på utgångar.
+
+Värden på ingångar, interna attribut, och även utgångar, hämtas upp i koden med GetDp,
+GetIp, GetAp eller GetSp objekt. Objekten knyts till attribut i objektet genom att
+attributet väljs ut i Template objektet för klassen, och 'Connect' aktiveras för 
+Get-objektet. En symbolisk referens $PlcFo läggs nu in i Get objektet. Den kommer sedan
+att bytas ut mot referens till respektive instans, när koden för instansen kompileras.
+
+Beräknade värden lagras i utgångar eller interna attribut med StoDp, StoIp etc. Dessa
+kopplas till attribut på samma sätt ingångarna, genom att välja ut attributen i 
+Template objektet och aktivera 'Connect'.
+
+<image> ced_fig9.gif
+Exempel på plc-kod för ett funktionsobjekt
+
+Template koden i Code objektet behöver inte kompileras eller byggas. När en instans
+kompileras första gången, kopieras koden från template programmet till instansen, 
+samtidigt som symboliska referenser byts ut.
+
+Om template-koden ändras kommer instansernas kod att uppdateras nästa gång de kompileras
+(klassvolymen måste uppdateras med UpdateClasses först).
+</topic>
+</headerlevel>
+
+<topic>ced_ioclasses
+I/O klasser
+
+I/O är de objekt som hanteras av I/O hanteringen i Proview. De kan indelas i Agent, Rack,
+Card och Channel objekt. Vid knytning av nya I/O system till Proview måste man oftast
+skapa ny klasser av typerna Agent, Rack och Card. I/O objekt skapas med ett $ClassDef objekt
+där man i Flags sätter biten IoAgent, IoRack eller IoCard.
+En närmare beskrivning av hur man skapar I/O objekt finns i Guide to I/O System.
+</topic>
+
+<topic>ced_components
+Komponenter
+
+En komponent är ett objekt, eller ett antal objekt som hanterar en komponent i anläggningen,
+det kan vara en ventil, en motor, en frekvensomformare etc. Tanken bakom komponent-begreppet
+är att man genom att skapa ett objekt (eller ett antal objekt) får med allt som behövs för
+att styra komponenten, ett objekt som innehåller data, ett funktionsobjekt med kod för att
+styra komponenten, objektsbild för HMI, simulerings objekt, I/O objekt för att knyta mot 
+bus-kommunikation mm.
+
+En komponent kan bestå av följande delar
+- ett huvudobjekt.
+- ett funktionsobjekt.
+- ett simuleringsobjekt.
+- ett eller flera I/O bus objekt.
+- objektsbild för huvudobjektet.
+- objektsbild för simulerings objektet.
+
+<b>Huvudobjekt
+Huvudobjektet innehåller alla data som behövs för att konfigurera och göra beräkningar.
+Objektet läggs i planthierarkin, som ett individuellt objekt eller som en del av ett
+aggregats, se nedan.
+
+Ofta använder man BaseClasses:Component som superklass till komponentobjekt och för då
+med ett antal attribut, som Description, Specification, DataSheet etc.
+
+Alla in- och utgångsignaler som finns på komponenten ska finnas i huvudobjektet. Di, Ii, 
+Ai, Do, Io, Ao eller Co objekt läggs som attributobjekt, som sedan i instanserna måste
+kopplas till kanalobjekt. För t ex Profibus, kan man skapa ett modulobjekt som innehåller
+kanalerna, och förkoppla signalerna till dessa kanaler, så att man sedan för instansen 
+inte behöver koppla varje signal för sig, utan kan göra en koppling mellan huvudobjekt 
+och modulobjekt.
+
+<b>Speciella attribut
+<b>PlcConnect
+Om det finns någon kod för objektet som ska exekveras av plc-programmet, skapar man
+ett funktionobjekt för klassen. Detta måste kopplas till huvudobjektet, och denna
+koppling ska ligga i ett attribut med namnet 'PlcConnect' av typen pwrs:Type-$AttrRef.
+
+<b>SimConnect
+Om det finns ett simulerings objekt så kopplas det till huvudobjektet med 'SimConnect'
+av typen pwrs:Type-AttrRef.
+
+<b>IoConnect
+Om det finns ett I/O-modul objekt kopplas detta med ett attribut, 'IoConnect' av typen
+pwrs:Type-AttrRef.
+
+<b>IoStatus
+Om man vill hämta upp status från I/O-modul objektet skapar man attributet 'IoStatus'
+av typen pwrs:Type-$Status, och sätter Pointer biten i Flags.
+
+<b>Metoden ConfigureComponent
+Ofta finns det många varianter på en komponent. En magnetventil, till exempel, kan
+ha ett gränsläge 
+
+<b>Funktionsobjekt
+Funktionsobjektet är gränssnittet i plc-programmet. Det definierar in och utgångar som
+kan kopplas till andra objekt
+
+</topic>
+
+</headerlevel>
+
+<topic> classvolume
+Klassvolym
+
+
+</topic>
+
+</chapter>
+
+
+
+
+
+
+
+

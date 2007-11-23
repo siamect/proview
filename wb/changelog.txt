@@ -84,3 +84,7 @@
 071019 cs  wb        Command 'wb load/noindex' wasn't implemented in V4.
 071025 cs  wb        Command paste/toplevel, to paste a buffer when wb is empty, added.
 071025 cs  wb        Bugfix in paste/keepoid. Nextoix in volumeobject wasn't updated.
+071105 cs  wb        Bugfix in plc plant navigator, attribute objects with disable attribute couldn't be opened.
+071105 cs  wb        Plc plant navigator, objects without children and object attributes can be opened with Shift/Right key.
+071105 cs  wb        Symbolic references are not cleared by copy.
+071105 cs  wb        Copy with the ingnore switch, replaces unknown classes with $ClassLost.
