@@ -92,10 +92,19 @@ rt_msg_eobjs 	:= $(eobj_dir)/pwr_msg_co.o $(eobj_dir)/pwr_msg_rt.o
 rs_msg_eobjs 	:= $(eobj_dir)/pwr_msg_rs.o
 wb_msg_eobjs 	:= $(eobj_dir)/pwr_msg_wb.o $(eobj_dir)/pwr_msg_ge.o $(eobj_dir)/pwr_msg_flow.o
 
+# Configuration
+ifeq ($(pwre_conf_mysql),1)
+  cmysql        := -DPWRE_CONF_MYSQL=1
+  linkmysql     := -L/usr/lib/mysql -lmysqlclient
+else
+  cmysql        :=
+  linkmysql     :=
+endif
+
 log_done	=
 csetos		:= -DOS_LINUX=1 -DOS=linux -D_LINUX -DHW_X86=1 -DHW=x86
 cinc		:= -I$(inc_dir) -I$(einc_dir) -I$(hw_source) -I$(os_source) -I$(co_source) -I/usr/X11R6/include -I$(jdk)/include -I$(jdk)/include/linux \
-`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" 
+`pkg-config --cflags gtk+-2.0` -DPREFIX=\"/usr/local\" -DSYSCONFDIR=\"/etc\" -DDATADIR=\"/usr/share\" -DLIBDIR=\"/usr/lib\" $(cmysql)
 rm		:= rm
 cp		:= cp
 cpflags		:= 
