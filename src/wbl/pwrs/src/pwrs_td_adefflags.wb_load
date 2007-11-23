@@ -1,5 +1,5 @@
 ! 
-!  Proview   $Id: pwrs_td_adefflags.wb_load,v 1.4 2005-10-07 05:57:31 claes Exp $
+!  Proview   $Id: pwrs_td_adefflags.wb_load,v 1.5 2007-11-23 14:39:45 claes Exp $
 !  Copyright (C) 2005 SSAB Oxelösund AB.
 !
 !  This program is free software; you can redistribute it and/or 
@@ -291,6 +291,16 @@ SObject pwrs:Type
        Attr PgmName = "rthide"
        Attr Text = "RtHide"
        Attr Value = 8388608
+     EndBody
+    EndObject
+    !/**
+    !  The Attribute is created in this session.
+    !*/
+    Object NewAttribute $Bit
+     Body SysBody
+       Attr PgmName = "newattribute"
+       Attr Text = "NewAttribute"
+       Attr Value = 16777216
      EndBody
     EndObject
   EndObject
