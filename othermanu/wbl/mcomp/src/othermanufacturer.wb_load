@@ -1090,7 +1090,7 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
       Object Code PlcTemplate 813 03-OCT-2007 10:48:24.39
         Body RtBody 03-OCT-2007 10:48:24.39
         EndBody
-        Body DevBody 23-OCT-2007 10:51:38.10
+        Body DevBody 23-NOV-2007 11:33:07.13
           Buffer PlcProgram
             Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code"
             Attr cid = "pwrb:Class-PlcTemplate"
@@ -1139,8 +1139,8 @@ Volume OtherManufacturer $ClassVolume 0.0.250.1
         Object W WindowPlc 814 03-OCT-2007 10:59:54.84
           Body RtBody 03-OCT-2007 10:59:54.84
           EndBody
-          Body DevBody 23-OCT-2007 10:51:38.10
-            Attr Modified = "23-OCT-2007 10:51:38.10"
+          Body DevBody 23-NOV-2007 11:33:07.13
+            Attr Modified = "23-NOV-2007 11:33:07.13"
             Buffer PlcWindow
               Attr oid = "OtherManufacturer:Class-Eurotherm_TC3001Fo-Code-W"
               Attr cid = "pwrb:Class-WindowPlc"
@@ -8867,7 +8867,7 @@ if (od8 && d1) { /* Alarm acknowledge */
           Object CArit4 CArithm 833 03-OCT-2007 11:01:19.99
             Body RtBody 03-OCT-2007 11:01:19.99
             EndBody
-            Body DevBody 05-OCT-2007 08:02:34.68
+            Body DevBody 23-NOV-2007 11:33:07.13
               Buffer PlcNode
                 Attr object_type = 11
                 Attr cid = "pwrb:Class-CArithm"
@@ -8883,11 +8883,11 @@ if (od8 && d1) { /* Alarm acknowledge */
               Attr Code = "od1 = 0;
 if ((I1 & 0xf000) == 0) { /* Polling */
  OA1 = I1 / 1000.0 * 100.0;
- OA2 = I2 / 1250.0 * A1;
- OA3 = I3 / 1250.0 * A2;
- OA4 = I4 / 1250.0 * A2;
- OA5 = I5 / 1250.0 * A2;
- OA6 = I6 / 1250.0 * A1;
+ OA2 = I2 / 1000.0 * A1;
+ OA3 = I3 / 1000.0 * A2;
+ OA4 = I4 / 1000.0 * A2;
+ OA5 = I5 / 1000.0 * A2;
+ OA6 = I6 / 1000.0 * A1;
 } else if ((I1 & 0xf000) == 0x1000) {
 OI1 = (I1 & 0xff); /* Par Num */
 OI2 = I4; /* Par Value */
