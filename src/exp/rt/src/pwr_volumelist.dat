@@ -6,7 +6,8 @@ remote 0.0.1.4
 basecomponent 0.0.0.10
 profibus 0.0.250.7
 opc 0.0.250.9
-othermanufacturer 0.2.250.1
+othermanufacturer 0.0.250.1
+otherio 0.0.250.10
 abb 0.0.250.2
 siemens 0.0.250.3
 telemecanique 0.0.250.4
