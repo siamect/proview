@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_ldh.cpp,v 1.62 2007-10-25 11:07:12 claes Exp $
+ * Proview   $Id: wb_ldh.cpp,v 1.63 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -1605,7 +1605,8 @@ ldh_RevertSession(ldh_tSession session)
 {
   wb_session *sp = (wb_session*)session;
 
-  return sp->abort();
+  sp->abort();
+  return sp->sts();
 }
 
 /* Save all changes to objects done in the session.  */
@@ -1615,7 +1616,8 @@ ldh_SaveSession(ldh_tSession session)
 {
   wb_session *sp = (wb_session*)session;
 
-  return sp->commit();
+  sp->commit();
+  return sp->sts();
 }
 
 ldh_tVolume

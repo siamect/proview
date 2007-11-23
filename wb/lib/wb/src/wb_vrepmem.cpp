@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepmem.cpp,v 1.29 2007-11-07 08:48:56 claes Exp $
+ * Proview   $Id: wb_vrepmem.cpp,v 1.30 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -689,12 +689,13 @@ void wb_vrepmem::freeObject( mem_object *memo)
   delete memo;
 }
 
-wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, 
+				  wb_name &name, pwr_tOix oix)
 {
   mem_object *dest;
   ldh_eDest code = d.code();
   char name_str[32];
-  pwr_tOix oix;
+  pwr_tOix soix;
   pwr_tTime time;
 
   clock_gettime(CLOCK_REALTIME, &time);
@@ -720,14 +721,14 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
   }
 
   if ( !m_classeditor) {
-    oix = nextOix();
+    soix = nextOix();
     if ( name.evenSts())
-      sprintf( name_str, "O%u", oix);
+      sprintf( name_str, "O%u", soix);
     else
       strcpy( name_str, name.object());
   }
   else {
-    if ( !classeditorCheck( code, dest, cdef.cid(), &oix, name_str, sts, false))
+    if ( !classeditorCheck( code, dest, cdef.cid(), &soix, name_str, sts, false))
       return 0;
 
     if ( name.oddSts())
@@ -737,7 +738,7 @@ wb_orep *wb_vrepmem::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination
 
   mem_object *memo = new mem_object();
   strcpy( memo->m_name, name_str);
-  memo->m_oid.oix = oix;
+  memo->m_oid.oix = soix;
   memo->m_oid.vid = m_vid;
   memo->m_cid = cdef.cid();
   memo->m_flags = cdef.flags();

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdbs.h,v 1.37 2006-06-08 13:39:33 claes Exp $
+ * Proview   $Id: wb_vrepdbs.h,v 1.38 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -89,7 +89,8 @@ public:
   virtual wb_orep *object(pwr_tStatus *sts, wb_name &name);
   virtual wb_orep *object(pwr_tStatus *sts, const wb_orep *parent, wb_name &name);
 
-  virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name);
+  virtual wb_orep *createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, 
+				wb_name &name, pwr_tOix oix = 0);
 
   virtual wb_orep *copyObject(pwr_tStatus *sts, const wb_orep *orep, wb_destination &d, wb_name &name);
   virtual bool copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d);

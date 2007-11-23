@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_lfu.cpp,v 1.7 2007-09-17 07:09:23 claes Exp $
+ * Proview   $Id: wb_lfu.cpp,v 1.8 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -917,25 +917,59 @@ pwr_tStatus lfu_SaveDirectoryVolume(
 	    break;
 	  }
 	  case pwr_cClass_ClassVolumeConfig : {
-	    // Check wbload-file...
-	    FILE *wblfile;
-	    
-	    sprintf( fname, "$pwrp_db/%s.wb_load", volume_name);
-	    cdh_ToLower( fname, fname);
-	    dcli_translate_filename( fname, fname);
-	    wblfile = fopen( fname, "r");
-	    if ( wblfile == 0) {
-	      wblfile = fopen( fname, "w");
-	      if ( wblfile == 0) {
+	    // Ced Test !!!!!!!!!!! TODO
+	    if ( strcmp( volume_name, "ClaesClassVolume") == 0) {
+	      /* Check if the databas is created */
+	      sprintf( filename, "$pwrp_db/%s.db/info", volume_name);
+	      cdh_ToLower( filename, filename);
+	      dcli_translate_filename( filename, filename);
+	      sts = dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_INIT);
+	      dcli_search_file( filename, found_file, DCLI_DIR_SEARCH_END);
+	      if (EVEN(sts)) {
+		if ( wow) {
+		  lfu_sCreaDb *data;
+		  data = (lfu_sCreaDb *) calloc( 1, sizeof(*data));
+		  strcpy( data->name, volumelist_ptr->volume_name);
+		  data->vid = volumelist_ptr->volume_id;
+		  data->cid = pwr_eClass_ClassVolume;
+		  data->ldhses = ldhses;
+		
+		  sprintf( text, "   ClassVolume '%s' is not yet created.\n \n\
+   Do you want to create this volume.\n",
+			   volume_name);
+		  wow->DisplayQuestion( NULL,
+				     "Create Classvolume", text,
+				     lfu_creadb_qb_yes, NULL, (void *)data);
+		}
+	      }
+	      else {
 		char msg[200];
-		sprintf( msg, "Error, unable to create file %s, ", fname);
+		sprintf( msg, "Error, Volume '%s' is not yet created.", 
+			 volume_name);
 		MsgWindow::message( 'E', msg, msgw_ePop_Default);
-		break;
-	      }	    
+	      }
+	    }
+	    else {
+	      // Check wbload-file...
+	      FILE *wblfile;
+	    
+	      sprintf( fname, "$pwrp_db/%s.wb_load", volume_name);
+	      cdh_ToLower( fname, fname);
+	      dcli_translate_filename( fname, fname);
+	      wblfile = fopen( fname, "r");
+	      if ( wblfile == 0) {
+		wblfile = fopen( fname, "w");
+		if ( wblfile == 0) {
+		  char msg[200];
+		  sprintf( msg, "Error, unable to create file %s, ", fname);
+		  MsgWindow::message( 'E', msg, msgw_ePop_Default);
+		  break;
+		}	    
 	      
-	      fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
-		       volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
-	      fclose( wblfile);
+		fprintf( wblfile, "Volume %s pwr_eClass_ClassVolume %s\nEndVolume\n", 
+			 volume_name, cdh_VolumeIdToString( 0, volumelist_ptr->volume_id, 0, 0));
+		fclose( wblfile);
+	      }
 	    }
 	    break;
 	  }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_db.cpp,v 1.39 2007-11-22 15:10:23 claes Exp $
+ * Proview   $Id: wb_db.cpp,v 1.40 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -497,7 +497,7 @@ void wb_db_ohead::name(pwr_tOid &oid)
 {
   memset(m_o.name, 0, sizeof(m_o.name));
   memset(m_o.normname, 0, sizeof(m_o.normname));
-  sprintf(m_o.name, "O%d", oid.oix);
+  sprintf(m_o.name, "O%u", oid.oix);
   strcpy(m_o.normname, m_o.name);
 }
 
@@ -1137,6 +1137,7 @@ pwr_tOid wb_db::new_oid(wb_db_txn *txn, pwr_tOid oid)
 
   try {
     wb_db_ohead o(this, txn, woid);
+    return pwr_cNOid;
   } catch (DbException &e) {
     pwr_tOix nextoix;
     int rc = 0;
@@ -1155,8 +1156,6 @@ pwr_tOid wb_db::new_oid(wb_db_txn *txn, pwr_tOid oid)
     }
     return woid;
   }
-  cout << " Old oix found, force new " << woid.oix << " !\n";
-  return new_oid(txn);
 }
 
 int wb_db::del_family(wb_db_txn *txn, Dbc *cp, pwr_tOid poid)
@@ -1207,7 +1206,10 @@ bool wb_db::commit(pwr_tStatus *sts)
   if (rc)
     printf("wb_db::commit, CHECK, rc %d\n", rc);
   m_env->txn_begin(0, (DbTxn **)&m_txn, 0);
-  *sts = rc;
+  if ( rc)
+    *sts = LDH__DB;
+  else
+    *sts = LDH__SUCCESS;
   printstat(m_env, "after commit");
   return true;
 }

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepdb.cpp,v 1.59 2007-11-07 18:07:51 claes Exp $
+ * Proview   $Id: wb_vrepdb.cpp,v 1.60 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -431,7 +431,8 @@ bool wb_vrepdb::copyOset(pwr_tStatus *sts, wb_oset *oset, wb_destination &d)
   return false;
 }
 
-wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name)
+wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, 
+				 wb_name &name, pwr_tOix oix)
 {
   *sts = LDH__SUCCESS;
   wb_db_txn *txn = m_db->begin(m_db->m_txn);
@@ -440,7 +441,21 @@ wb_orep* wb_vrepdb::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination 
   try {
     int rs = 0;
     pwr_tTime time;
-    pwr_tOid oid = m_db->new_oid(txn);
+    pwr_tOid oid;
+
+    if ( oix) {
+      pwr_tOid woid;
+      woid.oix = oix;
+      woid.vid = m_vid;
+      oid = m_db->new_oid(txn, woid);
+      if ( !oid.oix) {
+	*sts = LDH__BADOBJID;
+	return 0;
+      }
+    }
+    else
+      oid = m_db->new_oid(txn);
+     
     wb_db_ohead o(m_db, oid);
 
     clock_gettime(CLOCK_REALTIME, &time);
@@ -1519,6 +1534,8 @@ bool wb_vrepdb::importPasteObject(pwr_tOid doid, ldh_eDest destcode,
 
   if (keepoid) {
     oep->n_oid = m_db->new_oid(m_db->m_txn, oid);
+    if ( !oep->n_oid.oix)
+      oep->n_oid = m_db->new_oid(m_db->m_txn);
   } else {
     oep->n_oid = m_db->new_oid(m_db->m_txn);
   }
@@ -1946,7 +1963,7 @@ int wb_vrepdb::updateArefs(pwr_tOid oid, pwr_tCid cid)
 
 pwr_tStatus wb_vrepdb::updateMeta()
 {
-  int rc = 0;
+  pwr_tStatus rc = 0;
   pwr_tStatus sts = LDH__SUCCESS;
   pwr_tStatus db_sts = LDH__SUCCESS;
   int nAref = 0;
@@ -2031,7 +2048,7 @@ pwr_tStatus wb_vrepdb::updateMeta()
 
     commit(&rc);
 
-    if (rc) {
+    if (EVEN(rc)) {
       sprintf(buff, "A total of %d object%s of %d classe%s %s updated, but could not be saved to database.",
               nObject, (nObject == 1 ? "" : "s"), tree_Cardinality(&sts, m_class_th), 
               (tree_Cardinality(&sts, m_class_th) == 1 ? "" : "s"), 

@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_erep.cpp,v 1.51 2007-08-24 13:39:43 claes Exp $
+ * Proview   $Id: wb_erep.cpp,v 1.52 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB OxelÃ¶sund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -27,6 +27,7 @@
 #include "wb_vrepdbs.h"
 #include "wb_vrepdb.h"
 //#include "wb_vrepdbms.h"
+#include "wb_vrepced.h"
 #include "wb_vrepref.h"
 #include "wb_vrepext.h"
 #include "wb_cdrep.h"
@@ -578,8 +579,9 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	MsgWindow::message( 'E', "Unable to open volume", vname, e.what().c_str());
       }
     }
-    else if ( (cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0) ||
-         (strcmp( vol_array[3], "load") == 0)) {
+    else if ( (cdh_NoCaseStrcmp( vol_array[2], "ClassVolume") == 0 && 
+	       strcmp( vol_array[0], "ClaesClassVolume") != 0) ||
+	      (strcmp( vol_array[3], "load") == 0)) {
       if ( nr != 4)
 	cout << "Syntax error in file: " << fname << endl;
 
@@ -741,12 +743,26 @@ void wb_erep::loadMeta( pwr_tStatus *status, char *db)
 	  }
 	}
 	else {
+	  // Ced Test !!!
+	  if ( strcmp( vol_array[0], "ClaesClassVolume") == 0) {
+	    wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
+
+	    wb_vrepced *vrepced = new wb_vrepced( this, vrepdb);
+	    vrepced->name(vol_array[0]);
+	    addDb( &sts, vrepced);
+	    MsgWindow::message( 'I', "Classvolume Database opened", vname);
+	    vol_cnt++;
+	  }
+	  else {
+	  // End Ced Test !!!
+
 	  // Open db
 	  wb_vrepdb *vrepdb = new wb_vrepdb( this, vname);
 	  vrepdb->name(vol_array[0]);
 	  addDb( &sts, vrepdb);
 	  MsgWindow::message( 'I', "Database opened", vname);
 	  vol_cnt++;
+	  }
 	}
       }
     }

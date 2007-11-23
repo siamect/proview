@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_vrepext.cpp,v 1.8 2006-09-15 09:33:20 claes Exp $
+ * Proview   $Id: wb_vrepext.cpp,v 1.9 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -384,7 +384,8 @@ void *wb_vrepext::readBody(pwr_tStatus *sts, const wb_orep *o, pwr_eBix bix, voi
 }
 
 
-wb_orep *wb_vrepext::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, wb_name &name)
+wb_orep *wb_vrepext::createObject(pwr_tStatus *sts, wb_cdef cdef, wb_destination &d, 
+				  wb_name &name, pwr_tOix oix)
 {
   if ( d.oid().vid != m_vid) {
     *sts = LDH__BADOBJID;

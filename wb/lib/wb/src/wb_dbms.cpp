@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: wb_dbms.cpp,v 1.3 2007-10-26 06:26:15 claes Exp $
+ * Proview   $Id: wb_dbms.cpp,v 1.4 2007-11-23 14:25:09 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -332,6 +332,7 @@ pwr_tOid wb_dbms::new_oid(wb_dbms_txn *txn, pwr_tOid oid)
 
   try {
     wb_dbms_ohead o(this, txn, woid);
+    return pwr_cNOid;
   } catch (wb_dbms_error &e) {
     pwr_tOix nextoix;
     int rc = 0;
@@ -350,8 +351,6 @@ pwr_tOid wb_dbms::new_oid(wb_dbms_txn *txn, pwr_tOid oid)
     }
     return woid;
   }
-  cout << " Old oix found, force new " << woid.oix << " !\n";
-  return new_oid(txn);
 }
 
 int wb_dbms::del_family(wb_dbms_txn *txn, wb_dbms_cursor *cp, pwr_tOid poid)
@@ -399,7 +398,10 @@ bool wb_dbms::commit(pwr_tStatus *sts)
     printf("wb_dbms::commit, rc %d\n", rc);
 
   m_env->txn_begin(0, (wb_dbms_txn **)&m_txn);
-  *sts = rc;
+  if ( rc)
+    *sts = LDH__DB;
+  else
+    *sts = LDH__SUCCESS;
 
   return true;
 }
@@ -1371,7 +1373,7 @@ void wb_dbms_ohead::name(pwr_tOid &oid)
 {
   memset(m_o.name, 0, sizeof(m_o.name));
   memset(m_o.normname, 0, sizeof(m_o.normname));
-  sprintf(m_o.name, "O%d", oid.oix);
+  sprintf(m_o.name, "O%u", oid.oix);
   strcpy(m_o.normname, m_o.name);
 }
 
