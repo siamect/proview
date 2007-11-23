@@ -1,5 +1,5 @@
 /* 
- * Proview   $Id: rt_subc.c,v 1.6 2006-09-14 14:16:07 claes Exp $
+ * Proview   $Id: rt_subc.c,v 1.7 2007-11-23 12:42:35 claes Exp $
  * Copyright (C) 2005 SSAB Oxelösund AB.
  *
  * This program is free software; you can redistribute it and/or 
@@ -616,7 +616,7 @@ subc_ActivateList (
     for (aep = tree_Minimum(&sts, add); aep != NULL; aep = tree_Successor(&sts, add, aep)) { 
       if (aep->msg != NULL) {
 	if (aep->msg->count > 0) {
-	  tgt.nid = aep->nid;
+	  tgt = np->handler;
 	  pwr_Assert(tgt.nid != pwr_cNNodeId);
 	  net_Put(NULL, &tgt, aep->msg, net_eMsg_subAdd, 0, pwr_Offset(aep->msg, spec[aep->msg->count]), 0);
 	}
