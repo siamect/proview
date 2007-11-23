@@ -205,6 +205,9 @@ sub build_kernel # args: flavour
   _module("wb");
   build_all("lib", $flavour);
   merge();
+  _module("otherio");
+  _build("exp","rt","src","copy");
+  merge();
   _module("xtt");
   build_all("exe", $flavour);
   merge();
