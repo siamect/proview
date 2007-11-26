@@ -207,6 +207,7 @@ sub build_kernel # args: flavour
   merge();
   _module("otherio");
   _build("exp","rt","src","copy");
+  _build("lib","usbio_dummy","src","init lib");
   merge();
   _module("xtt");
   build_all("exe", $flavour);
