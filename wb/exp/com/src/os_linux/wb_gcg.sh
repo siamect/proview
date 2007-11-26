@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: wb_gcg.sh,v 1.4 2007-11-22 15:18:30 claes Exp $
+# Proview   $Id: wb_gcg.sh,v 1.5 2007-11-26 13:11:32 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -167,7 +167,7 @@ CompileRtNode()
     ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else
-    ld_opt="`eval echo $pwr_obj/rt_io_user.o`"
+    ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_usbio_dummy`"
   fi
 
   if g++ $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
