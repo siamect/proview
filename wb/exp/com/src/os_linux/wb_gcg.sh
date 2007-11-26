@@ -1,6 +1,6 @@
 #! /bin/bash
 #
-# Proview   $Id: wb_gcg.sh,v 1.5 2007-11-26 13:11:32 claes Exp $
+# Proview   $Id: wb_gcg.sh,v 1.6 2007-11-26 13:22:17 claes Exp $
 # Copyright (C) 2005 SSAB Oxelösund AB.
 #
 # This program is free software; you can redistribute it and/or 
@@ -167,7 +167,7 @@ CompileRtNode()
     ld_opt_tmp="`cat $pwrp_exe/$FileName.opt`"
     ld_opt="`eval echo $ld_opt_tmp`"
   else
-    ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_usbio_dummy`"
+    ld_opt="`eval echo $pwr_obj/rt_io_user.o -lpwr_rt -lpwr_usbio_dummy`"
   fi
 
   if g++ $link_debug -L/lib/thread -L$pwrp_lib -L$pwrp_cmn/x86_linux/lib -L$pwr_lib \
@@ -177,7 +177,7 @@ CompileRtNode()
     $Libs \
     $ld_opt \
     $pwr_obj/pwr_msg_rt.o $pwr_obj/pwr_msg_co.o \
-    -lrt -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm -lusbio
+    -lrt -lpwr_remote -lpwr_nmps -lpwr_rt -lpwr_co -lrpcsvc -lpwr_msg_dummy -lpthread -lm
   then
     echo "-- Plc program linked for $OsStr $say_linkdebug node $FileName" 
     gcg_status=$gcg__success
