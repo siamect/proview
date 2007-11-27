@@ -23,7 +23,7 @@ all : init copy lib
 
 init :
 
-copy : $(lib_dir)/libusbio.a $(inc_dir)/libusbio.h
+copy : $(inc_dir)/libusbio.h
 
 lib :
 
@@ -35,9 +35,9 @@ realclean : clean $(clean_obj)
 
 .SUFFIXES:
 
-$(lib_dir)/libusbio.a : ../libusbio.a
-	@ echo "Copying libusbio.a"
-	@ $(cp) $(cpflags) $(source) $(target)
+#$(lib_dir)/libusbio.a : ../libusbio.a
+#	@ echo "Copying libusbio.a"
+#	@ $(cp) $(cpflags) $(source) $(target)
 
 $(inc_dir)/libusbio.h : ../libusbio.h
 	@ echo "Copying libusbio.h"
