@@ -21981,7 +21981,7 @@ Eurotherm TC3001 Aggregate
             Body RtBody 09-OCT-2007 10:48:51.56
             EndBody
             Body DevBody 09-OCT-2007 15:08:11.77
-              Attr DpObject = "$PlcFo:ABB-Class-ABB_ACS800MotorAggrSim.OpResetContactorFeedback"
+              Attr DpObject = "$PlcFo:OtherManufacturer-Class-Eurotherm_TC3001AggrSim.OpResetContactorFeedback"
               Buffer PlcNode
                 Attr object_type = 256
                 Attr cid = "pwrb:Class-GetDp"
